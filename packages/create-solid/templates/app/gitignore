@@ -10,7 +10,9 @@ dist
 *.launch
 .settings/
 
+# Temp
+gitignore
 
-#System Files
+# System Files
 .DS_Store
 Thumbs.db

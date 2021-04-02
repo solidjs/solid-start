@@ -13,10 +13,10 @@
   ],
   "dependencies": {
     "node-fetch": "^2.6.1",
-    "rollup-route-manifest": "^1.0.0",
-    "solid-app-router": "^0.0.36"
+    "rollup-route-manifest": "^1.0.0"
   },
   "peerDependencies": {
+    "solid-app-router": "*",
     "solid-js": "*",
     "vite": "*"
   }
