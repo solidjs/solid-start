@@ -5,4 +5,4 @@ lib/
 coverage/
 types/
 
-packages/solid-start/bin
+packages/create-solid/bin

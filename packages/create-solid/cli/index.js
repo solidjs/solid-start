@@ -53,7 +53,7 @@ async function main() {
   }
 
   const cwd = path.join(__dirname, "templates/" + (ts_response.value ? "app-ts" : "app"));
-  const gitignore_contents = fs.readFileSync(path.join(cwd, ".gitignore"), "utf-8");
+  const gitignore_contents = fs.readFileSync(path.join(cwd, "gitignore"), "utf-8");
   const gitignore = parser.compile(gitignore_contents);
 
   const files = glob("**/*", { cwd }).filter(gitignore.accepts);
