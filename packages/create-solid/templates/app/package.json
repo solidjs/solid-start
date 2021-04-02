@@ -1,0 +1,16 @@
+{
+  "name": "~TODO~",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start"
+  },
+  "type": "module",
+  "devDependencies": {
+    "solid-js": "0.25.0",
+    "vite": "^2.1.3"
+  },
+  "engines": {
+    "node": ">=12"
+  }
+}

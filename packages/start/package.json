@@ -1,0 +1,23 @@
+{
+  "name": "solid-start",
+  "version": "0.0.12",
+  "description": "Create Solid apps with low configuration",
+  "author": "Ryan Carniato",
+  "license": "MIT",
+  "bin": "./bin.cjs",
+  "type": "module",
+  "files": [
+    "bin.cjs",
+    "plugin.js",
+    "runtime"
+  ],
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "rollup-route-manifest": "^1.0.0",
+    "solid-app-router": "^0.0.36"
+  },
+  "peerDependencies": {
+    "vite": "*",
+    "solid-js": "*"
+  }
+}

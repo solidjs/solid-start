@@ -1,0 +1,8 @@
+node_modules/
+dist/
+lib/
+.vscode/
+coverage/
+types/
+
+packages/solid-start/bin

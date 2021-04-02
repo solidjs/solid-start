@@ -1,0 +1,3398 @@
+#!/usr/bin/env node
+'use strict';
+
+var fs = require('fs');
+var path = require('path');
+var readline = require('readline');
+var EventEmitter = require('events');
+var os = require('os');
+
+function createCommonjsModule(fn) {
+  var module = { exports: {} };
+	return fn(module, module.exports), module.exports;
+}
+
+/**
+ * Compile the given `.gitignore` content (not filename!)
+ * and return an object with `accepts`, `denies` and `maybe` methods.
+ * These methods each accepts a single filename and determines whether
+ * they are acceptable or unacceptable according to the `.gitignore` definition.
+ *
+ *
+ * @param  {String} content The `.gitignore` content to compile.
+ * @return {Object}         The helper object with methods that operate on the compiled content.
+ */
+
+var lib$1 = createCommonjsModule(function (module, exports) {
+exports.compile = function (content) {
+  var parsed = exports.parse(content),
+      positives = parsed[0],
+      negatives = parsed[1];
+  return {
+    accepts: function (input) {
+      if (input[0] === '/') input = input.slice(1);
+      return negatives[0].test(input) || !positives[0].test(input);
+    },
+    denies: function (input) {
+      if (input[0] === '/') input = input.slice(1);
+      return !(negatives[0].test(input) || !positives[0].test(input));
+    },
+    maybe: function (input) {
+      if (input[0] === '/') input = input.slice(1);
+      return negatives[1].test(input) || !positives[1].test(input);
+    }
+  };
+};
+
+/**
+ * Parse the given `.gitignore` content and return an array
+ * containing two further arrays - positives and negatives.
+ * Each of these two arrays in turn contains two regexps, one
+ * strict and one for 'maybe'.
+ *
+ * @param  {String} content  The content to parse,
+ * @return {Array[]}         The parsed positive and negatives definitions.
+ */
+exports.parse = function (content) {
+  return content.split('\n')
+  .map(function (line) {
+    line = line.trim();
+    return line;
+  })
+  .filter(function (line) {
+    return line && line[0] !== '#';
+  })
+  .reduce(function (lists, line) {
+    var isNegative = line[0] === '!';
+    if (isNegative) {
+      line = line.slice(1);
+    }
+    if (line[0] === '/')
+      line = line.slice(1);
+    if (isNegative) {
+      lists[1].push(line);
+    }
+    else {
+      lists[0].push(line);
+    }
+    return lists;
+  }, [[], []])
+  .map(function (list) {
+    return list
+    .sort()
+    .map(prepareRegexes)
+    .reduce(function (list, prepared) {
+      list[0].push(prepared[0]);
+      list[1].push(prepared[1]);
+      return list;
+    }, [[], [], []]);
+  })
+  .map(function (item) {
+    return [
+      item[0].length > 0 ? new RegExp('^((' + item[0].join(')|(') + '))') : new RegExp('$^'),
+      item[1].length > 0 ? new RegExp('^((' + item[1].join(')|(') + '))') : new RegExp('$^')
+    ]
+  });
+};
+
+function prepareRegexes (pattern) {
+  return [
+    // exact regex
+    prepareRegexPattern(pattern),
+    // partial regex
+    preparePartialRegex(pattern)
+  ];
+}
+function prepareRegexPattern (pattern) {
+  return escapeRegex(pattern).replace('**', '(.+)').replace('*', '([^\\/]+)');
+}
+
+function preparePartialRegex (pattern) {
+  return pattern
+  .split('/')
+  .map(function (item, index) {
+    if (index)
+      return '([\\/]?(' + prepareRegexPattern(item) + '\\b|$))';
+    else
+      return '(' + prepareRegexPattern(item) + '\\b)';
+  })
+  .join('');
+}
+
+function escapeRegex (pattern) {
+  return pattern.replace(/[\-\[\]\/\{\}\(\)\+\?\.\\\^\$\|]/g, "\\$&");
+}
+});
+
+let FORCE_COLOR$1, NODE_DISABLE_COLORS$1, NO_COLOR, TERM$1, isTTY=true;
+if (typeof process !== 'undefined') {
+	({ FORCE_COLOR: FORCE_COLOR$1, NODE_DISABLE_COLORS: NODE_DISABLE_COLORS$1, NO_COLOR, TERM: TERM$1 } = process.env);
+	isTTY = process.stdout && process.stdout.isTTY;
+}
+
+const $$1 = {
+	enabled: !NODE_DISABLE_COLORS$1 && NO_COLOR == null && TERM$1 !== 'dumb' && (
+		FORCE_COLOR$1 != null && FORCE_COLOR$1 !== '0' || isTTY
+	)
+};
+
+function init$1(x, y) {
+	let rgx = new RegExp(`\\x1b\\[${y}m`, 'g');
+	let open = `\x1b[${x}m`, close = `\x1b[${y}m`;
+
+	return function (txt) {
+		if (!$$1.enabled || txt == null) return txt;
+		return open + (!!~(''+txt).indexOf(close) ? txt.replace(rgx, close + open) : txt) + close;
+	};
+}
+const bold = init$1(1, 22);
+const red = init$1(31, 39);
+const green = init$1(32, 39);
+const cyan = init$1(36, 39);
+const gray = init$1(90, 39);
+
+const { FORCE_COLOR, NODE_DISABLE_COLORS, TERM } = process.env;
+
+const $ = {
+	enabled: !NODE_DISABLE_COLORS && TERM !== 'dumb' && FORCE_COLOR !== '0',
+
+	// modifiers
+	reset: init(0, 0),
+	bold: init(1, 22),
+	dim: init(2, 22),
+	italic: init(3, 23),
+	underline: init(4, 24),
+	inverse: init(7, 27),
+	hidden: init(8, 28),
+	strikethrough: init(9, 29),
+
+	// colors
+	black: init(30, 39),
+	red: init(31, 39),
+	green: init(32, 39),
+	yellow: init(33, 39),
+	blue: init(34, 39),
+	magenta: init(35, 39),
+	cyan: init(36, 39),
+	white: init(37, 39),
+	gray: init(90, 39),
+	grey: init(90, 39),
+
+	// background colors
+	bgBlack: init(40, 49),
+	bgRed: init(41, 49),
+	bgGreen: init(42, 49),
+	bgYellow: init(43, 49),
+	bgBlue: init(44, 49),
+	bgMagenta: init(45, 49),
+	bgCyan: init(46, 49),
+	bgWhite: init(47, 49)
+};
+
+function run(arr, str) {
+	let i=0, tmp, beg='', end='';
+	for (; i < arr.length; i++) {
+		tmp = arr[i];
+		beg += tmp.open;
+		end += tmp.close;
+		if (str.includes(tmp.close)) {
+			str = str.replace(tmp.rgx, tmp.close + tmp.open);
+		}
+	}
+	return beg + str + end;
+}
+
+function chain(has, keys) {
+	let ctx = { has, keys };
+
+	ctx.reset = $.reset.bind(ctx);
+	ctx.bold = $.bold.bind(ctx);
+	ctx.dim = $.dim.bind(ctx);
+	ctx.italic = $.italic.bind(ctx);
+	ctx.underline = $.underline.bind(ctx);
+	ctx.inverse = $.inverse.bind(ctx);
+	ctx.hidden = $.hidden.bind(ctx);
+	ctx.strikethrough = $.strikethrough.bind(ctx);
+
+	ctx.black = $.black.bind(ctx);
+	ctx.red = $.red.bind(ctx);
+	ctx.green = $.green.bind(ctx);
+	ctx.yellow = $.yellow.bind(ctx);
+	ctx.blue = $.blue.bind(ctx);
+	ctx.magenta = $.magenta.bind(ctx);
+	ctx.cyan = $.cyan.bind(ctx);
+	ctx.white = $.white.bind(ctx);
+	ctx.gray = $.gray.bind(ctx);
+	ctx.grey = $.grey.bind(ctx);
+
+	ctx.bgBlack = $.bgBlack.bind(ctx);
+	ctx.bgRed = $.bgRed.bind(ctx);
+	ctx.bgGreen = $.bgGreen.bind(ctx);
+	ctx.bgYellow = $.bgYellow.bind(ctx);
+	ctx.bgBlue = $.bgBlue.bind(ctx);
+	ctx.bgMagenta = $.bgMagenta.bind(ctx);
+	ctx.bgCyan = $.bgCyan.bind(ctx);
+	ctx.bgWhite = $.bgWhite.bind(ctx);
+
+	return ctx;
+}
+
+function init(open, close) {
+	let blk = {
+		open: `\x1b[${open}m`,
+		close: `\x1b[${close}m`,
+		rgx: new RegExp(`\\x1b\\[${close}m`, 'g')
+	};
+	return function (txt) {
+		if (this !== void 0 && this.has !== void 0) {
+			this.has.includes(open) || (this.has.push(open),this.keys.push(blk));
+			return txt === void 0 ? this : $.enabled ? run(this.keys, txt+'') : txt+'';
+		}
+		return txt === void 0 ? chain([open], [blk]) : $.enabled ? run([blk], txt+'') : txt+'';
+	};
+}
+
+var kleur = $;
+
+var action$1 = (key, isSelect) => {
+  if (key.meta && key.name !== 'escape') return;
+  
+  if (key.ctrl) {
+    if (key.name === 'a') return 'first';
+    if (key.name === 'c') return 'abort';
+    if (key.name === 'd') return 'abort';
+    if (key.name === 'e') return 'last';
+    if (key.name === 'g') return 'reset';
+  }
+  
+  if (isSelect) {
+    if (key.name === 'j') return 'down';
+    if (key.name === 'k') return 'up';
+  }
+
+  if (key.name === 'return') return 'submit';
+  if (key.name === 'enter') return 'submit'; // ctrl + J
+  if (key.name === 'backspace') return 'delete';
+  if (key.name === 'delete') return 'deleteForward';
+  if (key.name === 'abort') return 'abort';
+  if (key.name === 'escape') return 'exit';
+  if (key.name === 'tab') return 'next';
+  if (key.name === 'pagedown') return 'nextPage';
+  if (key.name === 'pageup') return 'prevPage';
+  // TODO create home() in prompt types (e.g. TextPrompt)
+  if (key.name === 'home') return 'home';
+  // TODO create end() in prompt types (e.g. TextPrompt)
+  if (key.name === 'end') return 'end';
+
+  if (key.name === 'up') return 'up';
+  if (key.name === 'down') return 'down';
+  if (key.name === 'right') return 'right';
+  if (key.name === 'left') return 'left';
+
+  return false;
+};
+
+var strip = str => {
+  const pattern = [
+    '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[a-zA-Z\\d]*)*)?\\u0007)',
+    '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PRZcf-ntqry=><~]))'
+  ].join('|');
+
+  const RGX = new RegExp(pattern, 'g');
+  return typeof str === 'string' ? str.replace(RGX, '') : str;
+};
+
+const ESC = '\x1B';
+const CSI = `${ESC}[`;
+const beep$1 = '\u0007';
+
+const cursor$b = {
+  to(x, y) {
+    if (!y) return `${CSI}${x + 1}G`;
+    return `${CSI}${y + 1};${x + 1}H`;
+  },
+  move(x, y) {
+    let ret = '';
+
+    if (x < 0) ret += `${CSI}${-x}D`;
+    else if (x > 0) ret += `${CSI}${x}C`;
+
+    if (y < 0) ret += `${CSI}${-y}A`;
+    else if (y > 0) ret += `${CSI}${y}B`;
+
+    return ret;
+  },
+  up: (count = 1) => `${CSI}${count}A`,
+  down: (count = 1) => `${CSI}${count}B`,
+  forward: (count = 1) => `${CSI}${count}C`,
+  backward: (count = 1) => `${CSI}${count}D`,
+  nextLine: (count = 1) => `${CSI}E`.repeat(count),
+  prevLine: (count = 1) => `${CSI}F`.repeat(count),
+  left: `${CSI}G`,
+  hide: `${CSI}?25l`,
+  show: `${CSI}?25h`,
+  save: `${ESC}7`,
+  restore: `${ESC}8`
+};
+
+const scroll = {
+  up: (count = 1) => `${CSI}S`.repeat(count),
+  down: (count = 1) => `${CSI}T`.repeat(count)
+};
+
+const erase$7 = {
+  screen: `${CSI}2J`,
+  up: (count = 1) => `${CSI}1J`.repeat(count),
+  down: (count = 1) => `${CSI}J`.repeat(count),
+  line: `${CSI}2K`,
+  lineEnd: `${CSI}K`,
+  lineStart: `${CSI}1K`,
+  lines(count) {
+    let clear = '';
+    for (let i = 0; i < count; i++)
+      clear += this.line + (i < count - 1 ? cursor$b.up() : '');
+    if (count)
+      clear += cursor$b.left;
+    return clear;
+  }
+};
+
+var src$1 = { cursor: cursor$b, scroll, erase: erase$7, beep: beep$1 };
+
+const { erase: erase$6, cursor: cursor$a } = src$1;
+
+const width = str => [...strip(str)].length;
+
+/**
+ * @param {string} prompt
+ * @param {number} perLine
+ */
+var clear$9 = function(prompt, perLine) {
+  if (!perLine) return erase$6.line + cursor$a.to(0);
+
+  let rows = 0;
+  const lines = prompt.split(/\r?\n/);
+  for (let line of lines) {
+    rows += 1 + Math.floor(Math.max(width(line) - 1, 0) / perLine);
+  }
+
+  return erase$6.lines(rows);
+};
+
+const main$1 = {
+  arrowUp: '↑',
+  arrowDown: '↓',
+  arrowLeft: '←',
+  arrowRight: '→',
+  radioOn: '◉',
+  radioOff: '◯',
+  tick: '✔',	
+  cross: '✖',	
+  ellipsis: '…',	
+  pointerSmall: '›',	
+  line: '─',	
+  pointer: '❯'	
+};	
+const win = {
+  arrowUp: main$1.arrowUp,
+  arrowDown: main$1.arrowDown,
+  arrowLeft: main$1.arrowLeft,
+  arrowRight: main$1.arrowRight,
+  radioOn: '(*)',
+  radioOff: '( )',	
+  tick: '√',	
+  cross: '×',	
+  ellipsis: '...',	
+  pointerSmall: '»',	
+  line: '─',	
+  pointer: '>'	
+};	
+const figures$7 = process.platform === 'win32' ? win : main$1;	
+
+ var figures_1 = figures$7;
+
+// rendering user input.
+const styles = Object.freeze({
+  password: { scale: 1, render: input => '*'.repeat(input.length) },
+  emoji: { scale: 2, render: input => '😃'.repeat(input.length) },
+  invisible: { scale: 0, render: input => '' },
+  default: { scale: 1, render: input => `${input}` }
+});
+const render = type => styles[type] || styles.default;
+
+// icon to signalize a prompt.
+const symbols = Object.freeze({
+  aborted: kleur.red(figures_1.cross),
+  done: kleur.green(figures_1.tick),
+  exited: kleur.yellow(figures_1.cross),
+  default: kleur.cyan('?')
+});
+
+const symbol = (done, aborted, exited) =>
+  aborted ? symbols.aborted : exited ? symbols.exited : done ? symbols.done : symbols.default;
+
+// between the question and the user's input.
+const delimiter = completing =>
+  kleur.gray(completing ? figures_1.ellipsis : figures_1.pointerSmall);
+
+const item = (expandable, expanded) =>
+  kleur.gray(expandable ? (expanded ? figures_1.pointerSmall : '+') : figures_1.line);
+
+var style$9 = {
+  styles,
+  render,
+  symbols,
+  symbol,
+  delimiter,
+  item
+};
+
+/**
+ * @param {string} msg
+ * @param {number} perLine
+ */
+var lines$2 = function (msg, perLine) {
+  let lines = String(strip(msg) || '').split(/\r?\n/);
+
+  if (!perLine) return lines.length;
+  return lines.map(l => Math.ceil(l.length / perLine))
+      .reduce((a, b) => a + b);
+};
+
+/**
+ * @param {string} msg The message to wrap
+ * @param {object} opts
+ * @param {number|string} [opts.margin] Left margin
+ * @param {number} opts.width Maximum characters per line including the margin
+ */
+var wrap$3 = (msg, opts = {}) => {
+  const tab = Number.isSafeInteger(parseInt(opts.margin))
+    ? new Array(parseInt(opts.margin)).fill(' ').join('')
+    : (opts.margin || '');
+
+  const width = opts.width;
+
+  return (msg || '').split(/\r?\n/g)
+    .map(line => line
+      .split(/\s+/g)
+      .reduce((arr, w) => {
+        if (w.length + tab.length >= width || arr[arr.length - 1].length + w.length + 1 < width)
+          arr[arr.length - 1] += ` ${w}`;
+        else arr.push(`${tab}${w}`);
+        return arr;
+      }, [ tab ])
+      .join('\n'))
+    .join('\n');
+};
+
+/**
+ * Determine what entries should be displayed on the screen, based on the
+ * currently selected index and the maximum visible. Used in list-based
+ * prompts like `select` and `multiselect`.
+ *
+ * @param {number} cursor the currently selected entry
+ * @param {number} total the total entries available to display
+ * @param {number} [maxVisible] the number of entries that can be displayed
+ */
+var entriesToDisplay$3 = (cursor, total, maxVisible)  => {
+  maxVisible = maxVisible || total;
+
+  let startIndex = Math.min(total- maxVisible, cursor - Math.floor(maxVisible / 2));
+  if (startIndex < 0) startIndex = 0;
+
+  let endIndex = Math.min(startIndex + maxVisible, total);
+
+  return { startIndex, endIndex };
+};
+
+var util = {
+  action: action$1,
+  clear: clear$9,
+  style: style$9,
+  strip: strip,
+  figures: figures_1,
+  lines: lines$2,
+  wrap: wrap$3,
+  entriesToDisplay: entriesToDisplay$3
+};
+
+const { action } = util;
+
+const { beep, cursor: cursor$9 } = src$1;
+
+
+/**
+ * Base prompt skeleton
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ */
+class Prompt extends EventEmitter {
+  constructor(opts={}) {
+    super();
+
+    this.firstRender = true;
+    this.in = opts.stdin || process.stdin;
+    this.out = opts.stdout || process.stdout;
+    this.onRender = (opts.onRender || (() => void 0)).bind(this);
+    const rl = readline.createInterface({ input:this.in, escapeCodeTimeout:50 });
+    readline.emitKeypressEvents(this.in, rl);
+
+    if (this.in.isTTY) this.in.setRawMode(true);
+    const isSelect = [ 'SelectPrompt', 'MultiselectPrompt' ].indexOf(this.constructor.name) > -1;
+    const keypress = (str, key) => {
+      let a = action(key, isSelect);
+      if (a === false) {
+        this._ && this._(str, key);
+      } else if (typeof this[a] === 'function') {
+        this[a](key);
+      } else {
+        this.bell();
+      }
+    };
+
+    this.close = () => {
+      this.out.write(cursor$9.show);
+      this.in.removeListener('keypress', keypress);
+      if (this.in.isTTY) this.in.setRawMode(false);
+      rl.close();
+      this.emit(this.aborted ? 'abort' : this.exited ? 'exit' : 'submit', this.value);
+      this.closed = true;
+    };
+
+    this.in.on('keypress', keypress);
+  }
+
+  fire() {
+    this.emit('state', {
+      value: this.value,
+      aborted: !!this.aborted,
+      exited: !!this.exited
+    });
+  }
+
+  bell() {
+    this.out.write(beep);
+  }
+
+  render() {
+    this.onRender(kleur);
+    if (this.firstRender) this.firstRender = false;
+  }
+}
+
+var prompt$1 = Prompt;
+
+const { erase: erase$5, cursor: cursor$8 } = src$1;
+const { style: style$8, clear: clear$8, lines: lines$1, figures: figures$6 } = util;
+
+/**
+ * TextPrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {String} [opts.style='default'] Render style
+ * @param {String} [opts.initial] Default value
+ * @param {Function} [opts.validate] Validate function
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ * @param {String} [opts.error] The invalid error label
+ */
+class TextPrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.transform = style$8.render(opts.style);
+    this.scale = this.transform.scale;
+    this.msg = opts.message;
+    this.initial = opts.initial || ``;
+    this.validator = opts.validate || (() => true);
+    this.value = ``;
+    this.errorMsg = opts.error || `Please Enter A Valid Value`;
+    this.cursor = Number(!!this.initial);
+    this.clear = clear$8(``, this.out.columns);
+    this.render();
+  }
+
+  set value(v) {
+    if (!v && this.initial) {
+      this.placeholder = true;
+      this.rendered = kleur.gray(this.transform.render(this.initial));
+    } else {
+      this.placeholder = false;
+      this.rendered = this.transform.render(v);
+    }
+    this._value = v;
+    this.fire();
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  reset() {
+    this.value = ``;
+    this.cursor = Number(!!this.initial);
+    this.fire();
+    this.render();
+  }
+
+  exit() {
+    this.abort();
+  }
+
+  abort() {
+    this.value = this.value || this.initial;
+    this.done = this.aborted = true;
+    this.error = false;
+    this.red = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  async validate() {
+    let valid = await this.validator(this.value);
+    if (typeof valid === `string`) {
+      this.errorMsg = valid;
+      valid = false;
+    }
+    this.error = !valid;
+  }
+
+  async submit() {
+    this.value = this.value || this.initial;
+    await this.validate();
+    if (this.error) {
+      this.red = true;
+      this.fire();
+      this.render();
+      return;
+    }
+    this.done = true;
+    this.aborted = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  next() {
+    if (!this.placeholder) return this.bell();
+    this.value = this.initial;
+    this.cursor = this.rendered.length;
+    this.fire();
+    this.render();
+  }
+
+  moveCursor(n) {
+    if (this.placeholder) return;
+    this.cursor = this.cursor+n;
+  }
+
+  _(c, key) {
+    let s1 = this.value.slice(0, this.cursor);
+    let s2 = this.value.slice(this.cursor);
+    this.value = `${s1}${c}${s2}`;
+    this.red = false;
+    this.cursor = this.placeholder ? 0 : s1.length+1;
+    this.render();
+  }
+
+  delete() {
+    if (this.cursor === 0) return this.bell();
+    let s1 = this.value.slice(0, this.cursor-1);
+    let s2 = this.value.slice(this.cursor);
+    this.value = `${s1}${s2}`;
+    this.red = false;
+    this.moveCursor(-1);
+    this.render();
+  }
+
+  deleteForward() {
+    if(this.cursor*this.scale >= this.rendered.length || this.placeholder) return this.bell();
+    let s1 = this.value.slice(0, this.cursor);
+    let s2 = this.value.slice(this.cursor+1);
+    this.value = `${s1}${s2}`;
+    this.red = false;
+    this.render();
+  }
+
+  first() {
+    this.cursor = 0;
+    this.render();
+  }
+
+  last() {
+    this.cursor = this.value.length;
+    this.render();
+  }
+
+  left() {
+    if (this.cursor <= 0 || this.placeholder) return this.bell();
+    this.moveCursor(-1);
+    this.render();
+  }
+
+  right() {
+    if (this.cursor*this.scale >= this.rendered.length || this.placeholder) return this.bell();
+    this.moveCursor(1);
+    this.render();
+  }
+
+  render() {
+    if (this.closed) return;
+    if (!this.firstRender) {
+      if (this.outputError)
+        this.out.write(cursor$8.down(lines$1(this.outputError, this.out.columns) - 1) + clear$8(this.outputError, this.out.columns));
+      this.out.write(clear$8(this.outputText, this.out.columns));
+    }
+    super.render();
+    this.outputError = '';
+
+    this.outputText = [
+      style$8.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style$8.delimiter(this.done),
+      this.red ? kleur.red(this.rendered) : this.rendered
+    ].join(` `);
+
+    if (this.error) {
+      this.outputError += this.errorMsg.split(`\n`)
+          .reduce((a, l, i) => a + `\n${i ? ' ' : figures$6.pointerSmall} ${kleur.red().italic(l)}`, ``);
+    }
+
+    this.out.write(erase$5.line + cursor$8.to(0) + this.outputText + cursor$8.save + this.outputError + cursor$8.restore);
+  }
+}
+
+var text = TextPrompt;
+
+const { style: style$7, clear: clear$7, figures: figures$5, wrap: wrap$2, entriesToDisplay: entriesToDisplay$2 } = util;
+const { cursor: cursor$7 } = src$1;
+
+/**
+ * SelectPrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {Array} opts.choices Array of choice objects
+ * @param {String} [opts.hint] Hint to display
+ * @param {Number} [opts.initial] Index of default value
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ * @param {Number} [opts.optionsPerPage=10] Max options to display at once
+ */
+class SelectPrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.msg = opts.message;
+    this.hint = opts.hint || '- Use arrow-keys. Return to submit.';
+    this.warn = opts.warn || '- This option is disabled';
+    this.cursor = opts.initial || 0;
+    this.choices = opts.choices.map((ch, idx) => {
+      if (typeof ch === 'string')
+        ch = {title: ch, value: idx};
+      return {
+        title: ch && (ch.title || ch.value || ch),
+        value: ch && (ch.value === undefined ? idx : ch.value),
+        description: ch && ch.description,
+        selected: ch && ch.selected,
+        disabled: ch && ch.disabled
+      };
+    });
+    this.optionsPerPage = opts.optionsPerPage || 10;
+    this.value = (this.choices[this.cursor] || {}).value;
+    this.clear = clear$7('', this.out.columns);
+    this.render();
+  }
+
+  moveCursor(n) {
+    this.cursor = n;
+    this.value = this.choices[n].value;
+    this.fire();
+  }
+
+  reset() {
+    this.moveCursor(0);
+    this.fire();
+    this.render();
+  }
+
+  exit() {
+    this.abort();
+  }
+
+  abort() {
+    this.done = this.aborted = true;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  submit() {
+    if (!this.selection.disabled) {
+      this.done = true;
+      this.aborted = false;
+      this.fire();
+      this.render();
+      this.out.write('\n');
+      this.close();
+    } else
+      this.bell();
+  }
+
+  first() {
+    this.moveCursor(0);
+    this.render();
+  }
+
+  last() {
+    this.moveCursor(this.choices.length - 1);
+    this.render();
+  }
+
+  up() {
+    if (this.cursor === 0) {
+      this.moveCursor(this.choices.length - 1);
+    } else {
+      this.moveCursor(this.cursor - 1);
+    }
+    this.render();
+  }
+
+  down() {
+    if (this.cursor === this.choices.length - 1) {
+      this.moveCursor(0);
+    } else {
+      this.moveCursor(this.cursor + 1);
+    }
+    this.render();
+  }
+
+  next() {
+    this.moveCursor((this.cursor + 1) % this.choices.length);
+    this.render();
+  }
+
+  _(c, key) {
+    if (c === ' ') return this.submit();
+  }
+
+  get selection() {
+    return this.choices[this.cursor];
+  }
+
+  render() {
+    if (this.closed) return;
+    if (this.firstRender) this.out.write(cursor$7.hide);
+    else this.out.write(clear$7(this.outputText, this.out.columns));
+    super.render();
+
+    let { startIndex, endIndex } = entriesToDisplay$2(this.cursor, this.choices.length, this.optionsPerPage);
+
+    // Print prompt
+    this.outputText = [
+      style$7.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style$7.delimiter(false),
+      this.done ? this.selection.title : this.selection.disabled
+          ? kleur.yellow(this.warn) : kleur.gray(this.hint)
+    ].join(' ');
+
+    // Print choices
+    if (!this.done) {
+      this.outputText += '\n';
+      for (let i = startIndex; i < endIndex; i++) {
+        let title, prefix, desc = '', v = this.choices[i];
+
+        // Determine whether to display "more choices" indicators
+        if (i === startIndex && startIndex > 0) {
+          prefix = figures$5.arrowUp;
+        } else if (i === endIndex - 1 && endIndex < this.choices.length) {
+          prefix = figures$5.arrowDown;
+        } else {
+          prefix = ' ';
+        }
+
+        if (v.disabled) {
+          title = this.cursor === i ? kleur.gray().underline(v.title) : kleur.strikethrough().gray(v.title);
+          prefix = (this.cursor === i ? kleur.bold().gray(figures$5.pointer) + ' ' : '  ') + prefix;
+        } else {
+          title = this.cursor === i ? kleur.cyan().underline(v.title) : v.title;
+          prefix = (this.cursor === i ? kleur.cyan(figures$5.pointer) + ' ' : '  ') + prefix;
+          if (v.description && this.cursor === i) {
+            desc = ` - ${v.description}`;
+            if (prefix.length + title.length + desc.length >= this.out.columns
+                || v.description.split(/\r?\n/).length > 1) {
+              desc = '\n' + wrap$2(v.description, { margin: 3, width: this.out.columns });
+            }
+          }
+        }
+
+        this.outputText += `${prefix} ${title}${kleur.gray(desc)}\n`;
+      }
+    }
+
+    this.out.write(this.outputText);
+  }
+}
+
+var select = SelectPrompt;
+
+const { style: style$6, clear: clear$6 } = util;
+const { cursor: cursor$6, erase: erase$4 } = src$1;
+
+/**
+ * TogglePrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {Boolean} [opts.initial=false] Default value
+ * @param {String} [opts.active='no'] Active label
+ * @param {String} [opts.inactive='off'] Inactive label
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ */
+class TogglePrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.msg = opts.message;
+    this.value = !!opts.initial;
+    this.active = opts.active || 'on';
+    this.inactive = opts.inactive || 'off';
+    this.initialValue = this.value;
+    this.render();
+  }
+
+  reset() {
+    this.value = this.initialValue;
+    this.fire();
+    this.render();
+  }
+
+  exit() {
+    this.abort();
+  }
+
+  abort() {
+    this.done = this.aborted = true;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  submit() {
+    this.done = true;
+    this.aborted = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  deactivate() {
+    if (this.value === false) return this.bell();
+    this.value = false;
+    this.render();
+  }
+
+  activate() {
+    if (this.value === true) return this.bell();
+    this.value = true;
+    this.render();
+  }
+
+  delete() {
+    this.deactivate();
+  }
+  left() {
+    this.deactivate();
+  }
+  right() {
+    this.activate();
+  }
+  down() {
+    this.deactivate();
+  }
+  up() {
+    this.activate();
+  }
+
+  next() {
+    this.value = !this.value;
+    this.fire();
+    this.render();
+  }
+
+  _(c, key) {
+    if (c === ' ') {
+      this.value = !this.value;
+    } else if (c === '1') {
+      this.value = true;
+    } else if (c === '0') {
+      this.value = false;
+    } else return this.bell();
+    this.render();
+  }
+
+  render() {
+    if (this.closed) return;
+    if (this.firstRender) this.out.write(cursor$6.hide);
+    else this.out.write(clear$6(this.outputText, this.out.columns));
+    super.render();
+
+    this.outputText = [
+      style$6.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style$6.delimiter(this.done),
+      this.value ? this.inactive : kleur.cyan().underline(this.inactive),
+      kleur.gray('/'),
+      this.value ? kleur.cyan().underline(this.active) : this.active
+    ].join(' ');
+
+    this.out.write(erase$4.line + cursor$6.to(0) + this.outputText);
+  }
+}
+
+var toggle = TogglePrompt;
+
+class DatePart$1 {
+  constructor({token, date, parts, locales}) {
+    this.token = token;
+    this.date = date || new Date();
+    this.parts = parts || [this];
+    this.locales = locales || {};
+  }
+
+  up() {}
+
+  down() {}
+
+  next() {
+    const currentIdx = this.parts.indexOf(this);
+    return this.parts.find((part, idx) => idx > currentIdx && part instanceof DatePart$1);
+  }
+
+  setTo(val) {}
+
+  prev() {
+    let parts = [].concat(this.parts).reverse();
+    const currentIdx = parts.indexOf(this);
+    return parts.find((part, idx) => idx > currentIdx && part instanceof DatePart$1);
+  }
+
+  toString() {
+    return String(this.date);
+  }
+}
+
+var datepart = DatePart$1;
+
+class Meridiem$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setHours((this.date.getHours() + 12) % 24);
+  }
+
+  down() {
+    this.up();
+  }
+
+  toString() {
+    let meridiem = this.date.getHours() > 12 ? 'pm' : 'am';
+    return /\A/.test(this.token) ? meridiem.toUpperCase() : meridiem;
+  }
+}
+
+var meridiem = Meridiem$1;
+
+const pos = n => {
+  n = n % 10;
+  return n === 1 ? 'st'
+       : n === 2 ? 'nd'
+       : n === 3 ? 'rd'
+       : 'th';
+};
+
+class Day$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setDate(this.date.getDate() + 1);
+  }
+
+  down() {
+    this.date.setDate(this.date.getDate() - 1);
+  }
+
+  setTo(val) {
+    this.date.setDate(parseInt(val.substr(-2)));
+  }
+
+  toString() {
+    let date = this.date.getDate();
+    let day = this.date.getDay();
+    return this.token === 'DD' ? String(date).padStart(2, '0')
+         : this.token === 'Do' ? date + pos(date)
+         : this.token === 'd' ? day + 1
+         : this.token === 'ddd' ? this.locales.weekdaysShort[day]
+         : this.token === 'dddd' ? this.locales.weekdays[day]
+         : date;
+  }
+}
+
+var day = Day$1;
+
+class Hours$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setHours(this.date.getHours() + 1);
+  }
+
+  down() {
+    this.date.setHours(this.date.getHours() - 1);
+  }
+
+  setTo(val) {
+    this.date.setHours(parseInt(val.substr(-2)));
+  }
+
+  toString() {
+    let hours = this.date.getHours();
+    if (/h/.test(this.token))
+      hours = (hours % 12) || 12;
+    return this.token.length > 1 ? String(hours).padStart(2, '0') : hours;
+  }
+}
+
+var hours = Hours$1;
+
+class Milliseconds$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setMilliseconds(this.date.getMilliseconds() + 1);
+  }
+
+  down() {
+    this.date.setMilliseconds(this.date.getMilliseconds() - 1);
+  }
+
+  setTo(val) {
+    this.date.setMilliseconds(parseInt(val.substr(-(this.token.length))));
+  }
+
+  toString() {
+    return String(this.date.getMilliseconds()).padStart(4, '0')
+                                              .substr(0, this.token.length);
+  }
+}
+
+var milliseconds = Milliseconds$1;
+
+class Minutes$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setMinutes(this.date.getMinutes() + 1);
+  }
+
+  down() {
+    this.date.setMinutes(this.date.getMinutes() - 1);
+  }
+
+  setTo(val) {
+    this.date.setMinutes(parseInt(val.substr(-2)));
+  }
+
+  toString() {
+    let m = this.date.getMinutes();
+    return this.token.length > 1 ? String(m).padStart(2, '0') : m;
+  }
+}
+
+var minutes = Minutes$1;
+
+class Month$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setMonth(this.date.getMonth() + 1);
+  }
+
+  down() {
+    this.date.setMonth(this.date.getMonth() - 1);
+  }
+
+  setTo(val) {
+    val = parseInt(val.substr(-2)) - 1;
+    this.date.setMonth(val < 0 ? 0 : val);
+  }
+
+  toString() {
+    let month = this.date.getMonth();
+    let tl = this.token.length;
+    return tl === 2 ? String(month + 1).padStart(2, '0')
+           : tl === 3 ? this.locales.monthsShort[month]
+             : tl === 4 ? this.locales.months[month]
+               : String(month + 1);
+  }
+}
+
+var month = Month$1;
+
+class Seconds$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setSeconds(this.date.getSeconds() + 1);
+  }
+
+  down() {
+    this.date.setSeconds(this.date.getSeconds() - 1);
+  }
+
+  setTo(val) {
+    this.date.setSeconds(parseInt(val.substr(-2)));
+  }
+
+  toString() {
+    let s = this.date.getSeconds();
+    return this.token.length > 1 ? String(s).padStart(2, '0') : s;
+  }
+}
+
+var seconds = Seconds$1;
+
+class Year$1 extends datepart {
+  constructor(opts={}) {
+    super(opts);
+  }
+
+  up() {
+    this.date.setFullYear(this.date.getFullYear() + 1);
+  }
+
+  down() {
+    this.date.setFullYear(this.date.getFullYear() - 1);
+  }
+
+  setTo(val) {
+    this.date.setFullYear(val.substr(-4));
+  }
+
+  toString() {
+    let year = String(this.date.getFullYear()).padStart(4, '0');
+    return this.token.length === 2 ? year.substr(-2) : year;
+  }
+}
+
+var year = Year$1;
+
+var dateparts = {
+  DatePart: datepart,
+  Meridiem: meridiem,
+  Day: day,
+  Hours: hours,
+  Milliseconds: milliseconds,
+  Minutes: minutes,
+  Month: month,
+  Seconds: seconds,
+  Year: year,
+};
+
+const { style: style$5, clear: clear$5, figures: figures$4 } = util;
+const { erase: erase$3, cursor: cursor$5 } = src$1;
+const { DatePart, Meridiem, Day, Hours, Milliseconds, Minutes, Month, Seconds, Year } = dateparts;
+
+const regex = /\\(.)|"((?:\\["\\]|[^"])+)"|(D[Do]?|d{3,4}|d)|(M{1,4})|(YY(?:YY)?)|([aA])|([Hh]{1,2})|(m{1,2})|(s{1,2})|(S{1,4})|./g;
+const regexGroups = {
+  1: ({token}) => token.replace(/\\(.)/g, '$1'),
+  2: (opts) => new Day(opts), // Day // TODO
+  3: (opts) => new Month(opts), // Month
+  4: (opts) => new Year(opts), // Year
+  5: (opts) => new Meridiem(opts), // AM/PM // TODO (special)
+  6: (opts) => new Hours(opts), // Hours
+  7: (opts) => new Minutes(opts), // Minutes
+  8: (opts) => new Seconds(opts), // Seconds
+  9: (opts) => new Milliseconds(opts), // Fractional seconds
+};
+
+const dfltLocales = {
+  months: 'January,February,March,April,May,June,July,August,September,October,November,December'.split(','),
+  monthsShort: 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'.split(','),
+  weekdays: 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'.split(','),
+  weekdaysShort: 'Sun,Mon,Tue,Wed,Thu,Fri,Sat'.split(',')
+};
+
+
+/**
+ * DatePrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {Number} [opts.initial] Index of default value
+ * @param {String} [opts.mask] The format mask
+ * @param {object} [opts.locales] The date locales
+ * @param {String} [opts.error] The error message shown on invalid value
+ * @param {Function} [opts.validate] Function to validate the submitted value
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ */
+class DatePrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.msg = opts.message;
+    this.cursor = 0;
+    this.typed = '';
+    this.locales = Object.assign(dfltLocales, opts.locales);
+    this._date = opts.initial || new Date();
+    this.errorMsg = opts.error || 'Please Enter A Valid Value';
+    this.validator = opts.validate || (() => true);
+    this.mask = opts.mask || 'YYYY-MM-DD HH:mm:ss';
+    this.clear = clear$5('', this.out.columns);
+    this.render();
+  }
+
+  get value() {
+    return this.date
+  }
+
+  get date() {
+    return this._date;
+  }
+
+  set date(date) {
+    if (date) this._date.setTime(date.getTime());
+  }
+
+  set mask(mask) {
+    let result;
+    this.parts = [];
+    while(result = regex.exec(mask)) {
+      let match = result.shift();
+      let idx = result.findIndex(gr => gr != null);
+      this.parts.push(idx in regexGroups
+        ? regexGroups[idx]({ token: result[idx] || match, date: this.date, parts: this.parts, locales: this.locales })
+        : result[idx] || match);
+    }
+
+    let parts = this.parts.reduce((arr, i) => {
+      if (typeof i === 'string' && typeof arr[arr.length - 1] === 'string')
+        arr[arr.length - 1] += i;
+      else arr.push(i);
+      return arr;
+    }, []);
+
+    this.parts.splice(0);
+    this.parts.push(...parts);
+    this.reset();
+  }
+
+  moveCursor(n) {
+    this.typed = '';
+    this.cursor = n;
+    this.fire();
+  }
+
+  reset() {
+    this.moveCursor(this.parts.findIndex(p => p instanceof DatePart));
+    this.fire();
+    this.render();
+  }
+
+  exit() {
+    this.abort();
+  }
+
+  abort() {
+    this.done = this.aborted = true;
+    this.error = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  async validate() {
+    let valid = await this.validator(this.value);
+    if (typeof valid === 'string') {
+      this.errorMsg = valid;
+      valid = false;
+    }
+    this.error = !valid;
+  }
+
+  async submit() {
+    await this.validate();
+    if (this.error) {
+      this.color = 'red';
+      this.fire();
+      this.render();
+      return;
+    }
+    this.done = true;
+    this.aborted = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  up() {
+    this.typed = '';
+    this.parts[this.cursor].up();
+    this.render();
+  }
+
+  down() {
+    this.typed = '';
+    this.parts[this.cursor].down();
+    this.render();
+  }
+
+  left() {
+    let prev = this.parts[this.cursor].prev();
+    if (prev == null) return this.bell();
+    this.moveCursor(this.parts.indexOf(prev));
+    this.render();
+  }
+
+  right() {
+    let next = this.parts[this.cursor].next();
+    if (next == null) return this.bell();
+    this.moveCursor(this.parts.indexOf(next));
+    this.render();
+  }
+
+  next() {
+    let next = this.parts[this.cursor].next();
+    this.moveCursor(next
+      ? this.parts.indexOf(next)
+      : this.parts.findIndex((part) => part instanceof DatePart));
+    this.render();
+  }
+
+  _(c) {
+    if (/\d/.test(c)) {
+      this.typed += c;
+      this.parts[this.cursor].setTo(this.typed);
+      this.render();
+    }
+  }
+
+  render() {
+    if (this.closed) return;
+    if (this.firstRender) this.out.write(cursor$5.hide);
+    else this.out.write(clear$5(this.outputText, this.out.columns));
+    super.render();
+
+    // Print prompt
+    this.outputText = [
+      style$5.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style$5.delimiter(false),
+      this.parts.reduce((arr, p, idx) => arr.concat(idx === this.cursor && !this.done ? kleur.cyan().underline(p.toString()) : p), [])
+          .join('')
+    ].join(' ');
+
+    // Print error
+    if (this.error) {
+      this.outputText += this.errorMsg.split('\n').reduce(
+          (a, l, i) => a + `\n${i ? ` ` : figures$4.pointerSmall} ${kleur.red().italic(l)}`, ``);
+    }
+
+    this.out.write(erase$3.line + cursor$5.to(0) + this.outputText);
+  }
+}
+
+var date = DatePrompt;
+
+const { cursor: cursor$4, erase: erase$2 } = src$1;
+const { style: style$4, figures: figures$3, clear: clear$4, lines } = util;
+
+const isNumber = /[0-9]/;
+const isDef = any => any !== undefined;
+const round = (number, precision) => {
+  let factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
+};
+
+/**
+ * NumberPrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {String} [opts.style='default'] Render style
+ * @param {Number} [opts.initial] Default value
+ * @param {Number} [opts.max=+Infinity] Max value
+ * @param {Number} [opts.min=-Infinity] Min value
+ * @param {Boolean} [opts.float=false] Parse input as floats
+ * @param {Number} [opts.round=2] Round floats to x decimals
+ * @param {Number} [opts.increment=1] Number to increment by when using arrow-keys
+ * @param {Function} [opts.validate] Validate function
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ * @param {String} [opts.error] The invalid error label
+ */
+class NumberPrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.transform = style$4.render(opts.style);
+    this.msg = opts.message;
+    this.initial = isDef(opts.initial) ? opts.initial : '';
+    this.float = !!opts.float;
+    this.round = opts.round || 2;
+    this.inc = opts.increment || 1;
+    this.min = isDef(opts.min) ? opts.min : -Infinity;
+    this.max = isDef(opts.max) ? opts.max : Infinity;
+    this.errorMsg = opts.error || `Please Enter A Valid Value`;
+    this.validator = opts.validate || (() => true);
+    this.color = `cyan`;
+    this.value = ``;
+    this.typed = ``;
+    this.lastHit = 0;
+    this.render();
+  }
+
+  set value(v) {
+    if (!v && v !== 0) {
+      this.placeholder = true;
+      this.rendered = kleur.gray(this.transform.render(`${this.initial}`));
+      this._value = ``;
+    } else {
+      this.placeholder = false;
+      this.rendered = this.transform.render(`${round(v, this.round)}`);
+      this._value = round(v, this.round);
+    }
+    this.fire();
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  parse(x) {
+    return this.float ? parseFloat(x) : parseInt(x);
+  }
+
+  valid(c) {
+    return c === `-` || c === `.` && this.float || isNumber.test(c)
+  }
+
+  reset() {
+    this.typed = ``;
+    this.value = ``;
+    this.fire();
+    this.render();
+  }
+
+  exit() {
+    this.abort();
+  }
+
+  abort() {
+    let x = this.value;
+    this.value = x !== `` ? x : this.initial;
+    this.done = this.aborted = true;
+    this.error = false;
+    this.fire();
+    this.render();
+    this.out.write(`\n`);
+    this.close();
+  }
+
+  async validate() {
+    let valid = await this.validator(this.value);
+    if (typeof valid === `string`) {
+      this.errorMsg = valid;
+      valid = false;
+    }
+    this.error = !valid;
+  }
+
+  async submit() {
+    await this.validate();
+    if (this.error) {
+      this.color = `red`;
+      this.fire();
+      this.render();
+      return;
+    }
+    let x = this.value;
+    this.value = x !== `` ? x : this.initial;
+    this.done = true;
+    this.aborted = false;
+    this.error = false;
+    this.fire();
+    this.render();
+    this.out.write(`\n`);
+    this.close();
+  }
+
+  up() {
+    this.typed = ``;
+    if(this.value === '') {
+      this.value = this.min - this.inc;
+    }
+    if (this.value >= this.max) return this.bell();
+    this.value += this.inc;
+    this.color = `cyan`;
+    this.fire();
+    this.render();
+  }
+
+  down() {
+    this.typed = ``;
+    if(this.value === '') {
+      this.value = this.min + this.inc;
+    }
+    if (this.value <= this.min) return this.bell();
+    this.value -= this.inc;
+    this.color = `cyan`;
+    this.fire();
+    this.render();
+  }
+
+  delete() {
+    let val = this.value.toString();
+    if (val.length === 0) return this.bell();
+    this.value = this.parse((val = val.slice(0, -1))) || ``;
+    if (this.value !== '' && this.value < this.min) {
+      this.value = this.min;
+    }
+    this.color = `cyan`;
+    this.fire();
+    this.render();
+  }
+
+  next() {
+    this.value = this.initial;
+    this.fire();
+    this.render();
+  }
+
+  _(c, key) {
+    if (!this.valid(c)) return this.bell();
+
+    const now = Date.now();
+    if (now - this.lastHit > 1000) this.typed = ``; // 1s elapsed
+    this.typed += c;
+    this.lastHit = now;
+    this.color = `cyan`;
+
+    if (c === `.`) return this.fire();
+
+    this.value = Math.min(this.parse(this.typed), this.max);
+    if (this.value > this.max) this.value = this.max;
+    if (this.value < this.min) this.value = this.min;
+    this.fire();
+    this.render();
+  }
+
+  render() {
+    if (this.closed) return;
+    if (!this.firstRender) {
+      if (this.outputError)
+        this.out.write(cursor$4.down(lines(this.outputError, this.out.columns) - 1) + clear$4(this.outputError, this.out.columns));
+      this.out.write(clear$4(this.outputText, this.out.columns));
+    }
+    super.render();
+    this.outputError = '';
+
+    // Print prompt
+    this.outputText = [
+      style$4.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style$4.delimiter(this.done),
+      !this.done || (!this.done && !this.placeholder)
+          ? kleur[this.color]().underline(this.rendered) : this.rendered
+    ].join(` `);
+
+    // Print error
+    if (this.error) {
+      this.outputError += this.errorMsg.split(`\n`)
+          .reduce((a, l, i) => a + `\n${i ? ` ` : figures$3.pointerSmall} ${kleur.red().italic(l)}`, ``);
+    }
+
+    this.out.write(erase$2.line + cursor$4.to(0) + this.outputText + cursor$4.save + this.outputError + cursor$4.restore);
+  }
+}
+
+var number = NumberPrompt;
+
+const { cursor: cursor$3 } = src$1;
+
+const { clear: clear$3, figures: figures$2, style: style$3, wrap: wrap$1, entriesToDisplay: entriesToDisplay$1 } = util;
+
+/**
+ * MultiselectPrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {Array} opts.choices Array of choice objects
+ * @param {String} [opts.hint] Hint to display
+ * @param {String} [opts.warn] Hint shown for disabled choices
+ * @param {Number} [opts.max] Max choices
+ * @param {Number} [opts.cursor=0] Cursor start position
+ * @param {Number} [opts.optionsPerPage=10] Max options to display at once
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ */
+class MultiselectPrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.msg = opts.message;
+    this.cursor = opts.cursor || 0;
+    this.scrollIndex = opts.cursor || 0;
+    this.hint = opts.hint || '';
+    this.warn = opts.warn || '- This option is disabled -';
+    this.minSelected = opts.min;
+    this.showMinError = false;
+    this.maxChoices = opts.max;
+    this.instructions = opts.instructions;
+    this.optionsPerPage = opts.optionsPerPage || 10;
+    this.value = opts.choices.map((ch, idx) => {
+      if (typeof ch === 'string')
+        ch = {title: ch, value: idx};
+      return {
+        title: ch && (ch.title || ch.value || ch),
+        description: ch && ch.description,
+        value: ch && (ch.value === undefined ? idx : ch.value),
+        selected: ch && ch.selected,
+        disabled: ch && ch.disabled
+      };
+    });
+    this.clear = clear$3('', this.out.columns);
+    if (!opts.overrideRender) {
+      this.render();
+    }
+  }
+
+  reset() {
+    this.value.map(v => !v.selected);
+    this.cursor = 0;
+    this.fire();
+    this.render();
+  }
+
+  selected() {
+    return this.value.filter(v => v.selected);
+  }
+
+  exit() {
+    this.abort();
+  }
+
+  abort() {
+    this.done = this.aborted = true;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  submit() {
+    const selected = this.value
+      .filter(e => e.selected);
+    if (this.minSelected && selected.length < this.minSelected) {
+      this.showMinError = true;
+      this.render();
+    } else {
+      this.done = true;
+      this.aborted = false;
+      this.fire();
+      this.render();
+      this.out.write('\n');
+      this.close();
+    }
+  }
+
+  first() {
+    this.cursor = 0;
+    this.render();
+  }
+
+  last() {
+    this.cursor = this.value.length - 1;
+    this.render();
+  }
+  next() {
+    this.cursor = (this.cursor + 1) % this.value.length;
+    this.render();
+  }
+
+  up() {
+    if (this.cursor === 0) {
+      this.cursor = this.value.length - 1;
+    } else {
+      this.cursor--;
+    }
+    this.render();
+  }
+
+  down() {
+    if (this.cursor === this.value.length - 1) {
+      this.cursor = 0;
+    } else {
+      this.cursor++;
+    }
+    this.render();
+  }
+
+  left() {
+    this.value[this.cursor].selected = false;
+    this.render();
+  }
+
+  right() {
+    if (this.value.filter(e => e.selected).length >= this.maxChoices) return this.bell();
+    this.value[this.cursor].selected = true;
+    this.render();
+  }
+
+  handleSpaceToggle() {
+    const v = this.value[this.cursor];
+
+    if (v.selected) {
+      v.selected = false;
+      this.render();
+    } else if (v.disabled || this.value.filter(e => e.selected).length >= this.maxChoices) {
+      return this.bell();
+    } else {
+      v.selected = true;
+      this.render();
+    }
+  }
+
+  toggleAll() {
+    if (this.maxChoices !== undefined || this.value[this.cursor].disabled) {
+      return this.bell();
+    }
+
+    const newSelected = !this.value[this.cursor].selected;
+    this.value.filter(v => !v.disabled).forEach(v => v.selected = newSelected);
+    this.render();
+  }
+
+  _(c, key) {
+    if (c === ' ') {
+      this.handleSpaceToggle();
+    } else if (c === 'a') {
+      this.toggleAll();
+    } else {
+      return this.bell();
+    }
+  }
+
+  renderInstructions() {
+    if (this.instructions === undefined || this.instructions) {
+      if (typeof this.instructions === 'string') {
+        return this.instructions;
+      }
+      return '\nInstructions:\n'
+        + `    ${figures$2.arrowUp}/${figures$2.arrowDown}: Highlight option\n`
+        + `    ${figures$2.arrowLeft}/${figures$2.arrowRight}/[space]: Toggle selection\n`
+        + (this.maxChoices === undefined ? `    a: Toggle all\n` : '')
+        + `    enter/return: Complete answer`;
+    }
+    return '';
+  }
+
+  renderOption(cursor, v, i, arrowIndicator) {
+    const prefix = (v.selected ? kleur.green(figures$2.radioOn) : figures$2.radioOff) + ' ' + arrowIndicator + ' ';
+    let title, desc;
+
+    if (v.disabled) {
+      title = cursor === i ? kleur.gray().underline(v.title) : kleur.strikethrough().gray(v.title);
+    } else {
+      title = cursor === i ? kleur.cyan().underline(v.title) : v.title;
+      if (cursor === i && v.description) {
+        desc = ` - ${v.description}`;
+        if (prefix.length + title.length + desc.length >= this.out.columns
+          || v.description.split(/\r?\n/).length > 1) {
+          desc = '\n' + wrap$1(v.description, { margin: prefix.length, width: this.out.columns });
+        }
+      }
+    }
+
+    return prefix + title + kleur.gray(desc || '');
+  }
+
+  // shared with autocompleteMultiselect
+  paginateOptions(options) {
+    if (options.length === 0) {
+      return kleur.red('No matches for this query.');
+    }
+
+    let { startIndex, endIndex } = entriesToDisplay$1(this.cursor, options.length, this.optionsPerPage);
+    let prefix, styledOptions = [];
+
+    for (let i = startIndex; i < endIndex; i++) {
+      if (i === startIndex && startIndex > 0) {
+        prefix = figures$2.arrowUp;
+      } else if (i === endIndex - 1 && endIndex < options.length) {
+        prefix = figures$2.arrowDown;
+      } else {
+        prefix = ' ';
+      }
+      styledOptions.push(this.renderOption(this.cursor, options[i], i, prefix));
+    }
+
+    return '\n' + styledOptions.join('\n');
+  }
+
+  // shared with autocomleteMultiselect
+  renderOptions(options) {
+    if (!this.done) {
+      return this.paginateOptions(options);
+    }
+    return '';
+  }
+
+  renderDoneOrInstructions() {
+    if (this.done) {
+      return this.value
+        .filter(e => e.selected)
+        .map(v => v.title)
+        .join(', ');
+    }
+
+    const output = [kleur.gray(this.hint), this.renderInstructions()];
+
+    if (this.value[this.cursor].disabled) {
+      output.push(kleur.yellow(this.warn));
+    }
+    return output.join(' ');
+  }
+
+  render() {
+    if (this.closed) return;
+    if (this.firstRender) this.out.write(cursor$3.hide);
+    super.render();
+
+    // print prompt
+    let prompt = [
+      style$3.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style$3.delimiter(false),
+      this.renderDoneOrInstructions()
+    ].join(' ');
+    if (this.showMinError) {
+      prompt += kleur.red(`You must select a minimum of ${this.minSelected} choices.`);
+      this.showMinError = false;
+    }
+    prompt += this.renderOptions(this.value);
+
+    this.out.write(this.clear + prompt);
+    this.clear = clear$3(prompt, this.out.columns);
+  }
+}
+
+var multiselect = MultiselectPrompt;
+
+const { erase: erase$1, cursor: cursor$2 } = src$1;
+const { style: style$2, clear: clear$2, figures: figures$1, wrap, entriesToDisplay } = util;
+
+const getVal = (arr, i) => arr[i] && (arr[i].value || arr[i].title || arr[i]);
+const getTitle = (arr, i) => arr[i] && (arr[i].title || arr[i].value || arr[i]);
+const getIndex = (arr, valOrTitle) => {
+  const index = arr.findIndex(el => el.value === valOrTitle || el.title === valOrTitle);
+  return index > -1 ? index : undefined;
+};
+
+/**
+ * TextPrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {Array} opts.choices Array of auto-complete choices objects
+ * @param {Function} [opts.suggest] Filter function. Defaults to sort by title
+ * @param {Number} [opts.limit=10] Max number of results to show
+ * @param {Number} [opts.cursor=0] Cursor start position
+ * @param {String} [opts.style='default'] Render style
+ * @param {String} [opts.fallback] Fallback message - initial to default value
+ * @param {String} [opts.initial] Index of the default value
+ * @param {Boolean} [opts.clearFirst] The first ESCAPE keypress will clear the input
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ * @param {String} [opts.noMatches] The no matches found label
+ */
+class AutocompletePrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.msg = opts.message;
+    this.suggest = opts.suggest;
+    this.choices = opts.choices;
+    this.initial = typeof opts.initial === 'number'
+      ? opts.initial
+      : getIndex(opts.choices, opts.initial);
+    this.select = this.initial || opts.cursor || 0;
+    this.i18n = { noMatches: opts.noMatches || 'no matches found' };
+    this.fallback = opts.fallback || this.initial;
+    this.clearFirst = opts.clearFirst || false;
+    this.suggestions = [];
+    this.input = '';
+    this.limit = opts.limit || 10;
+    this.cursor = 0;
+    this.transform = style$2.render(opts.style);
+    this.scale = this.transform.scale;
+    this.render = this.render.bind(this);
+    this.complete = this.complete.bind(this);
+    this.clear = clear$2('', this.out.columns);
+    this.complete(this.render);
+    this.render();
+  }
+
+  set fallback(fb) {
+    this._fb = Number.isSafeInteger(parseInt(fb)) ? parseInt(fb) : fb;
+  }
+
+  get fallback() {
+    let choice;
+    if (typeof this._fb === 'number')
+      choice = this.choices[this._fb];
+    else if (typeof this._fb === 'string')
+      choice = { title: this._fb };
+    return choice || this._fb || { title: this.i18n.noMatches };
+  }
+
+  moveSelect(i) {
+    this.select = i;
+    if (this.suggestions.length > 0)
+      this.value = getVal(this.suggestions, i);
+    else this.value = this.fallback.value;
+    this.fire();
+  }
+
+  async complete(cb) {
+    const p = (this.completing = this.suggest(this.input, this.choices));
+    const suggestions = await p;
+
+    if (this.completing !== p) return;
+    this.suggestions = suggestions
+      .map((s, i, arr) => ({ title: getTitle(arr, i), value: getVal(arr, i), description: s.description }));
+    this.completing = false;
+    const l = Math.max(suggestions.length - 1, 0);
+    this.moveSelect(Math.min(l, this.select));
+
+    cb && cb();
+  }
+
+  reset() {
+    this.input = '';
+    this.complete(() => {
+      this.moveSelect(this.initial !== void 0 ? this.initial : 0);
+      this.render();
+    });
+    this.render();
+  }
+
+  exit() {
+    if (this.clearFirst && this.input.length > 0) {
+      this.reset();
+    } else {
+      this.done = this.exited = true; 
+      this.aborted = false;
+      this.fire();
+      this.render();
+      this.out.write('\n');
+      this.close();
+    }
+  }
+
+  abort() {
+    this.done = this.aborted = true;
+    this.exited = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  submit() {
+    this.done = true;
+    this.aborted = this.exited = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  _(c, key) {
+    let s1 = this.input.slice(0, this.cursor);
+    let s2 = this.input.slice(this.cursor);
+    this.input = `${s1}${c}${s2}`;
+    this.cursor = s1.length+1;
+    this.complete(this.render);
+    this.render();
+  }
+
+  delete() {
+    if (this.cursor === 0) return this.bell();
+    let s1 = this.input.slice(0, this.cursor-1);
+    let s2 = this.input.slice(this.cursor);
+    this.input = `${s1}${s2}`;
+    this.complete(this.render);
+    this.cursor = this.cursor-1;
+    this.render();
+  }
+
+  deleteForward() {
+    if(this.cursor*this.scale >= this.rendered.length) return this.bell();
+    let s1 = this.input.slice(0, this.cursor);
+    let s2 = this.input.slice(this.cursor+1);
+    this.input = `${s1}${s2}`;
+    this.complete(this.render);
+    this.render();
+  }
+
+  first() {
+    this.moveSelect(0);
+    this.render();
+  }
+
+  last() {
+    this.moveSelect(this.suggestions.length - 1);
+    this.render();
+  }
+
+  up() {
+    if (this.select === 0) {
+      this.moveSelect(this.suggestions.length - 1);
+    } else {
+      this.moveSelect(this.select - 1);
+    }
+    this.render();
+  }
+
+  down() {
+    if (this.select === this.suggestions.length - 1) {
+      this.moveSelect(0);
+    } else {
+      this.moveSelect(this.select + 1);
+    }
+    this.render();
+  }
+
+  next() {
+    if (this.select === this.suggestions.length - 1) {
+      this.moveSelect(0);
+    } else this.moveSelect(this.select + 1);
+    this.render();
+  }
+
+  nextPage() {
+    this.moveSelect(Math.min(this.select + this.limit, this.suggestions.length - 1));
+    this.render();
+  }
+
+  prevPage() {
+    this.moveSelect(Math.max(this.select - this.limit, 0));
+    this.render();
+  }
+
+  left() {
+    if (this.cursor <= 0) return this.bell();
+    this.cursor = this.cursor-1;
+    this.render();
+  }
+
+  right() {
+    if (this.cursor*this.scale >= this.rendered.length) return this.bell();
+    this.cursor = this.cursor+1;
+    this.render();
+  }
+
+  renderOption(v, hovered, isStart, isEnd) {
+    let desc;
+    let prefix = isStart ? figures$1.arrowUp : isEnd ? figures$1.arrowDown : ' ';
+    let title = hovered ? kleur.cyan().underline(v.title) : v.title;
+    prefix = (hovered ? kleur.cyan(figures$1.pointer) + ' ' : '  ') + prefix;
+    if (v.description) {
+      desc = ` - ${v.description}`;
+      if (prefix.length + title.length + desc.length >= this.out.columns
+        || v.description.split(/\r?\n/).length > 1) {
+        desc = '\n' + wrap(v.description, { margin: 3, width: this.out.columns });
+      }
+    }
+    return prefix + ' ' + title + kleur.gray(desc || '');
+  }
+
+  render() {
+    if (this.closed) return;
+    if (this.firstRender) this.out.write(cursor$2.hide);
+    else this.out.write(clear$2(this.outputText, this.out.columns));
+    super.render();
+
+    let { startIndex, endIndex } = entriesToDisplay(this.select, this.choices.length, this.limit);
+
+    this.outputText = [
+      style$2.symbol(this.done, this.aborted, this.exited),
+      kleur.bold(this.msg),
+      style$2.delimiter(this.completing),
+      this.done && this.suggestions[this.select]
+        ? this.suggestions[this.select].title
+        : this.rendered = this.transform.render(this.input)
+    ].join(' ');
+
+    if (!this.done) {
+      const suggestions = this.suggestions
+        .slice(startIndex, endIndex)
+        .map((item, i) =>  this.renderOption(item,
+          this.select === i + startIndex,
+          i === 0 && startIndex > 0,
+          i + startIndex === endIndex - 1 && endIndex < this.choices.length))
+        .join('\n');
+      this.outputText += `\n` + (suggestions || kleur.gray(this.fallback.title));
+    }
+
+    this.out.write(erase$1.line + cursor$2.to(0) + this.outputText);
+  }
+}
+
+var autocomplete = AutocompletePrompt;
+
+const { cursor: cursor$1 } = src$1;
+
+const { clear: clear$1, style: style$1, figures } = util;
+/**
+ * MultiselectPrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {Array} opts.choices Array of choice objects
+ * @param {String} [opts.hint] Hint to display
+ * @param {String} [opts.warn] Hint shown for disabled choices
+ * @param {Number} [opts.max] Max choices
+ * @param {Number} [opts.cursor=0] Cursor start position
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ */
+class AutocompleteMultiselectPrompt extends multiselect {
+  constructor(opts={}) {
+    opts.overrideRender = true;
+    super(opts);
+    this.inputValue = '';
+    this.clear = clear$1('', this.out.columns);
+    this.filteredOptions = this.value;
+    this.render();
+  }
+
+  last() {
+    this.cursor = this.filteredOptions.length - 1;
+    this.render();
+  }
+  next() {
+    this.cursor = (this.cursor + 1) % this.filteredOptions.length;
+    this.render();
+  }
+
+  up() {
+    if (this.cursor === 0) {
+      this.cursor = this.filteredOptions.length - 1;
+    } else {
+      this.cursor--;
+    }
+    this.render();
+  }
+
+  down() {
+    if (this.cursor === this.filteredOptions.length - 1) {
+      this.cursor = 0;
+    } else {
+      this.cursor++;
+    }
+    this.render();
+  }
+
+  left() {
+    this.filteredOptions[this.cursor].selected = false;
+    this.render();
+  }
+
+  right() {
+    if (this.value.filter(e => e.selected).length >= this.maxChoices) return this.bell();
+    this.filteredOptions[this.cursor].selected = true;
+    this.render();
+  }
+
+  delete() {
+    if (this.inputValue.length) {
+      this.inputValue = this.inputValue.substr(0, this.inputValue.length - 1);
+      this.updateFilteredOptions();
+    }
+  }
+
+  updateFilteredOptions() {
+    const currentHighlight = this.filteredOptions[this.cursor];
+    this.filteredOptions = this.value
+      .filter(v => {
+        if (this.inputValue) {
+          if (typeof v.title === 'string') {
+            if (v.title.toLowerCase().includes(this.inputValue.toLowerCase())) {
+              return true;
+            }
+          }
+          if (typeof v.value === 'string') {
+            if (v.value.toLowerCase().includes(this.inputValue.toLowerCase())) {
+              return true;
+            }
+          }
+          return false;
+        }
+        return true;
+      });
+    const newHighlightIndex = this.filteredOptions.findIndex(v => v === currentHighlight);
+    this.cursor = newHighlightIndex < 0 ? 0 : newHighlightIndex;
+    this.render();
+  }
+
+  handleSpaceToggle() {
+    const v = this.filteredOptions[this.cursor];
+
+    if (v.selected) {
+      v.selected = false;
+      this.render();
+    } else if (v.disabled || this.value.filter(e => e.selected).length >= this.maxChoices) {
+      return this.bell();
+    } else {
+      v.selected = true;
+      this.render();
+    }
+  }
+
+  handleInputChange(c) {
+    this.inputValue = this.inputValue + c;
+    this.updateFilteredOptions();
+  }
+
+  _(c, key) {
+    if (c === ' ') {
+      this.handleSpaceToggle();
+    } else {
+      this.handleInputChange(c);
+    }
+  }
+
+  renderInstructions() {
+    if (this.instructions === undefined || this.instructions) {
+      if (typeof this.instructions === 'string') {
+        return this.instructions;
+      }
+      return `
+Instructions:
+    ${figures.arrowUp}/${figures.arrowDown}: Highlight option
+    ${figures.arrowLeft}/${figures.arrowRight}/[space]: Toggle selection
+    [a,b,c]/delete: Filter choices
+    enter/return: Complete answer
+`;
+    }
+    return '';
+  }
+
+  renderCurrentInput() {
+    return `
+Filtered results for: ${this.inputValue ? this.inputValue : kleur.gray('Enter something to filter')}\n`;
+  }
+
+  renderOption(cursor, v, i) {
+    let title;
+    if (v.disabled) title = cursor === i ? kleur.gray().underline(v.title) : kleur.strikethrough().gray(v.title);
+    else title = cursor === i ? kleur.cyan().underline(v.title) : v.title;
+    return (v.selected ? kleur.green(figures.radioOn) : figures.radioOff) + '  ' + title
+  }
+
+  renderDoneOrInstructions() {
+    if (this.done) {
+      return this.value
+        .filter(e => e.selected)
+        .map(v => v.title)
+        .join(', ');
+    }
+
+    const output = [kleur.gray(this.hint), this.renderInstructions(), this.renderCurrentInput()];
+
+    if (this.filteredOptions.length && this.filteredOptions[this.cursor].disabled) {
+      output.push(kleur.yellow(this.warn));
+    }
+    return output.join(' ');
+  }
+
+  render() {
+    if (this.closed) return;
+    if (this.firstRender) this.out.write(cursor$1.hide);
+    super.render();
+
+    // print prompt
+
+    let prompt = [
+      style$1.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style$1.delimiter(false),
+      this.renderDoneOrInstructions()
+    ].join(' ');
+
+    if (this.showMinError) {
+      prompt += kleur.red(`You must select a minimum of ${this.minSelected} choices.`);
+      this.showMinError = false;
+    }
+    prompt += this.renderOptions(this.filteredOptions);
+
+    this.out.write(this.clear + prompt);
+    this.clear = clear$1(prompt, this.out.columns);
+  }
+}
+
+var autocompleteMultiselect = AutocompleteMultiselectPrompt;
+
+const { style, clear } = util;
+const { erase, cursor } = src$1;
+
+/**
+ * ConfirmPrompt Base Element
+ * @param {Object} opts Options
+ * @param {String} opts.message Message
+ * @param {Boolean} [opts.initial] Default value (true/false)
+ * @param {Stream} [opts.stdin] The Readable stream to listen to
+ * @param {Stream} [opts.stdout] The Writable stream to write readline data to
+ * @param {String} [opts.yes] The "Yes" label
+ * @param {String} [opts.yesOption] The "Yes" option when choosing between yes/no
+ * @param {String} [opts.no] The "No" label
+ * @param {String} [opts.noOption] The "No" option when choosing between yes/no
+ */
+class ConfirmPrompt extends prompt$1 {
+  constructor(opts={}) {
+    super(opts);
+    this.msg = opts.message;
+    this.value = opts.initial;
+    this.initialValue = !!opts.initial;
+    this.yesMsg = opts.yes || 'yes';
+    this.yesOption = opts.yesOption || '(Y/n)';
+    this.noMsg = opts.no || 'no';
+    this.noOption = opts.noOption || '(y/N)';
+    this.render();
+  }
+
+  reset() {
+    this.value = this.initialValue;
+    this.fire();
+    this.render();
+  }
+
+  exit() {
+    this.abort();
+  }
+
+  abort() {
+    this.done = this.aborted = true;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  submit() {
+    this.value = this.value || false;
+    this.done = true;
+    this.aborted = false;
+    this.fire();
+    this.render();
+    this.out.write('\n');
+    this.close();
+  }
+
+  _(c, key) {
+    if (c.toLowerCase() === 'y') {
+      this.value = true;
+      return this.submit();
+    }
+    if (c.toLowerCase() === 'n') {
+      this.value = false;
+      return this.submit();
+    }
+    return this.bell();
+  }
+
+  render() {
+    if (this.closed) return;
+    if (this.firstRender) this.out.write(cursor.hide);
+    else this.out.write(clear(this.outputText, this.out.columns));
+    super.render();
+
+    this.outputText = [
+      style.symbol(this.done, this.aborted),
+      kleur.bold(this.msg),
+      style.delimiter(this.done),
+      this.done ? (this.value ? this.yesMsg : this.noMsg)
+          : kleur.gray(this.initialValue ? this.yesOption : this.noOption)
+    ].join(' ');
+
+    this.out.write(erase.line + cursor.to(0) + this.outputText);
+  }
+}
+
+var confirm = ConfirmPrompt;
+
+var elements = {
+  TextPrompt: text,
+  SelectPrompt: select,
+  TogglePrompt: toggle,
+  DatePrompt: date,
+  NumberPrompt: number,
+  MultiselectPrompt: multiselect,
+  AutocompletePrompt: autocomplete,
+  AutocompleteMultiselectPrompt: autocompleteMultiselect,
+  ConfirmPrompt: confirm
+};
+
+var prompts = createCommonjsModule(function (module, exports) {
+const $ = exports;
+
+const noop = v => v;
+
+function toPrompt(type, args, opts={}) {
+  return new Promise((res, rej) => {
+    const p = new elements[type](args);
+    const onAbort = opts.onAbort || noop;
+    const onSubmit = opts.onSubmit || noop;
+    const onExit = opts.onExit || noop;
+    p.on('state', args.onState || noop);
+    p.on('submit', x => res(onSubmit(x)));
+    p.on('exit', x => res(onExit(x)));
+    p.on('abort', x => rej(onAbort(x)));
+  });
+}
+
+/**
+ * Text prompt
+ * @param {string} args.message Prompt message to display
+ * @param {string} [args.initial] Default string value
+ * @param {string} [args.style="default"] Render style ('default', 'password', 'invisible')
+ * @param {function} [args.onState] On state change callback
+ * @param {function} [args.validate] Function to validate user input
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.text = args => toPrompt('TextPrompt', args);
+
+/**
+ * Password prompt with masked input
+ * @param {string} args.message Prompt message to display
+ * @param {string} [args.initial] Default string value
+ * @param {function} [args.onState] On state change callback
+ * @param {function} [args.validate] Function to validate user input
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.password = args => {
+  args.style = 'password';
+  return $.text(args);
+};
+
+/**
+ * Prompt where input is invisible, like sudo
+ * @param {string} args.message Prompt message to display
+ * @param {string} [args.initial] Default string value
+ * @param {function} [args.onState] On state change callback
+ * @param {function} [args.validate] Function to validate user input
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.invisible = args => {
+  args.style = 'invisible';
+  return $.text(args);
+};
+
+/**
+ * Number prompt
+ * @param {string} args.message Prompt message to display
+ * @param {number} args.initial Default number value
+ * @param {function} [args.onState] On state change callback
+ * @param {number} [args.max] Max value
+ * @param {number} [args.min] Min value
+ * @param {string} [args.style="default"] Render style ('default', 'password', 'invisible')
+ * @param {Boolean} [opts.float=false] Parse input as floats
+ * @param {Number} [opts.round=2] Round floats to x decimals
+ * @param {Number} [opts.increment=1] Number to increment by when using arrow-keys
+ * @param {function} [args.validate] Function to validate user input
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.number = args => toPrompt('NumberPrompt', args);
+
+/**
+ * Date prompt
+ * @param {string} args.message Prompt message to display
+ * @param {number} args.initial Default number value
+ * @param {function} [args.onState] On state change callback
+ * @param {number} [args.max] Max value
+ * @param {number} [args.min] Min value
+ * @param {string} [args.style="default"] Render style ('default', 'password', 'invisible')
+ * @param {Boolean} [opts.float=false] Parse input as floats
+ * @param {Number} [opts.round=2] Round floats to x decimals
+ * @param {Number} [opts.increment=1] Number to increment by when using arrow-keys
+ * @param {function} [args.validate] Function to validate user input
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.date = args => toPrompt('DatePrompt', args);
+
+/**
+ * Classic yes/no prompt
+ * @param {string} args.message Prompt message to display
+ * @param {boolean} [args.initial=false] Default value
+ * @param {function} [args.onState] On state change callback
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.confirm = args => toPrompt('ConfirmPrompt', args);
+
+/**
+ * List prompt, split intput string by `seperator`
+ * @param {string} args.message Prompt message to display
+ * @param {string} [args.initial] Default string value
+ * @param {string} [args.style="default"] Render style ('default', 'password', 'invisible')
+ * @param {string} [args.separator] String separator
+ * @param {function} [args.onState] On state change callback
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input, in form of an `Array`
+ */
+$.list = args => {
+  const sep = args.separator || ',';
+  return toPrompt('TextPrompt', args, {
+    onSubmit: str => str.split(sep).map(s => s.trim())
+  });
+};
+
+/**
+ * Toggle/switch prompt
+ * @param {string} args.message Prompt message to display
+ * @param {boolean} [args.initial=false] Default value
+ * @param {string} [args.active="on"] Text for `active` state
+ * @param {string} [args.inactive="off"] Text for `inactive` state
+ * @param {function} [args.onState] On state change callback
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.toggle = args => toPrompt('TogglePrompt', args);
+
+/**
+ * Interactive select prompt
+ * @param {string} args.message Prompt message to display
+ * @param {Array} args.choices Array of choices objects `[{ title, value }, ...]`
+ * @param {number} [args.initial] Index of default value
+ * @param {String} [args.hint] Hint to display
+ * @param {function} [args.onState] On state change callback
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.select = args => toPrompt('SelectPrompt', args);
+
+/**
+ * Interactive multi-select / autocompleteMultiselect prompt
+ * @param {string} args.message Prompt message to display
+ * @param {Array} args.choices Array of choices objects `[{ title, value, [selected] }, ...]`
+ * @param {number} [args.max] Max select
+ * @param {string} [args.hint] Hint to display user
+ * @param {Number} [args.cursor=0] Cursor start position
+ * @param {function} [args.onState] On state change callback
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.multiselect = args => {
+  args.choices = [].concat(args.choices || []);
+  const toSelected = items => items.filter(item => item.selected).map(item => item.value);
+  return toPrompt('MultiselectPrompt', args, {
+    onAbort: toSelected,
+    onSubmit: toSelected
+  });
+};
+
+$.autocompleteMultiselect = args => {
+  args.choices = [].concat(args.choices || []);
+  const toSelected = items => items.filter(item => item.selected).map(item => item.value);
+  return toPrompt('AutocompleteMultiselectPrompt', args, {
+    onAbort: toSelected,
+    onSubmit: toSelected
+  });
+};
+
+const byTitle = (input, choices) => Promise.resolve(
+  choices.filter(item => item.title.slice(0, input.length).toLowerCase() === input.toLowerCase())
+);
+
+/**
+ * Interactive auto-complete prompt
+ * @param {string} args.message Prompt message to display
+ * @param {Array} args.choices Array of auto-complete choices objects `[{ title, value }, ...]`
+ * @param {Function} [args.suggest] Function to filter results based on user input. Defaults to sort by `title`
+ * @param {number} [args.limit=10] Max number of results to show
+ * @param {string} [args.style="default"] Render style ('default', 'password', 'invisible')
+ * @param {String} [args.initial] Index of the default value
+ * @param {boolean} [opts.clearFirst] The first ESCAPE keypress will clear the input
+ * @param {String} [args.fallback] Fallback message - defaults to initial value
+ * @param {function} [args.onState] On state change callback
+ * @param {Stream} [args.stdin] The Readable stream to listen to
+ * @param {Stream} [args.stdout] The Writable stream to write readline data to
+ * @returns {Promise} Promise with user input
+ */
+$.autocomplete = args => {
+  args.suggest = args.suggest || byTitle;
+  args.choices = [].concat(args.choices || []);
+  return toPrompt('AutocompletePrompt', args);
+};
+});
+
+const passOn = ['suggest', 'format', 'onState', 'validate', 'onRender', 'type'];
+const noop = () => {};
+
+/**
+ * Prompt for a series of questions
+ * @param {Array|Object} questions Single question object or Array of question objects
+ * @param {Function} [onSubmit] Callback function called on prompt submit
+ * @param {Function} [onCancel] Callback function called on cancel/abort
+ * @returns {Object} Object with values from user input
+ */
+async function prompt(questions=[], { onSubmit=noop, onCancel=noop }={}) {
+  const answers = {};
+  const override = prompt._override || {};
+  questions = [].concat(questions);
+  let answer, question, quit, name, type, lastPrompt;
+
+  const getFormattedAnswer = async (question, answer, skipValidation = false) => {
+    if (!skipValidation && question.validate && question.validate(answer) !== true) {
+      return;
+    }
+    return question.format ? await question.format(answer, answers) : answer
+  };
+
+  for (question of questions) {
+    ({ name, type } = question);
+
+    // evaluate type first and skip if type is a falsy value
+    if (typeof type === 'function') {
+      type = await type(answer, { ...answers }, question);
+      question['type'] = type;
+    }
+    if (!type) continue;
+
+    // if property is a function, invoke it unless it's a special function
+    for (let key in question) {
+      if (passOn.includes(key)) continue;
+      let value = question[key];
+      question[key] = typeof value === 'function' ? await value(answer, { ...answers }, lastPrompt) : value;
+    }
+
+    lastPrompt = question;
+
+    if (typeof question.message !== 'string') {
+      throw new Error('prompt message is required');
+    }
+
+    // update vars in case they changed
+    ({ name, type } = question);
+
+    if (prompts[type] === void 0) {
+      throw new Error(`prompt type (${type}) is not defined`);
+    }
+
+    if (override[question.name] !== undefined) {
+      answer = await getFormattedAnswer(question, override[question.name]);
+      if (answer !== undefined) {
+        answers[name] = answer;
+        continue;
+      }
+    }
+
+    try {
+      // Get the injected answer if there is one or prompt the user
+      answer = prompt._injected ? getInjectedAnswer(prompt._injected, question.initial) : await prompts[type](question);
+      answers[name] = answer = await getFormattedAnswer(question, answer, true);
+      quit = await onSubmit(question, answer, answers);
+    } catch (err) {
+      quit = !(await onCancel(question, answers));
+    }
+
+    if (quit) return answers;
+  }
+
+  return answers;
+}
+
+function getInjectedAnswer(injected, deafultValue) {
+  const answer = injected.shift();
+    if (answer instanceof Error) {
+      throw answer;
+    }
+
+    return (answer === undefined) ? deafultValue : answer;
+}
+
+function inject(answers) {
+  prompt._injected = (prompt._injected || []).concat(answers);
+}
+
+function override(answers) {
+  prompt._override = Object.assign({}, answers);
+}
+
+var lib = Object.assign(prompt, { prompt, prompts, inject, override });
+
+const isWin$1 = process.platform === 'win32';
+const SEP = isWin$1 ? `\\\\+` : `\\/`;
+const SEP_ESC = isWin$1 ? `\\\\` : `/`;
+const GLOBSTAR = `((?:[^/]*(?:/|$))*)`;
+const WILDCARD = `([^/]*)`;
+const GLOBSTAR_SEGMENT = `((?:[^${SEP_ESC}]*(?:${SEP_ESC}|$))*)`;
+const WILDCARD_SEGMENT = `([^${SEP_ESC}]*)`;
+
+/**
+ * Convert any glob pattern to a JavaScript Regexp object
+ * @param {String} glob Glob pattern to convert
+ * @param {Object} opts Configuration object
+ * @param {Boolean} [opts.extended=false] Support advanced ext globbing
+ * @param {Boolean} [opts.globstar=false] Support globstar
+ * @param {Boolean} [opts.strict=true] be laissez faire about mutiple slashes
+ * @param {Boolean} [opts.filepath=''] Parse as filepath for extra path related features
+ * @param {String} [opts.flags=''] RegExp globs
+ * @returns {Object} converted object with string, segments and RegExp object
+ */
+function globrex(glob, {extended = false, globstar = false, strict = false, filepath = false, flags = ''} = {}) {
+    let regex = '';
+    let segment = '';
+    let path = { regex: '', segments: [] };
+
+    // If we are doing extended matching, this boolean is true when we are inside
+    // a group (eg {*.html,*.js}), and false otherwise.
+    let inGroup = false;
+    let inRange = false;
+
+    // extglob stack. Keep track of scope
+    const ext = [];
+
+    // Helper function to build string and segments
+    function add(str, {split, last, only}={}) {
+        if (only !== 'path') regex += str;
+        if (filepath && only !== 'regex') {
+            path.regex += (str === '\\/' ? SEP : str);
+            if (split) {
+                if (last) segment += str;
+                if (segment !== '') {
+                    if (!flags.includes('g')) segment = `^${segment}$`; // change it 'includes'
+                    path.segments.push(new RegExp(segment, flags));
+                }
+                segment = '';
+            } else {
+                segment += str;
+            }
+        }
+    }
+
+    let c, n;
+    for (let i = 0; i < glob.length; i++) {
+        c = glob[i];
+        n = glob[i + 1];
+
+        if (['\\', '$', '^', '.', '='].includes(c)) {
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '/') {
+            add(`\\${c}`, {split: true});
+            if (n === '/' && !strict) regex += '?';
+            continue;
+        }
+
+        if (c === '(') {
+            if (ext.length) {
+                add(c);
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === ')') {
+            if (ext.length) {
+                add(c);
+                let type = ext.pop();
+                if (type === '@') {
+                    add('{1}');
+                } else if (type === '!') {
+                    add('([^\/]*)');
+                } else {
+                    add(type);
+                }
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+        
+        if (c === '|') {
+            if (ext.length) {
+                add(c);
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '+') {
+            if (n === '(' && extended) {
+                ext.push(c);
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '@' && extended) {
+            if (n === '(') {
+                ext.push(c);
+                continue;
+            }
+        }
+
+        if (c === '!') {
+            if (extended) {
+                if (inRange) {
+                    add('^');
+                    continue
+                }
+                if (n === '(') {
+                    ext.push(c);
+                    add('(?!');
+                    i++;
+                    continue;
+                }
+                add(`\\${c}`);
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '?') {
+            if (extended) {
+                if (n === '(') {
+                    ext.push(c);
+                } else {
+                    add('.');
+                }
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '[') {
+            if (inRange && n === ':') {
+                i++; // skip [
+                let value = '';
+                while(glob[++i] !== ':') value += glob[i];
+                if (value === 'alnum') add('(\\w|\\d)');
+                else if (value === 'space') add('\\s');
+                else if (value === 'digit') add('\\d');
+                i++; // skip last ]
+                continue;
+            }
+            if (extended) {
+                inRange = true;
+                add(c);
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === ']') {
+            if (extended) {
+                inRange = false;
+                add(c);
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '{') {
+            if (extended) {
+                inGroup = true;
+                add('(');
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '}') {
+            if (extended) {
+                inGroup = false;
+                add(')');
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === ',') {
+            if (inGroup) {
+                add('|');
+                continue;
+            }
+            add(`\\${c}`);
+            continue;
+        }
+
+        if (c === '*') {
+            if (n === '(' && extended) {
+                ext.push(c);
+                continue;
+            }
+            // Move over all consecutive "*"'s.
+            // Also store the previous and next characters
+            let prevChar = glob[i - 1];
+            let starCount = 1;
+            while (glob[i + 1] === '*') {
+                starCount++;
+                i++;
+            }
+            let nextChar = glob[i + 1];
+            if (!globstar) {
+                // globstar is disabled, so treat any number of "*" as one
+                add('.*');
+            } else {
+                // globstar is enabled, so determine if this is a globstar segment
+                let isGlobstar =
+                    starCount > 1 && // multiple "*"'s
+                    (prevChar === '/' || prevChar === undefined) && // from the start of the segment
+                    (nextChar === '/' || nextChar === undefined); // to the end of the segment
+                if (isGlobstar) {
+                    // it's a globstar, so match zero or more path segments
+                    add(GLOBSTAR, {only:'regex'});
+                    add(GLOBSTAR_SEGMENT, {only:'path', last:true, split:true});
+                    i++; // move over the "/"
+                } else {
+                    // it's not a globstar, so only match one path segment
+                    add(WILDCARD, {only:'regex'});
+                    add(WILDCARD_SEGMENT, {only:'path'});
+                }
+            }
+            continue;
+        }
+
+        add(c);
+    }
+
+
+    // When regexp 'g' flag is specified don't
+    // constrain the regular expression with ^ & $
+    if (!flags.includes('g')) {
+        regex = `^${regex}$`;
+        segment = `^${segment}$`;
+        if (filepath) path.regex = `^${path.regex}$`;
+    }
+
+    const result = {regex: new RegExp(regex, flags)};
+
+    // Push the last segment
+    if (filepath) {
+        path.segments.push(new RegExp(segment, flags));
+        path.regex = new RegExp(path.regex, flags);
+        path.globstar = new RegExp(!flags.includes('g') ? `^${GLOBSTAR_SEGMENT}$` : GLOBSTAR_SEGMENT, flags);
+        result.path = path;
+    }
+
+    return result;
+}
+
+var globrex_1 = globrex;
+
+const isWin = os.platform() === 'win32';
+
+const CHARS = { '{': '}', '(': ')', '[': ']'};
+const STRICT = /\\(.)|(^!|\*|[\].+)]\?|\[[^\\\]]+\]|\{[^\\}]+\}|\(\?[:!=][^\\)]+\)|\([^|]+\|[^\\)]+\)|(\\).|([@?!+*]\(.*\)))/;
+const RELAXED = /\\(.)|(^!|[*?{}()[\]]|\(\?)/;
+
+/**
+ * Detect if a string cointains glob
+ * @param {String} str Input string
+ * @param {Object} [options] Configuration object
+ * @param {Boolean} [options.strict=true] Use relaxed regex if true
+ * @returns {Boolean} true if string contains glob
+ */
+function isglob(str, { strict = true } = {}) {
+  if (str === '') return false;
+  let match, rgx = strict ? STRICT : RELAXED;
+
+  while ((match = rgx.exec(str))) {
+    if (match[2]) return true;
+    let idx = match.index + match[0].length;
+
+    // if an open bracket/brace/paren is escaped,
+    // set the index to the next closing character
+    let open = match[1];
+    let close = open ? CHARS[open] : null;
+    if (open && close) {
+      let n = str.indexOf(close, idx);
+      if (n !== -1)  idx = n + 1;
+    }
+
+    str = str.slice(idx);
+  }
+  return false;
+}
+
+
+/**
+ * Find the static part of a glob-path,
+ * split path and return path part
+ * @param {String} str Path/glob string
+ * @returns {String} static path section of glob
+ */
+function parent(str, { strict = false } = {}) {
+  if (isWin && str.includes('/'))
+    str = str.split('\\').join('/');
+
+	// special case for strings ending in enclosure containing path separator
+	if (/[\{\[].*[\/]*.*[\}\]]$/.test(str)) str += '/';
+
+	// preserves full path in case of trailing path separator
+	str += 'a';
+
+	do {str = path.dirname(str);}
+	while (isglob(str, {strict}) || /(^|[^\\])([\{\[]|\([^\)]+$)/.test(str));
+
+	// remove escape chars and return result
+	return str.replace(/\\([\*\?\|\[\]\(\)\{\}])/g, '$1');
+}
+
+/**
+ * Parse a glob path, and split it by static/glob part
+ * @param {String} pattern String path
+ * @param {Object} [opts] Options
+ * @param {Object} [opts.strict=false] Use strict parsing
+ * @returns {Object} object with parsed path
+ */
+function globalyzer(pattern, opts = {}) {
+    let base = parent(pattern, opts);
+    let isGlob = isglob(pattern, opts);
+    let glob;
+
+    if (base != '.') {
+        glob = pattern.substr(base.length);
+        if (glob.startsWith('/')) glob = glob.substr(1);
+    } else {
+        glob = pattern;
+    }
+
+    if (!isGlob) {
+        base = path.dirname(pattern);
+        glob = base !== '.' ? pattern.substr(base.length) : pattern;
+    }
+
+    if (glob.startsWith('./')) glob = glob.substr(2);
+    if (glob.startsWith('/')) glob = glob.substr(1);
+
+    return { base, glob, isGlob };
+}
+
+
+var src = globalyzer;
+
+const { join, resolve, relative } = path;
+const isHidden = /(^|[\\\/])\.[^\\\/\.]/g;
+
+let CACHE = {};
+
+function walk(output, prefix, lexer, opts, dirname='', level=0) {
+  const rgx = lexer.segments[level];
+  const dir = resolve(opts.cwd, prefix, dirname);
+  const files = fs.readdirSync(dir);
+  const { dot, filesOnly } = opts;
+
+  let i=0, len=files.length, file;
+  let fullpath, relpath, stats, isMatch;
+
+  for (; i < len; i++) {
+    fullpath = join(dir, file=files[i]);
+    relpath = dirname ? join(dirname, file) : file;
+    if (!dot && isHidden.test(relpath)) continue;
+    isMatch = lexer.regex.test(relpath);
+
+    if ((stats=CACHE[relpath]) === void 0) {
+      CACHE[relpath] = stats = fs.lstatSync(fullpath);
+    }
+
+    if (!stats.isDirectory()) {
+      isMatch && output.push(relative(opts.cwd, fullpath));
+      continue;
+    }
+
+    if (rgx && !rgx.test(file)) continue;
+    !filesOnly && isMatch && output.push(join(prefix, relpath));
+
+    walk(output, prefix, lexer, opts, relpath, rgx && rgx.toString() !== lexer.globstar && level + 1);
+  }
+}
+
+/**
+ * Find files using bash-like globbing.
+ * All paths are normalized compared to node-glob.
+ * @param {String} str Glob string
+ * @param {String} [options.cwd='.'] Current working directory
+ * @param {Boolean} [options.dot=false] Include dotfile matches
+ * @param {Boolean} [options.absolute=false] Return absolute paths
+ * @param {Boolean} [options.filesOnly=false] Do not include folders if true
+ * @param {Boolean} [options.flush=false] Reset cache object
+ * @returns {Array} array containing matching files
+ */
+var sync = function (str, opts={}) {
+  if (!str) return [];
+
+  let glob = src(str);
+
+  opts.cwd = opts.cwd || '.';
+
+  if (!glob.isGlob) {
+    try {
+      let resolved = resolve(opts.cwd, str);
+      let dirent = fs.statSync(resolved);
+      if (opts.filesOnly && !dirent.isFile()) return [];
+
+      return opts.absolute ? [resolved] : [str];
+    } catch (err) {
+      if (err.code != 'ENOENT') throw err;
+
+      return [];
+    }
+  }
+
+  if (opts.flush) CACHE = {};
+
+  let matches = [];
+  const { path } = globrex_1(glob.glob, { filepath:true, globstar:true, extended:true });
+
+  path.globstar = path.globstar.toString();
+  walk(matches, glob.base, path, opts, '.', 0);
+
+  return opts.absolute ? matches.map(x => resolve(opts.cwd, x)) : matches;
+};
+
+var version = "0.0.12";
+
+const disclaimer = `
+Welcome to the SolidStart setup wizard!
+
+There are definitely bugs and some feature might not work yet.
+If you encounter an issue, have a look at https://github.com/ryansolid/solid-start/issues and open a new one, if it is not already tracked.
+`;
+
+function mkdirp(dir) {
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+  } catch (e) {
+    if (e.code === "EEXIST") return;
+    throw e;
+  }
+}
+
+async function main() {
+  console.log(gray(`\ncreate-solid version ${version}`));
+  console.log(red(disclaimer));
+
+  const target = process.argv[2] || ".";
+
+  const ts_response = await lib({
+    type: "confirm",
+    name: "value",
+    message: "Use TypeScript?",
+    initial: false
+  });
+
+  if (fs.existsSync(target)) {
+    if (fs.readdirSync(target).length > 0) {
+      const response = await lib({
+        type: "confirm",
+        name: "value",
+        message: "Directory not empty. Continue?",
+        initial: false
+      });
+
+      if (!response.value) {
+        process.exit(1);
+      }
+    }
+  } else {
+    mkdirp(target);
+  }
+
+  const cwd = path.join(__dirname, "templates/" + (ts_response.value ? "app-ts" : "app"));
+  const gitignore_contents = fs.readFileSync(path.join(cwd, ".gitignore"), "utf-8");
+  const gitignore = lib$1.compile(gitignore_contents);
+
+  const files = sync("**/*", { cwd }).filter(gitignore.accepts);
+
+  files.forEach(file => {
+    const src = path.join(cwd, file);
+    const dest = path.join(target, file);
+
+    if (fs.statSync(src).isDirectory()) {
+      mkdirp(dest);
+    } else {
+      fs.copyFileSync(src, dest);
+    }
+  });
+
+  fs.writeFileSync(path.join(target, ".gitignore"), gitignore_contents);
+
+  const name = path.basename(path.resolve(target));
+
+  const pkg_file = path.join(target, "package.json");
+  const pkg_json = fs
+    .readFileSync(pkg_file, "utf-8")
+    .replace("~TODO~", name)
+    .replace(/"(.+)": "workspace:.+"/g, (_m, name) => `"${name}": "next"`); // TODO ^${versions[name]}
+
+  fs.writeFileSync(pkg_file, pkg_json);
+
+  console.log(bold(green("✔ Copied project files")));
+
+  console.log("\nNext steps:");
+  let i = 1;
+
+  const relative = path.relative(process.cwd(), target);
+  if (relative !== "") {
+    console.log(`  ${i++}: ${bold(cyan(`cd ${relative}`))}`);
+  }
+
+  console.log(`  ${i++}: ${bold(cyan("npm install"))} (or pnpm install, or yarn)`);
+  console.log(`  ${i++}: ${bold(cyan("npm run dev -- --open"))}`);
+
+  console.log(`\nTo close the dev server, hit ${bold(cyan("Ctrl-C"))}`);
+}
+
+main();
