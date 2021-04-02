@@ -2,22 +2,27 @@
 "use strict";
 
 const path = require("path");
-const exec = require("child_process").exec;
-const script = process.argv[2];
+const { spawn, exec } = require("child_process");
+const sade = require("sade");
 
-switch (script) {
-  case "dev":
-    exec("node " + path.join(__dirname, "runtime", "server.cjs"), (e, stdout, stderr) => {
-      if (e instanceof Error) {
-        console.error(e);
-        throw e;
-      }
-      console.log("stdout ", stdout);
-      console.log("stderr ", stderr);
-    });
-    break;
-  case "build":
-    break;
-  case "start":
-    break;
+const prog = sade("solid-start").version("__VERSION__");
+
+prog
+  .command("dev")
+  .describe("Start a development server")
+  .option("-o, --open", "Open a browser tab", false)
+  .action(({ open }) => {
+    const proc = spawn("node", [path.join(__dirname, "runtime", "server.cjs")]);
+    proc.stdout.pipe(process.stdout);
+    if (open) launch(3000);
+  });
+
+function launch(port) {
+  let cmd = "open";
+  if (process.platform == "win32") {
+    cmd = "start";
+  } else if (process.platform == "linux") {
+    cmd = "xdg-open";
+  }
+  exec(`${cmd} http://localhost:${port}`);
 }

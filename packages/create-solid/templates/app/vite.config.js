@@ -13,6 +13,9 @@ export default defineConfig({
       replacement: path.join(process.cwd(), "node_modules", "solid-start", "runtime")
     }]
   },
+  ssr: {
+    noExternal: ["solid-app-router"]
+  },
   plugins: [
     solid({ ssr: true }),
     {

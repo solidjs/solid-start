@@ -5,7 +5,7 @@ const dataModules = import.meta.globEager("/src/pages/**/*.data.(js|ts)");
 const pages = import.meta.glob("/src/pages/**/*.(jsx|tsx)");
 
 function toIdentifier(source: string) {
-  return source.slice(10).replace(/(.jsx|.tsx|.data.js|.data.ts)/, "");
+  return source.slice(10).replace(/(index)?(.jsx|.tsx|.data.js|.data.ts)/, "");
 }
 
 function toPath(id: string) {

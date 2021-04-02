@@ -9,6 +9,7 @@
   "devDependencies": {
     "solid-app-router": "0.0.37",
     "solid-js": "0.25.0",
+    "solid-start": "next",
     "vite": "^2.1.3"
   },
   "engines": {

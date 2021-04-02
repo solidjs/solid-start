@@ -13,7 +13,9 @@
   ],
   "dependencies": {
     "node-fetch": "^2.6.1",
-    "rollup-route-manifest": "^1.0.0"
+    "rollup-route-manifest": "^1.0.0",
+    "vite-plugin-solid": "^1.5.0",
+    "sade": "^1.7.4"
   },
   "peerDependencies": {
     "solid-app-router": "*",

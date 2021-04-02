@@ -19,6 +19,7 @@ async function createServer(root = process.cwd()) {
     vite.middlewares(req, res, async () => {
       try {
         const parsed = parse(req.url);
+        const url = parsed.pathname + (parsed.search || "");
 
         if (req.url === "/favicon.ico") return;
 
@@ -28,15 +29,16 @@ async function createServer(root = process.cwd()) {
         // always read fresh template in dev
         template = readFileSync(resolve("./index.html"), "utf-8");
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule("./lib/entry-server.jsx")).render;
+        render = (await vite.ssrLoadModule("@solid-start/entry-server.jsx")).render;
 
-        const { stream, script } = render(parsed.pathname + parsed.search, ctx);
+        const { stream, script } = render(url, ctx);
 
         const [htmlStart, htmlEnd] = template
           .replace(`<!--app-head-->`, script)
           .split(`<!--app-html-->`);
 
-        res.status(200).set({ "content-type": "text/html" });
+        res.statusCode = 200;
+        res.setHeader("content-type", "text/html");
 
         res.write(htmlStart);
         stream.pipe(res, { end: false });
@@ -48,7 +50,8 @@ async function createServer(root = process.cwd()) {
       } catch (e) {
         vite && vite.ssrFixStacktrace(e);
         console.log(e.stack);
-        res.status(500).end(e.stack);
+        res.statusCode = 500
+        res.end(e.stack);
       }
     });
   });
