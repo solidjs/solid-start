@@ -5,7 +5,7 @@ const path = require("path");
 const { spawn, exec } = require("child_process");
 const sade = require("sade");
 
-const prog = sade("solid-start").version("__VERSION__");
+const prog = sade("solid-start").version("alpha");
 
 prog
   .command("dev")
@@ -14,8 +14,10 @@ prog
   .action(({ open }) => {
     const proc = spawn("node", [path.join(__dirname, "runtime", "server.cjs")]);
     proc.stdout.pipe(process.stdout);
-    if (open) launch(3000);
+    if (open) setTimeout(() => launch(3000), 1000);
   });
+
+prog.parse(process.argv);
 
 function launch(port) {
   let cmd = "open";
