@@ -1,6 +1,6 @@
 {
   "name": "create-solid",
-  "version": "0.0.12",
+  "version": "0.1.0-alpha.0",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -9,10 +9,10 @@
     "build": "rollup -c"
   },
   "devDependencies": {
-		"gitignore-parser": "^0.0.2",
-		"kleur": "^4.1.4",
-		"prompts": "^2.4.0",
-		"tiny-glob": "^0.2.8"
+    "gitignore-parser": "^0.0.2",
+    "kleur": "^4.1.4",
+    "prompts": "^2.4.0",
+    "tiny-glob": "^0.2.8"
   },
   "files": [
     "bin",
