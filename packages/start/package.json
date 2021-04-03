@@ -5,6 +5,7 @@
   "author": "Ryan Carniato",
   "license": "MIT",
   "bin": "./bin.cjs",
+  "main": "./plugin.js",
   "type": "module",
   "files": [
     "bin.cjs",
