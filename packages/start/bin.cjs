@@ -45,7 +45,7 @@ prog
   .describe("Run production build")
   .option("-o, --open", "Open a browser tab", false)
   .option("-p, --port", "Port to start server on", 3000)
-  .action(({ open, port }) => {
+  .action(async ({ open, port }) => {
     if (open) setTimeout(() => launch(port), 1000);
     (await import("./runtime/devServer.js")).start({ port });
   });
