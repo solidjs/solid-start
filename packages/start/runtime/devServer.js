@@ -1,13 +1,14 @@
-const path = require("path");
-const http = require("http");
-const { parse } = require("url");
-const { readFileSync } = require("fs");
+import path from "path";
+import http from "http";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import vite from "vite";
 
 async function createServer(root = process.cwd()) {
   const resolve = p => path.resolve(process.cwd(), p);
   const ctx = {};
 
-  const vite = await require("vite").createServer({
+  const server = await vite.createServer({
     root,
     logLevel: "info",
     server: {
@@ -16,22 +17,19 @@ async function createServer(root = process.cwd()) {
   });
 
   const app = http.createServer((req, res) => {
-    vite.middlewares(req, res, async () => {
+    server.middlewares(req, res, async () => {
       try {
-        const parsed = parse(req.url);
-        const url = parsed.pathname + (parsed.search || "");
-
         if (req.url === "/favicon.ico") return;
-
         let template;
-        let render;
 
         // always read fresh template in dev
         template = readFileSync(resolve("./index.html"), "utf-8");
-        template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule("@solid-start/entry-server.jsx")).render;
+        template = await server.transformIndexHtml(req.url, template);
+        const { render } = await server.ssrLoadModule(
+          path.join(path.dirname(fileURLToPath(import.meta.url)), "server", "nodeStream", "index.jsx")
+        );
 
-        const { stream, script } = render(url, ctx);
+        const { stream, script } = render(req.url, ctx);
 
         const [htmlStart, htmlEnd] = template
           .replace(`<!--app-head-->`, script)
@@ -48,19 +46,21 @@ async function createServer(root = process.cwd()) {
           res.end();
         });
       } catch (e) {
-        vite && vite.ssrFixStacktrace(e);
+        server && server.ssrFixStacktrace(e);
         console.log(e.stack);
-        res.statusCode = 500
+        res.statusCode = 500;
         res.end(e.stack);
       }
     });
   });
 
-  return { app, vite };
+  return { app, server };
 }
 
-createServer().then(({ app }) =>
-  app.listen(3000, () => {
-    console.log("http://localhost:3000");
-  })
-);
+export function start(options) {
+  createServer().then(({ app }) =>
+    app.listen(options.port, () => {
+      console.log(`http://localhost:${options.port}`);
+    })
+  );
+}

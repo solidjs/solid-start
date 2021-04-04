@@ -1,4 +1,5 @@
 dist
+.solid
 
 # dependencies
 /node_modules

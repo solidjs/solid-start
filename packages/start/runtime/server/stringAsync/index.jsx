@@ -1,10 +1,10 @@
-import { renderToNodeStream } from "solid-js/web";
+import { renderToStringAsync } from "solid-js/web";
 import { Router } from "solid-app-router";
 import Layout from "~/layout";
-import { routes } from "./routes";
+import { routes } from "../../routes";
 import fetch from "node-fetch";
 
-globalThis.fetch = fetch;
+globalThis.fetch || (globalThis.fetch = fetch);
 
 export function render(initialURL, ctx) {
   const App = (props) => (
@@ -12,5 +12,5 @@ export function render(initialURL, ctx) {
       {props.children}
     </Router>
   );
-  return renderToNodeStream(() => <Layout App={App} />);
+  return renderToStringAsync(() => <Layout App={App} />);
 }

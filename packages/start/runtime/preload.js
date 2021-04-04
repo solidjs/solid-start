@@ -1,4 +1,4 @@
-module.exports = function preload(handlers, manifest) {
+export default function preload(handlers, manifest) {
   const url = handlers
     .map((h) =>
       h.path.replace(/:(\w+)/, (f, g) => `[${g}]`).replace(/\*(\w+)/, (f, g) => `[...${g}]`)
