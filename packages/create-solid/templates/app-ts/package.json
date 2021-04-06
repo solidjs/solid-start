@@ -7,9 +7,10 @@
   },
   "type": "module",
   "devDependencies": {
-    "solid-app-router": "0.0.37",
-    "solid-js": "0.25.0",
+    "solid-app-router": "^0.0.37",
+    "solid-js": "^0.25.0",
     "solid-start": "next",
+    "solid-start-node": "next",
     "typescript": "^4.2.3",
     "vite": "^2.1.3"
   },

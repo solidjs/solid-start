@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 export default function StartPlugin(options) {
+  options = Object.assign({ adapter: "solid-start-node", ssr: true, preferStreaming: true }, options)
   return [
     solid(options),
     {
@@ -16,14 +17,12 @@ export default function StartPlugin(options) {
             alias: [{
               find: "~",
               replacement: path.join(process.cwd(), "src")
-            }, {
-              find: "@solid-start",
-              replacement: path.join(process.cwd(), "node_modules", "solid-start", "runtime")
             }]
           },
           ssr: {
             noExternal: ["solid-app-router"]
-          }
+          },
+          solidOptions: options
         }
       }
     }, {

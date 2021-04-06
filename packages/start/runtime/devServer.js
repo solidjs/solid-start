@@ -6,7 +6,6 @@ import vite from "vite";
 
 async function createServer(root = process.cwd()) {
   const resolve = p => path.resolve(process.cwd(), p);
-  const ctx = {};
 
   const server = await vite.createServer({
     root,
@@ -20,13 +19,14 @@ async function createServer(root = process.cwd()) {
     server.middlewares(req, res, async () => {
       try {
         if (req.url === "/favicon.ico") return;
+        const ctx = {};
         let template;
 
         // always read fresh template in dev
         template = readFileSync(resolve("./index.html"), "utf-8");
         template = await server.transformIndexHtml(req.url, template);
         const { render } = await server.ssrLoadModule(
-          path.join(path.dirname(fileURLToPath(import.meta.url)), "server", "nodeStream", "index.jsx")
+          path.join(path.dirname(fileURLToPath(import.meta.url)), "server", "nodeStream", "app.jsx")
         );
 
         const { stream, script } = render(req.url, ctx);
