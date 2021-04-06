@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.1.0-alpha.7",
+  "version": "0.1.0-alpha.8",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -13,11 +13,11 @@
     "runtime"
   ],
   "dependencies": {
+    "@brillout/vite-fix-2390": "^0.3.0",
     "node-fetch": "^2.6.1",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.7.4",
-    "vite-plugin-solid": "^1.5.0",
-    "@brillout/vite-fix-2390": "^0.3.0"
+    "vite-plugin-solid": "^1.5.0"
   },
   "peerDependencies": {
     "solid-app-router": "*",

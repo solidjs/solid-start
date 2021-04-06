@@ -1,18 +1,18 @@
 {
-	"name": "solid-start-node",
-	"version": "0.0.0",
-	"main": "./index.js",
-	"type": "module",
-	"dependencies": {
-		"@rollup/plugin-node-resolve": "^11.2.1",
-		"@rollup/plugin-json": "^4.1.0",
-		"compression": "^1.7.4",
-		"node-fetch": "^2.6.1",
-		"polka": "^1.0.0-next.13",
-    "rollup": "^2.44.0",
-		"sirv": "^1.0.11"
-	},
-  "peerDependencies": {
-    "solid-start": "*"
-  }
+		"name": "solid-start-node",
+		"version": "0.1.0-alpha.8",
+		"main": "./index.js",
+		"type": "module",
+		"dependencies": {
+				"@rollup/plugin-json": "^4.1.0",
+				"@rollup/plugin-node-resolve": "^11.2.1",
+				"compression": "^1.7.4",
+				"node-fetch": "^2.6.1",
+				"polka": "^1.0.0-next.13",
+				"rollup": "^2.44.0",
+				"sirv": "^1.0.11"
+		},
+		"peerDependencies": {
+				"solid-start": "*"
+		}
 }
