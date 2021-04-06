@@ -23,7 +23,7 @@ prog
   .describe("Create production build")
   .action(async () => {
     const config = await vite.resolveConfig({}, "build");
-    (await import(adapter)).default(config)
+    (await import(config.solidOptions.adapter)).default(config);
   });
 
 prog

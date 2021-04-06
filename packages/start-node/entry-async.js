@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
-import { createServer } from "solid-adapter-node/server.js";
+import { createServer } from "solid-start-node/server.js";
 import preload from "solid-start/runtime/preload.js";
-import manifest from "../dist/rmanifest.json";
+import manifest from "../../dist/rmanifest.json";
 import { render } from "./app";
 
 const template = readFileSync("index.html", "utf-8");

@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
-import { createServer } from "solid-adapter-node/server.js";
+import { createServer } from "solid-start-node/server.js";
 import preload from "solid-start/runtime/preload.js";
-import manifest from "../dist/rmanifest.json";
+import manifest from "../../dist/rmanifest.json";
 import { render } from "./app";
 
 const template = readFileSync("index.html", "utf-8");
@@ -13,7 +13,7 @@ createServer({
     const { stream, script } = render(req.url, ctx);
 
     const [htmlStart, htmlEnd] = template
-      .replace(`<!--app-head-->`, script)
+      .replace(`<!--app-head-->`, script + preload(ctx.router[0].current, manifest))
       .split(`<!--app-html-->`);
 
     res.statusCode = 200;

@@ -1,9 +1,11 @@
-import { copyFile } from "fs";
+import { copyFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
+import vite from "vite";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import common from "@rollup/plugin-commonjs";
 
 export default async function Node(config) {
   const { preferStreaming } = config.solidOptions;
@@ -16,9 +18,9 @@ export default async function Node(config) {
     }),
     vite.build({
       build: {
-        ssr: `solid-start/runtime/server/${
+        ssr: `node_modules/solid-start/runtime/server/${
           preferStreaming ? "nodeStream" : "stringAsync"
-        }/index.jsx`,
+        }/app.jsx`,
         outDir: "./.solid/server",
         rollupOptions: {
           output: {
@@ -28,19 +30,20 @@ export default async function Node(config) {
       }
     })
   ]);
-  await copyFile(
+  copyFileSync(
     join(__dirname, preferStreaming ? "entry-stream.js" : "entry-async.js"),
-    join(process.cwd(), ".solid", "server", "index.js")
+    join(config.root, ".solid", "server", "index.js")
   );
   const bundle = await rollup({
-    input: join(process.cwd(), ".solid", "server", "index.js"),
+    input: join(config.root, ".solid", "server", "index.js"),
     plugins: [
       json(),
-      nodeResolve()
+      nodeResolve(),
+      common()
     ]
   });
   // or write the bundle to disk
-  await bundle.write({ format: "cjs", outDir: join(process.cwd(), "dist") });
+  await bundle.write({ format: "cjs", dir: join(config.root, "dist") });
 
   // closes the bundle
   await bundle.close();
