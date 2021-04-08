@@ -23,4 +23,9 @@ bucket = "./dist"
 entry-point = "./"
 ```
 
+You also need to add the main entry to your package.json:
+```
+"main": "./dist/index.js",
+```
+
 More info on configuring a cloudflare worker site can be found [here](https://developers.cloudflare.com/workers/platform/sites/start-from-existing)

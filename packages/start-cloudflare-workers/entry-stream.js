@@ -1,7 +1,7 @@
 import { render } from "./app";
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
 import preload from "solid-start/runtime/preload";
-import manifest from "../dist/client/rmanifest.json";
+import manifest from "../../dist/rmanifest.json";
 
 addEventListener('fetch', event => {
   console.log(`Received new request: ${event.request.url}`);
