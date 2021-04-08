@@ -12,6 +12,7 @@ const paths = {
 };
 
 export function createServer({ render }) {
+	const comp = compression({ threshold: 0 });
 	const assets_handler = fs.existsSync(paths.assets)
 		? sirv(paths.assets, {
 				maxAge: 31536000,
@@ -19,11 +20,10 @@ export function createServer({ render }) {
 		  })
 		: noop_handler;
 
-	const server = polka().use(
-		compression({ threshold: 0 }),
-		assets_handler,
-		render
-	);
+	const server = polka().use("/assets",
+		comp,
+		assets_handler
+	).use(comp, render);
 
 	return server;
 }

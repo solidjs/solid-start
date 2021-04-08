@@ -13,7 +13,6 @@
     "runtime"
   ],
   "dependencies": {
-    "@brillout/vite-fix-2390": "^0.3.0",
     "node-fetch": "^2.6.1",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.7.4",

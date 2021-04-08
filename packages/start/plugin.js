@@ -1,7 +1,6 @@
 import solid from "vite-plugin-solid";
 import manifest from "rollup-route-manifest";
 import path from "path";
-import { fileURLToPath } from "url";
 
 export default function StartPlugin(options) {
   options = Object.assign({ adapter: "solid-start-node", ssr: true, preferStreaming: true }, options)
@@ -36,8 +35,7 @@ export default function StartPlugin(options) {
       merge: false,
       publicPath: "/",
       routes: (file) => {
-        const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        file = file.replace(path.join(__dirname, "src"), "").replace(/\.[tj]sx?$/, "");
+        file = file.replace(path.join(process.cwd(), "src"), "").replace(/(index)?\.[tj]sx?$/, "");
         if (!file.includes("/pages/")) return "*"; // commons
         return "/" + file.replace("/pages/", "").toLowerCase();
       }

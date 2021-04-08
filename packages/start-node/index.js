@@ -38,12 +38,14 @@ export default async function Node(config) {
     input: join(config.root, ".solid", "server", "index.js"),
     plugins: [
       json(),
-      nodeResolve(),
+      nodeResolve({
+        exportConditions: ["node", "solid"]
+      }),
       common()
     ]
   });
   // or write the bundle to disk
-  await bundle.write({ format: "cjs", dir: join(config.root, "dist") });
+  await bundle.write({ format: "esm", dir: join(config.root, "dist") });
 
   // closes the bundle
   await bundle.close();

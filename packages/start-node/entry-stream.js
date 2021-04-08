@@ -1,15 +1,21 @@
 import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { createServer } from "solid-start-node/server.js";
 import preload from "solid-start/runtime/preload.js";
 import manifest from "../../dist/rmanifest.json";
 import { render } from "./app";
 
-const template = readFileSync("index.html", "utf-8");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const template = readFileSync(join(__dirname, "index.html"), "utf-8");
 
-createServer({
+const { PORT = 3000 } = process.env;
+
+const server = createServer({
   render(req, res) {
-    const ctx = {}
-    
+    if (req.url === "/favicon.ico") return;
+    const ctx = {};
+
     const { stream, script } = render(req.url, ctx);
 
     const [htmlStart, htmlEnd] = template
@@ -26,5 +32,13 @@ createServer({
       res.write(htmlEnd);
       res.end();
     });
+  }
+});
+
+server.listen(PORT, err => {
+  if (err) {
+    console.log("error", err);
+  } else {
+    console.log(`Listening on port ${PORT}`);
   }
 });
