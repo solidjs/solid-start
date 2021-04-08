@@ -6,9 +6,12 @@ import vite from "vite";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import common from "@rollup/plugin-commonjs";
+import { spawn } from "child_process";
 
-export function start(config) {
-  import(join(config.root, "dist", "index.js"));
+export function start() {
+  const proc = spawn("wrangler", ["dev"])
+  proc.stdout.pipe(process.stdout);
+  proc.stderr.pipe(process.stderr);
 }
 export async function build(config) {
   const { preferStreaming } = config.solidOptions;
@@ -22,7 +25,7 @@ export async function build(config) {
     vite.build({
       build: {
         ssr: `node_modules/solid-start/runtime/server/${
-          preferStreaming ? "nodeStream" : "stringAsync"
+          preferStreaming ? "webStream" : "stringAsync"
         }/app.jsx`,
         outDir: "./.solid/server",
         rollupOptions: {
@@ -45,10 +48,14 @@ export async function build(config) {
         exportConditions: ["node", "solid"]
       }),
       common()
-    ]
+    ],
+    external: ["stream"],
+    treeshake: {
+      moduleSideEffects: "no-external"
+    }
   });
   // or write the bundle to disk
-  await bundle.write({ format: "esm", dir: join(config.root, "dist") });
+  await bundle.write({ format: "cjs", dir: join(config.root, "dist") });
 
   // closes the bundle
   await bundle.close();

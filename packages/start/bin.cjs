@@ -23,16 +23,15 @@ prog
   .describe("Create production build")
   .action(async () => {
     const config = await vite.resolveConfig({}, "build");
-    (await import(config.solidOptions.adapter)).default(config);
+    (await import(config.solidOptions.adapter)).build(config);
   });
 
 prog
   .command("start")
   .describe("Run production build")
-  .option("-o, --open", "Open a browser tab", false)
-  .action(async ({ open }) => {
-    if (open) setTimeout(() => launch(process.env.PORT || 3000), 1000);
-    await import(`${process.cwd()}/dist/index.js`);
+  .action(async () => {
+    const config = await vite.resolveConfig({}, "build");
+    (await import(config.solidOptions.adapter)).start(config);
   });
 
 prog.parse(process.argv);
