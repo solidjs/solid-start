@@ -10,7 +10,8 @@
   "files": [
     "bin.cjs",
     "plugin.js",
-    "runtime"
+    "runtime",
+    "renderStatic"
   ],
   "dependencies": {
     "node-fetch": "^2.6.1",
