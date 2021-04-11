@@ -28,7 +28,7 @@ function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
 }
 
 export function start() {
-  const proc = spawn("sirv-cli", ["./dist", "--port", "3000"]);
+  const proc = spawn("npx", ["sirv-cli", "./dist", "--port", "3000"]);
   proc.stdout.pipe(process.stdout);
   proc.stderr.pipe(process.stderr);
 }
