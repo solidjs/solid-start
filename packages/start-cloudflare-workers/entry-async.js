@@ -1,7 +1,11 @@
 import { render } from "./app";
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
 import preload from "solid-start/runtime/preload";
+import processSSRManifest from "solid-start/runtime/processSSRManifest";
 import manifest from "../../dist/rmanifest.json";
+import ssrManifest from "../../dist/ssr-manifest.json";
+
+const assetLookup = processSSRManifest(ssrManifest);
 
 addEventListener('fetch', event => {
   console.log(`Received new request: ${event.request.url}`);
@@ -27,7 +31,7 @@ async function handleEvent(event) {
     const { html, script } = await render(url, ctx);
 
     const appHtml = template
-      .replace(`<!--app-head-->`, script + preload(ctx.router[0].current, manifest))
+      .replace(`<!--app-head-->`, script + preload(ctx.router[0].current, manifest, assetLookup))
       .replace(`<!--app-html-->`, html);
 
     return new Response(appHtml, {

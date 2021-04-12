@@ -3,11 +3,14 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createServer } from "solid-start-node/server.js";
 import preload from "solid-start/runtime/preload.js";
+import processSSRManifest from "solid-start/runtime/processSSRManifest.js";
 import manifest from "../../dist/rmanifest.json";
+import ssrManifest from "../../dist/ssr-manifest.json";
 import { render } from "./app";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const template = readFileSync(join(__dirname, "index.html"), "utf-8");
+const assetLookup = processSSRManifest(ssrManifest);
 
 const { PORT = 3000 } = process.env;
 
@@ -18,7 +21,7 @@ const server = createServer({
     const { html, script } = await render(req.url, ctx);
 
     const appHtml = template
-      .replace(`<!--app-head-->`, script + preload(ctx.router[0].current, manifest))
+      .replace(`<!--app-head-->`, script + preload(ctx.router[0].current, manifest, assetLookup))
       .replace(`<!--app-html-->`, html);
 
     res.statusCode = 200;

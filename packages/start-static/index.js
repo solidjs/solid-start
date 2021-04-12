@@ -15,7 +15,7 @@ function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
   files.forEach(file => {
     if (statSync(dirPath + "/" + file).isDirectory()) {
       arrayOfFiles = getAllFiles(dirPath + "/" + file, pageRoot, arrayOfFiles);
-    } else if (file.endsWith("sx")) {
+    } else if (file.endsWith("sx") && !file.match(/\[.*\]/)) {
       arrayOfFiles.push(
         join(dirPath, "/", file)
           .replace(pageRoot, "")
@@ -55,7 +55,10 @@ export async function build(config) {
   copyFileSync(join(__dirname, "entry.js"), pathToServer);
   const pathToDist = resolve(config.root, "dist");
   const pageRoot = join(config.root, "src", "pages");
-  const routes = getAllFiles(pageRoot, pageRoot);
+  const routes = [
+    ...getAllFiles(pageRoot, pageRoot),
+    ...(config.solidOptions.prerenderRoutes || [])
+  ];
   renderStatic(
     routes.map(url => ({
       entry: pathToServer,

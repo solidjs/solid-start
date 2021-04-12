@@ -20,6 +20,7 @@ WIP this will change
 {
   preferStreaming: true, // use Streaming SSR on platforms that support it
   hot: true, // HMR in dev
-  adapter: "solid-start-node" // pick your adapter
+  adapter: "solid-start-node", // pick your adapter
+  prerenderRoutes: [] // routes that should be pre-rendered in static adapter
 }
 ```

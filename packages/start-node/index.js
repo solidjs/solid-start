@@ -1,6 +1,6 @@
 import { copyFileSync } from "fs";
 import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { rollup } from "rollup";
 import vite from "vite";
 import json from "@rollup/plugin-json";
@@ -8,7 +8,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import common from "@rollup/plugin-commonjs";
 
 export function start(config) {
-  import(join(config.root, "dist", "index.js"));
+  import(pathToFileURL(join(config.root, "dist", "index.js")));
 }
 export async function build(config) {
   const { preferStreaming } = config.solidOptions;
