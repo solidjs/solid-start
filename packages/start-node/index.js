@@ -16,7 +16,8 @@ export async function build(config) {
   await Promise.all([
     vite.build({
       build: {
-        outDir: "./dist/"
+        outDir: "./dist/",
+        ssrManifest: true
       }
     }),
     vite.build({
