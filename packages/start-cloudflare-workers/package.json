@@ -1,6 +1,6 @@
 {
   "name": "solid-start-cloudflare-workers",
-  "version": "0.1.0-alpha.18",
+  "version": "0.1.0-y.0",
   "main": "./index.js",
   "type": "module",
   "dependencies": {
