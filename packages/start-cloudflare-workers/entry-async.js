@@ -4,6 +4,7 @@ import preload from "solid-start/runtime/preload";
 import processSSRManifest from "solid-start/runtime/processSSRManifest";
 import manifest from "../../dist/rmanifest.json";
 import ssrManifest from "../../dist/ssr-manifest.json";
+import template from "../../dist/index.html"
 
 const assetLookup = processSSRManifest(ssrManifest);
 
@@ -12,7 +13,6 @@ addEventListener('fetch', event => {
   event.respondWith(handleEvent(event));
 });
 
-let template;
 /**
  * Respond with hello worker text
  * @param {Request} request
@@ -23,10 +23,6 @@ async function handleEvent(event) {
     if (url==="/") throw new Error("index")
     return await getAssetFromKV(event);
   } catch (err) {
-    if (!template) {
-      template = await __STATIC_CONTENT.list({prefix: "index"})
-        .then(res => __STATIC_CONTENT.get(res.keys[0].name));
-    }
     const ctx = {};
     const { html, script } = await render(url, ctx);
 

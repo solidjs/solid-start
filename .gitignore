@@ -1,6 +1,7 @@
 node_modules/
 dist/
-lib/
+example/
+
 .vscode/
 coverage/
 types/

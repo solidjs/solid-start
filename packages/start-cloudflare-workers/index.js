@@ -6,6 +6,7 @@ import vite from "vite";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import common from "@rollup/plugin-commonjs";
+import { string } from "rollup-plugin-string";
 import { spawn } from "child_process";
 
 export function start() {
@@ -45,6 +46,7 @@ export async function build(config) {
     input: join(config.root, ".solid", "server", "index.js"),
     plugins: [
       json(),
+      string({ include: "**/*.html" }),
       nodeResolve({
         exportConditions: ["node", "solid"]
       }),
