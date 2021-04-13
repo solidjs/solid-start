@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 "use strict";
 
-const path = require("path");
 const { exec } = require("child_process");
 const sade = require("sade");
 const vite = require("vite");
@@ -23,7 +22,11 @@ prog
   .describe("Create production build")
   .action(async () => {
     const config = await vite.resolveConfig({}, "build");
-    (await import(config.solidOptions.adapter)).build(config);
+    let adapter = config.solidOptions.adapter;
+    if (typeof adapter === "string") {
+      adapter = (await import(adapter)).default();
+    }
+    adapter.build(config);
   });
 
 prog
@@ -31,7 +34,11 @@ prog
   .describe("Run production build")
   .action(async () => {
     const config = await vite.resolveConfig({}, "build");
-    (await import(config.solidOptions.adapter)).start(config);
+    let adapter = config.solidOptions.adapter;
+    if (typeof adapter === "string") {
+      adapter = (await import(adapter)).default();
+    }
+    adapter.start(config);
   });
 
 prog.parse(process.argv);

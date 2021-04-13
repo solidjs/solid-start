@@ -27,44 +27,48 @@ function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
   return arrayOfFiles;
 }
 
-export function start() {
-  const proc = spawn("npx", ["sirv-cli", "./dist", "--port", "3000"]);
-  proc.stdout.pipe(process.stdout);
-  proc.stderr.pipe(process.stderr);
-}
-export async function build(config) {
-  await Promise.all([
-    vite.build({
-      build: {
-        outDir: "./dist/",
-        ssrManifest: true
-      }
-    }),
-    vite.build({
-      build: {
-        ssr: `node_modules/solid-start/runtime/server/${"stringAsync"}/app.jsx`,
-        outDir: "./.solid/server",
-        rollupOptions: {
-          output: {
-            format: "esm"
+export default function () {
+  return {
+    start() {
+      const proc = spawn("npx", ["sirv-cli", "./dist", "--port", "3000"]);
+      proc.stdout.pipe(process.stdout);
+      proc.stderr.pipe(process.stderr);
+    },
+    async build(config) {
+      await Promise.all([
+        vite.build({
+          build: {
+            outDir: "./dist/",
+            ssrManifest: true
           }
-        }
-      }
-    })
-  ]);
-  const pathToServer = join(config.root, ".solid", "server", "index.js");
-  copyFileSync(join(__dirname, "entry.js"), pathToServer);
-  const pathToDist = resolve(config.root, "dist");
-  const pageRoot = join(config.root, "src", "pages");
-  const routes = [
-    ...getAllFiles(pageRoot, pageRoot),
-    ...(config.solidOptions.prerenderRoutes || [])
-  ];
-  renderStatic(
-    routes.map(url => ({
-      entry: pathToServer,
-      output: join(pathToDist, url.length === 1 ? "index.html" : `${url.slice(1)}.html`),
-      url
-    }))
-  );
+        }),
+        vite.build({
+          build: {
+            ssr: `node_modules/solid-start/runtime/server/${"stringAsync"}/app.jsx`,
+            outDir: "./.solid/server",
+            rollupOptions: {
+              output: {
+                format: "esm"
+              }
+            }
+          }
+        })
+      ]);
+      const pathToServer = join(config.root, ".solid", "server", "index.js");
+      copyFileSync(join(__dirname, "entry.js"), pathToServer);
+      const pathToDist = resolve(config.root, "dist");
+      const pageRoot = join(config.root, "src", "pages");
+      const routes = [
+        ...getAllFiles(pageRoot, pageRoot),
+        ...(config.solidOptions.prerenderRoutes || [])
+      ];
+      renderStatic(
+        routes.map(url => ({
+          entry: pathToServer,
+          output: join(pathToDist, url.length === 1 ? "index.html" : `${url.slice(1)}.html`),
+          url
+        }))
+      );
+    }
+  };
 }
