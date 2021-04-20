@@ -5,7 +5,7 @@ export default function serverScripts() {
       scripts.push(fn);
     },
     get() {
-      scripts.map(fn => fn()).join("");
+      return scripts.map(fn => fn()).join("");
     }
   };
 }

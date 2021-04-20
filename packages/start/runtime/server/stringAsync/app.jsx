@@ -1,6 +1,6 @@
 import { renderToStringAsync } from "solid-js/web";
 import { Router } from "solid-app-router";
-import { MetaProvider } from "solid-meta";
+import { MetaProvider, renderTags } from "solid-meta";
 import Layout from "~/layout";
 import { routes } from "../../routes";
 import fetch from "node-fetch";

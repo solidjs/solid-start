@@ -2,7 +2,7 @@ import path from "path";
 import http from "http";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
-import serverScripts from "./serverScripts";
+import serverScripts from "./serverScripts.js";
 import vite from "vite";
 
 async function createServer(root = process.cwd()) {
