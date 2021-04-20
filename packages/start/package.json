@@ -22,6 +22,7 @@
   "peerDependencies": {
     "solid-app-router": "*",
     "solid-js": "*",
+    "solid-meta": "*",
     "vite": "*"
   }
 }

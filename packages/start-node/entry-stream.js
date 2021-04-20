@@ -3,6 +3,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { createServer } from "solid-start-node/server.js";
 import preload from "solid-start/runtime/preload.js";
+import serverScripts from "solid-start/runtime/serverScripts.js";
 import processSSRManifest from "solid-start/runtime/processSSRManifest.js";
 import manifest from "../../dist/rmanifest.json";
 import ssrManifest from "../../dist/ssr-manifest.json";
@@ -17,12 +18,15 @@ const { PORT = 3000 } = process.env;
 const server = createServer({
   render(req, res) {
     if (req.url === "/favicon.ico") return;
-    const ctx = {};
-
+    const { add, get } = serverScripts();
+    const ctx = { add };
     const { stream, script } = render(req.url, ctx);
 
     const [htmlStart, htmlEnd] = template
-      .replace(`<!--app-head-->`, script + preload(ctx.router[0].current, manifest, assetLookup))
+      .replace(
+        `<!--app-head-->`,
+        script + preload(ctx.router[0].current, manifest, assetLookup) + get()
+      )
       .split(`<!--app-html-->`);
 
     res.statusCode = 200;

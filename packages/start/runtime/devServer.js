@@ -2,6 +2,7 @@ import path from "path";
 import http from "http";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
+import serverScripts from "./serverScripts";
 import vite from "vite";
 
 async function createServer(root = process.cwd()) {
@@ -19,7 +20,6 @@ async function createServer(root = process.cwd()) {
     server.middlewares(req, res, async () => {
       try {
         if (req.url === "/favicon.ico") return;
-        const ctx = {};
         let template;
 
         // always read fresh template in dev
@@ -29,10 +29,11 @@ async function createServer(root = process.cwd()) {
           path.join(path.dirname(fileURLToPath(import.meta.url)), "server", "nodeStream", "app.jsx")
         );
 
-        const { stream, script } = render(req.url, ctx);
+        const { add, get } = serverScripts();
+        const { stream, script } = render(req.url, { add });
 
         const [htmlStart, htmlEnd] = template
-          .replace(`<!--app-head-->`, script)
+          .replace(`<!--app-head-->`, script + get())
           .split(`<!--app-html-->`);
 
         res.statusCode = 200;

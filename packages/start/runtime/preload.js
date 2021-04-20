@@ -5,7 +5,7 @@ export default function preload(handlers, manifest, assetManifest) {
     )
     .join("");
 
-  if (!manifest[url]) return;
+  if (!manifest[url]) return "";
   const list = manifest[url].slice(0)
     .reverse()
     .slice(1);

@@ -8,7 +8,8 @@
   "type": "module",
   "devDependencies": {
     "solid-app-router": "^0.0.38",
-    "solid-js": "^0.26.0",
+    "solid-js": "^0.26.1",
+    "solid-meta": "^0.26.1",
     "solid-start": "next",
     "solid-start-node": "next",
     "vite": "2.2.1"
