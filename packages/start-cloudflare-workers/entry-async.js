@@ -1,4 +1,4 @@
-import { render } from "./app";
+import { render, renderActions } from "./app";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 import preload from "solid-start/runtime/preload";
 import serverScripts from "solid-start/runtime/serverScripts";
@@ -11,13 +11,19 @@ const assetLookup = processSSRManifest(ssrManifest);
 
 addEventListener("fetch", event => {
   console.log(`Received new request: ${event.request.url}`);
-  event.respondWith(handleEvent(event));
+  if (request.method === "POST") {
+    return event.respondWith(handleRequest(event.request))
+  } else event.respondWith(handleEvent(event));
 });
 
-/**
- * Respond with hello worker text
- * @param {Request} request
- */
+async function handleRequest(request) {
+  const body = await request.json();
+  const res = await renderActions(request.url, body);
+  return new Response(res.body, {
+    headers: { "content-type": "application/json" },
+  })
+}
+
 async function handleEvent(event) {
   const url = new URL(event.request.url).pathname;
   try {

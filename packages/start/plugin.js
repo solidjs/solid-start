@@ -24,7 +24,7 @@ export default function StartPlugin(options) {
             ]
           },
           ssr: {
-            noExternal: ["solid-app-router", "solid-meta"]
+            noExternal: ["solid-app-router", "solid-meta", "solid-start"]
           },
           build: {
             rollupOptions: {

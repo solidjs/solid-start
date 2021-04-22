@@ -3,6 +3,7 @@ import http from "http";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import serverScripts from "./serverScripts.js";
+import { getBody } from "./utils.js"
 import vite from "vite";
 
 async function createServer(root = process.cwd()) {
@@ -25,9 +26,20 @@ async function createServer(root = process.cwd()) {
         // always read fresh template in dev
         template = readFileSync(resolve("./index.html"), "utf-8");
         template = await server.transformIndexHtml(req.url, template);
-        const { render } = await server.ssrLoadModule(
+        const { render, renderActions } = await server.ssrLoadModule(
           path.join(path.dirname(fileURLToPath(import.meta.url)), "server", "nodeStream", "app.jsx")
         );
+
+        if (req.method === "POST") {
+          let e;
+          const body = await getBody(req);
+          if (e = await renderActions(req.url, body)) {
+            res.statusCode = e.status;
+            res.write(e.body);
+            res.end();
+            return;
+          }
+        }
 
         const { add, get } = serverScripts();
         const { stream, script } = render(req.url, { add });
