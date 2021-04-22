@@ -11,7 +11,7 @@ const assetLookup = processSSRManifest(ssrManifest);
 
 addEventListener("fetch", event => {
   console.log(`Received new request: ${event.request.url}`);
-  if (request.method === "POST") {
+  if (event.request.method === "POST") {
     return event.respondWith(handleRequest(event.request))
   } else event.respondWith(handleEvent(event));
 });
