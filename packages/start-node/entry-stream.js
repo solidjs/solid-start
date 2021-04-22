@@ -8,7 +8,7 @@ import { getBody } from "solid-start/runtime/utils.js";
 import processSSRManifest from "solid-start/runtime/processSSRManifest.js";
 import manifest from "../../dist/rmanifest.json";
 import ssrManifest from "../../dist/ssr-manifest.json";
-import { render } from "./app";
+import { render, renderActions } from "./app";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const template = readFileSync(join(__dirname, "index.html"), "utf-8");
@@ -17,7 +17,7 @@ const assetLookup = processSSRManifest(ssrManifest);
 const { PORT = 3000 } = process.env;
 
 const server = createServer({
-  render(req, res) {
+  async render(req, res) {
     if (req.url === "/favicon.ico") return;
     if (req.method === "POST") {
       let e;

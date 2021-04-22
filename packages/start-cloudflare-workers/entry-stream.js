@@ -17,8 +17,9 @@ addEventListener("fetch", event => {
 });
 
 async function handleRequest(request) {
+  const url = new URL(request.url).pathname;
   const body = await request.json();
-  const res = await renderActions(request.url, body);
+  const res = await renderActions(url, body);
   return new Response(res.body, {
     headers: { "content-type": "application/json" },
   })
