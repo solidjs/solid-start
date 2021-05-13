@@ -43,4 +43,6 @@ If specifying `"nohoist"` options for a specific package using `solid-start`:
 }
 ```
 
+Regardless of where you specify the nohoist option, you also need to include `solid-start` as a devDependency in the child `package.json`.
+
 The reason why this is necessary is because `solid-start` creates an `index.html` file within your project which expects to load a script located in `/node_modules/solid-start/runtime/entry.jsx` (where `/` is the path of your project root). By default, if you hoist the `solid-start` dependency into the workspace root then that script will not be available within the package's `node_modules` folder.
