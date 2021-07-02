@@ -8,6 +8,7 @@
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
     "types": ["vite/client"],
+    "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"]
     }
