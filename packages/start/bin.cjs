@@ -12,10 +12,11 @@ prog
   .describe("Start a development server")
   .option("-o, --open", "Open a browser tab", false)
   .option("-r --root", "Root directory")
+  .option("-c, --config", "Vite config file")
   .option("-p, --port", "Port to start server on", 3000)
-  .action(async ({ open, port, root }) => {
+  .action(async ({ config, open, port, root }) => {
     if (open) setTimeout(() => launch(port), 1000);
-    (await import("./runtime/devServer.js")).start({ port, root });
+    (await import("./runtime/devServer.js")).start({ config, port, root });
   });
 
 prog

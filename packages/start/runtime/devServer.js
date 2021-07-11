@@ -6,11 +6,12 @@ import serverScripts from "./serverScripts.js";
 import { getBody } from "./utils.js";
 import vite from "vite";
 
-async function createServer(root = process.cwd()) {
+async function createServer(root = process.cwd(), configFile) {
   const resolve = p => path.resolve(root, p);
 
   const server = await vite.createServer({
     root,
+    configFile,
     logLevel: "info",
     server: {
       middlewareMode: true
@@ -71,7 +72,7 @@ async function createServer(root = process.cwd()) {
 }
 
 export function start(options) {
-  createServer(options.root).then(({ app }) =>
+  createServer(options.root, options.config).then(({ app }) =>
     app.listen(options.port, () => {
       console.log(`http://localhost:${options.port}`);
     })
