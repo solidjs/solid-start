@@ -4,7 +4,13 @@ import path from "path";
 
 export default function StartPlugin(options) {
   options = Object.assign(
-    { adapter: "solid-start-node", ssr: true, preferStreaming: true, prerenderRoutes: [] },
+    {
+      adapter: "solid-start-node",
+      root: process.cwd(),
+      ssr: true,
+      preferStreaming: true,
+      prerenderRoutes: []
+    },
     options
   );
   return [
@@ -19,7 +25,7 @@ export default function StartPlugin(options) {
             alias: [
               {
                 find: "~",
-                replacement: path.join(process.cwd(), "src")
+                replacement: path.join(root, "src")
               }
             ]
           },
@@ -35,7 +41,7 @@ export default function StartPlugin(options) {
                   publicPath: "/",
                   routes: file => {
                     file = file
-                      .replace(path.join(process.cwd(), "src"), "")
+                      .replace(path.join(root, "src"), "")
                       .replace(/(index)?\.[tj]sx?$/, "");
                     if (!file.includes("/pages/")) return "*"; // commons
                     return "/" + file.replace("/pages/", "").toLowerCase();
