@@ -11,10 +11,11 @@ prog
   .command("dev")
   .describe("Start a development server")
   .option("-o, --open", "Open a browser tab", false)
+  .option("-r --root", "Root directory")
   .option("-p, --port", "Port to start server on", 3000)
-  .action(async ({ open, port }) => {
+  .action(async ({ open, port, root }) => {
     if (open) setTimeout(() => launch(port), 1000);
-    (await import("./runtime/devServer.js")).start({ port });
+    (await import("./runtime/devServer.js")).start({ port, root });
   });
 
 prog

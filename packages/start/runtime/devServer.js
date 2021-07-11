@@ -3,11 +3,11 @@ import http from "http";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import serverScripts from "./serverScripts.js";
-import { getBody } from "./utils.js"
+import { getBody } from "./utils.js";
 import vite from "vite";
 
 async function createServer(root = process.cwd()) {
-  const resolve = p => path.resolve(process.cwd(), p);
+  const resolve = p => path.resolve(root, p);
 
   const server = await vite.createServer({
     root,
@@ -71,7 +71,7 @@ async function createServer(root = process.cwd()) {
 }
 
 export function start(options) {
-  createServer().then(({ app }) =>
+  createServer(options.root).then(({ app }) =>
     app.listen(options.port, () => {
       console.log(`http://localhost:${options.port}`);
     })
