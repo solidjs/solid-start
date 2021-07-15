@@ -1,12 +1,11 @@
-import solid from "vite-plugin-solid";
-import manifest from "rollup-route-manifest";
 import path from "path";
+import manifest from "rollup-route-manifest";
+import solid from "vite-plugin-solid";
 
 export default function StartPlugin(options) {
   options = Object.assign(
     {
       adapter: "solid-start-node",
-      root: process.cwd(),
       ssr: true,
       preferStreaming: true,
       prerenderRoutes: []
@@ -18,14 +17,14 @@ export default function StartPlugin(options) {
     {
       name: "solid-start",
       mode: "pre",
-      config() {
+      config(conf) {
         return {
           resolve: {
             conditions: ["solid"],
             alias: [
               {
                 find: "~",
-                replacement: path.join(root, "src")
+                replacement: path.join(conf.root, "src")
               }
             ]
           },
@@ -41,7 +40,7 @@ export default function StartPlugin(options) {
                   publicPath: "/",
                   routes: file => {
                     file = file
-                      .replace(path.join(root, "src"), "")
+                      .replace(path.join(conf.root, "src"), "")
                       .replace(/(index)?\.[tj]sx?$/, "");
                     if (!file.includes("/pages/")) return "*"; // commons
                     return "/" + file.replace("/pages/", "").toLowerCase();
