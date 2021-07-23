@@ -1,6 +1,6 @@
 {
   "name": "solid-start-node",
-  "version": "0.1.0-alpha.26",
+  "version": "0.1.0-alpha.27",
   "main": "./index.js",
   "type": "module",
   "dependencies": {
@@ -14,7 +14,7 @@
     "sirv": "^1.0.12"
   },
   "devDependencies": {
-    "solid-start": "0.1.0-alpha.26"
+    "solid-start": "^0.1.0-alpha.27"
   },
   "peerDependencies": {
     "solid-start": "*"
