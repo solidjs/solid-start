@@ -10,19 +10,21 @@
   "files": [
     "bin.cjs",
     "plugin.js",
-    "runtime",
-    "renderStatic"
+    "index.ts",
+    "components",
+    "runtime"
   ],
   "dependencies": {
     "node-fetch": "^2.6.1",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.7.4",
-    "vite-plugin-solid": "^1.5.1"
+    "solid-ssr": "^1.0.4",
+    "vite-plugin-solid": "^2.0.1"
   },
   "peerDependencies": {
-    "solid-app-router": "*",
-    "solid-js": "*",
-    "solid-meta": "*",
-    "vite": "*"
+    "solid-app-router": "^0.1.1",
+    "solid-js": "^1.0.0",
+    "solid-meta": "^0.27.0",
+    "vite": "^2.4.3"
   }
 }

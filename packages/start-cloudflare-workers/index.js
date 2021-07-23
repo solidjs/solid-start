@@ -6,7 +6,6 @@ import vite from "vite";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import common from "@rollup/plugin-commonjs";
-import { string } from "rollup-plugin-string";
 import { spawn } from "child_process";
 
 export default function () {
@@ -19,20 +18,22 @@ export default function () {
     async build(config) {
       const { preferStreaming } = config.solidOptions;
       const __dirname = dirname(fileURLToPath(import.meta.url));
+      const ssrEntry = `node_modules/solid-start/runtime/entries/${preferStreaming ? "webStream" : "stringAsync"}.jsx`;
       await Promise.all([
         vite.build({
           build: {
             outDir: "./dist/",
-            ssrManifest: true
+            rollupOptions: {
+              input: `node_modules/solid-start/runtime/entries/client.jsx`
+            }
           }
         }),
         vite.build({
           build: {
-            ssr: `node_modules/solid-start/runtime/server/${
-              preferStreaming ? "webStream" : "stringAsync"
-            }/app.jsx`,
+            ssr: true,
             outDir: "./.solid/server",
             rollupOptions: {
+              input: ssrEntry,
               output: {
                 format: "esm"
               }
@@ -41,6 +42,10 @@ export default function () {
         })
       ]);
       copyFileSync(
+        join(config.root, ".solid", "server", `${preferStreaming ? "webStream" : "stringAsync"}.js`),
+        join(config.root, ".solid", "server", "app.js")
+      );
+      copyFileSync(
         join(__dirname, preferStreaming ? "entry-stream.js" : "entry-async.js"),
         join(config.root, ".solid", "server", "index.js")
       );
@@ -48,7 +53,6 @@ export default function () {
         input: join(config.root, ".solid", "server", "index.js"),
         plugins: [
           json(),
-          string({ include: "**/*.html" }),
           nodeResolve({
             exportConditions: ["node", "solid"]
           }),

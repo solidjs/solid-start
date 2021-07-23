@@ -2,7 +2,7 @@ import { copyFileSync, readdirSync, statSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { spawn } from "child_process";
-import renderStatic from "solid-start/renderStatic/index.js";
+import renderStatic from "solid-ssr/static";
 import vite from "vite";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -39,14 +39,17 @@ export default function () {
         vite.build({
           build: {
             outDir: "./dist/",
-            ssrManifest: true
+            rollupOptions: {
+              input: `node_modules/solid-start/runtime/entries/client.jsx`
+            }
           }
         }),
         vite.build({
           build: {
-            ssr: `node_modules/solid-start/runtime/server/${"stringAsync"}/app.jsx`,
+            ssr: true,
             outDir: "./.solid/server",
             rollupOptions: {
+              input: `node_modules/solid-start/runtime/entries/stringAsync.jsx`,
               output: {
                 format: "esm"
               }
@@ -54,6 +57,10 @@ export default function () {
           }
         })
       ]);
+      copyFileSync(
+        join(config.root, ".solid", "server", "stringAsync.js"),
+        join(config.root, ".solid", "server", "app.js")
+      );
       const pathToServer = join(config.root, ".solid", "server", "index.js");
       copyFileSync(join(__dirname, "entry.js"), pathToServer);
       const pathToDist = resolve(config.root, "dist");

@@ -18,13 +18,14 @@ export default function StartPlugin(options) {
       name: "solid-start",
       mode: "pre",
       config(conf) {
+        const root = conf.root || process.cwd();
         return {
           resolve: {
             conditions: ["solid"],
             alias: [
               {
                 find: "~",
-                replacement: path.join(conf.root, "src")
+                replacement: path.join(root, "src")
               }
             ]
           },
@@ -32,6 +33,8 @@ export default function StartPlugin(options) {
             noExternal: ["solid-app-router", "solid-meta", "solid-start"]
           },
           build: {
+            target: "esnext",
+            manifest: true,
             rollupOptions: {
               plugins: [
                 manifest({
@@ -40,7 +43,7 @@ export default function StartPlugin(options) {
                   publicPath: "/",
                   routes: file => {
                     file = file
-                      .replace(path.join(conf.root, "src"), "")
+                      .replace(path.join(root, "src"), "")
                       .replace(/(index)?\.[tj]sx?$/, "");
                     if (!file.includes("/pages/")) return "*"; // commons
                     return "/" + file.replace("/pages/", "").toLowerCase();
@@ -51,13 +54,6 @@ export default function StartPlugin(options) {
           },
           solidOptions: options
         };
-      }
-    },
-    options.preferStreaming && {
-      name: "html-async",
-      enforce: "post",
-      transformIndexHtml(html) {
-        return html.replace('type="module"', 'type="module" async');
       }
     }
   ];

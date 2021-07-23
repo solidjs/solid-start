@@ -1,13 +1,10 @@
 import { render, renderActions } from "./app";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
-import preload from "solid-start/runtime/preload";
-import serverScripts from "solid-start/runtime/serverScripts";
-import processSSRManifest from "solid-start/runtime/processSSRManifest";
 import manifest from "../../dist/rmanifest.json";
-import ssrManifest from "../../dist/ssr-manifest.json";
-import template from "../../dist/index.html";
+import assetManifest from "../../dist/manifest.json";
+import prepareManifest from "solid-start/runtime/prepareManifest";
 
-const assetLookup = processSSRManifest(ssrManifest);
+prepareManifest(manifest, assetManifest);
 
 addEventListener("fetch", event => {
   console.log(`Received new request: ${event.request.url}`);
@@ -28,30 +25,10 @@ async function handleRequest(request) {
 async function handleEvent(event) {
   const url = new URL(event.request.url).pathname;
   try {
-    if (url === "/") throw new Error("index");
     return await getAssetFromKV(event);
   } catch (err) {
-    const { add, get } = serverScripts();
-    const ctx = { add };
-    const { writeTo, script } = render(url, ctx);
-
-    const [htmlStart, htmlEnd] = template
-      .replace(
-        `<!--app-head-->`,
-        script + preload(ctx.router[0].current, manifest, assetLookup) + get()
-      )
-      .split(`<!--app-html-->`);
-
     const { readable, writable } = new TransformStream();
-    const writer = writable.getWriter();
-    const encoder = new TextEncoder();
-    writer.write(encoder.encode(htmlStart));
-    writeTo(writer)
-      .then(() => {
-        writer.write(encoder.encode(htmlEnd));
-        writer.close();
-      })
-      .catch(err => console.log(err.message));
+    render({ url, writable, manifest });
     return new Response(readable, {
       headers: { "content-type": "text/html;charset=UTF-8" }
     });
