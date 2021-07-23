@@ -1,5 +1,5 @@
 // @refresh reload
-import { Links, Meta, Outlet, Scripts } from "solid-start";
+import { Links, Meta, Outlet, Scripts } from "solid-start/components";
 
 export default function Root({ Start }) {
   return (
