@@ -30,6 +30,4 @@ const routes = Object.entries(pages).map(([key, fn]) => {
   };
 });
 
-export default function Outlet() {
-  return useRoutes(routes);
-}
+export default useRoutes(routes);
