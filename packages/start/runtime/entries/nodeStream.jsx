@@ -4,9 +4,6 @@ import { Router } from "solid-app-router";
 import Root from "~/root";
 import { StartProvider } from "../../components";
 import renderActions from "../actionsServer";
-import fetch from "node-fetch";
-
-globalThis.fetch || (globalThis.fetch = fetch);
 
 export function render({ url, writable, manifest }) {
   const context = { tags: [] };

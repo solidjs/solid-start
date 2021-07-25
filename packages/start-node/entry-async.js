@@ -4,6 +4,9 @@ import prepareManifest from "solid-start/runtime/prepareManifest.js";
 import manifest from "../../dist/rmanifest.json";
 import assetManifest from "../../dist/manifest.json";
 import { render, renderActions } from "./app";
+import fetch from "node-fetch";
+
+globalThis.fetch || (globalThis.fetch = fetch);
 
 prepareManifest(manifest, assetManifest);
 

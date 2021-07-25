@@ -57,14 +57,10 @@ export default function () {
             exportConditions: ["node", "solid"]
           }),
           common()
-        ],
-        external: ["stream"],
-        treeshake: {
-          moduleSideEffects: "no-external"
-        }
+        ]
       });
       // or write the bundle to disk
-      await bundle.write({ format: "cjs", dir: join(config.root, "dist") });
+      await bundle.write({ format: "esm", dir: join(config.root, "dist") });
 
       // closes the bundle
       await bundle.close();

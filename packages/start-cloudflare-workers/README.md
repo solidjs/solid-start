@@ -21,6 +21,9 @@ type = "javascript"
 [site]
 bucket = "./dist"
 entry-point = "./"
+[build]
+command = ""
+upload.format = "service-worker"
 ```
 
 You also need to add the main entry to your package.json:
