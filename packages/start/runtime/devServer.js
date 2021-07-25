@@ -3,6 +3,9 @@ import http from "http";
 import { fileURLToPath } from "url";
 import { getBody } from "./utils.js";
 import vite from "vite";
+import fetch from "node-fetch";
+
+globalThis.fetch || (globalThis.fetch = fetch);
 
 async function createServer(root = process.cwd(), configFile) {
   const server = await vite.createServer({
