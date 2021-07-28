@@ -16,7 +16,12 @@ export function render({ url, writable, manifest }) {
       </MetaProvider>
     </StartProvider>
   );
-  pipeToNodeWritable(() => <Root Start={Start} />, writable);
+  pipeToNodeWritable(() => <Root Start={Start} />, writable, {
+    onReady({ write, startWriting }) {
+      write("<!DOCTYPE html>");
+      startWriting();
+    }
+  });
 }
 
 export { renderActions };

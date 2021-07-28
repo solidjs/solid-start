@@ -16,7 +16,7 @@ export function render({ url, manifest }) {
       </MetaProvider>
     </StartProvider>
   );
-  return renderToString(() => <Root Start={Start} />);
+  return "<!DOCTYPE html>" + renderToString(() => <Root Start={Start} />);
 }
 
 export { renderActions };

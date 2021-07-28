@@ -5,7 +5,7 @@ import Root from "~/root";
 import { StartProvider } from "../../components";
 import renderActions from "../actionsServer";
 
-export function render({ url, manifest }) {
+export async function render({ url, manifest }) {
   const context = { tags: [] };
   const Start = props => (
     <StartProvider context={context} manifest={manifest}>
@@ -16,7 +16,8 @@ export function render({ url, manifest }) {
       </MetaProvider>
     </StartProvider>
   );
-  return renderToStringAsync(() => <Root Start={Start} />);
+  const html = await renderToStringAsync(() => <Root Start={Start} />);
+  return "<!DOCTYPE html>" + html;
 }
 
 export { renderActions };
