@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 
 globalThis.fetch || (globalThis.fetch = fetch);
 
-async function createServer(root = process.cwd(), configFile) {
+async function createServer(root = process.cwd(), configFile, port) {
   const server = await vite.createServer({
     root,
     configFile,
@@ -39,7 +39,7 @@ async function createServer(root = process.cwd(), configFile) {
 
         res.statusCode = 200;
         res.setHeader("content-type", "text/html");
-        render({ url: req.url, writable: res });
+        render({ url: req.url, writable: res, port: port });
       } catch (e) {
         server && server.ssrFixStacktrace(e);
         console.log(e.stack);
@@ -53,7 +53,7 @@ async function createServer(root = process.cwd(), configFile) {
 }
 
 export function start(options) {
-  createServer(options.root, options.config).then(({ app }) =>
+  createServer(options.root, options.config, options.port).then(({ app }) =>
     app.listen(options.port, () => {
       console.log(`http://localhost:${options.port}`);
     })

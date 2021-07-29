@@ -10,7 +10,7 @@ function getFromManifest(manifest) {
 
 export default function Scripts() {
   const isDev = import.meta.env.MODE === "development";
-  const { manifest } = useContext(StartContext);
+  const { manifest, port } = useContext(StartContext);
   return (
     <>
       <HydrationScript />
@@ -18,11 +18,11 @@ export default function Scripts() {
         {isServer &&
           (isDev ? (
             <>
-              <script type="module" src="http://localhost:3000/@vite/client" $ServerOnly></script>
+              <script type="module" src={`http://localhost:${port || 3000}/@vite/client`} $ServerOnly></script>
               <script
                 type="module"
                 async
-                src="http://localhost:3000/node_modules/solid-start/runtime/entries/client.jsx"
+                src={`http://localhost:${port || 3000}/node_modules/solid-start/runtime/entries/client.jsx`}
                 $ServerOnly
               ></script>
             </>

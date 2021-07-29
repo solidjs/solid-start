@@ -5,10 +5,10 @@ import Root from "~/root";
 import { StartProvider } from "../../components";
 import renderActions from "../actionsServer";
 
-export function render({ url, writable, manifest }) {
+export function render({ url, writable, manifest, port }) {
   const context = { tags: [] };
   const Start = props => (
-    <StartProvider context={context} manifest={manifest}>
+    <StartProvider context={context} manifest={manifest} port={port}>
       <MetaProvider tags={context.tags}>
         <Router url={url} out={context}>
           {props.children}
