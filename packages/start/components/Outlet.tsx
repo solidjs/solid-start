@@ -17,17 +17,38 @@ const data = Object.entries(dataModules).reduce((memo, [key, value]) => {
   return memo;
 }, {});
 
-const routes = Object.entries(pages).map(([key, fn]) => {
-  const id = toIdentifier(key);
-  return {
-    path: toPath(id),
-    component: lazy(
+function findNestedPath(list, id, full, component) {
+  let temp = list.find(o => o._id && id.startsWith(o._id));
+  if (!temp)
+    list.push({
+      _id: id,
+      path: toPath(id),
+      component,
+      data: data[full] ? data[full].default : undefined
+    });
+  else
+    findNestedPath(
+      temp.children || (temp.children = []),
+      id.slice(temp._id.length),
+      full,
+      component
+    );
+}
+
+const routes = Object.entries(pages).reduce((r, [key, fn]) => {
+  let id = toIdentifier(key);
+  if (id === "/") id = "";
+  findNestedPath(
+    r,
+    id,
+    id,
+    lazy(
       fn as () => Promise<{
         default: Component<any>;
       }>
-    ),
-    data: data[id] ? data[id].default : undefined
-  };
-});
+    )
+  );
+  return r;
+}, []);
 
 export default useRoutes(routes);
