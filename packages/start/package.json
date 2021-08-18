@@ -11,6 +11,7 @@
     "bin.cjs",
     "plugin.js",
     "index.ts",
+    "actions.ts",
     "components",
     "runtime"
   ],
