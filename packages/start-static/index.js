@@ -40,7 +40,7 @@ export default function () {
           build: {
             outDir: "./dist/",
             rollupOptions: {
-              input: `node_modules/solid-start/runtime/entries/client.jsx`
+              input: `node_modules/solid-start/runtime/entries/client.tsx`
             }
           }
         }),
@@ -49,7 +49,7 @@ export default function () {
             ssr: true,
             outDir: "./.solid/server",
             rollupOptions: {
-              input: `node_modules/solid-start/runtime/entries/stringAsync.jsx`,
+              input: `node_modules/solid-start/runtime/entries/stringAsync.tsx`,
               output: {
                 format: "esm"
               }

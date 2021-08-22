@@ -22,7 +22,7 @@ export default function Scripts() {
               <script
                 type="module"
                 async
-                src="http://localhost:3000/node_modules/solid-start/runtime/entries/client.jsx"
+                src="http://localhost:3000/node_modules/solid-start/runtime/entries/client.tsx"
                 $ServerOnly
               ></script>
             </>

@@ -15,13 +15,13 @@ export default function () {
     async build(config) {
       const { preferStreaming } = config.solidOptions;
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      const ssrEntry = `node_modules/solid-start/runtime/entries/${preferStreaming ? "nodeStream" : "stringAsync"}.jsx`;
+      const ssrEntry = `node_modules/solid-start/runtime/entries/${preferStreaming ? "nodeStream" : "stringAsync"}.tsx`;
       await Promise.all([
         vite.build({
           build: {
             outDir: "./dist/",
             rollupOptions: {
-              input: `node_modules/solid-start/runtime/entries/client.jsx`
+              input: `node_modules/solid-start/runtime/entries/client.tsx`
             }
           }
         }),

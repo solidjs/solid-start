@@ -16,28 +16,33 @@ async function postData(url = "", body = {}) {
 
 let actionProxy;
 if (isServer) {
-  const actionModules = import.meta.globEager("/src/actions/**/*.(js|ts)");
-  actionProxy = Object.values<{ default: any }>(actionModules).reduce(
-    (memo, actions) =>
-      Object.assign(
-        memo,
-        Object.keys(actions.default).reduce((apis, actionName) => {
-          apis[actionName] = (...args: any[]) => {
-            return Promise.resolve(actions.default[actionName](...args));
-          };
-          return apis;
-        }, {})
-      ),
+  const NAMESPACE = /([^\/\.]+)\.actions/;
+  const actionModules = import.meta.globEager("/src/**/*.actions.(js|ts)");
+  actionProxy = Object.entries<Record<string, any>>(actionModules).reduce(
+    (memo, [name, actions]) => {
+      memo[NAMESPACE.exec(name)[1]] = Object.keys(actions).reduce((apis, actionName) => {
+        apis[actionName] = (...args: any[]) => Promise.resolve(actions[actionName](...args));
+        return apis;
+      }, {});
+      return memo;
+    },
     {}
   );
 } else {
   actionProxy = new Proxy(
     {},
     {
-      get(_, property: string) {
-        return (...args: any[]) => {
-          return postData(`/actions/${property}`, args);
-        };
+      get(_, namespace: string) {
+        return new Proxy(
+          {},
+          {
+            get(_, property: string) {
+              return (...args: any[]) => {
+                return postData(`/actions/${namespace}/${property}`, args);
+              };
+            }
+          }
+        );
       }
     }
   );

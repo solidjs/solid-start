@@ -1,13 +1,14 @@
 import { hydrate } from "solid-js/web";
 import { MetaProvider } from "solid-meta";
-import { Router } from "solid-app-router";
+import { RouteDataFunc, Router } from "solid-app-router";
 import { StartProvider } from "../../components";
 import Root from "~/root";
+import { Component } from "solid-js";
 
-const Start = props => (
+const Start: Component<{ data?: RouteDataFunc }> = props => (
   <StartProvider>
     <MetaProvider>
-      <Router>{props.children}</Router>
+      <Router data={props.data}>{props.children}</Router>
     </MetaProvider>
   </StartProvider>
 );

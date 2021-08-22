@@ -1,7 +1,10 @@
-const actionModules = import.meta.globEager("/src/actions/**/*.(js|ts)");
+const actionModules = import.meta.globEager("/src/**/*.actions.(js|ts)");
 
-const actions = Object.values<{ default: any }>(actionModules).reduce((memo, actions) => {
-  return Object.assign(memo, actions.default);
+const NAMESPACE = /([^\/\.]+)\.actions/;
+const actions = Object.entries<Record<string, any>>(actionModules).reduce((memo, [name, actions]) => {
+  const prefix = NAMESPACE.exec(name)[1] + "/";
+  Object.keys(actions).forEach(key => memo[prefix + key] = actions[key]);
+  return memo;
 }, {});
 
 export default async function renderActions(url: string, body: any) {
