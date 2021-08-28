@@ -1,5 +1,6 @@
-import { lazy, Component } from "solid-js";
+import { lazy } from "solid-js";
 import { useRoutes } from "solid-app-router";
+import type { Component } from "solid-js";
 
 const dataModules = import.meta.globEager("/src/pages/**/*.data.(js|ts)");
 const pages = import.meta.glob("/src/pages/**/*.(jsx|tsx)");

@@ -1,10 +1,12 @@
 import { pipeToWritable } from "solid-js/web";
 import { MetaProvider } from "solid-meta";
-import { RouteDataFunc, Router } from "solid-app-router";
+import { Router } from "solid-app-router";
 import Root from "~/root";
 import { StartProvider } from "../../components";
 import renderActions from "../actionsServer";
-import { Component } from "solid-js";
+
+import type { Component } from "solid-js";
+import type { RouteDataFunc } from "solid-app-router";
 
 export function render({ url, writable, manifest }) {
   const context = { tags: [] };
