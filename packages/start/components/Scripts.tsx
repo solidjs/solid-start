@@ -18,11 +18,11 @@ export default function Scripts() {
         {isServer &&
           (isDev ? (
             <>
-              <script type="module" src="http://localhost:3000/@vite/client" $ServerOnly></script>
+              <script type="module" src="/@vite/client" $ServerOnly></script>
               <script
                 type="module"
                 async
-                src="http://localhost:3000/node_modules/solid-start/runtime/entries/client.tsx"
+                src="/node_modules/solid-start/runtime/entries/client.tsx"
                 $ServerOnly
               ></script>
             </>
