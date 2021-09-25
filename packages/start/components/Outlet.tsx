@@ -23,7 +23,7 @@ function findNestedPath(list, id, full, component) {
   if (!temp)
     list.push({
       _id: id,
-      path: toPath(id),
+      path: toPath(id) || "/",
       component,
       data: data[full] ? data[full].default : undefined
     });
