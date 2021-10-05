@@ -4,7 +4,7 @@ import { StartContext } from "./StartContext";
 
 function getAssetsFromManifest(manifest, context) {
   let path = mapRouteToFile(context.matches[0]);
-  const match = manifest[path];
+  const match = manifest[path] || [];
   return Object.values(
     match.reduce((r, src) => {
       r[src.href] =
