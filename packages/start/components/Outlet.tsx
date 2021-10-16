@@ -19,7 +19,7 @@ const data = Object.entries(dataModules).reduce((memo, [key, value]) => {
 }, {});
 
 function findNestedPath(list, id, full, component) {
-  let temp = list.find(o => o._id !== '/' && o._id && id.startsWith(o._id));
+  let temp = list.find(o => o._id && o._id !== '/' && id.startsWith(o._id));
   if (!temp)
     list.push({
       _id: id,
@@ -38,7 +38,6 @@ function findNestedPath(list, id, full, component) {
 
 const routes = Object.entries(pages).reduce((r, [key, fn]) => {
   let id = toIdentifier(key);
-  if (id === "/") id = "";
   findNestedPath(
     r,
     id,
