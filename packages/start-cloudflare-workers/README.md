@@ -1,4 +1,4 @@
-# start-node
+# start-cloudflare-workers
 
 Adapter for Solid apps that work on Cloudflare Workers.
 
