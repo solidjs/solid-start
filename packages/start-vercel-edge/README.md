@@ -1,4 +1,4 @@
-# start-vercel-edte
+# start-vercel-edge
 
 Adapter for Solid apps that work on Vercel Edge Functions.
 
