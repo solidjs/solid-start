@@ -7,6 +7,7 @@
     "@rollup/plugin-commonjs": "^19.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.2",
+    "encoding": "^0.1.13",
     "node-fetch": "^2.6.1",
     "rollup": "^2.53.3"
   },

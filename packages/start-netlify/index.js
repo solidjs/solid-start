@@ -59,7 +59,7 @@ export default function () {
         ]
       });
       // or write the bundle to disk
-      await bundle.write({ format: "esm", dir: join(config.root, "dist", "functions") });
+      await bundle.write({ format: "cjs", dir: join(config.root, "dist", "functions") });
 
       // closes the bundle
       await bundle.close();
