@@ -2,6 +2,9 @@ import { render, renderActions } from "./app";
 import manifest from "../../dist/rmanifest.json";
 import assetManifest from "../../dist/manifest.json";
 import prepareManifest from "solid-start/runtime/prepareManifest";
+import fetch from "node-fetch";
+
+globalThis.fetch || (globalThis.fetch = fetch);
 
 prepareManifest(manifest, assetManifest);
 
