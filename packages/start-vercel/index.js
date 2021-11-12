@@ -50,8 +50,8 @@ export default function () {
         join(config.root, ".solid", "server", "index.js")
       );
       copyFileSync(
-        join(__dirname, "function-manifests.json"),
-        join(config.root, ".output", "function-manifests.json")
+        join(__dirname, "functions-manifest.json"),
+        join(config.root, ".output", "functions-manifest.json")
       );
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
