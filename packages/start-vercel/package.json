@@ -1,5 +1,5 @@
 {
-  "name": "solid-start-vercel-edge",
+  "name": "solid-start-vercel",
   "version": "0.1.0-alpha.37",
   "main": "./index.js",
   "type": "module",

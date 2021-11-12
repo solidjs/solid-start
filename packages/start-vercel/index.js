@@ -11,7 +11,7 @@ import { spawn } from "child_process";
 export default function () {
   return {
     start() {
-      const proc = spawn("vercel", ["./dist"]);
+      const proc = spawn("vercel");
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
@@ -22,7 +22,7 @@ export default function () {
       await Promise.all([
         vite.build({
           build: {
-            outDir: "./dist/public/",
+            outDir: "./.output/static/",
             rollupOptions: {
               input: `node_modules/solid-start/runtime/entries/client.tsx`
             }
@@ -50,12 +50,11 @@ export default function () {
         join(config.root, ".solid", "server", "index.js")
       );
       copyFileSync(
-        join(__dirname, "package-stub.json"),
-        join(config.root, "dist", "package.json")
+        join(__dirname, "function-manifests.json"),
+        join(config.root, ".output", "function-manifests.json")
       );
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
-        external: ["next/server"],
         plugins: [
           json(),
           nodeResolve({
@@ -65,7 +64,7 @@ export default function () {
         ]
       });
       // or write the bundle to disk
-      await bundle.write({ format: "esm", file: join(config.root, "dist", "pages", "_middleware.js") });
+      await bundle.write({ format: "esm", file: join(config.root, ".output", "server", "pages", "_middleware.js") });
 
       // closes the bundle
       await bundle.close();
