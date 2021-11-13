@@ -20,7 +20,7 @@ async function middleware({ request }) {
       headers: { "content-type": "text/html;charset=UTF-8" }
     });
   }
-  return getRespnse(null, {
+  return getResponse(null, {
     headers: {
       "x-middleware-next": "1"
     }
