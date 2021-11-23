@@ -46,7 +46,7 @@ export default function StartPlugin(options) {
                       .replace(path.join(root, "src"), "")
                       .replace(/(index)?\.[tj]sx?$/, "");
                     if (!file.includes("/pages/")) return "*"; // commons
-                    return "/" + file.replace("/pages/", "").toLowerCase();
+                    return "/" + file.replace("/pages/", "");
                   }
                 })
               ]
