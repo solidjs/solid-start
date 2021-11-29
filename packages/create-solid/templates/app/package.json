@@ -7,12 +7,12 @@
   },
   "type": "module",
   "devDependencies": {
-    "solid-app-router": "^0.1.9",
+    "solid-app-router": "^0.1.13",
     "solid-js": "^1.2.0",
     "solid-meta": "^0.27.2",
     "solid-start": "next",
     "solid-start-node": "next",
-    "vite": "^2.6.12"
+    "vite": "^2.6.14"
   },
   "engines": {
     "node": ">=12"
