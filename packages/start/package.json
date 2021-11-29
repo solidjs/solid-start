@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.1.0-alpha.43",
+  "version": "0.1.0-alpha.44",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -16,22 +16,22 @@
     "runtime"
   ],
   "dependencies": {
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.6",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.7.4",
-    "solid-ssr": "^1.0.5",
-    "vite-plugin-solid": "^2.0.1"
+    "solid-ssr": "^1.2.5",
+    "vite-plugin-solid": "^2.1.2"
   },
   "devDependencies": {
-    "solid-app-router": "^0.1.5",
-    "solid-js": "^1.0.5",
+    "solid-app-router": "^0.1.13",
+    "solid-js": "^1.2.5",
     "solid-meta": "^0.27.0",
-    "vite": "^2.4.3"
+    "vite": "^2.6.14"
   },
   "peerDependencies": {
     "solid-app-router": "^0.1.5",
-    "solid-js": "^1.0.5",
+    "solid-js": "^1.2.5",
     "solid-meta": "^0.27.0",
-    "vite": "^2.4.3"
+    "vite": "^2.6.14"
   }
 }
