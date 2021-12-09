@@ -23,6 +23,7 @@ export default function () {
         vite.build({
           build: {
             outDir: "./.output/static/",
+            minify: "terser",
             rollupOptions: {
               input: `node_modules/solid-start/runtime/entries/client.tsx`
             }

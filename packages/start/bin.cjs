@@ -23,7 +23,7 @@ prog
   .command("build")
   .describe("Create production build")
   .action(async () => {
-    const config = await vite.resolveConfig({}, "build");
+    const config = await vite.resolveConfig({ mode: "production" }, "build");
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
@@ -35,7 +35,7 @@ prog
   .command("start")
   .describe("Run production build")
   .action(async () => {
-    const config = await vite.resolveConfig({}, "build");
+    const config = await vite.resolveConfig({ mode: "production" }, "build");
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
