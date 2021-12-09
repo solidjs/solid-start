@@ -1,3 +1,7 @@
+<p>
+  <img width="100%" src="https://raw.githubusercontent.com/solidjs/solid-start/master/banner.png" alt="Solid Docs">
+</p>
+
 # Solid Start
 
 This is the home of the new official starter for Solid. This is still a work in progress. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
