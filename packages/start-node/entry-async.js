@@ -1,3 +1,4 @@
+import { renderToStringAsync } from "solid-js/web";
 import { createServer } from "solid-start-node/server.js";
 import { getBody } from "solid-start/runtime/utils.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
@@ -26,7 +27,7 @@ const server = createServer({
       }
     }
 
-    const html = await render({ url: req.url, manifest });
+    const html = await renderToStringAsync(render({ url: req.url, manifest }));
 
     res.statusCode = 200;
     res.setHeader("content-type", "text/html");

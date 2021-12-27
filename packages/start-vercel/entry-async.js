@@ -1,3 +1,4 @@
+import { renderToStringAsync } from "solid-js/web";
 import { render, renderActions } from "./app";
 import manifest from "../../.output/static/rmanifest.json";
 import assetManifest from "../../.output/static/manifest.json";
@@ -15,7 +16,7 @@ async function middleware({ request }) {
   const url = new URL(request.url).pathname;
   if (request.method === "POST") handleAction(request, url);
   else if (!url.includes(".")) {
-    const html = await render({ url, manifest });
+    const html = await renderToStringAsync(render({ url, manifest }));
     return getResponse(html, {
       headers: { "content-type": "text/html;charset=UTF-8" }
     });

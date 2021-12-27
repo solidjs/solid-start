@@ -23,7 +23,7 @@ async function createServer(root = process.cwd(), configFile) {
         if (req.url === "/favicon.ico") return;
 
         const { render, renderActions } = await server.ssrLoadModule(
-          path.join(path.dirname(fileURLToPath(import.meta.url)), "entries", "nodeStream.tsx")
+          path.join(path.dirname(fileURLToPath(import.meta.url)), "entries", "devServer.tsx")
         );
 
         if (req.method === "POST") {

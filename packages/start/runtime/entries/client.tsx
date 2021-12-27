@@ -4,15 +4,18 @@ import { Router } from "solid-app-router";
 import { StartProvider } from "../../components";
 import Root from "~/root";
 
-import type { Component } from "solid-js";
-import type { RouteDataFunc } from "solid-app-router";
+const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
+const dataFn = rootData ? rootData.default : undefined;
 
-const Start: Component<{ data?: RouteDataFunc }> = props => (
-  <StartProvider>
-    <MetaProvider>
-      <Router data={props.data}>{props.children}</Router>
-    </MetaProvider>
-  </StartProvider>
+hydrate(
+  () => (
+    <StartProvider>
+      <MetaProvider>
+        <Router data={dataFn}>
+          <Root />
+        </Router>
+      </MetaProvider>
+    </StartProvider>
+  ),
+  document
 );
-
-hydrate(() => <Root Start={Start} manifest={{}} />, document);

@@ -17,7 +17,6 @@ export default function () {
     },
     async build(config) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      const ssrEntry = `node_modules/solid-start/runtime/entries/stringAsync.tsx`;
       await Promise.all([
         vite.build({
           build: {
@@ -33,7 +32,7 @@ export default function () {
             ssr: true,
             outDir: "./.solid/server",
             rollupOptions: {
-              input: ssrEntry,
+              input: `node_modules/solid-start/runtime/entries/server.tsx`,
               output: {
                 format: "esm"
               }
@@ -42,11 +41,11 @@ export default function () {
         })
       ]);
       copyFileSync(
-        join(config.root, ".solid", "server", "stringAsync.js"),
+        join(config.root, ".solid", "server", "server.js"),
         join(config.root, ".solid", "server", "app.js")
       );
       copyFileSync(
-        join(__dirname, "entry-async.js"),
+        join(__dirname, "entry.js"),
         join(config.root, ".solid", "server", "index.js")
       );
       const bundle = await rollup({
@@ -54,6 +53,7 @@ export default function () {
         plugins: [
           json(),
           nodeResolve({
+            preferBuiltins: true,
             exportConditions: ["node", "solid"]
           }),
           common()

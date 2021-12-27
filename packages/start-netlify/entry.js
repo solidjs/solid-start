@@ -1,3 +1,4 @@
+import { renderToStringAsync } from "solid-js/web";
 import { render, renderActions } from "./app";
 import manifest from "../../dist/rmanifest.json";
 import assetManifest from "../../dist/manifest.json";
@@ -18,7 +19,7 @@ exports.handler = async function(event, context) {
       headers: { "content-type": "application/json" },
     }
   } else {
-    const html = await render({ url: event.path, manifest });
+    const html = await renderToStringAsync(render({ url: event.path, manifest }));
     return {
       body: html,
       statusCode: 200,

@@ -18,7 +18,6 @@ export default function () {
     async build(config) {
       const { preferStreaming } = config.solidOptions;
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      const ssrEntry = `node_modules/solid-start/runtime/entries/${preferStreaming ? "webStream" : "stringAsync"}.tsx`;
       await Promise.all([
         vite.build({
           build: {
@@ -34,7 +33,7 @@ export default function () {
             ssr: true,
             outDir: "./.solid/server",
             rollupOptions: {
-              input: ssrEntry,
+              input: `node_modules/solid-start/runtime/entries/server.tsx`,
               output: {
                 format: "esm"
               }
@@ -43,7 +42,7 @@ export default function () {
         })
       ]);
       copyFileSync(
-        join(config.root, ".solid", "server", `${preferStreaming ? "webStream" : "stringAsync"}.js`),
+        join(config.root, ".solid", "server", "server.js"),
         join(config.root, ".solid", "server", "app.js")
       );
       copyFileSync(
@@ -59,6 +58,7 @@ export default function () {
         plugins: [
           json(),
           nodeResolve({
+            preferBuiltins: true,
             exportConditions: ["node", "solid"]
           }),
           common()

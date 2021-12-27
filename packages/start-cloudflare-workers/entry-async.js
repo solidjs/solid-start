@@ -1,3 +1,4 @@
+import { renderToStringAsync } from "solid-js/web";
 import { render, renderActions } from "./app";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 import manifest from "../../dist/rmanifest.json";
@@ -27,7 +28,7 @@ async function handleEvent(event) {
   try {
     return await getAssetFromKV(event);
   } catch (err) {
-    const html = await render({ url, manifest });
+    const html = await renderToStringAsync(render({ url, manifest }));
     return new Response(html, {
       headers: { "content-type": "text/html;charset=UTF-8" }
     });

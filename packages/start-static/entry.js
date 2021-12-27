@@ -1,3 +1,4 @@
+import { renderToStringAsync } from "solid-js/web";
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -17,5 +18,5 @@ const assetManifest = JSON.parse(
 prepareManifest(manifest, assetManifest);
 
 export default req => {
-  return render({ url: req.url, manifest });
+  return renderToStringAsync(render({ url: req.url, manifest }));
 };

@@ -1,3 +1,4 @@
+import { pipeToWritable } from "solid-js/web";
 import { render, renderActions } from "./app";
 import manifest from "../../.output/static/rmanifest.json";
 import assetManifest from "../../.output/static/manifest.json";
@@ -16,7 +17,7 @@ function middleware({ request }) {
   if (request.method === "POST") handleAction(request, url);
   else if(!url.includes(".")) {
     const { readable, writable } = new TransformStream();
-    render({ url, writable, manifest });
+    pipeToWritable(render({ url, manifest }), writable);
     return getResponse(readable, {
       headers: { "content-type": "text/html;charset=UTF-8" }
     });
