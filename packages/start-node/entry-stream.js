@@ -1,4 +1,4 @@
-import { pipeToNodeWritable } from "solid-js/web";
+import { renderToStream } from "solid-js/web";
 import { createServer } from "solid-start-node/server.js";
 import { getBody } from "solid-start/runtime/utils.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
@@ -29,7 +29,7 @@ const server = createServer({
 
     res.statusCode = 200;
     res.setHeader("content-type", "text/html");
-    pipeToNodeWritable(render({ url: req.url, manifest }), res);
+    renderToStream(render({ url: req.url, manifest })).pipe(res);
   }
 });
 

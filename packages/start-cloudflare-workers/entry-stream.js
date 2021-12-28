@@ -1,4 +1,4 @@
-import { pipeToWritable } from "solid-js/web";
+import { renderToStream } from "solid-js/web";
 import { render, renderActions } from "./app";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 import manifest from "../../dist/rmanifest.json";
@@ -29,7 +29,7 @@ async function handleEvent(event) {
     return await getAssetFromKV(event);
   } catch (err) {
     const { readable, writable } = new TransformStream();
-    pipeToWritable(render({ url, manifest }), writable);
+    renderToStream(render({ url, manifest })).pipeTo(writable);
     return new Response(readable, {
       headers: { "content-type": "text/html;charset=UTF-8" }
     });
