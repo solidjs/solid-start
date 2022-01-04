@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "node-fetch": "^2.6.6",
+    "rollup": "^2.0.0",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.7.4",
     "solid-ssr": "^1.2.6",
