@@ -24,33 +24,31 @@ export default function StartPlugin(options) {
       mode: "pre",
       resolveId(id, referrer) {
         if (id === SOLID_START_DATA_MODULE_ID) {
-          console.log(id);
           return id;
         } else if (id === SOLID_START_PAGES_MODULE_ID) {
-          console.log(id);
           return id;
         } else if (id === SOLID_START_ROUTES_MODULE_ID) {
-          console.log(id);
           return id;
         }
       },
       load(id) {
         if (id === SOLID_START_DATA_MODULE_ID) {
-          console.log(id);
           return `export default import.meta.globEager("/src/pages/**/*.data.(js|ts)");`;
         } else if (id === SOLID_START_PAGES_MODULE_ID) {
-          console.log(id);
           return `export default import.meta.glob("/src/pages/**/*.(${[
             "jsx",
             "tsx",
             ...options.extensions.map(e => (Array.isArray(e) ? e[0].slice(1) : e.slice(1)))
           ].join("|")})");`;
         } else if (id === SOLID_START_ROUTES_MODULE_ID) {
-          console.log(id);
-          return fs.readFileSync(
-            path.dirname(new URL(import.meta.url).pathname) + "/routes.js",
-            "utf8"
-          );
+          return fs
+            .readFileSync(path.dirname(new URL(import.meta.url).pathname) + "/routes.js", "utf8")
+            .replace(
+              "$EXTENSIONS",
+              [".jsx", ".tsx", ...options.extensions.map(e => (Array.isArray(e) ? e[0] : e))].join(
+                "|"
+              )
+            );
         }
       },
       config(conf) {

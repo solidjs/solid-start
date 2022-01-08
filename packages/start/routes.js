@@ -1,10 +1,15 @@
+// This file is used a virtual module to load the data and pages using glob imports,
+// then processing them into a format that is compatible with the solid-app-router
+// useRoutes hook
 import { lazy } from "solid-js";
 
 import dataModules from "virtual:solid-start/data";
 import pages from "virtual:solid-start/pages";
 
 function toIdentifier(source) {
-  return source.slice(10).replace(/(index)?(.jsx|.tsx|.mdx|.data.js|.data.ts)/, "");
+  // $EXTENSIONS will be replaced by the extensions list
+  // by the solid-start vite plugin
+  return source.slice(10).replace(/(index)?($EXTENSIONS|.data.js|.data.ts)/, "");
 }
 
 function toPath(id) {
