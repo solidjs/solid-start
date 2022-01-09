@@ -7,11 +7,13 @@
   "bin": "./bin.cjs",
   "main": "./plugin.js",
   "type": "module",
+  "types": "index.d.ts",
   "files": [
     "bin.cjs",
     "plugin.js",
-    "index.ts",
     "actions.ts",
+    "types.d.ts",
+    "index.d.ts",
     "components",
     "runtime"
   ],
