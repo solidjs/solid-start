@@ -43,7 +43,7 @@ export default function StartPlugin(options) {
         } else if (id === SOLID_START_ROUTES_MODULE_ID) {
           return fs
             .readFileSync(path.dirname(new URL(import.meta.url).pathname) + "/routes.js", "utf8")
-            .replace(
+            .replaceAll(
               "$EXTENSIONS",
               [
                 ".jsx",
