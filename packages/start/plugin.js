@@ -38,16 +38,18 @@ export default function StartPlugin(options) {
           return `export default import.meta.glob("/src/pages/**/*.(${[
             "jsx",
             "tsx",
-            ...options.extensions.map(e => (Array.isArray(e) ? e[0].slice(1) : e.slice(1)))
+            ...(options?.extensions ?? []).map(e => (Array.isArray(e) ? e[0].slice(1) : e.slice(1)))
           ].join("|")})");`;
         } else if (id === SOLID_START_ROUTES_MODULE_ID) {
           return fs
             .readFileSync(path.dirname(new URL(import.meta.url).pathname) + "/routes.js", "utf8")
             .replace(
               "$EXTENSIONS",
-              [".jsx", ".tsx", ...options.extensions.map(e => (Array.isArray(e) ? e[0] : e))].join(
-                "|"
-              )
+              [
+                ".jsx",
+                ".tsx",
+                ...(options?.extensions ?? []).map(e => (Array.isArray(e) ? e[0] : e))
+              ].join("|")
             );
         }
       },
