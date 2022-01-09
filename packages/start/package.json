@@ -11,6 +11,7 @@
   "files": [
     "bin.cjs",
     "plugin.js",
+    "routes.js",
     "actions.ts",
     "types.d.ts",
     "index.d.ts",
