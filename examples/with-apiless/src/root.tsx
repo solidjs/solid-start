@@ -1,4 +1,5 @@
 // @refresh reload
+import { Suspense } from "solid-js";
 import { Links, Meta, Outlet, Scripts } from "solid-start/components";
 
 export default function Root() {
@@ -12,7 +13,9 @@ export default function Root() {
       </head>
       <body>
         <main>
-          <Outlet />
+          <Suspense fallback="Loading">
+            <Outlet />
+          </Suspense>
         </main>
         <Scripts />
       </body>

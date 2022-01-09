@@ -1,4 +1,4 @@
-import { createEffect, createResource, createSignal } from "solid-js";
+import { createEffect, createResource, createSignal, Suspense } from "solid-js";
 import "./Counter.css";
 import { getCounter } from "./counter.api";
 
@@ -7,6 +7,10 @@ export default function Counter() {
   const [d] = createResource(getCounter, {
     onHydrated: console.log
   });
+
+  // createEffect(() => {
+  //   console.log(d(), d.loading);
+  // });
 
   return <button class="increment">Clicks: {d()}</button>;
 }
