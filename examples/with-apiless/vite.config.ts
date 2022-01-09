@@ -46,7 +46,7 @@ export default defineConfig({
     solid({
       extensions: [".mdx"],
       babel: {
-        plugins: [plugin]
+        // plugins: [plugin]
       }
     }),
     inspect()
