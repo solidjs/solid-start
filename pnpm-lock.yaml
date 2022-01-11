@@ -140,7 +140,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.49
+      solid-start: ^0.1.0-alpha.50
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
@@ -158,7 +158,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^2.6.1
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.49
+      solid-start: ^0.1.0-alpha.50
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
@@ -179,7 +179,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.53.3
       sirv: ^1.0.12
-      solid-start: ^0.1.0-alpha.49
+      solid-start: ^0.1.0-alpha.50
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
@@ -196,7 +196,7 @@ importers:
     specifiers:
       node-fetch: ^2.6.1
       sirv-cli: 1.0.12
-      solid-start: ^0.1.0-alpha.49
+      solid-start: ^0.1.0-alpha.50
     dependencies:
       node-fetch: 2.6.6
       sirv-cli: 1.0.12
@@ -209,7 +209,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.49
+      solid-start: ^0.1.0-alpha.50
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
