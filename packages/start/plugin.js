@@ -42,7 +42,7 @@ export default function StartPlugin(options) {
           ].join("|")})");`;
         } else if (id === SOLID_START_ROUTES_MODULE_ID) {
           return fs
-            .readFileSync(path.dirname(new URL(import.meta.url).pathname) + "/routes.js", "utf8")
+            .readFileSync(new URL("./routes.js", import.meta.url), "utf8")
             .replaceAll(
               "$EXTENSIONS",
               [
