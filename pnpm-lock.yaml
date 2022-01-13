@@ -24,7 +24,7 @@ importers:
 
   examples/basic-ts:
     specifiers:
-      node-fetch: ^3.1.0
+      node-fetch: ^2.6.1
       solid-app-router: ^0.2.0
       solid-js: ^1.3.0
       solid-meta: ^0.27.3
@@ -34,7 +34,7 @@ importers:
       vite: ^2.7.10
       vite-plugin-inspect: ^0.3.13
     devDependencies:
-      node-fetch: 3.1.0
+      node-fetch: 2.6.6
       solid-app-router: 0.2.0_solid-js@1.3.1
       solid-js: 1.3.1
       solid-meta: 0.27.3_solid-js@1.3.1
@@ -47,7 +47,7 @@ importers:
   examples/with-mdx-ts:
     specifiers:
       '@mdx-js/rollup': ^2.0.0-rc.1
-      node-fetch: ^3.1.0
+      node-fetch: ^2.6.1
       solid-app-router: ^0.2.0
       solid-js: ^1.3.0
       solid-mdx: ^0.0.5
@@ -59,7 +59,7 @@ importers:
       vite-plugin-inspect: ^0.3.13
     devDependencies:
       '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
-      node-fetch: 3.1.0
+      node-fetch: 2.6.6
       solid-app-router: 0.2.0_solid-js@1.3.1
       solid-js: 1.3.1
       solid-mdx: 0.0.5_solid-js@1.3.1+vite@2.7.10
@@ -84,40 +84,48 @@ importers:
 
   packages/create-solid/templates/app:
     specifiers:
+      node-fetch: ^2.6.1
       solid-app-router: ^0.2.0
       solid-js: ^1.3.0
       solid-meta: ^0.27.3
       solid-start: next
       solid-start-node: next
+      vite: ^2.7.11
     devDependencies:
+      node-fetch: 2.6.6
       solid-app-router: 0.2.0_solid-js@1.3.1
       solid-js: 1.3.1
       solid-meta: 0.27.3_solid-js@1.3.1
       solid-start: link:../../../start
       solid-start-node: link:../../../start-node
+      vite: 2.7.11
 
   packages/create-solid/templates/app-ts:
     specifiers:
+      node-fetch: ^2.6.1
       solid-app-router: ^0.2.0
       solid-js: ^1.3.0
       solid-meta: ^0.27.3
       solid-start: next
       solid-start-node: next
       typescript: ^4.4.3
+      vite: ^2.7.11
     devDependencies:
+      node-fetch: 2.6.6
       solid-app-router: 0.2.0_solid-js@1.3.1
       solid-js: 1.3.1
       solid-meta: 0.27.3_solid-js@1.3.1
       solid-start: link:../../../start
       solid-start-node: link:../../../start-node
       typescript: 4.5.4
+      vite: 2.7.11
 
   packages/start:
     specifiers:
       es-module-lexer: ^0.9.3
       esbuild: ^0.14.11
       fast-glob: ^3.2.10
-      node-fetch: ^2.6.6
+      node-fetch: ^2.6.1
       rollup: ^2.0.0
       rollup-route-manifest: ^1.0.0
       sade: ^1.8.0
@@ -199,11 +207,11 @@ importers:
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
       '@rollup/plugin-node-resolve': 13.1.3_rollup@2.63.0
       compression: 1.7.4
-      node-fetch: 2.6.6
       polka: 1.0.0-next.22
       rollup: 2.63.0
       sirv: 1.0.19
     devDependencies:
+      node-fetch: 2.6.6
       solid-start: 0.1.0-y.0_rollup@2.63.0+vite@2.7.10
       vite: 2.7.10
 
@@ -2324,11 +2332,6 @@ packages:
       assert-plus: 1.0.0
     dev: true
 
-  /data-uri-to-buffer/4.0.0:
-    resolution: {integrity: sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==}
-    engines: {node: '>= 12'}
-    dev: true
-
   /dateformat/3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
     dev: true
@@ -3009,13 +3012,6 @@ packages:
     dependencies:
       reusify: 1.0.4
 
-  /fetch-blob/3.1.3:
-    resolution: {integrity: sha512-ax1Y5I9w+9+JiM+wdHkhBoxew+zG4AJ2SvAD1v1szpddUIiPERVGBxrMcB2ZqW0Y3PP8bOWYv2zqQq1Jp2kqUQ==}
-    engines: {node: ^12.20 || >= 14.13}
-    dependencies:
-      web-streams-polyfill: 3.2.0
-    dev: true
-
   /figures/3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
@@ -3065,13 +3061,6 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.34
-    dev: true
-
-  /formdata-polyfill/4.0.10:
-    resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
-    engines: {node: '>=12.20.0'}
-    dependencies:
-      fetch-blob: 3.1.3
     dev: true
 
   /fs-extra/9.1.0:
@@ -4742,15 +4731,6 @@ packages:
     engines: {node: 4.x || >=6.0.0}
     dependencies:
       whatwg-url: 5.0.0
-
-  /node-fetch/3.1.0:
-    resolution: {integrity: sha512-QU0WbIfMUjd5+MUzQOYhenAazakV7Irh1SGkWCsRzBwvm4fAhzEUaHMJ6QLP7gWT6WO9/oH2zhKMMGMuIrDyKw==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      data-uri-to-buffer: 4.0.0
-      fetch-blob: 3.1.3
-      formdata-polyfill: 4.0.10
-    dev: true
 
   /node-gyp/5.1.1:
     resolution: {integrity: sha512-WH0WKGi+a4i4DUt2mHnvocex/xPLp9pYt5R6M2JdFB7pJ7Z34hveZ4nDTGTiLXCkitA9T8HFZjhinBCiVHYcWw==}
@@ -6647,15 +6627,34 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
 
+  /vite/2.7.11:
+    resolution: {integrity: sha512-W1OVwJmtuxnzt9HwZ1AebVLgvsgNpe4TK/sxvF+1x2y8MRnTEHvaPqxy9A67IYb5BR0Q+nENmLYa3QfESmp5GQ==}
+    engines: {node: '>=12.2.0'}
+    hasBin: true
+    peerDependencies:
+      less: '*'
+      sass: '*'
+      stylus: '*'
+    peerDependenciesMeta:
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+    dependencies:
+      esbuild: 0.13.15
+      postcss: 8.4.5
+      resolve: 1.21.0
+      rollup: 2.63.0
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
   /wcwidth/1.0.1:
     resolution: {integrity: sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=}
     dependencies:
       defaults: 1.0.3
-    dev: true
-
-  /web-streams-polyfill/3.2.0:
-    resolution: {integrity: sha512-EqPmREeOzttaLRm5HS7io98goBgZ7IVz79aDvqjD0kYXLtFZTc0T/U6wHTPKyIjb+MdN7DFIIX6hgdBEpWmfPA==}
-    engines: {node: '>= 8'}
     dev: true
 
   /webidl-conversions/3.0.1:

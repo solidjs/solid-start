@@ -13,7 +13,9 @@
     "solid-meta": "^0.27.4",
     "solid-start": "next",
     "solid-start-node": "next",
-    "typescript": "^4.4.3"
+    "node-fetch": "^2.6.1",
+    "typescript": "^4.4.3",
+    "vite": "^2.7.11"
   },
   "engines": {
     "node": ">=14"
