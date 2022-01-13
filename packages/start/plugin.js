@@ -39,6 +39,16 @@ export default function StartPlugin(options) {
         }
       },
       config(conf) {
+        const regex = new RegExp(
+          `(index)?(.(${[
+            "tsx",
+            "ts",
+            "jsx",
+            "js",
+            ...(options.extensions?.map(e => e.slice(1)) ?? [])
+          ].join("|")}))$`
+        );
+
         const root = conf.root || process.cwd();
         return {
           resolve: {
@@ -63,9 +73,7 @@ export default function StartPlugin(options) {
                   merge: false,
                   publicPath: "/",
                   routes: file => {
-                    file = file
-                      .replace(path.join(root, "src"), "")
-                      .replace(/(index)?\.[tj]sx?$/, "");
+                    file = file.replace(path.join(root, "src"), "").replace(regex, "");
                     if (!file.includes("/pages/")) return "*"; // commons
                     return "/" + file.replace("/pages/", "");
                   }
