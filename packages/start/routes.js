@@ -59,8 +59,8 @@ export async function getRoutes({
         _id: id,
         path: toPath(id) || "/",
         componentSrc: src,
-        type: "PAGE"
-        // dataSrc: data[full] ? data[full] : exports.includes("data") ? src + "?data" : undefined
+        type: "PAGE",
+        dataSrc: data[full] ? data[full] : undefined
         // methods: ["GET", ...(exports.includes("action") ? ["POST", "PATCH", "DELETE"] : [])]
         // actionSrc: exports.includes("action") ? src + "?action" : undefined,
         // loaderSrc: exports.includes("loader") ? src + "?loader" : undefined
@@ -105,7 +105,7 @@ export function stringifyRoutes(routes) {
         .map(
           i =>
             `{ ${[
-              i.dataSrc?.endsWith(".data.js")
+              /.data.(js|ts)$/.test(i.dataSrc ?? "")
                 ? `data: ${addImport(process.cwd() + "/" + i.dataSrc)}`
                 : undefined,
               `component: lazy(() => import('${process.cwd() + "/" + i.componentSrc}'))`,
