@@ -1,6 +1,6 @@
 {
   "name": "solid-start-node",
-  "version": "0.1.0-alpha.51",
+  "version": "0.1.0-alpha.52",
   "main": "./index.js",
   "type": "module",
   "dependencies": {
@@ -13,14 +13,13 @@
     "sirv": "^1.0.12"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.51",
-    "vite": "^2.7.10",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "solid-start": "^0.1.0-alpha.52",
+    "vite": "^2.7.10"
   },
   "peerDependencies": {
-    "node-fetch": "^2.6.6",
+    "node-fetch": "^2.0.0",
     "solid-start": "*",
-    "vite": "*",
-    "node-fetch": "^2.0.0"
+    "vite": "*"
   }
 }
