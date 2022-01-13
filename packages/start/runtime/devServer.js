@@ -17,6 +17,17 @@ async function createServer(root = process.cwd(), configFile) {
     }
   });
 
+  function getApiModules(mod, apiModules = {}) {
+    for (var m of mod.importedModules.values()) {
+      getApiModules(m, apiModules);
+      if (m.id.endsWith(".api.ts")) {
+        apiModules[m.id] = m.url;
+      }
+    }
+
+    return apiModules;
+  }
+
   const app = http.createServer((req, res) => {
     server.middlewares(req, res, async () => {
       try {
@@ -25,6 +36,26 @@ async function createServer(root = process.cwd(), configFile) {
         const { render, renderActions } = await server.ssrLoadModule(
           path.join(path.dirname(fileURLToPath(import.meta.url)), "entries", "devServer.tsx")
         );
+
+        // console.log(
+        //   path.resolve(
+        //     path.join(
+        //       server.config.root,
+        //       "src",
+        //       "pages",
+        //       new URL(req.url, "http://localhost").pathname
+        //     )
+        //   )
+        // );
+        // const mod = await server.ssrLoadModule(
+        //   "/Users/nikhilsaraf/garage/vinxi/solid-start/examples/with-apiless/src/pages/index.tsx"
+        // );
+
+        // const apiModules = getApiModules(
+        //   server.moduleGraph.getModuleById(
+        //     "/Users/nikhilsaraf/garage/vinxi/solid-start/examples/with-apiless/src/pages/index.tsx"
+        //   )
+        // );
 
         if (req.method === "POST") {
           let e;
@@ -39,7 +70,9 @@ async function createServer(root = process.cwd(), configFile) {
 
         res.statusCode = 200;
         res.setHeader("content-type", "text/html");
-        render({ url: req.url, writable: res });
+        console.log("start rendering", req.url);
+        await render({ url: req.url, writable: res });
+        console.log("end rendering", req.url);
       } catch (e) {
         server && server.ssrFixStacktrace(e);
         console.log(e.stack);

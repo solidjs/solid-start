@@ -2,15 +2,16 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "target": "ESNext",
-    "module": "ESNext",
+    "target": "esnext",
+    "module": "es2022",
     "moduleResolution": "node",
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
     "types": ["vite/client"],
     "baseUrl": "./",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "*.api?": ["./src/*"]
     }
   }
 }

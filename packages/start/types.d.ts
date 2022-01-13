@@ -13,3 +13,9 @@ declare module "virtual:solid-start/data" {
   const data: { [key: string]: () => any };
   export default data;
 }
+
+declare module "~/root" {
+  import { JSX } from "solid-js";
+  const data: () => JSX.Element;
+  export default data;
+}

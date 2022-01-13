@@ -1,10 +1,10 @@
-import { renderToStream } from "solid-js/web";
+import { renderToStream, renderToStringAsync } from "solid-js/web";
 import { render as sRender } from "./server";
 
-export function render({ url, writable, context }) {
-  renderToStream(
-    sRender({ url, manifest: {}, context }),
-  ).pipe(writable);
+export async function render({ url, writable, context }) {
+  let string = await renderToStringAsync(sRender({ url, manifest: {}, context }));
+  writable.write(string);
+  writable.end();
 }
 
 export { renderActions } from "./server";
