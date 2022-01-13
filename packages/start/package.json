@@ -19,6 +19,9 @@
     "runtime"
   ],
   "dependencies": {
+    "es-module-lexer": "^0.9.3",
+    "esbuild": "^0.14.11",
+    "fast-glob": "^3.2.10",
     "node-fetch": "^2.6.6",
     "rollup": "^2.0.0",
     "rollup-route-manifest": "^1.0.0",
