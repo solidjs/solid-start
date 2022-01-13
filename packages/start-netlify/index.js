@@ -17,37 +17,32 @@ export default function () {
     },
     async build(config) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      await Promise.all([
-        vite.build({
-          build: {
-            outDir: "./dist/",
-            minify: "terser",
-            rollupOptions: {
-              input: `node_modules/solid-start/runtime/entries/client.tsx`
+      await vite.build({
+        build: {
+          outDir: "./dist/",
+          minify: "terser",
+          rollupOptions: {
+            input: `node_modules/solid-start/runtime/entries/client.tsx`
+          }
+        }
+      });
+      await vite.build({
+        build: {
+          ssr: true,
+          outDir: "./.solid/server",
+          rollupOptions: {
+            input: `node_modules/solid-start/runtime/entries/server.tsx`,
+            output: {
+              format: "esm"
             }
           }
-        }),
-        vite.build({
-          build: {
-            ssr: true,
-            outDir: "./.solid/server",
-            rollupOptions: {
-              input: `node_modules/solid-start/runtime/entries/server.tsx`,
-              output: {
-                format: "esm"
-              }
-            }
-          }
-        })
-      ]);
+        }
+      });
       copyFileSync(
         join(config.root, ".solid", "server", "server.js"),
         join(config.root, ".solid", "server", "app.js")
       );
-      copyFileSync(
-        join(__dirname, "entry.js"),
-        join(config.root, ".solid", "server", "index.js")
-      );
+      copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
         plugins: [

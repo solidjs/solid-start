@@ -18,6 +18,7 @@
     "node-fetch": "^2.6.1"
   },
   "peerDependencies": {
+    "node-fetch": "^2.6.6",
     "solid-start": "*",
     "vite": "*",
     "node-fetch": "^2.0.0"

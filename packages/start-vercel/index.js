@@ -18,29 +18,27 @@ export default function () {
     async build(config) {
       const { preferStreaming } = config.solidOptions;
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      await Promise.all([
-        vite.build({
-          build: {
-            outDir: "./.output/static/",
-            minify: "terser",
-            rollupOptions: {
-              input: `node_modules/solid-start/runtime/entries/client.tsx`
+      await vite.build({
+        build: {
+          outDir: "./.output/static/",
+          minify: "terser",
+          rollupOptions: {
+            input: `node_modules/solid-start/runtime/entries/client.tsx`
+          }
+        }
+      });
+      await vite.build({
+        build: {
+          ssr: true,
+          outDir: "./.solid/server",
+          rollupOptions: {
+            input: `node_modules/solid-start/runtime/entries/server.tsx`,
+            output: {
+              format: "esm"
             }
           }
-        }),
-        vite.build({
-          build: {
-            ssr: true,
-            outDir: "./.solid/server",
-            rollupOptions: {
-              input: `node_modules/solid-start/runtime/entries/server.tsx`,
-              output: {
-                format: "esm"
-              }
-            }
-          }
-        })
-      ]);
+        }
+      });
       copyFileSync(
         join(config.root, ".solid", "server", "server.js"),
         join(config.root, ".solid", "server", "app.js")
@@ -65,7 +63,10 @@ export default function () {
         ]
       });
       // or write the bundle to disk
-      await bundle.write({ format: "esm", file: join(config.root, ".output", "server", "pages", "_middleware.js") });
+      await bundle.write({
+        format: "esm",
+        file: join(config.root, ".output", "server", "pages", "_middleware.js")
+      });
 
       // closes the bundle
       await bundle.close();
