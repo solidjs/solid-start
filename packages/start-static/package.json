@@ -4,13 +4,13 @@
   "main": "./index.js",
   "type": "module",
   "dependencies": {
-    "node-fetch": "^2.6.1",
     "sirv-cli": "1.0.12"
   },
   "devDependencies": {
     "solid-start": "^0.1.0-alpha.51"
   },
   "peerDependencies": {
+    "node-fetch": "^2.6.6",
     "solid-start": "*"
   }
 }
