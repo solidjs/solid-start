@@ -8,17 +8,18 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.2",
     "compression": "^1.7.4",
-    "node-fetch": "^2.6.1",
     "polka": "^1.0.0-next.13",
     "rollup": "^2.53.3",
     "sirv": "^1.0.12"
   },
   "devDependencies": {
     "solid-start": "^0.1.0-alpha.51",
-    "vite": "^2.7.10"
+    "vite": "^2.7.10",
+    "node-fetch": "^2.6.1"
   },
   "peerDependencies": {
     "solid-start": "*",
-    "vite": "*"
+    "vite": "*",
+    "node-fetch": "^2.0.0"
   }
 }
