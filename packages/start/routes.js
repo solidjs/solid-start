@@ -106,24 +106,21 @@ export function stringifyRoutes(routes) {
       r
         .map(
           i =>
-            `{ ${[
+            `{\n${[
               /.data.(js|ts)$/.test(i.dataSrc ?? "")
                 ? `data: ${addImport(process.cwd() + "/" + i.dataSrc)}`
                 : undefined,
               `component: lazy(() => import('${process.cwd() + "/" + i.componentSrc}'))`,
               ...Object.keys(i)
-                .filter(
-                  k =>
-                    ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined
-                )
+                .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(
                   k => `${k}: ${k === "children" ? _stringifyRoutes(i[k]) : JSON.stringify(i[k])}`
                 )
             ]
               .filter(Boolean)
-              .join(", ")} }`
+              .join(",\n ")} \n}`
         )
-        .join(",") +
+        .join(",\n") +
       `\n]`
     );
   }
