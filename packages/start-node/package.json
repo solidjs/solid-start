@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "node-fetch": "^2.6.1",
-    "solid-start": "^0.1.0-alpha.53",
+    "solid-start": "workspace:0.1.0-alpha.53",
     "vite": "^2.7.10"
   },
   "peerDependencies": {
