@@ -1,23 +1,26 @@
 {
-  "name": "example-basic-ts",
+  "name": "solid-hackernews",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
     "start": "solid-start start"
   },
   "type": "module",
+  "main": "./dist/index.js",
   "devDependencies": {
-    "node-fetch": "^2.6.1",
-    "solid-app-router": "^0.2.0",
-    "solid-js": "^1.3.0",
+    "@mdx-js/rollup": "^2.0.0-rc.1",
+    "node-fetch": "^2.6.6",
+    "solid-app-router": "0.2.0",
+    "solid-js": "1.3.1",
+    "solid-mdx": "^0.0.5",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:^0.1.0-alpha.53",
     "solid-start-node": "workspace:^0.1.0-alpha.53",
     "typescript": "^4.4.3",
-    "vite": "^2.7.10",
+    "vite": "2.7.10",
     "vite-plugin-inspect": "^0.3.13"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=12"
   }
 }

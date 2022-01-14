@@ -13,9 +13,9 @@
     "sirv": "^1.0.12"
   },
   "devDependencies": {
-    "node-fetch": "^2.6.1",
-    "solid-start": "^0.1.0-alpha.53",
-    "vite": "^2.7.10"
+    "solid-start": "workspace:^0.1.0-alpha.53",
+    "vite": "^2.7.10",
+    "node-fetch": "^2.6.6"
   },
   "peerDependencies": {
     "node-fetch": "^2.0.0",
