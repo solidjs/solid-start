@@ -3,6 +3,8 @@ import fs from "fs";
 import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 
+const ROUTE_KEYS = ["component", "path", "data", "children"];
+
 export async function getRoutes({
   baseDir = "src/pages",
   pageExtensions = ["jsx", "tsx", "js", "ts"],
@@ -110,7 +112,10 @@ export function stringifyRoutes(routes) {
                 : undefined,
               `component: lazy(() => import('${process.cwd() + "/" + i.componentSrc}'))`,
               ...Object.keys(i)
-                .filter(k => i[k] !== undefined)
+                .filter(
+                  k =>
+                    ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined
+                )
                 .map(
                   k => `${k}: ${k === "children" ? _stringifyRoutes(i[k]) : JSON.stringify(i[k])}`
                 )
@@ -124,9 +129,6 @@ export function stringifyRoutes(routes) {
   }
 
   let r = _stringifyRoutes(routes.pageRoutes);
-  console.log(
-    [...imports.keys()].map(i => `import ${imports.get(i).default} from '${i}';`).join("\n")
-  );
   const text = `
   import { lazy } from 'solid-js';
   ${[...imports.keys()].map(i => `import ${imports.get(i).default} from '${i}';`).join("\n")}
