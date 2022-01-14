@@ -14,8 +14,8 @@
     "solid-js": "1.3.1",
     "solid-mdx": "^0.0.5",
     "solid-meta": "^0.27.3",
-    "solid-start": "workspace:^0.1.0-alpha.52",
-    "solid-start-node": "workspace:^0.1.0-alpha.52",
+    "solid-start": "workspace:^0.1.0-alpha.53",
+    "solid-start-node": "workspace:^0.1.0-alpha.53",
     "typescript": "^4.4.3",
     "vite": "2.7.10",
     "vite-plugin-inspect": "^0.3.13"

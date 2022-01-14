@@ -16,8 +16,8 @@
     "clean:root": "rimraf node_modules",
     "test": "lerna run test --concurrency=1 --stream",
     "test:coverage": "lerna run test:coverage --parallel",
-    "build": "lerna run build --concurrency=1 --stream",
-    "publish:release": "lerna run build && lerna publish"
+    "build": "pnpm run build -r --parallel --if-present",
+    "publish:release": "pnpm run build && lerna publish"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.1",
