@@ -1,0 +1,19 @@
+0 silly argv {
+0 silly argv   _: [ 'run' ],
+0 silly argv   concurrency: 1,
+0 silly argv   stream: true,
+0 silly argv   lernaVersion: '4.0.0',
+0 silly argv   '$0': 'node_modules/lerna/cli.js',
+0 silly argv   script: 'build'
+0 silly argv }
+1 notice cli v4.0.0
+2 verbose rootPath /Users/nikhilsaraf/garage/vinxi/solid-start
+3 error Error: Unsupported URL Type "workspace:": workspace:^0.1.0-alpha.53
+3 error     at unsupportedURLType (/Users/nikhilsaraf/garage/vinxi/solid-start/node_modules/.pnpm/npm-package-arg@8.1.5/node_modules/npm-package-arg/npa.js:246:15)
+3 error     at fromURL (/Users/nikhilsaraf/garage/vinxi/solid-start/node_modules/.pnpm/npm-package-arg@8.1.5/node_modules/npm-package-arg/npa.js:306:13)
+3 error     at Function.resolve (/Users/nikhilsaraf/garage/vinxi/solid-start/node_modules/.pnpm/npm-package-arg@8.1.5/node_modules/npm-package-arg/npa.js:76:12)
+3 error     at /Users/nikhilsaraf/garage/vinxi/solid-start/node_modules/.pnpm/@lerna+package-graph@4.0.0/node_modules/@lerna/package-graph/index.js:66:30
+3 error     at Array.forEach (<anonymous>)
+3 error     at /Users/nikhilsaraf/garage/vinxi/solid-start/node_modules/.pnpm/@lerna+package-graph@4.0.0/node_modules/@lerna/package-graph/index.js:60:38
+3 error     at Map.forEach (<anonymous>)
+3 error     at new PackageGraph (/Users/nikhilsaraf/garage/vinxi/solid-start/node_modules/.pnpm/@lerna+package-graph@4.0.0/node_modules/@lerna/package-graph/index.js:49:10)

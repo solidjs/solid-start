@@ -53,26 +53,27 @@ export async function getRoutes({
       if (!exports.includes("default")) {
         return;
       }
-      if (!parentRoute) {
-        routesList.push({
-          src: src,
-          _id: id,
-          path: toPath(id) || "/",
-          componentSrc: src,
-          type: "PAGE",
-          dataSrc: data[full] ? data[full] : exports.includes("data") ? src + "?data" : undefined
-          // methods: ["GET", ...(exports.includes("action") ? ["POST", "PATCH", "DELETE"] : [])]
-          // actionSrc: exports.includes("action") ? src + "?action" : undefined,
-          // loaderSrc: exports.includes("loader") ? src + "?loader" : undefined
-        });
-      } else {
-        processRoute(
-          parentRoute.children || (parentRoute.children = []),
-          src,
-          id.slice(parentRoute._id.length),
-          full
-        );
-      }
+    }
+
+    if (!parentRoute) {
+      routesList.push({
+        src: src,
+        _id: id,
+        path: toPath(id) || "/",
+        componentSrc: src,
+        type: "PAGE",
+        dataSrc: data[full] ? data[full] : undefined
+        // methods: ["GET", ...(exports.includes("action") ? ["POST", "PATCH", "DELETE"] : [])]
+        // actionSrc: exports.includes("action") ? src + "?action" : undefined,
+        // loaderSrc: exports.includes("loader") ? src + "?loader" : undefined
+      });
+    } else {
+      processRoute(
+        parentRoute.children || (parentRoute.children = []),
+        src,
+        id.slice(parentRoute._id.length),
+        full
+      );
     }
   }
 
@@ -105,24 +106,21 @@ export function stringifyRoutes(routes) {
       r
         .map(
           i =>
-            `{ ${[
-              i.dataSrc?.includes(".data.")
+            `{\n${[
+              /.data.(js|ts)$/.test(i.dataSrc ?? "")
                 ? `data: ${addImport(process.cwd() + "/" + i.dataSrc)}`
                 : undefined,
               `component: lazy(() => import('${process.cwd() + "/" + i.componentSrc}'))`,
               ...Object.keys(i)
-                .filter(
-                  k =>
-                    ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined
-                )
+                .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(
                   k => `${k}: ${k === "children" ? _stringifyRoutes(i[k]) : JSON.stringify(i[k])}`
                 )
             ]
               .filter(Boolean)
-              .join(", ")} }`
+              .join(",\n ")} \n}`
         )
-        .join(",") +
+        .join(",\n") +
       `\n]`
     );
   }
