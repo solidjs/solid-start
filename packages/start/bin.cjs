@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-const { exec } = require("child_process");
+const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const vite = require("vite");
 
@@ -16,7 +16,10 @@ prog
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config, open, port, root }) => {
     if (open) setTimeout(() => launch(port), 1000);
-    (await import("./runtime/devServer.js")).start({ config, port, root });
+    spawn("vite", ["dev"], {
+      stdio: "inherit"
+    });
+    // (await import("./runtime/devServer.js")).start({ config, port, root });
   });
 
 prog
