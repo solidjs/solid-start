@@ -53,27 +53,26 @@ export async function getRoutes({
       if (!exports.includes("default")) {
         return;
       }
-    }
-
-    if (!parentRoute) {
-      routesList.push({
-        src: src,
-        _id: id,
-        path: toPath(id) || "/",
-        componentSrc: src,
-        type: "PAGE",
-        dataSrc: data[full] ? data[full] : exports.includes("data") ? src + "?data" : undefined
-        // methods: ["GET", ...(exports.includes("action") ? ["POST", "PATCH", "DELETE"] : [])]
-        // actionSrc: exports.includes("action") ? src + "?action" : undefined,
-        // loaderSrc: exports.includes("loader") ? src + "?loader" : undefined
-      });
-    } else {
-      processRoute(
-        parentRoute.children || (parentRoute.children = []),
-        src,
-        id.slice(parentRoute._id.length),
-        full
-      );
+      if (!parentRoute) {
+        routesList.push({
+          src: src,
+          _id: id,
+          path: toPath(id) || "/",
+          componentSrc: src,
+          type: "PAGE",
+          dataSrc: data[full] ? data[full] : exports.includes("data") ? src + "?data" : undefined
+          // methods: ["GET", ...(exports.includes("action") ? ["POST", "PATCH", "DELETE"] : [])]
+          // actionSrc: exports.includes("action") ? src + "?action" : undefined,
+          // loaderSrc: exports.includes("loader") ? src + "?loader" : undefined
+        });
+      } else {
+        processRoute(
+          parentRoute.children || (parentRoute.children = []),
+          src,
+          id.slice(parentRoute._id.length),
+          full
+        );
+      }
     }
   }
 
