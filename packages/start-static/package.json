@@ -1,13 +1,13 @@
 {
   "name": "solid-start-static",
-  "version": "0.1.0-alpha.53",
+  "version": "0.1.0-alpha.54",
   "main": "./index.js",
   "type": "module",
   "dependencies": {
     "sirv-cli": "1.0.12"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.53"
+    "solid-start": "^0.1.0-alpha.54"
   },
   "peerDependencies": {
     "node-fetch": "^2.6.6",
