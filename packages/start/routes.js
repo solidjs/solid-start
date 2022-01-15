@@ -20,7 +20,7 @@ export async function getRoutes({
 
   const dataRoutes = fg.sync(`${baseDir}/**/*.data.(ts|js)`, { cwd });
 
-  const regex = new RegExp(`(index)?(.(${pageExtensions.join("|")})|.data.js|.data.ts)`);
+  const regex = new RegExp(`(index)?(\\.(${pageExtensions.join("|")})|\\.data\\.js|\\.data\\.ts)`);
 
   function toIdentifier(source) {
     return source.slice(baseDir.length).replace(regex, "");
