@@ -42,6 +42,7 @@ export async function getRoutes({
   function processRoute(routesList, src, id, full) {
     let parentRoute = routesList.find(o => o._id && o._id !== "/" && id.startsWith(o._id + "/"));
 
+    let dataFn = undefined;
     if (/\.(js|ts)x?$/.test(src)) {
       let [imports, exports] = parse(
         esbuild.transformSync(fs.readFileSync(process.cwd() + "/" + src).toString(), {
@@ -53,6 +54,10 @@ export async function getRoutes({
       if (!exports.includes("default")) {
         return;
       }
+
+      if (exports.includes("data")) {
+        dataFn = src + "?data";
+      }
     }
 
     if (!parentRoute) {
@@ -62,7 +67,7 @@ export async function getRoutes({
         path: toPath(id) || "/",
         componentSrc: src,
         type: "PAGE",
-        dataSrc: data[full] ? data[full] : undefined
+        dataSrc: data[full] ? data[full] : dataFn
         // methods: ["GET", ...(exports.includes("action") ? ["POST", "PATCH", "DELETE"] : [])]
         // actionSrc: exports.includes("action") ? src + "?action" : undefined,
         // loaderSrc: exports.includes("loader") ? src + "?loader" : undefined
@@ -107,9 +112,7 @@ export function stringifyRoutes(routes) {
         .map(
           i =>
             `{\n${[
-              /.data.(js|ts)$/.test(i.dataSrc ?? "")
-                ? `data: ${addImport(process.cwd() + "/" + i.dataSrc)}`
-                : undefined,
+              i.dataSrc ? `data: ${addImport(process.cwd() + "/" + i.dataSrc)}` : undefined,
               `component: lazy(() => import('${process.cwd() + "/" + i.componentSrc}'))`,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)

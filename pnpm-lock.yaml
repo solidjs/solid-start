@@ -148,6 +148,10 @@ importers:
 
   packages/start:
     specifiers:
+      '@babel/core': ^7.16.7
+      '@babel/preset-typescript': ^7.16.7
+      '@types/babel__core': ^7.1.18
+      babel-preset-typescript: ^7.0.0-alpha.19
       es-module-lexer: ^0.9.3
       esbuild: ^0.14.11
       fast-glob: ^3.2.10
@@ -161,10 +165,14 @@ importers:
       solid-meta: ^0.27.3
       solid-ssr: ^1.3.0
       solid-start-node: '*'
+      type-fest: ^2.9.0
       vite: ^2.7.10
       vite-plugin-inspect: ^0.3.13
       vite-plugin-solid: ^2.2.1
     dependencies:
+      '@babel/preset-typescript': 7.16.7_@babel+core@7.16.7
+      '@types/babel__core': 7.1.18
+      babel-preset-typescript: 7.0.0-alpha.19
       es-module-lexer: 0.9.3
       esbuild: 0.14.11
       fast-glob: 3.2.10
@@ -179,9 +187,11 @@ importers:
     optionalDependencies:
       solid-start-node: link:../start-node
     devDependencies:
+      '@babel/core': 7.16.7
       solid-app-router: 0.2.0_solid-js@1.3.1
       solid-js: 1.3.1
       solid-meta: 0.27.3_solid-js@1.3.1
+      type-fest: 2.9.0
       vite: 2.7.10
 
   packages/start-cloudflare-workers:
@@ -191,7 +201,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.53
+      solid-start: ^0.1.0-alpha.54
       vite: ^2.7.10
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
@@ -211,7 +221,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^2.6.1
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.53
+      solid-start: ^0.1.0-alpha.54
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
@@ -232,7 +242,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.53.3
       sirv: ^1.0.12
-      solid-start: ^0.1.0-alpha.53
+      solid-start: ^0.1.0-alpha.54
       vite: ^2.7.10
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
@@ -250,7 +260,7 @@ importers:
   packages/start-static:
     specifiers:
       sirv-cli: 1.0.12
-      solid-start: ^0.1.0-alpha.53
+      solid-start: ^0.1.0-alpha.54
     dependencies:
       sirv-cli: 1.0.12
     devDependencies:
@@ -262,7 +272,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.53
+      solid-start: ^0.1.0-alpha.54
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
@@ -1545,6 +1555,35 @@ packages:
       '@types/estree': 0.0.50
     dev: true
 
+  /@types/babel__core/7.1.18:
+    resolution: {integrity: sha512-S7unDjm/C7z2A2R9NzfKCK1I+BAALDtxEmsJBwlB3EzNfb929ykjL++1CK9LO++EIp2fQrC8O+BwjKvz6UeDyQ==}
+    dependencies:
+      '@babel/parser': 7.16.7
+      '@babel/types': 7.16.7
+      '@types/babel__generator': 7.6.4
+      '@types/babel__template': 7.4.1
+      '@types/babel__traverse': 7.14.2
+    dev: false
+
+  /@types/babel__generator/7.6.4:
+    resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
+    dependencies:
+      '@babel/types': 7.16.7
+    dev: false
+
+  /@types/babel__template/7.4.1:
+    resolution: {integrity: sha512-azBFKemX6kMg5Io+/rdGT0dkGreboUVR0Cdm3fz9QJWpaQGJRQXl7C+6hOTCZcMll7KFyEQpgbYI2lHdsS4U7g==}
+    dependencies:
+      '@babel/parser': 7.16.7
+      '@babel/types': 7.16.7
+    dev: false
+
+  /@types/babel__traverse/7.14.2:
+    resolution: {integrity: sha512-K2waXdXBi2302XUdcHcR1jCeU0LL4TD9HRs/gk0N2Xvrht+G/BfJa4QObBQZfhMdxiCpV3COl5Nfq4uKTeTnJA==}
+    dependencies:
+      '@babel/types': 7.16.7
+    dev: false
+
   /@types/cacheable-request/6.0.2:
     resolution: {integrity: sha512-B3xVo+dlKM6nnKTcmm5ZtY/OL8bOAOd2Olee9M1zft65ox50OzjEHW91sDiU9j6cvW8Ejg1/Qkf4xd2kugApUA==}
     dependencies:
@@ -1852,6 +1891,20 @@ packages:
       - '@babel/core'
     dev: false
 
+  /babel-plugin-syntax-object-rest-spread/7.0.0-alpha.19:
+    resolution: {integrity: sha512-Jo9wXmU9AtufOFPdQpedc+j7Ck5okGYsK0zkk2NZNae61SAtuMF5M3aRUeZusrssPqWC32pOiBokbApIFHdlXw==}
+    dev: false
+
+  /babel-plugin-syntax-typescript/7.0.0-alpha.19:
+    resolution: {integrity: sha512-jLuaWfoQsVr8/hmZtWB+86tZ5jYmOYV6kq70EkSUT7RR+gfeYOExS0FjObbbp+WExZNpBaRZvlyikNk3hCQGeQ==}
+    dev: false
+
+  /babel-plugin-transform-typescript/7.0.0-alpha.19:
+    resolution: {integrity: sha512-OtkOYcYRffmC38/UjDZn2cvM2qarqDT748TbSJtVpNb7EvDLQcfPn9+0adk8oqmhc0lk+Ldy/2daGMNMxW0vuQ==}
+    dependencies:
+      babel-plugin-syntax-typescript: 7.0.0-alpha.19
+    dev: false
+
   /babel-preset-solid/0.26.5_@babel+core@7.16.7:
     resolution: {integrity: sha512-SXMSmp3iL3FTbcy2QB4poHSbsPMrNSHOk8vIgQSMI/8UwxbxjjAG1iDDcqjsgWw6DqndxM6Z6nID9+94aT8NCQ==}
     dependencies:
@@ -1866,6 +1919,13 @@ packages:
       babel-plugin-jsx-dom-expressions: 0.31.5_@babel+core@7.16.7
     transitivePeerDependencies:
       - '@babel/core'
+    dev: false
+
+  /babel-preset-typescript/7.0.0-alpha.19:
+    resolution: {integrity: sha512-2VGIgn58ohmVXhc+qAx0OsihQHQm5R+Y1Mu7bu98HbCJtR/CzEdZs8qCtPb1XmYKF8XRNvZQge44dPTVimI2/w==}
+    dependencies:
+      babel-plugin-syntax-object-rest-spread: 7.0.0-alpha.19
+      babel-plugin-transform-typescript: 7.0.0-alpha.19
     dev: false
 
   /bail/2.0.2:
@@ -6387,6 +6447,11 @@ packages:
   /type-fest/0.8.1:
     resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
+    dev: true
+
+  /type-fest/2.9.0:
+    resolution: {integrity: sha512-uC0hJKi7eAGXUJ/YKk53RhnKxMwzHWgzf4t92oz8Qez28EBgVTfpDTB59y9hMYLzc/Wl85cD7Tv1hLZZoEJtrg==}
+    engines: {node: '>=12.20'}
     dev: true
 
   /typedarray-to-buffer/3.1.5:

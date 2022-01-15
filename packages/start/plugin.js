@@ -5,6 +5,56 @@ import inspect from "vite-plugin-inspect";
 import { getRoutes, stringifyRoutes } from "./routes.js";
 import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
+import babel from "@babel/core";
+
+function serverBabel(babel) {
+  const { types: t, template } = babel;
+
+  return {
+    name: "ast-transform", // not required
+    visitor: {
+      Program(path, state) {
+        state.servers = 0;
+      },
+      CallExpression(path, state) {
+        let callee = path.get("callee");
+        if (callee.get("name").node === "server") {
+          const serverFn = path.get("arguments")[0];
+          let program = path.findParent(p => t.isProgram(p));
+          let statement = path.findParent(p => program.get("body").includes(p));
+          let serverIndex = state.servers++;
+          if (state.opts.ssr) {
+            statement.insertBefore(
+              template(`export const __serverModule${serverIndex} = (%%source%%)`)({
+                source: serverFn.node
+              })
+            );
+          } else {
+            statement.insertBefore(
+              template(
+                `export const __serverModule${serverIndex} = (...args) => fetch('/__server', {
+                  method: '${"POST"}',
+                  body: JSON.stringify({
+                    filename: '${state.filename}',
+                    index: ${serverIndex},
+                    args: args
+                  }),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                }).then(r => r.json())`,
+                {
+                  syntacticPlaceholders: true
+                }
+              )()
+            );
+          }
+          path.replaceWith(t.identifier(`__serverModule${serverIndex}`));
+        }
+      }
+    }
+  };
+}
 
 /**
  * @returns {import('vite').Plugin}
@@ -13,7 +63,15 @@ function solidStartRouter(options) {
   return {
     name: "solid-start-router",
     enforce: "pre",
-    async transform(code, id) {
+
+    async transform(code, id, opts) {
+      if (/.data.(ts|js)/.test(id)) {
+        return babel.transformSync(code, {
+          filename: id,
+          presets: ["@babel/preset-typescript"],
+          plugins: [[serverBabel, { ssr: opts?.ssr ?? false }]]
+        });
+      }
       if (code.includes("const routes = $ROUTES;")) {
         const routes = await getRoutes({
           pageExtensions: [
@@ -81,6 +139,27 @@ function solidStartServer(options) {
     configureServer(vite) {
       return () => {
         remove_html_middlewares(vite.middlewares);
+
+        vite.middlewares.use("/__server", async (req, res) => {
+          let data = "";
+          req.on("data", chunk => {
+            data += chunk;
+          });
+          req.on("end", async () => {
+            let args = JSON.parse(data);
+            let mod = await vite.ssrLoadModule(args.filename);
+            try {
+              let response = await mod["__serverModule" + args.index](...args.args);
+              res.write(JSON.stringify(response));
+              res.end();
+            } catch (e) {
+              res.write("Not found");
+              res.statusCode = 500;
+              res.end();
+            }
+          });
+        });
+
         vite.middlewares.use(createDevHandler(vite));
 
         // logging routes on server start
@@ -154,7 +233,12 @@ export default function solidStart(options) {
 
   return [
     options.inspect ? inspect() : undefined,
-    solid(options),
+    solid({
+      ...(options ?? {}),
+      babel: (source, id, ssr) => ({
+        plugins: [[serverBabel, { ssr }]]
+      })
+    }),
     solidStartRouter(options),
     solidStartServer(options),
     solidStartBuild(options)
