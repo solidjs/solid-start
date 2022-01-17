@@ -15,7 +15,7 @@
     "actions.ts",
     "types.d.ts",
     "server.d.ts",
-    "compiled-server.js",
+    "server-modules",
     "plugin.d.ts",
     "components",
     "server.js",
