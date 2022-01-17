@@ -6,7 +6,7 @@ import { getRoutes, stringifyRoutes } from "./routes.js";
 import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
 import babel from "@babel/core";
-import compiledServer from "./compiled-server.js";
+import babelServerModule from "./babel-server-module.js";
 
 /**
  * @returns {import('vite').Plugin}
@@ -21,7 +21,7 @@ function solidStartRouter(options) {
         return babel.transformSync(code, {
           filename: id,
           presets: ["@babel/preset-typescript"],
-          plugins: [[compiledServer, { ssr: opts?.ssr ?? false }]]
+          plugins: [[babelServerModule, { ssr: opts?.ssr ?? false, root: process.cwd() }]]
         });
       }
       if (code.includes("const routes = $ROUTES;")) {
@@ -84,33 +84,13 @@ function solidStartBuild(options) {
 /**
  * @returns {import('vite').Plugin}
  */
-function solidStartServer(options) {
+function solidStartDevServer(options) {
   let config;
   return {
     name: "solid-start-dev",
     configureServer(vite) {
       return () => {
         remove_html_middlewares(vite.middlewares);
-
-        vite.middlewares.use("/__server", async (req, res) => {
-          let data = "";
-          req.on("data", chunk => {
-            data += chunk;
-          });
-          req.on("end", async () => {
-            let args = JSON.parse(data);
-            let mod = await vite.ssrLoadModule(args.filename);
-            try {
-              let response = await mod["__serverModule" + args.index](...args.args);
-              res.write(JSON.stringify(response));
-              res.end();
-            } catch (e) {
-              res.write("Not found");
-              res.statusCode = 500;
-              res.end();
-            }
-          });
-        });
 
         vite.middlewares.use(createDevHandler(vite));
 
@@ -138,7 +118,7 @@ function solidStartServer(options) {
                 .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
                 .join("\n")}`
             );
-          }, 0);
+          }, 100);
         });
       };
     },
@@ -166,6 +146,48 @@ function solidStartServer(options) {
   };
 }
 
+function serverModule() {
+  let config;
+  return {
+    name: "server-module-dev",
+    configResolved(conf) {
+      config = conf;
+    },
+    configureServer(vite) {
+      vite.middlewares.use("/__server_module", async (req, res) => {
+        let data = "";
+        req.on("data", chunk => {
+          data += chunk;
+        });
+        req.on("end", async () => {
+          let args = JSON.parse(data);
+          let mod = await vite.ssrLoadModule(args.filename);
+          try {
+            let response = await mod["__serverModule" + args.index](...args.args);
+            res.write(JSON.stringify(response));
+            res.end();
+          } catch (e) {
+            res.write("Not found");
+            res.statusCode = 500;
+            res.end();
+          }
+        });
+      });
+
+      vite.httpServer?.once("listening", async () => {
+        const protocol = config.server.https ? "https" : "http";
+        const port = config.server.port;
+        const label = `  > Server modules: `;
+
+        setTimeout(() => {
+          // eslint-disable-next-line no-console
+          console.log(`${label}${c.blue(`${protocol}://localhost:${port}/__server_module`)}`);
+        }, 0);
+      });
+    }
+  };
+}
+
 /**
  * @returns {import('vite').Plugin[]}
  */
@@ -188,11 +210,12 @@ export default function solidStart(options) {
     solid({
       ...(options ?? {}),
       babel: (source, id, ssr) => ({
-        plugins: [[compiledServer, { ssr }]]
+        plugins: [[babelServerModule, { ssr, root: process.cwd() }]]
       })
     }),
     solidStartRouter(options),
-    solidStartServer(options),
+    serverModule(),
+    solidStartDevServer(options),
     solidStartBuild(options)
   ].filter(Boolean);
 }

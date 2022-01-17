@@ -139,8 +139,11 @@ function transformServer({ types: t, template }) {
                   } else {
                     statement.insertBefore(
                       template(
-                        `export const __serverModule${serverIndex} = (...args) => fetch('/__server', {
-                  method: '${"POST"}',
+                        `export const __serverModule${serverIndex} = (...args) => fetch('/__server_module${state.filename.replace(
+                          state.opts.root,
+                          ""
+                        )}', {
+                  method: 'POST',
                   body: JSON.stringify({
                     filename: '${state.filename}',
                     index: ${serverIndex},
