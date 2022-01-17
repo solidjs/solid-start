@@ -165,66 +165,6 @@ function solidStartServer(options) {
     }
   };
 }
-import esbuild from "esbuild";
-
-// function Babel() {
-//   let config;
-//   return {
-//     name: "",
-//     configResolved(conf) {
-//       config = conf;
-//     },
-//     async transform(code, id, { ssr }) {
-//       if (!ssr && code.includes("serverModule")) {
-//         fs.mkdirSync(path.join(config.root, "node_modules", ".start"), { recursive: true });
-//         fs.writeFileSync(path.join(config.root, "node_modules", ".start", "server.js"), code);
-//         await esbuild.build({
-//           entryPoints: [path.join(config.root, "node_modules", ".start", "server.js")],
-//           outfile: path.join(config.root, "node_modules", ".start", "server.out.js"),
-//           bundle: true,
-//           external: ["*"],
-//           format: "esm",
-//           minify: true,
-//           plugins: [
-//             {
-//               name: "env",
-//               setup(build) {
-//                 // Intercept import paths called "env" so esbuild doesn't attempt
-//                 // to map them to a file system location. Tag them with the "env-ns"
-//                 // namespace to reserve them for this plugin.
-//                 build.onResolve(
-//                   {
-//                     filter: new RegExp(
-//                       path.join(config.root, "node_modules", ".start", "server.js")
-//                     )
-//                   },
-//                   args => ({
-//                     path: args.path,
-//                     external: false
-//                   })
-//                 );
-
-//                 // Load paths tagged with the "env-ns" namespace and behave as if
-//                 // they point to a JSON file containing the environment variables.
-//                 // build.onLoad({ filter: /.*/, namespace: "env-ns" }, () => ({
-//                 //   contents: JSON.stringify(process.env),
-//                 //   loader: "json"
-//                 // }));
-//               }
-//             }
-//           ]
-//         });
-
-//         return {
-//           code: fs.readFileSync(path.join(config.root, "node_modules", ".start", "server.out.js"), {
-//             encoding: "utf-8"
-//           })
-//         };
-//       }
-//       return null;
-//     }
-//   };
-// }
 
 /**
  * @returns {import('vite').Plugin[]}
