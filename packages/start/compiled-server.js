@@ -1,15 +1,7 @@
-const EXPORT_NAME_GET_STATIC_PROPS = "getStaticProps";
-const EXPORT_NAME_GET_STATIC_PATHS = "getStaticPaths";
-const EXPORT_NAME_GET_SERVER_PROPS = "getServerSideProps";
-const ssgExports = new Set([
-  EXPORT_NAME_GET_STATIC_PROPS,
-  EXPORT_NAME_GET_STATIC_PATHS,
-  EXPORT_NAME_GET_SERVER_PROPS,
-  `unstable_getStaticProps`,
-  `unstable_getStaticPaths`,
-  `unstable_getServerProps`,
-  `unstable_getServerSideProps`
-]);
+// All credit for this work goes to the amazing Next.js team.
+// https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
+// This is adapted to work with any server() calls and transpile it into multiple api function for a file.
+
 function decorateSsgExport(t, path, state) {
   const gsspName = "__has_server";
   const gsspId = t.identifier(gsspName);
@@ -27,6 +19,7 @@ function decorateSsgExport(t, path, state) {
     ]);
     exportPath.scope.registerDeclaration(pageCompPath);
   };
+
   path.traverse({
     ExportDefaultDeclaration(exportDefaultPath) {
       addGsspExport(exportDefaultPath);
@@ -36,24 +29,7 @@ function decorateSsgExport(t, path, state) {
     }
   });
 }
-// const isDataIdentifier = (name, state) => {
-//   console.log(name);
-//   if (ssgExports.has(name)) {
-//     // if (name === EXPORT_NAME_GET_SERVER_PROPS) {
-//     //   if (state.isPrerender) {
-//     //     throw new Error(SERVER_PROPS_SSG_CONFLICT);
-//     //   }
-//     //   state.isServerProps = true;
-//     // } else {
-//     //   if (state.isServerProps) {
-//     //     throw new Error(SERVER_PROPS_SSG_CONFLICT);
-//     //   }
-//     //   state.isPrerender = true;
-//     // }
-//     return true;
-//   }
-//   return false;
-// };
+
 function nextTransformSsg({ types: t, template }) {
   function getIdentifier(path) {
     const parentPath = path.parentPath;
@@ -189,56 +165,6 @@ function nextTransformSsg({ types: t, template }) {
               ImportSpecifier: markImport,
               ImportDefaultSpecifier: markImport,
               ImportNamespaceSpecifier: markImport
-              // ExportNamedDeclaration(exportNamedPath, exportNamedState) {
-              //   const specifiers = exportNamedPath.get("specifiers");
-              //   if (specifiers.length) {
-              //     specifiers.forEach(s => {
-              //       if (
-              //         isDataIdentifier(
-              //           t.isIdentifier(s.node.exported)
-              //             ? s.node.exported.name
-              //             : s.node.exported.value,
-              //           exportNamedState
-              //         )
-              //       ) {
-              //         s.remove();
-              //       }
-              //     });
-              //     if (exportNamedPath.node.specifiers.length < 1) {
-              //       exportNamedPath.remove();
-              //     }
-              //     return;
-              //   }
-              //   const decl = exportNamedPath.get("declaration");
-              //   if (decl == null || decl.node == null) {
-              //     return;
-              //   }
-              //   switch (decl.node.type) {
-              //     case "FunctionDeclaration": {
-              //       const name = decl.node.id.name;
-              //       if (isDataIdentifier(name, exportNamedState)) {
-              //         exportNamedPath.remove();
-              //       }
-              //       break;
-              //     }
-              //     case "VariableDeclaration": {
-              //       const inner = decl.get("declarations");
-              //       inner.forEach(d => {
-              //         if (d.node.id.type !== "Identifier") {
-              //           return;
-              //         }
-              //         const name = d.node.id.name;
-              //         if (isDataIdentifier(name, exportNamedState)) {
-              //           d.remove();
-              //         }
-              //       });
-              //       break;
-              //     }
-              //     default: {
-              //       break;
-              //     }
-              //   }
-              // }
             },
             state
           );
@@ -339,9 +265,4 @@ function nextTransformSsg({ types: t, template }) {
     }
   };
 }
-export {
-  EXPORT_NAME_GET_SERVER_PROPS,
-  EXPORT_NAME_GET_STATIC_PATHS,
-  EXPORT_NAME_GET_STATIC_PROPS,
-  nextTransformSsg as default
-};
+export { nextTransformSsg as default };
