@@ -2,7 +2,7 @@
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
 // This is adapted to work with any server() calls and transpile it into multiple api function for a file.
 
-function decorateSsgExport(t, path, state) {
+function decorateServerExport(t, path, state) {
   const gsspName = "__has_server";
   const gsspId = t.identifier(gsspName);
   const addGsspExport = exportPath => {
@@ -30,7 +30,7 @@ function decorateSsgExport(t, path, state) {
   });
 }
 
-function nextTransformSsg({ types: t, template }) {
+function transformServer({ types: t, template }) {
   function getIdentifier(path) {
     const parentPath = path.parentPath;
     if (parentPath.type === "VariableDeclarator") {
@@ -259,10 +259,10 @@ function nextTransformSsg({ types: t, template }) {
               ImportNamespaceSpecifier: sweepImport
             });
           } while (count);
-          decorateSsgExport(t, path, state);
+          decorateServerExport(t, path, state);
         }
       }
     }
   };
 }
-export { nextTransformSsg as default };
+export { transformServer as default };
