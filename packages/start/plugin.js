@@ -7,7 +7,7 @@ import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
 import babel from "@babel/core";
 import babelServerModule from "./server-modules/babel-server-module.js";
-import serverModule from "./server-modules/vite.js";
+import serverModuleDev from "./server-modules/vite-dev.js";
 /**
  * @returns {import('vite').Plugin}
  */
@@ -172,7 +172,7 @@ export default function solidStart(options) {
       })
     }),
     solidStartRouter(options),
-    serverModule(),
+    serverModuleDev(),
     solidStartDevServer(options),
     solidStartBuild(options)
   ].filter(Boolean);
