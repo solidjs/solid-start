@@ -1,5 +1,6 @@
 import fg from "fast-glob";
 import fs from "fs";
+import path from "path";
 import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 
@@ -20,7 +21,7 @@ export async function getRoutes({
 
   const dataRoutes = fg.sync(`${baseDir}/**/*.data.(ts|js)`, { cwd });
 
-  const regex = new RegExp(`(index)?(.(${pageExtensions.join("|")})|.data.js|.data.ts)`);
+  const regex = new RegExp(`(index)?(\\.(${pageExtensions.join("|")})|\\.data\\.js|\\.data\\.ts)`);
 
   function toIdentifier(source) {
     return source.slice(baseDir.length).replace(regex, "");
@@ -112,8 +113,10 @@ export function stringifyRoutes(routes) {
         .map(
           i =>
             `{\n${[
-              i.dataSrc ? `data: ${addImport(process.cwd() + "/" + i.dataSrc)}` : undefined,
-              `component: lazy(() => import('${process.cwd() + "/" + i.componentSrc}'))`,
+              /.data.(js|ts)$/.test(i.dataSrc ?? "")
+                ? `data: ${addImport(path.posix.resolve(i.dataSrc))}`
+                : undefined,
+              `component: lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(
