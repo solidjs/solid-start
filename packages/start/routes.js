@@ -1,5 +1,6 @@
 import fg from "fast-glob";
 import fs from "fs";
+import path from "path";
 import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 
@@ -108,9 +109,9 @@ export function stringifyRoutes(routes) {
           i =>
             `{\n${[
               /.data.(js|ts)$/.test(i.dataSrc ?? "")
-                ? `data: ${addImport(process.cwd() + "/" + i.dataSrc)}`
+                ? `data: ${addImport(path.posix.resolve(i.dataSrc))}`
                 : undefined,
-              `component: lazy(() => import('${process.cwd() + "/" + i.componentSrc}'))`,
+              `component: lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(

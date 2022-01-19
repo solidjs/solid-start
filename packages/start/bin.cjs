@@ -17,6 +17,7 @@ prog
   .action(async ({ config, open, port, root }) => {
     if (open) setTimeout(() => launch(port), 1000);
     spawn("vite", ["dev"], {
+      shell: true,
       stdio: "inherit"
     });
     // (await import("./runtime/devServer.js")).start({ config, port, root });
