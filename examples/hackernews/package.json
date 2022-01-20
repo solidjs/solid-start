@@ -10,8 +10,8 @@
   "devDependencies": {
     "@mdx-js/rollup": "^2.0.0-rc.1",
     "node-fetch": "^2.6.6",
-    "solid-app-router": "0.2.0",
-    "solid-js": "1.3.1",
+    "solid-app-router": "^0.2.0",
+    "solid-js": "^1.3.1",
     "solid-mdx": "^0.0.5",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
