@@ -10,10 +10,15 @@ import c from "picocolors";
  * @returns {import('vite').Plugin}
  */
 function solidStartRouter(options) {
+  let lazy;
   return {
     name: "solid-start-router",
     enforce: "pre",
-    async transform(code, id) {
+    configResolved(config) {
+      lazy = config.command !== 'serve';
+    },
+    async transform(code, id, transformOptions) {
+      const isSsr = transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
       if (code.includes("const routes = $ROUTES;")) {
         const routes = await getRoutes({
           pageExtensions: [
@@ -26,7 +31,7 @@ function solidStartRouter(options) {
           ]
         });
 
-        return { code: code.replace("const routes = $ROUTES;", stringifyRoutes(routes)) };
+        return { code: code.replace("const routes = $ROUTES;", stringifyRoutes(routes, { lazy })) };
       }
     }
   };
@@ -145,7 +150,6 @@ export default function solidStart(options) {
       appRoot: "src",
       routesDir: "pages",
       ssr: true,
-      preferStreaming: true,
       prerenderRoutes: [],
       inspect: true
     },

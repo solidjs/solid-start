@@ -1,35 +1,41 @@
 import path from "path";
-import http from "http";
-import { fileURLToPath } from "url";
-import { getBody } from "./utils.js";
+import Streams from "stream/web";
+import { Readable } from "stream";
+import { once } from "events";
 import vite from "vite";
-import fetch from "node-fetch";
+import { fetch, Headers, Response, Request } from "undici";
+import { createRequest } from "./fetch.js";
 
-globalThis.fetch || (globalThis.fetch = fetch);
+Object.assign(globalThis, Streams, {
+  Request, Response, fetch
+});
 
 export function createDevHandler(viteServer) {
   return async (req, res) => {
     try {
       if (req.url === "/favicon.ico") return;
 
-      const { render, renderActions } = await viteServer.ssrLoadModule(
-        path.join(path.dirname(fileURLToPath(import.meta.url)), "entries", "devServer.tsx")
-      );
+      const entry = (await viteServer.ssrLoadModule(path.resolve("/src/entryServer"))).default;
 
-      if (req.method === "POST") {
-        let e;
-        const body = await getBody(req);
-        if ((e = await renderActions(req.url, body))) {
-          res.statusCode = e.status;
-          res.write(e.body);
-          res.end();
-          return;
-        }
+      const webRes = await entry({
+        request: createRequest(req),
+        headers: new Headers()
+      });
+
+      res.statusCode = webRes.status;
+      res.statusMessage = webRes.statusText;
+
+      for (const [name, value] of webRes.headers) {
+        res.setHeader(name, value);
       }
 
-      res.statusCode = 200;
-      res.setHeader("content-type", "text/html");
-      render({ url: req.url, writable: res });
+      if (webRes.body) {
+        const readable = Readable.from(webRes.body);
+        readable.pipe(res);
+        await once(readable, "end");
+      } else {
+        res.end();
+      }
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
       console.log(e.stack);
@@ -45,13 +51,11 @@ async function createDevServer(root = process.cwd(), configFile) {
     configFile,
     logLevel: "info",
     server: {
-      middlewareMode: true
+      middlewareMode: "ssr"
     }
   });
 
-  const app = http.createServer((req, res) => {
-    server.middlewares(req, res, createDevHandler(server));
-  });
+  server.middlewares.use(createDevHandler(server));
 
   return { app, server };
 }

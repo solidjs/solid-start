@@ -1,12 +1,14 @@
-import { renderToStringAsync } from "solid-js/web";
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { createRequest } from "solid-start/runtime/fetch.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
-import { render } from "./app.js";
-import fetch from "node-fetch";
+import { fetch, Headers, Response, Request } from "undici";
+import entry from "./app";
 
-globalThis.fetch || (globalThis.fetch = fetch);
+Object.assign(globalThis, {
+  Request, Response, fetch
+});
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const manifest = JSON.parse(
@@ -17,6 +19,8 @@ const assetManifest = JSON.parse(
 );
 prepareManifest(manifest, assetManifest);
 
-export default req => {
-  return renderToStringAsync(render({ url: req.url, manifest }));
+export default async req => {
+  req.headers = {};
+  const webRes = await entry({ request: createRequest(req), headers: new Headers(), manifest });
+  return webRes.text();
 };

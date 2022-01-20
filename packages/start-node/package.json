@@ -13,13 +13,13 @@
     "sirv": "^1.0.12"
   },
   "devDependencies": {
-    "node-fetch": "^2.6.6",
     "solid-start": "^0.1.0-alpha.55",
+    "undici": "^4.12.2",
     "vite": "^2.7.10"
   },
   "peerDependencies": {
-    "node-fetch": "^2.0.0",
     "solid-start": "*",
+    "undici": "^4.12.2",
     "vite": "*"
   }
 }
