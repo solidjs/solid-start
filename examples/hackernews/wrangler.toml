@@ -1,0 +1,12 @@
+name = "hackernews"
+type = "webpack"
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2022-01-20"
+[site]
+entry-point = "./"
+bucket= "./dist"
+[build]
+command = ""
+upload.format = "service-worker"

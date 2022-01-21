@@ -57,7 +57,7 @@ async function createDevServer(root = process.cwd(), configFile) {
 
   server.middlewares.use(createDevHandler(server));
 
-  return { app, server };
+  return { server };
 }
 
 export function start(options) {

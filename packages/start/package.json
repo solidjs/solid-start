@@ -14,11 +14,16 @@
     "routes.js",
     "actions.ts",
     "types.d.ts",
+    "server.d.ts",
+    "server-modules",
     "plugin.d.ts",
     "components",
+    "server.js",
     "runtime"
   ],
   "dependencies": {
+    "@babel/preset-typescript": "^7.16.7",
+    "@babel/core": "^7.16.7",
     "es-module-lexer": "^0.9.3",
     "esbuild": "^0.14.11",
     "fast-glob": "^3.2.10",

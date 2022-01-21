@@ -1,5 +1,5 @@
 import { copyFileSync } from "fs";
-import { dirname, join } from "path";
+import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
 import vite from "vite";
@@ -7,7 +7,6 @@ import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import common from "@rollup/plugin-commonjs";
 import { spawn } from "child_process";
-
 export default function () {
   return {
     start() {
