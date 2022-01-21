@@ -201,18 +201,18 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       encoding: ^0.1.13
-      node-fetch: ^2.6.1
       rollup: ^2.53.3
       solid-start: ^0.1.0-alpha.55
+      undici: ^4.12.2
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
       '@rollup/plugin-node-resolve': 13.1.3_rollup@2.63.0
       encoding: 0.1.13
-      node-fetch: 2.6.6
       rollup: 2.63.0
     devDependencies:
       solid-start: 0.1.0-y.0_rollup@2.63.0
+      undici: 4.12.2
 
   packages/start-node:
     specifiers:
@@ -243,10 +243,12 @@ importers:
     specifiers:
       sirv-cli: 1.0.12
       solid-start: ^0.1.0-alpha.55
+      undici: ^4.12.2
     dependencies:
       sirv-cli: 1.0.12
     devDependencies:
       solid-start: 0.1.0-y.0_rollup@2.63.0
+      undici: 4.12.2
 
   packages/start-vercel:
     specifiers:
@@ -4751,6 +4753,7 @@ packages:
     engines: {node: 4.x || >=6.0.0}
     dependencies:
       whatwg-url: 5.0.0
+    dev: true
 
   /node-gyp/5.1.1:
     resolution: {integrity: sha512-WH0WKGi+a4i4DUt2mHnvocex/xPLp9pYt5R6M2JdFB7pJ7Z34hveZ4nDTGTiLXCkitA9T8HFZjhinBCiVHYcWw==}
@@ -6295,6 +6298,7 @@ packages:
 
   /tr46/0.0.3:
     resolution: {integrity: sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=}
+    dev: true
 
   /tr46/2.1.0:
     resolution: {integrity: sha512-15Ih7phfcdP5YxqiB+iDtLoaTz4Nd35+IiAv0kQ5FNKHzXgdWqPoTIqEDDJmXceQt4JZk6lVPT8lnDlPpGDppw==}
@@ -6724,6 +6728,7 @@ packages:
 
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=}
+    dev: true
 
   /webidl-conversions/6.1.0:
     resolution: {integrity: sha512-qBIvFLGiBpLjfwmYAaHPXsn+ho5xZnGvyGvsarywGNc8VyQJUMHJ8OBKGGrPER0okBeMDaan4mNBlgBROxuI8w==}
@@ -6735,6 +6740,7 @@ packages:
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
+    dev: true
 
   /whatwg-url/8.7.0:
     resolution: {integrity: sha512-gAojqb/m9Q8a5IV96E3fHJM70AzCkgt4uXYX2O7EmuyOnLrViCQlsEBmF9UQIu3/aeAIp2U17rtbpZWNntQqdg==}
