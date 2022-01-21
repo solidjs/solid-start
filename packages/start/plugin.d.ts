@@ -3,7 +3,6 @@ export type Options = {
   appRoot: string;
   routesDir: string;
   ssr: boolean;
-  preferStreaming: boolean;
   prerenderRoutes: any[];
   inspect: boolean;
 } & import("vite-plugin-solid").Options;

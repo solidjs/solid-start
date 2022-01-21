@@ -94,7 +94,7 @@ export async function getRoutes({
   };
 }
 
-export function stringifyRoutes(routes) {
+export function stringifyRoutes(routes, options = {}) {
   let imports = new Map();
   let vars = 0;
 
@@ -116,7 +116,7 @@ export function stringifyRoutes(routes) {
               /.data.(js|ts)$/.test(i.dataSrc ?? "")
                 ? `data: ${addImport(path.posix.resolve(i.dataSrc))}`
                 : undefined,
-              `component: lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`,
+              `component: ${options.lazy ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`: addImport(path.posix.resolve(i.componentSrc))}`,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(
@@ -133,7 +133,7 @@ export function stringifyRoutes(routes) {
 
   let r = _stringifyRoutes(routes.pageRoutes);
   const text = `
-  import { lazy } from 'solid-js';
+  ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${[...imports.keys()].map(i => `import ${imports.get(i).default} from '${i}';`).join("\n")}
   const routes = ${r};`;
   return text;

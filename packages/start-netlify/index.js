@@ -1,5 +1,5 @@
 import { copyFileSync } from "fs";
-import { dirname, join } from "path";
+import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
 import vite from "vite";
@@ -22,7 +22,10 @@ export default function () {
           outDir: "./dist/",
           minify: "terser",
           rollupOptions: {
-            input: `node_modules/solid-start/runtime/entries/client.tsx`
+            input: resolve(join(config.root, "src", `entryClient`)),
+            output: {
+              manualChunks: undefined
+            }
           }
         }
       });
@@ -31,7 +34,7 @@ export default function () {
           ssr: true,
           outDir: "./.solid/server",
           rollupOptions: {
-            input: `node_modules/solid-start/runtime/entries/server.tsx`,
+            input: resolve(join(config.root, "src", `entryServer`)),
             output: {
               format: "esm"
             }
@@ -39,7 +42,7 @@ export default function () {
         }
       });
       copyFileSync(
-        join(config.root, ".solid", "server", "server.js"),
+        join(config.root, ".solid", "server", `entryServer.js`),
         join(config.root, ".solid", "server", "app.js")
       );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));

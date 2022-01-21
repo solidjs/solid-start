@@ -30,65 +30,76 @@ importers:
       vite: 2.7.10
       vite-plugin-inspect: 0.3.13_vite@2.7.10
     specifiers:
-      node-fetch: ^2.6.1
-      solid-app-router: ^0.2.0
-      solid-js: ^1.3.0
+      solid-app-router: ^0.2.1
+      solid-js: ^1.3.3
       solid-meta: ^0.27.3
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      vite: ^2.7.10
+      undici: ^4.12.2
+      vite: ^2.7.13
       vite-plugin-inspect: ^0.3.13
   examples/hackernews:
     devDependencies:
-      '@mdx-js/rollup': 2.0.0-rc.1
-      node-fetch: 2.6.6
       solid-app-router: 0.2.1_solid-js@1.3.3
       solid-js: 1.3.3
-      solid-mdx: 0.0.5_solid-js@1.3.3+vite@2.7.10
       solid-meta: 0.27.3_solid-js@1.3.3
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.5.4
-      vite: 2.7.10
-      vite-plugin-inspect: 0.3.13_vite@2.7.10
+      undici: 4.12.2
+      vite: 2.7.13
+      vite-plugin-inspect: 0.3.13_vite@2.7.13
+
+  examples/hackernews:
     specifiers:
-      '@mdx-js/rollup': ^2.0.0-rc.1
-      node-fetch: ^2.6.6
-      solid-app-router: ^0.2.0
-      solid-js: ^1.3.1
-      solid-mdx: ^0.0.5
+      solid-app-router: 0.2.1
+      solid-js: 1.3.3
       solid-meta: ^0.27.3
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      vite: 2.7.10
+      undici: ^4.12.2
+      vite: 2.7.13
       vite-plugin-inspect: ^0.3.13
   examples/with-mdx-ts:
     devDependencies:
-      '@mdx-js/rollup': 2.0.0-rc.1
-      node-fetch: 2.6.6
-      solid-app-router: 0.2.0_solid-js@1.3.1
-      solid-js: 1.3.1
-      solid-mdx: 0.0.5_solid-js@1.3.1+vite@2.7.10
-      solid-meta: 0.27.3_solid-js@1.3.1
+      solid-app-router: 0.2.1_solid-js@1.3.3
+      solid-js: 1.3.3
+      solid-meta: 0.27.3_solid-js@1.3.3
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.5.4
-      vite: 2.7.10
-      vite-plugin-inspect: 0.3.13_vite@2.7.10
+      undici: 4.12.2
+      vite: 2.7.13
+      vite-plugin-inspect: 0.3.13_vite@2.7.13
+
+  examples/with-mdx-ts:
     specifiers:
       '@mdx-js/rollup': ^2.0.0-rc.1
-      node-fetch: ^2.6.1
-      solid-app-router: ^0.2.0
-      solid-js: ^1.3.0
+      solid-app-router: ^0.2.1
+      solid-js: ^1.3.3
       solid-mdx: ^0.0.5
       solid-meta: ^0.27.3
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      vite: ^2.7.10
+      undici: ^4.12.2
+      vite: ^2.7.13
       vite-plugin-inspect: ^0.3.13
+    devDependencies:
+      '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
+      solid-app-router: 0.2.1_solid-js@1.3.3
+      solid-js: 1.3.3
+      solid-mdx: 0.0.5_solid-js@1.3.3+vite@2.7.13
+      solid-meta: 0.27.3_solid-js@1.3.3
+      solid-start: link:../../packages/start
+      solid-start-node: link:../../packages/start-node
+      typescript: 4.5.4
+      undici: 4.12.2
+      vite: 2.7.13
+      vite-plugin-inspect: 0.3.13_vite@2.7.13
+
   packages/create-solid:
     devDependencies:
       gitignore-parser: 0.0.2
@@ -110,56 +121,39 @@ importers:
       solid-start-node: link:../../../start-node
       vite: 2.7.11
     specifiers:
-      node-fetch: ^2.6.6
       solid-app-router: ^0.2.1
       solid-js: ^1.3.3
       solid-meta: ^0.27.3
       solid-start: next
       solid-start-node: next
-      vite: ^2.7.11
-  packages/create-solid/templates/app-ts:
+      vite: ^2.7.13
     devDependencies:
-      node-fetch: 2.6.6
       solid-app-router: 0.2.1_solid-js@1.3.3
       solid-js: 1.3.3
       solid-meta: 0.27.3_solid-js@1.3.3
       solid-start: link:../../../start
       solid-start-node: link:../../../start-node
-      typescript: 4.5.4
-      vite: 2.7.11
+      vite: 2.7.13
+
+  packages/create-solid/templates/app-ts:
     specifiers:
-      node-fetch: ^2.6.6
       solid-app-router: ^0.2.1
       solid-js: ^1.3.3
       solid-meta: ^0.27.3
       solid-start: next
       solid-start-node: next
       typescript: ^4.4.3
-      vite: ^2.7.11
-  packages/start:
-    dependencies:
-      '@babel/core': 7.16.7
-      '@babel/preset-typescript': 7.16.7_@babel+core@7.16.7
-      es-module-lexer: 0.9.3
-      esbuild: 0.14.11
-      fast-glob: 3.2.10
-      node-fetch: 2.6.6
-      picocolors: 1.0.0
-      rollup: 2.63.0
-      rollup-route-manifest: 1.0.0_rollup@2.63.0
-      sade: 1.8.1
-      solid-ssr: 1.3.1
-      vite-plugin-inspect: 0.3.13_vite@2.7.10
-      vite-plugin-solid: 2.2.1
+      vite: ^2.7.13
     devDependencies:
-      '@types/babel__core': 7.1.18
       solid-app-router: 0.2.1_solid-js@1.3.3
       solid-js: 1.3.3
       solid-meta: 0.27.3_solid-js@1.3.3
-      type-fest: 2.9.0
-      vite: 2.7.10
-    optionalDependencies:
-      solid-start-node: link:../start-node
+      solid-start: link:../../../start
+      solid-start-node: link:../../../start-node
+      typescript: 4.5.4
+      vite: 2.7.13
+
+  packages/start:
     specifiers:
       '@babel/core': ^7.16.7
       '@babel/preset-typescript': ^7.16.7
@@ -167,7 +161,6 @@ importers:
       es-module-lexer: ^0.9.3
       esbuild: ^0.14.11
       fast-glob: ^3.2.10
-      node-fetch: ^2.6.1
       picocolors: ^1.0.0
       rollup: ^2.0.0
       rollup-route-manifest: ^1.0.0
@@ -175,13 +168,41 @@ importers:
       solid-app-router: ^0.2.1
       solid-js: ^1.3.3
       solid-meta: ^0.27.3
-      solid-ssr: ^1.3.0
+      solid-ssr: ^1.3.3
       solid-start-node: '*'
-      type-fest: ^2.9.0
-      vite: ^2.7.10
+      undici: ^4.12.2
+      vite: ^2.7.13
       vite-plugin-inspect: ^0.3.13
-      vite-plugin-solid: ^2.2.1
+      vite-plugin-solid: ^2.2.4
+    dependencies:
+      es-module-lexer: 0.9.3
+      esbuild: 0.14.11
+      fast-glob: 3.2.10
+      picocolors: 1.0.0
+      rollup: 2.63.0
+      rollup-route-manifest: 1.0.0_rollup@2.63.0
+      sade: 1.8.1
+      solid-ssr: 1.3.3
+      undici: 4.12.2
+      vite-plugin-inspect: 0.3.13_vite@2.7.13
+      vite-plugin-solid: 2.2.4
+    optionalDependencies:
+      solid-start-node: link:../start-node
+    devDependencies:
+      solid-app-router: 0.2.1_solid-js@1.3.3
+      solid-js: 1.3.3
+      solid-meta: 0.27.3_solid-js@1.3.3
+      vite: 2.7.13
+
   packages/start-cloudflare-workers:
+    specifiers:
+      '@cloudflare/kv-asset-handler': ^0.1.1
+      '@rollup/plugin-commonjs': ^19.0.1
+      '@rollup/plugin-json': ^4.1.0
+      '@rollup/plugin-node-resolve': ^13.0.2
+      rollup: ^2.53.3
+      solid-start: ^0.1.0-alpha.55
+      vite: ^2.7.10
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
@@ -197,9 +218,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.54
-      vite: ^2.7.10
-  packages/start-netlify:
+      solid-start: ^0.1.0-alpha.55
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
@@ -213,11 +232,13 @@ importers:
       '@rollup/plugin-commonjs': ^19.0.1
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
-      encoding: ^0.1.13
-      node-fetch: ^2.6.1
+      compression: ^1.7.4
+      polka: ^1.0.0-next.13
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.54
-  packages/start-node:
+      sirv: ^1.0.12
+      solid-start: ^0.1.0-alpha.55
+      undici: ^4.12.2
+      vite: ^2.7.10
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
@@ -227,9 +248,20 @@ importers:
       rollup: 2.63.0
       sirv: 1.0.19
     devDependencies:
-      node-fetch: 2.6.6
       solid-start: 0.1.0-y.0_rollup@2.63.0+vite@2.7.10
+      undici: 4.12.2
       vite: 2.7.10
+
+  packages/start-static:
+    specifiers:
+      sirv-cli: 1.0.12
+      solid-start: ^0.1.0-alpha.55
+    dependencies:
+      sirv-cli: 1.0.12
+    devDependencies:
+      solid-start: 0.1.0-y.0_rollup@2.63.0
+
+  packages/start-vercel:
     specifiers:
       '@rollup/plugin-commonjs': ^19.0.1
       '@rollup/plugin-json': ^4.1.0
@@ -238,18 +270,7 @@ importers:
       node-fetch: ^2.6.6
       polka: ^1.0.0-next.13
       rollup: ^2.53.3
-      sirv: ^1.0.12
-      solid-start: ^0.1.0-alpha.54
-      vite: ^2.7.10
-  packages/start-static:
-    dependencies:
-      sirv-cli: 1.0.12
-    devDependencies:
-      solid-start: 0.1.0-y.0
-    specifiers:
-      sirv-cli: 1.0.12
-      solid-start: ^0.1.0-alpha.54
-  packages/start-vercel:
+      solid-start: ^0.1.0-alpha.55
     dependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.63.0
       '@rollup/plugin-json': 4.1.0_rollup@2.63.0
@@ -6285,15 +6306,9 @@ packages:
       ip: 1.1.5
       smart-buffer: 4.2.0
     dev: true
-    engines:
-      node: '>= 10.13.0'
-      npm: '>= 3.0.0'
-    resolution:
-      integrity: sha512-kLQ9N5ucj8uIcxrDwjm0Jsqk06xdpBjGNQtpXy4Q8/QY2k+fY7nZH8CARy+hkbG+SGAovmzzuauCpBlb8FrnBA==
-  /solid-app-router/0.2.0_solid-js@1.3.1:
-    dependencies:
-      solid-js: 1.3.1
-    dev: true
+
+  /solid-app-router/0.2.1_solid-js@1.3.3:
+    resolution: {integrity: sha512-ENkhw3EF6MbkOuhRuCvmALtXs2x/fjvQw1ZSQP3ON7l6q6+QqTT8d0oZf6r5VYS95IIlevSSJNnAwvc1+Fx6Hw==}
     peerDependencies:
       solid-js: ^1.3.0
     resolution:
@@ -6308,22 +6323,12 @@ packages:
       integrity: sha512-ENkhw3EF6MbkOuhRuCvmALtXs2x/fjvQw1ZSQP3ON7l6q6+QqTT8d0oZf6r5VYS95IIlevSSJNnAwvc1+Fx6Hw==
   /solid-js/0.26.5:
     dev: true
-    resolution:
-      integrity: sha512-cMjxcVoyRBgnfSpwYxXPM5WF800guR+x/01RDBFQjAAkqU7X28GbRkTNKcyQ1KHcFOnzEsG18J+JJ9/PvqyNmw==
-  /solid-js/1.3.1:
-    resolution:
-      integrity: sha512-umBPwS/d7K5+NxojUok/t8xgXdMbIOkFLs/sk4DliFTsl3nbguHgkcAt3KWE6XhA8Xr1xKx5P+g75B8+VP0CzQ==
+
   /solid-js/1.3.3:
-    dev: true
-    resolution:
-      integrity: sha512-0pyHpLZIgQDI1Z+MgxXQRPY10dhXfKJdptb4UCJQ9ArQOLq2gtFA1acEsvSAtPMVdqQ8bqj68FOTXLpz6hm2Mg==
-  /solid-mdx/0.0.5_solid-js@1.3.1+vite@2.7.10:
-    dependencies:
-      resolve: 1.21.0
-      solid-js: 1.3.1
-      vite: 2.7.10
-      xdm: 3.3.1
-    dev: true
+    resolution: {integrity: sha512-0pyHpLZIgQDI1Z+MgxXQRPY10dhXfKJdptb4UCJQ9ArQOLq2gtFA1acEsvSAtPMVdqQ8bqj68FOTXLpz6hm2Mg==}
+
+  /solid-mdx/0.0.5_solid-js@1.3.3+vite@2.7.13:
+    resolution: {integrity: sha512-gmEQGEFCcn26NyG0rnmq6nPicN16OeaqdA7ClOCzflgr7sV1cMX31SyLvmP3Vy//cvkmtVPVKxXFzacRkLxx+g==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
@@ -6333,18 +6338,12 @@ packages:
     dependencies:
       resolve: 1.21.0
       solid-js: 1.3.3
-      vite: 2.7.10
+      vite: 2.7.13
       xdm: 3.3.1
     dev: true
-    peerDependencies:
-      solid-js: ^1.2.6
-      vite: '*'
-    resolution:
-      integrity: sha512-gmEQGEFCcn26NyG0rnmq6nPicN16OeaqdA7ClOCzflgr7sV1cMX31SyLvmP3Vy//cvkmtVPVKxXFzacRkLxx+g==
-  /solid-meta/0.27.3_solid-js@1.3.1:
-    dependencies:
-      solid-js: 1.3.1
-    dev: true
+
+  /solid-meta/0.27.3_solid-js@1.3.3:
+    resolution: {integrity: sha512-XaVv0EPkoPvufzUOIMn4yOzZFnJvQPVBlpZFLc9zTFTUnb+cq/zuoWr0Sa0fEntodfVPe5j6NfvXwGE6pHQo+w==}
     peerDependencies:
       solid-js: ^1.0.0
     resolution:
@@ -6361,6 +6360,9 @@ packages:
     dependencies:
       solid-js: 0.26.5
     dev: true
+
+  /solid-refresh/0.4.0_solid-js@1.3.3:
+    resolution: {integrity: sha512-5XCUz845n/sHPzKK2i2G2EeV61tAmzv6SqzqhXcPaYhrgzVy7nKTQaBpKK8InKrriq9Z2JFF/mguIU00t/73xw==}
     peerDependencies:
       solid-js: '*'
     resolution:
@@ -6370,13 +6372,11 @@ packages:
       '@babel/generator': 7.16.7
       '@babel/helper-module-imports': 7.16.7
       '@babel/types': 7.16.7
-      solid-js: 1.3.1
+      solid-js: 1.3.3
     dev: false
-    peerDependencies:
-      solid-js: ^1.3.0
-    resolution:
-      integrity: sha512-5XCUz845n/sHPzKK2i2G2EeV61tAmzv6SqzqhXcPaYhrgzVy7nKTQaBpKK8InKrriq9Z2JFF/mguIU00t/73xw==
-  /solid-ssr/1.3.1:
+
+  /solid-ssr/1.3.3:
+    resolution: {integrity: sha512-OMO++hYGS43X1n8Rdg0x5UX+V5xwFpWYIKwd4IIEAuuuaI6yVKo6uEmlZvf+abHk+ybWNXiHALBrIz/BwwJnfw==}
     dev: false
     resolution:
       integrity: sha512-/mCEXzyUDWt/Rd5kqN06b7SiYjgqEzF5mPA7aun6s/NPxOrHUAxCG4af4KkXHqdk7IaJsMt4hAwBqk2Uni1+BQ==
@@ -6947,8 +6947,11 @@ packages:
       has-symbols: 1.0.2
       which-boxed-primitive: 1.0.2
     dev: true
-    resolution:
-      integrity: sha512-tZU/3NqK3dA5gpE1KtyiJUrEB0lxnGkMFHptJ7q6ewdZ8s12QrODwNbhIJStmJkd1QDXa1NRA8aF2A1zk/Ypyw==
+
+  /undici/4.12.2:
+    resolution: {integrity: sha512-RZj6SbkQFs5O/pJCboGEo6l5DTCe3Zg4r/8Z/0/2qnIv08+s6zL4akohOPMYWKc3mzwv15WTvsfMWaafZcvYoQ==}
+    engines: {node: '>=12.18'}
+
   /unified/10.1.1:
     dependencies:
       '@types/unist': 2.0.6
@@ -7133,22 +7136,22 @@ packages:
       unist-util-stringify-position: 3.0.0
       vfile-message: 3.1.0
     dev: true
-    resolution:
-      integrity: sha512-vXW5XKbELM6mLj88kmkJ+gjFGZ/2gTmpdqPDjs3y+qbvI5i7md7rba/+pbYEawa7t22W7ynywPV6lUUAS1WiYg==
-  /vite-plugin-inspect/0.3.13_vite@2.7.10:
+
+  /vite-plugin-inspect/0.3.13_vite@2.7.13:
+    resolution: {integrity: sha512-Naie3Rx/0IbmQSknfQPVrvWKiar7fCu50u+uLcUgt54yX0espduLDnI8IEtOYlsCA4gHs93IYKtxFDTxAThmYw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      vite: ^2.0.0
     dependencies:
       '@rollup/pluginutils': 4.1.2
       debug: 4.3.3
       kolorist: 1.5.1
       sirv: 2.0.0
       ufo: 0.7.9
-      vite: 2.7.10
-    engines:
-      node: '>=14'
-    peerDependencies:
-      vite: ^2.0.0
-    resolution:
-      integrity: sha512-Naie3Rx/0IbmQSknfQPVrvWKiar7fCu50u+uLcUgt54yX0espduLDnI8IEtOYlsCA4gHs93IYKtxFDTxAThmYw==
+      vite: 2.7.13
+    transitivePeerDependencies:
+      - supports-color
+
   /vite-plugin-solid/1.9.0:
     dependencies:
       '@babel/core': 7.16.7
@@ -7157,19 +7160,29 @@ packages:
       merge-anything: 4.0.2
       solid-js: 0.26.5
       solid-refresh: 0.1.2_solid-js@0.26.5
-      vite: 2.7.11
+      vite: 2.7.13
+    transitivePeerDependencies:
+      - less
+      - sass
+      - stylus
+      - supports-color
     dev: true
-    resolution:
-      integrity: sha512-GN6lm/FkMBuZZyVEXSLf2lJzw+uhyFpBUPZ1d7p9PbgH6ScpTny5waa8smur4dx/JRuXDpHq+kWoRV3kCP4YjQ==
-  /vite-plugin-solid/2.2.1:
+
+  /vite-plugin-solid/2.2.4:
+    resolution: {integrity: sha512-JMYc8SOZFnAU30x7UzFnMpNG+x92WOaKHwnKYg0LZPrLJGvE2k1Xh01GtvAG5cdqZTjpczCCpKtsEjz1t4JtgQ==}
     dependencies:
       '@babel/core': 7.16.7
       '@babel/preset-typescript': 7.16.7_@babel+core@7.16.7
       babel-preset-solid: 1.3.1_@babel+core@7.16.7
       merge-anything: 4.0.2
-      solid-js: 1.3.1
-      solid-refresh: 0.4.0_solid-js@1.3.1
-      vite: 2.7.10
+      solid-js: 1.3.3
+      solid-refresh: 0.4.0_solid-js@1.3.3
+      vite: 2.7.13
+    transitivePeerDependencies:
+      - less
+      - sass
+      - stylus
+      - supports-color
     dev: false
     resolution:
       integrity: sha512-iyat83wK4sgcRqWLRHoVufwjONZiPAIK/4micEWQEm54ArvF4dAHrdne5C7BJ14k71vapoB1pNryS78wL4UE2Q==
@@ -7209,6 +7222,12 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /vite/2.7.11:
+    resolution: {integrity: sha512-W1OVwJmtuxnzt9HwZ1AebVLgvsgNpe4TK/sxvF+1x2y8MRnTEHvaPqxy9A67IYb5BR0Q+nENmLYa3QfESmp5GQ==}
+    engines: {node: '>=12.2.0'}
+    hasBin: true
     peerDependencies:
       less: '*'
       sass: '*'
@@ -7220,8 +7239,38 @@ packages:
         optional: true
       stylus:
         optional: true
-    resolution:
-      integrity: sha512-W1OVwJmtuxnzt9HwZ1AebVLgvsgNpe4TK/sxvF+1x2y8MRnTEHvaPqxy9A67IYb5BR0Q+nENmLYa3QfESmp5GQ==
+    dependencies:
+      esbuild: 0.13.15
+      postcss: 8.4.5
+      resolve: 1.21.0
+      rollup: 2.63.0
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /vite/2.7.13:
+    resolution: {integrity: sha512-Mq8et7f3aK0SgSxjDNfOAimZGW9XryfHRa/uV0jseQSilg+KhYDSoNb9h1rknOy6SuMkvNDLKCYAYYUMCE+IgQ==}
+    engines: {node: '>=12.2.0'}
+    hasBin: true
+    peerDependencies:
+      less: '*'
+      sass: '*'
+      stylus: '*'
+    peerDependenciesMeta:
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+    dependencies:
+      esbuild: 0.13.15
+      postcss: 8.4.5
+      resolve: 1.21.0
+      rollup: 2.63.0
+    optionalDependencies:
+      fsevents: 2.3.2
+
   /wcwidth/1.0.1:
     dependencies:
       defaults: 1.0.3
