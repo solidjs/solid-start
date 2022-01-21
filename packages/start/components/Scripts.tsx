@@ -22,7 +22,7 @@ export default function Scripts() {
               <script
                 type="module"
                 async
-                src="/src/entryClient"
+                src="/src/entry-client"
                 $ServerOnly
               ></script>
             </>

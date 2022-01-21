@@ -15,7 +15,7 @@ export function createDevHandler(viteServer) {
     try {
       if (req.url === "/favicon.ico") return;
 
-      const entry = (await viteServer.ssrLoadModule(path.resolve("/src/entryServer"))).default;
+      const entry = (await viteServer.ssrLoadModule(path.resolve("/src/entry-server"))).default;
 
       const webRes = await entry({
         request: createRequest(req),

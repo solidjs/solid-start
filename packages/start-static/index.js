@@ -41,7 +41,7 @@ export default function () {
             outDir: "./dist/",
             minify: "terser",
             rollupOptions: {
-              input: resolve(join(config.root, "src", `entryClient`)),
+              input: resolve(join(config.root, "src", `entry-client`)),
               output: {
                 manualChunks: undefined
               }
@@ -53,7 +53,7 @@ export default function () {
             ssr: true,
             outDir: "./.solid/server",
             rollupOptions: {
-              input: resolve(join(config.root, "src", `entryServer`)),
+              input: resolve(join(config.root, "src", `entry-server`)),
               output: {
                 format: "esm"
               }
@@ -62,7 +62,7 @@ export default function () {
         })
       ]);
       copyFileSync(
-        join(config.root, ".solid", "server", `entryServer.js`),
+        join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "app.js")
       );
       const pathToServer = join(config.root, ".solid", "server", "index.js");
