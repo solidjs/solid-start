@@ -4,3 +4,4 @@ export { default as Outlet } from "./Outlet";
 export { default as Scripts } from "./Scripts";
 export { default as StartServer } from "./StartServer";
 export { default as StartClient } from "./StartClient";
+export * from "./StartContext";
