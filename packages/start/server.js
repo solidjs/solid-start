@@ -1,29 +1,31 @@
+import { isServer } from "solid-js/web";
+
 export default function server(fn) {
   return fn;
 }
 
-server.fetch =
-  (s, serverIndex) =>
-  (...args) =>
-    fetch(`/__server_module${s}`, {
-      method: "POST",
-      body: JSON.stringify({
-        filename: s,
-        index: serverIndex,
-        args: args
-      }),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(r => r.json());
+if (!isServer) {
+  server.fetch =
+    hash =>
+    (...args) =>
+      fetch(`/_m${hash}`, {
+        method: "POST",
+        body: JSON.stringify([hash, args]),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(r => r.json());
+}
 
-const handlers = new Map();
+if (isServer) {
+  const handlers = new Map();
 
-server.registerHandler = function (path, index, handler) {
-  // console.log(path, handler);
-  handlers.set(path + "__" + index, handler);
-};
+  server.registerHandler = function (hash, handler) {
+    handlers.set(hash, handler);
+  };
 
-server.getHandler = function (path, index) {
-  return handlers.get(path + "__" + index);
-};
+  server.getHandler = function (hash) {
+    console.log(handlers, hash);
+    return handlers.get(hash);
+  };
+}

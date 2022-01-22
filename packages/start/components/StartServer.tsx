@@ -68,9 +68,10 @@ export const serverModules: Middleware = ({ forward }) => {
   return async (ctx: RequestContext) => {
     const url = new URL(ctx.request.url);
 
-    if (url.pathname.startsWith("/__server_module")) {
+    if (url.pathname.startsWith("/_m")) {
       let json = await ctx.request.json();
-      let handler = server.getHandler(json.filename, json.index);
+      let handler = server.getHandler(json[0]);
+      console.log(handler);
       if (!handler)
         return new Response(
           JSON.stringify({
@@ -82,7 +83,7 @@ export const serverModules: Middleware = ({ forward }) => {
           }
         );
       try {
-        const data = await handler(...json.args);
+        const data = await handler(...json[1]);
         return new Response(JSON.stringify(data), {
           status: 200
         });

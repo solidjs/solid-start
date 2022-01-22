@@ -1,6 +1,6 @@
 declare const server: (<T>(fn: T) => T) & {
-  getHandler: (path: string, index: number) => any;
-  registerHandler: (path: string, index: number, handler: any) => any;
+  getHandler: (hash: string) => any;
+  registerHandler: (hash: string, handler: any) => any;
 };
 
 export default server;

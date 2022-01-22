@@ -22,10 +22,10 @@ function decorateServerExport(t, path, state) {
 
   path.traverse({
     ExportDefaultDeclaration(exportDefaultPath) {
-      addGsspExport(exportDefaultPath);
+      // addGsspExport(exportDefaultPath);
     },
     ExportNamedDeclaration(exportNamedPath) {
-      addGsspExport(exportNamedPath);
+      // addGsspExport(exportNamedPath);
     }
   });
 }
@@ -71,6 +71,16 @@ function transformServer({ types: t, template }) {
     if (isIdentifierReferenced(local)) {
       state.refs.add(local);
     }
+  }
+
+  function hashFn(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      var char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
   }
   return {
     visitor: {
@@ -130,13 +140,14 @@ function transformServer({ types: t, template }) {
                   let program = path.findParent(p => t.isProgram(p));
                   let statement = path.findParent(p => program.get("body").includes(p));
                   let serverIndex = state.servers++;
+                  const hash = hashFn(
+                    state.filename.replace(state.opts.root, "") + "/" + serverIndex
+                  );
+
                   if (state.opts.ssr) {
                     statement.insertBefore(
                       template(`export const $$server_module${serverIndex} = (%%source%%);
-                      server.registerHandler("${state.filename.replace(
-                        state.opts.root,
-                        ""
-                      )}", ${serverIndex}, $$server_module${serverIndex});
+                      server.registerHandler("/${hash}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
                       })
@@ -144,10 +155,7 @@ function transformServer({ types: t, template }) {
                   } else {
                     statement.insertBefore(
                       template(
-                        `export const $$server_module${serverIndex} = server.fetch("${state.filename.replace(
-                          state.opts.root,
-                          ""
-                        )}", ${serverIndex});`,
+                        `export const $$server_module${serverIndex} = server.fetch("/${hash}", ${serverIndex});`,
                         {
                           syntacticPlaceholders: true
                         }
