@@ -16,7 +16,10 @@ prog
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config, open, port, root }) => {
     if (open) setTimeout(() => launch(port), 1000);
-    spawn("vite", ["dev"], {
+    spawn("vite", ["dev",
+      ...(config ? ["--config", config] : []),
+      ...(port ? ["--port", port] : []),
+    ], {
       shell: true,
       stdio: "inherit"
     });
