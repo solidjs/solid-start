@@ -1,4 +1,5 @@
 import path from "path";
+import { normalizePath } from "vite";
 import manifest from "rollup-route-manifest";
 import solid from "vite-plugin-solid";
 import inspect from "vite-plugin-inspect";
@@ -51,7 +52,7 @@ function solidStartBuild(options) {
         ].join("|")}))$`
       );
 
-      const root = conf.root || process.cwd();
+      const root = normalizePath(conf.root || process.cwd());
       return {
         build: {
           target: "esnext",
@@ -63,7 +64,7 @@ function solidStartBuild(options) {
                 merge: false,
                 publicPath: "/",
                 routes: file => {
-                  file = file.replace(path.join(root, options.appRoot), "").replace(regex, "");
+                  file = file.replace(path.posix.join(root, options.appRoot), "").replace(regex, "");
                   if (!file.includes(`/${options.routesDir}/`)) return "*"; // commons
                   return "/" + file.replace(`/${options.routesDir}/`, "");
                 }
