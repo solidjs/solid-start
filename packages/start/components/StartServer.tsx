@@ -1,6 +1,7 @@
 import { ssr } from "solid-js/web";
 import { MetaProvider } from "solid-meta";
 import { RouteDataFunc, Router } from "solid-app-router";
+// @ts-expect-error
 import Root from "~/root";
 import { StartProvider } from "./StartContext";
 import server from "../server";
@@ -68,10 +69,11 @@ export const serverModules: Middleware = ({ forward }) => {
   return async (ctx: RequestContext) => {
     const url = new URL(ctx.request.url);
 
+    server.setRequest(ctx);
+
     if (url.pathname.startsWith("/_m")) {
       let json = await ctx.request.json();
       let handler = server.getHandler(json[0]);
-      console.log(handler);
       if (!handler)
         return new Response(
           JSON.stringify({
@@ -83,7 +85,7 @@ export const serverModules: Middleware = ({ forward }) => {
           }
         );
       try {
-        const data = await handler(...json[1]);
+        const data = await handler.bind(ctx)(...json[1]);
         return new Response(JSON.stringify(data), {
           status: 200
         });

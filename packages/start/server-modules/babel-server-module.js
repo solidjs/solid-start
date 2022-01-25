@@ -146,7 +146,7 @@ function transformServer({ types: t, template }) {
 
                   if (state.opts.ssr) {
                     statement.insertBefore(
-                      template(`export const $$server_module${serverIndex} = (%%source%%);
+                      template(`export const $$server_module${serverIndex} = server.handler(%%source%%);
                       server.registerHandler("/${hash}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
@@ -155,7 +155,7 @@ function transformServer({ types: t, template }) {
                   } else {
                     statement.insertBefore(
                       template(
-                        `export const $$server_module${serverIndex} = server.fetch("/${hash}", ${serverIndex});`,
+                        `export const $$server_module${serverIndex} = server.fetch("/${hash}");`,
                         {
                           syntacticPlaceholders: true
                         }
