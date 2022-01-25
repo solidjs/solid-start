@@ -140,8 +140,9 @@ function transformServer({ types: t, template }) {
                   let program = path.findParent(p => t.isProgram(p));
                   let statement = path.findParent(p => program.get("body").includes(p));
                   let serverIndex = state.servers++;
-                  const hash = hashFn(
-                    state.filename.replace(state.opts.root, "") + "/" + serverIndex
+                  let hasher = state.opts.minify ? hashFn : str => str;
+                  const hash = hasher(
+                    state.filename.replace(state.opts.root, "").slice(1) + "/" + serverIndex
                   );
 
                   if (state.opts.ssr) {

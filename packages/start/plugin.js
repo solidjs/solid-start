@@ -26,7 +26,16 @@ function solidStartRouter(options) {
         return babel.transformSync(code, {
           filename: id,
           presets: ["@babel/preset-typescript"],
-          plugins: [[babelServerModule, { ssr: isSsr ?? false, root: process.cwd() }]]
+          plugins: [
+            [
+              babelServerModule,
+              {
+                ssr: isSsr ?? false,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
+            ]
+          ]
         });
       }
 
@@ -173,7 +182,12 @@ export default function solidStart(options) {
     solid({
       ...(options ?? {}),
       babel: (source, id, ssr) => ({
-        plugins: [[babelServerModule, { ssr, root: process.cwd() }]]
+        plugins: [
+          [
+            babelServerModule,
+            { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+          ]
+        ]
       })
     }),
     solidStartRouter(options),
