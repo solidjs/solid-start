@@ -7,7 +7,7 @@ import { getRoutes, stringifyRoutes } from "./routes.js";
 import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
 import babel from "@babel/core";
-import babelServerModule from "./server-modules/babel-server-module.js";
+import babelServerModule from "./server/babel.js";
 
 /**
  * @returns {import('vite').Plugin}

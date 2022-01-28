@@ -2,6 +2,8 @@
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
 // This is adapted to work with any server() calls and transpile it into multiple api function for a file.
 
+import { INLINE_SERVER_ROUTE_PREFIX } from "./constants.js";
+
 function decorateServerExport(t, path, state) {
   const gsspName = "__has_server";
   const gsspId = t.identifier(gsspName);
@@ -145,10 +147,12 @@ function transformServer({ types: t, template }) {
                     state.filename.replace(state.opts.root, "").slice(1) + "/" + serverIndex
                   );
 
+                  const route = `${INLINE_SERVER_ROUTE_PREFIX}/${hash}`;
+
                   if (state.opts.ssr) {
                     statement.insertBefore(
                       template(`export const $$server_module${serverIndex} = server.handler(%%source%%);
-                      server.registerHandler("/${hash}", $$server_module${serverIndex});
+                      server.registerHandler("${route}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
                       })
@@ -156,7 +160,7 @@ function transformServer({ types: t, template }) {
                   } else {
                     statement.insertBefore(
                       template(
-                        `export const $$server_module${serverIndex} = server.fetch("/${hash}");`,
+                        `export const $$server_module${serverIndex} = server.fetcher("${route}");`,
                         {
                           syntacticPlaceholders: true
                         }
