@@ -4,7 +4,6 @@ import { RouteDataFunc, Router } from "solid-app-router";
 // @ts-expect-error
 import Root from "~/root";
 import { StartProvider } from "./StartContext";
-import server from "../server";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
@@ -37,13 +36,6 @@ export const composeMiddleware =
         exchange({
           ctx: ctx,
           forward
-          // dispatchDebug(event) {
-          //   dispatchDebug({
-          //     timestamp: Date.now(),
-          //     source: exchange.name,
-          //     ...event
-          //   });
-          // }
         }),
       forward
     );
@@ -64,41 +56,6 @@ export function createHandler(...exchanges: Middleware[]) {
     })(request);
   };
 }
-
-export const serverModules: Middleware = ({ forward }) => {
-  return async (ctx: RequestContext) => {
-    const url = new URL(ctx.request.url);
-
-    server.setRequest(ctx);
-
-    if (url.pathname.startsWith("/_m")) {
-      let json = await ctx.request.json();
-      let handler = server.getHandler(json[0]);
-      if (!handler)
-        return new Response(
-          JSON.stringify({
-            status: 404,
-            body: "Not Found"
-          }),
-          {
-            status: 404
-          }
-        );
-      try {
-        const data = await handler.bind(ctx)(...json[1]);
-        return new Response(JSON.stringify(data), {
-          status: 200
-        });
-      } catch (error) {
-        return new Response(JSON.stringify(error), {
-          status: 500
-        });
-      }
-    }
-
-    return await forward(ctx);
-  };
-};
 
 const docType = ssr("<!DOCTYPE html>");
 export default ({

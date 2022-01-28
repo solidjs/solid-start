@@ -14,11 +14,9 @@
     "routes.js",
     "actions.ts",
     "types.d.ts",
-    "server.d.ts",
-    "server-modules",
+    "server",
     "plugin.d.ts",
     "components",
-    "server.js",
     "runtime"
   ],
   "dependencies": {
