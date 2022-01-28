@@ -17,7 +17,8 @@
     "test": "lerna run test --concurrency=1 --stream",
     "test:coverage": "lerna run test:coverage --parallel",
     "build": "pnpm run build -r --parallel --if-present",
-    "publish:release": "pnpm run build && lerna publish"
+    "publish:release": "pnpm run build && lerna publish",
+    "docs:dev": "pnpm run dev --filter solid-start-docs"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.1",
