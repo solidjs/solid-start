@@ -170,7 +170,7 @@ export default function solidStart(options) {
     {
       adapter: "solid-start-node",
       appRoot: "src",
-      routesDir: "pages",
+      routesDir: "routes",
       ssr: true,
       prerenderRoutes: [],
       inspect: true
