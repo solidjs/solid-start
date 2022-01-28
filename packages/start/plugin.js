@@ -16,10 +16,11 @@ function solidStartRouter(options) {
     name: "solid-start-router",
     enforce: "pre",
     configResolved(config) {
-      lazy = config.command !== 'serve';
+      lazy = config.command !== "serve" || options.lazy;
     },
     async transform(code, id, transformOptions) {
-      const isSsr = transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
+      const isSsr =
+        transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
       if (code.includes("const routes = $ROUTES;")) {
         const routes = await getRoutes({
           pageExtensions: [
