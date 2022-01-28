@@ -1,5 +1,6 @@
 import { Request as BaseNodeRequest, Headers } from "undici";
 import { FormData } from "undici";
+import multipart from "parse-multipart-data";
 
 function createHeaders(requestHeaders) {
   let headers = new Headers();
@@ -35,21 +36,48 @@ class NodeRequest extends BaseNodeRequest {
 
   _body;
 
+  cachedBuffer;
+
   async json() {
     return JSON.parse(await this.text());
   }
 
-  async text() {
+  async buffer() {
+    if (this.cachedBuffer) {
+      return this.cachedBuffer;
+    }
     return await new Promise((resolve, reject) => {
       let chunks = [];
       this._body.on("data", chunk => {
         chunks.push(chunk);
       });
       this._body.on("end", () => {
-        resolve(Buffer.concat(chunks).toString());
+        this.cachedBuffer = Buffer.concat(chunks);
+        resolve(this.cachedBuffer);
       });
       this._body.on("error", reject);
     });
+  }
+
+  async text() {
+    return (await this.buffer()).toString();
+  }
+
+  async formData() {
+    if (this.headers.get("content-type") === "application/x-www-form-urlencoded") {
+      return await super.formData();
+    } else {
+      const data = await this.buffer();
+      const input = multipart.parse(
+        data,
+        this.headers.get("content-type").replace("multipart/form-data; boundary=", "")
+      );
+      const form = new FormData();
+      input.forEach(({ name, data }) => {
+        form.set(name, data);
+      });
+      return form;
+    }
   }
 }
 

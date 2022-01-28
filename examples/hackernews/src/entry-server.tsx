@@ -1,6 +1,11 @@
 import { renderToStream } from "solid-js/web";
 import { StartServer, createHandler } from "solid-start/components";
-import { inlineServerModules } from "solid-start/server";
+import server, { inlineServerModules } from "solid-start/server";
+
+server.registerHandler("/api/hello-world", () => {
+  const req = server.getContext().request;
+  return new Response(`Hello World! ${Date.now()}: ${req.headers.get("user-agent")}`);
+});
 
 const renderPage = () => {
   return async ({ request, manifest, headers, context = {} }) => {
