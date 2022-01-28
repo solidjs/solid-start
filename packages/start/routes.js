@@ -43,6 +43,7 @@ export async function getRoutes({
   function processRoute(routesList, src, id, full) {
     let parentRoute = routesList.find(o => o._id && o._id !== "/" && id.startsWith(o._id + "/"));
 
+    let dataFn = undefined;
     if (/\.(js|ts)x?$/.test(src)) {
       let [imports, exports] = parse(
         esbuild.transformSync(fs.readFileSync(process.cwd() + "/" + src).toString(), {
@@ -54,6 +55,10 @@ export async function getRoutes({
       if (!exports.includes("default")) {
         return;
       }
+
+      if (exports.includes("data")) {
+        dataFn = src + "?data";
+      }
     }
 
     if (!parentRoute) {
@@ -63,7 +68,7 @@ export async function getRoutes({
         path: toPath(id) || "/",
         componentSrc: src,
         type: "PAGE",
-        dataSrc: data[full] ? data[full] : undefined
+        dataSrc: data[full] ? data[full] : dataFn
         // methods: ["GET", ...(exports.includes("action") ? ["POST", "PATCH", "DELETE"] : [])]
         // actionSrc: exports.includes("action") ? src + "?action" : undefined,
         // loaderSrc: exports.includes("loader") ? src + "?loader" : undefined
