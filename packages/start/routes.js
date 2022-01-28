@@ -56,7 +56,7 @@ export async function getRoutes({
         return;
       }
 
-      if (exports.includes("data")) {
+      if (exports.includes("routeData")) {
         dataFn = src + "?data";
       }
     }
@@ -99,10 +99,26 @@ export function stringifyRoutes(routes, options = {}) {
   let vars = 0;
 
   function addImport(p) {
-    let d = "data" + vars++;
-    imports.set(p, {
-      default: d
-    });
+    let id = imports.get(p);
+    if (!id) {
+      id = {};
+      imports.set(p, id);
+    }
+
+    let d = "routeData" + vars++;
+    id["default"] = d;
+    return d;
+  }
+
+  function addNamedImport(name, p) {
+    let id = imports.get(p);
+    if (!id) {
+      id = {};
+      imports.set(p, id);
+    }
+
+    let d = "routeData" + vars++;
+    id[name] = d;
     return d;
   }
 
@@ -115,8 +131,15 @@ export function stringifyRoutes(routes, options = {}) {
             `{\n${[
               /.data.(js|ts)$/.test(i.dataSrc ?? "")
                 ? `data: ${addImport(path.posix.resolve(i.dataSrc))}`
-                : undefined,
-              `component: ${options.lazy ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`: addImport(path.posix.resolve(i.componentSrc))}`,
+                : i.dataSrc
+                ? `data: ${addNamedImport("routeData", path.posix.resolve(i.componentSrc))}`
+                : "",
+              `component: ${
+                options.lazy
+                  ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`
+                  : addImport(path.posix.resolve(i.componentSrc))
+              }`,
+              ,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(
@@ -132,9 +155,31 @@ export function stringifyRoutes(routes, options = {}) {
   }
 
   let r = _stringifyRoutes(routes.pageRoutes);
+
+  const getNamedExport = p => {
+    let id = imports.get(p);
+
+    delete id["default"];
+
+    return Object.keys(id).length > 0
+      ? `{ ${Object.keys(id)
+          .map(k => `${k} as ${id[k]}`)
+          .join(", ")} }`
+      : "";
+  };
+
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
-  ${[...imports.keys()].map(i => `import ${imports.get(i).default} from '${i}';`).join("\n")}
+  ${[...imports.keys()]
+    .map(
+      i =>
+        `import ${
+          imports.get(i).default
+            ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
+            : ""
+        } ${getNamedExport(i)} from '${i}';`
+    )
+    .join("\n")}
   const routes = ${r};`;
   return text;
 }

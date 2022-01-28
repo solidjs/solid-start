@@ -180,6 +180,7 @@ export default function solidStart(options) {
 
   return [
     options.inspect ? inspect() : undefined,
+    solidStartRouter(options),
     solid({
       ...(options ?? {}),
       babel: (source, id, ssr) => ({
@@ -191,7 +192,6 @@ export default function solidStart(options) {
         ]
       })
     }),
-    solidStartRouter(options),
     solidStartServer(options),
     solidStartBuild(options)
   ].filter(Boolean);
