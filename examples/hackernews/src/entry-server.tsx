@@ -1,7 +1,7 @@
 import { renderToStream } from "solid-js/web";
 import { StartServer, createHandler, serverModules } from "solid-start/components";
 
-export const renderPage = () => {
+const renderPage = () => {
   return async ({ request, manifest, headers, context = {} }) => {
     // streaming
     const { readable, writable } = new TransformStream();

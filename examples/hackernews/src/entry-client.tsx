@@ -13,18 +13,6 @@ function logger({ onLog }) {
   };
 }
 
-function auth() {
-  return ({ ctx, next }) => {
-    return async req => {
-      ctx.headers = {
-        Authorization: "Bearer solidjs"
-      };
-      const response = await next(req);
-      return response;
-    };
-  };
-}
-
-server.setClientMiddleware(logger({ onLog: console.log }), auth());
+server.setClientMiddleware(logger({ onLog: console.log }));
 
 hydrate(() => <StartClient />, document);

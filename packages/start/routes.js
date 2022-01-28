@@ -7,7 +7,7 @@ import esbuild from "esbuild";
 const ROUTE_KEYS = ["component", "path", "data", "children"];
 
 export async function getRoutes({
-  baseDir = "src/pages",
+  baseDir = "src/routes",
   pageExtensions = ["jsx", "tsx", "js", "ts"],
   cwd = process.cwd()
 } = {}) {

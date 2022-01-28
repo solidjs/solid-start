@@ -6,7 +6,6 @@ export default function server(fn) {
 if (!isServer) {
   server.middleware = [fetchServerModule()];
   server.setClientMiddleware = (...middleware) => {
-    console.log(middleware);
     server.middleware = [...middleware, fetchServerModule()];
   };
 
@@ -57,8 +56,6 @@ if (!isServer) {
   }
 
   server.fetch = (hash, middleware = []) => {
-    console.log(hash, middleware);
-
     return async (...args) => {
       const handler = createHandler(...middleware, ...server.middleware);
       return await handler({
@@ -89,7 +86,6 @@ if (isServer) {
   };
 
   server.getHandler = function (hash) {
-    console.log(handlers, hash);
     return handlers.get(hash);
   };
 }

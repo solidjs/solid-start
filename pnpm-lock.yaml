@@ -77,26 +77,20 @@ importers:
 
   examples/hackernews:
     specifiers:
-      '@cloudflare/kv-asset-handler': ^0.1.1
-      '@cloudflare/wrangler': ^1.19.7
       solid-app-router: 0.2.1
-      solid-js: 1.3.3
+      solid-js: 1.3.4
       solid-meta: ^0.27.3
       solid-start: workspace:*
-      solid-start-cloudflare-workers: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
       undici: ^4.12.2
       vite: 2.7.13
       vite-plugin-inspect: ^0.3.13
     devDependencies:
-      '@cloudflare/kv-asset-handler': 0.1.3
-      '@cloudflare/wrangler': 1.19.7
-      solid-app-router: 0.2.1_solid-js@1.3.3
-      solid-js: 1.3.3
-      solid-meta: 0.27.3_solid-js@1.3.3
+      solid-app-router: 0.2.1_solid-js@1.3.4
+      solid-js: 1.3.4
+      solid-meta: 0.27.3_solid-js@1.3.4
       solid-start: link:../../packages/start
-      solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
       solid-start-node: link:../../packages/start-node
       typescript: 4.5.4
       undici: 4.12.2
@@ -588,18 +582,7 @@ packages:
     resolution: {integrity: sha512-FNcunDuTmEfQTLRLtA6zz+buIXUHj1soPvSWzzQFBC+n2lsy+CGf/NIrR3SEPCmsVNQj70/Jx2lViCpq+09YpQ==}
     dependencies:
       mime: 2.6.0
-
-  /@cloudflare/wrangler/1.19.7:
-    resolution: {integrity: sha512-za2r33ccJVTOtnnMl36VbiGw2Hw4QuQPxuzUfTwB6IgU1XdlBHvAS+OpXbDed5WE3sMs2ORGTQQfmilB9t7S1A==}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      axios: 0.21.4
-      rimraf: 3.0.2
-      tar: 6.1.11
-    transitivePeerDependencies:
-      - debug
-    dev: true
+    dev: false
 
   /@gar/promisify/1.1.2:
     resolution: {integrity: sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==}
@@ -1877,14 +1860,6 @@ packages:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
 
-  /axios/0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
-    dependencies:
-      follow-redirects: 1.14.7
-    transitivePeerDependencies:
-      - debug
-    dev: true
-
   /babel-plugin-jsx-dom-expressions/0.26.3_@babel+core@7.16.7:
     resolution: {integrity: sha512-TtcqjKrCzP9m8eMKBTxwdqTK5PlySn6+mYt6vJTbgQ7cCNtnurLUqPFN+ObG1dY60D2ZgUGc86/7O6plXDjsXg==}
     dependencies:
@@ -3146,16 +3121,6 @@ packages:
     dependencies:
       locate-path: 5.0.0
       path-exists: 4.0.0
-    dev: true
-
-  /follow-redirects/1.14.7:
-    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
     dev: true
 
   /forever-agent/0.6.1:
@@ -4806,6 +4771,7 @@ packages:
     resolution: {integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==}
     engines: {node: '>=4.0.0'}
     hasBin: true
+    dev: false
 
   /mimic-fn/2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
@@ -6109,14 +6075,6 @@ packages:
       smart-buffer: 4.2.0
     dev: true
 
-  /solid-app-router/0.2.1_solid-js@1.3.3:
-    resolution: {integrity: sha512-ENkhw3EF6MbkOuhRuCvmALtXs2x/fjvQw1ZSQP3ON7l6q6+QqTT8d0oZf6r5VYS95IIlevSSJNnAwvc1+Fx6Hw==}
-    peerDependencies:
-      solid-js: ^1.3.0
-    dependencies:
-      solid-js: 1.3.3
-    dev: true
-
   /solid-app-router/0.2.1_solid-js@1.3.4:
     resolution: {integrity: sha512-ENkhw3EF6MbkOuhRuCvmALtXs2x/fjvQw1ZSQP3ON7l6q6+QqTT8d0oZf6r5VYS95IIlevSSJNnAwvc1+Fx6Hw==}
     peerDependencies:
@@ -6127,10 +6085,6 @@ packages:
 
   /solid-js/0.26.5:
     resolution: {integrity: sha512-cMjxcVoyRBgnfSpwYxXPM5WF800guR+x/01RDBFQjAAkqU7X28GbRkTNKcyQ1KHcFOnzEsG18J+JJ9/PvqyNmw==}
-    dev: true
-
-  /solid-js/1.3.3:
-    resolution: {integrity: sha512-0pyHpLZIgQDI1Z+MgxXQRPY10dhXfKJdptb4UCJQ9ArQOLq2gtFA1acEsvSAtPMVdqQ8bqj68FOTXLpz6hm2Mg==}
     dev: true
 
   /solid-js/1.3.4:
@@ -6148,14 +6102,6 @@ packages:
       xdm: 3.3.4
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /solid-meta/0.27.3_solid-js@1.3.3:
-    resolution: {integrity: sha512-XaVv0EPkoPvufzUOIMn4yOzZFnJvQPVBlpZFLc9zTFTUnb+cq/zuoWr0Sa0fEntodfVPe5j6NfvXwGE6pHQo+w==}
-    peerDependencies:
-      solid-js: ^1.0.0
-    dependencies:
-      solid-js: 1.3.3
     dev: true
 
   /solid-meta/0.27.3_solid-js@1.3.4:
