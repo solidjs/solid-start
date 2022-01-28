@@ -1,9 +1,7 @@
 import { Link, useData } from "solid-app-router";
 import { Component, For, Show } from "solid-js";
-
 import type { IStory } from "../types";
 import Story from "../components/story";
-
 interface StoriesData {
   page: () => number;
   type: () => string;
@@ -23,11 +21,7 @@ const Stories: Component = () => {
             </span>
           }
         >
-          <Link
-            class="page-link"
-            href={`/${type()}?page=${page() - 1}`}
-            aria-label="Previous Page"
-          >
+          <Link class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
             {"<"} prev
           </Link>
         </Show>
@@ -40,11 +34,7 @@ const Stories: Component = () => {
             </span>
           }
         >
-          <Link
-            class="page-link"
-            href={`/${type()}?page=${page() + 1}`}
-            aria-label="Next Page"
-          >
+          <Link class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
             more {">"}
           </Link>
         </Show>
@@ -52,7 +42,7 @@ const Stories: Component = () => {
       <main class="news-list">
         <Show when={stories()}>
           <ul>
-            <For each={stories()}>{(story) => <Story story={story} />}</For>
+            <For each={stories()}>{story => <Story story={story} />}</For>
           </ul>
         </Show>
       </main>

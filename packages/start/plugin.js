@@ -6,6 +6,8 @@ import inspect from "vite-plugin-inspect";
 import { getRoutes, stringifyRoutes } from "./routes.js";
 import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
+import babel from "@babel/core";
+import babelServerModule from "./server-modules/babel-server-module.js";
 
 /**
  * @returns {import('vite').Plugin}
@@ -16,11 +18,28 @@ function solidStartRouter(options) {
     name: "solid-start-router",
     enforce: "pre",
     configResolved(config) {
-      lazy = config.command !== "serve" || options.lazy;
+      lazy = config.command !== "serve";
     },
     async transform(code, id, transformOptions) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
+      if (/.data.(ts|js)/.test(id)) {
+        return babel.transformSync(code, {
+          filename: id,
+          presets: ["@babel/preset-typescript"],
+          plugins: [
+            [
+              babelServerModule,
+              {
+                ssr: isSsr ?? false,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
+            ]
+          ]
+        });
+      }
+
       if (code.includes("const routes = $ROUTES;")) {
         const routes = await getRoutes({
           pageExtensions: [
@@ -88,6 +107,7 @@ function solidStartServer(options) {
     configureServer(vite) {
       return () => {
         remove_html_middlewares(vite.middlewares);
+
         vite.middlewares.use(createDevHandler(vite));
 
         // logging routes on server start
@@ -114,7 +134,7 @@ function solidStartServer(options) {
                 .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
                 .join("\n")}`
             );
-          }, 0);
+          }, 100);
         });
       };
     },
@@ -160,7 +180,17 @@ export default function solidStart(options) {
 
   return [
     options.inspect ? inspect() : undefined,
-    solid(options),
+    solid({
+      ...(options ?? {}),
+      babel: (source, id, ssr) => ({
+        plugins: [
+          [
+            babelServerModule,
+            { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+          ]
+        ]
+      })
+    }),
     solidStartRouter(options),
     solidStartServer(options),
     solidStartBuild(options)
@@ -177,6 +207,7 @@ function remove_html_middlewares(server) {
     "viteSpaFallbackMiddleware"
   ];
   for (let i = server.stack.length - 1; i > 0; i--) {
+    // @ts-ignore
     if (html_middlewares.includes(server.stack[i].handle.name)) {
       server.stack.splice(i, 1);
     }
