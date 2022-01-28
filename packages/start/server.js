@@ -42,7 +42,7 @@ if (!isServer) {
     return ({ ctx, next }) => {
       return async op => {
         let response = await fetch(`/_m${op.key}`, {
-          method: op.method ?? "POST",
+          method: op.method || "POST",
           body: JSON.stringify([op.key, op.args]),
           headers: {
             "Content-Type": "application/json",
