@@ -31,13 +31,13 @@ We **strongly encourage you** to do one of the tutorials before anything else. R
       <p>Dive deep into Remix and full stack development with this app. It's backed by a SQL database, user authentication and session, and of course some modern UI finishes. You'll learn about nested routes, sessions, data loading, data mutations, progressive enhancement, and more. Get a feel for what a data-backed web app feels like with Remix.</p>
     </docs-card>
   </a>
-  <a href="v1/api/conventions" aria-label="Conventional APIs">
+  <a href="/api/conventions" aria-label="Conventional APIs">
     <docs-card>
       <h4>Conventional APIs</h4> 
       <p>Remix has a handful of conventions to make web application development a breeze. You'll spend some time in this document when you're first learning Remix, but probably won't need it much after you get your feet wet.</p>
     </docs-card>
   </a>
-  <a href="v1/api/remix" aria-label="Remix API">
+  <a href="/api/remix" aria-label="Remix API">
     <docs-card>
       <h4>Remix Package API</h4>
       <p>This is probably the doc page you'll visit the most. It's got all of the Remix package exports that you'll use day-to-day in your app.</p>
