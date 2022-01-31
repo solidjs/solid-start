@@ -5,17 +5,17 @@ import UnoCSSVite from "unocss/vite";
 
 export default defineConfig({
   plugins: [
-    // {
-    //   ...xdm({
-    //     jsx: true,
-    //     jsxImportSource: "solid-js",
-    //     providerImportSource: "solid-mdx"
-    //   }),
-    //   enforce: "pre"
-    // },
+    {
+      ...xdm({
+        jsx: true,
+        jsxImportSource: "solid-js",
+        providerImportSource: "solid-mdx"
+      }),
+      enforce: "pre"
+    },
     UnoCSSVite({}),
     solid({
-      // extensions: [".mdx", ".md"],
+      extensions: [".mdx", ".md"],
     })
   ]
 });
