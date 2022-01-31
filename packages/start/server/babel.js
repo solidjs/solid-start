@@ -3,6 +3,7 @@
 // This is adapted to work with any server() calls and transpile it into multiple api function for a file.
 
 import { INLINE_SERVER_ROUTE_PREFIX } from "./constants.js";
+import nodePath from 'path'
 
 function decorateServerExport(t, path, state) {
   const gsspName = "__has_server";
@@ -143,11 +144,11 @@ function transformServer({ types: t, template }) {
                   let statement = path.findParent(p => program.get("body").includes(p));
                   let serverIndex = state.servers++;
                   let hasher = state.opts.minify ? hashFn : str => str;
-                  const hash = hasher(
-                    state.filename.replace(state.opts.root, "").slice(1) + "/" + serverIndex
-                  );
+                  const fName = state.filename.replace(state.opts.root, "").slice(1)
 
-                  const route = `${INLINE_SERVER_ROUTE_PREFIX}/${hash}`;
+                  const hash = hasher(nodePath.join(fName, String(serverIndex)));
+
+                  const route = nodePath.join(INLINE_SERVER_ROUTE_PREFIX, hash).replaceAll('\\', '/');
 
                   if (state.opts.ssr) {
                     statement.insertBefore(
