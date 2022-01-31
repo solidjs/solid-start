@@ -1,7 +1,5 @@
 // @refresh reload
 import { Links, Meta, Outlet, Scripts } from "solid-start/components";
-import "./root.css";
-import "./code.css";
 export default function Root() {
   return (
     <html lang="en">
@@ -12,9 +10,7 @@ export default function Root() {
         <Links />
       </head>
       <body>
-        <main>
-          <Outlet />
-        </main>
+        <Outlet />
         <Scripts />
       </body>
     </html>

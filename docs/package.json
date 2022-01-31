@@ -12,15 +12,17 @@
   "license": "ISC",
   "devDependencies": {
     "@mdx-js/rollup": "^2.0.0-rc.1",
+    "@unocss/reset": "^0.22.6",
     "rehype-highlight": "^5.0.2",
     "remark-code-extra": "^1.0.1",
     "remark-gfm": "^3.0.1",
     "solid-app-router": "^0.2.1",
-    "solid-js": "^1.3.4",
+    "solid-js": "1.3.4",
     "solid-mdx": "^0.0.5",
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
     "undici": "^4.12.2",
+    "unocss": "^0.22.6",
     "vite": "^2.7.13",
     "xdm": "^3.3.4"
   },
