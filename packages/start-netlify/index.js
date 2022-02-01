@@ -6,6 +6,7 @@ import vite from "vite";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import common from "@rollup/plugin-commonjs";
+import { babel } from "@rollup/plugin-babel";
 import { spawn } from "child_process";
 
 export default function () {
@@ -54,7 +55,11 @@ export default function () {
             preferBuiltins: true,
             exportConditions: ["node", "solid"]
           }),
-          common()
+          common(),
+          babel({
+            babelHelpers: "bundled",
+            presets: [["@babel/preset-env", { targets: {node: 14 }}]]
+          })
         ]
       });
       // or write the bundle to disk
