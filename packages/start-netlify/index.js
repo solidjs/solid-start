@@ -58,7 +58,7 @@ export default function () {
           common(),
           babel({
             babelHelpers: "bundled",
-            presets: [["@babel/preset-env", { targets: {node: 14 }}]]
+            presets: [["@babel/preset-env", { targets: { node: 14 } }]]
           })
         ]
       });
