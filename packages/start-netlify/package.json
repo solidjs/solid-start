@@ -1,6 +1,6 @@
 {
   "name": "solid-start-netlify",
-  "version": "0.1.0-alpha.58",
+  "version": "0.1.0-y.0",
   "main": "./index.js",
   "type": "module",
   "dependencies": {
@@ -11,11 +11,11 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.2",
     "encoding": "^0.1.13",
-    "rollup": "^2.53.3",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "rollup": "^2.53.3"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.58"
+    "solid-start": "^0.1.0-y.0"
   },
   "peerDependencies": {
     "solid-start": "*"
