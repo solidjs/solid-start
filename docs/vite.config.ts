@@ -1,22 +1,20 @@
 import { defineConfig } from "vite";
 import solid from "solid-start";
 import xdm from "xdm/rollup.js";
-import UnoCSSVite from "unocss/vite";
-import rehypeHighlight from "rehype-highlight";
+import mdx from "@mdx-js/rollup";
+import WindiCSS from "vite-plugin-windicss"
 
 export default defineConfig({
   plugins: [
     {
-      ...xdm({
+      ...mdx({
         jsx: true,
         jsxImportSource: "solid-js",
-        providerImportSource: "solid-mdx",
-        rehypePlugins: [rehypeHighlight],
-        
+        providerImportSource: "solid-mdx"
       }),
       enforce: "pre"
     },
-    UnoCSSVite({}),
+    WindiCSS(),
     solid({
       extensions: [".mdx", ".md"],
     })
