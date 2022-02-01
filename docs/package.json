@@ -24,6 +24,7 @@
     "undici": "^4.12.2",
     "unocss": "^0.22.6",
     "vite": "^2.7.13",
+    "vite-plugin-xdm": "^0.2.0",
     "xdm": "^3.3.4"
   },
   "dependencies": {

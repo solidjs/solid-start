@@ -1,5 +1,8 @@
 // @refresh reload
 import { Links, Meta, Outlet, Scripts } from "solid-start/components";
+
+import './code.css';
+
 export default function Root() {
   return (
     <html lang="en">
