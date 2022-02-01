@@ -7,4 +7,4 @@
     `pnpm run dev --filter solid-hackernews`
 
 ## Requirements
-1. Node.js: ^16.0.0
+1. Node.js: ^16.13.0
