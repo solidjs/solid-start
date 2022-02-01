@@ -34,7 +34,7 @@ The lines in the document above between the `---` are called "frontmatter". You 
 
 You can reference your frontmatter fields through the global `attributes` variable in your MDX:
 
-```mdx
+```md
 ---
 componentData:
   label: Hello, World!
@@ -51,7 +51,7 @@ import SomeComponent from "~/components/some-component";
 
 By creating a `app/routes/posts/first-post.mdx` we can start writing a blog post:
 
-```mdx
+```md
 ---
 meta:
   title: My First Post
