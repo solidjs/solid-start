@@ -11,7 +11,8 @@ export default defineConfig({
         jsx: true,
         jsxImportSource: "solid-js",
         providerImportSource: "solid-mdx",
-        rehypePlugins: [rehypeHighlight]
+        rehypePlugins: [rehypeHighlight],
+        
       }),
       enforce: "pre"
     },
