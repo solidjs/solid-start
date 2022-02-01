@@ -60,8 +60,8 @@ export function createRequest(req) {
   let init = {
     method: req.method,
     headers: createHeaders(req.headers),
-    // will be read as body by NodeRequest
-    data: req.method === "POST" ? req : null
+    // POST, PUT, & PATCH will be read as body by NodeRequest
+    data: req.method.indexOf("P") === 0 ? req : null
   };
 
   return new NodeRequest(url.href, init);

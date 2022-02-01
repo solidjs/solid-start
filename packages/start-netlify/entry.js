@@ -1,7 +1,7 @@
 import manifest from "../../dist/rmanifest.json";
 import assetManifest from "../../dist/manifest.json";
 import prepareManifest from "solid-start/runtime/prepareManifest";
-import { fetch, Headers, Response, Request } from "undici";
+import fetch, { Headers, Response, Request } from "node-fetch";
 import entry from "./app";
 
 Object.assign(globalThis, {
@@ -16,11 +16,15 @@ exports.handler = async function (event, context) {
   console.log(`Received new request: ${event.path}`);
 
   const webRes = await entry({ request: createRequest(event), headers: new Headers(), manifest });
+  const headers = {};
+  for (const [name, value] of webRes.headers) {
+    headers[name] = [value];
+  }
 
   return {
     statusCode: webRes.status,
     statusMessage: webRes.statusText,
-    multiValueHeaders: webRes.headers.raw(),
+    multiValueHeaders: headers,
     body: await webRes.text()
   };
 };
