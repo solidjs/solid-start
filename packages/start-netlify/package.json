@@ -1,21 +1,23 @@
 {
   "name": "solid-start-netlify",
-  "version": "0.1.0-alpha.57",
+  "version": "0.1.0-v0.1.0-alpha.59.0",
   "main": "./index.js",
   "type": "module",
   "dependencies": {
-    "@rollup/plugin-commonjs": "^19.0.1",
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.2",
     "encoding": "^0.1.13",
+    "node-fetch": "^2.6.7",
     "rollup": "^2.53.3"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.57",
-    "undici": "^4.12.2"
+    "solid-start": "^0.1.0-v0.1.0-alpha.59.0"
   },
   "peerDependencies": {
-    "solid-start": "*",
-    "undici": "^4.12.2"
+    "solid-start": "*"
   }
 }
