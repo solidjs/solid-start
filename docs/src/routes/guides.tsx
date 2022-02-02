@@ -24,7 +24,7 @@ const Guides = () => {
   return (
     <>
       <md.ul>
-        <For each={Object.keys(modules)}>
+        <For each={Object.keys(modules).filter(n => n !== "./guides/index.mdx")}>
           {name => (
             <md.li>
               <md.a href={pathToLink(name)}>{pathToHumanName(name)}</md.a>
