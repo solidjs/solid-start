@@ -12,7 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "@mdx-js/rollup": "^2.0.0-rc.1",
-    "@unocss/reset": "^0.22.6",
     "rehype-highlight": "^5.0.2",
     "remark-code-extra": "^1.0.1",
     "remark-gfm": "^3.0.1",
@@ -22,7 +21,6 @@
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
     "undici": "^4.12.2",
-    "unocss": "^0.22.6",
     "vite": "^2.7.13",
     "vite-plugin-xdm": "^0.2.0",
     "xdm": "^3.3.4",
