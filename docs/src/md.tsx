@@ -36,7 +36,7 @@ export default {
             {props.children}
         </Link>
     ),
-    li: props => <li {...props}>{props.children}</li>,
+    li: props => <li {...props} class="my-2">{props.children}</li>,
     ul: props => (
         <ul {...props} class="list-disc pl-8 my-2">
             {props.children}
@@ -56,7 +56,7 @@ export default {
         </p>
     ),
     code: props => (
-        <code class="bg-gray-200 p-2 rounded-lg text-xs font-mono">
+        <code class="bg-gray-200 p-2 rounded-lg text-xs font-mono inline-block">
             {props.children}
         </code>
     ),
