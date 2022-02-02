@@ -23,6 +23,14 @@ export default function Root() {
             ...md
           }}
         >
+          <header class="p-4 bg-orange-500 text-white">
+            <h1 class="text-5xl sticky top-0 mb-4 text-center">WIP</h1>
+            <p class="max-w-prose mx-auto">
+              These docs are a major work in progress. They are incomplete and have inaccurate
+              information. That is why we need you! Feel free to ask questions in the discord chat
+              and if you're dedicated, then contribute!
+            </p>{" "}
+          </header>
           <Nav />
           <Outlet />
         </MDXProvider>
