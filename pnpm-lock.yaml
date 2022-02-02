@@ -37,7 +37,6 @@ importers:
       undici: ^4.12.2
       vite: ^2.7.13
       vite-plugin-windicss: ^1.6.3
-      vite-plugin-xdm: ^0.2.0
     devDependencies:
       '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
       highlight.js: 11.4.0
@@ -52,7 +51,6 @@ importers:
       undici: 4.12.2
       vite: 2.7.13
       vite-plugin-windicss: 1.6.3_vite@2.7.13
-      vite-plugin-xdm: 0.2.0_vite@2.7.13
 
   examples/basic-ts:
     specifiers:
@@ -2912,10 +2910,6 @@ packages:
       sprintf-js: 1.0.3
     dev: true
 
-  /argparse/2.0.1:
-    resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
-    dev: true
-
   /array-differ/3.0.0:
     resolution: {integrity: sha512-THtfYS6KtME/yIAhKjZ2ul7XI96lQGHRputJQHO80LAWQnuGP4iCIN8vdMRboGbIEYBwU33q8Tch1os2+X0kMg==}
     engines: {node: '>=8'}
@@ -5085,13 +5079,6 @@ packages:
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
-    dev: true
-
-  /js-yaml/4.1.0:
-    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
-    hasBin: true
-    dependencies:
-      argparse: 2.0.1
     dev: true
 
   /jsbn/0.1.1:
@@ -7789,10 +7776,6 @@ packages:
     dependencies:
       is-number: 7.0.0
 
-  /toml/3.0.0:
-    resolution: {integrity: sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==}
-    dev: true
-
   /totalist/1.1.0:
     resolution: {integrity: sha512-gduQwd1rOdDMGxFG1gEvhV88Oirdo2p+KjoYFU7k2g+i7n6AFFbDQ5kMPUsW0pNbfQsB/cwXvT1i4Bue0s9g5g==}
     engines: {node: '>=6'}
@@ -8220,18 +8203,6 @@ packages:
       windicss: 3.4.3
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /vite-plugin-xdm/0.2.0_vite@2.7.13:
-    resolution: {integrity: sha512-X+kt2qNU9SGzN+053IjZ+DpXX5HjZ+QHNqE6+sK79tLhmfDjU3JGh3GCN+2ILV8kKsYs7czWJta5iNPl3oyTQA==}
-    peerDependencies:
-      vite: ^2.5.1
-    dependencies:
-      '@rollup/pluginutils': 4.1.2
-      js-yaml: 4.1.0
-      source-map: 0.7.3
-      toml: 3.0.0
-      vite: 2.7.13
     dev: true
 
   /vite/2.7.10:
