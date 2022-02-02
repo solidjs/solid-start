@@ -54,5 +54,10 @@ export default {
             Remove This Now!!! If you see this it means that markdown custom components does
             work
         </p>
-    )
+    ),
+    code: props => (
+        <code class="bg-gray-200 p-2 rounded-lg text-xs font-mono">
+            {props.children}
+        </code>
+    ),
 };
