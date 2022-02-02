@@ -3,7 +3,8 @@
 // This is adapted to work with any server() calls and transpile it into multiple api function for a file.
 
 import { INLINE_SERVER_ROUTE_PREFIX } from "./constants.js";
-import nodePath from 'path'
+import nodePath from 'path';
+import crypto from 'crypto';
 
 function decorateServerExport(t, path, state) {
   const gsspName = "__has_server";
@@ -77,13 +78,10 @@ function transformServer({ types: t, template }) {
   }
 
   function hashFn(str) {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-      var char = str.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
+    return crypto
+      .createHash("shake256", { outputLength: 5 /* bytes = 10 hex digits*/ })
+      .update(str)
+      .digest("hex");
   }
   return {
     visitor: {
