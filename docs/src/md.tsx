@@ -2,17 +2,17 @@ import { Link } from "solid-app-router";
 
 export default {
     h1: props => (
-        <h1 {...props} class="text-6xl font-400 mb-4 border-b-2 p-2">
+        <h1 {...props} class="text-6xl font-400 mb-4 border-b-2 p-2 mt-4">
             {props.children}
         </h1>
     ),
     h2: props => (
-        <h2 {...props} class="text-5xl font-400">
+        <h2 {...props} class="text-5xl font-400 mb-4 border-b-2 p-2 mt-4">
             {props.children}
         </h2>
     ),
     h3: props => (
-        <h3 {...props} class="text-4xl font-400">
+        <h3 {...props} class="text-4xl font-400 mb-4 border-b-2 p-2 mt-4">
             {props.children}
         </h3>
     ),
@@ -30,6 +30,11 @@ export default {
         <h6 {...props} class="text-xl font-400">
             {props.children}
         </h6>
+    ),
+    p: props => (
+        <p {...props} class="text-lg font-400 mb-4">
+            {props.children}
+        </p>
     ),
     a: props => (
         <Link {...props} class="text-blue-500">
@@ -56,8 +61,13 @@ export default {
         </p>
     ),
     code: props => (
-        <code class="bg-gray-200 p-2 rounded-lg text-xs font-mono inline-block">
+        <code class="bg-gray-200 p-2 rounded-lg font-mono inline-block">
             {props.children}
         </code>
+    ),
+    pre: props => (
+        <pre {...props} class="bg-gray-200 p-2 rounded-lg text-xs font-mono">
+            {props.children}
+        </pre>
     ),
 };

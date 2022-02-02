@@ -1,7 +1,9 @@
 import { defineConfig } from "vite";
 import solid from "solid-start";
 import mdx from "@mdx-js/rollup";
-import WindiCSS from "vite-plugin-windicss"
+import WindiCSS from "vite-plugin-windicss";
+
+import rehypeHighlight from "rehype-highlight";
 
 export default defineConfig({
   plugins: [
@@ -9,7 +11,8 @@ export default defineConfig({
       ...mdx({
         jsx: true,
         jsxImportSource: "solid-js",
-        providerImportSource: "solid-mdx"
+        providerImportSource: "solid-mdx",
+        rehypePlugins: [rehypeHighlight],
       }),
       enforce: "pre"
     },

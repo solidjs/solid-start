@@ -22,7 +22,7 @@ const pathToLink = (path: string) =>
 
 const Guides = () => {
   return (
-    <>
+    <div class="p-2">
       <md.ul>
         <For each={Object.keys(modules).filter(n => n !== "./guides/index.mdx")}>
           {name => (
@@ -34,7 +34,7 @@ const Guides = () => {
       </md.ul>
 
       <Outlet />
-    </>
+    </div>
   );
 };
 
