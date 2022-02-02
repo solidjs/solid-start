@@ -5,13 +5,10 @@ import "./code.css";
 import "virtual:windi.css";
 
 import { MDXProvider } from "solid-mdx";
-import { Component } from "solid-js";
-import { Link } from "solid-app-router";
 import Nav from "./Nav";
 import md from "./md";
 
 export default function Root() {
-  console.log({ MDXProvider });
   return (
     <html lang="en">
       <head>
