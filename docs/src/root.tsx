@@ -7,6 +7,7 @@ import "virtual:windi.css";
 import { MDXProvider } from "solid-mdx";
 import { Component } from "solid-js";
 import { Link } from "solid-app-router";
+import Nav from "./Nav";
 
 export default function Root() {
   console.log({ MDXProvider });
@@ -22,7 +23,7 @@ export default function Root() {
         <MDXProvider
           components={{
             h1: props => (
-              <h1 {...props} class="text-6xl font-400">
+              <h1 {...props} class="text-6xl font-400 mb-4 border-b-2 p-2">
                 {props.children}
               </h1>
             ),
@@ -56,10 +57,28 @@ export default function Root() {
                 {props.children}
               </Link>
             ),
+            li: props => <li {...props}>{props.children}</li>,
+            ul: props => (
+              <ul {...props} class="list-disc pl-4">
+                {props.children}
+              </ul>
+            ),
+            ol: props => (
+              <ol {...props} class="list-decimal pl-4">
+                {props.children}
+              </ol>
+            ),
+            nav: props => <nav {...props}>{props.children}</nav>,
             Link,
-            Outlet
+            TesterComponent: props => (
+              <p>
+                Remove This Now!!! If you see this it means that markdown custom components does
+                work
+              </p>
+            )
           }}
         >
+          <Nav />
           <Outlet />
         </MDXProvider>
         <Scripts />

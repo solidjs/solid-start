@@ -1,4 +1,4 @@
-// ---
+<!-- // ---
 // title: Remix Docs Home
 // order: 1
 // description: Learn how to Build Better Websites with Remix.
@@ -65,14 +65,8 @@ import { Outlet } from "solid-start/components";
 //       <p>Join our awesome community of developers for realtime discussion, help, and showing off what you built! Good vibes only.</p>
 //     </article>
 //   </a>
-// </section>
+// </section> -->
 
-const Index: Component = () => {
-  return (
-    <div>
-      <Link href="/api/conventions">Conventions</Link>
-    </div>
-  );
-};
+[Guides](/guides)
 
-export default Index;
+<TesterComponent />
