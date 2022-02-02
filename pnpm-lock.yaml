@@ -38,7 +38,6 @@ importers:
       vite: ^2.7.13
       vite-plugin-windicss: ^1.6.3
       vite-plugin-xdm: ^0.2.0
-      xdm: ^3.3.4
     devDependencies:
       '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
       highlight.js: 11.4.0
@@ -54,7 +53,6 @@ importers:
       vite: 2.7.13
       vite-plugin-windicss: 1.6.3_vite@2.7.13
       vite-plugin-xdm: 0.2.0_vite@2.7.13
-      xdm: 3.3.4
 
   examples/basic-ts:
     specifiers:

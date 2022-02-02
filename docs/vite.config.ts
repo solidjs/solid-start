@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import solid from "solid-start";
-import xdm from "xdm/rollup.js";
 import mdx from "@mdx-js/rollup";
 import WindiCSS from "vite-plugin-windicss"
 
