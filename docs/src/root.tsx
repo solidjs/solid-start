@@ -59,12 +59,12 @@ export default function Root() {
             ),
             li: props => <li {...props}>{props.children}</li>,
             ul: props => (
-              <ul {...props} class="list-disc pl-4">
+              <ul {...props} class="list-disc pl-8 my-2">
                 {props.children}
               </ul>
             ),
             ol: props => (
-              <ol {...props} class="list-decimal pl-4">
+              <ol {...props} class="list-decimal pl-8 my-2">
                 {props.children}
               </ol>
             ),
