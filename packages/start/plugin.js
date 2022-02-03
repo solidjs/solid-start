@@ -100,13 +100,28 @@ function solidStartFileSystemRouter(options) {
           ]
         });
         const label = `  > Routes: `;
+
+        let flatRoutes = [];
+
+        function addRoute(route) {
+          if (route.children) {
+            for (var r of route.children) {
+              addRoute(r);
+            }
+          }
+
+          flatRoutes.push(route);
+        }
+
+        for (var r of routes.pageRoutes) {
+          addRoute(r);
+        }
         setTimeout(() => {
           // eslint-disable-next-line no-console
           console.log(
-            `${label}\n${routes.pageRoutes
-              .flatMap(r => (r.children ? r.children : [r]))
+            `${label}\n${flatRoutes
               .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
-              .join("\n")}\n`
+              .join("\n")}`
           );
         }, 100);
       });
