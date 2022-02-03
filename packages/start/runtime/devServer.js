@@ -7,7 +7,10 @@ import { fetch, Headers, Response, Request } from "undici";
 import { createRequest } from "./fetch.js";
 
 Object.assign(globalThis, Streams, {
-  Request, Response, fetch
+  Request,
+  Response,
+  fetch,
+  Headers
 });
 
 export function createDevHandler(viteServer) {

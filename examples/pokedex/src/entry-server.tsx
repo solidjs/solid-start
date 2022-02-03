@@ -14,11 +14,18 @@ function renderPage() {
     manifest: Record<string, any>;
     context?: Record<string, any>;
   }) => {
+    headers.set("content-type", "text/html");
+
     let markup = await renderToStringAsync(() => (
       <StartServer context={context} url={request.url} manifest={manifest} />
     ));
 
-    headers.set("Content-Type", "text/html");
+    if (headers.get("x-solidstart-status-code")) {
+      return new Response(markup, {
+        status: Number(headers.get("x-solidstart-status-code")),
+        headers
+      });
+    }
 
     return new Response(markup, {
       status: 200,

@@ -73,14 +73,14 @@ export function respondWith(
     if (isRedirectResponse(data) && ctx.request.headers.get("x-solidstart-origin") === "client") {
       data.headers.set("x-solidstart-origin", "server");
       data.headers.set("x-solidstart-location", data.headers.get("Location"));
-      data.headers.set("x-solidstart-Response-Type", responseType);
-      data.headers.set("x-solidstart-Content-type", "response");
+      data.headers.set("x-solidstart-response-type", responseType);
+      data.headers.set("x-solidstart-content-type", "response");
       return new Response(null, {
         status: 204,
         headers: data.headers
       });
     } else {
-      data.headers.set("x-solidstart-Response-Type", responseType);
+      data.headers.set("x-solidstart-Response-type", responseType);
       data.headers.set("x-solidstart-Content-type", "response");
       return data;
     }

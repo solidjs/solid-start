@@ -115,6 +115,7 @@ importers:
   examples/pokedex:
     specifiers:
       '@prisma/client': ^3.9.0
+      bcryptjs: ^2.4.3
       prisma: ^3.9.0
       solid-app-router: ^0.2.1
       solid-js: ^1.3.4
@@ -127,6 +128,7 @@ importers:
       windicss: ^3.4.3
     dependencies:
       '@prisma/client': 3.9.1_prisma@3.9.1
+      bcryptjs: 2.4.3
       prisma: 3.9.1
       vite-plugin-windicss: 1.6.3_vite@2.7.13
       windicss: 3.4.3
@@ -2664,6 +2666,7 @@ packages:
   /@prisma/engines/3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009:
     resolution: {integrity: sha512-qM+uJbkelB21bnK44gYE049YTHIjHysOuj0mj5U2gDGyNLfmiazlggzFPCgEjgme4U5YB2tYs6Z5Hq08Kl8pjA==}
     requiresBuild: true
+    dev: false
 
   /@rollup/plugin-babel/5.3.0_eaa60d72cafbfa8a2e8beed2e85b464d:
     resolution: {integrity: sha512-9uIC8HZOnVLrLHxayq/PTzw+uS25E14KPUBh5ktF+18Mjo5yK0ToMMx6epY0uEgkjwJw0aBW4x2horYXh8juWw==}
@@ -3146,6 +3149,10 @@ packages:
     dependencies:
       tweetnacl: 0.14.5
     dev: true
+
+  /bcryptjs/2.4.3:
+    resolution: {integrity: sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=}
+    dev: false
 
   /before-after-hook/2.2.2:
     resolution: {integrity: sha512-3pZEU3NT5BFUo/AD5ERPWOgQOCZITni6iavr5AUw5AUwQjMlI0kzu5btnyD39AF0gUEsDPwJT+oY1ORBJijPjQ==}

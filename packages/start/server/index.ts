@@ -1,6 +1,6 @@
 import { isServer } from "solid-js/web";
 import type { RequestContext, Middleware as ServerMiddleware } from "../components/StartServer";
-import { parseResponse, respondWith } from "./responses";
+import { isRedirectResponse, parseResponse, respondWith } from "./responses";
 
 export { json, redirect, isRedirectResponse } from "./responses";
 
@@ -189,8 +189,39 @@ async function handleServerRequest(ctx: RequestContext) {
 if (isServer) {
   const handlers = new Map();
   server.requestContext = null;
-  server.createHandler = (fn, hash) => {
+  server.createHandler = (_fn, hash) => {
+    let fn: any = async (...args) => {
+      try {
+        let e = await _fn(...args);
+        if (e instanceof Response) {
+          let headers = server.getContext().headers;
+          if (headers.get("content-type") === "text/html") {
+            headers.set("X-SolidStart-Status-Code", e.status.toString());
+            if (isRedirectResponse(e)) {
+              headers.set("X-SolidStart-Location", e.headers.get("Location"));
+              headers.set("Location", e.headers.get("Location"));
+            }
+            return e;
+          }
+        }
+        return e;
+      } catch (e) {
+        if (e instanceof Response) {
+          let headers = server.getContext().headers;
+          if (headers.get("content-type") === "text/html") {
+            headers.set("X-SolidStart-Status-Code", e.status.toString());
+            if (isRedirectResponse(e)) {
+              headers.set("X-SolidStart-Location", e.headers.get("Location"));
+              headers.set("Location", e.headers.get("Location"));
+            }
+            throw new Error("Response");
+          }
+        }
+        throw e;
+      }
+    };
     fn.url = `/_m${hash}`;
+
     return fn;
   };
 

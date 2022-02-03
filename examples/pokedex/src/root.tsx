@@ -1,5 +1,5 @@
 // @refresh reload
-import { Suspense } from "solid-js";
+import { ErrorBoundary, Suspense } from "solid-js";
 import { Links, Meta, Outlet, Scripts } from "solid-start/components";
 import "virtual:windi.css";
 
@@ -13,9 +13,17 @@ export default function Root() {
         <Links />
       </head>
       <body>
-        <Suspense>
-          <Outlet />
-        </Suspense>
+        <ErrorBoundary
+          fallback={e => (
+            <p>
+              {e.message} {e.stack}
+            </p>
+          )}
+        >
+          <Suspense>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
         <Scripts />
       </body>
     </html>

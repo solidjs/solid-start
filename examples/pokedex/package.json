@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.9.0",
+    "bcryptjs": "^2.4.3",
     "prisma": "^3.9.0",
     "vite-plugin-windicss": "^1.6.3",
     "windicss": "^3.4.3"
