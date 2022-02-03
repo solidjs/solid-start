@@ -61,7 +61,9 @@ function OptimisticPlayer(props: { submission: FormSubmission }) {
                 name="firstName"
                 placeholder="steph"
               />
-              <button type="submit">Retry</button>
+              <button type="submit" class="bg-red-100 rounded-sm px-2 py-0 text-red-700">
+                Retry
+              </button>
             </addPlayer.Form>
           </>
         )}
