@@ -1,14 +1,18 @@
-import { ComponentProps, createEffect, JSX, mergeProps, onCleanup, splitProps } from "solid-js";
+import { useNavigate } from "solid-app-router";
+import { ActionSubmission, createAction } from "./action";
+import {
+  ComponentProps,
+  createEffect,
+  mergeProps,
+  onCleanup,
+  refetchResources,
+  splitProps,
+  startTransition,
+  getOwner,
+  runWithOwner
+} from "solid-js";
 
-function invariant(condition: boolean, message: string) {
-  if (!condition) {
-    throw new Error(message);
-  }
-}
-
-export type AppData = any;
-
-export interface Submission {
+export interface FormAction {
   action: string;
   method: string;
   formData: FormData;
@@ -16,100 +20,23 @@ export interface Submission {
   key: string;
 }
 
-export type FormEncType = "application/x-www-form-urlencoded" | "multipart/form-data";
+type FormEncType = "application/x-www-form-urlencoded" | "multipart/form-data";
 
-export function isCatchResponse(response: any): boolean {
-  return response instanceof Response && response.headers.get("X-Remix-Catch") != null;
-}
-
-export function isErrorResponse(response: any): boolean {
-  return response instanceof Response && response.headers.get("X-Remix-Error") != null;
-}
-
-export function isRedirectResponse(response: any): boolean {
-  return response instanceof Response && response.headers.get("X-Remix-Redirect") != null;
-}
-
-export async function fetchData(
-  url: URL,
-  routeId: string,
-  signal: AbortSignal,
-  submission?: Submission
-): Promise<Response | Error> {
-  url.searchParams.set("_data", routeId);
-
-  let init: RequestInit = submission
-    ? getActionInit(submission, signal)
-    : { credentials: "same-origin", signal };
-
-  let response = await fetch(url.href, init);
-
-  if (isErrorResponse(response)) {
-    let data = await response.json();
-    let error = new Error(data.message);
-    error.stack = data.stack;
-    return error;
+export class FormError extends Error {
+  formError: string;
+  fields: {};
+  fieldErrors: { [key: string]: string };
+  constructor(
+    message: string,
+    { fieldErrors = {}, form, fields }: { fieldErrors?: {}; form?: FormData; fields?: {} } = {}
+  ) {
+    super(message);
+    this.formError = message;
+    this.name = "FormError";
+    this.fields = fields || Object.fromEntries(form?.entries() ?? []) || {};
+    this.fieldErrors = fieldErrors;
   }
-
-  return response;
 }
-
-export async function extractData(response: Response): Promise<AppData> {
-  // This same algorithm is used on the server to interpret load
-  // results when we render the HTML page.
-  let contentType = response.headers.get("Content-Type");
-
-  if (contentType && /\bapplication\/json\b/.test(contentType)) {
-    return response.json();
-  }
-
-  return response.text();
-}
-
-function getActionInit(submission: Submission, signal: AbortSignal): RequestInit {
-  let { encType, method, formData } = submission;
-
-  let headers = undefined;
-  let body = formData;
-
-  if (encType === "application/x-www-form-urlencoded") {
-    body = new URLSearchParams();
-    for (let [key, value] of formData) {
-      invariant(
-        typeof value === "string",
-        `File inputs are not supported with encType "application/x-www-form-urlencoded", please use "multipart/form-data" instead.`
-      );
-      body.append(key, value);
-    }
-    headers = { "Content-Type": encType };
-  }
-
-  return {
-    method,
-    body,
-    signal,
-    credentials: "same-origin",
-    headers
-  };
-}
-
-/**
- * Resolves a `<form action>` path relative to the current route.
- */
-// export function useFormAction(
-//   action = "/",
-//   method: FormMethod = "get"
-// ): string {
-//   // let { id } = useRemixRouteContext();
-//   // let path = useResolvedPath(action);
-//   // let search = path.search;
-//   // let isIndexRoute = id.endsWith("/index");
-//   // if (action === "." && isIndexRoute && isActionRequestMethod(method)) {
-//   //   search = search ? search.replace(/^\?/, "?index&") : "?index";
-//   // }
-//   // return path.pathname + search;
-//   return action;
-// }
 
 export interface SubmitOptions {
   /**
@@ -140,10 +67,10 @@ export interface SubmitOptions {
    */
   replace?: boolean;
 }
-
 /**
  * Submits a HTML `<form>` to the server without reloading the page.
  */
+
 export interface SubmitFunction {
   (
     /**
@@ -195,7 +122,6 @@ export interface FormProps extends Omit<ComponentProps<"form">, "method" | "onSu
    * but will soon support `multipart/form-data` as well.
    */
   // encType?: FormEncType;
-
   /**
    * Forces a full document navigation instead of a fetch.
    */
@@ -212,11 +138,10 @@ export interface FormProps extends Omit<ComponentProps<"form">, "method" | "onSu
    * A function to call when the form is submitted. If you call
    * `event.preventDefault()` then this form will not do anything.
    */
-  onSubmit?: (submission: Submission) => void;
+  onSubmit?: (submission: FormAction) => void;
 
   key?: any;
 }
-
 /**
  * A Remix-aware `<form>`. It behaves like a normal form except that the
  * interaction with the server is with `fetch` instead of new document
@@ -226,12 +151,11 @@ export interface FormProps extends Omit<ComponentProps<"form">, "method" | "onSu
 // export let Form = React.forwardRef<HTMLFormElement, FormProps>((props, ref) => {
 //   return <FormImpl {...props} ref={ref} />;
 // });
-
 interface FormImplProps extends FormProps {
   fetchKey?: string;
 }
 
-export let FormImpl = (_props: FormImplProps) => {
+let FormImpl = (_props: FormImplProps) => {
   let [props, rest] = splitProps(
     mergeProps(
       {
@@ -262,7 +186,6 @@ export let FormImpl = (_props: FormImplProps) => {
   // let formAction = useFormAction(props.action, formMethod);
   // let formRef = React.useRef<HTMLFormElement>();
   // let ref = useComposedRefs(forwardedRef, formRef);
-
   // When calling `submit` on the form element itself, we don't get data from
   // the button that submitted the event. For example:
   //
@@ -291,7 +214,6 @@ export let FormImpl = (_props: FormImplProps) => {
       );
 
       if (submitButton && submitButton.type === "submit") {
-        console.log("hereee");
         clickedButtonRef.current = submitButton;
       }
     }
@@ -301,8 +223,6 @@ export let FormImpl = (_props: FormImplProps) => {
       form && form.removeEventListener("click", handleClick);
     });
   }, []);
-  // console.log(formMethod, formAction);
-
   return (
     <form
       ref={f => {
@@ -320,7 +240,6 @@ export let FormImpl = (_props: FormImplProps) => {
               // props.onSubmit && props.onSubmit(event);
               if (event.defaultPrevented) return;
               event.preventDefault();
-              console.log("submitting");
               submit(clickedButtonRef.current || event.currentTarget, {
                 method: props.method,
                 replace: props.replace
@@ -334,30 +253,6 @@ export let FormImpl = (_props: FormImplProps) => {
     </form>
   );
 };
-
-// function isActionRequestMethod(method: string): boolean {
-//   method = method.toLowerCase();
-//   return method === "post" || method === "put" || method === "patch" || method === "delete";
-// }
-
-/**
- * Resolves a `<form action>` path relative to the current route.
- */
-// export function useFormAction(
-//   action = ".",
-//   method: FormMethod = "get"
-// ): string {
-//   let { id } = useRemixRouteContext();
-//   let path = useResolvedPath(action);
-//   let search = path.search;
-//   let isIndexRoute = id.endsWith("/index");
-
-//   if (action === "." && isIndexRoute && isActionRequestMethod(method)) {
-//     search = search ? search.replace(/^\?/, "?index&") : "?index";
-//   }
-
-//   return path.pathname + search;
-// }
 
 export interface SubmitOptions {
   /**
@@ -380,7 +275,6 @@ export interface SubmitOptions {
    * Defaults to "application/x-www-form-urlencoded".
    */
   // encType?: FormEncType;
-
   /**
    * Set `true` to replace the current entry in the browser's history stack
    * instead of creating a new one (i.e. stay on "the same page"). Defaults
@@ -388,19 +282,18 @@ export interface SubmitOptions {
    */
   replace?: boolean;
 }
-
 /**
  * Returns a function that may be used to programmatically submit a form (or
  * some arbitrary data) to the server.
  */
+
 export function useSubmit(): SubmitFunction {
   return useSubmitImpl();
 }
 
-export function useSubmitImpl(key?: string, onSubmit?: (sub: Submission) => void): SubmitFunction {
+export function useSubmitImpl(key?: string, onSubmit?: (sub: FormAction) => void): SubmitFunction {
   // let defaultAction = useFormAction();
   // let { transitionManager } = useRemixEntryContext();
-
   return (target, options = {}) => {
     let method: string;
     let action: string;
@@ -430,7 +323,6 @@ export function useSubmitImpl(key?: string, onSubmit?: (sub: Submission) => void
       }
 
       // <button>/<input type="submit"> may override attributes of <form>
-
       method = options.method || target.getAttribute("formmethod") || form.method;
       action = options.action || target.getAttribute("formaction") || form.action;
       encType = options.encType || target.getAttribute("formenctype") || form.enctype;
@@ -469,7 +361,6 @@ export function useSubmitImpl(key?: string, onSubmit?: (sub: Submission) => void
     }
 
     let { protocol, host } = window.location;
-    console.log({ action });
     let url = new URL(isButtonElement(action) ? "/" : action, `${protocol}//${host}`);
 
     if (method.toLowerCase() === "get") {
@@ -482,54 +373,88 @@ export function useSubmitImpl(key?: string, onSubmit?: (sub: Submission) => void
       }
     }
 
-    let submission: Submission = {
+    let submission: FormAction = {
       formData,
       action: url.pathname + url.search,
       method: method.toUpperCase(),
       encType,
-      key: key ?? Math.random().toString(36).substr(2, 8)
+      key: key ?? Math.random().toString(36).substring(2, 8)
     };
 
     onSubmit(submission);
-
-    // if (key) {
-    //   transitionManager.send({
-    //     type: "fetcher",
-    //     href: submission.action,
-    //     submission,
-    //     key,
-    //   });
-    // } else {
-    //   setNextNavigationSubmission(submission);
-    //   navigate(url.pathname + url.search, { replace: options.replace });
-    // }
   };
 }
-
-// let nextNavigationSubmission: Submission | undefined;
-
-// function setNextNavigationSubmission(submission: Submission) {
-//   nextNavigationSubmission = submission;
-// }
-
-// function consumeNextNavigationSubmission() {
-//   let submission = nextNavigationSubmission;
-//   nextNavigationSubmission = undefined;
-//   return submission;
-// }
-
 function isHtmlElement(object: any): object is HTMLElement {
   return object != null && typeof object.tagName === "string";
 }
-
 function isButtonElement(object: any): object is HTMLButtonElement {
   return isHtmlElement(object) && object.tagName.toLowerCase() === "button";
 }
-
 function isFormElement(object: any): object is HTMLFormElement {
   return isHtmlElement(object) && object.tagName.toLowerCase() === "form";
 }
-
 function isInputElement(object: any): object is HTMLInputElement {
   return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
 }
+
+export function createForm<
+  T extends ((form: FormData) => Promise<any | never | void>) & { url?: string }
+>(fn: T) {
+  const [submissions, action] = createAction(fn);
+
+  function Form(props: FormProps) {
+    const navigate = useNavigate();
+    const owner = getOwner();
+
+    return (
+      <FormImpl
+        {...props}
+        action={fn.url ?? ""}
+        onSubmit={submission => {
+          action(submission.formData, props.key)
+            .then(response => {
+              if (response instanceof Response) {
+                if (response.status === 302) {
+                  runWithOwner(owner, () => {
+                    startTransition(() => {
+                      navigate(response.headers.get("Location") || "/");
+                      refetchResources();
+                    });
+                  });
+                }
+              } else {
+                runWithOwner(owner, () => {
+                  startTransition(refetchResources);
+                });
+              }
+            })
+            .catch((e: Error) => {
+              runWithOwner(owner, () => {
+                if (e instanceof Response && e.status === 302) {
+                  startTransition(() => {
+                    navigate(e.headers.get("Location") || "/");
+                    refetchResources();
+                  });
+                  return;
+                }
+                throw e;
+              });
+            });
+        }}
+      />
+    );
+  }
+
+  Form.Form = Form;
+  Form.url = fn.url;
+  Form.isSubmitting = () =>
+    Object.values(submissions()).filter(sub => sub.status === "submitting").length > 0;
+
+  Form.submissions = () => submissions();
+
+  return Form;
+}
+
+export { FormImpl as Form };
+
+export type FormSubmission = ActionSubmission<FormData>;
