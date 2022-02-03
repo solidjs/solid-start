@@ -137,15 +137,18 @@ export default async function handleRequest({
 </ApiSection>
 
 <ApiSection 
-    name="Scripts"
+    name="Root Page Components"
     description={
-      <>
-          <md.code>&lt;Scripts /&gt;</md.code> is a component that renders the scripts needed for the site
-      </>
+      <md.ul>
+          <md.li><md.code>&lt;Scripts /&gt;</md.code> is a component that renders the scripts needed for the site.</md.li>
+          <md.li><md.code>&lt;Meta /&gt;</md.code> is a component that renders the meta tags needed for the site.</md.li>
+          <md.li><md.code>&lt;Links /&gt;</md.code> is a component that renders the links needed for the site.</md.li>
+          <md.li><md.code>&lt;Outlet /&gt;</md.code> is a component that renders the content of the page.</md.li>
+      </md.ul>
     }
 >
 ```ts
-import { Scripts } from "solid-start/components";
+import { Scripts, Meta, Links, Outlet } from "solid-start/components";
 ```
 
 ### Usage
