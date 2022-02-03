@@ -1,0 +1,82 @@
+import ApiSection from "../../components/ApiSection";
+import md from "../../md";
+
+# API
+
+<ApiSection name="solid">
+```ts
+import solid from "solid-start";
+```
+
+### Usage
+
+```ts
+import { defineConfig } from "vite";
+import solid from "solid-start";
+
+export default defineConfig({
+  plugins: [solid({})]
+});
+```
+
+</ApiSection>
+
+<ApiSection name="server" description="A vite plugin that activates solid-start in your project">
+```ts 
+import server from "solid-start/server";
+```
+</ApiSection>
+
+<ApiSection name="StartClient" description={<>A Component to render on the client. Use it in <md.code>src/entry-client.tsx</md.code></>}>
+```ts
+import { StartClient } from "solid-start/components";
+```
+
+### Usage
+
+```ts
+import { hydrate } from "solid-js/web";
+import { StartClient } from "solid-start/components";
+
+hydrate(() => <StartClient />, document);
+```
+
+</ApiSection>
+
+<ApiSection name="StartServer" description={<>A Component to render on the server. Use in <md.code>src/entry-server.tsx</md.code></>}>
+
+```ts
+import { StartServer } from "solid-start/components";
+```
+
+### Usage
+
+```ts
+import { renderToStringAsync } from "solid-js/web";
+import { StartServer } from "solid-start/components";
+
+export default async function handleRequest({
+  request,
+  manifest,
+  headers,
+  context = {}
+}: {
+  request: Request;
+  headers: Response["headers"];
+  manifest: Record<string, any>;
+  context?: Record<string, any>;
+}) {
+  let markup = await renderToStringAsync(() => (
+    <StartServer context={context} url={request.url} manifest={manifest} />
+  ));
+
+  headers.set("Content-Type", "text/html");
+
+  return new Response(markup, {
+    status: 200,
+    headers
+  });
+}
+```
+
+</ApiSection>

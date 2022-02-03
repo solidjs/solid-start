@@ -1,5 +1,6 @@
 import { renderToStringAsync } from "solid-js/web";
-import { StartServer, createHandler, serverModules } from "solid-start/components";
+import { StartServer, createHandler } from "solid-start/components";
+import { inlineServerModules } from "solid-start/server";
 
 function renderPage() {
   return async ({
@@ -26,4 +27,4 @@ function renderPage() {
   };
 }
 
-export default createHandler(serverModules, renderPage);
+export default createHandler(inlineServerModules, renderPage);
