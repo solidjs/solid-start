@@ -17,4 +17,4 @@ function renderPage() {
   };
 }
 
-export default createHandler(serverModules, renderPage);
+export default createHandler(inlineServerModules, renderPage);
