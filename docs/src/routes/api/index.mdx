@@ -135,3 +135,40 @@ export default async function handleRequest({
 ```
 
 </ApiSection>
+
+<ApiSection 
+    name="Scripts"
+    description={
+      <>
+          <md.code>&lt;Scripts /&gt;</md.code> is a component that renders the scripts needed for the site
+      </>
+    }
+>
+```ts
+import { Scripts } from "solid-start/components";
+```
+
+### Usage
+```ts
+// @refresh reload
+import { Links, Meta, Outlet, Scripts } from "solid-start/components";
+
+
+export default function Root() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+          <Outlet />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+</ApiSection>
