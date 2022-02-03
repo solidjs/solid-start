@@ -32,7 +32,7 @@ export default {
         </h6>
     ),
     p: props => (
-        <p {...props} class="text-lg font-400 mb-4">
+        <p {...props} class="text-lg font-400 my-4">
             {props.children}
         </p>
     ),

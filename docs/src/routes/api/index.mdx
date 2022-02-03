@@ -3,7 +3,7 @@ import md from "../../md";
 
 # API
 
-<ApiSection name="solid">
+<ApiSection name="solid" description="A vite plugin that activates solid-start in your project">
 ```ts
 import solid from "solid-start";
 ```
@@ -21,10 +21,65 @@ export default defineConfig({
 
 </ApiSection>
 
-<ApiSection name="server" description="A vite plugin that activates solid-start in your project">
-```ts 
-import server from "solid-start/server";
+<ApiSection
+  name="server"
+  description={
+    <>
+      When code inside of the <md.code>server</md.code> function is run on the server, it runs
+      exactly as written. When the code is run on the client it is converted into an dynamic api call.
+    </>
+  }
+>
+```ts
+import server from "solid-start/server"; 
 ```
+
+  ### Usage
+
+  ```ts
+import { createResource } from "solid-js";
+import { RouteDataFunc } from "solid-app-router";
+import fetchAPI from "../../lib/api";
+import server from "solid-start/server";
+
+const UserData: RouteDataFunc = props => {
+  const [user] = createResource(
+    () => `user/${props.params.id}`,
+    server(fetchAPI)
+  );
+  return user;
+};
+
+export default UserData;
+```
+
+ please note that you can use server anywhere not just in the data files. For example:
+
+  ```ts
+  import { Component } from "solid-js";
+  import server from "solid-start/server";
+
+  const AddItemButton: Component = () => {
+    return (
+      <button
+        onClick={() => {
+          server(() => {
+            prisma.items.create({
+              data: {
+                name: "New Item",
+                description: "New Item Description"
+              }
+            });
+          })
+        }}
+      >
+        Add Item
+      </button>
+    )
+  }
+  ```
+
+  So in that example when the button is clicked, the client will hit an api which runs the code in the server function.
 </ApiSection>
 
 <ApiSection name="StartClient" description={<>A Component to render on the client. Use it in <md.code>src/entry-client.tsx</md.code></>}>
