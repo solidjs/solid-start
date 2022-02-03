@@ -6,7 +6,7 @@ import { Prisma, User } from "@prisma/client";
 
 const addPlayer = createForm(
   server(async (form: FormData) => {
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 2500));
     try {
       await db.user.create({
         data: {
@@ -106,7 +106,7 @@ const removePlayer = createForm(
   server(async (form: FormData) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    if (Math.random() > 0.75) {
+    if (Math.random() > 0.5) {
       throw new FormError("There was an error removing the player, please try again later");
     }
 
