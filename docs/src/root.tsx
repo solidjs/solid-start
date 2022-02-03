@@ -10,14 +10,14 @@ import md from "./md";
 
 export default function Root() {
   return (
-    <html lang="en">
+    <html lang="en" class="h-full">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
+      <body class="h-full flex flex-col">
         <MDXProvider
           components={{
             ...md
