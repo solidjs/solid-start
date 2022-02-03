@@ -1,7 +1,13 @@
 // @refresh reload
 import { Links, Meta, Outlet, Scripts } from "solid-start/components";
-import "./root.css";
+
 import "./code.css";
+import "virtual:windi.css";
+
+import { MDXProvider } from "solid-mdx";
+import Nav from "./components/Nav";
+import md from "./md";
+
 export default function Root() {
   return (
     <html lang="en">
@@ -12,9 +18,23 @@ export default function Root() {
         <Links />
       </head>
       <body>
-        <main>
+        <MDXProvider
+          components={{
+            ...md
+          }}
+        >
+          
+          <header class="p-4 bg-orange-500 text-white">
+          <h1 class="text-5xl text-center mb-4">WIP</h1>
+            <p class="max-w-prose mx-auto">
+              These docs are a major work in progress. They are incomplete and have inaccurate
+              information. That is why we need you! Feel free to ask questions in the discord chat
+              and if you're dedicated, then contribute!
+            </p>{" "}
+          </header>
+          <Nav />
           <Outlet />
-        </main>
+        </MDXProvider>
         <Scripts />
       </body>
     </html>
