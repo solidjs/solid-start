@@ -1,5 +1,5 @@
 import { Outlet } from "solid-app-router";
-const modules = import.meta.globEager("./guides/*.(mdx|md)");
+const modules = import.meta.glob("./guides/*.(mdx|md)");
 import { For } from "solid-js";
 import md from "~/md";
 
