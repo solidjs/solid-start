@@ -1,5 +1,5 @@
 // @refresh reload
-import { Links, Meta, Outlet, Scripts } from "solid-start/components";
+import { Links, Meta, Routes, Scripts } from "solid-start/components";
 
 export default function Root() {
   return (
@@ -12,7 +12,7 @@ export default function Root() {
       </head>
       <body>
         <main>
-          <Outlet />
+          <Routes />
         </main>
         <Scripts />
       </body>

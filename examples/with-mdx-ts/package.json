@@ -10,7 +10,7 @@
     "@mdx-js/rollup": "^2.0.0-rc.1",
     "solid-app-router": "^0.2.1",
     "solid-js": "^1.3.4",
-    "solid-mdx": "^0.0.5",
+    "solid-mdx": "^0.0.6",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",

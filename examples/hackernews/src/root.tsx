@@ -1,5 +1,5 @@
 // @refresh reload
-import { Links, Outlet, Scripts } from "solid-start/components";
+import { Links, Routes, Scripts } from "solid-start/components";
 import { Suspense } from "solid-js";
 import { isServer } from "solid-js/web";
 import Nav from "./components/nav";
@@ -19,7 +19,7 @@ export default function Root() {
       <body>
         <Nav />
         <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
-          <Outlet />
+          <Routes />
         </Suspense>
         <Scripts />
       </body>

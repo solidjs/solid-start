@@ -10,7 +10,7 @@ const disclaimer = `
 Welcome to the SolidStart setup wizard!
 
 There are definitely bugs and some feature might not work yet.
-If you encounter an issue, have a look at https://github.com/ryansolid/solid-start/issues and open a new one, if it is not already tracked.
+If you encounter an issue, have a look at https://github.com/solidjs/solid-start/issues and open a new one, if it is not already tracked.
 `;
 
 function mkdirp(dir) {

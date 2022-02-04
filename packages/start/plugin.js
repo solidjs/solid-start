@@ -8,22 +8,112 @@ import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
 import babel from "@babel/core";
 import babelServerModule from "./server/babel.js";
+import { join, resolve } from "path";
+import vite from "vite";
+import connect from "connect";
+import http from "http";
+import compression from "compression";
+import sirv from "sirv";
+
+function solidStartClientAdpater() {
+  return {
+    async start(config) {
+      var app = connect();
+      app.use(compression());
+      app.use(config.base, sirv(join(config.root, "dist")));
+      http.createServer(app).listen(3000);
+      console.log("Listening on http://localhost:3000");
+      return;
+    },
+    async build(config) {
+      await vite.build({
+        root: join(config.root),
+        // out: "./dist/",
+        build: {
+          outDir: "./dist/",
+          rollupOptions: {
+            input: resolve(join(config.root, "index.html")),
+            output: {
+              manualChunks: undefined
+            }
+          },
+          minify: "terser"
+        }
+      });
+    }
+  };
+}
+
+function solidStartInlineServerModules(options) {
+  let lazy;
+  let config;
+  /** @type {import('vite').Plugin} */
+  return {
+    enforce: "pre",
+    configResolved(_config) {
+      lazy = _config.command !== "serve";
+      config = _config;
+    },
+    name: "solid-start-inline-server-modules",
+    configureServer(vite) {
+      vite.httpServer?.once("listening", async () => {
+        const protocol = config.server.https ? "https" : "http";
+        const port = config.server.port;
+
+        const label = `  > Server modules: `;
+        setTimeout(() => {
+          // eslint-disable-next-line no-console
+          console.log(`${label}${c.magenta(`${protocol}://localhost:${port}/_m/*`)}\n`);
+        }, 200);
+      });
+    }
+  };
+}
 
 /**
  * @returns {import('vite').Plugin}
  */
-function solidStartRouter(options) {
+function solidStartFileSystemRouter(options) {
   let lazy;
+  let config;
+  /** @type {import('vite').Plugin} */
   return {
-    name: "solid-start-router",
+    name: "solid-start-file-system-router",
     enforce: "pre",
-    configResolved(config) {
-      lazy = config.command !== "serve";
+    configResolved(_config) {
+      lazy = _config.command !== "serve";
+      config = _config;
+    },
+    configureServer(vite) {
+      vite.httpServer?.once("listening", async () => {
+        const protocol = config.server.https ? "https" : "http";
+        const port = config.server.port;
+        const routes = await getRoutes({
+          pageExtensions: [
+            "tsx",
+            "jsx",
+            "js",
+            "ts",
+            ...(options.extensions?.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1)) ??
+              [])
+          ]
+        });
+        const label = `  > Routes: `;
+        setTimeout(() => {
+          // eslint-disable-next-line no-console
+          console.log(
+            `${label}\n${routes.pageRoutes
+              .flatMap(r => (r.children ? r.children : [r]))
+              .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
+              .join("\n")}\n`
+          );
+        }, 100);
+      });
     },
     async transform(code, id, transformOptions) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
-      if (/.data.(ts|js)/.test(id)) {
+      if (/.data.(ts|js)/.test(id) && config.solidOptions.ssr) {
         return babel.transformSync(code, {
           filename: id,
           presets: ["@babel/preset-typescript"],
@@ -58,9 +148,9 @@ function solidStartRouter(options) {
   };
 }
 
-function solidStartBuild(options) {
+function solidsStartRouteManifest(options) {
   return {
-    name: "solid-start-build",
+    name: "solid-start-route-manifest",
     config(conf) {
       const regex = new RegExp(
         `(index)?(.(${[
@@ -84,7 +174,9 @@ function solidStartBuild(options) {
                 merge: false,
                 publicPath: "/",
                 routes: file => {
-                  file = file.replace(path.posix.join(root, options.appRoot), "").replace(regex, "");
+                  file = file
+                    .replace(path.posix.join(root, options.appRoot), "")
+                    .replace(regex, "");
                   if (!file.includes(`/${options.routesDir}/`)) return "*"; // commons
                   return "/" + file.replace(`/${options.routesDir}/`, "");
                 }
@@ -100,58 +192,28 @@ function solidStartBuild(options) {
 /**
  * @returns {import('vite').Plugin}
  */
-function solidStartServer(options) {
-  let config;
+function solidStartSSR(options) {
   return {
-    name: "solid-start-dev",
+    name: "solid-start-ssr",
     configureServer(vite) {
       return () => {
         remove_html_middlewares(vite.middlewares);
-
         vite.middlewares.use(createDevHandler(vite));
-
-        // logging routes on server start
-        vite.httpServer?.once("listening", async () => {
-          const protocol = config.server.https ? "https" : "http";
-          const port = config.server.port;
-          const routes = await getRoutes({
-            pageExtensions: [
-              "tsx",
-              "jsx",
-              "js",
-              "ts",
-              ...(options.extensions
-                ?.map(s => (Array.isArray(s) ? s[0] : s))
-                .map(s => s.slice(1)) ?? [])
-            ]
-          });
-          const label = `  > Routes: `;
-          setTimeout(() => {
-            // eslint-disable-next-line no-console
-            console.log(
-              `${label}\n${routes.pageRoutes
-                .flatMap(r => (r.children ? r.children : [r]))
-                .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
-                .join("\n")}`
-            );
-          }, 100);
-        });
       };
-    },
-    configResolved: conf => {
-      config = conf;
-    },
+    }
+  };
+}
+
+function solidStartConfig(options) {
+  return {
+    name: "solid-start-config",
+    enforce: "pre",
     config(conf) {
       const root = conf.root || process.cwd();
       return {
         resolve: {
           conditions: ["solid"],
-          alias: [
-            {
-              find: "~",
-              replacement: path.join(root, options.appRoot)
-            }
-          ]
+          alias: { "~": path.join(root, options.appRoot) }
         },
         ssr: {
           noExternal: ["solid-app-router", "solid-meta", "solid-start"]
@@ -168,7 +230,7 @@ function solidStartServer(options) {
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: "solid-start-node",
+      adapter: options && !options.ssr ? solidStartClientAdpater() : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: true,
@@ -178,22 +240,27 @@ export default function solidStart(options) {
     options ?? {}
   );
 
+  // @ts-ignore
   return [
+    solidStartConfig(options),
     options.inspect ? inspect() : undefined,
+    options.ssr && solidStartInlineServerModules(options),
+    solidStartFileSystemRouter(options),
     solid({
       ...(options ?? {}),
       babel: (source, id, ssr) => ({
-        plugins: [
-          [
-            babelServerModule,
-            { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-          ]
-        ]
+        plugins: options.ssr
+          ? [
+              [
+                babelServerModule,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ]
+            ]
+          : []
       })
     }),
-    solidStartRouter(options),
-    solidStartServer(options),
-    solidStartBuild(options)
+    options.ssr && solidStartSSR(options),
+    solidsStartRouteManifest(options)
   ].filter(Boolean);
 }
 
