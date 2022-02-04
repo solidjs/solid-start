@@ -202,7 +202,7 @@ let FormImpl = (_props: FormImplProps) => {
   // another form field, yeeeeet) so we should have access to that button's
   // data for use in the submit handler.
   let clickedButtonRef = { current: null };
-  let form;
+  let form: HTMLFormElement | null = null;
 
   createEffect(() => {
     if (!form) return;
@@ -227,8 +227,7 @@ let FormImpl = (_props: FormImplProps) => {
     <form
       ref={f => {
         form = f;
-        // @ts-ignore
-        props.ref?.(f);
+        if (typeof props.ref === "function") props.ref(f);
       }}
       method={formMethod}
       action={_props.action}
@@ -281,14 +280,6 @@ export interface SubmitOptions {
    * to `false`.
    */
   replace?: boolean;
-}
-/**
- * Returns a function that may be used to programmatically submit a form (or
- * some arbitrary data) to the server.
- */
-
-export function useSubmit(): SubmitFunction {
-  return useSubmitImpl();
 }
 
 export function useSubmitImpl(key?: string, onSubmit?: (sub: FormAction) => void): SubmitFunction {

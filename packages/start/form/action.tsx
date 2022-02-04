@@ -9,6 +9,10 @@ interface SubmissionState<T> {
   variables: T;
 }
 
+type SetSubmissionState<T> = (
+  state: SubmissionState<T> | ((s: SubmissionState<T>) => SubmissionState<T>)
+) => void;
+
 export type ActionSubmission<T> = {
   variables: T;
   state: Accessor<SubmissionState<T>>;
@@ -16,19 +20,25 @@ export type ActionSubmission<T> = {
   error: Error | null;
   key: any;
   index: number;
-  setState: (state: SubmissionState<T> | ((s: SubmissionState<T>) => SubmissionState<T>)) => void;
+  setState: SetSubmissionState<T>;
 };
 
-export function createAction<T, U = void>(fn: (args: T) => Promise<U>) {
+/**
+ *  
+ * @param actionFn the async function that handles the submission, this would be where you call your API
+ */
+export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
   const [submissions, setSubmissions] = createSignal<{
     [key: string]: ActionSubmission<T>;
   }>({});
 
   let index = 0;
+
   async function action(submission: T, _k: string) {
     let i = ++index;
     let key = () => _k || `${i}`;
-    let submissionState, setSubmissionState;
+
+    let submissionState: Accessor<SubmissionState<T>>, setSubmissionState: SetSubmissionState<T>;
 
     if (submissions()[key()]) {
       submissionState = submissions()[key()].state;
@@ -71,7 +81,7 @@ export function createAction<T, U = void>(fn: (args: T) => Promise<U>) {
     }
 
     try {
-      let response = await fn(submission);
+      let response = await actionFn(submission);
 
       // if response was successful, remove the submission since its resolved
       // TODO: figure out if this is the appropriate behaviour, should we keep successful submissions?
@@ -86,6 +96,7 @@ export function createAction<T, U = void>(fn: (args: T) => Promise<U>) {
         data: response,
         error: null
       }));
+
       return response;
     } catch (e) {
       // console.error(e);
