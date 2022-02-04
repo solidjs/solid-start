@@ -10,7 +10,6 @@ import degit from "degit";
 
 const gitIgnore = `
 dist
-worker
 .solid
 .output
 .vercel
