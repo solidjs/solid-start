@@ -22,9 +22,7 @@ export async function viaContentsApi({
   getFullData = false
 }) {
   const files = [];
-  const requests = [];
   const contents = await api(`${user}/${repository}/contents/${directory}?ref=${ref}`, token);
-  console.log(contents);
 
   if (contents.message === "Not Found") {
     return [];

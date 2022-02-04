@@ -59,42 +59,41 @@ async function main() {
   let config = {
     directory: "examples",
     repository: "solid-start",
-    user: "devinxi",
-    ref: "create-solid"
+    user: "solidjs",
+    ref: "main"
   };
+
   let templates = {};
   const templateDirs = await viaContentsApi(config);
 
-  console.log(
-    templateDirs.forEach(dir => {
-      let template = dir
-        .replace("examples/", "")
-        .replace(/-client-ts/, "")
-        .replace(/-client/, "")
-        .replace(/-ts/, "");
-      if (!templates[template]) {
-        templates[template] = {
-          name: template,
-          client: false,
-          ssr: false,
-          js: false,
-          ts: false
-        };
-      }
+  templateDirs.forEach(dir => {
+    let template = dir
+      .replace("examples/", "")
+      .replace(/-client-ts/, "")
+      .replace(/-client/, "")
+      .replace(/-ts/, "");
+    if (!templates[template]) {
+      templates[template] = {
+        name: template,
+        client: false,
+        ssr: false,
+        js: false,
+        ts: false
+      };
+    }
 
-      if (dir.endsWith("-client") || dir.endsWith("-client-ts")) {
-        templates[template].client = true;
-      } else {
-        templates[template].ssr = true;
-      }
+    if (dir.endsWith("-client") || dir.endsWith("-client-ts")) {
+      templates[template].client = true;
+    } else {
+      templates[template].ssr = true;
+    }
 
-      if (dir.endsWith("-ts")) {
-        templates[template].ts = true;
-      } else {
-        templates[template].js = true;
-      }
-    })
-  );
+    if (dir.endsWith("-ts")) {
+      templates[template].ts = true;
+    } else {
+      templates[template].js = true;
+    }
+  });
 
   let ssr = (
     await prompts({
@@ -110,12 +109,11 @@ async function main() {
       type: "confirm",
       name: "value",
       message: "Use TypeScript?",
-      initial: true
+      initial: false
     })
   ).value;
 
   let templateNames = [...Object.values(templates)];
-  console.log(templateNames);
 
   const templateName = (
     await prompts({
@@ -130,7 +128,9 @@ async function main() {
     })
   ).template;
 
-  console.log(templateName);
+  if (!templateName) {
+    throw new Error("No template selected");
+  }
 
   if (fs.existsSync(target)) {
     if (fs.readdirSync(target).length > 0) {
