@@ -90,7 +90,7 @@ importers:
       vite: 2.7.13
       vite-plugin-inspect: 0.3.13_vite@2.7.13
 
-  examples/hackernews:
+  examples/hackernews-ts:
     specifiers:
       solid-app-router: 0.2.1
       solid-js: 1.3.4
@@ -227,30 +227,6 @@ importers:
       node-fetch: 2.6.7
       prompts: 2.4.2
       tiny-glob: 0.2.9
-
-  packages/create-solid/hello:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0
-      solid-app-router: ^0.2.1
-      solid-js: ^1.3.4
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: next
-      solid-start-node: next
-      undici: ^4.12.2
-      vite: ^2.7.13
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0_rollup@2.63.0
-      solid-app-router: 0.2.1_solid-js@1.3.4
-      solid-js: 1.3.4
-      solid-mdx: 0.0.6_solid-js@1.3.4+vite@2.7.13
-      solid-meta: 0.27.3_solid-js@1.3.4
-      solid-start: link:../../start
-      solid-start-node: link:../../start-node
-      undici: 4.12.2
-      vite: 2.7.13
-      vite-plugin-inspect: 0.3.13_vite@2.7.13
 
   packages/start:
     specifiers:
