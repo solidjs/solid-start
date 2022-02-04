@@ -1,7 +1,7 @@
 // isomorphic exports
 export { default as Links } from "./Links";
 export { default as Meta } from "./Meta";
-export { default as Outlet } from "./Outlet";
+export { default as Routes } from "./Routes";
 export { default as Scripts } from "./Scripts";
 export { default as StartClient } from "./StartClient";
 export * from "./StartContext";

@@ -11,9 +11,7 @@ export default function Root() {
         <Links />
       </head>
       <body>
-        <main>
-          <Routes />
-        </main>
+        <Routes />
         <Scripts />
       </body>
     </html>

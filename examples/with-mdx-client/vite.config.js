@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import solid from "solid-start";
-
 export default defineConfig({
   plugins: [
     {
@@ -12,6 +11,7 @@ export default defineConfig({
       enforce: "pre"
     },
     solid({
+      ssr: false,
       extensions: [".mdx", ".md"]
     })
   ]

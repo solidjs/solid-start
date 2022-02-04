@@ -1,5 +1,5 @@
 // @refresh reload
-import { Links, Meta, Outlet, Scripts } from "solid-start/components";
+import { Links, Meta, Routes, Scripts } from "solid-start/components";
 
 import "./code.css";
 import "virtual:windi.css";
@@ -23,9 +23,8 @@ export default function Root() {
             ...md
           }}
         >
-          
           <header class="p-4 bg-orange-500 text-white">
-          <h1 class="text-5xl text-center mb-4">WIP</h1>
+            <h1 class="text-5xl text-center mb-4">WIP</h1>
             <p class="max-w-prose mx-auto">
               These docs are a major work in progress. They are incomplete and have inaccurate
               information. That is why we need you! Feel free to ask questions in the discord chat
