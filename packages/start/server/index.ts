@@ -92,6 +92,18 @@ if (!isServer) {
     if (args.length === 1 && args[0] instanceof FormData) {
       body = args[0];
     } else {
+      // special case for when server is used as fetcher for createResource
+      // we set {}.value to undefined. This keeps the createResource API intact as the type
+      // of this object is { value: T | undefined; refetching: boolean }
+      // So the user is expected to check value for undefined, and by setting it as undefined
+      // we can match user expectations that they dont have access to previous data on
+      // the server
+      if (Array.isArray(args) && args.length > 1) {
+        let secondArg = args[1];
+        if (typeof secondArg === "object" && "value" in secondArg && "refetching" in secondArg) {
+          secondArg.value = undefined;
+        }
+      }
       body = JSON.stringify(args);
       headers["Content-Type"] = "application/json";
     }
