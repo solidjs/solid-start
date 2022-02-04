@@ -230,7 +230,10 @@ function solidStartConfig(options) {
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: options && !options.ssr ? solidStartClientAdpater() : "solid-start-node",
+      adapter:
+        options && options.ssr !== undefined && !options.srr
+          ? solidStartClientAdpater()
+          : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: true,

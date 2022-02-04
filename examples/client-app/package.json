@@ -1,5 +1,5 @@
 {
-  "name": "example-basic-ts",
+  "name": "example-client-app",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
@@ -14,15 +14,11 @@
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
-    "typescript": "^4.4.3",
     "undici": "^4.12.2",
     "vite": "^2.7.13",
     "vite-plugin-inspect": "^0.3.13"
   },
   "engines": {
     "node": ">=14"
-  },
-  "dependencies": {
-    "connect": "^3.7.0"
   }
 }
