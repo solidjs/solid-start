@@ -56,22 +56,43 @@ async function main() {
 
   const target = process.argv[2] || ".";
 
-  let templates = new Set();
-  const templateDirs = await viaContentsApi({
+  let config = {
     directory: "examples",
     repository: "solid-start",
-    user: "solidjs",
-    ref: "main"
-  });
+    user: "devinxi",
+    ref: "create-solid"
+  };
+  let templates = {};
+  const templateDirs = await viaContentsApi(config);
 
   console.log(
     templateDirs.forEach(dir => {
-      templates.add(
-        dir
-          .replace("examples/", "")
-          .replace(/-client-ts/, "")
-          .replace(/-ts/, "")
-      );
+      let template = dir
+        .replace("examples/", "")
+        .replace(/-client-ts/, "")
+        .replace(/-client/, "")
+        .replace(/-ts/, "");
+      if (!templates[template]) {
+        templates[template] = {
+          name: template,
+          client: false,
+          ssr: false,
+          js: false,
+          ts: false
+        };
+      }
+
+      if (dir.endsWith("-client") || dir.endsWith("-client-ts")) {
+        templates[template].client = true;
+      } else {
+        templates[template].ssr = true;
+      }
+
+      if (dir.endsWith("-ts")) {
+        templates[template].ts = true;
+      } else {
+        templates[template].js = true;
+      }
     })
   );
 
@@ -92,27 +113,24 @@ async function main() {
       initial: true
     })
   ).value;
-  // } else {
-  // ts_response = fa;
-  // }
-  // }
 
-  let templateNames = [...templates];
+  let templateNames = [...Object.values(templates)];
+  console.log(templateNames);
+
   const templateName = (
     await prompts({
       type: "select",
       name: "template",
       message: "Which template do you want to use?",
       choices: templateNames
-        .map(name => ({ title: name, value: name }))
-        .filter(n =>
-          ssr
-            ? !templateDirs.includes(d => d.includes(`examples/${d}-client`))
-            : !templateDirs.includes(d => d.includes(`examples/${d}-client`))
-        ),
-      initial: 1
+        .filter(template => (ssr ? template.ssr : template.client))
+        .filter(template => (ts_response ? template.ts : template.js))
+        .map(template => ({ title: template.name, value: template.name })),
+      initial: 0
     })
   ).template;
+
+  console.log(templateName);
 
   if (fs.existsSync(target)) {
     if (fs.readdirSync(target).length > 0) {
@@ -135,7 +153,9 @@ async function main() {
 
   await new Promise((res, rej) => {
     const emitter = degit(
-      "solidjs/solid-start/examples/" + templateName + (ts_response ? "-ts" : "") + "#main",
+      `${config.user}/${config.repository}/${config.directory}/${
+        templateName + (!ssr ? "-client" : "") + (ts_response ? "-ts" : "")
+      }#${config.ref}`,
       {
         cache: false,
         force: true,
