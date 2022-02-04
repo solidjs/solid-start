@@ -4,13 +4,13 @@ Solid start comes with a server function that allows you to right code that only
 
 ```tsx
 import server from "solid-start/server";
-import { Component, Suspence  } from "solid";
+import { Component, Suspense  } from "solid";
 
 const Counter: Component = () => {
     const count = createResource(() => server(() => db.items.findMany()));
 
     return (
-        <Suspence fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
             <div>
                 <h1>Counter</h1>
                 <p>{count()}</p>
@@ -22,7 +22,7 @@ const Counter: Component = () => {
                     Increment
                 </button>
             </div>
-        </Suspence>
+        </Suspense>
     );
 }
 
