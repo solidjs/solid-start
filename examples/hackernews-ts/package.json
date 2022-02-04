@@ -3,8 +3,7 @@
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
-    "start": "solid-start start",
-    "deploy": "wrangler publish"
+    "start": "solid-start start"
   },
   "type": "module",
   "main": "./dist/index.js",
