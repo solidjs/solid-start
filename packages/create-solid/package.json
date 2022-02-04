@@ -15,7 +15,11 @@
     "tiny-glob": "^0.2.8"
   },
   "files": [
-    "bin",
-    "templates"
-  ]
+    "bin"
+  ],
+  "dependencies": {
+    "degit": "^2.8.4",
+    "node-fetch": "^2.6.7",
+    "undici": "^4.12.2"
+  }
 }
