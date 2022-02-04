@@ -24,7 +24,7 @@ importers:
 
   docs:
     specifiers:
-      '@mdx-js/rollup': ^2.0.0-rc.1
+      '@mdx-js/rollup': ^2.0.0
       highlight.js: ^11.4.0
       rehype-highlight: ^5.0.2
       remark-code-extra: ^1.0.1
@@ -38,7 +38,7 @@ importers:
       vite: ^2.7.13
       vite-plugin-windicss: ^1.6.3
     devDependencies:
-      '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
+      '@mdx-js/rollup': 2.0.0_rollup@2.63.0
       highlight.js: 11.4.0
       rehype-highlight: 5.0.2
       remark-code-extra: 1.0.1
@@ -90,56 +90,6 @@ importers:
       vite: 2.7.13
       vite-plugin-inspect: 0.3.13_vite@2.7.13
 
-  examples/client-app:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0-rc.1
-      solid-app-router: ^0.2.1
-      solid-js: ^1.3.4
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      undici: ^4.12.2
-      vite: ^2.7.13
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
-      solid-app-router: 0.2.1_solid-js@1.3.4
-      solid-js: 1.3.4
-      solid-mdx: 0.0.6_solid-js@1.3.4+vite@2.7.13
-      solid-meta: 0.27.3_solid-js@1.3.4
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      undici: 4.12.2
-      vite: 2.7.13
-      vite-plugin-inspect: 0.3.13_vite@2.7.13
-
-  examples/client-app-ts:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0-rc.1
-      solid-app-router: ^0.2.1
-      solid-js: ^1.3.4
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      typescript: ^4.4.3
-      undici: ^4.12.2
-      vite: ^2.7.13
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
-      solid-app-router: 0.2.1_solid-js@1.3.4
-      solid-js: 1.3.4
-      solid-mdx: 0.0.6_solid-js@1.3.4+vite@2.7.13
-      solid-meta: 0.27.3_solid-js@1.3.4
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      typescript: 4.5.4
-      undici: 4.12.2
-      vite: 2.7.13
-      vite-plugin-inspect: 0.3.13_vite@2.7.13
-
   examples/hackernews:
     specifiers:
       solid-app-router: 0.2.1
@@ -164,7 +114,7 @@ importers:
 
   examples/with-mdx:
     specifiers:
-      '@mdx-js/rollup': ^2.0.0-rc.1
+      '@mdx-js/rollup': ^2.0.0
       solid-app-router: ^0.2.1
       solid-js: ^1.3.4
       solid-mdx: ^0.0.6
@@ -175,7 +125,7 @@ importers:
       vite: ^2.7.13
       vite-plugin-inspect: ^0.3.13
     devDependencies:
-      '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
+      '@mdx-js/rollup': 2.0.0_rollup@2.63.0
       solid-app-router: 0.2.1_solid-js@1.3.4
       solid-js: 1.3.4
       solid-mdx: 0.0.6_solid-js@1.3.4+vite@2.7.13
@@ -186,9 +136,33 @@ importers:
       vite: 2.7.13
       vite-plugin-inspect: 0.3.13_vite@2.7.13
 
-  examples/with-mdx-ts:
+  examples/with-mdx-client:
     specifiers:
-      '@mdx-js/rollup': ^2.0.0-rc.1
+      '@mdx-js/rollup': ^2.0.0
+      solid-app-router: ^0.2.1
+      solid-js: ^1.3.4
+      solid-mdx: ^0.0.6
+      solid-meta: ^0.27.3
+      solid-start: workspace:*
+      solid-start-node: workspace:*
+      undici: ^4.12.2
+      vite: ^2.7.13
+      vite-plugin-inspect: ^0.3.13
+    devDependencies:
+      '@mdx-js/rollup': 2.0.0_rollup@2.63.0
+      solid-app-router: 0.2.1_solid-js@1.3.4
+      solid-js: 1.3.4
+      solid-mdx: 0.0.6_solid-js@1.3.4+vite@2.7.13
+      solid-meta: 0.27.3_solid-js@1.3.4
+      solid-start: link:../../packages/start
+      solid-start-node: link:../../packages/start-node
+      undici: 4.12.2
+      vite: 2.7.13
+      vite-plugin-inspect: 0.3.13_vite@2.7.13
+
+  examples/with-mdx-client-ts:
+    specifiers:
+      '@mdx-js/rollup': ^2.0.0
       solid-app-router: ^0.2.1
       solid-js: ^1.3.4
       solid-mdx: ^0.0.6
@@ -200,7 +174,33 @@ importers:
       vite: ^2.7.13
       vite-plugin-inspect: ^0.3.13
     devDependencies:
-      '@mdx-js/rollup': 2.0.0-rc.1_rollup@2.63.0
+      '@mdx-js/rollup': 2.0.0_rollup@2.63.0
+      solid-app-router: 0.2.1_solid-js@1.3.4
+      solid-js: 1.3.4
+      solid-mdx: 0.0.6_solid-js@1.3.4+vite@2.7.13
+      solid-meta: 0.27.3_solid-js@1.3.4
+      solid-start: link:../../packages/start
+      solid-start-node: link:../../packages/start-node
+      typescript: 4.5.4
+      undici: 4.12.2
+      vite: 2.7.13
+      vite-plugin-inspect: 0.3.13_vite@2.7.13
+
+  examples/with-mdx-ts:
+    specifiers:
+      '@mdx-js/rollup': ^2.0.0
+      solid-app-router: ^0.2.1
+      solid-js: ^1.3.4
+      solid-mdx: ^0.0.6
+      solid-meta: ^0.27.3
+      solid-start: workspace:*
+      solid-start-node: workspace:*
+      typescript: ^4.4.3
+      undici: ^4.12.2
+      vite: ^2.7.13
+      vite-plugin-inspect: ^0.3.13
+    devDependencies:
+      '@mdx-js/rollup': 2.0.0_rollup@2.63.0
       solid-app-router: 0.2.1_solid-js@1.3.4
       solid-js: 1.3.4
       solid-mdx: 0.0.6_solid-js@1.3.4+vite@2.7.13
@@ -220,72 +220,13 @@ importers:
       node-fetch: ^2.6.7
       prompts: ^2.4.0
       tiny-glob: ^0.2.8
-      undici: ^4.12.2
-    dependencies:
-      degit: 2.8.4
-      node-fetch: 2.6.7
-      undici: 4.12.2
     devDependencies:
+      degit: 2.8.4
       gitignore-parser: 0.0.2
       kleur: 4.1.4
+      node-fetch: 2.6.7
       prompts: 2.4.2
       tiny-glob: 0.2.9
-
-  packages/create-solid/hello:
-    specifiers:
-      solid-app-router: 0.2.1
-      solid-js: 1.3.4
-      solid-meta: ^0.27.3
-      solid-start: next
-      solid-start-node: next
-      typescript: ^4.4.3
-      undici: ^4.12.2
-      vite: 2.7.13
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      solid-app-router: 0.2.1_solid-js@1.3.4
-      solid-js: 1.3.4
-      solid-meta: 0.27.3_solid-js@1.3.4
-      solid-start: link:../../start
-      solid-start-node: link:../../start-node
-      typescript: 4.5.4
-      undici: 4.12.2
-      vite: 2.7.13
-      vite-plugin-inspect: 0.3.13_vite@2.7.13
-
-  packages/create-solid/templates/app:
-    specifiers:
-      solid-app-router: ^0.2.1
-      solid-js: ^1.3.4
-      solid-meta: ^0.27.3
-      solid-start: next
-      solid-start-node: next
-      vite: ^2.7.13
-    devDependencies:
-      solid-app-router: 0.2.1_solid-js@1.3.4
-      solid-js: 1.3.4
-      solid-meta: 0.27.3_solid-js@1.3.4
-      solid-start: link:../../../start
-      solid-start-node: link:../../../start-node
-      vite: 2.7.13
-
-  packages/create-solid/templates/app-ts:
-    specifiers:
-      solid-app-router: ^0.2.1
-      solid-js: ^1.3.4
-      solid-meta: ^0.27.3
-      solid-start: next
-      solid-start-node: next
-      typescript: ^4.4.3
-      vite: ^2.7.13
-    devDependencies:
-      solid-app-router: 0.2.1_solid-js@1.3.4
-      solid-js: 1.3.4
-      solid-meta: 0.27.3_solid-js@1.3.4
-      solid-start: link:../../../start
-      solid-start-node: link:../../../start-node
-      typescript: 4.5.4
-      vite: 2.7.13
 
   packages/start:
     specifiers:
@@ -2448,8 +2389,8 @@ packages:
       write-file-atomic: 3.0.3
     dev: true
 
-  /@mdx-js/mdx/2.0.0-rc.2:
-    resolution: {integrity: sha512-hf/kfsQSl/fhFP6s4TRWic7LYDzwsLieD37n90w8CP3U6dsbVhuk+n/OwLSS1pfdb5NJulTV4LQBv4e4h7Y1iw==}
+  /@mdx-js/mdx/2.0.0:
+    resolution: {integrity: sha512-Q/Zv+gdm80qcxpmL/Dtd/b9+UyZjjJUCQeZyywLAQqre648hRYgeGNPu7Bl2hB7M8/WBLXpabQEKW3dmGdDTDQ==}
     dependencies:
       '@types/estree-jsx': 0.0.1
       '@types/mdx': 2.0.1
@@ -2460,7 +2401,7 @@ packages:
       hast-util-to-estree: 2.0.2
       markdown-extensions: 1.1.1
       periscopic: 3.0.4
-      remark-mdx: 2.0.0-rc.2
+      remark-mdx: 2.0.0
       remark-parse: 10.0.1
       remark-rehype: 10.1.0
       unified: 10.1.1
@@ -2472,12 +2413,12 @@ packages:
       - supports-color
     dev: true
 
-  /@mdx-js/rollup/2.0.0-rc.1_rollup@2.63.0:
-    resolution: {integrity: sha512-jkpTbMzHGnmh6oVnUglajicXlBb2NBzV1wWj41gtrEUK/YJkq68qaKVg+v97CGSCojf+w6RGn41U4j1YEiLrsA==}
+  /@mdx-js/rollup/2.0.0_rollup@2.63.0:
+    resolution: {integrity: sha512-si9n0yxhVg1J/AtMcHH7CZTqLJegCMrl8BDYNtGmCITBvt+VGTO3MAp6I6ackyJV9LOsnYOH5svJf1AJjQKMjA==}
     peerDependencies:
       rollup: '>=2'
     dependencies:
-      '@mdx-js/mdx': 2.0.0-rc.2
+      '@mdx-js/mdx': 2.0.0
       '@rollup/pluginutils': 4.1.2
       rollup: 2.63.0
       source-map: 0.7.3
@@ -3693,7 +3634,7 @@ packages:
     resolution: {integrity: sha512-vqYuzmSA5I50J882jd+AbAhQtgK6bdKUJIex1JNfEUPENCgYsxugzKVZlFyMwV4i06MmnV47/Iqi5Io86zf3Ng==}
     engines: {node: '>=8.0.0'}
     hasBin: true
-    dev: false
+    dev: true
 
   /delayed-stream/1.0.0:
     resolution: {integrity: sha1-3zrhmayt+31ECqrgsp4icrJOxhk=}
@@ -5526,12 +5467,14 @@ packages:
       '@types/estree-jsx': 0.0.1
     dev: true
 
-  /mdast-util-mdx-jsx/1.2.0:
-    resolution: {integrity: sha512-5+ot/kfxYd3ChgEMwsMUO71oAfYjyRI3pADEK4I7xTmWLGQ8Y7ghm1CG36zUoUvDPxMlIYwQV/9DYHAUWdG4dA==}
+  /mdast-util-mdx-jsx/2.0.1:
+    resolution: {integrity: sha512-oPC7/smPBf7vxnvIYH5y3fPo2lw1rdrswFfSb4i0GTAXRUQv7JUU/t/hbp07dgGdUFTSDOHm5DNamhNg/s2Hrg==}
     dependencies:
       '@types/estree-jsx': 0.0.1
+      '@types/hast': 2.3.4
       '@types/mdast': 3.0.10
-      mdast-util-to-markdown: 1.2.6
+      ccount: 2.0.1
+      mdast-util-to-markdown: 1.3.0
       parse-entities: 4.0.0
       stringify-entities: 4.0.2
       unist-util-remove-position: 4.0.1
@@ -5539,11 +5482,11 @@ packages:
       vfile-message: 3.1.0
     dev: true
 
-  /mdast-util-mdx/1.1.0:
-    resolution: {integrity: sha512-leKb9uG7laXdyFlTleYV4ZEaCpsxeU1LlkkR/xp35pgKrfV1Y0fNCuOw9vaRc2a9YDpH22wd145Wt7UY5yzeZw==}
+  /mdast-util-mdx/2.0.0:
+    resolution: {integrity: sha512-M09lW0CcBT1VrJUaF/PYxemxxHa7SLDHdSn94Q9FhxjCQfuW7nMAWKWimTmA3OyDMSTH981NN1csW1X+HPSluw==}
     dependencies:
       mdast-util-mdx-expression: 1.1.1
-      mdast-util-mdx-jsx: 1.2.0
+      mdast-util-mdx-jsx: 2.0.1
       mdast-util-mdxjs-esm: 1.1.1
     transitivePeerDependencies:
       - supports-color
@@ -5555,7 +5498,7 @@ packages:
       '@types/estree-jsx': 0.0.1
       '@types/mdast': 3.0.10
       mdast-util-from-markdown: 1.2.0
-      mdast-util-to-markdown: 1.2.6
+      mdast-util-to-markdown: 1.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5577,6 +5520,18 @@ packages:
 
   /mdast-util-to-markdown/1.2.6:
     resolution: {integrity: sha512-doJZmTEGagHypWvJ8ltinmwUsT9ZaNgNIQW6Gl7jNdsI1QZkTHTimYW561Niy2s8AEPAqEgV0dIh2UOVlSXUJA==}
+    dependencies:
+      '@types/mdast': 3.0.10
+      '@types/unist': 2.0.6
+      longest-streak: 3.0.1
+      mdast-util-to-string: 3.1.0
+      micromark-util-decode-string: 1.0.2
+      unist-util-visit: 4.1.0
+      zwitch: 2.0.2
+    dev: true
+
+  /mdast-util-to-markdown/1.3.0:
+    resolution: {integrity: sha512-6tUSs4r+KK4JGTTiQ7FfHmVOaDrLQJPmpjD6wPMlHGUVXoG9Vjc3jIeP+uyBWRf8clwB2blM+W7+KrlMYQnftA==}
     dependencies:
       '@types/mdast': 3.0.10
       '@types/unist': 2.0.6
@@ -6171,6 +6126,7 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: true
 
   /node-fetch/2.6.7_encoding@0.1.13:
     resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
@@ -7010,10 +6966,10 @@ packages:
       unified: 10.1.1
     dev: true
 
-  /remark-mdx/2.0.0-rc.2:
-    resolution: {integrity: sha512-TMgFSEVx42/YzJWjDY+GKw7CGSbp3XKqBraXPxFS27r8iD9U6zuOZKXH4MoLl9JqiTOmQi0M1zJwT2YhPs32ug==}
+  /remark-mdx/2.0.0:
+    resolution: {integrity: sha512-TDnjSv77Oynf+K1deGWZPKSwh3/9hykVAxVm9enAw6BmicCGklREET8s19KYnjGsNPms0pNDJLmp+bnHDVItAQ==}
     dependencies:
-      mdast-util-mdx: 1.1.0
+      mdast-util-mdx: 2.0.0
       micromark-extension-mdxjs: 1.0.0
     transitivePeerDependencies:
       - supports-color

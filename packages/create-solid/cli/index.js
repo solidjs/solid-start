@@ -66,9 +66,36 @@ async function main() {
 
   console.log(
     templateDirs.forEach(dir => {
-      templates.add(dir.replace("examples/", "").replace(/-ts/, ""));
+      templates.add(
+        dir
+          .replace("examples/", "")
+          .replace(/-client-ts/, "")
+          .replace(/-ts/, "")
+      );
     })
   );
+
+  let ssr = (
+    await prompts({
+      type: "confirm",
+      name: "value",
+      message: "Server Side Rendering?",
+      initial: true
+    })
+  ).value;
+
+  let ts_response = (
+    await prompts({
+      type: "confirm",
+      name: "value",
+      message: "Use TypeScript?",
+      initial: true
+    })
+  ).value;
+  // } else {
+  // ts_response = fa;
+  // }
+  // }
 
   let templateNames = [...templates];
   const templateName = (
@@ -76,27 +103,16 @@ async function main() {
       type: "select",
       name: "template",
       message: "Which template do you want to use?",
-      choices: templateNames.map(name => ({ title: name, value: name })),
+      choices: templateNames
+        .map(name => ({ title: name, value: name }))
+        .filter(n =>
+          ssr
+            ? !templateDirs.includes(d => d.includes(`examples/${d}-client`))
+            : !templateDirs.includes(d => d.includes(`examples/${d}-client`))
+        ),
       initial: 1
     })
   ).template;
-
-  let ts_response = false;
-
-  if (templateDirs.find(dir => dir.includes(templateName + "-ts"))) {
-    if (templateDirs.find(dir => dir === "examples/" + templateName)) {
-      ts_response = (
-        await prompts({
-          type: "confirm",
-          name: "value",
-          message: "Use TypeScript?",
-          initial: false
-        })
-      ).value;
-    } else {
-      ts_response = true;
-    }
-  }
 
   if (fs.existsSync(target)) {
     if (fs.readdirSync(target).length > 0) {
