@@ -32,7 +32,7 @@ export default function Root() {
             </p>{" "}
           </header>
           <Nav />
-          <Outlet />
+          <Routes />
         </MDXProvider>
         <Scripts />
       </body>
