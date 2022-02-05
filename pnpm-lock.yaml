@@ -130,9 +130,9 @@ importers:
       '@prisma/client': 3.9.1_prisma@3.9.1
       bcryptjs: 2.4.3
       prisma: 3.9.1
-      solid-app-router: 0.2.1_solid-js@1.3.4
-      solid-js: 1.3.4
-      solid-meta: 0.27.3_solid-js@1.3.4
+      solid-app-router: 0.2.1_solid-js@1.3.5
+      solid-js: 1.3.5
+      solid-meta: 0.27.3_solid-js@1.3.5
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.5.4
@@ -259,6 +259,7 @@ importers:
   packages/start:
     specifiers:
       '@babel/core': ^7.16.7
+      '@babel/plugin-syntax-jsx': ^7.16.7
       '@babel/preset-typescript': ^7.16.7
       compression: ^1.7.4
       connect: ^3.7.0
@@ -284,6 +285,7 @@ importers:
       vite-plugin-solid: ^2.2.4
     dependencies:
       '@babel/core': 7.16.7
+      '@babel/plugin-syntax-jsx': 7.16.7_@babel+core@7.16.7
       '@babel/preset-typescript': 7.16.7_@babel+core@7.16.7
       compression: 1.7.4
       connect: 3.7.0
