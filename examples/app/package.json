@@ -8,7 +8,7 @@
   "type": "module",
   "devDependencies": {
     "solid-app-router": "^0.2.1",
-    "solid-js": "^1.3.4",
+    "solid-js": "^1.3.5",
     "solid-meta": "^0.27.3",
     "solid-start": "next",
     "solid-start-node": "next",
