@@ -1,12 +1,10 @@
 import { Link, useData } from "solid-app-router";
 import { Component, For, Show } from "solid-js";
-
-import type { IStory } from "../../types";
-import Comment from "../../components/comment";
-
+import type { IStory } from "~/types";
+import Comment from "~/components/comment";
 import { createResource } from "solid-js";
 import { RouteDataFunc } from "solid-app-router";
-import fetchAPI from "../../lib/api";
+import fetchAPI from "~/lib/api";
 import server from "solid-start/server";
 
 export const routeData: RouteDataFunc = props => {

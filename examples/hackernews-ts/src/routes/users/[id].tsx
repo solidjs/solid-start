@@ -1,5 +1,9 @@
 import { Component, Show } from "solid-js";
 import { useData } from "solid-app-router";
+import { createResource } from "solid-js";
+import { RouteDataFunc } from "solid-app-router";
+import fetchAPI from "~/lib/api";
+import server from "solid-start/server";
 
 export interface IUser {
   error: string;
@@ -8,11 +12,6 @@ export interface IUser {
   karma: number;
   about: string;
 }
-
-import { createResource } from "solid-js";
-import { RouteDataFunc } from "solid-app-router";
-import fetchAPI from "../../lib/api";
-import server from "solid-start/server";
 
 export const routeData: RouteDataFunc = props => {
   const [user] = createResource(() => `user/${props.params.id}`, server(fetchAPI));

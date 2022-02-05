@@ -2,7 +2,10 @@ import { Link, useData } from "solid-app-router";
 import { Component, For, Show } from "solid-js";
 import { createResource } from "solid-js";
 import { RouteDataFunc } from "solid-app-router";
-import fetchAPI from "../lib/api";
+import fetchAPI from "~/lib/api";
+import Story from "~/components/story";
+import { IStory } from "~/types";
+import server from "solid-start/server";
 
 const mapStories = {
   top: "news",
@@ -21,9 +24,6 @@ export const routeData: RouteDataFunc = ({ location, params }) => {
   return { type, stories, page };
 };
 
-import Story from "../components/story";
-import { IStory } from "~/types";
-import server from "solid-start/server";
 interface StoriesData {
   page: () => number;
   type: () => string;
