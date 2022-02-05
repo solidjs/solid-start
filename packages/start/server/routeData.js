@@ -2,8 +2,6 @@
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
 // This is adapted to work with any server() calls and transpile it into multiple api function for a file.
 
-import { INLINE_SERVER_ROUTE_PREFIX } from "./constants.js";
-import nodePath from "path";
 import crypto from "crypto";
 
 function decorateServerExport(t, path, state) {
@@ -135,40 +133,59 @@ function transformServer({ types: t, template }) {
                   });
                 }
               },
-              CallExpression: path => {
-                if (path.node.callee.type === "Identifier" && path.node.callee.name === "server") {
-                  const serverFn = path.get("arguments")[0];
-                  let program = path.findParent(p => t.isProgram(p));
-                  let statement = path.findParent(p => program.get("body").includes(p));
-                  let serverIndex = state.servers++;
-                  let hasher = state.opts.minify ? hashFn : str => str;
-                  const fName = state.filename.replace(state.opts.root, "").slice(1);
-
-                  const hash = hasher(nodePath.join(fName, String(serverIndex)));
-
-                  const route = nodePath
-                    .join(INLINE_SERVER_ROUTE_PREFIX, hash)
-                    .replaceAll("\\", "/");
-
-                  if (state.opts.ssr) {
-                    statement.insertBefore(
-                      template(`export const $$server_module${serverIndex} = server.handler(%%source%%);
-                      server.registerHandler("${route}", $$server_module${serverIndex});
-                      `)({
-                        source: serverFn.node
-                      })
-                    );
-                  } else {
-                    statement.insertBefore(
-                      template(
-                        `const $$server_module${serverIndex} = server.createFetcher("${route}");`,
-                        {
-                          syntacticPlaceholders: true
-                        }
-                      )()
-                    );
+              ExportDefaultDeclaration(exportNamedPath, exportNamedState) {
+                if (!state.opts.keep) {
+                  exportNamedPath.remove();
+                }
+              },
+              ExportNamedDeclaration(exportNamedPath, exportNamedState) {
+                if (!state.opts.keep) {
+                  return;
+                }
+                const specifiers = exportNamedPath.get("specifiers");
+                if (specifiers.length) {
+                  specifiers.forEach(s => {
+                    if (
+                      t.isIdentifier(s.node.exported)
+                        ? s.node.exported.name
+                        : s.node.exported.value === "routeData"
+                    ) {
+                      s.remove();
+                    }
+                  });
+                  if (exportNamedPath.node.specifiers.length < 1) {
+                    exportNamedPath.remove();
                   }
-                  path.replaceWith(t.identifier(`$$server_module${serverIndex}`));
+                  return;
+                }
+                const decl = exportNamedPath.get("declaration");
+                if (decl == null || decl.node == null) {
+                  return;
+                }
+                switch (decl.node.type) {
+                  case "FunctionDeclaration": {
+                    const name = decl.node.id.name;
+                    if (name === "routeData") {
+                      exportNamedPath.remove();
+                    }
+                    break;
+                  }
+                  case "VariableDeclaration": {
+                    const inner = decl.get("declarations");
+                    inner.forEach(d => {
+                      if (d.node.id.type !== "Identifier") {
+                        return;
+                      }
+                      const name = d.node.id.name;
+                      if (name === "routeData") {
+                        d.remove();
+                      }
+                    });
+                    break;
+                  }
+                  default: {
+                    break;
+                  }
                 }
               },
               FunctionDeclaration: markFunction,

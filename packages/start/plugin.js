@@ -14,6 +14,7 @@ import connect from "connect";
 import http from "http";
 import compression from "compression";
 import sirv from "sirv";
+import routeData from "./server/routeData.js";
 
 function solidStartClientAdpater() {
   return {
@@ -110,27 +111,57 @@ function solidStartFileSystemRouter(options) {
         }, 100);
       });
     },
+
     async transform(code, id, transformOptions) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
+
+      let babelSolidCompiler = (code, id, fn) => {
+        // @ts-ignore
+        return solid({
+          ...(options ?? {}),
+          babel: fn
+        }).transform(code, id, transformOptions);
+      };
+
       if (/.data.(ts|js)/.test(id) && config.solidOptions.ssr) {
-        return babel.transformSync(code, {
-          filename: id,
-          presets: ["@babel/preset-typescript"],
+        return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id, ssr) => ({
           plugins: [
-            [
+            options.ssr && [
               babelServerModule,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ]
+          ]
+        }));
+      } else if (/\?data/.test(id)) {
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
+          plugins: [
+            options.ssr && [
+              babelServerModule,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            [routeData, { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }]
+          ].filter(Boolean)
+        }));
+      } else if (id.includes("routes")) {
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
+          plugins: [
+            options.ssr && [
+              babelServerModule,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            [
+              routeData,
               {
-                ssr: isSsr ?? false,
+                ssr,
                 root: process.cwd(),
+                keep: true,
                 minify: process.env.NODE_ENV === "production"
               }
             ]
-          ]
-        });
-      }
-
-      if (code.includes("const routes = $ROUTES;")) {
+          ].filter(Boolean)
+        }));
+      } else if (code.includes("const routes = $ROUTES;")) {
         const routes = await getRoutes({
           pageExtensions: [
             "tsx",
@@ -246,9 +277,9 @@ export default function solidStart(options) {
   // @ts-ignore
   return [
     solidStartConfig(options),
+    solidStartFileSystemRouter(options),
     options.inspect ? inspect() : undefined,
     options.ssr && solidStartInlineServerModules(options),
-    solidStartFileSystemRouter(options),
     solid({
       ...(options ?? {}),
       babel: (source, id, ssr) => ({
