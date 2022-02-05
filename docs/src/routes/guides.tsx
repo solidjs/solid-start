@@ -1,5 +1,5 @@
-import { Outlet } from "solid-app-router";
-const modules = import.meta.globEager("./guides/*.(mdx|md)");
+import { NavLink, Outlet } from "solid-app-router";
+const modules = import.meta.glob("./guides/*.(mdx|md)");
 import { For } from "solid-js";
 import md from "~/md";
 
@@ -22,20 +22,23 @@ const pathToLink = (path: string) =>
 
 const Guides = () => {
   return (
-    <div class="p-2">
-      <md.ul>
+    <div class="flex h-full">
+      <ul class="bg-gray-200 h-full p-2 w-max">
         <For each={Object.keys(modules).filter(n => n !== "./guides/index.mdx")}>
           {name => (
-            <md.li>
-              <md.a href={pathToLink(name)}>{pathToHumanName(name)}</md.a>
-            </md.li>
+            <li class="w-max">
+              <NavLink href={pathToLink(name)} class="text-blue-800 block" activeClass="bg-gray-400">
+                {pathToHumanName(name)}
+              </NavLink>
+            </li>
           )}
         </For>
-      </md.ul>
-
-      <Outlet />
+      </ul>
+      <div class="p-4">
+        <Outlet />
+      </div>
     </div>
   );
-};
+}; 
 
 export default Guides;
