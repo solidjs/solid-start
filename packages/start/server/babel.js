@@ -161,7 +161,7 @@ function transformServer({ types: t, template }) {
                   } else {
                     statement.insertBefore(
                       template(
-                        `const $$server_module${serverIndex} = server.createFetcher("${route}");`,
+                        `const $$server_module${serverIndex} = server.fetcher("${route}");`,
                         {
                           syntacticPlaceholders: true
                         }
