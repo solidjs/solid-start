@@ -1,6 +1,17 @@
 import { isServer } from "solid-js/web";
 import type { RequestContext, Middleware as ServerMiddleware } from "../components/StartServer";
-import { isRedirectResponse, parseResponse, respondWith } from "./responses";
+import {
+  ContentTypeHeader,
+  isRedirectResponse,
+  JSONResponseType,
+  LocationHeader,
+  parseResponse,
+  respondWith,
+  XSolidStartLocationHeader,
+  XSolidStartOrigin,
+  XSolidStartResponseTypeHeader,
+  XSolidStartStatusCodeHeader
+} from "./responses";
 
 export { json, redirect, isRedirectResponse } from "./responses";
 
@@ -14,13 +25,13 @@ type ServerFn = (<T extends (...args: any) => void>(fn: T) => InlineServer<T>) &
   createHandler: (fn: any, hash: string) => any;
   registerHandler: (route: string, handler: any) => any;
   hasHandler: (route: string) => boolean;
-  middleware?: Middleware[];
-  requestContext?: RequestContext;
-  setClientMiddleware: (...middleware: Middleware[]) => void;
-  setContext(ctx: RequestContext): void;
-  fetch(route: string, init: RequestInit, middleware?: Middleware[]): Promise<Response>;
-  getContext(): RequestContext;
+  fetcher: (request: Request) => Promise<Response>;
+  setFetcher: (fetcher: (request: Request) => Promise<Response>) => void;
   createFetcher(route: string): InlineServer<any>;
+  fetch(route: string, init: RequestInit): Promise<Response>;
+  requestContext?: RequestContext;
+  getContext(): RequestContext;
+  setContext(ctx: RequestContext): void;
 };
 
 const server: ServerFn = fn => {
@@ -41,52 +52,47 @@ export interface MiddlewareInput {
 export type MiddlewareFn = (request: Request) => Promise<Response>;
 
 if (!isServer) {
-  server.middleware = [fetchServerModule()];
-  server.setClientMiddleware = (...middleware) => {
-    console.log(middleware);
-    server.middleware = [...middleware, fetchServerModule()];
+  server.fetcher = fetch;
+  server.setFetcher = fetch => {
+    server.fetcher = fetch;
   };
 
-  const composeMiddleware =
-    exchanges =>
-    ({ ctx, next }) =>
-      exchanges.reduceRight(
-        (next, exchange) =>
-          exchange({
-            ctx: ctx,
-            next
-          }),
-        next
-      );
+  // const composeMiddleware =
+  //   exchanges =>
+  //   ({ ctx, next }) =>
+  //     exchanges.reduceRight(
+  //       (next, exchange) =>
+  //         exchange({
+  //           ctx: ctx,
+  //           next
+  //         }),
+  //       next
+  //     );
 
-  function createHandler(...middleware) {
-    const handler = composeMiddleware(middleware);
-    return async request => {
-      return await handler({
-        ctx: {
-          request
-        },
-        next: async op => {
-          throw new Response(null, {
-            status: 404
-          });
-        }
-      })(request);
-    };
-  }
+  // function createHandler(...middleware) {
+  //   const handler = composeMiddleware(middleware);
+  //   return async request => {
+  //     return await handler({
+  //       ctx: {
+  //         request
+  //       },
+  //       next: null
+  //     })(request);
+  //   };
+  // }
 
-  function fetchServerModule() {
-    return ({ ctx, next }) => {
-      return async (req: Request) => {
-        return await fetch(req);
-      };
-    };
-  }
+  // function fetchServerModule() {
+  //   return () => {
+  //     return async (req: Request) => {
+  //       return await fetch(req);
+  //     };
+  //   };
+  // }
 
   function createRequestInit(...args) {
     let body,
       headers = {
-        "x-solidstart-origin": "client"
+        [XSolidStartOrigin]: "client"
       };
 
     if (args.length === 1 && args[0] instanceof FormData) {
@@ -105,7 +111,7 @@ if (!isServer) {
         }
       }
       body = JSON.stringify(args);
-      headers["Content-Type"] = "application/json";
+      headers[ContentTypeHeader] = JSONResponseType;
     }
 
     return {
@@ -132,20 +138,21 @@ if (!isServer) {
   server.fetch = async function (route, init: RequestInit) {
     const request = new Request(route, init);
 
-    const handler = createHandler(...server.middleware);
+    // const handler = createHandler(...server.middleware);
+    const handler = fetch;
     const response = await handler(request);
 
-    // throws response, error, form error, json object, string
-    if (response.headers.get("X-SolidStart-Response-Type") === "throw") {
+    // // throws response, error, form error, json object, string
+    if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
       throw await parseResponse(request, response);
-    } else if (response.headers.get("X-SolidStart-Response-Type") === "return") {
+    } else if (response.headers.get(XSolidStartResponseTypeHeader) === "return") {
       return await parseResponse(request, response);
     }
 
-    // fallback if we are getting a response that we dont recognize
+    // // fallback if we are getting a response that we dont recognize
     if (
       response.status !== 200 &&
-      !response.headers.get("Content-type")?.includes("application/json")
+      !response.headers.get(ContentTypeHeader)?.includes(JSONResponseType)
     ) {
       throw response;
     }
@@ -156,12 +163,12 @@ if (!isServer) {
 }
 
 async function parseRequest(request: Request) {
-  let contentType = request.headers.get("content-type");
+  let contentType = request.headers.get(ContentTypeHeader);
   let name = new URL(request.url).pathname,
     args = [];
 
   if (contentType) {
-    if (contentType === "application/json") {
+    if (contentType === JSONResponseType) {
       args = await request.json();
     } else if (contentType.includes("form")) {
       args = [await request.formData()];
@@ -201,17 +208,18 @@ async function handleServerRequest(ctx: RequestContext) {
 if (isServer) {
   const handlers = new Map();
   server.requestContext = null;
+
   server.createHandler = (_fn, hash) => {
     let fn: any = async (...args) => {
       try {
         let e = await _fn(...args);
         if (e instanceof Response) {
           let headers = server.getContext().headers;
-          if (headers.get("content-type") === "text/html") {
-            headers.set("X-SolidStart-Status-Code", e.status.toString());
+          if (headers.get(ContentTypeHeader) === "text/html") {
+            headers.set(XSolidStartStatusCodeHeader, e.status.toString());
             if (isRedirectResponse(e)) {
-              headers.set("X-SolidStart-Location", e.headers.get("Location"));
-              headers.set("Location", e.headers.get("Location"));
+              headers.set(XSolidStartLocationHeader, e.headers.get(LocationHeader));
+              headers.set(LocationHeader, e.headers.get(LocationHeader));
             }
             return e;
           }
@@ -221,10 +229,10 @@ if (isServer) {
         if (e instanceof Response) {
           let headers = server.getContext().headers;
           if (headers.get("content-type") === "text/html") {
-            headers.set("X-SolidStart-Status-Code", e.status.toString());
+            headers.set(XSolidStartStatusCodeHeader, e.status.toString());
             if (isRedirectResponse(e)) {
-              headers.set("X-SolidStart-Location", e.headers.get("Location"));
-              headers.set("Location", e.headers.get("Location"));
+              headers.set(XSolidStartLocationHeader, e.headers.get(LocationHeader));
+              headers.set(LocationHeader, e.headers.get(LocationHeader));
             }
             throw new Error("Response");
           }

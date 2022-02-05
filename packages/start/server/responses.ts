@@ -1,6 +1,14 @@
-import { FormError } from "../form";
+import { FormError } from "../form/FormError";
 import { RequestContext } from "../components/StartServer";
 
+export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";
+export const XSolidStartLocationHeader = "x-solidstart-location";
+export const LocationHeader = "Location";
+export const ContentTypeHeader = "content-type";
+export const XSolidStartResponseTypeHeader = "x-solidstart-response-type";
+export const XSolidStartContentTypeHeader = "x-solidstart-content-type";
+export const XSolidStartOrigin = "x-solidstart-origin";
+export const JSONResponseType = "application/json";
 /**
  * A JSON response. Converts `data` to JSON and sets the `Content-Type` header.
  */
@@ -11,8 +19,8 @@ export function json<Data>(data: Data, init: number | ResponseInit = {}): Respon
   }
 
   let headers = new Headers(responseInit.headers);
-  if (!headers.has("Content-Type")) {
-    headers.set("Content-Type", "application/json; charset=utf-8");
+  if (!headers.has(ContentTypeHeader)) {
+    headers.set(ContentTypeHeader, "application/json; charset=utf-8");
   }
 
   return new Response(JSON.stringify(data), {
@@ -42,8 +50,8 @@ export function redirect(
     ...responseInit,
     headers: {
       ...responseInit.headers,
-      "X-SolidStart-Location": url,
-      Location: url
+      [XSolidStartLocationHeader]: url,
+      [LocationHeader]: url
     }
   });
 }
@@ -70,18 +78,18 @@ export function respondWith(
   responseType: "throw" | "return"
 ) {
   if (data instanceof Response) {
-    if (isRedirectResponse(data) && ctx.request.headers.get("x-solidstart-origin") === "client") {
-      data.headers.set("x-solidstart-origin", "server");
-      data.headers.set("x-solidstart-location", data.headers.get("Location"));
-      data.headers.set("x-solidstart-response-type", responseType);
-      data.headers.set("x-solidstart-content-type", "response");
+    if (isRedirectResponse(data) && ctx.request.headers.get(XSolidStartOrigin) === "client") {
+      data.headers.set(XSolidStartOrigin, "server");
+      data.headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
+      data.headers.set(XSolidStartResponseTypeHeader, responseType);
+      data.headers.set(XSolidStartContentTypeHeader, "response");
       return new Response(null, {
         status: 204,
         headers: data.headers
       });
     } else {
-      data.headers.set("x-solidstart-Response-type", responseType);
-      data.headers.set("x-solidstart-Content-type", "response");
+      data.headers.set(XSolidStartResponseTypeHeader, responseType);
+      data.headers.set(XSolidStartContentTypeHeader, "response");
       return data;
     }
   } else if (data instanceof FormError) {
@@ -98,8 +106,8 @@ export function respondWith(
       {
         status: 400,
         headers: {
-          "X-SolidStart-Response-Type": responseType,
-          "X-SolidStart-Content-Type": "form-error"
+          [XSolidStartResponseTypeHeader]: responseType,
+          [XSolidStartContentTypeHeader]: "form-error"
         }
       }
     );
@@ -115,8 +123,8 @@ export function respondWith(
       {
         status: (data as any).status || 500,
         headers: {
-          "X-SolidStart-Response-Type": responseType,
-          "X-SolidStart-Content-Type": "error"
+          [XSolidStartResponseTypeHeader]: responseType,
+          [XSolidStartContentTypeHeader]: "error"
         }
       }
     );
@@ -124,17 +132,17 @@ export function respondWith(
     return new Response(data, {
       status: 200,
       headers: {
-        "X-SolidStart-Response-Type": responseType,
-        "X-SolidStart-Content-Type": "string"
+        [XSolidStartResponseTypeHeader]: responseType,
+        [XSolidStartContentTypeHeader]: "string"
       }
     });
   } else if (typeof data === "object") {
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
-        "Content-type": "application/json",
-        "X-SolidStart-Response-Type": responseType,
-        "X-SolidStart-Content-Type": "json"
+        [ContentTypeHeader]: "application/json",
+        [XSolidStartResponseTypeHeader]: responseType,
+        [XSolidStartContentTypeHeader]: "json"
       }
     });
   }
@@ -142,17 +150,16 @@ export function respondWith(
   return new Response("null", {
     status: 200,
     headers: {
-      "Content-type": "application/json",
-      "X-SolidStart-Content-Type": "json",
-      "X-SolidStart-Response-Type": responseType
+      [ContentTypeHeader]: "application/json",
+      [XSolidStartContentTypeHeader]: "json",
+      [XSolidStartResponseTypeHeader]: responseType
     }
   });
 }
 
 export async function parseResponse(request: Request, response: Response) {
   const contentType =
-    response.headers.get("X-SolidStart-Content-Type") || response.headers.get("Content-Type");
-
+    response.headers.get(XSolidStartContentTypeHeader) || response.headers.get(ContentTypeHeader);
   if (contentType.includes("json")) {
     return await response.json();
   } else if (contentType.includes("text")) {
@@ -164,8 +171,8 @@ export async function parseResponse(request: Request, response: Response) {
     const data = await response.json();
     return new Error(data.error.message);
   } else if (contentType.includes("response")) {
-    if (response.status === 204 && response.headers.get("X-SolidStart-Location")) {
-      return redirect(response.headers.get("X-SolidStart-Location"));
+    if (response.status === 204 && response.headers.get(LocationHeader)) {
+      return redirect(response.headers.get(LocationHeader));
     }
     return response;
   }

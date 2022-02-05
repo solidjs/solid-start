@@ -20,23 +20,9 @@ export interface FormAction {
   key: string;
 }
 
-type FormEncType = "application/x-www-form-urlencoded" | "multipart/form-data";
+export { FormError } from "./FormError";
 
-export class FormError extends Error {
-  formError: string;
-  fields: {};
-  fieldErrors: { [key: string]: string };
-  constructor(
-    message: string,
-    { fieldErrors = {}, form, fields }: { fieldErrors?: {}; form?: FormData; fields?: {} } = {}
-  ) {
-    super(message);
-    this.formError = message;
-    this.name = "FormError";
-    this.fields = fields || Object.fromEntries(form?.entries() ?? []) || {};
-    this.fieldErrors = fieldErrors;
-  }
-}
+type FormEncType = "application/x-www-form-urlencoded" | "multipart/form-data";
 
 export interface SubmitOptions {
   /**
