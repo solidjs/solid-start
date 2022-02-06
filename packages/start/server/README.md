@@ -17,7 +17,15 @@ const serverFunction = server(async (name: string) => {
 
 - Any code inside a server function (including things that only a server function references) is only executed on the server. It is not even included in the client side bundle.
 - You can treat the function that it returns as a normal async function and should expect to receieve exactly what you return or throw from the function you pass in. This is incredibly important and is what allows us to use this model on both the server and the client. What this means?
-  - If you return/throw a promise, the server function will wait for the promise to resolve before returning the result.
+  - If you return a javascript object, the server function will return that object.
+  
+  ```tsx
+  import server from "solid-start/server";
+
+  const serverFunction = server((name: string) => ({ messasge: `Hello ${name}` }));
+  
+  console.log(message); // "Hello da vinci"
+  ```
 
 ```tsx
 import server from "solid-start/server";
@@ -61,22 +69,22 @@ console.log(await e.text()); // "Hello da vinci"
     when you dont to continue executing the components in that path. It is similar to indicating that there is an error and you want stop normal execution
   - You can also throw a Response object with a specific status code and headers that will be used as the response status code
 
-```tsx
-import server from "solid-start/server";
+  ```tsx
+  import server from "solid-start/server";
 
-const serverFunction = server(async (name: string) => {
-  throw new Response(`Hello ${name}`);
-});
+  const serverFunction = server(async (name: string) => {
+    throw new Response(`Hello ${name}`);
+  });
 
-const e = await serverFuncton("da vinci");
-try {
-  serverFuncton("da vinci");
-} catch (e) {
-  if (e instanceof Response) {
-    console.log(await e.text()); // "Hello da vinci"
+  const e = await serverFuncton("da vinci");
+  try {
+    serverFuncton("da vinci");
+  } catch (e) {
+    if (e instanceof Response) {
+      console.log(await e.text()); // "Hello da vinci"
+    }
   }
-}
-```
+  ```
 
 - If you return/throw an `Error` or its subclass, the server function will return/throw the error with the same stack and custom properties. You can assert the name of the error or the message on the client to detect different kinds of errors.
 - If you return/throw a HTTP `Response` (of the `fetch` API), the server function will return the same-looking response on the client.
