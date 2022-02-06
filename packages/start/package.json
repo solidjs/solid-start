@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "@babel/core": "^7.16.7",
+    "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
