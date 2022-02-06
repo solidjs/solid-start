@@ -390,6 +390,7 @@ export function createForm<
         onSubmit={submission => {
           action(submission.formData, props.key)
             .then(response => {
+              console.log(response);
               if (response instanceof Response) {
                 if (response.status === 302) {
                   runWithOwner(owner, () => {

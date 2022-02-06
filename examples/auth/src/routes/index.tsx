@@ -3,7 +3,7 @@ import server, { redirect } from "solid-start/server";
 import { FormError, createForm, FormSubmission } from "solid-start/form";
 import { createEffect, createResource, ErrorBoundary, For, Index, Show } from "solid-js";
 import { Prisma, Message, User } from "@prisma/client";
-import { getUser } from "~/session";
+import { getUser, logout } from "~/session";
 
 const sendMessage = createForm(
   server(async (form: FormData) => {
@@ -12,6 +12,7 @@ const sendMessage = createForm(
     if (!user) {
       throw new Error("Unauthenticated");
     }
+
     await new Promise(resolve => setTimeout(resolve, 2500));
     try {
       await db.message.create({
@@ -118,6 +119,7 @@ export default function Home() {
       if (!(await getUser(server.getContext().request))) {
         throw redirect("/login");
       }
+
       return {
         messages: await db.message.findMany({
           include: {
@@ -163,9 +165,18 @@ export default function Home() {
     );
   }
 
+  const logoutForm = createForm(
+    server(async () => {
+      return await logout(server.getContext().request);
+    })
+  );
+
   return (
     <main class="w-full p-4 space-y-2">
       <h1 class="font-bold text-xl">Message board</h1>
+      <logoutForm.Form>
+        <button type="submit">Logout</button>
+      </logoutForm.Form>
       <Index each={data()?.messages ?? []}>
         {item => (
           <Show

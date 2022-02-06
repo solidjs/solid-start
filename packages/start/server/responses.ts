@@ -166,10 +166,18 @@ export async function parseResponse(request: Request, response: Response) {
     return await response.text();
   } else if (contentType.includes("form-error")) {
     const data = await response.json();
-    return new FormError(data.error.message, { fieldErrors: data.error.fieldErrors });
+    return new FormError(data.error.message, {
+      fieldErrors: data.error.fieldErrors,
+      fields: data.error.fields,
+      stack: data.error.stack
+    });
   } else if (contentType.includes("error")) {
     const data = await response.json();
-    return new Error(data.error.message);
+    const error = new Error(data.error.message);
+    if (data.error.stack) {
+      error.stack = data.error.stack;
+    }
+    return error;
   } else if (contentType.includes("response")) {
     if (response.status === 204 && response.headers.get(LocationHeader)) {
       return redirect(response.headers.get(LocationHeader));

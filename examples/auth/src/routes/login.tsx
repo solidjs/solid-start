@@ -1,8 +1,9 @@
-import { createForm } from "solid-start/form";
-import server, { json } from "solid-start/server";
+import { createForm, FormError } from "solid-start/form";
+import server, { json, redirect } from "solid-start/server";
 import { db } from "~/db";
-import { createUserSession, login, register } from "~/session";
-import { Link, useParams } from "solid-app-router";
+import { createUserSession, getUser, login, register } from "~/session";
+import { Link, useData, useParams } from "solid-app-router";
+import { createComputed, createResource } from "solid-js";
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
     return `Usernames must be at least 3 characters long`;
@@ -26,7 +27,6 @@ type ActionData = {
  * statements, while still returning the accurate HTTP status, 400 Bad Request,
  * to the client.
  */
-const badRequest = (data: ActionData) => json(data, { status: 400 });
 const loginForm = createForm(
   server(async (form: FormData) => {
     const loginType = form.get("loginType");
@@ -39,7 +39,7 @@ const loginForm = createForm(
       typeof password !== "string" ||
       typeof redirectTo !== "string"
     ) {
-      return badRequest({ formError: `Form not submitted correctly.` });
+      throw new FormError(`Form not submitted correctly.`);
     }
 
     const fields = { loginType, username, password };
@@ -48,16 +48,15 @@ const loginForm = createForm(
       password: validatePassword(password)
     };
     if (Object.values(fieldErrors).some(Boolean)) {
-      return badRequest({ fieldErrors, fields });
+      throw new FormError("Fields invalid", { fieldErrors, fields });
     }
 
     switch (loginType) {
       case "login": {
         const user = await login({ username, password });
         if (!user) {
-          return badRequest({
-            fields,
-            formError: `Username/Password combination is incorrect`
+          throw new FormError(`Username/Password combination is incorrect`, {
+            fields
           });
         }
         return createUserSession(`${user.id}`, redirectTo);
@@ -65,28 +64,41 @@ const loginForm = createForm(
       case "register": {
         const userExists = await db.user.findFirst({ where: { username } });
         if (userExists) {
-          return badRequest({
-            fields,
-            formError: `User with username ${username} already exists`
+          throw new FormError(`User with username ${username} already exists`, {
+            fields
           });
         }
         const user = await register({ username, password });
         if (!user) {
-          return badRequest({
-            fields,
-            formError: `Something went wrong trying to create a new user.`
+          throw new FormError(`Something went wrong trying to create a new user.`, {
+            fields
           });
         }
         return createUserSession(`${user.id}`, redirectTo);
       }
       default: {
-        return badRequest({ fields, formError: `Login type invalid` });
+        throw new FormError(`Login type invalid`, { fields });
       }
     }
   })
 );
 
+export function routeData() {
+  return createResource(
+    server(async () => {
+      console.log("hereee");
+      if (await getUser(server.getContext().request)) {
+        console.log("redirecting");
+        throw redirect("/");
+      }
+      return {};
+    })
+  );
+}
+
 export default function Login() {
+  const [data] = useData();
+  createComputed(() => data());
   const params = useParams();
   return (
     <div className="p-4">

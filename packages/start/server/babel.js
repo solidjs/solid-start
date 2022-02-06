@@ -152,7 +152,7 @@ function transformServer({ types: t, template }) {
 
                   if (state.opts.ssr) {
                     statement.insertBefore(
-                      template(`export const $$server_module${serverIndex} = server.createHandler(%%source%%, "${route}");
+                      template(`const $$server_module${serverIndex} = server.createHandler(%%source%%, "${route}");
                       server.registerHandler("${route}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node

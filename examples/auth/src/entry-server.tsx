@@ -20,7 +20,10 @@ function renderPage() {
       <StartServer context={context} url={request.url} manifest={manifest} />
     ));
 
+    console.log(headers.get("content-type"), headers.get("x-solidstart-status-code"));
+
     if (headers.get("x-solidstart-status-code")) {
+      console.log("x-solidstart-status-code", headers.get("x-solidstart-status-code"));
       return new Response(markup, {
         status: Number(headers.get("x-solidstart-status-code")),
         headers

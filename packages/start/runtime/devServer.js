@@ -41,7 +41,7 @@ export function createDevHandler(viteServer) {
       }
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
-      console.log(e.stack);
+      console.log("ERROR", e);
       res.statusCode = 500;
       res.end(e.stack);
     }

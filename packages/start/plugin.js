@@ -149,15 +149,18 @@ function solidStartFileSystemRouter(options) {
           ]
         }));
       } else if (/\?data/.test(id)) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
+        console.log(id, isSsr);
+        const text = await babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
           plugins: [
-            options.ssr && [
+            [
               babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              { ssr: isSsr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
             [routeData, { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }]
           ].filter(Boolean)
         }));
+        console.log(text);
+        return text;
       } else if (id.includes("routes")) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
           plugins: [

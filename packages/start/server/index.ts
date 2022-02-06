@@ -57,6 +57,11 @@ if (!isServer) {
     server.fetcher = fetch;
   };
 
+  server.getContext = () => {
+    console.log("gonna throw error");
+    throw new Error("Should be called inside a server function");
+  };
+
   // const composeMiddleware =
   //   exchanges =>
   //   ({ ctx, next }) =>
@@ -142,9 +147,15 @@ if (!isServer) {
     const handler = fetch;
     const response = await handler(request);
 
+    console.log("response", route, init, response);
+
     // // throws response, error, form error, json object, string
     if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
-      throw await parseResponse(request, response);
+      const parsedResponse = await parseResponse(request, response);
+      if (isRedirectResponse(parsedResponse) && !isServer) {
+        console.log(parsedResponse);
+      }
+      throw parsedResponse;
     } else if (response.headers.get(XSolidStartResponseTypeHeader) === "return") {
       return await parseResponse(request, response);
     }
@@ -211,15 +222,22 @@ if (isServer) {
 
   server.createHandler = (_fn, hash) => {
     let fn: any = async (...args) => {
+      console.log("HEREE", server.getContext().headers);
       try {
         let e = await _fn(...args);
         if (e instanceof Response) {
           let headers = server.getContext().headers;
           if (headers.get(ContentTypeHeader) === "text/html") {
             headers.set(XSolidStartStatusCodeHeader, e.status.toString());
+            console.log(
+              "responding to html",
+              e.status.toString(),
+              headers.get("X-SolidStart-Status-Code")
+            );
             if (isRedirectResponse(e)) {
               headers.set(XSolidStartLocationHeader, e.headers.get(LocationHeader));
               headers.set(LocationHeader, e.headers.get(LocationHeader));
+              return null;
             }
             return e;
           }
@@ -229,18 +247,22 @@ if (isServer) {
         if (e instanceof Response) {
           let headers = server.getContext().headers;
           if (headers.get("content-type") === "text/html") {
+            console.log("responding to html", e.status);
             headers.set(XSolidStartStatusCodeHeader, e.status.toString());
             if (isRedirectResponse(e)) {
               headers.set(XSolidStartLocationHeader, e.headers.get(LocationHeader));
               headers.set(LocationHeader, e.headers.get(LocationHeader));
+              console.log(headers);
+              return e;
             }
             throw new Error("Response");
           }
         }
+        console.log("HEREEE#", e, server.getContext().headers);
         throw e;
       }
     };
-    fn.url = `/_m${hash}`;
+    fn.url = hash;
 
     return fn;
   };
@@ -271,7 +293,7 @@ if (isServer) {
     // this is also used for requests made specifically to a server module
     let ctx: RequestContext = {
       request: new Request(route, init),
-      headers: new Headers(),
+      headers: server.getContext().headers,
       manifest: {},
       context: {}
     };
