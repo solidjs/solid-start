@@ -23,13 +23,13 @@ const serverFunction = server(async (name: string) => {
 import server from "solid-start/server";
 
 const serverFunction = server(async (name: string) => {
-  throw new Error("Hello world");
+  throw new Error(`Who is ${name}?`);
 });
 
 try {
   serverFuncton("da vinci");
 } catch (e) {
-  console.log(e.message); // "Hello world"
+  console.log(e.message); // "Who is da vinci?"
 }
 ```
 
@@ -37,29 +37,35 @@ try {
 import server from "solid-start/server";
 
 const serverFunction = server(async (name: string) => {
-  return new Error("Hello world");
+  return new Error(`Who is ${name}?`);
 });
 
 const e = await serverFuncton("da vinci");
-console.log(e.message); // "Hello world"
+console.log(e.message); // "Who is da vinci?"
 ```
 
 ```tsx
 import server from "solid-start/server";
 
 const serverFunction = server(async (name: string) => {
-  return new Response("Hello world");
+  return new Response(`Hello ${name}`);
 });
 
 const e = await serverFuncton("da vinci");
-console.log(await e.text()); // "Hello world"
+console.log(await e.text()); // "Hello da vinci"
 ```
+
+- Throwing a Response object will cause the server function to return a Response object that you can catch
+  - Redirects are thrown responses
+  - Throw a Response instead of returning it if you want to communicate that you want to hit the Error boundary of your app,
+    when you dont to continue executing the components in that path. It is similar to indicating that there is an error and you want stop normal execution
+  - You can also throw a Response object with a specific status code and headers that will be used as the response status code
 
 ```tsx
 import server from "solid-start/server";
 
 const serverFunction = server(async (name: string) => {
-  throw new Response("Hello world");
+  throw new Response(`Hello ${name}`);
 });
 
 const e = await serverFuncton("da vinci");
@@ -67,7 +73,7 @@ try {
   serverFuncton("da vinci");
 } catch (e) {
   if (e instanceof Response) {
-    console.log(await e.text()); // "Hello world"
+    console.log(await e.text()); // "Hello da vinci"
   }
 }
 ```
