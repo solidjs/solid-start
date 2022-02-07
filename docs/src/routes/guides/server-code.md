@@ -1,6 +1,6 @@
 # Server Code
 
-Solid start comes with a server function that allows you to right code that only runs on the server from within your client code.
+Solid start comes with a server function that allows you to write code that only runs on the server from within your client code.
 
 ```tsx
 import server from "solid-start/server";
