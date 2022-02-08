@@ -152,7 +152,8 @@ function transformServer({ types: t, template }) {
 
                   if (state.opts.ssr) {
                     statement.insertBefore(
-                      template(`const $$server_module${serverIndex} = server.createHandler(%%source%%, "${route}");
+                      template(`
+                      const $$server_module${serverIndex} = server.createHandler(%%source%%, "${route}");
                       server.registerHandler("${route}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
@@ -161,11 +162,23 @@ function transformServer({ types: t, template }) {
                   } else {
                     statement.insertBefore(
                       template(
-                        `const $$server_module${serverIndex} = server.createFetcher("${route}");`,
+                        `
+                        ${
+                          process.env.TEST_ENV === "client"
+                            ? `server.registerHandler("${route}", server.createHandler(%%source%%, "${route}"));`
+                            : ``
+                        }
+                        const $$server_module${serverIndex} = server.createFetcher("${route}");`,
                         {
                           syntacticPlaceholders: true
                         }
-                      )()
+                      )(
+                        process.env.TEST_ENV === "client"
+                          ? {
+                              source: serverFn.node
+                            }
+                          : {}
+                      )
                     );
                   }
                   path.replaceWith(t.identifier(`$$server_module${serverIndex}`));

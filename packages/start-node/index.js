@@ -33,8 +33,9 @@ export default function () {
           rollupOptions: {
             input: resolve(join(config.root, "src", `entry-server`)),
             output: {
-              format: "esm"
-            }
+              format: "cjs"
+            },
+            external: ["@prisma/client"]
           }
         }
       });
@@ -53,7 +54,7 @@ export default function () {
           }),
           common()
         ],
-        external: ["undici", "stream/web"]
+        external: ["undici", "stream/web", "@prisma/client"]
       });
       // or write the bundle to disk
       await bundle.write({ format: "esm", dir: join(config.root, "dist") });

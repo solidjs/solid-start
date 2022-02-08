@@ -139,8 +139,21 @@ function solidStartFileSystemRouter(options) {
         }).transform(code, id, transformOptions);
       };
 
+      let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
+
+      if (/.test.(tsx)/.test(id) && config.solidOptions.ssr) {
+        return babelSolidCompiler(code, id, (source, id) => ({
+          plugins: [
+            options.ssr && [
+              babelServerModule,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ]
+          ]
+        }));
+      }
+
       if (/.data.(ts|js)/.test(id) && config.solidOptions.ssr) {
-        return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id, ssr) => ({
+        return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id) => ({
           plugins: [
             options.ssr && [
               babelServerModule,
@@ -149,8 +162,7 @@ function solidStartFileSystemRouter(options) {
           ]
         }));
       } else if (/\?data/.test(id)) {
-        console.log(id, isSsr);
-        const text = await babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
+        const text = await babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
             [
               babelServerModule,
@@ -159,10 +171,9 @@ function solidStartFileSystemRouter(options) {
             [routeData, { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }]
           ].filter(Boolean)
         }));
-        console.log(text);
         return text;
       } else if (id.includes("routes")) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
             options.ssr && [
               babelServerModule,

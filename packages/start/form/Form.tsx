@@ -375,9 +375,17 @@ function isInputElement(object: any): object is HTMLInputElement {
 }
 
 export function createForm<
-  T extends ((form: FormData) => Promise<any | never | void>) & { url?: string }
+  T extends { url?: string; action: (request: Request, arg: FormData) => Promise<Response> }
 >(fn: T) {
-  const [submissions, action] = createAction(fn);
+  const [submissions, action] = createAction((submission: FormAction) =>
+    fn.action(
+      new Request(fn.url, {
+        method: submission.method,
+        body: submission.formData
+      }),
+      submission.formData
+    )
+  );
 
   function Form(props: FormProps) {
     const navigate = useNavigate();
@@ -388,7 +396,8 @@ export function createForm<
         {...props}
         action={fn.url ?? ""}
         onSubmit={submission => {
-          action(submission.formData, props.key)
+          const key = props.key ?? Math.random().toString(36).substring(2, 8);
+          action(submission, key)
             .then(response => {
               console.log(response);
               if (response instanceof Response) {
@@ -396,7 +405,7 @@ export function createForm<
                   runWithOwner(owner, () => {
                     startTransition(() => {
                       navigate(response.headers.get("Location") || "/");
-                      refetchResources();
+                      refetchResources().then(console.log);
                     });
                   });
                 }
@@ -407,15 +416,21 @@ export function createForm<
               }
             })
             .catch((e: Error) => {
+              console.log(submission, submissions());
+              const sub = submissions()[key];
+              console.log(sub, sub.state().readError);
               runWithOwner(owner, () => {
                 if (e instanceof Response && e.status === 302) {
                   startTransition(() => {
                     navigate(e.headers.get("Location") || "/");
+                    console.log("hereee");
                     refetchResources();
                   });
                   return;
                 }
-                throw e;
+                if (!sub.state().readError) {
+                  throw e;
+                }
               });
             });
         }}
@@ -435,4 +450,4 @@ export function createForm<
 
 export { FormImpl as Form };
 
-export type FormSubmission = ActionSubmission<FormData>;
+export type FormSubmission = ActionSubmission<FormAction>;

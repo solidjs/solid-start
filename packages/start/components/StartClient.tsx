@@ -1,17 +1,22 @@
 import { MetaProvider } from "solid-meta";
 import { Router } from "solid-app-router";
 import { StartProvider } from "./StartContext";
+// @ts-expect-error
 import Root from "~/root";
+import { createSignal } from "solid-js";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn = rootData ? rootData.default : undefined;
+const [request, setRequest] = createSignal(new Request("http://localhost:3000/"));
 
-export default () => (
-  <StartProvider>
-    <MetaProvider>
-      <Router data={dataFn}>
-        <Root />
-      </Router>
-    </MetaProvider>
-  </StartProvider>
-);
+export default () => {
+  return (
+    <StartProvider request={request()} context={{ headers: new Headers() }}>
+      <MetaProvider>
+        <Router data={dataFn}>
+          <Root />
+        </Router>
+      </MetaProvider>
+    </StartProvider>
+  );
+};

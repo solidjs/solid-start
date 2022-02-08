@@ -1,9 +1,11 @@
 import { createForm, FormError } from "solid-start/form";
 import server, { json, redirect } from "solid-start/server";
 import { db } from "~/db";
-import { createUserSession, getUser, login, register } from "~/session";
+import { createUserSession, getUser, login, register } from "~/db/session";
 import { Link, useData, useParams } from "solid-app-router";
-import { createComputed, createResource } from "solid-js";
+import { createComputed, createResource, useContext } from "solid-js";
+import { RequestContext, StartContext } from "solid-start/components";
+import ErrorBoundary from "solid-start/server/ErrorBoundary";
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
     return `Usernames must be at least 3 characters long`;
@@ -15,20 +17,13 @@ function validatePassword(password: unknown) {
     return `Passwords must be at least 6 characters long`;
   }
 }
-
-type ActionData = {
-  formError?: string;
-  fieldErrors?: { username: string | undefined; password: string | undefined };
-  fields?: { loginType: string; username: string; password: string };
-};
-
 /**
  * This helper function gives us typechecking for our ActionData return
  * statements, while still returning the accurate HTTP status, 400 Bad Request,
  * to the client.
  */
 const loginForm = createForm(
-  server(async (form: FormData) => {
+  server(async (request: Request, form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");
@@ -83,22 +78,20 @@ const loginForm = createForm(
   })
 );
 
+let getData = server(async (context: RequestContext, responseHeaders: Headers) => {
+  if (await getUser(context.request)) {
+    throw server.setPageResponse(context, redirect("/"));
+  }
+  return {};
+});
+
 export function routeData() {
-  return createResource(
-    server(async () => {
-      console.log("hereee");
-      if (await getUser(server.getContext().request)) {
-        console.log("redirecting");
-        throw redirect("/");
-      }
-      return {};
-    })
-  );
+  const { context } = useContext(StartContext);
+  return createResource(() => getData(context));
 }
 
 export default function Login() {
   const [data] = useData();
-  createComputed(() => data());
   const params = useParams();
   return (
     <div className="p-4">
@@ -170,9 +163,14 @@ export default function Login() {
             ) : null}
           </div> */}
 
-            <button class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2" type="submit">
-              Login
-            </button>
+            <ErrorBoundary>
+              <button
+                class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2"
+                type="submit"
+              >
+                {data() ? "Login" : ""}
+              </button>
+            </ErrorBoundary>
           </loginForm.Form>
         </main>
       </div>

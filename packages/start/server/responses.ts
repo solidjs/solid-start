@@ -12,7 +12,10 @@ export const JSONResponseType = "application/json";
 /**
  * A JSON response. Converts `data` to JSON and sets the `Content-Type` header.
  */
-export function json<Data>(data: Data, init: number | ResponseInit = {}): Response {
+export function json<Data>(
+  data: Data,
+  init: number | (ResponseInit & { context?: RequestContext }) = {}
+): Response {
   let responseInit: any = init;
   if (typeof init === "number") {
     responseInit = { status: init };
@@ -37,7 +40,7 @@ export function redirect(
   url: string,
   // we use 204 no content to signal that the response body is empty
   // and the X-Location header should be used instead to do the redirect client side
-  init: number | ResponseInit = 302
+  init: number | (ResponseInit & { context?: RequestContext }) = 302
 ): Response {
   let responseInit = init;
   if (typeof responseInit === "number") {
@@ -69,16 +72,16 @@ export function isResponse(value: any): value is Response {
 const redirectStatusCodes = new Set([301, 302, 303, 307, 308]);
 
 export function isRedirectResponse(response: Response): boolean {
-  return redirectStatusCodes.has(response.status);
+  return response && response instanceof Response && redirectStatusCodes.has(response.status);
 }
 
 export function respondWith(
-  ctx: RequestContext,
+  request: Request,
   data: Response | Error | FormError | string | object,
   responseType: "throw" | "return"
 ) {
   if (data instanceof Response) {
-    if (isRedirectResponse(data) && ctx.request.headers.get(XSolidStartOrigin) === "client") {
+    if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
       data.headers.set(XSolidStartOrigin, "server");
       data.headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
       data.headers.set(XSolidStartResponseTypeHeader, responseType);
@@ -159,7 +162,9 @@ export function respondWith(
 
 export async function parseResponse(request: Request, response: Response) {
   const contentType =
-    response.headers.get(XSolidStartContentTypeHeader) || response.headers.get(ContentTypeHeader);
+    response.headers.get(XSolidStartContentTypeHeader) ||
+    response.headers.get(ContentTypeHeader) ||
+    "";
   if (contentType.includes("json")) {
     return await response.json();
   } else if (contentType.includes("text")) {
@@ -179,6 +184,17 @@ export async function parseResponse(request: Request, response: Response) {
     }
     return error;
   } else if (contentType.includes("response")) {
+    if (response.status === 204 && response.headers.get(LocationHeader)) {
+      return redirect(response.headers.get(LocationHeader));
+    }
+    return response;
+  } else {
+    if (response.status === 200) {
+      const text = await response.text();
+      try {
+        return JSON.parse(text);
+      } catch {}
+    }
     if (response.status === 204 && response.headers.get(LocationHeader)) {
       return redirect(response.headers.get(LocationHeader));
     }

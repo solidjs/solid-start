@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
-import { db } from "./db";
+import { db } from ".";
 
 type LoginForm = {
   username: string;

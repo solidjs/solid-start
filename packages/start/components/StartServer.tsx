@@ -65,15 +65,15 @@ export default ({
 }: {
   url: string;
   manifest: Record<string, any>;
-  context?: Record<string, any>;
+  context?: Partial<RequestContext> & { tags?: [] };
 }) => {
-  context.headers = {};
+  // context.headers = {};
   context.tags = [];
   const parsed = new URL(url);
   const path = parsed.pathname + parsed.search;
 
   return (
-    <StartProvider context={context} manifest={manifest}>
+    <StartProvider context={context} manifest={manifest} request={context.request}>
       <MetaProvider tags={context.tags}>
         <Router url={path} out={context} data={dataFn}>
           {docType as unknown as any}

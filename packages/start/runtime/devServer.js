@@ -1,22 +1,17 @@
 import path from "path";
-import Streams from "stream/web";
 import { Readable } from "stream";
 import { once } from "events";
 import vite from "vite";
-import { fetch, Headers, Response, Request } from "undici";
+import { Headers } from "undici";
 import { createRequest } from "./fetch.js";
-
-Object.assign(globalThis, Streams, {
-  Request,
-  Response,
-  fetch,
-  Headers
-});
+import "./node-globals.js";
 
 export function createDevHandler(viteServer) {
   return async (req, res) => {
     try {
       if (req.url === "/favicon.ico") return;
+
+      console.log(req.method, req.url);
 
       const entry = (await viteServer.ssrLoadModule(path.resolve("./src/entry-server"))).default;
 

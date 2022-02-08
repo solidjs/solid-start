@@ -1,13 +1,24 @@
 import { db } from "~/db";
 import server, { redirect } from "solid-start/server";
 import { FormError, createForm, FormSubmission } from "solid-start/form";
-import { createEffect, createResource, ErrorBoundary, For, Index, Show } from "solid-js";
+import {
+  createComputed,
+  createEffect,
+  createResource,
+  For,
+  Index,
+  Show,
+  useContext
+} from "solid-js";
 import { Prisma, Message, User } from "@prisma/client";
-import { getUser, logout } from "~/session";
+import { getUser, logout } from "~/db/session";
+import { StartContext, StartProvider } from "solid-start/components";
+import { useData } from "solid-app-router";
+import ErrorBoundary from "solid-start/server/ErrorBoundary";
 
 const sendMessage = createForm(
-  server(async (form: FormData) => {
-    const user = await getUser(server.getContext().request);
+  server(async (ctx, form: FormData) => {
+    const user = await getUser(ctx);
 
     if (!user) {
       throw new Error("Unauthenticated");
@@ -26,7 +37,7 @@ const sendMessage = createForm(
       return redirect("/");
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        console.log(e); // The .code property can be accessed in a type-safe manner
+        // The .code property can be accessed in a type-safe manner
         if (e.code === "P2002") {
           throw new FormError(
             "There is a unique constraint violation, a new player cannot be created with this name",
@@ -48,7 +59,7 @@ function OptimisticMessage(props: { submission: FormSubmission }) {
     <li class="flex flex-row space-y-2">
       <div class="text-lg inline-flex flex-row items-center space-x-2">
         <span class="text-gray-500 font-bold">anonymous</span>
-        <span>{props.submission.variables.get("message") as string}</span>
+        <span>{props.submission.variables.formData.get("message") as string}</span>
         {/* Retry form when there is an error with an add (switch firtname lastname for fun) */}
         <Show when={props.submission.error}>
           {error => (
@@ -57,7 +68,7 @@ function OptimisticMessage(props: { submission: FormSubmission }) {
               <sendMessage.Form key={props.submission.key}>
                 <input
                   type="hidden"
-                  value={props.submission.variables.get("message") as string}
+                  value={props.submission.variables.formData.get("message") as string}
                   name="message"
                 />
                 <button type="submit" class="bg-red-100 rounded-sm px-2 py-0 text-red-700">
@@ -73,7 +84,7 @@ function OptimisticMessage(props: { submission: FormSubmission }) {
 }
 
 const removeMessage = createForm(
-  server(async (form: FormData) => {
+  server(async (ctx, form: FormData) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (Math.random() > 0.5) {
@@ -91,33 +102,31 @@ const removeMessage = createForm(
 
 function MessageItem(props: { item: Message & { user: User } }) {
   return (
-    <ErrorBoundary fallback={(err, reset) => <div onClick={reset}>Error: {err.toString()}</div>}>
-      <div
-        class="py-1"
-        style={{ color: removeMessage.submissions()[props.item.id]?.error ? "red" : "black" }}
-      >
-        <div class="text-lg inline-flex flex-row space-x-2">
-          <span class="text-red-500 font-bold">{props.item.user.username}</span>
-          <span>{props.item.text}</span>
-          <removeMessage.Form method="post" key={props.item.id}>
-            <input type="hidden" name="id" value={props.item.id} />
-            <button class="bg-red-100 rounded-sm px-2 py-0 text-red-700">
-              <Show when={!removeMessage.submissions()[props.item.id]?.error} fallback={"Retry"}>
-                x
-              </Show>
-            </button>
-          </removeMessage.Form>
-        </div>
+    <div
+      class="py-1"
+      style={{ color: removeMessage.submissions()[props.item.id]?.error ? "red" : "black" }}
+    >
+      <div class="text-lg inline-flex flex-row space-x-2">
+        <span class="text-red-500 font-bold">{props.item.user.username}</span>
+        <span>{props.item.text}</span>
+        <removeMessage.Form method="post" key={props.item.id}>
+          <input type="hidden" name="id" value={props.item.id} />
+          <button class="bg-red-100 rounded-sm px-2 py-0 text-red-700">
+            {/* <Show when={!removeMessage.submissions()[props.item.id]?.error} fallback={"Retry"}> */}
+            x{/* </Show> */}
+          </button>
+        </removeMessage.Form>
       </div>
-    </ErrorBoundary>
+    </div>
   );
 }
 
-export default function Home() {
-  const [data] = createResource(
-    server(async () => {
-      if (!(await getUser(server.getContext().request))) {
-        throw redirect("/login");
+export function routeData() {
+  const { request, context } = useContext(StartContext);
+  return createResource(() =>
+    server(async context => {
+      if (!(await getUser(context.request))) {
+        throw server.setPageResponse(context, redirect("/login"));
       }
 
       return {
@@ -126,10 +135,14 @@ export default function Home() {
             user: true
           }
         }),
-        user: await getUser(server.getContext().request)
+        user: await getUser(request)
       };
-    })
+    })(context)
   );
+}
+
+export default function Home() {
+  const [data] = useData<ReturnType<typeof routeData>>();
 
   function MessageBox() {
     let formRef: HTMLFormElement;
@@ -147,7 +160,7 @@ export default function Home() {
         class="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 space-y-2"
         ref={formRef!}
       >
-        <div class="flex flex flex-row">
+        <label htmlFor="message" class="flex flex flex-row">
           <span class="font-bold mr-2 text-blue-500">
             {data()?.user ? () => <span>{data()?.user.username}</span> : <span>anonymous</span>}
           </span>
@@ -157,8 +170,8 @@ export default function Home() {
             placeholder="Hello!"
             class="border-gray-700 flex-1 border-2 rounded-md px-2"
           />
-        </div>
-        <button class="focus:bg-gray-100 bg-gray-200 rounded-md px-2" type="submit">
+        </label>
+        <button class="focus:bg-gray-100 bg-gray-200 rounded-md px-2" type="submit" id="sends">
           Send
         </button>
       </sendMessage.Form>
@@ -166,8 +179,8 @@ export default function Home() {
   }
 
   const logoutForm = createForm(
-    server(async () => {
-      return await logout(server.getContext().request);
+    server(async request => {
+      return await logout(request);
     })
   );
 
@@ -175,28 +188,32 @@ export default function Home() {
     <main class="w-full p-4 space-y-2">
       <h1 class="font-bold text-xl">Message board</h1>
       <logoutForm.Form>
-        <button type="submit">Logout</button>
+        <button name="logout" type="submit">
+          Logout
+        </button>
       </logoutForm.Form>
-      <Index each={data()?.messages ?? []}>
-        {item => (
-          <Show
-            when={
-              !removeMessage.submissions()[item()?.id] ||
-              removeMessage.submissions()[item()?.id]?.status === "error"
-            }
-          >
-            <MessageItem item={item()} />
-          </Show>
-        )}
-      </Index>
-      <For
-        each={Object.values(sendMessage.submissions()).filter(
-          submission => submission.status !== "success"
-        )}
-      >
-        {submission => <OptimisticMessage submission={submission} />}
-      </For>
-      <MessageBox />
+      <ErrorBoundary>
+        <Index each={data()?.messages ?? []}>
+          {item => (
+            <Show
+              when={
+                !removeMessage.submissions()[item()?.id] ||
+                removeMessage.submissions()[item()?.id]?.status === "error"
+              }
+            >
+              <MessageItem item={item()} />
+            </Show>
+          )}
+        </Index>
+        <For
+          each={Object.values(sendMessage.submissions()).filter(
+            submission => submission.status !== "success"
+          )}
+        >
+          {submission => <OptimisticMessage submission={submission} />}
+        </For>
+        <MessageBox />
+      </ErrorBoundary>
     </main>
   );
 }

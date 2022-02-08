@@ -7,6 +7,7 @@ interface SubmissionState<T> {
   error: Error | null;
   status: ActionStatus;
   variables: T;
+  readError: boolean;
 }
 
 type SetSubmissionState<T> = (
@@ -24,7 +25,7 @@ export type ActionSubmission<T> = {
 };
 
 /**
- *  
+ *
  * @param actionFn the async function that handles the submission, this would be where you call your API
  */
 export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
@@ -48,6 +49,7 @@ export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
         status: "submitting",
         data: null,
         error: null,
+        readError: false,
         variables: submission
       });
     } else {
@@ -55,6 +57,7 @@ export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
         status: "submitting",
         data: null,
         error: null,
+        readError: false,
         variables: submission
       });
 
@@ -68,6 +71,9 @@ export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
             return submissionState().status;
           },
           get error() {
+            if (!submissionState().readError) {
+              setSubmissionState(e => ({ ...e, readError: true }));
+            }
             return submissionState().error;
           },
           get key() {
