@@ -78,15 +78,18 @@ const loginForm = createForm(
   })
 );
 
-let getData = server(async (context: RequestContext, responseHeaders: Headers) => {
+let getData = server(async (context: RequestContext) => {
   if (await getUser(context.request)) {
-    throw server.setPageResponse(context, redirect("/"));
+    throw redirect("/", {
+      context
+    });
   }
   return {};
 });
 
 export function routeData() {
   const { context } = useContext(StartContext);
+
   return createResource(() => getData(context));
 }
 

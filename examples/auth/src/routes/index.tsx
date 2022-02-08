@@ -122,11 +122,13 @@ function MessageItem(props: { item: Message & { user: User } }) {
 }
 
 export function routeData() {
-  const { request, context } = useContext(StartContext);
+  const { context } = useContext(StartContext);
   return createResource(() =>
     server(async context => {
       if (!(await getUser(context.request))) {
-        throw server.setPageResponse(context, redirect("/login"));
+        throw redirect("/login", {
+          context
+        });
       }
 
       return {
@@ -135,7 +137,7 @@ export function routeData() {
             user: true
           }
         }),
-        user: await getUser(request)
+        user: await getUser(context)
       };
     })(context)
   );

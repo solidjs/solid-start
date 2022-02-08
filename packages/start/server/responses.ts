@@ -9,27 +9,40 @@ export const XSolidStartResponseTypeHeader = "x-solidstart-response-type";
 export const XSolidStartContentTypeHeader = "x-solidstart-content-type";
 export const XSolidStartOrigin = "x-solidstart-origin";
 export const JSONResponseType = "application/json";
+
+declare global {
+  interface Response {
+    context?: RequestContext;
+  }
+
+  interface ResponseInit {
+    context?: RequestContext;
+  }
+}
 /**
  * A JSON response. Converts `data` to JSON and sets the `Content-Type` header.
  */
-export function json<Data>(
-  data: Data,
-  init: number | (ResponseInit & { context?: RequestContext }) = {}
-): Response {
+export function json<Data>(data: Data, init: number | ResponseInit = {}): Response {
   let responseInit: any = init;
   if (typeof init === "number") {
     responseInit = { status: init };
   }
 
   let headers = new Headers(responseInit.headers);
+
   if (!headers.has(ContentTypeHeader)) {
     headers.set(ContentTypeHeader, "application/json; charset=utf-8");
   }
 
-  return new Response(JSON.stringify(data), {
+  const response = new Response(JSON.stringify(data), {
     ...responseInit,
     headers
   });
+
+  // @ts-expect-error
+  response.context = context;
+
+  return response;
 }
 
 /**
@@ -40,7 +53,7 @@ export function redirect(
   url: string,
   // we use 204 no content to signal that the response body is empty
   // and the X-Location header should be used instead to do the redirect client side
-  init: number | (ResponseInit & { context?: RequestContext }) = 302
+  init: number | ResponseInit = 302
 ): Response {
   let responseInit = init;
   if (typeof responseInit === "number") {
@@ -49,7 +62,7 @@ export function redirect(
     responseInit.status = 302;
   }
 
-  return new Response(null, {
+  const response = new Response(null, {
     ...responseInit,
     headers: {
       ...responseInit.headers,
@@ -57,6 +70,9 @@ export function redirect(
       [LocationHeader]: url
     }
   });
+
+  response.context = responseInit.context;
+  return response;
 }
 
 export function isResponse(value: any): value is Response {

@@ -456,6 +456,7 @@ it("should send request inside an object when caller sends context", async () =>
 
 it("should send headers inside an object when caller sends object with headers", async () => {
   const requestServer = server(async ({ headers }) => {
+    console.log(headers);
     return { data: headers.get("x-test") };
   });
 

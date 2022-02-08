@@ -1,27 +1,45 @@
-import { useNavigate } from "solid-app-router";
+import { useLocation, useNavigate } from "solid-app-router";
 import {
   ErrorBoundary as ErrorBoundaryBase,
   JSX,
   PropsWithChildren,
   resetErrorBoundaries,
-  Show
+  Show,
+  startTransition
 } from "solid-js";
 
 import { isRedirectResponse, LocationHeader } from ".";
 
 export function ErrorBoundary(props: PropsWithChildren<{ fallback?: (e: any) => JSX.Element }>) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <ErrorBoundaryBase
       fallback={e => {
-        const data = () => {
+        const response = () => {
           if (e instanceof Response) {
             return e;
           }
 
           try {
-            let response = JSON.parse(e.message);
+            let response = JSON.parse(e.message, (k, value) => {
+              if (!value) {
+                return value;
+              }
+              if (value.$type === "headers") {
+                let headers = new Headers();
+                value.headers.forEach((value, key) => headers.set(key, value));
+                return headers;
+              }
+              if (value.$type === "request") {
+                return new Request(value.url, {
+                  method: value.method,
+                  headers: value.headers
+                });
+              }
+              return value;
+            });
             if (response.$type === "response") {
               return new Response(response.body, {
                 status: response.status,
@@ -33,12 +51,14 @@ export function ErrorBoundary(props: PropsWithChildren<{ fallback?: (e: any) => 
 
         return (
           <Show
-            when={!isRedirectResponse(data())}
+            when={!isRedirectResponse(response())}
             fallback={() => {
-              let response = data();
-              console.log("NAVIGATION");
-              navigate(response.headers.get(LocationHeader));
-              resetErrorBoundaries();
+              let res = response();
+              startTransition(() => {
+                navigate(res.headers.get(LocationHeader));
+                resetErrorBoundaries();
+              });
+
               return null;
             }}
           >

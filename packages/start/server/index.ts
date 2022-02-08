@@ -26,7 +26,6 @@ type ServerFn = (<E extends any[], T extends (...args: E) => void>(fn: T) => Inl
   setFetcher: (fetcher: (request: Request) => Promise<Response>) => void;
   createFetcher(route: string): InlineServer<any, any>;
   fetch(route: string, init: RequestInit): Promise<Response>;
-  setPageResponse(context: RequestContext, response: Response): Response;
 };
 
 const server: ServerFn = fn => {
@@ -46,59 +45,22 @@ export interface MiddlewareInput {
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
 export type MiddlewareFn = (request: Request) => Promise<Response>;
 
-server.setPageResponse = (headers, response) => {
-  context.set("x-solidstart-status-code", response.status.toString());
+// server.setPageResponse = (context, response) => {
+//   context.set("x-solidstart-status-code", response.status.toString());
 
-  console.log(headers, response.headers);
+//   console.log(headers, response.headers);
 
-  response.headers.forEach((head, value) => {
-    context.set(value, head);
-  });
-  return response;
-};
+//   response.headers.forEach((head, value) => {
+//     context.set(value, head);
+//   });
+//   return response;
+// };
 
 if (!isServer || process.env.TEST_ENV === "client") {
   server.fetcher = fetch;
   server.setFetcher = fetch => {
     server.fetcher = fetch;
   };
-
-  // server.getContext = () => {
-  //   console.log("gonna throw error");
-  //   throw new Error("Should be called inside a server function");
-  // };
-
-  // const composeMiddleware =
-  //   exchanges =>
-  //   ({ ctx, next }) =>
-  //     exchanges.reduceRight(
-  //       (next, exchange) =>
-  //         exchange({
-  //           ctx: ctx,
-  //           next
-  //         }),
-  //       next
-  //     );
-
-  // function createHandler(...middleware) {
-  //   const handler = composeMiddleware(middleware);
-  //   return async request => {
-  //     return await handler({
-  //       ctx: {
-  //         request
-  //       },
-  //       next: null
-  //     })(request);
-  //   };
-  // }
-
-  // function fetchServerModule() {
-  //   return () => {
-  //     return async (req: Request) => {
-  //       return await fetch(req);
-  //     };
-  //   };
-  // }
 
   function createRequestInit(...args) {
     // parsing args when a request is made from the browser for a server module
@@ -111,21 +73,6 @@ if (!isServer || process.env.TEST_ENV === "client") {
       headers = {
         [XSolidStartOrigin]: "client"
       };
-
-    let collectArgs = [];
-
-    args.forEach(arg => {
-      // if (arg instanceof Headers) {
-      //   headers = arg;
-      // } else if (arg instanceof FormData) {
-      //   body = arg;
-      // } else if (arg instanceof Request) {
-      //   body = arg.body;
-      //   headers = arg.headers;
-      // } else if (arg instanceof Object) {
-      //   collectArgs.push(arg);
-      // }
-    });
 
     if (args.length === 2 && args[1] instanceof FormData) {
       body = args[1];
@@ -199,22 +146,10 @@ if (!isServer || process.env.TEST_ENV === "client") {
 
     // // throws response, error, form error, json object, string
     if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
-      const parsedResponse = await parseResponse(request, response);
-      throw parsedResponse;
+      throw await parseResponse(request, response);
     } else {
       return await parseResponse(request, response);
     }
-
-    // // fallback if we are getting a response that we dont recognize
-    // if (
-    //   response.status !== 200 &&
-    //   !response.headers.get(ContentTypeHeader)?.includes(JSONResponseType)
-    // ) {
-    //   throw response;
-    // }
-
-    // // assumes 200 response with json
-    // return await response.json();
   };
 }
 
@@ -234,6 +169,7 @@ async function parseRequest(request: Request) {
           if (value.$type === "headers") {
             let headers = new Headers();
             request.headers.forEach((value, key) => headers.set(key, value));
+            value.values.forEach(([key, value]) => headers.set(key, value));
             return headers;
           }
           if (value.$type === "request") {
@@ -302,19 +238,6 @@ if (isServer) {
       // const ctx = server.getContext();
       try {
         let e = await _fn(...args);
-        // if (e instanceof Response) {
-        // let headers = ctx.headers;
-        // // if (headers.get(ContentTypeHeader) === "text/html") {
-        // headers.set(XSolidStartStatusCodeHeader, e.status.toString());
-        // if (isRedirectResponse(e)) {
-        //   headers.set(XSolidStartLocationHeader, e.headers.get(LocationHeader));
-        //   headers.set(LocationHeader, e.headers.get(LocationHeader));
-        //   return e;
-        // }
-        // return e;
-        // }
-        // }
-        return e;
       } catch (e) {
         if (e instanceof Response) {
           let error = e as unknown as Error;
@@ -324,21 +247,20 @@ if (isServer) {
             message: e.statusText,
             headers: [...e.headers.entries()]
           });
+
+          // @ts-ignore d
+          if (e.context) {
+            let headers = e.context.headers;
+            headers.set("x-solidstart-status-code", e.status.toString());
+            e.headers.forEach((head, value) => {
+              headers.set(value, head);
+            });
+          }
+
           throw e;
-          // let headers = ctx.headers;
-          // headers.set(XSolidStartStatusCodeHeader, e.status.toString());
-          // if (isRedirectResponse(e)) {
-          //   headers.set(XSolidStartLocationHeader, e.headers.get(LocationHeader));
-          //   headers.set(LocationHeader, e.headers.get(LocationHeader));
-          //   if (headers.get("content-type") === "text/html") {
-          //     throw new Error("response");
-          //   }
-          // }
-          // if (headers.get("content-type") === "text/html") {
-          //   throw new Error("Response");
-          // }
-          // }
         }
+
+        console.error(e);
         if (/[A-Za-z]+ is not defined/.test(e.message)) {
           const error = new Error(
             e.message +
@@ -405,11 +327,6 @@ if (isServer) {
 export const inlineServerModules: ServerMiddleware = ({ forward }) => {
   return async (ctx: RequestContext) => {
     const url = new URL(ctx.request.url);
-
-    // set the request context for server modules that will be called
-    // during server side rendering.
-    // this is also used for requests made specifically to a server module
-    // server.setContext(ctx);
 
     if (server.hasHandler(url.pathname)) {
       return await handleServerRequest(ctx.request);
