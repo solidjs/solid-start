@@ -436,10 +436,10 @@ export function createForm<
             });
         }}
       >
-        {props.children}
         <Show when={props.key}>
           <input type="hidden" name="_key" value={props.key} />
         </Show>
+        {props.children}
       </FormImpl>
     );
   }
