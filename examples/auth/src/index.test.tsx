@@ -49,14 +49,9 @@ it("should handle no args", async () => {
 });
 
 it("should handle one string arg", async () => {
-  const basicArgs = server(
-    async (name?: string) => (
-      console.log(name),
-      {
-        data: `Hello ${name ?? "World"}`
-      }
-    )
-  );
+  const basicArgs = server(async (name?: string) => ({
+    data: `Hello ${name ?? "World"}`
+  }));
 
   mockServerFunction(basicArgs, [], 200, {
     data: "Hello World"
@@ -187,7 +182,6 @@ it("should return redirect when handler returns redirect", async () => {
     });
 
   expect(await redirectServer()).satisfies(e => {
-    console.log(e);
     expect(e.headers.get("location")).toBe("/hello");
     expect(e.status).toBe(302);
     // expect(server.getContext().headers.get("x-solidstart-status-code")).toBe("302");
@@ -256,7 +250,6 @@ it("should return response when handler returns response", async () => {
     });
 
   expect(await redirectServer()).satisfies(async e => {
-    console.log(e);
     expect(e.headers.get("randomheader")).toBe("solidjs");
     expect(e.status).toBe(404);
     expect(await e.text()).toBe("text");
@@ -456,7 +449,6 @@ it("should send request inside an object when caller sends context", async () =>
 
 it("should send headers inside an object when caller sends object with headers", async () => {
   const requestServer = server(async ({ headers }) => {
-    console.log(headers);
     return { data: headers.get("x-test") };
   });
 

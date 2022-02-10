@@ -1,19 +1,11 @@
 import { db } from "~/db";
 import server, { redirect } from "solid-start/server";
 import { FormError, createForm, FormSubmission } from "solid-start/form";
-import {
-  createComputed,
-  createEffect,
-  createResource,
-  For,
-  Index,
-  Show,
-  useContext
-} from "solid-js";
+import { createEffect, createResource, For, Index, Show, useContext } from "solid-js";
 import { Prisma, Message, User } from "@prisma/client";
 import { getUser, logout } from "~/db/session";
 import { StartContext, StartProvider } from "solid-start/components";
-import { useData } from "solid-app-router";
+import { useData, useParams, useSearchParams } from "solid-app-router";
 import ErrorBoundary from "solid-start/server/ErrorBoundary";
 
 const sendMessage = createForm(
@@ -54,11 +46,12 @@ const sendMessage = createForm(
   })
 );
 
-function OptimisticMessage(props: { submission: FormSubmission }) {
+export function OptimisticMessage(props: { submission: FormSubmission }) {
+  const [data] = useData<ReturnType<typeof routeData>>();
   return (
     <li class="flex flex-row space-y-2">
       <div class="text-lg inline-flex flex-row items-center space-x-2">
-        <span class="text-gray-500 font-bold">anonymous</span>
+        <span class="text-gray-500 font-bold">{data()?.user.username}</span>
         <span>{props.submission.variables.formData.get("message") as string}</span>
         {/* Retry form when there is an error with an add (switch firtname lastname for fun) */}
         <Show when={props.submission.error}>
@@ -137,7 +130,7 @@ export function routeData() {
             user: true
           }
         }),
-        user: await getUser(context)
+        user: await getUser(context.request)
       };
     })(context)
   );
@@ -166,13 +159,13 @@ export default function Home() {
           <span class="font-bold mr-2 text-blue-500">
             {data()?.user ? () => <span>{data()?.user.username}</span> : <span>anonymous</span>}
           </span>
-          <input
-            ref={firstNameRef!}
-            name="message"
-            placeholder="Hello!"
-            class="border-gray-700 flex-1 border-2 rounded-md px-2"
-          />
         </label>
+        <input
+          ref={firstNameRef!}
+          name="message"
+          placeholder="Hello!"
+          class="border-gray-700 flex-1 border-2 rounded-md px-2"
+        />
         <button class="focus:bg-gray-100 bg-gray-200 rounded-md px-2" type="submit" id="sends">
           Send
         </button>

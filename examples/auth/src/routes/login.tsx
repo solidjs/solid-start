@@ -1,11 +1,13 @@
 import { createForm, FormError } from "solid-start/form";
-import server, { json, redirect } from "solid-start/server";
+import server, { redirect } from "solid-start/server";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
-import { Link, useData, useParams } from "solid-app-router";
-import { createComputed, createResource, useContext } from "solid-js";
+import { useData, useParams } from "solid-app-router";
+import { createResource, Show, useContext } from "solid-js";
 import { RequestContext, StartContext } from "solid-start/components";
+
 import ErrorBoundary from "solid-start/server/ErrorBoundary";
+
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
     return `Usernames must be at least 3 characters long`;
@@ -78,19 +80,19 @@ const loginForm = createForm(
   })
 );
 
-let getData = server(async (context: RequestContext) => {
-  if (await getUser(context.request)) {
-    throw redirect("/", {
-      context
-    });
-  }
-  return {};
-});
-
 export function routeData() {
   const { context } = useContext(StartContext);
 
-  return createResource(() => getData(context));
+  return createResource(() =>
+    server(async (context: RequestContext) => {
+      if (await getUser(context.request)) {
+        throw redirect("/", {
+          context
+        });
+      }
+      return {};
+    })(context)
+  );
 }
 
 export default function Login() {
@@ -101,34 +103,15 @@ export default function Login() {
       <div data-light="">
         <main class="p-6 mx-auto w-[fit-content] space-y-4 rounded-lg bg-gray-100">
           <h1 class="font-bold text-xl">Login</h1>
-          <loginForm.Form
-            method="post"
-            class="flex flex-col space-y-2"
-            // aria-describedby={actionData?.formError ? "form-error-message" : undefined}
-          >
+          <loginForm.Form key="login" method="post" class="flex flex-col space-y-2">
             <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
             <fieldset class="flex flex-row">
               <legend className="sr-only">Login or Register?</legend>
               <label class="w-full">
-                <input
-                  type="radio"
-                  name="loginType"
-                  value="login"
-                  checked={true}
-                  // defaultChecked={
-                  //   !actionData?.fields?.loginType || actionData?.fields?.loginType === "login"
-                  // }
-                />{" "}
-                Login
+                <input type="radio" name="loginType" value="login" checked={true} /> Login
               </label>
               <label class="w-full">
-                <input
-                  type="radio"
-                  name="loginType"
-                  value="register"
-                  // defaultChecked={actionData?.fields?.loginType === "register"}
-                />{" "}
-                Register
+                <input type="radio" name="loginType" value="register" /> Register
               </label>
             </fieldset>
             <div>
@@ -138,11 +121,11 @@ export default function Login() {
                 placeholder="vinxi"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              {/* {actionData?.fieldErrors?.username ? (
-              <p className="form-validation-error" role="alert" id="username-error">
-                {actionData.fieldErrors.username}
-              </p>
-            ) : null} */}
+              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors.username}>
+                <p class="text-red-400" role="alert">
+                  {loginForm.submissions()["login"]?.error.fieldErrors.username}
+                </p>
+              </Show>
             </div>
             <div>
               <label htmlFor="password-input">Password</label>
@@ -152,20 +135,17 @@ export default function Login() {
                 placeholder="vinxi"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              {/* {actionData?.fieldErrors?.password ? (
-              <p className="form-validation-error" role="alert" id="password-error">
-                {actionData.fieldErrors.password}
-              </p>
-            ) : null} */}
+              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors.password}>
+                <p class="text-red-400" role="alert">
+                  {loginForm.submissions()["login"]?.error.fieldErrors.password}
+                </p>
+              </Show>
             </div>
-            {/* <div id="form-error-message"> */}
-            {/* {actionData?.formError ? (
-              <p className="form-validation-error" role="alert">
-                {actionData.formError}
+            <Show when={loginForm.submissions()["login"]?.error}>
+              <p class="text-red-400" role="alert">
+                {loginForm.submissions()["login"]?.error.message}
               </p>
-            ) : null}
-          </div> */}
-
+            </Show>
             <ErrorBoundary>
               <button
                 class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2"

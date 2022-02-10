@@ -1,4 +1,4 @@
-import { useNavigate } from "solid-app-router";
+import { useNavigate, useParams, useSearchParams } from "solid-app-router";
 import { ActionSubmission, createAction } from "./action";
 import {
   ComponentProps,
@@ -9,8 +9,12 @@ import {
   splitProps,
   startTransition,
   getOwner,
-  runWithOwner
+  runWithOwner,
+  createComputed,
+  createMemo,
+  Show
 } from "solid-js";
+import { FormError } from "./FormError";
 
 export interface FormAction {
   action: string;
@@ -390,6 +394,7 @@ export function createForm<
   function Form(props: FormProps) {
     const navigate = useNavigate();
     const owner = getOwner();
+    const params = useParams();
 
     return (
       <FormImpl
@@ -399,7 +404,6 @@ export function createForm<
           const key = props.key ?? Math.random().toString(36).substring(2, 8);
           action(submission, key)
             .then(response => {
-              console.log(response);
               if (response instanceof Response) {
                 if (response.status === 302) {
                   runWithOwner(owner, () => {
@@ -416,14 +420,11 @@ export function createForm<
               }
             })
             .catch((e: Error) => {
-              console.log(submission, submissions());
               const sub = submissions()[key];
-              console.log(sub, sub.state().readError);
               runWithOwner(owner, () => {
                 if (e instanceof Response && e.status === 302) {
                   startTransition(() => {
                     navigate(e.headers.get("Location") || "/");
-                    console.log("hereee");
                     refetchResources();
                   });
                   return;
@@ -434,7 +435,12 @@ export function createForm<
               });
             });
         }}
-      />
+      >
+        {props.children}
+        <Show when={props.key}>
+          <input type="hidden" name="_key" value={props.key} />
+        </Show>
+      </FormImpl>
     );
   }
 
@@ -443,7 +449,51 @@ export function createForm<
   Form.isSubmitting = () =>
     Object.values(submissions()).filter(sub => sub.status === "submitting").length > 0;
 
-  Form.submissions = () => submissions();
+  Form.submissions = (): { [key: string]: FormSubmission } => {
+    const submission = submissions();
+    const [params] = useSearchParams();
+
+    let param = params.form ? JSON.parse(params.form) : null;
+    if (!param) {
+      return submission;
+    }
+
+    let key = param.entries.find(e => e[0] === "_key")?.[1];
+
+    if (param.url !== fn.url) {
+      return submission;
+    }
+
+    let error = param.error
+      ? new FormError(param.error.message, {
+          fieldErrors: param.error.fieldErrors,
+          stack: param.error.stack,
+          form: param.error.form,
+          fields: param.error.fields
+        })
+      : null;
+
+    let paramForm = {
+      key,
+      error: error,
+      index: -1,
+      status: error ? "error" : "idle",
+      variables: {
+        action: param.url,
+        method: "POST",
+        formData: {
+          get: (name: string) => {
+            return param.entries.find(e => e[0] === name)?.[1];
+          }
+        }
+      }
+    };
+
+    return {
+      [paramForm.key ?? "default"]: paramForm,
+      ...submission
+    };
+  };
 
   return Form;
 }

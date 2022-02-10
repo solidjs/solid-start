@@ -62,19 +62,33 @@ export function ErrorBoundary(props: PropsWithChildren<{ fallback?: (e: any) => 
               return null;
             }}
           >
-            <div class="p-6">
-              <div class="bg-red-300 text-red-800 rounded-md p-6 overflow-scroll">
-                <p class="font-bold" id="error-message">
+            <div style={{ padding: "16px" }}>
+              <div
+                style={{
+                  "background-color": "rgba(252, 165, 165)",
+                  color: "rgb(153, 27, 27)",
+                  "border-radius": "5px",
+                  overflow: "scroll",
+                  padding: "16px",
+                  "margin-bottom": "8px"
+                }}
+              >
+                <p style={{ "font-weight": "bold" }} id="error-message">
                   {e.message}
                 </p>
                 <button
                   id="reset-errors"
                   onClick={resetErrorBoundaries}
-                  class="bg-red-800 text-sm text-red-300 rounded-sm px-2 py-1"
+                  style={{
+                    color: "rgba(252, 165, 165)",
+                    "background-color": "rgb(153, 27, 27)",
+                    "border-radius": "5px",
+                    padding: "4px 8px"
+                  }}
                 >
                   Clear errors and retry
                 </button>
-                <pre class="mt-4 text-sm w-full">{e.stack}</pre>
+                <pre style={{ "margin-top": "8px", width: "100%" }}>{e.stack}</pre>
               </div>
             </div>
           </Show>

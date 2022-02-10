@@ -6,7 +6,6 @@ import { ErrorBoundary } from "solid-start/server/ErrorBoundary";
 import "virtual:windi.css";
 
 export default function Root() {
-  const navigate = useNavigate();
   return (
     <html lang="en">
       <head>

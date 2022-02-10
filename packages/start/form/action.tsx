@@ -1,4 +1,5 @@
 import { Accessor, createSignal } from "solid-js";
+import { FormError } from "./FormError";
 
 type ActionStatus = "submitting" | "error" | "success";
 
@@ -18,7 +19,7 @@ export type ActionSubmission<T> = {
   variables: T;
   state: Accessor<SubmissionState<T>>;
   status: ActionStatus;
-  error: Error | null;
+  error: FormError | null;
   key: any;
   index: number;
   setState: SetSubmissionState<T>;

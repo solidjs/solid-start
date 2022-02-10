@@ -238,6 +238,7 @@ if (isServer) {
       // const ctx = server.getContext();
       try {
         let e = await _fn(...args);
+        return e;
       } catch (e) {
         if (e instanceof Response) {
           let error = e as unknown as Error;
@@ -329,7 +330,31 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
     const url = new URL(ctx.request.url);
 
     if (server.hasHandler(url.pathname)) {
-      return await handleServerRequest(ctx.request);
+      const serverResponse = await handleServerRequest(ctx.request);
+
+      const formData = await ctx.request.formData();
+      let entries = [...formData.entries()];
+
+      if (
+        ctx.request.headers.get("content-type")?.includes("form") &&
+        !ctx.request.headers.get("x-solidstart-origin")?.includes("client") &&
+        serverResponse.headers.get("x-solidstart-content-type")?.includes("form-error")
+      ) {
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location:
+              new URL(ctx.request.headers.get("referer")).pathname +
+              "?form=" +
+              JSON.stringify({
+                url: url.pathname,
+                entries: entries,
+                ...(await serverResponse.json())
+              })
+          }
+        });
+      }
+      return serverResponse;
     }
 
     const response = await forward(ctx);
