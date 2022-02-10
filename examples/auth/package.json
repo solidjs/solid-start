@@ -21,7 +21,6 @@
   "devDependencies": {
     "@prisma/client": "^3.9.0",
     "@vitest/ui": "^0.2.7",
-    "bcryptjs": "^2.4.3",
     "prisma": "^3.9.0",
     "solid-app-router": "^0.2.1",
     "solid-js": "^1.3.4",

@@ -121,7 +121,7 @@ export default function Login() {
                 placeholder="vinxi"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors.username}>
+              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors?.username}>
                 <p class="text-red-400" role="alert">
                   {loginForm.submissions()["login"]?.error.fieldErrors.username}
                 </p>
@@ -135,7 +135,7 @@ export default function Login() {
                 placeholder="vinxi"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors.password}>
+              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors?.password}>
                 <p class="text-red-400" role="alert">
                   {loginForm.submissions()["login"]?.error.fieldErrors.password}
                 </p>
