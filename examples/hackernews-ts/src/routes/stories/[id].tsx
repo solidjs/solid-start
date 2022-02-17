@@ -1,4 +1,4 @@
-import { Link, useData } from "solid-app-router";
+import { Link, useRouteData } from "solid-app-router";
 import { Component, For, Show } from "solid-js";
 import type { IStory } from "~/types";
 import Comment from "~/components/comment";
@@ -13,7 +13,7 @@ export const routeData: RouteDataFunc = props => {
 };
 
 const Story: Component = () => {
-  const story = useData<() => IStory>();
+  const story = useRouteData<() => IStory>();
   return (
     <Show when={story()}>
       <div class="item-view">
