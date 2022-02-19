@@ -1,20 +1,41 @@
 import { ssr } from "solid-js/web";
 import { MetaProvider } from "solid-meta";
 import { RouteDataFunc, Router } from "solid-app-router";
-// @ts-expect-error
 import Root from "~/root";
-import { StartProvider } from "./StartContext";
 import { sharedConfig } from "solid-js";
+import { StartProvider } from "./StartContext";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
 
+type ManifestEntry = {
+  type: string;
+  href: string;
+};
+
+export type ContextMatches = {
+  originalPath: string;
+  pattern: string;
+  path: string;
+  params: unknown;
+};
+
+type TagDescription = {
+  tag: string;
+  props: Record<string, unknown>;
+};
+
+type RouterContext = {
+  matches?: ContextMatches[][];
+  url?: unknown;
+};
+
 export interface RequestContext {
   request: Request;
   responseHeaders: Response["headers"];
-  manifest: Record<string, any>;
-  routerContext?: Record<string, any>;
-  tags?: [];
+  manifest: Record<string, ManifestEntry[]>;
+  routerContext?: RouterContext;
+  tags?: TagDescription[];
 }
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
