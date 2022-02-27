@@ -20,19 +20,20 @@ interface CookieSessionStorageOptions {
  * browser's maximum cookie size. Trade-offs!
  */
 export function createCookieSessionStorage({
-  cookie: cookieArg,
+  cookie: cookieArg
 }: CookieSessionStorageOptions = {}): SessionStorage {
   let cookie = isCookie(cookieArg)
     ? cookieArg
-    : createCookie(cookieArg?.name || "__session", cookieArg);
+    : createCookie(
+        typeof cookieArg !== "undefined" ? cookieArg.name : undefined || "__session",
+        cookieArg
+      );
 
   warnOnceAboutSigningSessionCookie(cookie);
 
   return {
     async getSession(cookieHeader, options) {
-      return createSession(
-        (cookieHeader && (await cookie.parse(cookieHeader, options))) || {}
-      );
+      return createSession((cookieHeader && (await cookie.parse(cookieHeader, options))) || {});
     },
     async commitSession(session, options) {
       return cookie.serialize(session.data, options);
@@ -40,8 +41,8 @@ export function createCookieSessionStorage({
     async destroySession(_session, options) {
       return cookie.serialize("", {
         ...options,
-        expires: new Date(0),
+        expires: new Date(0)
       });
-    },
+    }
   };
 }

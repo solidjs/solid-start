@@ -357,7 +357,7 @@ export function useSubmitImpl(key?: string, onSubmit?: (sub: FormAction) => void
       action: url.pathname + url.search,
       method: method.toUpperCase(),
       encType,
-      key: key ?? Math.random().toString(36).substring(2, 8)
+      key: typeof key !== "undefined" ? key : Math.random().toString(36).substring(2, 8)
     };
 
     onSubmit(submission);
@@ -397,9 +397,12 @@ export function createForm<
     return (
       <FormImpl
         {...props}
-        action={fn.url ?? ""}
+        action={typeof fn.url !== "undefined" ? fn.url : ""}
         onSubmit={submission => {
-          const key = props.key ?? Math.random().toString(36).substring(2, 8);
+          const key =
+            typeof props.key !== "undefined"
+              ? props.key
+              : Math.random().toString(36).substring(2, 8);
           console.log(key);
           action(submission, key)
             .then(response => {
@@ -449,20 +452,19 @@ export function createForm<
     Object.values(submissions()).filter(sub => sub.status === "submitting").length > 0;
 
   let getSubmissions = (): { [key: string]: FormSubmission } => {
-    const submission = submissions();
+    const existingSubmissions = submissions();
     const [params] = useSearchParams();
 
     let param = params.form ? JSON.parse(params.form) : null;
     if (!param) {
-      return submission;
+      return existingSubmissions;
     }
 
-    console.log("hEEREEEEE");
-
-    let key = param.entries.find(e => e[0] === "_key")?.[1];
+    let entry = param.entries.find(e => e[0] === "_key");
+    let key = typeof entry !== "undefined" ? entry[1] : "default";
 
     if (param.url !== fn.url) {
-      return submission;
+      return existingSubmissions;
     }
 
     let error = param.error
@@ -482,17 +484,20 @@ export function createForm<
       variables: {
         action: param.url,
         method: "POST",
+        // mock readonly form data to read the information from the form
+        // submission from the URL params
         formData: {
           get: (name: string) => {
-            return param.entries.find(e => e[0] === name)?.[1];
+            let entry = param.entries.find(e => e[0] === name);
+            return typeof entry !== "undefined" ? entry[1] : undefined;
           }
         }
       }
     };
 
     return {
-      [paramForm.key ?? "default"]: paramForm,
-      ...submission
+      [paramForm.key]: paramForm,
+      ...existingSubmissions
     };
   };
 

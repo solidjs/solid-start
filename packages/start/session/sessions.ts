@@ -208,7 +208,7 @@ export function createSessionStorage({
 }: SessionIdStorageStrategy): SessionStorage {
   let cookie = isCookie(cookieArg)
     ? cookieArg
-    : createCookie(cookieArg?.name || "__session", cookieArg);
+    : createCookie(typeof cookieArg !== 'undefined' ? cookieArg.name : undefined || "__session", cookieArg);
 
   warnOnceAboutSigningSessionCookie(cookie);
 

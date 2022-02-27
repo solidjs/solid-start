@@ -334,11 +334,19 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
 
       const formData = await ctx.request.formData();
       let entries = [...formData.entries()];
-
+      let contentType = ctx.request.headers.get("content-type");
+      let origin = ctx.request.headers.get("x-solidstart-origin");
+      let responseContentType = serverResponse.headers.get("x-solidstart-content-type");
+      // when a form POST action is made and there is an error throw,
+      // and its a non-javascript request potentially,
+      // we redirect to the referrer with the form state and error serialized
+      // in the url params for the redicted location
       if (
-        ctx.request.headers.get("content-type")?.includes("form") &&
-        !ctx.request.headers.get("x-solidstart-origin")?.includes("client") &&
-        serverResponse.headers.get("x-solidstart-content-type")?.includes("form-error")
+        contentType != null &&
+        contentType.includes("form") &&
+        !(origin != null && origin.includes("client")) &&
+        responseContentType !== null &&
+        responseContentType.includes("error")
       ) {
         return new Response(null, {
           status: 302,

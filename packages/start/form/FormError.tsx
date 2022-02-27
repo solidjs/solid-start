@@ -14,7 +14,8 @@ export class FormError extends Error {
     super(message);
     this.formError = message;
     this.name = "FormError";
-    this.fields = fields || Object.fromEntries(form?.entries() ?? []) || {};
+    this.fields =
+      fields || Object.fromEntries(typeof form !== "undefined" ? form.entries() : []) || {};
     this.fieldErrors = fieldErrors;
     if (stack) {
       this.stack = stack;
