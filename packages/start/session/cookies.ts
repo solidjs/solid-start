@@ -1,3 +1,6 @@
+// All credits to Remix team:
+// https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/cookies.ts
+
 import type { CookieParseOptions, CookieSerializeOptions } from "cookie";
 import { parse, serialize } from "cookie";
 
@@ -21,9 +24,7 @@ export interface CookieSignatureOptions {
   secrets?: string[];
 }
 
-export type CookieOptions = CookieParseOptions &
-  CookieSerializeOptions &
-  CookieSignatureOptions;
+export type CookieOptions = CookieParseOptions & CookieSerializeOptions & CookieSignatureOptions;
 
 /**
  * A HTTP cookie.
@@ -56,10 +57,7 @@ export interface Cookie {
    * Parses a raw `Cookie` header and returns the value of this cookie or
    * `null` if it's not present.
    */
-  parse(
-    cookieHeader: string | null,
-    options?: CookieParseOptions
-  ): Promise<any>;
+  parse(cookieHeader: string | null, options?: CookieParseOptions): Promise<any>;
 
   /**
    * Serializes the given value to a string and returns the `Set-Cookie`
@@ -98,15 +96,11 @@ export function createCookie(
         : null;
     },
     async serialize(value, serializeOptions) {
-      return serialize(
-        name,
-        value === "" ? "" : await encodeCookieValue(value, secrets),
-        {
-          ...options,
-          ...serializeOptions,
-        }
-      );
-    },
+      return serialize(name, value === "" ? "" : await encodeCookieValue(value, secrets), {
+        ...options,
+        ...serializeOptions
+      });
+    }
   };
 }
 
@@ -120,10 +114,7 @@ export function isCookie(object: any): object is Cookie {
   );
 }
 
-async function encodeCookieValue(
-  value: any,
-  secrets: string[]
-): Promise<string> {
+async function encodeCookieValue(value: any, secrets: string[]): Promise<string> {
   let encoded = encodeData(value);
 
   if (secrets.length > 0) {
@@ -133,10 +124,7 @@ async function encodeCookieValue(
   return encoded;
 }
 
-async function decodeCookieValue(
-  value: string,
-  secrets: string[]
-): Promise<any> {
+async function decodeCookieValue(value: string, secrets: string[]): Promise<any> {
   if (secrets.length > 0) {
     for (let secret of secrets) {
       let unsignedValue = await unsign(value, secret);
@@ -144,8 +132,6 @@ async function decodeCookieValue(
         return decodeData(unsignedValue);
       }
     }
-
-    return null;
   }
 
   return decodeData(value);

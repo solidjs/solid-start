@@ -1,3 +1,6 @@
+// Credits to the Remix team for the Form implementation:
+// https://github.com/remix-run/remix/blob/main/packages/remix-react/components.tsx#L865
+
 import { useNavigate, useParams, useSearchParams } from "solid-app-router";
 import { ActionSubmission, createAction } from "./action";
 import {

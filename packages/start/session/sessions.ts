@@ -1,3 +1,6 @@
+// All credits to Remix team:
+// https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/sessions/cookieStorage.ts
+
 import type { CookieParseOptions, CookieSerializeOptions } from "cookie";
 
 import type { Cookie, CookieOptions } from "./cookies";
@@ -102,7 +105,7 @@ export function createSession(initialData: SessionData = {}, id = ""): Session {
     },
     unset(name) {
       map.delete(name);
-    },
+    }
   };
 }
 
@@ -132,28 +135,19 @@ export interface SessionStorage {
    * Session. If there is no session associated with the cookie, this will
    * return a new Session with no data.
    */
-  getSession(
-    cookieHeader?: string | null,
-    options?: CookieParseOptions
-  ): Promise<Session>;
+  getSession(cookieHeader?: string | null, options?: CookieParseOptions): Promise<Session>;
 
   /**
    * Stores all data in the Session and returns the Set-Cookie header to be
    * used in the HTTP response.
    */
-  commitSession(
-    session: Session,
-    options?: CookieSerializeOptions
-  ): Promise<string>;
+  commitSession(session: Session, options?: CookieSerializeOptions): Promise<string>;
 
   /**
    * Deletes all data associated with the Session and returns the Set-Cookie
    * header to be used in the HTTP response.
    */
-  destroySession(
-    session: Session,
-    options?: CookieSerializeOptions
-  ): Promise<string>;
+  destroySession(session: Session, options?: CookieSerializeOptions): Promise<string>;
 }
 
 /**
@@ -204,11 +198,14 @@ export function createSessionStorage({
   createData,
   readData,
   updateData,
-  deleteData,
+  deleteData
 }: SessionIdStorageStrategy): SessionStorage {
   let cookie = isCookie(cookieArg)
     ? cookieArg
-    : createCookie(typeof cookieArg !== 'undefined' ? cookieArg.name : undefined || "__session", cookieArg);
+    : createCookie(
+        typeof cookieArg !== "undefined" ? cookieArg.name : undefined || "__session",
+        cookieArg
+      );
 
   warnOnceAboutSigningSessionCookie(cookie);
 
@@ -233,9 +230,9 @@ export function createSessionStorage({
       await deleteData(session.id);
       return cookie.serialize("", {
         ...options,
-        expires: new Date(0),
+        expires: new Date(0)
       });
-    },
+    }
   };
 }
 

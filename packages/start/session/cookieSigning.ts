@@ -1,3 +1,6 @@
+// All credits to Remix team:
+// https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/cookieSigning.ts
+
 export type InternalSignFunctionDoNotUseMe = (value: string, secret: string) => Promise<string>;
 
 export type InternalUnsignFunctionDoNotUseMe = (
