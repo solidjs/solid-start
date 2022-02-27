@@ -2,7 +2,7 @@ import { createForm, FormError } from "solid-start/form";
 import server, { redirect } from "solid-start/server";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
-import { useData, useParams } from "solid-app-router";
+import { useRouteData, useParams } from "solid-app-router";
 import { createResource, Show, useContext } from "solid-js";
 import { RequestContext, StartContext } from "solid-start/components";
 
@@ -96,65 +96,65 @@ export function routeData() {
 }
 
 export default function Login() {
-  const [data] = useData();
+  const [data] = useRouteData();
   const params = useParams();
   return (
     <div className="p-4">
       <div data-light="">
         <main class="p-6 mx-auto w-[fit-content] space-y-4 rounded-lg bg-gray-100">
           <h1 class="font-bold text-xl">Login</h1>
-          <loginForm.Form key="login" method="post" class="flex flex-col space-y-2">
-            <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
-            <fieldset class="flex flex-row">
-              <legend className="sr-only">Login or Register?</legend>
-              <label class="w-full">
-                <input type="radio" name="loginType" value="login" checked={true} /> Login
-              </label>
-              <label class="w-full">
-                <input type="radio" name="loginType" value="register" /> Register
-              </label>
-            </fieldset>
-            <div>
-              <label htmlFor="username-input">Username</label>
-              <input
-                name="username"
-                placeholder="vinxi"
-                class="border-gray-700 border-2 ml-2 rounded-md px-2"
-              />
-              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors?.username}>
-                <p class="text-red-400" role="alert">
-                  {loginForm.submissions()["login"]?.error.fieldErrors.username}
+          <ErrorBoundary fallback={() => <div>Error</div>}>
+            <loginForm.Form key="login" method="post" class="flex flex-col space-y-2">
+              <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
+              <fieldset class="flex flex-row">
+                <legend className="sr-only">Login or Register?</legend>
+                <label class="w-full">
+                  <input type="radio" name="loginType" value="login" checked={true} /> Login
+                </label>
+                <label class="w-full">
+                  <input type="radio" name="loginType" value="register" /> Register
+                </label>
+              </fieldset>
+              <div>
+                <label htmlFor="username-input">Username</label>
+                <input
+                  name="username"
+                  placeholder="kody"
+                  class="border-gray-700 border-2 ml-2 rounded-md px-2"
+                />
+                <Show when={loginForm.submission("login")?.error?.fieldErrors?.username}>
+                  <p class="text-red-400" role="alert">
+                    {loginForm.submission("login")?.error.fieldErrors.username}
+                  </p>
+                </Show>
+              </div>
+              <div>
+                <label htmlFor="password-input">Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="twixrox"
+                  class="border-gray-700 border-2 ml-2 rounded-md px-2"
+                />
+                <Show when={loginForm.submission("login")?.error?.fieldErrors?.password}>
+                  <p class="text-red-400" role="alert">
+                    {loginForm.submission("login")?.error.fieldErrors.password}
+                  </p>
+                </Show>
+              </div>
+              <Show when={loginForm.submission("login")?.error}>
+                <p class="text-red-400" role="alert" id="error-message">
+                  {loginForm.submissions()["login"]?.error.message}
                 </p>
               </Show>
-            </div>
-            <div>
-              <label htmlFor="password-input">Password</label>
-              <input
-                name="password"
-                type="password"
-                placeholder="vinxi"
-                class="border-gray-700 border-2 ml-2 rounded-md px-2"
-              />
-              <Show when={loginForm.submissions()["login"]?.error?.fieldErrors?.password}>
-                <p class="text-red-400" role="alert">
-                  {loginForm.submissions()["login"]?.error.fieldErrors.password}
-                </p>
-              </Show>
-            </div>
-            <Show when={loginForm.submissions()["login"]?.error}>
-              <p class="text-red-400" role="alert">
-                {loginForm.submissions()["login"]?.error.message}
-              </p>
-            </Show>
-            <ErrorBoundary>
               <button
                 class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2"
                 type="submit"
               >
                 {data() ? "Login" : ""}
               </button>
-            </ErrorBoundary>
-          </loginForm.Form>
+            </loginForm.Form>
+          </ErrorBoundary>
         </main>
       </div>
     </div>

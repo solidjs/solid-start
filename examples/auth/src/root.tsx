@@ -1,5 +1,4 @@
 // @refresh reload
-import { useNavigate } from "solid-app-router";
 import { Suspense } from "solid-js";
 import { Links, Meta, Routes, Scripts } from "solid-start/components";
 import { ErrorBoundary } from "solid-start/server/ErrorBoundary";

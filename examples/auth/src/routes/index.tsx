@@ -5,12 +5,16 @@ import { createEffect, createResource, For, Index, Show, useContext } from "soli
 import { Prisma, Message, User } from "@prisma/client";
 import { getUser, logout } from "~/db/session";
 import { StartContext, StartProvider } from "solid-start/components";
-import { useData, useParams, useSearchParams } from "solid-app-router";
+import { useRouteData, useParams, useSearchParams } from "solid-app-router";
 import ErrorBoundary from "solid-start/server/ErrorBoundary";
 
 const sendMessage = createForm(
   server(async (ctx, form: FormData) => {
     const user = await getUser(ctx);
+
+    if (Math.random() > 0.75) {
+      throw new FormError("There was an error adding the messages, please try again");
+    }
 
     if (!user) {
       throw new Error("Unauthenticated");
@@ -47,7 +51,7 @@ const sendMessage = createForm(
 );
 
 export function OptimisticMessage(props: { submission: FormSubmission }) {
-  const [data] = useData<ReturnType<typeof routeData>>();
+  const [data] = useRouteData<ReturnType<typeof routeData>>();
   return (
     <li class="flex flex-row space-y-2">
       <div class="text-lg inline-flex flex-row items-center space-x-2">
@@ -80,7 +84,7 @@ const removeMessage = createForm(
   server(async (ctx, form: FormData) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    if (Math.random() > 0.5) {
+    if (Math.random() > 0.75) {
       throw new FormError("There was an error removing the player, please try again later");
     }
 
@@ -137,7 +141,7 @@ export function routeData() {
 }
 
 export default function Home() {
-  const [data] = useData<ReturnType<typeof routeData>>();
+  const [data] = useRouteData<ReturnType<typeof routeData>>();
 
   function MessageBox() {
     let formRef: HTMLFormElement;

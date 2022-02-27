@@ -1,4 +1,4 @@
-import { Link, useData } from "solid-app-router";
+import { Link, useRouteData } from "solid-app-router";
 import { Component, For, Show } from "solid-js";
 import { createResource } from "solid-js";
 import { RouteDataFunc } from "solid-app-router";
@@ -15,6 +15,12 @@ const mapStories = {
   job: "jobs"
 } as const;
 
+interface StoriesData {
+  page: () => number;
+  type: () => string;
+  stories: () => IStory[];
+}
+
 export const routeData: RouteDataFunc = ({ location, params }) => {
   const page = () => +location.query.page || 1;
   const type = () => params.stories || "top";
@@ -24,14 +30,8 @@ export const routeData: RouteDataFunc = ({ location, params }) => {
   return { type, stories, page };
 };
 
-interface StoriesData {
-  page: () => number;
-  type: () => string;
-  stories: () => IStory[];
-}
-
 const Stories: Component = () => {
-  const { page, type, stories } = useData<StoriesData>();
+  const { page, type, stories } = useRouteData<StoriesData>();
   return (
     <div class="news-view">
       <div class="news-list-nav">

@@ -6,7 +6,6 @@ import inspect from "vite-plugin-inspect";
 import { getRoutes, stringifyRoutes } from "./routes.js";
 import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
-import babel from "@babel/core";
 import babelServerModule from "./server/babel.js";
 import { join, resolve } from "path";
 import vite from "vite";
@@ -162,16 +161,15 @@ function solidStartFileSystemRouter(options) {
           ]
         }));
       } else if (/\?data/.test(id)) {
-        const text = await babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
-            [
+            options.ssr && [
               babelServerModule,
-              { ssr: isSsr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
             [routeData, { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }]
           ].filter(Boolean)
         }));
-        return text;
       } else if (id.includes("routes")) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [

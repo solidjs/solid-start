@@ -10,8 +10,6 @@ import {
   startTransition,
   getOwner,
   runWithOwner,
-  createComputed,
-  createMemo,
   Show
 } from "solid-js";
 import { FormError } from "./FormError";
@@ -402,6 +400,7 @@ export function createForm<
         action={fn.url ?? ""}
         onSubmit={submission => {
           const key = props.key ?? Math.random().toString(36).substring(2, 8);
+          console.log(key);
           action(submission, key)
             .then(response => {
               if (response instanceof Response) {
@@ -449,7 +448,7 @@ export function createForm<
   Form.isSubmitting = () =>
     Object.values(submissions()).filter(sub => sub.status === "submitting").length > 0;
 
-  Form.submissions = (): { [key: string]: FormSubmission } => {
+  let getSubmissions = (): { [key: string]: FormSubmission } => {
     const submission = submissions();
     const [params] = useSearchParams();
 
@@ -457,6 +456,8 @@ export function createForm<
     if (!param) {
       return submission;
     }
+
+    console.log("hEEREEEEE");
 
     let key = param.entries.find(e => e[0] === "_key")?.[1];
 
@@ -494,6 +495,9 @@ export function createForm<
       ...submission
     };
   };
+
+  Form.submissions = getSubmissions;
+  Form.submission = (key: string) => getSubmissions()[key];
 
   return Form;
 }

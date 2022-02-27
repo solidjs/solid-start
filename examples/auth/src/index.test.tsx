@@ -26,6 +26,7 @@ if (process.env.TEST_ENV === "client" && process.env.TEST_MODE === "client-serve
 
 // tests that the client is sending the correct http request and parsing the http respose correctly,
 // mocks fetch
+// if testing client-server or server, this is a noop
 function mockServerFunction(fn, args, status, response, headers?) {
   if (process.env.TEST_MODE === "client") {
     mockPool

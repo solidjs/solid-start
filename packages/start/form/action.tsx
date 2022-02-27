@@ -75,7 +75,7 @@ export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
             if (!submissionState().readError) {
               setSubmissionState(e => ({ ...e, readError: true }));
             }
-            return submissionState().error;
+            return submissionState().error as FormError;
           },
           get key() {
             return key();
