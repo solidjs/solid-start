@@ -81,17 +81,15 @@ const loginForm = createForm(
 );
 
 export function routeData() {
-  const { context } = useContext(StartContext);
-
-  return createResource(() =>
-    server(async (context: RequestContext) => {
-      if (await getUser(context.request)) {
+  return createResource(
+    server(async function () {
+      if (await getUser(this.request)) {
         throw redirect("/", {
-          context
+          context: this
         });
       }
       return {};
-    })(context)
+    })
   );
 }
 

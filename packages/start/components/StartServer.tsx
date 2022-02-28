@@ -4,13 +4,14 @@ import { RouteDataFunc, Router } from "solid-app-router";
 // @ts-expect-error
 import Root from "~/root";
 import { StartProvider } from "./StartContext";
+import { sharedConfig } from "solid-js";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
 
 export interface RequestContext {
   request: Request;
-  headers: Response["headers"];
+  pageHeaders: Response["headers"];
   manifest: Record<string, any>;
   context?: Record<string, any>;
 }
@@ -19,9 +20,15 @@ export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
 
 /** Input parameters for to an Exchange factory function. */
 export interface MiddlewareInput {
-  ctx: any;
+  ctx: { request: RequestContext };
   forward: MiddlewareFn;
   // dispatchDebug: <T extends keyof DebugEventTypes | string>(t: DebugEventArg<T>) => void;
+}
+
+declare module "solid-js" {
+  export type HydrationContext = {
+    requestContext: RequestContext;
+  };
 }
 
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
@@ -67,13 +74,14 @@ export default ({
   manifest: Record<string, any>;
   context?: Partial<RequestContext> & { tags?: [] };
 }) => {
-  // context.headers = {};
+  // @ts-expect-error
+  sharedConfig.context.requestContext = context;
   context.tags = [];
   const parsed = new URL(url);
   const path = parsed.pathname + parsed.search;
 
   return (
-    <StartProvider context={context} manifest={manifest} request={context.request}>
+    <StartProvider context={context} manifest={manifest}>
       <MetaProvider tags={context.tags}>
         <Router url={path} out={context} data={dataFn}>
           {docType as unknown as any}

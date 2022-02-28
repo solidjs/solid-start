@@ -119,12 +119,12 @@ function MessageItem(props: { item: Message & { user: User } }) {
 }
 
 export function routeData() {
-  const { context } = useContext(StartContext);
-  return createResource(() =>
-    server(async context => {
-      if (!(await getUser(context.request))) {
+  return createResource(
+    server(async function () {
+      console.log(this.request.headers.get("cookie"));
+      if (!(await getUser(this.request))) {
         throw redirect("/login", {
-          context
+          context: this
         });
       }
 
@@ -134,9 +134,9 @@ export function routeData() {
             user: true
           }
         }),
-        user: await getUser(context.request)
+        user: await getUser(this.request)
       };
-    })(context)
+    })
   );
 }
 
@@ -178,8 +178,8 @@ export default function Home() {
   }
 
   const logoutForm = createForm(
-    server(async request => {
-      return await logout(request);
+    server(async function () {
+      return await logout(this.request);
     })
   );
 

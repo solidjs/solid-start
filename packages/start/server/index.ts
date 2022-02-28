@@ -1,3 +1,4 @@
+import { sharedConfig } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { RequestContext, Middleware as ServerMiddleware } from "../components/StartServer";
 import {
@@ -11,13 +12,15 @@ import {
 
 export { json, redirect, isRedirectResponse } from "./responses";
 
-type InlineServer<E extends any[], T extends (...args: E) => void> = {
+type InlineServer<E extends any[], T extends (this: RequestContext, ...args: E) => void> = {
   url: string;
-  action(...args: E): ReturnType<T>;
+  action(this: RequestContext | void, ...args: E): ReturnType<T>;
   fetch(init: RequestInit): Promise<Response>;
-} & ((...args: E) => ReturnType<T>);
+} & ((this: RequestContext | void, ...args: E) => ReturnType<T>);
 
-type ServerFn = (<E extends any[], T extends (...args: E) => void>(fn: T) => InlineServer<E, T>) & {
+type ServerFn = (<E extends any[], T extends (this: RequestContext, ...args: E) => void>(
+  fn: T
+) => InlineServer<E, T>) & {
   getHandler: (route: string) => any;
   createHandler: (fn: any, hash: string) => any;
   registerHandler: (route: string, handler: any) => any;
@@ -119,7 +122,10 @@ if (!isServer || process.env.TEST_ENV === "client") {
   }
 
   server.createFetcher = route => {
-    let fetcher: any = async (...args: any[]) => {
+    let fetcher: any = function (this: Request, ...args: any[]) {
+      console.log(this);
+      if (this instanceof Request) {
+      }
       const requestInit = createRequestInit(...args);
       // request body: json, formData, or string
       return server.fetch(route, requestInit);
@@ -207,7 +213,7 @@ export async function handleServerRequest(request: Request) {
           message: "Handler Not Found for " + name
         };
       }
-      const data = await handler(...(Array.isArray(args) ? args : [args]));
+      const data = await handler.call({ request }, ...(Array.isArray(args) ? args : [args]));
       // server.setContext(oldContext);
       return respondWith(request, data, "return");
     } catch (error) {
@@ -233,49 +239,65 @@ if (isServer) {
     // called on the server when an HTTP request for this server function is made to the server (by a client)
     // - request is parsed to figure out the args that need to be passed here, we still pass the same args as above, but they are not the same reference
     //   as the ones passed in the client. They are cloned and serialized and made as similar to the ones passed in the client as possible
-    let fn: any = async (...args) => {
-      // const id = counter++;
-      // const ctx = server.getContext();
-      try {
-        let e = await _fn(...args);
-        return e;
-      } catch (e) {
-        if (e instanceof Response) {
-          let error = e as unknown as Error;
-          error.message = JSON.stringify({
-            $type: "response",
-            status: e.status,
-            message: e.statusText,
-            headers: [...e.headers.entries()]
-          });
+    let fn: any = function (...args) {
+      let ctx;
 
-          // @ts-ignore d
-          if (e.context) {
-            let headers = e.context.headers;
-            headers.set("x-solidstart-status-code", e.status.toString());
-            e.headers.forEach((head, value) => {
-              headers.set(value, head);
+      // if called with fn.call(...), we check if we got a valid RequestContext, and use that as
+      // the request context for this server function call
+      if (typeof this === "object" && this.request instanceof Request) {
+        ctx = this;
+      } else {
+        // otherwise we check if the sharedConfig has a requestContext, and use that as the request context
+        // @ts-ignore
+        ctx = sharedConfig.context.requestContext;
+      }
+
+      const execute = async () => {
+        try {
+          let e = await _fn.call(ctx, ...args);
+          return e;
+        } catch (e) {
+          if (e instanceof Response) {
+            let error = e as unknown as Error;
+            error.message = JSON.stringify({
+              $type: "response",
+              status: e.status,
+              message: e.statusText,
+              headers: [...e.headers.entries()]
             });
+
+            // @ts-ignore
+            if (e.context) {
+              let pageHeaders = e.context.pageHeaders;
+              pageHeaders.set("x-solidstart-status-code", e.status.toString());
+              e.headers.forEach((head, value) => {
+                pageHeaders.set(value, head);
+              });
+            }
+
+            throw e;
           }
 
+          if (/[A-Za-z]+ is not defined/.test(e.message)) {
+            const error = new Error(
+              e.message +
+                "\n" +
+                " You probably are using a variable defined in a closure in your server function."
+            );
+            error.stack = e.stack;
+            throw error;
+          }
           throw e;
         }
+      };
 
-        console.error(e);
-        if (/[A-Za-z]+ is not defined/.test(e.message)) {
-          const error = new Error(
-            e.message +
-              "\n" +
-              " You probably are using a variable defined in a closure in your server function."
-          );
-          error.stack = e.stack;
-          throw error;
-        }
-        throw e;
-      }
+      return execute();
     };
+
     fn.url = hash;
-    fn.action = (...args) => fn({}, ...args);
+    fn.action = function (...args) {
+      return fn.call(this, ...args);
+    };
 
     return fn;
   };
@@ -367,9 +389,9 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
 
     const response = await forward(ctx);
 
-    if (ctx.headers.get("x-solidstart-status-code")) {
+    if (ctx.pageHeaders.get("x-solidstart-status-code")) {
       return new Response(response.body, {
-        status: parseInt(ctx.headers.get("x-solidstart-status-code")),
+        status: parseInt(ctx.pageHeaders.get("x-solidstart-status-code")),
         headers: response.headers
       });
     }

@@ -17,7 +17,7 @@ export function createDevHandler(viteServer) {
 
       const webRes = await entry({
         request: createRequest(req),
-        headers: new Headers()
+        pageHeaders: new Headers()
       });
 
       res.statusCode = webRes.status;
@@ -59,9 +59,8 @@ async function createDevServer(root = process.cwd(), configFile) {
 }
 
 export function start(options) {
-  createDevServer(options.root, options.config).then(({ app }) =>
-    app.listen(options.port, () => {
-      console.log(`http://localhost:${options.port}`);
-    })
-  );
+  createDevServer(options.root, options.config).then(({ server }) => {
+    server.listen(options.port);
+    console.log(`http://localhost:${options.port}`);
+  });
 }

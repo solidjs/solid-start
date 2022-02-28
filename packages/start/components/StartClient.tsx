@@ -12,7 +12,6 @@ const [request, setRequest] = createSignal(new Request("http://localhost:3000/")
 export default () => {
   return (
     <StartProvider
-      request={request()}
       context={{
         headers: new Headers(),
         request: request()
