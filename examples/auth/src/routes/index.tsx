@@ -9,8 +9,8 @@ import { useRouteData, useParams, useSearchParams } from "solid-app-router";
 import ErrorBoundary from "solid-start/server/ErrorBoundary";
 
 const sendMessage = createForm(
-  server(async (ctx, form: FormData) => {
-    const user = await getUser(ctx);
+  server(async function (form: FormData) {
+    const user = await getUser(this.request);
 
     if (Math.random() > 0.75) {
       throw new FormError("There was an error adding the messages, please try again");
@@ -81,7 +81,7 @@ export function OptimisticMessage(props: { submission: FormSubmission }) {
 }
 
 const removeMessage = createForm(
-  server(async (ctx, form: FormData) => {
+  server(async (form: FormData) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (Math.random() > 0.75) {

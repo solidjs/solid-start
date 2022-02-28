@@ -17,10 +17,10 @@ import {
 } from "solid-js";
 import { FormError } from "./FormError";
 
-export interface FormAction {
+export interface FormAction<Data> {
   action: string;
   method: string;
-  formData: FormData;
+  formData: Data;
   encType: string;
   key: string;
 }
@@ -129,7 +129,7 @@ export interface FormProps extends Omit<ComponentProps<"form">, "method" | "onSu
    * A function to call when the form is submitted. If you call
    * `event.preventDefault()` then this form will not do anything.
    */
-  onSubmit?: (submission: FormAction) => void;
+  onSubmit?: (submission: FormAction<FormData>) => void;
 
   key?: any;
 }
@@ -273,7 +273,10 @@ export interface SubmitOptions {
   replace?: boolean;
 }
 
-export function useSubmitImpl(key?: string, onSubmit?: (sub: FormAction) => void): SubmitFunction {
+export function useSubmitImpl(
+  key?: string,
+  onSubmit?: (sub: FormAction<FormData>) => void
+): SubmitFunction {
   // let defaultAction = useFormAction();
   // let { transitionManager } = useRemixEntryContext();
   return (target, options = {}) => {
@@ -355,7 +358,7 @@ export function useSubmitImpl(key?: string, onSubmit?: (sub: FormAction) => void
       }
     }
 
-    let submission: FormAction = {
+    let submission: FormAction<FormData> = {
       formData,
       action: url.pathname + url.search,
       method: method.toUpperCase(),
@@ -380,16 +383,11 @@ function isInputElement(object: any): object is HTMLInputElement {
 }
 
 export function createForm<
-  T extends { url?: string; action: (request: Request, arg: FormData) => Promise<Response> }
+  D extends FormData,
+  T extends { url?: string; action: (arg: D) => Promise<Response> }
 >(fn: T) {
-  const [submissions, action] = createAction((submission: FormAction) =>
-    fn.action(
-      new Request(fn.url, {
-        method: submission.method,
-        body: submission.formData
-      }),
-      submission.formData
-    )
+  const [submissions, action] = createAction((submission: FormAction<D>) =>
+    fn.action(submission.formData)
   );
 
   function Form(props: FormProps) {
@@ -406,8 +404,7 @@ export function createForm<
             typeof props.key !== "undefined"
               ? props.key
               : Math.random().toString(36).substring(2, 8);
-          console.log(key);
-          action(submission, key)
+          action(submission as FormAction<D>, key)
             .then(response => {
               if (response instanceof Response) {
                 if (response.status === 302) {
@@ -512,4 +509,4 @@ export function createForm<
 
 export { FormImpl as Form };
 
-export type FormSubmission = ActionSubmission<FormAction>;
+export type FormSubmission = ActionSubmission<FormAction<FormData>>;

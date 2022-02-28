@@ -25,7 +25,7 @@ function validatePassword(password: unknown) {
  * to the client.
  */
 const loginForm = createForm(
-  server(async (request: Request, form: FormData) => {
+  server(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");

@@ -77,8 +77,8 @@ if (!isServer || process.env.TEST_ENV === "client") {
         [XSolidStartOrigin]: "client"
       };
 
-    if (args.length === 2 && args[1] instanceof FormData) {
-      body = args[1];
+    if (args.length === 1 && args[0] instanceof FormData) {
+      body = args[0];
     } else {
       // special case for when server is used as fetcher for createResource
       // we set {}.value to undefined. This keeps the createResource API intact as the type
@@ -191,7 +191,7 @@ async function parseRequest(request: Request) {
       }
     } else if (contentType.includes("form")) {
       let formData = await request.formData();
-      args = [request, formData];
+      args = [formData];
     }
   }
   return [name, args] as const;
