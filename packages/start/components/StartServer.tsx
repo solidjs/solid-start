@@ -11,7 +11,7 @@ const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
 
 export interface RequestContext {
   request: Request;
-  pageHeaders: Response["headers"];
+  responseHeaders: Response["headers"];
   manifest: Record<string, any>;
   context?: Record<string, any>;
 }

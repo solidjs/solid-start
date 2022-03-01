@@ -6,28 +6,28 @@ function renderPage() {
   return async ({
     request,
     manifest,
-    pageHeaders,
+    responseHeaders,
     context = {}
   }: {
     request: Request;
-    pageHeaders: Response["headers"];
+    responseHeaders: Response["headers"];
     manifest: Record<string, any>;
     context?: Record<string, any>;
   }) => {
-    console.log(request, pageHeaders, manifest, context);
+    console.log(request, responseHeaders, manifest, context);
     let markup = await renderToStringAsync(() => (
       <StartServer
-        context={{ ...context, request, pageHeaders }}
+        context={{ ...context, request, responseHeaders }}
         url={request.url}
         manifest={manifest}
       />
     ));
 
-    pageHeaders.set("content-type", "text/html");
+    responseHeaders.set("content-type", "text/html");
 
     return new Response(markup, {
       status: 200,
-      headers: pageHeaders
+      headers: responseHeaders
     });
   };
 }

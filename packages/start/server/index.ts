@@ -268,10 +268,10 @@ if (isServer) {
 
             // @ts-ignore
             if (e.context) {
-              let pageHeaders = e.context.pageHeaders;
-              pageHeaders.set("x-solidstart-status-code", e.status.toString());
+              let responseHeaders = e.context.responseHeaders;
+              responseHeaders.set("x-solidstart-status-code", e.status.toString());
               e.headers.forEach((head, value) => {
-                pageHeaders.set(value, head);
+                responseHeaders.set(value, head);
               });
             }
 
@@ -389,9 +389,9 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
 
     const response = await forward(ctx);
 
-    if (ctx.pageHeaders.get("x-solidstart-status-code")) {
+    if (ctx.responseHeaders.get("x-solidstart-status-code")) {
       return new Response(response.body, {
-        status: parseInt(ctx.pageHeaders.get("x-solidstart-status-code")),
+        status: parseInt(ctx.responseHeaders.get("x-solidstart-status-code")),
         headers: response.headers
       });
     }
