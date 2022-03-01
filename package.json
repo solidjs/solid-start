@@ -14,7 +14,7 @@
     "clean:artifacts": "lerna run clean --parallel",
     "clean:packages": "lerna clean --yes",
     "clean:root": "rimraf node_modules",
-    "test": "lerna run test --concurrency=1 --stream",
+    "test": "pnpm run test -r --parallel --if-present",
     "test:coverage": "lerna run test:coverage --parallel",
     "build": "pnpm run build -r --parallel --if-present",
     "publish:release": "pnpm run build && lerna publish",

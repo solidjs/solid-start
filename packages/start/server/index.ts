@@ -123,7 +123,6 @@ if (!isServer || process.env.TEST_ENV === "client") {
 
   server.createFetcher = route => {
     let fetcher: any = function (this: Request, ...args: any[]) {
-      console.log(this);
       if (this instanceof Request) {
       }
       const requestInit = createRequestInit(...args);
@@ -246,10 +245,15 @@ if (isServer) {
       // the request context for this server function call
       if (typeof this === "object" && this.request instanceof Request) {
         ctx = this;
-      } else {
+        // @ts-ignore
+      } else if (sharedConfig.context && sharedConfig.context.requestContext) {
         // otherwise we check if the sharedConfig has a requestContext, and use that as the request context
         // @ts-ignore
         ctx = sharedConfig.context.requestContext;
+      } else {
+        ctx = {
+          request: new URL(hash, "http://localhost:3000").href
+        };
       }
 
       const execute = async () => {
