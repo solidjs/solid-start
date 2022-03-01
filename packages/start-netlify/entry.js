@@ -15,7 +15,11 @@ prepareManifest(manifest, assetManifest);
 exports.handler = async function (event, context) {
   console.log(`Received new request: ${event.path}`);
 
-  const webRes = await entry({ request: createRequest(event), headers: new Headers(), manifest });
+  const webRes = await entry({
+    request: createRequest(event),
+    responseHeaders: new Headers(),
+    manifest
+  });
   const headers = {};
   for (const [name, value] of webRes.headers) {
     headers[name] = [value];

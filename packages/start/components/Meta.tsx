@@ -4,6 +4,6 @@ import { renderTags } from "solid-meta";
 import { StartContext } from "./StartContext";
 
 export default function Meta() {
-  const { context } = useContext(StartContext);
+  const context = useContext(StartContext);
   return <Assets>{ssr(renderTags(context.tags))}</Assets>;
 }

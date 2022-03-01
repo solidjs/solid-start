@@ -1,20 +1,18 @@
 import { renderToStream } from "solid-js/web";
-import { StartServer, createHandler } from "solid-start/components";
+import { StartServer, createHandler, RequestContext } from "solid-start/components";
 import { inlineServerModules } from "solid-start/server";
 
 const renderPage = () => {
-  return async ({ request, manifest, headers, context = {} }) => {
+  return async (context: RequestContext) => {
     // streaming
     const { readable, writable } = new TransformStream();
-    renderToStream(() => (
-      <StartServer context={context} url={request.url} manifest={manifest} />
-    )).pipeTo(writable);
+    renderToStream(() => <StartServer context={context} />).pipeTo(writable);
 
-    headers.set("Content-Type", "text/html");
+    context.responseHeaders.set("Content-Type", "text/html");
 
     return new Response(readable, {
       status: 200,
-      headers
+      headers: context.responseHeaders
     });
   };
 };

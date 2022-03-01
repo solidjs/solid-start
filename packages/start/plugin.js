@@ -6,7 +6,6 @@ import inspect from "vite-plugin-inspect";
 import { getRoutes, stringifyRoutes } from "./routes.js";
 import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
-import babel from "@babel/core";
 import babelServerModule from "./server/babel.js";
 import { join, resolve } from "path";
 import vite from "vite";
@@ -100,13 +99,28 @@ function solidStartFileSystemRouter(options) {
           ]
         });
         const label = `  > Routes: `;
+
+        let flatRoutes = [];
+
+        function addRoute(route) {
+          if (route.children) {
+            for (var r of route.children) {
+              addRoute(r);
+            }
+          }
+
+          flatRoutes.push(route);
+        }
+
+        for (var r of routes.pageRoutes) {
+          addRoute(r);
+        }
         setTimeout(() => {
           // eslint-disable-next-line no-console
           console.log(
-            `${label}\n${routes.pageRoutes
-              .flatMap(r => (r.children ? r.children : [r]))
+            `${label}\n${flatRoutes
               .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
-              .join("\n")}\n`
+              .join("\n")}`
           );
         }, 100);
       });
@@ -124,8 +138,21 @@ function solidStartFileSystemRouter(options) {
         }).transform(code, id, transformOptions);
       };
 
+      let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
+
+      if (/.test.(tsx)/.test(id) && config.solidOptions.ssr) {
+        return babelSolidCompiler(code, id, (source, id) => ({
+          plugins: [
+            options.ssr && [
+              babelServerModule,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ]
+          ]
+        }));
+      }
+
       if (/.data.(ts|js)/.test(id) && config.solidOptions.ssr) {
-        return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id, ssr) => ({
+        return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id) => ({
           plugins: [
             options.ssr && [
               babelServerModule,
@@ -134,7 +161,7 @@ function solidStartFileSystemRouter(options) {
           ]
         }));
       } else if (/\?data/.test(id)) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
             options.ssr && [
               babelServerModule,
@@ -144,7 +171,7 @@ function solidStartFileSystemRouter(options) {
           ].filter(Boolean)
         }));
       } else if (id.includes("routes")) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id, ssr) => ({
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
             options.ssr && [
               babelServerModule,

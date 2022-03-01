@@ -3,7 +3,6 @@ import { Link } from "solid-app-router";
 import "./index.css";
 
 export default function Home() {
-  console.log("heree");
   return (
     <main>
       <h1>Hello world!</h1>

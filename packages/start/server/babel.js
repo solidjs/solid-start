@@ -6,34 +6,6 @@ import { INLINE_SERVER_ROUTE_PREFIX } from "./constants.js";
 import nodePath from "path";
 import crypto from "crypto";
 
-function decorateServerExport(t, path, state) {
-  const gsspName = "__has_server";
-  const gsspId = t.identifier(gsspName);
-  const addGsspExport = exportPath => {
-    if (state.done) {
-      return;
-    }
-    state.done = true;
-    const [pageCompPath] = exportPath.replaceWithMultiple([
-      t.exportNamedDeclaration(
-        t.variableDeclaration("var", [t.variableDeclarator(gsspId, t.booleanLiteral(true))]),
-        [t.exportSpecifier(gsspId, gsspId)]
-      ),
-      exportPath.node
-    ]);
-    exportPath.scope.registerDeclaration(pageCompPath);
-  };
-
-  path.traverse({
-    ExportDefaultDeclaration(exportDefaultPath) {
-      // addGsspExport(exportDefaultPath);
-    },
-    ExportNamedDeclaration(exportNamedPath) {
-      // addGsspExport(exportNamedPath);
-    }
-  });
-}
-
 function transformServer({ types: t, template }) {
   function getIdentifier(path) {
     const parentPath = path.parentPath;
@@ -88,8 +60,6 @@ function transformServer({ types: t, template }) {
       Program: {
         enter(path, state) {
           state.refs = new Set();
-          state.isPrerender = false;
-          state.isServerProps = false;
           state.done = false;
           state.servers = 0;
           path.traverse(
@@ -152,7 +122,8 @@ function transformServer({ types: t, template }) {
 
                   if (state.opts.ssr) {
                     statement.insertBefore(
-                      template(`export const $$server_module${serverIndex} = server.handler(%%source%%);
+                      template(`
+                      const $$server_module${serverIndex} = server.createHandler(%%source%%, "${route}");
                       server.registerHandler("${route}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
@@ -161,11 +132,23 @@ function transformServer({ types: t, template }) {
                   } else {
                     statement.insertBefore(
                       template(
-                        `const $$server_module${serverIndex} = server.fetcher("${route}");`,
+                        `
+                        ${
+                          process.env.TEST_ENV === "client"
+                            ? `server.registerHandler("${route}", server.createHandler(%%source%%, "${route}"));`
+                            : ``
+                        }
+                        const $$server_module${serverIndex} = server.createFetcher("${route}");`,
                         {
                           syntacticPlaceholders: true
                         }
-                      )()
+                      )(
+                        process.env.TEST_ENV === "client"
+                          ? {
+                              source: serverFn.node
+                            }
+                          : {}
+                      )
                     );
                   }
                   path.replaceWith(t.identifier(`$$server_module${serverIndex}`));
@@ -271,7 +254,6 @@ function transformServer({ types: t, template }) {
               ImportNamespaceSpecifier: sweepImport
             });
           } while (count);
-          decorateServerExport(t, path, state);
         }
       }
     }

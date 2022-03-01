@@ -10,7 +10,9 @@ import { fetch, Headers, Response, Request } from "undici";
 import entry from "./app";
 
 Object.assign(globalThis, Streams, {
-  Request, Response, fetch
+  Request,
+  Response,
+  fetch
 });
 
 prepareManifest(manifest, assetManifest);
@@ -23,7 +25,7 @@ const server = createServer({
 
     const webRes = await entry({
       request: createRequest(req),
-      headers: new Headers(),
+      responseHeaders: new Headers(),
       manifest
     });
 

@@ -1,25 +1,23 @@
 import path from "path";
-import Streams from "stream/web";
 import { Readable } from "stream";
 import { once } from "events";
 import vite from "vite";
-import { fetch, Headers, Response, Request } from "undici";
+import { Headers } from "undici";
 import { createRequest } from "./fetch.js";
-
-Object.assign(globalThis, Streams, {
-  Request, Response, fetch
-});
+import "./node-globals.js";
 
 export function createDevHandler(viteServer) {
   return async (req, res) => {
     try {
       if (req.url === "/favicon.ico") return;
 
+      console.log(req.method, req.url);
+
       const entry = (await viteServer.ssrLoadModule(path.resolve("./src/entry-server"))).default;
 
       const webRes = await entry({
         request: createRequest(req),
-        headers: new Headers()
+        responseHeaders: new Headers()
       });
 
       res.statusCode = webRes.status;
@@ -38,7 +36,7 @@ export function createDevHandler(viteServer) {
       }
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
-      console.log(e.stack);
+      console.log("ERROR", e);
       res.statusCode = 500;
       res.end(e.stack);
     }
@@ -61,9 +59,8 @@ async function createDevServer(root = process.cwd(), configFile) {
 }
 
 export function start(options) {
-  createDevServer(options.root, options.config).then(({ app }) =>
-    app.listen(options.port, () => {
-      console.log(`http://localhost:${options.port}`);
-    })
-  );
+  createDevServer(options.root, options.config).then(({ server }) => {
+    server.listen(options.port);
+    console.log(`http://localhost:${options.port}`);
+  });
 }

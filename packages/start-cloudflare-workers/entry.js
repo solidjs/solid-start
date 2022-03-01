@@ -15,6 +15,10 @@ async function handleEvent(event) {
   try {
     return await getAssetFromKV(event);
   } catch (err) {
-    return entry({ request: event.request, headers: new Headers(), manifest });
+    return entry({
+      request: event.request,
+      responseHeaders: new Headers(),
+      manifest
+    });
   }
 }
