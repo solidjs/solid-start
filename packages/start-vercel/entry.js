@@ -14,7 +14,11 @@ const wrapResponse = response => ({
 function middleware({ request }) {
   const url = new URL(request.url).pathname;
   if (!url.includes(".")) {
-    const response = entry({ request, headers: new Headers(), manifest });
+    const response = entry({
+      request,
+      responseHeaders: new Headers(),
+      manifest
+    });
     return wrapResponse(response);
   }
   return wrapResponse(

@@ -10,7 +10,7 @@ function getFromManifest(manifest) {
 
 export default function Scripts() {
   const isDev = import.meta.env.MODE === "development";
-  const { manifest } = useContext(StartContext);
+  const context = useContext(StartContext);
   return (
     <>
       <HydrationScript />
@@ -19,15 +19,10 @@ export default function Scripts() {
           (isDev ? (
             <>
               <script type="module" src="/@vite/client" $ServerOnly></script>
-              <script
-                type="module"
-                async
-                src="/src/entry-client"
-                $ServerOnly
-              ></script>
+              <script type="module" async src="/src/entry-client" $ServerOnly></script>
             </>
           ) : (
-            getFromManifest(manifest)
+            getFromManifest(context.manifest)
           ))}
       </NoHydration>
     </>

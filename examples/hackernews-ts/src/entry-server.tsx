@@ -1,25 +1,18 @@
 import { renderToStream } from "solid-js/web";
-import { StartServer, createHandler } from "solid-start/components";
-import server, { inlineServerModules } from "solid-start/server";
-
-server.registerHandler("/api/hello-world", () => {
-  const req = server.getContext().request;
-  return new Response(`Hello World! ${Date.now()}: ${req.headers.get("user-agent")}`);
-});
+import { StartServer, createHandler, RequestContext } from "solid-start/components";
+import { inlineServerModules } from "solid-start/server";
 
 const renderPage = () => {
-  return async ({ request, manifest, headers, context = {} }) => {
+  return async (context: RequestContext) => {
     // streaming
     const { readable, writable } = new TransformStream();
-    renderToStream(() => (
-      <StartServer context={context} url={request.url} manifest={manifest} />
-    )).pipeTo(writable);
+    renderToStream(() => <StartServer context={context} />).pipeTo(writable);
 
-    headers.set("Content-Type", "text/html");
+    context.responseHeaders.set("Content-Type", "text/html");
 
     return new Response(readable, {
       status: 200,
-      headers
+      headers: context.responseHeaders
     });
   };
 };

@@ -7,7 +7,9 @@ import { fetch, Headers, Response, Request } from "undici";
 import entry from "./app";
 
 Object.assign(globalThis, {
-  Request, Response, fetch
+  Request,
+  Response,
+  fetch
 });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -21,6 +23,10 @@ prepareManifest(manifest, assetManifest);
 
 export default async req => {
   req.headers = {};
-  const webRes = await entry({ request: createRequest(req), headers: new Headers(), manifest });
+  const webRes = await entry({
+    request: createRequest(req),
+    responseHeaders: new Headers(),
+    manifest
+  });
   return webRes.text();
 };

@@ -1,11 +1,8 @@
 import { createContext } from "solid-js";
 import { RequestContext } from "./StartServer";
 
-export const StartContext = createContext<{
-  manifest?: Record<string, any>;
-  context?: RequestContext;
-}>({});
+export const StartContext = createContext<Partial<RequestContext>>({});
 
 export function StartProvider(props) {
-  return <StartContext.Provider value={props}>{props.children}</StartContext.Provider>;
+  return <StartContext.Provider value={props.context}>{props.children}</StartContext.Provider>;
 }

@@ -13,7 +13,7 @@ export default () => {
   return (
     <StartProvider
       context={{
-        headers: new Headers(),
+        responseHeaders: new Headers(),
         request: request()
       }}
     >

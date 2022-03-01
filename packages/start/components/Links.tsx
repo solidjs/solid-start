@@ -28,6 +28,8 @@ function mapRouteToFile(matches) {
 
 export default function Links() {
   const isDev = import.meta.env.MODE === "development";
-  const { manifest, context } = useContext(StartContext);
-  return <Assets>{!isDev && getAssetsFromManifest(manifest, context)}</Assets>;
+  const context = useContext(StartContext);
+  return (
+    <Assets>{!isDev && getAssetsFromManifest(context.manifest, context.routerContext)}</Assets>
+  );
 }

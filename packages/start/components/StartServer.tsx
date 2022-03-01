@@ -13,7 +13,8 @@ export interface RequestContext {
   request: Request;
   responseHeaders: Response["headers"];
   manifest: Record<string, any>;
-  context?: Record<string, any>;
+  routerContext?: Record<string, any>;
+  tags?: [];
 }
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
@@ -65,25 +66,19 @@ export function createHandler(...exchanges: Middleware[]) {
 }
 
 const docType = ssr("<!DOCTYPE html>");
-export default ({
-  url,
-  manifest,
-  context = {}
-}: {
-  url: string;
-  manifest: Record<string, any>;
-  context?: Partial<RequestContext> & { tags?: [] };
-}) => {
+export default ({ context }: { context: RequestContext }) => {
+  context.routerContext = {};
+  context.tags = [];
+
   // @ts-expect-error
   sharedConfig.context.requestContext = context;
-  context.tags = [];
-  const parsed = new URL(url);
+  const parsed = new URL(context.request.url);
   const path = parsed.pathname + parsed.search;
 
   return (
-    <StartProvider context={context} manifest={manifest}>
+    <StartProvider context={context}>
       <MetaProvider tags={context.tags}>
-        <Router url={path} out={context} data={dataFn}>
+        <Router url={path} out={context.routerContext} data={dataFn}>
           {docType as unknown as any}
           <Root />
         </Router>
