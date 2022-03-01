@@ -31,11 +31,7 @@ export default function () {
           ssr: true,
           outDir: "./.solid/server",
           rollupOptions: {
-            input: resolve(join(config.root, "src", `entry-server`)),
-            output: {
-              format: "cjs"
-            },
-            external: ["@prisma/client"]
+            input: resolve(join(config.root, "src", `entry-server`))
           }
         }
       });

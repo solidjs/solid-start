@@ -68,7 +68,7 @@ export default function () {
       const pathToServer = join(config.root, ".solid", "server", "index.js");
       copyFileSync(join(__dirname, "entry.js"), pathToServer);
       const pathToDist = resolve(config.root, "dist");
-      const pageRoot = join(config.root, "src", "pages");
+      const pageRoot = join(config.root, "src", "routes");
       const routes = [
         ...getAllFiles(pageRoot, pageRoot),
         ...(config.solidOptions.prerenderRoutes || [])
