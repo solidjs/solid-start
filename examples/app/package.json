@@ -12,6 +12,7 @@
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
+    "undici": "^4.12.2",
     "vite": "^2.7.13"
   },
   "engines": {
