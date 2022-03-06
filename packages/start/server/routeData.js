@@ -23,7 +23,7 @@ function transformRouteData({ types: t }) {
 
   function isIdentifierReferenced(ident) {
     const b = ident.scope.getBinding(ident.node.name);
-    if (b?.referenced) {
+    if (b && b.referenced) {
       if (b.path.type === "FunctionDeclaration") {
         return !b.constantViolations
           .concat(b.referencePaths)
@@ -35,7 +35,7 @@ function transformRouteData({ types: t }) {
   }
   function markFunction(path, state) {
     const ident = getIdentifier(path);
-    if (ident?.node && isIdentifierReferenced(ident)) {
+    if (ident && ident.node && isIdentifierReferenced(ident)) {
       state.refs.add(ident);
     }
   }
@@ -82,9 +82,9 @@ function transformRouteData({ types: t }) {
                   const elements = pattern.get("elements");
                   elements.forEach(e => {
                     let local;
-                    if (e.node?.type === "Identifier") {
+                    if (e.node && e.node.type === "Identifier") {
                       local = e;
-                    } else if (e.node?.type === "RestElement") {
+                    } else if (e.node && e.node.type === "RestElement") {
                       local = e.get("argument");
                     } else {
                       return;
@@ -166,7 +166,7 @@ function transformRouteData({ types: t }) {
           let count;
           function sweepFunction(sweepPath) {
             const ident = getIdentifier(sweepPath);
-            if (ident?.node && refs.has(ident) && !isIdentifierReferenced(ident)) {
+            if (ident && ident.node && refs.has(ident) && !isIdentifierReferenced(ident)) {
               ++count;
               if (
                 t.isAssignmentExpression(sweepPath.parentPath) ||
@@ -227,9 +227,9 @@ function transformRouteData({ types: t }) {
                   const elements = pattern.get("elements");
                   elements.forEach(e => {
                     let local;
-                    if (e.node?.type === "Identifier") {
+                    if (e.node && e.node.type === "Identifier") {
                       local = e;
-                    } else if (e.node?.type === "RestElement") {
+                    } else if (e.node && e.node.type === "RestElement") {
                       local = e.get("argument");
                     } else {
                       return;

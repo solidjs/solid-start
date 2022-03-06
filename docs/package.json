@@ -21,7 +21,7 @@
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
     "undici": "^4.12.2",
-    "vite": "^2.7.13",
+    "vite": "^2.8.6",
     "highlight.js": "^11.4.0",
     "vite-plugin-windicss": "^1.6.3"
   }

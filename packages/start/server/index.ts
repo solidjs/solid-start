@@ -59,7 +59,7 @@ export type MiddlewareFn = (request: Request) => Promise<Response>;
 //   return response;
 // };
 
-if (!isServer || process.env.TEST_ENV === "client") {
+if (!isServer) {
   server.fetcher = fetch;
   server.setFetcher = fetch => {
     server.fetcher = fetch;

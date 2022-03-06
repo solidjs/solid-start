@@ -56,7 +56,7 @@ function solidStartInlineServerModules(options) {
     },
     name: "solid-start-inline-server-modules",
     configureServer(vite) {
-      vite.httpServer?.once("listening", async () => {
+      vite.httpServer.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
 
@@ -85,7 +85,7 @@ function solidStartFileSystemRouter(options) {
       config = _config;
     },
     configureServer(vite) {
-      vite.httpServer?.once("listening", async () => {
+      vite.httpServer.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
         const routes = await getRoutes({
@@ -94,7 +94,8 @@ function solidStartFileSystemRouter(options) {
             "jsx",
             "js",
             "ts",
-            ...(options.extensions?.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1)) ??
+            ...((options.extensions &&
+              options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
               [])
           ]
         });
@@ -195,7 +196,8 @@ function solidStartFileSystemRouter(options) {
             "jsx",
             "js",
             "ts",
-            ...(options.extensions?.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1)) ??
+            ...((options.extensions &&
+              options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
               [])
           ]
         });
@@ -216,7 +218,7 @@ function solidsStartRouteManifest(options) {
           "ts",
           "jsx",
           "js",
-          ...(options.extensions?.map(e => e.slice(1)) ?? [])
+          ...((options.extensions && options.extensions.map(e => e.slice(1))) || [])
         ].join("|")}))$`
       );
 
