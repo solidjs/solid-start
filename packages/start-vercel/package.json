@@ -13,6 +13,6 @@
     "solid-start": "^0.1.0-alpha.63"
   },
   "peerDependencies": {
-    "solid-start": "*"
+    "solid-start": "next"
   }
 }
