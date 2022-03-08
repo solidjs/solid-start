@@ -1,25 +1,18 @@
 import { renderToStringAsync } from "solid-js/web";
-import { StartServer } from "solid-start/components";
+import { StartServer, createHandler, RequestContext } from "solid-start/components";
+import { inlineServerModules } from "solid-start/server";
 
-export default async function handleRequest({
-  request,
-  manifest,
-  headers,
-  context = {}
-}: {
-  request: Request;
-  headers: Response["headers"];
-  manifest: Record<string, any>;
-  context?: Record<string, any>;
-}) {
-  let markup = await renderToStringAsync(() => (
-    <StartServer context={context} url={request.url} manifest={manifest} />
-  ));
+function renderPage() {
+  return async (context: RequestContext) => {
+    let markup = await renderToStringAsync(() => <StartServer context={context} />);
 
-  headers.set("Content-Type", "text/html");
+    context.responseHeaders.set("content-type", "text/html");
 
-  return new Response(markup, {
-    status: 200,
-    headers
-  });
+    return new Response(markup, {
+      status: 200,
+      headers: context.responseHeaders
+    });
+  };
 }
+
+export default createHandler(inlineServerModules, renderPage);
