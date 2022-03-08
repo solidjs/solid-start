@@ -19,6 +19,6 @@
     "vite-plugin-inspect": "^0.3.13"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   }
 }
