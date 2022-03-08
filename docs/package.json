@@ -15,7 +15,7 @@
     "rehype-highlight": "^5.0.2",
     "remark-code-extra": "^1.0.1",
     "remark-gfm": "^3.0.1",
-    "solid-app-router": "^0.2.1",
+    "solid-app-router": "^0.3.0",
     "solid-js": "^1.3.5",
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:*",

@@ -19,6 +19,7 @@
     "entry-client",
     "entry-server",
     "plugin.d.ts",
+    "required-user-files.d.ts",
     "root",
     "runtime"
   ],
