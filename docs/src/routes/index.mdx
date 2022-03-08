@@ -1,9 +1,15 @@
 # SolidStart
 
+## Why
+
+How we build SolidJS apps right now requires some difficult setup to get everything working together. Let's look at the problems that we need to solve:
+
+- Routing
+  - Render-as-you-fetch pattern, start loading data before you start rendering the UI for a route
+  - Code-split rendering code for each router
+  - Nested Routes
+  - Browser-like transitions between routes
+
 export default function Layout(props) {
-    return (
-        <div class="p-2">
-            {props.children}
-        </div>
-    );
+  return <div class="p-2">{props.children}</div>;
 }
