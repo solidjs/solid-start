@@ -1,7 +1,15 @@
+import { JSX } from "solid-js";
 import { renderToStringAsync, renderToStream } from "solid-js/web";
 import { RequestContext } from "./StartServer";
 
-export function renderAsync(fn: (context: RequestContext) => any, options?: any) {
+export function renderAsync(
+  fn: (context: RequestContext) => JSX.Element,
+  options?: {
+    timeoutMs?: number;
+    nonce?: string;
+    renderId?: string;
+  }
+) {
   return () => async (context: RequestContext) => {
     let markup = await renderToStringAsync(() => fn(context), options);
     if (context.routerContext.url) {
@@ -23,9 +31,17 @@ function handleRedirect(context) {
   };
 }
 
-export function renderStream(fn: (context: RequestContext) => any, options: any = {}) {
+export function renderStream(
+  fn: (context: RequestContext) => JSX.Element,
+  options: {
+    nonce?: string;
+    renderId?: string;
+    onCompleteShell?: (info: { write: (v: string) => void }) => void;
+    onCompleteAll?: (info: { write: (v: string) => void }) => void;
+  } = {}
+) {
   return () => async (context: RequestContext) => {
-    options = {...options};
+    options = { ...options };
     if (options.onCompleteAll) {
       const og = options.onCompleteAll;
       options.onCompleteAll = options => {
