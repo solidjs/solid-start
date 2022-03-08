@@ -56,7 +56,17 @@ export default defineConfig({
       },
       enforce: "pre"
     },
-    WindiCSS(),
+    WindiCSS({
+      config: {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["DM Sans", "Inter var", "sans-serif"]
+            }
+          }
+        }
+      }
+    }),
     solid({
       extensions: [".mdx", ".md"]
     })
