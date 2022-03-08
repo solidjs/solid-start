@@ -1,6 +1,6 @@
 // @refresh reload
 import { Suspense } from "solid-js";
-import { Links, Meta, Routes, Scripts } from "solid-start/components";
+import { Links, Meta, Routes, Scripts } from "solid-start/root";
 import { ErrorBoundary } from "solid-start/server/ErrorBoundary";
 import "virtual:windi.css";
 

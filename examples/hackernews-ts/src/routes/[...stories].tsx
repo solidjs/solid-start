@@ -1,7 +1,5 @@
-import { Link, useRouteData } from "solid-app-router";
-import { Component, For, Show } from "solid-js";
-import { createResource } from "solid-js";
-import { RouteDataFunc } from "solid-app-router";
+import { Link, useRouteData, RouteDataFunc } from "solid-app-router";
+import { Component, For, Show, createResource } from "solid-js";
 import fetchAPI from "~/lib/api";
 import Story from "~/components/story";
 import { IStory } from "~/types";

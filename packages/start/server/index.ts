@@ -1,6 +1,6 @@
 import { sharedConfig } from "solid-js";
 import { isServer } from "solid-js/web";
-import type { RequestContext, Middleware as ServerMiddleware } from "../components/StartServer";
+import type { RequestContext, Middleware as ServerMiddleware } from "../entry-server/StartServer";
 import {
   ContentTypeHeader,
   JSONResponseType,
@@ -141,13 +141,10 @@ if (!isServer) {
   };
 
   server.fetch = async function (route, init: RequestInit) {
-    const request = new Request(new URL(route, "http://localhost:3000").href, init);
+    const request = new Request(new URL(route, window.location.href).href, init);
 
-    // const handler = createHandler(...server.middleware);
     const handler = server.fetcher;
     const response = await handler(request);
-
-    // console.log(response);
 
     // // throws response, error, form error, json object, string
     if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
