@@ -1,7 +1,7 @@
 import { useContext, JSXElement } from "solid-js";
 import { Assets } from "solid-js/web";
-import { StartContext } from "./StartContext";
-import { ContextMatches, RequestContext } from "./StartServer";
+import { StartContext } from "../entry-server/StartContext";
+import { ContextMatches, RequestContext } from "../entry-server/StartServer";
 
 function getAssetsFromManifest(
   manifest: RequestContext["manifest"],

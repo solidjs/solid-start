@@ -16,8 +16,10 @@
     "server",
     "form",
     "session",
+    "entry-client",
+    "entry-server",
     "plugin.d.ts",
-    "components",
+    "root",
     "runtime"
   ],
   "dependencies": {

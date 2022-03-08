@@ -82,7 +82,7 @@ class NodeRequest extends BaseNodeRequest {
 }
 
 export function createRequest(req) {
-  let origin = `${req.protocol}://${req.headers.host}`;
+  let origin = req.headers.origin || `http://${req.headers.host}`;
   let url = new URL(req.url, origin);
 
   let init = {

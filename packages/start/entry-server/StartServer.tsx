@@ -27,7 +27,7 @@ type TagDescription = {
 
 type RouterContext = {
   matches?: ContextMatches[][];
-  url?: unknown;
+  url?: string;
 };
 
 export interface RequestContext {

@@ -1,5 +1,5 @@
 // @refresh reload
-import { Links, Routes, Scripts } from "solid-start/components";
+import { Links, Routes, Scripts } from "solid-start/root";
 import { Suspense } from "solid-js";
 import { isServer } from "solid-js/web";
 import Nav from "./components/nav";
