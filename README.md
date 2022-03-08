@@ -24,7 +24,7 @@ If you are using Solid Start within a monorepo that takes advantage of the `pack
 
 For example, if specifying `"nohoist"` options from the workspace root (i.e. for all packages):
 
-```json
+```jsonc
 // in workspace root
 {
   "workspaces": {
@@ -38,7 +38,7 @@ For example, if specifying `"nohoist"` options from the workspace root (i.e. for
 
 If specifying `"nohoist"` options for a specific package using `solid-start`:
 
-```json
+```jsonc
 // in project root of a workspace child
 {
   "workspaces": {
