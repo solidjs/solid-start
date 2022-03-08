@@ -4,7 +4,10 @@
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
-  "bin": "./bin.cjs",
+  "bin": {
+    "solid-start": "./bin.cjs",
+    "solid": "./bin.cjs"
+  },
   "main": "./plugin.js",
   "type": "module",
   "types": "plugin.d.ts",
@@ -12,6 +15,7 @@
     "bin.cjs",
     "plugin.js",
     "routes.js",
+    "client-adapter.js",
     "types.d.ts",
     "server",
     "form",
@@ -22,7 +26,9 @@
     "required-user-files.d.ts",
     "root",
     "runtime",
-    "error-boundary"
+    "error-boundary",
+    "router",
+    "meta"
   ],
   "dependencies": {
     "@babel/core": "^7.16.7",
@@ -46,15 +52,15 @@
     "vite-plugin-solid": "^2.2.6"
   },
   "devDependencies": {
-    "solid-app-router": "^0.3.0",
-    "solid-js": "^1.3.5",
+    "solid-app-router": "^0.3.1",
+    "solid-js": "^1.3.13",
     "solid-meta": "^0.27.3",
     "solid-start-node": "^0.1.0-alpha.66",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
-    "solid-app-router": "^0.3.0",
-    "solid-js": "^1.3.5",
+    "solid-app-router": "^0.3.1",
+    "solid-js": "^1.3.13",
     "solid-meta": "^0.27.2",
     "vite": "^2.8.6"
   },

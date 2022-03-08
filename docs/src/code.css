@@ -13,6 +13,34 @@
   background: #ffffff;
 }
 
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Source Code Pro, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    Liberation Mono, Courier New, monospace;
+}
+
+code {
+  padding: 2px 4px;
+  letter-spacing: -0.01em;
+  @apply text-secondary dark:text-secondary-dark rounded-md no-underline bg-gray-500 bg-opacity-10;
+}
+
+a code {
+  @apply text-link bg-highlight dark:bg-highlight-dark py-0;
+}
+
+.code-container code {
+  padding: 0px;
+  letter-spacing: 0em;
+}
+
 .hljs-doctag,
 .hljs-keyword,
 .hljs-meta .hljs-keyword,
@@ -144,11 +172,11 @@ pre {
   height: auto;
 
   /* Give it some space to breathe */
-  padding: 12px;
+  padding: 24px;
 
   /* All code samples get a grey border, twoslash ones get a different color */
-  border-left: 1px solid #999;
-  border-bottom: 1px solid #999;
+  /* border-left: 1px solid #999; */
+  /* border-bottom: 1px solid #999; */
 
   margin-bottom: 3rem;
 
@@ -156,14 +184,24 @@ pre {
   overflow-x: auto;
   position: relative;
 }
+
+.light .shiki.github-dark {
+  display: none;
+}
+
+.dark .shiki.github-light {
+  display: none;
+}
+
 pre.shiki {
   overflow-x: auto;
+  @apply rounded-lg h-full w-full overflow-x-auto flex items-center bg-wash dark:bg-gray-900 shadow-lg my-8;
 }
 pre.shiki:hover .dim {
   opacity: 1;
 }
 pre.shiki div.dim {
-  opacity: 0.5;
+  opacity: 0.25;
 }
 pre.shiki div.dim,
 pre.shiki div.highlight {
@@ -172,7 +210,7 @@ pre.shiki div.highlight {
 }
 pre.shiki div.highlight {
   opacity: 1;
-  background-color: #f1f8ff;
+  @apply bg-highlight dark:bg-highlight-dark;
 }
 pre.shiki div.line {
   min-height: 1rem;
@@ -184,9 +222,6 @@ pre.shiki .language-id {
 }
 
 /* Visually differentiates twoslash code samples  */
-pre.twoslash {
-  border-color: #719af4;
-}
 
 /** When you mouse over the pre, show the underlines */
 pre.twoslash:hover data-lsp {
@@ -212,6 +247,7 @@ pre.twoslash data-lsp:hover::before {
 
 pre .code-container {
   overflow: auto;
+  @apply w-full;
 }
 /* The try button */
 pre .code-container > a {
@@ -442,7 +478,6 @@ pre .logger.log-log svg {
 }
 
 pre .twoslash {
-  
 }
 
 pre .code-title {

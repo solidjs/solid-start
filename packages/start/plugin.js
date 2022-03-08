@@ -6,42 +6,8 @@ import inspect from "vite-plugin-inspect";
 import { getRoutes, stringifyRoutes } from "./routes.js";
 import c from "picocolors";
 import babelServerModule from "./server/babel.js";
-import { join, resolve } from "path";
-import vite from "vite";
-import connect from "connect";
-import http from "http";
-import compression from "compression";
-import sirv from "sirv";
 import routeData from "./server/routeData.js";
-
-function solidStartClientAdpater() {
-  return {
-    async start(config) {
-      var app = connect();
-      app.use(compression());
-      app.use(config.base, sirv(join(config.root, "dist")));
-      http.createServer(app).listen(3000);
-      console.log("Listening on http://localhost:3000");
-      return;
-    },
-    async build(config) {
-      await vite.build({
-        root: join(config.root),
-        // out: "./dist/",
-        build: {
-          outDir: "./dist/",
-          rollupOptions: {
-            input: resolve(join(config.root, "index.html")),
-            output: {
-              manualChunks: undefined
-            }
-          },
-          minify: "terser"
-        }
-      });
-    }
-  };
-}
+import { solidStartClientAdpater } from "./client-adapter.js";
 
 function solidStartInlineServerModules(options) {
   let lazy;
