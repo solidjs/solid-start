@@ -11,7 +11,7 @@
     "undici": "^4.12.2"
   },
   "peerDependencies": {
-    "solid-start": "*",
+    "solid-start": "next",
     "undici": "^4.12.2"
   }
 }

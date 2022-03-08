@@ -59,6 +59,6 @@
     "vite": "^2.8.6"
   },
   "optionalDependencies": {
-    "solid-start-node": "*"
+    "solid-start-node": "next"
   }
 }

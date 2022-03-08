@@ -18,7 +18,7 @@
     "vite": "^2.8.6"
   },
   "peerDependencies": {
-    "solid-start": "*",
+    "solid-start": "next",
     "undici": "^4.12.2",
     "vite": "*"
   }
