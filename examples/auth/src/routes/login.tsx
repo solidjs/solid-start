@@ -4,7 +4,6 @@ import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
 import { useRouteData, useParams } from "solid-app-router";
 import { createResource, Show, useContext } from "solid-js";
-import { RequestContext, StartContext } from "solid-start/components";
 
 import ErrorBoundary from "solid-start/server/ErrorBoundary";
 

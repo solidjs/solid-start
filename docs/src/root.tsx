@@ -1,5 +1,5 @@
 // @refresh reload
-import { Links, Meta, Routes, Scripts } from "solid-start/components";
+import { Links, Meta, Routes, Scripts } from "solid-start/root";
 
 import "./code.css";
 import "virtual:windi.css";

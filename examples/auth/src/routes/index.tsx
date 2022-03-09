@@ -1,11 +1,10 @@
 import { db } from "~/db";
 import server, { redirect } from "solid-start/server";
 import { FormError, createForm, FormSubmission } from "solid-start/form";
-import { createEffect, createResource, For, Index, Show, useContext } from "solid-js";
+import { createEffect, createResource, For, Index, Show } from "solid-js";
 import { Prisma, Message, User } from "@prisma/client";
 import { getUser, logout } from "~/db/session";
-import { StartContext, StartProvider } from "solid-start/components";
-import { useRouteData, useParams, useSearchParams } from "solid-app-router";
+import { useRouteData } from "solid-app-router";
 import ErrorBoundary from "solid-start/server/ErrorBoundary";
 
 const sendMessage = createForm(

@@ -84,14 +84,14 @@ export default UserData;
 
 <ApiSection name="StartClient" description={<>A Component to render on the client. Use it in <md.code>src/entry-client.tsx</md.code></>}>
 ```ts
-import { StartClient } from "solid-start/components";
+import { StartClient } from "solid-start/entry-client";
 ```
 
 ### Usage
 
 ```ts
 import { hydrate } from "solid-js/web";
-import { StartClient } from "solid-start/components";
+import { StartClient } from "solid-start/entry-client";
 
 hydrate(() => <StartClient />, document);
 ```
@@ -101,14 +101,14 @@ hydrate(() => <StartClient />, document);
 <ApiSection name="StartServer" description={<>A Component to render on the server. Use in <md.code>src/entry-server.tsx</md.code></>}>
 
 ```ts
-import { StartServer } from "solid-start/components";
+import { StartServer } from "solid-start/entry-server";
 ```
 
 ### Usage
 
 ```ts
 import { renderToStringAsync } from "solid-js/web";
-import { StartServer } from "solid-start/components";
+import { StartServer } from "solid-start/entry-server";
 
 export default async function handleRequest({
   request,
@@ -148,13 +148,13 @@ export default async function handleRequest({
     }
 >
 ```ts
-import { Scripts, Meta, Links, Outlet } from "solid-start/components";
+import { Scripts, Meta, Links, Outlet } from "solid-start/root";
 ```
 
 ### Usage
 ```ts
 // @refresh reload
-import { Links, Meta, Outlet, Scripts } from "solid-start/components";
+import { Links, Meta, Outlet, Scripts } from "solid-start/root";
 
 
 export default function Root() {

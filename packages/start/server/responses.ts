@@ -1,5 +1,5 @@
 import { FormError } from "../form/FormError";
-import { RequestContext } from "../components/StartServer";
+import { RequestContext } from "../entry-server/StartServer";
 
 export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";
 export const XSolidStartLocationHeader = "x-solidstart-location";
@@ -147,15 +147,12 @@ export function respondWith(
         }
       }
     );
-  } else if (typeof data === "string") {
-    return new Response(data, {
-      status: 200,
-      headers: {
-        [XSolidStartResponseTypeHeader]: responseType,
-        [XSolidStartContentTypeHeader]: "string"
-      }
-    });
-  } else if (typeof data === "object") {
+  } else if (
+    typeof data === "object" ||
+    typeof data === "string" ||
+    typeof data === "number" ||
+    typeof data === "boolean"
+  ) {
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
