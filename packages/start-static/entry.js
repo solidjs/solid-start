@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import { createRequest } from "solid-start/runtime/fetch.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
 import { fetch, Headers, Response, Request } from "undici";
-import entry from "./app";
+import entry from "./app.js";
 
 Object.assign(globalThis, {
   Request,
@@ -23,6 +23,7 @@ prepareManifest(manifest, assetManifest);
 
 export default async req => {
   req.headers = {};
+  req.method = "GET";
   const webRes = await entry({
     request: createRequest(req),
     responseHeaders: new Headers(),
