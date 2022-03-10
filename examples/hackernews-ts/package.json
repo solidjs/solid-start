@@ -8,7 +8,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "devDependencies": {
-    "solid-app-router": "0.3.0",
+    "solid-app-router": "^0.3.0",
     "solid-js": "^1.3.5",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",

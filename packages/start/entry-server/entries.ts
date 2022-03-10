@@ -12,6 +12,7 @@ export function renderAsync(
 ) {
   return () => async (context: RequestContext) => {
     let markup = await renderToStringAsync(() => fn(context), options);
+    console.log("M", markup)
     if (context.routerContext.url) {
       return Response.redirect(new URL(context.routerContext.url, context.request.url), 302);
     }
@@ -27,13 +28,13 @@ export function renderAsync(
 
 function handleRedirect(context) {
   return ({ write }) => {
-    // if (context.routerContext.url) write(`<script>window.location="${context.routerContext.url}"</script>`);
+    if (context.routerContext.url) write(`<script>window.location="${context.routerContext.url}"</script>`);
   };
 }
 
 export function renderStream(
   fn: (context: RequestContext) => JSX.Element,
-  options: {
+  baseOptions: {
     nonce?: string;
     renderId?: string;
     onCompleteShell?: (info: { write: (v: string) => void }) => void;
@@ -41,7 +42,7 @@ export function renderStream(
   } = {}
 ) {
   return () => async (context: RequestContext) => {
-    options = { ...options };
+    const options = { ...baseOptions };
     if (options.onCompleteAll) {
       const og = options.onCompleteAll;
       options.onCompleteAll = options => {
@@ -50,10 +51,11 @@ export function renderStream(
       };
     } else options.onCompleteAll = handleRedirect(context);
     const { readable, writable } = new TransformStream();
-    renderToStream(() => fn(context), options).pipeTo(writable);
+    const stream = renderToStream(() => fn(context), options);
     if (context.routerContext.url) {
       return Response.redirect(new URL(context.routerContext.url, context.request.url), 302);
     }
+    stream.pipeTo(writable);
 
     context.responseHeaders.set("Content-Type", "text/html");
 
