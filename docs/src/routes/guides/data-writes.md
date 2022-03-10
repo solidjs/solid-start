@@ -2,7 +2,13 @@
 title: Data Writes
 ---
 
-# Data Writes
+# Forms and Actions
+
+Why?
+
+In most dynamic web applications, you will want a mechanism of changing the data stored in your database. You 
+
+So we need to collect input from the user about what data to change and how.  This normally happens when the user clicks a button or enters some data in inputs on the web page.
 
 Data writes (some people call these mutations) in Remix are built on top of two fundamental web APIs: `< form >` and HTTP. We then use progressive enhancement to enable optimistic UI, loading indicators, and validation feedback--but the programming model is still built on HTML forms.
 

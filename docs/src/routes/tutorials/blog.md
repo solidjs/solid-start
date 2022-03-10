@@ -13,12 +13,11 @@ This uses TypeScript, but we always pepper the types on after we write the code.
 
 ## Creating the project
 
-💿 Initialize a new Remix project
+💿 Initialize a new SolidStart project
 
 ```sh
-npx create-remix@latest
-# choose Remix App Server
-cd [whatever you named the project]
+npm init solid@latest my-blog
+cd my-blog
 npm run dev
 ```
 
