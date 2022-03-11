@@ -12,7 +12,6 @@ export function renderAsync(
 ) {
   return () => async (context: RequestContext) => {
     let markup = await renderToStringAsync(() => fn(context), options);
-    console.log("M", markup)
     if (context.routerContext.url) {
       return Response.redirect(new URL(context.routerContext.url, context.request.url), 302);
     }
