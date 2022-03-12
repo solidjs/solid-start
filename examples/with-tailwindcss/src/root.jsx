@@ -1,6 +1,6 @@
 // @refresh reload
-import { Links, Meta, Outlet, Scripts } from "solid-start/components";
-  import "./index.css";
+import { Links, Meta, Routes, Scripts } from "solid-start/root";
+import "./index.css";
 
 export default function Root() {
   return (
@@ -12,7 +12,7 @@ export default function Root() {
         <Links />
       </head>
       <body class="antialiased">
-        <Outlet />
+        <Routes />
         <Scripts />
       </body>
     </html>
