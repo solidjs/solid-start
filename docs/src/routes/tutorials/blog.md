@@ -7,7 +7,7 @@ order: 1
 
 We're going to be short on words and quick on code in this quickstart. If you're looking to see what SolidStart is all about in 15 minutes, this is it.
 
-<docs-info>💿 Hey I'm Derrick the Remix Compact Disc 👋 Whenever you're supposed to _do_ something you'll see me</docs-info>
+<docs-info>💿 Hey I'm Derrick the solid-start/router Compact Disc 👋 Whenever you're supposed to _do_ something you'll see me</docs-info>
 
 This uses TypeScript, but we always pepper the types on after we write the code. This isn't our normal workflow, but some of you aren't using TypeScript so we didn't want to clutter up the code for you. Normally we create the type as we write the code so that we get it right the first time (measure twice, cut once!).
 
@@ -21,7 +21,7 @@ cd my-blog
 npm run dev
 ```
 
-<docs-warning>It is important that you pick Remix App Server</docs-warning>
+<docs-warning>It is important that you pick solid-start/router App Server</docs-warning>
 
 We're going to be doing some work with the file system and not all setups are compatible with the code in this tutorial.
 
@@ -33,13 +33,13 @@ If your application is not running properly at [http://localhost:3000](http://lo
 Make sure the `postinstall` script runs before you start the app - if it does not, run it manually (e.g. via `npm run postinstall`).
 </docs-warning>
 
-This might happen if you've added `ignore-scripts = true` to your `npm` configuration or you're using `pnpm` or other package manager that does not automatically run `postinstall` scripts, which Remix relies on.
+This might happen if you've added `ignore-scripts = true` to your `npm` configuration or you're using `pnpm` or other package manager that does not automatically run `postinstall` scripts, which solid-start/router relies on.
 
 ## Your First Route
 
 We're going to make a new route to render at the "/posts" URL. Before we do that, let's link to it.
 
-💿 Add a link to posts in `app/root.tsx`
+💿 Add a link to posts in `src/root.tsx`
 
 ```tsx
 <Link to="/posts">Posts</Link>
@@ -50,16 +50,16 @@ You can put it anywhere you like, you might want to just delete everything that'
 💿 Either way you will also need to import `Link`:
 
 ```tsx
-import { Link } from "remix";
+import { Link } from "solid-start/router";
 ```
 
 Back in the browser go ahead and click the link. You should see a 404 page since we've not created this route yet. Let's create the route now:
 
-💿 Create a new file in `app/routes/posts/index.tsx`
+💿 Create a new file in `src/routes/posts/index.tsx`
 
 ```sh
-mkdir app/routes/posts
-touch app/routes/posts/index.tsx
+mkdir src/routes/posts
+touch src/routes/posts/index.tsx
 ```
 
 <docs-info>Any time you see terminal commands to create files or folders, you can of course do that however you'd like, but using `mkdir` and `touch` is just a way for us to make it clear which files you should be creating.</docs-info>
@@ -70,7 +70,7 @@ You'll probably see the screen just go blank with `null`. You've got a route but
 
 💿 Make the posts component
 
-```tsx filename=app/routes/posts/index.tsx
+```tsx filename=src/routes/posts/index.tsx
 export default function Posts() {
   return (
     <div>
@@ -84,34 +84,40 @@ You might need to refresh the browser to see our new, bare-bones posts route.
 
 ## Loading Data
 
-Data loading is built into Remix.
+Data loading is built into SolidStart.
 
-If your web dev background is primarily in the last few years, you're probably used to creating two things here: an API route to provide data and a frontend component that consumes it. In Remix your frontend component is also its own API route and it already knows how to talk to itself on the server from the browser. That is, you don't have to fetch it.
+If your web dev background is primarily in the last few years, you're probably used to creating two things here: an API route to provide data and a frontend component that consumes it. In SolidStart, we don't think you need another API endpoint for serving data to the same app. What we want to do is load some data for our page but we want the data loading logic to be run just on the server.
 
-If your background is a bit farther back than that with MVC web frameworks like Rails, then you can think of your Remix routes as backend views using React for templating, but then they know how to seamlessly hydrate in the browser to add some flair instead of writing detached jQuery code to dress up the user interactions. It's progressive enhancement realized in its fullest. Additionally, your routes are their own controller.
+Just like in client-side SolidJS apps, we can use the data function that comes with `solid-app-router` to fetch data as you render you component, avoiding waterfalls. In SolidStart, with file system routing, you can export a `routeData` function from your route. This function runs both on the client and the server. You can create resources inside the routeData function if you want to do fetching or reading from the file system.
+
+The magic powers that SolidStart gives you is a function called `server`. You can wrap any async function in your app in a `server` function call, and you create an RPC endpoint that runs as in on the server, but its tree-shaken from the client. The RPC function can be called from the client.
 
 So let's get to it and provide some data to our component.
 
 💿 Make the posts route "loader"
 
-```tsx filename=app/routes/posts/index.tsx lines=[1,3-14,17-18]
-import { useLoaderData } from "remix";
+```tsx filename=src/routes/posts/index.tsx lines=[1,3-14,17-18]
+import { useRouteData } from "solid-start/router";
 
-export const loader = () => {
-  return [
-    {
-      slug: "my-first-post",
-      title: "My First Post"
-    },
-    {
-      slug: "90s-mixtape",
-      title: "A Mixtape I Made Just For You"
-    }
-  ];
-};
+export function routeData() {
+  return createResource(
+    server(() => {
+      return [
+        {
+          slug: "my-first-post",
+          title: "My First Post"
+        },
+        {
+          slug: "90s-mixtape",
+          title: "A Mixtape I Made Just For You"
+        }
+      ];
+    })
+  );
+}
 
 export default function Posts() {
-  const posts = useLoaderData();
+  const [posts] = useRouteData();
   console.log(posts);
   return (
     <div>
@@ -121,89 +127,48 @@ export default function Posts() {
 }
 ```
 
-Loaders are the backend "API" for their component and it's already wired up for you through `useLoaderData`. It's a little wild how blurry the line is between the client and the server in a Remix route. If you have your server and browser consoles both open, you'll note that they both logged our post data. That's because Remix rendered on the server to send a full HTML document like a traditional web framework, but it also hydrated in the client and logged there too.
+Loaders are the backend "API" for their component and it's already wired up for you through `useLoaderData`. It's a little wild how blurry the line is between the client and the server in a solid-start/router route. If you have your server and browser consoles both open, you'll note that they both logged our post data. That's because solid-start/router rendered on the server to send a full HTML document like a traditional web framework, but it also hydrated in the client and logged there too.
 
 💿 Render links to our posts
 
-```tsx filename=app/routes/posts/index.tsx lines=[1,9-15]
-import { Link, useLoaderData } from "remix";
+```tsx filename=src/routes/posts/index.tsx lines=[1,9-15]
+import { Link, useLoaderData } from "solid-start/router";
 
 // ...
 export default function Posts() {
-  const posts = useLoaderData();
+  const [posts] = useRouterData<typeof routeData>();
   return (
     <div>
       <h1>Posts</h1>
       <ul>
-        {posts.map(post => (
-          <li key={post.slug}>
-            <Link to={post.slug}>{post.title}</Link>
-          </li>
-        ))}
+        <For each={posts}>
+          {post => (
+            <li key={post.slug}>
+              <Link to={post.slug}>{post.title}</Link>
+            </li>
+          )}
+        </For>
       </ul>
     </div>
   );
 }
 ```
 
-TypeScript is mad, so let's help it out:
-
-💿 Add the Post type and generic for `useLoaderData`
-
-```tsx filename=app/routes/posts/index.tsx lines=[3-6,9,19,23]
-import { Link, useLoaderData } from "remix";
-
-export type Post = {
-  slug: string;
-  title: string;
-};
-
-export const loader = () => {
-  const posts: Post[] = [
-    {
-      slug: "my-first-post",
-      title: "My First Post"
-    },
-    {
-      slug: "90s-mixtape",
-      title: "A Mixtape I Made Just For You"
-    }
-  ];
-  return posts;
-};
-
-export default function Posts() {
-  const posts = useLoaderData<Post[]>();
-  return (
-    <div>
-      <h1>Posts</h1>
-      <ul>
-        {posts.map(post => (
-          <li key={post.slug}>
-            <Link to={post.slug}>{post.title}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-```
-
-Hey, that's pretty cool. We get a pretty solid degree of type safety even over a network request because it's all defined in the same file. Unless the network blows up while Remix fetches the data, you've got type safety in this component and its API (remember, the component is already its own API route).
+Hey, that's pretty cool. We get a pretty solid degree of type safety even over a network request because it's all defined in the same file and typescript inference works surprisingly well. Unless the network blows up while solid-start/router fetches the data, you've got type safety in this component and the route data.
 
 ## A little refactoring
 
 A solid practice is to create a module that deals with a particular concern. In our case it's going to be reading and writing posts. Let's set that up now and add a `getPosts` export to our module.
 
-💿 Create `app/post.ts`
+💿 Create `src/post.ts`
 
 ```sh
-touch app/post.ts
+touch src/post.ts
 ```
 
 We're mostly gonna copy/paste it from our route:
 
-```tsx filename=app/post.ts
+```tsx filename=src/post.ts
 export type Post = {
   slug: string;
   title: string;
@@ -226,15 +191,14 @@ export function getPosts() {
 
 💿 Update the posts route to use our new posts module
 
-```tsx filename=app/routes/posts/index.tsx
-import { Link, useLoaderData } from "remix";
+```tsx filename=src/routes/posts/index.tsx
+import { Link, useRouterData } from "solid-start/router";
 import { getPosts } from "~/post";
 import type { Post } from "~/post";
 
-export const loader = () => {
-  return getPosts();
-};
-
+export function routeData() {
+  return createResource(server(getPosts));
+}
 // ...
 ```
 
@@ -303,7 +267,7 @@ We'll need a node module for this:
 npm add front-matter
 ```
 
-```tsx filename=app/post.ts lines=[1-3,11,13-28]
+```tsx filename=src/post.ts lines=[1-3,11,13-28]
 import path from "path";
 import fs from "fs/promises";
 import parseFrontMatter from "front-matter";
@@ -333,7 +297,7 @@ export async function getPosts() {
 
 This isn't a Node file system tutorial, so you'll just have to trust us on that code. As mentioned before, you could pull this markdown from a database somewhere (which we will show you in a later tutorial).
 
-<docs-error>If you did not use the Remix App Server you'll probably need to add an extra ".." on the path. Also note that you can't deploy this demo anywhere that doesn't have a persistent file system.</docs-error>
+<docs-error>If you did not use the solid-start/router App Server you'll probably need to add an extra ".." on the path. Also note that you can't deploy this demo anywhere that doesn't have a persistent file system.</docs-error>
 
 TypeScript is gonna be mad at that code, let's make it happy.
 
@@ -345,7 +309,7 @@ Since we're reading in a file, the type system has no idea what's in there, so w
 npm add tiny-invariant
 ```
 
-```tsx filename=app/post.ts lines=[4,11-13,17-21,33-36]
+```tsx filename=src/post.ts lines=[4,11-13,17-21,33-36]
 import path from "path";
 import fs from "fs/promises";
 import parseFrontMatter from "front-matter";
@@ -395,15 +359,15 @@ Now let's make a route to actually view the post. We want these URLs to work:
 /posts/90s-mixtape
 ```
 
-Instead of creating a route for every single one of our posts, we can use a "dynamic segment" in the url. Remix will parse and pass to us so we can look up the post dynamically.
+Instead of creating a route for every single one of our posts, we can use a "dynamic segment" in the url. solid-start/router will parse and pass to us so we can look up the post dynamically.
 
-💿 Create a dynamic route at "app/routes/posts/$slug.tsx"
+💿 Create a dynamic route at "src/routes/posts/[slug].tsx"
 
 ```sh
-touch app/routes/posts/\$slug.tsx
+touch src/routes/posts/[slug].tsx
 ```
 
-```tsx filename=app/routes/posts/$slug.tsx
+```tsx filename=src/routes/posts/$slug.tsx
 export default function PostSlug() {
   return (
     <div>
@@ -417,15 +381,16 @@ You can click one of your posts and should see the new page.
 
 💿 Add a loader to access the params
 
-```tsx filename=app/routes/posts/$slug.tsx lines=[1,3-5,8,11]
-import { useLoaderData } from "remix";
+```tsx filename=src/routes/posts/$slug.tsx lines=[1,3-5,8,11]
+import { useRouterData } from "solid-start/router";
+import type { RouteDataFunc } from "solid-start/router";
 
-export const loader = async ({ params }) => {
+export const routeData: RouteDataFunc = ({ params }) => {
   return params.slug;
 };
 
 export default function PostSlug() {
-  const slug = useLoaderData();
+  const slug = useRouterData();
   return (
     <div>
       <h1>Some Post: {slug}</h1>
@@ -436,24 +401,13 @@ export default function PostSlug() {
 
 The part of the filename attached to the `$` becomes a named key on the `params` object that comes into your loader. This is how we'll look up our blog post.
 
-💿 Let's get some help from TypeScript for the loader function signature.
-
-```tsx filename=app/routes/posts/$slug.tsx lines=[2,4]
-import { useLoaderData } from "remix";
-import type { LoaderFunction } from "remix";
-
-export const loader: LoaderFunction = async ({ params }) => {
-  return params.slug;
-};
-```
-
 Now let's actually read the post from the file system.
 
 💿 Add a `getPost` function to our post module
 
-Put this function anywhere in the `app/post.ts` module:
+Put this function anywhere in the `src/post.ts` module:
 
-```tsx filename=app/post.ts lines=[2,4]
+```tsx filename=src/post.ts lines=[2,4]
 // ...
 export async function getPost(slug: string) {
   const filepath = path.join(postsPath, slug + ".md");
@@ -466,19 +420,19 @@ export async function getPost(slug: string) {
 
 💿 Use the new `getPost` function in the route
 
-```tsx filename=app/routes/posts/$slug.tsx lines=[3,4,9,10,14,17]
-import { useLoaderData } from "remix";
-import type { LoaderFunction } from "remix";
+```tsx filename=src/routes/posts/[slug].tsx lines=[3,4,9,10,14,17]
+import { useRouteData } from "solid-start/router";
+import type { RouteDataFunc } from "solid-start/router";
 import { getPost } from "~/post";
 import invariant from "tiny-invariant";
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const routeData: RouteDataFunc = ({ params }) => {
   invariant(params.slug, "expected params.slug");
-  return getPost(params.slug);
+  return createResource(() => params.slug, server(getPost)));
 };
 
 export default function PostSlug() {
-  const post = useLoaderData();
+  const post = useRouteData();
   return (
     <div>
       <h1>{post.title}</h1>
@@ -501,7 +455,7 @@ npm add marked
 npm add @types/marked
 ```
 
-```tsx filename=app/post.ts lines=[5,11,18,19]
+```tsx filename=src/post.ts lines=[5,11,18,19]
 import path from "path";
 import fs from "fs/promises";
 import parseFrontMatter from "front-matter";
@@ -521,11 +475,11 @@ export async function getPost(slug: string) {
 
 💿 Render the HTML in the route
 
-```tsx filename=app/routes/posts/$slug.tsx lines=[5]
+```tsx filename=src/routes/posts/[slug].tsx lines=[5]
 // ...
 export default function PostSlug() {
-  const post = useLoaderData();
-  return <div dangerouslySetInnerHTML={{ __html: post.html }} />;
+  const post = useRouteData();
+  return <div innerHTML={post.html} />;
 }
 ```
 
@@ -540,20 +494,20 @@ Let's make a new "admin" section of the app.
 💿 Create an admin route
 
 ```sh
-touch app/routes/admin.tsx
+touch src/routes/admin.tsx
 ```
 
-```tsx filename=app/routes/admin.tsx
-import { Link, useLoaderData } from "remix";
+```tsx filename=src/routes/admin.tsx
+import { Link, useRouteData } from "solid-start/router";
 import { getPosts } from "~/post";
 import type { Post } from "~/post";
 
-export const loader = () => {
-  return getPosts();
+export const routeData = () => {
+  return createResource(server(getPosts));
 };
 
 export default function Admin() {
-  const posts = useLoaderData<Post[]>();
+  const [posts] = useRouteData<typeof routeData>();
   return (
     <div className="admin">
       <nav>
@@ -603,8 +557,8 @@ em {
 
 💿 Link to the stylesheet in the admin route
 
-```tsx filename=app/routes/admin.tsx lines=[4,6-8]
-import { Link, useLoaderData } from "remix";
+```tsx filename=src/routes/admin.tsx lines=[4,6-8]
+import { Link, useLoaderData } from "solid-start/router";
 import { getPosts } from "~/post";
 import type { Post } from "~/post";
 import adminStyles from "~/styles/admin.css";
@@ -616,7 +570,7 @@ export const links = () => {
 // ...
 ```
 
-Each route can export a `links` function that returns array of `< link >`tags, except in object form instead of HTML. So we use`{ rel: "stylesheet", href: adminStyles}`instead of`< link rel="stylesheet" href="..." / >`. This allows Remix to merge all of your rendered routes links together and render them in the `< Links/ >`element at the top of your document. You can see another example of this in`root.tsx` if you're curious.
+Each route can export a `links` function that returns array of `< link >`tags, except in object form instead of HTML. So we use`{ rel: "stylesheet", href: adminStyles}`instead of`< link rel="stylesheet" href="..." / >`. This allows solid-start/router to merge all of your rendered routes links together and render them in the `< Links/ >`element at the top of your document. You can see another example of this in`root.tsx` if you're curious.
 
 Alright, you should have a decent looking page with the posts on the left and a placeholder on the right.
 For now, you need to navigate to [http://localhost:3000/admin](http://localhost:3000/admin) manually as we haven't set up any navigational links yet.
@@ -628,12 +582,12 @@ Let's fill in that placeholder with an index route for admin. Hang with us, we'r
 💿 Create a folder for `admin.tsx`'s child routes, with an index inside
 
 ```sh
-mkdir app/routes/admin
-touch app/routes/admin/index.tsx
+mkdir src/routes/admin
+touch src/routes/admin/index.tsx
 ```
 
-```tsx filename=app/routes/admin/index.tsx
-import { Link } from "remix";
+```tsx filename=src/routes/admin/index.tsx
+import { Link } from "solid-start/router";
 
 export default function AdminIndex() {
   return (
@@ -644,12 +598,12 @@ export default function AdminIndex() {
 }
 ```
 
-If you refresh you're not going to see it yet. Every route inside of `app/routes/admin/` can now render _inside_ of `app/routes/admin.tsx` when their URL matches. You get to control which part of the `admin.tsx` layout the child routes render.
+If you refresh you're not going to see it yet. Every route inside of `src/routes/admin/` can now render _inside_ of `src/routes/admin.tsx` when their URL matches. You get to control which part of the `admin.tsx` layout the child routes render.
 
 💿 Add an outlet to the admin page
 
-```tsx filename=app/routes/admin.tsx lines=[1,21]
-import { Outlet, Link, useLoaderData } from "remix";
+```tsx filename=src/routes/admin.tsx lines=[1,21]
+import { Outlet, Link, useRouteData } from "solid-start/router";
 
 //...
 export default function Admin() {
@@ -678,13 +632,13 @@ Hang with us for a minute, index routes can be confusing at first. Just know tha
 
 Maybe this will help, let's add the "/admin/new" route and see what happens when we click the link.
 
-💿 Create the `app/routes/admin/new.tsx` route
+💿 Create the `src/routes/admin/new.tsx` route
 
 ```sh
-touch app/routes/admin/new.tsx
+touch src/routes/admin/new.tsx
 ```
 
-```tsx filename=app/routes/admin/new.tsx
+```tsx filename=src/routes/admin/new.tsx
 export default function NewPost() {
   return <h2>New Post</h2>;
 }
@@ -698,8 +652,8 @@ We're gonna get serious now. Let's build a form to create a new post in our new 
 
 💿 Add a form to the new route
 
-```tsx filename=app/routes/admin/new.tsx lines=[1,4-25]
-import { Form } from "remix";
+```tsx filename=src/routes/admin/new.tsx lines=[1,4-25]
+import { Form } from "solid-start/router";
 
 export default function NewPost() {
   return (
@@ -729,13 +683,13 @@ export default function NewPost() {
 
 If you love HTML like us, you should be getting pretty excited. If you've been doing a lot of `< form onSubmit >`and`< button onClick >` you're about to have your mind blown by HTML.
 
-All you really need for a feature like this is a form to get data from the user and a backend action to handle it. And in Remix, that's all you have to do, too.
+All you really need for a feature like this is a form to get data from the user and a backend action to handle it. And in solid-start/router, that's all you have to do, too.
 
 Let's create the essential code that knows how to save a post first in our `post.ts` module.
 
-💿 Add `createPost` anywhere inside of `app/post.ts`
+💿 Add `createPost` anywhere inside of `src/post.ts`
 
-```tsx filename=app/post.ts
+```tsx filename=src/post.ts
 // ...
 export async function createPost(post) {
   const md = `---\ntitle: ${post.title}\n---\n\n${post.markdown}`;
@@ -746,28 +700,29 @@ export async function createPost(post) {
 
 💿 Call `createPost` from the new post route's action
 
-```tsx filename=app/routes/admin/new.tsx lines=[1,2,4-14]
-import { redirect, Form } from "remix";
+```tsx filename=src/routes/admin/new.tsx lines=[1,2,4-14]
+import { createForm } from "solid-start/form";
+import { redirect } from "solid-start/server";
 import { createPost } from "~/post";
 
-export const action = async ({ request }) => {
-  const formData = await request.formData();
+export const newPost = createForm(
+  async function (formData: FormData) => {
+    const title = formData.get("title");
+    const slug = formData.get("slug");
+    const markdown = formData.get("markdown");
 
-  const title = formData.get("title");
-  const slug = formData.get("slug");
-  const markdown = formData.get("markdown");
+    await createPost({ title, slug, markdown });
 
-  await createPost({ title, slug, markdown });
-
-  return redirect("/admin");
-};
+    return redirect("/admin");
+  }
+);
 
 export default function NewPost() {
   // ...
 }
 ```
 
-That's it. Remix (and the browser) will take care of the rest. Click the submit button and watch the sidebar that lists our posts update automatically.
+That's it. solid-start/router (and the browser) will take care of the rest. Click the submit button and watch the sidebar that lists our posts update automatically.
 
 In HTML an input's `name` attribute is sent over the network and available by the same name on the request's `formData`.
 
@@ -775,7 +730,7 @@ TypeScript is mad again, let's add some types.
 
 💿 Add the types to both files we changed
 
-```tsx filename=app/post.ts lines=[2-6,8]
+```tsx filename=src/post.ts lines=[2-6,8]
 // ...
 type NewPost = {
   title: string;
@@ -792,9 +747,9 @@ export async function createPost(post: NewPost) {
 //...
 ```
 
-```tsx filename=app/routes/admin/new.tsx lines=[2,5]
-import { Form, redirect } from "remix";
-import type { ActionFunction } from "remix";
+```tsx filename=src/routes/admin/new.tsx lines=[2,5]
+import { Form, redirect } from "solid-start/router";
+import type { ActionFunction } from "solid-start/router";
 import { createPost } from "~/post";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -816,7 +771,7 @@ Let's add some validation before we create the post.
 
 💿 Validate if the form data contains what we need, and return the errors if not
 
-```tsx filename=app/routes/admin/new.tsx lines=[11-14,16-18]
+```tsx filename=src/routes/admin/new.tsx lines=[11-14,16-18]
 //...
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -844,9 +799,9 @@ Notice we don't return a redirect this time, we actually return the errors. Thes
 
 💿 Add validation messages to the UI
 
-```tsx filename=app/routes/admin/new.tsx lines=[1,7,13-15,20-22,26-28]
-import { useActionData, Form, redirect } from "remix";
-import type { ActionFunction } from "remix";
+```tsx filename=src/routes/admin/new.tsx lines=[1,7,13-15,20-22,26-28]
+import { useActionData, Form, redirect } from "solid-start/router";
+import type { ActionFunction } from "solid-start/router";
 
 // ...
 
@@ -883,7 +838,7 @@ export default function NewPost() {
 
 TypeScript is still mad, so let's add some invariants and a new type for the error object to make it happy.
 
-```tsx filename=app/routes/admin/new.tsx lines=[2,4-8,15,24-26]
+```tsx filename=src/routes/admin/new.tsx lines=[2,4-8,15,24-26]
 //...
 import invariant from "tiny-invariant";
 
@@ -914,11 +869,11 @@ export const action: ActionFunction = async ({ request }) => {
 };
 ```
 
-For some real fun, disable JavaScript in your dev tools and try it out. Because Remix is built on the fundamentals of HTTP and HTML, this whole thing works without JavaScript in the browser. But that's not the point. Let's slow this down and add some "pending UI" to our form.
+For some real fun, disable JavaScript in your dev tools and try it out. Because solid-start/router is built on the fundamentals of HTTP and HTML, this whole thing works without JavaScript in the browser. But that's not the point. Let's slow this down and add some "pending UI" to our form.
 
 💿 Slow down our action with a fake delay
 
-```tsx filename=app/routes/admin/new.tsx lines=[5-6]
+```tsx filename=src/routes/admin/new.tsx lines=[5-6]
 // ...
 export const action: ActionFunction = async ({ request }) => {
   await new Promise(res => setTimeout(res, 1000));
@@ -935,8 +890,8 @@ export const action: ActionFunction = async ({ request }) => {
 
 💿 Add some pending UI with `useTransition`
 
-```tsx filename=app/routes/admin/new.tsx lines=[2,12,20-22]
-import { useTransition, useActionData, Form, redirect } from "remix";
+```tsx filename=src/routes/admin/new.tsx lines=[2,12,20-22]
+import { useTransition, useActionData, Form, redirect } from "solid-start/router";
 
 // ...
 
@@ -958,6 +913,6 @@ export default function NewPost() {
 
 Now the user gets an enhanced experience than if we had just done this without JavaScript in the browser at all. Some other things that you could do to make it better is automatically slugify the title into the slug field or let the user override it (maybe we'll add that later).
 
-That's it for today! Your homework is to make an `/admin/edit` page for your posts. The links are already there in the sidebar but they return 404! Create a new route that reads the posts, and puts them into the fields. All the code you need is already in `app/routes/posts/$slug.tsx` and `app/routes/admin/new.tsx`. You just gotta put it together.
+That's it for today! Your homework is to make an `/admin/edit` page for your posts. The links are already there in the sidebar but they return 404! Create a new route that reads the posts, and puts them into the fields. All the code you need is already in `src/routes/posts/$slug.tsx` and `src/routes/admin/new.tsx`. You just gotta put it together.
 
-We hope you love Remix!
+We hope you love solid-start!

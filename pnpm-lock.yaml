@@ -76,6 +76,28 @@ importers:
       undici: 4.16.0
       vite: 2.8.6
 
+  examples/blog:
+    specifiers:
+      solid-app-router: ^0.3.0
+      solid-js: ^1.3.5
+      solid-meta: ^0.27.3
+      solid-start: workspace:*
+      solid-start-node: workspace:*
+      typescript: ^4.4.3
+      undici: ^4.12.2
+      vite: ^2.8.6
+      vite-plugin-inspect: ^0.3.13
+    devDependencies:
+      solid-app-router: 0.3.1_solid-js@1.3.11
+      solid-js: 1.3.11
+      solid-meta: 0.27.3_solid-js@1.3.11
+      solid-start: link:../../packages/start
+      solid-start-node: link:../../packages/start-node
+      typescript: 4.6.2
+      undici: 4.15.1
+      vite: 2.8.6
+      vite-plugin-inspect: 0.3.15_vite@2.8.6
+
   examples/hackernews:
     specifiers:
       solid-app-router: ^0.3.0

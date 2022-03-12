@@ -22,7 +22,8 @@
     "required-user-files.d.ts",
     "root",
     "runtime",
-    "error-boundary"
+    "error-boundary",
+    "router"
   ],
   "dependencies": {
     "@babel/core": "^7.16.7",
