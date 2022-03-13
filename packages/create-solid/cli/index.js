@@ -282,7 +282,14 @@ async function main() {
           htmlLeftEnd,
           htmlLeftEnd + root.substring(htmlLeftEnd).search(">")
         );
-        let rootTxt = root.substring(0, htmlLeft) + `<>` + body + `</>` + root.substring(htmlRight);
+        let rootTxt =
+          root
+            .substring(0, htmlLeft)
+            .replace("import { Links, Meta, Routes, Scripts }", `import { Routes }`) +
+          `<>` +
+          body +
+          `</>` +
+          root.substring(htmlRight);
         code = rootTxt.replace(`<Scripts />`, "");
 
         let headTxt = head.replace(`<Meta />`, "").replace(`<Links />`, "");
