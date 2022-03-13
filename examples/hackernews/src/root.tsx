@@ -1,6 +1,7 @@
 // @refresh reload
 import { Links, Routes, Scripts } from "solid-start/root";
 import { Suspense } from "solid-js";
+import { ErrorBoundary } from "solid-start/error-boundary";
 import { isServer } from "solid-js/web";
 import Nav from "./components/nav";
 import "./root.css";
@@ -18,9 +19,11 @@ export default function Root() {
       </head>
       <body>
         <Nav />
-        <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
-          <Routes />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
+            <Routes />
+          </Suspense>
+        </ErrorBoundary>
         <Scripts />
       </body>
     </html>

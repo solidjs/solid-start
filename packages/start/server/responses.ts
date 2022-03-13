@@ -1,5 +1,5 @@
 import { FormError } from "../form/FormError";
-import { RequestContext } from "../entry-server/StartServer";
+import type { RequestContext } from "../entry-server/StartServer";
 
 export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";
 export const XSolidStartLocationHeader = "x-solidstart-location";

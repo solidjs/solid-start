@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "solid-app-router";
+import { useNavigate } from "solid-app-router";
 import {
   ErrorBoundary as ErrorBoundaryBase,
   JSX,
@@ -8,7 +8,7 @@ import {
   startTransition
 } from "solid-js";
 
-import { isRedirectResponse, LocationHeader } from "./responses";
+import { isRedirectResponse, LocationHeader } from "../server/responses";
 
 export function ErrorBoundary(props: PropsWithChildren<{ fallback?: (e: any) => JSX.Element }>) {
   const navigate = useNavigate();
@@ -100,5 +100,3 @@ export function ErrorBoundary(props: PropsWithChildren<{ fallback?: (e: any) => 
     </ErrorBoundaryBase>
   );
 }
-
-export default ErrorBoundary;

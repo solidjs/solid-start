@@ -1,7 +1,8 @@
 // @refresh reload
 import { Links, Meta, Routes, Scripts } from "solid-start/root";
-import "./index.css";
+import { ErrorBoundary } from "solid-start/error-boundary";
 
+import "./index.css";
 export default function Root() {
   return (
     <html lang="en">
@@ -13,7 +14,9 @@ export default function Root() {
       </head>
       <body>
         <main>
-          <Routes />
+          <ErrorBoundary>
+            <Routes />
+          </ErrorBoundary>
         </main>
         <Scripts />
       </body>
