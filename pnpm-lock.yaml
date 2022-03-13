@@ -62,7 +62,6 @@ importers:
       typescript: ^4.4.3
       undici: ^4.12.2
       vite: ^2.8.6
-      vite-plugin-inspect: ^0.3.13
     devDependencies:
       solid-app-router: 0.3.1_solid-js@1.3.11
       solid-js: 1.3.11
@@ -72,7 +71,6 @@ importers:
       typescript: 4.6.2
       undici: 4.15.1
       vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
 
   examples/hackernews:
     specifiers:
@@ -84,7 +82,6 @@ importers:
       typescript: ^4.4.3
       undici: ^4.12.2
       vite: 2.8.6
-      vite-plugin-inspect: ^0.3.13
     devDependencies:
       solid-app-router: 0.3.1_solid-js@1.3.11
       solid-js: 1.3.11
@@ -94,7 +91,6 @@ importers:
       typescript: 4.6.2
       undici: 4.15.1
       vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
 
   examples/with-mdx:
     specifiers:
@@ -108,7 +104,6 @@ importers:
       typescript: ^4.4.3
       undici: ^4.12.2
       vite: ^2.8.6
-      vite-plugin-inspect: ^0.3.13
     devDependencies:
       '@mdx-js/rollup': 2.0.0_rollup@2.70.0
       solid-app-router: 0.3.1_solid-js@1.3.11
@@ -120,7 +115,6 @@ importers:
       typescript: 4.6.2
       undici: 4.15.1
       vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
 
   examples/with-prisma:
     specifiers:
@@ -144,7 +138,6 @@ importers:
       typescript: ^4.4.3
       undici: ^4.12.2
       vite: ^2.8.6
-      vite-plugin-terminal: ^1.0.1
       vite-plugin-windicss: ^1.6.3
       vitest: ^0.2.7
       windicss: ^3.4.3
@@ -159,7 +152,6 @@ importers:
       npm-run-all: 4.1.5
       start-server-and-test: 1.14.0
       undici: 4.15.1
-      vite-plugin-terminal: 1.0.1_rollup@2.70.0+vite@2.8.6
     devDependencies:
       '@prisma/client': 3.10.0_prisma@3.10.0
       '@vitest/ui': 0.2.8
@@ -212,8 +204,6 @@ importers:
       prompts: ^2.4.0
       tiny-glob: ^0.2.8
       yargs-parser: ^21.0.1
-    dependencies:
-      yargs-parser: 21.0.1
     devDependencies:
       '@babel/core': 7.17.5
       '@babel/plugin-syntax-jsx': 7.16.7_@babel+core@7.17.5
@@ -225,6 +215,7 @@ importers:
       prettier: 2.5.1
       prompts: 2.4.2
       tiny-glob: 0.2.9
+      yargs-parser: 21.0.1
 
   packages/start:
     specifiers:
@@ -3011,17 +3002,6 @@ packages:
       is-module: 1.0.0
       resolve: 1.22.0
       rollup: 2.70.0
-
-  /@rollup/plugin-strip/2.1.0_rollup@2.70.0:
-    resolution: {integrity: sha512-OKlIlXMFlH4nVxq0beNSIKVw0LkpNUpVjjvfzH5OAOAR5dhLZgLZBzwYX4ifIAs18YDrreMcZH4xnKmW9fI2AQ==}
-    peerDependencies:
-      rollup: ^1.20.0 || ^2.0.0
-    dependencies:
-      '@rollup/pluginutils': 3.1.0_rollup@2.70.0
-      estree-walker: 2.0.2
-      magic-string: 0.25.9
-      rollup: 2.70.0
-    dev: false
 
   /@rollup/pluginutils/3.1.0_rollup@2.70.0:
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
@@ -9302,6 +9282,7 @@ packages:
 
   /ufo/0.7.11:
     resolution: {integrity: sha512-IT3q0lPvtkqQ8toHQN/BkOi4VIqoqheqM1FnkNWT9y0G8B3xJhwnoKBu5OHx8zHDOvveQzfKuFowJ0VSARiIDg==}
+    dev: false
 
   /uglify-js/3.15.3:
     resolution: {integrity: sha512-6iCVm2omGJbsu3JWac+p6kUiOpg3wFO2f8lIXjfEb8RrmLjzog1wTPMmwKB7swfzzqxj9YM+sGUM++u1qN4qJg==}
@@ -9585,6 +9566,7 @@ packages:
       vite: 2.8.6
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /vite-plugin-solid/1.9.0:
     resolution: {integrity: sha512-GN6lm/FkMBuZZyVEXSLf2lJzw+uhyFpBUPZ1d7p9PbgH6ScpTny5waa8smur4dx/JRuXDpHq+kWoRV3kCP4YjQ==}
@@ -9617,23 +9599,6 @@ packages:
       - less
       - sass
       - stylus
-      - supports-color
-    dev: false
-
-  /vite-plugin-terminal/1.0.1_rollup@2.70.0+vite@2.8.6:
-    resolution: {integrity: sha512-8DnTEKkRGA/HhPk0IeZzNRAqIedjjfSry4BCi9qghr5A0gS4rCPNfNqC8a2qr2e4y1JKYoE9FupQyg7DZVnVHw==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      vite: ^2.0.0
-    dependencies:
-      '@rollup/plugin-strip': 2.1.0_rollup@2.70.0
-      debug: 4.3.3
-      kolorist: 1.5.1
-      sirv: 2.0.2
-      ufo: 0.7.11
-      vite: 2.8.6
-    transitivePeerDependencies:
-      - rollup
       - supports-color
     dev: false
 
@@ -9961,7 +9926,6 @@ packages:
   /yargs-parser/21.0.1:
     resolution: {integrity: sha512-9BK1jFpLzJROCI5TzwZL/TU4gqjK5xiHV/RfWLOahrjAko/e4DJkRDZQXfvqAsiZzzYhgAzbgz6lg48jcm4GLg==}
     engines: {node: '>=12'}
-    dev: false
 
   /yargs/16.2.0:
     resolution: {integrity: sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==}
