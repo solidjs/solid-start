@@ -66,7 +66,7 @@ async function main() {
     directory: "examples",
     repository: "solid-start",
     user: "solidjs",
-    ref: "nksaraf/create-solid"
+    ref: "create-solid"
   };
 
   let templates = {};
@@ -169,9 +169,7 @@ async function main() {
 
   await new Promise((res, rej) => {
     const emitter = degit(
-      `${config.user}/${config.repository}/${config.directory}/${
-        templateName + (!ssr ? "-client" : "") + (ts_response ? "-ts" : "")
-      }#${config.ref}`,
+      `${config.user}/${config.repository}/${config.directory}/${templateName}#${config.ref}`,
       {
         cache: false,
         force: true,
@@ -237,8 +235,28 @@ async function main() {
 
   if (!ssr) {
     fs.copyFileSync(
-      path.join(__dirname, "../templates/client", "entry-client.tsx"),
-      path.join(target, "src", "entry-client.tsx")
+      path.join(__dirname, "templates", "client", "entry-client.jsx"),
+      path.join(target, "src", "entry-client.jsx")
+    );
+
+    fs.copyFileSync(
+      path.join(__dirname, "templates", "client", "root.jsx"),
+      path.join(target, "src", "root.jsx")
+    );
+
+    fs.copyFileSync(
+      path.join(__dirname, "templates", "client", "index.html"),
+      path.join(target, "index.html")
+    );
+
+    let viteConfig = fs.readFileSync(path.join(target, "vite.config.js")).toString();
+    let config = viteConfig
+      .replace(`solid({`, `solid({ ssr: false, `)
+      .replace(`solid()`, `solid({ ssr: false })`);
+
+    fs.writeFileSync(
+      path.join(target, "vite.config.js"),
+      prettier.format(config, { parser: "babel", plugins: [babel] })
     );
   }
 

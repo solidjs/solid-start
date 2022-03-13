@@ -3,7 +3,6 @@ import { useRouteData } from "solid-app-router";
 import { createResource } from "solid-js";
 import { RouteDataFunc } from "solid-app-router";
 import fetchAPI from "~/lib/api";
-import server from "solid-start/server";
 
 interface IUser {
   error: string;
@@ -14,7 +13,7 @@ interface IUser {
 }
 
 export const routeData: RouteDataFunc = props => {
-  const [user] = createResource(() => `user/${props.params.id}`, server(fetchAPI));
+  const [user] = createResource(() => `user/${props.params.id}`, fetchAPI);
   return user;
 };
 

@@ -3,7 +3,6 @@ import { Component, For, Show, createResource } from "solid-js";
 import fetchAPI from "~/lib/api";
 import Story from "~/components/story";
 import { IStory } from "~/types";
-import server from "solid-start/server";
 
 const mapStories = {
   top: "news",
@@ -23,7 +22,7 @@ export const routeData: RouteDataFunc = ({ location, params }) => {
   const page = () => +location.query.page || 1;
   const type = () => params.stories || "top";
 
-  const [stories] = createResource(() => `${mapStories[type()]}?page=${page()}`, server(fetchAPI));
+  const [stories] = createResource(() => `${mapStories[type()]}?page=${page()}`, fetchAPI);
 
   return { type, stories, page };
 };

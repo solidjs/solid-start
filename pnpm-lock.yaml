@@ -52,25 +52,7 @@ importers:
       vite: 2.8.6
       vite-plugin-windicss: 1.8.3_vite@2.8.6
 
-  examples/app:
-    specifiers:
-      solid-app-router: ^0.3.0
-      solid-js: ^1.3.5
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      undici: ^4.12.2
-      vite: ^2.8.6
-    devDependencies:
-      solid-app-router: 0.3.1_solid-js@1.3.11
-      solid-js: 1.3.11
-      solid-meta: 0.27.3_solid-js@1.3.11
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      undici: 4.15.1
-      vite: 2.8.6
-
-  examples/app-ts:
+  examples/bare:
     specifiers:
       solid-app-router: ^0.3.0
       solid-js: ^1.3.5
@@ -92,7 +74,55 @@ importers:
       vite: 2.8.6
       vite-plugin-inspect: 0.3.15_vite@2.8.6
 
-  examples/auth:
+  examples/hackernews:
+    specifiers:
+      solid-app-router: ^0.3.0
+      solid-js: ^1.3.5
+      solid-meta: ^0.27.3
+      solid-start: workspace:*
+      solid-start-node: workspace:*
+      typescript: ^4.4.3
+      undici: ^4.12.2
+      vite: 2.8.6
+      vite-plugin-inspect: ^0.3.13
+    devDependencies:
+      solid-app-router: 0.3.1_solid-js@1.3.11
+      solid-js: 1.3.11
+      solid-meta: 0.27.3_solid-js@1.3.11
+      solid-start: link:../../packages/start
+      solid-start-node: link:../../packages/start-node
+      typescript: 4.6.2
+      undici: 4.15.1
+      vite: 2.8.6
+      vite-plugin-inspect: 0.3.15_vite@2.8.6
+
+  examples/with-mdx:
+    specifiers:
+      '@mdx-js/rollup': ^2.0.0
+      solid-app-router: ^0.3.0
+      solid-js: ^1.3.5
+      solid-mdx: ^0.0.6
+      solid-meta: ^0.27.3
+      solid-start: workspace:*
+      solid-start-node: workspace:*
+      typescript: ^4.4.3
+      undici: ^4.12.2
+      vite: ^2.8.6
+      vite-plugin-inspect: ^0.3.13
+    devDependencies:
+      '@mdx-js/rollup': 2.0.0_rollup@2.70.0
+      solid-app-router: 0.3.1_solid-js@1.3.11
+      solid-js: 1.3.11
+      solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
+      solid-meta: 0.27.3_solid-js@1.3.11
+      solid-start: link:../../packages/start
+      solid-start-node: link:../../packages/start-node
+      typescript: 4.6.2
+      undici: 4.15.1
+      vite: 2.8.6
+      vite-plugin-inspect: 0.3.15_vite@2.8.6
+
+  examples/with-prisma:
     specifiers:
       '@playwright/test': ^1.18.1
       '@prisma/client': ^3.9.0
@@ -144,128 +174,6 @@ importers:
       vite-plugin-windicss: 1.8.3_vite@2.8.6
       vitest: 0.2.8_@vitest+ui@0.2.8+jsdom@19.0.0
       windicss: 3.5.1
-
-  examples/hackernews-ts:
-    specifiers:
-      solid-app-router: ^0.3.0
-      solid-js: ^1.3.5
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      typescript: ^4.4.3
-      undici: ^4.12.2
-      vite: 2.8.6
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      solid-app-router: 0.3.1_solid-js@1.3.11
-      solid-js: 1.3.11
-      solid-meta: 0.27.3_solid-js@1.3.11
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      typescript: 4.6.2
-      undici: 4.15.1
-      vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
-
-  examples/with-mdx:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0
-      solid-app-router: ^0.3.0
-      solid-js: ^1.3.5
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      undici: ^4.12.2
-      vite: ^2.8.6
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0_rollup@2.70.0
-      solid-app-router: 0.3.1_solid-js@1.3.11
-      solid-js: 1.3.11
-      solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
-      solid-meta: 0.27.3_solid-js@1.3.11
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      undici: 4.15.1
-      vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
-
-  examples/with-mdx-client:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0
-      solid-app-router: ^0.3.0
-      solid-js: ^1.3.5
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      undici: ^4.12.2
-      vite: ^2.8.6
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0_rollup@2.70.0
-      solid-app-router: 0.3.1_solid-js@1.3.11
-      solid-js: 1.3.11
-      solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
-      solid-meta: 0.27.3_solid-js@1.3.11
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      undici: 4.15.1
-      vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
-
-  examples/with-mdx-client-ts:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0
-      solid-app-router: ^0.3.0
-      solid-js: ^1.3.5
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      typescript: ^4.4.3
-      undici: ^4.12.2
-      vite: ^2.8.6
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0_rollup@2.70.0
-      solid-app-router: 0.3.1_solid-js@1.3.11
-      solid-js: 1.3.11
-      solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
-      solid-meta: 0.27.3_solid-js@1.3.11
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      typescript: 4.6.2
-      undici: 4.15.1
-      vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
-
-  examples/with-mdx-ts:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0
-      solid-app-router: ^0.3.0
-      solid-js: ^1.3.5
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: workspace:*
-      solid-start-node: workspace:*
-      typescript: ^4.4.3
-      undici: ^4.12.2
-      vite: ^2.8.6
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0_rollup@2.70.0
-      solid-app-router: 0.3.1_solid-js@1.3.11
-      solid-js: 1.3.11
-      solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
-      solid-meta: 0.27.3_solid-js@1.3.11
-      solid-start: link:../../packages/start
-      solid-start-node: link:../../packages/start-node
-      typescript: 4.6.2
-      undici: 4.15.1
-      vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
 
   examples/with-tailwindcss:
     specifiers:
@@ -322,56 +230,29 @@ importers:
 
   packages/create-solid/hello:
     specifiers:
-      '@playwright/test': ^1.18.1
-      '@prisma/client': ^3.9.0
-      '@vitest/ui': ^0.2.7
-      concurrently: ^7.0.0
-      cookie: ^0.4.1
-      cookie-signature: ^1.1.0
-      jsdom: ^19.0.0
-      msw: ^0.36.8
-      node-fetch: ^2.6.7
-      npm-run-all: ^4.1.5
-      prisma: ^3.9.0
+      '@mdx-js/rollup': ^2.0.0
       solid-app-router: ^0.3.0
       solid-js: ^1.3.5
+      solid-mdx: ^0.0.6
       solid-meta: ^0.27.3
       solid-start: next
       solid-start-node: next
-      start-server-and-test: ^1.14.0
       typescript: ^4.4.3
       undici: ^4.12.2
       vite: ^2.8.6
-      vite-plugin-terminal: ^1.0.1
-      vite-plugin-windicss: ^1.6.3
-      vitest: ^0.2.7
-      windicss: ^3.4.3
-    dependencies:
-      '@playwright/test': 1.19.2
-      concurrently: 7.0.0
-      cookie: 0.4.2
-      cookie-signature: 1.2.0
-      jsdom: 19.0.0
-      msw: 0.36.8
-      node-fetch: 2.6.7
-      npm-run-all: 4.1.5
-      start-server-and-test: 1.14.0
-      undici: 4.15.1
-      vite-plugin-terminal: 1.0.1_rollup@2.70.0+vite@2.8.6
+      vite-plugin-inspect: ^0.3.13
     devDependencies:
-      '@prisma/client': 3.10.0_prisma@3.10.0
-      '@vitest/ui': 0.2.8
-      prisma: 3.10.0
+      '@mdx-js/rollup': 2.0.0_rollup@2.70.0
       solid-app-router: 0.3.1_solid-js@1.3.11
       solid-js: 1.3.11
+      solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
       solid-meta: 0.27.3_solid-js@1.3.11
       solid-start: link:../../start
       solid-start-node: link:../../start-node
       typescript: 4.6.2
+      undici: 4.15.1
       vite: 2.8.6
-      vite-plugin-windicss: 1.8.3_vite@2.8.6
-      vitest: 0.2.8_@vitest+ui@0.2.8+jsdom@19.0.0
-      windicss: 3.5.1
+      vite-plugin-inspect: 0.3.15_vite@2.8.6
 
   packages/start:
     specifiers:
