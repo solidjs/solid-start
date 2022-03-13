@@ -7,6 +7,13 @@ import glob from "tiny-glob/sync.js";
 import { viaContentsApi } from "./github.js";
 import { version } from "../package.json";
 import degit from "degit";
+import { fetch } from "undici";
+import { transform } from "sucrase";
+import { transformSync } from "@babel/core";
+import presetTypescript from "@babel/preset-typescript";
+import pluginSyntaxJSX from "@babel/plugin-syntax-jsx";
+import prettier from "prettier/esm/standalone.mjs";
+import babel from "prettier/esm/parser-babel.mjs";
 
 const gitIgnore = `
 dist
@@ -63,36 +70,65 @@ async function main() {
   };
 
   let templates = {};
-  const templateDirs = await viaContentsApi(config);
+  const templateDirs = (await viaContentsApi(config)).filter(
+    d => d !== config.directory + "/" + ".DS_Store"
+  );
+
+  const packageJsons = templateDirs.map(dir => {
+    let url = `https://raw.githubusercontent.com/${config.user}/${config.repository}/${config.ref}/${dir}/package.json`;
+    console.log(url);
+    return fetch(url).then(s => s.json());
+  });
+
+  const packageJsonsMap = await Promise.all(packageJsons);
+  console.log(packageJsonsMap);
 
   templateDirs.forEach(dir => {
-    let template = dir
-      .replace("examples/", "")
-      .replace(/-client-ts/, "")
-      .replace(/-client/, "")
-      .replace(/-ts/, "");
+    let template = dir.replace("examples/", "");
+    // .replace(/-client-ts/, "")
+    // .replace(/-client/, "")
+    // .replace(/-ts/, "");
     if (!templates[template]) {
       templates[template] = {
         name: template,
-        client: false,
-        ssr: false,
-        js: false,
-        ts: false
+        client: true,
+        ssr: true,
+        js: true,
+        ts: true
       };
     }
 
-    if (dir.endsWith("-client") || dir.endsWith("-client-ts")) {
-      templates[template].client = true;
-    } else {
-      templates[template].ssr = true;
-    }
+    // if (dir.endsWith("-client") || dir.endsWith("-client-ts")) {
+    //   templates[template].client = true;
+    // } else {
+    //   templates[template].ssr = true;
+    // }
 
-    if (dir.endsWith("-ts")) {
-      templates[template].ts = true;
-    } else {
-      templates[template].js = true;
-    }
+    // if (dir.endsWith("-ts")) {
+    //   templates[template].ts = true;
+    // } else {
+    //   templates[template].js = true;
+    // }
   });
+
+  let templateNames = [...Object.values(templates)];
+
+  const templateName = (
+    await prompts({
+      type: "select",
+      name: "template",
+      message: "Which template do you want to use?",
+      choices: templateNames
+        //   .filter(template => (ssr ? template.ssr : template.client))
+        //   .filter(template => (ts_response ? template.ts : template.js))
+        .map(template => ({ title: template.name, value: template.name })),
+      initial: 0
+    })
+  ).template;
+
+  if (!templateName) {
+    throw new Error("No template selected");
+  }
 
   let ssr = (
     await prompts({
@@ -111,25 +147,6 @@ async function main() {
       initial: false
     })
   ).value;
-
-  let templateNames = [...Object.values(templates)];
-
-  const templateName = (
-    await prompts({
-      type: "select",
-      name: "template",
-      message: "Which template do you want to use?",
-      choices: templateNames
-        .filter(template => (ssr ? template.ssr : template.client))
-        .filter(template => (ts_response ? template.ts : template.js))
-        .map(template => ({ title: template.name, value: template.name })),
-      initial: 0
-    })
-  ).template;
-
-  if (!templateName) {
-    throw new Error("No template selected");
-  }
 
   if (fs.existsSync(target)) {
     if (fs.readdirSync(target).length > 0) {
@@ -184,7 +201,26 @@ async function main() {
     if (fs.statSync(src).isDirectory()) {
       mkdirp(dest);
     } else {
-      fs.copyFileSync(src, dest);
+      if (src.includes("entry-server") && !ssr) {
+        return;
+      }
+      if (!ts_response && (src.endsWith(".ts") || src.endsWith(".tsx"))) {
+        let code = fs.readFileSync(src).toString();
+        console.log(src);
+        let compiledCode = transformSync(code, {
+          // transforms: ["typescript", "jsx"],
+          // disableESTransforms: true
+          filename: dest,
+          presets: [presetTypescript],
+          plugins: [pluginSyntaxJSX]
+        }).code;
+
+        compiledCode = prettier.format(compiledCode, { parser: "babel", plugins: [babel] });
+
+        fs.writeFileSync(dest.replace(".ts", ".js"), compiledCode);
+      } else {
+        fs.copyFileSync(src, dest);
+      }
     }
   });
 
@@ -204,6 +240,13 @@ async function main() {
     .replace(/"(.+)": "workspace:.+"/g, (_m, name) => `"${name}": "next"`); // TODO ^${versions[name]}
 
   fs.writeFileSync(pkg_file, pkg_json);
+
+  if (!ssr) {
+    fs.copyFileSync(
+      path.join(__dirname, "../templates/client", "entry-client.tsx"),
+      path.join(target, "src", "entry-client.tsx")
+    );
+  }
 
   console.log(bold(green("✔ Copied project files")));
 

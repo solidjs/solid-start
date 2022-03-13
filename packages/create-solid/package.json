@@ -18,5 +18,14 @@
   },
   "files": [
     "bin"
-  ]
+  ],
+  "dependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/plugin-syntax-jsx": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "esbuild": "^0.14.11",
+    "prettier": "^2.5.1",
+    "sucrase": "^3.20.3",
+    "undici": "^4.12.2"
+  }
 }
