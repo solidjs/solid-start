@@ -1,5 +1,6 @@
 // @refresh reload
 import { Links, Meta, Routes, Scripts } from "solid-start/root";
+import "./index.css";
 
 export default function Root() {
   return (

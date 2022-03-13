@@ -16,13 +16,14 @@ prog
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config, open, port, root }) => {
     if (open) setTimeout(() => launch(port), 1000);
-    spawn("vite", ["dev",
-      ...(config ? ["--config", config] : []),
-      ...(port ? ["--port", port] : []),
-    ], {
-      shell: true,
-      stdio: "inherit"
-    });
+    spawn(
+      "vite",
+      ["dev", ...(config ? ["--config", config] : []), ...(port ? ["--port", port] : [])],
+      {
+        shell: true,
+        stdio: "inherit"
+      }
+    );
     // (await import("./runtime/devServer.js")).start({ config, port, root });
   });
 
@@ -48,6 +49,13 @@ prog
       adapter = (await import(adapter)).default();
     }
     adapter.start(config);
+  });
+
+prog
+  .command("use")
+  .describe("Use a solid-start feature")
+  .action(async () => {
+    
   });
 
 prog.parse(process.argv);
