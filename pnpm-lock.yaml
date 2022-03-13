@@ -211,6 +211,9 @@ importers:
       prettier: ^2.5.1
       prompts: ^2.4.0
       tiny-glob: ^0.2.8
+      yargs-parser: ^21.0.1
+    dependencies:
+      yargs-parser: 21.0.1
     devDependencies:
       '@babel/core': 7.17.5
       '@babel/plugin-syntax-jsx': 7.16.7_@babel+core@7.17.5

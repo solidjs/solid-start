@@ -14,6 +14,7 @@ import pluginSyntaxJSX from "@babel/plugin-syntax-jsx";
 import prettier from "prettier/esm/standalone.mjs";
 import prettierBabel from "prettier/esm/parser-babel.mjs";
 import prettierHTML from "prettier/esm/parser-html.mjs";
+import yargsParser from "yargs-parser";
 
 const gitIgnore = `
 dist
@@ -60,13 +61,15 @@ async function main() {
   console.log(gray(`\ncreate-solid version ${version}`));
   console.log(red(disclaimer));
 
+  let args = yargsParser(process.argv.slice(2));
+
   const target = process.argv[2] || ".";
 
   let config = {
-    directory: "examples",
-    repository: "solid-start",
-    user: "solidjs",
-    ref: "main"
+    directory: args.example_dir ? args.example_dir : "examples",
+    repository: args.repo ? args.repo.split("/")[1] : "solid-start",
+    user: args.repo ? args.repo.split("/")[0] : "solidjs",
+    ref: args.branch ? args.branch : "main"
   };
 
   let templates = {};
@@ -74,14 +77,13 @@ async function main() {
     d => d !== config.directory + "/" + ".DS_Store"
   );
 
-  const packageJsons = templateDirs.map(dir => {
-    let url = `https://raw.githubusercontent.com/${config.user}/${config.repository}/${config.ref}/${dir}/package.json`;
-    console.log(url);
-    return fetch(url).then(s => s.json());
-  });
+  // const packageJsons = templateDirs.map(dir => {
+  //   let url = `https://raw.githubusercontent.com/${config.user}/${config.repository}/${config.ref}/${dir}/package.json`;
+  //   console.log(url);
+  //   return fetch(url).then(s => s.json());
+  // });
 
-  const packageJsonsMap = await Promise.all(packageJsons);
-  console.log(packageJsonsMap);
+  // const packageJsonsMap = await Promise.all(packageJsons);
 
   templateDirs.forEach(dir => {
     let template = dir.replace("examples/", "");
@@ -274,6 +276,8 @@ async function main() {
 
         let head = root.substring(headLeft + root.substring(headLeft).search(">") + 1, headRight);
         let body = root.substring(bodyLeft + root.substring(bodyLeft).search(">") + 1, bodyRight);
+        let bodyProps = root.substring(bodyLeft, root.substring(bodyLeft).search(">"));
+        let htmlProps = root.substring(htmlLeft + 5, root.substring(htmlLeft + 5).search(">"));
         let rootTxt = root.substring(0, htmlLeft) + `<>` + body + `</>` + root.substring(htmlRight);
         code = rootTxt.replace(`<Scripts />`, "");
 
@@ -281,12 +285,12 @@ async function main() {
 
         indexHTML = prettier.format(
           `<!DOCTYPE html>
-        <html lang="en">
+        <html ${htmlProps}>
           <head>
             ${headTxt}
             <script type="module" src="./src/entry-client.${ts_response ? "tsx" : "jsx"}"></script>
           </head>
-          <body></body>
+          <body ${bodyProps}></body>
         </html>`,
           {
             parser: "html",
@@ -334,12 +338,18 @@ async function main() {
   const name = path.basename(path.resolve(target));
 
   const pkg_file = path.join(target, "package.json");
-  const pkg_json = fs
-    .readFileSync(pkg_file, "utf-8")
-    .replace(/"name": ".+"/, _m => `"name": "${name}"`)
-    .replace(/"(.+)": "workspace:.+"/g, (_m, name) => `"${name}": "next"`); // TODO ^${versions[name]}
+  const pkg_json = JSON.parse(
+    fs
+      .readFileSync(pkg_file, "utf-8")
+      .replace(/"name": ".+"/, _m => `"name": "${name}"`)
+      .replace(/"(.+)": "workspace:.+"/g, (_m, name) => `"${name}": "next"`)
+  ); // TODO ^${versions[name]}
 
-  fs.writeFileSync(pkg_file, pkg_json);
+  if (!ts_response) {
+    delete pkg_json.devDependencies["typescript"];
+  }
+
+  fs.writeFileSync(pkg_file, JSON.stringify(pkg_json, null, 2));
 
   if (!ssr) {
     fs.writeFileSync(path.join(target, "index.html"), indexHTML);
