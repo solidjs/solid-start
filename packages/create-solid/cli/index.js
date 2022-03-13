@@ -7,7 +7,7 @@ import glob from "tiny-glob/sync.js";
 import { viaContentsApi } from "./github.js";
 import { version } from "../package.json";
 import degit from "degit";
-import { fetch } from "undici";
+import fetch from "node-fetch";
 import { transformSync } from "@babel/core";
 import presetTypescript from "@babel/preset-typescript";
 import pluginSyntaxJSX from "@babel/plugin-syntax-jsx";
@@ -85,9 +85,6 @@ async function main() {
 
   templateDirs.forEach(dir => {
     let template = dir.replace("examples/", "");
-    // .replace(/-client-ts/, "")
-    // .replace(/-client/, "")
-    // .replace(/-ts/, "");
     if (!templates[template]) {
       templates[template] = {
         name: template,
@@ -97,18 +94,6 @@ async function main() {
         ts: true
       };
     }
-
-    // if (dir.endsWith("-client") || dir.endsWith("-client-ts")) {
-    //   templates[template].client = true;
-    // } else {
-    //   templates[template].ssr = true;
-    // }
-
-    // if (dir.endsWith("-ts")) {
-    //   templates[template].ts = true;
-    // } else {
-    //   templates[template].js = true;
-    // }
   });
 
   let templateNames = [...Object.values(templates)];
@@ -118,10 +103,7 @@ async function main() {
       type: "select",
       name: "template",
       message: "Which template do you want to use?",
-      choices: templateNames
-        //   .filter(template => (ssr ? template.ssr : template.client))
-        //   .filter(template => (ts_response ? template.ts : template.js))
-        .map(template => ({ title: template.name, value: template.name })),
+      choices: templateNames.map(template => ({ title: template.name, value: template.name })),
       initial: 0
     })
   ).template;

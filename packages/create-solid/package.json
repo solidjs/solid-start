@@ -14,16 +14,13 @@
     "kleur": "^4.1.4",
     "node-fetch": "^2.6.7",
     "prompts": "^2.4.0",
-    "tiny-glob": "^0.2.8"
-  },
-  "files": [
-    "bin"
-  ],
-  "dependencies": {
+    "tiny-glob": "^0.2.8",
     "@babel/core": "^7.17.5",
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
-    "prettier": "^2.5.1",
-    "undici": "^4.12.2"
-  }
+    "prettier": "^2.5.1"
+  },
+  "files": [
+    "bin"
+  ]
 }

@@ -185,6 +185,7 @@ importers:
       solid-start: next
       solid-start-node: next
       tailwindcss: ^3.0.18
+      typescript: ^3.7.5
       vite: ^2.7.13
     devDependencies:
       autoprefixer: 10.4.2_postcss@8.4.8
@@ -195,6 +196,7 @@ importers:
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       tailwindcss: 3.0.23_autoprefixer@10.4.2
+      typescript: 3.9.10
       vite: 2.8.6
 
   packages/create-solid:
@@ -209,46 +211,17 @@ importers:
       prettier: ^2.5.1
       prompts: ^2.4.0
       tiny-glob: ^0.2.8
-      undici: ^4.12.2
-    dependencies:
+    devDependencies:
       '@babel/core': 7.17.5
       '@babel/plugin-syntax-jsx': 7.16.7_@babel+core@7.17.5
       '@babel/preset-typescript': 7.16.7_@babel+core@7.17.5
-      prettier: 2.5.1
-      undici: 4.15.1
-    devDependencies:
       degit: 2.8.4
       gitignore-parser: 0.0.2
       kleur: 4.1.4
       node-fetch: 2.6.7
+      prettier: 2.5.1
       prompts: 2.4.2
       tiny-glob: 0.2.9
-
-  packages/create-solid/hello:
-    specifiers:
-      '@mdx-js/rollup': ^2.0.0
-      solid-app-router: ^0.3.0
-      solid-js: ^1.3.5
-      solid-mdx: ^0.0.6
-      solid-meta: ^0.27.3
-      solid-start: next
-      solid-start-node: next
-      typescript: ^4.4.3
-      undici: ^4.12.2
-      vite: ^2.8.6
-      vite-plugin-inspect: ^0.3.13
-    devDependencies:
-      '@mdx-js/rollup': 2.0.0_rollup@2.70.0
-      solid-app-router: 0.3.1_solid-js@1.3.11
-      solid-js: 1.3.11
-      solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
-      solid-meta: 0.27.3_solid-js@1.3.11
-      solid-start: link:../../start
-      solid-start-node: link:../../start-node
-      typescript: 4.6.2
-      undici: 4.15.1
-      vite: 2.8.6
-      vite-plugin-inspect: 0.3.15_vite@2.8.6
 
   packages/start:
     specifiers:
@@ -7928,7 +7901,7 @@ packages:
     resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
-    dev: false
+    dev: true
 
   /pretty-format/27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
@@ -9305,6 +9278,12 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: false
+
+  /typescript/3.9.10:
+    resolution: {integrity: sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
 
   /typescript/4.3.5:
     resolution: {integrity: sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==}
