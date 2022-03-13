@@ -2,7 +2,7 @@ import { db } from "~/db";
 import server, { redirect } from "solid-start/server";
 import { FormError, createForm, FormSubmission } from "solid-start/form";
 import { createEffect, createResource, For, Index, Show } from "solid-js";
-import P from "@prisma/client";
+import P, { Message, User } from "@prisma/client";
 import { getUser, logout } from "~/db/session";
 import { useRouteData } from "solid-app-router";
 import { ErrorBoundary } from "solid-start/error-boundary";
