@@ -224,7 +224,7 @@ async function main() {
          *
          *   export default function Root() {
          *      return (
-         *        <html>
+         *        <html lang="fr">
          *          <head>
          *            <title>Solid Start</title>
          *            <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -254,7 +254,7 @@ async function main() {
          * index.html
          *
          *    <!DOCTYPE html>
-         *    <html>
+         *    <html lang="fr">
          *     <head>
          *       <title>Solid Start</title>
          *       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -272,12 +272,16 @@ async function main() {
         let headRight = root.search("</head>");
 
         let htmlLeft = root.search("<html");
+        let htmlLeftEnd = htmlLeft + 5;
         let htmlRight = root.search("</html>") + 8;
 
         let head = root.substring(headLeft + root.substring(headLeft).search(">") + 1, headRight);
         let body = root.substring(bodyLeft + root.substring(bodyLeft).search(">") + 1, bodyRight);
-        let bodyProps = root.substring(bodyLeft, root.substring(bodyLeft).search(">"));
-        let htmlProps = root.substring(htmlLeft + 5, root.substring(htmlLeft + 5).search(">"));
+        let bodyProps = root.substring(bodyLeft, bodyLeft + root.substring(bodyLeft).search(">"));
+        let htmlProps = root.substring(
+          htmlLeftEnd,
+          htmlLeftEnd + root.substring(htmlLeftEnd).search(">")
+        );
         let rootTxt = root.substring(0, htmlLeft) + `<>` + body + `</>` + root.substring(htmlRight);
         code = rootTxt.replace(`<Scripts />`, "");
 
