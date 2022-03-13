@@ -66,7 +66,7 @@ async function main() {
     directory: "examples",
     repository: "solid-start",
     user: "solidjs",
-    ref: "create-solid"
+    ref: "main"
   };
 
   let templates = {};
