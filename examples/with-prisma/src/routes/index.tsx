@@ -5,8 +5,8 @@ import { createEffect, createResource, For, Index, Show } from "solid-js";
 import P from "@prisma/client";
 import { getUser, logout } from "~/db/session";
 import { useRouteData } from "solid-app-router";
-import ErrorBoundary from "solid-start/server/ErrorBoundary";
-const { Prisma }  = P;
+import { ErrorBoundary } from "solid-start/error-boundary";
+const { Prisma } = P;
 
 const sendMessage = createForm(
   server(async function (form: FormData) {
