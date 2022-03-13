@@ -8,12 +8,12 @@ import { viaContentsApi } from "./github.js";
 import { version } from "../package.json";
 import degit from "degit";
 import { fetch } from "undici";
-import { transform } from "sucrase";
 import { transformSync } from "@babel/core";
 import presetTypescript from "@babel/preset-typescript";
 import pluginSyntaxJSX from "@babel/plugin-syntax-jsx";
 import prettier from "prettier/esm/standalone.mjs";
-import babel from "prettier/esm/parser-babel.mjs";
+import prettierBabel from "prettier/esm/parser-babel.mjs";
+import prettierHTML from "prettier/esm/parser-html.mjs";
 
 const gitIgnore = `
 dist
@@ -192,6 +192,7 @@ async function main() {
 
   const files = glob("**/*", { cwd: templateDir }).filter(gitignore.accepts);
 
+  let indexHTML = undefined;
   files.forEach(file => {
     const src = path.join(templateDir, file);
     const dest = path.join(target, file);
@@ -199,22 +200,147 @@ async function main() {
     if (fs.statSync(src).isDirectory()) {
       mkdirp(dest);
     } else {
-      if (src.includes("entry-server") && !ssr) {
+      if (src.endsWith("entry-server.tsx") && !ssr) {
         return;
-      } else if (!ts_response && (src.endsWith(".ts") || src.endsWith(".tsx"))) {
-        let code = fs.readFileSync(src).toString();
-        console.log(src);
-        let compiledCode = transformSync(code, {
-          // transforms: ["typescript", "jsx"],
-          // disableESTransforms: true
-          filename: dest,
-          presets: [presetTypescript],
-          plugins: [pluginSyntaxJSX]
-        }).code;
+      }
 
-        compiledCode = prettier.format(compiledCode, { parser: "babel", plugins: [babel] });
+      if (src.endsWith("tsconfig.json") && !ts_response) {
+        return fs.writeFileSync(
+          path.join(target, "jsconfig.json"),
+          JSON.stringify(
+            {
+              compilerOptions: {
+                jsx: "preserve",
+                jsxImportSource: "solid-js",
+                paths: {
+                  "~/*": ["./src/*"]
+                }
+              }
+            },
+            null,
+            2
+          )
+        );
+      }
 
-        fs.writeFileSync(dest.replace(".ts", ".js"), compiledCode);
+      let code = fs.readFileSync(src).toString();
+
+      if (src.endsWith("entry-client.tsx") && !ssr) {
+        code = `
+        import { render } from "solid-js/web";
+        import { StartClient } from "solid-start/entry-client";
+
+        render(() => <StartClient />, document.body);
+        `;
+      }
+
+      if (src.endsWith("root.tsx") && !ssr) {
+        /**
+         * src/root.tsx
+         *
+         *   export default function Root() {
+         *      return (
+         *        <html>
+         *          <head>
+         *            <title>Solid Start</title>
+         *            <meta name="viewport" content="width=device-width, initial-scale=1" />
+         *            <Meta />
+         *            </Links />
+         *          </head>
+         *          <body class="body-class">
+         *            <Routes/>
+         *            <Scripts />
+         *          </body>
+         *        </html>
+         *      );
+         *    }
+         *           ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
+         *
+         * src/root.tsx
+         *
+         *   export default function Root() {
+         *    return (
+         *      <>
+         *        <Routes/>
+         *        <Scripts />
+         *      </>
+         *    );
+         *   }
+         *
+         * index.html
+         *
+         *    <!DOCTYPE html>
+         *    <html>
+         *     <head>
+         *       <title>Solid Start</title>
+         *       <meta name="viewport" content="width=device-width, initial-scale=1" />
+         *       <script type="module" src="./src/entry-client.tsx"></script>
+         *     </head>
+         *     <body class="body-class">
+         *     </body>
+         *    </html>
+         */
+        let root = code;
+        let bodyLeft = root.search("<body") + 5;
+        let bodyRight = root.search("</body>");
+
+        let headLeft = root.search("<head") + 5;
+        let headRight = root.search("</head>");
+
+        let htmlLeft = root.search("<html");
+        let htmlRight = root.search("</html>") + 8;
+
+        let head = root.substring(headLeft + root.substring(headLeft).search(">") + 1, headRight);
+        let body = root.substring(bodyLeft + root.substring(bodyLeft).search(">") + 1, bodyRight);
+        let rootTxt = root.substring(0, htmlLeft) + `<>` + body + `</>` + root.substring(htmlRight);
+        code = rootTxt.replace(`<Scripts />`, "");
+
+        let headTxt = head.replace(`<Meta />`, "").replace(`<Links />`, "");
+
+        indexHTML = prettier.format(
+          `<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            ${headTxt}
+            <script type="module" src="./src/entry-client.${ts_response ? "tsx" : "jsx"}"></script>
+          </head>
+          <body></body>
+        </html>`,
+          {
+            parser: "html",
+            plugins: [prettierHTML]
+          }
+        );
+      }
+
+      if (src.includes("vite.config") && !ssr) {
+        code = code
+          .replace(`solid({`, `solid({ ssr: false, `)
+          .replace(`solid()`, `solid({ ssr: false })`);
+      }
+
+      if (src.endsWith(".ts") || src.endsWith(".tsx")) {
+        if (!ts_response) {
+          let compiledCode = transformSync(code, {
+            // transforms: ["typescript", "jsx"],
+            // disableESTransforms: true
+            filename: dest,
+            presets: [presetTypescript],
+            plugins: [pluginSyntaxJSX]
+          }).code;
+
+          compiledCode = prettier.format(compiledCode, {
+            parser: "babel",
+            plugins: [prettierBabel]
+          });
+
+          fs.writeFileSync(dest.replace(".ts", ".js"), compiledCode);
+        } else {
+          fs.writeFileSync(
+            dest,
+            prettier.format(code, { parser: "babel-ts", plugins: [prettierBabel] })
+          );
+        }
       } else {
         fs.copyFileSync(src, dest);
       }
@@ -234,30 +360,7 @@ async function main() {
   fs.writeFileSync(pkg_file, pkg_json);
 
   if (!ssr) {
-    fs.copyFileSync(
-      path.join(__dirname, "templates", "client", "entry-client.jsx"),
-      path.join(target, "src", "entry-client.jsx")
-    );
-
-    fs.copyFileSync(
-      path.join(__dirname, "templates", "client", "root.jsx"),
-      path.join(target, "src", "root.jsx")
-    );
-
-    fs.copyFileSync(
-      path.join(__dirname, "templates", "client", "index.html"),
-      path.join(target, "index.html")
-    );
-
-    let viteConfig = fs.readFileSync(path.join(target, "vite.config.js")).toString();
-    let config = viteConfig
-      .replace(`solid({`, `solid({ ssr: false, `)
-      .replace(`solid()`, `solid({ ssr: false })`);
-
-    fs.writeFileSync(
-      path.join(target, "vite.config.js"),
-      prettier.format(config, { parser: "babel", plugins: [babel] })
-    );
+    fs.writeFileSync(path.join(target, "index.html"), indexHTML);
   }
 
   fs.rmSync(path.join(process.cwd(), tempTemplate), {
