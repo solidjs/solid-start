@@ -66,7 +66,7 @@ async function main() {
     directory: "examples",
     repository: "solid-start",
     user: "solidjs",
-    ref: "main"
+    ref: "nksaraf/create-solid"
   };
 
   let templates = {};
@@ -203,8 +203,7 @@ async function main() {
     } else {
       if (src.includes("entry-server") && !ssr) {
         return;
-      }
-      if (!ts_response && (src.endsWith(".ts") || src.endsWith(".tsx"))) {
+      } else if (!ts_response && (src.endsWith(".ts") || src.endsWith(".tsx"))) {
         let code = fs.readFileSync(src).toString();
         console.log(src);
         let compiledCode = transformSync(code, {
@@ -228,11 +227,6 @@ async function main() {
 
   const name = path.basename(path.resolve(target));
 
-  fs.rmSync(path.join(process.cwd(), tempTemplate), {
-    recursive: true,
-    force: true
-  });
-
   const pkg_file = path.join(target, "package.json");
   const pkg_json = fs
     .readFileSync(pkg_file, "utf-8")
@@ -247,6 +241,11 @@ async function main() {
       path.join(target, "src", "entry-client.tsx")
     );
   }
+
+  fs.rmSync(path.join(process.cwd(), tempTemplate), {
+    recursive: true,
+    force: true
+  });
 
   console.log(bold(green("✔ Copied project files")));
 
