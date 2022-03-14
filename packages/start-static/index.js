@@ -35,13 +35,14 @@ export default function () {
       proc.stderr.pipe(process.stderr);
     },
     async build(config) {
+      const appRoot = config.solidOptions.appRoot;
       await Promise.all([
         vite.build({
           build: {
             outDir: "./dist/",
             minify: "terser",
             rollupOptions: {
-              input: resolve(join(config.root, "src", `entry-client`)),
+              input: resolve(join(config.root, appRoot, `entry-client`)),
               output: {
                 manualChunks: undefined
               }
@@ -53,7 +54,7 @@ export default function () {
             ssr: true,
             outDir: "./.solid/server",
             rollupOptions: {
-              input: resolve(join(config.root, "src", `entry-server`)),
+              input: resolve(join(config.root, appRoot, `entry-server`)),
               output: {
                 format: "esm"
               }
@@ -68,7 +69,7 @@ export default function () {
       const pathToServer = join(config.root, ".solid", "server", "index.js");
       copyFileSync(join(__dirname, "entry.js"), pathToServer);
       const pathToDist = resolve(config.root, "dist");
-      const pageRoot = join(config.root, "src", "routes");
+      const pageRoot = join(config.root, appRoot, config.solidOptions.routesDir);
       const routes = [
         ...getAllFiles(pageRoot, pageRoot),
         ...(config.solidOptions.prerenderRoutes || [])
