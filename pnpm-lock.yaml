@@ -177,7 +177,7 @@ importers:
       solid-start: next
       solid-start-node: next
       tailwindcss: ^3.0.18
-      typescript: ^3.7.5
+      typescript: ^4.6.2
       vite: ^2.7.13
     devDependencies:
       autoprefixer: 10.4.2_postcss@8.4.8
@@ -188,7 +188,7 @@ importers:
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       tailwindcss: 3.0.23_autoprefixer@10.4.2
-      typescript: 3.9.10
+      typescript: 4.6.2
       vite: 2.8.6
 
   packages/create-solid:
@@ -9261,12 +9261,6 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: false
-
-  /typescript/3.9.10:
-    resolution: {integrity: sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==}
-    engines: {node: '>=4.2.0'}
-    hasBin: true
-    dev: true
 
   /typescript/4.3.5:
     resolution: {integrity: sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==}
