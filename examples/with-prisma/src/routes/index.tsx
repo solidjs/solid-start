@@ -121,7 +121,6 @@ function MessageItem(props: { item: Message & { user: User } }) {
 export function routeData() {
   return createResource(
     server(async function () {
-      console.log(this.request.headers.get("cookie"));
       if (!(await getUser(this.request))) {
         throw redirect("/login", {
           context: this
