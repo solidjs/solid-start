@@ -193,15 +193,15 @@ async function parseRequest(request: Request) {
   return [name, args] as const;
 }
 
-export async function handleServerRequest(request: Request) {
-  const url = new URL(request.url);
+export async function handleServerRequest(ctx: RequestContext) {
+  const url = new URL(ctx.request.url);
 
   // let oldContext = server.getContext();
   // server.setContext(ctx);
 
   if (server.hasHandler(url.pathname)) {
     try {
-      let [name, args] = await parseRequest(request);
+      let [name, args] = await parseRequest(ctx.request);
       let handler = server.getHandler(name);
       if (!handler) {
         throw {
@@ -209,12 +209,12 @@ export async function handleServerRequest(request: Request) {
           message: "Handler Not Found for " + name
         };
       }
-      const data = await handler.call({ request }, ...(Array.isArray(args) ? args : [args]));
+      const data = await handler.call(ctx, ...(Array.isArray(args) ? args : [args]));
       // server.setContext(oldContext);
-      return respondWith(request, data, "return");
+      return respondWith(ctx.request, data, "return");
     } catch (error) {
       // server.setContext(oldContext);
-      return respondWith(request, error, "throw");
+      return respondWith(ctx.request, error, "throw");
     }
   }
 
@@ -353,7 +353,7 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
     const url = new URL(ctx.request.url);
 
     if (server.hasHandler(url.pathname)) {
-      const serverResponse = await handleServerRequest(ctx.request);
+      const serverResponse = await handleServerRequest(ctx);
 
       const formData = await ctx.request.formData();
       let entries = [...formData.entries()];

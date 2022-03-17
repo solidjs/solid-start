@@ -21,7 +21,8 @@
     "plugin.d.ts",
     "required-user-files.d.ts",
     "root",
-    "runtime"
+    "runtime",
+    "error-boundary"
   ],
   "dependencies": {
     "@babel/core": "^7.16.7",

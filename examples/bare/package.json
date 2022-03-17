@@ -1,5 +1,5 @@
 {
-  "name": "example-with-mdx-ts",
+  "name": "example-app-ts",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
@@ -7,10 +7,8 @@
   },
   "type": "module",
   "devDependencies": {
-    "@mdx-js/rollup": "^2.0.0",
     "solid-app-router": "^0.3.0",
     "solid-js": "^1.3.5",
-    "solid-mdx": "^0.0.6",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
