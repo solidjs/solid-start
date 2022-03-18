@@ -1,11 +1,29 @@
-node_modules/
-dist/
-example/
-.solid/
-
 .vscode/
 coverage/
 types/
 
 packages/create-solid/bin
 *.log
+
+dist
+worker
+.solid
+
+# dependencies
+node_modules
+
+# IDEs and editors
+.idea
+.project
+.classpath
+*.launch
+.settings/
+
+# Temp
+gitignore
+
+.env
+
+# System Files
+.DS_Store
+Thumbs.db
