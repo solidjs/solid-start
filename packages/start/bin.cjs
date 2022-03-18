@@ -52,10 +52,13 @@ prog
   });
 
 prog
-  .command("use")
+  .command("use <feature>")
   .describe("Use a solid-start feature")
-  .action(async () => {
-    
+  .action(async feature => {
+    const { default: fn } = await import(`./addons/${feature}.js`);
+
+    const config = await vite.resolveConfig({}, "serve");
+    console.log(await fn(config));
   });
 
 prog.parse(process.argv);
