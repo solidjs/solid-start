@@ -1,8 +1,8 @@
 import { createServer } from "solid-start-node/server.js";
 import { createRequest } from "solid-start/runtime/fetch.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
-import manifest from "../../dist/rmanifest.json";
-import assetManifest from "../../dist/manifest.json";
+import manifest from "../../dist/rmanifest.json" assert { type: 'json' };
+import assetManifest from "../../dist/manifest.json" assert { type: 'json' };
 import { Readable } from "stream";
 import { once } from "events";
 import * as Streams from "stream/web";
@@ -21,8 +21,6 @@ const { PORT = 3000 } = process.env;
 
 const server = createServer({
   async render(req, res) {
-    if (req.url === "/favicon.ico") return;
-
     const webRes = await entry({
       request: createRequest(req),
       responseHeaders: new Headers(),

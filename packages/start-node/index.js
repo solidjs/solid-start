@@ -1,16 +1,15 @@
 import { copyFileSync } from "fs";
 import { dirname, join, resolve } from "path";
-import { fileURLToPath, pathToFileURL } from "url";
-import { rollup } from "rollup";
+import { fileURLToPath } from "url";
 import vite from "vite";
-import json from "@rollup/plugin-json";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import common from "@rollup/plugin-commonjs";
+import { spawn } from "child_process";
 
 export default function () {
   return {
     start(config) {
-      import(pathToFileURL(join(config.root, "dist", "index.js")));
+      const proc = spawn("node", ["--conditions=\"browser,node\"", "--es-module-specifier-resolution=node", "--experimental-modules", join(config.root, ".solid", "server", "index.js")]);
+      proc.stdout.pipe(process.stdout);
+      proc.stderr.pipe(process.stderr);
     },
     async build(config) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -34,7 +33,7 @@ export default function () {
             input: resolve(join(config.root, "src", `entry-server`)),
             output: {
               format: "esm"
-            }
+            },
           }
         }
       });
@@ -43,23 +42,6 @@ export default function () {
         join(config.root, ".solid", "server", "app.js")
       );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
-      const bundle = await rollup({
-        input: join(config.root, ".solid", "server", "index.js"),
-        plugins: [
-          json(),
-          nodeResolve({
-            preferBuiltins: true,
-            exportConditions: ["node", "solid"]
-          }),
-          common()
-        ],
-        external: ["undici", "stream/web", "@prisma/client"]
-      });
-      // or write the bundle to disk
-      await bundle.write({ format: "esm", dir: join(config.root, "dist") });
-
-      // closes the bundle
-      await bundle.close();
     }
   };
 }
