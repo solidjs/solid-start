@@ -59,7 +59,7 @@ export type MiddlewareFn = (request: Request) => Promise<Response>;
 //   return response;
 // };
 
-if (!isServer) {
+if (!isServer || process.env.TEST_ENV === "client") {
   server.fetcher = fetch;
   server.setFetcher = fetch => {
     server.fetcher = fetch;
@@ -221,7 +221,7 @@ export async function handleServerRequest(ctx: RequestContext) {
   return null;
 }
 
-if (isServer) {
+if (isServer || process.env.TEST_ENV === "client") {
   const handlers = new Map();
   // server.requestContext = null;
 

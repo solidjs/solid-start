@@ -1,21 +1,18 @@
 import { test, expect } from "@playwright/test";
 
-test("basic login test", async ({ page, context, browser }) => {
-  let javaScriptEnabled = (process.env.JAVASCRIPT ?? "true") === "true";
-  let host = process.env.TEST_HOST ?? "http://localhost:3000";
-  const nojs = await browser.newContext({
-    javaScriptEnabled
+test("basic login test", async ({ browser }) => {
+  let appURL = new URL(process.env.TEST_HOST ?? "http://localhost:3000/").href;
+  const context = await browser.newContext({
+    javaScriptEnabled: !process.env.DISABLE_JAVASCRIPT
   });
 
-  page = await nojs.newPage();
-
-  console.log("testing with javascript ", javaScriptEnabled);
+  const page = await context.newPage();
 
   // go to home
-  await page.goto(`${host}`);
+  await page.goto(appURL);
 
   console.log(`redirect to login page`);
-  await page.waitForURL(`${host}/login`);
+  await page.waitForURL(new URL("/login", appURL).href);
 
   console.log("testing wrong password");
   await page.fill('input[name="username"]', "kody");
@@ -54,17 +51,17 @@ test("basic login test", async ({ page, context, browser }) => {
   await page.click("button[type=submit]");
 
   console.log(`redirect to home after login`);
-  await page.waitForURL(`${host}`);
+  await page.waitForURL(appURL);
 
   console.log(`going to login page should redirect to home page since we are logged in`);
-  await page.goto(`${host}/login`);
-  await page.waitForURL(`${host}`);
+  await page.goto(new URL("/login", appURL).href);
+  await page.waitForURL(appURL);
 
   console.log(`logout`);
   await page.click("button[name=logout]");
-  await page.waitForURL(`${host}/login`);
+  await page.waitForURL(new URL("/login", appURL).href);
 
   console.log(`going to home should redirect to login`);
-  await page.goto(`${host}`);
-  await page.waitForURL(`${host}/login`);
+  await page.goto(appURL);
+  await page.waitForURL(new URL("/login", appURL).href);
 });

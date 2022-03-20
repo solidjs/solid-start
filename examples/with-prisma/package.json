@@ -7,16 +7,12 @@
     "db:dev": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
+    "postinstall": "prisma generate",
+    "start-server-and-test": "start-server-and-test build-and-start http://localhost:3000 test:e2e",
     "build-and-start": "npm run build && npm run start",
-    "test": "npm run test:unit && start-server-and-test build-and-start http://localhost:3000 test:e2e",
-    "test:unit": "npm-run-all -p test:unit:*",
-    "test:unit:client": "TEST_ENV=client TEST_MODE=client vitest run",
-    "test:unit:client-server": "TEST_ENV=client TEST_MODE=client-server vitest run",
-    "test:unit:server": "TEST_ENV=server TEST_MODE=server vitest run",
     "test:e2e": "npm-run-all -p test:e2e:*",
-    "test:e2e:js": "playwright test && echo",
-    "test:e2e:no-js": "JAVASCRIPT=false playwright test && echo",
-    "postinstall": "prisma generate"
+    "test:e2e:js": "playwright test",
+    "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test"
   },
   "prisma": {
     "enabled": true,
@@ -36,22 +32,14 @@
     "vite": "^2.8.6",
     "vite-plugin-windicss": "^1.6.3",
     "vitest": "^0.2.7",
-    "windicss": "^3.4.3"
+    "windicss": "^3.4.3",
+    "undici": "^4.12.2",
+    "playwright": "1.19.2",
+    "@playwright/test": "^1.18.1",
+    "npm-run-all": "latest",
+    "start-server-and-test": "latest"
   },
   "engines": {
     "node": ">=14"
-  },
-  "dependencies": {
-    "@playwright/test": "^1.18.1",
-    "concurrently": "^7.0.0",
-    "cookie": "^0.4.1",
-    "cookie-signature": "^1.1.0",
-    "jsdom": "^19.0.0",
-    "msw": "^0.36.8",
-    "node-fetch": "^2.6.7",
-    "npm-run-all": "^4.1.5",
-    "playwright": "^1.20.0",
-    "start-server-and-test": "^1.14.0",
-    "undici": "^4.12.2"
   }
 }
