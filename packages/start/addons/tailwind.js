@@ -25,6 +25,9 @@ let tailwindCSS = `@tailwind base;
 
 export default async function main(vite) {
   cd(vite.root);
+  if (fs.existsSync(path.join(vite.root, ".git"))) {
+    await $`git add -A`;
+  }
 
   let pkgJSON = JSON.parse(fs.readFileSync(path.join(vite.root, "package.json")).toString());
 

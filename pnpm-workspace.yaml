@@ -2,6 +2,7 @@ packages:
   # all packages in subdirs of packages/ and examples/
   - 'packages/**'
   - 'examples/**'
+  - 'fixtures/**'
   - 'docs/**'
 options:
   prefer-workspace-packages: true

@@ -25,6 +25,9 @@ let tailwindCSS = `@tailwind base;
 
 export default async function main(vite) {
   cd(vite.root);
+  if (fs.existsSync(path.join(vite.root, ".git"))) {
+    await $`git add -A`;
+  }
 
   let pkgJSON = JSON.parse(fs.readFileSync(path.join(vite.root, "package.json")).toString());
 
@@ -72,6 +75,7 @@ export default async function main(vite) {
   console.log(config);
 
   fs.writeFileSync(path.resolve(vite.root, vitep), config);
+  await $`npx prettier -w ${vitep}`;
 
   // let newConfig = config.replace(
   // fs.writeFileSync(path.join(vite.root, "postcss.config.cjs"), postcssConfig);
@@ -83,5 +87,4 @@ export default async function main(vite) {
   // );
 
   await $`npx @antfu/ni`;
-  await $`npx prettier -w ${vitep}`;
 }
