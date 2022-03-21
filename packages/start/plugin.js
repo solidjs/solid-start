@@ -106,7 +106,7 @@ function solidStartFileSystemRouter(options) {
         function addRoute(route) {
           if (route.children) {
             for (var r of route.children) {
-              addRoute(r);
+              addRoute({ ...r, path: route.path + r.path, _id: route._id + r.path });
             }
           }
 
@@ -116,6 +116,7 @@ function solidStartFileSystemRouter(options) {
         for (var r of routes.pageRoutes) {
           addRoute(r);
         }
+
         setTimeout(() => {
           // eslint-disable-next-line no-console
           console.log(

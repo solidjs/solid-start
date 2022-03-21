@@ -31,7 +31,11 @@ function mapRouteToFile(matches: ContextMatches[]) {
     .join("");
 }
 
-export default function Links() {
+/**
+ * Links are used to load assets for the server.
+ * @returns {JSXElement}
+ */
+export default function Links(): JSXElement {
   const isDev = import.meta.env.MODE === "development";
   const context = useContext(StartContext);
   return (

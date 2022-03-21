@@ -7,8 +7,20 @@ import "virtual:windi.css";
 import { MDXProvider } from "solid-mdx";
 import Nav from "./components/Nav";
 import md from "./md";
+import { createEffect } from "solid-js";
+import tippy from "tippy.js";
 
 export default function Root() {
+  createEffect(() => {
+    tippy("[data-template]", {
+      content(reference) {
+        const id = reference.getAttribute("data-template");
+        const template = document.getElementById(id);
+        return template.innerHTML;
+      },
+      allowHTML: true
+    });
+  });
   return (
     <html lang="en" class="h-full">
       <head>
@@ -17,22 +29,18 @@ export default function Root() {
         <Meta />
         <Links />
       </head>
-      <body class="h-full flex flex-col">
+      <body class="min-h-full flex flex-row">
         <MDXProvider
           components={{
             ...md
           }}
         >
-          <header class="p-4 bg-orange-500 text-white">
-            <h1 class="text-5xl text-center mb-4">WIP</h1>
-            <p class="max-w-prose mx-auto">
-              These docs are a major work in progress. They are incomplete and have inaccurate
-              information. That is why we need you! Feel free to ask questions in the discord chat
-              and if you're dedicated, then contribute!
-            </p>{" "}
-          </header>
           <Nav />
-          <Routes />
+          <div class="h-screen overflow-scroll flex-1 bg-blue-50 px-12">
+            <div class="flex flex-col w-full">
+              <Routes />
+            </div>
+          </div>
         </MDXProvider>
         <Scripts />
       </body>

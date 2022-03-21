@@ -13,7 +13,8 @@ import {
   startTransition,
   getOwner,
   runWithOwner,
-  Show
+  Show,
+  JSX
 } from "solid-js";
 import { FormError } from "./FormError";
 
@@ -382,10 +383,24 @@ function isInputElement(object: any): object is HTMLInputElement {
   return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
 }
 
+interface FormController {
+  (props: FormProps): JSX.Element;
+  Form: (props: FormProps) => JSX.Element;
+  url: string;
+  isSubmitting(): boolean;
+  submissions: () => {
+    [key: string]: FormSubmission;
+  };
+  submission(key: string): FormSubmission;
+}
+
 export function createForm<
   D extends FormData,
-  T extends { url?: string; action: (arg: D) => Promise<Response> }
->(fn: T) {
+  T extends {
+    url?: string;
+    action: ((arg: D) => Promise<Response>) | ((this: any, arg: D) => Promise<Response>);
+  }
+>(fn: T): FormController {
   const [submissions, action] = createAction((submission: FormAction<D>) =>
     fn.action(submission.formData)
   );
@@ -446,7 +461,7 @@ export function createForm<
     );
   }
 
-  Form.Form = Form;
+  Form.Form = Form as (props: FormProps) => JSX.Element;
   Form.url = fn.url;
   Form.isSubmitting = () =>
     Object.values(submissions()).filter(sub => sub.status === "submitting").length > 0;
