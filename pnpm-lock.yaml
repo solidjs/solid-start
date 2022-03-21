@@ -30,12 +30,11 @@ importers:
       remark-code-extra: ^1.0.1
       remark-gfm: ^3.0.1
       remark-shiki-twoslash: ^3.0.9
-      solid-app-router: ^0.3.0
+      solid-app-router: ^0.3.1
       solid-js: ^1.3.5
       solid-mdx: ^0.0.6
       solid-start: workspace:*
       solid-start-node: workspace:*
-      solid-tippy: ^0.1.3
       tippy.js: ^6.3.7
       undici: ^4.12.2
       vite: ^2.8.6
@@ -52,7 +51,6 @@ importers:
       solid-mdx: 0.0.6_solid-js@1.3.11+vite@2.8.6
       solid-start: link:../packages/start
       solid-start-node: link:../packages/start-node
-      solid-tippy: 0.1.3_solid-js@1.3.11+tippy.js@6.3.7
       tippy.js: 6.3.7
       undici: 4.15.1
       vite: 2.8.6
@@ -8997,17 +8995,6 @@ packages:
     dependencies:
       '@testing-library/dom': 7.31.2
       solid-js: 1.3.11
-    dev: true
-
-  /solid-tippy/0.1.3_solid-js@1.3.11+tippy.js@6.3.7:
-    resolution: {integrity: sha512-41lqCpVIvpEztQQEe12/FphCXvg+IvMRxsrxRwNdWAb3Eli8glpHPEIFfd20n8zHIIe2m2LXpx1BTVfAacJsog==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-js: ^1.2
-      tippy.js: ^6.3
-    dependencies:
-      solid-js: 1.3.11
-      tippy.js: 6.3.7
     dev: true
 
   /sort-keys/2.0.0:
