@@ -17,12 +17,13 @@ export default function () {
     },
     async build(config) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
+      const appRoot = config.solidOptions.appRoot;
       await vite.build({
         build: {
           outDir: "./.output/static/",
           minify: "terser",
           rollupOptions: {
-            input: resolve(join(config.root, "src", `entry-client`)),
+            input: resolve(join(config.root, appRoot, `entry-client`)),
             output: {
               manualChunks: undefined
             }
@@ -34,7 +35,7 @@ export default function () {
           ssr: true,
           outDir: "./.solid/server",
           rollupOptions: {
-            input: resolve(join(config.root, "src", `entry-server`)),
+            input: resolve(join(config.root, appRoot, `entry-server`)),
             output: {
               format: "esm"
             }
