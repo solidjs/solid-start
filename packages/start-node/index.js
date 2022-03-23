@@ -1,4 +1,4 @@
-import { copyFileSync } from "fs";
+import { copyFileSync, unlinkSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { rollup } from "rollup";
@@ -17,7 +17,7 @@ export default function () {
       const appRoot = config.solidOptions.appRoot;
       await vite.build({
         build: {
-          outDir: "./dist/",
+          outDir: "./dist/public",
           minify: "terser",
           rollupOptions: {
             input: resolve(join(config.root, appRoot, `entry-client`)),
@@ -61,6 +61,9 @@ export default function () {
 
       // closes the bundle
       await bundle.close();
+
+      unlinkSync(join(config.root, "dist", "public", "manifest.json"));
+      unlinkSync(join(config.root, "dist", "public", "rmanifest.json"));
     }
   };
 }

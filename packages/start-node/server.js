@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const noop_handler = (_req, _res, next) => next();
 const paths = {
-	assets: join(__dirname, '/assets')
+	assets: join(__dirname, '/public')
 };
 
 export function createServer({ render }) {
@@ -20,7 +20,7 @@ export function createServer({ render }) {
 		  })
 		: noop_handler;
 
-	const server = polka().use("/assets",
+	const server = polka().use("/",
 		comp,
 		assets_handler
 	).use(comp, render);
