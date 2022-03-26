@@ -1,3 +1,4 @@
+import fs from "path";
 import path from "path";
 import { normalizePath } from "vite";
 import manifest from "rollup-route-manifest";
@@ -281,6 +282,30 @@ function solidStartConfig(options) {
   };
 }
 
+function find(locate, cwd) {
+  cwd = cwd || process.cwd();
+  if (cwd.split(path.sep).length < 2) return undefined;
+  const match = fs.readdirSync(cwd).find((f) => f === locate);
+  if (match) return match;
+  return find(locate, path.join(cwd, ".."));
+}
+
+function detectAdapter() {
+  const nodeModulesPath = find("node_modules");
+
+  let adapters = [];
+  fs.readdirSync(nodeModulesPath).forEach((dir) => {
+    if (dir.startsWith("solid-start-")) {
+      adapters.push(dir);
+    }
+  });
+
+  // Ignore the default adapter.
+  adapters = adapters.filter((adapter) => adapter !== "solid-start-node");
+
+  return adapters.length > 0 ? adapters[0] : "solid-start-node";
+}
+
 /**
  * @returns {import('vite').Plugin[]}
  */
@@ -290,7 +315,7 @@ export default function solidStart(options) {
       adapter:
         options && options.ssr !== undefined && !options.srr
           ? solidStartClientAdpater()
-          : "solid-start-node",
+          : detectAdapter(),
       appRoot: "src",
       routesDir: "routes",
       ssr: true,
