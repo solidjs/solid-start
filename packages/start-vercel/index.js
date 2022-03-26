@@ -1,5 +1,5 @@
 import { copyFileSync } from "fs";
-import { dirname, join } from "path";
+import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
 import vite from "vite";
