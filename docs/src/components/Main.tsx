@@ -15,21 +15,12 @@ export function Main(props) {
     </div>
   );
 }
-
-import { createForm } from "solid-start/form";
-import server, { redirect } from "solid-start/server";
-
-const loginForm = createForm(
-  server(async (formData) => {
-//              ^?
-    return redirect("/");
-  })
-);
-
+import { Title as MetaTitle } from "solid-meta";
 export function Title(props) {
   return (
     <h1 class="heading mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-bold leading-tight">
       {props.children}
+      <MetaTitle>{props.children}</MetaTitle>
       <a
         href="#undefined"
         aria-label="Link for this heading"

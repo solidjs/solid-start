@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "solid-app-router";
+import { NavLink, Route, Routes, useLocation } from "solid-app-router";
 import { NavHeader, SearchBar } from "./NavHeader";
 import {
   Accordion,
@@ -8,7 +8,6 @@ import {
   AccordionPanel,
   useHeadlessSelectOptionChild
 } from "solid-headless";
-import { For } from "solid-js";
 
 export default function Nav() {
   return (
@@ -37,51 +36,99 @@ function NavMenu() {
         class="w-full h-screen lg:h-auto grow pr-0 lg:pr-5 pt-6 pb-44 lg:pb-0 lg:py-6 md:pt-4 lg:pt-4 overflow-y-scroll lg:overflow-y-auto scrolling-touch scrolling-gpu"
         style="--bg-opacity:0.2;"
       >
-        <Accordion as="ul" toggleable>
-          <NavSection header="Directory Structure" href="/api/files/index">
-            <NavItem href="/api/files/root" title="solid-start/root">
-              src/root.tsx
-            </NavItem>
-            <NavItem href="/api/files/entry-client" title="solid-start/entry-client">
-              src/entry-client.tsx
-            </NavItem>
-            <NavItem href="/api/files/entry-server" title="solid-start/entry-server">
-              src/entry-server.tsx
-            </NavItem>
-            <NavItem href="/api/files/routes" title="solid-start/entry-server">
-              src/routes/**/*
-            </NavItem>
-          </NavSection>
-          <NavSection href="/api/forms/index" header="Forms">
-            <NavItem href="/api/forms/createform" title="createForm()">
-              createForm()
-            </NavItem>
-            <NavItem href="/api/forms/formerror" title=" new FormError()">
-              new FormError()
-            </NavItem>
-            <NavItem href="/api/forms/createaction" title="createAction()">
-              createAction()
-            </NavItem>
-          </NavSection>
-          <NavSection href="/api/server/index" header="Server Functions">
-            <NavItem href="/api/server/server" title="server()">
-              server()
-            </NavItem>
-          </NavSection>
-          <NavSection href="/api/session/index" header="Session">
-            <NavItem
-              href="/api/session/createCookieSessionStorage"
-              title="createCookieSessionStorage()"
-            >
-              createCookieSessionStorage()
-            </NavItem>
-          </NavSection>
-        </Accordion>
+        <Routes>
+          <Route path="/api/**/*" component={ApiNav} />
+          <Route path="/learn" component={LearnNav} />
+        </Routes>
       </nav>
       {/* <div class="sticky bottom-0 hidden lg:block">
         IsThisPageHelpful()}
       </div> */}
     </aside>
+  );
+}
+
+function LearnNav() {
+  return <></>;
+}
+
+const SECTIONS = {
+  FileNameConventions: {
+    header: "File Name Conventions",
+    link: "/api/files",
+    inSubsections: p => p.startsWith("/api/files")
+  },
+  Forms: {
+    header: "Forms",
+    link: "/api/forms",
+    inSubsections: p => p.startsWith("/api/forms")
+  },
+  "Server Functions": {
+    header: "Server Functions",
+    link: "/api/server",
+    inSubsections: p => p.startsWith("/api/server")
+  }
+};
+
+function ApiNav() {
+  const location = useLocation();
+  let section = Object.keys(SECTIONS).find(
+    k =>
+      location.pathname.startsWith(SECTIONS[k].link) || SECTIONS[k].inSubsections(location.pathname)
+  );
+
+  return (
+    <Accordion as="ul" toggleable defaultValue={section ? SECTIONS[section].header : undefined}>
+      <NavSection href="/api/router/index" header="Routing">
+        <NavItem
+          href="/api/session/createCookieSessionStorage"
+          title="createCookieSessionStorage()"
+        >
+          createCookieSessionStorage()
+        </NavItem>
+      </NavSection>
+      <NavSection
+        header={SECTIONS.FileNameConventions.header}
+        href={SECTIONS.FileNameConventions.link}
+      >
+        <NavItem href="/api/files/root" title="solid-start/root">
+          src/root.tsx
+        </NavItem>
+        <NavItem href="/api/files/entry-client" title="solid-start/entry-client">
+          src/entry-client.tsx
+        </NavItem>
+        <NavItem href="/api/files/entry-server" title="solid-start/entry-server">
+          src/entry-server.tsx
+        </NavItem>
+        <NavItem href="/api/files/routes" title="solid-start/entry-server">
+          src/routes/**/*
+        </NavItem>
+      </NavSection>
+      <NavSection href="/api/forms" header="Forms">
+        <NavItem href="/api/forms/createform" title="createForm()">
+          createForm()
+        </NavItem>
+        <NavItem href="/api/forms/formerror" title=" new FormError()">
+          new FormError()
+        </NavItem>
+        <NavItem href="/api/forms/createaction" title="createAction()">
+          createAction()
+        </NavItem>
+      </NavSection>
+      <NavSection href="/api/server" header="Server Functions">
+        <NavItem href="/api/server/server" title="server()">
+          server()
+        </NavItem>
+      </NavSection>
+      <NavSection href="/api/session/index" header="Session">
+        <NavItem
+          href="/api/session/createCookieSessionStorage"
+          title="createCookieSessionStorage()"
+        >
+          createCookieSessionStorage()
+        </NavItem>
+      </NavSection>
+    </Accordion>
   );
 }
 
@@ -96,13 +143,18 @@ function NavSection(props) {
 
 function SectionHeader(props) {
   let child = useHeadlessSelectOptionChild();
-  const isRouted = useLocation().pathname.startsWith(props.href);
+  const location = useLocation();
+  let isActive = () => location.pathname === props.href;
   return (
     <AccordionHeader>
-      <NavLink
-        class={`p-2 pr-2 w-full rounded-none lg:rounded-r-lg text-left hover:bg-gray-5 dark:hover:bg-gray-80 relative flex items-center justify-between pl-5 text-base font-bold text-primary dark:text-primary-dark
-        `}
-        activeClass="text-link dark:text-link-dark bg-highlight dark:bg-highlight-dark border-blue-40 hover:bg-highlight hover:text-link dark:hover:bg-highlight-dark dark:hover:text-link-dark active"
+      <a
+        classList={{
+          "p-2 pr-2 w-full rounded-none lg:rounded-r-lg text-left hover:bg-gray-5 dark:hover:bg-gray-80 relative flex items-center justify-between pl-5 text-base font-bold":
+            true,
+          "text-primary dark:text-primary-dark": !isActive(),
+          "text-link dark:text-link-dark bg-highlight dark:bg-highlight-dark border-blue-40 hover:bg-highlight hover:text-link dark:hover:bg-highlight-dark dark:hover:text-link-dark active":
+            isActive()
+        }}
         onClick={() => !child.isSelected() && child.select()}
         // title={props.faq.question}
         href={props.href}
@@ -115,7 +167,7 @@ function SectionHeader(props) {
             />
           </span>
         </>
-      </NavLink>
+      </a>
     </AccordionHeader>
   );
 }
@@ -140,29 +192,6 @@ function CollapsedIcon(props) {
       height="20"
       viewBox="0 0 20 20"
       class={"duration-100 ease-in transition" + props.class}
-      style="min-width: 20px; min-height: 20px;"
-    >
-      <g fill="none" fill-rule="evenodd" transform="translate(-446 -398)">
-        <path
-          fill="currentColor"
-          fill-rule="nonzero"
-          d="M95.8838835,240.366117 C95.3957281,239.877961 94.6042719,239.877961 94.1161165,240.366117 C93.6279612,240.854272 93.6279612,241.645728 94.1161165,242.133883 L98.6161165,246.633883 C99.1042719,247.122039 99.8957281,247.122039 100.383883,246.633883 L104.883883,242.133883 C105.372039,241.645728 105.372039,240.854272 104.883883,240.366117 C104.395728,239.877961 103.604272,239.877961 103.116117,240.366117 L99.5,243.982233 L95.8838835,240.366117 Z"
-          transform="translate(356.5 164.5)"
-        ></path>
-        <polygon points="446 418 466 418 466 398 446 398"></polygon>
-      </g>
-    </svg>
-  );
-}
-
-function UnCollapsedIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      class="duration-100 ease-in transition rotate-0"
       style="min-width: 20px; min-height: 20px;"
     >
       <g fill="none" fill-rule="evenodd" transform="translate(-446 -398)">

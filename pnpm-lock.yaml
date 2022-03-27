@@ -29,7 +29,9 @@ importers:
       '@mdx-js/rollup': ^2.0.0
       '@types/bad-words': ^3.0.1
       bad-words: ^3.0.4
+      rehype-autolink-headings: ^6.1.1
       rehype-raw: ^6.1.1
+      rehype-slug: ^5.0.1
       remark-code-extra: ^1.0.1
       remark-gfm: ^3.0.1
       remark-shiki-twoslash: ^3.0.9
@@ -37,6 +39,7 @@ importers:
       solid-headless: ^0.10.12
       solid-js: ^1.3.13
       solid-mdx: ^0.0.6
+      solid-meta: ^0.27.3
       solid-start: workspace:*
       solid-start-node: workspace:*
       tippy.js: ^6.3.7
@@ -45,22 +48,23 @@ importers:
       vite: ^2.8.6
       vite-plugin-windicss: ^1.6.3
       windicss: ^3.4.3
-    dependencies:
-      '@types/bad-words': 3.0.1
-      bad-words: 3.0.4
-      solid-headless: 0.10.12_solid-js@1.3.13
-      windicss: 3.5.1
     devDependencies:
       '@iconify/json': 2.1.20
       '@mdx-js/mdx': 2.1.0
       '@mdx-js/rollup': 2.0.0_rollup@2.70.0
+      '@types/bad-words': 3.0.1
+      bad-words: 3.0.4
+      rehype-autolink-headings: 6.1.1
       rehype-raw: 6.1.1
+      rehype-slug: 5.0.1
       remark-code-extra: 1.0.1
       remark-gfm: 3.0.1
       remark-shiki-twoslash: 3.0.9
       solid-app-router: 0.3.1_solid-js@1.3.13
+      solid-headless: 0.10.12_solid-js@1.3.13
       solid-js: 1.3.13
       solid-mdx: 0.0.6_solid-js@1.3.13+vite@2.8.6
+      solid-meta: 0.27.3_solid-js@1.3.13
       solid-start: link:../packages/start
       solid-start-node: link:../packages/start-node
       tippy.js: 6.3.7
@@ -68,6 +72,7 @@ importers:
       unplugin-icons: 0.14.1_rollup@2.70.0+vite@2.8.6
       vite: 2.8.6
       vite-plugin-windicss: 1.8.3_vite@2.8.6
+      windicss: 3.5.1
 
   examples/bare:
     specifiers:
@@ -3211,7 +3216,7 @@ packages:
 
   /@types/bad-words/3.0.1:
     resolution: {integrity: sha512-7la3ZDJG1tlRqySO+pnXycZpacaMEw/iLEm8kc4l+I+jN8KjBfoQVwO6jm98xzXVLrxV8vDrB5TaMoop8sKclQ==}
-    dev: false
+    dev: true
 
   /@types/chai-subset/1.3.3:
     resolution: {integrity: sha512-frBecisrNGz+F4T6bcc+NLeolfiojh5FxW2klu669+8BARtyQv2C/GkNW6FUodVe4BroGMP/wER/YDGc7rEllw==}
@@ -3814,10 +3819,11 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       badwords-list: 1.0.0
-    dev: false
+    dev: true
 
   /badwords-list/1.0.0:
     resolution: {integrity: sha1-XphW2/E0gqKVw7CzBK+51M/FxXk=}
+    dev: true
 
   /bail/2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -5447,6 +5453,10 @@ packages:
       ini: 1.3.8
     dev: true
 
+  /github-slugger/1.4.0:
+    resolution: {integrity: sha512-w0dzqw/nt51xMVmlaV1+JRzN+oCa1KfcgGEWhxUG16wbdA+Xnt/yoFO8Z8x/V82ZcZ0wy6ln9QDup5avbhiDhQ==}
+    dev: true
+
   /gitignore-parser/0.0.2:
     resolution: {integrity: sha1-9hJZuYXdkUFLmnFo+u+RccLuxd8=}
     engines: {node: '>=0.10.0'}
@@ -5595,6 +5605,23 @@ packages:
       web-namespaces: 2.0.1
     dev: true
 
+  /hast-util-has-property/2.0.0:
+    resolution: {integrity: sha512-4Qf++8o5v14us4Muv3HRj+Er6wTNGA/N9uCaZMty4JWvyFKLdhULrv4KE1b65AthsSO9TXSZnjuxS8ecIyhb0w==}
+    dev: true
+
+  /hast-util-heading-rank/2.1.0:
+    resolution: {integrity: sha512-w+Rw20Q/iWp2Bcnr6uTrYU6/ftZLbHKhvc8nM26VIWpDqDMlku2iXUVTeOlsdoih/UKQhY7PHQ+vZ0Aqq8bxtQ==}
+    dependencies:
+      '@types/hast': 2.3.4
+    dev: true
+
+  /hast-util-is-element/2.1.2:
+    resolution: {integrity: sha512-thjnlGAnwP8ef/GSO1Q8BfVk2gundnc2peGQqEg2kUt/IqesiGg/5mSwN2fE7nLzy61pg88NG6xV+UrGOrx9EA==}
+    dependencies:
+      '@types/hast': 2.3.4
+      '@types/unist': 2.0.6
+    dev: true
+
   /hast-util-parse-selector/3.1.0:
     resolution: {integrity: sha512-AyjlI2pTAZEOeu7GeBPZhROx0RHBnydkQIXlhnFzDi0qfXTmGUWoCYZtomHbrdrheV4VFUlPcfJ6LMF5T6sQzg==}
     dependencies:
@@ -5647,6 +5674,12 @@ packages:
       property-information: 6.1.1
       web-namespaces: 2.0.1
       zwitch: 2.0.2
+    dev: true
+
+  /hast-util-to-string/2.0.0:
+    resolution: {integrity: sha512-02AQ3vLhuH3FisaMM+i/9sm4OXGSq1UhOOCpTLLQtHdL3tZt7qil69r8M8iDkZYyC0HCFylcYoP+8IO7ddta1A==}
+    dependencies:
+      '@types/hast': 2.3.4
     dev: true
 
   /hast-util-whitespace/2.0.0:
@@ -8603,12 +8636,36 @@ packages:
       jsesc: 0.5.0
     dev: false
 
+  /rehype-autolink-headings/6.1.1:
+    resolution: {integrity: sha512-NMYzZIsHM3sA14nC5rAFuUPIOfg+DFmf9EY1YMhaNlB7+3kK/ZlE6kqPfuxr1tsJ1XWkTrMtMoyHosU70d35mA==}
+    dependencies:
+      '@types/hast': 2.3.4
+      extend: 3.0.2
+      hast-util-has-property: 2.0.0
+      hast-util-heading-rank: 2.1.0
+      hast-util-is-element: 2.1.2
+      unified: 10.1.2
+      unist-util-visit: 4.1.0
+    dev: true
+
   /rehype-raw/6.1.1:
     resolution: {integrity: sha512-d6AKtisSRtDRX4aSPsJGTfnzrX2ZkHQLE5kiUuGOeEoLpbEulFF4hj0mLPbsa+7vmguDKOVVEQdHKDSwoaIDsQ==}
     dependencies:
       '@types/hast': 2.3.4
       hast-util-raw: 7.2.1
       unified: 10.1.2
+    dev: true
+
+  /rehype-slug/5.0.1:
+    resolution: {integrity: sha512-X5v3wV/meuOX9NFcGhJvUpEjIvQl2gDvjg3z40RVprYFt7q3th4qMmYLULiu3gXvbNX1ppx+oaa6JyY1W67pTA==}
+    dependencies:
+      '@types/hast': 2.3.4
+      github-slugger: 1.4.0
+      hast-util-has-property: 2.0.0
+      hast-util-heading-rank: 2.1.0
+      hast-util-to-string: 2.0.0
+      unified: 10.1.2
+      unist-util-visit: 4.1.0
     dev: true
 
   /remark-code-extra/1.0.1:
@@ -9016,7 +9073,7 @@ packages:
     dependencies:
       solid-js: 1.3.13
       solid-use: 0.3.3_solid-js@1.3.13
-    dev: false
+    dev: true
 
   /solid-js/0.26.5:
     resolution: {integrity: sha512-cMjxcVoyRBgnfSpwYxXPM5WF800guR+x/01RDBFQjAAkqU7X28GbRkTNKcyQ1KHcFOnzEsG18J+JJ9/PvqyNmw==}
@@ -9159,7 +9216,7 @@ packages:
       solid-js: ^1.2
     dependencies:
       solid-js: 1.3.13
-    dev: false
+    dev: true
 
   /sort-keys/2.0.0:
     resolution: {integrity: sha1-ZYU1WEhh7JfXMNbPQYIuH1ZoQSg=}
@@ -10385,6 +10442,7 @@ packages:
     resolution: {integrity: sha512-E1hYZATcZFci/XhGS0sJAMRxULjnK+glNukE78Ku7xeb3jxgMY55fFOdIrav+GjQCsgR+IZxPq9/DwmO6eyc4Q==}
     engines: {node: '>= 12'}
     hasBin: true
+    dev: true
 
   /word-wrap/1.2.3:
     resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}

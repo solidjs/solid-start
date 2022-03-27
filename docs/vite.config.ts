@@ -8,6 +8,8 @@ import { nodeTypes } from "@mdx-js/mdx";
 import colors from "windicss/colors";
 // @ts-ignore
 import remarkShikiTwoslash from "remark-shiki-twoslash";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeSlug from "rehype-slug";
 import Icons from "unplugin-icons/vite";
 export default defineConfig({
   plugins: [
@@ -20,7 +22,11 @@ export default defineConfig({
         jsx: true,
         jsxImportSource: "solid-js",
         providerImportSource: "solid-mdx",
-        rehypePlugins: [[rehypeRaw, { passThrough: nodeTypes }]],
+        rehypePlugins: [
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behaviour: "append", test: ["h1", "h2", "h3"] }],
+          [rehypeRaw, { passThrough: nodeTypes }]
+        ],
         remarkPlugins: [
           [
             // @ts-ignore

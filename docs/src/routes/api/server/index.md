@@ -1,4 +1,4 @@
-<title>Forms</title>
+<title>Server</title>
 
 <ssr>
 

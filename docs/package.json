@@ -27,9 +27,10 @@
     "undici": "^4.12.2",
     "unplugin-icons": "^0.14.1",
     "vite": "^2.8.6",
-    "vite-plugin-windicss": "^1.6.3"
-  },
-  "dependencies": {
+    "vite-plugin-windicss": "^1.6.3",
+    "rehype-autolink-headings": "^6.1.1",
+    "rehype-slug": "^5.0.1",
+    "solid-meta": "^0.27.3",
     "@types/bad-words": "^3.0.1",
     "bad-words": "^3.0.4",
     "solid-headless": "^0.10.12",
