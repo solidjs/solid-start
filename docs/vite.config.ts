@@ -94,6 +94,8 @@ export default defineConfig({
               "secondary-dark": colors.coolGray[50],
               link: colors.lightBlue[700],
               "link-dark": colors.lightBlue[500],
+              card: colors.gray[100],
+              "card-dark": colors.gray[700],
               border: colors.slate[300],
               "border-dark": colors.slate[500],
               highlight: colors.lightBlue[100],

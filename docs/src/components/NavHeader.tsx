@@ -1,4 +1,20 @@
-import { NavLink } from "solid-app-router";
+import { NavLink, useLocation } from "solid-app-router";
+
+function ActiveLink(props) {
+  const location = useLocation();
+  return (
+    <a
+      href={props.href}
+      classList={{
+        [props.className]: true,
+        [props.activeClass]: props.isActive(location),
+        [props.inactiveClass]: !props.isActive(location)
+      }}
+    >
+      {props.children}
+    </a>
+  );
+}
 
 export const NavHeader = () => (
   <nav className="sticky top-0 items-center w-full flex lg:block justify-between bg-wash dark:bg-wash-dark pt-0 lg:pt-4 pr-5 lg:px-5 z-50">
@@ -48,27 +64,34 @@ export const NavHeader = () => (
       </div>
     </div>
     <div className="px-0 pt-2 w-full 2xl:max-w-xs hidden lg:flex items-center self-center border-b-0 lg:border-b border-border dark:border-border-dark">
-      <NavLink
+      <ActiveLink
+        isActive={loc =>
+          loc.pathname.startsWith("/") &&
+          !loc.pathname.startsWith("/api") &&
+          !loc.pathname.startsWith("/learn")
+        }
         activeClass="text-link border-link dark:text-link-dark dark:border-link-dark font-bold"
         className="border-transparent inline-flex w-full items-center border-b-2 justify-center text-base leading-9 px-3 py-0.5 hover:text-link dark:hover:text-link-dark whitespace-nowrap"
-        href="/home"
+        href="/"
       >
         Home
-      </NavLink>
-      <NavLink
+      </ActiveLink>
+      <ActiveLink
+        isActive={loc => loc.pathname.startsWith("/learn")}
         activeClass="text-link border-link dark:text-link-dark dark:border-link-dark font-bold"
         className="border-transparent inline-flex w-full items-center border-b-2 justify-center text-base leading-9 px-3 py-0.5 hover:text-link dark:hover:text-link-dark whitespace-nowrap"
         href="/learn"
       >
         Learn
-      </NavLink>
-      <NavLink
+      </ActiveLink>
+      <ActiveLink
+        isActive={loc => loc.pathname.startsWith("/api")}
         activeClass="text-link border-link dark:text-link-dark dark:border-link-dark font-bold"
         className="border-transparent inline-flex w-full items-center border-b-2 justify-center text-base leading-9 px-3 py-0.5 hover:text-link dark:hover:text-link-dark whitespace-nowrap"
         href="/api"
       >
         API
-      </NavLink>
+      </ActiveLink>
     </div>
     <div className="flex my-4 h-10 mx-0 w-full lg:hidden justify-end lg:max-w-sm">
       <SearchBar />
@@ -246,7 +269,7 @@ function MoonIcon() {
   );
 }
 
-function Logo(props) {
+export function Logo(props) {
   return (
     // <svg
     //   width="100%"

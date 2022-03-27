@@ -11,7 +11,7 @@ import {
 
 export default function Nav() {
   return (
-    <div class="no-bg-scrollbar bg-wash lg:min-h-screen h-auto lg:h-[calc(100%-40px)] lg:overflow-y-scroll fixed flex flex-row lg:flex-col py-0 left-0 right-0 lg:max-w-xs w-full shadow lg:shadow-none z-50">
+    <div class="no-bg-scrollbar bg-wash dark:bg-wash-dark lg:min-h-screen h-auto lg:h-[calc(100%-40px)] lg:overflow-y-scroll fixed flex flex-row lg:flex-col py-0 left-0 right-0 lg:max-w-xs w-full shadow lg:shadow-none z-50">
       <NavHeader />
       <NavMenu />
     </div>
@@ -37,8 +37,9 @@ function NavMenu() {
         style="--bg-opacity:0.2;"
       >
         <Routes>
+          <Route path="/home/**/*" component={ApiNav} />
           <Route path="/api/**/*" component={ApiNav} />
-          <Route path="/learn" component={LearnNav} />
+          <Route path="/learn/**/*" component={LearnNav} />
         </Routes>
       </nav>
       {/* <div class="sticky bottom-0 hidden lg:block">
