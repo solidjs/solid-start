@@ -1,1 +1,1 @@
-export * from "solid-app-router";
+export * from "solid-meta";
