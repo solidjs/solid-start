@@ -1,24 +1,44 @@
 import { Link } from "solid-app-router";
-import { createEffect } from "solid-js";
+import { createEffect, createMemo } from "solid-js";
 import "tippy.js/dist/tippy.css";
+import { Title } from "./components/Main";
+import Terminal from "./components/Terminal";
+let hashCode = function (str) {
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var code = str.charCodeAt(i);
+    hash = (hash << 5) - hash + code;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 export default {
   h1: props => (
     <h1 {...props} class="text-6xl font-400 mb-4 border-b-2 p-2 mt-4">
       {props.children}
     </h1>
   ),
+  ssr: props => <>{props.children}</>,
+  spa: props => <></>,
   h2: props => (
-    <h2 {...props} class="text-5xl font-400 mb-4 border-b-2 p-2 mt-4">
+    <h2
+      {...props}
+      class="heading text-3xl leading-10 text-primary dark:text-primary-dark font-bold my-6"
+    >
       {props.children}
     </h2>
   ),
   h3: props => (
-    <h3 {...props} class="text-4xl font-400 mb-4 border-b-2 p-2 mt-4">
+    <h3
+      {...props}
+      class="heading text-2xl leading-9 text-primary dark:text-primary-dark font-bold my-6"
+    >
       {props.children}
     </h3>
   ),
   h4: props => (
-    <h4 {...props} class="text-3xl font-400">
+    <h4 {...props} class="heading text-xl font-bold leading-9 my-4">
       {props.children}
     </h4>
   ),
@@ -38,7 +58,10 @@ export default {
     </p>
   ),
   a: props => (
-    <Link {...props} class="text-blue-500">
+    <Link
+      {...props}
+      class="text-link dark:text-link-dark break-normal border-b border-link border-opacity-0 hover:border-opacity-100 duration-100 ease-in transition leading-normal"
+    >
       {props.children}
     </Link>
   ),
@@ -62,24 +85,22 @@ export default {
   TesterComponent: props => (
     <p>Remove This Now!!! If you see this it means that markdown custom components does work</p>
   ),
-  code: props => <code class="font-mono inline-block">{props.children}</code>,
+  code: props => (
+    <code className="inline text-code font-mono" {...props}>
+      {props.children}
+    </code>
+  ),
   pre: props => (
-    <pre
-      {...props}
-      class="bg-gray-200 p-2 rounded-lg text-xs font-mono"
-      classList={{ "py-8": props.title }}
-    >
+    <pre classList={{ "font-mono": true }} {...props}>
       {props.children}
     </pre>
   ),
   "data-lsp": props => {
-    createEffect(() => {
-      console.log(props);
-    });
+    const lspHash = createMemo(() => hashCode(props.lsp).toString());
     return (
-      <span class="data-lsp" data-template={props.lsp}>
+      <span class="data-lsp" data-template={lspHash()}>
         {props.children}
-        <div id={props.lsp} style="display: none;">
+        <div id={lspHash()} style="display: none;">
           <pre class="text-white bg-transparent text-xs p-0 m-0 border-0">{props.lsp}</pre>
         </div>
       </span>
@@ -110,5 +131,7 @@ export default {
   },
   void: props => {
     return <span>{props.children}</span>;
-  }
+  },
+  terminal: Terminal,
+  title: Title
 };

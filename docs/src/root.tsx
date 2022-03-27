@@ -9,7 +9,12 @@ import Nav from "./components/Nav";
 import md from "./md";
 import { createEffect } from "solid-js";
 import tippy from "tippy.js";
+import { Main } from "./components/Main";
+import { createStore } from "solid-js/store";
 
+export const [store, setStore] = createStore({
+  darkMode: false
+});
 export default function Root() {
   createEffect(() => {
     tippy("[data-template]", {
@@ -20,6 +25,14 @@ export default function Root() {
       },
       allowHTML: true
     });
+
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+      setStore("darkMode", true);
+    } else {
+      document.documentElement.classList.add("light");
+      setStore("darkMode", false);
+    }
   });
   return (
     <html lang="en" class="h-full">
@@ -32,21 +45,26 @@ export default function Root() {
           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
           rel="stylesheet"
         />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200;300;400&display=swap"
+          rel="stylesheet"
+        />
         <Meta />
         <Links />
       </head>
-      <body class="min-h-full flex flex-row">
+      <body class="font-sans antialiased text-lg bg-wash dark:bg-wash-dark text-secondary dark:text-secondary-dark leading-base min-h-screen h-auto lg:h-screen flex flex-row">
         <MDXProvider
           components={{
             ...md
           }}
         >
           <Nav />
-          <div class="h-screen overflow-scroll flex-1 bg-blue-50 px-12">
-            <div class="flex flex-col w-full">
-              <Routes />
-            </div>
-          </div>
+          <Main>
+            <Routes />
+          </Main>
+          {/* <div class="h-screen overflow-scroll flex-1 bg-blue-50 px-12">
+            <div class="flex flex-col w-full"> <Routes /> </div>
+          </div> */}
         </MDXProvider>
         <Scripts />
       </body>
