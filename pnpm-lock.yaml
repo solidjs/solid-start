@@ -302,6 +302,7 @@ importers:
       undici: 4.16.0
       vite-plugin-inspect: 0.3.15_vite@2.8.6
       vite-plugin-solid: 2.2.6
+      web-streams-polyfill: 3.2.0
     optionalDependencies:
       solid-start-node: link:../start-node
     devDependencies:
@@ -309,7 +310,6 @@ importers:
       solid-js: 1.3.13
       solid-meta: 0.27.3_solid-js@1.3.13
       vite: 2.8.6
-      web-streams-polyfill: 3.2.0
 
   packages/start-cloudflare-workers:
     specifiers:
@@ -318,7 +318,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.69
+      solid-start: ^0.1.0-alpha.71
       vite: ^2.8.6
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
@@ -341,7 +341,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^2.6.7
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.69
+      solid-start: ^0.1.0-alpha.71
     dependencies:
       '@babel/core': 7.17.8
       '@babel/preset-env': 7.16.11_@babel+core@7.17.8
@@ -364,7 +364,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.53.3
       sirv: ^1.0.12
-      solid-start: ^0.1.0-alpha.69
+      solid-start: ^0.1.0-alpha.71
       undici: ^4.12.2
       vite: ^2.8.6
     dependencies:
@@ -384,7 +384,7 @@ importers:
     specifiers:
       sirv-cli: 1.0.12
       solid-ssr: ^1.3.11
-      solid-start: ^0.1.0-alpha.69
+      solid-start: ^0.1.0-alpha.71
       undici: ^4.12.2
       vite: ^2.8.6
     dependencies:
@@ -401,7 +401,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.69
+      solid-start: ^0.1.0-alpha.71
     dependencies:
       '@rollup/plugin-commonjs': 21.0.2_rollup@2.70.1
       '@rollup/plugin-json': 4.1.0_rollup@2.70.1
@@ -10010,7 +10010,7 @@ packages:
   /web-streams-polyfill/3.2.0:
     resolution: {integrity: sha512-EqPmREeOzttaLRm5HS7io98goBgZ7IVz79aDvqjD0kYXLtFZTc0T/U6wHTPKyIjb+MdN7DFIIX6hgdBEpWmfPA==}
     engines: {node: '>= 8'}
-    dev: true
+    dev: false
 
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=}

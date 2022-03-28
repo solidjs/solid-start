@@ -43,15 +43,15 @@
     "sirv": "^1.0.19",
     "undici": "^4.12.2",
     "vite-plugin-inspect": "^0.3.13",
-    "vite-plugin-solid": "^2.2.6"
+    "vite-plugin-solid": "^2.2.6",
+    "web-streams-polyfill": "3.2.0"
   },
   "devDependencies": {
     "solid-app-router": "^0.3.0",
     "solid-js": "^1.3.5",
     "solid-meta": "^0.27.3",
     "solid-start-node": "^0.1.0-alpha.66",
-    "vite": "^2.8.6",
-    "web-streams-polyfill": "3.2.0"
+    "vite": "^2.8.6"
   },
   "peerDependencies": {
     "solid-app-router": "^0.3.0",
