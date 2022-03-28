@@ -281,6 +281,7 @@ importers:
       vite: ^2.8.6
       vite-plugin-inspect: ^0.3.13
       vite-plugin-solid: ^2.2.6
+      web-streams-polyfill: 3.2.0
     dependencies:
       '@babel/core': 7.17.8
       '@babel/plugin-syntax-jsx': 7.16.7_@babel+core@7.17.8
@@ -308,6 +309,7 @@ importers:
       solid-js: 1.3.13
       solid-meta: 0.27.3_solid-js@1.3.13
       vite: 2.8.6
+      web-streams-polyfill: 3.2.0
 
   packages/start-cloudflare-workers:
     specifiers:
@@ -316,7 +318,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.68
+      solid-start: ^0.1.0-alpha.69
       vite: ^2.8.6
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
@@ -339,7 +341,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^2.6.7
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.68
+      solid-start: ^0.1.0-alpha.69
     dependencies:
       '@babel/core': 7.17.8
       '@babel/preset-env': 7.16.11_@babel+core@7.17.8
@@ -362,7 +364,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.53.3
       sirv: ^1.0.12
-      solid-start: ^0.1.0-alpha.68
+      solid-start: ^0.1.0-alpha.69
       undici: ^4.12.2
       vite: ^2.8.6
     dependencies:
@@ -382,7 +384,7 @@ importers:
     specifiers:
       sirv-cli: 1.0.12
       solid-ssr: ^1.3.11
-      solid-start: ^0.1.0-alpha.68
+      solid-start: ^0.1.0-alpha.69
       undici: ^4.12.2
       vite: ^2.8.6
     dependencies:
@@ -399,7 +401,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.68
+      solid-start: ^0.1.0-alpha.69
     dependencies:
       '@rollup/plugin-commonjs': 21.0.2_rollup@2.70.1
       '@rollup/plugin-json': 4.1.0_rollup@2.70.1
@@ -10003,6 +10005,11 @@ packages:
 
   /web-namespaces/2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
+    dev: true
+
+  /web-streams-polyfill/3.2.0:
+    resolution: {integrity: sha512-EqPmREeOzttaLRm5HS7io98goBgZ7IVz79aDvqjD0kYXLtFZTc0T/U6wHTPKyIjb+MdN7DFIIX6hgdBEpWmfPA==}
+    engines: {node: '>= 8'}
     dev: true
 
   /webidl-conversions/3.0.1:
