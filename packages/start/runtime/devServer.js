@@ -1,7 +1,6 @@
 import path from "path";
 import { Readable } from "stream";
 import { once } from "events";
-import vite from "vite";
 import { Headers } from "undici";
 import { createRequest } from "./fetch.js";
 import "./node-globals.js";
@@ -41,26 +40,4 @@ export function createDevHandler(viteServer) {
       res.end(e.stack);
     }
   };
-}
-
-async function createDevServer(root = process.cwd(), configFile) {
-  const server = await vite.createServer({
-    root,
-    configFile,
-    logLevel: "info",
-    server: {
-      middlewareMode: "ssr"
-    }
-  });
-
-  server.middlewares.use(createDevHandler(server));
-
-  return { server };
-}
-
-export function start(options) {
-  createDevServer(options.root, options.config).then(({ server }) => {
-    server.listen(options.port);
-    console.log(`http://localhost:${options.port}`);
-  });
 }
