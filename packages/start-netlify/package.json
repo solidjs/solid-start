@@ -3,6 +3,9 @@
   "version": "0.1.0-alpha.73",
   "main": "./index.js",
   "type": "module",
+  "solid": {
+    "type": "adapter"
+  },
   "dependencies": {
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
