@@ -5,7 +5,6 @@ import manifest from "rollup-route-manifest";
 import solid from "vite-plugin-solid";
 import inspect from "vite-plugin-inspect";
 import { getRoutes, stringifyRoutes } from "./routes.js";
-import { createDevHandler } from "./runtime/devServer.js";
 import c from "picocolors";
 import babelServerModule from "./server/babel.js";
 import { join, resolve } from "path";
@@ -258,7 +257,8 @@ function solidStartSSR(options) {
   return {
     name: "solid-start-ssr",
     configureServer(vite) {
-      return () => {
+      return async () => {
+        const { createDevHandler } = await import("./runtime/devServer.js");
         remove_html_middlewares(vite.middlewares);
         vite.middlewares.use(createDevHandler(vite));
       };
