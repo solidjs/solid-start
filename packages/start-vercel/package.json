@@ -3,6 +3,9 @@
   "version": "0.1.0-alpha.73",
   "main": "./index.js",
   "type": "module",
+  "solid": {
+    "type": "adapter"
+  },
   "dependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",

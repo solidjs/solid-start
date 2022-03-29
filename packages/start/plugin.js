@@ -296,7 +296,12 @@ function detectAdapter() {
   let adapters = [];
   fs.readdirSync(nodeModulesPath).forEach((dir) => {
     if (dir.startsWith("solid-start-")) {
-      adapters.push(dir);
+      const pkg = JSON.parse(
+        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"))
+      );
+      if (pkg.solid && pkg.solid.type === "adapter") {
+        adapters.push(dir);
+      }
     }
   });
 
