@@ -8,7 +8,7 @@ import { StartProvider } from "./StartContext";
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
 
-type ManifestEntry = {
+export type ManifestEntry = {
   type: string;
   href: string;
 };
