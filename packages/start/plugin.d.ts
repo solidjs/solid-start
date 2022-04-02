@@ -1,5 +1,5 @@
 export type Options = {
-  adapter: string;
+  adapter: string | { start; build };
   appRoot: string;
   routesDir: string;
   ssr: boolean;

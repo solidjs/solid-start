@@ -11,11 +11,11 @@
     "rollup": "^2.53.3"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.73",
+    "solid-start": "next",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
-    "solid-start": "next",
+    "solid-start": "*",
     "vite": "*"
   }
 }

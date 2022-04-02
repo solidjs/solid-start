@@ -55,7 +55,8 @@
     "solid-app-router": "^0.3.1",
     "solid-js": "^1.3.13",
     "solid-meta": "^0.27.3",
-    "solid-start-node": "^0.1.0-alpha.66",
+    "solid-start-node": "next",
+    "solid-start-cloudflare-workers": "next",
     "vite": "^2.8.6"
   },
   "peerDependencies": {

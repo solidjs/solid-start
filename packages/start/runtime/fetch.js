@@ -22,10 +22,10 @@ function createHeaders(requestHeaders) {
 
 class NodeRequest extends BaseNodeRequest {
   constructor(input, init) {
-    if (init && init.body instanceof FormData) {
+    if (init) {
       init = {
         ...init,
-        body: init.body
+        body: init.body ?? init.data
       };
     }
 
