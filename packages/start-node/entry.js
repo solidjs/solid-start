@@ -8,13 +8,13 @@ import { once } from "events";
 import * as Streams from "stream/web";
 import { fetch, Headers, Response, Request } from "undici";
 import entry from "./app";
-const webcrypto = require("crypto").webcrypto;
+import crypto from "crypto";
 Object.assign(globalThis, Streams, {
   Request,
   Response,
   fetch,
   Headers,
-  crypto: webcrypto
+  crypto: crypto.webcrypto
 });
 
 prepareManifest(manifest, assetManifest);
