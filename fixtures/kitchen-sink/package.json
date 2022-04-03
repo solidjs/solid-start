@@ -11,8 +11,8 @@
     "test:unit:server": "cross-env TEST_ENV=server TEST_MODE=server vitest run",
     "test": "npm run test:unit && start-server-and-test start http://localhost:3000 test:e2e",
     "test:e2e": "npm-run-all -p test:e2e:*",
-    "test:e2e:js": "playwright test e2e/*.mjs",
-    "test:e2e:no-js": "cross-env DISABLE_JAVASCRIPT=true playwright test e2e/*.mjs"
+    "test:e2e:js": "playwright test e2e",
+    "test:e2e:no-js": "cross-env DISABLE_JAVASCRIPT=true playwright test e2e"
   },
   "type": "module",
   "devDependencies": {
