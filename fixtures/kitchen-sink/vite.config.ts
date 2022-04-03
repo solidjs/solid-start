@@ -3,7 +3,7 @@ import solid from "solid-start";
 
 export default defineConfig({
   test: {
-    exclude: ["./e2e/**/*.spec.js", "node_modules"],
+    exclude: ["e2e", "node_modules"],
 
     // globals: true,
     environment: "jsdom",

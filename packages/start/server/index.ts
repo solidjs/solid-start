@@ -6,6 +6,7 @@ import {
   JSONResponseType,
   parseResponse,
   respondWith,
+  ResponseError,
   XSolidStartOrigin,
   XSolidStartResponseTypeHeader
 } from "./responses";
@@ -259,13 +260,6 @@ if (isServer || process.env.TEST_ENV === "client") {
           return e;
         } catch (e) {
           if (e instanceof Response) {
-            let message = JSON.stringify({
-              $type: "response",
-              status: e.status,
-              message: e.statusText,
-              headers: [...e.headers.entries()]
-            });
-
             // @ts-ignore
             if (e.context) {
               let responseHeaders = e.context.responseHeaders;
@@ -275,7 +269,7 @@ if (isServer || process.env.TEST_ENV === "client") {
               });
             }
 
-            throw new Error(message);
+            throw new ResponseError(e);
           }
 
           if (/[A-Za-z]+ is not defined/.test(e.message)) {
