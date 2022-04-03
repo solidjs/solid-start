@@ -1,4 +1,4 @@
-import fs from "path";
+import fs from "fs";
 import path from "path";
 import { normalizePath } from "vite";
 import manifest from "rollup-route-manifest";
@@ -285,7 +285,7 @@ function solidStartConfig(options) {
 function find(locate, cwd) {
   cwd = cwd || process.cwd();
   if (cwd.split(path.sep).length < 2) return undefined;
-  const match = fs.readdirSync(cwd).find((f) => f === locate);
+  const match = fs.readdirSync(cwd).find(f => f === locate);
   if (match) return match;
   return find(locate, path.join(cwd, ".."));
 }
@@ -294,11 +294,9 @@ function detectAdapter() {
   const nodeModulesPath = find("node_modules");
 
   let adapters = [];
-  fs.readdirSync(nodeModulesPath).forEach((dir) => {
+  fs.readdirSync(nodeModulesPath).forEach(dir => {
     if (dir.startsWith("solid-start-")) {
-      const pkg = JSON.parse(
-        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"))
-      );
+      const pkg = JSON.parse(fs.readFileSync(path.join(nodeModulesPath, dir, "package.json")));
       if (pkg.solid && pkg.solid.type === "adapter") {
         adapters.push(dir);
       }
@@ -306,7 +304,7 @@ function detectAdapter() {
   });
 
   // Ignore the default adapter.
-  adapters = adapters.filter((adapter) => adapter !== "solid-start-node");
+  adapters = adapters.filter(adapter => adapter !== "solid-start-node");
 
   return adapters.length > 0 ? adapters[0] : "solid-start-node";
 }
