@@ -4,12 +4,6 @@
 
 <div class="text-xl">
 
-```ts twoslash
-import { useMatch } from "solid-app-router";
-// ---cut---
-const location = useMatch();
-```
-
 </div>
 
 - [Usage](#usage)
@@ -142,14 +136,6 @@ function User() {
 ### `useMatch()`
 
 Call `useMatch()` inside a component to get the current URL (location).
-
-```tsx twoslash
-import { useMatch } from "solid-app-router";
-
-function Component() {
-  const location = useMatch();
-}
-```
 
 #### Returns
 
