@@ -29,14 +29,12 @@
     "vite": "^2.9.1",
     "vite-plugin-windicss": "^1.6.3",
     "vitest": "^0.2.7",
-    "windicss": "^3.4.3"
-  },
-  "engines": {
-    "node": ">=14"
-  },
-  "dependencies": {
+    "windicss": "^3.4.3",
     "@cloudflare/kv-asset-handler": "^0.1.1",
     "cookie": "^0.4.1",
     "cookie-signature": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=14"
   }
 }
