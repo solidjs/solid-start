@@ -1,7 +1,7 @@
 import { Request as BaseNodeRequest, Headers } from "undici";
 import { FormData } from "undici";
 import multipart from "parse-multipart-data";
-
+import stream from "stream";
 function createHeaders(requestHeaders) {
   let headers = new Headers();
 
@@ -22,10 +22,12 @@ function createHeaders(requestHeaders) {
 
 class NodeRequest extends BaseNodeRequest {
   constructor(input, init) {
-    if (init) {
+    if (init && init.data && init.data.on) {
       init = {
         ...init,
-        body: init.body ?? init.data
+        body: init.data.headers["content-type"].includes("x-www")
+          ? init.data
+          : stream.Readable.toWeb(init.data)
       };
     }
 

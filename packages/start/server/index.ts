@@ -259,8 +259,7 @@ if (isServer || process.env.TEST_ENV === "client") {
           return e;
         } catch (e) {
           if (e instanceof Response) {
-            let error = e as unknown as Error;
-            error.message = JSON.stringify({
+            let message = JSON.stringify({
               $type: "response",
               status: e.status,
               message: e.statusText,
@@ -276,7 +275,7 @@ if (isServer || process.env.TEST_ENV === "client") {
               });
             }
 
-            throw e;
+            throw new Error(message);
           }
 
           if (/[A-Za-z]+ is not defined/.test(e.message)) {
@@ -362,8 +361,17 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
         contentType.includes("form") &&
         !(origin != null && origin.includes("client"))
       ) {
-        console.log(ctx.request);
-        formRequestBody = ctx.request.body.tee();
+        let [read1, read2] = ctx.request.body.tee();
+        formRequestBody = new Request(ctx.request.url, {
+          body: read2,
+          headers: ctx.request.headers,
+          method: ctx.request.method
+        });
+        ctx.request = new Request(ctx.request.url, {
+          body: read1,
+          headers: ctx.request.headers,
+          method: ctx.request.method
+        });
       }
 
       const serverResponse = await handleServerRequest(ctx);
@@ -379,7 +387,7 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
         responseContentType !== null &&
         responseContentType.includes("error")
       ) {
-        const formData = await ctx.request.formData();
+        const formData = await formRequestBody.formData();
         let entries = [...formData.entries()];
         return new Response(null, {
           status: 302,
