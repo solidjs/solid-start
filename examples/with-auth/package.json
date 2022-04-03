@@ -6,9 +6,9 @@
     "build": "solid-start build",
     "start": "solid-start start",
     "test": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 test:e2e",
-    "test:e2e": "TEST_HOST=http://localhost:$PORT/ npm-run-all -p test:e2e:*",
+    "test:e2e": "cross-env TEST_HOST=http://localhost:$PORT/ npm-run-all -p test:e2e:*",
     "test:e2e:js": "playwright test",
-    "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test"
+    "test:e2e:no-js": "cross-env DISABLE_JAVASCRIPT=true playwright test"
   },
   "type": "module",
   "devDependencies": {

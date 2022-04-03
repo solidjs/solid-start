@@ -15,7 +15,8 @@ export default async function main(vite) {
     playwright: "1.19.2",
     "@playwright/test": "^1.18.1",
     "npm-run-all": "latest",
-    "start-server-and-test": "latest"
+    "start-server-and-test": "latest",
+    "cross-env": "latest"
   };
 
   pkgJSON.scripts = {
@@ -24,7 +25,7 @@ export default async function main(vite) {
     "build-and-start": "npm run build && npm run start",
     "test:e2e": "npm-run-all -p test:e2e:*",
     "test:e2e:js": "playwright test e2e/*.mjs",
-    "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test e2e/*.mjs"
+    "test:e2e:no-js": "cross-env DISABLE_JAVASCRIPT=true playwright test e2e/*.mjs"
   };
 
   fs.writeFileSync(path.join(vite.root, "package.json"), JSON.stringify(pkgJSON, null, 2));

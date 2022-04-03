@@ -227,6 +227,7 @@ importers:
       '@prisma/client': ^3.9.0
       '@vitest/ui': ^0.2.7
       cookie: ^0.4.1
+      cross-env: ^7.0.3
       npm-run-all: latest
       playwright: 1.19.2
       prisma: ^3.9.0
@@ -248,6 +249,7 @@ importers:
       '@playwright/test': 1.20.0
       '@prisma/client': 3.11.0_prisma@3.11.0
       '@vitest/ui': 0.2.8
+      cross-env: 7.0.3
       npm-run-all: 4.1.5
       playwright: 1.19.2
       prisma: 3.11.0
