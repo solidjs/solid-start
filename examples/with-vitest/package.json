@@ -5,7 +5,7 @@
     "build": "solid-start build",
     "start": "solid-start start",
     "postinstall": "node ./fix-jest-dom.mjs",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "type": "module",
   "devDependencies": {
