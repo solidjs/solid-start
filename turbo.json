@@ -9,7 +9,7 @@
     },
     "test": {
       "dependsOn": ["build"],
-      "outputs": []
+      "outputs": ["$OS"]
     },
     "dev": {
       "cache": false
