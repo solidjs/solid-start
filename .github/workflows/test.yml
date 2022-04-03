@@ -16,6 +16,7 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      OS: ${{ matrix.os }}
     strategy:
       matrix:
         node_version: ['17']
@@ -38,6 +39,6 @@ jobs:
 
       - name: build
         run: pnpm turbo run build
-        
+
       - name: Run tests 
         run: pnpm turbo run test
