@@ -9,20 +9,27 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+  test:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['14', '16', '17']
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
+    steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v3
+      - name: Use Node.js ${{ matrix.node_version }} 
+        uses: actions/setup-node@v3
         with:
-          node-version: '17.1'
+          node-version: ${{ matrix.node_version }}
       
-      - run: npm install -g pnpm
-      - run: pnpm install
-      - run: npx playwright install
-      - run: pnpm test
+      - name: Install dependencies 
+        run: |
+          npm install -g pnpm
+          pnpm install
+          npx playwright install
+      - name: Run tests 
+        run: pnpm test
