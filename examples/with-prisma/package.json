@@ -8,7 +8,7 @@
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "test": "start-server-and-test start http://localhost:3000 test:e2e",
+    "_test": "start-server-and-test start http://localhost:3000 test:e2e",
     "test:e2e": "npm-run-all -p test:e2e:*",
     "test:e2e:js": "playwright test",
     "test:e2e:no-js": "cross-env DISABLE_JAVASCRIPT=true playwright test"
