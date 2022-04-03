@@ -5,15 +5,19 @@
     "dev": "solid-start dev",
     "build": "solid-start build",
     "start": "solid-start start",
-    "test": "PORT=3001 start-server-and-test start http://localhost:3001 test:e2e",
+    "test": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 test:e2e",
     "test:e2e": "TEST_HOST=http://localhost:$PORT/ npm-run-all -p test:e2e:*",
     "test:e2e:js": "playwright test",
     "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test"
   },
   "type": "module",
   "devDependencies": {
+    "@cloudflare/kv-asset-handler": "^0.1.1",
     "@playwright/test": "1.20.0",
     "@vitest/ui": "^0.2.7",
+    "cookie": "^0.4.1",
+    "cookie-signature": "^1.1.0",
+    "cross-env": "^7.0.3",
     "npm-run-all": "latest",
     "playwright": "1.19.2",
     "solid-app-router": "^0.3.0",
@@ -28,10 +32,7 @@
     "vite": "^2.9.1",
     "vite-plugin-windicss": "^1.6.3",
     "vitest": "^0.2.7",
-    "windicss": "^3.4.3",
-    "@cloudflare/kv-asset-handler": "^0.1.1",
-    "cookie": "^0.4.1",
-    "cookie-signature": "^1.1.0"
+    "windicss": "^3.4.3"
   },
   "engines": {
     "node": ">=14"
