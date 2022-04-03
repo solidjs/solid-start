@@ -1,5 +1,5 @@
 {
-  "name": "example-auth",
+  "name": "example-with-prisma",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
@@ -8,9 +8,7 @@
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "start-server-and-test": "start-server-and-test build-and-start http://localhost:3000 test:e2e",
-    "build-and-start": "npm run build && npm run start",
-    "test": "npm run start-server-and-test",
+    "test": "start-server-and-test start http://localhost:3000 test:e2e",
     "test:e2e": "npm-run-all -p test:e2e:*",
     "test:e2e:js": "playwright test",
     "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test"

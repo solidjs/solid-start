@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [
     windicss(),
     solid({
+      adapter: "solid-start-node"
       // adapter: "solid-start-cloudflare-workers"
     })
   ]

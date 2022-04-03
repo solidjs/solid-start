@@ -1,6 +1,6 @@
 {
   "name": "solid-start-docs",
-  "private": "true",
+  "private": true,
   "description": "Docs for SolidStart",
   "type": "module",
   "scripts": {

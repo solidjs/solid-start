@@ -11,6 +11,7 @@ importers:
       lerna: ^4.0.0
       rimraf: ^3.0.2
       rollup: ^2.53.3
+      turbo: ^1.1.10
       typescript: ~4.3.5
     devDependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.70.1
@@ -20,6 +21,7 @@ importers:
       lerna: 4.0.0
       rimraf: 3.0.2
       rollup: 2.70.1
+      turbo: 1.1.10
       typescript: 4.3.5
 
   docs:
@@ -10591,6 +10593,121 @@ packages:
     resolution: {integrity: sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=}
     dependencies:
       safe-buffer: 5.2.1
+    dev: true
+
+  /turbo-darwin-64/1.1.10:
+    resolution: {integrity: sha512-MY/1mHg+tS/GaZKG805e5JSGNS8A4j/M2GzLwCbNL+lwGMfneNASri1vAd80ss3T2MgMsfsFMVyIQJljqpDBvA==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-darwin-arm64/1.1.10:
+    resolution: {integrity: sha512-gMPLseYqGKwdy6UHVWKMLA433ZTfQRV5FlYz5n4XVtx30cF6ajOqq12ykeCUUX/lZkH4Uq5zT0tNEYpUhUw7mA==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-freebsd-64/1.1.10:
+    resolution: {integrity: sha512-wra27mvakr5ZFceQnCCSR8gHQtKV8Q0EhtzO/wEdyhEssw0wVaNtMHUOOdvFN0HLmjQmmLZgmfZbURc83UDuZQ==}
+    cpu: [x64]
+    os: [freebsd]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-freebsd-arm64/1.1.10:
+    resolution: {integrity: sha512-J2I76pTwtrEVjHt1+zWY/s/Y0YIGdWHBIWOjhCXi1E8dav98oGw+WUaiFwzAkcksAblOhNpDL3qhnrnm7kHqrg==}
+    cpu: [arm64]
+    os: [freebsd]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-32/1.1.10:
+    resolution: {integrity: sha512-d1ILhEv2B/lOtpH4niFUKGb8YMU6G7gNCQCY6wG+SXARWJtDti+KiNWESechD5DycCIMgtE40XNy/c1US+LI5g==}
+    cpu: [ia32]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-64/1.1.10:
+    resolution: {integrity: sha512-8VEOiNJFNfUMZOyrN32wOcdT1Ik1nlIuTwkO4UeonAJhuWjTvdDLPCQkz0SECTu60q90l6nXCnNYtoZA6LrZzA==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-arm/1.1.10:
+    resolution: {integrity: sha512-qJ50K/s5MjpHjam+UdnK3GniEIv5XOBCZOGslgMMyz8V/q43vhB9BU9HQODclM89uQgsKxhs8Fue6ytOY4vIpg==}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-arm64/1.1.10:
+    resolution: {integrity: sha512-ng3dEEL4SbBudF/UZzsOrfyJh8DLtTHawTepeS30FdtvYuVBXdCPc5BAhbawGoau/2AV4vrN3qzh9e3LCqD6Qg==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-mips64le/1.1.10:
+    resolution: {integrity: sha512-Jd4yH7ZEXCo0xmdJWZ6YsyqcNLyL5vRU3j5ZT+1W97YJCT+g+1on3/nd3rBVPzVz52lb8JIqgGtrBrnOO0AWJg==}
+    cpu: [mips64el]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-ppc64le/1.1.10:
+    resolution: {integrity: sha512-YF8+Oi53glqY29O1A7KJsHZxBzeVBobYFnPEXMt8vm+ouuo8kkbxXxShOP4h+33YGEkesTw/CTXtfDC1Xj1hDw==}
+    cpu: [ppc64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-windows-32/1.1.10:
+    resolution: {integrity: sha512-IO92tVTCtWVPPgcCjf8J7AmBEcwnjv1zPq7t9GFdqZ/6QA06atgPJNzQ/QvyzbzJgUsJUN2ByzwT04o4QUbrBQ==}
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-windows-64/1.1.10:
+    resolution: {integrity: sha512-g/RIXaVDaOgliHEJuOsuB6Tefwue9fXBH1/iIH9dmT3Z7lL0banGh+C10RW6Jd6PBPMoPBWir9PLYuzxoPcCNQ==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo/1.1.10:
+    resolution: {integrity: sha512-y8vx8uIyBRFI3aFjZ3PeGaOvYtNk6t7xNLzRsPY+xtnknTeqdBad56ElS8z+j0RyVwKCvI+wgvTHGkEle4VnJA==}
+    hasBin: true
+    requiresBuild: true
+    optionalDependencies:
+      turbo-darwin-64: 1.1.10
+      turbo-darwin-arm64: 1.1.10
+      turbo-freebsd-64: 1.1.10
+      turbo-freebsd-arm64: 1.1.10
+      turbo-linux-32: 1.1.10
+      turbo-linux-64: 1.1.10
+      turbo-linux-arm: 1.1.10
+      turbo-linux-arm64: 1.1.10
+      turbo-linux-mips64le: 1.1.10
+      turbo-linux-ppc64le: 1.1.10
+      turbo-windows-32: 1.1.10
+      turbo-windows-64: 1.1.10
     dev: true
 
   /tweetnacl/0.14.5:

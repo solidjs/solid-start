@@ -1,13 +1,12 @@
 {
-  "name": "example-auth",
+  "name": "example-with-auth",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
     "start": "solid-start start",
-    "start-server-and-test": "start-server-and-test build-and-start http://localhost:3000 test:e2e",
-    "build-and-start": "npm run build && npm run start",
-    "test:e2e": "npm-run-all -p test:e2e:*",
+    "test": "PORT=3001 start-server-and-test start http://localhost:3001 test:e2e",
+    "test:e2e": "TEST_HOST=http://localhost:$PORT/ npm-run-all -p test:e2e:*",
     "test:e2e:js": "playwright test",
     "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test"
   },

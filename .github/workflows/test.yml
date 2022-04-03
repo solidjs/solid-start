@@ -1,4 +1,4 @@
-name: Test Node 17
+name: Test
 
 on:
   push:
@@ -12,9 +12,12 @@ jobs:
   test:
     name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     strategy:
       matrix:
-        node_version: ['14', '16', '17']
+        node_version: ['17']
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
@@ -31,5 +34,6 @@ jobs:
           npm install -g pnpm
           pnpm install
           npx playwright install
+          pnpm turbo run build
       - name: Run tests 
-        run: pnpm test
+        run: pnpm turbo run test

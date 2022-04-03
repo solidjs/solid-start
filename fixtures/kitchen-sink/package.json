@@ -9,9 +9,7 @@
     "test:unit:client": "TEST_ENV=client TEST_MODE=client vitest run",
     "test:unit:client-server": "TEST_ENV=client TEST_MODE=client-server vitest run",
     "test:unit:server": "TEST_ENV=server TEST_MODE=server vitest run",
-    "start-server-and-test": "start-server-and-test build-and-start http://localhost:3000 test:e2e",
-    "build-and-start": "npm run build && npm run start",
-    "test": "npm run test:unit && npm run start-server-and-test",
+    "test": "npm run test:unit && start-server-and-test start http://localhost:3000 test:e2e",
     "test:e2e": "npm-run-all -p test:e2e:*",
     "test:e2e:js": "playwright test e2e/*.mjs",
     "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test e2e/*.mjs"

@@ -2,6 +2,8 @@
 coverage/
 types/
 
+.turbo
+
 packages/create-solid/bin
 *.log
 
