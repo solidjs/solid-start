@@ -15,7 +15,7 @@ export default function Root() {
       </head>
       <body>
         <ErrorBoundary>
-          <Suspense fallback={<div>Loading</div>}>
+          <Suspense fallback={<div>Page Loading</div>}>
             <Routes />
           </Suspense>
         </ErrorBoundary>
