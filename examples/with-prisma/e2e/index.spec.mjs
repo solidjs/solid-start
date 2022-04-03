@@ -2,8 +2,9 @@ import { test, expect } from "@playwright/test";
 
 test("basic login test", async ({ browser }) => {
   let appURL = new URL(process.env.TEST_HOST ?? "http://localhost:3000/").href;
+  let javaScriptEnabled = !process.env.DISABLE_JAVASCRIPT;
   const context = await browser.newContext({
-    javaScriptEnabled: !process.env.DISABLE_JAVASCRIPT
+    javaScriptEnabled
   });
 
   const page = await context.newPage();
@@ -19,6 +20,13 @@ test("basic login test", async ({ browser }) => {
   await page.fill('input[name="password"]', "twixroxx");
   await page.click("button[type=submit]");
 
+  // console.log(page.url())
+  // console.log(await page.content())
+  // console.log(page.url())
+  if (!javaScriptEnabled) {
+    await page.waitForURL(/Username\/Password%20combination%20is%20incorrect%22/);
+  }
+
   await expect(page.locator("#error-message")).toHaveText(
     "Username/Password combination is incorrect"
   );
@@ -30,8 +38,15 @@ test("basic login test", async ({ browser }) => {
   await page.fill('input[name="password"]', "twixrox");
   await page.click("button[type=submit]");
 
+  if (!javaScriptEnabled) {
+    await page.waitForURL(/Username\/Password%20combination%20is%20incorrect%22/);
+  }
+
   await expect(page.locator("#error-message")).toHaveText(
-    "Username/Password combination is incorrect"
+    "Username/Password combination is incorrect",
+    {
+      timeout: 10000
+    }
   );
 
   // await page.click("#reset-errors");
@@ -40,6 +55,9 @@ test("basic login test", async ({ browser }) => {
   await page.fill('input[name="username"]', "kody");
   await page.fill('input[name="password"]', "twix");
   await page.click("button[type=submit]");
+  if (!javaScriptEnabled) {
+    await page.waitForURL(/Fields%20invalid/);
+  }
 
   await expect(page.locator("#error-message")).toHaveText("Fields invalid");
 

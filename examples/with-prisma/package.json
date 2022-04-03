@@ -8,7 +8,7 @@
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "start-server-and-test": "start-server-and-test build-and-start http://localhost:3000 test:e2e:js",
+    "start-server-and-test": "start-server-and-test build-and-start http://localhost:3000 test:e2e",
     "build-and-start": "npm run build && npm run start",
     "test": "npm run start-server-and-test",
     "test:e2e": "npm-run-all -p test:e2e:*",
@@ -21,7 +21,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "@playwright/test": "^1.18.1",
+    "@playwright/test": "1.20.0",
     "@prisma/client": "^3.9.0",
     "@vitest/ui": "^0.2.7",
     "npm-run-all": "latest",

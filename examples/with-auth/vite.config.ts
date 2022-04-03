@@ -3,9 +3,14 @@ import solid from "solid-start";
 import windicss from "vite-plugin-windicss";
 
 export default defineConfig({
-  plugins: [windicss(), solid({ adapter: "solid-start-cloudflare-workers" })],
-  define: {
-    "process.env.NODE_ENV": `"production"`,
-    "process.env.TEST_ENV": `""`
-  }
+  plugins: [
+    windicss(),
+    solid({
+      // adapter: "solid-start-cloudflare-workers"
+    })
+  ]
+  // define: {
+  //   "process.env.NODE_ENV": `"production"`,
+  //   "process.env.TEST_ENV": `""`
+  // }
 });
