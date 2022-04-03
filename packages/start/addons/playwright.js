@@ -23,14 +23,14 @@ export default async function main(vite) {
     "start-server-and-test": "start-server-and-test build-and-start http://localhost:3000 test:e2e",
     "build-and-start": "npm run build && npm run start",
     "test:e2e": "npm-run-all -p test:e2e:*",
-    "test:e2e:js": "playwright test",
-    "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test"
+    "test:e2e:js": "playwright test e2e/*.mjs",
+    "test:e2e:no-js": "DISABLE_JAVASCRIPT=true playwright test e2e/*.mjs"
   };
 
   fs.writeFileSync(path.join(vite.root, "package.json"), JSON.stringify(pkgJSON, null, 2));
 
   fs.mkdirSync(path.join(vite.root, "e2e"), { recursive: true });
-  let specPath = path.join(vite.root, "e2e", "index.spec.js");
+  let specPath = path.join(vite.root, "e2e", "index.spec.mjs");
   fs.writeFileSync(
     specPath,
     `
