@@ -39,9 +39,7 @@ export function json<Data>(data: Data, init: number | ResponseInit = {}): Respon
     headers
   });
 
-  // @ts-expect-error
-  response.context = context;
-
+  response.context = responseInit.context;
   return response;
 }
 

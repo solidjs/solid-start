@@ -3,7 +3,7 @@ import { normalizePath } from "vite";
 import manifest from "rollup-route-manifest";
 import solid from "vite-plugin-solid";
 import inspect from "vite-plugin-inspect";
-import { getRoutes, stringifyRoutes } from "./routes.js";
+import { getRoutes, stringifyApiRoutes, stringifyPageRoutes } from "./routes.js";
 import c from "picocolors";
 import babelServerModule from "./server/babel.js";
 import routeData from "./server/routeData.js";
@@ -64,9 +64,9 @@ function solidStartFileSystemRouter(options) {
               [])
           ]
         });
-        const label = `  > Routes: `;
 
-        let flatRoutes = [];
+        let flatPageRoutes = [];
+        let flatAPIRoutes = [];
 
         function addRoute(route) {
           if (route.children) {
@@ -75,7 +75,11 @@ function solidStartFileSystemRouter(options) {
             }
           }
 
-          flatRoutes.push(route);
+          if (route.type === "API") {
+            flatAPIRoutes.push(route);
+          } else {
+            flatPageRoutes.push(route);
+          }
         }
 
         for (var r of routes.pageRoutes) {
@@ -85,8 +89,14 @@ function solidStartFileSystemRouter(options) {
         setTimeout(() => {
           // eslint-disable-next-line no-console
           console.log(
-            `${label}\n${flatRoutes
+            `${`  > Page Routes: `}\n${flatPageRoutes
               .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
+              .join("\n")}`
+          );
+          console.log("");
+          console.log(
+            `${`  > API Routes: `}\n${flatAPIRoutes
+              .map(r => `     ${c.green(`${protocol}://localhost:${port}${r.path}`)}`)
               .join("\n")}`
           );
         }, 100);
@@ -168,7 +178,23 @@ function solidStartFileSystemRouter(options) {
           ]
         });
 
-        return { code: code.replace("const routes = $ROUTES;", stringifyRoutes(routes, { lazy })) };
+        return {
+          code: code.replace("const routes = $ROUTES;", stringifyPageRoutes(routes, { lazy }))
+        };
+      } else if (code.includes("const api = $API_ROUTES;")) {
+        const routes = await getRoutes({
+          pageExtensions: [
+            "js",
+            "ts",
+            ...((options.extensions &&
+              options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
+              [])
+          ]
+        });
+
+        return {
+          code: code.replace("const api = $API_ROUTES;", stringifyApiRoutes(routes, { lazy }))
+        };
       }
     }
   };

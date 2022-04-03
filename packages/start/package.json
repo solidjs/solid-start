@@ -27,8 +27,7 @@
     "root",
     "runtime",
     "error-boundary",
-    "router",
-    "meta"
+    "api"
   ],
   "dependencies": {
     "@babel/core": "^7.16.7",
