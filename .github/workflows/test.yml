@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
@@ -34,6 +35,9 @@ jobs:
           npm install -g pnpm
           pnpm install
           npx playwright install
-          pnpm turbo run build
+
+      - name: build
+        run: pnpm turbo run build
+        
       - name: Run tests 
         run: pnpm turbo run test
