@@ -8,8 +8,8 @@
       "dependsOn": ["$OS"]
     },
     "test": {
-      "dependsOn": ["build"],
-      "outputs": ["$OS"]
+      "dependsOn": ["build", "$OS"],
+      "outputs": []
     },
     "dev": {
       "cache": false
