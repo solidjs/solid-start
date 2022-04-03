@@ -37,8 +37,5 @@ jobs:
           pnpm install
           npx playwright install
 
-      - name: build
-        run: pnpm turbo run build
-
       - name: Run tests 
         run: pnpm turbo run test
