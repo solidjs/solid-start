@@ -173,6 +173,17 @@ export class Router {
 
     return routes;
   }
+
+  getFlattenedPageRoutes() {
+    const routes = Object.values(this.routes).reduce((r, route) => {
+      if (route.componentPath) {
+        r.push({ ...route, id: route.id, path: toPath(route.id) });
+      }
+      return r;
+    }, []);
+
+    return routes;
+  }
 }
 
 export function stringifyPageRoutes(pageRoutes, options = {}) {
@@ -182,7 +193,7 @@ export function stringifyPageRoutes(pageRoutes, options = {}) {
     return (
       `[\n` +
       r
-        .filter(r => r.componentPath || r.children)
+        .filter(i => i.componentPath || i.children)
         .map(
           i =>
             `{\n${[
@@ -210,10 +221,12 @@ export function stringifyPageRoutes(pageRoutes, options = {}) {
     );
   }
 
+  let routeConfig = _stringifyRoutes(pageRoutes);
+
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
-  const routes = ${_stringifyRoutes(pageRoutes)};`;
+  const routes = ${routeConfig};`;
 
   return text;
 }
@@ -251,9 +264,11 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
     );
   }
 
+  let routeConfig = _stringifyRoutes(flatRoutes);
+
   const text = `
   ${jsFile.getImportStatements()}
-  const api = ${_stringifyRoutes(flatRoutes)};`;
+  const api = ${routeConfig};`;
   return text;
 }
 

@@ -66,35 +66,19 @@ function solidStartFileSystemRouter(options) {
       vite.httpServer.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
-        const routes = router.getNestedPageRoutes();
-
-        let flatPageRoutes = [];
-        let flatAPIRoutes = router.getFlattenedApiRoutes();
-
-        function addRoute(route) {
-          if (route.children) {
-            for (var r of route.children) {
-              addRoute({ ...r, path: route.path + r.path, _id: route._id + r.path });
-            }
-          }
-
-          flatPageRoutes.push(route);
-        }
-
-        for (var r of routes) {
-          addRoute(r);
-        }
 
         setTimeout(() => {
           // eslint-disable-next-line no-console
           console.log(
-            `${`  > Page Routes: `}\n${flatPageRoutes
+            `${`  > Page Routes: `}\n${router
+              .getFlattenedPageRoutes()
               .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
               .join("\n")}`
           );
           console.log("");
           console.log(
-            `${`  > API Routes: `}\n${flatAPIRoutes
+            `${`  > API Routes: `}\n${router
+              .getFlattenedApiRoutes()
               .map(r => `     ${c.green(`${protocol}://localhost:${port}${r.path}`)}`)
               .join("\n")}`
           );
@@ -166,16 +150,18 @@ function solidStartFileSystemRouter(options) {
           ].filter(Boolean)
         }));
       } else if (code.includes("const routes = $ROUTES;")) {
-        const routes = router.getNestedPageRoutes();
-
         return {
-          code: code.replace("const routes = $ROUTES;", stringifyPageRoutes(routes, { lazy }))
+          code: code.replace(
+            "const routes = $ROUTES;",
+            stringifyPageRoutes(router.getNestedPageRoutes(), { lazy })
+          )
         };
       } else if (code.includes("const api = $API_ROUTES;")) {
-        const routes = router.getFlattenedApiRoutes();
-
         return {
-          code: code.replace("const api = $API_ROUTES;", stringifyApiRoutes(routes, { lazy }))
+          code: code.replace(
+            "const api = $API_ROUTES;",
+            stringifyApiRoutes(router.getFlattenedApiRoutes(), { lazy })
+          )
         };
       }
     }
