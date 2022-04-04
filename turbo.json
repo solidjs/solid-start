@@ -5,10 +5,10 @@
   "pipeline": {
     "build": {
       "outputs": [".solid/**", "dist/**"],
-      "dependsOn": ["$OS"]
+      "dependsOn": ["$OS", "$NODE_VERSION"]
     },
     "test": {
-      "dependsOn": ["build", "$OS"],
+      "dependsOn": ["build", "$OS", "$NODE_VERSION"],
       "outputs": []
     },
     "dev": {

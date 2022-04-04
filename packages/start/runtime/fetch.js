@@ -1,7 +1,57 @@
 import { Request as BaseNodeRequest, Headers } from "undici";
 import { FormData } from "undici";
 import multipart from "parse-multipart-data";
-import stream from "stream";
+
+function nodeToWeb(nodeStream) {
+  var destroyed = false;
+  var listeners = {};
+
+  function start(controller) {
+    listeners["data"] = onData;
+    listeners["end"] = onData;
+    listeners["end"] = onDestroy;
+    listeners["close"] = onDestroy;
+    listeners["error"] = onDestroy;
+    for (var name in listeners) nodeStream.on(name, listeners[name]);
+
+    nodeStream.pause();
+
+    function onData(chunk) {
+      if (destroyed) return;
+      controller.enqueue(chunk);
+      nodeStream.pause();
+    }
+
+    function onDestroy(err) {
+      if (destroyed) return;
+      destroyed = true;
+
+      for (var name in listeners) nodeStream.removeListener(name, listeners[name]);
+
+      if (err) controller.error(err);
+      else controller.close();
+    }
+  }
+
+  function pull() {
+    if (destroyed) return;
+    nodeStream.resume();
+  }
+
+  function cancel() {
+    destroyed = true;
+
+    for (var name in listeners) nodeStream.removeListener(name, listeners[name]);
+
+    nodeStream.push(null);
+    nodeStream.pause();
+    if (nodeStream.destroy) nodeStream.destroy();
+    else if (nodeStream.close) nodeStream.close();
+  }
+
+  return new ReadableStream({ start: start, pull: pull, cancel: cancel });
+}
+
 function createHeaders(requestHeaders) {
   let headers = new Headers();
 
@@ -25,51 +75,31 @@ class NodeRequest extends BaseNodeRequest {
     if (init && init.data && init.data.on) {
       init = {
         ...init,
-        body: init.data.headers["content-type"].includes("x-www")
-          ? init.data
-          : stream.Readable.toWeb(init.data)
+        body: init.data.headers["content-type"].includes("x-www") ? init.data : nodeToWeb(init.data)
       };
     }
 
     super(input, init);
-
-    this._body = init.data;
   }
 
-  _body;
-
-  cachedBuffer;
-
-  async json() {
-    return JSON.parse(await this.text());
-  }
+  // async json() {
+  //   return JSON.parse(await this.text());
+  // }
 
   async buffer() {
-    if (this.cachedBuffer) {
-      return this.cachedBuffer;
-    }
-    return await new Promise((resolve, reject) => {
-      let chunks = [];
-      this._body.on("data", chunk => {
-        chunks.push(chunk);
-      });
-      this._body.on("end", () => {
-        this.cachedBuffer = Buffer.concat(chunks);
-        resolve(this.cachedBuffer);
-      });
-      this._body.on("error", reject);
-    });
+    return Buffer.from(await super.arrayBuffer());
   }
 
-  async text() {
-    return (await this.buffer()).toString();
-  }
+  // async text() {
+  //   return (await this.buffer()).toString();
+  // }
 
   async formData() {
     if (this.headers.get("content-type") === "application/x-www-form-urlencoded") {
       return await super.formData();
     } else {
       const data = await this.buffer();
+      console.log(data);
       const input = multipart.parse(
         data,
         this.headers.get("content-type").replace("multipart/form-data; boundary=", "")

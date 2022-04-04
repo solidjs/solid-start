@@ -17,9 +17,10 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       OS: ${{ matrix.os }}
+      NODE_VERSION: ${{ matrix.node_version }}
     strategy:
       matrix:
-        node_version: ['17']
+        node_version: ['17', '16']
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
