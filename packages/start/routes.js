@@ -6,7 +6,7 @@ import esbuild from "esbuild";
 import chokidar from "chokidar";
 
 const ROUTE_KEYS = ["component", "path", "data", "children"];
-
+const API_METHODS = ["get", "post", "put", "delete"];
 function toPath(id) {
   return id.replace(/\[(.+)\]/, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
 }
@@ -49,9 +49,6 @@ export class Router {
     this.watcher.on("all", (event, path) => {
       switch (event) {
         case "add": {
-          // if (path.match(new RegExp(`\\.(${pageExtensions.join("|")})`))) {
-          //   this.
-          // }
           this.processFile(path);
           this.rawFiles[path] = true;
           break;
@@ -122,7 +119,7 @@ export class Router {
           this.setRouteComponent(id, path);
         }
 
-        for (var method of ["get", "post", "put", "delete"]) {
+        for (var method of API_METHODS) {
           if (exports.includes(method)) {
             this.setAPIRoute(id, method, path);
           }
@@ -136,13 +133,9 @@ export class Router {
         this.setRouteComponent(id, path);
       }
     }
-
-    // let parentRoute = this.routes.find(
   }
 
   getNestedPageRoutes() {
-    // const routes = [];
-
     function processRoute(routes, route, id, full) {
       const parentRoute = Object.values(routes).find(
         o => o.id && o.id !== "/" && id.startsWith(o.id + "/")
@@ -182,22 +175,6 @@ export class Router {
   }
 }
 
-// export async function getRoutes({
-//   baseDir = "src/routes",
-//   pageExtensions = ["jsx", "tsx", "js", "ts"],
-//   cwd = process.cwd()
-// } = {}) {
-//   let r = new Routes({
-//     baseDir,
-//     pageExtensions,
-//     cwd
-//   });
-
-//   return {
-//     pageRoutes: r.getNestedPageRoutes()
-//   };
-// }
-
 export function stringifyPageRoutes(pageRoutes, options = {}) {
   const jsFile = jsCode();
 
@@ -233,12 +210,11 @@ export function stringifyPageRoutes(pageRoutes, options = {}) {
     );
   }
 
-  let r = _stringifyRoutes(pageRoutes);
-
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
-  const routes = ${r};`;
+  const routes = ${_stringifyRoutes(pageRoutes)};`;
+
   return text;
 }
 
@@ -252,16 +228,14 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
         .map(
           i =>
             `{\n${[
-              ...["get", "post", "put", "delete"]
-                .filter(j => i.apiPath[j])
-                .map(
-                  v =>
-                    `${v}: ${
-                      // options.lazy
-                      // ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`
-                      jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
-                    }`
-                ),
+              ...API_METHODS.filter(j => i.apiPath[j]).map(
+                v =>
+                  `${v}: ${
+                    // options.lazy
+                    // ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`
+                    jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
+                  }`
+              ),
 
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
@@ -277,11 +251,9 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
     );
   }
 
-  let r = _stringifyRoutes(flatRoutes);
-
   const text = `
   ${jsFile.getImportStatements()}
-  const api = ${r};`;
+  const api = ${_stringifyRoutes(flatRoutes)};`;
   return text;
 }
 
