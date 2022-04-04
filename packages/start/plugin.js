@@ -4,7 +4,7 @@ import { normalizePath } from "vite";
 import manifest from "rollup-route-manifest";
 import solid from "vite-plugin-solid";
 import inspect from "vite-plugin-inspect";
-import { getRoutes, stringifyApiRoutes, stringifyPageRoutes } from "./routes.js";
+import { stringifyApiRoutes, stringifyPageRoutes, Router } from "./routes.js";
 import c from "picocolors";
 import babelServerModule from "./server/babel.js";
 import routeData from "./server/routeData.js";
@@ -43,31 +43,33 @@ function solidStartFileSystemRouter(options) {
   let lazy;
   let config;
   /** @type {import('vite').Plugin} */
+  let router = new Router({
+    pageExtensions: [
+      "tsx",
+      "jsx",
+      "js",
+      "ts",
+      ...((options.extensions &&
+        options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
+        [])
+    ]
+  });
   return {
     name: "solid-start-file-system-router",
     enforce: "pre",
-    configResolved(_config) {
+    async configResolved(_config) {
       lazy = _config.command !== "serve";
       config = _config;
+      await router.init();
     },
     configureServer(vite) {
       vite.httpServer.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
-        const routes = await getRoutes({
-          pageExtensions: [
-            "tsx",
-            "jsx",
-            "js",
-            "ts",
-            ...((options.extensions &&
-              options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
-              [])
-          ]
-        });
+        const routes = router.getNestedPageRoutes();
 
         let flatPageRoutes = [];
-        let flatAPIRoutes = [];
+        let flatAPIRoutes = router.getFlattenedApiRoutes();
 
         function addRoute(route) {
           if (route.children) {
@@ -76,14 +78,10 @@ function solidStartFileSystemRouter(options) {
             }
           }
 
-          if (route.type === "API") {
-            flatAPIRoutes.push(route);
-          } else {
-            flatPageRoutes.push(route);
-          }
+          flatPageRoutes.push(route);
         }
 
-        for (var r of routes.pageRoutes) {
+        for (var r of routes) {
           addRoute(r);
         }
 
@@ -100,6 +98,7 @@ function solidStartFileSystemRouter(options) {
               .map(r => `     ${c.green(`${protocol}://localhost:${port}${r.path}`)}`)
               .join("\n")}`
           );
+          console.log("");
         }, 100);
       });
     },
@@ -167,31 +166,13 @@ function solidStartFileSystemRouter(options) {
           ].filter(Boolean)
         }));
       } else if (code.includes("const routes = $ROUTES;")) {
-        const routes = await getRoutes({
-          pageExtensions: [
-            "tsx",
-            "jsx",
-            "js",
-            "ts",
-            ...((options.extensions &&
-              options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
-              [])
-          ]
-        });
+        const routes = router.getNestedPageRoutes();
 
         return {
           code: code.replace("const routes = $ROUTES;", stringifyPageRoutes(routes, { lazy }))
         };
       } else if (code.includes("const api = $API_ROUTES;")) {
-        const routes = await getRoutes({
-          pageExtensions: [
-            "js",
-            "ts",
-            ...((options.extensions &&
-              options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
-              [])
-          ]
-        });
+        const routes = router.getFlattenedApiRoutes();
 
         return {
           code: code.replace("const api = $API_ROUTES;", stringifyApiRoutes(routes, { lazy }))
