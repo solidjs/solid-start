@@ -1,5 +1,7 @@
 import { RequestContext } from "../entry-server/StartServer";
 
+// the line below will be replaced by the compiler with a configuration of routes
+// based on the files in src/routes
 // @ts-ignore
 const api = $API_ROUTES;
 
