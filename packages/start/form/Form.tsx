@@ -408,7 +408,6 @@ export function createForm<
   function Form(props: FormProps) {
     const navigate = useNavigate();
     const owner = getOwner();
-    const params = useParams();
 
     return (
       <FormImpl
