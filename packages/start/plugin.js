@@ -36,13 +36,44 @@ function solidStartInlineServerModules(options) {
   };
 }
 
+// import micromatch from "micromatch";
+function touch(path) {
+  const time = new Date();
+  try {
+    fs.utimesSync(path, time, time);
+  } catch (err) {
+    fs.closeSync(fs.openSync(path, "w"));
+  }
+}
+let i = 0;
+function toArray(arr) {
+  if (!arr) return [];
+  if (Array.isArray(arr)) return arr;
+  return [arr];
+}
+
 /**
  * @returns {import('vite').Plugin}
  */
 function solidStartFileSystemRouter(options) {
   let lazy;
   let config;
-  /** @type {import('vite').Plugin} */
+
+  const { delay = 500, glob: enableGlob = true } = options;
+  let root = process.cwd();
+  let reloadGlobs = [];
+  let restartGlobs = [];
+  let configFile = "vite.config.js";
+  let timerState = "reload";
+  let timer;
+  const pathPlatform = process.platform === "win32" ? path.win32 : path.posix;
+  function clear() {
+    clearTimeout(timer);
+  }
+  function schedule(fn) {
+    clear();
+    timer = setTimeout(fn, delay);
+  }
   let router = new Router({
     pageExtensions: [
       "tsx",
@@ -54,15 +85,52 @@ function solidStartFileSystemRouter(options) {
         [])
     ]
   });
+  let listener = function handleFileChange(file) {
+    timerState = "restart";
+    schedule(() => {
+      touch(configFile);
+      // eslint-disable-next-line no-console
+      console.log(
+        c.dim(new Date().toLocaleTimeString()) +
+          c.bold(c.blue(" [plugin-restart] ")) +
+          c.yellow(`restarting server by ${pathPlatform.relative(root, file)}`)
+      );
+      timerState = "";
+    });
+    // } else if (micromatch.isMatch(file, reloadGlobs) && timerState !== "restart") {
+    //   timerState = "reload";
+    //   schedule(() => {
+    //     server.ws.send({ type: "full-reload" });
+    //     timerState = "";
+    //   });
+  };
+  let server;
   return {
     name: "solid-start-file-system-router",
     enforce: "pre",
+    config(c) {
+      if (!enableGlob) return;
+      if (!c.server) c.server = {};
+      if (!c.server.watch) c.server.watch = {};
+      c.server.watch.disableGlobbing = false;
+    },
     async configResolved(_config) {
       lazy = _config.command !== "serve";
       config = _config;
       await router.init();
+
+      if (fs.existsSync("vite.config.ts")) configFile = "vite.config.ts";
+      // famous last words, but this *appears* to always be an absolute path
+      // with all slashes normalized to forward slashes `/`. this is compatible
+      // with path.posix.join, so we can use it to make an absolute path glob
+      root = config.root;
+      restartGlobs = toArray(options.restart).map(i => path.posix.join(root, i));
+      reloadGlobs = toArray(options.reload).map(i => path.posix.join(root, i));
     },
     configureServer(vite) {
+      server = vite;
+      router.watch(console.log);
+      router.listener = listener;
       vite.httpServer.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
@@ -79,7 +147,14 @@ function solidStartFileSystemRouter(options) {
           console.log(
             `${`  > API Routes: `}\n${router
               .getFlattenedApiRoutes()
-              .map(r => `     ${c.green(`${protocol}://localhost:${port}${r.path}`)}`)
+              .map(
+                r =>
+                  `     ${c.green(`${protocol}://localhost:${port}${r.path}`)} ${c.dim(
+                    Object.keys(r.apiPath)
+                      .map(p => p.toUpperCase())
+                      .join(" | ")
+                  )}`
+              )
               .join("\n")}`
           );
           console.log("");
@@ -297,6 +372,9 @@ export default function solidStart(options) {
 
   // @ts-ignore
   return [
+    // restart({
+    //   restart: ["src/routes/**/*"]
+    // }),
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
     options.inspect ? inspect() : undefined,

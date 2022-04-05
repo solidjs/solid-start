@@ -4,15 +4,17 @@ import path, { join } from "path";
 import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 import chokidar from "chokidar";
+import debug from "debug";
 
+const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
-const API_METHODS = ["get", "post", "put", "delete"];
+const API_METHODS = ["get", "post", "put", "delete", "patch"];
 function toPath(id) {
   return id.replace(/\[(.+)\]/, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
 }
 
 export class Router {
-  routes = {};
+  routes;
   baseDir;
   pageExtensions;
   cwd;
@@ -25,6 +27,7 @@ export class Router {
     this.baseDir = baseDir;
     this.pageExtensions = pageExtensions;
     this.cwd = cwd;
+    this.routes = {};
   }
 
   async init() {
@@ -43,7 +46,10 @@ export class Router {
     });
   }
 
-  watch() {
+  watch(onChange) {
+    if (this.watcher) {
+      return;
+    }
     this.watcher = chokidar.watch("src/routes/**/*", { cwd: this.cwd, ignoreInitial: true });
 
     this.watcher.on("all", (event, path) => {
@@ -54,8 +60,15 @@ export class Router {
           break;
         }
         case "change":
+          this.processFile(path);
           break;
         case "unlink":
+          this.routes = Object.fromEntries(
+            Object.entries(this.routes).filter(
+              ([k, v]) => v.componentPath !== path && v.dataPath !== path
+            )
+          );
+          this.notify(path);
           delete this.rawFiles[path];
           break;
       }
@@ -64,30 +77,26 @@ export class Router {
 
   rawFiles = {};
 
+  listener;
+
+  notify(path) {
+    this.listener && this.listener(path);
+  }
+
+  notifyFsEvent() {}
+
   setRouteData(route, data) {
     if (!this.routes[route]) {
-      this.routes[route] = { id: route, path: toPath(route) || "/" };
-    }
-    this.routes[route].dataPath = data;
-  }
-
-  setRouteComponent(route, data) {
-    if (!this.routes[route]) {
-      this.routes[route] = { id: route, path: toPath(route) || "/" };
-    }
-    this.routes[route].componentPath = data;
-  }
-
-  setAPIRoute(route, method, data) {
-    if (!this.routes[route]) {
-      this.routes[route] = { id: route, path: toPath(route) || "/" };
+      this.routes[route] = { id: route, path: toPath(route) || "/", dataPath: data };
+      this.notify(data);
+      return;
     }
 
-    if (!this.routes[route].apiPath) {
-      this.routes[route].apiPath = {};
+    if (!this.routes[route].dataPath) {
+      this.routes[route].dataPath = data;
+      this.notify(data);
+      return;
     }
-
-    this.routes[route].apiPath[method] = data;
   }
 
   processFile(path) {
@@ -102,9 +111,12 @@ export class Router {
 
     // if its a possible page due to its extension
     if (path.match(new RegExp(`\\.(${this.pageExtensions.join("|")})`))) {
+      log("processing", path);
       let id = path
         .slice(this.baseDir.length)
         .replace(new RegExp(`(index)?\\.(${this.pageExtensions.join("|")})`), "");
+
+      let routeConfig = {};
 
       if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})`))) {
         let [imports, exports] = parse(
@@ -116,21 +128,48 @@ export class Router {
         );
 
         if (exports.includes("default")) {
-          this.setRouteComponent(id, path);
+          routeConfig.componentPath = path;
         }
 
         for (var method of API_METHODS) {
           if (exports.includes(method)) {
-            this.setAPIRoute(id, method, path);
+            if (!routeConfig.apiPath) {
+              routeConfig.apiPath = {};
+            }
+
+            routeConfig.apiPath[method] = path;
+            // this.setAPIRoute(id, method, path);
           }
         }
 
         if (exports.includes("routeData")) {
-          this.setRouteData(id, path + "?data");
+          routeConfig.dataPath = path + "?data";
+          // this.setRouteData(id, path + "?data");
           // dataFn = src.replace("tsx", "data.ts");
         }
       } else {
-        this.setRouteComponent(id, path);
+        routeConfig.componentPath = path;
+        // this.setRouteComponent(id, path);
+        // this.setRouteComponent(id, path);
+      }
+
+      if (this.routes[id]) {
+        // get old config, we want to compare the oldConfig with the new one to
+        // detect changes and restart the vite server
+        let { id: oldID, path: oldPath, dataPath, ...oldConfig } = this.routes[id];
+        let newConfig = { ...routeConfig };
+
+        if (!dataPath.endsWith("?data") && !newConfig.dataPath) {
+          newConfig.dataPath = dataPath;
+        }
+
+        if (JSON.stringify({ dataPath, ...oldConfig }) !== JSON.stringify(newConfig)) {
+          this.routes[id] = { id, path: toPath(id) ?? "/", ...newConfig };
+          this.notify(path);
+        }
+      } else {
+        this.routes[id] = { id, path: toPath(id) ?? "/", ...routeConfig };
+        this.notify(path);
       }
     }
   }
