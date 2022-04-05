@@ -115,7 +115,7 @@ function solidStartFileSystemRouter(options) {
       c.server.watch.disableGlobbing = false;
     },
     async configResolved(_config) {
-      lazy = _config.command !== "serve";
+      lazy = _config.command !== "serve" || options.lazy === true;
       config = _config;
       await router.init();
 
