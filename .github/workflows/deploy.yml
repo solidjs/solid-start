@@ -1,0 +1,49 @@
+name: Test adapters
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+jobs:
+  # deploy-fly:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Cancel Previous Runs
+  #       uses: styfle/cancel-workflow-action@0.9.1
+
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@v2
+
+  #     - name: Deploy to Production
+  #       uses: superfly/flyctl-actions@1.1
+  #       with:
+  #         args: "deploy ./fixtures/node --config ./fly.toml"
+  deploy-cf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      
+      - name: Install dependencies 
+        run: |
+          npm install -g pnpm
+          pnpm install
+          npx playwright install
+
+      - run: |
+          cd ./fixtures/cloudlare-workers
+          pnpm run build
+          
+
+      - name: Run tests 
+        run: ppnpm run test
+
