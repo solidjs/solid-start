@@ -294,6 +294,54 @@ importers:
       vite-plugin-inspect: 0.3.15_vite@2.8.6
       vitest: 0.6.3_jsdom@19.0.0
 
+  fixtures/cloudflare-workers:
+    specifiers:
+      '@cloudflare/kv-asset-handler': ^0.1.1
+      '@cloudflare/wrangler': latest
+      '@playwright/test': 1.20.0
+      '@vitest/ui': ^0.2.7
+      cookie: ^0.4.1
+      cookie-signature: ^1.1.0
+      cross-env: ^7.0.3
+      npm-run-all: latest
+      playwright: 1.19.2
+      solid-app-router: ^0.3.0
+      solid-js: ^1.3.13
+      solid-meta: ^0.27.3
+      solid-start: workspace:*
+      solid-start-cloudflare-workers: next
+      solid-start-node: workspace:*
+      start-server-and-test: latest
+      typescript: ^4.4.3
+      undici: ^4.12.2
+      vite: ^2.9.1
+      vite-plugin-windicss: ^1.6.3
+      vitest: ^0.2.7
+      windicss: ^3.4.3
+    devDependencies:
+      '@cloudflare/kv-asset-handler': 0.1.3
+      '@cloudflare/wrangler': 1.19.11
+      '@playwright/test': 1.20.0
+      '@vitest/ui': 0.2.8
+      cookie: 0.4.2
+      cookie-signature: 1.2.0
+      cross-env: 7.0.3
+      npm-run-all: 4.1.5
+      playwright: 1.19.2
+      solid-app-router: 0.3.2_solid-js@1.3.13
+      solid-js: 1.3.13
+      solid-meta: 0.27.3_solid-js@1.3.13
+      solid-start: link:../../packages/start
+      solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
+      solid-start-node: link:../../packages/start-node
+      start-server-and-test: 1.14.0
+      typescript: 4.6.2
+      undici: 4.16.0
+      vite: 2.9.1
+      vite-plugin-windicss: 1.8.3_vite@2.9.1
+      vitest: 0.2.8_@vitest+ui@0.2.8
+      windicss: 3.5.1
+
   fixtures/kitchen-sink:
     specifiers:
       '@magiql/ide': ^0.0.31
@@ -460,7 +508,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^2.6.7
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.73
+      solid-start: ^0.1.0-alpha.74
     dependencies:
       '@babel/core': 7.17.8
       '@babel/preset-env': 7.16.11_@babel+core@7.17.8
@@ -503,7 +551,7 @@ importers:
     specifiers:
       sirv-cli: 1.0.12
       solid-ssr: ^1.3.11
-      solid-start: ^0.1.0-alpha.73
+      solid-start: ^0.1.0-alpha.74
       undici: ^4.12.2
       vite: ^2.8.6
     dependencies:
@@ -520,7 +568,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.73
+      solid-start: ^0.1.0-alpha.74
     dependencies:
       '@rollup/plugin-commonjs': 21.0.2_rollup@2.70.1
       '@rollup/plugin-json': 4.1.0_rollup@2.70.1
@@ -2060,6 +2108,18 @@ packages:
     resolution: {integrity: sha512-FNcunDuTmEfQTLRLtA6zz+buIXUHj1soPvSWzzQFBC+n2lsy+CGf/NIrR3SEPCmsVNQj70/Jx2lViCpq+09YpQ==}
     dependencies:
       mime: 2.6.0
+
+  /@cloudflare/wrangler/1.19.11:
+    resolution: {integrity: sha512-aUoSHodCx79b1mMxv2L68fEQmMj+6vFO5dwCozBPL8AE81XumeUau2RfqQEAInciESdiJbYnam7b1q2D59PQew==}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      axios: 0.21.4
+      rimraf: 3.0.2
+      tar: 6.1.11
+    transitivePeerDependencies:
+      - debug
+    dev: true
 
   /@endemolshinegroup/cosmiconfig-typescript-loader/3.0.2_c84a270c92bf6e8d30a9786dab5936e4:
     resolution: {integrity: sha512-QRVtqJuS1mcT56oHpVegkKBlgtWjXw/gHNWO3eL9oyB5Sc7HBoc2OLG/nYpVfT/Jejvo3NUrD0Udk7XgoyDKkA==, registry: https://registry.yarnpkg.com/, tarball: https://registry.yarnpkg.com/@endemolshinegroup/cosmiconfig-typescript-loader/-/cosmiconfig-typescript-loader-3.0.2.tgz}
@@ -4169,6 +4229,14 @@ packages:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
 
+  /axios/0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+    dependencies:
+      follow-redirects: 1.14.9
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
@@ -5756,6 +5824,16 @@ packages:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
+    dev: true
+
+  /follow-redirects/1.14.9:
+    resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
     dev: true
 
   /follow-redirects/1.14.9_debug@4.3.2:
@@ -11192,7 +11270,7 @@ packages:
       merge-anything: 4.0.5
       solid-js: 0.26.5
       solid-refresh: 0.1.2_solid-js@0.26.5
-      vite: 2.8.6
+      vite: 2.9.1
     transitivePeerDependencies:
       - less
       - sass
