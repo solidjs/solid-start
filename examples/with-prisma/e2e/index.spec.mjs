@@ -24,7 +24,7 @@ test("basic login test", async ({ browser }) => {
   // console.log(await page.content())
   // console.log(page.url())
   if (!javaScriptEnabled) {
-    await page.waitForURL(/Username\/Password%20combination%20is%20incorrect%22/);
+    await page.waitForURL(/Username%2FPassword%20combination%20is%20incorrect%22/);
   }
 
   await expect(page.locator("#error-message")).toHaveText(
@@ -39,7 +39,7 @@ test("basic login test", async ({ browser }) => {
   await page.click("button[type=submit]");
 
   if (!javaScriptEnabled) {
-    await page.waitForURL(/Username\/Password%20combination%20is%20incorrect%22/);
+    await page.waitForURL(/Username%2FPassword%20combination%20is%20incorrect%22/);
   }
 
   await expect(page.locator("#error-message")).toHaveText(

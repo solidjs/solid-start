@@ -32,7 +32,7 @@ const storage = createCookieSessionStorage({
     name: "RJ_session",
     // secure doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     secrets: ["hello"],
     sameSite: "lax",
     path: "/",

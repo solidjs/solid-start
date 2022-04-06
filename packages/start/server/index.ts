@@ -389,11 +389,13 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
             Location:
               new URL(ctx.request.headers.get("referer")).pathname +
               "?form=" +
-              JSON.stringify({
-                url: url.pathname,
-                entries: entries,
-                ...(await serverResponse.json())
-              })
+              encodeURIComponent(
+                JSON.stringify({
+                  url: url.pathname,
+                  entries: entries,
+                  ...(await serverResponse.json())
+                })
+              )
           }
         });
       }

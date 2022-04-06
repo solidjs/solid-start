@@ -316,7 +316,8 @@ function solidStartConfig(options) {
         },
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
-          "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV)
+          "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
+          "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV)
         },
         solidOptions: options
       };
