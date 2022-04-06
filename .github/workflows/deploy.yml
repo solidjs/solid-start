@@ -46,5 +46,7 @@ jobs:
           pnpm run build
 
       - name: Run tests 
-        run: pnpm run test
+        run: |
+          cd ./fixtures/cloudflare-workers
+          pnpm run test
 
