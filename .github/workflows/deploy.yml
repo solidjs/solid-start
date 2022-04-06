@@ -45,5 +45,5 @@ jobs:
           
 
       - name: Run tests 
-        run: ppnpm run test
+        run: pnpm run test
 
