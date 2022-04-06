@@ -7,6 +7,8 @@ on:
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  CF_API_TOKEN: ${{ secrets.CF_ACCOUNT_TOKEN }}
+  CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
 
 jobs:
   # deploy-fly:
@@ -42,7 +44,6 @@ jobs:
       - run: |
           cd ./fixtures/cloudflare-workers
           pnpm run build
-          
 
       - name: Run tests 
         run: pnpm run test
