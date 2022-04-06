@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         node_version: ['17', '16']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, macOS-latest]
 
     steps:
       - name: Checkout Repo
