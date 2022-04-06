@@ -40,7 +40,7 @@ jobs:
           npx playwright install
 
       - run: |
-          cd ./fixtures/cloudlare-workers
+          cd ./fixtures/cloudflare-workers
           pnpm run build
           
 
