@@ -30,7 +30,7 @@
     "typescript": "^4.4.3",
     "undici": "^4.12.2",
     "vite": "^2.9.1",
-    "@cloudlare/wrangler": "latest",
+    "@cloudflare/wrangler": "latest",
     "vite-plugin-windicss": "^1.6.3",
     "vitest": "^0.2.7",
     "windicss": "^3.4.3"
