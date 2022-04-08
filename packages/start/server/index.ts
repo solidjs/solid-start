@@ -13,15 +13,13 @@ import {
 
 export { json, redirect, isRedirectResponse } from "./responses";
 
-type InlineServer<E extends any[], T extends (this: RequestContext, ...args: E) => void> = {
+type InlineServer<E extends any[], T extends (...args: E) => void> = {
   url: string;
-  action(this: RequestContext | void, ...args: E): ReturnType<T>;
+  action(...args: E): ReturnType<T>;
   fetch(init: RequestInit): Promise<Response>;
-} & ((this: RequestContext | void, ...args: E) => ReturnType<T>);
+} & ((...args: E) => ReturnType<T>);
 
-type ServerFn = (<E extends any[], T extends (this: RequestContext, ...args: E) => void>(
-  fn: T
-) => InlineServer<E, T>) & {
+type ServerFn = (<E extends any[], T extends (...args: E) => void>(fn: T) => InlineServer<E, T>) & {
   getHandler: (route: string) => any;
   createHandler: (fn: any, hash: string) => any;
   registerHandler: (route: string, handler: any) => any;
@@ -30,7 +28,7 @@ type ServerFn = (<E extends any[], T extends (this: RequestContext, ...args: E) 
   setFetcher: (fetcher: (request: Request) => Promise<Response>) => void;
   createFetcher(route: string): InlineServer<any, any>;
   fetch(route: string, init: RequestInit): Promise<Response>;
-} & RequestContext;
+} & Pick<RequestContext, "request" | "responseHeaders">;
 
 const server: ServerFn = (fn => {
   throw new Error("Should be compiled away");
@@ -60,7 +58,13 @@ export type MiddlewareFn = (request: Request) => Promise<Response>;
 //   return response;
 // };
 
-Object.defineProperty(server, "ctx", {
+Object.defineProperty(server, "request", {
+  get() {
+    throw new Error("Should be compiled away");
+  }
+});
+
+Object.defineProperty(server, "responseHeaders", {
   get() {
     throw new Error("Should be compiled away");
   }
