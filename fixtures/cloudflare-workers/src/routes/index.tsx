@@ -7,7 +7,7 @@ import { useRouteData } from "solid-app-router";
 export function routeData() {
   return createResource(
     server(async function () {
-      if (!(await getUser(this.request))) {
+      if (!(await getUser(server.request))) {
         throw redirect("/login", {
           context: this
         });
@@ -24,7 +24,7 @@ export default function Home() {
 
   const logoutForm = createForm(
     server(async function () {
-      return await logout(this.request);
+      return await logout(server.request);
     })
   );
 

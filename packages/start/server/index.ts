@@ -30,11 +30,11 @@ type ServerFn = (<E extends any[], T extends (this: RequestContext, ...args: E) 
   setFetcher: (fetcher: (request: Request) => Promise<Response>) => void;
   createFetcher(route: string): InlineServer<any, any>;
   fetch(route: string, init: RequestInit): Promise<Response>;
-};
+} & RequestContext;
 
-const server: ServerFn = fn => {
+const server: ServerFn = (fn => {
   throw new Error("Should be compiled away");
-};
+}) as unknown as ServerFn;
 
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
@@ -59,6 +59,12 @@ export type MiddlewareFn = (request: Request) => Promise<Response>;
 //   });
 //   return response;
 // };
+
+Object.defineProperty(server, "ctx", {
+  get() {
+    throw new Error("Should be compiled away");
+  }
+});
 
 if (!isServer || process.env.TEST_ENV === "client") {
   server.fetcher = fetch;

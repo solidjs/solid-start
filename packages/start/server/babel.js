@@ -116,6 +116,39 @@ function transformServer({ types: t, template }) {
 
                   const hash = hasher(nodePath.join(fName, String(serverIndex)));
 
+                  serverFn.traverse({
+                    MemberExpression(path) {
+                      let obj = path.get("object");
+                      if (obj.node.type === "Identifier" && obj.node.name === "server") {
+                        obj.replaceWith(t.identifier("$$ctx"));
+                        return;
+                      }
+                    }
+                  });
+
+                  if (serverFn.node.type === "ArrowFunctionExpression") {
+                    serverFn.replaceWith(
+                      t.functionExpression(
+                        t.identifier("$$serverHandler" + serverIndex),
+                        serverFn.node.params,
+                        serverFn.node.body,
+                        false,
+                        true
+                      )
+                    );
+                  }
+
+                  if (serverFn.node.type === "FunctionExpression") {
+                    serverFn
+                      .get("body")
+                      .unshiftContainer(
+                        "body",
+                        t.variableDeclaration("const", [
+                          t.variableDeclarator(t.identifier("$$ctx"), t.thisExpression())
+                        ])
+                      );
+                  }
+
                   const route = nodePath
                     .join(INLINE_SERVER_ROUTE_PREFIX, hash)
                     .replaceAll("\\", "/");
