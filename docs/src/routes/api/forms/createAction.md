@@ -73,13 +73,6 @@ const cookieSessionStorage = createCookieSessionStorage({
 
 ```ts twoslash
 import { createForm } from "solid-start/form";
-import server from "solid-start/server";
-
-const newItem = createForm(server(formData => {}));
-```
-
-```ts twoslash
-import { createForm } from "solid-start/form";
 
 const newItem = createForm({
   action: formData => {
