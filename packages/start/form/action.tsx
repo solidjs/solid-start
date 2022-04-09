@@ -29,14 +29,14 @@ export type ActionSubmission<T> = {
  *
  * @param actionFn the async function that handles the submission, this would be where you call your API
  */
-export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
+export function createAction<T extends any[], U = void>(actionFn: (...args: T) => Promise<U>) {
   const [submissions, setSubmissions] = createSignal<{
     [key: string]: ActionSubmission<T>;
   }>({});
 
   let index = 0;
 
-  async function action(submission: T, _k: string) {
+  async function actionWithKey(_k: string, ...submission: T) {
     let i = ++index;
     let key = () => _k || `${i}`;
 
@@ -88,7 +88,7 @@ export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
     }
 
     try {
-      let response = await actionFn(submission);
+      let response = await actionFn(...submission);
 
       // if response was successful, remove the submission since its resolved
       // TODO: figure out if this is the appropriate behaviour, should we keep successful submissions?
@@ -118,10 +118,12 @@ export function createAction<T, U = void>(actionFn: (args: T) => Promise<U>) {
     }
   }
 
+  const action = (...args: T) => actionWithKey(null, ...args);
+
   return [submissions, action] as [
     Accessor<{
       [key: string]: ActionSubmission<T>;
     }>,
-    (vars: T, key?: string) => Promise<U>
+    (...vars: T) => Promise<U>
   ];
 }

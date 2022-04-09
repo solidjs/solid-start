@@ -398,7 +398,7 @@ export function createForm<
   D extends FormData,
   T extends {
     url?: string;
-    action: ((arg: D) => Promise<Response>) | ((this: any, arg: D) => Promise<Response>);
+    action: (arg: D) => Promise<Response>;
   }
 >(fn: T): FormController {
   const [submissions, action] = createAction((submission: FormAction<D>) =>

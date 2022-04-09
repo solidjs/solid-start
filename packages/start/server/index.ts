@@ -13,13 +13,15 @@ import {
 
 export { json, redirect, isRedirectResponse } from "./responses";
 
-type InlineServer<E extends any[], T extends (...args: E) => void> = {
+type InlineServer<E extends any[], T extends (...args: [...E]) => void> = {
   url: string;
-  action(...args: E): ReturnType<T>;
+  action(...args: [...E]): ReturnType<T>;
   fetch(init: RequestInit): Promise<Response>;
-} & ((...args: E) => ReturnType<T>);
+} & ((...args: [...E]) => ReturnType<T>);
 
-type ServerFn = (<E extends any[], T extends (...args: E) => void>(fn: T) => InlineServer<E, T>) & {
+type ServerFn = (<E extends any[], T extends (...args: E) => void>(
+  fn: T
+) => T & { url: string; action: T }) & {
   getHandler: (route: string) => any;
   createHandler: (fn: any, hash: string) => any;
   registerHandler: (route: string, handler: any) => any;
