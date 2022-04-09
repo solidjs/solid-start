@@ -127,6 +127,13 @@ function transformServer({ types: t, template }) {
                   });
 
                   if (serverFn.node.type === "ArrowFunctionExpression") {
+                    const body = serverFn.get("body");
+
+                    if (body.node.type !== "BlockStatement") {
+                      const block = t.blockStatement([t.returnStatement(body.node)]);
+                      body.replaceWith(block);
+                    }
+
                     serverFn.replaceWith(
                       t.functionExpression(
                         t.identifier("$$serverHandler" + serverIndex),

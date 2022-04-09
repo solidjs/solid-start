@@ -8,9 +8,7 @@ export function routeData() {
   return createResource(
     server(async () => {
       if (!(await getUser(server.request))) {
-        throw redirect("/login", {
-          context: this
-        });
+        throw redirect("/login");
       }
 
       return {};

@@ -259,8 +259,10 @@ if (isServer || process.env.TEST_ENV === "client") {
         // @ts-ignore
         ctx = sharedConfig.context.requestContext;
       } else {
+        // this is normally used during a test
         ctx = {
-          request: new URL(hash, "http://localhost:3000").href
+          request: new URL(hash, "http://localhost:3000").href,
+          responseHeaders: new Headers()
         };
       }
 
@@ -271,8 +273,8 @@ if (isServer || process.env.TEST_ENV === "client") {
         } catch (e) {
           if (e instanceof Response) {
             // @ts-ignore
-            if (e.context) {
-              let responseHeaders = e.context.responseHeaders;
+            if (ctx) {
+              let responseHeaders = ctx.responseHeaders;
               responseHeaders.set("x-solidstart-status-code", e.status.toString());
               e.headers.forEach((head, value) => {
                 responseHeaders.set(value, head);

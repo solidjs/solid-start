@@ -82,9 +82,7 @@ export function routeData() {
   return createResource(
     server(async function () {
       if (await getUser(server.request)) {
-        throw redirect("/", {
-          context: this
-        });
+        throw redirect("/");
       }
       return {};
     })

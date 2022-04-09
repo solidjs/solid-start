@@ -12,11 +12,11 @@ export const JSONResponseType = "application/json";
 
 declare global {
   interface Response {
-    context?: RequestContext;
+    context?: Pick<RequestContext, "request" | "responseHeaders">;
   }
 
   interface ResponseInit {
-    context?: RequestContext;
+    context?: Pick<RequestContext, "request" | "responseHeaders">;
   }
 }
 /**
