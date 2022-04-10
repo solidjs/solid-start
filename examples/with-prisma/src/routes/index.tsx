@@ -10,7 +10,7 @@ const { Prisma } = P;
 
 const sendMessage = createForm(
   server(async function (form: FormData) {
-    const user = await getUser(this.request);
+    const user = await getUser(server.request);
 
     if (Math.random() > 0.75) {
       throw new FormError("There was an error adding the messages, please try again");
@@ -121,7 +121,7 @@ function MessageItem(props: { item: Message & { user: User } }) {
 export function routeData() {
   return createResource(
     server(async function () {
-      if (!(await getUser(this.request))) {
+      if (!(await getUser(server.request))) {
         throw redirect("/login", {
           context: this
         });
@@ -133,7 +133,7 @@ export function routeData() {
             user: true
           }
         }),
-        user: await getUser(this.request)
+        user: await getUser(server.request)
       };
     })
   );
@@ -178,7 +178,7 @@ export default function Home() {
 
   const logoutForm = createForm(
     server(async function () {
-      return await logout(this.request);
+      return await logout(server.request);
     })
   );
 

@@ -81,10 +81,8 @@ const loginForm = createForm(
 export function routeData() {
   return createResource(
     server(async function () {
-      if (await getUser(this.request)) {
-        throw redirect("/", {
-          context: this
-        });
+      if (await getUser(server.request)) {
+        throw redirect("/");
       }
       return {};
     })

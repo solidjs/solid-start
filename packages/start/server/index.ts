@@ -13,15 +13,13 @@ import {
 
 export { json, redirect, isRedirectResponse } from "./responses";
 
-type InlineServer<E extends any[], T extends (this: RequestContext, ...args: E) => void> = {
+type InlineServer<E extends any[], T extends (...args: E) => void> = {
   url: string;
-  action(this: RequestContext | void, ...args: E): ReturnType<T>;
+  action(...args: E): ReturnType<T>;
   fetch(init: RequestInit): Promise<Response>;
-} & ((this: RequestContext | void, ...args: E) => ReturnType<T>);
+} & ((...args: E) => ReturnType<T>);
 
-type ServerFn = (<E extends any[], T extends (this: RequestContext, ...args: E) => void>(
-  fn: T
-) => InlineServer<E, T>) & {
+type ServerFn = (<E extends any[], T extends (...args: E) => void>(fn: T) => InlineServer<E, T>) & {
   getHandler: (route: string) => any;
   createHandler: (fn: any, hash: string) => any;
   registerHandler: (route: string, handler: any) => any;
@@ -30,11 +28,11 @@ type ServerFn = (<E extends any[], T extends (this: RequestContext, ...args: E) 
   setFetcher: (fetcher: (request: Request) => Promise<Response>) => void;
   createFetcher(route: string): InlineServer<any, any>;
   fetch(route: string, init: RequestInit): Promise<Response>;
-};
+} & Pick<RequestContext, "request" | "responseHeaders">;
 
-const server: ServerFn = fn => {
+const server: ServerFn = (fn => {
   throw new Error("Should be compiled away");
-};
+}) as unknown as ServerFn;
 
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
@@ -59,6 +57,18 @@ export type MiddlewareFn = (request: Request) => Promise<Response>;
 //   });
 //   return response;
 // };
+
+Object.defineProperty(server, "request", {
+  get() {
+    throw new Error("Should be compiled away");
+  }
+});
+
+Object.defineProperty(server, "responseHeaders", {
+  get() {
+    throw new Error("Should be compiled away");
+  }
+});
 
 if (!isServer || process.env.TEST_ENV === "client") {
   server.fetcher = fetch;
@@ -249,8 +259,10 @@ if (isServer || process.env.TEST_ENV === "client") {
         // @ts-ignore
         ctx = sharedConfig.context.requestContext;
       } else {
+        // this is normally used during a test
         ctx = {
-          request: new URL(hash, "http://localhost:3000").href
+          request: new URL(hash, "http://localhost:3000").href,
+          responseHeaders: new Headers()
         };
       }
 
@@ -261,8 +273,8 @@ if (isServer || process.env.TEST_ENV === "client") {
         } catch (e) {
           if (e instanceof Response) {
             // @ts-ignore
-            if (e.context) {
-              let responseHeaders = e.context.responseHeaders;
+            if (ctx) {
+              let responseHeaders = ctx.responseHeaders;
               responseHeaders.set("x-solidstart-status-code", e.status.toString());
               e.headers.forEach((head, value) => {
                 responseHeaders.set(value, head);
