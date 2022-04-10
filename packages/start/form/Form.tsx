@@ -401,13 +401,48 @@ export function createForm<
     action: (arg: D) => Promise<Response>;
   }
 >(fn: T): FormController {
-  const [submissions, action] = createAction((submission: FormAction<D>) =>
-    fn.action(submission.formData)
+  const [submissions, action] = createAction((submission: FormAction<FormData>) =>
+    fn.action(submission.formData as D)
   );
 
   function Form(props: FormProps) {
     const navigate = useNavigate();
     const owner = getOwner();
+
+    function submit(submission: FormAction<FormData>, key: string) {
+      return action(submission, key)
+        .then(response => {
+          if (response instanceof Response) {
+            if (response.status === 302) {
+              runWithOwner(owner, () => {
+                startTransition(() => {
+                  navigate(response.headers.get("Location") || "/");
+                  refetchResources().then(console.log);
+                });
+              });
+            }
+          } else {
+            runWithOwner(owner, () => {
+              startTransition(refetchResources);
+            });
+          }
+        })
+        .catch((e: Error) => {
+          const sub = submissions()[key];
+          runWithOwner(owner, () => {
+            if (e instanceof Response && e.status === 302) {
+              startTransition(() => {
+                navigate(e.headers.get("Location") || "/");
+                refetchResources();
+              });
+              return;
+            }
+            if (!sub.state().readError) {
+              throw e;
+            }
+          });
+        });
+    }
 
     return (
       <FormImpl
@@ -418,38 +453,8 @@ export function createForm<
             typeof props.key !== "undefined"
               ? props.key
               : Math.random().toString(36).substring(2, 8);
-          action(submission as FormAction<D>, key)
-            .then(response => {
-              if (response instanceof Response) {
-                if (response.status === 302) {
-                  runWithOwner(owner, () => {
-                    startTransition(() => {
-                      navigate(response.headers.get("Location") || "/");
-                      refetchResources().then(console.log);
-                    });
-                  });
-                }
-              } else {
-                runWithOwner(owner, () => {
-                  startTransition(refetchResources);
-                });
-              }
-            })
-            .catch((e: Error) => {
-              const sub = submissions()[key];
-              runWithOwner(owner, () => {
-                if (e instanceof Response && e.status === 302) {
-                  startTransition(() => {
-                    navigate(e.headers.get("Location") || "/");
-                    refetchResources();
-                  });
-                  return;
-                }
-                if (!sub.state().readError) {
-                  throw e;
-                }
-              });
-            });
+
+          submit(submission, key);
         }}
       >
         <Show when={props.key}>

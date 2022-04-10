@@ -119,33 +119,37 @@ export class Router {
       let routeConfig = {};
 
       if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})`))) {
-        let [imports, exports] = parse(
-          esbuild.transformSync(fs.readFileSync(join(this.cwd, path)).toString(), {
-            jsx: "transform",
-            format: "esm",
-            loader: "tsx"
-          }).code
-        );
+        try {
+          let [imports, exports] = parse(
+            esbuild.transformSync(fs.readFileSync(join(this.cwd, path)).toString(), {
+              jsx: "transform",
+              format: "esm",
+              loader: "tsx"
+            }).code
+          );
 
-        if (exports.includes("default")) {
-          routeConfig.componentPath = path;
-        }
-
-        for (var method of API_METHODS) {
-          if (exports.includes(method)) {
-            if (!routeConfig.apiPath) {
-              routeConfig.apiPath = {};
-            }
-
-            routeConfig.apiPath[method] = path;
-            // this.setAPIRoute(id, method, path);
+          if (exports.includes("default")) {
+            routeConfig.componentPath = path;
           }
-        }
 
-        if (exports.includes("routeData")) {
-          routeConfig.dataPath = path + "?data";
-          // this.setRouteData(id, path + "?data");
-          // dataFn = src.replace("tsx", "data.ts");
+          for (var method of API_METHODS) {
+            if (exports.includes(method)) {
+              if (!routeConfig.apiPath) {
+                routeConfig.apiPath = {};
+              }
+
+              routeConfig.apiPath[method] = path;
+              // this.setAPIRoute(id, method, path);
+            }
+          }
+
+          if (exports.includes("routeData")) {
+            routeConfig.dataPath = path + "?data";
+            // this.setRouteData(id, path + "?data");
+            // dataFn = src.replace("tsx", "data.ts");
+          }
+        } catch (e) {
+          console.error(e);
         }
       } else {
         routeConfig.componentPath = path;
@@ -159,7 +163,7 @@ export class Router {
         let { id: oldID, path: oldPath, dataPath, ...oldConfig } = this.routes[id];
         let newConfig = { ...routeConfig };
 
-        if (!dataPath.endsWith("?data") && !newConfig.dataPath) {
+        if (dataPath && !dataPath.endsWith("?data") && !newConfig.dataPath) {
           newConfig.dataPath = dataPath;
         }
 
