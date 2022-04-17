@@ -247,7 +247,7 @@ export function stringifyPageRoutes(pageRoutes, options = {}) {
                 : "",
               `component: ${
                 options.lazy
-                  ? `lazy(() => import('${path.posix.resolve(i.componentPath)}'))`
+                  ? `lazy(() => new Promise(resolve=>queueMicrotask(()=>resolve(import('${path.posix.resolve(i.componentPath)}')))))`
                   : jsFile.addImport(path.posix.resolve(i.componentPath))
               }`,
               ...Object.keys(i)
