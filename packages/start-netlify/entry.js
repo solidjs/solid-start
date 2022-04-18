@@ -1,5 +1,5 @@
-import manifest from "../../dist/rmanifest.json";
-import assetManifest from "../../dist/manifest.json";
+import manifest from "../../netlify/rmanifest.json";
+import assetManifest from "../../netlify/manifest.json";
 import prepareManifest from "solid-start/runtime/prepareManifest";
 import fetch, { Headers, Response, Request } from "node-fetch";
 import entry from "./app";

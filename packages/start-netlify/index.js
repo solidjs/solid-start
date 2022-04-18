@@ -1,4 +1,4 @@
-import { copyFileSync } from "fs";
+import { copyFileSync, promises } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
@@ -21,7 +21,7 @@ export default function () {
       const appRoot = config.solidOptions.appRoot;
       await vite.build({
         build: {
-          outDir: "./dist/",
+          outDir: "./netlify/",
           minify: "terser",
           rollupOptions: {
             input: resolve(join(config.root, appRoot, `entry-client`)),
@@ -64,10 +64,12 @@ export default function () {
         ]
       });
       // or write the bundle to disk
-      await bundle.write({ format: "cjs", dir: join(config.root, "dist", "functions") });
+      await bundle.write({ format: "cjs", dir: join(config.root, "netlify", "functions") });
 
       // closes the bundle
       await bundle.close();
+
+      await promises.writeFile(join(config.root, "netlify", "_redirects"), "/*    /.netlify/functions/index    200", 'utf-8');
     }
   };
 }

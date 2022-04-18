@@ -22,6 +22,7 @@ dist
 .output
 .vercel
 .netlify
+netlify
 
 # dependencies
 /node_modules
