@@ -508,7 +508,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^2.6.7
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.74
+      solid-start: ^0.1.0-alpha.75
     dependencies:
       '@babel/core': 7.17.8
       '@babel/preset-env': 7.16.11_@babel+core@7.17.8
@@ -551,7 +551,7 @@ importers:
     specifiers:
       sirv-cli: 1.0.12
       solid-ssr: ^1.3.11
-      solid-start: ^0.1.0-alpha.74
+      solid-start: ^0.1.0-alpha.75
       undici: ^4.12.2
       vite: ^2.8.6
     dependencies:
@@ -568,7 +568,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.74
+      solid-start: ^0.1.0-alpha.75
     dependencies:
       '@rollup/plugin-commonjs': 21.0.2_rollup@2.70.1
       '@rollup/plugin-json': 4.1.0_rollup@2.70.1
