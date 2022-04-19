@@ -1,4 +1,4 @@
-import { copyFileSync, promises } from "fs";
+import { copyFileSync, promises, existsSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
@@ -9,7 +9,7 @@ import common from "@rollup/plugin-commonjs";
 import { babel } from "@rollup/plugin-babel";
 import { spawn } from "child_process";
 
-export default function () {
+export default function ({ edge } = {}) {
   return {
     start() {
       const proc = spawn("netlify", ["dev"]);
@@ -47,7 +47,7 @@ export default function () {
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "app.js")
       );
-      copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
+      copyFileSync(join(__dirname, edge ? "entry-edge.js" : "entry.js"), join(config.root, ".solid", "server", "index.js"));
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
         plugins: [
@@ -64,12 +64,28 @@ export default function () {
         ]
       });
       // or write the bundle to disk
-      await bundle.write({ format: "cjs", dir: join(config.root, "netlify", "functions") });
+      await bundle.write({ format: edge ? "esm": "cjs", dir: join(config.root, "netlify", edge ? "edge-functions" : "functions") });
 
       // closes the bundle
       await bundle.close();
 
-      await promises.writeFile(join(config.root, "netlify", "_redirects"), "/*    /.netlify/functions/index    200", 'utf-8');
+      if (edge) {
+        const dir = join(config.root, ".netlify", "edge-functions");
+        if (!(existsSync(dir))){
+          await promises.mkdir(dir, { recursive: true });
+        }
+        await promises.writeFile(join(config.root, ".netlify", "edge-functions", "manifest.json"), `{
+  "functions": [
+    {
+      "function": "index",
+      "path": "/*"
+    }
+  ],
+  "version": 1
+}`, 'utf-8');
+      } else {
+        await promises.writeFile(join(config.root, "netlify", "_redirects"), "/*    /.netlify/functions/index    200", 'utf-8');
+      }
     }
   };
 }
