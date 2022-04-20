@@ -497,6 +497,23 @@ importers:
       solid-start: link:../start
       vite: 2.8.6
 
+  packages/start-deno:
+    specifiers:
+      '@rollup/plugin-commonjs': ^21.0.1
+      '@rollup/plugin-json': ^4.1.0
+      '@rollup/plugin-node-resolve': ^13.0.2
+      rollup: ^2.53.3
+      solid-start: next
+      vite: ^2.8.6
+    dependencies:
+      '@rollup/plugin-commonjs': 21.0.2_rollup@2.70.1
+      '@rollup/plugin-json': 4.1.0_rollup@2.70.1
+      '@rollup/plugin-node-resolve': 13.1.3_rollup@2.70.1
+      rollup: 2.70.1
+    devDependencies:
+      solid-start: link:../start
+      vite: 2.9.1
+
   packages/start-netlify:
     specifiers:
       '@babel/core': ^7.16.12

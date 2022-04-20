@@ -8,7 +8,8 @@ prepareManifest(manifest, assetManifest);
 
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
 
-console.log(`Listening on http://localhost:${Deno.env.get("PORT")}`);
+let port = Deno.env.get("PORT") ?? "8080";
+console.log(`Listening on http://localhost:${port}`);
 
 serve(
   async request => {
@@ -19,9 +20,7 @@ serve(
     // 2. We read the asset from the file system.
     // 3. We send the asset back to the client.
 
-    // Check if the request is for style.css.
-    if (pathname.startsWith("/assets") || pathname.startsWith("/favicon.ico")) {
-      // Read the style.css file from the file system.
+    try {
       const file = await Deno.readFile(`.${pathname}`);
       // Respond to the request with the style.css file.
       return new Response(file, {
@@ -29,7 +28,7 @@ serve(
           "content-type": lookup(pathname)
         }
       });
-    }
+    } catch (e) {}
 
     return entry({
       request: request,
@@ -38,6 +37,6 @@ serve(
     });
   },
   {
-    addr: `:${Deno.env.get("PORT")}`
+    addr: `:${port}`
   }
 );

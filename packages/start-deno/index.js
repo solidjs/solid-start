@@ -10,7 +10,7 @@ import { spawn } from "child_process";
 export default function () {
   return {
     start() {
-      const proc = spawn("deno", ["run", "--allow-net", "dist/index.js"]);
+      const proc = spawn("deno", ["run", "--allow-net", "--allow-env", "index.js"]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
