@@ -16,7 +16,7 @@ export function renderAsync(
       return Response.redirect(new URL(context.routerContext.url, context.request.url), 302);
     }
 
-    context.responseHeaders.set("content-type", "text/html");
+    context.responseHeaders.set("Content-Type", "text/html");
 
     return new Response(markup, {
       status: 200,
