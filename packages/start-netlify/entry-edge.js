@@ -5,13 +5,9 @@ import entry from "./app";
 
 prepareManifest(manifest, assetManifest);
 
-export default async (request) => {
-  const url = new URL(request.url).pathname;
-  if (!url.includes(".")) {
-    return await entry({
-      request,
-      responseHeaders: new Headers(),
-      manifest
-    })
-  }
-}
+export default request =>
+  entry({
+    request,
+    responseHeaders: new Headers(),
+    manifest
+  });
