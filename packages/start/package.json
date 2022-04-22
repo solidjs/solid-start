@@ -50,8 +50,7 @@
     "sirv": "^1.0.19",
     "undici": "^4.12.2",
     "vite-plugin-inspect": "^0.3.13",
-    "vite-plugin-solid": "^2.2.6",
-    "zx": "^6.0.3"
+    "vite-plugin-solid": "^2.2.6"
   },
   "devDependencies": {
     "solid-app-router": "^0.3.1",
