@@ -3,6 +3,7 @@ import { Links, Meta, Routes, Scripts } from "solid-start/root";
 import { ErrorBoundary } from "solid-start/error-boundary";
 
 import "./index.css";
+import { Suspense } from "solid-js";
 export default function Root() {
   return (
     <html lang="en">
@@ -15,7 +16,9 @@ export default function Root() {
       <body>
         <main>
           <ErrorBoundary>
-            <Routes />
+            <Suspense>
+              <Routes />
+            </Suspense>
           </ErrorBoundary>
         </main>
         <Scripts />
