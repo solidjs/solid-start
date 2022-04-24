@@ -219,7 +219,7 @@ async function main() {
         `;
       }
 
-      if (src.endsWith("root.tsx") && !ssr) {
+      if (src.endsWith("root.tsx") && code.includes("<html") && !ssr) {
         /**
          * src/root.tsx
          *
@@ -311,7 +311,7 @@ async function main() {
         );
       }
 
-      if (src.includes("vite.config") && !ssr) {
+      if (src.includes("vite.config") && !code.includes("ssr: false") && !ssr) {
         code = code
           .replace(`solid({`, `solid({ ssr: false, `)
           .replace(`solid()`, `solid({ ssr: false })`);
@@ -363,7 +363,7 @@ async function main() {
 
   fs.writeFileSync(pkg_file, JSON.stringify(pkg_json, null, 2));
 
-  if (!ssr) {
+  if (!ssr && indexHTML) {
     fs.writeFileSync(path.join(target, "index.html"), indexHTML);
   }
 
