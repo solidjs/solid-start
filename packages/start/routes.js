@@ -119,9 +119,10 @@ export class Router {
       let routeConfig = {};
 
       if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})`))) {
+        let code = fs.readFileSync(join(this.cwd, path)).toString();
         try {
           let [imports, exports] = parse(
-            esbuild.transformSync(fs.readFileSync(join(this.cwd, path)).toString(), {
+            esbuild.transformSync(code, {
               jsx: "transform",
               format: "esm",
               loader: "tsx"
@@ -143,7 +144,7 @@ export class Router {
             }
           }
 
-          if (exports.includes("routeData")) {
+          if (exports.includes("routeData") || code.includes("createRouteResource")) {
             routeConfig.dataPath = path + "?data";
             // this.setRouteData(id, path + "?data");
             // dataFn = src.replace("tsx", "data.ts");
