@@ -1,24 +1,21 @@
 import server, { redirect } from "solid-start/server";
-import { createForm } from "solid-start/form";
-import { createComputed, createResource } from "solid-js";
-import { getUser, logout } from "~/db/session";
-import { useRouteData } from "solid-app-router";
+import { createRouteResource } from "solid-start/router";
 
-export function routeData() {
-  return createResource(
+import { createForm } from "solid-start/form";
+import { getUser, logout } from "~/db/session";
+
+export default function Home() {
+  const [user] = createRouteResource(
     server(async () => {
-      if (!(await getUser(server.request))) {
+      let user = await getUser(server.request);
+
+      if (!user) {
         throw redirect("/login");
       }
 
-      return {};
+      return user;
     })
   );
-}
-
-export default function Home() {
-  const [data] = useRouteData<ReturnType<typeof routeData>>();
-  createComputed(data);
 
   const logoutForm = createForm(
     server(async function () {
@@ -28,7 +25,8 @@ export default function Home() {
 
   return (
     <main class="w-full p-4 space-y-2">
-      <h1 class="font-bold text-xl">Message board</h1>
+      <h1 class="font-bold text-3xl">Hello {user()?.username}</h1>
+      <h3 class="font-bold text-xl">Message board</h3>
       <logoutForm.Form>
         <button name="logout" type="submit">
           Logout
