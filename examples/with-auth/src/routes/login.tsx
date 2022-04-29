@@ -1,5 +1,6 @@
 import { createForm, FormError } from "solid-start/form";
 import server, { redirect } from "solid-start/server";
+import { createRouteResource } from "solid-start/router";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
 import { useRouteData, useParams } from "solid-app-router";
@@ -78,8 +79,8 @@ const loginForm = createForm(
   })
 );
 
-export function routeData() {
-  return createResource(
+export default function Login() {
+  const [data] = createRouteResource(
     server(async function () {
       if (await getUser(server.request)) {
         throw redirect("/");
@@ -87,10 +88,7 @@ export function routeData() {
       return {};
     })
   );
-}
 
-export default function Login() {
-  const [data] = useRouteData();
   const params = useParams();
   return (
     <div className="p-4">
