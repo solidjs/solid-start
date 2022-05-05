@@ -1,5 +1,7 @@
 // @refresh reload
 import { Links, Meta, Routes, Scripts } from "solid-start/root";
+import { ErrorBoundary } from "solid-start/error-boundary";
+import { Suspense } from "solid-js";
 import "./index.css";
 
 export default function Root() {
@@ -12,7 +14,11 @@ export default function Root() {
         <Links />
       </head>
       <body class="antialiased">
-        <Routes />
+        <ErrorBoundary>
+          <Suspense>
+            <Routes />
+          </Suspense>
+        </ErrorBoundary>
         <Scripts />
       </body>
     </html>
