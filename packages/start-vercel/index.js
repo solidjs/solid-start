@@ -1,4 +1,4 @@
-import { copyFileSync } from "fs";
+import { copyFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
@@ -16,20 +16,26 @@ export default function () {
       proc.stderr.pipe(process.stderr);
     },
     async build(config) {
+      // Vercel Build Output API v3 (https://vercel.com/docs/build-output-api/v3)
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
+      const outputDir = join(config.root, ".vercel/output");
+
+      // Static Files
       await vite.build({
         build: {
-          outDir: "./.output/static/",
+          outDir: join(outputDir, "static"),
           minify: "terser",
           rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-client`)),
+            input: resolve(join(config.root, appRoot, "entry-client")),
             output: {
               manualChunks: undefined
             }
           }
         }
       });
+
+      // SSR Edge Function
       await vite.build({
         build: {
           ssr: true,
@@ -42,17 +48,10 @@ export default function () {
           }
         }
       });
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "app.js")
-      );
-      copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
-      copyFileSync(
-        join(__dirname, "functions-manifest.json"),
-        join(config.root, ".output", "functions-manifest.json")
-      );
+      const entrypoint = join(config.root, ".solid", "server", "index.js");
+      copyFileSync(join(__dirname, "entry.js"), entrypoint);
       const bundle = await rollup({
-        input: join(config.root, ".solid", "server", "index.js"),
+        input: entrypoint,
         plugins: [
           json(),
           nodeResolve({
@@ -62,14 +61,32 @@ export default function () {
           common()
         ]
       });
-      // or write the bundle to disk
+
+      const renderEntrypoint = "index.js";
+      const renderFuncDir = join(outputDir, "functions/render.func");
       await bundle.write({
         format: "esm",
-        file: join(config.root, ".output", "server", "pages", "_middleware.js")
+        file: join(renderFuncDir, renderEntrypoint)
       });
-
-      // closes the bundle
       await bundle.close();
+
+      const renderConfig = {
+        runtime: "edge",
+        entrypoint: renderEntrypoint
+      };
+      writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));
+
+      // Routing Config
+      const outputConfig = {
+        version: 3,
+        routes: [
+          // Serve any matching static assets first
+          { handle: "filesystem" },
+          // Invoke the SSR function if not a static asset
+          { src: "/.*", middlewarePath: "render" }
+        ]
+      };
+      writeFileSync(join(outputDir, "config.json"), JSON.stringify(outputConfig, null, 2));
     }
   };
 }

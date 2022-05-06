@@ -1,35 +1,15 @@
-import manifest from "../../.output/static/rmanifest.json";
-import assetManifest from "../../.output/static/manifest.json";
+import manifest from "../../.vercel/output/static/rmanifest.json";
+import assetManifest from "../../.vercel/output/static/manifest.json";
 import prepareManifest from "solid-start/runtime/prepareManifest";
-import entry from "./app";
+import entry from "./entry-server";
 
 prepareManifest(manifest, assetManifest);
 
-const wrapResponse = response => ({
-  promise: Promise.resolve(),
-  waitUntil: Promise.resolve(),
-  response
-});
-
-function middleware({ request }) {
-  const url = new URL(request.url).pathname;
-  if (!url.includes(".")) {
-    const response = entry({
-      request,
-      responseHeaders: new Headers(),
-      manifest
-    });
-    return wrapResponse(response);
-  }
-  return wrapResponse(
-    new Response(null, {
-      headers: {
-        "x-middleware-next": "1"
-      }
-    })
-  );
+export default function (request) {
+  const response = entry({
+    request,
+    responseHeaders: new Headers(),
+    manifest
+  });
+  return response;
 }
-
-_ENTRIES = typeof _ENTRIES === "undefined" ? {} : _ENTRIES;
-
-_ENTRIES["middleware_pages/_middleware"] = { default: middleware };
