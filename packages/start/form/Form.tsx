@@ -1,22 +1,8 @@
 // Credits to the Remix team for the Form implementation:
 // https://github.com/remix-run/remix/blob/main/packages/remix-react/components.tsx#L865
 
-import { useNavigate, useParams, useSearchParams } from "solid-app-router";
-import { ActionSubmission, createAction } from "./action";
-import {
-  ComponentProps,
-  createEffect,
-  mergeProps,
-  onCleanup,
-  refetchResources,
-  splitProps,
-  startTransition,
-  getOwner,
-  runWithOwner,
-  Show,
-  JSX
-} from "solid-js";
-import { FormError } from "./FormError";
+import { ActionSubmission } from "./createAction";
+import { ComponentProps, createEffect, mergeProps, onCleanup, splitProps, JSX } from "solid-js";
 
 export interface FormAction<Data> {
   action: string;
@@ -147,7 +133,7 @@ interface FormImplProps extends FormProps {
   fetchKey?: string;
 }
 
-let FormImpl = (_props: FormImplProps) => {
+export let FormImpl = (_props: FormImplProps) => {
   let [props, rest] = splitProps(
     mergeProps(
       {
@@ -383,7 +369,7 @@ function isInputElement(object: any): object is HTMLInputElement {
   return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
 }
 
-interface FormController {
+export interface FormController {
   (props: FormProps): JSX.Element;
   Form: (props: FormProps) => JSX.Element;
   url: string;
@@ -392,138 +378,6 @@ interface FormController {
     [key: string]: FormSubmission;
   };
   submission(key: string): FormSubmission;
-}
-
-export function createForm<
-  D extends FormData,
-  T extends {
-    url?: string;
-    action: (arg: D) => Promise<Response>;
-  }
->(fn: T): FormController {
-  const [submissions, action] = createAction((submission: FormAction<FormData>) =>
-    fn.action(submission.formData as D)
-  );
-
-  function Form(props: FormProps) {
-    const navigate = useNavigate();
-    const owner = getOwner();
-
-    function submit(submission: FormAction<FormData>, key: string) {
-      return action(submission, key)
-        .then(response => {
-          if (response instanceof Response) {
-            if (response.status === 302) {
-              runWithOwner(owner, () => {
-                startTransition(() => {
-                  navigate(response.headers.get("Location") || "/");
-                  refetchResources().then(console.log);
-                });
-              });
-            }
-          } else {
-            runWithOwner(owner, () => {
-              startTransition(refetchResources);
-            });
-          }
-        })
-        .catch((e: Error) => {
-          const sub = submissions()[key];
-          runWithOwner(owner, () => {
-            if (e instanceof Response && e.status === 302) {
-              startTransition(() => {
-                navigate(e.headers.get("Location") || "/");
-                refetchResources();
-              });
-              return;
-            }
-            if (!sub.state().readError) {
-              throw e;
-            }
-          });
-        });
-    }
-
-    return (
-      <FormImpl
-        {...props}
-        action={typeof fn.url !== "undefined" ? fn.url : ""}
-        onSubmit={submission => {
-          const key =
-            typeof props.key !== "undefined"
-              ? props.key
-              : Math.random().toString(36).substring(2, 8);
-
-          submit(submission, key);
-        }}
-      >
-        <Show when={props.key}>
-          <input type="hidden" name="_key" value={props.key} />
-        </Show>
-        {props.children}
-      </FormImpl>
-    );
-  }
-
-  Form.Form = Form as (props: FormProps) => JSX.Element;
-  Form.url = fn.url;
-  Form.isSubmitting = () =>
-    Object.values(submissions()).filter(sub => sub.status === "submitting").length > 0;
-
-  let getSubmissions = (): { [key: string]: FormSubmission } => {
-    const existingSubmissions = submissions();
-    const [params] = useSearchParams();
-
-    let param = params.form ? JSON.parse(params.form) : null;
-    if (!param) {
-      return existingSubmissions;
-    }
-
-    let entry = param.entries.find(e => e[0] === "_key");
-    let key = typeof entry !== "undefined" ? entry[1] : "default";
-
-    if (param.url !== fn.url) {
-      return existingSubmissions;
-    }
-
-    let error = param.error
-      ? new FormError(param.error.message, {
-          fieldErrors: param.error.fieldErrors,
-          stack: param.error.stack,
-          form: param.error.form,
-          fields: param.error.fields
-        })
-      : null;
-
-    let paramForm = {
-      key,
-      error: error,
-      index: -1,
-      status: error ? "error" : "idle",
-      variables: {
-        action: param.url,
-        method: "POST",
-        // mock readonly form data to read the information from the form
-        // submission from the URL params
-        formData: {
-          get: (name: string) => {
-            let entry = param.entries.find(e => e[0] === name);
-            return typeof entry !== "undefined" ? entry[1] : undefined;
-          }
-        }
-      }
-    };
-
-    return {
-      [paramForm.key]: paramForm,
-      ...existingSubmissions
-    };
-  };
-
-  Form.submissions = getSubmissions;
-  Form.submission = (key: string) => getSubmissions()[key];
-
-  return Form;
 }
 
 export { FormImpl as Form };
