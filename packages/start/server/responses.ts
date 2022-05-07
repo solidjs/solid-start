@@ -155,13 +155,14 @@ export function respondWith(
 
   if (data instanceof Response) {
     if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
-      data.headers.set(XSolidStartOrigin, "server");
-      data.headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
-      data.headers.set(XSolidStartResponseTypeHeader, responseType);
-      data.headers.set(XSolidStartContentTypeHeader, "response");
+      let headers = new Headers(data.headers);
+      headers.set(XSolidStartOrigin, "server");
+      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
+      headers.set(XSolidStartResponseTypeHeader, responseType);
+      headers.set(XSolidStartContentTypeHeader, "response");
       return new Response(null, {
         status: 204,
-        headers: data.headers
+        headers: headers
       });
     } else {
       data.headers.set(XSolidStartResponseTypeHeader, responseType);
