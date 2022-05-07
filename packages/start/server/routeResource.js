@@ -20,7 +20,7 @@ function transformRouteData({ types: t }) {
                   callPath.replaceWith(
                     t.memberExpression(
                       t.callExpression(t.identifier("useRouteData"), []),
-                      t.numericLiteral(0),
+                      t.numericLiteral(callState.routeData.length),
                       true
                     )
                   );
@@ -48,10 +48,16 @@ function transformRouteData({ types: t }) {
                   t.identifier("routeData"),
                   [],
                   t.blockStatement([
-                    t.variableDeclaration("const", [
-                      t.variableDeclarator(t.identifier("a"), state.routeData[0])
-                    ]),
-                    t.returnStatement(t.arrayExpression([t.identifier("a")]))
+                    ...state.routeData.map((routeResource, index) =>
+                      t.variableDeclaration("const", [
+                        t.variableDeclarator(t.identifier("a" + index), routeResource)
+                      ])
+                    ),
+                    t.returnStatement(
+                      t.arrayExpression(
+                        state.routeData.map((routeResource, index) => t.identifier("a" + index))
+                      )
+                    )
                   ])
                 )
               )
