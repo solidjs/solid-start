@@ -52,24 +52,25 @@ export class Router {
     }
     this.watcher = chokidar.watch("src/routes/**/*", { cwd: this.cwd, ignoreInitial: true });
 
-    this.watcher.on("all", (event, path) => {
+    this.watcher.on("all", (event, filePath) => {
+      const posixPath = filePath.split(path.sep).join(path.posix.sep);
       switch (event) {
         case "add": {
-          this.processFile(path);
-          this.rawFiles[path] = true;
+          this.processFile(posixPath);
+          this.rawFiles[posixPath] = true;
           break;
         }
         case "change":
-          this.processFile(path);
+          this.processFile(posixPath);
           break;
         case "unlink":
           this.routes = Object.fromEntries(
             Object.entries(this.routes).filter(
-              ([k, v]) => v.componentPath !== path && v.dataPath !== path
+              ([k, v]) => v.componentPath !== posixPath && v.dataPath !== posixPath
             )
           );
-          this.notify(path);
-          delete this.rawFiles[path];
+          this.notify(posixPath);
+          delete this.rawFiles[posixPath];
           break;
       }
     });
