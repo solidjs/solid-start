@@ -53,8 +53,9 @@ export function ErrorBoundary(props: PropsWithChildren<{ fallback?: (e: any) => 
             when={!isRedirectResponse(response())}
             fallback={() => {
               let res = response();
+              let location = res.headers.get(LocationHeader);
               startTransition(() => {
-                navigate(res.headers.get(LocationHeader));
+                navigate(location.startsWith("/") ? location : new URL(location).pathname);
                 resetErrorBoundaries();
               });
 
