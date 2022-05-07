@@ -1,3 +1,4 @@
+import { getApiHandler } from "../api";
 import { sharedConfig } from "solid-js";
 import { isServer } from "solid-js/web";
 import type { RequestContext, Middleware as ServerMiddleware } from "../entry-server/StartServer";
@@ -29,7 +30,7 @@ type ServerFn = (<E extends any[], T extends (...args: E) => void>(
   fetcher: (request: Request) => Promise<Response>;
   setFetcher: (fetcher: (request: Request) => Promise<Response>) => void;
   createFetcher(route: string): InlineServer<any, any>;
-  fetch(route: string, init: RequestInit): Promise<Response>;
+  fetch(route: string, init?: RequestInit): Promise<Response>;
 } & Pick<RequestContext, "request" | "responseHeaders">;
 
 const server: ServerFn = (fn => {
@@ -140,20 +141,20 @@ if (!isServer || process.env.TEST_ENV === "client") {
       }
       const requestInit = createRequestInit(...args);
       // request body: json, formData, or string
-      return server.fetch(route, requestInit);
+      return server.call(route, requestInit);
     };
 
     fetcher.url = route;
-    fetcher.fetch = (init: RequestInit) => server.fetch(route, init);
-    fetcher.action = async (...args: any[]) => {
-      const requestInit = createRequestInit(...args);
-      // request body: json, formData, or string
-      return server.fetch(route, requestInit);
-    };
+    fetcher.fetch = (init: RequestInit) => server.call(route, init);
+    // fetcher.action = async (...args: any[]) => {
+    //   const requestInit = createRequestInit(...args);
+    //   // request body: json, formData, or string
+    //   return server.call(route, requestInit);
+    // };
     return fetcher as InlineServer<any, any>;
   };
 
-  server.fetch = async function (route, init: RequestInit) {
+  server.call = async function (route, init: RequestInit) {
     const request = new Request(new URL(route, window.location.href).href, init);
 
     const handler = server.fetcher;
@@ -165,6 +166,18 @@ if (!isServer || process.env.TEST_ENV === "client") {
     } else {
       return await parseResponse(request, response);
     }
+  };
+
+  // used to fetch from an API route on the server or client, without falling into
+  // fetch problems on the server
+  server.fetch = async function (route, init: RequestInit) {
+    const request = new Request(new URL(route, window.location.href).href, init);
+
+    const handler = server.fetcher;
+    const response = await handler(request);
+
+    // // throws response, error, form error, json object, string
+    return response;
   };
 }
 
@@ -344,26 +357,15 @@ if (isServer || process.env.TEST_ENV === "client") {
     return handlers.has(route);
   };
 
-  // server.fetch = async function (route, init: RequestInit) {
-  //   // set the request context for server modules that will be called
-  //   // during server side rendering.
-  //   // this is also used for requests made specifically to a server module
-  //   let headers = new Headers();
-  //   let ctx: RequestContext = {
-  //     request: new Request(new URL(route, "http://localhost:3000").href, init),
-  //     headers: headers,
-  //     manifest: {},
-  //     context: {}
-  //   };
-
-  //   const response = await handleServerRequest(ctx.request);
-
-  //   for (var entry of headers.entries()) {
-  //     response.headers.set(entry[0], entry[1]);
-  //   }
-
-  //   return response;
-  // };
+  // used to fetch from an API route on the server or client, without falling into
+  // fetch problems on the server
+  server.fetch = async function (route, init: RequestInit) {
+    let url = new URL(route, "http://localhost:3000");
+    const request = new Request(url.href, init);
+    const handler = getApiHandler(url, request.method);
+    const response = await handler(request);
+    return response;
+  };
 }
 
 export const inlineServerModules: ServerMiddleware = ({ forward }) => {
