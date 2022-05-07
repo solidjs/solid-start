@@ -39,6 +39,7 @@
     "cookie": "^0.4.1",
     "cookie-signature": "^1.1.0",
     "debug": "^4.3.4",
+    "dequal": "^2.0.2",
     "es-module-lexer": "^0.9.3",
     "esbuild": "^0.14.11",
     "fast-glob": "^3.2.10",
