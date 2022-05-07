@@ -5,7 +5,7 @@ import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 import chokidar from "chokidar";
 import debug from "debug";
-
+import { dequal } from "dequal";
 const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
 const API_METHODS = ["get", "post", "put", "delete", "patch"];
@@ -168,7 +168,8 @@ export class Router {
           newConfig.dataPath = dataPath;
         }
 
-        if (JSON.stringify({ dataPath, ...oldConfig }) !== JSON.stringify(newConfig)) {
+        if (!dequal({ dataPath, ...oldConfig }, newConfig)) {
+          console.log(newConfig, { dataPath, ...oldConfig });
           this.routes[id] = { id, path: toPath(id) ?? "/", ...newConfig };
           this.notify(path);
         }
