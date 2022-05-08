@@ -1,7 +1,7 @@
 import server, { redirect } from "solid-start/server";
 import { createRouteResource } from "solid-start/router";
 
-import { createForm } from "solid-start/form";
+import { createAction } from "solid-start/form";
 import { getUser, logout } from "~/db/session";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
     })
   );
 
-  const logoutForm = createForm(
+  const logout = createAction(
     server(async function () {
       return await logout(server.request);
     })
@@ -27,11 +27,11 @@ export default function Home() {
     <main class="w-full p-4 space-y-2">
       <h1 class="font-bold text-3xl">Hello {user()?.username}</h1>
       <h3 class="font-bold text-xl">Message board</h3>
-      <logoutForm.Form>
+      <logout.Form>
         <button name="logout" type="submit">
           Logout
         </button>
-      </logoutForm.Form>
+      </logout.Form>
     </main>
   );
 }
