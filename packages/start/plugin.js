@@ -88,6 +88,9 @@ function solidStartFileSystemRouter(options) {
   let listener = function handleFileChange(file) {
     timerState = "restart";
     schedule(() => {
+      if (router.watcher) {
+        router.watcher.close();
+      }
       touch(configFile);
       // eslint-disable-next-line no-console
       console.log(
