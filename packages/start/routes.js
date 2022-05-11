@@ -203,7 +203,6 @@ export class Router {
       }
       return r;
     }, []);
-    console.log(JSON.stringify(routes, null, 2))
     return routes;
   }
 
