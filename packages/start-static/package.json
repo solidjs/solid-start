@@ -1,6 +1,6 @@
 {
   "name": "solid-start-static",
-  "version": "0.1.0-alpha.77",
+  "version": "0.1.0-alpha.78",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -11,7 +11,7 @@
     "solid-ssr": "^1.3.11"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.77",
+    "solid-start": "^0.1.0-alpha.78",
     "undici": "^4.12.2",
     "vite": "^2.8.6"
   },
