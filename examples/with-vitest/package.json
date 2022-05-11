@@ -1,5 +1,5 @@
 {
-  "name": "example-app-ts",
+  "name": "example-with-vitest",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",

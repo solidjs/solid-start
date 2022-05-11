@@ -182,7 +182,7 @@ export class Router {
   getNestedPageRoutes() {
     function processRoute(routes, route, id, full) {
       const parentRoute = Object.values(routes).find(
-        o => o.id && o.id !== "/" && id.startsWith(o.id + "/")
+        o => o.id && o.id === "/" ? (id === "/index/" && (id = "/")) : id.startsWith(o.id + "/")
       );
 
       if (!parentRoute) {
@@ -203,7 +203,7 @@ export class Router {
       }
       return r;
     }, []);
-
+    console.log(JSON.stringify(routes, null, 2))
     return routes;
   }
 
