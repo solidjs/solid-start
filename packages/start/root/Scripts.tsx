@@ -1,6 +1,6 @@
 import { useContext } from "solid-js";
 import { NoHydration, HydrationScript, isServer } from "solid-js/web";
-import { StartContext } from "../entry-server/StartContext";
+import { StartContext } from "../server/StartContext";
 
 function getFromManifest(manifest) {
   const match = manifest["*"];

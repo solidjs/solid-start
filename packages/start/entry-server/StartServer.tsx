@@ -3,40 +3,14 @@ import { MetaProvider } from "solid-meta";
 import { RouteDataFunc, Router } from "solid-app-router";
 import Root from "~/root";
 import { sharedConfig } from "solid-js";
-import { StartProvider } from "./StartContext";
+import { StartProvider } from "../server/StartContext";
+import { inlineServerFunctions } from "../server";
+import { RequestContext } from "../server/types";
+import { apiRoutes } from "../api";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
 
-export type ManifestEntry = {
-  type: string;
-  href: string;
-};
-
-export type ContextMatches = {
-  originalPath: string;
-  pattern: string;
-  path: string;
-  params: unknown;
-};
-
-type TagDescription = {
-  tag: string;
-  props: Record<string, unknown>;
-};
-
-type RouterContext = {
-  matches?: ContextMatches[][];
-  url?: string;
-};
-
-export interface RequestContext {
-  request: Request;
-  responseHeaders: Response["headers"];
-  manifest: Record<string, ManifestEntry[]>;
-  routerContext?: RouterContext;
-  tags?: TagDescription[];
-}
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
 
@@ -70,7 +44,7 @@ export const composeMiddleware =
     );
 
 export function createHandler(...exchanges: Middleware[]) {
-  const exchange = composeMiddleware(exchanges);
+  const exchange = composeMiddleware([apiRoutes, inlineServerFunctions, ...exchanges]);
   return async (request: RequestContext) => {
     return await exchange({
       ctx: {
