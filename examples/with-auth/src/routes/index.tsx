@@ -1,11 +1,12 @@
 import server, { redirect } from "solid-start/server";
-import { createRouteResource } from "solid-start/router";
+import { createRouteResource, useRouteData } from "solid-start/router";
 
 import { createAction } from "solid-start/form";
 import { getUser, logout } from "~/db/session";
+import { createResource } from "solid-js";
 
-export default function Home() {
-  const [user] = createRouteResource(
+export function routeData() {
+  return createResource(
     server(async () => {
       let user = await getUser(server.request);
 
@@ -16,6 +17,10 @@ export default function Home() {
       return user;
     })
   );
+}
+
+export default function Home() {
+  const [user] = useRouteData<ReturnType<typeof routeData>>();
 
   const logout = createAction(
     server(async function () {

@@ -3,8 +3,8 @@ import server, { redirect } from "solid-start/server";
 import { createRouteResource } from "solid-start/router";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
-import { useParams } from "solid-app-router";
-import { Show } from "solid-js";
+import { useParams, useRouteData } from "solid-app-router";
+import { createResource, Show } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
 
 function validateUsername(username: unknown) {
@@ -19,8 +19,8 @@ function validatePassword(password: unknown) {
   }
 }
 
-export default function Login() {
-  const [data] = createRouteResource(
+export function routeData() {
+  return createResource(
     server(async function () {
       if (await getUser(server.request)) {
         throw redirect("/");
@@ -28,6 +28,10 @@ export default function Login() {
       return {};
     })
   );
+}
+
+export default function Login() {
+  const [data] = useRouteData<ReturnType<typeof routeData>>();
 
   /**
    * This helper function gives us typechecking for our ActionData return
