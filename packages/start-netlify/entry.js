@@ -4,6 +4,13 @@ import prepareManifest from "solid-start/runtime/prepareManifest";
 import fetch, { Headers, Response, Request } from "node-fetch";
 import entry from "./app";
 
+Response.redirect = function (url, status = 302) {
+  let response = new Response("", { status, headers: { Location: url } });
+  response.redirected = true;
+
+  return response;
+};
+
 Object.assign(globalThis, {
   Request,
   Response,
