@@ -241,6 +241,19 @@ function solidStartFileSystemRouter(options) {
             ]
           ].filter(Boolean)
         }));
+      } else if (code.includes("server(")) {
+        return babelSolidCompiler(
+          code,
+          id.replace(/.ts$/, ".tsx").replace(/.js$/, ".jsx"),
+          (source, id) => ({
+            plugins: [
+              options.ssr && [
+                babelServerModule,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ]
+            ].filter(Boolean)
+          })
+        );
       } else if (code.includes("const routes = $ROUTES;")) {
         return {
           code: code.replace(
