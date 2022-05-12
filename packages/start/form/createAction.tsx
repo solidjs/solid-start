@@ -147,14 +147,14 @@ export type Action<
   //   (...vars: D) => Promise<R>
   // ]
   {
-    (props: FormProps): JSX.Element;
+    (...submission: [...D]): Promise<R | void>;
     Form: D extends [FormData] ? (props: FormProps) => JSX.Element : never;
     url: string;
     isSubmitting(): boolean;
     submissions: () => {
       [key: string]: ActionSubmission<D>;
     };
-    submission(key: string): ActionSubmission<D>;
+    submission(key?: string): ActionSubmission<D>;
     submit: (submission?: D, key?: string, owner?: Owner) => Promise<R | void>;
   };
 
@@ -171,7 +171,7 @@ export function createAction<
   const navigate = useNavigate();
   const actionOwner = getOwner();
 
-  function submit(submission: D = [] as D, key: string = "", owner: Owner = actionOwner) {
+  function submitWithKey(submission: D = [] as D, key: string = "", owner: Owner = actionOwner) {
     return action(submission, key)
       .then(response => {
         if (response instanceof Response) {
@@ -207,6 +207,10 @@ export function createAction<
       });
   }
 
+  function submit(...submission: D) {
+    return submitWithKey(submission);
+  }
+
   function Form(props: FormProps) {
     const owner = getOwner();
 
@@ -221,7 +225,7 @@ export function createAction<
               ? props.key
               : Math.random().toString(36).substring(2, 8);
 
-          submit([submission.formData] as any, key, owner);
+          submitWithKey([submission.formData] as any, key, owner);
         }}
       >
         <Show when={props.key}>
@@ -232,9 +236,9 @@ export function createAction<
     );
   }
 
-  Form.Form = Form as unknown as D extends [FormData] ? (props: FormProps) => JSX.Element : never;
-  Form.url = (fn as any).url;
-  Form.isSubmitting = () =>
+  submit.Form = Form as unknown as D extends [FormData] ? (props: FormProps) => JSX.Element : never;
+  submit.url = (fn as any).url;
+  submit.isSubmitting = () =>
     Object.values(submissions()).filter(sub => sub.status === "submitting").length > 0;
 
   let getSubmissions = (): { [key: string]: ActionSubmission<D> } => {
@@ -287,9 +291,9 @@ export function createAction<
     };
   };
 
-  Form.submissions = getSubmissions;
-  Form.submission = (key: string) => getSubmissions()[key];
-  Form.submit = submit;
+  submit.submissions = getSubmissions;
+  submit.submission = (key: string) => getSubmissions()[key ?? ""];
+  submit.submit = submitWithKey;
 
-  return Form;
+  return submit;
 }
