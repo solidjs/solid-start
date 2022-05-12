@@ -7,6 +7,8 @@ types/
 packages/create-solid/bin
 *.log
 
+playground
+
 dist
 worker
 .solid
