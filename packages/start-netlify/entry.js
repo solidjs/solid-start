@@ -5,8 +5,7 @@ import fetch, { Headers, Response, Request } from "node-fetch";
 import entry from "./app";
 
 Response.redirect = function (url, status = 302) {
-  let response = new Response("", { status, headers: { Location: url } });
-  response.redirected = true;
+  let response = new Response(null, { status, headers: { Location: url }, counter: 1 });
 
   return response;
 };

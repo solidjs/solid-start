@@ -254,17 +254,17 @@ function solidStartFileSystemRouter(options) {
             ].filter(Boolean)
           })
         );
-      } else if (code.includes("const routes = $ROUTES;")) {
+      } else if (code.includes("var routes = $ROUTES;")) {
         return {
           code: code.replace(
-            "const routes = $ROUTES;",
+            "var routes = $ROUTES;",
             stringifyPageRoutes(router.getNestedPageRoutes(), { lazy })
           )
         };
-      } else if (code.includes("const api = $API_ROUTES;")) {
+      } else if (code.includes("var api = $API_ROUTES;")) {
         return {
           code: code.replace(
-            "const api = $API_ROUTES;",
+            "var api = $API_ROUTES;",
             stringifyApiRoutes(router.getFlattenedApiRoutes(), { lazy })
           )
         };
