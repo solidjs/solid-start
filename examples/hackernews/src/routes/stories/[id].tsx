@@ -1,16 +1,16 @@
-import { Link } from "solid-app-router";
-import { Component, For, Show } from "solid-js";
+import { Link, useRouteData, RouteDataFunc } from "solid-app-router";
+import { Component, For, Show, createResource } from "solid-js";
 import type { IStory } from "~/types";
 import Comment from "~/components/comment";
 import fetchAPI from "~/lib/api";
-import { createRouteResource } from "solid-start/router";
+
+export const routeData: RouteDataFunc = props => {
+  const [story] = createResource(() => `item/${props.params.id}`, fetchAPI);
+  return story;
+};
 
 const Story: Component = () => {
-  const [story] = createRouteResource<IStory, string>(
-    ({ params }) => `item/${params.id}`,
-    fetchAPI
-  );
-
+  const story = useRouteData<() => IStory>();
   return (
     <Show when={story()}>
       <div class="item-view">

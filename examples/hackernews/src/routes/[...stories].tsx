@@ -1,9 +1,8 @@
-import { Link, useRouteData, RouteDataFunc, useLocation, useParams } from "solid-app-router";
+import { Link, useRouteData, RouteDataFunc } from "solid-app-router";
 import { Component, For, Show, createResource } from "solid-js";
 import fetchAPI from "~/lib/api";
 import Story from "~/components/story";
 import { IStory } from "~/types";
-import { createRouteResource } from "solid-start/router";
 
 const mapStories = {
   top: "news",
@@ -13,18 +12,23 @@ const mapStories = {
   job: "jobs"
 } as const;
 
-const Stories: Component = () => {
-  const [stories] = createRouteResource<IStory[], string>(({ location, params }) => {
-    const page = () => +location.query.page || 1;
-    const type = () => params.stories || "top";
+interface StoriesData {
+  page: () => number;
+  type: () => string;
+  stories: () => IStory[];
+}
 
-    return `${mapStories[type()]}?page=${page()}`;
-  }, fetchAPI);
-
-  const location = useLocation();
-  const params = useParams();
+export const routeData: RouteDataFunc = ({ location, params }) => {
   const page = () => +location.query.page || 1;
   const type = () => params.stories || "top";
+
+  const [stories] = createResource(() => `${mapStories[type()]}?page=${page()}`, fetchAPI);
+
+  return { type, stories, page };
+};
+
+const Stories: Component = () => {
+  const { page, type, stories } = useRouteData<StoriesData>();
   return (
     <div class="news-view">
       <div class="news-list-nav">

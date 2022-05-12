@@ -1,6 +1,6 @@
-import { Component, Show } from "solid-js";
+import { Component, Show, createResource } from "solid-js";
+import { useRouteData, RouteDataFunc } from "solid-app-router";
 import fetchAPI from "~/lib/api";
-import { createRouteResource } from "solid-start/router";
 
 interface IUser {
   error: string;
@@ -10,9 +10,13 @@ interface IUser {
   about: string;
 }
 
-const User: Component = () => {
-  const [user] = createRouteResource(({ params }) => `user/${params.id}`, fetchAPI);
+export const routeData: RouteDataFunc = props => {
+  const [user] = createResource(() => `user/${props.params.id}`, fetchAPI);
+  return user;
+};
 
+const User: Component = () => {
+  const user = useRouteData<() => IUser>();
   return (
     <div class="user-view">
       <Show when={user()}>
