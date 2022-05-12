@@ -1,7 +1,7 @@
 import { useContext } from "solid-js";
 import { Assets, ssr } from "solid-js/web";
 import { renderTags } from "solid-meta";
-import { StartContext } from "../entry-server/StartContext";
+import { StartContext } from "../server/StartContext";
 
 export default function Meta() {
   const context = useContext(StartContext);

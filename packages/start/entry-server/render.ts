@@ -1,6 +1,6 @@
 import { JSX } from "solid-js";
 import { renderToStringAsync, renderToStream } from "solid-js/web";
-import { RequestContext } from "./StartServer";
+import { RequestContext } from "../server/types";
 
 export function renderAsync(
   fn: (context: RequestContext) => JSX.Element,
@@ -27,7 +27,8 @@ export function renderAsync(
 
 function handleRedirect(context) {
   return ({ write }) => {
-    if (context.routerContext.url) write(`<script>window.location="${context.routerContext.url}"</script>`);
+    if (context.routerContext.url)
+      write(`<script>window.location="${context.routerContext.url}"</script>`);
   };
 }
 

@@ -1,7 +1,8 @@
 import { getApiHandler } from "../api";
 import { sharedConfig } from "solid-js";
 import { isServer } from "solid-js/web";
-import type { RequestContext, Middleware as ServerMiddleware } from "../entry-server/StartServer";
+import type { Middleware as ServerMiddleware } from "../entry-server/StartServer";
+import type { RequestContext } from "./types";
 import {
   ContentTypeHeader,
   JSONResponseType,
@@ -334,17 +335,6 @@ if (isServer || process.env.TEST_ENV === "client") {
     return fn;
   };
 
-  // server.setContext = (requestContext: RequestContext) => {
-  //   server.requestContext = requestContext;
-  // };
-
-  // server.getContext = () => {
-  //   if (!server.requestContext) {
-  //     throw new Error("No request context found");
-  //   }
-  //   return server.requestContext;
-  // };
-
   server.registerHandler = function (route, handler) {
     handlers.set(route, handler);
   };
@@ -368,7 +358,7 @@ if (isServer || process.env.TEST_ENV === "client") {
   };
 }
 
-export const inlineServerModules: ServerMiddleware = ({ forward }) => {
+export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
   return async (ctx: RequestContext) => {
     const url = new URL(ctx.request.url);
 
@@ -442,6 +432,9 @@ export const inlineServerModules: ServerMiddleware = ({ forward }) => {
   };
 };
 
+export { inlineServerFunctions as inlineServerModules };
+
 export default server;
 
 export * from "./responses";
+export * from "./StartContext";

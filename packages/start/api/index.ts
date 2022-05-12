@@ -1,4 +1,4 @@
-import { RequestContext } from "../entry-server/StartServer";
+import type { RequestContext } from "../server/types";
 
 // the line below will be replaced by the compiler with a configuration of routes
 // based on the files in src/routes
