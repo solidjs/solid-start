@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "solid-app-router";
-import { refetchResources, startTransition, getOwner, runWithOwner, Show, JSX } from "solid-js";
+import { startTransition, getOwner, runWithOwner, Show, JSX } from "solid-js";
 import { FormProps, FormImpl } from "./Form";
 
 import { Accessor, createSignal } from "solid-js";
@@ -185,7 +185,7 @@ export function createAction<
           }
         } else {
           runWithOwner(owner, () => {
-            startTransition(refetchResources);
+            // startTransition(refetchResources);
           });
         }
         return response;

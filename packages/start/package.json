@@ -55,15 +55,16 @@
   },
   "devDependencies": {
     "solid-app-router": "^0.3.1",
-    "solid-js": "^1.3.13",
+    "solid-js": "^1.4.0",
     "solid-meta": "^0.27.3",
+    "solid-start-cloudflare-pages": "next",
     "solid-start-cloudflare-workers": "next",
     "solid-start-node": "next",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
     "solid-app-router": "^0.3.1",
-    "solid-js": "^1.3.13",
+    "solid-js": "^1.4.0",
     "solid-meta": "^0.27.2",
     "vite": "^2.8.6"
   },

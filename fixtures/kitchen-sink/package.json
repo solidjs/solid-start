@@ -28,7 +28,7 @@
     "npm-run-all": "latest",
     "playwright": "1.19.2",
     "solid-app-router": "^0.3.0",
-    "solid-js": "^1.3.13",
+    "solid-js": "^1.4.0",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
