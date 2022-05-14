@@ -402,6 +402,7 @@ importers:
       solid-meta: ^0.27.3
       solid-start-cloudflare-pages: next
       solid-start-cloudflare-workers: next
+      solid-start-deno: next
       solid-start-node: next
       undici: ^4.12.2
       vite: ^2.8.6
@@ -438,6 +439,7 @@ importers:
       solid-meta: 0.27.3_solid-js@1.4.1
       solid-start-cloudflare-pages: link:../start-cloudflare-pages
       solid-start-cloudflare-workers: link:../start-cloudflare-workers
+      solid-start-deno: link:../start-deno
       vite: 2.9.9
 
   packages/start-cloudflare-pages:
@@ -619,9 +621,9 @@ packages:
       '@babel/traverse': 7.17.10
       '@babel/types': 7.17.10
       convert-source-map: 1.8.0
-      debug: 4.3.3
+      debug: 4.3.4
       gensync: 1.0.0-beta.2
-      json5: 2.2.0
+      json5: 2.2.1
       semver: 6.3.0
       source-map: 0.5.7
     transitivePeerDependencies:
@@ -5645,7 +5647,7 @@ packages:
       '@jest/types': 27.5.1
       ansi-styles: 5.2.0
       jest-get-type: 27.5.1
-      jest-matcher-utils: 27.2.5
+      jest-matcher-utils: 27.5.1
       jest-message-util: 27.5.1
       jest-regex-util: 27.5.1
     dev: true
@@ -5673,7 +5675,7 @@ packages:
     engines: {node: '>= 10.17.0'}
     hasBin: true
     dependencies:
-      debug: 4.3.3
+      debug: 4.3.4
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
@@ -6481,7 +6483,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.3
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9868,7 +9870,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.3
+      debug: 4.3.4
       socks: 2.6.2
     transitivePeerDependencies:
       - supports-color

@@ -6,14 +6,12 @@ import { lookup } from "https://deno.land/x/media_types/mod.ts";
 
 prepareManifest(manifest, assetManifest);
 
-import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
-
-let port = Deno.env.get("PORT") ?? "8080";
-console.log(`Listening on http://localhost:${port}`);
+import { serve } from "https://deno.land/std@0.139.0/http/server.ts";
 
 serve(
   async request => {
     const { pathname } = new URL(request.url);
+    console.log(pathname);
 
     // This is how the server works:
     // 1. A request comes in for a specific asset.
@@ -37,6 +35,6 @@ serve(
     });
   },
   {
-    addr: `:${port}`
+    port: Number(Deno.env.get("PORT") ?? "8080")
   }
 );

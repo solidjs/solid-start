@@ -11,14 +11,19 @@ import { spawn } from "child_process";
 export default function () {
   return {
     start() {
-      const proc = spawn("wrangler", ["pages dev ./dist"]);
+      const proc = spawn("npx", [
+        "wrangler@2",
+        "pages",
+        "dev",
+        "./dist",
+        "--port",
+        process.env.PORT ? process.env.PORT : "3000"
+      ]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
     async build(config) {
-      const __dirname = dirname(fileURLToPath(
-        import.meta.url,
-      ));
+      const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
       await vite.build({
         build: {
@@ -27,10 +32,10 @@ export default function () {
           rollupOptions: {
             input: resolve(join(config.root, appRoot, `entry-client`)),
             output: {
-              manualChunks: undefined,
-            },
-          },
-        },
+              manualChunks: undefined
+            }
+          }
+        }
       });
       await vite.build({
         build: {
@@ -39,39 +44,36 @@ export default function () {
           rollupOptions: {
             input: resolve(join(config.root, appRoot, `entry-server`)),
             output: {
-              format: "esm",
-            },
-          },
-        },
+              format: "esm"
+            }
+          }
+        }
       });
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "app.js"),
+        join(config.root, ".solid", "server", "app.js")
       );
-      copyFileSync(
-        join(__dirname, "entry.js"),
-        join(config.root, ".solid", "server", "index.js"),
-      );
+      copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
         plugins: [
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"],
+            exportConditions: ["node", "solid"]
           }),
-          common(),
-        ],
+          common()
+        ]
       });
 
       // or write the bundle to disk
       await bundle.write({
         format: "esm",
-        file: join(config.root, "functions", "[[path]].js"),
+        file: join(config.root, "functions", "[[path]].js")
       });
 
       // closes the bundle
       await bundle.close();
-    },
+    }
   };
 }

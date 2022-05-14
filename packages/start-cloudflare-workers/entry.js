@@ -13,7 +13,8 @@ addEventListener("fetch", event => {
 
 async function handleEvent(event) {
   try {
-    return await getAssetFromKV(event);
+    let asset = await getAssetFromKV(event);
+    return asset;
   } catch (err) {
     return entry({
       request: event.request,

@@ -10,7 +10,15 @@ import { spawn } from "child_process";
 export default function () {
   return {
     start() {
-      const proc = spawn("wrangler", ["dev"]);
+      const proc = spawn("npx", [
+        "wrangler@2",
+        "dev",
+        "./dist/index.js",
+        "--site",
+        "./dist",
+        "--port",
+        process.env.PORT ? process.env.PORT : "3000"
+      ]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },

@@ -14,7 +14,20 @@ export const onRequestGet = ({ request, next }) => {
   return entry({
     request,
     responseHeaders: new Headers(),
-    manifest,
+    manifest
+  });
+};
+
+export const onRequestHead = ({ request, next }) => {
+  // Handle static assets
+  if (/\.\w+$/.test(request.url)) {
+    return next(request);
+  }
+
+  return entry({
+    request,
+    responseHeaders: new Headers(),
+    manifest
   });
 };
 
@@ -23,6 +36,6 @@ export async function onRequestPost({ request }) {
   return entry({
     request,
     responseHeaders: new Headers(),
-    manifest,
+    manifest
   });
 }
