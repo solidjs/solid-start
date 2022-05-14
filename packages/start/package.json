@@ -31,6 +31,7 @@
   ],
   "dependencies": {
     "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "chokidar": "^3.5.3",
@@ -59,6 +60,7 @@
     "solid-meta": "^0.27.3",
     "solid-start-deno": "next",
     "solid-start-cloudflare-pages": "next",
+    "solid-start-netlify": "next",
     "solid-start-cloudflare-workers": "next",
     "solid-start-node": "next",
     "vite": "^2.8.6"
