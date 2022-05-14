@@ -1,4 +1,4 @@
-/// <reference path="../types.ts" />
+/// <reference path="../server/types.tsx" />
 
 import { useRoutes } from "solid-app-router";
 // @ts-expect-error

@@ -4,9 +4,9 @@ import { RouteDataFunc, Router } from "solid-app-router";
 import Root from "~/root";
 import { sharedConfig } from "solid-js";
 import { StartProvider } from "../server/StartContext";
-import { inlineServerFunctions } from "../server";
+import { inlineServerFunctions } from "../server/middleware";
 import { RequestContext } from "../server/types";
-import { apiRoutes } from "../api";
+import { apiRoutes } from "../api/middleware";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
