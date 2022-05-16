@@ -1,5 +1,5 @@
 {
-  "name": "example-with-auth",
+  "name": "example-cloudflare-workers",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "solid-start dev",
