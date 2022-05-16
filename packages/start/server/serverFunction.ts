@@ -270,31 +270,31 @@ if (isServer || process.env.TEST_ENV === "client") {
       const execute = async () => {
         try {
           let e = await _fn.call(ctx, ...args);
-          if (e instanceof Response) {
-            // @ts-ignore
-            if (ctx) {
-              let responseHeaders = ctx.responseHeaders;
-              responseHeaders.set("x-solidstart-status-code", e.status.toString());
-              e.headers.forEach((head, value) => {
-                responseHeaders.set(value, head);
-              });
-            }
-          }
+          // if (e instanceof Response) {
+          //   // @ts-ignore
+          //   if (ctx) {
+          //     let responseHeaders = ctx.responseHeaders;
+          //     responseHeaders.set("x-solidstart-status-code", e.status.toString());
+          //     e.headers.forEach((head, value) => {
+          //       responseHeaders.set(value, head);
+          //     });
+          //   }
+          // }
 
           return e;
         } catch (e) {
-          if (e instanceof Response) {
-            // @ts-ignore
-            if (ctx) {
-              let responseHeaders = ctx.responseHeaders;
-              responseHeaders.set("x-solidstart-status-code", e.status.toString());
-              e.headers.forEach((head, value) => {
-                responseHeaders.set(value, head);
-              });
-            }
+          // if (e instanceof Response) {
+          //   // @ts-ignore
+          //   if (ctx) {
+          //     let responseHeaders = ctx.responseHeaders;
+          //     responseHeaders.set("x-solidstart-status-code", e.status.toString());
+          //     e.headers.forEach((head, value) => {
+          //       responseHeaders.set(value, head);
+          //     });
+          //   }
 
-            throw new ResponseError(e);
-          }
+          //   throw new ResponseError(e);
+          // }
 
           if (/[A-Za-z]+ is not defined/.test(e.message)) {
             const error = new Error(

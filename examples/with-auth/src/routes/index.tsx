@@ -1,12 +1,19 @@
-import server, { redirect } from "solid-start/server";
-import { createRouteResource, useRouteData } from "solid-start/router";
+import server, {
+  isRedirectResponse,
+  LocationHeader,
+  redirect,
+  StartContext
+} from "solid-start/server";
+
+import { createServerResource } from "solid-start/server/resources";
+import { useNavigate, useRouteData } from "solid-start/router";
 
 import { createAction } from "solid-start/form";
 import { getUser, logout } from "~/db/session";
-import { createResource } from "solid-js";
+import { createResource, useContext } from "solid-js";
 
 export function routeData() {
-  return createResource(
+  return createServerResource(
     server(async () => {
       let user = await getUser(server.request);
 
