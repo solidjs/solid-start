@@ -69,7 +69,6 @@ export function redirect(
     }
   });
 
-  response.context = responseInit.context;
   return response;
 }
 

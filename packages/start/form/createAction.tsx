@@ -5,6 +5,7 @@ import { FormProps, FormImpl } from "./Form";
 import { Accessor, createSignal } from "solid-js";
 import { FormError } from "./FormError";
 import { Owner } from "solid-js/types/reactive/signal";
+import { isRedirectResponse } from "../server/responses";
 
 type ActionStatus = "submitting" | "error" | "success";
 
@@ -193,7 +194,7 @@ export function createAction<
       .catch((e: Error) => {
         const sub = submissions()[key];
         runWithOwner(owner, () => {
-          if (e instanceof Response && e.status === 302) {
+          if (e instanceof Response && isRedirectResponse(e)) {
             // startTransition(() => {
             navigate(e.headers.get("Location") || "/");
             // refetchResources();

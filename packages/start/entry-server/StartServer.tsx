@@ -5,7 +5,7 @@ import Root from "~/root";
 import { sharedConfig } from "solid-js";
 import { StartProvider } from "../server/StartContext";
 import { inlineServerFunctions } from "../server/middleware";
-import { RequestContext } from "../server/types";
+import { PageContext, RequestContext } from "../server/types";
 import { apiRoutes } from "../api/middleware";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
@@ -62,8 +62,17 @@ export function createHandler(...exchanges: Middleware[]) {
 
 const docType = ssr("<!DOCTYPE html>");
 export default ({ context }: { context: RequestContext }) => {
-  context.routerContext = {};
-  context.tags = [];
+  let pageContext = context as PageContext;
+  pageContext.routerContext = {};
+  pageContext.tags = [];
+
+  pageContext.setStatusCode = (code: number) => {
+    pageContext.responseHeaders.set("x-solidstart-status-code", code.toString());
+  };
+
+  pageContext.setHeader = (name: string, value: string) => {
+    pageContext.responseHeaders.set(name, value.toString());
+  };
 
   // @ts-expect-error
   sharedConfig.context.requestContext = context;
@@ -71,9 +80,9 @@ export default ({ context }: { context: RequestContext }) => {
   const path = parsed.pathname + parsed.search;
 
   return (
-    <StartProvider context={context}>
-      <MetaProvider tags={context.tags}>
-        <Router url={path} out={context.routerContext} data={dataFn}>
+    <StartProvider context={pageContext}>
+      <MetaProvider tags={pageContext.tags}>
+        <Router url={path} out={pageContext.routerContext} data={dataFn}>
           {docType as unknown as any}
           <Root />
         </Router>

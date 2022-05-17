@@ -1,11 +1,11 @@
 import { useContext, JSXElement } from "solid-js";
 import { Assets } from "solid-js/web";
 import { StartContext } from "../server/StartContext";
-import { ContextMatches, ManifestEntry, RequestContext } from "../server/types";
+import { ContextMatches, ManifestEntry, PageContext } from "../server/types";
 
 function getAssetsFromManifest(
-  manifest: RequestContext["manifest"],
-  routerContext: RequestContext["routerContext"]
+  manifest: PageContext["manifest"],
+  routerContext: PageContext["routerContext"]
 ) {
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     memo.push(...(manifest[mapRouteToFile(m)] || []));
