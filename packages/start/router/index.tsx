@@ -7,9 +7,9 @@ import { StartContext } from "../server/StartContext";
 import { createResource, ResourceReturn, createRenderEffect } from "solid-js";
 import { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
-import { RequestContext } from "../server/types";
+import { PageContext, RequestContext } from "../server/types";
 
-type RouteContext = RequestContext;
+type RouteContext = Omit<PageContext, "tags" | "manifest" | "routerContext">;
 
 type RouteResourceSource<S> =
   | S

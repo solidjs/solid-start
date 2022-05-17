@@ -61,8 +61,8 @@ export function createHandler(...exchanges: Middleware[]) {
 }
 
 const docType = ssr("<!DOCTYPE html>");
-export default ({ context }: { context: RequestContext }) => {
-  let pageContext = context as PageContext;
+export default ({ context }: { context: PageContext }) => {
+  let pageContext = context;
   pageContext.routerContext = {};
   pageContext.tags = [];
 

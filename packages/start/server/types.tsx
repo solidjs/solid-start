@@ -20,6 +20,7 @@ type RouterContext = {
 
 export interface RequestContext {
   request: Request;
+  responseHeaders: Headers;
 }
 
 export interface PageContext extends RequestContext {

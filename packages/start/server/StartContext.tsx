@@ -18,6 +18,9 @@ export function StartProvider(props: ParentProps<{ context?: PageContext }>) {
           get request() {
             return request();
           },
+          get responseHeaders() {
+            return new Headers();
+          },
           get tags() {
             return [];
           },
