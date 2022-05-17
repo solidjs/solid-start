@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
+let javaScriptEnabled = !process.env.DISABLE_JAVASCRIPT;
 
-test("basic login test", async ({ browser }) => {
+test("login test " + (javaScriptEnabled ? "with js" : "without js"), async ({ browser }) => {
   let appURL = new URL(process.env.TEST_HOST ?? "http://localhost:3000/").href;
-  let javaScriptEnabled = !process.env.DISABLE_JAVASCRIPT;
   const context = await browser.newContext({
     javaScriptEnabled
   });

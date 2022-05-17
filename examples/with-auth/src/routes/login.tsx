@@ -1,11 +1,11 @@
 import { createAction, FormError } from "solid-start/form";
 import server, { redirect } from "solid-start/server";
-import { createServerResource } from "solid-start/server/resource";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
 import { useParams, useRouteData } from "solid-app-router";
-import { createResource, Show } from "solid-js";
+import { Show } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
+import { createRouteResource } from "solid-start/router";
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
@@ -20,7 +20,7 @@ function validatePassword(password: unknown) {
 }
 
 export function routeData() {
-  return createServerResource(
+  return createRouteResource(
     server(async function (ctx) {
       if (await getUser(ctx.request)) {
         throw redirect("/");
