@@ -69,26 +69,8 @@ export function createRouteResource<T, S>(
   const navigate = useNavigate();
   const context = useContext(StartContext);
 
-  let fetcherWithRedirect = async (...args) => {
-    try {
-      let response = await (fetcher as any)(context, ...args);
-      return response;
-    } catch (e) {
-      if (e instanceof Response) {
-        if (isRedirectResponse(e)) {
-          return e;
-        }
-      }
-      throw e;
-    }
-  };
-
-  // @ts-ignore
-  let resource = createResource(source, fetcherWithRedirect, options);
-
-  createRenderEffect(() => {
-    let response = resource[0]();
-    if (response instanceof Response && isRedirectResponse(response)) {
+  function handleResponse(response: Response) {
+    if (isRedirectResponse(response)) {
       navigate(response.headers.get(LocationHeader), {
         replace: true
       });
@@ -99,7 +81,27 @@ export function createRouteResource<T, S>(
         });
       }
     }
-  });
+  }
+
+  let fetcherWithRedirect = async (...args) => {
+    try {
+      let response = await (fetcher as any)(context, ...args);
+      if (response instanceof Response) {
+        setTimeout(() => handleResponse(response), 0);
+        return response;
+      }
+      return response;
+    } catch (e) {
+      if (e instanceof Response) {
+        setTimeout(() => handleResponse(e), 0);
+        return e;
+      }
+      throw e;
+    }
+  };
+
+  // @ts-ignore
+  let resource = createResource(source, fetcherWithRedirect, options);
 
   return resource;
 }
