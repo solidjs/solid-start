@@ -9,3 +9,4 @@ var routes = $ROUTES;
  */
 const Routes = useRoutes(routes);
 export default Routes;
+export { routes };
