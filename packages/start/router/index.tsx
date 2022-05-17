@@ -9,7 +9,7 @@ import { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal"
 import { isServer } from "solid-js/web";
 import { PageContext, RequestContext } from "../server/types";
 
-type RouteContext = Omit<PageContext, "tags" | "manifest" | "routerContext">;
+type RouteResourceContext = Omit<PageContext, "tags" | "manifest" | "routerContext">;
 
 type RouteResourceSource<S> =
   | S
@@ -22,7 +22,7 @@ type RouteResourceSource<S> =
       context: RequestContext;
     }) => S | false | null | undefined);
 
-type RouteResourceFetcher<S, T> = (context: RouteContext, k: S) => T | Promise<T>;
+type RouteResourceFetcher<S, T> = (context: RouteResourceContext, k: S) => T | Promise<T>;
 
 export function createRouteResource<T, S = true>(
   fetcher: RouteResourceFetcher<S, T>,
