@@ -6,8 +6,31 @@ This is very experimental; the adapter API isn't at all fleshed out, and things 
 
 So far this only supports Edge functions but we intend to extend this to other output formats.
 
+## Usage
+
+Add the adapter in your `vite.config.js` file
+
+```js
+import solid from "solid-start";
+import vercel from "solid-start-vercel";
+
+export default defineConfig({
+  plugins: [solid({ adapter: vercel() })]
+});
+```
+
 ## Configuration
 
-Need to have vercel-cli installed globally. This makes use of the File System API which is in beta and needs to be enabled via an env variable:
+You will need to have the [vercel-cli](https://vercel.com/docs/cli) installed globally.
 
-> ENABLE_FILE_SYSTEM_API=1
+```bash
+> npm i -g vercel
+```
+
+This adapter makes use of the [Build Output API](https://vercel.com/docs/build-output-api/v3) which you need to enable through the Vercel CLI
+
+```bash
+> vercel env add ENABLE_VC_BUILD
+```
+follow the prompts to set it to `1` for all environments
+
