@@ -10,7 +10,7 @@ const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
 const API_METHODS = ["get", "post", "put", "delete", "patch"];
 function toPath(id) {
-  return id.replace(/\[(.+)\]/, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
+  return id.replace(/\[([^\[]+)\]/g, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
 }
 
 export class Router {
