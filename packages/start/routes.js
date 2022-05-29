@@ -183,8 +183,10 @@ export class Router {
 
   getNestedPageRoutes() {
     function processRoute(routes, route, id, full) {
-      const parentRoute = Object.values(routes).find(
-        o => o.id && o.id === "/" ? (id.startsWith("/index/") && (id = id.slice("/index".length))) : id.startsWith(o.id + "/")
+      const parentRoute = Object.values(routes).find(o =>
+        o.id && o.id === "/"
+          ? id.startsWith("/index/") && (id = id.slice("/index".length))
+          : id.startsWith(o.id + "/")
       );
 
       if (!parentRoute) {
@@ -208,10 +210,25 @@ export class Router {
     return routes;
   }
 
-  getFlattenedApiRoutes() {
+  isLayoutRoute(route) {
+    return Object.values(this.routes).some(r => {
+      return r.id.startsWith(route.id === "/" ? "/index/" : route.id + "/") && r.componentPath;
+    });
+  }
+
+  getFlattenedApiRoutes(includePageRoutes = false) {
+    const hasIndexLayout = this.routes["/"] && this.routes["/"].componentPath;
     const routes = Object.values(this.routes).reduce((r, route) => {
-      if (route.apiPath) {
-        r.push({ ...route, id: route.id, path: toPath(route.id) });
+      if (
+        route.apiPath ||
+        (includePageRoutes && route.componentPath && !this.isLayoutRoute(route))
+      ) {
+        const path = toPath(
+          hasIndexLayout && route.id.startsWith("/index/")
+            ? route.id.slice("/index".length)
+            : route.id
+        );
+        r.push({ ...route, id: route.id, path });
       }
       return r;
     }, []);
@@ -219,10 +236,16 @@ export class Router {
     return routes;
   }
 
-  getFlattenedPageRoutes() {
+  getFlattenedPageRoutes(includeLayouts = false) {
+    const hasIndexLayout = this.routes["/"] && this.routes["/"].componentPath;
     const routes = Object.values(this.routes).reduce((r, route) => {
-      if (route.componentPath) {
-        r.push({ ...route, id: route.id, path: toPath(route.id) });
+      if (route.componentPath && (!this.isLayoutRoute(route) || includeLayouts)) {
+        const path = toPath(
+          hasIndexLayout && route.id.startsWith("/index/")
+            ? route.id.slice("/index".length)
+            : route.id
+        );
+        r.push({ ...route, id: route.id, path });
       }
       return r;
     }, []);
@@ -286,7 +309,7 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
         .map(
           i =>
             `{\n${[
-              ...API_METHODS.filter(j => i.apiPath[j]).map(
+              ...API_METHODS.filter(j => i.apiPath?.[j]).map(
                 v =>
                   `${v}: ${
                     // options.lazy
@@ -294,7 +317,7 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
                     jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
                   }`
               ),
-
+              i.componentPath ? `get: "skip"` : undefined,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(

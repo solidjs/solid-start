@@ -9,114 +9,93 @@ var api = $API_ROUTES;
 type Method = "get" | "post" | "put" | "delete" | "patch";
 type Handler = (ctx: RequestContext, params: Record<string, string>) => Response;
 
-type RouteData = {
-  [method in Method]?: Handler;
-} & {
-  path: string;
-};
+type Route = { path: string; children?: Route[] } & { [method in Method]?: Handler | "skip" };
+type MatchRoute = ReturnType<typeof routeToMatchRoute>;
 
-type ParameterType = "parametric" | "wildcard";
-type Route = RouteData & {
-  params?: [ParameterType, string, number][];
-};
+function routeToMatchRoute(route: Route) {
+  const segments = route.path.split("/").filter(Boolean);
 
-type RouteTree = {
-  static?: { [key: string]: RouteTree };
-  parametric?: RouteTree;
-  wildcard?: RouteTree;
-  route?: Route;
-};
+  const params: { type: "*" | ":"; name: string; index: number }[] = [];
+  const matchSegments: (string | null)[] = [];
+  let score = route.path.endsWith("/") ? 4 : 0;
+  let wildcard = false;
 
-function createRouteTree(routes: RouteData[]) {
-  return routes.reduce<RouteTree>((tree, routeData) => {
-    const sections = routeData.path
-      .slice(1, routeData.path.endsWith("/") ? -1 : routeData.path.length)
-      .split("/");
+  for (const [index, segment] of segments.entries()) {
+    if (segment[0] === ":") {
+      const name = segment.slice(1);
+      score += 3;
+      params.push({
+        type: ":",
+        name,
+        index
+      });
+      matchSegments.push(null);
+    } else if (segment[0] === "*") {
+      params.push({
+        type: "*",
+        name: segment.slice(1),
+        index
+      });
+      wildcard = true;
+    } else {
+      score += 4;
+      matchSegments.push(segment);
+    }
+  }
 
-    let params: [ParameterType, string, number][] = [];
+  return {
+    ...route,
+    score,
+    params,
+    matchSegments,
+    wildcard
+  };
+}
 
-    let current = tree;
-    for (const [i, section] of sections.entries()) {
-      if (section[0] === ":") {
-        current = current.parametric ?? (current.parametric = {});
-        params.push(["parametric", section.slice(1), i]);
-      } else if (section[0] === "*") {
-        current = current.wildcard ?? (current.wildcard = {});
-        params.push(["wildcard", section.slice(1), i]);
-      } else {
-        if (!current.static) {
-          current.static = Object.create(null);
-        }
-        current = current.static![section] ?? (current.static![section] = {});
+function getRouteMatches(routes: MatchRoute[], path: string, method: Method) {
+  const segments = path.split("/").filter(Boolean);
+
+  routeLoop: for (const route of routes) {
+    const matchSegments = route.matchSegments;
+
+    if (
+      segments.length < matchSegments.length ||
+      (!route.wildcard && segments.length > matchSegments.length)
+    ) {
+      continue;
+    }
+
+    for (let index = 0; index < matchSegments.length; index++) {
+      const match = matchSegments[index];
+      if (!match) {
+        continue;
+      }
+
+      if (segments[index] !== match) {
+        continue routeLoop;
       }
     }
 
-    current.route = routeData;
-    current.route.params = params;
+    const handler = route[method];
+    if (handler === "skip" || handler === undefined) {
+      return;
+    }
 
-    return tree;
-  }, {});
-}
+    const params: Record<string, string> = {};
+    for (const { type, name, index } of route.params) {
+      if (type === ":") {
+        params[name] = segments[index];
+      } else {
+        params[name] = segments.slice(index).join("/");
+      }
+    }
 
-function matchRoute(
-  tree: RouteTree,
-  url: string,
-  method: Method
-): { handler: Handler; params: Record<string, string> } | undefined {
-  const sections = url.slice(1, url.endsWith("/") ? -1 : url.length).split("/");
-  const route = _matchRoute(tree, sections, 0);
-
-  if (route?.[method]) {
-    const params =
-      route.params?.reduce<Record<string, string>>((params, [type, name, sectionIndex]) => {
-        if (type === "wildcard") {
-          params[name] = sections.slice(sectionIndex).join("/");
-        } else {
-          params[name] = sections[sectionIndex];
-        }
-        return params;
-      }, {}) ?? {};
-
-    return { handler: route[method]!, params };
+    return { handler, params };
   }
 }
 
-function _matchRoute(tree: RouteTree, sections: string[], start: number): Route | undefined {
-  if (start === sections.length) {
-    if (tree.route) {
-      return tree.route;
-    } else if (tree.wildcard) {
-      return tree.wildcard.route;
-    }
-    return;
-  }
-
-  const section = sections[start];
-
-  if (tree.static?.[section]) {
-    const result = _matchRoute(tree.static[section], sections, start + 1);
-    if (result) {
-      return result;
-    }
-  }
-
-  if (tree.parametric) {
-    const result = _matchRoute(tree.parametric, sections, start + 1);
-    if (result) {
-      return result;
-    }
-  }
-
-  if (tree.wildcard) {
-    const result = _matchRoute(tree.wildcard, sections, sections.length);
-    if (result) {
-      return result;
-    }
-  }
-}
-
-const routeTree = createRouteTree(api);
+const allRoutes = (api as Route[]).map(routeToMatchRoute).sort((a, b) => b.score - a.score);
 
 export function getApiHandler(url: URL, method: string) {
-  return matchRoute(routeTree, url.pathname, method.toLowerCase() as Method);
+  return getRouteMatches(allRoutes, url.pathname, method.toLowerCase() as Method);
 }

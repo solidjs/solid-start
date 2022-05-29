@@ -265,7 +265,7 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var api = $API_ROUTES;",
-            stringifyApiRoutes(router.getFlattenedApiRoutes(), { lazy })
+            stringifyApiRoutes(router.getFlattenedApiRoutes(true), { lazy })
           )
         };
       }
