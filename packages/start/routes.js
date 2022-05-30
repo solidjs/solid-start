@@ -1,7 +1,6 @@
 import fg from "fast-glob";
-import fs from "fs";
+import fs from "fs/promises";
 import path, { join } from "path";
-import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 import chokidar from "chokidar";
 import debug from "debug";
@@ -31,8 +30,6 @@ export class Router {
   }
 
   async init() {
-    await init;
-
     if (this.watcher) {
       this.watcher.close();
     }
@@ -41,9 +38,7 @@ export class Router {
       cwd: this.cwd
     });
 
-    routes.forEach(route => {
-      this.processFile(route);
-    });
+    await Promise.all(routes.map(route => this.processFile(route)));
   }
 
   watch(onChange) {
@@ -100,7 +95,34 @@ export class Router {
     }
   }
 
-  processFile(path) {
+  async getFileModuleExports(path) {
+    let result = await esbuild.build({
+      entryPoints: [join(this.cwd, path)],
+
+      platform: "neutral",
+      format: "esm",
+      metafile: true,
+      write: false,
+      watch: false,
+      loader: {
+        ".js": "tsx"
+      },
+      logLevel: "silent"
+    });
+
+    let metafile = result.metafile;
+
+    for (let key in metafile.outputs) {
+      let output = metafile.outputs[key];
+      if (output.entryPoint) {
+        return output.exports;
+      }
+    }
+
+    throw new Error(`Unable to get exports for route ${path}`);
+  }
+
+  async processFile(path) {
     // if its a route data function
     if (path.match(new RegExp(`\\.data\\.(${["ts", "js"].join("|")})`))) {
       let id = path
@@ -120,15 +142,8 @@ export class Router {
       let routeConfig = {};
 
       if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})`))) {
-        let code = fs.readFileSync(join(this.cwd, path)).toString();
         try {
-          let [imports, exports] = parse(
-            esbuild.transformSync(code, {
-              jsx: "transform",
-              format: "esm",
-              loader: "tsx"
-            }).code
-          );
+          let exports = await this.getFileModuleExports(path);
 
           if (exports.includes("default")) {
             routeConfig.componentPath = path;
@@ -145,7 +160,13 @@ export class Router {
             }
           }
 
-          if (exports.includes("routeData") || code.includes("createRouteResource")) {
+          // in the case where createRouteResource is included int he code when we will also
+          // add this to the route data, this is static and we avoid reading the file unnecessarily
+          // since esbuild will parse in the average case.
+          if (
+            exports.includes("routeData") ||
+            (await fs.readFile(join(this.cwd, path))).toString().includes("createRouteResource")
+          ) {
             routeConfig.dataPath = path + "?data";
             // this.setRouteData(id, path + "?data");
             // dataFn = src.replace("tsx", "data.ts");
@@ -159,8 +180,7 @@ export class Router {
         // this.setRouteComponent(id, path);
       }
 
-      if (this.routes[id]) {
-        // get old config, we want to compare the oldConfig with the new one to
+      // get old config, we want to compare the oldConfig with the new one to
         // detect changes and restart the vite server
         let { id: oldID, path: oldPath, dataPath, ...oldConfig } = this.routes[id];
         let newConfig = { ...routeConfig };
@@ -170,21 +190,18 @@ export class Router {
         }
 
         if (!dequal({ dataPath, ...oldConfig }, newConfig)) {
-          console.log(newConfig, { dataPath, ...oldConfig });
           this.routes[id] = { id, path: toPath(id) ?? "/", ...newConfig };
           this.notify(path);
         }
-      } else {
-        this.routes[id] = { id, path: toPath(id) ?? "/", ...routeConfig };
-        this.notify(path);
-      }
     }
   }
 
   getNestedPageRoutes() {
     function processRoute(routes, route, id, full) {
-      const parentRoute = Object.values(routes).find(
-        o => o.id && o.id === "/" ? (id.startsWith("/index/") && (id = id.slice("/index".length))) : id.startsWith(o.id + "/")
+      const parentRoute = Object.values(routes).find(o =>
+        o.id && o.id === "/"
+          ? id.startsWith("/index/") && (id = id.slice("/index".length))
+          : id.startsWith(o.id + "/")
       );
 
       if (!parentRoute) {
