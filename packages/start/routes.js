@@ -10,7 +10,7 @@ const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
 const API_METHODS = ["get", "post", "put", "delete", "patch"];
 function toPath(id) {
-  return id.replace(/\[(.+)\]/, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
+  return id.replace(/\[([^\[]+)\]/g, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
 }
 
 export class Router {
@@ -162,15 +162,14 @@ export class Router {
       if (this.routes[id]) {
         // get old config, we want to compare the oldConfig with the new one to
         // detect changes and restart the vite server
-        let { id: oldID, path: oldPath, dataPath, ...oldConfig } = this.routes[id];
+        let { id: oldID, path: oldPath, ...oldConfig } = this.routes[id];
         let newConfig = { ...routeConfig };
 
-        if (dataPath && !dataPath.endsWith("?data") && !newConfig.dataPath) {
-          newConfig.dataPath = dataPath;
+        if (oldConfig.dataPath && !oldConfig.dataPath.endsWith("?data") && !newConfig.dataPath) {
+          newConfig.dataPath = oldConfig.dataPath;
         }
 
-        if (!dequal({ dataPath, ...oldConfig }, newConfig)) {
-          console.log(newConfig, { dataPath, ...oldConfig });
+        if (!dequal(oldConfig, newConfig)) {
           this.routes[id] = { id, path: toPath(id) ?? "/", ...newConfig };
           this.notify(path);
         }
@@ -183,8 +182,10 @@ export class Router {
 
   getNestedPageRoutes() {
     function processRoute(routes, route, id, full) {
-      const parentRoute = Object.values(routes).find(
-        o => o.id && o.id === "/" ? (id === "/index/" && (id = "/")) : id.startsWith(o.id + "/")
+      const parentRoute = Object.values(routes).find(o =>
+        o.id && o.id === "/"
+          ? id.startsWith("/index/") && (id = id.slice("/index".length))
+          : id.startsWith(o.id + "/")
       );
 
       if (!parentRoute) {

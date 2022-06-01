@@ -36,32 +36,30 @@ export default function () {
     },
     async build(config) {
       const appRoot = config.solidOptions.appRoot;
-      await Promise.all([
-        vite.build({
-          build: {
-            outDir: "./dist/",
-            minify: "terser",
-            rollupOptions: {
-              input: resolve(join(config.root, appRoot, `entry-client`)),
-              output: {
-                manualChunks: undefined
-              }
+      await vite.build({
+        build: {
+          outDir: "./dist/",
+          minify: "terser",
+          rollupOptions: {
+            input: resolve(join(config.root, appRoot, `entry-client`)),
+            output: {
+              manualChunks: undefined
             }
           }
-        }),
-        vite.build({
-          build: {
-            ssr: true,
-            outDir: "./.solid/server",
-            rollupOptions: {
-              input: resolve(join(config.root, appRoot, `entry-server`)),
-              output: {
-                format: "esm"
-              }
+        }
+      });
+      await vite.build({
+        build: {
+          ssr: true,
+          outDir: "./.solid/server",
+          rollupOptions: {
+            input: resolve(join(config.root, appRoot, `entry-server`)),
+            output: {
+              format: "esm"
             }
           }
-        })
-      ]);
+        }
+      });
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "app.js")

@@ -1,6 +1,6 @@
 {
   "name": "solid-start-node",
-  "version": "0.1.0-alpha.74",
+  "version": "0.1.0-alpha.82",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -21,7 +21,7 @@
     "vite": "^2.8.6"
   },
   "peerDependencies": {
-    "solid-start": "next",
+    "solid-start": "*",
     "undici": "^4.12.2",
     "vite": "*"
   }
