@@ -96,7 +96,7 @@ export default function Login() {
 
   const params = useParams();
   return (
-    <div className="p-4">
+    <div class="p-4">
       <div data-light="">
         <main class="p-6 mx-auto w-[fit-content] space-y-4 rounded-lg bg-gray-100">
           <h1 class="font-bold text-xl">Login</h1>
@@ -104,7 +104,7 @@ export default function Login() {
             <loginAction.Form key="login" method="post" class="flex flex-col space-y-2">
               <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
               <fieldset class="flex flex-row">
-                <legend className="sr-only">Login or Register?</legend>
+                <legend class="sr-only">Login or Register?</legend>
                 <label class="w-full">
                   <input type="radio" name="loginType" value="login" checked={true} /> Login
                 </label>
@@ -113,7 +113,7 @@ export default function Login() {
                 </label>
               </fieldset>
               <div>
-                <label htmlFor="username-input">Username</label>
+                <label for="username-input">Username</label>
                 <input
                   name="username"
                   placeholder="kody"
@@ -126,7 +126,7 @@ export default function Login() {
                 </Show>
               </div>
               <div>
-                <label htmlFor="password-input">Password</label>
+                <label for="password-input">Password</label>
                 <input
                   name="password"
                   type="password"

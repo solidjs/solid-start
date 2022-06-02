@@ -1,10 +1,10 @@
 export * from "solid-app-router";
 
 import { useLocation, useNavigate, useParams } from "solid-app-router";
-import { useContext } from "solid-js";
+import { useContext, startTransition, onCleanup} from "solid-js";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
 import { StartContext } from "../server/StartContext";
-import { createResource, ResourceReturn, createRenderEffect } from "solid-js";
+import { createResource, ResourceReturn } from "solid-js";
 import { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
 import { PageContext, RequestContext } from "../server/types";
@@ -23,6 +23,8 @@ type RouteResourceSource<S> =
     }) => S | false | null | undefined);
 
 type RouteResourceFetcher<S, T> = (context: RouteResourceContext, k: S) => T | Promise<T>;
+
+const resources = new Set<(k: any) => void>();
 
 export function createRouteResource<T, S = true>(
   fetcher: RouteResourceFetcher<S, T>,
@@ -58,14 +60,6 @@ export function createRouteResource<T, S>(
     source = true as ResourceSource<S>;
   }
 
-  const location = useLocation();
-  const params = useParams();
-
-  if (typeof source === "function") {
-    let oldSource: any = source;
-    source = () => oldSource({ location, params });
-  }
-
   const navigate = useNavigate();
   const context = useContext(StartContext);
 
@@ -85,6 +79,15 @@ export function createRouteResource<T, S>(
 
   let fetcherWithRedirect = async (...args) => {
     try {
+      const [key, info] = args;
+
+      if (
+        info.refetching &&
+        info.refetching !== true &&
+        !partialMatch(key, info.refetching)
+      ) {
+        return info.value;
+      }
       let response = await (fetcher as any)(context, ...args);
       if (response instanceof Response) {
         setTimeout(() => handleResponse(response), 0);
@@ -102,6 +105,40 @@ export function createRouteResource<T, S>(
 
   // @ts-ignore
   let resource = createResource(source, fetcherWithRedirect, options);
+  resources.add(resource[1].refetch);
+  onCleanup(() => resources.delete(resource[1].refetch));
 
   return resource;
+}
+
+export function refetchRouteResources(key?: any[]) {
+  for (let refetch of resources) refetch(key);
+}
+
+/* React Query key matching  https://github.com/tannerlinsley/react-query */
+function partialMatch(a, b) {
+  return partialDeepEqual(ensureQueryKeyArray(a), ensureQueryKeyArray(b));
+}
+
+function ensureQueryKeyArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * Checks if `b` partially matches with `a`.
+ */
+function partialDeepEqual(a, b) {
+  if (a === b) {
+    return true;
+  }
+
+  if (typeof a !== typeof b) {
+    return false;
+  }
+
+  if (a && b && typeof a === "object" && typeof b === "object") {
+    return !Object.keys(b).some((key) => !partialDeepEqual(a[key], b[key]));
+  }
+
+  return false;
 }

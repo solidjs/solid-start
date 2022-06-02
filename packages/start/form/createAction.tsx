@@ -1,11 +1,12 @@
 import { useNavigate, useSearchParams } from "solid-app-router";
-import { startTransition, getOwner, runWithOwner, Show, JSX } from "solid-js";
+import { createSignal, startTransition, getOwner, runWithOwner, Show } from "solid-js";
 import { FormProps, FormImpl } from "./Form";
 
-import { Accessor, createSignal } from "solid-js";
+import type { Accessor, JSX } from "solid-js";
 import { FormError } from "./FormError";
 import { Owner } from "solid-js/types/reactive/signal";
 import { isRedirectResponse } from "../server/responses";
+import { refetchRouteResources } from "../router"
 
 type ActionStatus = "submitting" | "error" | "success";
 
@@ -166,7 +167,7 @@ export function createAction<
   //     url?: string;
   //     action: (...arg: D) => Promise<Response>;
   //   }
->(fn: (...arg: D) => Promise<R>): Action<D, R> {
+>(fn: (...arg: D) => Promise<R>, options: { key?: any[] } = {}): Action<D, R> {
   const [submissions, action] = createActionState(fn);
 
   const navigate = useNavigate();
@@ -178,15 +179,15 @@ export function createAction<
         if (response instanceof Response) {
           if (response.status === 302) {
             runWithOwner(owner, () => {
-              // startTransition(() => {
-              navigate(response.headers.get("Location") || "/");
-              // refetchResources().then(console.log);
-              // });
+              startTransition(() => {
+                navigate(response.headers.get("Location") || "/");
+                refetchRouteResources(options.key);
+              });
             });
           }
         } else {
           runWithOwner(owner, () => {
-            // startTransition(refetchResources);
+            startTransition(() => refetchRouteResources(options.key));
           });
         }
         return response;
@@ -195,10 +196,10 @@ export function createAction<
         const sub = submissions()[key];
         runWithOwner(owner, () => {
           if (e instanceof Response && isRedirectResponse(e)) {
-            // startTransition(() => {
-            navigate(e.headers.get("Location") || "/");
-            // refetchResources();
-            // });
+            startTransition(() => {
+              navigate(e.headers.get("Location") || "/");
+              refetchRouteResources(options.key);
+            });
             return;
           }
           if (!sub.state().readError) {

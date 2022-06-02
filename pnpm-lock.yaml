@@ -555,7 +555,7 @@ importers:
     specifiers:
       sirv-cli: 1.0.12
       solid-ssr: ^1.3.11
-      solid-start: ^0.1.0-alpha.81
+      solid-start: ^0.1.0-alpha.82
       undici: ^4.12.2
       vite: ^2.8.6
     dependencies:
@@ -572,7 +572,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.81
+      solid-start: ^0.1.0-alpha.82
       vite: ^2.9.8
     dependencies:
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.73.0
