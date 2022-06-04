@@ -7,4 +7,4 @@ export * from "./StartContext";
 
 export { StatusCode } from "./StatusCode";
 export { HttpHeader } from "./HttpHeader";
-export { createServerResource } from "./resource";
+export { createServerResource, createServerAction } from "./resource";

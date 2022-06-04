@@ -1,26 +1,22 @@
-import server, { redirect } from "solid-start/server";
-import { createRouteResource } from "solid-start/router";
+import server, { redirect, createServerResource, createServerAction } from "solid-start/server";
 import { useRouteData } from "solid-start/router";
-import { createAction } from "solid-start/form";
 import { getUser, logout } from "~/db/session";
 
 export function routeData() {
-  return createRouteResource(
-    server(async ({ request }) => {
-      const user = await getUser(request);
+  return createServerResource(async ({ request }) => {
+    const user = await getUser(request);
 
-      if (!user) {
-        throw redirect("/login");
-      }
+    if (!user) {
+      throw redirect("/login");
+    }
 
-      return user;
-    })
-  );
+    return user;
+  });
 }
 
 export default function Home() {
   const user = useRouteData<ReturnType<typeof routeData>>();
-  const logoutAction = createAction(server(() => logout(server.request)));
+  const logoutAction = createServerAction(() => logout(server.request));
 
   return (
     <main class="w-full p-4 space-y-2">

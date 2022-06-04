@@ -6,7 +6,7 @@ import type { Accessor, JSX } from "solid-js";
 import { FormError } from "./FormError";
 import { Owner } from "solid-js/types/reactive/signal";
 import { isRedirectResponse } from "../server/responses";
-import { refetchRouteResources } from "../router"
+import { refetchRouteResources } from "./createRouteResource"
 
 type ActionStatus = "submitting" | "error" | "success";
 
@@ -36,7 +36,7 @@ export type ActionSubmission<T> = {
  *
  * @param actionFn the async function that handles the submission, this would be where you call your API
  */
-export function createActionState<T extends [...any], U = void>(
+function createActionState<T extends [...any], U = void>(
   actionFn: (...args: T) => Promise<U>
 ) {
   const [submissions, setSubmissions] = createSignal<{
@@ -160,7 +160,7 @@ export type Action<
     submit: (submission?: D, key?: string, owner?: Owner) => Promise<R | void>;
   };
 
-export function createAction<
+export function createRouteAction<
   D extends [...any],
   R extends any
   // | {

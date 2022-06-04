@@ -1,4 +1,4 @@
-import { FormError } from "../form/FormError";
+import { FormError } from "../router/FormError";
 import { RequestContext } from "./types";
 
 export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";

@@ -203,12 +203,12 @@ function solidStartFileSystemRouter(options) {
       } else if (/\?data/.test(id)) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
-            options.ssr && [
-              babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
             [
               routeResource,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            options.ssr && [
+              babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
             [routeData, { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }]
@@ -217,10 +217,6 @@ function solidStartFileSystemRouter(options) {
       } else if (id.includes("routes")) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
-            options.ssr && [
-              babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
             [
               routeResource,
               {
@@ -229,6 +225,10 @@ function solidStartFileSystemRouter(options) {
                 keep: true,
                 minify: process.env.NODE_ENV === "production"
               }
+            ],
+            options.ssr && [
+              babelServerModule,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
             [
               routeData,
