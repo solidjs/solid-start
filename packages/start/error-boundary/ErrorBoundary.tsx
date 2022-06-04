@@ -1,70 +1,18 @@
-import { useNavigate } from "solid-app-router";
 import {
   ErrorBoundary as ErrorBoundaryBase,
   JSX,
-  PropsWithChildren,
+  ParentProps,
   resetErrorBoundaries,
-  Show,
-  startTransition
+  Show
 } from "solid-js";
 
-import { isRedirectResponse, LocationHeader } from "../server/responses";
-
-export function ErrorBoundary(props: PropsWithChildren<{ fallback?: (e: any) => JSX.Element }>) {
-  const navigate = useNavigate();
-
+export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any) => JSX.Element }>) {
   return (
     <ErrorBoundaryBase
       fallback={e => {
-        const response = () => {
-          if (e instanceof Response) {
-            return e;
-          }
-
-          try {
-            let response = JSON.parse(e.message, (k, value) => {
-              if (!value) {
-                return value;
-              }
-              if (value.$type === "headers") {
-                let headers = new Headers();
-                value.headers.forEach((value, key) => headers.set(key, value));
-                return headers;
-              }
-              if (value.$type === "request") {
-                return new Request(value.url, {
-                  method: value.method,
-                  headers: value.headers
-                });
-              }
-              return value;
-            });
-            if (response.$type === "response") {
-              return new Response(response.body, {
-                status: response.status,
-                headers: new Headers(response.headers)
-              });
-            }
-          } catch (e) {}
-        };
-
         return (
-          <Show
-            when={!isRedirectResponse(response())}
-            fallback={() => {
-              let res = response();
-              let location = res.headers.get(LocationHeader);
-              startTransition(() => {
-                navigate(location.startsWith("/") ? location : new URL(location).pathname);
-                resetErrorBoundaries();
-              });
-
-              return null;
-            }}
-          >
-            <Show when={!props.fallback} fallback={props.fallback(e)}>
-              <ErrorMessage error={e} />
-            </Show>
+          <Show when={!props.fallback} fallback={props.fallback(e)}>
+            <ErrorMessage error={e} />
           </Show>
         );
       }}

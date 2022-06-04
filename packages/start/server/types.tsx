@@ -20,8 +20,13 @@ type RouterContext = {
 
 export interface RequestContext {
   request: Request;
-  responseHeaders: Response["headers"];
+  responseHeaders: Headers;
+}
+
+export interface PageContext extends RequestContext {
   manifest: Record<string, ManifestEntry[]>;
   routerContext?: RouterContext;
   tags?: TagDescription[];
+  setStatusCode(code: number): void;
+  setHeader(name: string, value: string): void;
 }

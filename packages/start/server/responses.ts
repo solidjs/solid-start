@@ -1,4 +1,4 @@
-import { FormError } from "../form/FormError";
+import { FormError } from "../router/FormError";
 import { RequestContext } from "./types";
 
 export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";
@@ -69,7 +69,6 @@ export function redirect(
     }
   });
 
-  response.context = responseInit.context;
   return response;
 }
 
@@ -83,7 +82,7 @@ export function isResponse(value: any): value is Response {
   );
 }
 
-const redirectStatusCodes = new Set([301, 302, 303, 307, 308]);
+const redirectStatusCodes = new Set([204, 301, 302, 303, 307, 308]);
 
 export function isRedirectResponse(response: Response): boolean {
   return response && response instanceof Response && redirectStatusCodes.has(response.status);

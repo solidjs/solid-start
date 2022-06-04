@@ -1,10 +1,12 @@
 import { useNavigate, useSearchParams } from "solid-app-router";
-import { startTransition, getOwner, runWithOwner, Show, JSX } from "solid-js";
+import { createSignal, startTransition, getOwner, runWithOwner, Show } from "solid-js";
 import { FormProps, FormImpl } from "./Form";
 
-import { Accessor, createSignal } from "solid-js";
+import type { Accessor, JSX } from "solid-js";
 import { FormError } from "./FormError";
 import { Owner } from "solid-js/types/reactive/signal";
+import { isRedirectResponse } from "../server/responses";
+import { refetchRouteResources } from "./createRouteResource"
 
 type ActionStatus = "submitting" | "error" | "success";
 
@@ -34,7 +36,7 @@ export type ActionSubmission<T> = {
  *
  * @param actionFn the async function that handles the submission, this would be where you call your API
  */
-export function createActionState<T extends [...any], U = void>(
+function createActionState<T extends [...any], U = void>(
   actionFn: (...args: T) => Promise<U>
 ) {
   const [submissions, setSubmissions] = createSignal<{
@@ -158,14 +160,14 @@ export type Action<
     submit: (submission?: D, key?: string, owner?: Owner) => Promise<R | void>;
   };
 
-export function createAction<
+export function createRouteAction<
   D extends [...any],
   R extends any
   // | {
   //     url?: string;
   //     action: (...arg: D) => Promise<Response>;
   //   }
->(fn: (...arg: D) => Promise<R>): Action<D, R> {
+>(fn: (...arg: D) => Promise<R>, options: { invalidate?: any[] } = {}): Action<D, R> {
   const [submissions, action] = createActionState(fn);
 
   const navigate = useNavigate();
@@ -177,15 +179,15 @@ export function createAction<
         if (response instanceof Response) {
           if (response.status === 302) {
             runWithOwner(owner, () => {
-              // startTransition(() => {
-              navigate(response.headers.get("Location") || "/");
-              // refetchResources().then(console.log);
-              // });
+              startTransition(() => {
+                navigate(response.headers.get("Location") || "/");
+                refetchRouteResources(options.invalidate);
+              });
             });
           }
         } else {
           runWithOwner(owner, () => {
-            // startTransition(refetchResources);
+            startTransition(() => refetchRouteResources(options.invalidate));
           });
         }
         return response;
@@ -193,11 +195,11 @@ export function createAction<
       .catch((e: Error) => {
         const sub = submissions()[key];
         runWithOwner(owner, () => {
-          if (e instanceof Response && e.status === 302) {
-            // startTransition(() => {
-            navigate(e.headers.get("Location") || "/");
-            // refetchResources();
-            // });
+          if (e instanceof Response && isRedirectResponse(e)) {
+            startTransition(() => {
+              navigate(e.headers.get("Location") || "/");
+              refetchRouteResources(options.invalidate);
+            });
             return;
           }
           if (!sub.state().readError) {

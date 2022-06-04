@@ -7,7 +7,6 @@ export const db = {
       return user;
     },
     async findUnique({ where: { username = undefined, id = undefined } }) {
-      console.log(username, id);
       if (id !== undefined) {
         return users.find(user => user.id === id);
       } else {
