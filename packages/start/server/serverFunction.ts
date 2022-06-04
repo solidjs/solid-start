@@ -315,7 +315,7 @@ if (isServer || process.env.TEST_ENV === "client") {
     let url = new URL(route, "http://localhost:3000");
     const request = new Request(url.href, init);
     const handler = getApiHandler(url, request.method);
-    const response = await handler(request);
+    const response = await handler.handler({ request } as RequestContext, handler.params);
     return response;
   };
 }
