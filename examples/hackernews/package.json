@@ -1,5 +1,5 @@
 {
-  "name": "solid-hackernews",
+  "name": "example-hackernews",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
