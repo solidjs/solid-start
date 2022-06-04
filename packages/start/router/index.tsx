@@ -1,26 +1,17 @@
 export * from "solid-app-router";
 
-import { useLocation, useNavigate, useParams } from "solid-app-router";
-import { useContext, startTransition, onCleanup} from "solid-js";
+import { useNavigate } from "solid-app-router";
+import { useContext, onCleanup } from "solid-js";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
 import { StartContext } from "../server/StartContext";
-import { createResource, ResourceReturn } from "solid-js";
+import { createResource, Resource } from "solid-js";
 import { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
-import { PageContext, RequestContext } from "../server/types";
+import { PageContext } from "../server/types";
 
 type RouteResourceContext = Omit<PageContext, "tags" | "manifest" | "routerContext">;
 
-type RouteResourceSource<S> =
-  | S
-  | false
-  | null
-  | undefined
-  | ((params: {
-      location: ReturnType<typeof useLocation>;
-      params: ReturnType<typeof useParams>;
-      context: RequestContext;
-    }) => S | false | null | undefined);
+type RouteResourceSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
 
 type RouteResourceFetcher<S, T> = (context: RouteResourceContext, k: S) => T | Promise<T>;
 
@@ -29,26 +20,26 @@ const resources = new Set<(k: any) => void>();
 export function createRouteResource<T, S = true>(
   fetcher: RouteResourceFetcher<S, T>,
   options?: ResourceOptions<undefined>
-): ResourceReturn<T | undefined>;
+): Resource<T | undefined>;
 export function createRouteResource<T, S = true>(
   fetcher: RouteResourceFetcher<S, T>,
   options: ResourceOptions<T>
-): ResourceReturn<T>;
+): Resource<T>;
 export function createRouteResource<T, S>(
   source: RouteResourceSource<S>,
   fetcher: RouteResourceFetcher<S, T>,
   options?: ResourceOptions<undefined>
-): ResourceReturn<T | undefined>;
+): Resource<T | undefined>;
 export function createRouteResource<T, S>(
   source: RouteResourceSource<S>,
   fetcher: RouteResourceFetcher<S, T>,
   options: ResourceOptions<T>
-): ResourceReturn<T>;
+): Resource<T>;
 export function createRouteResource<T, S>(
   source: RouteResourceSource<S> | RouteResourceFetcher<S, T>,
   fetcher?: RouteResourceFetcher<S, T> | ResourceOptions<T> | ResourceOptions<undefined>,
   options?: ResourceOptions<T> | ResourceOptions<undefined>
-): ResourceReturn<T> | ResourceReturn<T | undefined> {
+): Resource<T> | Resource<T | undefined> {
   if (arguments.length === 2) {
     if (typeof fetcher === "object") {
       options = fetcher as ResourceOptions<T> | ResourceOptions<undefined>;
@@ -81,11 +72,7 @@ export function createRouteResource<T, S>(
     try {
       const [key, info] = args;
 
-      if (
-        info.refetching &&
-        info.refetching !== true &&
-        !partialMatch(key, info.refetching)
-      ) {
+      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
         return info.value;
       }
       let response = await (fetcher as any)(context, ...args);
@@ -104,9 +91,9 @@ export function createRouteResource<T, S>(
   };
 
   // @ts-ignore
-  let resource = createResource(source, fetcherWithRedirect, options);
-  resources.add(resource[1].refetch);
-  onCleanup(() => resources.delete(resource[1].refetch));
+  const [resource, { refetch }] = createResource(source, fetcherWithRedirect, options);
+  resources.add(refetch);
+  onCleanup(() => resources.delete(refetch));
 
   return resource;
 }
@@ -117,7 +104,11 @@ export function refetchRouteResources(key?: any[]) {
 
 /* React Query key matching  https://github.com/tannerlinsley/react-query */
 function partialMatch(a, b) {
-  return partialDeepEqual(ensureQueryKeyArray(a), ensureQueryKeyArray(b));
+  const ensuredA = ensureQueryKeyArray(a);
+  if (Array.isArray(b)) {
+    return b.some(b => partialDeepEqual(ensuredA, ensureQueryKeyArray(b)));
+  }
+  return partialDeepEqual(ensuredA, ensureQueryKeyArray(b));
 }
 
 function ensureQueryKeyArray(value) {
@@ -137,7 +128,7 @@ function partialDeepEqual(a, b) {
   }
 
   if (a && b && typeof a === "object" && typeof b === "object") {
-    return !Object.keys(b).some((key) => !partialDeepEqual(a[key], b[key]));
+    return !Object.keys(b).some(key => !partialDeepEqual(a[key], b[key]));
   }
 
   return false;

@@ -19,7 +19,7 @@ export function routeData() {
 }
 
 export default function Home() {
-  const [user] = useRouteData<ReturnType<typeof routeData>>();
+  const user = useRouteData<ReturnType<typeof routeData>>();
   const logoutAction = createAction(server(() => logout(server.request)));
 
   return (

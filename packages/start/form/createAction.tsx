@@ -167,7 +167,7 @@ export function createAction<
   //     url?: string;
   //     action: (...arg: D) => Promise<Response>;
   //   }
->(fn: (...arg: D) => Promise<R>, options: { key?: any[] } = {}): Action<D, R> {
+>(fn: (...arg: D) => Promise<R>, options: { invalidate?: any[] } = {}): Action<D, R> {
   const [submissions, action] = createActionState(fn);
 
   const navigate = useNavigate();
@@ -181,13 +181,13 @@ export function createAction<
             runWithOwner(owner, () => {
               startTransition(() => {
                 navigate(response.headers.get("Location") || "/");
-                refetchRouteResources(options.key);
+                refetchRouteResources(options.invalidate);
               });
             });
           }
         } else {
           runWithOwner(owner, () => {
-            startTransition(() => refetchRouteResources(options.key));
+            startTransition(() => refetchRouteResources(options.invalidate));
           });
         }
         return response;
@@ -198,7 +198,7 @@ export function createAction<
           if (e instanceof Response && isRedirectResponse(e)) {
             startTransition(() => {
               navigate(e.headers.get("Location") || "/");
-              refetchRouteResources(options.key);
+              refetchRouteResources(options.invalidate);
             });
             return;
           }

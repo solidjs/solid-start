@@ -31,7 +31,7 @@ export function routeData() {
 }
 
 export default function Login() {
-  const [data] = useRouteData<ReturnType<typeof routeData>>();
+  const data = useRouteData<ReturnType<typeof routeData>>();
 
   /**
    * This helper function gives us typechecking for our ActionData return
