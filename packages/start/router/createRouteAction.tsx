@@ -167,7 +167,7 @@ export function createRouteAction<
   //   }
 >(
   fn: (...arg: D) => Promise<R>,
-  options: { invalidate?: ((r: Response) => any[]) | any[] } = {}
+  options: { invalidate?: ((r: Response) => any[] | void) | any[] } = {}
 ): Action<D, R> {
   const [submissions, action] = createActionState(fn);
 
@@ -182,7 +182,9 @@ export function createRouteAction<
             navigate(response.headers.get("Location") || "/");
           startTransition(() => {
             refetchRouteResources(
-              typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
+              typeof options.invalidate === "function"
+                ? options.invalidate(response as Response)
+                : options.invalidate
             );
           });
         });
@@ -195,7 +197,9 @@ export function createRouteAction<
             navigate(e.headers.get("Location") || "/");
             startTransition(() => {
               refetchRouteResources(
-                typeof options.invalidate === "function" ? options.invalidate(e) : options.invalidate
+                typeof options.invalidate === "function"
+                  ? options.invalidate(e as Response)
+                  : options.invalidate
               );
             });
             return;

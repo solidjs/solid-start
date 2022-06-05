@@ -96,7 +96,7 @@ export function createRouteResource<T, S>(
   return resource;
 }
 
-export function refetchRouteResources(key?: any[]) {
+export function refetchRouteResources(key?: any[] | void) {
   for (let refetch of resources) refetch(key);
 }
 
@@ -120,6 +120,8 @@ function partialDeepEqual(a, b) {
   if (typeof a !== typeof b) {
     return false;
   }
+
+  if (a.length && !b.length) return false;
 
   if (a && b && typeof a === "object" && typeof b === "object") {
     return !Object.keys(b).some(key => !partialDeepEqual(a[key], b[key]));
