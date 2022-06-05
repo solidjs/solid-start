@@ -66,14 +66,12 @@ export function createRouteResource<T, S>(
     }
   }
 
-  let fetcherWithRedirect = async (...args) => {
+  let fetcherWithRedirect = async (key, info) => {
     try {
-      const [key, info] = args;
-
       if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
         return info.value;
       }
-      let response = await (fetcher as any)(context, ...args);
+      let response = await (fetcher as any)(context, key);
       if (response instanceof Response) {
         setTimeout(() => handleResponse(response), 0);
         return response;

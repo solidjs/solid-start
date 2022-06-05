@@ -1,6 +1,6 @@
-import { PageContext, RequestContext } from "./types";
+import { PageContext } from "./types";
 
-import { createContext, createSignal, ParentProps, useContext } from "solid-js";
+import { createContext, createSignal, ParentProps } from "solid-js";
 import { isServer } from "solid-js/web";
 
 export const StartContext = createContext<PageContext>({} as any);
