@@ -102,11 +102,7 @@ export function refetchRouteResources(key?: any[]) {
 
 /* React Query key matching  https://github.com/tannerlinsley/react-query */
 function partialMatch(a, b) {
-  const ensuredA = ensureQueryKeyArray(a);
-  if (Array.isArray(b)) {
-    return b.some(b => partialDeepEqual(ensuredA, ensureQueryKeyArray(b)));
-  }
-  return partialDeepEqual(ensuredA, ensureQueryKeyArray(b));
+  return partialDeepEqual(ensureQueryKeyArray(a), ensureQueryKeyArray(b));
 }
 
 function ensureQueryKeyArray(value) {

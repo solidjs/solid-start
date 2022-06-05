@@ -6,7 +6,7 @@ import type { Accessor, JSX } from "solid-js";
 import { FormError } from "./FormError";
 import { Owner } from "solid-js/types/reactive/signal";
 import { isRedirectResponse } from "../server/responses";
-import { refetchRouteResources } from "./createRouteResource"
+import { refetchRouteResources } from "./createRouteResource";
 
 type ActionStatus = "submitting" | "error" | "success";
 
@@ -36,9 +36,7 @@ export type ActionSubmission<T> = {
  *
  * @param actionFn the async function that handles the submission, this would be where you call your API
  */
-function createActionState<T extends [...any], U = void>(
-  actionFn: (...args: T) => Promise<U>
-) {
+function createActionState<T extends [...any], U = void>(actionFn: (...args: T) => Promise<U>) {
   const [submissions, setSubmissions] = createSignal<{
     [key: string]: ActionSubmission<T>;
   }>({});
@@ -167,7 +165,10 @@ export function createRouteAction<
   //     url?: string;
   //     action: (...arg: D) => Promise<Response>;
   //   }
->(fn: (...arg: D) => Promise<R>, options: { invalidate?: any[] } = {}): Action<D, R> {
+>(
+  fn: (...arg: D) => Promise<R>,
+  options: { invalidate?: ((r: Response) => any[]) | any[] } = {}
+): Action<D, R> {
   const [submissions, action] = createActionState(fn);
 
   const navigate = useNavigate();
@@ -176,29 +177,26 @@ export function createRouteAction<
   function submitWithKey(submission: D = [] as D, key: string = "", owner: Owner = actionOwner) {
     return action(submission, key)
       .then(response => {
-        if (response instanceof Response) {
-          if (response.status === 302) {
-            runWithOwner(owner, () => {
-              startTransition(() => {
-                navigate(response.headers.get("Location") || "/");
-                refetchRouteResources(options.invalidate);
-              });
-            });
-          }
-        } else {
-          runWithOwner(owner, () => {
-            startTransition(() => refetchRouteResources(options.invalidate));
+        runWithOwner(owner, () => {
+          if (response instanceof Response && response.status === 302)
+            navigate(response.headers.get("Location") || "/");
+          startTransition(() => {
+            refetchRouteResources(
+              typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
+            );
           });
-        }
+        });
         return response;
       })
       .catch((e: Error) => {
         const sub = submissions()[key];
         runWithOwner(owner, () => {
           if (e instanceof Response && isRedirectResponse(e)) {
+            navigate(e.headers.get("Location") || "/");
             startTransition(() => {
-              navigate(e.headers.get("Location") || "/");
-              refetchRouteResources(options.invalidate);
+              refetchRouteResources(
+                typeof options.invalidate === "function" ? options.invalidate(e) : options.invalidate
+              );
             });
             return;
           }
