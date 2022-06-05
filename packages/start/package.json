@@ -18,7 +18,7 @@
     "client-adapter.js",
     "types.d.ts",
     "server",
-    "form",
+    "router",
     "session",
     "entry-client",
     "entry-server",
