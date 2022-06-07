@@ -94,7 +94,7 @@ export function createRouteResource<T, S>(
   return resource;
 }
 
-export function refetchRouteResources(key?: any[] | void) {
+export function refetchRouteResources(key?: string | any[] | void) {
   for (let refetch of resources) refetch(key);
 }
 

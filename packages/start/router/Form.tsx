@@ -1,7 +1,5 @@
 // Credits to the Remix team for the Form implementation:
 // https://github.com/remix-run/remix/blob/main/packages/remix-react/components.tsx#L865
-
-import { ActionSubmission } from "./createRouteAction";
 import { ComponentProps, createEffect, mergeProps, onCleanup, splitProps, JSX } from "solid-js";
 
 export interface FormAction<Data> {
@@ -9,7 +7,6 @@ export interface FormAction<Data> {
   method: string;
   formData: Data;
   encType: string;
-  key: string;
 }
 
 export { FormError } from "./FormError";
@@ -117,8 +114,6 @@ export interface FormProps extends Omit<ComponentProps<"form">, "method" | "onSu
    * `event.preventDefault()` then this form will not do anything.
    */
   onSubmit?: (submission: FormAction<FormData>) => void;
-
-  key?: any;
 }
 /**
  * A Remix-aware `<form>`. It behaves like a normal form except that the
@@ -264,8 +259,6 @@ export function useSubmitImpl(
   key?: string,
   onSubmit?: (sub: FormAction<FormData>) => void
 ): SubmitFunction {
-  // let defaultAction = useFormAction();
-  // let { transitionManager } = useRemixEntryContext();
   return (target, options = {}) => {
     let method: string;
     let action: string;
@@ -349,8 +342,7 @@ export function useSubmitImpl(
       formData,
       action: url.pathname + url.search,
       method: method.toUpperCase(),
-      encType,
-      key: typeof key !== "undefined" ? key : Math.random().toString(36).substring(2, 8)
+      encType
     };
 
     onSubmit(submission);
@@ -369,17 +361,4 @@ function isInputElement(object: any): object is HTMLInputElement {
   return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
 }
 
-export interface FormController {
-  (props: FormProps): JSX.Element;
-  Form: (props: FormProps) => JSX.Element;
-  url: string;
-  isSubmitting(): boolean;
-  submissions: () => {
-    [key: string]: FormSubmission;
-  };
-  submission(key: string): FormSubmission;
-}
-
 export { FormImpl as Form };
-
-export type FormSubmission = ActionSubmission<FormAction<FormData>>;
