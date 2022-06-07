@@ -1,9 +1,8 @@
+import { Show } from "solid-js";
+import { useParams, useRouteData, FormError } from "solid-start/router";
 import { redirect, createServerResource, createServerAction } from "solid-start/server";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
-import { Show } from "solid-js";
-import ErrorBoundary from "solid-start/error-boundary";
-import { useParams, useRouteData, FormError } from "solid-start/router";
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
@@ -28,12 +27,8 @@ export function routeData() {
 
 export default function Login() {
   const data = useRouteData<ReturnType<typeof routeData>>();
+  const params = useParams();
 
-  /**
-   * This helper function gives us typechecking for our ActionData return
-   * statements, while still returning the accurate HTTP status, 400 Bad Request,
-   * to the client.
-   */
   const loginAction = createServerAction(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
@@ -88,64 +83,58 @@ export default function Login() {
     }
   });
 
-  const params = useParams();
   return (
     <div class="p-4">
       <div data-light="">
         <main class="p-6 mx-auto w-[fit-content] space-y-4 rounded-lg bg-gray-100">
           <h1 class="font-bold text-xl">Login</h1>
-          <ErrorBoundary fallback={() => <div>Error</div>}>
-            <loginAction.Form key="login" method="post" class="flex flex-col space-y-2">
-              <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
-              <fieldset class="flex flex-row">
-                <legend class="sr-only">Login or Register?</legend>
-                <label class="w-full">
-                  <input type="radio" name="loginType" value="login" checked={true} /> Login
-                </label>
-                <label class="w-full">
-                  <input type="radio" name="loginType" value="register" /> Register
-                </label>
-              </fieldset>
-              <div>
-                <label for="username-input">Username</label>
-                <input
-                  name="username"
-                  placeholder="kody"
-                  class="border-gray-700 border-2 ml-2 rounded-md px-2"
-                />
-                <Show when={loginAction.submission("login")?.error?.fieldErrors?.username}>
-                  <p class="text-red-400" role="alert">
-                    {loginAction.submission("login")?.error.fieldErrors.username}
-                  </p>
-                </Show>
-              </div>
-              <div>
-                <label for="password-input">Password</label>
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="twixrox"
-                  class="border-gray-700 border-2 ml-2 rounded-md px-2"
-                />
-                <Show when={loginAction.submission("login")?.error?.fieldErrors?.password}>
-                  <p class="text-red-400" role="alert">
-                    {loginAction.submission("login")?.error.fieldErrors.password}
-                  </p>
-                </Show>
-              </div>
-              <Show when={loginAction.submission("login")?.error}>
-                <p class="text-red-400" role="alert" id="error-message">
-                  {loginAction.submission("login")?.error.message}
+          <loginAction.Form method="post" class="flex flex-col space-y-2">
+            <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
+            <fieldset class="flex flex-row">
+              <legend class="sr-only">Login or Register?</legend>
+              <label class="w-full">
+                <input type="radio" name="loginType" value="login" checked={true} /> Login
+              </label>
+              <label class="w-full">
+                <input type="radio" name="loginType" value="register" /> Register
+              </label>
+            </fieldset>
+            <div>
+              <label for="username-input">Username</label>
+              <input
+                name="username"
+                placeholder="kody"
+                class="border-gray-700 border-2 ml-2 rounded-md px-2"
+              />
+              <Show when={loginAction.error?.fieldErrors?.username}>
+                <p class="text-red-400" role="alert">
+                  {loginAction.error.fieldErrors.username}
                 </p>
               </Show>
-              <button
-                class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2"
-                type="submit"
-              >
-                {data() ? "Login" : ""}
-              </button>
-            </loginAction.Form>
-          </ErrorBoundary>
+            </div>
+            <div>
+              <label for="password-input">Password</label>
+              <input
+                name="password"
+                type="password"
+                placeholder="twixrox"
+                class="border-gray-700 border-2 ml-2 rounded-md px-2"
+              />
+              <Show when={loginAction.error?.fieldErrors?.password}>
+                <p class="text-red-400" role="alert">
+                  {loginAction.error.fieldErrors.password}
+                </p>
+              </Show>
+            </div>
+            <Show when={loginAction.error}>
+              <p class="text-red-400" role="alert" id="error-message">
+                {loginAction.error.message}
+              </p>
+            </Show>
+            <button class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2" type="submit">
+              {data() ? "Login" : ""}
+            </button>
+          </loginAction.Form>
         </main>
       </div>
     </div>

@@ -37,8 +37,5 @@
   },
   "engines": {
     "node": ">=14"
-  },
-  "dependencies": {
-    "solid-start-cloudflare-pages": "workspace:^0.1.0-alpha.78"
   }
 }

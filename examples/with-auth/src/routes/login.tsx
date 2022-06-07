@@ -40,7 +40,7 @@ export default function Login() {
       typeof password !== "string" ||
       typeof redirectTo !== "string"
     ) {
-      return new FormError(`Form not submitted correctly.`);
+      throw new FormError(`Form not submitted correctly.`);
     }
 
     const fields = { loginType, username, password };
@@ -49,14 +49,14 @@ export default function Login() {
       password: validatePassword(password)
     };
     if (Object.values(fieldErrors).some(Boolean)) {
-      return new FormError("Fields invalid", { fieldErrors, fields });
+      throw new FormError("Fields invalid", { fieldErrors, fields });
     }
 
     switch (loginType) {
       case "login": {
         const user = await login({ username, password });
         if (!user) {
-          return new FormError(`Username/Password combination is incorrect`, {
+          throw new FormError(`Username/Password combination is incorrect`, {
             fields
           });
         }
@@ -65,20 +65,20 @@ export default function Login() {
       case "register": {
         const userExists = await db.user.findUnique({ where: { username } });
         if (userExists) {
-          return new FormError(`User with username ${username} already exists`, {
+          throw new FormError(`User with username ${username} already exists`, {
             fields
           });
         }
         const user = await register({ username, password });
         if (!user) {
-          return new FormError(`Something went wrong trying to create a new user.`, {
+          throw new FormError(`Something went wrong trying to create a new user.`, {
             fields
           });
         }
         return createUserSession(`${user.id}`, redirectTo);
       }
       default: {
-        return new FormError(`Login type invalid`, { fields });
+        throw new FormError(`Login type invalid`, { fields });
       }
     }
   });
@@ -106,9 +106,9 @@ export default function Login() {
                 placeholder="kody"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={loginAction.value?.fieldErrors?.username}>
+              <Show when={loginAction.error?.fieldErrors?.username}>
                 <p class="text-red-400" role="alert">
-                  {loginAction.value?.fieldErrors.username}
+                  {loginAction.error.fieldErrors.username}
                 </p>
               </Show>
             </div>
@@ -120,15 +120,15 @@ export default function Login() {
                 placeholder="twixrox"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={loginAction.value?.fieldErrors?.password}>
+              <Show when={loginAction.error?.fieldErrors?.password}>
                 <p class="text-red-400" role="alert">
-                  {loginAction.value?.fieldErrors.password}
+                  {loginAction.error.fieldErrors.password}
                 </p>
               </Show>
             </div>
-            <Show when={loginAction.value}>
+            <Show when={loginAction.error}>
               <p class="text-red-400" role="alert" id="error-message">
-                {loginAction.value?.message}
+                {loginAction.error.message}
               </p>
             </Show>
             <button class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2" type="submit">

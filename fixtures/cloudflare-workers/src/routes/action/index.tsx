@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <main class="w-full p-4 space-y-2">
       <h1 class="font-bold text-xl">Message board</h1>
-      <button name="logout" onClick={() => logoutAction().then(() => navigate("/action/login"))}>
+      <button name="logout" onClick={() => logoutAction.submit().then(() => navigate("/action/login"))}>
         Logout
       </button>
     </main>

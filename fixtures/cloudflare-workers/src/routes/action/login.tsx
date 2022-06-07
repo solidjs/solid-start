@@ -30,7 +30,7 @@ export function routeData() {
 export default function Login() {
   const [data] = useRouteData<ReturnType<typeof routeData>>();
   const navigate = useNavigate();
-  const { submission, submit } = createServerAction(async (form: FormData) => {
+  const loginAction = createServerAction(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");
@@ -95,9 +95,7 @@ export default function Login() {
             class="flex flex-col space-y-2"
             onSubmit={e => {
               e.preventDefault();
-              submit([new FormData(e.currentTarget)], "login").then(res => {
-                navigate("/action");
-              });
+              loginAction.submit(new FormData(e.currentTarget)).then(() => navigate("/action"));
             }}
           >
             <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/action"} />
@@ -117,9 +115,9 @@ export default function Login() {
                 placeholder="kody"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={submission("login")?.error?.fieldErrors?.username}>
+              <Show when={loginAction.error?.fieldErrors?.username}>
                 <p class="text-red-400" role="alert">
-                  {submission("login")?.error.fieldErrors.username}
+                  {loginAction.error.fieldErrors.username}
                 </p>
               </Show>
             </div>
@@ -131,15 +129,15 @@ export default function Login() {
                 placeholder="twixrox"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={submission("login")?.error?.fieldErrors?.password}>
+              <Show when={loginAction.error?.fieldErrors?.password}>
                 <p class="text-red-400" role="alert">
-                  {submission("login")?.error.fieldErrors.password}
+                  {loginAction.error.fieldErrors.password}
                 </p>
               </Show>
             </div>
-            <Show when={submission("login")?.error}>
+            <Show when={loginAction.error}>
               <p class="text-red-400" role="alert" id="error-message">
-                {submission("login")?.error.message}
+                {loginAction.error.message}
               </p>
             </Show>
             <button class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2" type="submit">
