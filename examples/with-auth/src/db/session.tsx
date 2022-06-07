@@ -13,7 +13,7 @@ export async function register({ username, password }: LoginForm) {
 }
 
 export async function login({ username, password }: LoginForm) {
-  console.log(username, password);
+  console.log(username);
   const user = await db.user.findUnique({ where: { username } });
   if (!user) return null;
   const isCorrectPassword = password === user.password;
