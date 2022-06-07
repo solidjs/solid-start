@@ -11,7 +11,7 @@ type RouteResourceContext = Omit<PageContext, "tags" | "manifest" | "routerConte
 
 type RouteResourceSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
 
-type RouteResourceFetcher<S, T> = (context: RouteResourceContext, k: S) => T | Promise<T>;
+type RouteResourceFetcher<S, T> = (k: S, context: RouteResourceContext) => T | Promise<T>;
 
 const resources = new Set<(k: any) => void>();
 
@@ -71,7 +71,7 @@ export function createRouteResource<T, S>(
       if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
         return info.value;
       }
-      let response = await (fetcher as any)(context, key);
+      let response = await (fetcher as any)(key, context);
       if (response instanceof Response) {
         setTimeout(() => handleResponse(response), 0);
         return response;

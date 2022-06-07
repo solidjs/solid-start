@@ -3,7 +3,7 @@ import { useRouteData } from "solid-start/router";
 import { getUser, logout } from "~/db/session";
 
 export function routeData() {
-  return createServerResource(async ({ request }) => {
+  return createServerResource(async (_, { request }) => {
     const user = await getUser(request);
 
     if (!user) {

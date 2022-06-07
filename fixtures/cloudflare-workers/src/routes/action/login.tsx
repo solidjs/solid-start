@@ -30,7 +30,7 @@ export function routeData() {
 export default function Login() {
   const [data] = useRouteData<ReturnType<typeof routeData>>();
   const navigate = useNavigate();
-  const [submissions, action] = createServerAction(async (form: FormData) => {
+  const { submission, submit } = createServerAction(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");
@@ -95,7 +95,7 @@ export default function Login() {
             class="flex flex-col space-y-2"
             onSubmit={e => {
               e.preventDefault();
-              action(new FormData(e.currentTarget), "login").then(res => {
+              submit([new FormData(e.currentTarget)], "login").then(res => {
                 navigate("/action");
               });
             }}
@@ -111,35 +111,35 @@ export default function Login() {
               </label>
             </fieldset>
             <div>
-              <label htmlFor="username-input">Username</label>
+              <label for="username-input">Username</label>
               <input
                 name="username"
                 placeholder="kody"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={submissions()["login"]?.error?.fieldErrors?.username}>
+              <Show when={submission("login")?.error?.fieldErrors?.username}>
                 <p class="text-red-400" role="alert">
-                  {submissions()["login"]?.error.fieldErrors.username}
+                  {submission("login")?.error.fieldErrors.username}
                 </p>
               </Show>
             </div>
             <div>
-              <label htmlFor="password-input">Password</label>
+              <label for="password-input">Password</label>
               <input
                 name="password"
                 type="password"
                 placeholder="twixrox"
                 class="border-gray-700 border-2 ml-2 rounded-md px-2"
               />
-              <Show when={submissions()["login"]?.error?.fieldErrors?.password}>
+              <Show when={submission("login")?.error?.fieldErrors?.password}>
                 <p class="text-red-400" role="alert">
-                  {submissions()["login"]?.error.fieldErrors.password}
+                  {submission("login")?.error.fieldErrors.password}
                 </p>
               </Show>
             </div>
-            <Show when={submissions()["login"]?.error}>
+            <Show when={submission("login")?.error}>
               <p class="text-red-400" role="alert" id="error-message">
-                {submissions()["login"]?.error.message}
+                {submission("login")?.error.message}
               </p>
             </Show>
             <button class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2" type="submit">

@@ -57,7 +57,7 @@
   "devDependencies": {
     "solid-app-router": "^0.3.1",
     "solid-js": "^1.4.0",
-    "solid-meta": "^0.27.3",
+    "solid-meta": "^0.27.5",
     "solid-start-cloudflare-pages": "next",
     "solid-start-cloudflare-workers": "next",
     "solid-start-deno": "next",

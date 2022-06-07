@@ -18,7 +18,7 @@ function validatePassword(password: unknown) {
 }
 
 export function routeData() {
-  return createServerResource(async ({ request }) => {
+  return createServerResource(async (_, { request }) => {
     if (await getUser(request)) {
       throw redirect("/");
     }
