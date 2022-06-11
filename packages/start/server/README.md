@@ -22,8 +22,8 @@ const serverFunction = server(async (name: string) => {
   ```tsx
   import server from "solid-start/server";
 
-  const serverFunction = server((name: string) => ({ messasge: `Hello ${name}` }));
-  
+  const serverFunction = server((name: string) => ({ message: `Hello ${name}` }));
+  const {message} = serverFunction("da vinci")
   console.log(message); // "Hello da vinci"
   ```
 
