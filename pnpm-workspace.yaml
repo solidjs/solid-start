@@ -6,3 +6,4 @@ packages:
   - 'docs/**'
 options:
   prefer-workspace-packages: true
+  strict-peer-dependencies: false
