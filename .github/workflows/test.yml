@@ -1,41 +1,66 @@
-name: Test
+# name: Test
 
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   test:
+#     name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+#     runs-on: ${{ matrix.os }}
+#     env:
+#       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+#       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+#       OS: ${{ matrix.os }}
+#       NODE_VERSION: ${{ matrix.node_version }}
+#     strategy:
+#       matrix:
+#         node_version: ['17', '16']
+#         os: [ubuntu-latest, macOS-latest]
+
+#     steps:
+#       - name: Checkout Repo
+#         uses: actions/checkout@v2
+
+#       # - name: Use Node.js ${{ matrix.node_version }} 
+#       #   uses: actions/setup-node@v3
+#       #   with:
+#       #     node-version: ${{ matrix.node_version }}
+      
+#       # - name: Install dependencies 
+#       #   run: |
+#       #     npm install -g pnpm
+#       #     pnpm install
+#       #     npx playwright install
+
+#       # - name: Run tests 
+#       #   run: pnpm turbo run test --force
+
+name: pnpm Example Workflow
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
-  test:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-      OS: ${{ matrix.os }}
-      NODE_VERSION: ${{ matrix.node_version }}
+  build:
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        node_version: ['17', '16']
-        os: [ubuntu-latest, macOS-latest]
+        node-version: [16]
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ matrix.node_version }} 
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node_version }}
-      
-      - name: Install dependencies 
-        run: |
-          npm install -g pnpm
-          pnpm install
-          npx playwright install
-
-      - name: Run tests 
-        run: pnpm turbo run test --force
+    - uses: actions/checkout@v2
+    - uses: pnpm/action-setup@v2.2.2
+      with:
+        version: 7
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install

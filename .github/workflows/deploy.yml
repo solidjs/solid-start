@@ -30,23 +30,23 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+      # - name: Use Node.js 16
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 16
       
-      - name: Install dependencies 
-        run: |
-          npm install -g pnpm
-          pnpm install
-          npx playwright install
+      # - name: Install dependencies 
+      #   run: |
+      #     npm install -g pnpm
+      #     pnpm install
+      #     npx playwright install
 
-      - run: |
-          cd ./fixtures/cloudflare-workers
-          pnpm run build
+      # - run: |
+      #     cd ./fixtures/cloudflare-workers
+      #     pnpm run build
 
-      - name: Run tests 
-        run: |
-          cd ./fixtures/cloudflare-workers
-          pnpm run test
+      # - name: Run tests 
+      #   run: |
+      #     cd ./fixtures/cloudflare-workers
+      #     pnpm run test
 
