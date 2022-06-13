@@ -2,7 +2,7 @@ import { RequestContext } from "../server/types";
 
 // the line below will be replaced by the compiler with a configuration of routes
 // based on the files in src/routes
-// we have to keep this var so that we can find it even if vite precompiles the code
+// we have to declare this with `var` so that we can find it even if vite precompiles the code
 // @ts-ignore
 var api = $API_ROUTES;
 
