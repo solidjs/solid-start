@@ -61,6 +61,7 @@
     "solid-start-cloudflare-pages": "next",
     "solid-start-cloudflare-workers": "next",
     "solid-start-deno": "next",
+    "solid-start-static": "next",
     "solid-start-netlify": "next",
     "solid-start-node": "next",
     "vite": "^2.8.6"
