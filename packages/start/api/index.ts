@@ -7,7 +7,10 @@ import { RequestContext } from "../server/types";
 var api = $API_ROUTES;
 
 type Method = "get" | "post" | "put" | "delete" | "patch";
-type Handler = (ctx: RequestContext, params: Record<string, string>) => Response;
+type Handler = (
+  ctx: RequestContext,
+  params: Record<string, string>
+) => Response | Promise<Response>;
 
 type Route = { path: string; children?: Route[] } & { [method in Method]?: Handler | "skip" };
 type MatchRoute = ReturnType<typeof routeToMatchRoute>;

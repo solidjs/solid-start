@@ -1,6 +1,6 @@
 import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
 import { RequestContext } from "./types";
-import { server, handleServerRequest } from "./serverFunction";
+import { server, handleServerRequest } from "./server-functions/server";
 
 export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
   return async (ctx: RequestContext) => {
