@@ -180,7 +180,7 @@ function solidStartFileSystemRouter(options) {
 
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
 
-      if (/.test.(tsx)/.test(id) && config.solidOptions.ssr) {
+      if (/\.test\.(tsx)/.test(id) && config.solidOptions.ssr) {
         return babelSolidCompiler(code, id, (source, id) => ({
           plugins: [
             options.ssr && [
@@ -191,8 +191,8 @@ function solidStartFileSystemRouter(options) {
         }));
       }
 
-      if (/.data.(ts|js)/.test(id) && config.solidOptions.ssr) {
-        return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id) => ({
+      if (/\.data\.(ts|js)/.test(id) && config.solidOptions.ssr) {
+        return babelSolidCompiler(code, id.replace(/\.data\.ts/, ".tsx"), (source, id) => ({
           plugins: [
             options.ssr && [
               babelServerModule,
@@ -244,7 +244,7 @@ function solidStartFileSystemRouter(options) {
       } else if (code.includes("server(")) {
         return babelSolidCompiler(
           code,
-          id.replace(/.ts$/, ".tsx").replace(/.js$/, ".jsx"),
+          id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
           (source, id) => ({
             plugins: [
               options.ssr && [
