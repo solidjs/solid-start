@@ -11,6 +11,18 @@ import routeData from "./server/routeData.js";
 import routeResource from "./server/serverResource.js";
 import { solidStartClientAdpater } from "./client-adapter.js";
 
+/**
+ * Helper function to get a human readable name for the given HTTP Verb
+ * @param {string} verb
+ * @returns {string} The uppercase and readable verb name
+ */
+function getHTTPVerbName(verb) {
+  if (verb === "del") {
+    return "DELETE";
+  }
+  return verb.toUpperCase();
+}
+
 function solidStartInlineServerModules(options) {
   let lazy;
   let config;
@@ -154,9 +166,7 @@ function solidStartFileSystemRouter(options) {
               .map(
                 r =>
                   `     ${c.green(`${protocol}://localhost:${port}${r.path}`)} ${c.dim(
-                    Object.keys(r.apiPath)
-                      .map(p => p.toUpperCase())
-                      .join(" | ")
+                    Object.keys(r.apiPath).map(getHTTPVerbName).join(" | ")
                   )}`
               )
               .join("\n")}`
