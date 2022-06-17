@@ -14,11 +14,11 @@ prog
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
   .option("-p, --port", "Port to start server on", 3000)
-  .action(async ({ config, open, port, root }) => {
+  .action(async ({ config, open, port, root, host }) => {
     if (open) setTimeout(() => launch(port), 1000);
     spawn(
       "vite",
-      ["dev", ...(config ? ["--config", config] : []), ...(port ? ["--port", port] : [])],
+      ["dev", ...(config ? ["--config", config] : []), ...(port ? ["--port", port] : []), ...(host ? ["--host"] : [])],
       {
         shell: true,
         stdio: "inherit"
