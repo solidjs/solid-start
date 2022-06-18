@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.1.0-alpha.88",
+  "version": "0.1.0-alpha.89",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -91,9 +91,9 @@
     "solid-start-cloudflare-pages": "next",
     "solid-start-cloudflare-workers": "next",
     "solid-start-deno": "next",
-    "solid-start-static": "next",
     "solid-start-netlify": "next",
     "solid-start-node": "next",
+    "solid-start-static": "next",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
