@@ -6,7 +6,7 @@ import solid from "vite-plugin-solid";
 import inspect from "vite-plugin-inspect";
 import { stringifyApiRoutes, stringifyPageRoutes, Router } from "./routes.js";
 import c from "picocolors";
-import babelServerModule from "./server/babel.js";
+import babelServerModule from "./server/server-functions/babel.js";
 import routeData from "./server/routeData.js";
 import routeResource from "./server/serverResource.js";
 import { solidStartClientAdpater } from "./client-adapter.js";
@@ -204,6 +204,10 @@ function solidStartFileSystemRouter(options) {
       if (/.data.(ts|js)/.test(id) && config.solidOptions.ssr) {
         return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id) => ({
           plugins: [
+            [
+              routeResource,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
             options.ssr && [
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
