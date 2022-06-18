@@ -194,6 +194,10 @@ function solidStartFileSystemRouter(options) {
       if (/.data.(ts|js)/.test(id) && config.solidOptions.ssr) {
         return babelSolidCompiler(code, id.replace(/.data.ts/, ".tsx"), (source, id) => ({
           plugins: [
+            [
+              routeResource,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
             options.ssr && [
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
