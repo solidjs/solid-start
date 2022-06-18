@@ -6,9 +6,14 @@ import esbuild from "esbuild";
 import chokidar from "chokidar";
 import debug from "debug";
 import { dequal } from "dequal";
+
 const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
-const API_METHODS = ["get", "post", "put", "delete", "patch"];
+
+// Available HTTP methods / verbs for api routes
+// `delete` is a reserved word in JS, so we use `del` instead
+const API_METHODS = ["get", "post", "put", "del", "patch"];
+
 function toPath(id) {
   return id.replace(/\[([^\[]+)\]/g, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
 }

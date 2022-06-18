@@ -6,7 +6,8 @@ import { RequestContext } from "../server/types";
 // @ts-ignore
 var api = $API_ROUTES;
 
-type Method = "get" | "post" | "put" | "delete" | "patch";
+// `delete` is a reserved word in JS, so we use `del` instead
+type Method = "get" | "post" | "put" | "del" | "patch";
 type Handler = (
   ctx: RequestContext,
   params: Record<string, string>
