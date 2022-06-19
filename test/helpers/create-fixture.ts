@@ -213,6 +213,7 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
   let integrationTemplateDir = path.join(dirname, template);
   let projectName = `remix-${template}-${Math.random().toString(32).slice(2)}`;
   let projectDir = path.join(TMP_DIR, projectName);
+  console.log(dirname, projectDir, integrationTemplateDir);
 
   await fse.ensureDir(projectDir);
   await fse.copy(integrationTemplateDir, projectDir);
