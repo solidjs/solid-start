@@ -5,7 +5,7 @@ import type { Writable } from "stream";
 import getPort from "get-port";
 import stripIndent from "strip-indent";
 import c from "picocolors";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { spawn, sync as spawnSync } from "cross-spawn";
 import { Readable } from "stream";
 
@@ -60,7 +60,7 @@ export async function createFixture(init: FixtureInit) {
       )
     );
   }
-  let app: EntryServer = await import(buildPath);
+  let app: EntryServer = await import(pathToFileURL(buildPath).toString());
   let manifest = fse.readJSONSync(path.resolve(projectDir, "dist", "public", "rmanifest.json"));
   let assetManifest = fse.readJSONSync(path.resolve(projectDir, "dist", "public", "manifest.json"));
 
