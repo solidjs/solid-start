@@ -40,23 +40,37 @@
 #       # - name: Run tests 
 #       #   run: pnpm turbo run test --force
 
-name: pnpm Example Workflow
+name: Tests
 on:
   push:
     branches:
       - main
 jobs:
-  build:
+  integration:
+    name: "👀 Integration Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node }})"
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [16]
+        os:
+            - ubuntu-latest
+            # - macos-latest
+            - windows-latest
+        include:
+          - os: ubuntu-latest
+            playwright_binary_path: ~/.cache/ms-playwright
+          # - os: macos-latest
+          #   playwright_binary_path: ~/Library/Caches/ms-playwright
+          - os: windows-latest
+            playwright_binary_path: '~\\AppData\\Local\\ms-playwright'
 
     steps:
     - uses: actions/checkout@v2
+    
     - uses: pnpm/action-setup@v2.2.2
       with:
         version: 7
+    
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -64,3 +78,33 @@ jobs:
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
+
+    - name: 🕵️‍♂️ Get current Playwright version
+      id: playwright-version
+      shell: bash
+      run: |
+        playwright_version=$(npm info @playwright/test version)
+        echo "::set-output name=version::${playwright_version}"
+
+    - name: 🤖 Cache Playwright binaries
+      uses: actions/cache@v3
+      id: playwright-cache
+      with:
+        path: ${{ matrix.playwright_binary_path }}
+        key: ${{ runner.os }}-${{ runner.arch }}-cache-playwright-${{ steps.playwright-version.outputs.version }}
+
+    - name: 🖨️ Playwright info
+      shell: bash
+      run: |
+        echo "OS: ${{ matrix.os }}"
+        echo "Playwright version: ${{ steps.playwright-version.outputs.version }}"
+        echo "Playwright install dir: ${{ matrix.playwright_binary_path }}"
+        echo "Cache key: ${{ runner.os }}-${{ runner.arch }}-cache-playwright-${{ steps.playwright-version.outputs.version }}"
+        echo "Cache hit: ${{ steps.playwright-cache.outputs.cache-hit == 'true' }}"
+
+    - name: 📥 Install Playwright
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      run: pnpm --filter solid-start-tests install:playwright
+
+    - name: 👀 Run Integration Tests
+      run: npm run test

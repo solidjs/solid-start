@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "clean": "rimraf .tmp",
-    "install:playwright": "playwright install",
+    "install:playwright": "playwright install --with-deps",
     "test": "playwright test --config ./playwright.config.ts"
   },
   "dependencies": {
