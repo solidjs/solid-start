@@ -209,7 +209,7 @@ export async function createAppFixture(fixture: Fixture) {
 ////////////////////////////////////////////////////////////////////////////////
 export async function createFixtureProject(init: FixtureInit): Promise<string> {
   let template = init.template ?? "node-template";
-  let dirname = path.dirname(path.dirname(new URL(import.meta.url).pathname));
+  let dirname = path.dirname(path.join(new URL(import.meta.url).pathname, ".."));
   let integrationTemplateDir = path.join(dirname, template);
   let projectName = `remix-${template}-${Math.random().toString(32).slice(2)}`;
   let projectDir = path.join(TMP_DIR, projectName);
