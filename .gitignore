@@ -23,6 +23,9 @@ node_modules
 *.launch
 .settings/
 
+.tmp
+test/playwright-report
+
 # Temp
 gitignore
 

@@ -3,6 +3,7 @@
   "description": "Official starter for SolidJS",
   "version": "0.1.0",
   "author": "Ryan Carniato",
+  "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -14,12 +15,10 @@
     "clean:artifacts": "lerna run clean --parallel",
     "clean:packages": "lerna clean --yes",
     "clean:root": "rimraf node_modules",
-    "test": "pnpm run test -r --parallel --if-present",
-    "test:coverage": "lerna run test:coverage --parallel",
-    "build": "pnpm run build -r --parallel --if-present",
-    "publish:release": "pnpm run build && lerna publish",
-    "docs:dev": "pnpm run dev --filter solid-start-docs",
-    "docs:build": "pnpm run build --filter solid-start-docs"
+    "publish:release": "lerna publish",
+    "docs:dev": "pnpm --filter solid-start-docs run dev",
+    "docs:build": "pnpm --filter solid-start-docs run build",
+    "test": "pnpm --filter solid-start-tests test"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.1",

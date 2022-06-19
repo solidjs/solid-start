@@ -1,0 +1,28 @@
+{
+  "name": "solid-start-tests",
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf .tmp",
+    "install:playwright": "playwright install",
+    "test": "playwright test --config ./playwright.config.ts"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.22.2",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.0.0",
+    "cheerio": "1.0.0-rc.11",
+    "compression": "^1.7.4",
+    "cross-spawn": "^7.0.3",
+    "fs-extra": "^10.1.0",
+    "get-port": "^6.1.2",
+    "picocolors": "^1.0.0",
+    "polka": "^1.0.0-next.13",
+    "prettier": "^2.5.1",
+    "sirv": "^2.0.2",
+    "solid-start": "workspace:*",
+    "solid-start-node": "workspace:*",
+    "strip-indent": "^4.0.0",
+    "undici": "^4.12.2"
+  }
+}

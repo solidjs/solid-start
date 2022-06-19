@@ -62,8 +62,8 @@ export default function () {
       // closes the bundle
       await bundle.close();
 
-      unlinkSync(join(config.root, "dist", "public", "manifest.json"));
-      unlinkSync(join(config.root, "dist", "public", "rmanifest.json"));
+      // unlinkSync(join(config.root, "dist", "public", "manifest.json"));
+      // unlinkSync(join(config.root, "dist", "public", "rmanifest.json"));
     }
   };
 }

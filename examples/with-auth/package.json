@@ -4,22 +4,16 @@
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
-    "start": "solid-start start",
-    "test": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 test:e2e",
-    "test:e2e": "cross-env TEST_HOST=http://localhost:$PORT/ npm-run-all -p test:e2e:*",
-    "test:e2e:js": "playwright test",
-    "test:e2e:no-js": "cross-env DISABLE_JAVASCRIPT=true playwright test"
+    "start": "solid-start start"
   },
   "type": "module",
   "devDependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.1",
-    "@playwright/test": "1.20.0",
     "@vitest/ui": "^0.2.7",
     "cookie": "^0.4.1",
     "cookie-signature": "^1.1.0",
     "cross-env": "^7.0.3",
     "npm-run-all": "latest",
-    "playwright": "1.19.2",
     "solid-app-router": "^0.4.1",
     "solid-js": "^1.4.0",
     "solid-meta": "^0.27.3",
