@@ -48,7 +48,7 @@ on:
 jobs:
   integration:
     name: "👀 Integration Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node }})"
-    runs-on: ubuntu-20.04
+    
     strategy:
       matrix:
         node-version: [16]
@@ -63,6 +63,8 @@ jobs:
           #   playwright_binary_path: ~/Library/Caches/ms-playwright
           - os: windows-latest
             playwright_binary_path: '~\\AppData\\Local\\ms-playwright'
+            
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
