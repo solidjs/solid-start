@@ -1,8 +1,9 @@
 import { Show } from "solid-js";
-import { useParams, useRouteData, FormError } from "solid-start/router";
-import { redirect, createServerResource, createServerAction } from "solid-start/server";
+import { useParams, useRouteData } from "solid-app-router";
+import { redirect, createServerData, createServerAction } from "solid-start/server";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
+import { FormError } from "solid-start/data";
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
@@ -17,7 +18,7 @@ function validatePassword(password: unknown) {
 }
 
 export function routeData() {
-  return createServerResource(async (_, { request }) => {
+  return createServerData(async (_, { request }) => {
     if (await getUser(request)) {
       throw redirect("/");
     }

@@ -197,8 +197,8 @@ async function build(projectDir: string, buildStdio?: Writable, sourcemap?: bool
 
   if (buildStdio) {
     console.log(proc.stdout.toString());
-    console.error(proc.stderr.toString());
   }
+  console.error(proc.stderr.toString());
 }
 
 async function writeTestFiles(init: FixtureInit, dir: string) {

@@ -279,11 +279,10 @@ importers:
       '@babel/plugin-syntax-jsx': ^7.16.7
       '@babel/preset-env': ^7.16.7
       '@babel/preset-typescript': ^7.16.7
+      '@types/cookie': ^0.5.1
       chokidar: ^3.5.3
       compression: ^1.7.4
       connect: ^3.7.0
-      cookie: ^0.4.1
-      cookie-signature: ^1.1.0
       debug: ^4.3.4
       dequal: ^2.0.2
       es-module-lexer: ^0.9.3
@@ -313,11 +312,10 @@ importers:
       '@babel/plugin-syntax-jsx': 7.17.12_@babel+core@7.18.5
       '@babel/preset-env': 7.18.2_@babel+core@7.18.5
       '@babel/preset-typescript': 7.17.12_@babel+core@7.18.5
+      '@types/cookie': 0.5.1
       chokidar: 3.5.3
       compression: 1.7.4
       connect: 3.7.0
-      cookie: 0.4.2
-      cookie-signature: 1.2.0
       debug: 4.3.4
       dequal: 2.0.2
       es-module-lexer: 0.9.3
@@ -2927,6 +2925,10 @@ packages:
     resolution: {integrity: sha512-/zPMqDkzSZ8t3VtxOa4KPq7uzzW978M9Tvh+j7GHKuo6k6GTLxPJ4J5gE5cjfJ26pnXst0N5Hax8Sr0T2Mi9zQ==}
     dev: true
 
+  /@types/cookie/0.5.1:
+    resolution: {integrity: sha512-COUnqfB2+ckwXXSFInsFdOAWQzCCx+a5hq2ruyj+Vjund94RJQd4LG2u9hnvJrTgunKAaax7ancBYlDrNYxA0g==}
+    dev: false
+
   /@types/cross-spawn/6.0.2:
     resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
     dependencies:
@@ -4012,10 +4014,12 @@ packages:
   /cookie-signature/1.2.0:
     resolution: {integrity: sha512-R0BOPfLGTitaKhgKROKZQN6iyq2iDQcH1DOF8nJoaWapguX5bC2w+Q/I9NmmM5lfcvEarnLZr+cCvmEYYSXvYA==}
     engines: {node: '>=6.6.0'}
+    dev: true
 
   /cookie/0.4.2:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
     engines: {node: '>= 0.6'}
+    dev: true
 
   /core-js-compat/3.23.1:
     resolution: {integrity: sha512-KeYrEc8t6FJsKYB2qnDwRHWaC0cJNaqlHfCpMe5q3j/W1nje3moib/txNklddLPCtGb+etcBIyJ8zuMa/LN5/A==}

@@ -1,9 +1,9 @@
-import server, { redirect, createServerResource, createServerAction } from "solid-start/server";
-import { useRouteData } from "solid-start/router";
+import server, { redirect, createServerData, createServerAction } from "solid-start/server";
+import { useRouteData } from "solid-app-router";
 import { getUser, logout } from "~/db/session";
 
 export function routeData() {
-  return createServerResource(async (_, { request }) => {
+  return createServerData(async (_, { request }) => {
     const user = await getUser(request);
 
     if (!user) {

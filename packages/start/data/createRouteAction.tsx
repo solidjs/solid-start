@@ -6,7 +6,7 @@ import { FormProps, FormImpl, FormError } from "./Form";
 import type { ParentComponent } from "solid-js";
 import { Owner } from "solid-js/types/reactive/signal";
 import { isRedirectResponse } from "../server/responses";
-import { refetchRouteResources } from "./createRouteResource";
+import { refetchRouteData } from "./createRouteData";
 
 export type ActionState = "idle" | "pending";
 export type RouteAction<T, U> = {
@@ -21,11 +21,11 @@ export type RouteAction<T, U> = {
 export function createRouteAction<T = void, U = void>(
   fn: () => Promise<U>,
   options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
-): RouteAction<T, U>
+): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
   fn: (args: T) => Promise<U>,
   options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
-): RouteAction<T, U>
+): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
   fn: (args: T) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
@@ -54,7 +54,7 @@ export function createRouteAction<T, U = void>(
           navigate(res.headers.get("Location") || "/");
         if (res instanceof Response && res.ok)
           startTransition(() => {
-            refetchRouteResources(
+            refetchRouteData(
               typeof options.invalidate === "function"
                 ? options.invalidate(res as Response)
                 : options.invalidate
@@ -68,7 +68,7 @@ export function createRouteAction<T, U = void>(
           if (e instanceof Response && isRedirectResponse(e)) {
             navigate(e.headers.get("Location") || "/");
             startTransition(() => {
-              refetchRouteResources(
+              refetchRouteData(
                 typeof options.invalidate === "function"
                   ? options.invalidate(e as Response)
                   : options.invalidate

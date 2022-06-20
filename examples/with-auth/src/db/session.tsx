@@ -13,7 +13,6 @@ export async function register({ username, password }: LoginForm) {
 }
 
 export async function login({ username, password }: LoginForm) {
-  console.log(username);
   const user = await db.user.findUnique({ where: { username } });
   if (!user) return null;
   const isCorrectPassword = password === user.password;
@@ -22,10 +21,6 @@ export async function login({ username, password }: LoginForm) {
 }
 
 const sessionSecret = import.meta.env.SESSION_SECRET;
-
-// if (!sessionSecret) {
-//   throw new Error("SESSION_SECRET must be set");
-// }
 
 const storage = createCookieSessionStorage({
   cookie: {
@@ -91,7 +86,6 @@ export async function logout(request: Request) {
 export async function createUserSession(userId: string, redirectTo: string) {
   const session = await storage.getSession();
   session.set("userId", userId);
-  console.log(session);
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await storage.commitSession(session)

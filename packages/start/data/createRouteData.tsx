@@ -3,7 +3,7 @@ import { useContext, onCleanup } from "solid-js";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
 import { StartContext } from "../server/StartContext";
 import { createResource, Resource } from "solid-js";
-import { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
+import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
 import { PageContext } from "../server/types";
 
@@ -15,25 +15,25 @@ type RouteResourceFetcher<S, T> = (k: S, context: RouteResourceContext) => T | P
 
 const resources = new Set<(k: any) => void>();
 
-export function createRouteResource<T, S = true>(
+export function createRouteData<T, S = true>(
   fetcher: RouteResourceFetcher<S, T>,
   options?: ResourceOptions<undefined>
 ): Resource<T | undefined>;
-export function createRouteResource<T, S = true>(
+export function createRouteData<T, S = true>(
   fetcher: RouteResourceFetcher<S, T>,
   options: ResourceOptions<T>
 ): Resource<T>;
-export function createRouteResource<T, S>(
+export function createRouteData<T, S>(
   source: RouteResourceSource<S>,
   fetcher: RouteResourceFetcher<S, T>,
   options?: ResourceOptions<undefined>
 ): Resource<T | undefined>;
-export function createRouteResource<T, S>(
+export function createRouteData<T, S>(
   source: RouteResourceSource<S>,
   fetcher: RouteResourceFetcher<S, T>,
   options: ResourceOptions<T>
 ): Resource<T>;
-export function createRouteResource<T, S>(
+export function createRouteData<T, S>(
   source: RouteResourceSource<S> | RouteResourceFetcher<S, T>,
   fetcher?: RouteResourceFetcher<S, T> | ResourceOptions<T> | ResourceOptions<undefined>,
   options?: ResourceOptions<T> | ResourceOptions<undefined>
@@ -73,13 +73,21 @@ export function createRouteResource<T, S>(
       }
       let response = await (fetcher as any)(key, context);
       if (response instanceof Response) {
-        setTimeout(() => handleResponse(response), 0);
+        if (isServer) {
+          handleResponse(response);
+        } else {
+          setTimeout(() => handleResponse(response), 0);
+        }
         return response;
       }
       return response;
     } catch (e) {
       if (e instanceof Response) {
-        setTimeout(() => handleResponse(e), 0);
+        if (isServer) {
+          handleResponse(e);
+        } else {
+          setTimeout(() => handleResponse(e), 0);
+        }
         return e;
       }
       throw e;
@@ -94,7 +102,7 @@ export function createRouteResource<T, S>(
   return resource;
 }
 
-export function refetchRouteResources(key?: string | any[] | void) {
+export function refetchRouteData(key?: string | any[] | void) {
   for (let refetch of resources) refetch(key);
 }
 

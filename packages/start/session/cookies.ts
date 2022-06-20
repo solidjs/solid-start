@@ -1,8 +1,8 @@
 // All credits to Remix team:
 // https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/cookies.ts
 
-import type { CookieParseOptions, CookieSerializeOptions } from "cookie";
-import { parse, serialize } from "cookie";
+import type { CookieParseOptions, CookieSerializeOptions } from "./cookie";
+import { parse, serialize } from "./cookie";
 
 export type SignFunction = (value: string, secret: string) => Promise<string>;
 

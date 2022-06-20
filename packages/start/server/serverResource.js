@@ -7,13 +7,13 @@ function transformRouteData({ types: t }) {
           state.resourceRequired = false;
           state.actionRequired = false;
           state.serverImported = false;
-          state.routeResourceImported = false;
+          state.routeDataImported = false;
           state.routeActionImported = false;
           path.traverse(
             {
               ImportSpecifier(path) {
-                if (path.node.imported.name === "createRouteResource") {
-                  state.routeResourceImported = true;
+                if (path.node.imported.name === "createRouteData") {
+                  state.routeDataImported = true;
                 }
                 if (path.node.imported.name === "createRouteAction") {
                   state.routeActionImported = true;
@@ -26,7 +26,7 @@ function transformRouteData({ types: t }) {
                 }
               },
               CallExpression(callPath, callState) {
-                if (callPath.get("callee").isIdentifier({ name: "createServerResource" })) {
+                if (callPath.get("callee").isIdentifier({ name: "createServerData" })) {
                   let args = callPath.node.arguments;
 
                   // need to handle more cases assumes inline options object
@@ -34,7 +34,7 @@ function transformRouteData({ types: t }) {
                     args[0] = t.callExpression(t.identifier("server"), [args[0]]);
                   } else args[1] = t.callExpression(t.identifier("server"), [args[1]]);
                   callPath.replaceWith(
-                    t.callExpression(t.identifier("createRouteResource"), callPath.node.arguments)
+                    t.callExpression(t.identifier("createRouteData"), callPath.node.arguments)
                   );
                   callState.resourceRequired = true;
                 }
@@ -63,17 +63,17 @@ function transformRouteData({ types: t }) {
             );
           }
 
-          if (state.resourceRequired && !state.routeResourceImported) {
+          if (state.resourceRequired && !state.routeDataImported) {
             path.unshiftContainer(
               "body",
               t.importDeclaration(
                 [
                   t.importSpecifier(
-                    t.identifier("createRouteResource"),
-                    t.identifier("createRouteResource")
+                    t.identifier("createRouteData"),
+                    t.identifier("createRouteData")
                   )
                 ],
-                t.stringLiteral("solid-start/router")
+                t.stringLiteral("solid-start/data")
               )
             );
           }
@@ -88,7 +88,7 @@ function transformRouteData({ types: t }) {
                     t.identifier("createRouteAction")
                   )
                 ],
-                t.stringLiteral("solid-start/router")
+                t.stringLiteral("solid-start/data")
               )
             );
           }

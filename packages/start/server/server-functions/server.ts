@@ -1,4 +1,3 @@
-// import { getApiHandler } from "../../api";
 import { getRouteMatches } from "../../api/router";
 import { sharedConfig } from "solid-js";
 import { ContentTypeHeader, JSONResponseType, respondWith } from "../responses";

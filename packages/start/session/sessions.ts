@@ -1,4 +1,4 @@
-import type { CookieParseOptions, CookieSerializeOptions } from "cookie";
+import type { CookieParseOptions, CookieSerializeOptions } from "./cookie";
 
 import type { Cookie, CookieOptions, CreateCookieFunction } from "./cookies";
 import { isCookie } from "./cookies";
@@ -73,10 +73,7 @@ function flash(name: string): string {
   return `__flash_${name}__`;
 }
 
-export type CreateSessionFunction = (
-  initialData?: SessionData,
-  id?: string
-) => Session;
+export type CreateSessionFunction = (initialData?: SessionData, id?: string) => Session;
 
 /**
  * Creates a new Session object.
@@ -86,10 +83,7 @@ export type CreateSessionFunction = (
  *
  * @see https://remix.run/api/remix#createsession
  */
-export const createSession: CreateSessionFunction = (
-  initialData = {},
-  id = ""
-) => {
+export const createSession: CreateSessionFunction = (initialData = {}, id = "") => {
   let map = new Map<string, any>(Object.entries(initialData));
 
   return {
@@ -122,7 +116,7 @@ export const createSession: CreateSessionFunction = (
     },
     unset(name) {
       map.delete(name);
-    },
+    }
   };
 };
 
@@ -159,28 +153,19 @@ export interface SessionStorage {
    * Session. If there is no session associated with the cookie, this will
    * return a new Session with no data.
    */
-  getSession(
-    cookieHeader?: string | null,
-    options?: CookieParseOptions
-  ): Promise<Session>;
+  getSession(cookieHeader?: string | null, options?: CookieParseOptions): Promise<Session>;
 
   /**
    * Stores all data in the Session and returns the Set-Cookie header to be
    * used in the HTTP response.
    */
-  commitSession(
-    session: Session,
-    options?: CookieSerializeOptions
-  ): Promise<string>;
+  commitSession(session: Session, options?: CookieSerializeOptions): Promise<string>;
 
   /**
    * Deletes all data associated with the Session and returns the Set-Cookie
    * header to be used in the HTTP response.
    */
-  destroySession(
-    session: Session,
-    options?: CookieSerializeOptions
-  ): Promise<string>;
+  destroySession(session: Session, options?: CookieSerializeOptions): Promise<string>;
 }
 
 /**
@@ -220,9 +205,7 @@ export interface SessionIdStorageStrategy {
   deleteData: (id: string) => Promise<void>;
 }
 
-export type CreateSessionStorageFunction = (
-  strategy: SessionIdStorageStrategy
-) => SessionStorage;
+export type CreateSessionStorageFunction = (strategy: SessionIdStorageStrategy) => SessionStorage;
 
 /**
  * Creates a SessionStorage object using a SessionIdStorageStrategy.
@@ -262,9 +245,9 @@ export const createSessionStorageFactory =
         await deleteData(session.id);
         return cookie.serialize("", {
           ...options,
-          expires: new Date(0),
+          expires: new Date(0)
         });
-      },
+      }
     };
   };
 

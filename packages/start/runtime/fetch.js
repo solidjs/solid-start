@@ -99,7 +99,6 @@ class NodeRequest extends BaseNodeRequest {
       return await super.formData();
     } else {
       const data = await this.buffer();
-      console.log(data);
       const input = multipart.parse(
         data,
         this.headers.get("content-type").replace("multipart/form-data; boundary=", "")

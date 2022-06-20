@@ -28,6 +28,12 @@ export class PlaywrightFixture {
     });
   }
 
+  async waitForURL(href: string, waitForHydration?: true) {
+    return this.page.waitForURL(this.app.serverUrl + href, {
+      waitUntil: waitForHydration ? "networkidle" : undefined
+    });
+  }
+
   /**
    * Finds a link on the page with a matching href, clicks it, and waits for
    * the network to be idle before continuing.
