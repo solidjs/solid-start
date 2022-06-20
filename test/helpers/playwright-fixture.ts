@@ -24,7 +24,7 @@ export class PlaywrightFixture {
    */
   async goto(href: string, waitForHydration?: true) {
     return this.page.goto(this.app.serverUrl + href, {
-      waitUntil: waitForHydration ? "networkidle" : undefined,
+      waitUntil: waitForHydration ? "networkidle" : undefined
     });
   }
 
@@ -180,11 +180,9 @@ export class PlaywrightFixture {
   async poke(seconds: number = 10, href: string = "/") {
     let ms = seconds * 1000;
     test.setTimeout(ms);
-    console.log(
-      `🙈 Poke around for ${seconds} seconds 👉 ${this.app.serverUrl}`
-    );
+    console.log(`🙈 Poke around for ${seconds} seconds 👉 ${this.app.serverUrl}`);
     cp.exec(`open ${this.app.serverUrl}${href}`);
-    return new Promise((res) => setTimeout(res, ms));
+    return new Promise(res => setTimeout(res, ms));
   }
 }
 
@@ -207,17 +205,13 @@ export function selectHtml(source: string, selector: string) {
 }
 
 export function prettyHtml(source: string): string {
-  return prettier.format(source, { parser: "html" });
+  return prettier.format(source, { parser: "html" }).trim();
 }
 
-async function doAndWait(
-  page: Page,
-  action: () => Promise<unknown>,
-  longPolls = 0
-) {
+async function doAndWait(page: Page, action: () => Promise<unknown>, longPolls = 0) {
   let DEBUG = !!process.env.DEBUG;
   let networkSettledCallback: any;
-  let networkSettledPromise = new Promise((resolve) => {
+  let networkSettledPromise = new Promise(resolve => {
     networkSettledCallback = resolve;
   });
 
@@ -242,7 +236,7 @@ async function doAndWait(
     // Note: this might be changed to use delay, e.g. setTimeout(f, 100),
     // when the page uses delay itself.
     let evaluate = page.evaluate(() => {
-      return new Promise((resolve) => setTimeout(resolve, 0));
+      return new Promise(resolve => setTimeout(resolve, 0));
     });
     evaluate
       .catch(() => null)
@@ -295,7 +289,7 @@ type UrlFilter = (url: URL) => boolean;
 function collectResponses(page: Page, filter?: UrlFilter): Response[] {
   let responses: Response[] = [];
 
-  page.on("response", (res) => {
+  page.on("response", res => {
     if (!filter || filter(new URL(res.url()))) {
       responses.push(res);
     }
@@ -305,5 +299,5 @@ function collectResponses(page: Page, filter?: UrlFilter): Response[] {
 }
 
 function collectDataResponses(page: Page) {
-  return collectResponses(page, (url) => url.searchParams.has("_data"));
+  return collectResponses(page, url => url.searchParams.has("_data"));
 }

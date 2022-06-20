@@ -107,24 +107,24 @@ export class Router {
 
   processFile(path) {
     // if its a route data function
-    if (path.match(new RegExp(`\\.data\\.(${["ts", "js"].join("|")})`))) {
+    if (path.match(new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`))) {
       let id = path
         .slice(this.baseDir.length)
-        .replace(new RegExp(`(index)?\\.data\\.(${["ts", "js"].join("|")})`), "");
+        .replace(new RegExp(`(index)?\\.data\\.(${["ts", "js"].join("|")})$`), "");
       this.setRouteData(id, path);
       return;
     }
 
     // if its a possible page due to its extension
-    if (path.match(new RegExp(`\\.(${this.pageExtensions.join("|")})`))) {
+    if (path.match(new RegExp(`\\.(${this.pageExtensions.join("|")})$`))) {
       log("processing", path);
       let id = path
         .slice(this.baseDir.length)
-        .replace(new RegExp(`(index)?\\.(${this.pageExtensions.join("|")})`), "");
+        .replace(new RegExp(`(index)?\\.(${this.pageExtensions.join("|")})$`), "");
 
       let routeConfig = {};
 
-      if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})`))) {
+      if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
         let code = fs.readFileSync(join(this.cwd, path)).toString();
         try {
           let [imports, exports] = parse(
@@ -150,7 +150,7 @@ export class Router {
             }
           }
 
-          if (exports.includes("routeData") || code.includes("createRouteResource")) {
+          if (exports.includes("routeData")) {
             routeConfig.dataPath = path + "?data";
             // this.setRouteData(id, path + "?data");
             // dataFn = src.replace("tsx", "data.ts");

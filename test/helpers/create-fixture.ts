@@ -1,25 +1,16 @@
 import path from "path";
 import fse from "fs-extra";
 import type { Writable } from "stream";
-// import express from "express";
 import getPort from "get-port";
 import stripIndent from "strip-indent";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
-import { spawn, sync as spawnSync } from "cross-spawn";
-import { Readable } from "stream";
+import { sync as spawnSync } from "cross-spawn";
 
-import fs from "fs";
-import polka from "polka";
-import { dirname, join } from "path";
-import sirv from "sirv";
-import { once } from "events";
-
-import "solid-start/runtime/node-globals.js";
-import { createRequest } from "solid-start/runtime/fetch.js";
-
-import prepareManifest from "solid-start/runtime/prepareManifest.js";
 import type { RequestContext } from "solid-start/server/types.js";
+import "solid-start/runtime/node-globals.js";
+import prepareManifest from "solid-start/runtime/prepareManifest.js";
+import { createServer } from "solid-start-node/server.js";
 
 const TMP_DIR = path.join(
   path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url)))),
@@ -122,49 +113,16 @@ export async function createAppFixture(fixture: Fixture) {
   }> => {
     return new Promise(async (accept, reject) => {
       let port = await getPort();
-      const noop_handler = (_req, _res, next) => next();
+
       const paths = {
         assets: path.join(fixture.projectDir, "dist", "public")
       };
 
-      const assets_handler = fs.existsSync(paths.assets)
-        ? sirv(paths.assets, {
-            maxAge: 31536000,
-            immutable: true
-          })
-        : noop_handler;
-
-      const render = async (req, res, next) => {
-        if (req.url === "/favicon.ico") return;
-
-        const webRes = await fixture.build.default({
-          request: createRequest(req),
-          responseHeaders: new Headers(),
-          manifest: fixture.manifest
-        });
-
-        res.statusCode = webRes.status;
-        res.statusMessage = webRes.statusText;
-
-        for (const [name, value] of webRes.headers) {
-          res.setHeader(name, value);
-        }
-
-        if (webRes.body) {
-          const readable = Readable.from(webRes.body as any);
-          readable.pipe(res);
-          await once(readable, "end");
-        } else {
-          res.end();
-        }
-      };
-
-      const app = polka().use("/", assets_handler).use(render);
-
-      // app.all(
-      //   "*",
-      //   createExpressHandler({ build: fixture.build, mode: "production" })
-      // );
+      let app = createServer({
+        paths,
+        manifest: fixture.manifest,
+        entry: fixture.build.default
+      });
 
       let stop = (): Promise<void> => {
         return new Promise((res, rej) => {
@@ -211,30 +169,17 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
   let template = init.template ?? "node-template";
   let dirname = path.dirname(path.dirname(path.join(fileURLToPath(import.meta.url))));
   let integrationTemplateDir = path.join(dirname, template);
-  let projectName = `remix-${template}-${Math.random().toString(32).slice(2)}`;
+  let projectName = `start-${template}-${Math.random().toString(32).slice(2)}`;
   let projectDir = path.join(TMP_DIR, projectName);
-  console.log(
-    dirname,
-    projectDir,
-    integrationTemplateDir,
-    path.join(new URL(import.meta.url).pathname, ".."),
-    new URL(import.meta.url).pathname,
-    fileURLToPath(import.meta.url)
-  );
 
   await fse.ensureDir(projectDir);
   await fse.copy(integrationTemplateDir, projectDir);
 
-  // await fse.copy(
-  //   path.join(dirname, "../../build/node_modules"),
-  //   path.join(projectDir, "node_modules"),
-  //   { overwrite: true }
-  // );
-  if (init.setup) {
-    spawnSync("node", ["node_modules/@remix-run/dev/cli.js", "setup", init.setup], {
-      cwd: projectDir
-    });
-  }
+  // if (init.setup) {
+  //   spawnSync("node", ["node_modules/@remix-run/dev/cli.js", "setup", init.setup], {
+  //     cwd: projectDir
+  //   });
+  // }
   await writeTestFiles(init, projectDir);
   await build(projectDir, init.buildStdio, init.sourcemap);
 
@@ -249,8 +194,11 @@ async function build(projectDir: string, buildStdio?: Writable, sourcemap?: bool
   let proc = spawnSync("node", ["node_modules/solid-start/bin.cjs", "build"], {
     cwd: projectDir
   });
-  console.log(proc.stdout.toString());
-  console.error(proc.stderr.toString());
+
+  if (buildStdio) {
+    console.log(proc.stdout.toString());
+    console.error(proc.stderr.toString());
+  }
 }
 
 async function writeTestFiles(init: FixtureInit, dir: string) {

@@ -1,51 +1,25 @@
 import { createServer } from "solid-start-node/server.js";
-import { createRequest } from "solid-start/runtime/fetch.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
+import "solid-start/runtime/node-globals.js";
 import manifest from "../../dist/public/rmanifest.json";
 import assetManifest from "../../dist/public/manifest.json";
-import { Readable } from "stream";
-import { once } from "events";
-import * as Streams from "stream/web";
-import { fetch, Headers, Response, Request } from "undici";
 import entry from "./app";
-import crypto from "crypto";
-Object.assign(globalThis, Streams, {
-  Request,
-  Response,
-  fetch,
-  Headers,
-  crypto: crypto.webcrypto
-});
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 prepareManifest(manifest, assetManifest);
 
 const { PORT = 3000 } = process.env;
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const paths = {
+  assets: join(__dirname, "/public")
+};
+
 const server = createServer({
-  async render(req, res) {
-    if (req.url === "/favicon.ico") return;
-
-    const webRes = await entry({
-      request: createRequest(req),
-      responseHeaders: new Headers(),
-      manifest
-    });
-
-    res.statusCode = webRes.status;
-    res.statusMessage = webRes.statusText;
-
-    for (const [name, value] of webRes.headers) {
-      res.setHeader(name, value);
-    }
-
-    if (webRes.body) {
-      const readable = Readable.from(webRes.body);
-      readable.pipe(res);
-      await once(readable, "end");
-    } else {
-      res.end();
-    }
-  }
+  paths,
+  entry,
+  manifest
 });
 
 server.listen(PORT, err => {

@@ -60,6 +60,10 @@ export function redirect(
     responseInit.status = 302;
   }
 
+  if (url === "") {
+    url = "/";
+  }
+
   const response = new Response(null, {
     ...responseInit,
     headers: {

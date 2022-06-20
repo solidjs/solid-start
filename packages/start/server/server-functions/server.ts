@@ -1,8 +1,20 @@
-import { getApiHandler } from "../../api";
+// import { getApiHandler } from "../../api";
+import { getRouteMatches } from "../../api/router";
 import { sharedConfig } from "solid-js";
 import { ContentTypeHeader, JSONResponseType, respondWith } from "../responses";
 import { RequestContext } from "../types";
 import { ServerFn } from "./types";
+import type { Method } from "../../api";
+
+let apiRoutes;
+
+export const registerApiRoutes = routes => {
+  apiRoutes = routes;
+};
+
+export function getApiHandler(url: URL, method: string) {
+  return getRouteMatches(apiRoutes, url.pathname, method.toLowerCase() as Method);
+}
 
 export const server: ServerFn = (fn => {
   throw new Error("Should be compiled away");

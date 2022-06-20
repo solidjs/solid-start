@@ -1,4 +1,6 @@
+import { registerApiRoutes } from "../server/server-functions/server";
 import { RequestContext } from "../server/types";
+import { getRouteMatches } from "./router";
 
 // the line below will be replaced by the compiler with a configuration of routes
 // based on the files in src/routes
@@ -7,14 +9,14 @@ import { RequestContext } from "../server/types";
 var api = $API_ROUTES;
 
 // `delete` is a reserved word in JS, so we use `del` instead
-type Method = "get" | "post" | "put" | "del" | "patch";
+export type Method = "get" | "post" | "put" | "del" | "patch";
 type Handler = (
   ctx: RequestContext,
   params: Record<string, string>
 ) => Response | Promise<Response>;
 
 type Route = { path: string; children?: Route[] } & { [method in Method]?: Handler | "skip" };
-type MatchRoute = ReturnType<typeof routeToMatchRoute>;
+export type MatchRoute = ReturnType<typeof routeToMatchRoute>;
 
 function routeToMatchRoute(route: Route) {
   const segments = route.path.split("/").filter(Boolean);
@@ -56,49 +58,9 @@ function routeToMatchRoute(route: Route) {
   };
 }
 
-function getRouteMatches(routes: MatchRoute[], path: string, method: Method) {
-  const segments = path.split("/").filter(Boolean);
-
-  routeLoop: for (const route of routes) {
-    const matchSegments = route.matchSegments;
-
-    if (
-      segments.length < matchSegments.length ||
-      (!route.wildcard && segments.length > matchSegments.length)
-    ) {
-      continue;
-    }
-
-    for (let index = 0; index < matchSegments.length; index++) {
-      const match = matchSegments[index];
-      if (!match) {
-        continue;
-      }
-
-      if (segments[index] !== match) {
-        continue routeLoop;
-      }
-    }
-
-    const handler = route[method];
-    if (handler === "skip" || handler === undefined) {
-      return;
-    }
-
-    const params: Record<string, string> = {};
-    for (const { type, name, index } of route.params) {
-      if (type === ":") {
-        params[name] = segments[index];
-      } else {
-        params[name] = segments.slice(index).join("/");
-      }
-    }
-
-    return { handler, params };
-  }
-}
-
 const allRoutes = (api as Route[]).map(routeToMatchRoute).sort((a, b) => b.score - a.score);
+
+registerApiRoutes(allRoutes);
 
 export function getApiHandler(url: URL, method: string) {
   return getRouteMatches(allRoutes, url.pathname, method.toLowerCase() as Method);
