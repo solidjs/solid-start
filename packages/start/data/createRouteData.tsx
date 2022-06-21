@@ -78,7 +78,6 @@ export function createRouteData<T, S>(
         } else {
           setTimeout(() => handleResponse(response), 0);
         }
-        return response;
       }
       return response;
     } catch (e) {

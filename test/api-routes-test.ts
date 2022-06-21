@@ -76,7 +76,7 @@ test.describe("api routes", () => {
       await page.waitForSelector("[data-testid='redirect-destination']");
     });
 
-    test("should handle reloadDocument to resource route", async ({ page }) => {
+    test("should load json from API route", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/data.json");
       expect(await page.content()).toContain('{"hello":"world"}');

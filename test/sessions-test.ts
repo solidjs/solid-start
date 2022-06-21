@@ -3,7 +3,7 @@ import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 import type { AppFixture } from "./helpers/create-fixture.js";
 
-test.describe("api routes", () => {
+test.describe("sessions", () => {
   let appFixture: AppFixture;
   test.beforeAll(async () => {
     appFixture = await createAppFixture(
@@ -320,7 +320,7 @@ test.describe("api routes", () => {
   });
 
   function runTests(javaScriptEnabled) {
-    test("should redirect to redirected", async ({ page }) => {
+    test("auth flow", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/");
 
@@ -358,8 +358,6 @@ test.describe("api routes", () => {
         }
       );
 
-      // await page.click("#reset-errors");
-
       console.log("testing invalid password");
       await page.fill('input[name="username"]', "kody");
       await page.fill('input[name="password"]', "twix");
@@ -369,8 +367,6 @@ test.describe("api routes", () => {
       }
 
       await expect(page.locator("#error-message")).toHaveText("Fields invalid");
-
-      // await page.click("#reset-errors");
 
       console.log("login");
       await page.fill('input[name="username"]', "kody");
