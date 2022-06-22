@@ -356,7 +356,7 @@ function solidStartConfig(options) {
           alias: { "~": path.join(root, options.appRoot) }
         },
         ssr: {
-          noExternal: ["solid-app-router", "solid-meta", "solid-start", "cookie"]
+          noExternal: ["solid-app-router", "solid-meta", "solid-start"]
         },
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
