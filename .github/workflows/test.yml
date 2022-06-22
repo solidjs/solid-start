@@ -1,50 +1,21 @@
-# name: Test
+name: 🧪 Test
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
-
-# jobs:
-#   test:
-#     name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
-#     runs-on: ${{ matrix.os }}
-#     env:
-#       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-#       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-#       OS: ${{ matrix.os }}
-#       NODE_VERSION: ${{ matrix.node_version }}
-#     strategy:
-#       matrix:
-#         node_version: ['17', '16']
-#         os: [ubuntu-latest, macOS-latest]
-
-#     steps:
-#       - name: Checkout Repo
-#         uses: actions/checkout@v2
-
-#       # - name: Use Node.js ${{ matrix.node_version }} 
-#       #   uses: actions/setup-node@v3
-#       #   with:
-#       #     node-version: ${{ matrix.node_version }}
-      
-#       # - name: Install dependencies 
-#       #   run: |
-#       #     npm install -g pnpm
-#       #     pnpm install
-#       #     npx playwright install
-
-#       # - name: Run tests 
-#       #   run: pnpm turbo run test --force
-
-name: Tests
 on:
   push:
     branches:
       - main
+      - dev
+      - release-*
+    tags-ignore:
+      - v*
+    paths-ignore:
+      - "docs/**"
+      - "**/README.md"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+
 jobs:
   integration:
     name: "👀 Integration Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node }})"
