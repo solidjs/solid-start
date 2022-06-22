@@ -8,7 +8,7 @@ export type InlineServer<E extends any[], T extends (...args: [...E]) => void> =
 
 export type ServerFn = (<E extends any[], T extends (...args: E) => void>(
   fn: T
-) => T & { url: string; action: T }) & {
+) => (...p: Parameters<T>) => Promise<Awaited<ReturnType<T>>> & { url: string; action: T }) & {
   getHandler: (route: string) => any;
   createHandler: (fn: any, hash: string) => any;
   registerHandler: (route: string, handler: any) => any;
