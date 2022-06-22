@@ -219,19 +219,19 @@ function solidStartFileSystemRouter(options) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
             [
+              routeData,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            !ssr &&
+              process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }],
+            [
               routeResource,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
             options.ssr && [
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            [
-              routeData,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            !ssr &&
-              process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }]
+            ]
           ].filter(Boolean)
         }));
       } else if (id.includes("routes")) {
