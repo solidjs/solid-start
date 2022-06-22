@@ -76,6 +76,7 @@ export default ({ context }: { context: PageContext }) => {
 
   // @ts-expect-error
   sharedConfig.context.requestContext = context;
+
   const parsed = new URL(context.request.url);
   const path = parsed.pathname + parsed.search;
 
