@@ -18,6 +18,7 @@
     "publish:release": "lerna publish",
     "docs:dev": "pnpm --filter solid-start-docs run dev",
     "docs:build": "pnpm --filter solid-start-docs run build",
+    "clean:test": "rimraf .tmp",
     "test": "pnpm --filter solid-start-tests test"
   },
   "devDependencies": {

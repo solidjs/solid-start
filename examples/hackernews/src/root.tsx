@@ -1,10 +1,11 @@
 // @refresh reload
-import { Links, Routes, Scripts } from "solid-start/root";
+import { Links, FileRoutes, Meta, Scripts } from "solid-start/root";
 import { Suspense } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import { isServer } from "solid-js/web";
 import Nav from "./components/nav";
 import "./root.css";
+import { Routes } from "solid-app-router";
 
 export default function Root() {
   return (
@@ -16,12 +17,15 @@ export default function Root() {
         <meta name="description" content="Hacker News Clone built with Solid" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <Links />
+        <Meta />
       </head>
       <body>
         <Nav />
         <ErrorBoundary>
           <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
-            <Routes />
+            <Routes>
+              <FileRoutes />
+            </Routes>
           </Suspense>
         </ErrorBoundary>
         <Scripts />
