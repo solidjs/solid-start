@@ -14,6 +14,7 @@ export default function routeDataHmr() {
         if (import.meta.hot) {
           import.meta.hot.data.modHash = ${modHash};
           import.meta.hot.accept(newMod => {
+            import.meta.hot.data.modHash = ${modHash};
             if (import.meta.hot.data.modHash !== newMod.${modHash}) {
               import.meta.hot.invalidate();
             }
