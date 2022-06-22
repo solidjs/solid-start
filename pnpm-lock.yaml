@@ -256,9 +256,11 @@ importers:
   packages/start:
     specifiers:
       '@babel/core': ^7.16.7
+      '@babel/generator': ^7.16.7
       '@babel/plugin-syntax-jsx': ^7.16.7
       '@babel/preset-env': ^7.16.7
       '@babel/preset-typescript': ^7.16.7
+      '@babel/template': ^7.16.7
       '@types/cookie': ^0.5.1
       chokidar: ^3.5.3
       compression: ^1.7.4
@@ -289,9 +291,11 @@ importers:
       vite-plugin-solid: ^2.2.6
     dependencies:
       '@babel/core': 7.18.5
+      '@babel/generator': 7.18.2
       '@babel/plugin-syntax-jsx': 7.17.12_@babel+core@7.18.5
       '@babel/preset-env': 7.18.2_@babel+core@7.18.5
       '@babel/preset-typescript': 7.17.12_@babel+core@7.18.5
+      '@babel/template': 7.16.7
       '@types/cookie': 0.5.1
       chokidar: 3.5.3
       compression: 1.7.4
