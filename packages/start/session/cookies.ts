@@ -2,7 +2,7 @@
 // https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/cookies.ts
 
 import type { CookieParseOptions, CookieSerializeOptions } from "./cookie";
-import { parse, serialize } from "./cookie";
+import { parseCookie, serializeCookie } from "./cookie";
 
 export type SignFunction = (value: string, secret: string) => Promise<string>;
 
@@ -97,7 +97,7 @@ export const createCookieFactory =
       },
       async parse(cookieHeader, parseOptions) {
         if (!cookieHeader) return null;
-        let cookies = parse(cookieHeader, { ...options, ...parseOptions });
+        let cookies = parseCookie(cookieHeader, { ...options, ...parseOptions });
         return name in cookies
           ? cookies[name] === ""
             ? ""
@@ -105,10 +105,14 @@ export const createCookieFactory =
           : null;
       },
       async serialize(value, serializeOptions) {
-        return serialize(name, value === "" ? "" : await encodeCookieValue(sign, value, secrets), {
-          ...options,
-          ...serializeOptions
-        });
+        return serializeCookie(
+          name,
+          value === "" ? "" : await encodeCookieValue(sign, value, secrets),
+          {
+            ...options,
+            ...serializeOptions
+          }
+        );
       }
     };
   };
