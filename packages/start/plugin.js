@@ -8,6 +8,7 @@ import { stringifyApiRoutes, stringifyPageRoutes, Router } from "./routes.js";
 import c from "picocolors";
 import babelServerModule from "./server/server-functions/babel.js";
 import routeData from "./server/routeData.js";
+import routeDataHmr from "./server/routeDataHmr.js";
 import routeResource from "./server/serverResource.js";
 import { solidStartClientAdpater } from "./client-adapter.js";
 
@@ -225,7 +226,12 @@ function solidStartFileSystemRouter(options) {
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
-            [routeData, { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }]
+            [
+              routeData,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            !ssr &&
+              process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }]
           ].filter(Boolean)
         }));
       } else if (id.includes("routes")) {
