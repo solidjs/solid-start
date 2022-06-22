@@ -11,29 +11,6 @@ test.describe("meta", () => {
   test.beforeAll(async () => {
     fixture = await createFixture({
       files: {
-        "src/root.tsx": js`
-          import { Links, Meta, Routes, Scripts } from "solid-start/root";
-          import { Suspense } from "solid-js";
-
-          export default function Root() {
-            return (
-              <html lang="en">
-                <head>
-                  <meta charset="utf-8" />
-                  <meta name="viewport" content="width=device-width, initial-scale=1" />
-                  <Meta />
-                  <Links />
-                </head>
-                <body>
-                  <Suspense>
-                    <Routes />
-                  </Suspense>
-                  <Scripts />
-                </body>
-              </html>
-            );
-          }
-        `,
         "src/routes/index.tsx": js`
           import { Title } from 'solid-meta';
           export default function Index() {
@@ -161,33 +138,8 @@ test.describe("streaming meta", () => {
     fixture = await createFixture({
       files: {
         "src/entry-server.tsx": js`
-        import { StartServer, createHandler, renderStream } from "solid-start/entry-server";
-
-        export default createHandler(renderStream(context => <StartServer context={context} />));
-        
-        `,
-        "src/root.tsx": js`
-          import { Links, Meta, Routes, Scripts } from "solid-start/root";
-          import { Suspense } from "solid-js";
-
-          export default function Root() {
-            return (
-              <html lang="en">
-                <head>
-                  <meta charset="utf-8" />
-                  <meta name="viewport" content="width=device-width, initial-scale=1" />
-                  <Meta />
-                  <Links />
-                </head>
-                <body>
-                  <Suspense>
-                    <Routes />
-                  </Suspense>
-                  <Scripts />
-                </body>
-              </html>
-            );
-          }
+          import { StartServer, createHandler, renderStream } from "solid-start/entry-server";
+          export default createHandler(renderStream(context => <StartServer context={context} />));
         `,
         "src/routes/index.tsx": js`
           import { Title } from 'solid-meta';
