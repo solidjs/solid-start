@@ -6,7 +6,7 @@ import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-import vite from "vite";
+import { build as viteBuild } from "vite";
 export default function ({ durableObjects = [] } = {}) {
   return {
     start(config) {
@@ -37,7 +37,7 @@ export default function ({ durableObjects = [] } = {}) {
         writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
       } else {
         await builder.client(join(config.root, "dist", "public"));
-        await vite.build({
+        await viteBuild({
           build: {
             ssr: true,
             outDir: "./.solid/server",
