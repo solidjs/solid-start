@@ -7,14 +7,14 @@
     "type": "adapter"
   },
   "dependencies": {
-    "@babel/core": "^7.18.9",
-    "@babel/preset-env": "^7.18.9",
+    "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "encoding": "^0.1.13",
-    "node-fetch": "^3.2.9",
+    "node-fetch": "^3.2.10",
     "rollup": "^2.77.2",
     "terser": "^5.14.2"
   },
