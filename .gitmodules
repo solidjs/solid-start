@@ -1,0 +1,6 @@
+[submodule "packages/router"]
+	path = packages/router
+	url = https://github.com/solidjs/solid-app-router
+[submodule "packages/meta"]
+	path = packages/meta
+	url = https://github.com/solidjs/solid-meta
