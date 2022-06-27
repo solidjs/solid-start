@@ -1,4 +1,4 @@
-import { copyFileSync, unlinkSync } from "fs";
+import { copyFileSync, readFileSync, writeFileSync, mkdirSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { rollup } from "rollup";
@@ -15,30 +15,58 @@ export default function () {
     async build(config) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
-      await vite.build({
-        build: {
-          outDir: "./dist/public",
-          minify: "terser",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-client`)),
-            output: {
-              manualChunks: undefined
+
+      if (!config.solidOptions.ssr) {
+        await vite.build({
+          build: {
+            outDir: "./dist/public",
+            minify: "terser",
+            rollupOptions: {
+              input: resolve(join(config.root, "index.html")),
+              output: {
+                manualChunks: undefined
+              }
             }
           }
-        }
-      });
-      await vite.build({
-        build: {
-          ssr: true,
-          outDir: "./.solid/server",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-server`)),
-            output: {
-              format: "esm"
+        });
+
+        mkdirSync(join(config.root, ".solid", "server"), {
+          recursive: true
+        });
+
+        let text = readFileSync(join(__dirname, "spa-handler.js")).toString();
+        text = text.replace(
+          "INDEX_HTML",
+          resolve(join(config.root, "dist", "public", "index.html"))
+        );
+        writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
+      } else {
+        await vite.build({
+          build: {
+            outDir: "./dist/public",
+            minify: "terser",
+            rollupOptions: {
+              input: resolve(join(config.root, appRoot, `entry-client`)),
+              output: {
+                manualChunks: undefined
+              }
             }
           }
-        }
-      });
+        });
+        await vite.build({
+          build: {
+            ssr: true,
+            outDir: "./.solid/server",
+            rollupOptions: {
+              input: resolve(join(config.root, appRoot, `entry-server`)),
+              output: {
+                format: "esm"
+              }
+            }
+          }
+        });
+      }
+
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "app.js")

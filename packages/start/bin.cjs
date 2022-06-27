@@ -18,7 +18,12 @@ prog
     if (open) setTimeout(() => launch(port), 1000);
     spawn(
       "vite",
-      ["dev", ...(config ? ["--config", config] : []), ...(port ? ["--port", port] : []), ...(host ? ["--host"] : [])],
+      [
+        "dev",
+        ...(config ? ["--config", config] : []),
+        ...(port ? ["--port", port] : []),
+        ...(host ? ["--host"] : [])
+      ],
       {
         shell: true,
         stdio: "inherit"

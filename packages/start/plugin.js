@@ -408,10 +408,7 @@ function detectAdapter() {
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter:
-        options && options.ssr !== undefined && !options.srr
-          ? solidStartClientAdpater()
-          : detectAdapter(),
+      adapter: detectAdapter(),
       appRoot: "src",
       routesDir: "routes",
       ssr: true,
