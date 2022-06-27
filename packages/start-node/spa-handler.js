@@ -1,6 +1,8 @@
 import { readFile } from "fs/promises";
+let indexHTML = INDEX_HTML;
 export default async function entry({ request, responseHeaders, manifest }) {
-  let text = await readFile(INDEX_HTML, "utf8");
+  console.log(indexHTML);
+  let text = await readFile(indexHTML, "utf8");
 
   return new Response(text, {
     headers: {
