@@ -39,6 +39,11 @@ test.describe("rendering", () => {
           export default function Index() {
             return <h2>Index</h2>;
           }
+        `,
+        "src/routes/about.tsx": js`
+          export default function Index() {
+            return <h2>About</h2>;
+          }
         `
       }
     });
@@ -71,17 +76,41 @@ test.describe("rendering", () => {
       <!--/-->
     </div>`)
     );
+
+    res = await fixture.requestDocument("/about");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("Content-Type")).toBe("text/html");
+    expect(selectHtml(await res.text(), "#content")).toBe(
+      prettyHtml(`
+    <div id="content">
+      <h1>Root</h1>
+      <!--#-->
+      <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">About</h2>
+      <!--/-->
+    </div>`)
+    );
   });
 
   test("hydrates", async ({ page }) => {
     let app = new PlaywrightFixture(appFixture, page);
-    await app.goto("/");
+    await app.goto("/", true);
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
     <div id="content">
       <h1>Root</h1>
       <!--#-->
       <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
+      <!--/-->
+    </div>`)
+    );
+
+    await app.goto("/about", true);
+    expect(await app.getHtml("#content")).toBe(
+      prettyHtml(`
+    <div id="content">
+      <h1>Root</h1>
+      <!--#-->
+      <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">About</h2>
       <!--/-->
     </div>`)
     );
