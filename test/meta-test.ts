@@ -4,8 +4,6 @@ import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
 import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
 
-function testMeta() {}
-
 test.describe("meta", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
