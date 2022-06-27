@@ -35,7 +35,10 @@ export default function () {
         });
 
         let text = readFileSync(join(__dirname, "spa-handler.js")).toString();
-        text = text.replace("INDEX_HTML", `'${join(config.root, "dist", "public", "index.html")}'`);
+        text = text.replace(
+          "INDEX_HTML",
+          `'${join(config.root, "dist", "public", "index.html").replace(`\\`, "\\\\")}'`
+        );
         console.log(text, join(config.root, "dist", "public", "index.html"));
         writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
       } else {
