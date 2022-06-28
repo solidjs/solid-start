@@ -1,4 +1,4 @@
-import { registerApiRoutes } from "../server/server-functions/server";
+import { registerApiRoutes } from "../server/internalFetch";
 import { RequestContext } from "../server/types";
 import { getRouteMatches } from "./router";
 
