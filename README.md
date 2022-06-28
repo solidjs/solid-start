@@ -2,7 +2,7 @@
   <img width="100%" src="https://assets.solidjs.com/banner?project=Start&type=core" alt="Solid Docs">
 </p>
 
-# Solid Start
+# SolidStart
 
 This is the home of the new app framework for Solid. This is still a work in progress. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
 
