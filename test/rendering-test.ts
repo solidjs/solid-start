@@ -31,9 +31,7 @@ test.describe("rendering", () => {
                   </nav>
                   <div id="content">
                     <h1>Root</h1>
-                    <Suspense>
-                      <Routes />
-                    </Suspense>
+                    <Routes />
                   </div>
                   <Scripts />
                 </body>
