@@ -1,4 +1,4 @@
-import { useContext, createRenderEffect, onCleanup } from "solid-js";
+import { useContext, onCleanup } from "solid-js";
 import { isServer } from "solid-js/web";
 import { XSolidStartStatusCodeHeader } from "./responses";
 import { StartContext } from "./StartContext";

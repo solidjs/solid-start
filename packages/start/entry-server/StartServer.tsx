@@ -8,7 +8,7 @@ import { inlineServerFunctions } from "../server/middleware";
 import { PageContext, RequestContext } from "../server/types";
 import { apiRoutes } from "../api/middleware";
 import { internalFetch } from "../server/internalFetch";
-import { XSolidStartStatusCodeHeader } from "server";
+import { XSolidStartStatusCodeHeader } from "../server/responses";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
