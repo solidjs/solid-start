@@ -4,7 +4,7 @@
     "dev": "solid-start dev",
     "build": "solid-start build",
     "start": "solid-start start",
-    "postinstall": "node ./fix-jest-dom.mjs",
+    "postinstall": "node ./scripts/fix-jest-dom.mjs",
     "test": "vitest run"
   },
   "type": "module",
