@@ -15,7 +15,6 @@ const config: PlaywrightTestConfig = {
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? "github" : [["html", { open: "on-failure" }]],
   use: { actionTimeout: 0 },
-
   projects: [
     {
       name: "chromium",
