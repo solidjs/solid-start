@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
+import { PlaywrightFixture, prettyHtml } from "./helpers/playwright-fixture.js";
 
 test.describe("actions", () => {
   let fixture: Fixture;
@@ -84,15 +84,7 @@ test.describe("actions", () => {
     await appFixture.close();
   });
 
-  // let logs: string[] = [];
-
-  // test.beforeEach(({ page }) => {
-  //   page.on("console", msg => {
-  //     logs.push(msg.text());
-  //   });
-  // });
-
-  test("successful action submitted without form", async ({ page }) => {
+  test("action submitted without form", async ({ page }) => {
     let app = new PlaywrightFixture(appFixture, page);
     await app.goto("/", true);
 
