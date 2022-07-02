@@ -71,13 +71,6 @@ export async function createFixture(init: FixtureInit) {
     return await handler(request);
   };
 
-  let requestData = async (href: string, routeId: string, init?: RequestInit) => {
-    let url = new URL(href, "test://test");
-    url.searchParams.set("_data", routeId);
-    let request = new Request(url, init);
-    return await handler(request);
-  };
-
   let postDocument = async (href: string, data: URLSearchParams | FormData) => {
     return await requestDocument(href, {
       method: "POST",
@@ -92,14 +85,13 @@ export async function createFixture(init: FixtureInit) {
   };
 
   let getBrowserAsset = async (asset: string) => {
-    return fse.readFile(path.join(projectDir, "public", asset.replace(/^\//, "")), "utf8");
+    return await fse.readFile(path.join(projectDir, "public", asset.replace(/^\//, "")), "utf8");
   };
 
   return {
     projectDir,
     build: app,
     requestDocument,
-    requestData,
     postDocument,
     getBrowserAsset,
     manifest
@@ -156,12 +148,12 @@ export async function createAppFixture(fixture: Fixture) {
        * have memory leaks.
        */
       close: async () => {
-        return stop();
+        return await stop();
       }
     };
   };
 
-  return start();
+  return await start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,7 +178,7 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
   return projectDir;
 }
 
-async function build(projectDir: string, buildStdio?: Writable, sourcemap?: boolean) {
+function build(projectDir: string, buildStdio?: Writable, sourcemap?: boolean) {
   // let buildArgs = ["node_modules/@remix-run/dev/cli.js", "build"];
   // if (sourcemap) {
   //   buildArgs.push("--sourcemap");
