@@ -7,7 +7,10 @@ import { Readable } from "stream";
 import { once } from "events";
 
 export function createServer({ entry, paths, manifest }) {
-  const comp = compression({ threshold: 0 });
+  const comp = compression({
+    threshold: 0,
+    filter: req => req.headers["content-type"]?.startsWith("text/event-stream")
+  });
   const assets_handler = fs.existsSync(paths.assets)
     ? sirv(paths.assets, {
         maxAge: 31536000,
