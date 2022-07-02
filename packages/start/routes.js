@@ -299,6 +299,7 @@ export function stringifyPageRoutes(pageRoutes, options = {}) {
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
   const routes = ${routeConfig};`;
+  console.log(text);
 
   return text;
 }
@@ -341,6 +342,7 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
   const text = `
   ${jsFile.getImportStatements()}
   const api = ${routeConfig};`;
+  console.log(text);
   return text;
 }
 

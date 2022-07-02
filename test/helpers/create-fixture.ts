@@ -18,7 +18,7 @@ const TMP_DIR = path.join(
 );
 
 interface FixtureInit {
-  buildStdio?: Writable;
+  buildStdio?: boolean;
   sourcemap?: boolean;
   files: { [filename: string]: string };
   template?: "cf-template" | "deno-template" | "node-template";
@@ -178,7 +178,7 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
   return projectDir;
 }
 
-function build(projectDir: string, buildStdio?: Writable, sourcemap?: boolean) {
+function build(projectDir: string, buildStdio?: boolean, sourcemap?: boolean) {
   // let buildArgs = ["node_modules/@remix-run/dev/cli.js", "build"];
   // if (sourcemap) {
   //   buildArgs.push("--sourcemap");
