@@ -11,7 +11,6 @@ test.describe("meta", () => {
   test.describe("without streaming", () => {
     test.beforeAll(async () => {
       fixture = await createFixture({
-        buildStdio: true,
         files: {
           "src/routes/index.tsx": js`
             import { Title } from 'solid-meta';
