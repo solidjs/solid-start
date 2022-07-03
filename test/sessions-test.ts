@@ -28,7 +28,7 @@ test.describe("sessions", () => {
 
             export default function Home() {
               const user = useRouteData<ReturnType<typeof routeData>>();
-              const logoutAction = createServerAction(() => logout(server.request));
+              const logoutAction = createServerAction((_, { request }) => logout(request));
 
               return (
                 <main class="w-full p-4 space-y-2">

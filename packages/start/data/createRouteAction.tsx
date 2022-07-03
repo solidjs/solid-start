@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "solid-app-router";
-import { createSignal, startTransition, getOwner, runWithOwner } from "solid-js";
+import { createSignal, startTransition, getOwner, runWithOwner, useContext } from "solid-js";
 import { isServer } from "solid-js/web";
 import { FormProps, FormImpl, FormError } from "./Form";
 
@@ -7,6 +7,10 @@ import type { ParentComponent } from "solid-js";
 import { Owner } from "solid-js/types/reactive/signal";
 import { isRedirectResponse } from "../server/responses";
 import { refetchRouteData } from "./createRouteData";
+import { ServerContext } from "../server/ServerContext";
+import { PageFetchEvent, ServerFunctionEvent } from "server";
+
+interface ActionEvent extends ServerFunctionEvent {}
 
 export type ActionState = "idle" | "pending";
 export type RouteAction<T, U> = {
@@ -19,28 +23,29 @@ export type RouteAction<T, U> = {
   submit: (vars: T) => Promise<U>;
 };
 export function createRouteAction<T = void, U = void>(
-  fn: () => Promise<U>,
+  fn: (arg1: void, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
-  fn: (args: T) => Promise<U>,
+  fn: (args: T, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
-  fn: (args: T) => Promise<U>,
+  fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteAction<T, U> {
   const [pending, setPending] = createSignal<T[]>([]);
   const [data, setData] = createSignal<{ value?: U; error?: any }>({});
   const owner = getOwner();
   const navigate = useNavigate();
+  const event = useContext(ServerContext);
   const lookup = new Map();
   let count = 0;
   let tempOwner: Owner = owner;
   let handledError = false;
 
   function submit(variables: T) {
-    const p = fn(variables);
+    const p = fn(variables, event);
     const reqId = ++count;
     lookup.set(p, variables);
     setPending(Array.from(lookup.values()));
