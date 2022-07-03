@@ -1,5 +1,6 @@
 import { FetchEvent, FETCH_EVENT } from "../server/types";
 import { getApiHandler } from "./index";
+import { internalFetch } from "./internalFetch";
 
 export const apiRoutes = ({ forward }) => {
   return async (event: FetchEvent) => {
@@ -9,7 +10,8 @@ export const apiRoutes = ({ forward }) => {
         request: event.request,
         params: apiHandler.params,
         env: event.env,
-        $type: FETCH_EVENT
+        $type: FETCH_EVENT,
+        fetch: internalFetch
       });
 
       return await apiHandler.handler(apiEvent);
