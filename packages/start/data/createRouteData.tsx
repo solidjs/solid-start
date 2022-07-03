@@ -1,17 +1,17 @@
 import { useNavigate } from "solid-app-router";
 import { useContext, onCleanup } from "solid-js";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
-import { StartContext } from "../server/StartContext";
+import { ServerContext } from "../server/ServerContext";
 import { createResource, Resource } from "solid-js";
 import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
-import { PageContext } from "../server/types";
+import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";
 
-type RouteResourceContext = Omit<PageContext, "tags" | "manifest" | "routerContext">;
+interface RouteDataEvent extends ServerFunctionEvent {}
 
 type RouteResourceSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
 
-type RouteResourceFetcher<S, T> = (k: S, context: RouteResourceContext) => T | Promise<T>;
+type RouteResourceFetcher<S, T> = (source: S, event: RouteDataEvent) => T | Promise<T>;
 
 const resources = new Set<(k: any) => void>();
 
@@ -50,7 +50,7 @@ export function createRouteData<T, S>(
   }
 
   const navigate = useNavigate();
-  const context = useContext(StartContext);
+  const pageEvent = useContext(ServerContext);
 
   function handleResponse(response: Response) {
     if (isRedirectResponse(response)) {
@@ -58,9 +58,9 @@ export function createRouteData<T, S>(
         replace: true
       });
       if (isServer) {
-        context.setStatusCode(response.status);
+        pageEvent.setStatusCode(response.status);
         response.headers.forEach((head, value) => {
-          context.setHeader(value, head);
+          pageEvent.responseHeaders.set(value, head);
         });
       }
     }
@@ -71,7 +71,18 @@ export function createRouteData<T, S>(
       if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
         return info.value;
       }
-      let response = await (fetcher as any)(key, context);
+
+      let event = pageEvent as RouteDataEvent;
+      if (isServer) {
+        event = Object.freeze({
+          request: pageEvent.request,
+          env: pageEvent.env,
+          $type: FETCH_EVENT,
+          fetch: pageEvent.fetch
+        });
+      }
+
+      let response = await (fetcher as any)(key, event);
       if (response instanceof Response) {
         if (isServer) {
           handleResponse(response);
