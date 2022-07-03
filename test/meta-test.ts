@@ -111,7 +111,7 @@ test.describe("meta", () => {
         files: {
           "src/entry-server.tsx": js`
           import { StartServer, createHandler, renderStream } from "solid-start/entry-server";
-          export default createHandler(renderStream(context => <StartServer context={context} />));
+          export default createHandler(renderStream(event => <StartServer event={event} />));
         `,
           "src/routes/index.tsx": js`
             import { Title } from 'solid-meta';

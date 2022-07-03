@@ -9,7 +9,7 @@
   "devDependencies": {
     "@mdx-js/rollup": "^2.0.0",
     "solid-app-router": "^0.4.1",
-    "solid-js": "^1.4.0",
+    "solid-js": "^1.4.6",
     "solid-mdx": "^0.0.6",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",

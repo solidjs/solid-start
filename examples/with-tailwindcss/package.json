@@ -10,7 +10,7 @@
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.6",
     "solid-app-router": "^0.4.1",
-    "solid-js": "^1.4.0",
+    "solid-js": "^1.4.6",
     "solid-meta": "^0.27.3",
     "solid-start": "next",
     "solid-start-node": "next",
