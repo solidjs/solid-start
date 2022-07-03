@@ -16,7 +16,7 @@ export function createDevHandler(viteServer) {
 
       const webRes = await entry({
         request: createRequest(req),
-        responseHeaders: new Headers()
+        env: {}
       });
 
       res.statusCode = webRes.status;

@@ -26,8 +26,7 @@ export default async req => {
   req.method = "GET";
   const webRes = await entry({
     request: createRequest(req),
-    responseHeaders: new Headers(),
-    manifest
+    env: { manifest }
   });
   return webRes.text();
 };

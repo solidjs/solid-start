@@ -1,26 +1,28 @@
+import { internalFetch } from "../api/internalFetch";
 import { JSX } from "solid-js";
 import { renderToStringAsync, renderToStream } from "solid-js/web";
-import { PageContext } from "../server/types";
+import { FetchEvent, FETCH_EVENT, PageFetchEvent } from "../server/types";
 
 export function renderAsync(
-  fn: (context: PageContext) => JSX.Element,
+  fn: (context: PageFetchEvent) => JSX.Element,
   options?: {
     timeoutMs?: number;
     nonce?: string;
     renderId?: string;
   }
 ) {
-  return () => async (context: PageContext) => {
-    let markup = await renderToStringAsync(() => fn(context), options);
-    if (context.routerContext.url) {
-      return Response.redirect(new URL(context.routerContext.url, context.request.url), 302);
+  return () => async (event: FetchEvent) => {
+    let pageEvent = createPageEvent(event);
+
+    let markup = await renderToStringAsync(() => fn(pageEvent), options);
+
+    if (pageEvent.routerContext.url) {
+      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
     }
 
-    context.responseHeaders.set("Content-Type", "text/html");
-
     return new Response(markup, {
-      status: 200,
-      headers: context.responseHeaders
+      status: pageEvent.getStatusCode(),
+      headers: pageEvent.responseHeaders
     });
   };
 }
@@ -32,8 +34,38 @@ function handleRedirect(context) {
   };
 }
 
+function createPageEvent(event: FetchEvent) {
+  let responseHeaders = new Headers({
+    "Content-Type": "text/html"
+  });
+
+  let statusCode = 200;
+
+  function setStatusCode(code: number) {
+    statusCode = code;
+  }
+
+  function getStatusCode() {
+    return statusCode;
+  }
+
+  const pageEvent: PageFetchEvent = Object.freeze({
+    request: event.request,
+    routerContext: {},
+    tags: [],
+    env: event.env,
+    $type: FETCH_EVENT,
+    responseHeaders,
+    setStatusCode: setStatusCode,
+    getStatusCode: getStatusCode,
+    fetch: internalFetch
+  });
+
+  return pageEvent;
+}
+
 export function renderStream(
-  fn: (context: PageContext) => JSX.Element,
+  fn: (context: PageFetchEvent) => JSX.Element,
   baseOptions: {
     nonce?: string;
     renderId?: string;
@@ -41,27 +73,28 @@ export function renderStream(
     onCompleteAll?: (info: { write: (v: string) => void }) => void;
   } = {}
 ) {
-  return () => async (context: PageContext) => {
+  return () => async (event: FetchEvent) => {
+    let pageEvent = createPageEvent(event);
+
     const options = { ...baseOptions };
     if (options.onCompleteAll) {
       const og = options.onCompleteAll;
       options.onCompleteAll = options => {
-        handleRedirect(context)(options);
+        handleRedirect(pageEvent)(options);
         og(options);
       };
-    } else options.onCompleteAll = handleRedirect(context);
+    } else options.onCompleteAll = handleRedirect(pageEvent);
     const { readable, writable } = new TransformStream();
-    const stream = renderToStream(() => fn(context), options);
-    if (context.routerContext.url) {
-      return Response.redirect(new URL(context.routerContext.url, context.request.url), 302);
+    const stream = renderToStream(() => fn(pageEvent), options);
+    if (pageEvent.routerContext.url) {
+      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
     }
+
     stream.pipeTo(writable);
 
-    context.responseHeaders.set("Content-Type", "text/html");
-
     return new Response(readable, {
-      status: 200,
-      headers: context.responseHeaders
+      status: pageEvent.getStatusCode(),
+      headers: pageEvent.responseHeaders
     });
   };
 }

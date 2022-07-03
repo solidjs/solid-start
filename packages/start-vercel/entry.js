@@ -8,8 +8,7 @@ prepareManifest(manifest, assetManifest);
 export default function (request) {
   const response = entry({
     request,
-    responseHeaders: new Headers(),
-    manifest
+    env: { manifest }
   });
   return response;
 }

@@ -8,6 +8,5 @@ prepareManifest(manifest, assetManifest);
 export default request =>
   entry({
     request,
-    responseHeaders: new Headers(),
-    manifest
+    env: { manifest }
   });

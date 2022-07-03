@@ -1,11 +1,58 @@
+import { FETCH_EVENT } from "../types";
 import {
   ContentTypeHeader,
   JSONResponseType,
-  parseResponse,
+  LocationHeader,
+  redirect,
+  XSolidStartContentTypeHeader,
   XSolidStartOrigin,
   XSolidStartResponseTypeHeader
 } from "../responses";
+
 import { InlineServer, ServerFn } from "./types";
+import { FormError } from "../../data";
+
+export async function parseResponse(request: Request, response: Response) {
+  const contentType =
+    response.headers.get(XSolidStartContentTypeHeader) ||
+    response.headers.get(ContentTypeHeader) ||
+    "";
+  if (contentType.includes("json")) {
+    return await response.json();
+  } else if (contentType.includes("text")) {
+    return await response.text();
+  } else if (contentType.includes("form-error")) {
+    const data = await response.json();
+    return new FormError(data.error.message, {
+      fieldErrors: data.error.fieldErrors,
+      fields: data.error.fields,
+      stack: data.error.stack
+    });
+  } else if (contentType.includes("error")) {
+    const data = await response.json();
+    const error = new Error(data.error.message);
+    if (data.error.stack) {
+      error.stack = data.error.stack;
+    }
+    return error;
+  } else if (contentType.includes("response")) {
+    if (response.status === 204 && response.headers.get(LocationHeader)) {
+      return redirect(response.headers.get(LocationHeader));
+    }
+    return response;
+  } else {
+    if (response.status === 200) {
+      const text = await response.text();
+      try {
+        return JSON.parse(text);
+      } catch {}
+    }
+    if (response.status === 204 && response.headers.get(LocationHeader)) {
+      return redirect(response.headers.get(LocationHeader));
+    }
+    return response;
+  }
+}
 
 export const server: ServerFn = (fn => {
   throw new Error("Should be compiled away");
@@ -27,7 +74,7 @@ function createRequestInit(...args) {
       [XSolidStartOrigin]: "client"
     };
 
-  if (args.length === 1 && args[0] instanceof FormData) {
+  if (args[0] instanceof FormData) {
     body = args[0];
   } else {
     // special case for when server is used as fetcher for createResource
@@ -43,6 +90,11 @@ function createRequestInit(...args) {
       }
     }
     body = JSON.stringify(args, (key, value) => {
+      if (typeof value === "object" && value.$type === FETCH_EVENT) {
+        return {
+          $type: "fetch_event"
+        };
+      }
       if (value instanceof Headers) {
         return {
           $type: "headers",
@@ -65,9 +117,9 @@ function createRequestInit(...args) {
   return {
     method: "POST",
     body: body,
-    headers: {
+    headers: new Headers({
       ...headers
-    }
+    })
   };
 }
 

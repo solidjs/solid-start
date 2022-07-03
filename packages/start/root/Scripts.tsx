@@ -1,8 +1,9 @@
+import { PageFetchEvent } from "server";
 import { useContext } from "solid-js";
 import { NoHydration, HydrationScript, isServer } from "solid-js/web";
-import { StartContext } from "../server/StartContext";
+import { ServerContext } from "../server/ServerContext";
 
-function getFromManifest(manifest) {
+function getFromManifest(manifest: PageFetchEvent["env"]["manifest"]) {
   const match = manifest["*"];
   const entry = match.find(src => src.type === "script");
   return <script type="module" async src={entry.href} />;
@@ -10,7 +11,7 @@ function getFromManifest(manifest) {
 
 export default function Scripts() {
   const isDev = import.meta.env.MODE === "development";
-  const context = useContext(StartContext);
+  const context = useContext(ServerContext);
   return (
     <>
       <HydrationScript />
@@ -22,7 +23,7 @@ export default function Scripts() {
               <script type="module" async src="/src/entry-client" $ServerOnly></script>
             </>
           ) : (
-            getFromManifest(context.manifest)
+            getFromManifest(context.env.manifest)
           ))}
       </NoHydration>
     </>

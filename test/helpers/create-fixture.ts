@@ -7,7 +7,7 @@ import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
 import { sync as spawnSync } from "cross-spawn";
 
-import type { RequestContext } from "solid-start/server/types.js";
+import type { FetchEvent } from "solid-start/server/types.js";
 import "solid-start/runtime/node-globals.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
 import { createServer } from "solid-start-node/server.js";
@@ -26,7 +26,7 @@ interface FixtureInit {
 }
 
 interface EntryServer {
-  default: (request: RequestContext) => Promise<Response>;
+  default: (request: FetchEvent) => Promise<Response>;
 }
 
 export type Fixture = Awaited<ReturnType<typeof createFixture>>;
@@ -60,8 +60,7 @@ export async function createFixture(init: FixtureInit) {
   let handler = async (request: Request) => {
     return await app.default({
       request: request,
-      responseHeaders: new Headers(),
-      manifest
+      env: { manifest }
     });
   };
 

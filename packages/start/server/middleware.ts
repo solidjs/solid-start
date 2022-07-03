@@ -1,14 +1,16 @@
 import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
-import { RequestContext } from "./types";
+import { FetchEvent, FETCH_EVENT } from "./types";
 import { server, handleServerRequest } from "./server-functions/server";
+import { internalFetch } from "../api/internalFetch";
+import { ContentTypeHeader, XSolidStartContentTypeHeader, XSolidStartOrigin } from "./responses";
 
 export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
-  return async (ctx: RequestContext) => {
-    const url = new URL(ctx.request.url);
+  return async (event: FetchEvent) => {
+    const url = new URL(event.request.url);
 
     if (server.hasHandler(url.pathname)) {
-      let contentType = ctx.request.headers.get("content-type");
-      let origin = ctx.request.headers.get("x-solidstart-origin");
+      let contentType = event.request.headers.get(ContentTypeHeader);
+      let origin = event.request.headers.get(XSolidStartOrigin);
 
       let formRequestBody;
       if (
@@ -16,22 +18,29 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
         contentType.includes("form") &&
         !(origin != null && origin.includes("client"))
       ) {
-        let [read1, read2] = ctx.request.body.tee();
-        formRequestBody = new Request(ctx.request.url, {
+        let [read1, read2] = event.request.body.tee();
+        formRequestBody = new Request(event.request.url, {
           body: read2,
-          headers: ctx.request.headers,
-          method: ctx.request.method
+          headers: event.request.headers,
+          method: event.request.method
         });
-        ctx.request = new Request(ctx.request.url, {
+        event.request = new Request(event.request.url, {
           body: read1,
-          headers: ctx.request.headers,
-          method: ctx.request.method
+          headers: event.request.headers,
+          method: event.request.method
         });
       }
 
-      const serverResponse = await handleServerRequest(ctx);
+      let serverFunctionEvent = Object.freeze({
+        request: event.request,
+        fetch: internalFetch,
+        $type: FETCH_EVENT,
+        env: event.env
+      });
 
-      let responseContentType = serverResponse.headers.get("x-solidstart-content-type");
+      const serverResponse = await handleServerRequest(serverFunctionEvent);
+
+      let responseContentType = serverResponse.headers.get(XSolidStartContentTypeHeader);
 
       // when a form POST action is made and there is an error throw,
       // and its a non-javascript request potentially,
@@ -48,7 +57,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
           status: 302,
           headers: {
             Location:
-              new URL(ctx.request.headers.get("referer")).pathname +
+              new URL(event.request.headers.get("referer")).pathname +
               "?form=" +
               encodeURIComponent(
                 JSON.stringify({
@@ -63,14 +72,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
       return serverResponse;
     }
 
-    const response = await forward(ctx);
-
-    if (ctx.responseHeaders.get("x-solidstart-status-code")) {
-      return new Response(response.body, {
-        status: parseInt(ctx.responseHeaders.get("x-solidstart-status-code")),
-        headers: response.headers
-      });
-    }
+    const response = await forward(event);
 
     return response;
   };

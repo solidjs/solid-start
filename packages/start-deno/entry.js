@@ -1,5 +1,5 @@
-import manifest from "../../dist/rmanifest.json";
-import assetManifest from "../../dist/manifest.json";
+import manifest from "../../dist/public/rmanifest.json";
+import assetManifest from "../../dist/public/manifest.json";
 import prepareManifest from "solid-start/runtime/prepareManifest";
 import entry from "./app";
 import { lookup } from "https://deno.land/x/media_types/mod.ts";
@@ -19,7 +19,7 @@ serve(
     // 3. We send the asset back to the client.
 
     try {
-      const file = await Deno.readFile(`.${pathname}`);
+      const file = await Deno.readFile(`./public${pathname}`);
       // Respond to the request with the style.css file.
       return new Response(file, {
         headers: {
@@ -28,10 +28,9 @@ serve(
       });
     } catch (e) {}
 
-    return entry({
+    return await entry({
       request: request,
-      responseHeaders: new Headers(),
-      manifest
+      env: { manifest }
     });
   },
   {

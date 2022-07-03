@@ -1,12 +1,19 @@
-import { RequestContext } from "../server/types";
+import { FetchEvent, FETCH_EVENT } from "../server/types";
 import { getApiHandler } from "./index";
 
 export const apiRoutes = ({ forward }) => {
-  return async (ctx: RequestContext) => {
-    let apiHandler = getApiHandler(new URL(ctx.request.url), ctx.request.method);
+  return async (event: FetchEvent) => {
+    let apiHandler = getApiHandler(new URL(event.request.url), event.request.method);
     if (apiHandler) {
-      return await apiHandler.handler(ctx, apiHandler.params);
+      let apiEvent = Object.freeze({
+        request: event.request,
+        params: apiHandler.params,
+        env: event.env,
+        $type: FETCH_EVENT
+      });
+
+      return await apiHandler.handler(apiEvent);
     }
-    return await forward(ctx);
+    return await forward(event);
   };
 };

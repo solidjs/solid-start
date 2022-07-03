@@ -12,9 +12,8 @@ export const onRequestGet = ({ request, next }) => {
   }
 
   return entry({
-    request,
-    responseHeaders: new Headers(),
-    manifest
+    request: request,
+    env: { manifest }
   });
 };
 

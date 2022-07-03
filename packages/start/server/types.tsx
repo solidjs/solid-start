@@ -3,30 +3,43 @@ export type ManifestEntry = {
   href: string;
 };
 
+export const FETCH_EVENT = Symbol("FETCH_EVENT");
+
 export type ContextMatches = {
   originalPath: string;
   pattern: string;
   path: string;
   params: unknown;
 };
+
 type TagDescription = {
   tag: string;
   props: Record<string, unknown>;
 };
+
 type RouterContext = {
   matches?: ContextMatches[][];
   url?: string;
 };
 
-export interface RequestContext {
+export interface FetchEvent {
   request: Request;
-  responseHeaders: Headers;
-  manifest?: Record<string, ManifestEntry[]>;
+  env: {
+    manifest?: Record<string, ManifestEntry[]>;
+  };
 }
 
-export interface PageContext extends RequestContext {
+export interface ServerFunctionEvent extends FetchEvent {
+  fetch(url: string, init: RequestInit): Promise<Response>;
+  $type: typeof FETCH_EVENT;
+}
+
+export interface PageFetchEvent extends FetchEvent {
+  responseHeaders: Headers;
   routerContext?: RouterContext;
   tags?: TagDescription[];
   setStatusCode(code: number): void;
+  getStatusCode(): number;
   fetch(url: string, init: RequestInit): Promise<Response>;
+  $type: typeof FETCH_EVENT;
 }

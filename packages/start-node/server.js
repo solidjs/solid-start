@@ -20,8 +20,9 @@ export function createServer({ entry, paths, manifest }) {
 
     const webRes = await entry({
       request: createRequest(req),
-      responseHeaders: new Headers(),
-      manifest
+      env: {
+        manifest
+      }
     });
 
     res.statusCode = webRes.status;

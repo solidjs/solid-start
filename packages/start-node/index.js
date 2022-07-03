@@ -10,7 +10,7 @@ import common from "@rollup/plugin-commonjs";
 export default function () {
   return {
     start(config) {
-      import(pathToFileURL(join(config.root, "dist", "index.js")));
+      import(pathToFileURL(join(config.root, "dist", "index.js")).toString());
     },
     async build(config) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -39,7 +39,6 @@ export default function () {
           "INDEX_HTML",
           `'${join(config.root, "dist", "public", "index.html").replace(/\\/g, "\\\\")}'`
         );
-        console.log(text, join(config.root, "dist", "public", "index.html"));
         writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
       } else {
         await vite.build({

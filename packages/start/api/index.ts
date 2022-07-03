@@ -1,6 +1,6 @@
-import { registerApiRoutes } from "../server/internalFetch";
-import { RequestContext } from "../server/types";
+import { registerApiRoutes } from "./internalFetch";
 import { getRouteMatches } from "./router";
+import { MatchRoute, Method, Route } from "./types";
 
 // the line below will be replaced by the compiler with a configuration of routes
 // based on the files in src/routes
@@ -9,16 +9,8 @@ import { getRouteMatches } from "./router";
 var api = $API_ROUTES;
 
 // `delete` is a reserved word in JS, so we use `del` instead
-export type Method = "get" | "post" | "put" | "del" | "patch";
-type Handler = (
-  ctx: RequestContext,
-  params: Record<string, string>
-) => Response | Promise<Response>;
 
-type Route = { path: string; children?: Route[] } & { [method in Method]?: Handler | "skip" };
-export type MatchRoute = ReturnType<typeof routeToMatchRoute>;
-
-function routeToMatchRoute(route: Route) {
+function routeToMatchRoute(route: Route): MatchRoute {
   const segments = route.path.split("/").filter(Boolean);
 
   const params: { type: "*" | ":"; name: string; index: number }[] = [];

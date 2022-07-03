@@ -1,14 +1,26 @@
 import { sharedConfig } from "solid-js";
-import { ContentTypeHeader, JSONResponseType, respondWith } from "../responses";
-import { RequestContext } from "../types";
+import {
+  ContentTypeHeader,
+  isRedirectResponse,
+  JSONResponseType,
+  LocationHeader,
+  ResponseError,
+  XSolidStartContentTypeHeader,
+  XSolidStartLocationHeader,
+  XSolidStartOrigin,
+  XSolidStartResponseTypeHeader
+} from "../responses";
+import { ServerFunctionEvent } from "../types";
 import { ServerFn } from "./types";
-import { internalFetch } from "../internalFetch";
+import { internalFetch } from "../../api/internalFetch";
+import { FormError } from "../../data";
 
 export const server: ServerFn = (fn => {
   throw new Error("Should be compiled away");
 }) as unknown as ServerFn;
 
-async function parseRequest(request: Request) {
+async function parseRequest(event: ServerFunctionEvent) {
+  let request = event.request;
   let contentType = request.headers.get(ContentTypeHeader);
   let name = new URL(request.url).pathname,
     args = [];
@@ -20,6 +32,9 @@ async function parseRequest(request: Request) {
         args = JSON.parse(text, (key, value) => {
           if (!value) {
             return value;
+          }
+          if (value.$type === "fetch_event") {
+            return event;
           }
           if (value.$type === "headers") {
             let headers = new Headers();
@@ -40,20 +55,113 @@ async function parseRequest(request: Request) {
       }
     } else if (contentType.includes("form")) {
       let formData = await request.formData();
-      args = [formData];
+      args = [formData, event];
     }
   }
   return [name, args] as const;
 }
 
-export async function handleServerRequest(ctx: RequestContext) {
-  const url = new URL(ctx.request.url);
+export function respondWith(
+  request: Request,
+  data: Response | Error | FormError | string | object,
+  responseType: "throw" | "return"
+) {
+  if (data instanceof ResponseError) {
+    data = data.clone();
+  }
 
-  // let oldContext = server.getContext();
-  // server.setContext(ctx);
+  if (data instanceof Response) {
+    if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
+      let headers = new Headers(data.headers);
+      headers.set(XSolidStartOrigin, "server");
+      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
+      headers.set(XSolidStartResponseTypeHeader, responseType);
+      headers.set(XSolidStartContentTypeHeader, "response");
+      return new Response(null, {
+        status: 204,
+        statusText: "Redirected",
+        headers: headers
+      });
+    } else {
+      let headers = new Headers(data.headers);
+      headers.set(XSolidStartOrigin, "server");
+      headers.set(XSolidStartResponseTypeHeader, responseType);
+      headers.set(XSolidStartContentTypeHeader, "response");
+
+      return new Response(data.body, {
+        status: data.status,
+        statusText: data.statusText,
+        headers
+      });
+    }
+  } else if (data instanceof FormError) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: data.message,
+          stack: data.stack,
+          formError: data.formError,
+          fields: data.fields,
+          fieldErrors: data.fieldErrors
+        }
+      }),
+      {
+        status: 400,
+        headers: {
+          [XSolidStartResponseTypeHeader]: responseType,
+          [XSolidStartContentTypeHeader]: "form-error"
+        }
+      }
+    );
+  } else if (data instanceof Error) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: data.message,
+          stack: data.stack,
+          status: (data as any).status
+        }
+      }),
+      {
+        status: (data as any).status || 500,
+        headers: {
+          [XSolidStartResponseTypeHeader]: responseType,
+          [XSolidStartContentTypeHeader]: "error"
+        }
+      }
+    );
+  } else if (
+    typeof data === "object" ||
+    typeof data === "string" ||
+    typeof data === "number" ||
+    typeof data === "boolean"
+  ) {
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: {
+        [ContentTypeHeader]: "application/json",
+        [XSolidStartResponseTypeHeader]: responseType,
+        [XSolidStartContentTypeHeader]: "json"
+      }
+    });
+  }
+
+  return new Response("null", {
+    status: 200,
+    headers: {
+      [ContentTypeHeader]: "application/json",
+      [XSolidStartContentTypeHeader]: "json",
+      [XSolidStartResponseTypeHeader]: responseType
+    }
+  });
+}
+
+export async function handleServerRequest(event: ServerFunctionEvent) {
+  const url = new URL(event.request.url);
+
   if (server.hasHandler(url.pathname)) {
     try {
-      let [name, args] = await parseRequest(ctx.request);
+      let [name, args] = await parseRequest(event);
       let handler = server.getHandler(name);
       if (!handler) {
         throw {
@@ -61,12 +169,10 @@ export async function handleServerRequest(ctx: RequestContext) {
           message: "Handler Not Found for " + name
         };
       }
-      const data = await handler.call(ctx, ...(Array.isArray(args) ? args : [args]));
-      // server.setContext(oldContext);
-      return respondWith(ctx.request, data, "return");
+      const data = await handler.call(event, ...(Array.isArray(args) ? args : [args]));
+      return respondWith(event.request, data, "return");
     } catch (error) {
-      // server.setContext(oldContext);
-      return respondWith(ctx.request, error, "throw");
+      return respondWith(event.request, error, "throw");
     }
   }
 

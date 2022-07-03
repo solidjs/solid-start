@@ -18,8 +18,7 @@ async function handleEvent(event) {
   } catch (err) {
     return entry({
       request: event.request,
-      responseHeaders: new Headers(),
-      manifest
+      env: { manifest }
     });
   }
 }

@@ -1,11 +1,11 @@
 import { useContext, JSXElement } from "solid-js";
 import { Assets } from "solid-js/web";
-import { StartContext } from "../server/StartContext";
-import { ContextMatches, ManifestEntry, PageContext } from "../server/types";
+import { ServerContext } from "../server/ServerContext";
+import { ContextMatches, ManifestEntry, PageFetchEvent } from "../server/types";
 
 function getAssetsFromManifest(
-  manifest: PageContext["manifest"],
-  routerContext: PageContext["routerContext"]
+  manifest: PageFetchEvent["env"]["manifest"],
+  routerContext: PageFetchEvent["routerContext"]
 ) {
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     memo.push(...(manifest[mapRouteToFile(m)] || []));
@@ -34,13 +34,13 @@ function mapRouteToFile(matches: ContextMatches[]) {
 }
 
 /**
- * Links are used to load assets for the server.
+ * Links are used to load assets for the server rendered HTML
  * @returns {JSXElement}
  */
 export default function Links(): JSXElement {
   const isDev = import.meta.env.MODE === "development";
-  const context = useContext(StartContext);
+  const context = useContext(ServerContext);
   return (
-    <Assets>{!isDev && getAssetsFromManifest(context.manifest, context.routerContext)}</Assets>
+    <Assets>{!isDev && getAssetsFromManifest(context.env.manifest, context.routerContext)}</Assets>
   );
 }

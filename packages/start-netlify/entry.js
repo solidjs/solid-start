@@ -23,8 +23,7 @@ exports.handler = async function (event, context) {
 
   const webRes = await entry({
     request: createRequest(event),
-    responseHeaders: new Headers(),
-    manifest
+    env: { manifest }
   });
   const headers = {};
   for (const [name, value] of webRes.headers) {
