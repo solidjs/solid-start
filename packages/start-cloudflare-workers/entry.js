@@ -1,24 +1,37 @@
-import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 import manifest from "../../dist/rmanifest.json";
-import assetManifest from "../../dist/manifest.json";
+import internalAssetManifest from "../../dist/manifest.json";
 import prepareManifest from "solid-start/runtime/prepareManifest";
 import entry from "./app";
+import { getAssetFromKV, NotFoundError, MethodNotAllowedError } from "@cloudflare/kv-asset-handler";
+import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 
-prepareManifest(manifest, assetManifest);
+prepareManifest(manifest, internalAssetManifest);
 
-addEventListener("fetch", event => {
-  console.log(`Received new request: ${event.request.url}`);
-  event.respondWith(handleEvent(event));
-});
+const assetManifest = JSON.parse(manifestJSON);
 
-async function handleEvent(event) {
-  try {
-    let asset = await getAssetFromKV(event);
-    return asset;
-  } catch (err) {
+export default {
+  async fetch(request, env, ctx) {
+    try {
+      return await getAssetFromKV(
+        {
+          request,
+          waitUntil(promise) {
+            return ctx.waitUntil(promise);
+          }
+        },
+        {
+          ASSET_NAMESPACE: env.__STATIC_CONTENT,
+          ASSET_MANIFEST: assetManifest
+        }
+      );
+    } catch (e) {
+      if (!(e instanceof NotFoundError || e instanceof MethodNotAllowedError)) {
+        return new Response("An unexpected error occurred", { status: 500 });
+      }
+    }
     return entry({
-      request: event.request,
+      request: request,
       env: { manifest }
     });
   }
-}
+};
