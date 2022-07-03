@@ -10,7 +10,6 @@ import babelServerModule from "./server/server-functions/babel.js";
 import routeData from "./server/routeData.js";
 import routeDataHmr from "./server/routeDataHmr.js";
 import routeResource from "./server/serverResource.js";
-import { solidStartClientAdpater } from "./client-adapter.js";
 
 /**
  * Helper function to get a human readable name for the given HTTP Verb
@@ -195,6 +194,10 @@ function solidStartFileSystemRouter(options) {
         return babelSolidCompiler(code, id, (source, id) => ({
           plugins: [
             options.ssr && [
+              routeResource,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            options.ssr && [
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ]
@@ -205,7 +208,7 @@ function solidStartFileSystemRouter(options) {
       if (/\.data\.(ts|js)/.test(id) && config.solidOptions.ssr) {
         return babelSolidCompiler(code, id.replace(/\.data\.ts/, ".tsx"), (source, id) => ({
           plugins: [
-            [
+            options.ssr && [
               routeResource,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
@@ -218,7 +221,7 @@ function solidStartFileSystemRouter(options) {
       } else if (/\?data/.test(id)) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
-            [
+            options.ssr && [
               routeResource,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
@@ -237,7 +240,7 @@ function solidStartFileSystemRouter(options) {
       } else if (id.includes("routes")) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
-            [
+            options.ssr && [
               routeResource,
               {
                 ssr,
@@ -389,7 +392,9 @@ function detectAdapter() {
   let adapters = [];
   fs.readdirSync(nodeModulesPath).forEach(dir => {
     if (dir.startsWith("solid-start-")) {
-      const pkg = JSON.parse(fs.readFileSync(path.join(nodeModulesPath, dir, "package.json")));
+      const pkg = JSON.parse(
+        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), { encoding: "utf8" })
+      );
       if (pkg.solid && pkg.solid.type === "adapter") {
         adapters.push(dir);
       }
@@ -432,6 +437,10 @@ export default function solidStart(options) {
       babel: (source, id, ssr) => ({
         plugins: options.ssr
           ? [
+              [
+                routeResource,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ],
               [
                 babelServerModule,
                 { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
