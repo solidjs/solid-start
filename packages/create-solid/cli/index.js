@@ -286,7 +286,7 @@ async function main() {
         let rootTxt =
           root
             .substring(0, htmlLeft)
-            .replace("import { Links, Meta, Routes, Scripts }", `import { Routes }`) +
+            .replace("import { Links, Meta, FileRoutes, Scripts }", `import { FileRoutes }`) +
           `<>` +
           body +
           `</>` +

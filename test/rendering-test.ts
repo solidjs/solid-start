@@ -12,8 +12,9 @@ test.describe("rendering", () => {
     fixture = await createFixture({
       files: {
         "src/root.tsx": js`
-          import { Links, Meta, Routes, Scripts } from "solid-start/root";
+          import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
           import { Suspense } from "solid-js";
+          import { Routes } from 'solid-app-router';
 
           export default function Root() {
             return (
@@ -31,7 +32,9 @@ test.describe("rendering", () => {
                   </nav>
                   <div id="content">
                     <h1>Root</h1>
-                    <Routes />
+                    <Routes>
+                      <FileRoutes />
+                    </Routes>
                   </div>
                   <Scripts />
                 </body>
@@ -73,12 +76,12 @@ test.describe("rendering", () => {
     expect(res.headers.get("Content-Type")).toBe("text/html");
     expect(selectHtml(await res.text(), "#content")).toBe(
       prettyHtml(`
-        <div id="content">
-          <h1>Root</h1>
-          <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
-          <!--/-->
-        </div>`)
+    <div id="content">
+      <h1>Root</h1>
+      <!--#-->
+      <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+      <!--/-->
+    </div>`)
     );
 
     res = await fixture.requestDocument("/about");
@@ -86,12 +89,12 @@ test.describe("rendering", () => {
     expect(res.headers.get("Content-Type")).toBe("text/html");
     expect(selectHtml(await res.text(), "#content")).toBe(
       prettyHtml(`
-        <div id="content">
-          <h1>Root</h1>
-          <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-0-0-0-0-0">About</h2>
-          <!--/-->
-        </div>`)
+    <div id="content">
+      <h1>Root</h1>
+      <!--#-->
+      <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
+      <!--/-->
+    </div>`)
     );
   });
 
@@ -103,7 +106,7 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );
@@ -114,7 +117,7 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-0-0-0-0-0">About</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
           <!--/-->
         </div>`)
     );
@@ -128,7 +131,7 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );
