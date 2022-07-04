@@ -15,12 +15,13 @@ interface ActionEvent extends ServerFunctionEvent {}
 export type ActionState = "idle" | "pending";
 export type RouteAction<T, U> = {
   value?: U;
-  error?: any;
+  error?: Error | null;
   pending: T[];
   state: ActionState;
   Form: T extends FormData ? ParentComponent<FormProps> : ParentComponent;
   url: string;
   submit: (vars: T) => Promise<U>;
+  reset: () => void;
 };
 export function createRouteAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
@@ -68,6 +69,8 @@ export function createRouteAction<T, U = void>(
       }
       return res;
     }).catch(e => {
+      lookup.delete(p);
+      setPending(Array.from(lookup.values()));
       if (reqId === count) {
         return runWithOwner(tempOwner || owner, () => {
           if (e instanceof Response && isRedirectResponse(e)) {
@@ -117,6 +120,9 @@ export function createRouteAction<T, U = void>(
             fields: param.error.fields
           })
         : error;
+    },
+    reset() {
+      setData(() => ({}));
     },
     url: (fn as any).url,
     Form(props: FormProps) {
