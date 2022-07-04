@@ -9,7 +9,7 @@ import {
   XSolidStartResponseTypeHeader
 } from "../responses";
 
-import { InlineServer, ServerFn } from "./types";
+import { ServerFunction, CreateServerFunction } from "./types";
 import { FormError } from "../../data";
 
 export async function parseResponse(request: Request, response: Response) {
@@ -54,9 +54,9 @@ export async function parseResponse(request: Request, response: Response) {
   }
 }
 
-export const server: ServerFn = (fn => {
+export const server: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");
-}) as unknown as ServerFn;
+}) as unknown as CreateServerFunction;
 
 server.fetcher = fetch;
 server.setFetcher = fetch => {
@@ -139,7 +139,7 @@ server.createFetcher = route => {
   //   // request body: json, formData, or string
   //   return server.call(route, requestInit);
   // };
-  return fetcher as InlineServer<any, any>;
+  return fetcher as ServerFunction<any, any>;
 };
 
 server.call = async function (route, init: RequestInit) {

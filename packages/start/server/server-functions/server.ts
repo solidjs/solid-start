@@ -11,13 +11,13 @@ import {
   XSolidStartResponseTypeHeader
 } from "../responses";
 import { ServerFunctionEvent } from "../types";
-import { ServerFn } from "./types";
+import { CreateServerFunction } from "./types";
 import { internalFetch } from "../../api/internalFetch";
 import { FormError } from "../../data";
 
-export const server: ServerFn = (fn => {
+export const server: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");
-}) as unknown as ServerFn;
+}) as unknown as CreateServerFunction;
 
 async function parseRequest(event: ServerFunctionEvent) {
   let request = event.request;
@@ -82,6 +82,9 @@ export function respondWith(
         statusText: "Redirected",
         headers: headers
       });
+    } else if (data.status === 101) {
+      // this is a websocket upgrade, so we don't want to modify the response
+      return data;
     } else {
       let headers = new Headers(data.headers);
       headers.set(XSolidStartOrigin, "server");
