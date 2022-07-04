@@ -8,7 +8,7 @@ import { Owner } from "solid-js/types/reactive/signal";
 import { isRedirectResponse } from "../server/responses";
 import { refetchRouteData } from "./createRouteData";
 import { ServerContext } from "../server/ServerContext";
-import { PageFetchEvent, ServerFunctionEvent } from "server";
+import { ServerFunctionEvent } from "../server/types";
 
 interface ActionEvent extends ServerFunctionEvent {}
 
