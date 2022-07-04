@@ -2,7 +2,7 @@ import { MetaProvider } from "solid-meta";
 import { Router } from "solid-app-router";
 import { ServerContext } from "../server/ServerContext";
 import Root from "~/root";
-import { FETCH_EVENT, PageFetchEvent } from "../server/types";
+import { FETCH_EVENT, PageEvent } from "../server/types";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn = rootData ? rootData.default : undefined;
@@ -14,7 +14,7 @@ function throwClientError(field: string): any {
 }
 
 export default () => {
-  let mockFetchEvent: PageFetchEvent = {
+  let mockFetchEvent: PageEvent = {
     get request() {
       if (process.env.NODE_ENV === "development") {
         return throwClientError("request");

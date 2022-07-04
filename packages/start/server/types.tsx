@@ -34,7 +34,7 @@ export interface ServerFunctionEvent extends FetchEvent {
   $type: typeof FETCH_EVENT;
 }
 
-export interface PageFetchEvent extends FetchEvent {
+export interface PageEvent extends FetchEvent {
   responseHeaders: Headers;
   routerContext?: RouterContext;
   tags?: TagDescription[];

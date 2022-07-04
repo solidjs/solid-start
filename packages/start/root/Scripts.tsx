@@ -1,9 +1,9 @@
-import { PageFetchEvent } from "server";
+import { PageEvent } from "server";
 import { useContext } from "solid-js";
 import { NoHydration, HydrationScript, isServer } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 
-function getFromManifest(manifest: PageFetchEvent["env"]["manifest"]) {
+function getFromManifest(manifest: PageEvent["env"]["manifest"]) {
   const match = manifest["*"];
   const entry = match.find(src => src.type === "script");
   return <script type="module" async src={entry.href} />;
