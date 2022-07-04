@@ -1,8 +1,9 @@
 // @refresh reload
 import { Suspense } from "solid-js";
-import { Links, Meta, Routes, Scripts } from "solid-start/root";
+import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import "virtual:windi.css";
+import { Routes } from "solid-app-router";
 
 export default function Root() {
   return (
@@ -16,7 +17,9 @@ export default function Root() {
       <body>
         <ErrorBoundary>
           <Suspense fallback={<div>Loading</div>}>
-            <Routes />
+            <Routes>
+              <FileRoutes />
+            </Routes>
           </Suspense>
         </ErrorBoundary>
         <Scripts />

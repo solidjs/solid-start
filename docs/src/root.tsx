@@ -1,5 +1,5 @@
 // @refresh reload
-import { Links, Meta, Routes, Scripts } from "solid-start/root";
+import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
 
 import "./code.css";
 import "virtual:windi.css";
@@ -10,7 +10,7 @@ import md from "./md";
 import { createEffect } from "solid-js";
 import { Main } from "./components/Main";
 import { createStore } from "solid-js/store";
-
+import { Routes } from "solid-app-router";
 
 export const [store, setStore] = createStore({
   darkMode: false
@@ -64,7 +64,9 @@ export default function Root() {
         >
           <Nav />
           <Main>
-            <Routes />
+            <Routes>
+              <FileRoutes />
+            </Routes>
           </Main>
           {/* <div class="h-screen overflow-scroll flex-1 bg-blue-50 px-12">
             <div class="flex flex-col w-full"> <Routes /> </div>

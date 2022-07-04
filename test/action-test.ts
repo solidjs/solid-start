@@ -26,7 +26,8 @@ test.describe("actions", () => {
           });
         `,
         "src/root.tsx": js`
-          import { Links, Meta, Routes, Scripts } from "solid-start/root";
+          import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
+          import { Routes } from "solid-app-router";
           import { Suspense } from "solid-js";
 
           export default function Root() {
@@ -34,7 +35,7 @@ test.describe("actions", () => {
               <>
                 <div id="content">
                   <h1>Root</h1>
-                  <Routes />
+                  <Routes><FileRoutes /></Routes>
                 </div>
               </>
             );
