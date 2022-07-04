@@ -4,13 +4,17 @@
   "scripts": {
     "clean": "rimraf .tmp",
     "install:playwright": "playwright install --with-deps",
-    "test": "playwright test --config ./playwright.config.ts"
+    "test": "playwright test --config ./playwright.config.ts",
+    "postinstall": "node ./fix-jest-dom.mjs",
+    "test:unit": "vitest run"
   },
   "dependencies": {
-    "@playwright/test": "^1.22.2",
+    "@playwright/test": "1.22.2",
+    "@testing-library/jest-dom": "^5.16.4",
     "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.0.0",
+    "@types/testing-library__jest-dom": "^5.14.4",
     "cheerio": "1.0.0-rc.11",
     "compression": "^1.7.4",
     "cross-spawn": "^7.0.3",
@@ -23,6 +27,8 @@
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
     "strip-indent": "^4.0.0",
-    "undici": "^4.12.2"
+    "undici": "^4.12.2",
+    "vite": "^2.9.12",
+    "vitest": "^0.16.0"
   }
 }

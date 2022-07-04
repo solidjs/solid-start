@@ -1,5 +1,4 @@
 import { FormError } from "../data/FormError";
-import { RequestContext } from "./types";
 
 export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";
 export const XSolidStartLocationHeader = "x-solidstart-location";
@@ -10,15 +9,6 @@ export const XSolidStartContentTypeHeader = "x-solidstart-content-type";
 export const XSolidStartOrigin = "x-solidstart-origin";
 export const JSONResponseType = "application/json";
 
-declare global {
-  interface Response {
-    context?: Pick<RequestContext, "request" | "responseHeaders">;
-  }
-
-  interface ResponseInit {
-    context?: Pick<RequestContext, "request" | "responseHeaders">;
-  }
-}
 /**
  * A JSON response. Converts `data` to JSON and sets the `Content-Type` header.
  */
@@ -39,7 +29,6 @@ export function json<Data>(data: Data, init: number | ResponseInit = {}): Respon
     headers
   });
 
-  response.context = responseInit.context;
   return response;
 }
 
@@ -165,11 +154,21 @@ export function respondWith(
       headers.set(XSolidStartContentTypeHeader, "response");
       return new Response(null, {
         status: 204,
+        statusText: "Redirected",
         headers: headers
       });
     } else {
-      data.headers.set(XSolidStartResponseTypeHeader, responseType);
-      data.headers.set(XSolidStartContentTypeHeader, "response");
+      let headers = new Headers(data.headers);
+      headers.set(XSolidStartOrigin, "server");
+      headers.set(XSolidStartResponseTypeHeader, responseType);
+      headers.set(XSolidStartContentTypeHeader, "response");
+
+      return new Response(data.body, {
+        status: data.status,
+        statusText: data.statusText,
+        headers
+      });
+
       return data;
     }
   } else if (data instanceof FormError) {

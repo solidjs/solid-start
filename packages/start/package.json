@@ -61,6 +61,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.7",
+    "@babel/generator": "^7.16.7",
+    "@babel/template": "^7.16.7",
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",

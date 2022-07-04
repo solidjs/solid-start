@@ -2,9 +2,21 @@
   <img width="100%" src="https://assets.solidjs.com/banner?project=Start&type=core" alt="Solid Docs">
 </p>
 
-# Solid Start
+# SolidStart
 
-This is the home of the new official starter for Solid. This is still a work in progress. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
+This is the home of the Solid app framework. This is still a **work in progress**. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
+
+* File-system based routing
+* Supports all rendering modes: Server-side rendering (SSR), Client-side rendering (CSR), Static Site Generation (SSG)
+* Streaming
+* Build optimizations with Code splitting, tree shaking and dead code elimination
+* API Routes
+* Built on Web standards: Fetch, Streams, WebCrypto
+* Adapters for deployment to all popular platforms
+* CSS Modules, SASS/SCSS Support
+* Typescript-first
+
+### Getting started
 
 ```bash
 mkdir my-app
@@ -14,7 +26,23 @@ npm install
 npm run dev
 ```
 
-## Monorepo & `project.json` `"workspace"` support
+### Development
+
+The monorepo uses `pnpm` as the package manager. To install `pnpm`, run the following command in your terminal.
+
+```bash
+npm install -g pnpm
+```
+
+Run `pnpm install` to install all the dependencies for the packages and examples in your monorepo.
+
+<details>
+<summary>
+
+#### Monorepo & `project.json` `"workspace"` support
+
+</summary>
+
 
 If you are using Solid Start within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for yarn), you must include `solid-start` within the optional `"nohoist"` workspaces property.
 
@@ -49,12 +77,6 @@ Regardless of where you specify the nohoist option, you also need to include `so
 
 The reason why this is necessary is because `solid-start` creates an `index.html` file within your project which expects to load a script located in `/node_modules/solid-start/runtime/entry.jsx` (where `/` is the path of your project root). By default, if you hoist the `solid-start` dependency into the workspace root then that script will not be available within the package's `node_modules` folder.
 
-## Development
 
-The monorepo uses `pnpm` as the package manager. To install `pnpm`, run the following command in your terminal.
+</details>
 
-```bash
-npm install -g pnpm
-```
-
-Run `pnpm install` to install all the dependencies for the packages and examples in your monorepo.

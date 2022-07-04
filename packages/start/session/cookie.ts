@@ -173,7 +173,7 @@ export interface CookieParseOptions {
  * @return {object}
  * @public
  */
-export function parse(str: string, options?: CookieParseOptions): Record<string, string> {
+export function parseCookie(str: string, options?: CookieParseOptions): Record<string, string> {
   if (typeof str !== "string") {
     throw new TypeError("argument str must be a string");
   }
@@ -234,8 +234,12 @@ export function parse(str: string, options?: CookieParseOptions): Record<string,
  * @param [options] object containing serialization options
  * @throws {TypeError} when `maxAge` options is invalid
  */
-export function serialize(name: string, value: string, options?: CookieSerializeOptions): string;
-export function serialize(name, val, options) {
+export function serializeCookie(
+  name: string,
+  value: string,
+  options?: CookieSerializeOptions
+): string;
+export function serializeCookie(name, val, options) {
   var opt = options || {};
   var enc = opt.encode || encode;
 

@@ -8,6 +8,7 @@ import { stringifyApiRoutes, stringifyPageRoutes, Router } from "./routes.js";
 import c from "picocolors";
 import babelServerModule from "./server/server-functions/babel.js";
 import routeData from "./server/routeData.js";
+import routeDataHmr from "./server/routeDataHmr.js";
 import routeResource from "./server/serverResource.js";
 import { solidStartClientAdpater } from "./client-adapter.js";
 
@@ -225,7 +226,12 @@ function solidStartFileSystemRouter(options) {
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
-            [routeData, { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }]
+            [
+              routeData,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            !ssr &&
+              process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }]
           ].filter(Boolean)
         }));
       } else if (id.includes("routes")) {
@@ -356,7 +362,7 @@ function solidStartConfig(options) {
           alias: { "~": path.join(root, options.appRoot) }
         },
         ssr: {
-          noExternal: ["solid-app-router", "solid-meta", "solid-start", "cookie"]
+          noExternal: ["solid-app-router", "solid-meta", "solid-start"]
         },
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
@@ -402,10 +408,7 @@ function detectAdapter() {
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter:
-        options && options.ssr !== undefined && !options.srr
-          ? solidStartClientAdpater()
-          : detectAdapter(),
+      adapter: detectAdapter(),
       appRoot: "src",
       routesDir: "routes",
       ssr: true,

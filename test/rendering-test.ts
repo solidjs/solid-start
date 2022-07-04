@@ -26,6 +26,10 @@ test.describe("rendering", () => {
                   <Links />
                 </head>
                 <body>
+                  <nav>
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                  </nav>
                   <div id="content">
                     <h1>Root</h1>
                     <Routes>
@@ -96,26 +100,52 @@ test.describe("rendering", () => {
 
   test("hydrates", async ({ page }) => {
     let app = new PlaywrightFixture(appFixture, page);
-    await app.goto("/");
+    await app.goto("/", true);
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
-    <div id="content">
-      <h1>Root</h1>
-      <!--#-->
-      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
-      <!--/-->
-    </div>`)
+        <div id="content">
+          <h1>Root</h1>
+          <!--#-->
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
+          <!--/-->
+        </div>`)
     );
 
-    await app.goto("/about");
+    await app.goto("/about", true);
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
-    <div id="content">
-      <h1>Root</h1>
-      <!--#-->
-      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
-      <!--/-->
-    </div>`)
+        <div id="content">
+          <h1>Root</h1>
+          <!--#-->
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">About</h2>
+          <!--/-->
+        </div>`)
+    );
+  });
+
+  test("navigates", async ({ page }) => {
+    let app = new PlaywrightFixture(appFixture, page);
+    await app.goto("/", true);
+    expect(await app.getHtml("#content")).toBe(
+      prettyHtml(`
+        <div id="content">
+          <h1>Root</h1>
+          <!--#-->
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
+          <!--/-->
+        </div>`)
+    );
+
+    await app.page.click("a[href='/about']");
+
+    expect(await app.getHtml("#content")).toBe(
+      prettyHtml(`
+        <div id="content">
+          <h1>Root</h1>
+          <!--#-->
+          <h2>About</h2>
+          <!--/-->
+        </div>`)
     );
   });
 });

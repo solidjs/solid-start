@@ -1,4 +1,4 @@
-import { ssr } from "solid-js/web";
+import { isServer, ssr } from "solid-js/web";
 import { MetaProvider } from "solid-meta";
 import { RouteDataFunc, Router } from "solid-app-router";
 import Root from "~/root";
@@ -7,6 +7,8 @@ import { StartProvider } from "../server/StartContext";
 import { inlineServerFunctions } from "../server/middleware";
 import { PageContext, RequestContext } from "../server/types";
 import { apiRoutes } from "../api/middleware";
+import { internalFetch } from "../server/internalFetch";
+import { XSolidStartStatusCodeHeader } from "../server/responses";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
@@ -67,15 +69,17 @@ export default ({ context }: { context: PageContext }) => {
   pageContext.tags = [];
 
   pageContext.setStatusCode = (code: number) => {
-    pageContext.responseHeaders.set("x-solidstart-status-code", code.toString());
+    if (!isServer) {
+      throw new Error("setStatusCode can only be called on the server");
+    }
+    pageContext.responseHeaders.set(XSolidStartStatusCodeHeader, code.toString());
   };
 
-  pageContext.setHeader = (name: string, value: string) => {
-    pageContext.responseHeaders.set(name, value.toString());
-  };
+  pageContext.fetch = internalFetch;
 
   // @ts-expect-error
-  sharedConfig.context.requestContext = context;
+  sharedConfig.context.requestContext = pageContext;
+
   const parsed = new URL(context.request.url);
   const path = parsed.pathname + parsed.search;
 

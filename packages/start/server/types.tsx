@@ -28,5 +28,5 @@ export interface PageContext extends RequestContext {
   routerContext?: RouterContext;
   tags?: TagDescription[];
   setStatusCode(code: number): void;
-  setHeader(name: string, value: string): void;
+  fetch(url: string, init: RequestInit): Promise<Response>;
 }

@@ -25,8 +25,9 @@ export function solidStartClientAdpater() {
           }
         );
       });
-      http.createServer(app).listen(3000);
-      console.log("Listening on http://localhost:3000");
+      const { PORT = 3000 } = process.env;
+      http.createServer(app).listen(PORT);
+      console.log(`Listening on http://localhost:${PORT}`);
       return;
     },
     async build(config) {

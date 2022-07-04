@@ -341,6 +341,7 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
   const text = `
   ${jsFile.getImportStatements()}
   const api = ${routeConfig};`;
+
   return text;
 }
 

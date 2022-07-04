@@ -1,19 +1,8 @@
-import { getRouteMatches } from "../../api/router";
 import { sharedConfig } from "solid-js";
 import { ContentTypeHeader, JSONResponseType, respondWith } from "../responses";
 import { RequestContext } from "../types";
 import { ServerFn } from "./types";
-import type { Method } from "../../api";
-
-let apiRoutes;
-
-export const registerApiRoutes = routes => {
-  apiRoutes = routes;
-};
-
-export function getApiHandler(url: URL, method: string) {
-  return getRouteMatches(apiRoutes, url.pathname, method.toLowerCase() as Method);
-}
+import { internalFetch } from "../internalFetch";
 
 export const server: ServerFn = (fn => {
   throw new Error("Should be compiled away");
@@ -160,10 +149,4 @@ server.hasHandler = function (route) {
 
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server
-server.fetch = async function (route, init: RequestInit) {
-  let url = new URL(route, "http://localhost:3000");
-  const request = new Request(url.href, init);
-  const handler = getApiHandler(url, request.method);
-  const response = await handler.handler({ request } as RequestContext, handler.params);
-  return response;
-};
+server.fetch = internalFetch;
