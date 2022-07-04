@@ -99,6 +99,36 @@ test.describe("actions", () => {
             );
           }
         `,
+        "src/components/Action.tsx": js`
+          import { createServerAction } from 'solid-start/server';
+        
+          export function Action() {
+            const action = createServerAction(async (params) => {
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              if (params.hello === "world") {
+                return "success";
+              }
+              else throw new Error('Wrong planet');
+            })
+
+            return (
+              <>
+                <button onClick={e => action.submit({ hello: "world" })} id="submit-earth">Earth</button>
+                <button onClick={e => action.submit({ hello: "mars" })} id="submit-mars">Mars</button>
+                <button onClick={e => action.reset()} id="reset">Reset</button>
+                <Show when={action.value}><p id="result">{action.value}</p></Show>
+                <Show when={action.state === "pending"}><p id="pending">Pending</p></Show>
+                <Show when={action.error}>{e => <p id="error">{e.message}</p>}</Show>
+              </>
+            );
+          }
+        `,
+        "src/routes/server-action-in-component.tsx": js`
+          import { Action } from '~/components/Action';
+          export default function Route() {
+            return <Action />
+          }
+        `,
         "src/routes/server-action-error-boundary.tsx": js`
           import { createServerAction } from 'solid-start/server';
 
@@ -172,6 +202,43 @@ test.describe("actions", () => {
   test("server-side action submitted without form", async ({ page }) => {
     let app = new PlaywrightFixture(appFixture, page);
     await app.goto("/server-action", true);
+
+    expect(await page.isVisible("#result")).toBe(false);
+    expect(await page.isVisible("#pending")).toBe(false);
+    expect(await page.isVisible("#error")).toBe(false);
+
+    // successful submission
+    await page.click("button#submit-earth");
+    expect(await page.isVisible("#pending")).toBe(true);
+    await page.waitForSelector("#result", {
+      state: "visible"
+    });
+
+    expect(await page.isVisible("#pending")).toBe(false);
+    expect(await page.isVisible("#error")).toBe(false);
+    expect(await app.getHtml("#result")).toBe(prettyHtml(`<p id="result">success</p>`));
+
+    // error submission
+    await page.click("button#submit-mars");
+    expect(await page.isVisible("#pending")).toBe(true);
+    expect(await page.isVisible("#result")).toBe(true);
+    await page.waitForSelector("#error", {
+      state: "visible"
+    });
+    expect(await page.isVisible("#pending")).toBe(false);
+    expect(await page.isVisible("#result")).toBe(false);
+    expect(await app.getHtml("#error")).toBe(prettyHtml(`<p id="error">Wrong planet</p>`));
+
+    // reset
+    await page.click("button#reset");
+    expect(await page.isVisible("#pending")).toBe(false);
+    expect(await page.isVisible("#result")).toBe(false);
+    expect(await page.isVisible("#error")).toBe(false);
+  });
+
+  test("server-side action submitted without form in another component file", async ({ page }) => {
+    let app = new PlaywrightFixture(appFixture, page);
+    await app.goto("/server-action-in-component", true);
 
     expect(await page.isVisible("#result")).toBe(false);
     expect(await page.isVisible("#pending")).toBe(false);
