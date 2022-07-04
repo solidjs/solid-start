@@ -1,0 +1,24 @@
+{
+  "name": "example-durable-objects-websocket",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@cloudflare/kv-asset-handler": "^0.1.1",
+    "solid-app-router": "^0.4.1",
+    "solid-js": "^1.4.6",
+    "solid-meta": "^0.27.3",
+    "solid-start": "workspace:*",
+    "solid-start-cloudflare-workers": "workspace:*",
+    "solid-start-node": "workspace:*",
+    "typescript": "^4.4.3",
+    "undici": "^4.12.2",
+    "vite": "^2.8.6"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
