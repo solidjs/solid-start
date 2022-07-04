@@ -48,7 +48,7 @@ importers:
       solid-start: workspace:*
       solid-start-node: workspace:*
       tippy.js: ^6.3.7
-      undici: ^4.12.2
+      undici: ^5.5.1
       unplugin-icons: ^0.14.1
       vite: ^2.8.6
       vite-plugin-windicss: ^1.6.3
@@ -77,7 +77,7 @@ importers:
       solid-start: link:../packages/start
       solid-start-node: link:../packages/start-node
       tippy.js: 6.3.7
-      undici: 4.16.0
+      undici: 5.6.0
       unplugin-icons: 0.14.7_vite@2.9.13
       vite: 2.9.13
       vite-plugin-windicss: 1.8.6_vite@2.9.13
@@ -91,7 +91,7 @@ importers:
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.8.6
     devDependencies:
       solid-app-router: 0.4.1_solid-js@1.4.6
@@ -100,7 +100,7 @@ importers:
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.7.4
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
 
   examples/hackernews:
@@ -111,7 +111,7 @@ importers:
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: 2.8.6
     devDependencies:
       solid-app-router: 0.4.1_solid-js@1.4.6
@@ -120,7 +120,7 @@ importers:
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.7.4
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.8.6
 
   examples/with-auth:
@@ -131,7 +131,7 @@ importers:
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.9.1
       vite-plugin-windicss: ^1.6.3
       windicss: ^3.4.3
@@ -142,7 +142,7 @@ importers:
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.7.4
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
       vite-plugin-windicss: 1.8.6_vite@2.9.13
       windicss: 3.5.6
@@ -157,7 +157,7 @@ importers:
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.8.6
     devDependencies:
       '@mdx-js/rollup': 2.1.2
@@ -168,7 +168,7 @@ importers:
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.7.4
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
 
   examples/with-tailwindcss:
@@ -207,7 +207,7 @@ importers:
       solid-start-node: workspace:*
       solid-testing-library: ^0.3.0
       typescript: ^4.4.3
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.8.6
       vite-plugin-inspect: ^0.3.13
       vitest: ^0.6.1
@@ -222,7 +222,7 @@ importers:
       solid-start-node: link:../../packages/start-node
       solid-testing-library: 0.3.0_solid-js@1.4.6
       typescript: 4.7.4
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
       vite-plugin-inspect: 0.3.15_vite@2.9.13
       vitest: 0.6.3_jsdom@19.0.0
@@ -285,7 +285,7 @@ importers:
       solid-start-netlify: next
       solid-start-node: next
       solid-start-static: next
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.8.6
       vite-plugin-inspect: ^0.3.13
       vite-plugin-solid: ^2.2.6
@@ -311,7 +311,7 @@ importers:
       rollup-route-manifest: 1.0.0_rollup@2.75.6
       sade: 1.8.1
       sirv: 1.0.19
-      undici: 4.16.0
+      undici: 5.6.0
       vite-plugin-inspect: 0.3.15_vite@2.9.13
       vite-plugin-solid: 2.2.6
     optionalDependencies:
@@ -417,7 +417,7 @@ importers:
       rollup: ^2.53.3
       sirv: ^1.0.12
       solid-start: next
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.8.6
     dependencies:
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.75.6
@@ -429,7 +429,7 @@ importers:
       sirv: 1.0.19
     devDependencies:
       solid-start: link:../start
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
 
   packages/start-static:
@@ -437,14 +437,14 @@ importers:
       sirv-cli: 1.0.12
       solid-ssr: ^1.3.11
       solid-start: ^0.1.0-alpha.89
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.8.6
     dependencies:
       sirv-cli: 1.0.12
       solid-ssr: 1.4.6
     devDependencies:
       solid-start: 0.1.0-y.0_vite@2.9.13
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
 
   packages/start-vercel:
@@ -484,7 +484,7 @@ importers:
       solid-start: workspace:*
       solid-start-node: workspace:*
       strip-indent: ^4.0.0
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.9.12
       vitest: ^0.16.0
     dependencies:
@@ -506,7 +506,7 @@ importers:
       solid-start: link:../packages/start
       solid-start-node: link:../packages/start-node
       strip-indent: 4.0.0
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
       vitest: 0.16.0
 
@@ -518,7 +518,7 @@ importers:
       solid-start: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
-      undici: ^4.12.2
+      undici: ^5.5.1
       vite: ^2.8.6
     devDependencies:
       solid-app-router: 0.4.1_solid-js@1.4.6
@@ -527,7 +527,7 @@ importers:
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.7.4
-      undici: 4.16.0
+      undici: 5.6.0
       vite: 2.9.13
 
 packages:
@@ -9152,8 +9152,8 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /undici/4.16.0:
-    resolution: {integrity: sha512-tkZSECUYi+/T1i4u+4+lwZmQgLXd4BLGlrc7KZPcLIW7Jpq99+Xpc30ONv7nS6F5UNOxp/HBZSSL9MafUrvJbw==}
+  /undici/5.6.0:
+    resolution: {integrity: sha512-mc+8SY1fXubTrdx4CXDkeFFGV8lI3Tq4I/70U1V8Z6g4iscGII0uLO7CPnDt56bXEbvaKwo2T2+VrteWbZiXiQ==}
     engines: {node: '>=12.18'}
 
   /unicode-canonical-property-names-ecmascript/2.0.0:

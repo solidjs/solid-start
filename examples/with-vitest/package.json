@@ -19,7 +19,7 @@
     "solid-start-node": "workspace:*",
     "solid-testing-library": "^0.3.0",
     "typescript": "^4.4.3",
-    "undici": "^4.12.2",
+    "undici": "^5.5.1",
     "vite": "^2.8.6",
     "vite-plugin-inspect": "^0.3.13",
     "vitest": "^0.6.1"

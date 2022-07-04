@@ -17,12 +17,12 @@
   },
   "devDependencies": {
     "solid-start": "next",
-    "undici": "^4.12.2",
+    "undici": "^5.5.1",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
     "solid-start": "*",
-    "undici": "^4.12.2",
+    "undici": "^5.5.1",
     "vite": "*"
   }
 }
