@@ -4,7 +4,19 @@
 
 # SolidStart
 
-This is the home of the new app framework for Solid. This is still a work in progress. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
+This is the home of the Solid app framework. This is still a **work in progress**. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
+
+* File-system based routing
+* Supports all rendering modes: Server-side rendering (SSR), Client-side rendering (CSR), Static Site Generation (SSG)
+* Streaming
+* Build optimizations with Code splitting, tree shaking and dead code elimination
+* API Routes
+* Built on Web standards: Fetch, Streams, WebCrypto
+* Adapters for deployment to all popular platforms
+* CSS Modules, SASS/SCSS Support
+* Typescript-first
+
+### Getting started
 
 ```bash
 mkdir my-app
