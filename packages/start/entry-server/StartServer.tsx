@@ -4,7 +4,7 @@ import { RouteDataFunc, Router } from "solid-app-router";
 import Root from "~/root";
 import { ServerContext } from "../server/ServerContext";
 import { inlineServerFunctions } from "../server/middleware";
-import { PageFetchEvent, FetchEvent } from "../server/types";
+import { PageEvent, FetchEvent } from "../server/types";
 import { apiRoutes } from "../api/middleware";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
@@ -47,7 +47,7 @@ export function createHandler(...exchanges: Middleware[]) {
 }
 
 const docType = ssr("<!DOCTYPE html>");
-export default ({ event }: { event: PageFetchEvent }) => {
+export default ({ event }: { event: PageEvent }) => {
   const parsed = new URL(event.request.url);
   const path = parsed.pathname + parsed.search;
 

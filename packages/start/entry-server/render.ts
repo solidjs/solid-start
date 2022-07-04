@@ -1,10 +1,10 @@
 import { internalFetch } from "../api/internalFetch";
 import { JSX } from "solid-js";
 import { renderToStringAsync, renderToStream } from "solid-js/web";
-import { FetchEvent, FETCH_EVENT, PageFetchEvent } from "../server/types";
+import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
 
 export function renderAsync(
-  fn: (context: PageFetchEvent) => JSX.Element,
+  fn: (context: PageEvent) => JSX.Element,
   options?: {
     timeoutMs?: number;
     nonce?: string;
@@ -49,7 +49,7 @@ function createPageEvent(event: FetchEvent) {
     return statusCode;
   }
 
-  const pageEvent: PageFetchEvent = Object.freeze({
+  const pageEvent: PageEvent = Object.freeze({
     request: event.request,
     routerContext: {},
     tags: [],
@@ -65,7 +65,7 @@ function createPageEvent(event: FetchEvent) {
 }
 
 export function renderStream(
-  fn: (context: PageFetchEvent) => JSX.Element,
+  fn: (context: PageEvent) => JSX.Element,
   baseOptions: {
     nonce?: string;
     renderId?: string;
