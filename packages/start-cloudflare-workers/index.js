@@ -1,4 +1,4 @@
-import { copyFileSync } from "fs";
+import { copyFileSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { rollup } from "rollup";
@@ -7,7 +7,7 @@ import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import common from "@rollup/plugin-commonjs";
 import { spawn } from "child_process";
-export default function () {
+export default function ({ durableObjects = [] }) {
   return {
     start() {
       const proc = spawn("npx", [
@@ -54,6 +54,13 @@ export default function () {
         join(config.root, ".solid", "server", "app.js")
       );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
+      if (durableObjects.length > 0) {
+        let text = readFileSync(join(config.root, ".solid", "server", "index.js"), "utf8");
+        durableObjects.forEach(item => {
+          text += `\nexport { ${item} } from "./app";`;
+        });
+        writeFileSync(join(config.root, ".solid", "server", "index.js"), text);
+      }
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
         plugins: [

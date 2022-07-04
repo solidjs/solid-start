@@ -29,9 +29,11 @@ export default {
         return new Response("An unexpected error occurred", { status: 500 });
       }
     }
+    
+    env.manifest = manifest;
     return entry({
       request: request,
-      env: { manifest }
+      env
     });
   }
 };
