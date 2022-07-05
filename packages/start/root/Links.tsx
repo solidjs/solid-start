@@ -7,8 +7,6 @@ function getAssetsFromManifest(
   manifest: PageEvent["env"]["manifest"],
   routerContext: PageEvent["routerContext"]
 ) {
-  console.log(manifest);
-
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     const manifestEntries = routesToManifestKeys(m).flatMap(
       manifestKey => manifest[manifestKey] || []
