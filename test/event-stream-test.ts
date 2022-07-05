@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
@@ -57,7 +57,6 @@ test.describe("check event stream", () => {
         
         export default () => {
           let ref;
-          const [chat, setChat] = createSignal("");
           createEventStream(
             server(async () =>
               eventStream(server.request, (send) => {
@@ -73,9 +72,10 @@ test.describe("check event stream", () => {
             }
           );
         
-          return <h1 ref={ref} id="chat" data-testid="chat"></h1>;
+          return <h1 ref={ref} id="chat">test data</h1>;
         };
         
+             
         `
       }
     });
@@ -83,14 +83,16 @@ test.describe("check event stream", () => {
     appFixture = await createAppFixture(fixture);
   });
 
-  test("chat should change change when receiving data from the event stream", async ({ page }) => {
+  test("should change the inner text of the h1 element when receiving data from the event stream", async ({
+    page
+  }) => {
     let app = new PlaywrightFixture(appFixture, page);
     await app.goto("/");
 
-    const element = page.locator("#chat");
+    expect(await page.locator("#chat").innerText()).toBe("Hello world");
 
-    const text = await element.innerText();
+    await page.waitForTimeout(6000);
 
-    console.log({ text });
+    expect(await page.locator("#chat").innerText()).toBe("Goodbye");
   });
 });
