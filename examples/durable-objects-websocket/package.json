@@ -15,7 +15,7 @@
     "solid-start-cloudflare-workers": "workspace:*",
     "solid-start-node": "workspace:*",
     "typescript": "^4.4.3",
-    "undici": "^4.12.2",
+    "undici": "^5.5.1",
     "vite": "^2.8.6"
   },
   "engines": {
