@@ -1,11 +1,11 @@
-import fg from "fast-glob";
-import fs from "fs";
-import path, { join } from "path";
-import { init, parse } from "es-module-lexer";
-import esbuild from "esbuild";
 import chokidar from "chokidar";
 import debug from "debug";
 import { dequal } from "dequal";
+import { init, parse } from "es-module-lexer";
+import esbuild from "esbuild";
+import fg from "fast-glob";
+import fs from "fs";
+import path, { join } from "path";
 
 const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
@@ -110,7 +110,9 @@ export class Router {
     if (path.match(new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`))) {
       let id = path
         .slice(this.baseDir.length)
-        .replace(new RegExp(`(index)?\\.data\\.(${["ts", "js"].join("|")})$`), "");
+        .replace(new RegExp(`(/index)?\\.data\\.(${["ts", "js"].join("|")})$`), (_, index) =>
+          index ? "/" : ""
+        );
       this.setRouteData(id, path);
       return;
     }
@@ -120,7 +122,9 @@ export class Router {
       log("processing", path);
       let id = path
         .slice(this.baseDir.length)
-        .replace(new RegExp(`(index)?\\.(${this.pageExtensions.join("|")})$`), "");
+        .replace(new RegExp(`(/index)?\\.(${this.pageExtensions.join("|")})$`), (_, index) =>
+          index ? "/" : ""
+        );
 
       let routeConfig = {};
 
