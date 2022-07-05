@@ -1,14 +1,14 @@
 import fs from "fs";
 import path from "path";
-import { normalizePath } from "vite";
-import manifest from "rollup-route-manifest";
-import solid from "vite-plugin-solid";
-import inspect from "vite-plugin-inspect";
-import { stringifyApiRoutes, stringifyPageRoutes, Router } from "./routes.js";
 import c from "picocolors";
-import babelServerModule from "./server/server-functions/babel.js";
+import manifest from "rollup-route-manifest";
+import { normalizePath } from "vite";
+import inspect from "vite-plugin-inspect";
+import solid from "vite-plugin-solid";
+import { Router, stringifyApiRoutes, stringifyPageRoutes } from "./routes.js";
 import routeData from "./server/routeData.js";
 import routeDataHmr from "./server/routeDataHmr.js";
+import babelServerModule from "./server/server-functions/babel.js";
 import routeResource from "./server/serverResource.js";
 
 /**
@@ -301,7 +301,7 @@ function solidsStartRouteManifest(options) {
     name: "solid-start-route-manifest",
     config(conf) {
       const regex = new RegExp(
-        `(index)?(.(${[
+        `(/index)?(.(${[
           "tsx",
           "ts",
           "jsx",
@@ -324,7 +324,7 @@ function solidsStartRouteManifest(options) {
                 routes: file => {
                   file = file
                     .replace(path.posix.join(root, options.appRoot), "")
-                    .replace(regex, "");
+                    .replace(regex, (_, index) => (index ? "/" : ""));
                   if (!file.includes(`/${options.routesDir}/`)) return "*"; // commons
                   return "/" + file.replace(`/${options.routesDir}/`, "");
                 }
