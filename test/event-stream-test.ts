@@ -55,7 +55,7 @@ test.describe("check event stream", () => {
           });
         }
         
-        export default () => {
+        export default function Page(){
           let ref;
           createEventStream(
             server(async () =>
