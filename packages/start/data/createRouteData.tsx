@@ -88,7 +88,7 @@ export function createRouteData<T, S>(
         });
       }
 
-      let response = await (fetcher as any)(key, event);
+      let response = await (fetcher as any).call(event, key, event);
       if (response instanceof Response) {
         if (isServer) {
           handleResponse(response);

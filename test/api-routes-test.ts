@@ -13,6 +13,8 @@ test.describe("api routes", () => {
           export default () => (
             <>
               <a href="/redirect" rel="external">Redirect</a>
+              <a href="/server-data-fetch">Server data fetch</a>
+              <a href="/server-fetch">Server Fetch</a>
               <form action="/redirect-to" method="post">
                 <input name="destination" value="/redirect-destination" />
                 <button type="submit">Redirect</button>
@@ -84,6 +86,15 @@ test.describe("api routes", () => {
 
             return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
           }
+        `,
+        "src/routes/server-data-fetch.jsx": js`
+          import server, { createServerData } from "solid-start/server";
+
+          export default function Page() {
+            const data = createServerData(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
+
+            return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
+          }
         `
       }
     });
@@ -129,6 +140,25 @@ test.describe("api routes", () => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/server-fetch");
       let dataEl = await page.$("[data-testid='data']");
+      expect(await dataEl!.innerText()).toBe("harry-potter");
+
+      await app.goto("/");
+      await page.click("a[href='/server-fetch']");
+      dataEl = await page.waitForSelector("[data-testid='data']");
+      expect(await dataEl!.innerText()).toBe("harry-potter");
+    });
+
+    test("should render data from API route using serverData with server.fetch", async ({
+      page
+    }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/server-data-fetch");
+      let dataEl = await page.$("[data-testid='data']");
+      expect(await dataEl!.innerText()).toBe("harry-potter");
+
+      await app.goto("/");
+      await page.click("a[href='/server-data-fetch']");
+      dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
     });
 
