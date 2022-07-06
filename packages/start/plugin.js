@@ -230,7 +230,7 @@ function solidStartFileSystemRouter(options) {
               process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }]
           ].filter(Boolean)
         }));
-      } else if (id.includes("routes")) {
+      } else if (id.includes(path.posix.join(options.appRoot, options.routesDir))) {
         return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
           plugins: [
             options.ssr && [
@@ -257,7 +257,7 @@ function solidStartFileSystemRouter(options) {
             ]
           ].filter(Boolean)
         }));
-      } else if (code.includes("server(")) {
+      } else if (code.includes("solid-start/server")) {
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
