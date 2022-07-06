@@ -157,7 +157,14 @@ function transformRouteData({ types: t }) {
               ArrowFunctionExpression: markFunction,
               ImportSpecifier: markImport,
               ImportDefaultSpecifier: markImport,
-              ImportNamespaceSpecifier: markImport
+              ImportNamespaceSpecifier: markImport,
+              ImportDeclaration: (path, state) => {
+                if (path.node.source.value.endsWith(".css")) {
+                  if (!state.opts.keep) {
+                    path.remove();
+                  }
+                }
+              }
             },
             state
           );
