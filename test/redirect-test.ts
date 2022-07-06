@@ -79,7 +79,7 @@ test.describe("external redirect", () => {
               redirect("https://hogwarts.deno.dev/callback")
             );
           
-            const internalRedirectAction = createServerAction(async () => redirect("/about"));
+            const internalRedirectAction = createServerAction(async () => redirect("/redirected"));
             return (
               <div>
                 <externalRedirectAction.Form>
@@ -89,7 +89,34 @@ test.describe("external redirect", () => {
                 </externalRedirectAction.Form>
                 <internalRedirectAction.Form>
                   <button type="submit" id="internal">
+                    internal redirect
+                  </button>
+                </internalRedirectAction.Form>
+              </div>
+            );
+          }
+        `,
+        "src/routes/throw-redirect-action.jsx": js`
+          import { createServerAction, redirect } from "solid-start/server";
+
+          export default function Page() {
+            const externalRedirectAction = createServerAction(async () => {
+              throw redirect("https://hogwarts.deno.dev/callback")
+            });
+          
+            const internalRedirectAction = createServerAction(async () => {
+              throw redirect("/redirected")
+            });
+            return (
+              <div>
+                <externalRedirectAction.Form>
+                  <button type="submit" id="external">
                     external redirect
+                  </button>
+                </externalRedirectAction.Form>
+                <internalRedirectAction.Form>
+                  <button type="submit" id="internal">
+                    internal redirect
                   </button>
                 </internalRedirectAction.Form>
               </div>
@@ -170,6 +197,22 @@ test.describe("external redirect", () => {
     test("should redirect to an internal route from server action function", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/redirect-action");
+      await page.click("#internal");
+      await page.waitForSelector("[data-testid='redirected']");
+    });
+
+    test("should handle thrown external redirect from server action function", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/throw-redirect-action");
+      await page.click("#external");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should handle thrown redirect to an internal route from server action function", async ({
+      page
+    }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/throw-redirect-action");
       await page.click("#internal");
       await page.waitForSelector("[data-testid='redirected']");
     });

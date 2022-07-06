@@ -45,6 +45,27 @@ export function createRouteAction<T, U = void>(
   let tempOwner: Owner = owner;
   let handledError = false;
 
+  function handleResponse(response: Response) {
+    if (response instanceof Response && isRedirectResponse(response)) {
+      const locationUrl = response.headers.get("Location") || "/";
+      if (locationUrl.startsWith("http")) {
+        window.location.href = locationUrl;
+      } else {
+        navigate(locationUrl);
+      }
+    }
+
+    if (response.ok) {
+      startTransition(() => {
+        refetchRouteData(
+          typeof options.invalidate === "function"
+            ? options.invalidate(response)
+            : options.invalidate
+        );
+      });
+    }
+  }
+
   function submit(variables: T) {
     const p = fn(variables, event);
     const reqId = ++count;
@@ -56,22 +77,9 @@ export function createRouteAction<T, U = void>(
       setPending(v);
       if (reqId === count) {
         setData(() => ({ value: res }));
-        if (res instanceof Response && res.status === 302) {
-          const locationUrl = res.headers.get("Location") || "/";
-          if (locationUrl.startsWith("http")) {
-            window.location.href = locationUrl;
-          } else {
-            navigate(res.headers.get("Location") || "/");
-          }
+        if (res instanceof Response) {
+          handleResponse(res);
         }
-        if (res instanceof Response && res.ok)
-          startTransition(() => {
-            refetchRouteData(
-              typeof options.invalidate === "function"
-                ? options.invalidate(res as Response)
-                : options.invalidate
-            );
-          });
       }
       return res;
     }).catch(e => {
@@ -79,15 +87,8 @@ export function createRouteAction<T, U = void>(
       setPending(Array.from(lookup.values()));
       if (reqId === count) {
         return runWithOwner(tempOwner || owner, () => {
-          if (e instanceof Response && isRedirectResponse(e)) {
-            navigate(e.headers.get("Location") || "/");
-            startTransition(() => {
-              refetchRouteData(
-                typeof options.invalidate === "function"
-                  ? options.invalidate(e as Response)
-                  : options.invalidate
-              );
-            });
+          if (e instanceof Response) {
+            handleResponse(e);
           }
           setData(() => ({ error: e }));
           if (!handledError) throw e;
