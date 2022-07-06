@@ -1,14 +1,13 @@
 import { NavLink, Route, Routes, useLocation } from "solid-app-router";
-import { NavHeader, SearchBar } from "./NavHeader";
 import {
   Accordion,
-  AccordionButton,
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
   useHeadlessSelectOptionChild
 } from "solid-headless";
 import { For } from "solid-js";
+import { NavHeader, SearchBar } from "./NavHeader";
 
 export default function Nav() {
   return (
@@ -460,14 +459,12 @@ function SectionHeader(props) {
         // title={props.faq.question}
         href={props.href}
       >
-        <>
-          {props.children}
-          <span class={`pr-1`}>
-            <CollapsedIcon
-              class={`flex-0 transform ${child.isSelected() ? "rotate-0" : "-rotate-90"} w-5 h-5 `}
-            />
-          </span>
-        </>
+        {props.children}
+        <span class={`pr-1`}>
+          <CollapsedIcon
+            class={`flex-0 transform ${child.isSelected() ? "rotate-0" : "-rotate-90"} w-5 h-5 `}
+          />
+        </span>
       </a>
     </AccordionHeader>
   );

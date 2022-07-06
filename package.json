@@ -19,6 +19,7 @@
     "docs:dev": "pnpm --filter solid-start-docs run dev",
     "docs:build": "pnpm --filter solid-start-docs run build",
     "clean:test": "rimraf .tmp",
+    "build:all": "pnpm run -r --if-present build",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --"
   },
   "devDependencies": {
