@@ -402,6 +402,7 @@ export default function solidStart(options) {
       appRoot: "src",
       routesDir: "routes",
       ssr: true,
+      lazy: true,
       prerenderRoutes: [],
       inspect: true
     },
