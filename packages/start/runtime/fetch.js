@@ -1,6 +1,5 @@
-import { Request as BaseNodeRequest, Headers } from "undici";
-import { FormData } from "undici";
 import multipart from "parse-multipart-data";
+import { FormData, Headers, Request as BaseNodeRequest } from "undici";
 
 function nodeToWeb(nodeStream) {
   var destroyed = false;

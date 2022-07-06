@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
 import solid from "solid-start";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   test: {

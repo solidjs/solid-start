@@ -1,6 +1,6 @@
 import { FETCH_EVENT } from "../server/types";
 import { getRouteMatches } from "./router";
-import type { Method, ApiFetchEvent } from "./types";
+import type { ApiFetchEvent, Method } from "./types";
 
 let apiRoutes;
 

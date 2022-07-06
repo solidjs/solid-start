@@ -1,7 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
 import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
-import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
 
 test.describe("api routes", () => {
   let appFixture: AppFixture;
@@ -74,6 +74,15 @@ test.describe("api routes", () => {
         "src/routes/api/fetch.js": js`
           import { json } from "solid-start/server";
           export let get = ({ request }) => fetch('https://hogwarts.deno.dev/');
+        `,
+        "src/routes/server-fetch.jsx": js`
+          import server from "solid-start/server";
+
+          export default function Page() {
+            const [data] = createResource(() => server.fetch('/api/greeting/harry-potter'));
+
+            return <Show when={data()}><div>{data()?.hello}</div></Show>;
+          }
         `
       }
     });
@@ -112,6 +121,12 @@ test.describe("api routes", () => {
     test("should render json from API route with .json file extension", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/data.json");
+      expect(await page.content()).toContain('{"hello":"world"}');
+    });
+
+    test("should render data from API route using server.fetch", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/server-fetch");
       expect(await page.content()).toContain('{"hello":"world"}');
     });
 

@@ -1,9 +1,9 @@
-import manifest from "../../dist/rmanifest.json";
-import internalAssetManifest from "../../dist/manifest.json";
+import { getAssetFromKV, MethodNotAllowedError, NotFoundError } from "@cloudflare/kv-asset-handler";
 import prepareManifest from "solid-start/runtime/prepareManifest";
-import entry from "./app";
-import { getAssetFromKV, NotFoundError, MethodNotAllowedError } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
+import internalAssetManifest from "../../dist/manifest.json";
+import manifest from "../../dist/rmanifest.json";
+import entry from "./app";
 
 prepareManifest(manifest, internalAssetManifest);
 
@@ -29,7 +29,7 @@ export default {
         return new Response("An unexpected error occurred", { status: 500 });
       }
     }
-    
+
     env.manifest = manifest;
     return entry({
       request: request,

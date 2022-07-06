@@ -1,5 +1,3 @@
-import { FormError } from "../data/FormError";
-
 export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";
 export const XSolidStartLocationHeader = "x-solidstart-location";
 export const LocationHeader = "Location";
@@ -130,5 +128,3 @@ export class ResponseError extends Error implements Response {
     return await this.response().json();
   }
 }
-
-

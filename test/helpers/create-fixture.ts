@@ -1,16 +1,15 @@
-import path from "path";
-import fse from "fs-extra";
-import type { Writable } from "stream";
-import getPort from "get-port";
-import stripIndent from "strip-indent";
-import c from "picocolors";
-import { fileURLToPath, pathToFileURL } from "url";
 import { sync as spawnSync } from "cross-spawn";
+import fse from "fs-extra";
+import getPort from "get-port";
+import path from "path";
+import c from "picocolors";
+import stripIndent from "strip-indent";
+import { fileURLToPath, pathToFileURL } from "url";
 
-import type { FetchEvent } from "solid-start/server/types.js";
+import { createServer } from "solid-start-node/server.js";
 import "solid-start/runtime/node-globals.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
-import { createServer } from "solid-start-node/server.js";
+import type { FetchEvent } from "solid-start/server/types.js";
 
 const TMP_DIR = path.join(
   path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url)))),

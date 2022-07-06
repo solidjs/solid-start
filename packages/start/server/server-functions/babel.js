@@ -2,8 +2,8 @@
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
 // This is adapted to work with any server() calls and transpile it into multiple api function for a file.
 
-import nodePath from "path";
 import crypto from "crypto";
+import nodePath from "path";
 
 const INLINE_SERVER_ROUTE_PREFIX = "/_m";
 

@@ -19,7 +19,7 @@
     "docs:dev": "pnpm --filter solid-start-docs run dev",
     "docs:build": "pnpm --filter solid-start-docs run build",
     "clean:test": "rimraf .tmp",
-    "test": "pnpm --filter solid-start-tests test"
+    "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.1",

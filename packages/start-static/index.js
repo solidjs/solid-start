@@ -1,8 +1,8 @@
+import { spawn } from "child_process";
 import { copyFileSync, readdirSync, statSync } from "fs";
 import { dirname, join, resolve } from "path";
-import { fileURLToPath } from "url";
-import { spawn } from "child_process";
 import renderStatic from "solid-ssr/static";
+import { fileURLToPath } from "url";
 import vite from "vite";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

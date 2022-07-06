@@ -1,6 +1,6 @@
 import { PageEvent } from "server";
 import { useContext } from "solid-js";
-import { NoHydration, HydrationScript, isServer } from "solid-js/web";
+import { HydrationScript, isServer, NoHydration } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 
 function getFromManifest(manifest: PageEvent["env"]["manifest"]) {

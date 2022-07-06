@@ -1,6 +1,6 @@
 // Credits to the Remix team for the Form implementation:
 // https://github.com/remix-run/remix/blob/main/packages/remix-react/components.tsx#L865
-import { ComponentProps, createEffect, mergeProps, onCleanup, splitProps, JSX } from "solid-js";
+import { ComponentProps, createEffect, mergeProps, onCleanup, splitProps } from "solid-js";
 
 export interface FormAction<Data> {
   action: string;
@@ -10,6 +10,7 @@ export interface FormAction<Data> {
 }
 
 export { FormError } from "./FormError";
+export { FormImpl as Form };
 
 type FormEncType = "application/x-www-form-urlencoded" | "multipart/form-data";
 
@@ -360,5 +361,3 @@ function isFormElement(object: any): object is HTMLFormElement {
 function isInputElement(object: any): object is HTMLInputElement {
   return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
 }
-
-export { FormImpl as Form };

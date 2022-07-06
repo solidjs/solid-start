@@ -1,7 +1,7 @@
-import { MetaProvider } from "solid-meta";
 import { Router } from "solid-app-router";
-import { ServerContext } from "../server/ServerContext";
+import { MetaProvider } from "solid-meta";
 import Root from "~/root";
+import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, PageEvent } from "../server/types";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];

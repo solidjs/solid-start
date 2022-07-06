@@ -1,9 +1,9 @@
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
-import { fileURLToPath } from "url";
 import { createRequest } from "solid-start/runtime/fetch.js";
 import prepareManifest from "solid-start/runtime/prepareManifest.js";
-import { fetch, Headers, Response, Request } from "undici";
+import { fetch, Request, Response } from "undici";
+import { fileURLToPath } from "url";
 import entry from "./app.js";
 
 Object.assign(globalThis, {

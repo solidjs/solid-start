@@ -1,7 +1,7 @@
-import cp from "child_process";
-import type { Page, Response, Request } from "@playwright/test";
+import type { Page, Request, Response } from "@playwright/test";
 import { test } from "@playwright/test";
 import cheerio from "cheerio";
+import cp from "child_process";
 import prettier from "prettier";
 
 import type { AppFixture } from "./create-fixture.js";

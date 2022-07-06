@@ -1,10 +1,9 @@
 import { useNavigate } from "solid-app-router";
-import { useContext, onCleanup } from "solid-js";
-import { isRedirectResponse, LocationHeader } from "../server/responses";
-import { ServerContext } from "../server/ServerContext";
-import { createResource, Resource } from "solid-js";
+import { createResource, onCleanup, Resource, useContext } from "solid-js";
 import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
+import { isRedirectResponse, LocationHeader } from "../server/responses";
+import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";
 
 interface RouteDataEvent extends ServerFunctionEvent {}

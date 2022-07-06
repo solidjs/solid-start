@@ -1,4 +1,3 @@
-import { FETCH_EVENT } from "../types";
 import {
   ContentTypeHeader,
   JSONResponseType,
@@ -8,9 +7,10 @@ import {
   XSolidStartOrigin,
   XSolidStartResponseTypeHeader
 } from "../responses";
+import { FETCH_EVENT } from "../types";
 
-import { ServerFunction, CreateServerFunction } from "./types";
 import { FormError } from "../../data";
+import { CreateServerFunction, ServerFunction } from "./types";
 
 export async function parseResponse(request: Request, response: Response) {
   const contentType =
@@ -145,8 +145,7 @@ server.createFetcher = route => {
 server.call = async function (route, init: RequestInit) {
   const request = new Request(new URL(route, window.location.href).href, init);
 
-  const handler = server.fetcher;
-  const response = await handler(request);
+  const response = await server.fetcher(request);
 
   // // throws response, error, form error, json object, string
   if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
@@ -158,12 +157,10 @@ server.call = async function (route, init: RequestInit) {
 
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server
-server.fetch = async function (route, init: RequestInit) {
+server.fetch = async function (route: string | URL, init: RequestInit) {
+  if (route instanceof URL || route.startsWith("http")) {
+    return await fetch(route, init);
+  }
   const request = new Request(new URL(route, window.location.href).href, init);
-
-  const handler = server.fetcher;
-  const response = await handler(request);
-
-  // // throws response, error, form error, json object, string
-  return response;
+  return await server.fetcher(request);
 };

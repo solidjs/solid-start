@@ -1,10 +1,10 @@
 import compression from "compression";
+import { once } from "events";
 import fs from "fs";
 import polka from "polka";
 import sirv from "sirv";
 import { createRequest } from "solid-start/runtime/fetch.js";
 import { Readable } from "stream";
-import { once } from "events";
 
 export function createServer({ entry, paths, manifest }) {
   const comp = compression({

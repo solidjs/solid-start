@@ -1,6 +1,6 @@
-import manifest from "../../dist/rmanifest.json";
-import assetManifest from "../../dist/manifest.json";
 import prepareManifest from "solid-start/runtime/prepareManifest";
+import assetManifest from "../../dist/manifest.json";
+import manifest from "../../dist/rmanifest.json";
 import entry from "./app";
 
 prepareManifest(manifest, assetManifest);

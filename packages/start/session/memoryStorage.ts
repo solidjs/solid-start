@@ -1,8 +1,8 @@
 import type {
+  CreateSessionStorageFunction,
   SessionData,
-  SessionStorage,
   SessionIdStorageStrategy,
-  CreateSessionStorageFunction
+  SessionStorage
 } from "./sessions";
 
 interface MemorySessionStorageOptions {

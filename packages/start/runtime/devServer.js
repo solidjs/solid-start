@@ -1,7 +1,5 @@
-import path from "path";
-import { Readable } from "stream";
 import { once } from "events";
-import { Headers } from "undici";
+import { Readable } from "stream";
 import { createRequest } from "./fetch.js";
 import "./node-globals.js";
 

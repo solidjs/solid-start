@@ -1,20 +1,19 @@
+import { transformSync } from "@babel/core";
+import pluginSyntaxJSX from "@babel/plugin-syntax-jsx";
+import presetTypescript from "@babel/preset-typescript";
+import degit from "degit";
 import fs from "fs";
 import parser from "gitignore-parser";
 import { bold, cyan, gray, green, red } from "kleur/colors";
 import path from "path";
-import prompts from "prompts/lib/index";
-import glob from "tiny-glob/sync.js";
-import { viaContentsApi } from "./github.js";
-import { version } from "../package.json";
-import degit from "degit";
-import fetch from "node-fetch";
-import { transformSync } from "@babel/core";
-import presetTypescript from "@babel/preset-typescript";
-import pluginSyntaxJSX from "@babel/plugin-syntax-jsx";
-import prettier from "prettier/esm/standalone.mjs";
 import prettierBabel from "prettier/esm/parser-babel.mjs";
 import prettierHTML from "prettier/esm/parser-html.mjs";
+import prettier from "prettier/esm/standalone.mjs";
+import prompts from "prompts/lib/index";
+import glob from "tiny-glob/sync.js";
 import yargsParser from "yargs-parser";
+import { version } from "../package.json";
+import { viaContentsApi } from "./github.js";
 
 const gitIgnore = `
 dist

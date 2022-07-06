@@ -1,7 +1,7 @@
-import manifest from "../../netlify/rmanifest.json";
-import assetManifest from "../../netlify/manifest.json";
+import fetch, { Headers, Request, Response } from "node-fetch";
 import prepareManifest from "solid-start/runtime/prepareManifest";
-import fetch, { Headers, Response, Request } from "node-fetch";
+import assetManifest from "../../netlify/manifest.json";
+import manifest from "../../netlify/rmanifest.json";
 import entry from "./app";
 
 Response.redirect = function (url, status = 302) {

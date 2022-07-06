@@ -1,11 +1,11 @@
-import { copyFileSync, readFileSync, writeFileSync, mkdirSync } from "fs";
-import { dirname, join, resolve } from "path";
-import { fileURLToPath, pathToFileURL } from "url";
-import { rollup } from "rollup";
-import vite from "vite";
+import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
-import common from "@rollup/plugin-commonjs";
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { dirname, join, resolve } from "path";
+import { rollup } from "rollup";
+import { fileURLToPath, pathToFileURL } from "url";
+import vite from "vite";
 
 export default function () {
   return {

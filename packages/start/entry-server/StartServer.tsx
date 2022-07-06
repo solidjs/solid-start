@@ -1,11 +1,11 @@
+import { RouteDataFunc, Router } from "solid-app-router";
 import { ssr } from "solid-js/web";
 import { MetaProvider } from "solid-meta";
-import { RouteDataFunc, Router } from "solid-app-router";
 import Root from "~/root";
-import { ServerContext } from "../server/ServerContext";
-import { inlineServerFunctions } from "../server/middleware";
-import { PageEvent, FetchEvent } from "../server/types";
 import { apiRoutes } from "../api/middleware";
+import { inlineServerFunctions } from "../server/middleware";
+import { ServerContext } from "../server/ServerContext";
+import { FetchEvent, PageEvent } from "../server/types";
 
 const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;

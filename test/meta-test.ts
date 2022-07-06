@@ -1,7 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
+import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
 
 test.describe("meta", () => {

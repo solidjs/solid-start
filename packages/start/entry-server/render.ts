@@ -1,6 +1,6 @@
-import { internalFetch } from "../api/internalFetch";
 import { JSX } from "solid-js";
-import { renderToStringAsync, renderToStream } from "solid-js/web";
+import { renderToStream, renderToStringAsync } from "solid-js/web";
+import { internalFetch } from "../api/internalFetch";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
 
 export function renderAsync(

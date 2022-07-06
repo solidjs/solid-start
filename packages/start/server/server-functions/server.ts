@@ -1,4 +1,6 @@
 import { sharedConfig } from "solid-js";
+import { internalFetch } from "../../api/internalFetch";
+import { FormError } from "../../data";
 import {
   ContentTypeHeader,
   isRedirectResponse,
@@ -12,8 +14,6 @@ import {
 } from "../responses";
 import { ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
-import { internalFetch } from "../../api/internalFetch";
-import { FormError } from "../../data";
 
 export const server: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");
