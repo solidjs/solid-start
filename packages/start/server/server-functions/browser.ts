@@ -58,11 +58,6 @@ export const server: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
-server.fetcher = fetch;
-server.setFetcher = fetch => {
-  server.fetcher = fetch;
-};
-
 function createRequestInit(...args) {
   // parsing args when a request is made from the browser for a server module
   // FormData
@@ -145,7 +140,7 @@ server.createFetcher = route => {
 server.call = async function (route, init: RequestInit) {
   const request = new Request(new URL(route, window.location.href).href, init);
 
-  const response = await server.fetcher(request);
+  const response = await fetch(request);
 
   // // throws response, error, form error, json object, string
   if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
@@ -162,5 +157,5 @@ server.fetch = async function (route: string | URL, init: RequestInit) {
     return await fetch(route, init);
   }
   const request = new Request(new URL(route, window.location.href).href, init);
-  return await server.fetcher(request);
+  return await fetch(request);
 };

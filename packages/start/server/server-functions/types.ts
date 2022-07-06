@@ -11,8 +11,6 @@ export type CreateServerFunction = (<E extends any[], T extends (...args: [...E]
   createHandler: (fn: any, hash: string) => any;
   registerHandler: (route: string, handler: any) => any;
   hasHandler: (route: string) => boolean;
-  fetcher: (request: Request) => Promise<Response>;
-  setFetcher: (fetcher: (request: Request) => Promise<Response>) => void;
   createFetcher(route: string): ServerFunction<any, any>;
   fetch(route: string, init?: RequestInit): Promise<Response>;
 } & FetchEvent;
