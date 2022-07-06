@@ -77,11 +77,12 @@ test.describe("api routes", () => {
         `,
         "src/routes/server-fetch.jsx": js`
           import server from "solid-start/server";
+          import { createResource } from 'solid-js';
 
           export default function Page() {
-            const [data] = createResource(() => server.fetch('/api/greeting/harry-potter'));
+            const [data] = createResource(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
 
-            return <Show when={data()}><div>{data()?.hello}</div></Show>;
+            return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
           }
         `
       }
@@ -127,7 +128,8 @@ test.describe("api routes", () => {
     test("should render data from API route using server.fetch", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/server-fetch");
-      expect(await page.content()).toContain('{"hello":"world"}');
+      let dataEl = await page.$("[data-testid='data']");
+      expect(await dataEl!.innerText()).toBe("harry-potter");
     });
 
     test("should return json from API route", async ({ page }) => {
