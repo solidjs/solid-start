@@ -89,12 +89,12 @@
     "solid-app-router": "^0.4.1",
     "solid-js": "^1.4.6",
     "solid-meta": "^0.27.5",
-    "solid-start-cloudflare-pages": "next",
-    "solid-start-cloudflare-workers": "next",
-    "solid-start-deno": "next",
-    "solid-start-netlify": "next",
-    "solid-start-node": "next",
-    "solid-start-static": "next",
+    "solid-start-cloudflare-pages": "0.1.0-alpha.90",
+    "solid-start-cloudflare-workers": "0.1.0-alpha.90",
+    "solid-start-deno": "0.1.0-alpha.90",
+    "solid-start-netlify": "0.1.0-alpha.90",
+    "solid-start-node": "0.1.0-alpha.90",
+    "solid-start-static": "0.1.0-alpha.90",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
@@ -104,6 +104,6 @@
     "vite": "^2.8.6"
   },
   "optionalDependencies": {
-    "solid-start-node": "next"
+    "solid-start-node": "0.1.0-alpha.90"
   }
 }
