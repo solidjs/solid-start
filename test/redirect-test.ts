@@ -1,45 +1,100 @@
-import { expect, test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
-import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
+import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
 
-test.describe("check redirect", () => {
-  let fixture: Fixture;
+test.describe("external redirect", () => {
   let appFixture: AppFixture;
-
+  let fixture: Fixture;
   test.beforeAll(async () => {
     fixture = await createFixture({
       files: {
-        "src/routes/about.jsx": js`
-        export default function AboutPage() {
-          return <div data-testid="redirected">hello world</div>;
-        }        
-        `,
         "src/routes/index.jsx": js`
-        import { createServerAction, redirect } from "solid-start/server";
+          export default () => (
+            <>
+              <a href="/redirect" rel="external">Redirect</a>
+              <a href="/redirect-data">Redirect</a>
+              <form action="/redirect-to" method="post">
+                <input name="destination" value="https://hogwarts.deno.dev/callback" />
+                <button type="submit">Redirect</button>
+              </form>
+            </>
+          )
+        `,
+        "src/routes/redirected.jsx": js`
+          export default () => <div data-testid="redirected">You were redirected</div>;
+        `,
+        "src/routes/redirect.jsx": js`
+          import { redirect } from "solid-start/server";
 
-export default function Page() {
-  const externalRedirectAction = createServerAction(async () =>
-    redirect("https://www.solidjs.com/")
-  );
+          export let get = () => redirect("https://hogwarts.deno.dev/callback");
+        `,
+        "src/routes/redirect-to.jsx": js`
+          import { redirect } from "solid-start/server";
 
-  const internalRedirectAction = createServerAction(async () => redirect("/about"));
-  return (
-    <div>
-      <externalRedirectAction.Form>
-        <button type="submit" id="external">
-          external redirect
-        </button>
-      </externalRedirectAction.Form>
-      <internalRedirectAction.Form>
-        <button type="submit" id="internal">
-          external redirect
-        </button>
-      </internalRedirectAction.Form>
-    </div>
-  );
-}
-  
+          export let post = async ({ request }) => {
+            let formData = await request.formData();
+            return redirect(formData.get('destination'));
+          }
+        `,
+        "src/routes/redirect-data.jsx": js`
+          import { createServerData } from 'solid-start/server';
+          import { redirect } from 'solid-start/server';
+          import { useRouteData } from 'solid-app-router';
+
+          export function routeData() {
+            return createServerData(async () => redirect('https://hogwarts.deno.dev/callback'));
+
+          }
+
+          export default function Route() {
+            const data = useRouteData();
+
+            return <Show when={data()}>{data()}</Show>;
+          }
+        `,
+        "src/routes/throw-redirect-data.jsx": js`
+          import { createServerData } from 'solid-start/server';
+          import { redirect } from 'solid-start/server';
+          import { useRouteData } from 'solid-app-router';
+
+          export function routeData() {
+            return createServerData(async () => {
+              throw redirect('https://hogwarts.deno.dev/callback')
+            });
+
+          }
+
+          export default function Route() {
+            const data = useRouteData();
+
+            return <Show when={data()}>{data()}</Show>;
+          }
+        `,
+        "src/routes/redirect-action.jsx": js`
+          import { createServerAction, redirect } from "solid-start/server";
+
+          export default function Page() {
+            const externalRedirectAction = createServerAction(async () =>
+              redirect("https://hogwarts.deno.dev/callback")
+            );
+          
+            const internalRedirectAction = createServerAction(async () => redirect("/about"));
+            return (
+              <div>
+                <externalRedirectAction.Form>
+                  <button type="submit" id="external">
+                    external redirect
+                  </button>
+                </externalRedirectAction.Form>
+                <internalRedirectAction.Form>
+                  <button type="submit" id="internal">
+                    external redirect
+                  </button>
+                </internalRedirectAction.Form>
+              </div>
+            );
+          }
         `
       }
     });
@@ -47,25 +102,76 @@ export default function Page() {
     appFixture = await createAppFixture(fixture);
   });
 
-  test("should redirect to an internal route", async ({ page }) => {
-    let app = new PlaywrightFixture(appFixture, page);
-    await app.goto("/");
-
-    console.log(`redirect to about page`);
-
-    await page.click("#internal");
-
-    await page.waitForSelector("[data-testid='redirected']");
+  test.afterAll(async () => {
+    await appFixture.close();
   });
 
-  test("should redirect to an external url", async ({ page }) => {
-    let app = new PlaywrightFixture(appFixture, page);
-    await app.goto("/");
-
-    console.log(`redirect to an external url`);
-
-    await page.click("#external");
-
-    await page.waitForURL("https://www.solidjs.com/");
+  test.describe("with JavaScript", () => {
+    runTests();
   });
+
+  test.describe("without JavaScript", () => {
+    test.use({ javaScriptEnabled: false });
+    runTests();
+  });
+
+  function runTests() {
+    test("should redirect to redirected", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/");
+      await page.click("a[href='/redirect']");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should handle post to destination", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/");
+      await page.click("button[type='submit']");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should handle redirect from server data function", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/redirect-data");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should handle thrown redirect from server data function", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/redirect-data");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should handle redirect when navigating to route with server data function", async ({
+      page
+    }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/");
+      await page.click("a[href='/redirect-data']");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should handle thrown redirect when navigating to route with server data function", async ({
+      page
+    }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/");
+      await page.click("a[href='/redirect-data']");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should handle external redirect from server action function", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/redirect-action");
+      await page.click("#external");
+      await page.waitForURL("https://hogwarts.deno.dev/callback");
+    });
+
+    test("should redirect to an internal route from server action function", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/redirect-action");
+      await page.click("#internal");
+      await page.waitForSelector("[data-testid='redirected']");
+    });
+  }
 });

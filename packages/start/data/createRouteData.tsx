@@ -54,9 +54,16 @@ export function createRouteData<T, S>(
 
   function handleResponse(response: Response) {
     if (isRedirectResponse(response)) {
-      navigate(response.headers.get(LocationHeader), {
-        replace: true
-      });
+      let url = response.headers.get(LocationHeader);
+      if (url.startsWith("/")) {
+        navigate(response.headers.get(LocationHeader), {
+          replace: true
+        });
+      } else {
+        if (!isServer) {
+          window.location.href = response.headers.get(LocationHeader);
+        }
+      }
       if (isServer) {
         pageEvent.setStatusCode(response.status);
         response.headers.forEach((head, value) => {
