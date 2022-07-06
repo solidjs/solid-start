@@ -89,7 +89,7 @@ function solidStartFileSystemRouter(options) {
   }
   let router = new Router({
     baseDir: path.posix.join(options.appRoot, options.routesDir),
-    pageExtensions: options.extensions
+    pageExtensions: options.pageExtensions
   });
   let listener = function handleFileChange(file) {
     timerState = "restart";
@@ -293,7 +293,7 @@ function solidsStartRouteManifest(options) {
   return {
     name: "solid-start-route-manifest",
     config(conf) {
-      const regex = new RegExp(`\\.(${options.extensions.join("|")})$`);
+      const regex = new RegExp(`\\.(${options.pageExtensions.join("|")})$`);
       const root = normalizePath(conf.root || process.cwd());
       return {
         build: {
@@ -409,7 +409,7 @@ export default function solidStart(options) {
     options ?? {}
   );
 
-  options.extensions = [
+  options.pageExtensions = [
     "tsx",
     "jsx",
     "js",
