@@ -1,4 +1,5 @@
 import { once } from "events";
+import path from "path";
 import { Readable } from "stream";
 import { createRequest } from "./fetch.js";
 import "./node-globals.js";

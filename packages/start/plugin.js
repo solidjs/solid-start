@@ -5,7 +5,7 @@ import manifest from "rollup-route-manifest";
 import { normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
-import { Router, stringifyApiRoutes, stringifyPageRoutes } from "./routes.js";
+import { Router, stringifyApiRoutes, stringifyPageRoutes, toPath } from "./routes.js";
 import routeData from "./server/routeData.js";
 import routeDataHmr from "./server/routeDataHmr.js";
 import babelServerModule from "./server/server-functions/babel.js";
