@@ -112,6 +112,7 @@ test.describe("rendering", () => {
     );
 
     await app.goto("/about", true);
+
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
         <div id="content">
@@ -137,6 +138,7 @@ test.describe("rendering", () => {
     );
 
     await app.page.click("a[href='/about']");
+    await page.waitForSelector("h2[text=About]");
 
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
