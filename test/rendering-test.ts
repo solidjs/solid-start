@@ -138,7 +138,7 @@ test.describe("rendering", () => {
     );
 
     await app.page.click("a[href='/about']");
-    await page.waitForSelector("h2[text=About]");
+    await page.waitForSelector(`h2:has-text("About")`);
 
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
