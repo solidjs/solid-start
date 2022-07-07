@@ -51,8 +51,14 @@ export function createRouteAction<T, U = void>(
       setPending(v);
       if (reqId === count) {
         setData(() => ({ value: res }));
-        if (res instanceof Response && res.status === 302)
-          navigate(res.headers.get("Location") || "/");
+        if (res instanceof Response && res.status === 302) {
+          const locationUrl = res.headers.get("Location") || "/";
+          if (locationUrl.startsWith("http")) {
+            window.location.href = locationUrl;
+          } else {
+            navigate(res.headers.get("Location") || "/");
+          }
+        }
         if (res instanceof Response && res.ok)
           startTransition(() => {
             refetchRouteData(
