@@ -5,7 +5,7 @@ import manifest from "rollup-route-manifest";
 import { normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
-import { Router, stringifyApiRoutes, stringifyPageRoutes } from "./routes.js";
+import { Router, stringifyApiRoutes, stringifyPageRoutes, toPath } from "./routes.js";
 import routeData from "./server/routeData.js";
 import routeDataHmr from "./server/routeDataHmr.js";
 import babelServerModule from "./server/server-functions/babel.js";
@@ -88,15 +88,8 @@ function solidStartFileSystemRouter(options) {
     timer = setTimeout(fn, delay);
   }
   let router = new Router({
-    pageExtensions: [
-      "tsx",
-      "jsx",
-      "js",
-      "ts",
-      ...((options.extensions &&
-        options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
-        [])
-    ]
+    baseDir: path.posix.join(options.appRoot, options.routesDir),
+    pageExtensions: options.extensions
   });
   let listener = function handleFileChange(file) {
     timerState = "restart";
@@ -277,10 +270,10 @@ function solidStartFileSystemRouter(options) {
             ].filter(Boolean)
           })
         );
-      } else if (code.includes("var routes = $ROUTES;")) {
+      } else if (code.includes("var routeData = $ROUTE_DATA;")) {
         return {
           code: code.replace(
-            "var routes = $ROUTES;",
+            "var routeData = $ROUTE_DATA;",
             stringifyPageRoutes(router.getNestedPageRoutes(), { lazy })
           )
         };
@@ -300,16 +293,7 @@ function solidsStartRouteManifest(options) {
   return {
     name: "solid-start-route-manifest",
     config(conf) {
-      const regex = new RegExp(
-        `(/index)?(.(${[
-          "tsx",
-          "ts",
-          "jsx",
-          "js",
-          ...((options.extensions && options.extensions.map(e => e.slice(1))) || [])
-        ].join("|")}))$`
-      );
-
+      const regex = new RegExp(`\\.(${options.extensions.join("|")})$`);
       const root = normalizePath(conf.root || process.cwd());
       return {
         build: {
@@ -322,10 +306,11 @@ function solidsStartRouteManifest(options) {
                 merge: false,
                 publicPath: "/",
                 routes: file => {
-                  file = file
-                    .replace(path.posix.join(root, options.appRoot), "")
-                    .replace(regex, (_, index) => (index ? "/" : ""));
-                  if (!file.includes(`/${options.routesDir}/`)) return "*"; // commons
+                  file = toPath(
+                    file.replace(path.posix.join(root, options.appRoot), "").replace(regex, ""),
+                    false
+                  );
+                  if (!file.startsWith(`/${options.routesDir}/`)) return "*"; // commons
                   return "/" + file.replace(`/${options.routesDir}/`, "");
                 }
               })
@@ -422,6 +407,16 @@ export default function solidStart(options) {
     },
     options ?? {}
   );
+
+  options.extensions = [
+    "tsx",
+    "jsx",
+    "js",
+    "ts",
+    ...((options.extensions &&
+      options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
+      [])
+  ];
 
   // @ts-ignore
   return [

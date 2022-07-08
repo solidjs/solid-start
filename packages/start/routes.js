@@ -14,8 +14,11 @@ const ROUTE_KEYS = ["component", "path", "data", "children"];
 // `delete` is a reserved word in JS, so we use `del` instead
 const API_METHODS = ["get", "post", "put", "del", "patch"];
 
-function toPath(id) {
-  return id.replace(/\[([^\[]+)\]/g, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
+export function toPath(id, removePathlessLayouts = true) {
+  const idWithoutIndex = id.endsWith("/index") ? id.slice(0, -"index".length) : id;
+  return (
+    removePathlessLayouts ? idWithoutIndex.replace(/\/__[^/]*/g, "") : idWithoutIndex
+  ).replace(/\[([^\[]+)\]/g, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
 }
 
 export class Router {
@@ -55,7 +58,7 @@ export class Router {
     if (this.watcher) {
       return;
     }
-    this.watcher = chokidar.watch("src/routes/**/*", { cwd: this.cwd, ignoreInitial: true });
+    this.watcher = chokidar.watch(`${this.baseDir}/**/*`, { cwd: this.cwd, ignoreInitial: true });
 
     this.watcher.on("all", (event, filePath) => {
       const posixPath = filePath.split(path.sep).join(path.posix.sep);
@@ -107,24 +110,18 @@ export class Router {
 
   processFile(path) {
     // if its a route data function
-    if (path.match(new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`))) {
-      let id = path
-        .slice(this.baseDir.length)
-        .replace(new RegExp(`(/index)?\\.data\\.(${["ts", "js"].join("|")})$`), (_, index) =>
-          index ? "/" : ""
-        );
+    const pageDataRegex = new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`);
+    if (path.match(pageDataRegex)) {
+      let id = path.slice(this.baseDir.length).replace(pageDataRegex, "");
       this.setRouteData(id, path);
       return;
     }
 
     // if its a possible page due to its extension
-    if (path.match(new RegExp(`\\.(${this.pageExtensions.join("|")})$`))) {
+    const pageRegex = new RegExp(`\\.(${this.pageExtensions.join("|")})$`);
+    if (path.match(pageRegex)) {
       log("processing", path);
-      let id = path
-        .slice(this.baseDir.length)
-        .replace(new RegExp(`(/index)?\\.(${this.pageExtensions.join("|")})$`), (_, index) =>
-          index ? "/" : ""
-        );
+      let id = path.slice(this.baseDir.length).replace(pageRegex, "");
 
       let routeConfig = {};
 
@@ -191,11 +188,12 @@ export class Router {
 
   getNestedPageRoutes() {
     function processRoute(routes, route, id, full) {
-      const parentRoute = Object.values(routes).find(o =>
-        o.id && o.id === "/"
-          ? id.startsWith("/index/") && (id = id.slice("/index".length))
-          : id.startsWith(o.id + "/")
-      );
+      const parentRoute = Object.values(routes).find(o => {
+        if (o.id.endsWith("/index")) {
+          return false;
+        }
+        return id.startsWith(o.id + "/");
+      });
 
       if (!parentRoute) {
         routes.push({ ...route, id, path: toPath(id) });
@@ -215,27 +213,49 @@ export class Router {
       }
       return r;
     }, []);
-    return routes;
+
+    const routeLayouts = routes.reduce((routeMap, route) => {
+      function buildRouteLayoutsMap(route, path, layouts) {
+        const fullPath = path + route.path;
+        const fullId = toPath(
+          layouts.length ? layouts[layouts.length - 1] + route.id : route.id,
+          false
+        );
+
+        if (!route.children) {
+          routeMap[fullPath] = { id: fullId, layouts };
+          return;
+        }
+
+        const parentLayouts = [...layouts, fullId];
+
+        route.children.forEach(child => buildRouteLayoutsMap(child, fullPath, parentLayouts));
+      }
+
+      buildRouteLayoutsMap(route, "", []);
+
+      return routeMap;
+    }, {});
+
+    return { routes, routeLayouts };
   }
 
   isLayoutRoute(route) {
+    if (route.id.endsWith("/index")) {
+      return false;
+    }
     return Object.values(this.routes).some(r => {
-      return r.id.startsWith(route.id === "/" ? "/index/" : route.id + "/") && r.componentPath;
+      return r.id.startsWith(route.id + "/") && r.componentPath;
     });
   }
 
   getFlattenedApiRoutes(includePageRoutes = false) {
-    const hasIndexLayout = this.routes["/"] && this.routes["/"].componentPath;
     const routes = Object.values(this.routes).reduce((r, route) => {
       if (
         route.apiPath ||
         (includePageRoutes && route.componentPath && !this.isLayoutRoute(route))
       ) {
-        const path = toPath(
-          hasIndexLayout && route.id.startsWith("/index/")
-            ? route.id.slice("/index".length)
-            : route.id
-        );
+        const path = toPath(route.id);
         r.push({ ...route, id: route.id, path });
       }
       return r;
@@ -245,14 +265,9 @@ export class Router {
   }
 
   getFlattenedPageRoutes(includeLayouts = false) {
-    const hasIndexLayout = this.routes["/"] && this.routes["/"].componentPath;
     const routes = Object.values(this.routes).reduce((r, route) => {
       if (route.componentPath && (!this.isLayoutRoute(route) || includeLayouts)) {
-        const path = toPath(
-          hasIndexLayout && route.id.startsWith("/index/")
-            ? route.id.slice("/index".length)
-            : route.id
-        );
+        const path = toPath(route.id);
         r.push({ ...route, id: route.id, path });
       }
       return r;
@@ -262,7 +277,7 @@ export class Router {
   }
 }
 
-export function stringifyPageRoutes(pageRoutes, options = {}) {
+export function stringifyPageRoutes(routeData, options = {}) {
   const jsFile = jsCode();
 
   function _stringifyRoutes(r) {
@@ -297,12 +312,14 @@ export function stringifyPageRoutes(pageRoutes, options = {}) {
     );
   }
 
-  let routeConfig = _stringifyRoutes(pageRoutes);
+  const routeConfig = _stringifyRoutes(routeData.routes);
 
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
-  const routes = ${routeConfig};`;
+  const routeData = { routes: ${routeConfig}, routeLayouts: ${JSON.stringify(
+    routeData.routeLayouts
+  )} };`;
 
   return text;
 }

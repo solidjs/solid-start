@@ -15,6 +15,7 @@ test.describe("CSS link tags", () => {
 
       const camelize = name => name.replace(/-./g, x => x[1].toUpperCase());
       const pascalize = name => {
+        name = name.replace(/[\[\]\.]/g, "");
         const cc = camelize(name);
         return cc[0].toUpperCase() + cc.slice(1);
       };
@@ -98,9 +99,10 @@ test.describe("CSS link tags", () => {
         }
       `;
 
-      createNestedRoute("index");
-      createNestedRoute("index/double-nested");
+      createNestedRoute("__auth", ["login", "[...wild]"]);
       createNestedRoute("nested");
+      createNestedRoute("[param]");
+      createNestedRoute("nested/__pathless", ["test"]);
       createNestedRoute("nested/double-nested");
       createNestedRoute("nested/double-nested/triple-nested");
 
@@ -145,25 +147,15 @@ test.describe("CSS link tags", () => {
   }
 
   function runTests() {
-    test("Index of index nested route", async () => {
-      const cssUrls = await getStylesheetUrlsForRoute("/", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "index", 2);
+    test("Pathless layout route", async () => {
+      const cssUrls = await getStylesheetUrlsForRoute("/login", 3);
+      expectNumberOfUrlsToMatch(cssUrls, "__auth", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "login", 1);
     });
-    test("Non-index of index nested route", async () => {
-      const cssUrls = await getStylesheetUrlsForRoute("/non-index", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "index", 1);
-      expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
-    });
-    test("Index of double index nested route", async () => {
-      const cssUrls = await getStylesheetUrlsForRoute("/double-nested", 4);
-      expectNumberOfUrlsToMatch(cssUrls, "index", 2);
-      expectNumberOfUrlsToMatch(cssUrls, "double-nested", 1);
-    });
-    test("Non-index of double index nested route", async () => {
-      const cssUrls = await getStylesheetUrlsForRoute("/double-nested/non-index", 4);
-      expectNumberOfUrlsToMatch(cssUrls, "index", 1);
-      expectNumberOfUrlsToMatch(cssUrls, "double-nested", 1);
-      expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
+    test("Pathless layout wildcard route", async () => {
+      const cssUrls = await getStylesheetUrlsForRoute("/2/3", 3);
+      expectNumberOfUrlsToMatch(cssUrls, "__auth", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "_...wild_", 1);
     });
     test("Index of nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested", 3);
@@ -174,6 +166,22 @@ test.describe("CSS link tags", () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested/non-index", 3);
       expectNumberOfUrlsToMatch(cssUrls, "nested", 1);
       expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
+    });
+    test("Index of dynamic nested route", async () => {
+      const cssUrls = await getStylesheetUrlsForRoute("/__auth", 3);
+      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "index", 1);
+    });
+    test("Non-index of dynamic nested route", async () => {
+      const cssUrls = await getStylesheetUrlsForRoute("/__auth/non-index", 3);
+      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
+    });
+    test("Pathless layout inside a nested route", async () => {
+      const cssUrls = await getStylesheetUrlsForRoute("/nested/test", 4);
+      expectNumberOfUrlsToMatch(cssUrls, "nested", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "__pathless", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "test", 1);
     });
     test("Index of double nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested/double-nested", 4);

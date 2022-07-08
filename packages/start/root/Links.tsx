@@ -1,17 +1,25 @@
 import { JSXElement, useContext } from "solid-js";
 import { Assets } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
-import { ContextMatches, ManifestEntry, PageEvent } from "../server/types";
+import { ManifestEntry, PageEvent } from "../server/types";
+import { routeLayouts } from "./FileRoutes";
 
 function getAssetsFromManifest(
   manifest: PageEvent["env"]["manifest"],
   routerContext: PageEvent["routerContext"]
 ) {
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
-    const manifestEntries = routesToManifestKeys(m).flatMap(
-      manifestKey => manifest[manifestKey] || []
-    );
-    memo.push(...manifestEntries);
+    if (m.length) {
+      const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
+      const route = routeLayouts[fullPath];
+      if (route) {
+        memo.push(...(manifest[route.id] || []));
+        const layoutsManifestEntries = route.layouts.flatMap(
+          manifestKey => manifest[manifestKey] || []
+        );
+        memo.push(...layoutsManifestEntries);
+      }
+    }
     return memo;
   }, []);
 
@@ -26,20 +34,6 @@ function getAssetsFromManifest(
   }, {} as Record<string, JSXElement>);
 
   return Object.values(links);
-}
-
-function routesToManifestKeys(matches: ContextMatches[]) {
-  return matches.reduce<[string[], string]>(
-    ([manifestKeys, previous], route, index) => {
-      const currentSegment = route.originalPath
-        .replace(/:(\w+)/, (f, g) => `[${g}]`)
-        .replace(/\*(\w+)/, (f, g) => `[...${g}]`);
-      const current = (index === 1 && previous === "/" ? "/index/" : previous) + currentSegment;
-      manifestKeys[index] = current;
-      return [manifestKeys, current];
-    },
-    [[], ""]
-  )[0];
 }
 
 /**
