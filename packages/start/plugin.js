@@ -270,10 +270,10 @@ function solidStartFileSystemRouter(options) {
             ].filter(Boolean)
           })
         );
-      } else if (code.includes("var routeData = $ROUTE_DATA;")) {
+      } else if (code.includes("var routesConfig = $ROUTES_CONFIG;")) {
         return {
           code: code.replace(
-            "var routeData = $ROUTE_DATA;",
+            "var routesConfig = $ROUTES_CONFIG;",
             stringifyPageRoutes(router.getNestedPageRoutes(), { lazy })
           )
         };

@@ -162,7 +162,7 @@ test.describe("CSS link tags", () => {
       expectNumberOfUrlsToMatch(cssUrls, "nested", 1);
       expectNumberOfUrlsToMatch(cssUrls, "index", 1);
     });
-    test("Non-index of nested route", async () => {
+    test("Non-index nested route containing the word index", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested/non-index", 3);
       expectNumberOfUrlsToMatch(cssUrls, "nested", 1);
       expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);

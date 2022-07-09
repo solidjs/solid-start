@@ -277,7 +277,7 @@ export class Router {
   }
 }
 
-export function stringifyPageRoutes(routeData, options = {}) {
+export function stringifyPageRoutes(routesConfig, options = {}) {
   const jsFile = jsCode();
 
   function _stringifyRoutes(r) {
@@ -312,13 +312,13 @@ export function stringifyPageRoutes(routeData, options = {}) {
     );
   }
 
-  const routeConfig = _stringifyRoutes(routeData.routes);
+  const stringifiedRoutes = _stringifyRoutes(routesConfig.routes);
 
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
-  const routeData = { routes: ${routeConfig}, routeLayouts: ${JSON.stringify(
-    routeData.routeLayouts
+  const routesConfig = { routes: ${stringifiedRoutes}, routeLayouts: ${JSON.stringify(
+    routesConfig.routeLayouts
   )} };`;
 
   return text;
