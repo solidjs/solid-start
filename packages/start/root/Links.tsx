@@ -1,14 +1,25 @@
-import { useContext, JSXElement } from "solid-js";
+import { JSXElement, useContext } from "solid-js";
 import { Assets } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
-import { ContextMatches, ManifestEntry, PageEvent } from "../server/types";
+import { ManifestEntry, PageEvent } from "../server/types";
+import { routeLayouts } from "./FileRoutes";
 
 function getAssetsFromManifest(
   manifest: PageEvent["env"]["manifest"],
   routerContext: PageEvent["routerContext"]
 ) {
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
-    memo.push(...(manifest[mapRouteToFile(m)] || []));
+    if (m.length) {
+      const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
+      const route = routeLayouts[fullPath];
+      if (route) {
+        memo.push(...(manifest[route.id] || []));
+        const layoutsManifestEntries = route.layouts.flatMap(
+          manifestKey => manifest[manifestKey] || []
+        );
+        memo.push(...layoutsManifestEntries);
+      }
+    }
     return memo;
   }, []);
 
@@ -23,14 +34,6 @@ function getAssetsFromManifest(
   }, {} as Record<string, JSXElement>);
 
   return Object.values(links);
-}
-
-function mapRouteToFile(matches: ContextMatches[]) {
-  return matches
-    .map(h =>
-      h.originalPath.replace(/:(\w+)/, (f, g) => `[${g}]`).replace(/\*(\w+)/, (f, g) => `[...${g}]`)
-    )
-    .join("");
 }
 
 /**
