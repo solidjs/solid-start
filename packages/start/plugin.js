@@ -7,8 +7,9 @@ import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import { Router, stringifyApiRoutes, stringifyPageRoutes, toPath } from "./routes.js";
 import routeData from "./server/routeData.js";
-import routeDataHmr from "./server/routeDataHmr.js";
+import routeDataHmrFix from "./server/routeDataHmrFix.js";
 import babelServerModule from "./server/server-functions/babel.js";
+import renameServerFunctions from "./server/server-functions/renameServer.js";
 import routeResource from "./server/serverResource.js";
 
 /**
@@ -218,16 +219,24 @@ function solidStartFileSystemRouter(options) {
               routeResource,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
-            options.ssr && [
-              babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
+            [renameServerFunctions, {}],
             [
               routeData,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ],
             !ssr &&
-              process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }]
+              process.env.NODE_ENV !== "production" && [
+                routeDataHmrFix,
+                { ssr, root: process.cwd() }
+              ],
+            options.ssr && [
+              babelServerModule,
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
+            ]
           ].filter(Boolean)
         }));
       } else if (id.includes(path.posix.join(options.appRoot, options.routesDir))) {

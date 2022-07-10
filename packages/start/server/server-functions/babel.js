@@ -4,6 +4,7 @@
 
 import crypto from "crypto";
 import nodePath from "path";
+import { SERVER_RENAME_PREFIX } from "./constants.js";
 
 const INLINE_SERVER_ROUTE_PREFIX = "/_m";
 
@@ -44,6 +45,11 @@ function transformServer({ types: t, template }) {
     }
   }
   function markImport(path, state) {
+    if (t.isImportDefaultSpecifier(path.node)) {
+      if (path.parent.source.value === "solid-start/server") {
+        state.serverImported = true;
+      }
+    }
     const local = path.get("local");
     if (isIdentifierReferenced(local)) {
       state.refs.add(local);
@@ -63,6 +69,7 @@ function transformServer({ types: t, template }) {
           state.refs = new Set();
           state.done = false;
           state.servers = 0;
+          state.serverImported = false;
           path.traverse(
             {
               VariableDeclarator(variablePath, variableState) {
@@ -107,14 +114,29 @@ function transformServer({ types: t, template }) {
                 }
               },
               CallExpression: path => {
-                if (path.node.callee.type === "Identifier" && path.node.callee.name === "server") {
+                const callee = path.node.callee;
+                if (
+                  callee.type === "Identifier" &&
+                  (callee.name === "server" || callee.name.startsWith(SERVER_RENAME_PREFIX))
+                ) {
                   const serverFn = path.get("arguments")[0];
                   let program = path.findParent(p => t.isProgram(p));
                   let statement = path.findParent(p => program.get("body").includes(p));
                   let decl = path.findParent(
                     p => p.isVariableDeclarator() || p.isFunctionDeclaration()
                   );
-                  let serverIndex = state.servers++;
+
+                  const serverIndex =
+                    callee.name === "server"
+                      ? state.servers
+                      : Number(callee.name.slice(SERVER_RENAME_PREFIX.length));
+
+                  state.servers++;
+
+                  if (callee.name !== "server") {
+                    callee.name = "server";
+                  }
+
                   let hasher = state.opts.minify ? hashFn : str => str;
                   const fName = state.filename.replace(state.opts.root, "").slice(1);
 
@@ -228,9 +250,14 @@ function transformServer({ types: t, template }) {
               }
             }
           }
-          function sweepImport(sweepPath) {
+          function sweepImport(sweepPath, state) {
             const local = sweepPath.get("local");
             if (refs.has(local) && !isIdentifierReferenced(local)) {
+              if (t.isImportDefaultSpecifier(sweepPath.node)) {
+                if (sweepPath.parent.source.value === "solid-start/server") {
+                  state.serverImported = false;
+                }
+              }
               ++count;
               sweepPath.remove();
               if (sweepPath.parent.specifiers.length === 0) {
@@ -241,67 +268,80 @@ function transformServer({ types: t, template }) {
           do {
             path.scope.crawl();
             count = 0;
-            path.traverse({
-              VariableDeclarator(variablePath) {
-                if (variablePath.node.id.type === "Identifier") {
-                  const local = variablePath.get("id");
-                  if (refs.has(local) && !isIdentifierReferenced(local)) {
-                    ++count;
-                    variablePath.remove();
-                  }
-                } else if (variablePath.node.id.type === "ObjectPattern") {
-                  const pattern = variablePath.get("id");
-                  const beforeCount = count;
-                  const properties = pattern.get("properties");
-                  properties.forEach(p => {
-                    const local = p.get(
-                      p.node.type === "ObjectProperty"
-                        ? "value"
-                        : p.node.type === "RestElement"
-                        ? "argument"
-                        : (function () {
-                            throw new Error("invariant");
-                          })()
-                    );
+            path.traverse(
+              {
+                VariableDeclarator(variablePath) {
+                  if (variablePath.node.id.type === "Identifier") {
+                    const local = variablePath.get("id");
                     if (refs.has(local) && !isIdentifierReferenced(local)) {
                       ++count;
-                      p.remove();
+                      variablePath.remove();
                     }
-                  });
-                  if (beforeCount !== count && pattern.get("properties").length < 1) {
-                    variablePath.remove();
+                  } else if (variablePath.node.id.type === "ObjectPattern") {
+                    const pattern = variablePath.get("id");
+                    const beforeCount = count;
+                    const properties = pattern.get("properties");
+                    properties.forEach(p => {
+                      const local = p.get(
+                        p.node.type === "ObjectProperty"
+                          ? "value"
+                          : p.node.type === "RestElement"
+                          ? "argument"
+                          : (function () {
+                              throw new Error("invariant");
+                            })()
+                      );
+                      if (refs.has(local) && !isIdentifierReferenced(local)) {
+                        ++count;
+                        p.remove();
+                      }
+                    });
+                    if (beforeCount !== count && pattern.get("properties").length < 1) {
+                      variablePath.remove();
+                    }
+                  } else if (variablePath.node.id.type === "ArrayPattern") {
+                    const pattern = variablePath.get("id");
+                    const beforeCount = count;
+                    const elements = pattern.get("elements");
+                    elements.forEach(e => {
+                      let local;
+                      if (e.node && e.node.type === "Identifier") {
+                        local = e;
+                      } else if (e.node && e.node.type === "RestElement") {
+                        local = e.get("argument");
+                      } else {
+                        return;
+                      }
+                      if (refs.has(local) && !isIdentifierReferenced(local)) {
+                        ++count;
+                        e.remove();
+                      }
+                    });
+                    if (beforeCount !== count && pattern.get("elements").length < 1) {
+                      variablePath.remove();
+                    }
                   }
-                } else if (variablePath.node.id.type === "ArrayPattern") {
-                  const pattern = variablePath.get("id");
-                  const beforeCount = count;
-                  const elements = pattern.get("elements");
-                  elements.forEach(e => {
-                    let local;
-                    if (e.node && e.node.type === "Identifier") {
-                      local = e;
-                    } else if (e.node && e.node.type === "RestElement") {
-                      local = e.get("argument");
-                    } else {
-                      return;
-                    }
-                    if (refs.has(local) && !isIdentifierReferenced(local)) {
-                      ++count;
-                      e.remove();
-                    }
-                  });
-                  if (beforeCount !== count && pattern.get("elements").length < 1) {
-                    variablePath.remove();
-                  }
-                }
+                },
+                FunctionDeclaration: sweepFunction,
+                FunctionExpression: sweepFunction,
+                ArrowFunctionExpression: sweepFunction,
+                ImportSpecifier: sweepImport,
+                ImportDefaultSpecifier: sweepImport,
+                ImportNamespaceSpecifier: sweepImport
               },
-              FunctionDeclaration: sweepFunction,
-              FunctionExpression: sweepFunction,
-              ArrowFunctionExpression: sweepFunction,
-              ImportSpecifier: sweepImport,
-              ImportDefaultSpecifier: sweepImport,
-              ImportNamespaceSpecifier: sweepImport
-            });
+              state
+            );
           } while (count);
+
+          if (!state.serverImported && state.servers > 0) {
+            path.unshiftContainer(
+              "body",
+              t.importDeclaration(
+                [t.importDefaultSpecifier(t.identifier("server"))],
+                t.stringLiteral("solid-start/server")
+              )
+            );
+          }
         }
       }
     }
