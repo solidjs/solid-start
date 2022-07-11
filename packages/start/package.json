@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.1.0-alpha.89",
+  "version": "0.1.0-alpha.90",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -62,10 +62,10 @@
   "dependencies": {
     "@babel/core": "^7.16.7",
     "@babel/generator": "^7.16.7",
-    "@babel/template": "^7.16.7",
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
+    "@babel/template": "^7.16.7",
     "@types/cookie": "^0.5.1",
     "chokidar": "^3.5.3",
     "compression": "^1.7.4",
