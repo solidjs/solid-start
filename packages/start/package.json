@@ -12,22 +12,21 @@
   "type": "module",
   "types": "plugin.d.ts",
   "files": [
-    "bin.cjs",
-    "plugin.js",
-    "routes.js",
-    "client-adapter.js",
-    "types.d.ts",
-    "server",
-    "router",
-    "session",
+    "api",
+    "data",
     "entry-client",
     "entry-server",
-    "plugin.d.ts",
-    "required-user-files.d.ts",
+    "error-boundary",
     "root",
     "runtime",
-    "error-boundary",
-    "api"
+    "server",
+    "session",
+    "bin.cjs",
+    "client-adapter.js",
+    "plugin.d.ts",
+    "plugin.js",
+    "required-user-files.d.ts",
+    "routes.js"
   ],
   "exports": {
     ".": {
