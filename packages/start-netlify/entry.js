@@ -13,6 +13,7 @@ Response.redirect = function (url, status = 302) {
 Object.assign(globalThis, {
   Request,
   Response,
+  Headers,
   fetch
 });
 
