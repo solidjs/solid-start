@@ -307,7 +307,7 @@ importers:
       solid-start-cloudflare-workers: ^0.1.0-alpha.91
       solid-start-deno: ^0.1.0-alpha.91
       solid-start-netlify: ^0.1.0-alpha.91
-      solid-start-node: ^0.1.0-alpha.91
+      solid-start-node: 0.1.0-alpha.91
       solid-start-static: ^0.1.0-alpha.91
       undici: ^5.5.1
       vite: ^2.8.6
@@ -338,8 +338,6 @@ importers:
       undici: 5.6.0
       vite-plugin-inspect: 0.3.15_vite@2.9.13
       vite-plugin-solid: 2.2.6
-    optionalDependencies:
-      solid-start-node: 0.1.0-y.0
     devDependencies:
       solid-app-router: 0.4.1_solid-js@1.4.6
       solid-js: 1.4.6
@@ -348,6 +346,7 @@ importers:
       solid-start-cloudflare-workers: 0.1.0-y.0
       solid-start-deno: link:../start-deno
       solid-start-netlify: 0.1.0-v0.1.0-alpha.59.0
+      solid-start-node: link:../start-node
       solid-start-static: 0.1.0-y.0
       vite: 2.9.13
 
@@ -357,7 +356,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: ^0.1.0-alpha.91
+      solid-start: 0.1.0-alpha.91
       vite: ^2.8.6
     dependencies:
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.75.6
@@ -365,7 +364,7 @@ importers:
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.75.6
       rollup: 2.75.6
     devDependencies:
-      solid-start: 0.1.0-y.0_rollup@2.75.6+vite@2.9.13
+      solid-start: link:../start
       vite: 2.9.13
 
   packages/start-cloudflare-workers:
@@ -440,7 +439,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.53.3
       sirv: ^1.0.12
-      solid-start: ^0.1.0-alpha.91
+      solid-start: 0.1.0-alpha.91
       undici: ^5.5.1
       vite: ^2.8.6
     dependencies:
@@ -452,7 +451,7 @@ importers:
       rollup: 2.75.6
       sirv: 1.0.19
     devDependencies:
-      solid-start: 0.1.0-y.0_rollup@2.75.6+vite@2.9.13
+      solid-start: link:../start
       undici: 5.6.0
       vite: 2.9.13
 
@@ -2722,6 +2721,7 @@ packages:
       magic-string: 0.25.9
       resolve: 1.22.1
       rollup: 2.75.6
+    dev: true
 
   /@rollup/plugin-commonjs/19.0.2_rollup@2.75.6:
     resolution: {integrity: sha512-gBjarfqlC7qs0AutpRW/hrFNm+cd2/QKxhwyFa+srbg1oX7rDsEU3l+W7LAUhsAp9mPJMAkXDhLbQaVwEaE8bA==}
@@ -2775,6 +2775,7 @@ packages:
       is-module: 1.0.0
       resolve: 1.22.1
       rollup: 2.75.6
+    dev: true
 
   /@rollup/plugin-node-resolve/13.3.0_rollup@2.75.6:
     resolution: {integrity: sha512-Lus8rbUo1eEcnS4yTFKLZrVumLPY+YayBdWXgFSHYhTT2iJbMhoaaBL3xl5NCdeRytErGr8tZ0L71BMRmnlwSw==}
@@ -6861,6 +6862,7 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: true
 
   /node-fetch/2.6.7_encoding@0.1.13:
     resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
@@ -8416,26 +8418,6 @@ packages:
       - '@types/babel__core'
       - supports-color
     dev: true
-
-  /solid-start-node/0.1.0-y.0:
-    resolution: {integrity: sha512-9FwAWKls6IwFckweuOKobkWgteuwXc5IFPd2Lc0ZmywIbhUFBGK6CVDANkNaOw1b4uHzzQrbbPsagGEtlll73w==}
-    requiresBuild: true
-    peerDependencies:
-      solid-start: '*'
-    dependencies:
-      '@rollup/plugin-commonjs': 18.1.0_rollup@2.75.6
-      '@rollup/plugin-json': 4.1.0_rollup@2.75.6
-      '@rollup/plugin-node-resolve': 11.2.1_rollup@2.75.6
-      compression: 1.7.4
-      node-fetch: 2.6.7
-      polka: 1.0.0-next.22
-      rollup: 2.75.6
-      sirv: 1.0.19
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
-    optional: true
 
   /solid-start-static/0.1.0-y.0:
     resolution: {integrity: sha512-7rNj5n4zLyXP2EaVmXYReSHXPkbnr0wZ/cPvhEGgW+UwO93Jjy3CeoyVBAGYmKVt0TZEvuSeufyaoEUlAdDrzw==}

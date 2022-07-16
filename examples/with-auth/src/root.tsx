@@ -1,9 +1,9 @@
 // @refresh reload
-import { Suspense } from "solid-js";
-import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
-import { ErrorBoundary } from "solid-start/error-boundary";
-import "virtual:windi.css";
 import { Routes } from "solid-app-router";
+import { Suspense } from "solid-js";
+import { ErrorBoundary } from "solid-start/error-boundary";
+import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
+import "virtual:windi.css";
 
 export default function Root() {
   return (

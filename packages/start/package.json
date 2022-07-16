@@ -92,7 +92,7 @@
     "solid-start-cloudflare-workers": "^0.1.0-alpha.91",
     "solid-start-deno": "^0.1.0-alpha.91",
     "solid-start-netlify": "^0.1.0-alpha.91",
-    "solid-start-node": "0.1.0-alpha.90",
+    "solid-start-node": "0.1.0-alpha.91",
     "solid-start-static": "^0.1.0-alpha.91",
     "vite": "^2.8.6"
   },
@@ -101,8 +101,5 @@
     "solid-js": "^1.4.6",
     "solid-meta": "^0.27.2",
     "vite": "^2.8.6"
-  },
-  "optionalDependencies": {
-    "solid-start-node": "^0.1.0-alpha.91"
   }
 }
