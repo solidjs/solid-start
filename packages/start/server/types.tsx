@@ -3,7 +3,7 @@ export type ManifestEntry = {
   href: string;
 };
 
-export const FETCH_EVENT = Symbol("FETCH_EVENT");
+export const FETCH_EVENT = "$FETCH";
 
 export type ContextMatches = {
   originalPath: string;
