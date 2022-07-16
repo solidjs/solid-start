@@ -98,7 +98,7 @@
   },
   "peerDependencies": {
     "solid-app-router": "^0.4.1",
-    "solid-js": "^1.4.6",
+    "solid-js": "^1.4.7",
     "solid-meta": "^0.27.2",
     "vite": "^2.8.6"
   }
