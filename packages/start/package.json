@@ -85,15 +85,15 @@
     "vite-plugin-solid": "^2.2.6"
   },
   "devDependencies": {
-    "solid-app-router": "^0.4.1",
-    "solid-js": "^1.4.6",
-    "solid-meta": "^0.27.5",
-    "solid-start-cloudflare-pages": "^0.1.0-alpha.91",
-    "solid-start-cloudflare-workers": "^0.1.0-alpha.91",
-    "solid-start-deno": "^0.1.0-alpha.91",
-    "solid-start-netlify": "^0.1.0-alpha.91",
+    "solid-app-router": "0.4.1",
+    "solid-js": "1.4.7",
+    "solid-meta": "0.27.5",
+    "solid-start-cloudflare-pages": "0.1.0-alpha.91",
+    "solid-start-cloudflare-workers": "0.1.0-alpha.91",
+    "solid-start-deno": "0.1.0-alpha.91",
+    "solid-start-netlify": "0.1.0-alpha.91",
     "solid-start-node": "0.1.0-alpha.91",
-    "solid-start-static": "^0.1.0-alpha.91",
+    "solid-start-static": "0.1.0-alpha.91",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
