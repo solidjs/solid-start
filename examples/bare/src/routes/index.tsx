@@ -1,4 +1,5 @@
 import Counter from "~/components/Counter";
+import "./index.css";
 
 export default function Home() {
   return (
@@ -10,7 +11,6 @@ export default function Home() {
         <a href="https://solidjs.com" target="_blank">
           solidjs.com
         </a>{" "}
-        <a href="/missing">missing</a>
         to learn how to build Solid apps.
       </p>
     </main>
