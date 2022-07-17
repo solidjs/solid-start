@@ -1,8 +1,7 @@
 /// <reference types="vitest" />
-/// <reference types="vite/client" />
 
-import { defineConfig } from "vite";
 import solid from "solid-start";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   test: {
@@ -11,7 +10,7 @@ export default defineConfig({
     transformMode: {
       web: [/\.[tj]sx?$/]
     },
-    setupFiles: "./scripts/setup-vitest.ts",
+    setupFiles: "./vitest.setup.ts",
     // solid needs to be inline to work around
     // a resolution issue in vitest:
     deps: {
@@ -23,11 +22,8 @@ export default defineConfig({
     // isolate: false,
   },
   plugins: [solid()],
-  build: {
-    target: "esnext",
-    polyfillDynamicImport: false
-  },
+  
   resolve: {
-    conditions: ["development", "browser"]
-  }
+		conditions: process.env["VITEST"] ? ["browser"] : [],
+	},
 });
