@@ -19,7 +19,7 @@ on:
 env:
   CF_API_TOKEN: ${{ secrets.CF_ACCOUNT_TOKEN }}
   CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-  
+
 jobs:
   integration:
     name: "👀 Integration Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node }})"
@@ -87,4 +87,4 @@ jobs:
       run: pnpm --filter solid-start-tests install:playwright
 
     - name: 👀 Run Integration Tests
-      run: ADAPTER=${{ matrix.adapter }}npm run test
+      run: ADAPTER=${{ matrix.adapter }} npm run test
