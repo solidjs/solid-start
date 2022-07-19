@@ -1,9 +1,5 @@
-import prepareManifest from "solid-start/runtime/prepareManifest";
-import assetManifest from "../../dist/manifest.json";
-import manifest from "../../dist/rmanifest.json";
-import entry from "./app";
-
-prepareManifest(manifest, assetManifest);
+import manifest from "../../dist/route-manifest.json";
+import handler from "./handler";
 
 export const onRequestGet = ({ request, next }) => {
   // Handle static assets
@@ -11,7 +7,7 @@ export const onRequestGet = ({ request, next }) => {
     return next(request);
   }
 
-  return entry({
+  return handler({
     request: request,
     env: { manifest }
   });
@@ -23,18 +19,32 @@ export const onRequestHead = ({ request, next }) => {
     return next(request);
   }
 
-  return entry({
-    request,
-    responseHeaders: new Headers(),
-    manifest
+  return handler({
+    request: request,
+    env: { manifest }
   });
 };
 
 export async function onRequestPost({ request }) {
   // Allow for POST /_m/33fbce88a9 server function
-  return entry({
-    request,
-    responseHeaders: new Headers(),
-    manifest
+  return handler({
+    request: request,
+    env: { manifest }
+  });
+}
+
+export async function onRequestDelete({ request }) {
+  // Allow for POST /_m/33fbce88a9 server function
+  return handler({
+    request: request,
+    env: { manifest }
+  });
+}
+
+export async function onRequestPatch({ request }) {
+  // Allow for POST /_m/33fbce88a9 server function
+  return handler({
+    request: request,
+    env: { manifest }
   });
 }

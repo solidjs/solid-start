@@ -7,8 +7,7 @@ import stripIndent from "strip-indent";
 import { fileURLToPath, pathToFileURL } from "url";
 
 import { createServer } from "solid-start-node/server.js";
-import "solid-start/runtime/node-globals.js";
-import prepareManifest from "solid-start/runtime/prepareManifest.js";
+import "solid-start/node/globals.js";
 import type { FetchEvent } from "solid-start/server/types.js";
 
 const TMP_DIR = path.join(
@@ -51,10 +50,9 @@ export async function createFixture(init: FixtureInit) {
     );
   }
   let app: EntryServer = await import(pathToFileURL(buildPath).toString());
-  let manifest = fse.readJSONSync(path.resolve(projectDir, "dist", "public", "rmanifest.json"));
-  let assetManifest = fse.readJSONSync(path.resolve(projectDir, "dist", "public", "manifest.json"));
-
-  prepareManifest(manifest, assetManifest);
+  let manifest = fse.readJSONSync(
+    path.resolve(projectDir, "dist", "public", "route-manifest.json")
+  );
 
   let handler = async (request: Request) => {
     return await app.default({
@@ -111,7 +109,7 @@ export async function createAppFixture(fixture: Fixture) {
       let app = createServer({
         paths,
         manifest: fixture.manifest,
-        entry: fixture.build.default
+        handler: fixture.build.default
       });
 
       let stop = (): Promise<void> => {

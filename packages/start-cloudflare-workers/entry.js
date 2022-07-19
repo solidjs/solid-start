@@ -1,11 +1,7 @@
 import { getAssetFromKV, MethodNotAllowedError, NotFoundError } from "@cloudflare/kv-asset-handler";
-import prepareManifest from "solid-start/runtime/prepareManifest";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
-import internalAssetManifest from "../../dist/manifest.json";
-import manifest from "../../dist/rmanifest.json";
-import entry from "./app";
-
-prepareManifest(manifest, internalAssetManifest);
+import manifest from "../../dist/route-manifest.json";
+import handler from "./handler";
 
 const assetManifest = JSON.parse(manifestJSON);
 
@@ -31,7 +27,7 @@ export default {
     }
 
     env.manifest = manifest;
-    return entry({
+    return handler({
       request: request,
       env
     });

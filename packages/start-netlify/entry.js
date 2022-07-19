@@ -1,8 +1,6 @@
 import fetch, { Headers, Request, Response } from "node-fetch";
-import prepareManifest from "solid-start/runtime/prepareManifest";
-import assetManifest from "../../netlify/manifest.json";
-import manifest from "../../netlify/rmanifest.json";
-import entry from "./app";
+import manifest from "../../netlify/route-manifest.json";
+import handler from "./handler";
 
 Response.redirect = function (url, status = 302) {
   let response = new Response(null, { status, headers: { Location: url }, counter: 1 });
@@ -17,12 +15,10 @@ Object.assign(globalThis, {
   fetch
 });
 
-prepareManifest(manifest, assetManifest);
-
 exports.handler = async function (event, context) {
   console.log(`Received new request: ${event.path}`);
 
-  const webRes = await entry({
+  const webRes = await handler({
     request: createRequest(event),
     env: { manifest }
   });

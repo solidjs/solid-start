@@ -7,13 +7,13 @@ import { dirname, join, resolve } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 import vite from "vite";
-export default function ({ durableObjects = [] }) {
+export default function ({ durableObjects = [] } = {}) {
   return {
     start() {
       const proc = spawn("npx", [
         "wrangler@2",
         "dev",
-        "./dist/index.js",
+        "./dist/server.js",
         "--site",
         "./dist",
         "--port",
@@ -22,21 +22,10 @@ export default function ({ durableObjects = [] }) {
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
-    async build(config) {
+    async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
-      await vite.build({
-        build: {
-          outDir: "./dist/",
-          minify: "terser",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-client`)),
-            output: {
-              manualChunks: undefined
-            }
-          }
-        }
-      });
+      await builder.client(join(config.root, "dist"));
       await vite.build({
         build: {
           ssr: true,
@@ -51,18 +40,18 @@ export default function ({ durableObjects = [] }) {
       });
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "app.js")
+        join(config.root, ".solid", "server", "handler.js")
       );
-      copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
+      copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
       if (durableObjects.length > 0) {
-        let text = readFileSync(join(config.root, ".solid", "server", "index.js"), "utf8");
+        let text = readFileSync(join(config.root, ".solid", "server", "server.js"), "utf8");
         durableObjects.forEach(item => {
-          text += `\nexport { ${item} } from "./app";`;
+          text += `\nexport { ${item} } from "./handler";`;
         });
-        writeFileSync(join(config.root, ".solid", "server", "index.js"), text);
+        writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
       }
       const bundle = await rollup({
-        input: join(config.root, ".solid", "server", "index.js"),
+        input: join(config.root, ".solid", "server", "server.js"),
         plugins: [
           json(),
           nodeResolve({

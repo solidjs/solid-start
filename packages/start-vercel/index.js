@@ -15,25 +15,14 @@ export default function () {
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
-    async build(config) {
+    async build(config, builder) {
       // Vercel Build Output API v3 (https://vercel.com/docs/build-output-api/v3)
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
       const outputDir = join(config.root, ".vercel/output");
 
       // Static Files
-      await vite.build({
-        build: {
-          outDir: join(outputDir, "static"),
-          minify: "terser",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, "entry-client")),
-            output: {
-              manualChunks: undefined
-            }
-          }
-        }
-      });
+      await builder.client(join(outputDir, "static"));
 
       // SSR Edge Function
       await vite.build({
@@ -48,7 +37,7 @@ export default function () {
           }
         }
       });
-      const entrypoint = join(config.root, ".solid", "server", "index.js");
+      const entrypoint = join(config.root, ".solid", "server", "server.js");
       copyFileSync(join(__dirname, "entry.js"), entrypoint);
       const bundle = await rollup({
         input: entrypoint,
