@@ -20,5 +20,8 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "dependencies": {
+    "miniflare": "^2.6.0"
   }
 }
