@@ -88,4 +88,6 @@ jobs:
       run: pnpm --filter solid-start-tests install:playwright
 
     - name: 👀 Run Integration Tests
-      run: cross-env ADAPTER=${{ matrix.adapter }} npm run test
+      env: 
+        ADAPTER: ${{ matrix.adapter }}
+      run: npm run test
