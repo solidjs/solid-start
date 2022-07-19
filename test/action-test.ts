@@ -7,6 +7,7 @@ import { PlaywrightFixture, prettyHtml } from "./helpers/playwright-fixture.js";
 test.describe("actions", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
+  test.skip(process.env.ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({

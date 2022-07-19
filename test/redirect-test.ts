@@ -6,6 +6,7 @@ import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 test.describe("external redirect", () => {
   let appFixture: AppFixture;
   let fixture: Fixture;
+  test.skip(process.env.ADAPTER !== "solid-start-node");
   test.beforeAll(async () => {
     fixture = await createFixture({
       files: {
