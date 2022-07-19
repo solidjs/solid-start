@@ -25,6 +25,7 @@ jobs:
     name: "👀 Integration Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node }})"
     
     strategy:
+      fail-fast: false
       matrix:
         node-version: [16]
         adapter:
