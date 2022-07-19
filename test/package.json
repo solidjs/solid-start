@@ -31,5 +31,8 @@
     "vite": "^2.9.12",
     "vitest": "^0.16.0",
     "wait-on": "^6.0.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

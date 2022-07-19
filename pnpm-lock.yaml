@@ -497,6 +497,7 @@ importers:
       '@types/testing-library__jest-dom': ^5.14.4
       cheerio: 1.0.0-rc.11
       compression: ^1.7.4
+      cross-env: ^7.0.3
       cross-spawn: ^7.0.3
       fs-extra: ^10.1.0
       get-port: ^6.1.2
@@ -534,6 +535,8 @@ importers:
       vite: 2.9.13
       vitest: 0.16.0
       wait-on: 6.0.1
+    devDependencies:
+      cross-env: 7.0.3
 
   test/template:
     specifiers:
@@ -4039,6 +4042,14 @@ packages:
       log-driver: 1.2.7
       minimist: 1.2.6
       request: 2.88.2
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn/7.0.3:
