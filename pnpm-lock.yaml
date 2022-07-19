@@ -8,11 +8,14 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       coveralls: ^3.1.0
+      cross-env: ^7.0.3
       lerna: ^4.0.0
       rimraf: ^3.0.2
       rollup: ^2.53.3
       turbo: ^1.1.10
       typescript: ~4.3.5
+    dependencies:
+      cross-env: 7.0.3
     devDependencies:
       '@rollup/plugin-commonjs': 19.0.2_rollup@2.75.6
       '@rollup/plugin-json': 4.1.0_rollup@2.75.6
@@ -4050,7 +4053,6 @@ packages:
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
-    dev: true
 
   /cross-spawn/7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}

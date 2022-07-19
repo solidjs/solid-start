@@ -32,5 +32,8 @@
     "rollup": "^2.53.3",
     "turbo": "^1.1.10",
     "typescript": "~4.3.5"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
   }
 }
