@@ -23,6 +23,9 @@ jobs:
     strategy:
       matrix:
         node-version: [16]
+        adapter:
+            - solid-start-node
+            - solid-start-cloudflare-workers
         os:
             - ubuntu-latest
             # - macos-latest
@@ -80,4 +83,4 @@ jobs:
       run: pnpm --filter solid-start-tests install:playwright
 
     - name: 👀 Run Integration Tests
-      run: npm run test
+      run: ADAPTER=${{ matrix.adapter }}npm run test

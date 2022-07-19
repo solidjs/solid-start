@@ -15,7 +15,7 @@ export default function () {
         "wrangler@2",
         "pages",
         "dev",
-        "./dist",
+        "./dist/public",
         "--port",
         process.env.PORT ? process.env.PORT : "3000"
       ]);

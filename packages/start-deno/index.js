@@ -14,7 +14,8 @@ export default function () {
         "deno",
         ["run", "--allow-net", "--allow-env", "--allow-read", "index.js"],
         {
-          cwd: join(process.cwd(), "dist")
+          cwd: join(process.cwd(), "dist"),
+          env: process.env
         }
       );
       proc.stdout.pipe(process.stdout);

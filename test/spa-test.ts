@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
+import { createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
 
 test.describe("spa rendering", () => {
@@ -22,7 +22,7 @@ test.describe("spa rendering", () => {
           import solid from "solid-start";
 
           export default defineConfig({
-            plugins: [solid({ ssr: false })]
+            plugins: [solid({ ssr: false, adapter: process.env.ADAPTER })]
           });
         `,
         "src/root.tsx": js`
@@ -65,7 +65,7 @@ test.describe("spa rendering", () => {
       }
     });
 
-    appFixture = await createAppFixture(fixture);
+    appFixture = await fixture.createServer();
   });
 
   test.afterAll(async () => {
@@ -83,7 +83,7 @@ test.describe("spa rendering", () => {
   test("server rendering doesn't include content", async () => {
     let res = await fixture.requestDocument("/");
     expect(res.status).toBe(200);
-    expect(res.headers.get("Content-Type")).toBe("text/html");
+    expect(res.headers.get("Content-Type")).toBe("text/html; charset=utf-8");
     expect(async () => selectHtml(await res.text(), "#content")).rejects.toThrow();
   });
 
