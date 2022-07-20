@@ -46,6 +46,10 @@ export function redirect(url: string, init: number | ResponseInit = 302): Respon
     url = "/";
   }
 
+  if (url.startsWith(".")) {
+    throw new Error("Relative URLs are not allowed in redirect");
+  }
+
   const response = new Response(null, {
     ...responseInit,
     headers: {
