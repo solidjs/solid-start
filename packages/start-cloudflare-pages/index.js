@@ -2,7 +2,7 @@ import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
-import { copyFileSync } from "fs";
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
@@ -10,9 +10,9 @@ import vite from "vite";
 
 export default function () {
   return {
-    start() {
-      const proc = spawn("npx", [
-        "wrangler@2",
+    start(config) {
+      const proc = spawn("node", [
+        join(config.root, "node_modules", "wrangler", "bin", "wrangler.js"),
         "pages",
         "dev",
         "./dist/public",
@@ -25,19 +25,31 @@ export default function () {
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
-      await builder.client(join(config.root, "dist"));
-      await vite.build({
-        build: {
-          ssr: true,
-          outDir: "./.solid/server",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-server`)),
-            output: {
-              format: "esm"
+      if (!config.solidOptions.ssr) {
+        await builder.spaClient(join(config.root, "dist", "public"));
+
+        mkdirSync(join(config.root, ".solid", "server"), {
+          recursive: true
+        });
+
+        let text = readFileSync(join(__dirname, "spa-handler.js")).toString();
+        writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
+      } else {
+        await builder.client(join(config.root, "dist", "public"));
+        await vite.build({
+          build: {
+            ssr: true,
+            outDir: "./.solid/server",
+            rollupOptions: {
+              input: resolve(join(config.root, appRoot, `entry-server`)),
+              output: {
+                format: "esm"
+              }
             }
           }
-        }
-      });
+        });
+      }
+
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "handler.js")

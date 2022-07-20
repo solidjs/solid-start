@@ -83,7 +83,7 @@ test.describe("spa rendering", () => {
   test("server rendering doesn't include content", async () => {
     let res = await fixture.requestDocument("/");
     expect(res.status).toBe(200);
-    expect(res.headers.get("Content-Type")).toBe("text/html; charset=utf-8");
+    expect(res.headers.get("Content-Type")?.includes("text/html")).toBe(true);
     expect(async () => selectHtml(await res.text(), "#content")).rejects.toThrow();
   });
 
