@@ -4,6 +4,8 @@
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const vite = require("vite");
+const { resolve, join } = require("path");
+const { readFileSync, writeFileSync } = require("fs");
 
 const prog = sade("solid-start").version("alpha");
 
@@ -41,7 +43,56 @@ prog
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
     }
-    adapter.build(config);
+    const { default: prepareManifest } = await import("./fs-router/manifest.js");
+
+    adapter.build(config, {
+      client: async path => {
+        await vite.build({
+          build: {
+            outDir: path,
+            ssrManifest: true,
+            minify: "terser",
+            rollupOptions: {
+              input: resolve(join(config.root, config.solidOptions.appRoot, `entry-client`)),
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+
+        let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
+        let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+
+        writeFileSync(
+          join(path, "route-manifest.json"),
+          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
+        );
+      },
+      spaClient: async path => {
+        await vite.build({
+          build: {
+            outDir: path,
+            minify: "terser",
+            ssrManifest: true,
+            rollupOptions: {
+              input: resolve(join(config.root, "index.html")),
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+
+        let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
+        let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+
+        writeFileSync(
+          join(path, "route-manifest.json"),
+          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
+        );
+      }
+    });
   });
 
 prog

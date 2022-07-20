@@ -1,8 +1,5 @@
-import { readFile } from "fs/promises";
-let indexHTML = INDEX_HTML;
-
 export default async function entry({ request, env }) {
-  let text = await readFile(indexHTML, "utf8");
+  const text = await Deno.readFile(`./public/index.html`);
 
   return new Response(text, {
     headers: {

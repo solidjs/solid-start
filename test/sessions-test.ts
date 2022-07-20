@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 import type { AppFixture } from "./helpers/create-fixture.js";
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
+import { createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 
 test.describe("sessions", () => {
   let appFixture: AppFixture;
   test.beforeAll(async () => {
-    appFixture = await createAppFixture(
+    appFixture = await (
       await createFixture({
         files: {
           "src/routes/index.tsx": js`
@@ -303,7 +303,7 @@ test.describe("sessions", () => {
           `
         }
       })
-    );
+    ).createServer();
   });
 
   test.afterAll(async () => {

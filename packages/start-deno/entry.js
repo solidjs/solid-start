@@ -1,10 +1,6 @@
 import { lookup } from "https://deno.land/x/media_types/mod.ts";
-import prepareManifest from "solid-start/runtime/prepareManifest";
-import assetManifest from "../../dist/public/manifest.json";
-import manifest from "../../dist/public/rmanifest.json";
-import entry from "./app";
-
-prepareManifest(manifest, assetManifest);
+import manifest from "../../dist/public/route-manifest.json";
+import handler from "./handler";
 
 import { serve } from "https://deno.land/std@0.139.0/http/server.ts";
 
@@ -28,7 +24,7 @@ serve(
       });
     } catch (e) {}
 
-    return await entry({
+    return await handler({
       request: request,
       env: { manifest }
     });

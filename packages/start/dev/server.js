@@ -1,8 +1,8 @@
 import { once } from "events";
 import path from "path";
 import { Readable } from "stream";
-import { createRequest } from "./fetch.js";
-import "./node-globals.js";
+import { createRequest } from "../node/fetch.js";
+import "../node/globals.js";
 
 export function createDevHandler(viteServer) {
   return async (req, res) => {

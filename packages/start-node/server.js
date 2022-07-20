@@ -3,10 +3,10 @@ import { once } from "events";
 import fs from "fs";
 import polka from "polka";
 import sirv from "sirv";
-import { createRequest } from "solid-start/runtime/fetch.js";
+import { createRequest } from "solid-start/node/fetch.js";
 import { Readable } from "stream";
 
-export function createServer({ entry, paths, manifest }) {
+export function createServer({ handler, paths, manifest }) {
   const comp = compression({
     threshold: 0,
     filter: req => req.headers["content-type"]?.startsWith("text/event-stream")
@@ -21,7 +21,7 @@ export function createServer({ entry, paths, manifest }) {
   const render = async (req, res) => {
     if (req.url === "/favicon.ico") return;
 
-    const webRes = await entry({
+    const webRes = await handler({
       request: createRequest(req),
       env: {
         manifest

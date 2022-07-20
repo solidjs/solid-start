@@ -7,14 +7,21 @@
   },
   "type": "module",
   "devDependencies": {
+    "@cloudflare/kv-asset-handler": "^0.1.1",
     "solid-app-router": "^0.4.1",
     "solid-js": "^1.4.7",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
+    "solid-start-cloudflare-pages": "workspace:*",
+    "solid-start-cloudflare-workers": "workspace:*",
+    "solid-start-deno": "workspace:*",
+    "solid-start-netlify": "workspace:*",
     "solid-start-node": "workspace:*",
+    "solid-start-static": "workspace:*",
     "typescript": "^4.4.3",
     "undici": "^5.5.1",
-    "vite": "^2.8.6"
+    "vite": "^2.8.6",
+    "wrangler": "^2.0.22"
   },
   "engines": {
     "node": ">=14"

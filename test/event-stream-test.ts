@@ -1,11 +1,13 @@
 import { expect, test } from "@playwright/test";
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
+import { createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 
 test.describe("check event-stream", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
+
+  test.skip(process.env.ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({
@@ -78,7 +80,7 @@ test.describe("check event-stream", () => {
       }
     });
 
-    appFixture = await createAppFixture(fixture);
+    appFixture = await fixture.createServer();
   });
 
   test("should change the inner text of the h1 element when receiving data from the event stream", async ({

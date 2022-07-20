@@ -10,25 +10,14 @@ import vite from "vite";
 export default function () {
   return {
     start(config) {
-      import(pathToFileURL(join(config.root, "dist", "index.js")).toString());
+      import(pathToFileURL(join(config.root, "dist", "server.js")).toString());
     },
-    async build(config) {
+    async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
 
       if (!config.solidOptions.ssr) {
-        await vite.build({
-          build: {
-            outDir: "./dist/public",
-            minify: "terser",
-            rollupOptions: {
-              input: resolve(join(config.root, "index.html")),
-              output: {
-                manualChunks: undefined
-              }
-            }
-          }
-        });
+        await builder.spaClient(join(config.root, "dist", "public"));
 
         mkdirSync(join(config.root, ".solid", "server"), {
           recursive: true
@@ -41,18 +30,8 @@ export default function () {
         );
         writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
       } else {
-        await vite.build({
-          build: {
-            outDir: "./dist/public",
-            minify: "terser",
-            rollupOptions: {
-              input: resolve(join(config.root, appRoot, `entry-client`)),
-              output: {
-                manualChunks: undefined
-              }
-            }
-          }
-        });
+        await builder.client(join(config.root, "dist", "public"));
+
         await vite.build({
           build: {
             ssr: true,
@@ -69,11 +48,14 @@ export default function () {
 
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "app.js")
+        join(config.root, ".solid", "server", "handler.js")
       );
-      copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "index.js"));
+
+      let text = readFileSync(join(__dirname, "entry.js")).toString();
+
+      writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
       const bundle = await rollup({
-        input: join(config.root, ".solid", "server", "index.js"),
+        input: join(config.root, ".solid", "server", "server.js"),
         plugins: [
           json(),
           nodeResolve({
@@ -89,9 +71,6 @@ export default function () {
 
       // closes the bundle
       await bundle.close();
-
-      // unlinkSync(join(config.root, "dist", "public", "manifest.json"));
-      // unlinkSync(join(config.root, "dist", "public", "rmanifest.json"));
     }
   };
 }

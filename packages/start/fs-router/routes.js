@@ -6,6 +6,7 @@ import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "fs";
 import path, { join } from "path";
+import { toPath } from "./path-utils.js";
 
 const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
@@ -13,13 +14,6 @@ const ROUTE_KEYS = ["component", "path", "data", "children"];
 // Available HTTP methods / verbs for api routes
 // `delete` is a reserved word in JS, so we use `del` instead
 const API_METHODS = ["get", "post", "put", "del", "patch"];
-
-export function toPath(id, removePathlessLayouts = true) {
-  const idWithoutIndex = id.endsWith("/index") ? id.slice(0, -"index".length) : id;
-  return (
-    removePathlessLayouts ? idWithoutIndex.replace(/\/__[^/]*/g, "") : idWithoutIndex
-  ).replace(/\[([^\[]+)\]/g, (_, m) => (m.startsWith("...") ? `*${m.slice(3)}` : `:${m}`));
-}
 
 export class Router {
   routes;

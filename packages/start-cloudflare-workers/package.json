@@ -14,7 +14,7 @@
     "rollup": "^2.53.3"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.92",
+    "solid-start": "0.1.0-alpha.92",
     "vite": "^2.8.6"
   },
   "peerDependencies": {

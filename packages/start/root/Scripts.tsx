@@ -3,9 +3,8 @@ import { useContext } from "solid-js";
 import { HydrationScript, isServer, NoHydration } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 
-function getFromManifest(manifest: PageEvent["env"]["manifest"]) {
-  const match = manifest["*"];
-  const entry = match.find(src => src.type === "script");
+function getEntryClient(manifest: PageEvent["env"]["manifest"]) {
+  const entry = manifest["entry-client"][0];
   return <script type="module" async src={entry.href} />;
 }
 
@@ -23,7 +22,7 @@ export default function Scripts() {
               <script type="module" async src="/src/entry-client" $ServerOnly></script>
             </>
           ) : (
-            getFromManifest(context.env.manifest)
+            getEntryClient(context.env.manifest)
           ))}
       </NoHydration>
     </>

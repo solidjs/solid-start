@@ -1,12 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
+import { createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
 
 test.describe("rendering", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
+  test.skip(process.env.ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({
@@ -55,7 +56,7 @@ test.describe("rendering", () => {
       }
     });
 
-    appFixture = await createAppFixture(fixture);
+    appFixture = await fixture.createServer();
   });
 
   test.afterAll(async () => {

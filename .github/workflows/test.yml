@@ -16,13 +16,23 @@ on:
       - "docs/**"
       - "**/*.md"
 
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CF_ACCOUNT_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
 jobs:
   integration:
-    name: "👀 Integration Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node }})"
+    name: "👀 ${{ matrix.adapter }} (os: ${{ matrix.os }}, node: ${{ matrix.node-version }})"
     
     strategy:
+      fail-fast: false
       matrix:
         node-version: [16]
+        adapter:
+            - solid-start-node
+            - solid-start-cloudflare-workers
+            - solid-start-cloudflare-pages
+            - solid-start-deno
         os:
             - ubuntu-latest
             # - macos-latest
@@ -52,6 +62,12 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
 
+    - name: Use Deno
+      if: matrix.adapter == 'solid-start-deno'
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+
     - name: 🕵️‍♂️ Get current Playwright version
       id: playwright-version
       shell: bash
@@ -80,4 +96,6 @@ jobs:
       run: pnpm --filter solid-start-tests install:playwright
 
     - name: 👀 Run Integration Tests
+      env: 
+        ADAPTER: ${{ matrix.adapter }}
       run: npm run test

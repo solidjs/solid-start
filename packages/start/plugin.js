@@ -1,11 +1,10 @@
 import fs from "fs";
 import path from "path";
 import c from "picocolors";
-import manifest from "rollup-route-manifest";
 import { normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
-import { Router, stringifyApiRoutes, stringifyPageRoutes, toPath } from "./routes.js";
+import { Router, stringifyApiRoutes, stringifyPageRoutes } from "./fs-router/routes.js";
 import routeData from "./server/routeData.js";
 import routeDataHmr from "./server/routeDataHmr.js";
 import babelServerModule from "./server/server-functions/babel.js";
@@ -298,24 +297,7 @@ function solidsStartRouteManifest(options) {
       return {
         build: {
           target: "esnext",
-          manifest: true,
-          rollupOptions: {
-            plugins: [
-              manifest({
-                inline: false,
-                merge: false,
-                publicPath: "/",
-                routes: file => {
-                  file = toPath(
-                    file.replace(path.posix.join(root, options.appRoot), "").replace(regex, ""),
-                    false
-                  );
-                  if (!file.startsWith(`/${options.routesDir}/`)) return "*"; // commons
-                  return "/" + file.replace(`/${options.routesDir}/`, "");
-                }
-              })
-            ]
-          }
+          manifest: true
         }
       };
     }
@@ -330,7 +312,7 @@ function solidStartSSR(options) {
     name: "solid-start-ssr",
     configureServer(vite) {
       return async () => {
-        const { createDevHandler } = await import("./runtime/devServer.js");
+        const { createDevHandler } = await import("./dev/server.js");
         remove_html_middlewares(vite.middlewares);
         vite.middlewares.use(createDevHandler(vite));
       };
