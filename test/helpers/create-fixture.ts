@@ -62,9 +62,11 @@ export async function createFixture(init: FixtureInit) {
       env: {
         ...process.env,
         PORT: `${port}`
-      },
-      stdio: [process.stdin, process.stdout, process.stderr]
+      }
     });
+
+    proc.stdout.pipe(process.stdout);
+    proc.stderr.pipe(process.stderr);
     console.log("waiting on", port);
 
     await waitOn({
