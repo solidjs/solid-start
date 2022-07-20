@@ -64,8 +64,8 @@ export async function createFixture(init: FixtureInit) {
       }
     });
 
-    // proc.stdout.pipe(process.stdout);
-    // proc.stderr.pipe(process.stderr);
+    proc.stdout.pipe(process.stdout);
+    proc.stderr.pipe(process.stderr);
 
     await waitOn({
       resources: [`http://127.0.0.1:${port}`]
