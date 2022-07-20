@@ -9,8 +9,9 @@ import { fileURLToPath } from "url";
 import vite from "vite";
 export default function ({ durableObjects = [] } = {}) {
   return {
-    start() {
-      const proc = spawn("./node_modules/.bin/wrangler", [
+    start(config) {
+      const proc = spawn("node", [
+        join(config.root, "node_modules", "wrangler", "bin", "wrangler.js"),
         "dev",
         "./dist/server.js",
         "--site",
