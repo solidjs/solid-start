@@ -306,12 +306,12 @@ importers:
       solid-app-router: 0.4.1
       solid-js: 1.4.7
       solid-meta: 0.27.5
-      solid-start-cloudflare-pages: 0.1.0-alpha.92
-      solid-start-cloudflare-workers: 0.1.0-alpha.92
-      solid-start-deno: 0.1.0-alpha.92
-      solid-start-netlify: 0.1.0-alpha.92
-      solid-start-node: 0.1.0-alpha.92
-      solid-start-static: 0.1.0-alpha.92
+      solid-start-cloudflare-pages: 0.1.0-alpha.93
+      solid-start-cloudflare-workers: 0.1.0-alpha.93
+      solid-start-deno: 0.1.0-alpha.93
+      solid-start-netlify: 0.1.0-alpha.93
+      solid-start-node: 0.1.0-alpha.93
+      solid-start-static: 0.1.0-alpha.93
       undici: ^5.5.1
       vite: ^2.8.6
       vite-plugin-inspect: ^0.3.13
@@ -359,7 +359,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: 0.1.0-alpha.92
+      solid-start: 0.1.0-alpha.93
       vite: ^2.8.6
     dependencies:
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.75.6
@@ -377,7 +377,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: 0.1.0-alpha.92
+      solid-start: 0.1.0-alpha.93
       vite: ^2.8.6
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
@@ -395,7 +395,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: 0.1.0-alpha.92
+      solid-start: 0.1.0-alpha.93
       vite: ^2.8.6
     dependencies:
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.75.6
@@ -417,7 +417,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^2.6.7
       rollup: ^2.53.3
-      solid-start: 0.1.0-alpha.92
+      solid-start: 0.1.0-alpha.93
       vite: ^2.8.6
     dependencies:
       '@babel/core': 7.18.6
@@ -442,7 +442,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.53.3
       sirv: ^1.0.12
-      solid-start: 0.1.0-alpha.92
+      solid-start: 0.1.0-alpha.93
       undici: ^5.5.1
       vite: ^2.8.6
     dependencies:
@@ -462,7 +462,7 @@ importers:
     specifiers:
       sirv-cli: 1.0.12
       solid-ssr: ^1.3.11
-      solid-start: 0.1.0-alpha.92
+      solid-start: 0.1.0-alpha.93
       undici: ^5.5.1
       vite: ^2.8.6
     dependencies:
@@ -479,7 +479,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.0.2
       rollup: ^2.53.3
-      solid-start: 0.1.0-alpha.92
+      solid-start: 0.1.0-alpha.93
       vite: ^2.9.8
     dependencies:
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.75.6
