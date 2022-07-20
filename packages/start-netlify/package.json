@@ -1,6 +1,6 @@
 {
   "name": "solid-start-netlify",
-  "version": "0.1.0-alpha.92",
+  "version": "0.1.0-alpha.93",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -18,7 +18,7 @@
     "rollup": "^2.53.3"
   },
   "devDependencies": {
-    "solid-start": "0.1.0-alpha.92",
+    "solid-start": "^0.1.0-alpha.93",
     "vite": "^2.8.6"
   },
   "peerDependencies": {
