@@ -17,8 +17,8 @@ on:
       - "**/*.md"
 
 env:
-  CF_API_TOKEN: ${{ secrets.CF_ACCOUNT_TOKEN }}
-  CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CF_ACCOUNT_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
 
 jobs:
   integration:
@@ -30,7 +30,7 @@ jobs:
         node-version: [16]
         adapter:
             - solid-start-node
-            - solid-start-cloudflare-workers
+            # - solid-start-cloudflare-workers
             - solid-start-deno
         os:
             - ubuntu-latest
