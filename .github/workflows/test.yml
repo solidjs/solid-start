@@ -30,7 +30,7 @@ jobs:
         node-version: [16]
         adapter:
             - solid-start-node
-            # - solid-start-cloudflare-workers
+            - solid-start-cloudflare-workers
             - solid-start-deno
         os:
             - ubuntu-latest

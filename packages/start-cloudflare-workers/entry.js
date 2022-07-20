@@ -22,7 +22,6 @@ export default {
         }
       );
     };
-    
     try {
       return await env.getAssetFromKV(request);
     } catch (e) {

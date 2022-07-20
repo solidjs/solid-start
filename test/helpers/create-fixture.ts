@@ -55,12 +55,14 @@ export async function createFixture(init: FixtureInit) {
   );
 
   if (process.env.ADAPTER !== "solid-start-node") {
+    let ip = process.env.ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
     let port = await getPort();
     let proc = spawn("npm", ["run", "start"], {
       cwd: projectDir,
       env: {
         ...process.env,
-        PORT: `${port}`
+        PORT: `${port}`,
+        IP: ip
       }
     });
 
@@ -68,11 +70,14 @@ export async function createFixture(init: FixtureInit) {
     proc.stderr.pipe(process.stderr);
 
     await waitOn({
-      resources: [`http://127.0.0.1:${port}`]
+      resources: [`http://${ip}:${port}/favicon.ico`],
+      validateStatus: function (status) {
+        return status >= 200 && status < 310; // default if not provided
+      }
     });
 
     let requestDocument = async (href: string, init?: RequestInit) => {
-      let url = new URL(href, `http://127.0.0.1:${port}`);
+      let url = new URL(href, `http://${ip}:${port}`);
       let request = new Request(url, init);
       return await fetch(request);
     };
@@ -102,7 +107,7 @@ export async function createFixture(init: FixtureInit) {
       manifest,
       createServer: async () => {
         return {
-          serverUrl: `http://127.0.0.1:${port}`,
+          serverUrl: `http://${ip}:${port}`,
           close: async () => {
             proc.kill();
           }
