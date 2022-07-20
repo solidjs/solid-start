@@ -11,6 +11,7 @@ export default function ({ durableObjects = [] } = {}) {
   return {
     start() {
       const proc = spawn("npx", [
+        "--no-install",
         "wrangler",
         "dev",
         "./dist/server.js",

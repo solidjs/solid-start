@@ -65,10 +65,13 @@ export async function createFixture(init: FixtureInit) {
       },
       stdio: [process.stdin, process.stdout, process.stderr]
     });
+    console.log("waiting on", port);
 
     await waitOn({
       resources: [`http://localhost:${port}/`]
     });
+
+    console.log("waited on", port);
 
     let requestDocument = async (href: string, init?: RequestInit) => {
       let url = new URL(href, `http://localhost:${port}`);
