@@ -1,5 +1,5 @@
 import { Link } from "solid-app-router";
-import { createEffect, createMemo, createUniqueId } from "solid-js";
+import { createEffect, createUniqueId } from "solid-js";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import { Title } from "./components/Main";
@@ -133,11 +133,7 @@ export default {
       {props.children}
     </code>
   ),
-  pre: props => (
-    <pre classList={{ "font-mono": true }} {...props}>
-      {props.children}
-    </pre>
-  ),
+  pre: props => <pre {...props}>{props.children}</pre>,
   "data-lsp": props => {
     const id = createUniqueId();
     createEffect(() => {
