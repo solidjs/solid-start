@@ -14,7 +14,7 @@ test.describe("check event-stream", () => {
       files: {
         "src/routes/index.jsx": js`
           import { createEffect, createSignal, onCleanup, Show } from "solid-js";
-          import server from "solid-start/server";
+          import server, { eventStream } from "solid-start/server";
           
           function createEventStream({ url }, onMessage) {
             createEffect(() => {
@@ -25,35 +25,6 @@ test.describe("check event-stream", () => {
               });
           
               onCleanup(() => eventSource.close());
-            });
-          }
-          
-          function eventStream(request, init) {
-            let stream = new ReadableStream({
-              start(controller) {
-                let encoder = new TextEncoder();
-                let send = (event, data) => {
-                  controller.enqueue(encoder.encode("event: " + event + "\n"));
-                  controller.enqueue(encoder.encode("data: " + data + "\n" + "\n"));
-                };
-                let cleanup = init(send);
-                let closed = false;
-                let close = () => {
-                  if (closed) return;
-                  cleanup();
-                  closed = true;
-                  request.signal.removeEventListener("abort", close);
-                  controller.close();
-                };
-                request.signal.addEventListener("abort", close);
-                if (request.signal.aborted) {
-                  close();
-                  return;
-                }
-              },
-            });
-            return new Response(stream, {
-              headers: { "Content-Type": "text/event-stream" },
             });
           }
           

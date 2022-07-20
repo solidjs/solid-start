@@ -46,8 +46,10 @@ export function redirect(url: string, init: number | ResponseInit = 302): Respon
     url = "/";
   }
 
-  if (url.startsWith(".")) {
-    throw new Error("Relative URLs are not allowed in redirect");
+  if (process.env.NODE_ENV === "development") {
+    if (url.startsWith(".")) {
+      throw new Error("Relative URLs are not allowed in redirect");
+    }
   }
 
   const response = new Response(null, {
@@ -60,6 +62,38 @@ export function redirect(url: string, init: number | ResponseInit = 302): Respon
   });
 
   return response;
+}
+
+export function eventStream(
+  request: Request,
+  init: (send: (event: string, data: object) => void) => () => void
+) {
+  let stream = new ReadableStream({
+    start(controller) {
+      let encoder = new TextEncoder();
+      let send = (event: string, data: object) => {
+        controller.enqueue(encoder.encode("event: " + event + "\n"));
+        controller.enqueue(encoder.encode("data: " + data + "\n" + "\n"));
+      };
+      let cleanup = init(send);
+      let closed = false;
+      let close = () => {
+        if (closed) return;
+        cleanup();
+        closed = true;
+        request.signal.removeEventListener("abort", close);
+        controller.close();
+      };
+      request.signal.addEventListener("abort", close);
+      if (request.signal.aborted) {
+        close();
+        return;
+      }
+    }
+  });
+  return new Response(stream, {
+    headers: { "Content-Type": "text/event-stream" }
+  });
 }
 
 export function isResponse(value: any): value is Response {
