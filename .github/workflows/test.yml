@@ -22,7 +22,7 @@ env:
 
 jobs:
   integration:
-    name: "👀 Integration Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node-version }} Adapter: ${{ matrix.adapter }})"
+    name: "👀 ${{ matrix.adapter }} (os: ${{ matrix.os }}, node: ${{ matrix.node-version }})"
     
     strategy:
       fail-fast: false
