@@ -56,7 +56,6 @@ export async function createFixture(init: FixtureInit) {
 
   if (process.env.ADAPTER !== "solid-start-node") {
     let port = await getPort();
-    console.log(port);
     let proc = spawn("npm", ["run", "start"], {
       cwd: projectDir,
       env: {
@@ -65,18 +64,15 @@ export async function createFixture(init: FixtureInit) {
       }
     });
 
-    proc.stdout.pipe(process.stdout);
-    proc.stderr.pipe(process.stderr);
-    console.log("waiting on", port);
+    // proc.stdout.pipe(process.stdout);
+    // proc.stderr.pipe(process.stderr);
 
     await waitOn({
-      resources: [`http://localhost:${port}/`]
+      resources: [`http://127.0.0.1:${port}`]
     });
 
-    console.log("waited on", port);
-
     let requestDocument = async (href: string, init?: RequestInit) => {
-      let url = new URL(href, `http://localhost:${port}`);
+      let url = new URL(href, `http://127.0.0.1:${port}`);
       let request = new Request(url, init);
       return await fetch(request);
     };
@@ -106,7 +102,7 @@ export async function createFixture(init: FixtureInit) {
       manifest,
       createServer: async () => {
         return {
-          serverUrl: `http://localhost:${port}`,
+          serverUrl: `http://127.0.0.1:${port}`,
           close: async () => {
             proc.kill();
           }

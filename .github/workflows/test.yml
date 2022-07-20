@@ -31,6 +31,7 @@ jobs:
         adapter:
             - solid-start-node
             - solid-start-cloudflare-workers
+            - solid-start-deno
         os:
             - ubuntu-latest
             # - macos-latest
@@ -59,6 +60,12 @@ jobs:
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
+
+    - name: Use Deno
+      if: matrix.adapter == 'solid-start-deno'
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
 
     - name: 🕵️‍♂️ Get current Playwright version
       id: playwright-version
