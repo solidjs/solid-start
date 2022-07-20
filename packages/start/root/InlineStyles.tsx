@@ -1,0 +1,71 @@
+import { createResource, Show, Suspense, useContext } from "solid-js";
+import { Style } from "solid-meta";
+import type { PageEvent } from "../server";
+import { ServerContext } from "../server/ServerContext";
+import { routeLayouts } from "./FileRoutes";
+
+export async function getInlineStyles(
+  env: PageEvent["env"],
+  routerContext: PageEvent["routerContext"]
+) {
+  const match = routerContext.matches.reduce((memo, m) => {
+    if (m.length) {
+      const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
+      if (env.devManifest.find(entry => entry.path === fullPath)) {
+        memo.push(env.devManifest.find(entry => entry.path === fullPath)!.componentPath);
+      }
+      // memo.push(env.devManifest.find(entry => entry.path === fullPath)?.componentPath);
+      const route = routeLayouts[fullPath];
+      if (route) {
+        // memo.push(...(manifest[route.id] || []));
+        // const layoutsManifestEntries = route.layouts.flatMap(
+        //   manifestKey => manifest[manifestKey] || []
+        // );
+        // memo.push(...layoutsManifestEntries);
+        memo.push(
+          ...route.layouts
+            .map(key => env.devManifest.find(entry => entry.path === key || entry.id === key))
+            .filter(entry => entry)
+            .map(entry => entry!.componentPath)
+        );
+      }
+    }
+    return memo;
+  }, []);
+
+  match.push("src/entry-server.tsx");
+  const styles = await env.collectStyles(match);
+  return styles;
+}
+
+export function InlineStyles() {
+  const isDev = import.meta.env.MODE === "development";
+  const context = useContext(ServerContext);
+  if (!isDev) {
+    return null;
+  }
+
+  const [resource] = createResource(() => getInlineStyles(context.env, context.routerContext), {
+    deferStream: true
+  });
+
+  return (
+    <Suspense>
+      <Show when={resource()}>
+        {resource => {
+          console.log(resource);
+          return (
+            <Style>
+              {Object.entries(resource)
+                .filter(([k]) => k.endsWith(".css"))
+                .map(([k, v]) => {
+                  return `/* ${k} */\n` + v;
+                })
+                .join("\n")}
+            </Style>
+          );
+        }}
+      </Show>
+    </Suspense>
+  );
+}

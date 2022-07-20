@@ -71,7 +71,7 @@ function solidStartFileSystemRouter(options) {
   let lazy;
   let config;
 
-  const { delay = 500, glob: enableGlob = true } = options;
+  const { delay = 500, glob: enableGlob = true, router } = options;
   let root = process.cwd();
   let reloadGlobs = [];
   let restartGlobs = [];
@@ -86,10 +86,7 @@ function solidStartFileSystemRouter(options) {
     clear();
     timer = setTimeout(fn, delay);
   }
-  let router = new Router({
-    baseDir: path.posix.join(options.appRoot, options.routesDir),
-    pageExtensions: options.pageExtensions
-  });
+
   let listener = function handleFileChange(file) {
     timerState = "restart";
     schedule(() => {
@@ -308,13 +305,17 @@ function solidsStartRouteManifest(options) {
  * @returns {import('vite').Plugin}
  */
 function solidStartSSR(options) {
+  let config;
   return {
     name: "solid-start-ssr",
+    config(c) {
+      config = c;
+    },
     configureServer(vite) {
       return async () => {
         const { createDevHandler } = await import("./dev/server.js");
         remove_html_middlewares(vite.middlewares);
-        vite.middlewares.use(createDevHandler(vite));
+        vite.middlewares.use(createDevHandler(vite, config, options));
       };
     }
   };
@@ -400,6 +401,11 @@ export default function solidStart(options) {
       options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
       [])
   ];
+
+  options.router = new Router({
+    baseDir: path.posix.join(options.appRoot, options.routesDir),
+    pageExtensions: options.pageExtensions
+  });
 
   // @ts-ignore
   return [

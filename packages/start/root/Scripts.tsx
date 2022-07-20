@@ -1,7 +1,8 @@
-import { PageEvent } from "server";
 import { useContext } from "solid-js";
 import { HydrationScript, isServer, NoHydration } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
+import type { PageEvent } from "../server/types";
+import { InlineStyles } from "./InlineStyles";
 
 function getEntryClient(manifest: PageEvent["env"]["manifest"]) {
   const entry = manifest["entry-client"][0];
@@ -25,6 +26,7 @@ export default function Scripts() {
             getEntryClient(context.env.manifest)
           ))}
       </NoHydration>
+      {isDev && <InlineStyles />}
     </>
   );
 }
