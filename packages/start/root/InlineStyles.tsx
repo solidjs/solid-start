@@ -14,14 +14,8 @@ export async function getInlineStyles(
       if (env.devManifest.find(entry => entry.path === fullPath)) {
         memo.push(env.devManifest.find(entry => entry.path === fullPath)!.componentPath);
       }
-      // memo.push(env.devManifest.find(entry => entry.path === fullPath)?.componentPath);
       const route = routeLayouts[fullPath];
       if (route) {
-        // memo.push(...(manifest[route.id] || []));
-        // const layoutsManifestEntries = route.layouts.flatMap(
-        //   manifestKey => manifest[manifestKey] || []
-        // );
-        // memo.push(...layoutsManifestEntries);
         memo.push(
           ...route.layouts
             .map(key => env.devManifest.find(entry => entry.path === key || entry.id === key))
@@ -53,7 +47,6 @@ export function InlineStyles() {
     <Suspense>
       <Show when={resource()}>
         {resource => {
-          console.log(resource);
           return (
             <Style>
               {Object.entries(resource)
