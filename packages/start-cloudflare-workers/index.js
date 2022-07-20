@@ -10,9 +10,7 @@ import vite from "vite";
 export default function ({ durableObjects = [] } = {}) {
   return {
     start() {
-      const proc = spawn("npx", [
-        "--no-install",
-        "wrangler",
+      const proc = spawn("./node_modules/.bin/wrangler", [
         "dev",
         "./dist/server.js",
         "--site",
