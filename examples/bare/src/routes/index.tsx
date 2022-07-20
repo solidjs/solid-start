@@ -1,18 +1,21 @@
-import Counter from "~/components/Counter";
-import "./index.css";
+import { createSignal } from 'solid-js';
+import greet from '~/server';
 
 export default function Home() {
+  const [message, setMessage] = createSignal('');
+
   return (
     <main>
       <h1>Hello world!</h1>
-      <Counter />
-      <p>
-        Visit{" "}
-        <a href="https://solidjs.com" target="_blank">
-          solidjs.com
-        </a>{" "}
-        to learn how to build Solid apps.
-      </p>
+      <button
+        onClick={async () => {
+          const message = await greet();
+          setMessage(message);
+        }}
+      >
+        Greet
+      </button>
+      <p>{message}</p>
     </main>
   );
 }

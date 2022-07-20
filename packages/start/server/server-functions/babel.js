@@ -45,9 +45,9 @@ function transformServer({ types: t, template }) {
   }
   function markImport(path, state) {
     const local = path.get("local");
-    if (isIdentifierReferenced(local)) {
-      state.refs.add(local);
-    }
+    // if (isIdentifierReferenced(local)) {
+    state.refs.add(local);
+    // }
   }
 
   function hashFn(str) {
@@ -233,8 +233,10 @@ function transformServer({ types: t, template }) {
             if (refs.has(local) && !isIdentifierReferenced(local)) {
               ++count;
               sweepPath.remove();
-              if (sweepPath.parent.specifiers.length === 0) {
-                sweepPath.parentPath.remove();
+              if (!state.opts.ssr) {
+                if (sweepPath.parent.specifiers.length === 0) {
+                  sweepPath.parentPath.remove();
+                }
               }
             }
           }
