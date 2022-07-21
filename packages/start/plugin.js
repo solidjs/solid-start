@@ -4,23 +4,12 @@ import c from "picocolors";
 import { normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
-import { Router, stringifyApiRoutes, stringifyPageRoutes } from "./fs-router/routes.js";
+import printUrls from "./dev/print-routes.js";
+import { Router, stringifyApiRoutes, stringifyPageRoutes } from "./fs-router/router.js";
 import routeData from "./server/routeData.js";
 import routeDataHmr from "./server/routeDataHmr.js";
 import babelServerModule from "./server/server-functions/babel.js";
 import routeResource from "./server/serverResource.js";
-
-/**
- * Helper function to get a human readable name for the given HTTP Verb
- * @param {string} verb
- * @returns {string} The uppercase and readable verb name
- */
-function getHTTPVerbName(verb) {
-  if (verb === "del") {
-    return "DELETE";
-  }
-  return verb.toUpperCase();
-}
 
 function solidStartInlineServerModules(options) {
   let lazy;
@@ -142,24 +131,7 @@ function solidStartFileSystemRouter(options) {
 
         setTimeout(() => {
           // eslint-disable-next-line no-console
-          console.log(
-            `${`  > Page Routes: `}\n${router
-              .getFlattenedPageRoutes()
-              .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
-              .join("\n")}`
-          );
-          console.log("");
-          console.log(
-            `${`  > API Routes: `}\n${router
-              .getFlattenedApiRoutes()
-              .map(
-                r =>
-                  `     ${c.green(`${protocol}://localhost:${port}${r.path}`)} ${c.dim(
-                    Object.keys(r.apiPath).map(getHTTPVerbName).join(" | ")
-                  )}`
-              )
-              .join("\n")}`
-          );
+          printUrls(router, `${protocol}://localhost:${port}`);
           console.log("");
         }, 100);
       });
@@ -338,7 +310,8 @@ function solidStartConfig(options) {
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
-          "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV)
+          "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+          "import.meta.env.START_SSR": JSON.stringify(options.ssr ? "true" : "false")
         },
         solidOptions: options
       };

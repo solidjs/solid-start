@@ -104,7 +104,14 @@ prog
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
     }
-    adapter.start(config);
+    let url = adapter.start(config);
+    const { Router } = await import("./fs-router/router.js");
+    const { default: printUrls } = await import("./dev/print-routes.js");
+    const router = new Router({
+      baseDir: join(config.solidOptions.appRoot, config.solidOptions.routesDir)
+    });
+    await router.init();
+    printUrls(router, url);
   });
 
 prog
