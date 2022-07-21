@@ -38,10 +38,10 @@ export default function ({ edge } = {}) {
       );
       copyFileSync(
         join(__dirname, edge ? "entry-edge.js" : "entry.js"),
-        join(config.root, ".solid", "server", "server.js")
+        join(config.root, ".solid", "server", "index.js")
       );
       const bundle = await rollup({
-        input: join(config.root, ".solid", "server", "server.js"),
+        input: join(config.root, ".solid", "server", "index.js"),
         plugins: [
           json(),
           nodeResolve({
