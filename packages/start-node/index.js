@@ -11,6 +11,7 @@ export default function () {
   return {
     start(config) {
       import(pathToFileURL(join(config.root, "dist", "server.js")).toString());
+      return `http://localhost:${process.env.PORT || 3000}`;
     },
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
