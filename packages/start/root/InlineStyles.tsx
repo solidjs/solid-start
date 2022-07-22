@@ -54,7 +54,7 @@ export function InlineStyles() {
                 .map(([k, v]) => {
                   return `/* ${k} */\n` + v;
                 })
-                .join("\n")}
+                .join("\n") + " "}
             </Style>
           );
         }}
