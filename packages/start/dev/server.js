@@ -10,51 +10,56 @@ import "../node/globals.js";
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
 export function createDevHandler(viteServer, config, options) {
-  return async (req, res) => {
-    try {
-      if (req.url === "/favicon.ico") return;
+  /**
+   * @returns {Promise<Response>}
+   */
+  async function devFetch(request, env) {
+    const entry = (await viteServer.ssrLoadModule(path.resolve("./src/entry-server"))).default;
 
-      const entry = (await viteServer.ssrLoadModule(path.resolve("./src/entry-server"))).default;
+    return await entry({
+      request,
+      env: {
+        ...env,
+        devManifest: options.router.getFlattenedPageRoutes(true),
+        collectStyles: async match => {
+          const styles = {};
+          const deps = new Set();
+          for (var file of match) {
+            await viteServer.ssrLoadModule(path.resolve(file));
+            const node = await viteServer.moduleGraph.getModuleByUrl(
+              pathToFileURL(`./${file}`).pathname.toString()
+            );
 
-      const webRes = await entry({
-        request: createRequest(req),
-        env: {
-          devManifest: options.router.getFlattenedPageRoutes(true),
-          collectStyles: async match => {
-            const styles = {};
-            const deps = new Set();
-            for (var file of match) {
-              await viteServer.ssrLoadModule(path.resolve(file));
-              const node = await viteServer.moduleGraph.getModuleByUrl(
-                pathToFileURL(`./${file}`).pathname.toString()
-              );
+            await find_deps(viteServer, node, deps);
+          }
 
-              await find_deps(viteServer, node, deps);
-            }
+          for (const dep of deps) {
+            const parsed = new URL(dep.url, "http://localhost/");
+            const query = parsed.searchParams;
 
-            for (const dep of deps) {
-              const parsed = new URL(dep.url, "http://localhost/");
-              const query = parsed.searchParams;
-
-              if (
-                style_pattern.test(dep.file) ||
-                (query.has("svelte") && query.get("type") === "style")
-              ) {
-                try {
-                  const mod = await viteServer.ssrLoadModule(dep.url);
-                  styles[dep.url] = mod.default;
-                } catch {
-                  // this can happen with dynamically imported modules, I think
-                  // because the Vite module graph doesn't distinguish between
-                  // static and dynamic imports? TODO investigate, submit fix
-                }
+            if (
+              style_pattern.test(dep.file) ||
+              (query.has("svelte") && query.get("type") === "style")
+            ) {
+              try {
+                const mod = await viteServer.ssrLoadModule(dep.url);
+                styles[dep.url] = mod.default;
+              } catch {
+                // this can happen with dynamically imported modules, I think
+                // because the Vite module graph doesn't distinguish between
+                // static and dynamic imports? TODO investigate, submit fix
               }
             }
-            return styles;
           }
+          return styles;
         }
-      });
+      }
+    });
+  }
 
+  async function handler(req, res) {
+    try {
+      let webRes = await devFetch(createRequest(req));
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
 
@@ -75,7 +80,9 @@ export function createDevHandler(viteServer, config, options) {
       res.statusCode = 500;
       res.end(e.stack);
     }
-  };
+  }
+
+  return { fetch: devFetch, handler };
 }
 
 /**

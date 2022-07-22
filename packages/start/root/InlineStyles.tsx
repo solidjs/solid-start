@@ -4,11 +4,8 @@ import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
 import { routeLayouts } from "./FileRoutes";
 
-export async function getInlineStyles(
-  env: PageEvent["env"],
-  routerContext: PageEvent["routerContext"]
-) {
-  const match = routerContext.matches.reduce((memo, m) => {
+async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["routerContext"]) {
+  const match = routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
       if (env.devManifest.find(entry => entry.path === fullPath)) {
@@ -35,7 +32,7 @@ export async function getInlineStyles(
 export function InlineStyles() {
   const isDev = import.meta.env.MODE === "development";
   const context = useContext(ServerContext);
-  if (!isDev) {
+  if (!isDev || !import.meta.env.START_SSR) {
     return null;
   }
 
@@ -43,6 +40,8 @@ export function InlineStyles() {
     deferStream: true
   });
 
+  // We need a space here to prevent the server from collapsing the space between the style tags
+  // and making it invalid
   return (
     <Suspense>
       <Show when={resource()}>

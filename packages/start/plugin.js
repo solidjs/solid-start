@@ -145,6 +145,7 @@ function solidStartFileSystemRouter(options) {
         // @ts-ignore
         return solid({
           ...(options ?? {}),
+          ssr: true,
           babel: fn
         }).transform(code, id, transformOptions);
       };
@@ -276,10 +277,10 @@ function solidsStartRouteManifest(options) {
 /**
  * @returns {import('vite').Plugin}
  */
-function solidStartSSR(options) {
+function solidStartServer(options) {
   let config;
   return {
-    name: "solid-start-ssr",
+    name: "solid-start-server",
     config(c) {
       config = c;
     },
@@ -287,7 +288,7 @@ function solidStartSSR(options) {
       return async () => {
         const { createDevHandler } = await import("./dev/server.js");
         remove_html_middlewares(vite.middlewares);
-        vite.middlewares.use(createDevHandler(vite, config, options));
+        vite.middlewares.use(createDevHandler(vite, config, options).handler);
       };
     }
   };
@@ -311,7 +312,10 @@ function solidStartConfig(options) {
           // handles use of process.env.TEST_ENV in solid-start internal code
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-          "import.meta.env.START_SSR": JSON.stringify(options.ssr ? "true" : "false")
+          "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
+          "import.meta.env.START_ADAPTER": JSON.stringify(
+            typeof options.adapter === "string" ? options.adapter : options.adapter.name
+          )
         },
         solidOptions: options
       };
@@ -354,10 +358,10 @@ function detectAdapter() {
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: detectAdapter(),
+      adapter: process.env.START_ADAPTER ?? detectAdapter(),
       appRoot: "src",
       routesDir: "routes",
-      ssr: true,
+      ssr: process.env.START_SSR === "false" ? false : true,
       lazy: true,
       prerenderRoutes: [],
       inspect: true
@@ -391,6 +395,7 @@ export default function solidStart(options) {
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
+      ssr: true,
       babel: (source, id, ssr) => ({
         plugins: options.ssr
           ? [
@@ -406,7 +411,7 @@ export default function solidStart(options) {
           : []
       })
     }),
-    options.ssr && solidStartSSR(options),
+    solidStartServer(options),
     solidsStartRouteManifest(options)
   ].filter(Boolean);
 }

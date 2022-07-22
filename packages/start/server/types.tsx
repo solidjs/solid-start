@@ -27,7 +27,7 @@ export interface FetchEvent {
   env: {
     manifest?: Record<string, ManifestEntry[]>;
     collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
-    devManifest: ManifestEntry[];
+    devManifest: [{ path: string; componentPath: string; id: string }];
   };
 }
 

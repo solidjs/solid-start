@@ -5,7 +5,9 @@ const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const vite = require("vite");
 const { resolve, join } = require("path");
-const { readFileSync, writeFileSync } = require("fs");
+const { readFileSync, writeFileSync, existsSync, renameSync } = require("fs");
+const waitOn = require("wait-on");
+const debug = require("debug")("start");
 
 const prog = sade("solid-start").version("alpha");
 
@@ -69,20 +71,61 @@ prog
           JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
         );
       },
+      debug,
       spaClient: async path => {
+        debug("spa build start");
+        let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
+        if (existsSync(join(config.root, "index.html"))) {
+          writeFileSync(
+            join(config.root, ".solid", "index.html"),
+            readFileSync(join(config.root, "index.html"))
+          );
+        } else {
+          debug("starting vite server for index.html");
+          let proc = spawn("vite", ["dev", "--mode", "production", "--port", "8989"], {
+            stdio: isDebug ? "inherit" : "ignore",
+            shell: true
+          });
+          process.on("SIGINT", function () {
+            proc.kill();
+            process.exit();
+          });
+          await waitOn({
+            resources: ["http://127.0.0.1:8989/"],
+            verbose: isDebug
+          });
+
+          debug("started vite server for index.html");
+
+          writeFileSync(
+            join(config.root, ".solid", "index.html"),
+            await (await import("./dev/create-index-html.js")).createHTML("http://127.0.0.1:8989/")
+          );
+
+          debug("spa index.html created");
+
+          proc.kill();
+        }
+
+        debug("building client bundle");
+
         await vite.build({
           build: {
             outDir: path,
             minify: "terser",
             ssrManifest: true,
             rollupOptions: {
-              input: resolve(join(config.root, "index.html")),
+              input: join(config.root, ".solid", "index.html"),
               output: {
                 manualChunks: undefined
               }
             }
           }
         });
+
+        renameSync(join(path, ".solid", "index.html"), join(path, "index.html"));
+
+        debug("built client bundle");
 
         let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
         let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
@@ -91,6 +134,8 @@ prog
           join(path, "route-manifest.json"),
           JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
         );
+
+        debug("wrote route manifest");
       }
     });
   });
