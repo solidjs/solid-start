@@ -18,13 +18,47 @@ test.describe("meta", () => {
     test.beforeAll(async () => {
       fixture = await createFixture({
         files: {
+          "src/root.tsx": js`// @refresh reload
+            import { Routes } from "solid-app-router";
+            import { Suspense } from "solid-js";
+            import { ErrorBoundary } from "solid-start/error-boundary";
+            import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
+            
+            export default function Root() {
+              return (
+                <html lang="en">
+                  <head>
+                    <meta charset="utf-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1" />
+                    <Meta />
+                    <Links />
+                  </head>
+                  <body>
+                    <ErrorBoundary>
+                      <Suspense>
+                        <a href="/">Home</a>
+                        <a href="/about">About</a>
+                        <Routes>
+                          <FileRoutes />
+                        </Routes>
+                      </Suspense>
+                    </ErrorBoundary>
+                    <Scripts />
+                  </body>
+                </html>
+              );
+            }
+          `,
           "src/routes/index.tsx": js`
             import { Title } from 'solid-meta';
             export default function Index() {
-              return <>
-                <Title>Index page</Title>
-                <h1>Index</h1>
-              </>;
+              return <Title>Index page</Title>;
+            }
+          `,
+          "src/routes/about.tsx": js`
+            import { Title } from 'solid-meta';
+            export default function About() {
+              return <Title>About page</Title>
             }
           `,
           "src/routes/no-title.tsx": js`
@@ -111,113 +145,113 @@ test.describe("meta", () => {
     runTests();
   });
 
-  test.describe("with streaming", () => {
-    test.beforeAll(async () => {
-      fixture = await createFixture({
-        files: {
-          "src/entry-server.tsx": js`
-          import { StartServer, createHandler, renderStream } from "solid-start/entry-server";
-          export default createHandler(renderStream(event => <StartServer event={event} />));
-        `,
-          "src/routes/index.tsx": js`
-            import { Title } from 'solid-meta';
-            export default function Index() {
-              return <>
-                <Title>Index page</Title>
-                <h1>Index</h1>
-              </>;
-            }
-          `,
-          "src/routes/no-title.tsx": js`
-            export default function NoTitle() {
-              return <>
-                <h1>No title</h1>
-              </>;
-            }
-          `,
-          "src/routes/title-from-resource.tsx": js`
-            import { Title } from 'solid-meta';
-            import { createResource } from 'solid-js';
-            export default function TitleFromData() {
-              const [data] = createResource(async () => "Title from data", {
-                deferStream: true
-              });
-              return <>
-                <Show when={data()}><Title>{data()}</Title></Show>
-                <h1>No title</h1>
-              </>;
-            }
-          `,
-          "src/routes/title-from-route-data.tsx": js`
-            import { Title } from 'solid-meta';
-            import { createServerData } from 'solid-start/server';
-            import { useRouteData } from 'solid-app-router';
-  
-            export function routeData() {
-              return createServerData(async () => "Title from route data", {
-                deferStream: true
-              });
-            }
-  
-            export default function TitleFromData() {
-              const data = useRouteData();
-              return <>
-                <Show when={data()}><Title>{data()}</Title></Show>
-                <h1>No title</h1>
-              </>;
-            }
-          `,
-          "src/routes/title-from-error-boundary.tsx": js`
-            import { Title, Meta } from 'solid-meta';
-            import { createResource, ErrorBoundary } from 'solid-js';
-  
-            export default function TitleFromErrorBoundary() {
-              const [data] = createResource(async () => {
-                throw new Error('Error')
-              }, {
-                deferStream: true
-              });
-              return <>
-                <ErrorBoundary fallback={e => <Title>{e.message}</Title>}>
-                  <h1>No title</h1>
-                  <Show when={data()}><Title>{data()}</Title></Show>
-                  <Meta name="description" value="Should not be rendered" />
-                </ErrorBoundary>
-              </>;
-            }`,
-          "src/routes/title-from-suspense.tsx": js`
-            import { Title, Meta } from 'solid-meta';
-            import { createResource, ErrorBoundary } from 'solid-js';
-  
-            export default function TitleFromErrorBoundary() {
-              const [data] = createResource(async () => {
-                return "Hello world"
-              }, {
-                deferStream: true
-              });
-              return <>
-                <Suspense fallback={() => (<>
-                  <Title>Waiting</Title>
-                  <Meta name="description" value="Should not be rendered" />
-                </>)}>
-                  <h1>No title</h1>
-                  <Show when={data()}><Title>{data()}</Title></Show>
-                </Suspense>
-              </>;
-            }
-          `
-        }
-      });
+  // test.describe("with streaming", () => {
+  //   test.beforeAll(async () => {
+  //     fixture = await createFixture({
+  //       files: {
+  //         "src/entry-server.tsx": js`
+  //         import { StartServer, createHandler, renderStream } from "solid-start/entry-server";
+  //         export default createHandler(renderStream(event => <StartServer event={event} />));
+  //       `,
+  //         "src/routes/index.tsx": js`
+  //           import { Title } from 'solid-meta';
+  //           export default function Index() {
+  //             return <>
+  //               <Title>Index page</Title>
+  //               <h1>Index</h1>
+  //             </>;
+  //           }
+  //         `,
+  //         "src/routes/no-title.tsx": js`
+  //           export default function NoTitle() {
+  //             return <>
+  //               <h1>No title</h1>
+  //             </>;
+  //           }
+  //         `,
+  //         "src/routes/title-from-resource.tsx": js`
+  //           import { Title } from 'solid-meta';
+  //           import { createResource } from 'solid-js';
+  //           export default function TitleFromData() {
+  //             const [data] = createResource(async () => "Title from data", {
+  //               deferStream: true
+  //             });
+  //             return <>
+  //               <Show when={data()}><Title>{data()}</Title></Show>
+  //               <h1>No title</h1>
+  //             </>;
+  //           }
+  //         `,
+  //         "src/routes/title-from-route-data.tsx": js`
+  //           import { Title } from 'solid-meta';
+  //           import { createServerData } from 'solid-start/server';
+  //           import { useRouteData } from 'solid-app-router';
 
-      appFixture = await fixture.createServer();
-    });
+  //           export function routeData() {
+  //             return createServerData(async () => "Title from route data", {
+  //               deferStream: true
+  //             });
+  //           }
 
-    test.afterAll(async () => {
-      await appFixture.close();
-    });
+  //           export default function TitleFromData() {
+  //             const data = useRouteData();
+  //             return <>
+  //               <Show when={data()}><Title>{data()}</Title></Show>
+  //               <h1>No title</h1>
+  //             </>;
+  //           }
+  //         `,
+  //         "src/routes/title-from-error-boundary.tsx": js`
+  //           import { Title, Meta } from 'solid-meta';
+  //           import { createResource, ErrorBoundary } from 'solid-js';
 
-    runTests();
-  });
+  //           export default function TitleFromErrorBoundary() {
+  //             const [data] = createResource(async () => {
+  //               throw new Error('Error')
+  //             }, {
+  //               deferStream: true
+  //             });
+  //             return <>
+  //               <ErrorBoundary fallback={e => <Title>{e.message}</Title>}>
+  //                 <h1>No title</h1>
+  //                 <Show when={data()}><Title>{data()}</Title></Show>
+  //                 <Meta name="description" value="Should not be rendered" />
+  //               </ErrorBoundary>
+  //             </>;
+  //           }`,
+  //         "src/routes/title-from-suspense.tsx": js`
+  //           import { Title, Meta } from 'solid-meta';
+  //           import { createResource, ErrorBoundary } from 'solid-js';
+
+  //           export default function TitleFromErrorBoundary() {
+  //             const [data] = createResource(async () => {
+  //               return "Hello world"
+  //             }, {
+  //               deferStream: true
+  //             });
+  //             return <>
+  //               <Suspense fallback={() => (<>
+  //                 <Title>Waiting</Title>
+  //                 <Meta name="description" value="Should not be rendered" />
+  //               </>)}>
+  //                 <h1>No title</h1>
+  //                 <Show when={data()}><Title>{data()}</Title></Show>
+  //               </Suspense>
+  //             </>;
+  //           }
+  //         `
+  //       }
+  //     });
+
+  //     appFixture = await fixture.createServer();
+  //   });
+
+  //   test.afterAll(async () => {
+  //     await appFixture.close();
+  //   });
+
+  //   runTests();
+  // });
 
   function runTests() {
     test("<meta charset='utf-8' /> in root add tag", async ({ page }) => {
@@ -243,6 +277,21 @@ test.describe("meta", () => {
       expect(await app.getHtml("title")).toBeTruthy();
       await expect(page).toHaveTitle("Index page");
     });
+
+    // TODO: when solid-meta PR https://github.com/solidjs/solid-meta/pull/13 is merged
+    // test("<Title /> navigation", async ({ page }) => {
+    //   let app = new PlaywrightFixture(appFixture, page);
+    //   await app.goto("/", true);
+
+    //   expect(await app.getHtml("title")).toBeTruthy();
+    //   await expect(page).toHaveTitle("Index page");
+
+    //   await app.clickElement('a[href="/about"]');
+    //   // await expect(page).toHaveTitle("About page");
+
+    //   // await page.click("a[href='/']");
+    //   // await expect(page).toHaveTitle("Index page");
+    // });
 
     test("<Title /> component adds a <title /> in SSR", async () => {
       let res = await fixture.requestDocument("/");
