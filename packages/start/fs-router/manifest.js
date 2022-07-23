@@ -38,7 +38,10 @@ export default function prepareManifest(ssrManifest, assetManifest, config) {
       function visitFile(file) {
         if (visitedFiles.has(file.file)) return;
         visitedFiles.add(file.file);
-        files.push({ type: "script", href: "/" + file.file });
+        files.push({
+          type: file.file.endsWith(".css") ? "style" : "script",
+          href: "/" + file.file
+        });
         if (!visitedScripts.has(file.file)) {
           visitedScripts.add(file.file);
           if (
@@ -54,9 +57,12 @@ export default function prepareManifest(ssrManifest, assetManifest, config) {
         });
 
         file.css?.forEach(css => {
+          if (visitedFiles.has(css)) return;
           files.push({ type: "style", href: "/" + css });
+          visitedFiles.add(css);
         });
       }
+
       value.forEach(val => {
         let asset = Object.values(assetManifest).find(f => "/" + f.file === val);
         if (!asset) {

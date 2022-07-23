@@ -6,7 +6,7 @@ import { copyFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-import vite from "vite";
+import { build as viteBuild } from "vite";
 
 export default function () {
   return {
@@ -25,7 +25,7 @@ export default function () {
       await builder.client(join(outputDir, "static"));
 
       // SSR Edge Function
-      await vite.build({
+      await viteBuild({
         build: {
           ssr: true,
           outDir: "./.solid/server",

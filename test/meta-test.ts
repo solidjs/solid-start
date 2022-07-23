@@ -2,7 +2,12 @@ import { expect, test } from "@playwright/test";
 
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
 import { createFixture, js } from "./helpers/create-fixture.js";
-import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
+import {
+  PlaywrightFixture,
+  prettyHtml,
+  selectHtml,
+  selectText
+} from "./helpers/playwright-fixture.js";
 
 test.describe("meta", () => {
   let fixture: Fixture;
@@ -243,9 +248,7 @@ test.describe("meta", () => {
       let res = await fixture.requestDocument("/");
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toBe("text/html");
-      expect(selectHtml(await res.text(), "title")).toBe(
-        prettyHtml(`<title data-sm="">Index page</title>`)
-      );
+      expect(selectText(await res.text(), "title")).toBe(`Index page`);
     });
 
     test("<Title /> component with resource adds a <title />", async ({ page }) => {
@@ -260,9 +263,7 @@ test.describe("meta", () => {
       let res = await fixture.requestDocument("/title-from-resource");
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toBe("text/html");
-      expect(selectHtml(await res.text(), "title")).toBe(
-        prettyHtml(`<title data-sm="">Title from data</title>`)
-      );
+      expect(selectText(await res.text(), "title")).toBe(`Title from data`);
     });
 
     test("<Title /> component with routeData adds a <title />", async ({ page }) => {
@@ -277,9 +278,7 @@ test.describe("meta", () => {
       let res = await fixture.requestDocument("/title-from-route-data");
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toBe("text/html");
-      expect(selectHtml(await res.text(), "title")).toBe(
-        prettyHtml(`<title data-sm="">Title from route data</title>`)
-      );
+      expect(selectText(await res.text(), "title")).toBe(`Title from route data`);
     });
 
     test("no <Title /> component should not have <title />", async ({ page }) => {
@@ -298,14 +297,14 @@ test.describe("meta", () => {
     //   expect(() => selectHtml(html, 'meta[name="description"]')).toThrow();
     // });
 
-    test("with ErrorBoundary adds correct <title />, no <meta description />", async ({ page }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/title-from-error-boundary");
+    // test("with ErrorBoundary adds correct <title />, no <meta description />", async ({ page }) => {
+    //   let app = new PlaywrightFixture(appFixture, page);
+    //   await app.goto("/title-from-error-boundary");
 
-      expect(await app.getHtml("title")).toBeTruthy();
-      await expect(page).toHaveTitle("Error");
-      expect(app.getHtml('meta[name="description"]')).rejects.toThrow();
-    });
+    //   expect(await app.getHtml("title")).toBeTruthy();
+    //   await expect(page).toHaveTitle("Error");
+    //   expect(app.getHtml('meta[name="description"]')).rejects.toThrow();
+    // });
 
     // test("with Suspense adds correct <title />, no <meta description /> in SSR", async () => {
     //   let res = await fixture.requestDocument("/title-from-suspense");

@@ -51,7 +51,7 @@ prog
           build: {
             outDir: path,
             ssrManifest: true,
-            minify: "terser",
+            minify: process.env.START_MINIFY === 'false' ?  false :"terser",
             rollupOptions: {
               input: resolve(join(config.root, config.solidOptions.appRoot, `entry-client`)),
               output: {

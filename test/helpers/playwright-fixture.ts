@@ -210,6 +210,12 @@ export function selectHtml(source: string, selector: string) {
   return prettyHtml(cheerio.html(el)).trim();
 }
 
+export function selectText(source: string, selector: string) {
+  let el = getElement(source, selector);
+
+  return el.text();
+}
+
 export function prettyHtml(source: string): string {
   return prettier.format(source, { parser: "html" }).trim();
 }

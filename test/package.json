@@ -28,7 +28,7 @@
     "solid-start-node": "workspace:*",
     "strip-indent": "^4.0.0",
     "undici": "^5.5.1",
-    "vite": "^2.9.12",
+    "vite": "^3.0.2",
     "vitest": "^0.16.0",
     "wait-on": "^6.0.1"
   },
