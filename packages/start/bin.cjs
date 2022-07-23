@@ -5,7 +5,7 @@ const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const vite = require("vite");
 const { resolve, join } = require("path");
-const { readFileSync, writeFileSync, existsSync, renameSync } = require("fs");
+const { readFileSync, writeFileSync, existsSync, renameSync, mkdirSync } = require("fs");
 const waitOn = require("wait-on");
 const debug = require("debug")("start");
 
@@ -75,11 +75,11 @@ prog
       spaClient: async path => {
         debug("spa build start");
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
+        mkdirSync(join(config.root, ".solid"), { recursive: true });
+
+        let indexHtml;
         if (existsSync(join(config.root, "index.html"))) {
-          writeFileSync(
-            join(config.root, ".solid", "index.html"),
-            readFileSync(join(config.root, "index.html"))
-          );
+          indexHtml = join(config.root, "index.html");
         } else {
           debug("starting vite server for index.html");
           let proc = spawn("vite", ["dev", "--mode", "production", "--port", "8989"], {
@@ -102,6 +102,8 @@ prog
             await (await import("./dev/create-index-html.js")).createHTML("http://127.0.0.1:8989/")
           );
 
+          indexHtml = join(config.root, ".solid", "index.html");
+
           debug("spa index.html created");
 
           proc.kill();
@@ -115,7 +117,7 @@ prog
             minify: "terser",
             ssrManifest: true,
             rollupOptions: {
-              input: join(config.root, ".solid", "index.html"),
+              input: indexHtml,
               output: {
                 manualChunks: undefined
               }
@@ -123,7 +125,9 @@ prog
           }
         });
 
-        renameSync(join(path, ".solid", "index.html"), join(path, "index.html"));
+        if (indexHtml === join(config.root, ".solid", "index.html")) {
+          renameSync(join(path, ".solid", "index.html"), join(path, "index.html"));
+        }
 
         debug("built client bundle");
 

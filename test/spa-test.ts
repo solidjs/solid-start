@@ -12,10 +12,9 @@ test.describe("spa rendering", () => {
     fixture = await createFixture({
       files: {
         "src/entry-client.tsx": js`
-          import { render } from "solid-js/web";
-          import { StartClient } from "solid-start/entry-client";
+          import { mount, StartClient } from "solid-start/entry-client";
           
-          render(() => <StartClient />, document.body);
+          mount(() => <StartClient />, document.body);
         `,
         "vite.config.ts": js`
           import { defineConfig } from "vite";
@@ -84,7 +83,7 @@ test.describe("spa rendering", () => {
     let res = await fixture.requestDocument("/");
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")?.includes("text/html")).toBe(true);
-    expect(async () => selectHtml(await res.text(), "#content")).rejects.toThrow();
+    expect((async () => selectHtml(await res.text(), "#content"))()).rejects.toThrow();
   });
 
   test("client side rendering", async ({ page }) => {
@@ -94,7 +93,9 @@ test.describe("spa rendering", () => {
       prettyHtml(`
       <div id="content">
         <h1>Root</h1>
+        <!--#-->
         <h2>Index</h2>
+        <!--/-->
       </div>`)
     );
 
@@ -103,7 +104,9 @@ test.describe("spa rendering", () => {
       prettyHtml(`
       <div id="content">
         <h1>Root</h1>
+        <!--#-->
         <h2>About</h2>
+        <!--/-->
       </div>`)
     );
   });

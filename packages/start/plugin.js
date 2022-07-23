@@ -314,7 +314,9 @@ function solidStartConfig(options) {
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
           "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
           "import.meta.env.START_ADAPTER": JSON.stringify(
-            typeof options.adapter === "string" ? options.adapter : options.adapter.name
+            typeof options.adapter === "string"
+              ? options.adapter
+              : options.adapter && options.adapter.name
           )
         },
         solidOptions: options
@@ -358,7 +360,7 @@ function detectAdapter() {
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ?? detectAdapter(),
+      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : detectAdapter(),
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
@@ -368,6 +370,7 @@ export default function solidStart(options) {
     },
     options ?? {}
   );
+  console.log(options);
 
   options.pageExtensions = [
     "tsx",
