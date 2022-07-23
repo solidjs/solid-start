@@ -7,7 +7,7 @@ import { copyFileSync, existsSync, promises } from "fs";
 import { dirname, join, resolve } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-import vite from "vite";
+import { build as viteBuild } from "vite";
 
 export default function ({ edge } = {}) {
   return {
@@ -20,7 +20,7 @@ export default function ({ edge } = {}) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
       await builder.client(join(config.root, "netlify"));
-      await vite.build({
+      await viteBuild({
         build: {
           ssr: true,
           outDir: "./.solid/server",
