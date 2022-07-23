@@ -53,7 +53,7 @@ prog
           build: {
             outDir: path,
             ssrManifest: true,
-            minify: process.env.START_MINIFY === 'false' ?  false :"terser",
+            minify: process.env.START_MINIFY === "false" ? false : "terser",
             rollupOptions: {
               input: resolve(join(config.root, config.solidOptions.appRoot, `entry-client`)),
               output: {
@@ -91,7 +91,7 @@ prog
             process.exit();
           });
           await waitOn({
-            resources: ["http://127.0.0.1:8989/"],
+            resources: ["http://localhost:8989/"],
             verbose: isDebug
           });
 
@@ -99,7 +99,7 @@ prog
 
           writeFileSync(
             join(config.root, ".solid", "index.html"),
-            await (await import("./dev/create-index-html.js")).createHTML("http://127.0.0.1:8989/")
+            await (await import("./dev/create-index-html.js")).createHTML("http://localhost:8989/")
           );
 
           indexHtml = join(config.root, ".solid", "index.html");
@@ -111,6 +111,7 @@ prog
 
         debug("building client bundle");
 
+        process.env.START_SPA_CLIENT = "true";
         await vite.build({
           build: {
             outDir: path,
@@ -124,6 +125,7 @@ prog
             }
           }
         });
+        process.env.START_SPA_CLIENT = "false";
 
         if (indexHtml === join(config.root, ".solid", "index.html")) {
           renameSync(join(path, ".solid", "index.html"), join(path, "index.html"));

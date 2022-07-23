@@ -398,7 +398,7 @@ export default function solidStart(options) {
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
-      ssr: true,
+      ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
       babel: (source, id, ssr) => ({
         plugins: options.ssr
           ? [
