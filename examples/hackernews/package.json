@@ -15,7 +15,7 @@
     "solid-start-node": "workspace:*",
     "typescript": "^4.4.3",
     "undici": "^5.5.1",
-    "vite": "2.8.6"
+    "vite": "3.0.2"
   },
   "engines": {
     "node": ">=14"

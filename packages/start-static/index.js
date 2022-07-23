@@ -3,7 +3,7 @@ import { copyFileSync, readdirSync, statSync } from "fs";
 import { dirname, join, resolve } from "path";
 import renderStatic from "solid-ssr/static";
 import { fileURLToPath } from "url";
-import vite from "vite";
+import { build as viteBuild } from "vite";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -37,7 +37,7 @@ export default function () {
     async build(config, builder) {
       const appRoot = config.solidOptions.appRoot;
       await builder.client(join(config.root, "dist", "public"));
-      await vite.build({
+      await viteBuild({
         build: {
           ssr: true,
           outDir: "./.solid/server",
