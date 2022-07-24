@@ -115,7 +115,7 @@ prog
         await vite.build({
           build: {
             outDir: path,
-            minify: "terser",
+            minify: false,
             ssrManifest: true,
             rollupOptions: {
               input: indexHtml,

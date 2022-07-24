@@ -9,11 +9,6 @@ test.describe("spa rendering", () => {
   let appFixture: AppFixture;
 
   const files = {
-    "src/entry-client.tsx": js`
-      import { mount, StartClient } from "solid-start/entry-client";
-      
-      mount(() => <StartClient />, document.body);
-    `,
     "vite.config.ts": js`
       import { defineConfig } from "vite";
       import solid from "solid-start";

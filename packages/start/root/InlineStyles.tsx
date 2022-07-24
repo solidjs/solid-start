@@ -36,9 +36,18 @@ export function InlineStyles() {
     return null;
   }
 
-  const [resource] = createResource(() => getInlineStyles(context.env, context.routerContext), {
-    deferStream: true
-  });
+  const [resource] = createResource(
+    async () => {
+      if (import.meta.env.SSR) {
+        return await getInlineStyles(context.env, context.routerContext);
+      } else {
+        return {};
+      }
+    },
+    {
+      deferStream: true
+    }
+  );
 
   // We need a space here to prevent the server from collapsing the space between the style tags
   // and making it invalid
