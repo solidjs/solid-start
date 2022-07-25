@@ -5,6 +5,9 @@ import Meta from "./Meta";
 import Scripts from "./Scripts";
 
 export function Html(props) {
+  if (import.meta.env.MPA) {
+    
+  }
   if (import.meta.env.SSR) {
     return `<html>
         ${resolveSSRNode(children(() => props.children))}

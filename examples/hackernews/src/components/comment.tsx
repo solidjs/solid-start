@@ -1,13 +1,48 @@
 import { Link } from "solid-app-router";
-import { Component, createSignal, For, Show } from "solid-js";
+import { Component, ComponentProps, For, lazy, sharedConfig, Show } from "solid-js";
 
-import type { IComment } from "../types";
+function island<T extends Component<any>>(
+  fn: () => Promise<{
+    default: T;
+  }>,
+  path?: string
+): T & {
+  preload: () => Promise<{
+    default: T;
+  }>;
+} {
+  const Toggle = lazy(fn);
 
-const pluralize = (n: number) => n + (n === 1 ? " reply" : " replies");
+  let a: T & {
+    preload: () => Promise<{
+      default: T;
+    }>;
+  } = ((compProps: ComponentProps<T>) => {
+    if (import.meta.env.SSR) {
+      const { children, ...props } = compProps;
+      return (
+        <solid-island
+          data-props={JSON.stringify(props)}
+          data-island={sharedConfig.context.id}
+          data-component={path}
+        >
+          <Toggle {...props}>
+            <solid-children>{children}</solid-children>
+          </Toggle>
+        </solid-island>
+      );
+    } else {
+      return null;
+    }
+  }) as any;
 
-const Comment: Component<{ comment: IComment }> = (props) => {
-  const [open, setOpen] = createSignal(true);
+  a.preload = Toggle.preload;
+  return a;
+}
 
+const Toggle = island(() => import("./toggle"));
+
+const Comment: Component<{ comment: IComment }> = props => {
   return (
     <li class="comment">
       <div class="by">
@@ -16,16 +51,9 @@ const Comment: Component<{ comment: IComment }> = (props) => {
       </div>
       <div class="text" innerHTML={props.comment.content} />
       <Show when={props.comment.comments.length}>
-        <div class="toggle" classList={{ open: open() }}>
-          <a onClick={() => setOpen(!open())}>
-            {open() ? "[-]" : "[+] " + pluralize(props.comment.comments.length) + " collapsed"}
-          </a>
-        </div>
-        <Show when={open()}>
-          <ul class="comment-children">
-            <For each={props.comment.comments}>{(comment) => <Comment comment={comment} />}</For>
-          </ul>
-        </Show>
+        <Toggle>
+          <For each={props.comment.comments}>{comment => <Comment comment={comment} />}</For>
+        </Toggle>
       </Show>
     </li>
   );

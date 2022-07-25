@@ -1,4 +1,4 @@
-import { Router } from "solid-app-router";
+import { Router, RouterProps } from "solid-app-router";
 import { MetaProvider } from "solid-meta";
 import Root from "~/root";
 import { ServerContext } from "../server/ServerContext";
@@ -16,6 +16,11 @@ function throwClientError(field: string): any {
 export default () => {
   let mockFetchEvent: PageEvent = {
     get request() {
+      if (process.env.NODE_ENV === "development") {
+        return throwClientError("request");
+      }
+    },
+    get prevUrl() {
       if (process.env.NODE_ENV === "development") {
         return throwClientError("request");
       }
@@ -54,12 +59,20 @@ export default () => {
     fetch
   };
 
+  function StartRouter(props: RouterProps) {
+    return (
+      <Router {...props}>
+        <Root />
+      </Router>
+    );
+  }
+
   return (
     <ServerContext.Provider value={mockFetchEvent}>
       <MetaProvider>
-        <Router data={dataFn}>
+        <StartRouter data={dataFn}>
           <Root />
-        </Router>
+        </StartRouter>
       </MetaProvider>
     </ServerContext.Provider>
   );

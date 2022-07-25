@@ -29,9 +29,14 @@ export default function prepareManifest(ssrManifest, assetManifest, config) {
   const pageRegex = new RegExp(`\\.(${config.solidOptions.pageExtensions.join("|")})$`);
   const baseRoutes = posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir);
   let routes = Object.keys(ssrManifest)
-    .filter(key => key.startsWith(baseRoutes) && key.match(pageRegex))
+    .filter(
+      key =>
+        (key.startsWith(baseRoutes) && key.match(pageRegex)) ||
+        key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
+    )
     .map(key => [key, ssrManifest[key]])
     .map(([key, value]) => {
+      console.log(key, value);
       let files = [];
       let visitedFiles = new Set();
 
@@ -42,6 +47,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config) {
           type: file.file.endsWith(".css") ? "style" : "script",
           href: "/" + file.file
         });
+
         if (!visitedScripts.has(file.file)) {
           visitedScripts.add(file.file);
           if (
@@ -60,6 +66,12 @@ export default function prepareManifest(ssrManifest, assetManifest, config) {
           if (visitedFiles.has(css)) return;
           files.push({ type: "style", href: "/" + css });
           visitedFiles.add(css);
+          if (
+            file.src &&
+            file.src.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
+          ) {
+            entryClientScripts.push({ type: "style", href: "/" + css });
+          }
         });
       }
 
@@ -71,8 +83,20 @@ export default function prepareManifest(ssrManifest, assetManifest, config) {
         visitFile(asset);
       });
 
+      if (!value.length) {
+        let asset = Object.values(assetManifest).find(f => f.src === key);
+        if (asset) {
+          visitFile(asset);
+        }
+      }
+
+      if (key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
+        return null;
+      }
+
       return [toPath(key.slice(baseRoutes.length).replace(pageRegex, ""), false), files];
-    });
+    })
+    .filter(Boolean);
 
   return Object.fromEntries([...routes, ["entry-client", entryClientScripts]]);
 }

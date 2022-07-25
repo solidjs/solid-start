@@ -18,8 +18,14 @@ type TagDescription = {
 };
 
 type RouterContext = {
+  // router matches;
   matches?: ContextMatches[][];
+  // redirected url
   url?: string;
+
+  // server route fragments
+  replaceOutletId?: string;
+  newOutletId?: string;
 };
 
 export interface FetchEvent {
@@ -37,6 +43,7 @@ export interface ServerFunctionEvent extends FetchEvent {
 }
 
 export interface PageEvent extends FetchEvent {
+  prevUrl: string;
   responseHeaders: Headers;
   routerContext?: RouterContext;
   tags?: TagDescription[];

@@ -1,5 +1,5 @@
 import fs from "fs";
-import path from "path";
+import path, { dirname, join } from "path";
 import c from "picocolors";
 import { normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
@@ -11,6 +11,10 @@ import routeDataHmr from "./server/routeDataHmr.js";
 import babelServerModule from "./server/server-functions/babel.js";
 import routeResource from "./server/serverResource.js";
 
+/**
+ * @returns {import('vite').PluginOption}
+ * @param {any} options
+ */
 function solidStartInlineServerModules(options) {
   let lazy;
   let config;
@@ -38,6 +42,9 @@ function solidStartInlineServerModules(options) {
 }
 
 // import micromatch from "micromatch";
+/**
+ * @param {fs.PathLike} path
+ */
 function touch(path) {
   const time = new Date();
   try {
@@ -47,6 +54,9 @@ function touch(path) {
   }
 }
 let i = 0;
+/**
+ * @param {any} arr
+ */
 function toArray(arr) {
   if (!arr) return [];
   if (Array.isArray(arr)) return arr;
@@ -55,6 +65,7 @@ function toArray(arr) {
 
 /**
  * @returns {import('vite').Plugin}
+ * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; }} options
  */
 function solidStartFileSystemRouter(options) {
   let lazy;
@@ -71,12 +82,15 @@ function solidStartFileSystemRouter(options) {
   function clear() {
     clearTimeout(timer);
   }
+  /**
+   * @param {{ (): void; (): void; }} fn
+   */
   function schedule(fn) {
     clear();
     timer = setTimeout(fn, delay);
   }
 
-  let listener = function handleFileChange(file) {
+  let listener = function handleFileChange(/** @type {string} */ file) {
     timerState = "restart";
     schedule(() => {
       if (router.watcher) {
@@ -141,7 +155,11 @@ function solidStartFileSystemRouter(options) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
 
-      let babelSolidCompiler = (code, id, fn) => {
+      let babelSolidCompiler = (
+        /** @type {string} */ code,
+        /** @type {string} */ id,
+        /** @type {{ (source: any, id: any): { plugins: ((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[][]; }; (source: any, id: any): { plugins: ((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[][]; }; (source: any, id: any): { plugins: (((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[] | ((() => { visitor: { Program(path: any): void; }; }) | { ssr: boolean; root: string; })[])[]; }; (source: any, id: any): { plugins: (((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; keep: boolean; minify: boolean; })[] | ((({ types: t, template }: { types: any; template: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[])[]; }; (source: any, id: any): { plugins: ((({ types: t, template }: { types: any; template: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[][]; }; }} */ fn
+      ) => {
         // @ts-ignore
         return solid({
           ...(options ?? {}),
@@ -153,7 +171,7 @@ function solidStartFileSystemRouter(options) {
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
 
       if (/\.test\.(tsx)/.test(id) && config.solidOptions.ssr) {
-        return babelSolidCompiler(code, id, (source, id) => ({
+        return babelSolidCompiler(code, id, (/** @type {any} */ source, /** @type {any} */ id) => ({
           plugins: [
             options.ssr && [
               routeResource,
@@ -168,69 +186,84 @@ function solidStartFileSystemRouter(options) {
       }
 
       if (/\.data\.(ts|js)/.test(id) && config.solidOptions.ssr) {
-        return babelSolidCompiler(code, id.replace(/\.data\.ts/, ".tsx"), (source, id) => ({
-          plugins: [
-            options.ssr && [
-              routeResource,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            options.ssr && [
-              babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+        return babelSolidCompiler(
+          code,
+          id.replace(/\.data\.ts/, ".tsx"),
+          (/** @type {any} */ source, /** @type {any} */ id) => ({
+            plugins: [
+              options.ssr && [
+                routeResource,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ],
+              options.ssr && [
+                babelServerModule,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ]
             ]
-          ]
-        }));
+          })
+        );
       } else if (/\?data/.test(id)) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
-          plugins: [
-            options.ssr && [
-              routeResource,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            options.ssr && [
-              babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            [
-              routeData,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            !ssr &&
-              process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }]
-          ].filter(Boolean)
-        }));
+        return babelSolidCompiler(
+          code,
+          id.replace("?data", ""),
+          (/** @type {any} */ source, /** @type {any} */ id) => ({
+            plugins: [
+              options.ssr && [
+                routeResource,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ],
+              options.ssr && [
+                babelServerModule,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ],
+              [
+                routeData,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ],
+              !ssr &&
+                process.env.NODE_ENV !== "production" && [
+                  routeDataHmr,
+                  { ssr, root: process.cwd() }
+                ]
+            ].filter(Boolean)
+          })
+        );
       } else if (id.includes(path.posix.join(options.appRoot, options.routesDir))) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
-          plugins: [
-            options.ssr && [
-              routeResource,
-              {
-                ssr,
-                root: process.cwd(),
-                keep: true,
-                minify: process.env.NODE_ENV === "production"
-              }
-            ],
-            options.ssr && [
-              babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            [
-              routeData,
-              {
-                ssr,
-                root: process.cwd(),
-                keep: true,
-                minify: process.env.NODE_ENV === "production"
-              }
-            ]
-          ].filter(Boolean)
-        }));
+        return babelSolidCompiler(
+          code,
+          id.replace("?data", ""),
+          (/** @type {any} */ source, /** @type {any} */ id) => ({
+            plugins: [
+              options.ssr && [
+                routeResource,
+                {
+                  ssr,
+                  root: process.cwd(),
+                  keep: true,
+                  minify: process.env.NODE_ENV === "production"
+                }
+              ],
+              options.ssr && [
+                babelServerModule,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ],
+              [
+                routeData,
+                {
+                  ssr,
+                  root: process.cwd(),
+                  keep: true,
+                  minify: process.env.NODE_ENV === "production"
+                }
+              ]
+            ].filter(Boolean)
+          })
+        );
       } else if (code.includes("solid-start/server")) {
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
-          (source, id) => ({
+          (/** @type {any} */ source, /** @type {any} */ id) => ({
             plugins: [
               options.ssr && [
                 babelServerModule,
@@ -258,6 +291,10 @@ function solidStartFileSystemRouter(options) {
   };
 }
 
+/**
+ * @returns {import('vite').Plugin}
+ * @param {{ pageExtensions: any[]; }} options
+ */
 function solidsStartRouteManifest(options) {
   return {
     name: "solid-start-route-manifest",
@@ -276,6 +313,7 @@ function solidsStartRouteManifest(options) {
 
 /**
  * @returns {import('vite').Plugin}
+ * @param {any} options
  */
 function solidStartServer(options) {
   let config;
@@ -294,6 +332,10 @@ function solidStartServer(options) {
   };
 }
 
+/**
+ * @returns {import('vite').Plugin}
+ * @param {{ appRoot: string; ssr: any; mpa: any; adapter: { name: any; }; }} options
+ */
 function solidStartConfig(options) {
   return {
     name: "solid-start-config",
@@ -313,6 +355,7 @@ function solidStartConfig(options) {
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
           "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
+          "import.meta.env.START_MPA": JSON.stringify(options.mpa ? true : false),
           "import.meta.env.START_ADAPTER": JSON.stringify(
             typeof options.adapter === "string"
               ? options.adapter
@@ -325,6 +368,10 @@ function solidStartConfig(options) {
   };
 }
 
+/**
+ * @param {string} locate
+ * @param {fs.PathLike} [cwd]
+ */
 function find(locate, cwd) {
   cwd = cwd || process.cwd();
   if (cwd.split(path.sep).length < 2) return undefined;
@@ -355,7 +402,7 @@ function detectAdapter() {
 }
 
 /**
- * @returns {import('vite').Plugin[]}
+ * @returns {import('vite').PluginOption[]}
  */
 export default function solidStart(options) {
   options = Object.assign(
@@ -364,6 +411,7 @@ export default function solidStart(options) {
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
+      mpa: process.env.START_MPA === "false" ? false : true,
       lazy: true,
       prerenderRoutes: [],
       inspect: true
@@ -378,7 +426,9 @@ export default function solidStart(options) {
     "js",
     "ts",
     ...((options.extensions &&
-      options.extensions.map(s => (Array.isArray(s) ? s[0] : s)).map(s => s.slice(1))) ||
+      options.extensions
+        .map((/** @type {any[]} */ s) => (Array.isArray(s) ? s[0] : s))
+        .map((/** @type {string | any[]} */ s) => s.slice(1))) ||
       [])
   ];
 
@@ -387,19 +437,48 @@ export default function solidStart(options) {
     pageExtensions: options.pageExtensions
   });
 
-  // @ts-ignore
   return [
     // restart({
     //   restart: ["src/routes/**/*"]
     // }),
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
+    {
+      name: "islands",
+
+      load(id) {
+        if (id.endsWith("?island")) {
+          return {
+            code: `import { hydrate } from 'solid-js/web';
+            import Component from '${id.replace("?island", "")}';
+
+            Component;
+            `
+          };
+        }
+      },
+      /**
+       * @param {any} id
+       * @param {string} code
+       */
+      transform(code, id, ssr) {
+        if (id.includes("comment")) {
+          let replaced = code.replace(/island\(\(\) => import\("([^"]+)"\)\)/, (a, b) =>
+            ssr
+              ? `island(() => import("${b}"), "${join(dirname(id), b) + ".tsx"}")`
+              : `island(() => import("${b}?island"), "${join(dirname(id), b) + ".tsx"}")`
+          );
+          console.log(replaced);
+          return replaced;
+        }
+      }
+    },
     options.inspect ? inspect() : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
       ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
-      babel: (source, id, ssr) => ({
+      babel: (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
         plugins: options.ssr
           ? [
               [

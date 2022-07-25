@@ -23,6 +23,8 @@ function getAssetsFromManifest(
     return memo;
   }, []);
 
+  match.push(...(manifest["entry-client"] || []));
+
   const links = match.reduce((r, src) => {
     r[src.href] =
       src.type === "style" ? (

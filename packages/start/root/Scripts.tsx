@@ -25,7 +25,7 @@ export default function Scripts() {
           ) : import.meta.env.START_SSR ? (
             getEntryClient(context.env.manifest)
           ) : (
-            <script type="module" async src="/src/entry-client" $ServerOnly></script>
+            <script type="module" async src="/src/entry-client" $ServerOnly />
           ))}
       </NoHydration>
       {isDev && <InlineStyles />}

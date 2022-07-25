@@ -9,7 +9,7 @@ import { Readable } from "stream";
 export function createServer({ handler, paths, manifest }) {
   const comp = compression({
     threshold: 0,
-    filter: req => req.headers["content-type"]?.startsWith("text/event-stream")
+    filter: req => !req.headers["content-type"]?.startsWith("text/event-stream")
   });
   const assets_handler = fs.existsSync(paths.assets)
     ? sirv(paths.assets, {

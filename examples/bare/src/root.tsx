@@ -20,6 +20,7 @@ export default function Root() {
             <Routes>
               <FileRoutes />
             </Routes>
+            {/* <Outlet /> */}
           </ErrorBoundary>
         </Suspense>
         <Scripts />
