@@ -36,6 +36,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config) {
       let visitedFiles = new Set();
 
       function visitFile(file) {
+        if (file.file.endsWith('css')) return;
         if (visitedFiles.has(file.file)) return;
         visitedFiles.add(file.file);
         files.push({
