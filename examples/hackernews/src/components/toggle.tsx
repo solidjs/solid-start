@@ -1,6 +1,7 @@
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, sharedConfig } from "solid-js";
 
 export default function Toggle(props) {
+  console.log(sharedConfig.context.id);
   const [open, setOpen] = createSignal(true);
   createEffect(() => {
     console.log(open());

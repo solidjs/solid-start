@@ -136,11 +136,10 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
         componentMap[el.dataset.component] = Component;
       }
 
-      // function Comp(props) {
-      //   return <Component {...props} />;
-      // }
+      console.log(el.dataset.island);
+
       hydrate(() => createComponent(Component, JSON.parse(el.dataset.props)), el, {
-        renderId: el.dataset.island
+        renderId: el.dataset.island + `2-`
       });
     }
 

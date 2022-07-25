@@ -1,8 +1,8 @@
 import { Link } from "solid-app-router";
-import { Component, ComponentProps, For, lazy, sharedConfig, Show } from "solid-js";
+import { Component, ComponentProps, For, sharedConfig, Show } from "solid-js";
 
 function island<T extends Component<any>>(
-  fn: () => Promise<{
+  Comp: () => Promise<{
     default: T;
   }>,
   path?: string
@@ -11,7 +11,13 @@ function island<T extends Component<any>>(
     default: T;
   }>;
 } {
-  const Toggle = lazy(fn);
+  function C(props) {
+    return (
+      <Comp {...props}>
+        <solid-children>{props.children}</solid-children>
+      </Comp>
+    );
+  }
 
   let a: T & {
     preload: () => Promise<{
@@ -26,9 +32,7 @@ function island<T extends Component<any>>(
           data-island={sharedConfig.context.id}
           data-component={path}
         >
-          <Toggle {...props}>
-            <solid-children>{children}</solid-children>
-          </Toggle>
+          <C {...compProps} />
         </solid-island>
       );
     } else {
@@ -36,7 +40,6 @@ function island<T extends Component<any>>(
     }
   }) as any;
 
-  a.preload = Toggle.preload;
   return a;
 }
 

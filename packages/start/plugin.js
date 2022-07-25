@@ -463,10 +463,15 @@ export default function solidStart(options) {
        */
       transform(code, id, ssr) {
         if (id.includes("comment")) {
-          let replaced = code.replace(/island\(\(\) => import\("([^"]+)"\)\)/, (a, b) =>
-            ssr
-              ? `island(() => import("${b}"), "${join(dirname(id), b) + ".tsx"}")`
-              : `island(() => import("${b}?island"), "${join(dirname(id), b) + ".tsx"}")`
+          let replaced = code.replace(
+            /const ([A-Za-z_]+) = island\(\(\) => import\("([^"]+)"\)\)/,
+            (a, b, c) =>
+              ssr
+                ? `import ${b}_island from "${c}"; 
+              const ${b} = island(${b}_island, "${join(dirname(id), c) + ".tsx"}");`
+                : `const ${b} = island(() => import("${c}?island"), "${
+                    join(dirname(id), c) + ".tsx"
+                  }")`
           );
           console.log(replaced);
           return replaced;
