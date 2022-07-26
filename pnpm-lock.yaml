@@ -313,12 +313,12 @@ importers:
       solid-app-router: 0.4.1
       solid-js: 1.4.7
       solid-meta: 0.27.5
-      solid-start-cloudflare-pages: 0.1.0-alpha.94
-      solid-start-cloudflare-workers: 0.1.0-alpha.94
-      solid-start-deno: 0.1.0-alpha.94
-      solid-start-netlify: 0.1.0-alpha.94
-      solid-start-node: 0.1.0-alpha.94
-      solid-start-static: 0.1.0-alpha.94
+      solid-start-cloudflare-pages: 0.1.0-alpha.95
+      solid-start-cloudflare-workers: 0.1.0-alpha.95
+      solid-start-deno: 0.1.0-alpha.95
+      solid-start-netlify: 0.1.0-alpha.95
+      solid-start-node: 0.1.0-alpha.95
+      solid-start-static: 0.1.0-alpha.95
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.2
@@ -373,7 +373,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.0
-      solid-start: 0.1.0-alpha.94
+      solid-start: 0.1.0-alpha.95
       terser: ^5.14.2
       vite: ^3.0.2
     dependencies:
@@ -393,7 +393,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.0
-      solid-start: 0.1.0-alpha.94
+      solid-start: 0.1.0-alpha.95
       terser: ^5.14.2
       vite: ^3.0.2
     dependencies:
@@ -413,7 +413,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.0
-      solid-start: 0.1.0-alpha.94
+      solid-start: 0.1.0-alpha.95
       terser: ^5.14.2
       vite: ^3.0.2
     dependencies:
@@ -437,7 +437,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^3.2.9
       rollup: ^2.77.0
-      solid-start: 0.1.0-alpha.94
+      solid-start: 0.1.0-alpha.95
       terser: ^5.14.2
       vite: ^3.0.2
     dependencies:
@@ -464,7 +464,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.77.0
       sirv: ^2.0.2
-      solid-start: 0.1.0-alpha.94
+      solid-start: 0.1.0-alpha.95
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.2
@@ -486,7 +486,7 @@ importers:
     specifiers:
       sirv-cli: 2.0.2
       solid-ssr: ^1.4.7
-      solid-start: 0.1.0-alpha.94
+      solid-start: 0.1.0-alpha.95
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.2
@@ -505,7 +505,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.0
-      solid-start: 0.1.0-alpha.94
+      solid-start: 0.1.0-alpha.95
       terser: ^5.14.2
       vite: ^3.0.2
     dependencies:
@@ -5032,7 +5032,7 @@ packages:
   /axios/0.25.0_debug@4.3.4:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.15.1_debug@4.3.4
+      follow-redirects: 1.15.1
     transitivePeerDependencies:
       - debug
     dev: false
@@ -8049,18 +8049,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-
-  /follow-redirects/1.15.1_debug@4.3.4:
-    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.4
-    dev: false
 
   /for-in/1.0.2:
     resolution: {integrity: sha512-7EwmXrOjyL+ChxMhmG5lnW9MPt1aIeZEwKhQzoBUdTV0N3zuwWDZYVJatDvZ2OyzPUvdIAZDsCetk3coyMfcnQ==}
