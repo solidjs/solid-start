@@ -437,13 +437,13 @@ export default function solidStart(options) {
 
         if (options.ssr) {
           // NOTE push or shift?
-          baseOptions.push([
+          processedOptions.push([
             babelServerModule,
             { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
           ])
         }
         
-        return baseOptions;
+        return processedOptions;
       },
     }),
     options.ssr && solidStartSSR(options),
