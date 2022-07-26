@@ -179,6 +179,7 @@ prog
       },
       debug: DEBUG,
       spaClient: async path => {
+        console.log("ajdslkdsjl");
         DEBUG("spa build start");
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
         mkdirSync(join(config.root, ".solid"), { recursive: true });
@@ -188,7 +189,8 @@ prog
           indexHtml = join(config.root, "index.html");
         } else {
           DEBUG("starting vite server for index.html");
-          let proc = spawn("vite", ["dev", "--mode", "production", "--port", "8989"], {
+          let port = await (await import("get-port")).default();
+          let proc = spawn("vite", ["dev", "--mode", "production", "--port", port], {
             stdio: isDebug ? "inherit" : "ignore",
             shell: true
           });
@@ -197,7 +199,7 @@ prog
             process.exit();
           });
           await waitOn({
-            resources: ["http://localhost:8989/"],
+            resources: [`http://localhost:${port}/`],
             verbose: isDebug
           });
 
@@ -205,7 +207,9 @@ prog
 
           writeFileSync(
             join(config.root, ".solid", "index.html"),
-            await (await import("./dev/create-index-html.js")).createHTML("http://localhost:8989/")
+            await (
+              await import("./dev/create-index-html.js")
+            ).createHTML(`http://localhost:${port}/`)
           );
 
           indexHtml = join(config.root, ".solid", "index.html");

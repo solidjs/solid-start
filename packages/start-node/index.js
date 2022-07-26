@@ -19,6 +19,7 @@ export default function () {
 
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "dist", "public"));
+        console.log("heree");
 
         mkdirSync(join(config.root, ".solid", "server"), {
           recursive: true

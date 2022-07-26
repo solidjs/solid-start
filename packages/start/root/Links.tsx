@@ -46,6 +46,10 @@ export default function Links(): JSXElement {
   const isDev = import.meta.env.MODE === "development";
   const context = useContext(ServerContext);
   return (
-    <Assets>{!isDev && getAssetsFromManifest(context.env.manifest, context.routerContext)}</Assets>
+    <Assets>
+      {!isDev &&
+        import.meta.env.START_SSR &&
+        getAssetsFromManifest(context.env.manifest, context.routerContext)}
+    </Assets>
   );
 }
