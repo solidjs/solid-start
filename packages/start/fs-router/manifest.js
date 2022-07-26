@@ -26,40 +26,29 @@ import { toPath } from "./path-utils.js";
 export default function prepareManifest(ssrManifest, assetManifest, config, islands = []) {
   const pageRegex = new RegExp(`\\.(${config.solidOptions.pageExtensions.join("|")})$`);
   const baseRoutes = posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir);
+  let routes = Object.keys(ssrManifest)
+    .filter(key => key.startsWith(baseRoutes) && key.match(pageRegex))
+    .map(key => [key, ssrManifest[key]])
+    .map(([key, value]) => {
+      let files = [];
+      let visitedFiles = new Set();
 
-  let manifest = {};
-
-  function collect(src) {
-    let assets = collectAssets();
-    assets.addSrc(src);
-
-    return assets.getFiles();
-  }
-
-  function collectAssets() {
-    let files = [];
-    let visitedFiles = new Set();
-
-    function visitFile(file) {
-      if (visitedFiles.has(file.file)) return;
-      visitedFiles.add(file.file);
-      files.push({
-        type: file.file.endsWith(".css") ? "style" : "script",
-        href: "/" + file.file
-      });
-
-      file.imports?.forEach(imp => {
-        visitFile(assetManifest[imp]);
-      });
-
-      file.dynamicImports?.forEach(imp => {
-        if (imp.endsWith("?island")) {
-          files.push({ type: "island", href: imp });
-          let f = collect(imp);
-          manifest[imp] = {
-            script: f[0],
-            assets: f
-          };
+      function visitFile(file) {
+        if (file.file.endsWith('css')) return;
+        if (visitedFiles.has(file.file)) return;
+        visitedFiles.add(file.file);
+        files.push({
+          type: file.file.endsWith(".css") ? "style" : "script",
+          href: "/" + file.file
+        });
+        if (!visitedScripts.has(file.file)) {
+          visitedScripts.add(file.file);
+          if (
+            file.src &&
+            file.src.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
+          ) {
+            entryClientScripts.push({ type: "script", href: "/" + file.file });
+          }
         }
       });
 
