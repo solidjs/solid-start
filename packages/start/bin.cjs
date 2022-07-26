@@ -179,7 +179,6 @@ prog
       },
       debug: DEBUG,
       spaClient: async path => {
-        console.log("ajdslkdsjl");
         DEBUG("spa build start");
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
         mkdirSync(join(config.root, ".solid"), { recursive: true });
