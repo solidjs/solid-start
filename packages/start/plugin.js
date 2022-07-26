@@ -430,14 +430,17 @@ export default function solidStart(options) {
     solid({
       ...(options ?? {}),
       babel: (source, id, ssr) => {
-        const baseOptions = options?.babel ?? [];
+        const baseOptions = options?.babel ?? {};
         const processedOptions = typeof baseOptions === 'function'
           ? baseOptions(source, id, ssr)
           : baseOptions;
 
         if (options.ssr) {
+          if (!processedOptions.plugins) {
+            processedOptions.plugins = [];
+          }
           // NOTE push or shift?
-          processedOptions.push([
+          processedOptions.plugins.push([
             babelServerModule,
             { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
           ])
