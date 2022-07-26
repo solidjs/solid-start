@@ -9,7 +9,9 @@ import { RouteDefinition, Router as MPARouter } from "../server/router";
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
 
-const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
+const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
+  default: RouteDataFunc;
+};
 const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
 
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
@@ -55,8 +57,7 @@ export function StartRouter(
     routes: RouteDefinition | RouteDefinition[];
   }
 ) {
-  console.log(import.meta.env.START_MPA);
-  if (import.meta.env.START_MPA) {
+  if (import.meta.env.START_ISLANDS_ROUTER) {
     return (
       <Router {...props}>
         <MPARouter {...props}>{props.children}</MPARouter>

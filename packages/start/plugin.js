@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs, { readFileSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { normalizePath } from "vite";
@@ -355,7 +355,10 @@ function solidStartConfig(options) {
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
           "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
-          "import.meta.env.START_MPA": JSON.stringify(options.mpa ? true : false),
+          "import.meta.env.START_ISLANDS": JSON.stringify(options.islands ? true : false),
+          "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
+            options.islandsRouter ? true : false
+          ),
           "import.meta.env.START_ADAPTER": JSON.stringify(
             typeof options.adapter === "string"
               ? options.adapter
@@ -411,7 +414,8 @@ export default function solidStart(options) {
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
-      mpa: process.env.START_MPA === "false" ? false : true,
+      islands: process.env.START_ISLANDS === "true" ? true : false,
+      islandsRouter: process.env.START_ISLANDS_ROUTER === "true" ? true : false,
       lazy: true,
       prerenderRoutes: [],
       inspect: true
@@ -449,10 +453,12 @@ export default function solidStart(options) {
       load(id) {
         if (id.endsWith("?island")) {
           return {
-            code: `import { hydrate } from 'solid-js/web';
+            code: `
             import Component from '${id.replace("?island", "")}';
 
-            Component;
+            window._$HY.island("${id.slice(process.cwd().length)}", Component);
+
+            export default Component;
             `
           };
         }
@@ -462,18 +468,39 @@ export default function solidStart(options) {
        * @param {string} code
        */
       transform(code, id, ssr) {
+        if (id.endsWith("start/islands.js")) {
+          let routeManifest = JSON.parse(
+            readFileSync(
+              path.join(process.cwd(), ".solid/route-manifest/route-manifest.json"),
+              "utf-8"
+            )
+          );
+
+          let r = ``;
+          Object.keys(routeManifest)
+            .filter(key => key.endsWith("?island"))
+            .forEach((key, index) => {
+              r += `const island${index} = import('/${key}');\n`;
+              r += `island${index}();\n`;
+            });
+
+          r += `export default {}`;
+          return r;
+        }
         if (id.includes("comment")) {
           let replaced = code.replace(
             /const ([A-Za-z_]+) = island\(\(\) => import\("([^"]+)"\)\)/,
             (a, b, c) =>
               ssr
                 ? `import ${b}_island from "${c}"; 
-              const ${b} = island(${b}_island, "${join(dirname(id), c) + ".tsx"}");`
+                  const ${b} = island(${b}_island, "${
+                    join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
+                  }");`
                 : `const ${b} = island(() => import("${c}?island"), "${
-                    join(dirname(id), c) + ".tsx"
+                    join(dirname(id), c) + ".tsx" + "?island"
                   }")`
           );
-          console.log(replaced);
+
           return replaced;
         }
       }

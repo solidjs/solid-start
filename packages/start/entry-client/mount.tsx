@@ -1,153 +1,66 @@
-import { createComponent, JSX } from "solid-js";
-import { hydrate, render } from "solid-js/web";
+import type { Debugger } from "debug";
+import type { Component, JSX } from "solid-js";
+import { createComponent, hydrate, render } from "solid-js/web";
+
+import mountRouter from "../islands/router";
+
+declare global {
+  interface Window {
+    DEBUG: Debugger;
+    _$HY: {
+      island(path: string, comp: Component): void;
+      islandMap: { [path: string]: Component };
+      hydrateIslands(): void;
+    };
+  }
+}
+
+if (import.meta.env.DEV) {
+  localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
+  const { default: createDebugger } = await import("debug");
+  window.DEBUG = createDebugger("start:client");
+} else {
+  window.DEBUG = (() => {}) as unknown as Debugger;
+}
 
 export default function mount(code?: () => JSX.Element, element?: Document) {
-  if (import.meta.env.START_MPA) {
-    interface LocationEntry {
-      path: string;
-      state: any;
-    }
+  if (import.meta.env.START_ISLANDS) {
+    mountRouter();
 
-    const basePath = "/";
-    let currentLocation: LocationEntry = getLocation();
+    if (import.meta.env.START_ISLANDS) {
+      async function mountIsland(el: HTMLElement) {
+        let Component = window._$HY.islandMap[el.dataset.island];
+        if (!Component) {
+          await import(/* @vite-ignore */ el.dataset.component);
+          Component = window._$HY.islandMap[el.dataset.island];
+        }
 
-    function getLocation(): LocationEntry {
-      const { pathname, search, hash } = window.location;
-      return {
-        path: pathname + search + hash,
-        state: history.state
+        window.DEBUG(
+          "hydrating island",
+          el.dataset.island,
+          el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`,
+          el
+        );
+
+        hydrate(() => createComponent(Component, JSON.parse(el.dataset.props)), el, {
+          renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`
+        });
+      }
+
+      window._$HY.hydrateIslands = () => {
+        document.querySelectorAll("solid-island").forEach((el: HTMLElement) => {
+          if (el.dataset.when === "idle") {
+            requestIdleCallback(() => mountIsland(el));
+          } else {
+            mountIsland(el as HTMLElement);
+          }
+        });
       };
     }
 
-    async function handleAnchorClick(evt: MouseEvent) {
-      if (
-        evt.defaultPrevented ||
-        evt.button !== 0 ||
-        evt.metaKey ||
-        evt.altKey ||
-        evt.ctrlKey ||
-        evt.shiftKey
-      )
-        return;
+    window._$HY.hydrateIslands();
 
-      const a = evt
-        .composedPath()
-        .find(el => el instanceof Node && el.nodeName.toUpperCase() === "A") as
-        | HTMLAnchorElement
-        | SVGAElement
-        | undefined;
-
-      if (!a) return;
-
-      const isSvg = a instanceof SVGAElement;
-      const href = isSvg ? a.href.baseVal : a.href;
-      const target = isSvg ? a.target.baseVal : a.target;
-      if (target || (!href && !a.hasAttribute("state"))) return;
-
-      const rel = (a.getAttribute("rel") || "").split(/\s+/);
-      if (a.hasAttribute("download") || (rel && rel.includes("external"))) return;
-
-      const url = isSvg ? new URL(href, document.baseURI) : new URL(href);
-      if (
-        url.origin !== window.location.origin ||
-        (basePath && url.pathname && !url.pathname.toLowerCase().startsWith(basePath.toLowerCase()))
-      )
-        return;
-
-      const to = url.pathname + url.search + url.hash;
-      const state = a.getAttribute("state");
-
-      evt.preventDefault();
-
-      const options = {
-        resolve: false,
-        replace: a.hasAttribute("replace"),
-        scroll: !a.hasAttribute("noscroll"),
-        state: state && JSON.parse(state)
-      };
-
-      if (await navigate(to)) {
-        if (options.replace) {
-          history.replaceState(options.state, "", to);
-        } else {
-          history.pushState(options.state, "", to);
-        }
-        currentLocation = getLocation();
-      }
-    }
-
-    interface NavigateOptions {
-      resolve?: boolean;
-      replace?: boolean;
-      scroll?: boolean;
-      state?: any;
-    }
-
-    async function handlePopState(evt: PopStateEvent) {
-      const { path, state } = getLocation();
-      if (await navigate(path)) {
-        currentLocation = getLocation();
-      }
-    }
-
-    async function navigate(to: string) {
-      const response = await fetch(to, {
-        headers: {
-          "x-solid-referrer": currentLocation.path
-        }
-      });
-
-      if (!response.ok) {
-        console.error(`Navigation failed: ${response.status} ${response.statusText}`);
-        return false;
-      }
-
-      const body = await response.text();
-      const splitIndex = body.indexOf("=");
-      const meta = body.substring(0, splitIndex);
-      const content = body.substring(splitIndex + 1);
-
-      if (meta) {
-        const [prev, next] = meta.split(":");
-        const outletEl = document.getElementById(prev);
-        if (outletEl) {
-          outletEl.innerHTML = content;
-          outletEl.id = next;
-          return true;
-        } else {
-          console.warn(`No outlet element with id ${prev}`);
-        }
-      } else {
-        console.warn(`No meta data in response`);
-      }
-
-      return false;
-    }
-
-    document.addEventListener("click", handleAnchorClick);
-    window.addEventListener("popstate", handlePopState);
-
-    let componentMap = {};
-
-    async function mountIsland(el) {
-      let Component = componentMap[el.dataset.component];
-      if (!Component) {
-        Component = (await import(/* @vite-ignore */ el.dataset.component)).default;
-        componentMap[el.dataset.component] = Component;
-      }
-
-      console.log(el.dataset.island);
-
-      hydrate(() => createComponent(Component, JSON.parse(el.dataset.props)), el, {
-        renderId: el.dataset.island + `2-`
-      });
-    }
-
-    document.querySelectorAll("solid-island").forEach(el => {
-      mountIsland(el);
-    });
-
-    return () => hydrate(code, element);
+    return;
   }
 
   if (import.meta.env.START_SSR) {

@@ -1,47 +1,7 @@
 import { Link } from "solid-app-router";
-import { Component, ComponentProps, For, sharedConfig, Show } from "solid-js";
-
-function island<T extends Component<any>>(
-  Comp: () => Promise<{
-    default: T;
-  }>,
-  path?: string
-): T & {
-  preload: () => Promise<{
-    default: T;
-  }>;
-} {
-  function C(props) {
-    return (
-      <Comp {...props}>
-        <solid-children>{props.children}</solid-children>
-      </Comp>
-    );
-  }
-
-  let a: T & {
-    preload: () => Promise<{
-      default: T;
-    }>;
-  } = ((compProps: ComponentProps<T>) => {
-    if (import.meta.env.SSR) {
-      const { children, ...props } = compProps;
-      return (
-        <solid-island
-          data-props={JSON.stringify(props)}
-          data-island={sharedConfig.context.id}
-          data-component={path}
-        >
-          <C {...compProps} />
-        </solid-island>
-      );
-    } else {
-      return null;
-    }
-  }) as any;
-
-  return a;
-}
+import { Component, For, Show } from "solid-js";
+import { island } from "solid-start/islands";
+import { IComment } from "~/types";
 
 const Toggle = island(() => import("./toggle"));
 
@@ -54,7 +14,7 @@ const Comment: Component<{ comment: IComment }> = props => {
       </div>
       <div class="text" innerHTML={props.comment.content} />
       <Show when={props.comment.comments.length}>
-        <Toggle>
+        <Toggle client:idle>
           <For each={props.comment.comments}>{comment => <Comment comment={comment} />}</For>
         </Toggle>
       </Show>

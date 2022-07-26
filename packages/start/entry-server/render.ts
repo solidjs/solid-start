@@ -20,7 +20,7 @@ export function renderAsync(
       return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
     }
 
-    if (pageEvent.routerContext.replaceOutletId) {
+    if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
       console.log("heree", `<!--${pageEvent.routerContext.newOutletId}-->`);
       console.log(
         markup.slice(
@@ -37,7 +37,7 @@ export function renderAsync(
         markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
           `</outlet-wrapper>`.length
       )}`;
-      
+
       pageEvent.responseHeaders.set("Content-Type", "text/plain");
     }
 

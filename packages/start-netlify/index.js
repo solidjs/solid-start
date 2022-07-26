@@ -19,7 +19,11 @@ export default function ({ edge } = {}) {
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
-      await builder.client(join(config.root, "netlify"));
+      if (config.solidOptions.islands) {
+        await builder.islandsClient(join(config.root, "netlify"));
+      } else {
+        await builder.client(join(config.root, "netlify"));
+      }
       await viteBuild({
         build: {
           ssr: true,
@@ -42,6 +46,7 @@ export default function ({ edge } = {}) {
       );
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
+        preserveEntrySignatures: false,
         plugins: [
           json(),
           nodeResolve({
@@ -58,6 +63,7 @@ export default function ({ edge } = {}) {
       // or write the bundle to disk
       await bundle.write({
         format: edge ? "esm" : "cjs",
+        manualChunks: {},
         dir: join(config.root, "netlify", edge ? "edge-functions" : "functions")
       });
 

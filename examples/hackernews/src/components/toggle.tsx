@@ -1,11 +1,8 @@
-import { createEffect, createSignal, sharedConfig } from "solid-js";
-
+import { createSignal } from "solid-js";
+import "./toggle.css";
 export default function Toggle(props) {
-  console.log(sharedConfig.context.id);
   const [open, setOpen] = createSignal(true);
-  createEffect(() => {
-    console.log(open());
-  });
+
   return (
     <>
       <div class="toggle" classList={{ open: open() }}>

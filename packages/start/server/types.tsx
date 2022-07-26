@@ -28,10 +28,15 @@ type RouterContext = {
   newOutletId?: string;
 };
 
+export type IslandManifest = {
+  script: ManifestEntry;
+  assets: ManifestEntry[];
+};
+
 export interface FetchEvent {
   request: Request;
   env: {
-    manifest?: Record<string, ManifestEntry[]>;
+    manifest?: Record<string, ManifestEntry[] | IslandManifest>;
     collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
     devManifest: [{ path: string; componentPath: string; id: string }];
   };

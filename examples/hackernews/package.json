@@ -8,10 +8,13 @@
   "type": "module",
   "main": "./dist/index.js",
   "devDependencies": {
+    "netlify-cli": "^10.11.2",
+    "node-fetch": "^3.2.9",
     "solid-app-router": "^0.4.1",
     "solid-js": "^1.4.7",
     "solid-meta": "^0.27.3",
     "solid-start": "workspace:*",
+    "solid-start-netlify": "workspace:*",
     "solid-start-node": "workspace:*",
     "typescript": "^4.4.3",
     "undici": "^5.5.1",

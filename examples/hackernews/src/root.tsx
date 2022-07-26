@@ -8,7 +8,7 @@ import Nav from "./components/nav";
 import "./root.css";
 
 export function Routes() {
-  if (import.meta.env.START_MPA) {
+  if (import.meta.env.START_ISLANDS_ROUTER) {
     return (
       <Outlet>
         <BaseRoutes>

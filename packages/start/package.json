@@ -46,6 +46,8 @@
     "./error-boundary/*": "./error-boundary/*",
     "./meta": "./meta/index.tsx",
     "./meta/*": "./meta/*",
+    "./islands": "./islands/index.tsx",
+    "./islands/*": "./islands/*",
     "./root": "./root/index.tsx",
     "./root/*": "./root/*",
     "./data": "./data/index.tsx",
