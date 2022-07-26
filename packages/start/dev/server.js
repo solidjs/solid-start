@@ -1,9 +1,12 @@
+import debug from "debug";
 import { once } from "events";
 import path from "path";
 import { Readable } from "stream";
 import { pathToFileURL } from "url";
 import { createRequest } from "../node/fetch.js";
 import "../node/globals.js";
+
+globalThis.DEBUG = debug("start:server");
 
 // Vite doesn't expose this so we just copy the list for now
 // https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96

@@ -60,6 +60,8 @@ test.describe("check event-stream", () => {
     let app = new PlaywrightFixture(appFixture, page);
     await app.goto("/");
 
+    await page.waitForTimeout(500);
+
     expect(await page.locator("#chat").innerText()).toBe("Hello world");
 
     await page.waitForTimeout(6000);

@@ -19,8 +19,6 @@ if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
   const { default: createDebugger } = await import("debug");
   window.DEBUG = createDebugger("start:client");
-} else {
-  window.DEBUG = (() => {}) as unknown as Debugger;
 }
 
 export default function mount(code?: () => JSX.Element, element?: Document) {
@@ -35,7 +33,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
           Component = window._$HY.islandMap[el.dataset.island];
         }
 
-        window.DEBUG(
+        DEBUG(
           "hydrating island",
           el.dataset.island,
           el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`,
@@ -66,6 +64,6 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
   if (import.meta.env.START_SSR) {
     hydrate(code, element);
   } else {
-    render(code, element.body);
+    render(code, element === document ? element.body : element);
   }
 }

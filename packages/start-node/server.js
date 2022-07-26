@@ -14,7 +14,9 @@ global.onunhandledrejection = (err, promise) => {
 export function createServer({ handler, paths, manifest }) {
   const comp = compression({
     threshold: 0,
-    filter: req => !req.headers["content-type"]?.startsWith("text/event-stream")
+    filter: req => {
+      return !req.headers["accept"]?.startsWith("text/event-stream");
+    }
   });
   const assets_handler = fs.existsSync(paths.assets)
     ? sirv(paths.assets, {

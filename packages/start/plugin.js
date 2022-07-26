@@ -359,6 +359,7 @@ function solidStartConfig(options) {
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.islandsRouter ? true : false
           ),
+          DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis.DEBUG",
           "import.meta.env.START_ADAPTER": JSON.stringify(
             typeof options.adapter === "string"
               ? options.adapter
