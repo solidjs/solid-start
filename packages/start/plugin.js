@@ -429,16 +429,22 @@ export default function solidStart(options) {
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
-      babel: (source, id, ssr) => ({
-        plugins: options.ssr
-          ? [
-              [
-                babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-              ]
-            ]
-          : []
-      })
+      babel: (source, id, ssr) => {
+        const baseOptions = options?.babel ?? [];
+        const processedOptions = typeof baseOptions === 'function'
+          ? baseOptions(source, id, ssr)
+          : baseOptions;
+
+        if (options.ssr) {
+          // NOTE push or shift?
+          baseOptions.push([
+            babelServerModule,
+            { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+          ])
+        }
+        
+        return baseOptions;
+      },
     }),
     options.ssr && solidStartSSR(options),
     solidsStartRouteManifest(options)
