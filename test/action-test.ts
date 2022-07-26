@@ -12,47 +12,6 @@ test.describe("actions", () => {
   test.beforeAll(async () => {
     fixture = await createFixture({
       files: {
-        // "src/entry-client.tsx": js`
-        //   import { render } from "solid-js/web";
-        //   import { StartClient } from "solid-start/entry-client";
-
-        //   render(() => <StartClient />, document.body);
-        // `,
-        // "vite.config.ts": js`
-        //   import { defineConfig } from "vite";
-        //   import solid from "solid-start";
-
-        //   export default defineConfig({
-        //     plugins: [solid({ ssr: false })]
-        //   });
-        // `,
-        // "src/root.tsx": js`
-        //   import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
-        //   import { Routes } from "solid-app-router";
-        //   import { Suspense } from "solid-js";
-
-        //   export default function Root() {
-        //     return (
-        //       <>
-        //         <div id="content">
-        //           <h1>Root</h1>
-        //           <Routes><FileRoutes /></Routes>
-        //         </div>
-        //       </>
-        //     );
-        //   }
-        // `,
-        // "index.html": js`
-        //   <!DOCTYPE html>
-        //   <html lang="en">
-        //     <head>
-        //       <meta charset="utf-8" />
-        //       <meta name="viewport" content="width=device-width, initial-scale=1" />
-        //       <script type="module" src="./src/entry-client.tsx"></script>
-        //     </head>
-        //     <body></body>
-        //   </html>
-        // `,
         "src/routes/client-action.tsx": js`
           import { createRouteAction } from 'solid-start/data';
 
@@ -124,6 +83,7 @@ test.describe("actions", () => {
             );
           }
         `,
+        // TODO: check the bug related to Document hydration for the `< when={action.value}>`
         "src/routes/server-action-in-component.tsx": js`
           import { Action } from '~/components/Action';
           export default function Route() {
@@ -147,7 +107,7 @@ test.describe("actions", () => {
                 <button onClick={e => action.submit({ hello: "world" })} id="submit-earth">Earth</button>
                 <button onClick={e => action.submit({ hello: "mars" })} id="submit-mars">Mars</button>
                 <button onClick={e => action.reset()} id="reset">Reset</button>
-                <Show when={action.value}><p id="result">{action.value}</p></Show>
+                <Show when={() => action.value}><p id="result">{action.value}</p></Show>
                 <Show when={action.state === "pending"}><p id="pending">Pending</p></Show>
               </>
             );

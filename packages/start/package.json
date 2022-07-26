@@ -82,6 +82,7 @@
     "picocolors": "^1.0.0",
     "rollup": "^2.77.0",
     "rollup-route-manifest": "^1.0.0",
+    "wait-on": "^6.0.1",
     "sade": "^1.8.1",
     "sirv": "^2.0.2",
     "terser": "^5.14.2",
@@ -90,6 +91,8 @@
     "vite-plugin-solid": "^2.3.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/wait-on": "^5.3.1",
     "solid-app-router": "0.4.1",
     "solid-js": "1.4.7",
     "solid-meta": "0.27.5",

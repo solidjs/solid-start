@@ -1,6 +1,5 @@
 import { Title } from "solid-meta";
 import Counter from "~/components/Counter";
-import "./index.css";
 
 export default function Home() {
   return (

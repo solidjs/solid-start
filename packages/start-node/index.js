@@ -30,6 +30,7 @@ export default function () {
           `'${join(config.root, "dist", "public", "index.html").replace(/\\/g, "\\\\")}'`
         );
         writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
+        builder.debug(`created ${join(config.root, ".solid", "server", "entry-server.js")}`);
       } else {
         await builder.client(join(config.root, "dist", "public"));
 
@@ -55,6 +56,9 @@ export default function () {
       let text = readFileSync(join(__dirname, "entry.js")).toString();
 
       writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
+
+      builder.debug(`bundling server with rollup`);
+
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "server.js"),
         plugins: [
@@ -72,6 +76,8 @@ export default function () {
 
       // closes the bundle
       await bundle.close();
+
+      builder.debug(`bundling server done`);
     }
   };
 }

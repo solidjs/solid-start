@@ -14,7 +14,7 @@ export default function Scripts() {
   const context = useContext(ServerContext);
   return (
     <>
-      <HydrationScript />
+      {import.meta.env.START_SSR && <HydrationScript />}
       <NoHydration>
         {isServer &&
           (isDev ? (
@@ -22,8 +22,10 @@ export default function Scripts() {
               <script type="module" src="/@vite/client" $ServerOnly></script>
               <script type="module" async src="/src/entry-client" $ServerOnly></script>
             </>
-          ) : (
+          ) : import.meta.env.START_SSR ? (
             getEntryClient(context.env.manifest)
+          ) : (
+            <script type="module" async src="/src/entry-client" $ServerOnly></script>
           ))}
       </NoHydration>
       {isDev && <InlineStyles />}
