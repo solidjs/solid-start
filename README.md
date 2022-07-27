@@ -48,7 +48,7 @@ Run `pnpm install` to install all the dependencies for the packages and examples
 - `entry-server.tsx`: The prop received by `StartServer`, and given to you by `createHandler` is called `event` instead of `context`.
 
 ```diff
-import { createHandler, renderAsync, StartServer } from "solid-start/entry-server";
+import { createHandler, renderAsync, StartServer } from "@solidjs/start/entry-server";
 
 - export default createHandler(renderAsync(context => <StartServer context={context} />));
 + export default createHandler(renderAsync(event => <StartServer event={event} />));
@@ -123,6 +123,10 @@ export default function Root() {
 ```
 
 - Step 2: For consistency between the SSR and client-side rendering modes, we needed to take more control of `root.tsx` specifically, we couldnt just take `<html></html>` and `<head></head>` tags and allow them to be part of the component tree since we can't client-side render the whole document. We only really get to take over `document.body`. We needed to ship with special `Html`, `Head`, and `Body` components that you use in `root.tsx` instead of the lower-case counterparts. These document flow components know what to do whether you are in SSR mode on or off.
+
+  - Because of this, we can avoid you having to include `Meta` and `Links` from `solid-start/root` in your `head` since we do it by default.
+  - We will always use the title-case variants of the tags used in `head` (eg. `Link` > `link`, `Style` > `style`, `Meta` > `meta`) for consistency throughout the app
+  - `solid-meta` is renamed to `@solidjs/meta`
 
 ```diff
 // @refresh reload
