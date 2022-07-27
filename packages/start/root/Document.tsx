@@ -4,11 +4,15 @@ import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
 
+let spread = (props: any, isSvg: boolean, skipChildren: boolean) =>
+  // @ts-ignore
+  ssrSpread(props, isSvg, skipChildren);
+  
 export function Html(props) {
   if (import.meta.env.MPA) {
   }
   if (import.meta.env.SSR) {
-    return `<html ${ssrSpread(props, false, true)}>
+    return `<html ${spread(props, false, true)}>
         ${resolveSSRNode(children(() => props.children))}
       </html>
     `;
@@ -27,7 +31,7 @@ export function Html(props) {
 
 export function Head(props) {
   if (import.meta.env.SSR) {
-    return `<head ${ssrSpread(props, false, true)}>
+    return `<head ${spread(props, false, true)}>
         ${resolveSSRNode(
           children(() => (
             <>
@@ -54,7 +58,7 @@ export function Head(props) {
 
 export function Body(props) {
   if (import.meta.env.SSR) {
-    return `<body ${ssrSpread(props, false, true)}>${
+    return `<body ${spread(props, false, true)}>${
       import.meta.env.START_SSR
         ? resolveSSRNode(children(() => props.children))
         : resolveSSRNode(<Scripts />)
