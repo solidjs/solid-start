@@ -1,6 +1,17 @@
 // @refresh reload
 import { Suspense } from "solid-js";
-import { Body, ErrorBoundary, FileRoutes, Head, Html, Routes, Scripts } from "solid-start";
+import {
+  Body,
+  ErrorBoundary,
+  FileRoutes,
+  Head,
+  Html,
+  Link,
+  Meta,
+  Routes,
+  Scripts,
+  Title
+} from "solid-start";
 import Nav from "./components/nav";
 import "./root.css";
 
@@ -8,11 +19,11 @@ export default function Root() {
   return (
     <Html lang="en">
       <Head>
-        <title>Solid - Hacker News</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Hacker News Clone built with Solid" />
-        <link rel="manifest" href="/manifest.webmanifest" />
+        <Title>Solid - Hacker News</Title>
+        <Meta charset="utf-8" />
+        <Meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta name="description" content="Hacker News Clone built with Solid" />
+        <Link rel="manifest" href="/manifest.webmanifest" />
       </Head>
       <Body>
         <Nav />

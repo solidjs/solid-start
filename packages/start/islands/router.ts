@@ -5,6 +5,7 @@ interface LocationEntry {
 
 export default function mountRouter() {
   if (import.meta.env.START_ISLANDS_ROUTER) {
+    DEBUG("mounting islands router");
     // console.log(islands);
 
     const basePath = "/";
@@ -112,6 +113,7 @@ export default function mountRouter() {
         if (outletEl) {
           outletEl.innerHTML = content;
           outletEl.id = next;
+          window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
           return true;
         } else {
           console.warn(`No outlet element with id ${prev}`);
@@ -125,5 +127,6 @@ export default function mountRouter() {
 
     document.addEventListener("click", handleAnchorClick);
     window.addEventListener("popstate", handlePopState);
+    DEBUG("mounted islands router");
   }
 }

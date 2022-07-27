@@ -10,5 +10,11 @@ export type Options = {
 } & import("vite-plugin-solid").Options;
 import { Plugin } from "vite";
 
+import type { Debugger } from "debug";
+
+declare global {
+  export const DEBUG: Debugger;
+}
+
 export const start: (options?: Partial<Options>) => Plugin[];
 export default start;

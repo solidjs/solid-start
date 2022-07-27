@@ -1,3 +1,4 @@
+import debug from "debug";
 import fs, { readFileSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
@@ -11,6 +12,7 @@ import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
 
+globalThis.DEBUG = debug("start:vite");
 /**
  * @returns {import('vite').PluginOption}
  * @param {any} options
@@ -155,11 +157,7 @@ function solidStartFileSystemRouter(options) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
 
-      let babelSolidCompiler = (
-        /** @type {string} */ code,
-        /** @type {string} */ id,
-        /** @type {{ (source: any, id: any): { plugins: ((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[][]; }; (source: any, id: any): { plugins: ((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[][]; }; (source: any, id: any): { plugins: (((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[] | ((() => { visitor: { Program(path: any): void; }; }) | { ssr: boolean; root: string; })[])[]; }; (source: any, id: any): { plugins: (((({ types: t }: { types: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; keep: boolean; minify: boolean; })[] | ((({ types: t, template }: { types: any; template: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[])[]; }; (source: any, id: any): { plugins: ((({ types: t, template }: { types: any; template: any; }) => { visitor: { Program: { enter(path: any, state: any): void; }; }; }) | { ssr: boolean; root: string; minify: boolean; })[][]; }; }} */ fn
-      ) => {
+      let babelSolidCompiler = (/** @type {string} */ code, /** @type {string} */ id, fn) => {
         // @ts-ignore
         return solid({
           ...(options ?? {}),
@@ -423,7 +421,8 @@ export default function solidStart(options) {
     },
     options ?? {}
   );
-  console.log(options);
+
+  DEBUG("options", options);
 
   options.pageExtensions = [
     "tsx",

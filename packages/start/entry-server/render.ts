@@ -21,13 +21,6 @@ export function renderAsync(
     }
 
     if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
-      console.log("heree", `<!--${pageEvent.routerContext.newOutletId}-->`);
-      console.log(
-        markup.slice(
-          markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`),
-          markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`)
-        )
-      );
       markup = `${pageEvent.routerContext.replaceOutletId}:${
         pageEvent.routerContext.newOutletId
       }=${markup.slice(
