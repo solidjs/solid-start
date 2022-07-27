@@ -1,18 +1,19 @@
-import { children, createRenderEffect } from "solid-js";
-import { insert, resolveSSRNode } from "solid-js/web";
+import { children, ComponentProps, createRenderEffect } from "solid-js";
+import { insert, resolveSSRNode, ssr, ssrSpread } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
 
-export function Html(props) {
+export function Html(props: ComponentProps<"html">) {
   if (import.meta.env.MPA) {
-    
   }
   if (import.meta.env.SSR) {
-    return `<html>
+    let { children: c, ...htmlProps } = props;
+
+    return ssr(`<html ${ssrSpread(htmlProps)}>
         ${resolveSSRNode(children(() => props.children))}
       </html>
-    `;
+    `) as unknown as Element;
   } else {
     if (import.meta.env.START_SSR) {
       createRenderEffect(() => {
@@ -26,9 +27,10 @@ export function Html(props) {
   }
 }
 
-export function Head(props) {
+export function Head(props: ComponentProps<"head">) {
   if (import.meta.env.SSR) {
-    return `<head>
+    let { children: c, ...headProps } = props;
+    return ssr(`<head ${ssrSpread(headProps)}>
         ${resolveSSRNode(
           children(() => (
             <>
@@ -39,7 +41,7 @@ export function Head(props) {
           ))
         )}
       </head>
-    `;
+    `) as unknown as Element;
   } else {
     if (import.meta.env.START_SSR) {
       createRenderEffect(() => {
@@ -53,14 +55,16 @@ export function Head(props) {
   }
 }
 
-export function Body(props) {
+export function Body(props: ComponentProps<"body">) {
   if (import.meta.env.SSR) {
-    console.log(import.meta.env.START_SSR, import.meta.env.SSR);
-    return `<body>${
-      import.meta.env.START_SSR
-        ? resolveSSRNode(children(() => props.children))
-        : resolveSSRNode(<Scripts />)
-    }</body>`;
+    let { children: c, ...bodyProps } = props;
+    return ssr(
+      `<body ${ssrSpread(bodyProps)}>${
+        import.meta.env.START_SSR
+          ? resolveSSRNode(children(() => props.children))
+          : resolveSSRNode(<Scripts />)
+      }</body>`
+    ) as unknown as Element;
   } else {
     if (import.meta.env.START_SSR) {
       let child = children(() => props.children);
