@@ -43,7 +43,9 @@ Run `pnpm install` to install all the dependencies for the packages and examples
 
 </summary>
 
-- `entry-server.tsx`: The prop received by `StartServer` is called `event` representing the FetchEvent received by the server. eg.
+#### [0.1.0-alpha.??] - Moving towards beta
+
+- `entry-server.tsx`: The prop received by `StartServer`, and given to you by `createHandler` is called `event` instead of `context`.
 
 ```diff
 import { createHandler, renderAsync, StartServer } from "solid-start/entry-server";
@@ -51,6 +53,46 @@ import { createHandler, renderAsync, StartServer } from "solid-start/entry-serve
 - export default createHandler(renderAsync(context => <StartServer context={context} />));
 + export default createHandler(renderAsync(event => <StartServer event={event} />));
 
+```
+
+- `root.tsx`
+
+  - Step 1: We changed how we declare our routes here a bit to make it more flexible
+
+```diff
+// @refresh reload
+import { Suspense } from "solid-js";
+import { Meta } from "solid-meta";
+import { ErrorBoundary } from "solid-start/error-boundary";
+- import { Meta, Link, Routes, Scripts } from "solid-start/root";
++ import { Meta, Link, FileRoutes, Scripts } from "solid-start/root";
++ import { Routes } from "solid-app-router";
+
+export default function Root() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Link />
+      </head>
+      <body>
+        <Suspense>
+          <ErrorBoundary>
+            <a href="/">Index</a>
+            <a href="/about">About</a>
+-            <Routes />
++            <Routes>
++              <FileRoutes />
++            </Routes>
+          </ErrorBoundary>
+        </Suspense>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
 ```
 
 </details>
