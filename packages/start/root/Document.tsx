@@ -8,7 +8,7 @@ export function Html(props) {
   if (import.meta.env.MPA) {
   }
   if (import.meta.env.SSR) {
-    return `<html ${ssrSpread(props, false, false)}>
+    return `<html ${ssrSpread(props, false, true)}>
         ${resolveSSRNode(children(() => props.children))}
       </html>
     `;
