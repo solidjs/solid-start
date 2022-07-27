@@ -62,7 +62,6 @@ import { createHandler, renderAsync, StartServer } from "solid-start/entry-serve
 ```diff
 // @refresh reload
 import { Suspense } from "solid-js";
-import { Meta } from "solid-meta";
 import { ErrorBoundary } from "solid-start/error-boundary";
 - import { Meta, Link, Routes, Scripts } from "solid-start/root";
 + import { Meta, Link, FileRoutes, Scripts } from "solid-start/root";
