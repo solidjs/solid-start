@@ -27,7 +27,7 @@ export function Html(props) {
 
 export function Head(props) {
   if (import.meta.env.SSR) {
-    return `<head>
+    return `<head ${ssrSpread(props, false, true)}>
         ${resolveSSRNode(
           children(() => (
             <>
@@ -54,8 +54,7 @@ export function Head(props) {
 
 export function Body(props) {
   if (import.meta.env.SSR) {
-    console.log(import.meta.env.START_SSR, import.meta.env.SSR);
-    return `<body>${
+    return `<body ${ssrSpread(props, false, true)}>${
       import.meta.env.START_SSR
         ? resolveSSRNode(children(() => props.children))
         : resolveSSRNode(<Scripts />)
