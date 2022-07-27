@@ -45,7 +45,7 @@ Run `pnpm install` to install all the dependencies for the packages and examples
 
 - `entry-server.tsx`: The prop received by `StartServer` is called `event` representing the FetchEvent received by the server. eg.
 
-```tsx
+```diff
 import { createHandler, renderAsync, StartServer } from "solid-start/entry-server";
 
 - export default createHandler(renderAsync(context => <StartServer context={context} />));
