@@ -2,7 +2,6 @@ import debug from "debug";
 import { once } from "events";
 import path from "path";
 import { Readable } from "stream";
-import { pathToFileURL } from "url";
 import { createRequest } from "../node/fetch.js";
 import "../node/globals.js";
 
@@ -27,11 +26,10 @@ export function createDevHandler(viteServer, config, options) {
         collectStyles: async match => {
           const styles = {};
           const deps = new Set();
-          for (var file of match) {
-            await viteServer.ssrLoadModule(path.resolve(file));
-            const node = await viteServer.moduleGraph.getModuleByUrl(
-              pathToFileURL(`./${file}`).pathname.toString()
-            );
+          for (const file of match) {
+            const absolutePath = path.resolve(file);
+            await viteServer.ssrLoadModule(absolutePath);
+            const node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
 
             await find_deps(viteServer, node, deps);
           }
