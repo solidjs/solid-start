@@ -35,6 +35,20 @@ export default function ({ durableObjects = [] } = {}) {
 
         let text = readFileSync(join(__dirname, "spa-handler.js")).toString();
         writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
+      } else if (config.solidOptions.islands) {
+        await builder.islandsClient(join(config.root, "dist", "public"));
+        await viteBuild({
+          build: {
+            ssr: true,
+            outDir: "./.solid/server",
+            rollupOptions: {
+              input: resolve(join(config.root, appRoot, `entry-server`)),
+              output: {
+                format: "esm"
+              }
+            }
+          }
+        });
       } else {
         await builder.client(join(config.root, "dist", "public"));
         await viteBuild({

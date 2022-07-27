@@ -132,24 +132,28 @@ importers:
 
   examples/hackernews:
     specifiers:
+      '@cloudflare/kv-asset-handler': ^0.2.0
       netlify-cli: ^10.11.2
       node-fetch: ^3.2.9
       solid-app-router: ^0.4.1
       solid-js: ^1.4.7
       solid-meta: ^0.27.3
       solid-start: workspace:*
+      solid-start-cloudflare-workers: workspace:*
       solid-start-netlify: workspace:*
       solid-start-node: workspace:*
       typescript: ^4.4.3
       undici: ^5.5.1
       vite: 3.0.2
     devDependencies:
+      '@cloudflare/kv-asset-handler': 0.2.0
       netlify-cli: 10.11.2
       node-fetch: 3.2.9
       solid-app-router: 0.4.1_solid-js@1.4.7
       solid-js: 1.4.7
       solid-meta: 0.27.5_solid-js@1.4.7
       solid-start: link:../../packages/start
+      solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
       solid-start-netlify: link:../../packages/start-netlify
       solid-start-node: link:../../packages/start-node
       typescript: 4.7.4
@@ -8049,6 +8053,19 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /follow-redirects/1.15.1_debug@4.3.4:
+    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha512-7EwmXrOjyL+ChxMhmG5lnW9MPt1aIeZEwKhQzoBUdTV0N3zuwWDZYVJatDvZ2OyzPUvdIAZDsCetk3coyMfcnQ==}
@@ -8959,7 +8976,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.1
+      follow-redirects: 1.15.1_debug@4.3.4
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
