@@ -1,24 +1,19 @@
-import type { Debugger } from "debug";
-import type { Component, JSX } from "solid-js";
+import type { JSX } from "solid-js";
 import { createComponent, hydrate, render } from "solid-js/web";
 
 import mountRouter from "../islands/router";
-
-declare global {
-  interface Window {
-    DEBUG: Debugger;
-    _$HY: {
-      island(path: string, comp: Component): void;
-      islandMap: { [path: string]: Component };
-      hydrateIslands(): void;
-    };
-  }
-}
 
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
   const { default: createDebugger } = await import("debug");
   window.DEBUG = createDebugger("start:client");
+
+  DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
+  DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
+  DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
+  DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
+  DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
+  DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
 }
 
 export default function mount(code?: () => JSX.Element, element?: Document) {
@@ -56,6 +51,9 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
 
     window._$HY.hydrateIslands();
 
+    return;
+  } else if (import.meta.env.START_ISLANDS_ROUTER) {
+    mountRouter();
     return;
   }
 

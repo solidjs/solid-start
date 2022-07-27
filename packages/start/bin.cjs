@@ -115,7 +115,6 @@ prog
 
         let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, islands);
 
-        console.log(islandsManifest);
         let newManifest = {
           ...Object.fromEntries(
             Object.entries(routeManifest)
@@ -146,7 +145,6 @@ prog
           let assets = Array.isArray(v) ? v : v.assets;
           assets.forEach(a => {
             if (a.type === "style") {
-              console.log(routeManifestPath, a.href);
               copyFileSync(join(routeManifestPath, a.href), join(path, a.href));
             }
           });

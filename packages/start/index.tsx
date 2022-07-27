@@ -1,6 +1,5 @@
 export { Link, Meta, Style, Title } from "@solidjs/meta";
 export {
-  Routes,
   useHref,
   useIsRouting,
   useLocation,
@@ -29,3 +28,30 @@ export {
   type CookieParseOptions,
   type CookieSerializeOptions
 } from "./session";
+import "./types";
+
+import { Outlet as BaseOutlet, Routes as BaseRoutes } from "solid-app-router";
+import { Outlet as IslandsOutlet } from "./islands/server-router";
+
+export function Routes(props) {
+  if (import.meta.env.START_ISLANDS_ROUTER) {
+    return (
+      <IslandsOutlet>
+        <BaseRoutes>{props.children}</BaseRoutes>
+      </IslandsOutlet>
+    );
+  }
+  return <BaseRoutes>{props.children}</BaseRoutes>;
+}
+
+export function Outlet(props) {
+  if (import.meta.env.START_ISLANDS_ROUTER) {
+    return (
+      <IslandsOutlet>
+        <BaseOutlet />
+      </IslandsOutlet>
+    );
+  }
+
+  return <BaseOutlet />;
+}

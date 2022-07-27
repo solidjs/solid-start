@@ -31,7 +31,7 @@
     "required-user-files.d.ts"
   ],
   "exports": {
-    ".": "./index.ts",
+    ".": "./index.tsx",
     "./vite": {
       "types": "./plugin.d.ts",
       "import": "./vite/plugin.js"

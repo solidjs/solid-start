@@ -213,7 +213,6 @@ export function Router(props: RouterProps) {
   const nextRoutes = next.routes;
 
   const prev = props.prevLocation ? getMatchedBranch(props.routes, props.prevLocation) : null;
-  console.log(next, prev);
   if (prev) {
     const prevRoutes = prev.routes;
 
@@ -225,9 +224,9 @@ export function Router(props: RouterProps) {
         nextRoute.id === prevRoute.id &&
         nextRoute.match.path === prevRoute.match.path
       ) {
-        console.log("shared routes");
         if (JSON.stringify(nextRoute.match.params) === JSON.stringify(prevRoute.match.params)) {
-          console.log("shared params");
+          props.out.replaceOutletId = `outlet-${prevRoute.id}`;
+          props.out.newOutletId = `outlet-${nextRoute.id}`;
         } else {
           // console.log("diff rendered");
           // const Comp = nextRoute.component;
@@ -246,6 +245,7 @@ export function Router(props: RouterProps) {
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
         props.out.newOutletId = `outlet-${nextRoute.id}`;
+        console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
         // diffedRender = (
         //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
         //     <Comp />
@@ -266,24 +266,13 @@ export function Router(props: RouterProps) {
     <RouterContext.Provider value={state}>{props.children}</RouterContext.Provider>
   );
 
-  console.log("rendering router");
   return diffedRender || fullRender;
 }
-
-// function OutletWrapper(props) {
-//   return (
-//     <outlet-wrapper id={`outlet-${props.id}`}>
-//       <OutletContext.Provider value={state}>{props.children}</OutletContext.Provider>
-//     </outlet-wrapper>
-//   );
-// }
 
 export function Outlet(props: { children: JSX.Element }) {
   const router = useRouter();
   const parent = useOutlet();
   const depth = parent ? parent.depth : 0;
-
-  // console.log(router);
 
   const state = {
     depth: depth + 1,
@@ -302,15 +291,6 @@ export function Outlet(props: { children: JSX.Element }) {
 
           return `<!--outlet-${state.route.id}--><outlet-wrapper id="outlet-${state.route.id}">${ssr}</outlet-wrapper><!--outlet-${state.route.id}-->`;
         }}
-      </Match>
-      <Match when={state.route.component}>
-        {Comp => (
-          <outlet-wrapper id={`outlet-${state.route.id}`}>
-            <OutletContext.Provider value={state}>
-              <Comp />
-            </OutletContext.Provider>
-          </outlet-wrapper>
-        )}
       </Match>
     </Switch>
   );
