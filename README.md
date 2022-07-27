@@ -125,6 +125,13 @@ export default function Root() {
 - Step 2: For consistency between the SSR and client-side rendering modes, we needed to take more control of `root.tsx` specifically, we couldnt just take `<html></html>` and `<head></head>` tags and allow them to be part of the component tree since we can't client-side render the whole document. We only really get to take over `document.body`. We needed to ship with special `Html`, `Head`, and `Body` components that you use in `root.tsx` instead of the lower-case counterparts. These document flow components know what to do whether you are in SSR mode on or off.
 
 ```diff
+// @refresh reload
+import { Suspense } from "solid-js";
+import { ErrorBoundary } from "solid-start/error-boundary";
+- import { Meta, Link, Routes, Scripts } from "solid-start/root";
++ import { FileRoutes, Scripts, Html, Head, Body } from "solid-start/root";
++ import { Routes } from "solid-app-router";
++ import { Meta } from "@solidjs/meta";
 
 export default function Root() {
   return (
