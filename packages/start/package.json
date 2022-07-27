@@ -31,9 +31,10 @@
     "required-user-files.d.ts"
   ],
   "exports": {
-    ".": {
+    ".": "./index.ts",
+    "./vite": {
       "types": "./plugin.d.ts",
-      "import": "./plugin.js"
+      "import": "./vite/plugin.js"
     },
     "./addons/*": "./addons/*",
     "./api": "./api/index.ts",
@@ -44,8 +45,6 @@
     "./entry-server/*": "./entry-server/*",
     "./error-boundary": "./error-boundary/index.tsx",
     "./error-boundary/*": "./error-boundary/*",
-    "./meta": "./meta/index.tsx",
-    "./meta/*": "./meta/*",
     "./islands": "./islands/index.tsx",
     "./islands/*": "./islands/*",
     "./root": "./root/index.tsx",
@@ -98,7 +97,7 @@
     "@types/wait-on": "^5.3.1",
     "solid-app-router": "0.4.1",
     "solid-js": "1.4.7",
-    "solid-meta": "0.27.5",
+    "@solidjs/meta": "0.28.0",
     "solid-start-cloudflare-pages": "0.1.0-alpha.95",
     "solid-start-cloudflare-workers": "0.1.0-alpha.95",
     "solid-start-deno": "0.1.0-alpha.95",
@@ -110,7 +109,7 @@
   "peerDependencies": {
     "solid-app-router": "^0.4.1",
     "solid-js": "^1.4.7",
-    "solid-meta": "^0.27.5",
+    "@solidjs/meta": "^0.28.0",
     "vite": "^3.0.2"
   }
 }

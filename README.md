@@ -126,7 +126,7 @@ export default function Root() {
 
   - Because of this, we can avoid you having to include `Meta` and `Links` from `solid-start/root` in your `head` since we do it by default.
   - We will always use the title-case variants of the tags used in `head` (eg. `Link` > `link`, `Style` > `style`, `Meta` > `meta`) for consistency throughout the app
-  - `solid-meta` is renamed to `@solidjs/meta`
+  - `@solidjs/meta` is renamed to `@solidjs/meta`
   - `solid-app-router` is renamed to `@solidjs/router`
   - `solid-start` is renamed to `@solidjs/start`
 

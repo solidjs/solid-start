@@ -9,7 +9,7 @@
   "devDependencies": {
     "solid-app-router": "^0.4.1",
     "solid-js": "^1.4.7",
-    "solid-meta": "^0.27.3",
+    "@solidjs/meta": "^0.28.0",
     "solid-start": "workspace:*",
     "solid-start-node": "workspace:*",
     "typescript": "^4.4.3",

@@ -1,9 +1,6 @@
 // @refresh reload
-import { Routes } from "solid-app-router";
 import { Suspense } from "solid-js";
-import { Meta } from "solid-meta";
-import { ErrorBoundary } from "solid-start/error-boundary";
-import { Body, FileRoutes, Head, Html, Scripts } from "solid-start/root";
+import { Body, ErrorBoundary, FileRoutes, Head, Html, Meta, Routes, Scripts } from "solid-start";
 
 export default function Root() {
   DEBUG("hello-world");

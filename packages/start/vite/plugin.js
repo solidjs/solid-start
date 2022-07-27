@@ -4,12 +4,12 @@ import c from "picocolors";
 import { normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
-import printUrls from "./dev/print-routes.js";
-import { Router, stringifyApiRoutes, stringifyPageRoutes } from "./fs-router/router.js";
-import routeData from "./server/routeData.js";
-import routeDataHmr from "./server/routeDataHmr.js";
-import babelServerModule from "./server/server-functions/babel.js";
-import routeResource from "./server/serverResource.js";
+import printUrls from "../dev/print-routes.js";
+import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
+import routeData from "../server/routeData.js";
+import routeDataHmr from "../server/routeDataHmr.js";
+import babelServerModule from "../server/server-functions/babel.js";
+import routeResource from "../server/serverResource.js";
 
 /**
  * @returns {import('vite').PluginOption}
@@ -324,7 +324,7 @@ function solidStartServer(options) {
     },
     configureServer(vite) {
       return async () => {
-        const { createDevHandler } = await import("./dev/server.js");
+        const { createDevHandler } = await import("../dev/server.js");
         remove_html_middlewares(vite.middlewares);
         vite.middlewares.use(createDevHandler(vite, config, options).handler);
       };
@@ -348,7 +348,7 @@ function solidStartConfig(options) {
           alias: { "~": path.join(root, options.appRoot) }
         },
         ssr: {
-          noExternal: ["solid-app-router", "solid-meta", "solid-start"]
+          noExternal: ["solid-app-router", "@solidjs/meta", "solid-start"]
         },
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code

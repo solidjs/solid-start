@@ -1,4 +1,4 @@
-import { Title } from "solid-meta";
+import { Title } from "@solidjs/meta";
 
 export default function NotFound() {
   return (

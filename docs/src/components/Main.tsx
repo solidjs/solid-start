@@ -15,7 +15,7 @@ export function Main(props) {
     </div>
   );
 }
-import { Title as MetaTitle } from "solid-meta";
+import { Title as MetaTitle } from "@solidjs/meta";
 
 export function Title(props) {
   return (

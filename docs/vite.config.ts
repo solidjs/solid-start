@@ -1,15 +1,15 @@
-import { defineConfig } from "vite";
-import solid from "solid-start";
 import mdx from "@mdx-js/rollup";
-import WindiCSS from "vite-plugin-windicss";
 import rehypeRaw from "rehype-raw";
+import solid from "solid-start/vite";
+import { defineConfig } from "vite";
+import WindiCSS from "vite-plugin-windicss";
 // @ts-ignore
 import { nodeTypes } from "@mdx-js/mdx";
 import colors from "windicss/colors";
 // @ts-ignore
-import remarkShikiTwoslash from "remark-shiki-twoslash";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
+import remarkShikiTwoslash from "remark-shiki-twoslash";
 import Icons from "unplugin-icons/vite";
 
 export default defineConfig({

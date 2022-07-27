@@ -1,52 +1,31 @@
 // @refresh reload
-import { Routes as BaseRoutes } from "solid-app-router";
 import { Suspense } from "solid-js";
-import { ErrorBoundary } from "solid-start/error-boundary";
-import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
-import { Outlet } from "solid-start/server/router";
+import { Body, ErrorBoundary, FileRoutes, Head, Html, Routes, Scripts } from "solid-start";
 import Nav from "./components/nav";
 import "./root.css";
 
-export function Routes() {
-  if (import.meta.env.START_ISLANDS_ROUTER) {
-    return (
-      <Outlet>
-        <BaseRoutes>
-          <FileRoutes />
-        </BaseRoutes>
-      </Outlet>
-    );
-  } else {
-    return (
-      <BaseRoutes>
-        <FileRoutes />
-      </BaseRoutes>
-    );
-  }
-}
-
 export default function Root() {
   return (
-    <html lang="en">
-      <head>
+    <Html lang="en">
+      <Head>
         <title>Solid - Hacker News</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Hacker News Clone built with Solid" />
         <link rel="manifest" href="/manifest.webmanifest" />
-        <Links />
-        <Meta />
-      </head>
-      <body>
+      </Head>
+      <Body>
         <Nav />
         <ErrorBoundary>
           <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
-            <Routes />
+            <Routes>
+              <FileRoutes />
+            </Routes>
           </Suspense>
         </ErrorBoundary>
         <Scripts />
-      </body>
-    </html>
+      </Body>
+    </Html>
   );
 }
 

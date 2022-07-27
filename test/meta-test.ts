@@ -50,13 +50,13 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/index.tsx": js`
-            import { Title } from 'solid-meta';
+            import { Title } from '@solidjs/meta';
             export default function Index() {
               return <Title>Index page</Title>;
             }
           `,
           "src/routes/about.tsx": js`
-            import { Title } from 'solid-meta';
+            import { Title } from '@solidjs/meta';
             export default function About() {
               return <Title>About page</Title>
             }
@@ -69,7 +69,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-resource.tsx": js`
-            import { Title } from 'solid-meta';
+            import { Title } from '@solidjs/meta';
             import { createResource } from 'solid-js';
             export default function TitleFromData() {
               const [data] = createResource(async () => "Title from data");
@@ -80,7 +80,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-route-data.tsx": js`
-            import { Title } from 'solid-meta';
+            import { Title } from '@solidjs/meta';
             import { createServerData } from 'solid-start/server';
             import { useRouteData } from 'solid-app-router';
 
@@ -97,7 +97,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-error-boundary.tsx": js`
-            import { Title, Meta } from 'solid-meta';
+            import { Title, Meta } from '@solidjs/meta';
             import { createResource, ErrorBoundary } from 'solid-js';
 
             export default function TitleFromErrorBoundary() {
@@ -114,7 +114,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-suspense.tsx": js`
-            import { Title, Meta } from 'solid-meta';
+            import { Title, Meta } from '@solidjs/meta';
             import { createResource, ErrorBoundary } from 'solid-js';
   
             export default function TitleFromErrorBoundary() {
@@ -154,7 +154,7 @@ test.describe("meta", () => {
   //         export default createHandler(renderStream(event => <StartServer event={event} />));
   //       `,
   //         "src/routes/index.tsx": js`
-  //           import { Title } from 'solid-meta';
+  //           import { Title } from '@solidjs/meta';
   //           export default function Index() {
   //             return <>
   //               <Title>Index page</Title>
@@ -170,7 +170,7 @@ test.describe("meta", () => {
   //           }
   //         `,
   //         "src/routes/title-from-resource.tsx": js`
-  //           import { Title } from 'solid-meta';
+  //           import { Title } from '@solidjs/meta';
   //           import { createResource } from 'solid-js';
   //           export default function TitleFromData() {
   //             const [data] = createResource(async () => "Title from data", {
@@ -183,7 +183,7 @@ test.describe("meta", () => {
   //           }
   //         `,
   //         "src/routes/title-from-route-data.tsx": js`
-  //           import { Title } from 'solid-meta';
+  //           import { Title } from '@solidjs/meta';
   //           import { createServerData } from 'solid-start/server';
   //           import { useRouteData } from 'solid-app-router';
 
@@ -202,7 +202,7 @@ test.describe("meta", () => {
   //           }
   //         `,
   //         "src/routes/title-from-error-boundary.tsx": js`
-  //           import { Title, Meta } from 'solid-meta';
+  //           import { Title, Meta } from '@solidjs/meta';
   //           import { createResource, ErrorBoundary } from 'solid-js';
 
   //           export default function TitleFromErrorBoundary() {
@@ -220,7 +220,7 @@ test.describe("meta", () => {
   //             </>;
   //           }`,
   //         "src/routes/title-from-suspense.tsx": js`
-  //           import { Title, Meta } from 'solid-meta';
+  //           import { Title, Meta } from '@solidjs/meta';
   //           import { createResource, ErrorBoundary } from 'solid-js';
 
   //           export default function TitleFromErrorBoundary() {
@@ -278,20 +278,20 @@ test.describe("meta", () => {
       await expect(page).toHaveTitle("Index page");
     });
 
-    // TODO: when solid-meta PR https://github.com/solidjs/solid-meta/pull/13 is merged
-    // test("<Title /> navigation", async ({ page }) => {
-    //   let app = new PlaywrightFixture(appFixture, page);
-    //   await app.goto("/", true);
+    // TODO: when @solidjs/meta PR https://github.com/solidjs/@solidjs/meta/pull/13 is merged
+    test("<Title /> navigation", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/", true);
 
-    //   expect(await app.getHtml("title")).toBeTruthy();
-    //   await expect(page).toHaveTitle("Index page");
+      expect(await app.getHtml("title")).toBeTruthy();
+      await expect(page).toHaveTitle("Index page");
 
-    //   await app.clickElement('a[href="/about"]');
-    //   // await expect(page).toHaveTitle("About page");
+      await app.clickElement('a[href="/about"]');
+      // await expect(page).toHaveTitle("About page");
 
-    //   // await page.click("a[href='/']");
-    //   // await expect(page).toHaveTitle("Index page");
-    // });
+      // await page.click("a[href='/']");
+      // await expect(page).toHaveTitle("Index page");
+    });
 
     test("<Title /> component adds a <title /> in SSR", async () => {
       let res = await fixture.requestDocument("/");

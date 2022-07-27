@@ -1,4 +1,4 @@
-export * from "solid-app-router";
+export { useRouteData } from "solid-app-router";
 export { createRouteAction } from "./createRouteAction";
 export { createRouteData } from "./createRouteData";
 export { FormError } from "./Form";

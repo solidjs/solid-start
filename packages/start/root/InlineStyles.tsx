@@ -1,5 +1,5 @@
+import { Style } from "@solidjs/meta";
 import { createResource, Show, Suspense, useContext } from "solid-js";
-import { Style } from "solid-meta";
 import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
 import { routeLayouts } from "./FileRoutes";

@@ -11,7 +11,7 @@ test.describe("spa rendering", () => {
   const files = {
     "vite.config.ts": js`
       import { defineConfig } from "vite";
-      import solid from "solid-start";
+      import solid from "solid-start/vite";
 
       export default defineConfig({
         plugins: [solid({ ssr: false, adapter: process.env.ADAPTER })]
@@ -83,7 +83,7 @@ test.describe("spa rendering", () => {
             import { Routes } from "solid-app-router";
             import { Suspense } from "solid-js";
             import { Html, Head, Body } from "solid-start/root";
-            import { Meta } from 'solid-meta'
+            import { Meta } from '@solidjs/meta'
 
             export default function Root() {
               return (
