@@ -15,6 +15,12 @@ export default function Scripts() {
   return (
     <>
       {import.meta.env.START_SSR && <HydrationScript />}
+      {import.meta.env.START_ISLANDS && (
+        <script>{` 
+        _$HY.islandMap = {};
+        _$HY.island = (u, c) => _$HY.islandMap[u] = c;
+      `}</script>
+      )}
       <NoHydration>
         {isServer &&
           (isDev ? (
@@ -25,7 +31,9 @@ export default function Scripts() {
           ) : import.meta.env.START_SSR ? (
             getEntryClient(context.env.manifest)
           ) : (
-            <script type="module" async src="/src/entry-client" $ServerOnly></script>
+            // used in the SPA build index.html mode to create a reference to index html
+            // which will be used by the client build
+            <script type="module" async src="/src/entry-client" $ServerOnly />
           ))}
       </NoHydration>
       {isDev && <InlineStyles />}

@@ -1,13 +1,11 @@
 import { Link } from "solid-app-router";
-import { Component, createSignal, For, Show } from "solid-js";
+import { Component, For, Show } from "solid-js";
+import { island } from "solid-start/islands";
+import { IComment } from "~/types";
 
-import type { IComment } from "../types";
+const Toggle = island(() => import("./toggle"));
 
-const pluralize = (n: number) => n + (n === 1 ? " reply" : " replies");
-
-const Comment: Component<{ comment: IComment }> = (props) => {
-  const [open, setOpen] = createSignal(true);
-
+const Comment: Component<{ comment: IComment }> = props => {
   return (
     <li class="comment">
       <div class="by">
@@ -16,16 +14,9 @@ const Comment: Component<{ comment: IComment }> = (props) => {
       </div>
       <div class="text" innerHTML={props.comment.content} />
       <Show when={props.comment.comments.length}>
-        <div class="toggle" classList={{ open: open() }}>
-          <a onClick={() => setOpen(!open())}>
-            {open() ? "[-]" : "[+] " + pluralize(props.comment.comments.length) + " collapsed"}
-          </a>
-        </div>
-        <Show when={open()}>
-          <ul class="comment-children">
-            <For each={props.comment.comments}>{(comment) => <Comment comment={comment} />}</For>
-          </ul>
-        </Show>
+        <Toggle client:idle>
+          <For each={props.comment.comments}>{comment => <Comment comment={comment} />}</For>
+        </Toggle>
       </Show>
     </li>
   );

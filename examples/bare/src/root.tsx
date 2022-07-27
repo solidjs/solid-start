@@ -6,6 +6,7 @@ import { ErrorBoundary } from "solid-start/error-boundary";
 import { Body, FileRoutes, Head, Html, Scripts } from "solid-start/root";
 
 export default function Root() {
+  DEBUG("hello-world");
   return (
     <Html lang="en">
       <Head>

@@ -5,9 +5,18 @@ const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const vite = require("vite");
 const { resolve, join } = require("path");
-const { readFileSync, writeFileSync, existsSync, renameSync, mkdirSync } = require("fs");
+const {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  renameSync,
+  mkdirSync,
+  copyFileSync
+} = require("fs");
 const waitOn = require("wait-on");
-const debug = require("debug")("start");
+
+const DEBUG = require("debug")("start");
+globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("alpha");
 
@@ -48,6 +57,103 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     adapter.build(config, {
+      islandsClient: async path => {
+        let routeManifestPath = join(config.root, ".solid", "route-manifest");
+        await vite.build({
+          build: {
+            outDir: routeManifestPath,
+            ssrManifest: true,
+            minify: process.env.START_MINIFY === "false" ? false : "terser",
+            rollupOptions: {
+              input: [
+                resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
+              ],
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+
+        let assetManifest = JSON.parse(
+          readFileSync(join(routeManifestPath, "manifest.json")).toString()
+        );
+        let ssrManifest = JSON.parse(
+          readFileSync(join(routeManifestPath, "ssr-manifest.json")).toString()
+        );
+
+        writeFileSync(
+          join(routeManifestPath, "route-manifest.json"),
+          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
+        );
+
+        let routeManifest = JSON.parse(
+          readFileSync(join(routeManifestPath, "route-manifest.json")).toString()
+        );
+
+        let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
+
+        await vite.build({
+          build: {
+            outDir: path,
+            ssrManifest: true,
+            minify: process.env.START_MINIFY === "false" ? false : "terser",
+            rollupOptions: {
+              input: [
+                resolve(join(config.root, config.solidOptions.appRoot, `entry-client`)),
+                ...islands.map(i => resolve(join(config.root, i)))
+              ],
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+
+        assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
+        ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+
+        let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, islands);
+
+        console.log(islandsManifest);
+        let newManifest = {
+          ...Object.fromEntries(
+            Object.entries(routeManifest)
+              .filter(([k]) => k.startsWith("/"))
+              .map(([k, v]) => [k, v.filter(a => a.type !== "script")])
+          ),
+          ...Object.fromEntries(
+            Object.entries(islandsManifest)
+              .filter(([k]) => k.endsWith("?island"))
+              .map(([k, v]) => [
+                k,
+                {
+                  script: v.script,
+                  assets: [
+                    ...v.assets.filter(a => a.type === "script"),
+                    ...routeManifest[k].assets.filter(a => a.type === "style")
+                  ]
+                }
+              ])
+          ),
+          "entry-client": [
+            ...islandsManifest["entry-client"].filter(a => a.type === "script"),
+            ...routeManifest["entry-client"].filter(a => a.type === "style")
+          ]
+        };
+
+        Object.values(newManifest).forEach(v => {
+          let assets = Array.isArray(v) ? v : v.assets;
+          assets.forEach(a => {
+            if (a.type === "style") {
+              console.log(routeManifestPath, a.href);
+              copyFileSync(join(routeManifestPath, a.href), join(path, a.href));
+            }
+          });
+        });
+
+        writeFileSync(join(path, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
+      },
       client: async path => {
         await vite.build({
           build: {
@@ -71,9 +177,9 @@ prog
           JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
         );
       },
-      debug,
+      debug: DEBUG,
       spaClient: async path => {
-        debug("spa build start");
+        DEBUG("spa build start");
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
         mkdirSync(join(config.root, ".solid"), { recursive: true });
 
@@ -81,8 +187,9 @@ prog
         if (existsSync(join(config.root, "index.html"))) {
           indexHtml = join(config.root, "index.html");
         } else {
-          debug("starting vite server for index.html");
-          let proc = spawn("vite", ["dev", "--mode", "production", "--port", "8989"], {
+          DEBUG("starting vite server for index.html");
+          let port = await (await import("get-port")).default();
+          let proc = spawn("vite", ["dev", "--mode", "production", "--port", port], {
             stdio: isDebug ? "inherit" : "ignore",
             shell: true
           });
@@ -91,25 +198,27 @@ prog
             process.exit();
           });
           await waitOn({
-            resources: ["http://localhost:8989/"],
+            resources: [`http://localhost:${port}/`],
             verbose: isDebug
           });
 
-          debug("started vite server for index.html");
+          DEBUG("started vite server for index.html");
 
           writeFileSync(
             join(config.root, ".solid", "index.html"),
-            await (await import("./dev/create-index-html.js")).createHTML("http://localhost:8989/")
+            await (
+              await import("./dev/create-index-html.js")
+            ).createHTML(`http://localhost:${port}/`)
           );
 
           indexHtml = join(config.root, ".solid", "index.html");
 
-          debug("spa index.html created");
+          DEBUG("spa index.html created");
 
           proc.kill();
         }
 
-        debug("building client bundle");
+        DEBUG("building client bundle");
 
         process.env.START_SPA_CLIENT = "true";
         await vite.build({
@@ -131,7 +240,7 @@ prog
           renameSync(join(path, ".solid", "index.html"), join(path, "index.html"));
         }
 
-        debug("built client bundle");
+        DEBUG("built client bundle");
 
         let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
         let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
@@ -141,7 +250,7 @@ prog
           JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
         );
 
-        debug("wrote route manifest");
+        DEBUG("wrote route manifest");
       }
     });
   });

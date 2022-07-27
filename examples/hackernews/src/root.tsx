@@ -1,11 +1,29 @@
 // @refresh reload
-import { Links, FileRoutes, Meta, Scripts } from "solid-start/root";
+import { Routes as BaseRoutes } from "solid-app-router";
 import { Suspense } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
-import { isServer } from "solid-js/web";
+import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
+import { Outlet } from "solid-start/server/router";
 import Nav from "./components/nav";
 import "./root.css";
-import { Routes } from "solid-app-router";
+
+export function Routes() {
+  if (import.meta.env.START_ISLANDS_ROUTER) {
+    return (
+      <Outlet>
+        <BaseRoutes>
+          <FileRoutes />
+        </BaseRoutes>
+      </Outlet>
+    );
+  } else {
+    return (
+      <BaseRoutes>
+        <FileRoutes />
+      </BaseRoutes>
+    );
+  }
+}
 
 export default function Root() {
   return (
@@ -23,9 +41,7 @@ export default function Root() {
         <Nav />
         <ErrorBoundary>
           <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
-            <Routes>
-              <FileRoutes />
-            </Routes>
+            <Routes />
           </Suspense>
         </ErrorBoundary>
         <Scripts />
@@ -34,9 +50,9 @@ export default function Root() {
   );
 }
 
-if (import.meta.env.PROD && !isServer && "serviceWorker" in navigator) {
-  // Use the window load event to keep the page load performant
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register(`/sw.js`);
-  });
-}
+// if (import.meta.env.PROD && !isServer && "serviceWorker" in navigator) {
+//   // Use the window load event to keep the page load performant
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker.register(`/sw.js`);
+//   });
+// }

@@ -31,6 +31,20 @@ export default function () {
         );
         writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
         builder.debug(`created ${join(config.root, ".solid", "server", "entry-server.js")}`);
+      } else if (config.solidOptions.islands) {
+        await builder.islandsClient(join(config.root, "dist", "public"));
+        await viteBuild({
+          build: {
+            ssr: true,
+            outDir: "./.solid/server",
+            rollupOptions: {
+              input: resolve(join(config.root, appRoot, `entry-server`)),
+              output: {
+                format: "esm"
+              }
+            }
+          }
+        });
       } else {
         await builder.client(join(config.root, "dist", "public"));
 

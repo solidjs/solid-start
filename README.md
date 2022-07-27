@@ -6,15 +6,15 @@
 
 This is the home of the Solid app framework. This is still a **work in progress**. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
 
-* File-system based routing
-* Supports all rendering modes: Server-side rendering (SSR), Client-side rendering (CSR), Static Site Generation (SSG)
-* Streaming
-* Build optimizations with Code splitting, tree shaking and dead code elimination
-* API Routes
-* Built on Web standards: Fetch, Streams, WebCrypto
-* Adapters for deployment to all popular platforms
-* CSS Modules, SASS/SCSS Support
-* Typescript-first
+- File-system based routing
+- Supports all rendering modes: Server-side rendering (SSR), Client-side rendering (CSR), Static Site Generation (SSG)
+- Streaming
+- Build optimizations with Code splitting, tree shaking and dead code elimination
+- API Routes
+- Built on Web standards: Fetch, Streams, WebCrypto
+- Adapters for deployment to all popular platforms
+- CSS Modules, SASS/SCSS Support
+- Typescript-first
 
 ### Getting started
 
@@ -36,13 +36,154 @@ npm install -g pnpm
 
 Run `pnpm install` to install all the dependencies for the packages and examples in your monorepo.
 
+<!-- <details> -->
+<!-- <summary> -->
+
+### Changelog
+
+<!-- </summary> -->
+
+#### [0.1.0-alpha.??] - Moving towards beta
+
+- `entry-server.tsx`: The prop received by `StartServer`, and given to you by `createHandler` is called `event` instead of `context`.
+
+```diff
+import { createHandler, renderAsync, StartServer } from "@solidjs/start/entry-server";
+
+- export default createHandler(renderAsync(context => <StartServer context={context} />));
++ export default createHandler(renderAsync(event => <StartServer event={event} />));
+
+```
+
+- `entry-client.tsx`: Earlier, you called `hydrate(document)` or `render(document.body)` here based on what kind of rendering mode you had selected and whether you had SSR turned on. We felt this was slightly annoying to change if you wanted to switch between the modes and error prone if you are not careful and end up passing `document` to `render` instead.
+
+We still wanted to expose `entry-client.tsx` to the user so that they can take over and do their own thing here if they want. We made a helper function called `mount` that embeds the logic for deciding how to interact with the app we get from the server, be it `hydrate` or `render`.
+
+If you were using SSR:
+
+```diff
+- import { hydrate } from "solid-js";
+- import { StartClient } from "solid-start/entry-client";
++ import { mount, StartClient } from "solid-start/entry-client";
+
+- hydrate(() => <StartClient />, document);
++ mount(() => <StartClient />, document);
+
+```
+
+If you were not using SSR and just rendering your app client-side:
+
+```diff
+- import { render } from "solid-js";
+- import { StartClient } from "solid-start/entry-client";
++ import { mount, StartClient } from "solid-start/entry-client";
+
+- render(() => <StartClient />, document.body);
++ mount(() => <StartClient />, document);
+
+```
+
+- `root.tsx`
+
+  - Step 1: We changed how we declare our routes here a bit to make it more flexible. Earlier we gave you a `Routes` component from `solid-start/root` that was equivalent to rendering a `Routes` from `solid-app-router` (yeah we know its confusing, that's why we are changing it) and filling it with the routes from the file system. You didn't have an opportunity to add more `Route` components there for some routes you want to manually add. So now we make this a bit more transparent. We now export `FileRoutes` from `solid-start/root` that represents the route config based on the file-system. It is meant to be passed to `Routes` component from `solid-app-router` or wherever you want to use the file-system routes config.
+
+```diff
+// @refresh reload
+import { Suspense } from "solid-js";
+import { ErrorBoundary } from "solid-start/error-boundary";
+- import { Meta, Link, Routes, Scripts } from "solid-start/root";
++ import { Meta, Link, FileRoutes, Scripts } from "solid-start/root";
++ import { Routes } from "solid-app-router";
+
+export default function Root() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Link />
+      </head>
+      <body>
+        <Suspense>
+          <ErrorBoundary>
+            <a href="/">Index</a>
+            <a href="/about">About</a>
+-            <Routes />
++            <Routes>
++              <FileRoutes />
++            </Routes>
+          </ErrorBoundary>
+        </Suspense>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
+- Step 2: For consistency between the SSR and client-side rendering modes, we needed to take more control of `root.tsx` specifically, we couldnt just take `<html></html>` and `<head></head>` tags and allow them to be part of the component tree since we can't client-side render the whole document. We only really get to take over `document.body`. We needed to ship with special `Html`, `Head`, and `Body` components that you use in `root.tsx` instead of the lower-case counterparts. These document flow components know what to do whether you are in SSR mode on or off.
+
+  - Because of this, we can avoid you having to include `Meta` and `Links` from `solid-start/root` in your `head` since we do it by default.
+  - We will always use the title-case variants of the tags used in `head` (eg. `Link` > `link`, `Style` > `style`, `Meta` > `meta`) for consistency throughout the app
+  - `solid-meta` is renamed to `@solidjs/meta`
+  - `solid-app-router` is renamed to `@solidjs/router`
+  - `solid-start` is renamed to `@solidjs/start`
+
+```diff
+// @refresh reload
+import { Suspense } from "solid-js";
+import { ErrorBoundary } from "solid-start/error-boundary";
+- import { Meta, Link, Routes, Scripts } from "solid-start/root";
++ import { FileRoutes, Scripts, Html, Head, Body } from "@solidjs/start/root";
++ import { Routes } from "@solidjs/router";
++ import { Meta } from "@solidjs/meta";
+
+export default function Root() {
+  return (
+-    <html lang="en">
++    <Html lang="en">
+-      <head>
++      <Head>
+
+-        <meta charset="utf-8" />
++        <Meta charset="utf-8" />
+-        <meta name="viewport" content="width=device-width, initial-scale=1" />
++        <Meta name="viewport" content="width=device-width, initial-scale=1" />
+
+-        <Meta /> // already exists inside `Head`
+-        <Links /> // already exists inside `Head`
+
+-      </head>
++      </Head>
+-      <body>
++      <Body>
+         <Suspense>
+           <ErrorBoundary>
+             <a href="/">Index</a>
+             <a href="/about">About</a>
+             <Routes>
+               <FileRoutes />
+             </Routes>
+           </ErrorBoundary>
+         </Suspense>
+         <Scripts />
+-     </body>
++     </Body>
+-   </html>
++   </Html>
+  );
+}
+
+```
+
+<!-- </details> -->
 <details>
 <summary>
 
 #### Monorepo & `project.json` `"workspace"` support
 
 </summary>
-
 
 If you are using Solid Start within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for yarn), you must include `solid-start` within the optional `"nohoist"` workspaces property.
 
@@ -77,6 +218,4 @@ Regardless of where you specify the nohoist option, you also need to include `so
 
 The reason why this is necessary is because `solid-start` creates an `index.html` file within your project which expects to load a script located in `/node_modules/solid-start/runtime/entry.jsx` (where `/` is the path of your project root). By default, if you hoist the `solid-start` dependency into the workspace root then that script will not be available within the package's `node_modules` folder.
 
-
 </details>
-
