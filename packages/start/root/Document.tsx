@@ -1,16 +1,15 @@
-import { children, ComponentProps, createRenderEffect } from "solid-js";
-import { insert, resolveSSRNode, ssrSpread } from "solid-js/web";
+import { children, createRenderEffect } from "solid-js";
+import { insert, resolveSSRNode } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
 
-export function Html(props: ComponentProps<"html">) {
+export function Html(props) {
   if (import.meta.env.MPA) {
+    
   }
   if (import.meta.env.SSR) {
-    let { children: c, ...htmlProps } = props;
-
-    return `<html ${ssrSpread(htmlProps)}>
+    return `<html>
         ${resolveSSRNode(children(() => props.children))}
       </html>
     `;
@@ -27,10 +26,9 @@ export function Html(props: ComponentProps<"html">) {
   }
 }
 
-export function Head(props: ComponentProps<"head">) {
+export function Head(props) {
   if (import.meta.env.SSR) {
-    let { children: c, ...headProps } = props;
-    return `<head ${ssrSpread(headProps)}>
+    return `<head>
         ${resolveSSRNode(
           children(() => (
             <>
@@ -55,10 +53,10 @@ export function Head(props: ComponentProps<"head">) {
   }
 }
 
-export function Body(props: ComponentProps<"body">) {
+export function Body(props) {
   if (import.meta.env.SSR) {
-    let { children: c, ...bodyProps } = props;
-    return `<body ${ssrSpread(bodyProps)}>${
+    console.log(import.meta.env.START_SSR, import.meta.env.SSR);
+    return `<body>${
       import.meta.env.START_SSR
         ? resolveSSRNode(children(() => props.children))
         : resolveSSRNode(<Scripts />)
