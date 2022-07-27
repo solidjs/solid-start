@@ -55,9 +55,43 @@ import { createHandler, renderAsync, StartServer } from "solid-start/entry-serve
 
 ```
 
+- `entry-client.tsx`: Earlier, you called `hydrate(document)` or `render(document.body)` here based on what kind of rendering mode you had selected and whether you had SSR turned on. We felt this was slightly annoying to change if you wanted to switch between the modes and error prone if you are not careful and end up `document` to `render` instead. Since the entrypoint is important for the `client` we wanted to make sure we can make the switch between our rendering modes easier and less error prone. We still wanted to expose `entry-client.tsx` to the user so that if they wish they can take over however they want. So we decided to make a helper function that embeds the logic for deciding how to interact with the app we get from the server, be it `hydrate` or `render`. We call it `mount` and would recommend you use it in `entry-client`.
+
+If you were using SSR:
+
+```diff
+- import { hydrate } from "solid-js";
+- import { StartClient } from "solid-start/entry-client";
++ import { mount, StartClient } from "solid-start/entry-client";
+
+- hydrate(() => <StartClient />, document);
++ mount(() => <StartClient />, document);
+
+```
+
+If you were not using SSR and just rendering your app client-side:
+
+```diff
+- import { render } from "solid-js";
+- import { StartClient } from "solid-start/entry-client";
++ import { mount, StartClient } from "solid-start/entry-client";
+
+- render(() => <StartClient />, document.body);
++ mount(() => <StartClient />, document);
+
+```
+
+```diff
+import { createHandler, renderAsync, StartServer } from "solid-start/entry-server";
+
+- export default createHandler(renderAsync(context => <StartServer context={context} />));
++ export default createHandler(renderAsync(event => <StartServer event={event} />));
+
+```
+
 - `root.tsx`
 
-  - Step 1: We changed how we declare our routes here a bit to make it more flexible
+  - Step 1: We changed how we declare our routes here a bit to make it more flexible. Earlier we gave you a `Routes` component from `solid-start/root` that was equivalent to rendering a `Routes` from `solid-app-router` (yeah we know its confusing, that's why we are changing it) and filling it with the routes from the file system. You didn't have an opportunity to add more `Route` components there for some routes you want to manually add. So now we make this a bit more transparent. We now export `FileRoutes` from `solid-start/root` that represents the route config based on the file-system. It is meant to be passed to `Routes` component from `solid-app-router` or wherever you want to use the file-system routes config.
 
 ```diff
 // @refresh reload
