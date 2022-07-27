@@ -1,5 +1,5 @@
 import { children, ComponentProps, createRenderEffect } from "solid-js";
-import { insert, resolveSSRNode, ssr, ssrSpread } from "solid-js/web";
+import { insert, resolveSSRNode, ssrSpread } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
@@ -10,10 +10,10 @@ export function Html(props: ComponentProps<"html">) {
   if (import.meta.env.SSR) {
     let { children: c, ...htmlProps } = props;
 
-    return ssr(`<html ${ssrSpread(htmlProps)}>
+    return `<html ${ssrSpread(htmlProps)}>
         ${resolveSSRNode(children(() => props.children))}
       </html>
-    `) as unknown as Element;
+    `;
   } else {
     if (import.meta.env.START_SSR) {
       createRenderEffect(() => {
@@ -30,7 +30,7 @@ export function Html(props: ComponentProps<"html">) {
 export function Head(props: ComponentProps<"head">) {
   if (import.meta.env.SSR) {
     let { children: c, ...headProps } = props;
-    return ssr(`<head ${ssrSpread(headProps)}>
+    return `<head ${ssrSpread(headProps)}>
         ${resolveSSRNode(
           children(() => (
             <>
@@ -41,7 +41,7 @@ export function Head(props: ComponentProps<"head">) {
           ))
         )}
       </head>
-    `) as unknown as Element;
+    `;
   } else {
     if (import.meta.env.START_SSR) {
       createRenderEffect(() => {
@@ -58,13 +58,11 @@ export function Head(props: ComponentProps<"head">) {
 export function Body(props: ComponentProps<"body">) {
   if (import.meta.env.SSR) {
     let { children: c, ...bodyProps } = props;
-    return ssr(
-      `<body ${ssrSpread(bodyProps)}>${
-        import.meta.env.START_SSR
-          ? resolveSSRNode(children(() => props.children))
-          : resolveSSRNode(<Scripts />)
-      }</body>`
-    ) as unknown as Element;
+    return `<body ${ssrSpread(bodyProps)}>${
+      import.meta.env.START_SSR
+        ? resolveSSRNode(children(() => props.children))
+        : resolveSSRNode(<Scripts />)
+    }</body>`;
   } else {
     if (import.meta.env.START_SSR) {
       let child = children(() => props.children);
