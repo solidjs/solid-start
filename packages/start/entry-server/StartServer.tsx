@@ -1,11 +1,12 @@
 import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "solid-app-router";
+import { ComponentProps } from "solid-js";
 import { ssr } from "solid-js/web";
 import Root from "~/root";
 import { apiRoutes } from "../api/middleware";
+import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
 import { fileRoutes } from "../root/FileRoutes";
 import { inlineServerFunctions } from "../server/middleware";
-import { RouteDefinition, Router as MPARouter } from "../server/router";
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
 
@@ -60,7 +61,7 @@ export function StartRouter(
   if (import.meta.env.START_ISLANDS_ROUTER) {
     return (
       <Router {...props}>
-        <MPARouter {...props}>{props.children}</MPARouter>
+        <IslandsRouter {...props}>{props.children}</IslandsRouter>
       </Router>
     );
   }
@@ -74,7 +75,7 @@ export default ({ event }: { event: PageEvent }) => {
 
   return (
     <ServerContext.Provider value={event}>
-      <MetaProvider tags={event.tags}>
+      <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
         <StartRouter
           url={path}
           out={event.routerContext}
