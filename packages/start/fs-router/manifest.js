@@ -23,80 +23,137 @@ import { toPath } from "./path-utils.js";
  * @param {*} assetManifest
  * @returns
  */
-export default function prepareManifest(ssrManifest, assetManifest, config) {
-  let entryClientScripts = [];
-  let visitedScripts = new Set();
+export default function prepareManifest(ssrManifest, assetManifest, config, islands = []) {
   const pageRegex = new RegExp(`\\.(${config.solidOptions.pageExtensions.join("|")})$`);
   const baseRoutes = posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir);
-  let routes = Object.keys(ssrManifest)
-    .filter(
-      key =>
-        (key.startsWith(baseRoutes) && key.match(pageRegex)) ||
-        key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
-    )
-    .map(key => [key, ssrManifest[key]])
-    .map(([key, value]) => {
-      console.log(key, value);
-      let files = [];
-      let visitedFiles = new Set();
 
-      function visitFile(file) {
-        if (visitedFiles.has(file.file)) return;
-        visitedFiles.add(file.file);
-        files.push({
-          type: file.file.endsWith(".css") ? "style" : "script",
-          href: "/" + file.file
-        });
+  let manifest = {};
 
-        if (!visitedScripts.has(file.file)) {
-          visitedScripts.add(file.file);
-          if (
-            file.src &&
-            file.src.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
-          ) {
-            entryClientScripts.push({ type: "script", href: "/" + file.file });
-          }
+  function collect(src) {
+    let assets = collectAssets();
+    assets.addSrc(src);
+
+    return assets.getFiles();
+  }
+
+  function collectAssets() {
+    let files = [];
+    let visitedFiles = new Set();
+
+    function visitFile(file) {
+      if (visitedFiles.has(file.file)) return;
+      visitedFiles.add(file.file);
+      files.push({
+        type: file.file.endsWith(".css") ? "style" : "script",
+        href: "/" + file.file
+      });
+
+      file.imports?.forEach(imp => {
+        visitFile(assetManifest[imp]);
+      });
+
+      file.dynamicImports?.forEach(imp => {
+        if (imp.endsWith("?island")) {
+          files.push({ type: "island", href: imp });
+          let f = collect(imp);
+          manifest[imp] = {
+            script: f[0],
+            assets: f
+          };
         }
+      });
 
-        file.imports?.forEach(imp => {
-          visitFile(assetManifest[imp]);
-        });
+      file.css?.forEach(css => {
+        if (visitedFiles.has(css)) return;
+        files.push({ type: "style", href: "/" + css });
+        visitedFiles.add(css);
 
-        file.css?.forEach(css => {
-          if (visitedFiles.has(css)) return;
-          files.push({ type: "style", href: "/" + css });
-          visitedFiles.add(css);
-          if (
-            file.src &&
-            file.src.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
-          ) {
-            entryClientScripts.push({ type: "style", href: "/" + css });
-          }
-        });
-      }
+        // if (!visitedScripts.has(file.src)) {
+        //   visitedScripts.add(file.src);
+        //   if (
+        //     file.src &&
+        //     file.src.match(
+        //       new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`)
+        //     )
+        //   ) {
+        //     entryClientScripts.push({ type: "style", href: "/" + css });
+        //   }
+        // }
+      });
+    }
 
-      value.forEach(val => {
+    return {
+      addAsset(val) {
         let asset = Object.values(assetManifest).find(f => "/" + f.file === val);
         if (!asset) {
           return;
         }
         visitFile(asset);
+      },
+      addSrc(val) {
+        let asset = Object.values(assetManifest).find(f => f.src === val);
+        if (!asset) {
+          return;
+        }
+        visitFile(asset);
+      },
+      getFiles() {
+        return files;
+      }
+    };
+  }
+
+  let routes = Object.keys(ssrManifest)
+    .filter(key => key.startsWith(baseRoutes) && key.match(pageRegex))
+    .map(key => [key, ssrManifest[key]])
+    .map(([key, value]) => {
+      const assets = collectAssets();
+      value.forEach(val => {
+        assets.addAsset(val);
       });
 
       if (!value.length) {
-        let asset = Object.values(assetManifest).find(f => f.src === key);
-        if (asset) {
-          visitFile(asset);
-        }
+        assets.addSrc(key);
       }
 
       if (key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
         return null;
       }
 
-      return [toPath(key.slice(baseRoutes.length).replace(pageRegex, ""), false), files];
+      return [
+        toPath(key.slice(baseRoutes.length).replace(pageRegex, ""), false),
+        assets.getFiles()
+      ];
     })
     .filter(Boolean);
 
-  return Object.fromEntries([...routes, ["entry-client", entryClientScripts]]);
+  let entryClient = Object.keys(ssrManifest).find(key =>
+    key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
+  );
+  const assets = collectAssets();
+
+  if (entryClient) {
+    assets.addSrc(entryClient);
+  }
+
+  return {
+    ...manifest,
+    ...Object.fromEntries([
+      ...routes,
+      ...islands.map(i => {
+        let asset = collectAssets();
+
+        asset.addSrc(i);
+
+        return [
+          i,
+          {
+            script: asset.getFiles()[0],
+            assets: asset.getFiles()
+          }
+        ];
+      }),
+      ["entry-client", assets.getFiles()]
+    ])
+  };
 }

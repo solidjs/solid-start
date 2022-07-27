@@ -41,7 +41,6 @@ export default function Root() {
         <Nav />
         <ErrorBoundary>
           <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
-            {/* <Outlet /> */}
             <Routes />
           </Suspense>
         </ErrorBoundary>
