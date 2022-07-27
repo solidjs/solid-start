@@ -488,7 +488,7 @@ export default function solidStart(options) {
           r += `export default {}`;
           return r;
         }
-        if (id.includes("comment")) {
+        if (code.includes("solid-start/islands")) {
           let replaced = code.replace(
             /const ([A-Za-z_]+) = island\(\(\) => import\("([^"]+)"\)\)/,
             (a, b, c) =>
