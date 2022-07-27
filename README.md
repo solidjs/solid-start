@@ -36,12 +36,12 @@ npm install -g pnpm
 
 Run `pnpm install` to install all the dependencies for the packages and examples in your monorepo.
 
-<details>
-<summary>
+<!-- <details> -->
+<!-- <summary> -->
 
 ### Changelog
 
-</summary>
+<!-- </summary> -->
 
 #### [0.1.0-alpha.??] - Moving towards beta
 
@@ -122,7 +122,7 @@ export default function Root() {
 }
 ```
 
-</details>
+<!-- </details> -->
 <details>
 <summary>
 
