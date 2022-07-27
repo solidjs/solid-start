@@ -132,26 +132,29 @@ export default function Root() {
 +    <Html lang="en">
 -      <head>
 +      <Head>
+
 -        <meta charset="utf-8" />
 +        <Meta charset="utf-8" />
 -        <meta name="viewport" content="width=device-width, initial-scale=1" />
 +        <Meta name="viewport" content="width=device-width, initial-scale=1" />
+
 -        <Meta /> // already exists inside `Head`
 -        <Links /> // already exists inside `Head`
+
 -      </head>
 +      </Head>
 -      <body>
 +      <Body>
-        <Suspense>
-          <ErrorBoundary>
-            <a href="/">Index</a>
-            <a href="/about">About</a>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </ErrorBoundary>
-        </Suspense>
-        <Scripts />
+         <Suspense>
+           <ErrorBoundary>
+             <a href="/">Index</a>
+             <a href="/about">About</a>
+             <Routes>
+               <FileRoutes />
+             </Routes>
+           </ErrorBoundary>
+         </Suspense>
+         <Scripts />
 -     </body>
 +     </Body>
 -   </html>
