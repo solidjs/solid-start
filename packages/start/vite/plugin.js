@@ -442,9 +442,6 @@ export default function solidStart(options) {
   });
 
   return [
-    // restart({
-    //   restart: ["src/routes/**/*"]
-    // }),
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
     {
