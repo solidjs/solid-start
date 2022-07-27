@@ -1,15 +1,14 @@
 import { children, createRenderEffect } from "solid-js";
-import { insert, resolveSSRNode } from "solid-js/web";
+import { insert, resolveSSRNode, ssrSpread } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
 
 export function Html(props) {
   if (import.meta.env.MPA) {
-    
   }
   if (import.meta.env.SSR) {
-    return `<html>
+    return `<html ${ssrSpread(props, false, false)}>
         ${resolveSSRNode(children(() => props.children))}
       </html>
     `;
