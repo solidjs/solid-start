@@ -41,7 +41,7 @@ test.describe("external redirect", () => {
         "src/routes/redirect-data.jsx": js`
           import { createServerData } from 'solid-start/server';
           import { redirect } from 'solid-start/server';
-          import { useRouteData } from 'solid-app-router';
+          import { useRouteData } from "@solidjs/router";
 
           export function routeData() {
             return createServerData(async () => redirect('https://hogwarts.deno.dev/callback'));
@@ -57,7 +57,7 @@ test.describe("external redirect", () => {
         "src/routes/throw-redirect-data.jsx": js`
           import { createServerData } from 'solid-start/server';
           import { redirect } from 'solid-start/server';
-          import { useRouteData } from 'solid-app-router';
+          import { useRouteData } from "@solidjs/router";
 
           export function routeData() {
             return createServerData(async () => {

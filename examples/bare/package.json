@@ -7,7 +7,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "solid-app-router": "^0.4.1",
+    "@solidjs/router": "^0.4.2",
     "solid-js": "^1.4.7",
     "@solidjs/meta": "^0.28.0",
     "solid-start": "workspace:*",

@@ -11,7 +11,7 @@
     "@cloudflare/kv-asset-handler": "^0.2.0",
     "netlify-cli": "^10.11.2",
     "node-fetch": "^3.2.9",
-    "solid-app-router": "^0.4.1",
+    "@solidjs/router": "^0.4.2",
     "solid-js": "^1.4.7",
     "@solidjs/meta": "^0.28.0",
     "solid-start": "workspace:*",

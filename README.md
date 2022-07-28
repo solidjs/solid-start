@@ -93,7 +93,7 @@ import { Suspense } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
 - import { Meta, Link, Routes, Scripts } from "solid-start/root";
 + import { Meta, Link, FileRoutes, Scripts } from "solid-start/root";
-+ import { Routes } from "solid-app-router";
++ import { Routes } from "@solidjs/router";
 
 export default function Root() {
   return (

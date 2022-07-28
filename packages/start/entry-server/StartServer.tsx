@@ -1,5 +1,5 @@
 import { MetaProvider } from "@solidjs/meta";
-import { RouteDataFunc, Router, RouterProps } from "solid-app-router";
+import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
 import { ComponentProps } from "solid-js";
 import { ssr } from "solid-js/web";
 import Root from "~/root";

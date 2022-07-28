@@ -15,7 +15,7 @@ test.describe("rendering", () => {
         "src/root.tsx": js`
           import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
           import { Suspense } from "solid-js";
-          import { Routes } from 'solid-app-router';
+          import { Routes } from "@solidjs/router";
 
           export default function Root() {
             return (

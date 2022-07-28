@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "solid-app-router";
+import { useLocation } from "@solidjs/router";
 
 function ActiveLink(props) {
   const location = useLocation();

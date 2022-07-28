@@ -1,7 +1,7 @@
-import server, { redirect, createServerData, createServerAction } from "solid-start/server";
-import { useRouteData } from "solid-app-router";
-import { getUser, logout } from "~/session";
+import { useRouteData } from "@solidjs/router";
 import { createEffect } from "solid-js";
+import server, { createServerAction, createServerData, redirect } from "solid-start/server";
+import { getUser, logout } from "~/session";
 
 export function routeData() {
   return createServerData(async (_, { request, env }) => {

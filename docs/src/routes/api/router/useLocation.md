@@ -5,7 +5,7 @@
 <div class="text-xl">
 
 ```ts twoslash
-import { useLocation } from "solid-app-router";
+import { useLocation } from "@solidjs/router";
 // ---cut---
 const location = useLocation();
 ```
@@ -33,7 +33,7 @@ Route params are an important part of the routing system. They allow you to acce
 In our router config, we will usually have a few `Route`'s with dynamic parts. For example, take this router config which has a `Route` with path `/users/:id`.
 
 ```tsx twoslash {6}
-import { Router, Route } from "solid-app-router";
+import { Router, Route } from "@solidjs/router";
 
 export function App() {
   return (
@@ -49,7 +49,7 @@ To access the `:id` part of the route, call `useParams()` inside a component. Th
 ```tsx twoslash {4-8}
 // @errors: 2571
 // @lib: ES2015
-import { useParams } from "solid-app-router";
+import { useParams } from "@solidjs/router";
 
 function User() {
   const params = useParams<{ id: string }>();
@@ -67,7 +67,7 @@ We could also have a `Route` with with multiple dynamic parts. For example, a ro
 ```tsx twoslash {6-8,14-18}
 // @errors: 2571
 // @lib: ES2015
-import { Router, Route, useParams } from "solid-app-router";
+import { Router, Route, useParams } from "@solidjs/router";
 
 export function App() {
   return (
@@ -99,7 +99,7 @@ For example, if you have a route like `/users/:id`, then you can access the `id`
 ```tsx twoslash {2}
 // @errors: 2571
 // @lib: ES2015
-import { useParams, Router, Route } from "solid-app-router";
+import { useParams, Router, Route } from "@solidjs/router";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
@@ -117,7 +117,7 @@ Then, you can use the `id` param as the source for your resource. You can fetch 
 ```tsx twoslash {4-7}
 // @errors: 2571
 // @lib: ES2015
-import { useParams, Router, Route } from "solid-app-router";
+import { useParams, Router, Route } from "@solidjs/router";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
@@ -144,7 +144,7 @@ function User() {
 Call `useLocation()` inside a component to get the current URL (location).
 
 ```tsx twoslash
-import { useLocation } from "solid-app-router";
+import { useLocation } from "@solidjs/router";
 
 function Component() {
   const location = useLocation();

@@ -1,4 +1,4 @@
-import { RouteDataFunc } from "solid-app-router";
+import { RouteDataFunc } from "@solidjs/router";
 import { Component, createResource, For, Show } from "solid-js";
 import { useRouteData } from "solid-start";
 import Comment from "~/components/comment";

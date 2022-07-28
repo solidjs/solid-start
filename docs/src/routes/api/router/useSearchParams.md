@@ -5,7 +5,7 @@
 <div class="text-xl">
 
 ```ts twoslash
-import { useSearchParams } from "solid-app-router";
+import { useSearchParams } from "@solidjs/router";
 // ---cut---
 const params = useSearchParams();
 ```

@@ -10,7 +10,7 @@ export {
   useRouteData,
   useRoutes,
   useSearchParams
-} from "solid-app-router";
+} from "@solidjs/router";
 export { createRouteAction, createRouteData } from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary } from "./error-boundary";
@@ -30,7 +30,7 @@ export {
 } from "./session";
 import "./types";
 
-import { Outlet as BaseOutlet, Routes as BaseRoutes } from "solid-app-router";
+import { Outlet as BaseOutlet, Routes as BaseRoutes } from "@solidjs/router";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 export function Routes(props) {

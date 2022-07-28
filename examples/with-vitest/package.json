@@ -12,7 +12,7 @@
     "@testing-library/jest-dom": "^5.16.2",
     "@types/testing-library__jest-dom": "^5.14.3",
     "jsdom": "^19.0.0",
-    "solid-app-router": "^0.4.1",
+    "@solidjs/router": "^0.4.2",
     "solid-js": "^1.4.7",
     "@solidjs/meta": "^0.28.0",
     "solid-start": "workspace:*",

@@ -5,7 +5,7 @@
 <div class="text-xl">
 
 ```ts twoslash
-import { useRouteData } from "solid-app-router";
+import { useRouteData } from "@solidjs/router";
 // ---cut---
 const params = useRouteData();
 ```

@@ -19,7 +19,7 @@ test.describe("meta", () => {
       fixture = await createFixture({
         files: {
           "src/root.tsx": js`// @refresh reload
-            import { Routes } from "solid-app-router";
+            import { Routes } from "@solidjs/router";
             import { Suspense } from "solid-js";
             import { ErrorBoundary } from "solid-start/error-boundary";
             import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
@@ -82,7 +82,7 @@ test.describe("meta", () => {
           "src/routes/title-from-route-data.tsx": js`
             import { Title } from '@solidjs/meta';
             import { createServerData } from 'solid-start/server';
-            import { useRouteData } from 'solid-app-router';
+            import { useRouteData } from "@solidjs/router";
 
             export function routeData() {
               return createServerData(async () => "Title from route data");
@@ -185,7 +185,7 @@ test.describe("meta", () => {
   //         "src/routes/title-from-route-data.tsx": js`
   //           import { Title } from '@solidjs/meta';
   //           import { createServerData } from 'solid-start/server';
-  //           import { useRouteData } from 'solid-app-router';
+  //           import { useRouteData } from "@solidjs/router";
 
   //           export function routeData() {
   //             return createServerData(async () => "Title from route data", {

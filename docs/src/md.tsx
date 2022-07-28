@@ -1,4 +1,4 @@
-import { Link } from "solid-app-router";
+import { Link } from "@solidjs/router";
 import { createEffect, createUniqueId } from "solid-js";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";

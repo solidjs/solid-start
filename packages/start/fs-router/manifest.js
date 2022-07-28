@@ -4,7 +4,7 @@ import { toPath } from "./path-utils.js";
 
 /**
  * Output:
- * * To be consumed by the Links/Scripts components, using solid-app-router path syntax
+ * * To be consumed by the Links/Scripts components, using solid-router path syntax
  * {
  *  "entry-client": [{ type: script, href: "/dist/public/entry-client.js" }],
  *  "/": [

@@ -1,9 +1,9 @@
+import { useParams, useRouteData } from "@solidjs/router";
 import { Show } from "solid-js";
-import { useParams, useRouteData } from "solid-app-router";
-import { redirect, createServerData, createServerAction } from "solid-start/server";
+import { FormError } from "solid-start/data";
+import { createServerAction, createServerData, redirect } from "solid-start/server";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
-import { FormError } from "solid-start/data";
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {

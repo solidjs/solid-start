@@ -4,7 +4,7 @@ import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
 import "virtual:windi.css";
 import "./code.css";
 
-import { Routes } from "solid-app-router";
+import { Routes } from "@solidjs/router";
 import { createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
 import { MDXProvider } from "solid-mdx";

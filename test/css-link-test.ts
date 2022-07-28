@@ -46,7 +46,7 @@ test.describe("CSS link tags", () => {
           }
         `;
         files[`src/routes/${path}.tsx`] = js`
-          import { Outlet } from "solid-app-router";
+          import { Outlet } from "@solidjs/router";
           import "./${name}.css";
           export default function ${pascalCaseName}() {
             return <>
@@ -72,7 +72,7 @@ test.describe("CSS link tags", () => {
         import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
         import { ErrorBoundary } from "solid-start/error-boundary";
         import { Suspense } from "solid-js";
-        import { Routes } from "solid-app-router";
+        import { Routes } from "@solidjs/router";
 
         import "./root.css";
 

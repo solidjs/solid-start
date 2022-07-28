@@ -1,4 +1,4 @@
-import { useNavigate } from "solid-app-router";
+import { useNavigate } from "@solidjs/router";
 import { createResource, onCleanup, Resource, useContext } from "solid-js";
 import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";

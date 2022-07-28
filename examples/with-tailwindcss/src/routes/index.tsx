@@ -1,5 +1,5 @@
+import { Link } from "@solidjs/router";
 import Counter from "~/components/Counter";
-import { Link } from "solid-app-router";
 
 export default function Home() {
   return (
@@ -14,9 +14,8 @@ export default function Home() {
         to learn how to build Solid apps.
       </p>
       <p class="my-4">
-        <span>
-          Home
-        </span>{" - "}
+        <span>Home</span>
+        {" - "}
         <Link href="/about" class="text-sky-600 hover:underline">
           About Page
         </Link>{" "}

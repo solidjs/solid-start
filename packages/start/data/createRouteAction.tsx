@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "solid-app-router";
+import { useNavigate, useSearchParams } from "@solidjs/router";
 import { createSignal, getOwner, runWithOwner, startTransition, useContext } from "solid-js";
 import { isServer } from "solid-js/web";
 import { FormError, FormImpl, FormProps } from "./Form";

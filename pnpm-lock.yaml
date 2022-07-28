@@ -33,6 +33,7 @@ importers:
       '@mdx-js/mdx': ^2.1.0
       '@mdx-js/rollup': ^2.0.0
       '@solidjs/meta': ^0.28.0
+      '@solidjs/router': ^0.4.2
       '@types/bad-words': ^3.0.1
       bad-words: ^3.0.4
       compression: ^1.7.4
@@ -44,7 +45,6 @@ importers:
       remark-gfm: ^3.0.1
       remark-shiki-twoslash: ^3.0.9
       sirv: ^2.0.2
-      solid-app-router: ^0.4.1
       solid-headless: ^0.10.12
       solid-js: ^1.4.7
       solid-mdx: ^0.0.6
@@ -65,6 +65,7 @@ importers:
       '@mdx-js/mdx': 2.1.2
       '@mdx-js/rollup': 2.1.2
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       '@types/bad-words': 3.0.1
       bad-words: 3.0.4
       rehype-autolink-headings: 6.1.1
@@ -73,7 +74,6 @@ importers:
       remark-code-extra: 1.0.1
       remark-gfm: 3.0.1
       remark-shiki-twoslash: 3.1.0
-      solid-app-router: 0.4.1_solid-js@1.4.7
       solid-headless: 0.10.12_solid-js@1.4.7
       solid-js: 1.4.7
       solid-mdx: 0.0.6_solid-js@1.4.7+vite@3.0.2
@@ -89,7 +89,7 @@ importers:
   examples/bare:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      solid-app-router: ^0.4.1
+      '@solidjs/router': ^0.4.2
       solid-js: ^1.4.7
       solid-start: workspace:*
       solid-start-node: workspace:*
@@ -98,7 +98,7 @@ importers:
       vite: ^3.0.2
     devDependencies:
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
-      solid-app-router: 0.4.1_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
@@ -110,7 +110,7 @@ importers:
     specifiers:
       '@cloudflare/kv-asset-handler': ^0.1.1
       '@solidjs/meta': ^0.28.0
-      solid-app-router: ^0.4.1
+      '@solidjs/router': ^0.4.2
       solid-js: ^1.4.7
       solid-start: workspace:*
       solid-start-cloudflare-workers: workspace:*
@@ -121,7 +121,7 @@ importers:
     devDependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
-      solid-app-router: 0.4.1_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start: link:../../packages/start
       solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
@@ -134,9 +134,9 @@ importers:
     specifiers:
       '@cloudflare/kv-asset-handler': ^0.2.0
       '@solidjs/meta': ^0.28.0
+      '@solidjs/router': ^0.4.2
       netlify-cli: ^10.11.2
       node-fetch: ^3.2.9
-      solid-app-router: ^0.4.1
       solid-js: ^1.4.7
       solid-start: workspace:*
       solid-start-cloudflare-workers: workspace:*
@@ -148,9 +148,9 @@ importers:
     devDependencies:
       '@cloudflare/kv-asset-handler': 0.2.0
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       netlify-cli: 10.11.2
       node-fetch: 3.2.9
-      solid-app-router: 0.4.1_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start: link:../../packages/start
       solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
@@ -163,7 +163,7 @@ importers:
   examples/with-auth:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      solid-app-router: ^0.4.1
+      '@solidjs/router': ^0.4.2
       solid-js: ^1.4.7
       solid-start: workspace:*
       solid-start-node: workspace:*
@@ -174,7 +174,7 @@ importers:
       windicss: ^3.4.3
     devDependencies:
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
-      solid-app-router: 0.4.1_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
@@ -188,7 +188,7 @@ importers:
     specifiers:
       '@mdx-js/rollup': ^2.0.0
       '@solidjs/meta': ^0.28.0
-      solid-app-router: ^0.4.1
+      '@solidjs/router': ^0.4.2
       solid-js: ^1.4.7
       solid-mdx: ^0.0.6
       solid-start: workspace:*
@@ -199,7 +199,7 @@ importers:
     devDependencies:
       '@mdx-js/rollup': 2.1.2
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
-      solid-app-router: 0.4.1_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       solid-js: 1.4.7
       solid-mdx: 0.0.6_solid-js@1.4.7+vite@3.0.2
       solid-start: link:../../packages/start
@@ -211,9 +211,9 @@ importers:
   examples/with-tailwindcss:
     specifiers:
       '@solidjs/meta': ^0.28.0
+      '@solidjs/router': ^0.4.2
       autoprefixer: ^10.4.2
       postcss: ^8.4.6
-      solid-app-router: ^0.4.1
       solid-js: ^1.4.7
       solid-start: workspace:*
       solid-start-node: workspace:*
@@ -222,9 +222,9 @@ importers:
       vite: ^3.0.2
     devDependencies:
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       autoprefixer: 10.4.7_postcss@8.4.14
       postcss: 8.4.14
-      solid-app-router: 0.4.1_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
@@ -235,10 +235,10 @@ importers:
   examples/with-vitest:
     specifiers:
       '@solidjs/meta': ^0.28.0
+      '@solidjs/router': ^0.4.2
       '@testing-library/jest-dom': ^5.16.2
       '@types/testing-library__jest-dom': ^5.14.3
       jsdom: ^19.0.0
-      solid-app-router: ^0.4.1
       solid-js: ^1.4.7
       solid-start: workspace:*
       solid-start-node: workspace:*
@@ -249,10 +249,10 @@ importers:
       vitest: ^0.6.1
     devDependencies:
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       '@testing-library/jest-dom': 5.16.4
       '@types/testing-library__jest-dom': 5.14.5
       jsdom: 19.0.0
-      solid-app-router: 0.4.1_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
@@ -297,6 +297,7 @@ importers:
       '@babel/preset-typescript': ^7.18.6
       '@babel/template': ^7.18.6
       '@solidjs/meta': 0.28.0
+      '@solidjs/router': 0.4.2
       '@types/cookie': ^0.5.1
       '@types/debug': ^4.1.7
       '@types/wait-on': ^5.3.1
@@ -315,7 +316,6 @@ importers:
       rollup-route-manifest: ^1.0.0
       sade: ^1.8.1
       sirv: ^2.0.2
-      solid-app-router: 0.4.1
       solid-js: 1.4.7
       solid-start-cloudflare-pages: 0.1.0-alpha.95
       solid-start-cloudflare-workers: 0.1.0-alpha.95
@@ -359,9 +359,9 @@ importers:
       wait-on: 6.0.1_debug@4.3.4
     devDependencies:
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       '@types/debug': 4.1.7
       '@types/wait-on': 5.3.1
-      solid-app-router: 0.4.1_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start-cloudflare-pages: link:../start-cloudflare-pages
       solid-start-cloudflare-workers: link:../start-cloudflare-workers
@@ -577,7 +577,7 @@ importers:
     specifiers:
       '@cloudflare/kv-asset-handler': ^0.1.1
       '@solidjs/meta': ^0.28.0
-      solid-app-router: ^0.4.1
+      '@solidjs/router': ^0.4.2
       solid-js: ^1.4.7
       solid-start: workspace:*
       solid-start-cloudflare-pages: workspace:*
@@ -593,7 +593,7 @@ importers:
     devDependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
-      solid-app-router: 0.4.1_solid-js@1.4.7
+      '@solidjs/router': 0.4.2_solid-js@1.4.7
       solid-js: 1.4.7
       solid-start: link:../../packages/start
       solid-start-cloudflare-pages: link:../../packages/start-cloudflare-pages
@@ -4073,6 +4073,14 @@ packages:
     resolution: {integrity: sha512-x52VdB9RZJ1apDB/pAmf58oeJsJ0lGKFXWjnm/TE/MlENIBPg3JaW8H5v2HnGpQC0WUbgiIsDFWpLWVNBo5t6g==}
     peerDependencies:
       solid-js: '>=1.4.0'
+    dependencies:
+      solid-js: 1.4.7
+    dev: true
+
+  /@solidjs/router/0.4.2_solid-js@1.4.7:
+    resolution: {integrity: sha512-RswymVhqnGVHMCo/01X9wE+u98pzYZQ/b23SgjO/PK+8oTgdY1f83OrsWR1A01LieTySkCSw7nunWTi+VOQyWA==}
+    peerDependencies:
+      solid-js: ^1.3.5
     dependencies:
       solid-js: 1.4.7
     dev: true
@@ -13987,14 +13995,6 @@ packages:
     dependencies:
       ip: 1.1.5
       smart-buffer: 4.2.0
-    dev: true
-
-  /solid-app-router/0.4.1_solid-js@1.4.7:
-    resolution: {integrity: sha512-RKHyFQ+J5lXyE/SoyJVHgTBeBck2etYVJn1/9F7ehlzyD2pIOMqLpNXD1GfWQljHqNdXZBSyE+xB/Cck5l9Q/g==}
-    peerDependencies:
-      solid-js: ^1.3.5
-    dependencies:
-      solid-js: 1.4.7
     dev: true
 
   /solid-headless/0.10.12_solid-js@1.4.7:
