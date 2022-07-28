@@ -1,5 +1,5 @@
 import debug from "debug";
-import fs, { readFileSync } from "fs";
+import fs from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { normalizePath } from "vite";
@@ -444,64 +444,7 @@ export default function solidStart(options) {
   return [
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
-    {
-      name: "islands",
-
-      load(id) {
-        if (id.endsWith("?island")) {
-          return {
-            code: `
-            import Component from '${id.replace("?island", "")}';
-
-            window._$HY.island("${id.slice(process.cwd().length)}", Component);
-
-            export default Component;
-            `
-          };
-        }
-      },
-      /**
-       * @param {any} id
-       * @param {string} code
-       */
-      transform(code, id, ssr) {
-        if (id.endsWith("start/islands.js")) {
-          let routeManifest = JSON.parse(
-            readFileSync(
-              path.join(process.cwd(), ".solid/route-manifest/route-manifest.json"),
-              "utf-8"
-            )
-          );
-
-          let r = ``;
-          Object.keys(routeManifest)
-            .filter(key => key.endsWith("?island"))
-            .forEach((key, index) => {
-              r += `const island${index} = import('/${key}');\n`;
-              r += `island${index}();\n`;
-            });
-
-          r += `export default {}`;
-          return r;
-        }
-        if (code.includes("solid-start/islands")) {
-          let replaced = code.replace(
-            /const ([A-Za-z_]+) = island\(\(\) => import\("([^"]+)"\)\)/,
-            (a, b, c) =>
-              ssr
-                ? `import ${b}_island from "${c}"; 
-                  const ${b} = island(${b}_island, "${
-                    join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
-                  }");`
-                : `const ${b} = island(() => import("${c}?island"), "${
-                    join(dirname(id), c) + ".tsx" + "?island"
-                  }")`
-          );
-
-          return replaced;
-        }
-      }
-    },
+    islands(),
     options.inspect ? inspect() : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
@@ -525,6 +468,47 @@ export default function solidStart(options) {
     solidStartServer(options),
     solidsStartRouteManifest(options)
   ].filter(Boolean);
+}
+
+function islands() {
+  return {
+    name: "solid-start-islands",
+    load(id) {
+      if (id.endsWith("?island")) {
+        return {
+          code: `
+            import Component from '${id.replace("?island", "")}';
+
+            window._$HY.island("${id.slice(process.cwd().length)}", Component);
+
+            export default Component;
+            `
+        };
+      }
+    },
+    /**
+     * @param {any} id
+     * @param {string} code
+     */
+    transform(code, id, ssr) {
+      if (code.includes("unstable_island")) {
+        let replaced = code.replace(
+          /const ([A-Za-z_]+) = island\(\(\) => import\("([^"]+)"\)\)/,
+          (a, b, c) =>
+            ssr
+              ? `import ${b}_island from "${c}"; 
+                  const ${b} = unstable_island(${b}_island, "${
+                  join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
+                }");`
+              : `const ${b} = unstable_island(() => import("${c}?island"), "${
+                  join(dirname(id), c) + ".tsx" + "?island"
+                }")`
+        );
+
+        return replaced;
+      }
+    }
+  };
 }
 
 /**
