@@ -9,14 +9,13 @@ import { isRedirectResponse } from "../server/responses";
 import { ServerContext } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
-import { ServerError } from "./FormError";
 
 interface ActionEvent extends ServerFunctionEvent {}
 
 export type ActionState = "idle" | "pending";
 export type RouteAction<T, U> = {
   value?: U;
-  error?: Error | FormError | ServerError | null;
+  error?: FormError | null;
   pending: T[];
   state: ActionState;
   Form: T extends FormData ? ParentComponent<FormProps> : ParentComponent;

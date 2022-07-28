@@ -1,5 +1,8 @@
 export { Link, Meta, Style, Title } from "@solidjs/meta";
 export {
+  Navigate,
+  NavLink,
+  Route,
   useHref,
   useIsRouting,
   useLocation,
@@ -9,12 +12,14 @@ export {
   useResolvedPath,
   useRouteData,
   useRoutes,
-  useSearchParams
+  useSearchParams,
+  type RouteDataFunc,
+  type RouteDataFuncArgs as RouteDataArgs
 } from "@solidjs/router";
-export { createRouteAction, createRouteData } from "./data";
+export { createRouteAction, createRouteData, FormError, ServerError } from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary } from "./error-boundary";
-export { island as ustable_island } from "./islands";
+export { island as unstable_island } from "./islands";
 export { Body, FileRoutes, Head, Html, Scripts } from "./root";
 export { ServerContext } from "./server/ServerContext";
 export type { FetchEvent, PageEvent, ServerFunctionEvent } from "./server/types";

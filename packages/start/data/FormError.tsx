@@ -9,9 +9,9 @@ export class ServerError extends Error {
 }
 
 export class FormError extends ServerError {
-  formError: string;
-  fields: {};
-  fieldErrors: { [key: string]: string };
+  formError?: string;
+  fields?: {};
+  fieldErrors?: { [key: string]: string };
   constructor(
     message: string,
     {
@@ -21,7 +21,7 @@ export class FormError extends ServerError {
       stack
     }: { fieldErrors?: {}; form?: FormData; fields?: {}; stack?: string } = {}
   ) {
-    super(message);
+    super(message, { stack });
     this.formError = message;
     this.name = "FormError";
     this.fields =
