@@ -1,5 +1,5 @@
-import { Link, RouteDataFunc, useRouteData } from "@solidjs/router";
 import { Component, createResource, For, Show } from "solid-js";
+import { RouteDataArgs, useRouteData } from "solid-start";
 import Story from "~/components/story";
 import fetchAPI from "~/lib/api";
 import { IStory } from "~/types";
@@ -12,23 +12,20 @@ const mapStories = {
   job: "jobs"
 } as const;
 
-interface StoriesData {
-  page: () => number;
-  type: () => string;
-  stories: () => IStory[];
-}
-
-export const routeData: RouteDataFunc = ({ location, params }) => {
+export const routeData = ({ location, params }: RouteDataArgs) => {
   const page = () => +location.query.page || 1;
   const type = () => params.stories || "top";
 
-  const [stories] = createResource(() => `${mapStories[type()]}?page=${page()}`, fetchAPI);
+  const [stories] = createResource<IStory[], string>(
+    () => `${mapStories[type()]}?page=${page()}`,
+    fetchAPI
+  );
 
   return { type, stories, page };
 };
 
 const Stories: Component = () => {
-  const { page, type, stories } = useRouteData<StoriesData>();
+  const { page, type, stories } = useRouteData<typeof routeData>();
   return (
     <div class="news-view">
       <div class="news-list-nav">
@@ -40,9 +37,9 @@ const Stories: Component = () => {
             </span>
           }
         >
-          <Link class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
+          <a class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
             {"<"} prev
-          </Link>
+          </a>
         </Show>
         <span>page {page()}</span>
         <Show
@@ -53,9 +50,9 @@ const Stories: Component = () => {
             </span>
           }
         >
-          <Link class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
+          <a class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
             more {">"}
-          </Link>
+          </a>
         </Show>
       </div>
       <main class="news-list">
