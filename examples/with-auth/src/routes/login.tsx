@@ -27,7 +27,7 @@ export function routeData() {
 }
 
 export default function Login() {
-  const data = useRouteData<ReturnType<typeof routeData>>();
+  const data = useRouteData<typeof routeData>();
   const params = useParams();
 
   const loginAction = createServerAction(async (form: FormData) => {
