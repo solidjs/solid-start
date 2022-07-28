@@ -1,5 +1,5 @@
 import { useRouteData } from "@solidjs/router";
-import server, { createServerAction, createServerData, redirect } from "solid-start/server";
+import { createServerAction, createServerData, redirect } from "solid-start/server";
 import { getUser, logout } from "~/db/session";
 
 export function routeData() {
@@ -16,7 +16,7 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
-  const logoutAction = createServerAction(() => logout(server.request));
+  const logoutAction = createServerAction((_, { request }) => logout(request));
 
   return (
     <main class="w-full p-4 space-y-2">
