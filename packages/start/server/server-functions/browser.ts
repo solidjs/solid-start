@@ -10,6 +10,7 @@ import {
 import { FETCH_EVENT } from "../types";
 
 import { FormError } from "../../data";
+import { ServerError } from "../../data/FormError";
 import { CreateServerFunction, ServerFunction } from "./types";
 
 export async function parseResponse(request: Request, response: Response) {
@@ -21,6 +22,11 @@ export async function parseResponse(request: Request, response: Response) {
     return await response.json();
   } else if (contentType.includes("text")) {
     return await response.text();
+  } else if (contentType.includes("server-error")) {
+    const data = await response.json();
+    return new ServerError(data.error.message, {
+      stack: data.error.stack
+    });
   } else if (contentType.includes("form-error")) {
     const data = await response.json();
     return new FormError(data.error.message, {
