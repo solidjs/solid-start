@@ -45,6 +45,21 @@ Run `pnpm install` to install all the dependencies for the packages and examples
 
 ### [0.1.0-alpha.??] - Moving towards beta
 
+<details><summary><h3><mono>vite.config.ts</mono></h3></summary>
+
+```diff
+- import solid from 'solid-start';
++ import solid from 'solid-start/vite';
+import { defineConfig } from 'vite';
+export default defineConfig({
+  plugins: [solid()]
+})
+```
+
+Why?
+
+- We wanted to use the main entry point of `solid-start` for use within the app where you are spending most of your time. And for the `vite` config, we use `solid-start/vite` entrypoint.
+</details>
 <details><summary><h3><mono>entry-server.tsx</mono></h3></summary>
 
 ```diff
@@ -56,11 +71,12 @@ import { createHandler, renderAsync, StartServer } from "solid-start/entry-serve
 ```
 
 #### Why?
-  - The prop received by ```StartServer```, and given to you by ```createHandler``` is called ```event``` instead of ```context```. It represents a ```PageEvent``` which is a ```FetchEvent``` that the server decided should be rendered by our components as a ```Page```. We adopted the ```event``` terminology to represent the input that our server handlers received. For example, the input to our top-level server handler is a ```FetchEvent```. It can then be routed to a server function and be passed as a ```ServerFunctionEvent``` or to an API Endpoint as an ```ApiEvent```. This terminology is adopted from the ServiceWorker API and Cloudflare Workers API. 
+
+- The prop received by `StartServer`, and given to you by `createHandler` is called `event` instead of `context`. It represents a `PageEvent` which is a `FetchEvent` that the server decided should be rendered by our components as a `Page`. We adopted the `event` terminology to represent the input that our server handlers received. For example, the input to our top-level server handler is a `FetchEvent`. It can then be routed to a server function and be passed as a `ServerFunctionEvent` or to an API Endpoint as an `ApiEvent`. This terminology is adopted from the ServiceWorker API and Cloudflare Workers API.
 
 </details>
-<details><summary><h3><mono>entry-client.tsx</mono></h3></summary>
 
+<details><summary><h3><mono>entry-client.tsx</mono></h3></summary>
 
 If you were using SSR:
 
@@ -88,10 +104,9 @@ If you were not using SSR and rendering your app client-side:
 
 #### Why?
 
-- Earlier, you called ```hydrate(document)``` or ```render(document.body)``` here based on what kind of rendering mode you had selected and whether you had SSR turned on. We felt this was slightly annoying to change if you wanted to switch between the modes and error prone if you are not careful and end up passing `document` to `render` instead.
+- Earlier, you called `hydrate(document)` or `render(document.body)` here based on what kind of rendering mode you had selected and whether you had SSR turned on. We felt this was slightly annoying to change if you wanted to switch between the modes and error prone if you are not careful and end up passing `document` to `render` instead.
 
-  We still wanted to expose ```entry-client.tsx``` to the user so that they can take over and do their own thing here if they want. We made a helper function called ```mount``` that embeds the logic for deciding how to interact with the app we get from the server, be it ```hydrate``` or ```render```.
-
+  We still wanted to expose `entry-client.tsx` to the user so that they can take over and do their own thing here if they want. We made a helper function called `mount` that embeds the logic for deciding how to interact with the app we get from the server, be it `hydrate` or `render`.
 
 </details>
 <details><summary><h3><mono>root.tsx</mono></h3>
@@ -144,15 +159,29 @@ export default function Root() {
 
 #### Why?
 
-- We changed how we declare our routes to make it more flexible. Earlier we gave you a `Routes` component from ```solid-start``` that was equivalent to rendering a `Routes` from `solid-app-router` (yeah we know its confusing, that's why we are changing it) and filling it with the routes from the file system. The opt-in to the file-system routing was all-in or nothing. You didn't have an opportunity to add more `Route` components there. We now export `FileRoutes` from ```solid-start``` that represents the route config based on the file-system. It is meant to be passed to ```Routes``` component from ```solid-app-router``` or wherever you want to use the file-system routes config. You can use it together with other ```Route``` components
-  
-- Step 2: For consistency between the SSR and client-side rendering modes, we needed to take more control of `root.tsx` specifically, we couldnt just take `<html></html>` and `<head></head>` tags and allow them to be part of the component tree since we can't client-side render the whole document. We only really get to take over `document.body`. We needed to ship with special `Html`, `Head`, and `Body` components that you use in `root.tsx` instead of the lower-case counterparts. These document flow components know what to do whether you are in SSR mode on or off.
+- We changed how we declare our routes to make it more flexible. Earlier we gave you a `Routes` component from `solid-start` that was equivalent to rendering a `Routes` from `solid-app-router` (yeah we know its confusing, that's why we are changing it) and filling it with the routes from the file system. The opt-in to the file-system routing was all-in or nothing. You didn't have an opportunity to add more `Route`s. We now export `FileRoutes` from `solid-start` that represents the route config based on the file-system. It is meant to be passed to the `Routes` component from `solid-start` or wherever you want to use the file-system routes config.
+  - You can use it together with other `Route` components.
+    ```typescript
+    <Routes>
+      <FileRoutes />
+      <Route path="/somewhere" component={SomeComponent} />
+    </Routes>
+    ```
+  - Also for quickly starting an app without creating a bunch of files, you can define your routes in a single file. We generally don't recommend this since it's a good idea to code split your app along your routes, but its a neat trick.
+    ```typescript
+    <Routes>
+      <Route path="/somewhere" component={SomeComponent} />
+    </Routes>
+    ```
+- For consistency between the SSR and client-side rendering modes, we needed to take more control of `root.tsx` specifically, we couldnt just take `<html></html>` and `<head></head>` tags and allow them to be part of the component tree since we can't client-side render the whole document. We only really get to take over `document.body`. We needed to ship with special `Html`, `Head`, and `Body` components that you use in `root.tsx` instead of the lower-case counterparts. These document flow components know what to do whether you are in SSR mode on or off.
+- We can avoid you having to include `Meta` and `Links` from `solid-start/root` in your `head` since we do it by default.
+- We will always use the title-case variants of the tags used in `head` (eg. `Link` > `link`, `Style` > `style`, `Meta` > `meta`) for consistency throughout the app
+- `solid-meta` is renamed to `@solidjs/meta`
+- `solid-app-router` is renamed to `@solidjs/router`
+- `solid-start` exports all the components meant to be used in your app and these components work on the client and server. Sometimes they are the same on both, and other times they coordinate between the two.
 
-  - Because of this, we can avoid you having to include `Meta` and `Links` from `solid-start/root` in your `head` since we do it by default.
-  - We will always use the title-case variants of the tags used in `head` (eg. `Link` > `link`, `Style` > `style`, `Meta` > `meta`) for consistency throughout the app
-  - `@solidjs/meta` is renamed to `@solidjs/meta`
-  - `solid-app-router` is renamed to `@solidjs/router`
-  - `solid-start` is renamed to `@solidjs/start`
+- Now, our `root.tsx` even more closely replicates how you would be writing your `index.html`. And this was intentionally done so that we could enable an SPA mode for you that used the same code as the SSR mode without changing anything. How we do this? At build time for SPA mode, we quickly run the vite server, and make a request for your app's index and we tell our `Body` component not to render anything. So the index.html we get is the one you would have written. We then use that `index.html` as your entrypoint. You can still write your own `index.html` if you don't want to use this functionality.
+
 </details>
 <details><summary><h3>createServerResource -> createServerData</h3></summary>
 
@@ -183,6 +212,18 @@ export function routeData() {
 ```
 
 </details>
+<details><summary><h3>🆕 HttpStatusCode, HttpHeaders</h3></summary>
+
+
+
+```diff
+- const logoutAction = createServerAction(() => logout(server.request));
++ const logoutAction = createServerAction((_, { request }) => logout(request));
+
+```
+
+</details>
+
 <details>
 <summary>
 
