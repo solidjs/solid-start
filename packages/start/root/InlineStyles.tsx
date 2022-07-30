@@ -24,7 +24,7 @@ async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["
     return memo;
   }, []);
 
-  match.push("src/entry-server.tsx");
+  match.push(import.meta.env.START_ENTRY_SERVER);
   const styles = await env.collectStyles(match);
   return styles;
 }

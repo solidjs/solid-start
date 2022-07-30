@@ -26,14 +26,19 @@ export default function Scripts() {
           (isDev ? (
             <>
               <script type="module" src="/@vite/client" $ServerOnly></script>
-              <script type="module" async src="/src/entry-client" $ServerOnly></script>
+              <script
+                type="module"
+                async
+                src={import.meta.env.START_ENTRY_CLIENT}
+                $ServerOnly
+              ></script>
             </>
           ) : import.meta.env.START_SSR ? (
             getEntryClient(context.env.manifest)
           ) : (
             // used in the SPA build index.html mode to create a reference to index html
             // which will be used by the client build
-            <script type="module" async src="/src/entry-client" $ServerOnly />
+            <script type="module" async src={import.meta.env.START_ENTRY_CLIENT} $ServerOnly />
           ))}
       </NoHydration>
       {isDev && <InlineStyles />}

@@ -1,9 +1,7 @@
 import { Link } from "@solidjs/router";
 import { Component, For, Show } from "solid-js";
-import { island } from "solid-start/islands";
 import { IComment } from "~/types";
-
-const Toggle = island(() => import("./toggle"));
+import Toggle from "./toggle";
 
 const Comment: Component<{ comment: IComment }> = props => {
   return (
@@ -14,7 +12,7 @@ const Comment: Component<{ comment: IComment }> = props => {
       </div>
       <div class="text" innerHTML={props.comment.content} />
       <Show when={props.comment.comments.length}>
-        <Toggle client:idle>
+        <Toggle>
           <For each={props.comment.comments}>{comment => <Comment comment={comment} />}</For>
         </Toggle>
       </Show>

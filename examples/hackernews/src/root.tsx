@@ -1,5 +1,5 @@
 // @refresh reload
-import { createEffect, createSignal, Suspense } from "solid-js";
+import { Suspense } from "solid-js";
 import {
   Body,
   ErrorBoundary,
@@ -16,10 +16,6 @@ import Nav from "./components/nav";
 import "./root.css";
 
 export default function Root() {
-  const [signal, setSignal] = createSignal("abc");
-  createEffect(() => {
-    setSignal("def");
-  });
   return (
     <Html lang="en">
       <Head>
@@ -29,7 +25,7 @@ export default function Root() {
         <Meta name="description" content="Hacker News Clone built with Solid" />
         <Link rel="manifest" href="/manifest.webmanifest" />
       </Head>
-      <Body class={signal()}>
+      <Body>
         <Nav />
         <ErrorBoundary>
           <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
