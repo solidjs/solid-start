@@ -4,10 +4,9 @@ import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
 import { copyFileSync, existsSync, promises } from "fs";
-import { dirname, join, resolve } from "path";
+import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-import { build as viteBuild } from "vite";
 
 export default function ({ edge } = {}) {
   return {
@@ -18,24 +17,17 @@ export default function ({ edge } = {}) {
     },
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      const appRoot = config.solidOptions.appRoot;
+      if (!config.solidOptions.ssr) {
+        throw new Error("SSR is required for Netlify");
+      }
+
       if (config.solidOptions.islands) {
         await builder.islandsClient(join(config.root, "netlify"));
       } else {
         await builder.client(join(config.root, "netlify"));
       }
-      await viteBuild({
-        build: {
-          ssr: true,
-          outDir: "./.solid/server",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-server`)),
-            output: {
-              format: "esm"
-            }
-          }
-        }
-      });
+      await builder.server(join(config.root, ".solid", "server"));
+
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "handler.js")

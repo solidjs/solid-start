@@ -16,7 +16,7 @@ export function createDevHandler(viteServer, config, options) {
    * @returns {Promise<Response>}
    */
   async function devFetch(request, env) {
-    const entry = (await viteServer.ssrLoadModule(path.resolve("./src/entry-server"))).default;
+    const entry = (await viteServer.ssrLoadModule("~start/entry-server")).default;
 
     return await entry({
       request,

@@ -1,5 +1,5 @@
 import debug from "debug";
-import fs from "fs";
+import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { normalizePath } from "vite";
@@ -13,6 +13,7 @@ import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
 
 globalThis.DEBUG = debug("start:vite");
+
 /**
  * @returns {import('vite').PluginOption}
  * @param {any} options
@@ -129,7 +130,7 @@ function solidStartFileSystemRouter(options) {
       config = _config;
       await router.init();
 
-      if (fs.existsSync("vite.config.ts")) configFile = "vite.config.ts";
+      configFile = _config.configFile;
       // famous last words, but this *appears* to always be an absolute path
       // with all slashes normalized to forward slashes `/`. this is compatible
       // with path.posix.join, so we can use it to make an absolute path glob
@@ -332,7 +333,7 @@ function solidStartServer(options) {
 
 /**
  * @returns {import('vite').Plugin}
- * @param {{ appRoot: string; ssr: any; mpa: any; adapter: { name: any; }; }} options
+ * @param {any} options
  */
 function solidStartConfig(options) {
   return {
@@ -340,10 +341,50 @@ function solidStartConfig(options) {
     enforce: "pre",
     config(conf) {
       const root = conf.root || process.cwd();
+      options.root = root;
+      options.entryClient = findAny(join(options.root, options.appRoot), "entry-client");
+      if (!options.entryClient) {
+        options.entryClient = join(
+          options.root,
+          "node_modules",
+          "solid-start",
+          "virtual",
+          "entry-client.tsx"
+        );
+      }
+      options.entryServer = findAny(join(options.root, options.appRoot), "entry-server");
+      if (!options.entryServer) {
+        options.entryServer = join(
+          options.root,
+          "node_modules",
+          "solid-start",
+          "virtual",
+          "entry-server.tsx"
+        );
+      }
+
+      options.appRootFile = findAny(join(options.root, options.appRoot), "root");
+      if (!options.appRootFile) {
+        options.appRootFile = join(
+          options.root,
+          "node_modules",
+          "solid-start",
+          "virtual",
+          "root.tsx"
+        );
+      }
+
+      DEBUG(options);
+
       return {
         resolve: {
           conditions: ["solid"],
-          alias: { "~": path.join(root, options.appRoot) }
+          alias: {
+            "~": path.join(root, options.appRoot),
+            "~start/root": options.appRootFile,
+            "~start/entry-client": options.entryClient,
+            "~start/entry-server": options.entryServer
+          }
         },
         ssr: {
           noExternal: ["@solidjs/router", "@solidjs/meta", "solid-start"]
@@ -354,6 +395,8 @@ function solidStartConfig(options) {
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
           "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
           "import.meta.env.START_ISLANDS": JSON.stringify(options.islands ? true : false),
+          "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.entryClient),
+          "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.entryServer),
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.islandsRouter ? true : false
           ),
@@ -382,9 +425,9 @@ function find(locate, cwd) {
   return find(locate, path.join(cwd, ".."));
 }
 
-function detectAdapter() {
-  const nodeModulesPath = find("node_modules");
+const nodeModulesPath = find("node_modules");
 
+function detectAdapter() {
   let adapters = [];
   fs.readdirSync(nodeModulesPath).forEach(dir => {
     if (dir.startsWith("solid-start-")) {
@@ -402,6 +445,16 @@ function detectAdapter() {
 
   return adapters.length > 0 ? adapters[0] : "solid-start-node";
 }
+
+const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts"]) => {
+  for (var ext of exts) {
+    const file = join(path, name + ext);
+    if (existsSync(file)) {
+      return file;
+    }
+  }
+  return null;
+};
 
 /**
  * @returns {import('vite').PluginOption[]}

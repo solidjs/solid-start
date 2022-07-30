@@ -20,6 +20,16 @@ globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("alpha");
 
+const findAny = (path, name) => {
+  for (var ext of [".js", ".ts", ".mjs", ".mts"]) {
+    const file = join(path, name + ext);
+    if (existsSync(file)) {
+      return file;
+    }
+  }
+  return null;
+};
+
 prog
   .command("dev")
   .describe("Start a development server")
@@ -28,6 +38,20 @@ prog
   .option("-c, --config", "Vite config file")
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config, open, port, root, host }) => {
+    root = root || process.cwd();
+    if (!config) {
+      if (!config) {
+        config = findAny(root, "start.config");
+      }
+      if (!config) {
+        config = findAny(root, "vite.config");
+      }
+
+      if (!config) {
+        config = join(root, "node_modules", "solid-start", "vite", "config.js");
+      }
+      DEBUG('config file: "%s"', config);
+    }
     if (open) setTimeout(() => launch(port), 1000);
     spawn(
       "vite",
@@ -47,9 +71,26 @@ prog
 
 prog
   .command("build")
+  .option("-r --root", "Root directory")
+  .option("-c, --config", "Vite config file")
   .describe("Create production build")
-  .action(async () => {
-    const config = await vite.resolveConfig({ mode: "production" }, "build");
+  .action(async ({ root, config: configFile }) => {
+    root = root || process.cwd();
+    if (!configFile) {
+      if (!configFile) {
+        configFile = findAny(root, "start.config");
+      }
+      if (!configFile) {
+        configFile = findAny(root, "vite.config");
+      }
+
+      if (!configFile) {
+        configFile = join(root, "node_modules", "solid-start", "vite", "config.js");
+      }
+      DEBUG('config file: "%s"', configFile);
+    }
+
+    const config = await vite.resolveConfig({ mode: "production", configFile, root }, "build");
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
@@ -94,6 +135,8 @@ prog
         let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
 
         await vite.build({
+          configFile: config.configFile,
+          root: config.root,
           build: {
             outDir: path,
             ssrManifest: true,
@@ -152,14 +195,32 @@ prog
 
         writeFileSync(join(path, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
       },
+      server: async path => {
+        await vite.build({
+          configFile: config.configFile,
+          root: config.root,
+          build: {
+            ssr: true,
+            outDir: path,
+            rollupOptions: {
+              input: config.solidOptions.entryServer,
+              output: {
+                format: "esm"
+              }
+            }
+          }
+        });
+      },
       client: async path => {
         await vite.build({
+          configFile: config.configFile,
+          root: config.root,
           build: {
             outDir: path,
             ssrManifest: true,
             minify: process.env.START_MINIFY === "false" ? false : "terser",
             rollupOptions: {
-              input: resolve(join(config.root, config.solidOptions.appRoot, `entry-client`)),
+              input: config.solidOptions.entryClient,
               output: {
                 manualChunks: undefined
               }
@@ -176,6 +237,13 @@ prog
         );
       },
       debug: DEBUG,
+      build: async conf => {
+        return await vite.build({
+          configFile: config.configFile,
+          root: config.root,
+          ...conf
+        });
+      },
       spaClient: async path => {
         DEBUG("spa build start");
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
@@ -187,10 +255,24 @@ prog
         } else {
           DEBUG("starting vite server for index.html");
           let port = await (await import("get-port")).default();
-          let proc = spawn("vite", ["dev", "--mode", "production", "--port", port], {
-            stdio: isDebug ? "inherit" : "ignore",
-            shell: true
-          });
+          let proc = spawn(
+            "vite",
+            [
+              "dev",
+              "--mode",
+              "production",
+              "--port",
+              port,
+              "--config",
+              config.configFile,
+              "--root",
+              config.root
+            ],
+            {
+              stdio: isDebug ? "inherit" : "ignore",
+              shell: true
+            }
+          );
           process.on("SIGINT", function () {
             proc.kill();
             process.exit();
@@ -220,6 +302,8 @@ prog
 
         process.env.START_SPA_CLIENT = "true";
         await vite.build({
+          configFile: config.configFile,
+          root: config.root,
           build: {
             outDir: path,
             minify: false,
@@ -255,9 +339,26 @@ prog
 
 prog
   .command("start")
-  .describe("Run production build")
-  .action(async () => {
-    const config = await vite.resolveConfig({ mode: "production" }, "build");
+  .option("-r --root", "Root directory")
+  .option("-c, --config", "Vite config file")
+  .describe("Start production build")
+  .action(async ({ root, config: configFile }) => {
+    root = root || process.cwd();
+    if (!configFile) {
+      if (!configFile) {
+        configFile = findAny(root, "start.config");
+      }
+      if (!configFile) {
+        configFile = findAny(root, "vite.config");
+      }
+
+      if (!configFile) {
+        configFile = join(root, "node_modules", "solid-start", "vite", "config.js");
+      }
+      DEBUG('config file: "%s"', configFile);
+    }
+
+    const config = await vite.resolveConfig({ mode: "production", configFile, root }, "build");
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
