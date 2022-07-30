@@ -2,11 +2,17 @@
 
 The easiest way to start building a SvelteKit app is to run npm init:
 
+## NPM
+
 ```bash
 npm init svelte@next my-app
-cd my-app
-npm install
-npm run dev
+cd my-app && npm install && npm run dev
+```
+## PNPM
+
+```bash
+pnpm create svelte@next my-app
+cd my-app && pnpm install && pnpm dev
 ```
 
 <terminal />
