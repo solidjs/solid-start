@@ -257,17 +257,7 @@ prog
           let port = await (await import("get-port")).default();
           let proc = spawn(
             "vite",
-            [
-              "dev",
-              "--mode",
-              "production",
-              "--port",
-              port,
-              "--config",
-              config.configFile,
-              "--root",
-              config.root
-            ],
+            ["dev", "--mode", "production", "--port", port, "--config", config.configFile],
             {
               stdio: isDebug ? "inherit" : "ignore",
               shell: true
