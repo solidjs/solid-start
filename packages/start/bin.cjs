@@ -75,22 +75,7 @@ prog
   .option("-c, --config", "Vite config file")
   .describe("Create production build")
   .action(async ({ root, config: configFile }) => {
-    root = root || process.cwd();
-    if (!configFile) {
-      if (!configFile) {
-        configFile = findAny(root, "start.config");
-      }
-      if (!configFile) {
-        configFile = findAny(root, "vite.config");
-      }
-
-      if (!configFile) {
-        configFile = join(root, "node_modules", "solid-start", "vite", "config.js");
-      }
-      DEBUG('config file: "%s"', configFile);
-    }
-
-    const config = await vite.resolveConfig({ mode: "production", configFile, root }, "build");
+    const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
@@ -257,7 +242,7 @@ prog
           let port = await (await import("get-port")).default();
           let proc = spawn(
             "vite",
-            ["dev", "--mode", "production", "--port", port, "--config", config.configFile],
+            ["dev", "--mode", "production", "--port", `${port}`, "--config", config.configFile],
             {
               stdio: isDebug ? "inherit" : "ignore",
               shell: true
@@ -333,22 +318,7 @@ prog
   .option("-c, --config", "Vite config file")
   .describe("Start production build")
   .action(async ({ root, config: configFile }) => {
-    root = root || process.cwd();
-    if (!configFile) {
-      if (!configFile) {
-        configFile = findAny(root, "start.config");
-      }
-      if (!configFile) {
-        configFile = findAny(root, "vite.config");
-      }
-
-      if (!configFile) {
-        configFile = join(root, "node_modules", "solid-start", "vite", "config.js");
-      }
-      DEBUG('config file: "%s"', configFile);
-    }
-
-    const config = await vite.resolveConfig({ mode: "production", configFile, root }, "build");
+    const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
@@ -376,6 +346,31 @@ prog
   });
 
 prog.parse(process.argv);
+
+/**
+ *
+ * @param {*} param0
+ * @returns {Promise<import('vite').ResolvedConfig & { solidOptions: import('./types').StartOptions }>}
+ */
+async function resolveConfig({ configFile, root, mode, command }) {
+  root = root || process.cwd();
+  if (!configFile) {
+    if (!configFile) {
+      configFile = findAny(root, "start.config");
+    }
+    if (!configFile) {
+      configFile = findAny(root, "vite.config");
+    }
+
+    if (!configFile) {
+      configFile = join(root, "node_modules", "solid-start", "vite", "config.js");
+    }
+    DEBUG('config file: "%s"', configFile);
+  }
+
+  let config = await vite.resolveConfig({ mode, configFile, root }, command);
+  return config;
+}
 
 function launch(port) {
   let cmd = "open";
