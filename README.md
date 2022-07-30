@@ -26,6 +26,12 @@ npm install
 npm run dev
 ```
 
+### Documentation
+
+If you are looking for the documentation website, go to [docs.solidjs.com/start](https://docs.solidjs.com/start).
+
+If you want to contribute to documentation, go to [solidjs/solid-docs-next](https://github.com/solidjs/solid-docs-next)
+
 ### Development
 
 The monorepo uses `pnpm` as the package manager. To install `pnpm`, run the following command in your terminal.
@@ -213,8 +219,6 @@ export function routeData() {
 
 </details>
 <details><summary><h3>🆕 HttpStatusCode, HttpHeaders</h3></summary>
-
-
 
 ```diff
 - const logoutAction = createServerAction(() => logout(server.request));
