@@ -9,10 +9,10 @@ export default function NotFound() {
       <h1>Page Not Found</h1>
       <p>
         Visit{" "}
-        <a href="https://solidjs.com" target="_blank">
-          solidjs.com
+        <a href="https://docs.solidjs.com/start" target="_blank">
+          docs.solidjs.com/start
         </a>{" "}
-        to learn how to build Solid apps.
+        to learn how to build SolidStart apps.
       </p>
     </main>
   );
