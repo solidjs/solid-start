@@ -17,7 +17,7 @@ export function renderAsync(
     let markup = await renderToStringAsync(() => fn(pageEvent), options);
 
     if (pageEvent.routerContext.url) {
-      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 308);
+      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
     }
 
     if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
@@ -105,7 +105,7 @@ export function renderStream(
     const stream = renderToStream(() => fn(pageEvent), options);
 
     if (pageEvent.routerContext.url) {
-      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 308);
+      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
     }
 
     if (pageEvent.routerContext.replaceOutletId) {

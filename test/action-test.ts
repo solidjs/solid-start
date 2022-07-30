@@ -36,7 +36,7 @@ test.describe("actions", () => {
           }
         `,
         "src/routes/server-action.tsx": js`
-          import { createServerAction } from 'solid-start/server';
+          import { createServerAction, ServerError } from 'solid-start/server';
 
           export default function Index() {
             const action = createServerAction(async (params) => {
@@ -44,7 +44,7 @@ test.describe("actions", () => {
               if (params.hello === "world") {
                 return "success";
               }
-              else throw new Error('Wrong planet');
+              else throw new ServerError('Wrong planet');
             })
 
             return (
@@ -60,7 +60,7 @@ test.describe("actions", () => {
           }
         `,
         "src/components/Action.tsx": js`
-          import { createServerAction } from 'solid-start/server';
+          import { createServerAction, ServerError } from 'solid-start/server';
         
           export function Action() {
             const action = createServerAction(async (params) => {
@@ -68,7 +68,7 @@ test.describe("actions", () => {
               if (params.hello === "world") {
                 return "success";
               }
-              else throw new Error('Wrong planet');
+              else throw new ServerError('Wrong planet');
             })
 
             return (
@@ -91,7 +91,7 @@ test.describe("actions", () => {
           }
         `,
         "src/routes/server-action-error-boundary.tsx": js`
-          import { createServerAction } from 'solid-start/server';
+          import { createServerAction, ServerError } from 'solid-start/server';
 
           export default function Index() {
             const action = createServerAction(async (params) => {
@@ -99,7 +99,7 @@ test.describe("actions", () => {
               if (params.hello === "world") {
                 return "success";
               }
-              else throw new Error('Wrong planet');
+              else throw new ServerError('Wrong planet');
             })
 
             return (
