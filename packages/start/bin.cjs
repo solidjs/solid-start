@@ -190,6 +190,7 @@ prog
             rollupOptions: {
               input: config.solidOptions.entryServer,
               output: {
+                inlineDynamicImports: true,
                 format: "esm"
               }
             }

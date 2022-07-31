@@ -14,7 +14,7 @@
     "solid-start-node": "workspace:*",
     "typescript": "^4.4.3",
     "undici": "^5.5.1",
-    "vite": "^3.0.2",
+    "vite": "^3.0.4",
     "vite-plugin-windicss": "^1.6.3",
     "windicss": "^3.4.3"
   },

@@ -33,7 +33,7 @@
   "exports": {
     ".": "./index.tsx",
     "./vite": {
-      "types": "./plugin.d.ts",
+      "types": "./vite/plugin.d.ts",
       "import": "./vite/plugin.js"
     },
     "./addons/*": "./addons/*",
