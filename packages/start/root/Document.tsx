@@ -1,4 +1,4 @@
-import { children, createRenderEffect } from "solid-js";
+import { children } from "solid-js";
 import { insert, resolveSSRNode, ssrSpread } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
@@ -7,7 +7,7 @@ import Scripts from "./Scripts";
 let spread = (props: any, isSvg: boolean, skipChildren: boolean) =>
   // @ts-ignore
   ssrSpread(props, isSvg, skipChildren);
-  
+
 export function Html(props) {
   if (import.meta.env.MPA) {
   }
@@ -16,17 +16,7 @@ export function Html(props) {
         ${resolveSSRNode(children(() => props.children))}
       </html>
     `;
-  } else {
-    if (import.meta.env.START_SSR) {
-      createRenderEffect(() => {
-        children(() => props.children);
-      });
-
-      return document;
-    }
-
-    return <>{props.children}</>;
-  }
+  } else return props.children;
 }
 
 export function Head(props) {
@@ -43,17 +33,7 @@ export function Head(props) {
         )}
       </head>
     `;
-  } else {
-    if (import.meta.env.START_SSR) {
-      createRenderEffect(() => {
-        children(() => props.children);
-      });
-
-      return document.head;
-    }
-
-    return <>{props.children}</>;
-  }
+  } else return props.children;
 }
 
 export function Body(props) {

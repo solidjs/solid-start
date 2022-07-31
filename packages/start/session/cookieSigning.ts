@@ -8,7 +8,7 @@ export type InternalUnsignFunctionDoNotUseMe = (
   secret: string
 ) => Promise<string | false>;
 
-const encoder = new TextEncoder();
+const encoder = /*#__PURE__*/new TextEncoder();
 
 export const sign: InternalSignFunctionDoNotUseMe = async (value, secret) => {
   let key = await createKey(secret, ["sign"]);

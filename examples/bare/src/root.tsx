@@ -4,7 +4,6 @@ import { Body, ErrorBoundary, FileRoutes, Head, Html, Meta, Routes, Scripts } fr
 import "./root.css";
 
 export default function Root() {
-  DEBUG("hello-world");
   return (
     <Html lang="en">
       <Head>
