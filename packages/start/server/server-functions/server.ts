@@ -15,6 +15,7 @@ import {
 } from "../responses";
 import { ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
+export type { ApiFetchEvent } from "../../api/types";
 
 export const server: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");

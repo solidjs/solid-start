@@ -38,7 +38,7 @@ export interface FetchEvent {
   env: {
     manifest?: Record<string, ManifestEntry[] | IslandManifest>;
     collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
-    devManifest: [{ path: string; componentPath: string; id: string }];
+    devManifest?: [{ path: string; componentPath: string; id: string }];
   };
 }
 

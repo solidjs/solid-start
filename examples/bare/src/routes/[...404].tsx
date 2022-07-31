@@ -1,11 +1,11 @@
 import { Title } from "@solidjs/meta";
-import { StatusCode } from "solid-start/server";
+import { HttpStatusCode } from "solid-start/server";
 
 export default function NotFound() {
   return (
     <main>
       <Title>Not Found</Title>
-      <StatusCode code={404} />
+      <HttpStatusCode code={404} />
       <h1>Page Not Found</h1>
       <p>
         Visit{" "}
