@@ -2,21 +2,17 @@ import { onCleanup, useContext } from "solid-js";
 import { isServer } from "solid-js/web";
 import { ServerContext } from "../ServerContext";
 
-export function HttpHeader(props: { headers: object }) {
+export function HttpHeader(props: { name: string; value: string }) {
   const pageContext = useContext(ServerContext);
 
   if (isServer) {
-    for (const [name, value] of Object.entries(props.headers)) {
-      pageContext.responseHeaders.set(name, value);
-    }
+    pageContext.responseHeaders.set(props.name, props.value);
   }
 
   onCleanup(() => {
     if (isServer) {
       console.log("cleaning up");
-      for (const [name] of Object.entries(props.headers)) {
-        pageContext.responseHeaders.delete(name);
-      }
+      pageContext.responseHeaders.delete(props.name);
     }
   });
 

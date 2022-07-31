@@ -218,7 +218,7 @@ export function routeData() {
 ```
 
 </details>
-<details><summary><h3>🆕 HttpStatusCode, HttpHeaders</h3></summary>
+<details><summary><h3>🆕 HttpStatusCode, HttpHeader</h3></summary>
 
 ```diff
 - const logoutAction = createServerAction(() => logout(server.request));
