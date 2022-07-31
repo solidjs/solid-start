@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.1.0-alpha.95",
+  "version": "0.1.0-alpha.96",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -93,23 +93,23 @@
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
+    "@solidjs/meta": "0.28.0",
+    "@solidjs/router": "0.4.2",
     "@types/debug": "^4.1.7",
     "@types/wait-on": "^5.3.1",
-    "@solidjs/router": "0.4.2",
     "solid-js": "1.4.7",
-    "@solidjs/meta": "0.28.0",
-    "solid-start-cloudflare-pages": "0.1.0-alpha.95",
-    "solid-start-cloudflare-workers": "0.1.0-alpha.95",
-    "solid-start-deno": "0.1.0-alpha.95",
-    "solid-start-netlify": "0.1.0-alpha.95",
-    "solid-start-node": "0.1.0-alpha.95",
-    "solid-start-static": "0.1.0-alpha.95",
+    "solid-start-cloudflare-pages": "^0.1.0-alpha.96",
+    "solid-start-cloudflare-workers": "^0.1.0-alpha.96",
+    "solid-start-deno": "^0.1.0-alpha.96",
+    "solid-start-netlify": "^0.1.0-alpha.96",
+    "solid-start-node": "^0.1.0-alpha.96",
+    "solid-start-static": "^0.1.0-alpha.96",
     "vite": "^3.0.2"
   },
   "peerDependencies": {
+    "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.2",
     "solid-js": "^1.4.7",
-    "@solidjs/meta": "^0.28.0",
     "vite": "^3.0.2"
   }
 }
