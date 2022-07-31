@@ -130,12 +130,12 @@ export class Router {
             }).code
           );
 
-          if (exports.includes("default")) {
+          if (exports.find($=>$.n === "default")) {
             routeConfig.componentPath = path;
           }
 
           for (var method of API_METHODS) {
-            if (exports.includes(method)) {
+            if (exports.find($=>$.n === method)) {
               if (!routeConfig.apiPath) {
                 routeConfig.apiPath = {};
               }
@@ -145,7 +145,7 @@ export class Router {
             }
           }
 
-          if (exports.includes("routeData")) {
+          if (exports.find($=>$.n === "routeData")) {
             routeConfig.dataPath = path + "?data";
             // this.setRouteData(id, path + "?data");
             // dataFn = src.replace("tsx", "data.ts");
