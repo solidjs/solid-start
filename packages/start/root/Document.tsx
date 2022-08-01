@@ -1,4 +1,4 @@
-import { children } from "solid-js";
+import { children, ComponentProps } from "solid-js";
 import { insert, resolveSSRNode, ssrSpread } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
@@ -8,7 +8,7 @@ let spread = (props: any, isSvg: boolean, skipChildren: boolean) =>
   // @ts-ignore
   ssrSpread(props, isSvg, skipChildren);
 
-export function Html(props) {
+export function Html(props: ComponentProps<"html">) {
   if (import.meta.env.MPA) {
   }
   if (import.meta.env.SSR) {
@@ -19,7 +19,7 @@ export function Html(props) {
   } else return props.children;
 }
 
-export function Head(props) {
+export function Head(props: ComponentProps<"head">) {
   if (import.meta.env.SSR) {
     return `<head ${spread(props, false, true)}>
         ${resolveSSRNode(
@@ -36,7 +36,7 @@ export function Head(props) {
   } else return props.children;
 }
 
-export function Body(props) {
+export function Body(props: ComponentProps<"body">) {
   if (import.meta.env.SSR) {
     return `<body ${spread(props, false, true)}>${
       import.meta.env.START_SSR
