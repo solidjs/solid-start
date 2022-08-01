@@ -2,7 +2,7 @@ import debug from "debug";
 import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
-import { normalizePath } from "vite";
+import { loadEnv, normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
@@ -339,9 +339,14 @@ function solidStartConfig(options) {
   return {
     name: "solid-start-config",
     enforce: "pre",
-    config(conf) {
+    async config(conf, e) {
       const root = conf.root || process.cwd();
       options.root = root;
+
+      // Load env file based on `mode` in the current working directory.
+      // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+      options.env = await loadEnv(e.mode, process.cwd(), "");
+
       options.entryClient = findAny(join(options.root, options.appRoot), "entry-client");
       if (!options.entryClient) {
         options.entryClient = join(
@@ -377,8 +382,19 @@ function solidStartConfig(options) {
       DEBUG(options);
 
       return {
+        test: {
+          transformMode: {
+            web: [/\.[tj]sx?$/]
+          },
+          setupFiles: "node_modules/solid-start/vitest.setup.ts",
+          // solid needs to be inline to work around
+          // a resolution issue in vitest:
+          deps: {
+            inline: [/solid-js/]
+          }
+        },
         resolve: {
-          conditions: ["solid"],
+          conditions: options.env["VITEST"] ? ["browser", "solid"] : ["solid"],
           alias: {
             "~": path.join(root, options.appRoot),
             "~start/root": options.appRootFile,
