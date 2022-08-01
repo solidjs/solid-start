@@ -12,6 +12,17 @@ import routeDataHmr from "./server/routeDataHmr.js";
 import routeResource from "./server/serverResource.js";
 import { solidStartClientAdpater } from "./client-adapter.js";
 
+function resolveBabelOptions(options, source, id, ssr, plugins) {
+  const baseOptions = options?.babel ?? {};
+  const processedOptions = typeof baseOptions === 'function'
+    ? baseOptions(source, id, ssr)
+    : baseOptions;
+
+  processedOptions.push(...plugins)
+  
+  return processedOptions;
+}
+
 /**
  * Helper function to get a human readable name for the given HTTP Verb
  * @param {string} verb
@@ -192,19 +203,19 @@ function solidStartFileSystemRouter(options) {
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
 
       if (/\.test\.(tsx)/.test(id) && config.solidOptions.ssr) {
-        return babelSolidCompiler(code, id, (source, id) => ({
-          plugins: [
+        return babelSolidCompiler(code, id, (source, id) => (
+          resolveBabelOptions(options, source, id, [
             options.ssr && [
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ]
-          ]
-        }));
+          ])
+        ));
       }
 
       if (/\.data\.(ts|js)/.test(id) && config.solidOptions.ssr) {
-        return babelSolidCompiler(code, id.replace(/\.data\.ts/, ".tsx"), (source, id) => ({
-          plugins: [
+        return babelSolidCompiler(code, id.replace(/\.data\.ts/, ".tsx"), (source, id) => (
+          resolveBabelOptions(options, source, id, [
             [
               routeResource,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
@@ -213,11 +224,11 @@ function solidStartFileSystemRouter(options) {
               babelServerModule,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
             ]
-          ]
-        }));
+          ])
+        ));
       } else if (/\?data/.test(id)) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
-          plugins: [
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => (
+          resolveBabelOptions(options, source, id, [
             [
               routeResource,
               { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
@@ -232,11 +243,11 @@ function solidStartFileSystemRouter(options) {
             ],
             !ssr &&
               process.env.NODE_ENV !== "production" && [routeDataHmr, { ssr, root: process.cwd() }]
-          ].filter(Boolean)
-        }));
+          ].filter(Boolean))
+        ));
       } else if (id.includes("routes")) {
-        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => ({
-          plugins: [
+        return babelSolidCompiler(code, id.replace("?data", ""), (source, id) => (
+          resolveBabelOptions(options, source, id, [
             [
               routeResource,
               {
@@ -259,20 +270,20 @@ function solidStartFileSystemRouter(options) {
                 minify: process.env.NODE_ENV === "production"
               }
             ]
-          ].filter(Boolean)
-        }));
+          ].filter(Boolean))
+        ));
       } else if (code.includes("server(")) {
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
-          (source, id) => ({
-            plugins: [
+          (source, id) => (
+            resolveBabelOptions(options, source, id, [
               options.ssr && [
                 babelServerModule,
                 { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
               ]
-            ].filter(Boolean)
-          })
+            ].filter(Boolean))
+          )
         );
       } else if (code.includes("var routes = $ROUTES;")) {
         return {
@@ -430,23 +441,10 @@ export default function solidStart(options) {
     solid({
       ...(options ?? {}),
       babel: (source, id, ssr) => {
-        const baseOptions = options?.babel ?? {};
-        const processedOptions = typeof baseOptions === 'function'
-          ? baseOptions(source, id, ssr)
-          : baseOptions;
-
-        if (options.ssr) {
-          if (!processedOptions.plugins) {
-            processedOptions.plugins = [];
-          }
-          // NOTE push or shift?
-          processedOptions.plugins.push([
-            babelServerModule,
-            { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-          ])
-        }
-        
-        return processedOptions;
+        return resolveBabelOptions(options, source, id, ssr, [
+          babelServerModule,
+          { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+        ]);
       },
     }),
     options.ssr && solidStartSSR(options),
