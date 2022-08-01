@@ -165,7 +165,7 @@ export default function Root() {
 
 #### Why?
 
-- We changed how we declare our routes to make it more flexible. Earlier we gave you a `Routes` component from `solid-start` that was equivalent to rendering a `Routes` from `solid-app-router` (yeah we know its confusing, that's why we are changing it) and filling it with the routes from the file system. The opt-in to the file-system routing was all-in or nothing. You didn't have an opportunity to add more `Route`s. We now export `FileRoutes` from `solid-start` that represents the route config based on the file-system. It is meant to be passed to the `Routes` component from `solid-start` or wherever you want to use the file-system routes config.
+- We changed how we declare our routes to make it more flexible. Earlier we gave you a `Routes` component from `solid-start` that was equivalent to rendering a `Routes` from `@solidjs/router` (yeah we know its confusing, that's why we are changing it) and filling it with the routes from the file system. The opt-in to the file-system routing was all-in or nothing. You didn't have an opportunity to add more `Route`s. We now export `FileRoutes` from `solid-start` that represents the route config based on the file-system. It is meant to be passed to the `Routes` component from `solid-start` or wherever you want to use the file-system routes config.
   - You can use it together with other `Route` components.
     ```typescript
     <Routes>
@@ -182,8 +182,8 @@ export default function Root() {
 - For consistency between the SSR and client-side rendering modes, we needed to take more control of `root.tsx` specifically, we couldnt just take `<html></html>` and `<head></head>` tags and allow them to be part of the component tree since we can't client-side render the whole document. We only really get to take over `document.body`. We needed to ship with special `Html`, `Head`, and `Body` components that you use in `root.tsx` instead of the lower-case counterparts. These document flow components know what to do whether you are in SSR mode on or off.
 - We can avoid you having to include `Meta` and `Links` from `solid-start/root` in your `head` since we do it by default.
 - We will always use the title-case variants of the tags used in `head` (eg. `Link` > `link`, `Style` > `style`, `Meta` > `meta`) for consistency throughout the app
-- `solid-meta` is renamed to `@solidjs/meta`
-- `solid-app-router` is renamed to `@solidjs/router`
+- `@solidjs/meta` is renamed to `@solidjs/meta`
+- `@solidjs/router` is renamed to `@solidjs/router`
 - `solid-start` exports all the components meant to be used in your app and these components work on the client and server. Sometimes they are the same on both, and other times they coordinate between the two.
 
 - Now, our `root.tsx` even more closely replicates how you would be writing your `index.html`. And this was intentionally done so that we could enable an SPA mode for you that used the same code as the SSR mode without changing anything. How we do this? At build time for SPA mode, we quickly run the vite server, and make a request for your app's index and we tell our `Body` component not to render anything. So the index.html we get is the one you would have written. We then use that `index.html` as your entrypoint. You can still write your own `index.html` if you don't want to use this functionality.

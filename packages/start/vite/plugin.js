@@ -389,6 +389,9 @@ function solidStartConfig(options) {
         ssr: {
           noExternal: ["@solidjs/router", "@solidjs/meta", "solid-start"]
         },
+        optimizeDeps: {
+          include: ["debug"]
+        },
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),

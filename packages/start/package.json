@@ -8,7 +8,8 @@
     "solid-start": "./bin.cjs",
     "solid": "./bin.cjs"
   },
-  "main": "./index.ts",
+  "main": "./index.tsx",
+  "types": "./index.tsx",
   "type": "module",
   "files": [
     "api",
