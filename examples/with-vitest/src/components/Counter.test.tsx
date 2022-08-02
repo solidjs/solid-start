@@ -14,10 +14,7 @@ describe("<Counter />", () => {
   });
 
   it("renders 1", ({ expect }) => {
-    expect.extend({})
-    console.log(expect);
     const { container, unmount } = render(() => <Counter />);
-    console.log(container, unmount);
     expect(container).toMatchSnapshot();
     unmount();
   });
