@@ -258,12 +258,12 @@ importers:
       sade: ^1.8.1
       sirv: ^2.0.2
       solid-js: 1.4.7
-      solid-start-cloudflare-pages: 0.1.0-alpha.96
-      solid-start-cloudflare-workers: 0.1.0-alpha.96
-      solid-start-deno: 0.1.0-alpha.96
-      solid-start-netlify: 0.1.0-alpha.96
-      solid-start-node: 0.1.0-alpha.96
-      solid-start-static: 0.1.0-alpha.96
+      solid-start-cloudflare-pages: 0.1.0-alpha.98
+      solid-start-cloudflare-workers: 0.1.0-alpha.98
+      solid-start-deno: 0.1.0-alpha.98
+      solid-start-netlify: 0.1.0-alpha.98
+      solid-start-node: 0.1.0-alpha.98
+      solid-start-static: 0.1.0-alpha.98
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.4
@@ -318,7 +318,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.96
+      solid-start: 0.1.0-alpha.98
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -338,7 +338,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.96
+      solid-start: 0.1.0-alpha.98
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -358,7 +358,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.96
+      solid-start: 0.1.0-alpha.98
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -382,7 +382,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^3.2.9
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.96
+      solid-start: 0.1.0-alpha.98
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -409,7 +409,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.77.2
       sirv: ^2.0.2
-      solid-start: 0.1.0-alpha.96
+      solid-start: 0.1.0-alpha.98
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.4
@@ -431,7 +431,7 @@ importers:
     specifiers:
       sirv-cli: 2.0.2
       solid-ssr: ^1.4.8
-      solid-start: 0.1.0-alpha.96
+      solid-start: 0.1.0-alpha.98
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.4
@@ -450,7 +450,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.96
+      solid-start: 0.1.0-alpha.98
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
