@@ -29,7 +29,7 @@
     "strip-indent": "^4.0.0",
     "undici": "^5.5.1",
     "vite": "^3.0.4",
-    "vitest": "^0.16.0",
+    "vitest": "^0.20.2",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
