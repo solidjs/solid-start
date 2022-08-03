@@ -64,7 +64,7 @@ export default defineConfig({
 
 Why?
 
-- We wanted to use the main entry point of `solid-start` for use within the app where you are spending most of your time. And for the `vite` config, we use `solid-start/vite` entrypoint.
+- We wanted to use the main entry point of `solid-start` for use within the app where you are spending most of your time. And for the `vite` config, we use the `solid-start/vite` entrypoint.
 </details>
 <details><summary><h3><mono>entry-server.tsx</mono></h3></summary>
 
@@ -182,9 +182,10 @@ export default function Root() {
 - For consistency between the SSR and client-side rendering modes, we needed to take more control of `root.tsx` specifically, we couldnt just take `<html></html>` and `<head></head>` tags and allow them to be part of the component tree since we can't client-side render the whole document. We only really get to take over `document.body`. We needed to ship with special `Html`, `Head`, and `Body` components that you use in `root.tsx` instead of the lower-case counterparts. These document flow components know what to do whether you are in SSR mode on or off.
 - We can avoid you having to include `Meta` and `Links` from `solid-start/root` in your `head` since we do it by default.
 - We will always use the title-case variants of the tags used in `head` (eg. `Link` > `link`, `Style` > `style`, `Meta` > `meta`) for consistency throughout the app
-- `@solidjs/meta` is renamed to `@solidjs/meta`
-- `@solidjs/router` is renamed to `@solidjs/router`
+- `solid-meta` is renamed to `@solidjs/meta`
+- `solid-app-router` is renamed to `@solidjs/router`
 - `solid-start` exports all the components meant to be used in your app and these components work on the client and server. Sometimes they are the same on both, and other times they coordinate between the two.
+
 
 - Now, our `root.tsx` even more closely replicates how you would be writing your `index.html`. And this was intentionally done so that we could enable an SPA mode for you that used the same code as the SSR mode without changing anything. How we do this? At build time for SPA mode, we quickly run the vite server, and make a request for your app's index and we tell our `Body` component not to render anything. So the index.html we get is the one you would have written. We then use that `index.html` as your entrypoint. You can still write your own `index.html` if you don't want to use this functionality.
 
@@ -207,6 +208,8 @@ export function routeData() {
 }
 ```
 
+- Renamed `createServerResource` to `createServerData`, and `createRouteResource` to `createRouteData`: We renamed `createServerResource` to `createServerData` because we were not using the `createResource` signature and that was confusing. We just return one single signal from `createServerData` instead of a tuple like `createResource` does.
+
 </details>
 
 <details><summary><h3>createServerAction</h3></summary>
@@ -217,13 +220,20 @@ export function routeData() {
 
 ```
 
+We pass in a `ServerFunctionEvent` which has a `request` field as the second argument to server actions. You can use this to access to the HTTP Request sent for your action and get the headers from it for things like auth.
+
 </details>
 <details><summary><h3>🆕 HttpStatusCode, HttpHeader</h3></summary>
 
-```diff
-- const logoutAction = createServerAction(() => logout(server.request));
-+ const logoutAction = createServerAction((_, { request }) => logout(request));
-
+```tsx
+export default function NotFound() {
+  return (
+    <div>
+      <HttpStatusCode code={404} />
+      <HttpHeader name="my-header" value="header-value" />
+    </div>
+  );
+}
 ```
 
 </details>
