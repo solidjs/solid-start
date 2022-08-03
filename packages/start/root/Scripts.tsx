@@ -32,7 +32,7 @@ export default function Scripts() {
               <script
                 type="module"
                 async
-                src={import.meta.env.START_ENTRY_CLIENT}
+                src={"/@fs/" + import.meta.env.START_ENTRY_CLIENT}
                 $ServerOnly
               ></script>
             </>
