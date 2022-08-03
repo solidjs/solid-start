@@ -1,18 +1,16 @@
-# SolidStart
+# SolidStart Hackernews Example
 
-Everything you need to build a Solid project, powered by [`solid-start`](https://github.com/ryansolid/solid-start/tree/master/packages/solid-start);
-
-## Creating a project
+Hackernews example powered by [`solid-start`](https://github.com/ryansolid/solid-start/tree/master/packages/solid-start);
 
 ```bash
-# create a new project in the current directory
-npm init solid@next
-
-# create a new project in my-app
-npm init solid@next my-app
+npm init solid@next -- --template hackernews
 ```
 
 > Note: the `@next` is temporary
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/solidjs/solid-start/tree/main/examples/hackernews)
+
+This example showcases Astro working with [Lit](https://lit.dev/).
 
 ## Developing
 
@@ -27,6 +25,6 @@ npm run dev -- --open
 
 ## Building
 
-Solid apps are built with _adapters_, which optimise your project for deployment to different environments.
+SolidStart apps are built with _adapters_, which optimise your project for deployment to different environments.
 
-By default, `npm run build` will generate a Node app that you can run with `node build`. To use a different adapter, add it to the `devDependencies` in `package.json` and specify in your `vite.config.js`.
+By default, `npm run build` will generate a Node app that you can run with `node ./dist/server.js`. To use a different adapter, add it to the `devDependencies` in `package.json` and specify in your `vite.config.js`.
