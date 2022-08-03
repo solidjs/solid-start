@@ -1,13 +1,9 @@
-import { createServer } from "solid-start-node/server.js";
-import prepareManifest from "solid-start/runtime/prepareManifest.js";
-import "solid-start/runtime/node-globals.js";
-import manifest from "../../dist/public/rmanifest.json";
-import assetManifest from "../../dist/public/manifest.json";
-import entry from "./app";
 import { dirname, join } from "path";
+import { createServer } from "solid-start-node/server.js";
+import "solid-start/node/globals.js";
 import { fileURLToPath } from "url";
-
-prepareManifest(manifest, assetManifest);
+import manifest from "../../dist/public/route-manifest.json";
+import handler from "./handler.js";
 
 const { PORT = 3000 } = process.env;
 
@@ -18,7 +14,7 @@ const paths = {
 
 const server = createServer({
   paths,
-  entry,
+  handler,
   manifest
 });
 

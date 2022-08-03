@@ -4,8 +4,31 @@
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const vite = require("vite");
+const { resolve, join } = require("path");
+const {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  renameSync,
+  mkdirSync,
+  copyFileSync
+} = require("fs");
+const waitOn = require("wait-on");
+
+const DEBUG = require("debug")("start");
+globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("alpha");
+
+const findAny = (path, name) => {
+  for (var ext of [".js", ".ts", ".mjs", ".mts"]) {
+    const file = join(path, name + ext);
+    if (existsSync(file)) {
+      return file;
+    }
+  }
+  return null;
+};
 
 prog
   .command("dev")
@@ -15,6 +38,20 @@ prog
   .option("-c, --config", "Vite config file")
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config, open, port, root, host }) => {
+    root = root || process.cwd();
+    if (!config) {
+      if (!config) {
+        config = findAny(root, "start.config");
+      }
+      if (!config) {
+        config = findAny(root, "vite.config");
+      }
+
+      if (!config) {
+        config = join(root, "node_modules", "solid-start", "vite", "config.js");
+      }
+      DEBUG('config file: "%s"', config);
+    }
     if (open) setTimeout(() => launch(port), 1000);
     spawn(
       "vite",
@@ -34,26 +71,269 @@ prog
 
 prog
   .command("build")
+  .option("-r --root", "Root directory")
+  .option("-c, --config", "Vite config file")
   .describe("Create production build")
-  .action(async () => {
-    const config = await vite.resolveConfig({ mode: "production" }, "build");
+  .action(async ({ root, config: configFile }) => {
+    const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
     }
-    adapter.build(config);
+    const { default: prepareManifest } = await import("./fs-router/manifest.js");
+
+    adapter.build(config, {
+      islandsClient: async path => {
+        let routeManifestPath = join(config.root, ".solid", "route-manifest");
+        await vite.build({
+          build: {
+            outDir: routeManifestPath,
+            ssrManifest: true,
+            minify: process.env.START_MINIFY === "false" ? false : "terser",
+            rollupOptions: {
+              input: [
+                resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
+              ],
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+
+        let assetManifest = JSON.parse(
+          readFileSync(join(routeManifestPath, "manifest.json")).toString()
+        );
+        let ssrManifest = JSON.parse(
+          readFileSync(join(routeManifestPath, "ssr-manifest.json")).toString()
+        );
+
+        writeFileSync(
+          join(routeManifestPath, "route-manifest.json"),
+          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
+        );
+
+        let routeManifest = JSON.parse(
+          readFileSync(join(routeManifestPath, "route-manifest.json")).toString()
+        );
+
+        let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
+
+        await vite.build({
+          configFile: config.configFile,
+          root: config.root,
+          build: {
+            outDir: path,
+            ssrManifest: true,
+            minify: process.env.START_MINIFY === "false" ? false : "terser",
+            rollupOptions: {
+              input: [
+                resolve(join(config.root, config.solidOptions.appRoot, `entry-client`)),
+                ...islands.map(i => resolve(join(config.root, i)))
+              ],
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+
+        assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
+        ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+
+        let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, islands);
+
+        let newManifest = {
+          ...Object.fromEntries(
+            Object.entries(routeManifest)
+              .filter(([k]) => k.startsWith("/"))
+              .map(([k, v]) => [k, v.filter(a => a.type !== "script")])
+          ),
+          ...Object.fromEntries(
+            Object.entries(islandsManifest)
+              .filter(([k]) => k.endsWith("?island"))
+              .map(([k, v]) => [
+                k,
+                {
+                  script: v.script,
+                  assets: [
+                    ...v.assets.filter(a => a.type === "script"),
+                    ...routeManifest[k].assets.filter(a => a.type === "style")
+                  ]
+                }
+              ])
+          ),
+          "entry-client": [
+            ...islandsManifest["entry-client"].filter(a => a.type === "script"),
+            ...routeManifest["entry-client"].filter(a => a.type === "style")
+          ]
+        };
+
+        Object.values(newManifest).forEach(v => {
+          let assets = Array.isArray(v) ? v : v.assets;
+          assets.forEach(a => {
+            if (a.type === "style") {
+              copyFileSync(join(routeManifestPath, a.href), join(path, a.href));
+            }
+          });
+        });
+
+        writeFileSync(join(path, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
+      },
+      server: async path => {
+        await vite.build({
+          configFile: config.configFile,
+          root: config.root,
+          build: {
+            ssr: true,
+            outDir: path,
+            rollupOptions: {
+              input: config.solidOptions.entryServer,
+              output: {
+                inlineDynamicImports: true,
+                format: "esm"
+              }
+            }
+          }
+        });
+      },
+      client: async path => {
+        await vite.build({
+          configFile: config.configFile,
+          root: config.root,
+          build: {
+            outDir: path,
+            ssrManifest: true,
+            minify: process.env.START_MINIFY === "false" ? false : "terser",
+            rollupOptions: {
+              input: config.solidOptions.entryClient,
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+
+        let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
+        let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+
+        writeFileSync(
+          join(path, "route-manifest.json"),
+          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
+        );
+      },
+      debug: DEBUG,
+      build: async conf => {
+        return await vite.build({
+          configFile: config.configFile,
+          root: config.root,
+          ...conf
+        });
+      },
+      spaClient: async path => {
+        DEBUG("spa build start");
+        let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
+        mkdirSync(join(config.root, ".solid"), { recursive: true });
+
+        let indexHtml;
+        if (existsSync(join(config.root, "index.html"))) {
+          indexHtml = join(config.root, "index.html");
+        } else {
+          DEBUG("starting vite server for index.html");
+          let port = await (await import("get-port")).default();
+          let proc = spawn(
+            "vite",
+            ["dev", "--mode", "production", "--port", `${port}`, "--config", config.configFile],
+            {
+              stdio: isDebug ? "inherit" : "ignore",
+              shell: true
+            }
+          );
+          process.on("SIGINT", function () {
+            proc.kill();
+            process.exit();
+          });
+          await waitOn({
+            resources: [`http://localhost:${port}/`],
+            verbose: isDebug
+          });
+
+          DEBUG("started vite server for index.html");
+
+          writeFileSync(
+            join(config.root, ".solid", "index.html"),
+            await (
+              await import("./dev/create-index-html.js")
+            ).createHTML(`http://localhost:${port}/`)
+          );
+
+          indexHtml = join(config.root, ".solid", "index.html");
+
+          DEBUG("spa index.html created");
+
+          proc.kill();
+        }
+
+        DEBUG("building client bundle");
+
+        process.env.START_SPA_CLIENT = "true";
+        await vite.build({
+          configFile: config.configFile,
+          root: config.root,
+          build: {
+            outDir: path,
+            minify: false,
+            ssrManifest: true,
+            rollupOptions: {
+              input: indexHtml,
+              output: {
+                manualChunks: undefined
+              }
+            }
+          }
+        });
+        process.env.START_SPA_CLIENT = "false";
+
+        if (indexHtml === join(config.root, ".solid", "index.html")) {
+          renameSync(join(path, ".solid", "index.html"), join(path, "index.html"));
+        }
+
+        DEBUG("built client bundle");
+
+        let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
+        let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+
+        writeFileSync(
+          join(path, "route-manifest.json"),
+          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
+        );
+
+        DEBUG("wrote route manifest");
+      }
+    });
   });
 
 prog
   .command("start")
-  .describe("Run production build")
-  .action(async () => {
-    const config = await vite.resolveConfig({ mode: "production" }, "build");
+  .option("-r --root", "Root directory")
+  .option("-c, --config", "Vite config file")
+  .describe("Start production build")
+  .action(async ({ root, config: configFile }) => {
+    const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
     }
-    adapter.start(config);
+    let url = await adapter.start(config);
+    if (url) {
+      const { Router } = await import("./fs-router/router.js");
+      const { default: printUrls } = await import("./dev/print-routes.js");
+      const router = new Router({
+        baseDir: join(config.solidOptions.appRoot, config.solidOptions.routesDir)
+      });
+      await router.init();
+      printUrls(router, url);
+    }
   });
 
 prog
@@ -67,6 +347,31 @@ prog
   });
 
 prog.parse(process.argv);
+
+/**
+ *
+ * @param {*} param0
+ * @returns {Promise<import('vite').ResolvedConfig & { solidOptions: import('./types').StartOptions }>}
+ */
+async function resolveConfig({ configFile, root, mode, command }) {
+  root = root || process.cwd();
+  if (!configFile) {
+    if (!configFile) {
+      configFile = findAny(root, "start.config");
+    }
+    if (!configFile) {
+      configFile = findAny(root, "vite.config");
+    }
+
+    if (!configFile) {
+      configFile = join(root, "node_modules", "solid-start", "vite", "config.js");
+    }
+    DEBUG('config file: "%s"', configFile);
+  }
+
+  let config = await vite.resolveConfig({ mode, configFile, root }, command);
+  return config;
+}
 
 function launch(port) {
   let cmd = "open";

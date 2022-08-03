@@ -1,25 +1,37 @@
-import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
-import manifest from "../../dist/rmanifest.json";
-import assetManifest from "../../dist/manifest.json";
-import prepareManifest from "solid-start/runtime/prepareManifest";
-import entry from "./app";
+import { getAssetFromKV, MethodNotAllowedError, NotFoundError } from "@cloudflare/kv-asset-handler";
+import manifestJSON from "__STATIC_CONTENT_MANIFEST";
+import manifest from "../../dist/public/route-manifest.json";
+import handler from "./handler";
 
-prepareManifest(manifest, assetManifest);
+const assetManifest = JSON.parse(manifestJSON);
 
-addEventListener("fetch", event => {
-  console.log(`Received new request: ${event.request.url}`);
-  event.respondWith(handleEvent(event));
-});
-
-async function handleEvent(event) {
-  try {
-    let asset = await getAssetFromKV(event);
-    return asset;
-  } catch (err) {
-    return entry({
-      request: event.request,
-      responseHeaders: new Headers(),
-      manifest
+export default {
+  async fetch(request, env, ctx) {
+    env.manifest = manifest;
+    env.getAssetFromKV = async request => {
+      return await getAssetFromKV(
+        {
+          request,
+          waitUntil(promise) {
+            return ctx.waitUntil(promise);
+          }
+        },
+        {
+          ASSET_NAMESPACE: env.__STATIC_CONTENT,
+          ASSET_MANIFEST: assetManifest
+        }
+      );
+    };
+    try {
+      return await env.getAssetFromKV(request);
+    } catch (e) {
+      if (!(e instanceof NotFoundError || e instanceof MethodNotAllowedError)) {
+        return new Response("An unexpected error occurred", { status: 500 });
+      }
+    }
+    return handler({
+      request: request,
+      env
     });
   }
-}
+};

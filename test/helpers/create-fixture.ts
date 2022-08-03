@@ -1,16 +1,16 @@
-import path from "path";
+import { test } from "@playwright/test";
+import spawn, { sync as spawnSync } from "cross-spawn";
 import fse from "fs-extra";
-import type { Writable } from "stream";
 import getPort from "get-port";
-import stripIndent from "strip-indent";
+import path from "path";
 import c from "picocolors";
+import stripIndent from "strip-indent";
 import { fileURLToPath, pathToFileURL } from "url";
-import { sync as spawnSync } from "cross-spawn";
+import waitOn from "wait-on";
 
-import type { RequestContext } from "solid-start/server/types.js";
-import "solid-start/runtime/node-globals.js";
-import prepareManifest from "solid-start/runtime/prepareManifest.js";
 import { createServer } from "solid-start-node/server.js";
+import "solid-start/node/globals.js";
+import type { FetchEvent } from "solid-start/server/types.js";
 
 const TMP_DIR = path.join(
   path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url)))),
@@ -21,16 +21,14 @@ interface FixtureInit {
   buildStdio?: boolean;
   sourcemap?: boolean;
   files: { [filename: string]: string };
-  template?: "cf-template" | "deno-template" | "node-template";
-  setup?: "node" | "cloudflare";
 }
 
 interface EntryServer {
-  default: (request: RequestContext) => Promise<Response>;
+  default: (request: FetchEvent) => Promise<Response>;
 }
 
 export type Fixture = Awaited<ReturnType<typeof createFixture>>;
-export type AppFixture = Awaited<ReturnType<typeof createAppFixture>>;
+export type AppFixture = Awaited<ReturnType<typeof createTestServer>>;
 
 export const js = String.raw;
 export const mdx = String.raw;
@@ -51,17 +49,79 @@ export async function createFixture(init: FixtureInit) {
       )
     );
   }
-  let app: EntryServer = await import(pathToFileURL(buildPath).toString());
-  let manifest = fse.readJSONSync(path.resolve(projectDir, "dist", "public", "rmanifest.json"));
-  let assetManifest = fse.readJSONSync(path.resolve(projectDir, "dist", "public", "manifest.json"));
 
-  prepareManifest(manifest, assetManifest);
+  let manifest = fse.readJSONSync(
+    path.resolve(projectDir, "dist", "public", "route-manifest.json")
+  );
+
+  if (process.env.ADAPTER !== "solid-start-node") {
+    let ip = process.env.ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
+    let port = await getPort();
+    let proc = spawn("npm", ["run", "start"], {
+      cwd: projectDir,
+      env: {
+        ...process.env,
+        PORT: `${port}`,
+        IP: ip
+      }
+    });
+
+    proc.stdout.pipe(process.stdout);
+    proc.stderr.pipe(process.stderr);
+
+    await waitOn({
+      resources: [`http://${ip}:${port}/favicon.ico`],
+      validateStatus: function (status) {
+        return status >= 200 && status < 310; // default if not provided
+      }
+    });
+
+    let requestDocument = async (href: string, init?: RequestInit) => {
+      let url = new URL(href, `http://${ip}:${port}`);
+      let request = new Request(url, init);
+      return await fetch(request);
+    };
+
+    let postDocument = async (href: string, data: URLSearchParams | FormData) => {
+      return await requestDocument(href, {
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type":
+            data instanceof URLSearchParams
+              ? "application/x-www-form-urlencoded"
+              : "multipart/form-data"
+        }
+      });
+    };
+
+    let getBrowserAsset = async (asset: string) => {
+      return await fse.readFile(path.join(projectDir, "public", asset.replace(/^\//, "")), "utf8");
+    };
+
+    return {
+      projectDir,
+      requestDocument,
+      postDocument,
+      getBrowserAsset,
+      manifest,
+      createServer: async () => {
+        return {
+          serverUrl: `http://${ip}:${port}`,
+          close: async () => {
+            proc.kill();
+          }
+        };
+      }
+    };
+  }
+
+  let app: EntryServer = await import(pathToFileURL(buildPath).toString());
 
   let handler = async (request: Request) => {
     return await app.default({
       request: request,
-      responseHeaders: new Headers(),
-      manifest
+      env: { manifest }
     });
   };
 
@@ -94,12 +154,18 @@ export async function createFixture(init: FixtureInit) {
     requestDocument,
     postDocument,
     getBrowserAsset,
-    manifest
+    manifest,
+    createServer: () =>
+      createTestServer({
+        projectDir,
+        build: app,
+        manifest
+      })
   };
 }
 
-export async function createAppFixture(fixture: Fixture) {
-  let startAppServer = async (): Promise<{
+export async function createTestServer(fixture: { projectDir: string; manifest: any; build }) {
+  let startServer = async (): Promise<{
     port: number;
     stop: () => Promise<void>;
   }> => {
@@ -113,7 +179,7 @@ export async function createAppFixture(fixture: Fixture) {
       let app = createServer({
         paths,
         manifest: fixture.manifest,
-        entry: fixture.build.default
+        handler: fixture.build.default
       });
 
       let stop = (): Promise<void> => {
@@ -135,7 +201,7 @@ export async function createAppFixture(fixture: Fixture) {
   };
 
   let start = async () => {
-    let { stop, port } = await startAppServer();
+    let { stop, port } = await startServer();
 
     let serverUrl = `http://localhost:${port}`;
 
@@ -158,10 +224,16 @@ export async function createAppFixture(fixture: Fixture) {
 
 ////////////////////////////////////////////////////////////////////////////////
 export async function createFixtureProject(init: FixtureInit): Promise<string> {
-  let template = init.template ?? "node-template";
+  let template = "template";
   let dirname = path.dirname(path.dirname(path.join(fileURLToPath(import.meta.url))));
+  let info = test.info();
+  let pName = info.titlePath
+    .slice(1, info.titlePath.length - 1)
+    .map(s => s.replace(/ /g, "-"))
+    .join("-");
   let integrationTemplateDir = path.join(dirname, template);
-  let projectName = `start-${template}-${Math.random().toString(32).slice(2)}`;
+  test;
+  let projectName = `${pName}-${Math.random().toString(32).slice(2)}`;
   let projectDir = path.join(TMP_DIR, projectName);
 
   await fse.ensureDir(projectDir);
@@ -173,19 +245,31 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
   //   });
   // }
   await writeTestFiles(init, projectDir);
-  await build(projectDir, init.buildStdio, init.sourcemap);
+  await build(projectDir, init.buildStdio);
 
   return projectDir;
 }
 
-function build(projectDir: string, buildStdio?: boolean, sourcemap?: boolean) {
+function build(
+  projectDir: string,
+  buildStdio?: boolean,
+  adapter: string | undefined = process.env.ADAPTER
+) {
   // let buildArgs = ["node_modules/@remix-run/dev/cli.js", "build"];
   // if (sourcemap) {
   //   buildArgs.push("--sourcemap");
   // }
   let proc = spawnSync("node", ["node_modules/solid-start/bin.cjs", "build"], {
-    cwd: projectDir
+    cwd: projectDir,
+    env: {
+      ...process.env,
+      ADAPTER: adapter ? adapter : "solid-start-node"
+    }
   });
+
+  if (proc.error) {
+    console.error(proc.error);
+  }
 
   if (buildStdio) {
     console.log(proc.stdout.toString());

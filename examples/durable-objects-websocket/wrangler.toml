@@ -1,0 +1,11 @@
+name = "workers-websocket-durable-objects"
+compatibility_date = "2022-05-10"
+
+[durable_objects]
+bindings = [
+  { name = "DO_WEBSOCKET", class_name = "WebSocketDurableObject" },
+]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["WebSocketDurableObject"] # Array of new classes

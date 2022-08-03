@@ -1,7 +1,7 @@
-import cp from "child_process";
-import type { Page, Response, Request } from "@playwright/test";
+import type { Page, Request, Response } from "@playwright/test";
 import { test } from "@playwright/test";
 import cheerio from "cheerio";
+import cp from "child_process";
 import prettier from "prettier";
 
 import type { AppFixture } from "./create-fixture.js";
@@ -208,6 +208,12 @@ export function getElement(source: string, selector: string) {
 export function selectHtml(source: string, selector: string) {
   let el = getElement(source, selector);
   return prettyHtml(cheerio.html(el)).trim();
+}
+
+export function selectText(source: string, selector: string) {
+  let el = getElement(source, selector);
+
+  return el.text();
 }
 
 export function prettyHtml(source: string): string {

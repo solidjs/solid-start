@@ -17,13 +17,14 @@ const serverFunction = server(async (name: string) => {
 
 - Any code inside a server function (including things that only a server function references) is only executed on the server. It is not even included in the client side bundle.
 - You can treat the function that it returns as a normal async function and should expect to receieve exactly what you return or throw from the function you pass in. This is incredibly important and is what allows us to use this model on both the server and the client. What this means?
+
   - If you return a javascript object, the server function will return that object.
-  
+
   ```tsx
   import server from "solid-start/server";
 
-  const serverFunction = server((name: string) => ({ messasge: `Hello ${name}` }));
-  
+  const serverFunction = server((name: string) => ({ message: `Hello ${name}` }));
+
   console.log(message); // "Hello da vinci"
   ```
 
@@ -64,6 +65,7 @@ console.log(await e.text()); // "Hello da vinci"
 ```
 
 - Throwing a Response object will cause the server function to return a Response object that you can catch
+
   - Redirects are thrown responses
   - Throw a Response instead of returning it if you want to communicate that you want to hit the Error boundary of your app,
     when you dont to continue executing the components in that path. It is similar to indicating that there is an error and you want stop normal execution

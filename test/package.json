@@ -24,11 +24,15 @@
     "polka": "^1.0.0-next.13",
     "prettier": "^2.5.1",
     "sirv": "^2.0.2",
-    "solid-start": "workspace:*",
-    "solid-start-node": "workspace:*",
+    "solid-start": "0.1.0-alpha.98",
+    "solid-start-node": "0.1.0-alpha.98",
     "strip-indent": "^4.0.0",
-    "undici": "^4.12.2",
-    "vite": "^2.9.12",
-    "vitest": "^0.16.0"
+    "undici": "^5.5.1",
+    "vite": "^3.0.4",
+    "vitest": "^0.20.2",
+    "wait-on": "^6.0.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

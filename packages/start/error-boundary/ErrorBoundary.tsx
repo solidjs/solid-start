@@ -1,4 +1,5 @@
 import {
+  createEffect,
   ErrorBoundary as ErrorBoundaryBase,
   JSX,
   ParentProps,
@@ -23,6 +24,10 @@ export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any) => JSX.El
 }
 
 function ErrorMessage(props: { error: any }) {
+  if (import.meta.env.DEV) {
+    createEffect(() => console.error(props.error));
+  }
+
   return (
     <div style={{ padding: "16px" }}>
       <div

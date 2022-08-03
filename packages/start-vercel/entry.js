@@ -1,15 +1,10 @@
-import manifest from "../../.vercel/output/static/rmanifest.json";
-import assetManifest from "../../.vercel/output/static/manifest.json";
-import prepareManifest from "solid-start/runtime/prepareManifest";
+import manifest from "../../.vercel/output/static/route-manifest.json";
 import entry from "./entry-server";
-
-prepareManifest(manifest, assetManifest);
 
 export default function (request) {
   const response = entry({
     request,
-    responseHeaders: new Headers(),
-    manifest
+    env: { manifest }
   });
   return response;
 }

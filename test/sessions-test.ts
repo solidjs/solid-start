@@ -1,17 +1,17 @@
-import { test, expect } from "@playwright/test";
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
-import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
+import { expect, test } from "@playwright/test";
 import type { AppFixture } from "./helpers/create-fixture.js";
+import { createFixture, js } from "./helpers/create-fixture.js";
+import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 
 test.describe("sessions", () => {
   let appFixture: AppFixture;
   test.beforeAll(async () => {
-    appFixture = await createAppFixture(
+    appFixture = await (
       await createFixture({
         files: {
           "src/routes/index.tsx": js`
             import server, { redirect, createServerData, createServerAction } from "solid-start/server";
-            import { useRouteData } from "solid-app-router";
+            import { useRouteData } from "@solidjs/router";
             import { getUser, logout } from "~/session";
 
             export function routeData() {
@@ -28,7 +28,7 @@ test.describe("sessions", () => {
 
             export default function Home() {
               const user = useRouteData<ReturnType<typeof routeData>>();
-              const logoutAction = createServerAction(() => logout(server.request));
+              const logoutAction = createServerAction((_, { request }) => logout(request));
 
               return (
                 <main class="w-full p-4 space-y-2">
@@ -45,7 +45,7 @@ test.describe("sessions", () => {
           `,
           "src/routes/login.tsx": js`
             import { Show } from "solid-js";
-            import { useParams, useRouteData } from "solid-app-router";
+            import { useParams, useRouteData } from "@solidjs/router";
             import { redirect, createServerData, createServerAction } from "solid-start/server";
             import { db, createUserSession, getUser, login, register } from "~/session";
             import { FormError } from "solid-start/data";
@@ -303,7 +303,7 @@ test.describe("sessions", () => {
           `
         }
       })
-    );
+    ).createServer();
   });
 
   test.afterAll(async () => {

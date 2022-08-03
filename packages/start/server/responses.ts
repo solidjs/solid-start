@@ -1,5 +1,3 @@
-import { FormError } from "../data/FormError";
-
 export const XSolidStartStatusCodeHeader = "x-solidstart-status-code";
 export const XSolidStartLocationHeader = "x-solidstart-location";
 export const LocationHeader = "Location";
@@ -36,12 +34,7 @@ export function json<Data>(data: Data, init: number | ResponseInit = {}): Respon
  * A redirect response. Sets the status code and the `Location` header.
  * Defaults to "302 Found".
  */
-export function redirect(
-  url: string,
-  // we use 204 no content to signal that the response body is empty
-  // and the X-Location header should be used instead to do the redirect client side
-  init: number | ResponseInit = 302
-): Response {
+export function redirect(url: string, init: number | ResponseInit = 302): Response {
   let responseInit = init;
   if (typeof responseInit === "number") {
     responseInit = { status: responseInit };
@@ -51,6 +44,12 @@ export function redirect(
 
   if (url === "") {
     url = "/";
+  }
+
+  if (process.env.NODE_ENV === "development") {
+    if (url.startsWith(".")) {
+      throw new Error("Relative URLs are not allowed in redirect");
+    }
   }
 
   const response = new Response(null, {
@@ -63,6 +62,38 @@ export function redirect(
   });
 
   return response;
+}
+
+export function eventStream(
+  request: Request,
+  init: (send: (event: string, data: object) => void) => () => void
+) {
+  let stream = new ReadableStream({
+    start(controller) {
+      let encoder = new TextEncoder();
+      let send = (event: string, data: object) => {
+        controller.enqueue(encoder.encode("event: " + event + "\n"));
+        controller.enqueue(encoder.encode("data: " + data + "\n" + "\n"));
+      };
+      let cleanup = init(send);
+      let closed = false;
+      let close = () => {
+        if (closed) return;
+        cleanup();
+        closed = true;
+        request.signal.removeEventListener("abort", close);
+        controller.close();
+      };
+      request.signal.addEventListener("abort", close);
+      if (request.signal.aborted) {
+        close();
+        return;
+      }
+    }
+  });
+  return new Response(stream, {
+    headers: { "Content-Type": "text/event-stream" }
+  });
 }
 
 export function isResponse(value: any): value is Response {
@@ -133,144 +164,5 @@ export class ResponseError extends Error implements Response {
 
   async json() {
     return await this.response().json();
-  }
-}
-
-export function respondWith(
-  request: Request,
-  data: Response | Error | FormError | string | object,
-  responseType: "throw" | "return"
-) {
-  if (data instanceof ResponseError) {
-    data = data.clone();
-  }
-
-  if (data instanceof Response) {
-    if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
-      let headers = new Headers(data.headers);
-      headers.set(XSolidStartOrigin, "server");
-      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
-      headers.set(XSolidStartResponseTypeHeader, responseType);
-      headers.set(XSolidStartContentTypeHeader, "response");
-      return new Response(null, {
-        status: 204,
-        statusText: "Redirected",
-        headers: headers
-      });
-    } else {
-      let headers = new Headers(data.headers);
-      headers.set(XSolidStartOrigin, "server");
-      headers.set(XSolidStartResponseTypeHeader, responseType);
-      headers.set(XSolidStartContentTypeHeader, "response");
-
-      return new Response(data.body, {
-        status: data.status,
-        statusText: data.statusText,
-        headers
-      });
-
-      return data;
-    }
-  } else if (data instanceof FormError) {
-    return new Response(
-      JSON.stringify({
-        error: {
-          message: data.message,
-          stack: data.stack,
-          formError: data.formError,
-          fields: data.fields,
-          fieldErrors: data.fieldErrors
-        }
-      }),
-      {
-        status: 400,
-        headers: {
-          [XSolidStartResponseTypeHeader]: responseType,
-          [XSolidStartContentTypeHeader]: "form-error"
-        }
-      }
-    );
-  } else if (data instanceof Error) {
-    return new Response(
-      JSON.stringify({
-        error: {
-          message: data.message,
-          stack: data.stack,
-          status: (data as any).status
-        }
-      }),
-      {
-        status: (data as any).status || 500,
-        headers: {
-          [XSolidStartResponseTypeHeader]: responseType,
-          [XSolidStartContentTypeHeader]: "error"
-        }
-      }
-    );
-  } else if (
-    typeof data === "object" ||
-    typeof data === "string" ||
-    typeof data === "number" ||
-    typeof data === "boolean"
-  ) {
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        [ContentTypeHeader]: "application/json",
-        [XSolidStartResponseTypeHeader]: responseType,
-        [XSolidStartContentTypeHeader]: "json"
-      }
-    });
-  }
-
-  return new Response("null", {
-    status: 200,
-    headers: {
-      [ContentTypeHeader]: "application/json",
-      [XSolidStartContentTypeHeader]: "json",
-      [XSolidStartResponseTypeHeader]: responseType
-    }
-  });
-}
-
-export async function parseResponse(request: Request, response: Response) {
-  const contentType =
-    response.headers.get(XSolidStartContentTypeHeader) ||
-    response.headers.get(ContentTypeHeader) ||
-    "";
-  if (contentType.includes("json")) {
-    return await response.json();
-  } else if (contentType.includes("text")) {
-    return await response.text();
-  } else if (contentType.includes("form-error")) {
-    const data = await response.json();
-    return new FormError(data.error.message, {
-      fieldErrors: data.error.fieldErrors,
-      fields: data.error.fields,
-      stack: data.error.stack
-    });
-  } else if (contentType.includes("error")) {
-    const data = await response.json();
-    const error = new Error(data.error.message);
-    if (data.error.stack) {
-      error.stack = data.error.stack;
-    }
-    return error;
-  } else if (contentType.includes("response")) {
-    if (response.status === 204 && response.headers.get(LocationHeader)) {
-      return redirect(response.headers.get(LocationHeader));
-    }
-    return response;
-  } else {
-    if (response.status === 200) {
-      const text = await response.text();
-      try {
-        return JSON.parse(text);
-      } catch {}
-    }
-    if (response.status === 204 && response.headers.get(LocationHeader)) {
-      return redirect(response.headers.get(LocationHeader));
-    }
-    return response;
   }
 }

@@ -1,17 +1,16 @@
-import { useNavigate } from "solid-app-router";
-import { useContext, onCleanup } from "solid-js";
-import { isRedirectResponse, LocationHeader } from "../server/responses";
-import { StartContext } from "../server/StartContext";
-import { createResource, Resource } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+import { createResource, onCleanup, Resource, useContext } from "solid-js";
 import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
-import { PageContext } from "../server/types";
+import { isRedirectResponse, LocationHeader } from "../server/responses";
+import { ServerContext } from "../server/ServerContext";
+import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";
 
-type RouteResourceContext = Omit<PageContext, "tags" | "manifest" | "routerContext">;
+interface RouteDataEvent extends ServerFunctionEvent {}
 
 type RouteResourceSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
 
-type RouteResourceFetcher<S, T> = (k: S, context: RouteResourceContext) => T | Promise<T>;
+type RouteResourceFetcher<S, T> = (source: S, event: RouteDataEvent) => T | Promise<T>;
 
 const resources = new Set<(k: any) => void>();
 
@@ -50,51 +49,71 @@ export function createRouteData<T, S>(
   }
 
   const navigate = useNavigate();
-  const context = useContext(StartContext);
+  const pageEvent = useContext(ServerContext);
 
   function handleResponse(response: Response) {
     if (isRedirectResponse(response)) {
-      navigate(response.headers.get(LocationHeader), {
-        replace: true
-      });
+      let url = response.headers.get(LocationHeader);
+      if (url.startsWith("/")) {
+        navigate(response.headers.get(LocationHeader), {
+          replace: true
+        });
+      } else {
+        if (!isServer) {
+          window.location.href = response.headers.get(LocationHeader);
+        }
+      }
       if (isServer) {
-        context.setStatusCode(response.status);
+        pageEvent.setStatusCode(response.status);
         response.headers.forEach((head, value) => {
-          context.setHeader(value, head);
+          pageEvent.responseHeaders.set(value, head);
         });
       }
     }
   }
 
-  let fetcherWithRedirect = async (key, info) => {
-    try {
-      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
-        return info.value;
-      }
-      let response = await (fetcher as any)(key, context);
-      if (response instanceof Response) {
-        if (isServer) {
-          handleResponse(response);
-        } else {
-          setTimeout(() => handleResponse(response), 0);
+  const [resource, { refetch }] = createResource<T, S>(
+    source as RouteResourceSource<S>,
+    async (key, info) => {
+      try {
+        if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
+          return info.value;
         }
-      }
-      return response;
-    } catch (e) {
-      if (e instanceof Response) {
-        if (isServer) {
-          handleResponse(e);
-        } else {
-          setTimeout(() => handleResponse(e), 0);
-        }
-        return e;
-      }
-      throw e;
-    }
-  };
 
-  // @ts-ignore
-  const [resource, { refetch }] = createResource(source, fetcherWithRedirect, options);
+        let event = pageEvent as RouteDataEvent;
+        if (isServer) {
+          event = Object.freeze({
+            request: pageEvent.request,
+            env: pageEvent.env,
+            $type: FETCH_EVENT,
+            fetch: pageEvent.fetch
+          });
+        }
+
+        let response = await (fetcher as any).call(event, key, event);
+        if (response instanceof Response) {
+          if (isServer) {
+            handleResponse(response);
+          } else {
+            setTimeout(() => handleResponse(response), 0);
+          }
+        }
+        return response;
+      } catch (e) {
+        if (e instanceof Response) {
+          if (isServer) {
+            handleResponse(e);
+          } else {
+            setTimeout(() => handleResponse(e), 0);
+          }
+          return e;
+        }
+        throw e;
+      }
+    },
+    options
+  );
+
   resources.add(refetch);
   onCleanup(() => resources.delete(refetch));
 

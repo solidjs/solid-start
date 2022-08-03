@@ -1,13 +1,12 @@
-import { copyFileSync, promises, existsSync } from "fs";
-import { dirname, join, resolve } from "path";
-import { fileURLToPath } from "url";
-import { rollup } from "rollup";
-import vite from "vite";
+import { babel } from "@rollup/plugin-babel";
+import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
-import common from "@rollup/plugin-commonjs";
-import { babel } from "@rollup/plugin-babel";
 import { spawn } from "child_process";
+import { copyFileSync, existsSync, promises } from "fs";
+import { dirname, join } from "path";
+import { rollup } from "rollup";
+import { fileURLToPath } from "url";
 
 export default function ({ edge } = {}) {
   return {
@@ -16,40 +15,30 @@ export default function ({ edge } = {}) {
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
-    async build(config) {
+    async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      const appRoot = config.solidOptions.appRoot;
-      await vite.build({
-        build: {
-          outDir: "./netlify/",
-          minify: "terser",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-client`)),
-            output: {
-              manualChunks: undefined
-            }
-          }
-        }
-      });
-      await vite.build({
-        build: {
-          ssr: true,
-          outDir: "./.solid/server",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-server`)),
-            output: {
-              format: "esm"
-            }
-          }
-        }
-      });
+      if (!config.solidOptions.ssr) {
+        throw new Error("SSR is required for Netlify");
+      }
+
+      if (config.solidOptions.islands) {
+        await builder.islandsClient(join(config.root, "netlify"));
+      } else {
+        await builder.client(join(config.root, "netlify"));
+      }
+      await builder.server(join(config.root, ".solid", "server"));
+
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "app.js")
+        join(config.root, ".solid", "server", "handler.js")
       );
-      copyFileSync(join(__dirname, edge ? "entry-edge.js" : "entry.js"), join(config.root, ".solid", "server", "index.js"));
+      copyFileSync(
+        join(__dirname, edge ? "entry-edge.js" : "entry.js"),
+        join(config.root, ".solid", "server", "index.js")
+      );
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
+        preserveEntrySignatures: false,
         plugins: [
           json(),
           nodeResolve({
@@ -64,17 +53,23 @@ export default function ({ edge } = {}) {
         ]
       });
       // or write the bundle to disk
-      await bundle.write({ format: edge ? "esm": "cjs", dir: join(config.root, "netlify", edge ? "edge-functions" : "functions") });
+      await bundle.write({
+        format: edge ? "esm" : "cjs",
+        manualChunks: {},
+        dir: join(config.root, "netlify", edge ? "edge-functions" : "functions")
+      });
 
       // closes the bundle
       await bundle.close();
 
       if (edge) {
         const dir = join(config.root, ".netlify", "edge-functions");
-        if (!(existsSync(dir))){
+        if (!existsSync(dir)) {
           await promises.mkdir(dir, { recursive: true });
         }
-        await promises.writeFile(join(config.root, ".netlify", "edge-functions", "manifest.json"), `{
+        await promises.writeFile(
+          join(config.root, ".netlify", "edge-functions", "manifest.json"),
+          `{
   "functions": [
     {
       "function": "index",
@@ -82,9 +77,15 @@ export default function ({ edge } = {}) {
     }
   ],
   "version": 1
-}`, 'utf-8');
+}`,
+          "utf-8"
+        );
       } else {
-        await promises.writeFile(join(config.root, "netlify", "_redirects"), "/*    /.netlify/functions/index    200", 'utf-8');
+        await promises.writeFile(
+          join(config.root, "netlify", "_redirects"),
+          "/*    /.netlify/functions/index    200",
+          "utf-8"
+        );
       }
     }
   };

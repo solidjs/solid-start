@@ -1,13 +1,8 @@
-import manifest from "../../netlify/rmanifest.json";
-import assetManifest from "../../netlify/manifest.json";
-import prepareManifest from "solid-start/runtime/prepareManifest";
-import entry from "./app";
-
-prepareManifest(manifest, assetManifest);
+import manifest from "../../netlify/route-manifest.json";
+import handler from "./handler";
 
 export default request =>
-  entry({
+handler({
     request,
-    responseHeaders: new Headers(),
-    manifest
+    env: { manifest }
   });

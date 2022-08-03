@@ -1,17 +1,21 @@
-import { useNavigate, useSearchParams } from "solid-app-router";
-import { createSignal, startTransition, getOwner, runWithOwner } from "solid-js";
+import { useNavigate, useSearchParams } from "@solidjs/router";
+import { createSignal, getOwner, runWithOwner, startTransition, useContext } from "solid-js";
 import { isServer } from "solid-js/web";
-import { FormProps, FormImpl, FormError } from "./Form";
+import { FormError, FormImpl, FormProps } from "./Form";
 
 import type { ParentComponent } from "solid-js";
 import { Owner } from "solid-js/types/reactive/signal";
 import { isRedirectResponse } from "../server/responses";
+import { ServerContext } from "../server/ServerContext";
+import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
+
+interface ActionEvent extends ServerFunctionEvent {}
 
 export type ActionState = "idle" | "pending";
 export type RouteAction<T, U> = {
   value?: U;
-  error?: Error | null;
+  error?: FormError | null;
   pending: T[];
   state: ActionState;
   Form: T extends FormData ? ParentComponent<FormProps> : ParentComponent;
@@ -20,28 +24,50 @@ export type RouteAction<T, U> = {
   reset: () => void;
 };
 export function createRouteAction<T = void, U = void>(
-  fn: () => Promise<U>,
+  fn: (arg1: void, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
-  fn: (args: T) => Promise<U>,
+  fn: (args: T, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
-  fn: (args: T) => Promise<U>,
+  fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteAction<T, U> {
   const [pending, setPending] = createSignal<T[]>([]);
   const [data, setData] = createSignal<{ value?: U; error?: any }>({});
   const owner = getOwner();
   const navigate = useNavigate();
+  const event = useContext(ServerContext);
   const lookup = new Map();
   let count = 0;
   let tempOwner: Owner = owner;
   let handledError = false;
 
+  function handleResponse(response: Response) {
+    if (response instanceof Response && isRedirectResponse(response)) {
+      const locationUrl = response.headers.get("Location") || "/";
+      if (locationUrl.startsWith("http")) {
+        window.location.href = locationUrl;
+      } else {
+        navigate(locationUrl);
+      }
+    }
+
+    if (response.ok) {
+      startTransition(() => {
+        refetchRouteData(
+          typeof options.invalidate === "function"
+            ? options.invalidate(response)
+            : options.invalidate
+        );
+      });
+    }
+  }
+
   function submit(variables: T) {
-    const p = fn(variables);
+    const p = fn(variables, event);
     const reqId = ++count;
     lookup.set(p, variables);
     setPending(Array.from(lookup.values()));
@@ -51,16 +77,9 @@ export function createRouteAction<T, U = void>(
       setPending(v);
       if (reqId === count) {
         setData(() => ({ value: res }));
-        if (res instanceof Response && res.status === 302)
-          navigate(res.headers.get("Location") || "/");
-        if (res instanceof Response && res.ok)
-          startTransition(() => {
-            refetchRouteData(
-              typeof options.invalidate === "function"
-                ? options.invalidate(res as Response)
-                : options.invalidate
-            );
-          });
+        if (res instanceof Response) {
+          handleResponse(res);
+        }
       }
       return res;
     }).catch(e => {
@@ -68,15 +87,8 @@ export function createRouteAction<T, U = void>(
       setPending(Array.from(lookup.values()));
       if (reqId === count) {
         return runWithOwner(tempOwner || owner, () => {
-          if (e instanceof Response && isRedirectResponse(e)) {
-            navigate(e.headers.get("Location") || "/");
-            startTransition(() => {
-              refetchRouteData(
-                typeof options.invalidate === "function"
-                  ? options.invalidate(e as Response)
-                  : options.invalidate
-              );
-            });
+          if (e instanceof Response) {
+            handleResponse(e);
           }
           setData(() => ({ error: e }));
           if (!handledError) throw e;

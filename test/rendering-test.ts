@@ -1,19 +1,21 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
+import { createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
 
 test.describe("rendering", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
+  test.skip(process.env.ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({
       files: {
         "src/root.tsx": js`
-          import { Links, Meta, Routes, Scripts } from "solid-start/root";
+          import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
           import { Suspense } from "solid-js";
+          import { Routes } from "@solidjs/router";
 
           export default function Root() {
             return (
@@ -31,7 +33,9 @@ test.describe("rendering", () => {
                   </nav>
                   <div id="content">
                     <h1>Root</h1>
-                    <Routes />
+                    <Routes>
+                      <FileRoutes />
+                    </Routes>
                   </div>
                   <Scripts />
                 </body>
@@ -52,7 +56,7 @@ test.describe("rendering", () => {
       }
     });
 
-    appFixture = await createAppFixture(fixture);
+    appFixture = await fixture.createServer();
   });
 
   test.afterAll(async () => {
@@ -73,12 +77,12 @@ test.describe("rendering", () => {
     expect(res.headers.get("Content-Type")).toBe("text/html");
     expect(selectHtml(await res.text(), "#content")).toBe(
       prettyHtml(`
-        <div id="content">
-          <h1>Root</h1>
-          <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
-          <!--/-->
-        </div>`)
+    <div id="content">
+      <h1>Root</h1>
+      <!--#-->
+      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+      <!--/-->
+    </div>`)
     );
 
     res = await fixture.requestDocument("/about");
@@ -86,12 +90,12 @@ test.describe("rendering", () => {
     expect(res.headers.get("Content-Type")).toBe("text/html");
     expect(selectHtml(await res.text(), "#content")).toBe(
       prettyHtml(`
-        <div id="content">
-          <h1>Root</h1>
-          <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">About</h2>
-          <!--/-->
-        </div>`)
+    <div id="content">
+      <h1>Root</h1>
+      <!--#-->
+      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
+      <!--/-->
+    </div>`)
     );
   });
 
@@ -103,18 +107,19 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );
 
     await app.goto("/about", true);
+
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">About</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
           <!--/-->
         </div>`)
     );
@@ -128,12 +133,13 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-0-0-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );
 
     await app.page.click("a[href='/about']");
+    await page.waitForSelector(`h2:has-text("About")`);
 
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`

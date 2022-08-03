@@ -1,46 +1,55 @@
-import { useContext, JSXElement } from "solid-js";
+import { JSXElement, useContext } from "solid-js";
 import { Assets } from "solid-js/web";
-import { StartContext } from "../server/StartContext";
-import { ContextMatches, ManifestEntry, PageContext } from "../server/types";
+import { ServerContext } from "../server/ServerContext";
+import { ManifestEntry, PageEvent } from "../server/types";
+import { routeLayouts } from "./FileRoutes";
 
 function getAssetsFromManifest(
-  manifest: PageContext["manifest"],
-  routerContext: PageContext["routerContext"]
+  manifest: PageEvent["env"]["manifest"],
+  routerContext: PageEvent["routerContext"]
 ) {
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
-    memo.push(...(manifest[mapRouteToFile(m)] || []));
+    if (m.length) {
+      const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
+      const route = routeLayouts[fullPath];
+      if (route) {
+        memo.push(...((manifest[route.id] || []) as ManifestEntry[]));
+        const layoutsManifestEntries = route.layouts.flatMap(
+          manifestKey => (manifest[manifestKey] || []) as ManifestEntry[]
+        );
+        memo.push(...layoutsManifestEntries);
+      }
+    }
     return memo;
   }, []);
+
+  match.push(...((manifest["entry-client"] || []) as ManifestEntry[]));
 
   const links = match.reduce((r, src) => {
     r[src.href] =
       src.type === "style" ? (
         <link rel="stylesheet" href={src.href} $ServerOnly />
-      ) : (
+      ) : src.type === "script" ? (
         <link rel="modulepreload" href={src.href} $ServerOnly />
-      );
+      ) : undefined;
     return r;
   }, {} as Record<string, JSXElement>);
 
   return Object.values(links);
 }
 
-function mapRouteToFile(matches: ContextMatches[]) {
-  return matches
-    .map(h =>
-      h.originalPath.replace(/:(\w+)/, (f, g) => `[${g}]`).replace(/\*(\w+)/, (f, g) => `[...${g}]`)
-    )
-    .join("");
-}
-
 /**
- * Links are used to load assets for the server.
+ * Links are used to load assets for the server rendered HTML
  * @returns {JSXElement}
  */
 export default function Links(): JSXElement {
   const isDev = import.meta.env.MODE === "development";
-  const context = useContext(StartContext);
+  const context = useContext(ServerContext);
   return (
-    <Assets>{!isDev && getAssetsFromManifest(context.manifest, context.routerContext)}</Assets>
+    <Assets>
+      {!isDev &&
+        import.meta.env.START_SSR &&
+        getAssetsFromManifest(context.env.manifest, context.routerContext)}
+    </Assets>
   );
 }
