@@ -1,12 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createAppFixture, createFixture, js } from "./helpers/create-fixture.js";
+import { createFixture, js } from "./helpers/create-fixture.js";
 import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-fixture.js";
 
 test.describe("rendering", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
+  test.skip(process.env.ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({
@@ -14,7 +15,7 @@ test.describe("rendering", () => {
         "src/root.tsx": js`
           import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
           import { Suspense } from "solid-js";
-          import { Routes } from 'solid-app-router';
+          import { Routes } from "@solidjs/router";
 
           export default function Root() {
             return (
@@ -55,7 +56,7 @@ test.describe("rendering", () => {
       }
     });
 
-    appFixture = await createAppFixture(fixture);
+    appFixture = await fixture.createServer();
   });
 
   test.afterAll(async () => {
@@ -79,7 +80,7 @@ test.describe("rendering", () => {
     <div id="content">
       <h1>Root</h1>
       <!--#-->
-      <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
       <!--/-->
     </div>`)
     );
@@ -92,7 +93,7 @@ test.describe("rendering", () => {
     <div id="content">
       <h1>Root</h1>
       <!--#-->
-      <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
+      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
       <!--/-->
     </div>`)
     );
@@ -106,7 +107,7 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );
@@ -118,7 +119,7 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
           <!--/-->
         </div>`)
     );
@@ -132,7 +133,7 @@ test.describe("rendering", () => {
         <div id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );

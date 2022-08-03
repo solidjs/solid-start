@@ -2,12 +2,13 @@ import { expect, test } from "@playwright/test";
 
 import cheerio from "cheerio";
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createAppFixture, createFixture, css, js } from "./helpers/create-fixture.js";
+import { createFixture, css, js } from "./helpers/create-fixture.js";
 import { getElement } from "./helpers/playwright-fixture.js";
 
 test.describe("CSS link tags", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
+  test.skip(process.env.ADAPTER !== "solid-start-node");
 
   test.describe("without streaming", () => {
     test.beforeAll(async () => {
@@ -45,7 +46,7 @@ test.describe("CSS link tags", () => {
           }
         `;
         files[`src/routes/${path}.tsx`] = js`
-          import { Outlet } from "solid-app-router";
+          import { Outlet } from "@solidjs/router";
           import "./${name}.css";
           export default function ${pascalCaseName}() {
             return <>
@@ -71,7 +72,7 @@ test.describe("CSS link tags", () => {
         import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
         import { ErrorBoundary } from "solid-start/error-boundary";
         import { Suspense } from "solid-js";
-        import { Routes } from "solid-app-router";
+        import { Routes } from "@solidjs/router";
 
         import "./root.css";
 
@@ -110,7 +111,7 @@ test.describe("CSS link tags", () => {
         files
       });
 
-      appFixture = await createAppFixture(fixture);
+      appFixture = await fixture.createServer();
     });
 
     test.afterAll(async () => {
@@ -139,7 +140,10 @@ test.describe("CSS link tags", () => {
   }
 
   function matchHashedCssFile(name: string) {
-    return (x: string) => new RegExp(`^/assets/${name}\\.[a-f0-9]+\.css$`).test(x);
+    return (x: string) =>
+      new RegExp(`^/assets/${name.replace("[", "\\[").replace("]", "\\]")}\\.[a-f0-9]+\.css$`).test(
+        x
+      );
   }
 
   function expectNumberOfUrlsToMatch(urls: string[], matchName: string, expectedNumber: number) {
@@ -155,7 +159,7 @@ test.describe("CSS link tags", () => {
     test("Pathless layout wildcard route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/2/3", 3);
       expectNumberOfUrlsToMatch(cssUrls, "__auth", 1);
-      expectNumberOfUrlsToMatch(cssUrls, "_...wild_", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "[...wild]", 1);
     });
     test("Index of nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested", 3);
@@ -169,12 +173,12 @@ test.describe("CSS link tags", () => {
     });
     test("Index of dynamic nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/__auth", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "[param]", 1);
       expectNumberOfUrlsToMatch(cssUrls, "index", 1);
     });
     test("Non-index of dynamic nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/__auth/non-index", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "[param]", 1);
       expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
     });
     test("Pathless layout inside a nested route", async () => {

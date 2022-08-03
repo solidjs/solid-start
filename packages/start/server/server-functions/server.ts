@@ -1,6 +1,7 @@
 import { sharedConfig } from "solid-js";
 import { internalFetch } from "../../api/internalFetch";
 import { FormError } from "../../data";
+import { ServerError } from "../../data/FormError";
 import {
   ContentTypeHeader,
   isRedirectResponse,
@@ -14,6 +15,7 @@ import {
 } from "../responses";
 import { ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
+export type { ApiFetchEvent } from "../../api/types";
 
 export const server: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");
@@ -102,7 +104,9 @@ export function respondWith(
       JSON.stringify({
         error: {
           message: data.message,
-          stack: data.stack,
+          stack: import.meta.env.DEV
+            ? `The stack for FormErrors are only logged during development. In production you should handle these errors with an ErrorBoundary that can display the error message appropriately to the user.\n\n${data.stack}`
+            : "",
           formError: data.formError,
           fields: data.fields,
           fieldErrors: data.fieldErrors
@@ -116,12 +120,34 @@ export function respondWith(
         }
       }
     );
-  } else if (data instanceof Error) {
+  } else if (data instanceof ServerError) {
     return new Response(
       JSON.stringify({
         error: {
           message: data.message,
-          stack: data.stack,
+          stack: import.meta.env.DEV
+            ? `The stack for ServerErrors is only logged during development. In production you should handle these errors with an ErrorBoundary that can display the error message appropriately to the user.\n\n${data.stack}`
+            : ""
+        }
+      }),
+      {
+        status: 400,
+        headers: {
+          [XSolidStartResponseTypeHeader]: responseType,
+          [XSolidStartContentTypeHeader]: "server-error"
+        }
+      }
+    );
+  } else if (data instanceof Error) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: import.meta.env.DEV
+            ? `Internal Server Error (${data.message})`
+            : "Internal Server Error",
+          stack: import.meta.env.DEV
+            ? `This error happened inside a server function and you didn't handle it. So the client will receive an Internal Server Error. You can catch the error and throw a ServerError that makes sense for your UI. In production, the user will have no idea what the error is: \n\n${data.stack}`
+            : "",
           status: (data as any).status
         }
       }),

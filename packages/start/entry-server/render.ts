@@ -20,6 +20,20 @@ export function renderAsync(
       return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
     }
 
+    if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
+      markup = `${pageEvent.routerContext.replaceOutletId}:${
+        pageEvent.routerContext.newOutletId
+      }=${markup.slice(
+        markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) +
+          `<!--${pageEvent.routerContext.newOutletId}-->`.length +
+          `<outlet-wrapper id="${pageEvent.routerContext.newOutletId}">`.length,
+        markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
+          `</outlet-wrapper>`.length
+      )}`;
+
+      pageEvent.responseHeaders.set("Content-Type", "text/plain");
+    }
+
     return new Response(markup, {
       status: pageEvent.getStatusCode(),
       headers: pageEvent.responseHeaders
@@ -39,6 +53,8 @@ function createPageEvent(event: FetchEvent) {
     "Content-Type": "text/html"
   });
 
+  const prevPath = event.request.headers.get("x-solid-referrer");
+
   let statusCode = 200;
 
   function setStatusCode(code: number) {
@@ -51,6 +67,7 @@ function createPageEvent(event: FetchEvent) {
 
   const pageEvent: PageEvent = Object.freeze({
     request: event.request,
+    prevUrl: prevPath,
     routerContext: {},
     tags: [],
     env: event.env,
@@ -86,8 +103,21 @@ export function renderStream(
     } else options.onCompleteAll = handleRedirect(pageEvent);
     const { readable, writable } = new TransformStream();
     const stream = renderToStream(() => fn(pageEvent), options);
+
     if (pageEvent.routerContext.url) {
       return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
+    }
+
+    if (pageEvent.routerContext.replaceOutletId) {
+      const writer = writable.getWriter();
+      const encoder = new TextEncoder();
+      writer.write(
+        encoder.encode(
+          `${pageEvent.routerContext.replaceOutletId}:${pageEvent.routerContext.newOutletId}=`
+        )
+      );
+      writer.releaseLock();
+      pageEvent.responseHeaders.set("Content-Type", "text/plain");
     }
 
     stream.pipeTo(writable);

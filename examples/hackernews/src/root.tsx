@@ -1,25 +1,31 @@
 // @refresh reload
-import { Links, FileRoutes, Meta, Scripts } from "solid-start/root";
 import { Suspense } from "solid-js";
-import { ErrorBoundary } from "solid-start/error-boundary";
-import { isServer } from "solid-js/web";
+import {
+  Body,
+  ErrorBoundary,
+  FileRoutes,
+  Head,
+  Html,
+  Link,
+  Meta,
+  Routes,
+  Scripts,
+  Title
+} from "solid-start";
 import Nav from "./components/nav";
 import "./root.css";
-import { Routes } from "solid-app-router";
 
 export default function Root() {
   return (
-    <html lang="en">
-      <head>
-        <title>Solid - Hacker News</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Hacker News Clone built with Solid" />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        <Links />
-        <Meta />
-      </head>
-      <body>
+    <Html lang="en">
+      <Head>
+        <Title>Solid - Hacker News</Title>
+        <Meta charset="utf-8" />
+        <Meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta name="description" content="Hacker News Clone built with Solid" />
+        <Link rel="manifest" href="/manifest.webmanifest" />
+      </Head>
+      <Body>
         <Nav />
         <ErrorBoundary>
           <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
@@ -29,14 +35,14 @@ export default function Root() {
           </Suspense>
         </ErrorBoundary>
         <Scripts />
-      </body>
-    </html>
+      </Body>
+    </Html>
   );
 }
 
-if (import.meta.env.PROD && !isServer && "serviceWorker" in navigator) {
-  // Use the window load event to keep the page load performant
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register(`/sw.js`);
-  });
-}
+// if (import.meta.env.PROD && !isServer && "serviceWorker" in navigator) {
+//   // Use the window load event to keep the page load performant
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker.register(`/sw.js`);
+//   });
+// }

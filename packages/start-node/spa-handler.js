@@ -6,7 +6,7 @@ export default async function entry({ request, env }) {
 
   return new Response(text, {
     headers: {
-      "Content-Type": "text/html"
+      "Content-Type": "text/html; charset=utf-8"
     }
   });
 }

@@ -33,3 +33,7 @@ gitignore
 # System Files
 .DS_Store
 Thumbs.db
+
+# Local Netlify folder
+.netlify
+netlify

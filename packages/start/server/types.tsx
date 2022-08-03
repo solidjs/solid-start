@@ -18,14 +18,27 @@ type TagDescription = {
 };
 
 type RouterContext = {
+  // router matches;
   matches?: ContextMatches[][];
+  // redirected url
   url?: string;
+
+  // server route fragments
+  replaceOutletId?: string;
+  newOutletId?: string;
+};
+
+export type IslandManifest = {
+  script: ManifestEntry;
+  assets: ManifestEntry[];
 };
 
 export interface FetchEvent {
   request: Request;
   env: {
-    manifest?: Record<string, ManifestEntry[]>;
+    manifest?: Record<string, ManifestEntry[] | IslandManifest>;
+    collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
+    devManifest?: [{ path: string; componentPath: string; id: string }];
   };
 }
 
@@ -35,6 +48,7 @@ export interface ServerFunctionEvent extends FetchEvent {
 }
 
 export interface PageEvent extends FetchEvent {
+  prevUrl: string;
   responseHeaders: Headers;
   routerContext?: RouterContext;
   tags?: TagDescription[];

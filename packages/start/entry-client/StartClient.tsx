@@ -1,10 +1,10 @@
-import { Router } from "solid-app-router";
-import { MetaProvider } from "solid-meta";
-import Root from "~/root";
+import { MetaProvider } from "@solidjs/meta";
+import { Router, RouterProps } from "@solidjs/router";
+import Root from "~start/root";
 import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, PageEvent } from "../server/types";
 
-const rootData = Object.values(import.meta.globEager("/src/root.data.(js|ts)"))[0];
+const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0];
 const dataFn = rootData ? rootData.default : undefined;
 
 function throwClientError(field: string): any {
@@ -16,6 +16,11 @@ function throwClientError(field: string): any {
 export default () => {
   let mockFetchEvent: PageEvent = {
     get request() {
+      if (process.env.NODE_ENV === "development") {
+        return throwClientError("request");
+      }
+    },
+    get prevUrl() {
       if (process.env.NODE_ENV === "development") {
         return throwClientError("request");
       }
@@ -54,12 +59,20 @@ export default () => {
     fetch
   };
 
+  function StartRouter(props: RouterProps) {
+    return (
+      <Router {...props}>
+        <Root />
+      </Router>
+    );
+  }
+
   return (
     <ServerContext.Provider value={mockFetchEvent}>
       <MetaProvider>
-        <Router data={dataFn}>
+        <StartRouter data={dataFn}>
           <Root />
-        </Router>
+        </StartRouter>
       </MetaProvider>
     </ServerContext.Provider>
   );

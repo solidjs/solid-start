@@ -1,9 +1,9 @@
 // @refresh reload
-import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
-import { ErrorBoundary } from "solid-start/error-boundary";
-import { Routes } from "solid-app-router";
-import "./index.css";
+import { Routes } from "@solidjs/router";
 import { Suspense } from "solid-js";
+import { ErrorBoundary } from "solid-start/error-boundary";
+import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
+import "./index.css";
 
 export default function Root() {
   return (

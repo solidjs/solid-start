@@ -1,5 +1,5 @@
 // @refresh reload
-import { Routes } from "solid-app-router";
+import { Routes } from "@solidjs/router";
 import { Suspense } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";

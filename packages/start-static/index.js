@@ -3,7 +3,6 @@ import { copyFileSync, readdirSync, statSync } from "fs";
 import { dirname, join, resolve } from "path";
 import renderStatic from "solid-ssr/static";
 import { fileURLToPath } from "url";
-import vite from "vite";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,43 +29,21 @@ function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
 export default function () {
   return {
     start() {
-      const proc = spawn("npx", ["sirv-cli", "./dist", "--port", "3000"]);
+      const proc = spawn("npx", ["sirv-cli", "./dist/public", "--port", "3000"]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
-    async build(config) {
+    async build(config, builder) {
       const appRoot = config.solidOptions.appRoot;
-      await vite.build({
-        build: {
-          outDir: "./dist/",
-          minify: "terser",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-client`)),
-            output: {
-              manualChunks: undefined
-            }
-          }
-        }
-      });
-      await vite.build({
-        build: {
-          ssr: true,
-          outDir: "./.solid/server",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-server`)),
-            output: {
-              format: "esm"
-            }
-          }
-        }
-      });
+      await builder.client(join(config.root, "dist", "public"));
+      await builder.server(join(config.root, ".solid", "server"));
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "app.js")
+        join(config.root, ".solid", "server", "handler.js")
       );
-      const pathToServer = join(config.root, ".solid", "server", "index.js");
+      const pathToServer = join(config.root, ".solid", "server", "server.js");
       copyFileSync(join(__dirname, "entry.js"), pathToServer);
-      const pathToDist = resolve(config.root, "dist");
+      const pathToDist = resolve(config.root, "dist", "public");
       const pageRoot = join(config.root, appRoot, config.solidOptions.routesDir);
       const routes = [
         ...getAllFiles(pageRoot, pageRoot),

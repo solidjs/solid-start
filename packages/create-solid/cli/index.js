@@ -7,7 +7,6 @@ import parser from "gitignore-parser";
 import { bold, cyan, gray, green, red } from "kleur/colors";
 import path from "path";
 import prettierBabel from "prettier/esm/parser-babel.mjs";
-import prettierHTML from "prettier/esm/parser-html.mjs";
 import prettier from "prettier/esm/standalone.mjs";
 import prompts from "prompts/lib/index";
 import glob from "tiny-glob/sync.js";
@@ -184,10 +183,6 @@ async function main() {
     if (fs.statSync(src).isDirectory()) {
       mkdirp(dest);
     } else {
-      if (src.endsWith("entry-server.tsx") && !ssr) {
-        return;
-      }
-
       if (src.endsWith("tsconfig.json") && !ts_response) {
         return fs.writeFileSync(
           path.join(target, "jsconfig.json"),
@@ -208,107 +203,6 @@ async function main() {
       }
 
       let code = fs.readFileSync(src).toString();
-
-      if (src.endsWith("entry-client.tsx") && !ssr) {
-        code = `
-        import { render } from "solid-js/web";
-        import { StartClient } from "solid-start/entry-client";
-
-        render(() => <StartClient />, document.body);
-        `;
-      }
-
-      if (src.endsWith("root.tsx") && code.includes("<html") && !ssr) {
-        /**
-         * src/root.tsx
-         *
-         *   export default function Root() {
-         *      return (
-         *        <html lang="fr">
-         *          <head>
-         *            <title>Solid Start</title>
-         *            <meta name="viewport" content="width=device-width, initial-scale=1" />
-         *            <Meta />
-         *            </Links />
-         *          </head>
-         *          <body class="body-class">
-         *            <Routes/>
-         *            <Scripts />
-         *          </body>
-         *        </html>
-         *      );
-         *    }
-         *           ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
-         *
-         * src/root.tsx
-         *
-         *   export default function Root() {
-         *    return (
-         *      <>
-         *        <Routes/>
-         *        <Scripts />
-         *      </>
-         *    );
-         *   }
-         *
-         * index.html
-         *
-         *    <!DOCTYPE html>
-         *    <html lang="fr">
-         *     <head>
-         *       <title>Solid Start</title>
-         *       <meta name="viewport" content="width=device-width, initial-scale=1" />
-         *       <script type="module" src="./src/entry-client.tsx"></script>
-         *     </head>
-         *     <body class="body-class">
-         *     </body>
-         *    </html>
-         */
-        let root = code;
-        let bodyLeft = root.search("<body") + 5;
-        let bodyRight = root.search("</body>");
-
-        let headLeft = root.search("<head") + 5;
-        let headRight = root.search("</head>");
-
-        let htmlLeft = root.search("<html");
-        let htmlLeftEnd = htmlLeft + 5;
-        let htmlRight = root.search("</html>") + 8;
-
-        let head = root.substring(headLeft + root.substring(headLeft).search(">") + 1, headRight);
-        let body = root.substring(bodyLeft + root.substring(bodyLeft).search(">") + 1, bodyRight);
-        let bodyProps = root.substring(bodyLeft, bodyLeft + root.substring(bodyLeft).search(">"));
-        let htmlProps = root.substring(
-          htmlLeftEnd,
-          htmlLeftEnd + root.substring(htmlLeftEnd).search(">")
-        );
-        let rootTxt =
-          root
-            .substring(0, htmlLeft)
-            .replace("import { Links, Meta, FileRoutes, Scripts }", `import { FileRoutes }`) +
-          `<>` +
-          body +
-          `</>` +
-          root.substring(htmlRight);
-        code = rootTxt.replace(`<Scripts />`, "");
-
-        let headTxt = head.replace(`<Meta />`, "").replace(`<Links />`, "");
-
-        indexHTML = prettier.format(
-          `<!DOCTYPE html>
-        <html ${htmlProps}>
-          <head>
-            ${headTxt}
-            <script type="module" src="./src/entry-client.${ts_response ? "tsx" : "jsx"}"></script>
-          </head>
-          <body ${bodyProps}></body>
-        </html>`,
-          {
-            parser: "html",
-            plugins: [prettierHTML]
-          }
-        );
-      }
 
       if (src.includes("vite.config") && !code.includes("ssr: false") && !ssr) {
         code = code
@@ -362,9 +256,9 @@ async function main() {
 
   fs.writeFileSync(pkg_file, JSON.stringify(pkg_json, null, 2));
 
-  if (!ssr && indexHTML) {
-    fs.writeFileSync(path.join(target, "index.html"), indexHTML);
-  }
+  // if (!ssr && indexHTML) {
+  //   fs.writeFileSync(path.join(target, "index.html"), indexHTML);
+  // }
 
   fs.rmSync(path.join(process.cwd(), tempTemplate), {
     recursive: true,

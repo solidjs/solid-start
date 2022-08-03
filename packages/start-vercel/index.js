@@ -3,10 +3,9 @@ import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
 import { copyFileSync, writeFileSync } from "fs";
-import { dirname, join, resolve } from "path";
+import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-import vite from "vite";
 
 export default function () {
   return {
@@ -15,40 +14,27 @@ export default function () {
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
-    async build(config) {
+    async build(config, builder) {
       // Vercel Build Output API v3 (https://vercel.com/docs/build-output-api/v3)
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
       const outputDir = join(config.root, ".vercel/output");
 
       // Static Files
-      await vite.build({
-        build: {
-          outDir: join(outputDir, "static"),
-          minify: "terser",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, "entry-client")),
-            output: {
-              manualChunks: undefined
-            }
-          }
-        }
-      });
+      await builder.client(join(outputDir, "static"));
 
       // SSR Edge Function
-      await vite.build({
-        build: {
-          ssr: true,
-          outDir: "./.solid/server",
-          rollupOptions: {
-            input: resolve(join(config.root, appRoot, `entry-server`)),
-            output: {
-              format: "esm"
-            }
-          }
-        }
-      });
-      const entrypoint = join(config.root, ".solid", "server", "index.js");
+      if (!config.solidOptions.ssr) {
+        await builder.spaClient(join(outputDir, "static"));
+      } else if (config.solidOptions.islands) {
+        await builder.islandsClient(join(outputDir, "static"));
+        await builder.server(join(config.root, ".solid", "server"));
+      } else {
+        await builder.client(join(outputDir, "static"));
+        await builder.server(join(config.root, ".solid", "server"));
+      }
+
+      const entrypoint = join(config.root, ".solid", "server", "server.js");
       copyFileSync(join(__dirname, "entry.js"), entrypoint);
       const bundle = await rollup({
         input: entrypoint,

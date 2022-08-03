@@ -1,4 +1,4 @@
-import { useNavigate } from "solid-app-router";
+import { useNavigate } from "@solidjs/router";
 import { createResource, onCleanup, Resource, useContext } from "solid-js";
 import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
@@ -72,46 +72,48 @@ export function createRouteData<T, S>(
     }
   }
 
-  let fetcherWithRedirect = async (key, info) => {
-    try {
-      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
-        return info.value;
-      }
-
-      let event = pageEvent as RouteDataEvent;
-      if (isServer) {
-        event = Object.freeze({
-          request: pageEvent.request,
-          env: pageEvent.env,
-          $type: FETCH_EVENT,
-          fetch: pageEvent.fetch
-        });
-      }
-
-      let response = await (fetcher as any).call(event, key, event);
-      if (response instanceof Response) {
-        if (isServer) {
-          handleResponse(response);
-        } else {
-          setTimeout(() => handleResponse(response), 0);
+  const [resource, { refetch }] = createResource<T, S>(
+    source as RouteResourceSource<S>,
+    async (key, info) => {
+      try {
+        if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
+          return info.value;
         }
-      }
-      return response;
-    } catch (e) {
-      if (e instanceof Response) {
-        if (isServer) {
-          handleResponse(e);
-        } else {
-          setTimeout(() => handleResponse(e), 0);
-        }
-        return e;
-      }
-      throw e;
-    }
-  };
 
-  // @ts-ignore
-  const [resource, { refetch }] = createResource(source, fetcherWithRedirect, options);
+        let event = pageEvent as RouteDataEvent;
+        if (isServer) {
+          event = Object.freeze({
+            request: pageEvent.request,
+            env: pageEvent.env,
+            $type: FETCH_EVENT,
+            fetch: pageEvent.fetch
+          });
+        }
+
+        let response = await (fetcher as any).call(event, key, event);
+        if (response instanceof Response) {
+          if (isServer) {
+            handleResponse(response);
+          } else {
+            setTimeout(() => handleResponse(response), 0);
+          }
+        }
+        return response;
+      } catch (e) {
+        if (e instanceof Response) {
+          if (isServer) {
+            handleResponse(e);
+          } else {
+            setTimeout(() => handleResponse(e), 0);
+          }
+          return e;
+        }
+        throw e;
+      }
+    },
+    options
+  );
+
   resources.add(refetch);
   onCleanup(() => resources.delete(refetch));
 

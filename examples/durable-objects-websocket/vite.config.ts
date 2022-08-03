@@ -1,8 +1,8 @@
-import { Miniflare } from "miniflare";
-import path from "path";
-import solid from "solid-start";
-import cloudflareWorkers from "solid-start-cloudflare-workers";
 import { defineConfig } from "vite";
+import solid from "solid-start/vite";
+import cloudflareWorkers from "solid-start-cloudflare-workers";
+import { Miniflare } from "miniflare";
+
 export default defineConfig({
   plugins: [
     solid({

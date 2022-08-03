@@ -1,6 +1,6 @@
 import { expect, test, assert, vi, it, beforeAll, afterAll, describe } from "vitest";
 // Edit an assertion and save to see HMR in action
-import "solid-start/runtime/node-globals";
+import "solid-start/node/globals";
 import server, {
   handleServerRequest,
   XSolidStartContentTypeHeader,

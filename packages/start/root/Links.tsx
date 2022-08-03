@@ -13,9 +13,9 @@ function getAssetsFromManifest(
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
       const route = routeLayouts[fullPath];
       if (route) {
-        memo.push(...(manifest[route.id] || []));
+        memo.push(...((manifest[route.id] || []) as ManifestEntry[]));
         const layoutsManifestEntries = route.layouts.flatMap(
-          manifestKey => manifest[manifestKey] || []
+          manifestKey => (manifest[manifestKey] || []) as ManifestEntry[]
         );
         memo.push(...layoutsManifestEntries);
       }
@@ -23,13 +23,15 @@ function getAssetsFromManifest(
     return memo;
   }, []);
 
+  match.push(...((manifest["entry-client"] || []) as ManifestEntry[]));
+
   const links = match.reduce((r, src) => {
     r[src.href] =
       src.type === "style" ? (
         <link rel="stylesheet" href={src.href} $ServerOnly />
-      ) : (
+      ) : src.type === "script" ? (
         <link rel="modulepreload" href={src.href} $ServerOnly />
-      );
+      ) : undefined;
     return r;
   }, {} as Record<string, JSXElement>);
 
@@ -44,6 +46,10 @@ export default function Links(): JSXElement {
   const isDev = import.meta.env.MODE === "development";
   const context = useContext(ServerContext);
   return (
-    <Assets>{!isDev && getAssetsFromManifest(context.env.manifest, context.routerContext)}</Assets>
+    <Assets>
+      {!isDev &&
+        import.meta.env.START_SSR &&
+        getAssetsFromManifest(context.env.manifest, context.routerContext)}
+    </Assets>
   );
 }
