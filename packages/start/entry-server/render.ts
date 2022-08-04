@@ -1,7 +1,43 @@
 import { JSX } from "solid-js";
-import { renderToStream, renderToStringAsync } from "solid-js/web";
+import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
 import { internalFetch } from "../api/internalFetch";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
+
+export function renderSync(
+  fn: (context: PageEvent) => JSX.Element,
+  options?: {
+    nonce?: string;
+    renderId?: string;
+  }
+) {
+  return () => (event: FetchEvent) => {
+    let pageEvent = createPageEvent(event);
+
+    let markup = renderToString(() => fn(pageEvent), options);
+    if (pageEvent.routerContext.url) {
+      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
+    }
+
+    if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
+      markup = `${pageEvent.routerContext.replaceOutletId}:${
+        pageEvent.routerContext.newOutletId
+      }=${markup.slice(
+        markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) +
+          `<!--${pageEvent.routerContext.newOutletId}-->`.length +
+          `<outlet-wrapper id="${pageEvent.routerContext.newOutletId}">`.length,
+        markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
+          `</outlet-wrapper>`.length
+      )}`;
+
+      pageEvent.responseHeaders.set("Content-Type", "text/plain");
+    }
+
+    return new Response(markup, {
+      status: pageEvent.getStatusCode(),
+      headers: pageEvent.responseHeaders
+    });
+  }
+}
 
 export function renderAsync(
   fn: (context: PageEvent) => JSX.Element,
@@ -90,7 +126,7 @@ export function renderStream(
     onCompleteAll?: (info: { write: (v: string) => void }) => void;
   } = {}
 ) {
-  return () => async (event: FetchEvent) => {
+  return () => (event: FetchEvent) => {
     let pageEvent = createPageEvent(event);
 
     const options = { ...baseOptions };
