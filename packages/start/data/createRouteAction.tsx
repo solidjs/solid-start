@@ -142,6 +142,7 @@ export function createRouteAction<T, U = void>(
           action={url}
           onSubmit={submission => {
             tempOwner = formOwner;
+            props.onSubmit && props.onSubmit(submission);
             submit(submission.formData as any);
             tempOwner = owner;
           }}
