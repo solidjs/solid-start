@@ -13,22 +13,30 @@ function getHTTPVerbName(verb) {
 import c from "picocolors";
 
 export default function printUrls(router, url) {
+  let routes = router
+    .getFlattenedPageRoutes()
+    .map(r => `├─ ${c.blue(`${url}${r.path}`)}`)
+  routes[0] = '┌─' + routes[0].slice(2)
+  routes[routes.length - 1] = '└─' + routes[routes.length - 1].slice(2)
+  
   console.log(
-    `${`  > Page Routes: `}\n${router
-      .getFlattenedPageRoutes()
-      .map(r => `     ${c.blue(`${url}${r.path}`)}`)
-      .join("\n")}`
+    `${c.bold('Page Routes:')}\n${routes.join('\n')}`
   );
-  console.log("");
+  
+  let apiRoutes = router
+    .getFlattenedApiRoutes()
+    .map(
+      r =>
+        `├─  ${c.green(`${url}${r.path}`)} ${c.dim(
+          Object.keys(r.apiPath).map(getHTTPVerbName).join(" | ")
+        )}`
+    )
+  if (apiRoutes.length > 0) {
+    apiRoutes[0] = '┌─' + apiRoutes[0].slice(2)
+    apiRoutes[apiRoutes.length - 1] = '└─' + apiRoutes[apiRoutes.length - 1].slice(2)
+  }
+
   console.log(
-    `${`  > API Routes: `}\n${router
-      .getFlattenedApiRoutes()
-      .map(
-        r =>
-          `     ${c.green(`${url}${r.path}`)} ${c.dim(
-            Object.keys(r.apiPath).map(getHTTPVerbName).join(" | ")
-          )}`
-      )
-      .join("\n")}`
+    `${c.bold('API Routes:')}\n${apiRoutes > 0 ? apiRoutes.join('\n') : '   None! 👻'}`
   );
 }
