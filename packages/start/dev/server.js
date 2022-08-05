@@ -58,9 +58,15 @@ export function createDevHandler(viteServer, config, options) {
     });
   }
 
-  async function handler(req, res) {
+  /**
+   *
+   * @param {import('http').IncomingMessage} req
+   * @param {*} res
+   */
+  async function startHandler(req, res) {
     try {
-      let webRes = await devFetch(createRequest(req));
+      console.log(req.method, req.url);
+      let webRes = await devFetch(createRequest(req), {});
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
 
@@ -78,18 +84,18 @@ export function createDevHandler(viteServer, config, options) {
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
       console.log("ERROR", e);
-      res.statusCode = 500;
-      res.end(e.stack);
+      // res.statusCode = 500;
+      // res.end(e.stack);
     }
   }
 
-  return { fetch: devFetch, handler };
+  return { fetch: devFetch, handler: startHandler };
 }
 
 /**
- * @param {import('vite').ViteDevServer} vite
- * @param {import('vite').ModuleNode} node
- * @param {Set<import('vite').ModuleNode>} deps
+ * @param {import('node_modules/vite').ViteDevServer} vite
+ * @param {import('node_modules/vite').ModuleNode} node
+ * @param {Set<import('node_modules/vite').ModuleNode>} deps
  */
 async function find_deps(vite, node, deps) {
   // since `ssrTransformResult.deps` contains URLs instead of `ModuleNode`s, this process is asynchronous.
@@ -97,7 +103,7 @@ async function find_deps(vite, node, deps) {
   /** @type {Promise<void>[]} */
   const branches = [];
 
-  /** @param {import('vite').ModuleNode} node */
+  /** @param {import('node_modules/vite').ModuleNode} node */
   async function add(node) {
     if (!deps.has(node)) {
       deps.add(node);

@@ -55,7 +55,7 @@ export function createRouteAction<T, U = void>(
       }
     }
 
-    if (response.ok) {
+    if (response.ok || isRedirectResponse(response)) {
       startTransition(() => {
         refetchRouteData(
           typeof options.invalidate === "function"

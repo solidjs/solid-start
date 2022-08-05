@@ -37,3 +37,6 @@ Thumbs.db
 # Local Netlify folder
 .netlify
 netlify
+
+# miniflare cache
+.mf

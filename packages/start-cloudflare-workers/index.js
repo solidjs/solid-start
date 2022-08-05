@@ -8,6 +8,9 @@ import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 export default function ({ durableObjects = [] } = {}) {
   return {
+    // async dev(options, env) {
+    //   console.log(await env.createDevMiddleware());
+    // },
     start(config) {
       const proc = spawn("node", [
         join(config.root, "node_modules", "wrangler", "bin", "wrangler.js"),

@@ -33,13 +33,23 @@ export type IslandManifest = {
   assets: ManifestEntry[];
 };
 
-export interface FetchEvent {
-  request: Request;
-  env: {
+declare global {
+  interface Env {
     manifest?: Record<string, ManifestEntry[] | IslandManifest>;
     collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
     devManifest?: [{ path: string; componentPath: string; id: string }];
-  };
+  }
+}
+
+// export interface Env {
+//   manifest?: Record<string, ManifestEntry[] | IslandManifest>;
+//   collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
+//   devManifest?: [{ path: string; componentPath: string; id: string }];
+// }
+
+export interface FetchEvent {
+  request: Request;
+  env: Env;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {

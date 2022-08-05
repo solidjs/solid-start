@@ -30,7 +30,7 @@ function solidStartInlineServerModules(options) {
     },
     name: "solid-start-inline-server-modules",
     configureServer(vite) {
-      vite.httpServer.once("listening", async () => {
+      vite.httpServer?.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
 
@@ -142,7 +142,7 @@ function solidStartFileSystemRouter(options) {
       server = vite;
       router.watch(console.log);
       router.listener = listener;
-      vite.httpServer.once("listening", async () => {
+      vite.httpServer?.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
 
@@ -291,7 +291,7 @@ function solidStartFileSystemRouter(options) {
 }
 
 /**
- * @returns {import('vite').Plugin}
+ * @returns {import('node_modules/vite').Plugin}
  * @param {{ pageExtensions: any[]; }} options
  */
 function solidsStartRouteManifest(options) {
@@ -311,7 +311,7 @@ function solidsStartRouteManifest(options) {
 }
 
 /**
- * @returns {import('vite').Plugin}
+ * @returns {import('node_modules/vite').Plugin}
  * @param {any} options
  */
 function solidStartServer(options) {
@@ -325,14 +325,21 @@ function solidStartServer(options) {
       return async () => {
         const { createDevHandler } = await import("../dev/server.js");
         remove_html_middlewares(vite.middlewares);
-        vite.middlewares.use(createDevHandler(vite, config, options).handler);
+        console.log(config.solidOptions.devServer);
+        if (
+          config.solidOptions.adapter &&
+          !config.solidOptions.adapter.dev &&
+          config.solidOptions.devServer
+        ) {
+          vite.middlewares.use(createDevHandler(vite, config, options).handler);
+        }
       };
     }
   };
 }
 
 /**
- * @returns {import('vite').Plugin}
+ * @returns {import('node_modules/vite').Plugin}
  * @param {any} options
  */
 function solidStartConfig(options) {
@@ -440,7 +447,7 @@ function solidStartConfig(options) {
 
 /**
  * @param {string} locate
- * @param {fs.PathLike} [cwd]
+ * @param {string} [cwd]
  */
 function find(locate, cwd) {
   cwd = cwd || process.cwd();
@@ -482,7 +489,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 };
 
 /**
- * @returns {import('vite').PluginOption[]}
+ * @returns {import('node_modules/vite').PluginOption[]}
  */
 export default function solidStart(options) {
   options = Object.assign(
@@ -495,6 +502,7 @@ export default function solidStart(options) {
       islandsRouter: process.env.START_ISLANDS_ROUTER === "true" ? true : false,
       lazy: true,
       prerenderRoutes: [],
+      devServer: true,
       inspect: true
     },
     options ?? {}
@@ -590,7 +598,7 @@ function islands() {
 }
 
 /**
- * @param {import('vite').ViteDevServer['middlewares']} server
+ * @param {import('node_modules/vite').ViteDevServer['middlewares']} server
  */
 function remove_html_middlewares(server) {
   const html_middlewares = [
