@@ -118,6 +118,26 @@ importers:
       undici: 5.6.0
       vite: 3.0.4
 
+  examples/todomvc:
+    specifiers:
+      '@solidjs/meta': ^0.28.0
+      '@solidjs/router': ^0.4.2
+      solid-js: 1.4.8
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
+      typescript: ^4.4.3
+      undici: ^5.8.0
+      vite: ^3.0.4
+    devDependencies:
+      '@solidjs/meta': 0.28.0_solid-js@1.4.8
+      '@solidjs/router': 0.4.2_solid-js@1.4.8
+      solid-js: 1.4.8
+      solid-start: link:../../packages/start
+      solid-start-node: link:../../packages/start-node
+      typescript: 4.7.4
+      undici: 5.8.0
+      vite: 3.0.4
+
   examples/with-auth:
     specifiers:
       '@solidjs/meta': ^0.28.0
@@ -4113,12 +4133,28 @@ packages:
       solid-js: 1.4.7
     dev: true
 
+  /@solidjs/meta/0.28.0_solid-js@1.4.8:
+    resolution: {integrity: sha512-x52VdB9RZJ1apDB/pAmf58oeJsJ0lGKFXWjnm/TE/MlENIBPg3JaW8H5v2HnGpQC0WUbgiIsDFWpLWVNBo5t6g==}
+    peerDependencies:
+      solid-js: '>=1.4.0'
+    dependencies:
+      solid-js: 1.4.8
+    dev: true
+
   /@solidjs/router/0.4.2_solid-js@1.4.7:
     resolution: {integrity: sha512-RswymVhqnGVHMCo/01X9wE+u98pzYZQ/b23SgjO/PK+8oTgdY1f83OrsWR1A01LieTySkCSw7nunWTi+VOQyWA==}
     peerDependencies:
       solid-js: ^1.3.5
     dependencies:
       solid-js: 1.4.7
+    dev: true
+
+  /@solidjs/router/0.4.2_solid-js@1.4.8:
+    resolution: {integrity: sha512-RswymVhqnGVHMCo/01X9wE+u98pzYZQ/b23SgjO/PK+8oTgdY1f83OrsWR1A01LieTySkCSw7nunWTi+VOQyWA==}
+    peerDependencies:
+      solid-js: ^1.3.5
+    dependencies:
+      solid-js: 1.4.8
     dev: true
 
   /@szmarczak/http-timer/1.1.2:
@@ -13621,6 +13657,10 @@ packages:
 
   /solid-js/1.4.7:
     resolution: {integrity: sha512-u3hoe5w3xseAc/8zLwYaQVGanWXknMMQkzryNz7lOPy2ygW6DhCtfMseun4kLflRNRzrUUpTV3W5p7j2SGcHCQ==}
+
+  /solid-js/1.4.8:
+    resolution: {integrity: sha512-XErZdnnYYXF7OwGSUAPcua2y5/ELB/c53zFCpWiEGqxTNoH1iQghzI8EsHJXk06sNn+Z/TGhb8bPDNNGSgimag==}
+    dev: true
 
   /solid-mdx/0.0.6_solid-js@1.4.7+vite@3.0.4:
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
