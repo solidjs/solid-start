@@ -17,7 +17,7 @@
     "terser": "^5.14.2"
   },
   "devDependencies": {
-    "solid-start": "^0.1.0-alpha.99",
+    "solid-start": "0.1.0-alpha.99",
     "undici": "^5.8.0",
     "vite": "^3.0.4"
   },
