@@ -49,11 +49,9 @@ export function createRouteAction<T, U = void>(
   function handleRefetch(response) {
     return startTransition(() => {
       refetchRouteData(
-        typeof options.invalidate === "function"
-          ? options.invalidate(response)
-          : options.invalidate
+        typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
       );
-    })
+    });
   }
 
   function handleResponse(response: Response) {
@@ -80,23 +78,25 @@ export function createRouteAction<T, U = void>(
         if (res instanceof Response) {
           await handleResponse(res);
         } else await handleRefetch(res);
-        toDelete.forEach((p) => lookup.delete(p));
+        toDelete.forEach(p => lookup.delete(p));
         setPending(Array.from(lookup.values()));
         setData(() => ({ value: res }));
       }
       return res;
-    }).catch(e => {
+    }).catch(async e => {
       toDelete.add(p);
       if (reqId === count) {
-        return runWithOwner(tempOwner || owner, async () => {
-          if (e instanceof Response) {
-            await handleResponse(e);
-          } else await handleRefetch(e);
-          toDelete.forEach((p) => lookup.delete(p));
-          setPending(Array.from(lookup.values()));
+        if (e instanceof Response) {
+          await handleResponse(e);
+        } else await handleRefetch(e);
+        toDelete.forEach(p => lookup.delete(p));
+        setPending(Array.from(lookup.values()));
+        if (!isRedirectResponse(e)) {
           setData(() => ({ error: e }));
-          if (!handledError) throw e;
-        });
+          return runWithOwner(tempOwner || owner, () => {
+            if (!handledError) throw e;
+          });
+        } else setData(() => ({ value: e }));
       }
     });
     return p;
