@@ -8,7 +8,10 @@
   "type": "module",
   "devDependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.1",
+    "@cloudflare/workers-types": "^3.14.1",
+    "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.2",
+    "node-mocks-http": "^1.11.0",
     "solid-js": "1.4.7",
     "@solidjs/meta": "^0.28.0",
     "solid-start": "0.1.0-alpha.99",
@@ -16,9 +19,19 @@
     "solid-start-node": "0.1.0-alpha.99",
     "typescript": "^4.4.3",
     "undici": "^5.5.1",
-    "vite": "^3.0.4"
+    "vite": "^3.0.4",
+    "wrangler": "2"
   },
   "engines": {
     "node": ">=16"
+  },
+  "dependencies": {
+    "@miniflare/core": "^2.6.0",
+    "@miniflare/http-server": "^2.6.0",
+    "@miniflare/shared": "^2.6.0",
+    "@miniflare/web-sockets": "^2.6.0",
+    "@types/ws": "^8.5.3",
+    "miniflare": "^2.6.0",
+    "ws": "^8.8.1"
   }
 }

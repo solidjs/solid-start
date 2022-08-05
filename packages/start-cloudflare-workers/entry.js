@@ -7,6 +7,7 @@ const assetManifest = JSON.parse(manifestJSON);
 
 export default {
   async fetch(request, env, ctx) {
+    console.log(env);
     env.manifest = manifest;
     env.getAssetFromKV = async request => {
       return await getAssetFromKV(

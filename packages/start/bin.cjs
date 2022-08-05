@@ -37,27 +37,23 @@ prog
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
   .option("-p, --port", "Port to start server on", 3000)
-  .action(async ({ config, open, port, root, host }) => {
-    root = root || process.cwd();
-    if (!config) {
-      if (!config) {
-        config = findAny(root, "start.config");
-      }
-      if (!config) {
-        config = findAny(root, "vite.config");
-      }
-
-      if (!config) {
-        config = join(root, "node_modules", "solid-start", "vite", "config.js");
-      }
-      DEBUG('config file: "%s"', config);
+  .action(async ({ config: configFile, open, port, root, host }) => {
+    const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
+    let adapterModule;
+    if (typeof config.solidOptions.adapter === "string") {
+      adapterModule = (await import(config.solidOptions.adapter)).default();
+    } else {
+      adapterModule = config.solidOptions.adapter;
     }
+
     if (open) setTimeout(() => launch(port), 1000);
     spawn(
-      "vite",
+      "node",
       [
+        "--experimental-vm-modules",
+        "node_modules/vite/bin/vite.js",
         "dev",
-        ...(config ? ["--config", config] : []),
+        ...(config ? ["--config", config.configFile] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
       ],
@@ -320,11 +316,14 @@ prog
   .describe("Start production build")
   .action(async ({ root, config: configFile }) => {
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
-    let adapter = config.solidOptions.adapter;
-    if (typeof adapter === "string") {
-      adapter = (await import(adapter)).default();
+
+    let adapterModule;
+    if (typeof config.solidOptions.adapter === "string") {
+      adapterModule = (await import(config.solidOptions.adapter)).default();
+    } else {
+      adapterModule = config.solidOptions.adapter;
     }
-    let url = await adapter.start(config);
+    let url = await adapterModule.start(config);
     if (url) {
       const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
@@ -351,7 +350,7 @@ prog.parse(process.argv);
 /**
  *
  * @param {*} param0
- * @returns {Promise<import('vite').ResolvedConfig & { solidOptions: import('./types').StartOptions }>}
+ * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
   root = root || process.cwd();
