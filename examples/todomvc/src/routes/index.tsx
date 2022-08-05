@@ -5,6 +5,13 @@ import { CompleteIcon, IncompleteIcon } from "~/components/icons";
 import db from "~/db";
 import { Todo } from "~/types";
 
+declare module "solid-js" {
+  namespace JSX {
+    interface Directives {
+      setFocus: true;
+    }
+  }
+}
 const setFocus = (el) => setTimeout(() => el.focus());
 
 export const routeData = () =>
@@ -44,7 +51,11 @@ const TodoApp = () => {
     if (!pending || !pending()) setEditingId(id);
   }
   const remainingCount = createMemo(
-    () => todos().length - todos().filter((todo) => todo.completed).length
+    () =>
+      todos().length +
+      addTodo.pending.length -
+      todos().filter(todo => todo.completed).length -
+      removeTodo.pending.length
   );
   const filterList = (todos: Todo[]) => {
     if (location.query.show === "active")
