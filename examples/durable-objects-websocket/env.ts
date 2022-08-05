@@ -1,6 +1,7 @@
 declare global {
   interface Env {
-    app: any[];
+    app: KVNamespace;
+    DO_WEBSOCKET: DurableObjectNamespace;
   }
 }
 

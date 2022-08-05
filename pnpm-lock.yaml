@@ -379,21 +379,39 @@ importers:
   packages/start-cloudflare-workers:
     specifiers:
       '@cloudflare/kv-asset-handler': ^0.2.0
+      '@cloudflare/workers-types': ^3.14.1
+      '@miniflare/core': ^2.6.0
+      '@miniflare/http-server': ^2.6.0
+      '@miniflare/shared': ^2.6.0
+      '@miniflare/web-sockets': ^2.6.0
       '@rollup/plugin-commonjs': ^22.0.1
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
+      '@types/node': ^18.0.0
+      '@types/ws': ^8.5.3
+      miniflare: ^2.6.0
       rollup: ^2.77.2
       solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       vite: ^3.0.4
+      ws: ^8.8.1
     dependencies:
       '@cloudflare/kv-asset-handler': 0.2.0
+      '@cloudflare/workers-types': 3.14.1
+      '@miniflare/core': 2.6.0
+      '@miniflare/http-server': 2.6.0
+      '@miniflare/shared': 2.6.0
+      '@miniflare/web-sockets': 2.6.0
       '@rollup/plugin-commonjs': 22.0.1_rollup@2.77.2
       '@rollup/plugin-json': 4.1.0_rollup@2.77.2
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.77.2
+      '@types/ws': 8.5.3
+      miniflare: 2.6.0
       rollup: 2.77.2
       terser: 5.14.2
+      ws: 8.8.1
     devDependencies:
+      '@types/node': 18.0.1
       solid-start: link:../start
       vite: 3.0.4_terser@5.14.2
 
@@ -1861,7 +1879,6 @@ packages:
 
   /@cloudflare/workers-types/3.14.1:
     resolution: {integrity: sha512-B1/plF62pt+H2IJHvApK8fdOJAVsvojvacuac8x8s+JIyqbropMyqNqHTKLm3YD8ZFLGwYeFTudU+PQ7vGvBdA==}
-    dev: true
 
   /@colors/colors/1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}

@@ -1,11 +1,31 @@
-import { useRouteData } from "@solidjs/router";
 import { createEffect, createSignal, onCleanup } from "solid-js";
+import { useParams, useRouteData } from "solid-start";
 import server, { createServerAction, createServerData, redirect } from "solid-start/server";
 import { createWebSocketServer } from "solid-start/websocket";
 import { getUser, logout } from "~/session";
 
-const pingPong = createWebSocketServer(
-  server(function (webSocket) {
+interface User {
+  websocket: WebSocket;
+  id: string;
+  // city: string | undefined;
+  // country: string;
+}
+
+const room = createWebSocketServer(
+  server(function (webSocket, { durableObject }) {
+    let object = durableObject as { users: Map<string, User>; pings: Map<string, number> };
+    if (!object.users) {
+      object.users = new Map();
+      object.pings = new Map();
+    }
+
+    // Create our session and add it to the users map.
+    const userId = crypto.randomUUID();
+    object.users.set(userId, {
+      id: userId,
+      websocket: webSocket
+    });
+
     webSocket.addEventListener("message", async msg => {
       try {
         // Parse the incoming message
@@ -14,17 +34,27 @@ const pingPong = createWebSocketServer(
 
         switch (incomingMessage.type) {
           case "ping":
-            webSocket.send(
-              JSON.stringify([
-                {
-                  type: "pong",
-                  data: {
-                    id: incomingMessage.data.id,
-                    time: Date.now()
+            const msg = {
+              type: "pong",
+              data: {
+                id: incomingMessage.data.id,
+                time: Date.now(),
+                dolocation: object.dolocation,
+                users: Array.from(object.users.values()).map(x => {
+                  // update user's ping
+                  if (incomingMessage.data.lastPingMs && x.websocket === webSocket) {
+                    object.pings.set(x.id, incomingMessage.data.lastPingMs);
                   }
-                }
-              ])
-            );
+
+                  return {
+                    ...x,
+                    ping: object.pings.get(x.id),
+                    websocket: undefined
+                  };
+                })
+              }
+            };
+            webSocket.send(JSON.stringify([msg]));
             break;
         }
       } catch (err) {
@@ -33,6 +63,15 @@ const pingPong = createWebSocketServer(
         webSocket.send(JSON.stringify({ error: err.stack }));
       }
     });
+
+    // On "close" and "error" events, remove the WebSocket from the webSockets list
+    let closeOrErrorHandler = ev => {
+      console.log("user", userId, ev);
+      object.users.delete(userId);
+      console.log(object.users.size);
+    };
+    webSocket.addEventListener("close", closeOrErrorHandler);
+    webSocket.addEventListener("error", closeOrErrorHandler);
   })
 );
 
@@ -50,6 +89,7 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
+  const params = useParams();
   const envData = createServerData(
     () => "k",
     async (_, { request, env }) => {
@@ -57,27 +97,24 @@ export default function Home() {
     }
   );
   const logoutAction = createServerAction((_, { request }) => logout(request));
-  const [lastPing, setLastPing] = createSignal(Date.now().toString());
+
   const increment = createServerAction(
     async (_, { env }) => {
       await env.app.put("key", `${Number(await this.env.app.get("key")) + 1}`);
-      return redirect("/");
     },
     {
       invalidate: () => "k"
     }
   );
 
+  const [users, setUsers] = createSignal([]);
+
   createEffect(() => {
-    let websocket = pingPong.connect();
+    let websocket = room.connect(params.id);
 
     websocket.addEventListener("message", event => {
       const messages = JSON.parse(event.data);
-      let message = messages[0];
-      switch (message.type) {
-        case "pong":
-          setLastPing(message.data.time);
-      }
+      setUsers(messages[0].data.users.map(user => user.id));
     });
 
     function sendWebSocketMessage(type, data) {
@@ -106,13 +143,18 @@ export default function Home() {
     <main class="w-full p-4 space-y-2">
       <h1 class="font-bold text-3xl">Hello {user()?.username}</h1>
       <h3 class="font-bold text-xl">Message board</h3>
-      <p>Counter: {envData()}</p>
-      <p>Last Ping: {lastPing()}</p>
+      Counter: {envData()}
       <increment.Form>
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Increment
         </button>
       </increment.Form>
+      <div>
+        Users:
+        <ul>
+          <For each={users()}>{user => <li>{user}</li>}</For>
+        </ul>
+      </div>
       <logoutAction.Form>
         <button name="logout" type="submit">
           Logout

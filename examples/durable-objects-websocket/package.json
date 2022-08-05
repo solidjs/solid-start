@@ -9,7 +9,6 @@
   "devDependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.1",
     "@cloudflare/workers-types": "^3.14.1",
-    "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.2",
     "node-mocks-http": "^1.11.0",
     "solid-js": "1.4.7",
