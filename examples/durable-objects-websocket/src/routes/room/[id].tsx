@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onCleanup } from "solid-js";
+import { createEffect, createSignal, For, onCleanup } from "solid-js";
 import { useParams, useRouteData } from "solid-start";
 import server, { createServerAction, createServerData, redirect } from "solid-start/server";
 import { createWebSocketServer } from "solid-start/websocket";
@@ -39,7 +39,6 @@ const room = createWebSocketServer(
               data: {
                 id: incomingMessage.data.id,
                 time: Date.now(),
-                dolocation: object.dolocation,
                 users: Array.from(object.users.values()).map(x => {
                   // update user's ping
                   if (incomingMessage.data.lastPingMs && x.websocket === webSocket) {
@@ -120,10 +119,6 @@ export default function Home() {
     function sendWebSocketMessage(type, data) {
       websocket.send(JSON.stringify({ type, data }));
     }
-
-    websocket.addEventListener("close", event => {
-      console.log(event);
-    });
 
     // client ping <-> server pong
     let interval = setInterval(() => {
