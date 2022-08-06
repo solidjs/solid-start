@@ -10,33 +10,35 @@ function getHTTPVerbName(verb) {
   return verb.toUpperCase();
 }
 
+/**
+ * Helper function to format routes for profit
+ * @param {any} routes flattened routes
+ * @param {string} routeCat route category name
+ * @param {function(string): string} colorFn mapped formatter function
+
+ * @returns {void}
+ */
+function prettyRoutes(routes,routeCat,colorFn) {
+  let base = routes.map(colorFn)
+  if (base.length > 0) {
+    base[0] = '┌─' + base[0].slice(2)
+    base[base.length - 1] = '└─' + base[base.length - 1].slice(2)
+    base = base.join('\n')
+  } else {
+    base = '   None! 👻'
+  }
+  console.log(
+    `${c.bold(routeCat + ':')}\n${base}`
+  );
+}
+
 import c from "picocolors";
 
 export default function printUrls(router, url) {
-  let routes = router
-    .getFlattenedPageRoutes()
-    .map(r => `├─ ${c.blue(`${url}${r.path}`)}`)
-  routes[0] = '┌─' + routes[0].slice(2)
-  routes[routes.length - 1] = '└─' + routes[routes.length - 1].slice(2)
+  prettyRoutes(router.getFlattenedPageRoutes(),"Page Routes",r => `├─ ${c.blue(`${url}${r.path}`)}`)
   
-  console.log(
-    `${c.bold('Page Routes:')}\n${routes.join('\n')}`
-  );
-  
-  let apiRoutes = router
-    .getFlattenedApiRoutes()
-    .map(
-      r =>
-        `├─  ${c.green(`${url}${r.path}`)} ${c.dim(
-          Object.keys(r.apiPath).map(getHTTPVerbName).join(" | ")
-        )}`
-    )
-  if (apiRoutes.length > 0) {
-    apiRoutes[0] = '┌─' + apiRoutes[0].slice(2)
-    apiRoutes[apiRoutes.length - 1] = '└─' + apiRoutes[apiRoutes.length - 1].slice(2)
-  }
-
-  console.log(
-    `${c.bold('API Routes:')}\n${apiRoutes > 0 ? apiRoutes.join('\n') : '   None! 👻'}`
-  );
+  prettyRoutes(router.getFlattenedApiRoutes(),"API Routes",r =>
+  `├─  ${c.green(`${url}${r.path}`)} ${c.dim(
+    Object.keys(r.apiPath).map(getHTTPVerbName).join(" | ")
+  )}`)
 }
