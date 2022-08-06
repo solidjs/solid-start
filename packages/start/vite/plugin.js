@@ -149,7 +149,6 @@ function solidStartFileSystemRouter(options) {
         setTimeout(() => {
           // eslint-disable-next-line no-console
           printUrls(router, `${protocol}://localhost:${port}`);
-          console.log("");
         }, 100);
       });
     },
