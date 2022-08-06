@@ -2,7 +2,7 @@ import debug from "debug";
 import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
-import { normalizePath } from "vite";
+import { loadEnv, normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
@@ -33,11 +33,12 @@ function solidStartInlineServerModules(options) {
       vite.httpServer.once("listening", async () => {
         const protocol = config.server.https ? "https" : "http";
         const port = config.server.port;
+
+        const label = c.bold("Server modules:");
         setTimeout(() => {
-          const label = c.bold("Server modules:");
           // eslint-disable-next-line no-console
           console.log(`${label}\n   ${c.magenta(`${protocol}://localhost:${port}/_m/*`)}\n`);
-        }, 200)
+        }, 200);
       });
     }
   };
@@ -78,6 +79,7 @@ function solidStartFileSystemRouter(options) {
   let reloadGlobs = [];
   let restartGlobs = [];
   let configFile = "vite.config.js";
+  let timerState = "reload";
   let timer;
   const pathPlatform = process.platform === "win32" ? path.win32 : path.posix;
   function clear() {
@@ -101,8 +103,8 @@ function solidStartFileSystemRouter(options) {
       // eslint-disable-next-line no-console
       console.log(
         c.dim(new Date().toLocaleTimeString()) +
-        c.bold(c.blue(" [plugin-restart] ")) +
-        c.yellow(`restarting server by ${pathPlatform.relative(root, file)}`)
+          c.bold(c.blue(" [plugin-restart] ")) +
+          c.yellow(`restarting server by ${pathPlatform.relative(root, file)}`)
       );
       timerState = "";
     });
@@ -147,6 +149,7 @@ function solidStartFileSystemRouter(options) {
         setTimeout(() => {
           // eslint-disable-next-line no-console
           printUrls(router, `${protocol}://localhost:${port}`);
+          console.log("");
         }, 100);
       });
     },
@@ -217,10 +220,10 @@ function solidStartFileSystemRouter(options) {
                 { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
               ],
               !ssr &&
-              process.env.NODE_ENV !== "production" && [
-                routeDataHmr,
-                { ssr, root: process.cwd() }
-              ]
+                process.env.NODE_ENV !== "production" && [
+                  routeDataHmr,
+                  { ssr, root: process.cwd() }
+                ]
             ].filter(Boolean)
           })
         );
@@ -336,9 +339,14 @@ function solidStartConfig(options) {
   return {
     name: "solid-start-config",
     enforce: "pre",
-    config(conf) {
+    async config(conf, e) {
       const root = conf.root || process.cwd();
       options.root = root;
+
+      // Load env file based on `mode` in the current working directory.
+      // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+      options.env = await loadEnv(e.mode, process.cwd(), "");
+
       options.entryClient = findAny(join(options.root, options.appRoot), "entry-client");
       if (!options.entryClient) {
         options.entryClient = join(
@@ -374,8 +382,25 @@ function solidStartConfig(options) {
       DEBUG(options);
 
       return {
+        test: {
+          environment: "jsdom",
+          transformMode: {
+            web: [/\.[tj]sx?$/]
+          },
+          globals: true,
+          setupFiles: "node_modules/solid-start/vitest.setup.ts",
+          // solid needs to be inline to work around
+          // a resolution issue in vitest:
+          // deps: {
+          //   inline: [/solid-js/]
+          // }
+          // if you have few tests, try commenting one
+          // or both out to improve performance:
+          threads: false,
+          isolate: false
+        },
         resolve: {
-          conditions: ["solid"],
+          conditions: options.env["VITEST"] ? ["browser", "solid"] : ["solid"],
           alias: {
             "~": path.join(root, options.appRoot),
             "~start/root": options.appRootFile,
@@ -506,15 +531,15 @@ export default function solidStart(options) {
       babel: (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
         plugins: options.ssr
           ? [
-            [
-              routeResource,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-            ],
-            [
-              babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              [
+                routeResource,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ],
+              [
+                babelServerModule,
+                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              ]
             ]
-          ]
           : []
       })
     }),
@@ -550,10 +575,12 @@ function islands() {
           (a, b, c) =>
             ssr
               ? `import ${b}_island from "${c}"; 
-                  const ${b} = unstable_island(${b}_island, "${join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
-              }");`
-              : `const ${b} = unstable_island(() => import("${c}?island"), "${join(dirname(id), c) + ".tsx" + "?island"
-              }")`
+                  const ${b} = unstable_island(${b}_island, "${
+                  join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
+                }");`
+              : `const ${b} = unstable_island(() => import("${c}?island"), "${
+                  join(dirname(id), c) + ".tsx" + "?island"
+                }")`
         );
 
         return replaced;
