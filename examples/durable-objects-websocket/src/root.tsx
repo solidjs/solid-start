@@ -4,6 +4,10 @@ import { Suspense } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
 
+import "virtual:windi-devtools";
+import "virtual:windi.css";
+
+
 export default function Root() {
   return (
     <html lang="en">

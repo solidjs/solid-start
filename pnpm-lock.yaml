@@ -59,6 +59,8 @@ importers:
       typescript: ^4.4.3
       undici: ^5.5.1
       vite: ^3.0.4
+      vite-plugin-windicss: ^1.8.7
+      windicss: ^3.5.6
     devDependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@solidjs/meta': 0.28.0_solid-js@1.4.7
@@ -70,6 +72,8 @@ importers:
       typescript: 4.7.4
       undici: 5.6.0
       vite: 3.0.4
+      vite-plugin-windicss: 1.8.7_vite@3.0.4
+      windicss: 3.5.6
 
   examples/hackernews:
     specifiers:
@@ -4528,11 +4532,35 @@ packages:
       - supports-color
     dev: true
 
+  /@windicss/config/1.8.7:
+    resolution: {integrity: sha512-8n+/Y36j5L3rw2tgMdLjeGRuNV7VYfKoHoraLK6Bk9OJ1MTPd5vv7pekof/uOPWVV7WWjVeZ6CTO8SDbDDW3iw==}
+    dependencies:
+      debug: 4.3.4
+      jiti: 1.14.0
+      windicss: 3.5.6
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@windicss/plugin-utils/1.8.6:
     resolution: {integrity: sha512-YY6EcUsgkosaQkIseFiIoHfU1H5boOAs/l74QWLI6ryNeHLMq2e04QVsFz+Rt+U8b8PRNxXPC8ADbxE05X7I7g==}
     dependencies:
       '@antfu/utils': 0.5.2
       '@windicss/config': 1.8.6
+      debug: 4.3.4
+      fast-glob: 3.2.11
+      magic-string: 0.26.2
+      micromatch: 4.0.5
+      windicss: 3.5.6
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@windicss/plugin-utils/1.8.7:
+    resolution: {integrity: sha512-dfj95olNZyGFDPFMBvE5oq8hA5f0ooUJZjVdWlthS4ek4W1/xNOHDxB6ygWR8LE9zCOXZykApjt1LOhy9Ky2QA==}
+    dependencies:
+      '@antfu/utils': 0.5.2
+      '@windicss/config': 1.8.7
       debug: 4.3.4
       fast-glob: 3.2.11
       magic-string: 0.26.2
@@ -5050,7 +5078,7 @@ packages:
   /axios/0.25.0_debug@4.3.4:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.15.1
+      follow-redirects: 1.15.1_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: false
@@ -8047,6 +8075,18 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+
+  /follow-redirects/1.15.1_debug@4.3.4:
+    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+    dev: false
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -15113,6 +15153,20 @@ packages:
       vite: ^2.0.1
     dependencies:
       '@windicss/plugin-utils': 1.8.6
+      debug: 4.3.4
+      kolorist: 1.5.1
+      vite: 3.0.4
+      windicss: 3.5.6
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /vite-plugin-windicss/1.8.7_vite@3.0.4:
+    resolution: {integrity: sha512-/zwQ8+RV+MSkbG0IGqsEma6r2R01NzN/aNpNjJD7VVAkxAptNznqDXOObFTskkWfZ+9m6KJZCOuCPgAFtQIzEA==}
+    peerDependencies:
+      vite: ^2.0.1 || ^3.0.0
+    dependencies:
+      '@windicss/plugin-utils': 1.8.7
       debug: 4.3.4
       kolorist: 1.5.1
       vite: 3.0.4
