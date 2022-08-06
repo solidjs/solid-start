@@ -110,11 +110,13 @@ export interface FormProps extends Omit<ComponentProps<"form">, "method" | "onSu
    */
   replace?: boolean;
 
+  onSubmit?: (event: SubmitEvent) => void;
+
   /**
    * A function to call when the form is submitted. If you call
-   * `event.preventDefault()` then this form will not do anything.
+   * `event.preventDefault()` then this form will not be called.
    */
-  onSubmit?: (submission: FormAction<FormData>) => void;
+  onSubmission?: (submission: FormAction<FormData>) => void;
 }
 /**
  * A Remix-aware `<form>`. It behaves like a normal form except that the
@@ -126,7 +128,7 @@ export interface FormProps extends Omit<ComponentProps<"form">, "method" | "onSu
 //   return <FormImpl {...props} ref={ref} />;
 // });
 interface FormImplProps extends FormProps {
-  fetchKey?: string;
+  onSubmmsion?: (submission: FormAction<FormData>) => void;
 }
 
 export let FormImpl = (_props: FormImplProps) => {
@@ -147,14 +149,14 @@ export let FormImpl = (_props: FormImplProps) => {
       "method",
       "action",
       "encType",
-      "fetchKey",
+      "onSubmission",
       "onSubmit",
       "children",
       "ref"
     ]
   );
-  let submit = useSubmitImpl(props.fetchKey, submission => {
-    props.onSubmit(submission);
+  let submit = useSubmitImpl(submission => {
+    props.onSubmission && props.onSubmission(submission);
   });
   let formMethod: FormMethod = props.method.toLowerCase() === "get" ? "get" : "post";
   // let formAction = useFormAction(props.action, formMethod);
@@ -175,7 +177,7 @@ export let FormImpl = (_props: FormImplProps) => {
   // the submit event (even when submitting via keyboard when focused on
   // another form field, yeeeeet) so we should have access to that button's
   // data for use in the submit handler.
-  let clickedButtonRef = { current: null };
+  let clickedButtonRef;
   let form: HTMLFormElement | null = null;
 
   createEffect(() => {
@@ -188,7 +190,7 @@ export let FormImpl = (_props: FormImplProps) => {
       );
 
       if (submitButton && submitButton.type === "submit") {
-        clickedButtonRef.current = submitButton;
+        clickedButtonRef = submitButton;
       }
     }
 
@@ -210,14 +212,14 @@ export let FormImpl = (_props: FormImplProps) => {
         props.reloadDocument
           ? undefined
           : event => {
-              // props.onSubmit && props.onSubmit(event);
+              props.onSubmit && props.onSubmit(event);
               if (event.defaultPrevented) return;
               event.preventDefault();
-              submit(clickedButtonRef.current || event.currentTarget, {
+              submit(clickedButtonRef || event.currentTarget, {
                 method: props.method,
                 replace: props.replace
               });
-              clickedButtonRef.current = null;
+              clickedButtonRef = null;
             }
       }
       {...rest}
@@ -257,8 +259,7 @@ export interface SubmitOptions {
 }
 
 export function useSubmitImpl(
-  key?: string,
-  onSubmit?: (sub: FormAction<FormData>) => void
+  onSubmission: (sub: FormAction<FormData>) => void
 ): SubmitFunction {
   return (target, options = {}) => {
     let method: string;
@@ -346,7 +347,7 @@ export function useSubmitImpl(
       encType
     };
 
-    onSubmit(submission);
+    onSubmission(submission);
   };
 }
 function isHtmlElement(object: any): object is HTMLElement {
