@@ -14,7 +14,7 @@ function getHTTPVerbName(verb) {
  * Helper function to format routes for profit
  * @param {any} routes flattened routes
  * @param {string} routeCat route category name
- * @param {function(string): string} colorFn mapped formatter function
+ * @param {function(Object): string} colorFn mapped formatter function
 
  * @returns {void}
  */
