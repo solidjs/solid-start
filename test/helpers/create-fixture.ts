@@ -277,7 +277,7 @@ function build(
     cwd: projectDir,
     env: {
       ...process.env,
-      ADAPTER: adapter ? adapter : "solid-start-node"
+      START_ADAPTER: adapter ? adapter : "solid-start-node"
     }
   });
 
