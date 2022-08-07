@@ -7,7 +7,14 @@ const assetManifest = JSON.parse(manifestJSON);
 
 export default {
   async fetch(request, env, ctx) {
-    console.log(env);
+    if (request.headers.get("Upgrade") === "websocket") {
+      const url = new URL(request.url);
+      const durableObjectId = env.DO_WEBSOCKET.idFromName(url.pathname + url.search);
+      const durableObjectStub = env.DO_WEBSOCKET.get(durableObjectId);
+      const response = await durableObjectStub.fetch(request);
+      return response;
+    }
+
     env.manifest = manifest;
     env.getAssetFromKV = async request => {
       return await getAssetFromKV(

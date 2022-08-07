@@ -26,6 +26,7 @@
     "session",
     "virtual",
     "vite",
+    "websocket",
     "bin.cjs",
     "index.tsx",
     "required-user-files.d.ts",
@@ -63,7 +64,8 @@
     "./server/*": "./server/*",
     "./session": "./session/index.ts",
     "./session/*": "./session/*",
-    "./websocket": "./websocket/index.ts"
+    "./websocket": "./websocket/index.ts",
+    "./websocket/*": "./websocket/*"
   },
   "dependencies": {
     "@babel/core": "^7.18.9",

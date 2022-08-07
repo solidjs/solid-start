@@ -89,22 +89,8 @@ export function routeData() {
 export default function Home() {
   const user = useRouteData<typeof routeData>();
   const params = useParams();
-  const envData = createServerData(
-    () => "k",
-    async (_, { request, env }) => {
-      return Number(await env.app.get("key"));
-    }
-  );
-  const logoutAction = createServerAction((_, { request }) => logout(request));
 
-  const increment = createServerAction(
-    async (_, { env }) => {
-      await env.app.put("key", `${Number(await this.env.app.get("key")) + 1}`);
-    },
-    {
-      invalidate: () => "k"
-    }
-  );
+  const logoutAction = createServerAction((_, { request }) => logout(request));
 
   const [users, setUsers] = createSignal([]);
 
@@ -138,12 +124,6 @@ export default function Home() {
     <main class="w-full p-4 space-y-2">
       <h1 class="font-bold text-3xl">Hello {user()?.username}</h1>
       <h3 class="font-bold text-xl">Message board</h3>
-      Counter: {envData()}
-      <increment.Form>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Increment
-        </button>
-      </increment.Form>
       <div>
         Users:
         <ul>

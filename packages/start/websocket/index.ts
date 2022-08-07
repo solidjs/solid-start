@@ -31,5 +31,3 @@ export function createWebSocketServer(
     };
   }
 }
-
-export { WebSocketDurableObject } from "./do";

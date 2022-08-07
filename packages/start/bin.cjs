@@ -238,17 +238,31 @@ prog
           DEBUG("starting vite server for index.html");
           let port = await (await import("get-port")).default();
           let proc = spawn(
-            "vite",
-            ["dev", "--mode", "production", "--port", `${port}`, "--config", config.configFile],
+            "node",
+            [
+              "--experimental-vm-modules",
+              "node_modules/vite/bin/vite.js",
+              "dev",
+              "--mode",
+              "production",
+              ...(config ? ["--config", config.configFile] : []),
+              ...(port ? ["--port", port] : [])
+            ],
             {
               stdio: isDebug ? "inherit" : "ignore",
-              shell: true
+              shell: true,
+              env: {
+                ...process.env,
+                START_SPA_CLIENT: "true"
+              }
             }
           );
+
           process.on("SIGINT", function () {
             proc.kill();
             process.exit();
           });
+
           await waitOn({
             resources: [`http://localhost:${port}/`],
             verbose: isDebug
