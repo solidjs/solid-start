@@ -5,8 +5,9 @@ import mountRouter from "../islands/router";
 
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
-  const { default: createDebugger } = await import("debug");
-  window.DEBUG = createDebugger("start:client");
+  // const { default: createDebugger } = await import("debug");
+  // window.DEBUG = createDebugger("start:client");
+  window.DEBUG = console.log
 
   DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
   DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);

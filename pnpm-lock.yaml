@@ -32,8 +32,8 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.2
       solid-js: 1.4.7
-      solid-start: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       typescript: ^4.4.3
       undici: ^5.8.0
       vite: ^3.0.4
@@ -53,9 +53,9 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.2
       solid-js: 1.4.7
-      solid-start: 0.1.0-alpha.98
-      solid-start-cloudflare-workers: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-cloudflare-workers: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       typescript: ^4.4.3
       undici: ^5.5.1
       vite: ^3.0.4
@@ -79,10 +79,8 @@ importers:
       netlify-cli: ^10.11.2
       node-fetch: ^3.2.9
       solid-js: 1.4.7
-      solid-start: 0.1.0-alpha.98
-      solid-start-cloudflare-workers: 0.1.0-alpha.98
-      solid-start-netlify: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       typescript: ^4.4.3
       undici: ^5.5.1
       vite: 3.0.4
@@ -94,8 +92,6 @@ importers:
       node-fetch: 3.2.9
       solid-js: 1.4.7
       solid-start: link:../../packages/start
-      solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
-      solid-start-netlify: link:../../packages/start-netlify
       solid-start-node: link:../../packages/start-node
       typescript: 4.7.4
       undici: 5.6.0
@@ -106,8 +102,8 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.2
       solid-js: 1.4.7
-      solid-start: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       typescript: ^4.4.3
       undici: ^5.5.1
       vite: ^3.0.4
@@ -132,8 +128,8 @@ importers:
       '@solidjs/router': ^0.4.2
       solid-js: 1.4.7
       solid-mdx: ^0.0.6
-      solid-start: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       typescript: ^4.4.3
       undici: ^5.5.1
       vite: ^3.0.4
@@ -156,8 +152,8 @@ importers:
       autoprefixer: ^10.4.2
       postcss: ^8.4.6
       solid-js: 1.4.7
-      solid-start: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       tailwindcss: ^3.0.18
       typescript: ^4.6.2
       vite: ^3.0.4
@@ -181,8 +177,8 @@ importers:
       '@types/testing-library__jest-dom': ^5.14.4
       jsdom: ^20.0.0
       solid-js: 1.4.7
-      solid-start: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       solid-testing-library: ^0.3.0
       typescript: ^4.4.3
       undici: ^5.5.1
@@ -260,12 +256,12 @@ importers:
       sade: ^1.8.1
       sirv: ^2.0.2
       solid-js: 1.4.7
-      solid-start-cloudflare-pages: 0.1.0-alpha.98
-      solid-start-cloudflare-workers: 0.1.0-alpha.98
-      solid-start-deno: 0.1.0-alpha.98
-      solid-start-netlify: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
-      solid-start-static: 0.1.0-alpha.98
+      solid-start-cloudflare-pages: 0.1.0-alpha.99
+      solid-start-cloudflare-workers: 0.1.0-alpha.99
+      solid-start-deno: 0.1.0-alpha.99
+      solid-start-netlify: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
+      solid-start-static: 0.1.0-alpha.99
       solid-testing-library: ^0.3.0
       terser: ^5.14.2
       undici: ^5.8.0
@@ -326,7 +322,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -346,7 +342,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -366,7 +362,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -390,7 +386,7 @@ importers:
       encoding: ^0.1.13
       node-fetch: ^3.2.9
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -417,7 +413,7 @@ importers:
       polka: ^1.0.0-next.13
       rollup: ^2.77.2
       sirv: ^2.0.2
-      solid-start: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.4
@@ -439,7 +435,7 @@ importers:
     specifiers:
       sirv-cli: 2.0.2
       solid-ssr: ^1.4.8
-      solid-start: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       undici: ^5.8.0
       vite: ^3.0.4
@@ -458,7 +454,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.77.2
-      solid-start: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
       terser: ^5.14.2
       vite: ^3.0.4
     dependencies:
@@ -489,8 +485,8 @@ importers:
       polka: ^1.0.0-next.13
       prettier: ^2.5.1
       sirv: ^2.0.2
-      solid-start: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
       strip-indent: ^4.0.0
       undici: ^5.5.1
       vite: ^3.0.4
@@ -528,13 +524,13 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.2
       solid-js: 1.4.7
-      solid-start: 0.1.0-alpha.98
-      solid-start-cloudflare-pages: 0.1.0-alpha.98
-      solid-start-cloudflare-workers: 0.1.0-alpha.98
-      solid-start-deno: 0.1.0-alpha.98
-      solid-start-netlify: 0.1.0-alpha.98
-      solid-start-node: 0.1.0-alpha.98
-      solid-start-static: 0.1.0-alpha.98
+      solid-start: 0.1.0-alpha.99
+      solid-start-cloudflare-pages: 0.1.0-alpha.99
+      solid-start-cloudflare-workers: 0.1.0-alpha.99
+      solid-start-deno: 0.1.0-alpha.99
+      solid-start-netlify: 0.1.0-alpha.99
+      solid-start-node: 0.1.0-alpha.99
+      solid-start-static: 0.1.0-alpha.99
       typescript: ^4.4.3
       undici: ^5.5.1
       vite: ^3.0.4
