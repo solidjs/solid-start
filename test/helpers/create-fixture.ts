@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import spawn, { sync as spawnSync } from "cross-spawn";
 import fse from "fs-extra";
+import { readFile } from "fs/promises";
 import getPort from "get-port";
 import path from "path";
 import c from "picocolors";
@@ -121,7 +122,20 @@ export async function createFixture(init: FixtureInit) {
   let handler = async (request: Request) => {
     return await app.default({
       request: request,
-      env: { manifest }
+      env: {
+        manifest,
+        getStaticHTML: async assetPath => {
+          let text = await readFile(
+            path.join(projectDir, "dist", "public", assetPath + ".html"),
+            "utf8"
+          );
+          return new Response(text, {
+            headers: {
+              "content-type": "text/html"
+            }
+          });
+        }
+      }
     });
   };
 

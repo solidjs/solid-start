@@ -46,7 +46,7 @@ declare global {
     /**
      * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
      */
-    __dev: {
+    __dev?: {
       /**
        * @warning
        */
