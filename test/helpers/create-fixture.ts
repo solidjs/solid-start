@@ -55,8 +55,8 @@ export async function createFixture(init: FixtureInit) {
     path.resolve(projectDir, "dist", "public", "route-manifest.json")
   );
 
-  if (process.env.ADAPTER !== "solid-start-node") {
-    let ip = process.env.ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
+  if (process.env.START_ADAPTER !== "solid-start-node") {
+    let ip = process.env.START_ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
     let port = await getPort();
     let proc = spawn("npm", ["run", "start"], {
       cwd: projectDir,
@@ -267,7 +267,7 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
 function build(
   projectDir: string,
   buildStdio?: boolean,
-  adapter: string | undefined = process.env.ADAPTER
+  adapter: string | undefined = process.env.START_ADAPTER
 ) {
   // let buildArgs = ["node_modules/@remix-run/dev/cli.js", "build"];
   // if (sourcemap) {

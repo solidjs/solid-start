@@ -97,5 +97,5 @@ jobs:
 
     - name: 👀 Run Integration Tests
       env: 
-        ADAPTER: ${{ matrix.adapter }}
+        START_ADAPTER: ${{ matrix.adapter }}
       run: npm run test

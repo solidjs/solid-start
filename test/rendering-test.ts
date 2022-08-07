@@ -7,7 +7,7 @@ import { PlaywrightFixture, prettyHtml, selectHtml } from "./helpers/playwright-
 test.describe("rendering", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
-  test.skip(process.env.ADAPTER !== "solid-start-node");
+  test.skip(process.env.START_ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({

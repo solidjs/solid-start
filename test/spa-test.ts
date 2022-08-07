@@ -14,7 +14,7 @@ test.describe("spa rendering", () => {
       import solid from "solid-start/vite";
 
       export default defineConfig({
-        plugins: [solid({ ssr: false, adapter: process.env.ADAPTER })]
+        plugins: [solid({ ssr: false, adapter: process.env.START_ADAPTER })]
       });
     `,
     "src/routes/index.tsx": js`
