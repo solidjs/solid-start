@@ -15,13 +15,13 @@ import routeResource from "../server/serverResource.js";
 globalThis.DEBUG = debug("start:vite");
 
 /**
- * @returns {import('vite').PluginOption}
+ * @returns {import('node_modules/vite').PluginOption}
  * @param {any} options
  */
 function solidStartInlineServerModules(options) {
   let lazy;
   let config;
-  /** @type {import('vite').Plugin} */
+  /** @type {import('node_modules/vite').Plugin} */
   return {
     enforce: "pre",
     configResolved(_config) {
@@ -30,14 +30,13 @@ function solidStartInlineServerModules(options) {
     },
     name: "solid-start-inline-server-modules",
     configureServer(vite) {
-      vite.httpServer?.once("listening", async () => {
-        const protocol = config.server.https ? "https" : "http";
-        const port = config.server.port;
+      vite.httpServer.once("listening", async () => {
 
         const label = `  > Server modules: `;
         setTimeout(() => {
+          const url = vite.resolvedUrls.local[0]
           // eslint-disable-next-line no-console
-          console.log(`${label}${c.magenta(`${protocol}://localhost:${port}/_m/*`)}\n`);
+          console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
         }, 200);
       });
     }
@@ -67,7 +66,7 @@ function toArray(arr) {
 }
 
 /**
- * @returns {import('vite').Plugin}
+ * @returns {import('node_modules/vite').Plugin}
  * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; }} options
  */
 function solidStartFileSystemRouter(options) {
@@ -142,14 +141,12 @@ function solidStartFileSystemRouter(options) {
       server = vite;
       router.watch(console.log);
       router.listener = listener;
-      vite.httpServer?.once("listening", async () => {
-        const protocol = config.server.https ? "https" : "http";
-        const port = config.server.port;
+      vite.httpServer.once("listening", async () => {
 
         setTimeout(() => {
+          const url = vite.resolvedUrls.local[0]
           // eslint-disable-next-line no-console
-          printUrls(router, `${protocol}://localhost:${port}`);
-          console.log("");
+          printUrls(router,url.substring(0,url.length - 1));
         }, 100);
       });
     },
