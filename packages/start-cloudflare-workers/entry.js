@@ -32,7 +32,7 @@ export default {
     };
 
     env.getStaticHTML = async path => {
-      return await env.getStaticAsset(new Request(path + ".html"), request.url.toString());
+      return await env.getStaticAsset(new Request(new URL(path + ".html", request.url.toString())));
     };
 
     try {
