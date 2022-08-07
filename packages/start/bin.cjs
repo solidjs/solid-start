@@ -253,7 +253,7 @@ prog
               shell: true,
               env: {
                 ...process.env,
-                START_SPA_CLIENT: "true"
+                START_INDEX_HTML: "true"
               }
             }
           );
@@ -292,7 +292,7 @@ prog
           root: config.root,
           build: {
             outDir: path,
-            minify: false,
+            minify: process.env.START_MINIFY == "false" ? false : "terser",
             ssrManifest: true,
             rollupOptions: {
               input: indexHtml,

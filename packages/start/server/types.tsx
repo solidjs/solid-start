@@ -35,17 +35,26 @@ export type IslandManifest = {
 
 declare global {
   interface Env {
+    /**
+     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     */
     manifest?: Record<string, ManifestEntry[] | IslandManifest>;
-    collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
-    devManifest?: [{ path: string; componentPath: string; id: string }];
+    /**
+     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     */
+    getStaticHTML?(path: string): Promise<Response>;
+    /**
+     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     */
+    __dev: {
+      /**
+       * @warning
+       */
+      collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
+      manifest?: [{ path: string; componentPath: string; id: string }];
+    };
   }
 }
-
-// export interface Env {
-//   manifest?: Record<string, ManifestEntry[] | IslandManifest>;
-//   collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
-//   devManifest?: [{ path: string; componentPath: string; id: string }];
-// }
 
 export interface FetchEvent {
   request: Request;

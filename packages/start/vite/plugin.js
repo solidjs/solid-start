@@ -31,10 +31,9 @@ function solidStartInlineServerModules(options) {
     name: "solid-start-inline-server-modules",
     configureServer(vite) {
       vite.httpServer.once("listening", async () => {
-
         const label = `  > Server modules: `;
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0]
+          const url = vite.resolvedUrls.local[0];
           // eslint-disable-next-line no-console
           console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
         }, 200);
@@ -142,11 +141,10 @@ function solidStartFileSystemRouter(options) {
       router.watch(console.log);
       router.listener = listener;
       vite.httpServer.once("listening", async () => {
-
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0]
+          const url = vite.resolvedUrls.local[0];
           // eslint-disable-next-line no-console
-          printUrls(router,url.substring(0,url.length - 1));
+          printUrls(router, url.substring(0, url.length - 1));
         }, 100);
       });
     },
@@ -159,7 +157,7 @@ function solidStartFileSystemRouter(options) {
         // @ts-ignore
         return solid({
           ...(options ?? {}),
-          ssr: true,
+          ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
           babel: fn
         }).transform(code, id, transformOptions);
       };
@@ -272,7 +270,13 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var routesConfig = $ROUTES_CONFIG;",
-            stringifyPageRoutes(router.getNestedPageRoutes(), { lazy })
+            stringifyPageRoutes(router.getNestedPageRoutes(), {
+              // if we are in SPA mode, and building the server bundle, we import
+              // the routes eagerly so that they can dead-code eliminate properly,
+              // for some reason, vite doesn't do it properly when the routes are
+              // loaded lazily.
+              lazy: !options.ssr && ssr ? false : true
+            })
           )
         };
       } else if (code.includes("var api = $API_ROUTES;")) {
@@ -429,8 +433,8 @@ function solidStartConfig(options) {
           "import.meta.env.START_ISLANDS": JSON.stringify(options.islands ? true : false),
           "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.entryClient),
           "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.entryServer),
-          "import.meta.env.START_SPA_CLIENT": JSON.stringify(
-            process.env.START_SPA_CLIENT === "true" ? true : false
+          "import.meta.env.START_INDEX_HTML": JSON.stringify(
+            process.env.START_INDEX_HTML === "true" ? true : false
           ),
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.islandsRouter ? true : false
@@ -538,7 +542,8 @@ export default function solidStart(options) {
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
-      ssr: true,
+      // if we are building the SPA client for production, we set ssr to false
+      ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
       babel: (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
         plugins: [
           [

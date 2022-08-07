@@ -26,7 +26,18 @@ serve(
 
     return await handler({
       request: request,
-      env: { manifest }
+      env: {
+        manifest,
+        getStaticHTML: async path => {
+          console.log(path);
+          let text = await Deno.readFile(`./public${path}.html`);
+          return new Response(text, {
+            headers: {
+              "content-type": "text/html"
+            }
+          });
+        }
+      }
     });
   },
   {

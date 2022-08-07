@@ -16,7 +16,7 @@ export default {
     }
 
     env.manifest = manifest;
-    env.getAssetFromKV = async request => {
+    env.getStaticAsset = async request => {
       return await getAssetFromKV(
         {
           request,
@@ -30,8 +30,13 @@ export default {
         }
       );
     };
+
+    env.getStaticHTML = async path => {
+      return await env.getStaticAsset(new Request(path + ".html"), request.url.toString());
+    };
+
     try {
-      return await env.getAssetFromKV(request);
+      return await env.getStaticAsset(request);
     } catch (e) {
       if (!(e instanceof NotFoundError || e instanceof MethodNotAllowedError)) {
         return new Response("An unexpected error occurred", { status: 500 });

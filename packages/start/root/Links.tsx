@@ -2,7 +2,7 @@ import { JSXElement, useContext } from "solid-js";
 import { Assets } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 import { ManifestEntry, PageEvent } from "../server/types";
-import { routeLayouts } from "./FileRoutes";
+import { routesConfig } from "./FileRoutes";
 
 function getAssetsFromManifest(
   manifest: PageEvent["env"]["manifest"],
@@ -11,7 +11,7 @@ function getAssetsFromManifest(
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      const route = routeLayouts[fullPath];
+      const route = routesConfig.routeLayouts[fullPath];
       if (route) {
         memo.push(...((manifest[route.id] || []) as ManifestEntry[]));
         const layoutsManifestEntries = route.layouts.flatMap(
