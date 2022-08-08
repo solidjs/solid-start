@@ -9,6 +9,9 @@ export const onRequestGet = ({ request, next, env }) => {
 
   env.manifest = manifest;
   env.next = next;
+  env.getStaticHTML = async path => {
+    return next();
+  };
   return handler({
     request: request,
     env
@@ -23,6 +26,9 @@ export const onRequestHead = ({ request, next, env }) => {
 
   env.manifest = manifest;
   env.next = next;
+  env.getStaticHTML = async path => {
+    return next();
+  };
   return handler({
     request: request,
     env
