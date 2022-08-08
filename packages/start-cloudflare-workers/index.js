@@ -76,6 +76,7 @@ export default function (miniflareOptions = {}) {
             });
 
             console.log(
+              "🔥",
               req.headers.get("Upgrade") === "websocket" ? "WEBSOCKET" : req.method,
               req.url
             );

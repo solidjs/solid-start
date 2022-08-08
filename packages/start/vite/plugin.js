@@ -326,13 +326,14 @@ function solidStartServer(options) {
       return async () => {
         const { createDevHandler } = await import("../dev/server.js");
         remove_html_middlewares(vite.middlewares);
-        if (config.solidOptions.adapter && config.solidOptions.adapter.dev) {
+        let adapter =
+          typeof config.solidOptions.adapter === "string"
+            ? (await import(config.solidOptions.adapter)).default()
+            : config.solidOptions.adapter;
+        console.log(adapter);
+        if (adapter && adapter.dev) {
           vite.middlewares.use(
-            await config.solidOptions.adapter.dev(
-              config,
-              vite,
-              createDevHandler(vite, config, options)
-            )
+            await adapter.dev(config, vite, createDevHandler(vite, config, options))
           );
         } else if (config.solidOptions.devServer) {
           vite.middlewares.use(createDevHandler(vite, config, options).handler);
