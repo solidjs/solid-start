@@ -8,17 +8,15 @@
   "type": "module",
   "devDependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.1",
+    "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.2",
     "solid-js": "1.4.7",
-    "@solidjs/meta": "^0.28.0",
     "solid-start": "0.1.0-alpha.99",
     "solid-start-cloudflare-workers": "0.1.0-alpha.99",
     "solid-start-node": "0.1.0-alpha.99",
     "typescript": "^4.4.3",
     "undici": "^5.5.1",
-    "vite": "^3.0.4",
-    "vite-plugin-windicss": "^1.8.7",
-    "windicss": "^3.5.6"
+    "vite": "^3.0.4"
   },
   "engines": {
     "node": ">=16"
