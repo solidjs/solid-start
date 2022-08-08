@@ -44,7 +44,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       if (visitedFiles.has(file.file)) return;
       visitedFiles.add(file.file);
       files.push({
-        type: file.file.endsWith(".css") ? "style" : "script",
+        type: file.file.endsWith(".css") ? "style" : file.file.endsWith(".js") ? "script" : "asset",
         href: "/" + file.file
       });
 
