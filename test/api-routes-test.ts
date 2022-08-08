@@ -142,6 +142,8 @@ test.describe("api routes", () => {
     });
 
     test("should render json from API route with .json file extension", async ({ page }) => {
+      test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
+
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/data.json");
       expect(await page.content()).toContain('{"hello":"world"}');
@@ -174,6 +176,8 @@ test.describe("api routes", () => {
     });
 
     test("should return json from API route", async ({ page }) => {
+      test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
+
       let res = await fixture.requestDocument("/data.json");
       expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
       expect(await res.json()).toEqual({ hello: "world" });

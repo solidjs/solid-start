@@ -1,10 +1,13 @@
 import manifest from "../../dist/public/route-manifest.json";
 import handler from "./handler";
 
-export const onRequestGet = ({ request, next, env }) => {
+export const onRequestGet = async ({ request, next, env }) => {
   // Handle static assets
   if (/\.\w+$/.test(request.url)) {
-    return next(request);
+    let resp = await next(request);
+    if (resp.status === 200) {
+      return resp;
+    }
   }
 
   env.manifest = manifest;
@@ -18,10 +21,13 @@ export const onRequestGet = ({ request, next, env }) => {
   });
 };
 
-export const onRequestHead = ({ request, next, env }) => {
+export const onRequestHead = async ({ request, next, env }) => {
   // Handle static assets
   if (/\.\w+$/.test(request.url)) {
-    return next(request);
+    let resp = await next(request);
+    if (resp.status === 200) {
+      return resp;
+    }
   }
 
   env.manifest = manifest;
