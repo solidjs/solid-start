@@ -26,7 +26,7 @@ export function routeData() {
 }
 
 export default function Login() {
-  const data = useRouteData<ReturnType<typeof routeData>>();
+  const data = useRouteData<typeof routeData>();
   const params = useParams();
 
   const loginAction = createServerAction(async (form: FormData) => {
@@ -87,49 +87,36 @@ export default function Login() {
     <main>
       <h1>Login</h1>
       <loginAction.Form method="post">
-        <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"}/>
+        <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
         <fieldset>
           <label>
-            <input type="radio" name="loginType" value="login" checked={true}/> Login
+            <input type="radio" name="loginType" value="login" checked={true} /> Login
           </label>
           <label>
-            <input type="radio" name="loginType" value="register"/> Register
+            <input type="radio" name="loginType" value="register" /> Register
           </label>
         </fieldset>
         <div>
           <label for="username-input">Username</label>
-          <input
-            name="username"
-            placeholder="kody"
-          />
+          <input name="username" placeholder="kody" />
         </div>
         <Show when={loginAction.error?.fieldErrors?.username}>
-          <p role="alert">
-            {loginAction.error.fieldErrors.username}
-          </p>
+          <p role="alert">{loginAction.error.fieldErrors.username}</p>
         </Show>
         <div>
           <label for="password-input">Password</label>
-          <input
-            name="password"
-            type="password"
-            placeholder="twixrox"
-          />
+          <input name="password" type="password" placeholder="twixrox" />
         </div>
         <Show when={loginAction.error?.fieldErrors?.password}>
-          <p role="alert">
-            {loginAction.error.fieldErrors.password}
-          </p>
+          <p role="alert">{loginAction.error.fieldErrors.password}</p>
         </Show>
-        <div/>
+        <div />
         <Show when={loginAction.error}>
           <p role="alert" id="error-message">
             {loginAction.error.message}
           </p>
         </Show>
-        <button type="submit">
-          {data() ? "Login" : ""}
-        </button>
+        <button type="submit">{data() ? "Login" : ""}</button>
       </loginAction.Form>
     </main>
   );

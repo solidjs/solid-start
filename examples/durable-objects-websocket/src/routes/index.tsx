@@ -17,7 +17,7 @@ export function routeData() {
 }
 
 export default function Home() {
-  const user = useRouteData<ReturnType<typeof routeData>>();
+  const user = useRouteData<typeof routeData>();
   const logoutAction = createServerAction((_, { request }) => logout(request));
 
   const join = server(async function () {
