@@ -33,6 +33,7 @@ export default function () {
         await builder.client(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       }
+      
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "handler.js")

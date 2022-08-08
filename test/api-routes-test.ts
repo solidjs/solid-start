@@ -150,7 +150,7 @@ test.describe("api routes", () => {
     test("should render data from API route using server.fetch", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/server-fetch");
-      let dataEl = await page.$("[data-testid='data']");
+      let dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
 
       await app.goto("/", true);
@@ -164,7 +164,7 @@ test.describe("api routes", () => {
     }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/server-data-fetch");
-      let dataEl = await page.$("[data-testid='data']");
+      let dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
 
       await app.goto("/", true);
