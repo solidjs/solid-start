@@ -5,7 +5,7 @@
 2. Install dependencies
    `pnpm install`
 3. Run an example
-   `pnpm --filter solid-hackernews run dev`
+   `pnpm --filter example-hackernews run dev`
 
 ## Requirements
 
