@@ -18,6 +18,7 @@ function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
       arrayOfFiles.push(
         join(dirPath, "/", file)
           .replace(pageRoot, "")
+          .replace(/\\/g, "/")
           .replace(/(\/index)?(.jsx|.tsx)/, "") || "/"
       );
     }
