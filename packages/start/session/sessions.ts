@@ -1,3 +1,6 @@
+// All credits to Remix team:
+// https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/sessions.ts
+
 import type { CookieParseOptions, CookieSerializeOptions } from "./cookie";
 
 import type { Cookie, CookieOptions, CreateCookieFunction } from "./cookies";
