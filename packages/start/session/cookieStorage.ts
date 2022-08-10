@@ -1,3 +1,6 @@
+// All credits to Remix team:
+// https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/cookieSigning.ts
+
 import type { CreateCookieFunction } from "./cookies";
 import { isCookie } from "./cookies";
 import type { SessionIdStorageStrategy, SessionStorage } from "./sessions";
