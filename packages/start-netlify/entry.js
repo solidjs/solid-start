@@ -35,7 +35,13 @@ exports.handler = async function (event, context) {
   };
 };
 
-// Borrowed and inspired by: https://github.com/remix-run/remix/blob/main/packages/remix-netlify/server.ts
+/*!
+ * Original code by Remix Sofware Inc
+ * MIT Licensed, Copyright(c) 2021 Remix software Inc, see LICENSE.remix.md for details
+ *
+ * Credits to the Remix team:
+ * https://github.com/remix-run/remix/blob/main/packages/remix-netlify/server.ts
+ */
 function createRequest(event) {
   let url;
 
