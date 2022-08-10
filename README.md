@@ -276,3 +276,7 @@ export default function NotFound() {
 ```
 
 </details>
+
+### Credits
+
+All credit for the work on Forms and Sessions goes to the @remix-run team, MIT License, Copyright 2021 Remix Software Inc.
