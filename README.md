@@ -28,8 +28,6 @@ npm run dev
 
 ### Documentation
 
-If you are looking for the documentation website, go to [docs.solidjs.com/start](https://docs.solidjs.com/start).
-
 If you want to contribute to documentation, go to [solidjs/solid-docs-next](https://github.com/solidjs/solid-docs-next)
 
 ### Development
