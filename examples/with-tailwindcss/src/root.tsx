@@ -1,8 +1,17 @@
 // @refresh reload
 import { Suspense } from "solid-js";
-import { Body, ErrorBoundary, FileRoutes, Head, Html, Meta, Routes, Scripts } from "solid-start";
+import {
+  Body,
+  ErrorBoundary,
+  FileRoutes,
+  Head,
+  Html,
+  Meta,
+  Routes,
+  Scripts,
+  Title
+} from "solid-start";
 import "./root.css";
-import { Title } from "@solidjs/meta";
 
 export default function Root() {
   return (

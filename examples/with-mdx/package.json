@@ -1,5 +1,5 @@
 {
-  "name": "example-with-mdx-ts",
+  "name": "example-with-mdx",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",

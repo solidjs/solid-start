@@ -2,8 +2,7 @@
 import { Routes } from "@solidjs/router";
 import { Suspense } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
-import { Body, FileRoutes, Head, Html, Links, Meta, Scripts } from "solid-start/root";
-import { Title } from "@solidjs/meta";
+import { Body, FileRoutes, Head, Html, Meta, Scripts, Title } from "solid-start";
 import "./root.css";
 
 export default function Root() {
@@ -11,8 +10,8 @@ export default function Root() {
     <Html lang="en">
       <Head>
         <Title>SolidStart - Durable Objects WebSocket</Title>
-        <Meta />
-        <Links />
+        <Meta charset="utf-8" />
+        <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Body>
         <ErrorBoundary>
