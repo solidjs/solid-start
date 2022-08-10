@@ -5,7 +5,12 @@
 2. Install dependencies
    `pnpm install`
 3. Run an example
-   `pnpm --filter solid-hackernews run dev`
+   `pnpm --filter example-hackernews run dev`
+4. Make changes and check if things work in examples
+5. Add integration tests in `test`, if appropriate
+6. Run tests locally
+   - Setup playwright: `pnpm --filter solid-start-tests install:playwright`
+   - Run all tests: `pnpm run test:all`
 
 ## Requirements
 
