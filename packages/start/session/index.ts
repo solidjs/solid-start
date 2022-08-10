@@ -1,5 +1,11 @@
-// All credits to Remix team:
-// https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime
+/*!
+ * Copyright(c) 2021 Remix software Inc
+ * MIT Licensed
+ * 
+ * Credits to the Remix team:
+ * https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime
+ */
+
 import { createCookieFactory } from "./cookies";
 import { createCookieSessionStorageFactory } from "./cookieStorage";
 import { createSessionStorageFactory } from "./sessions";

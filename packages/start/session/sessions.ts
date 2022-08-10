@@ -1,5 +1,10 @@
-// All credits to Remix team:
-// https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/sessions.ts
+/*!
+ * Copyright(c) 2021 Remix software Inc
+ * MIT Licensed
+ * 
+ * Credits to the Remix team:
+ * https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/sessions.ts
+ */
 
 import type { CookieParseOptions, CookieSerializeOptions } from "./cookie";
 
