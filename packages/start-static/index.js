@@ -30,8 +30,7 @@ function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
 export default function () {
   return {
     start(config, { port }) {
-      process.env.PORT = port ? port : process.env.PORT ? process.env.PORT : "3000";
-
+      process.env.PORT = port;
       const proc = spawn("npx", ["sirv-cli", "./dist/public", "--port", `${process.env.PORT}`]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);

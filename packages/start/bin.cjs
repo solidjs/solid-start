@@ -317,7 +317,11 @@ prog
   .command("start")
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
-  .option("-p, --port", "Port to start server on (doesn't work with all adapters)", 3000)
+  .option(
+    "-p, --port",
+    "Port to start server on (doesn't work with all adapters)",
+    process.env.PORT ? process.env.PORT : "3000"
+  )
   .describe("Start production build")
   .action(async ({ root, config: configFile, port }) => {
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });

@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 export default function () {
   return {
     start(config, { port }) {
-      process.env.PORT = port ? port : process.env.PORT ? process.env.PORT : "3000";
+      process.env.PORT = port;
       console.log();
       const proc = spawn(
         "deno",

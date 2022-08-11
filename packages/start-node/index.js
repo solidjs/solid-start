@@ -9,8 +9,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 export default function () {
   return {
     start(config, { port }) {
-      process.env.PORT = port ? port : process.env.PORT ? process.env.PORT : "3000";
-
+      process.env.PORT = port;
       import(pathToFileURL(join(config.root, "dist", "server.js")).toString());
       return `http://localhost:${process.env.PORT}`;
     },
