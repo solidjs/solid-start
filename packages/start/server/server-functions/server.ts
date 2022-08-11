@@ -131,7 +131,7 @@ export function respondWith(
         }
       }),
       {
-        status: 400,
+        status: data.status,
         headers: {
           [XSolidStartResponseTypeHeader]: responseType,
           [XSolidStartContentTypeHeader]: "server-error"

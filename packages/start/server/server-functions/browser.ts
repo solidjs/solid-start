@@ -25,7 +25,8 @@ export async function parseResponse(request: Request, response: Response) {
   } else if (contentType.includes("server-error")) {
     const data = await response.json();
     return new ServerError(data.error.message, {
-      stack: data.error.stack
+      stack: data.error.stack,
+      status: response.status,
     });
   } else if (contentType.includes("form-error")) {
     const data = await response.json();
