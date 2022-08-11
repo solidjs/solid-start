@@ -79,11 +79,7 @@ test.describe("spa rendering", () => {
         files: {
           ...files,
           "src/root.tsx": js`
-            import { FileRoutes, Scripts } from "solid-start/root";
-            import { Routes } from "@solidjs/router";
             import { Suspense } from "solid-js";
-            import { Html, Head, Body } from "solid-start/root";
-            import { Meta } from '@solidjs/meta'
 
             export default function Root() {
               return (
