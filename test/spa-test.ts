@@ -80,6 +80,7 @@ test.describe("spa rendering", () => {
           ...files,
           "src/root.tsx": js`
             import { Suspense } from "solid-js";
+            import { Html, Head, Body, Meta, FileRoutes, Scripts, Routes } from "solid-start";
 
             export default function Root() {
               return (
