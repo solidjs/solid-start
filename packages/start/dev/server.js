@@ -28,9 +28,8 @@ export function createDevHandler(viteServer, config, options) {
             const styles = {};
             const deps = new Set();
             for (const file of match) {
-              const absolutePath = path.resolve(file);
-              await viteServer.ssrLoadModule(absolutePath);
-              const node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
+              const normalizedPath = path.resolve(file).replace(/\\/g, "/");
+              const node = await viteServer.moduleGraph.getModuleById(normalizedPath);
 
               await find_deps(viteServer, node, deps);
             }
