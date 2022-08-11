@@ -1,3 +1,11 @@
+/*!
+ * Original code by Remix Sofware Inc
+ * MIT Licensed, Copyright(c) 2021 Remix software Inc, see LICENSE.remix.md for details
+ * 
+ * Credits to the Remix team:
+ * https://github.com/remix-run/remix/blob/main/packages/remix-server-runtime/sessions.ts
+ */
+
 import type { CookieParseOptions, CookieSerializeOptions } from "./cookie";
 
 import type { Cookie, CookieOptions, CreateCookieFunction } from "./cookies";
