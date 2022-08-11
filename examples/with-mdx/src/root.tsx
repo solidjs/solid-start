@@ -2,30 +2,31 @@
 import { Routes } from "@solidjs/router";
 import { Suspense } from "solid-js";
 import { ErrorBoundary } from "solid-start/error-boundary";
-import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
-import "./index.css";
+import { Body, FileRoutes, Head, Html, Meta, Scripts, Title } from "solid-start";
+import "./root.css";
 
 export default function Root() {
   return (
-    <html lang="en">
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <main>
-          <ErrorBoundary>
-            <Suspense>
+    <Html lang="en">
+      <Head>
+        <Title>SolidStart - With MDX</Title>
+        <Meta charset="utf-8" />
+        <Meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <Body>
+        <ErrorBoundary>
+          <a href="/">Index</a>
+          <a href="/about">About</a>
+          <Suspense>
+            <main>
               <Routes>
                 <FileRoutes />
               </Routes>
-            </Suspense>
-          </ErrorBoundary>
-        </main>
+            </main>
+          </Suspense>
+        </ErrorBoundary>
         <Scripts />
-      </body>
-    </html>
+      </Body>
+    </Html>
   );
 }

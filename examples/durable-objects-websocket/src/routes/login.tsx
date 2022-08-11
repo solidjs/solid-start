@@ -26,7 +26,7 @@ export function routeData() {
 }
 
 export default function Login() {
-  const data = useRouteData<ReturnType<typeof routeData>>();
+  const data = useRouteData<typeof routeData>();
   const params = useParams();
 
   const loginAction = createServerAction(async (form: FormData) => {
@@ -84,59 +84,40 @@ export default function Login() {
   });
 
   return (
-    <div class="p-4">
-      <div data-light="">
-        <main class="p-6 mx-auto w-[fit-content] space-y-4 rounded-lg bg-gray-100">
-          <h1 class="font-bold text-xl">Login</h1>
-          <loginAction.Form method="post" class="flex flex-col space-y-2">
-            <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
-            <fieldset class="flex flex-row">
-              <legend class="sr-only">Login or Register?</legend>
-              <label class="w-full">
-                <input type="radio" name="loginType" value="login" checked={true} /> Login
-              </label>
-              <label class="w-full">
-                <input type="radio" name="loginType" value="register" /> Register
-              </label>
-            </fieldset>
-            <div>
-              <label for="username-input">Username</label>
-              <input
-                name="username"
-                placeholder="kody"
-                class="border-gray-700 border-2 ml-2 rounded-md px-2"
-              />
-              <Show when={loginAction.error?.fieldErrors?.username}>
-                <p class="text-red-400" role="alert">
-                  {loginAction.error.fieldErrors.username}
-                </p>
-              </Show>
-            </div>
-            <div>
-              <label for="password-input">Password</label>
-              <input
-                name="password"
-                type="password"
-                placeholder="twixrox"
-                class="border-gray-700 border-2 ml-2 rounded-md px-2"
-              />
-              <Show when={loginAction.error?.fieldErrors?.password}>
-                <p class="text-red-400" role="alert">
-                  {loginAction.error.fieldErrors.password}
-                </p>
-              </Show>
-            </div>
-            <Show when={loginAction.error}>
-              <p class="text-red-400" role="alert" id="error-message">
-                {loginAction.error.message}
-              </p>
-            </Show>
-            <button class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2" type="submit">
-              {data() ? "Login" : ""}
-            </button>
-          </loginAction.Form>
-        </main>
-      </div>
-    </div>
+    <main>
+      <h1>Login</h1>
+      <loginAction.Form method="post">
+        <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
+        <fieldset>
+          <label>
+            <input type="radio" name="loginType" value="login" checked={true} /> Login
+          </label>
+          <label>
+            <input type="radio" name="loginType" value="register" /> Register
+          </label>
+        </fieldset>
+        <div>
+          <label for="username-input">Username</label>
+          <input name="username" placeholder="kody" />
+        </div>
+        <Show when={loginAction.error?.fieldErrors?.username}>
+          <p role="alert">{loginAction.error.fieldErrors.username}</p>
+        </Show>
+        <div>
+          <label for="password-input">Password</label>
+          <input name="password" type="password" placeholder="twixrox" />
+        </div>
+        <Show when={loginAction.error?.fieldErrors?.password}>
+          <p role="alert">{loginAction.error.fieldErrors.password}</p>
+        </Show>
+        <div />
+        <Show when={loginAction.error}>
+          <p role="alert" id="error-message">
+            {loginAction.error.message}
+          </p>
+        </Show>
+        <button type="submit">{data() ? "Login" : ""}</button>
+      </loginAction.Form>
+    </main>
   );
 }

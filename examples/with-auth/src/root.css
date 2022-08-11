@@ -1,0 +1,59 @@
+body {
+  font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell,
+  'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+main {
+  width: 25%;
+  margin: 0 auto;
+  border-radius: 1rem;
+  background: #f3f4f6;
+  padding: 1rem;
+}
+
+h1 {
+  margin: 0;
+}
+
+p {
+  margin: 0 0 0.3rem 0;
+  color: #f87171;
+  flex-basis: 100%;
+}
+
+input {
+  margin: 0 0 0 0.4rem;
+  border: 2px solid #000;
+  border-radius: 0.4rem;
+  padding: 0.3rem;
+  flex: 1;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+fieldset {
+  border: none;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+button {
+  background: #d1d5db;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 0.2rem;
+  font-size: 1rem;
+  width: 100%;
+}
+
+
