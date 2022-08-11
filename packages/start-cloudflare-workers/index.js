@@ -8,7 +8,8 @@ import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 export default function ({ durableObjects = [] } = {}) {
   return {
-    start(config) {
+    start(config, { port }) {
+      process.env.PORT = port ? port : process.env.PORT ? process.env.PORT : "3000";
       const proc = spawn("node", [
         join(config.root, "node_modules", "wrangler", "bin", "wrangler.js"),
         "dev",
@@ -16,10 +17,11 @@ export default function ({ durableObjects = [] } = {}) {
         "--site",
         "./dist/public",
         "--port",
-        process.env.PORT ? process.env.PORT : "3000"
+        process.env.PORT
       ]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
+      return `http://localhost:${process.env.PORT}`;
     },
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));

@@ -29,10 +29,14 @@ function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
 
 export default function () {
   return {
-    start() {
-      const proc = spawn("npx", ["sirv-cli", "./dist/public", "--port", "3000"]);
+    start(config, { port }) {
+      process.env.PORT = port ? port : process.env.PORT ? process.env.PORT : "3000";
+
+      const proc = spawn("npx", ["sirv-cli", "./dist/public", "--port", `${process.env.PORT}`]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
+
+      return `http://localhost:${process.env.PORT}`;
     },
     async build(config, builder) {
       const appRoot = config.solidOptions.appRoot;

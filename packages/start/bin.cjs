@@ -317,14 +317,15 @@ prog
   .command("start")
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
+  .option("-p, --port", "Port to start server on (doesn't work with all adapters)", 3000)
   .describe("Start production build")
-  .action(async ({ root, config: configFile }) => {
+  .action(async ({ root, config: configFile, port }) => {
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
     let adapter = config.solidOptions.adapter;
     if (typeof adapter === "string") {
       adapter = (await import(adapter)).default();
     }
-    let url = await adapter.start(config);
+    let url = await adapter.start(config, { port });
     if (url) {
       const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
