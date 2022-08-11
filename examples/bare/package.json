@@ -1,5 +1,5 @@
 {
-  "name": "example-app-ts",
+  "name": "example-bare",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
@@ -7,14 +7,16 @@
   },
   "type": "module",
   "devDependencies": {
+    "solid-start-node": "0.1.0-alpha.99",
+    "typescript": "^4.4.3",
+    "vite": "^3.0.4"
+  },
+  "dependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.2",
     "solid-js": "1.4.7",
     "solid-start": "0.1.0-alpha.99",
-    "solid-start-node": "0.1.0-alpha.99",
-    "typescript": "^4.4.3",
-    "undici": "^5.8.0",
-    "vite": "^3.0.4"
+    "undici": "^5.8.0"
   },
   "engines": {
     "node": ">=14"

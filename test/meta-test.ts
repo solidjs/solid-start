@@ -50,13 +50,13 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/index.tsx": js`
-            import { Title } from '@solidjs/meta';
+            import { Title } from 'solid-start';
             export default function Index() {
               return <Title>Index page</Title>;
             }
           `,
           "src/routes/about.tsx": js`
-            import { Title } from '@solidjs/meta';
+            import { Title } from 'solid-start';
             export default function About() {
               return <Title>About page</Title>
             }
@@ -69,7 +69,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-resource.tsx": js`
-            import { Title } from '@solidjs/meta';
+            import { Title } from 'solid-start';
             import { createResource } from 'solid-js';
             export default function TitleFromData() {
               const [data] = createResource(async () => "Title from data");
@@ -80,7 +80,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-route-data.tsx": js`
-            import { Title } from '@solidjs/meta';
+            import { Title } from 'solid-start';
             import { createServerData } from 'solid-start/server';
             import { useRouteData } from "@solidjs/router";
 
@@ -97,7 +97,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-error-boundary.tsx": js`
-            import { Title, Meta } from '@solidjs/meta';
+            import { Title, Meta } from 'solid-start';
             import { createResource, ErrorBoundary } from 'solid-js';
 
             export default function TitleFromErrorBoundary() {
@@ -114,7 +114,7 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-suspense.tsx": js`
-            import { Title, Meta } from '@solidjs/meta';
+            import { Title, Meta } from 'solid-start';
             import { createResource, ErrorBoundary } from 'solid-js';
   
             export default function TitleFromErrorBoundary() {
@@ -154,7 +154,7 @@ test.describe("meta", () => {
   //         export default createHandler(renderStream(event => <StartServer event={event} />));
   //       `,
   //         "src/routes/index.tsx": js`
-  //           import { Title } from '@solidjs/meta';
+  //           import { Title } from 'solid-start';
   //           export default function Index() {
   //             return <>
   //               <Title>Index page</Title>
@@ -170,7 +170,7 @@ test.describe("meta", () => {
   //           }
   //         `,
   //         "src/routes/title-from-resource.tsx": js`
-  //           import { Title } from '@solidjs/meta';
+  //           import { Title } from 'solid-start';
   //           import { createResource } from 'solid-js';
   //           export default function TitleFromData() {
   //             const [data] = createResource(async () => "Title from data", {
@@ -183,7 +183,7 @@ test.describe("meta", () => {
   //           }
   //         `,
   //         "src/routes/title-from-route-data.tsx": js`
-  //           import { Title } from '@solidjs/meta';
+  //           import { Title } from 'solid-start';
   //           import { createServerData } from 'solid-start/server';
   //           import { useRouteData } from "@solidjs/router";
 
@@ -202,7 +202,7 @@ test.describe("meta", () => {
   //           }
   //         `,
   //         "src/routes/title-from-error-boundary.tsx": js`
-  //           import { Title, Meta } from '@solidjs/meta';
+  //           import { Title, Meta } from 'solid-start';
   //           import { createResource, ErrorBoundary } from 'solid-js';
 
   //           export default function TitleFromErrorBoundary() {
@@ -220,7 +220,7 @@ test.describe("meta", () => {
   //             </>;
   //           }`,
   //         "src/routes/title-from-suspense.tsx": js`
-  //           import { Title, Meta } from '@solidjs/meta';
+  //           import { Title, Meta } from 'solid-start';
   //           import { createResource, ErrorBoundary } from 'solid-js';
 
   //           export default function TitleFromErrorBoundary() {

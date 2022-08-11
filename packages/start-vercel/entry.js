@@ -4,7 +4,15 @@ import entry from "./entry-server";
 export default function (request) {
   const response = entry({
     request,
-    env: { manifest }
+    env: {
+      manifest,
+      getStaticHTML: path =>
+        new Response(null, {
+          headers: {
+            "x-middleware-rewrite": new URL(`${path}.html`, request.url).href
+          }
+        })
+    }
   });
   return response;
 }

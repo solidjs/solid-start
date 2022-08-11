@@ -24,7 +24,7 @@ export interface MiddlewareInput {
 }
 
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
-export type MiddlewareFn = (event: FetchEvent) => Promise<Response>;
+export type MiddlewareFn = (event: FetchEvent) => Promise<Response> | Response;
 
 /** This composes an array of Exchanges into a single ExchangeIO function */
 export const composeMiddleware =

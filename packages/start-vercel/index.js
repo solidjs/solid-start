@@ -9,8 +9,8 @@ import { fileURLToPath } from "url";
 
 export default function () {
   return {
-    start() {
-      const proc = spawn("vercel");
+    async start() {
+      const proc = await spawn("vercel", ["deploy", "--prebuilt"], {});
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
     },
@@ -26,6 +26,7 @@ export default function () {
       // SSR Edge Function
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(outputDir, "static"));
+        await builder.server(join(config.root, ".solid", "server"));
       } else if (config.solidOptions.islands) {
         await builder.islandsClient(join(outputDir, "static"));
         await builder.server(join(config.root, ".solid", "server"));

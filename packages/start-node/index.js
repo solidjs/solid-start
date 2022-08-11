@@ -8,9 +8,10 @@ import { fileURLToPath, pathToFileURL } from "url";
 
 export default function () {
   return {
-    start(config) {
+    start(config, { port }) {
+      process.env.PORT = port;
       import(pathToFileURL(join(config.root, "dist", "server.js")).toString());
-      return `http://localhost:${process.env.PORT || 3000}`;
+      return `http://localhost:${process.env.PORT}`;
     },
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));

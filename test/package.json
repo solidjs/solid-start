@@ -5,7 +5,6 @@
     "clean": "rimraf .tmp",
     "install:playwright": "playwright install --with-deps",
     "test": "playwright test --config ./playwright.config.ts",
-    "postinstall": "node ./fix-jest-dom.mjs",
     "test:unit": "vitest run"
   },
   "dependencies": {
