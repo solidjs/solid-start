@@ -1,4 +1,4 @@
-import { ComponentProps } from "solid-js";
+import { children, ComponentProps } from "solid-js";
 import { insert, resolveSSRNode, spread, ssrSpread } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
@@ -49,11 +49,12 @@ export function Body(props: ComponentProps<"body">) {
     }</body>`;
   } else {
     if (import.meta.env.START_SSR) {
+      let child = children(() => props.children);
       spread(document.body, props, false, true);
       insert(
         document.body,
         () => {
-          let childNodes = props.children;
+          let childNodes = child();
           if (childNodes) {
             if (Array.isArray(childNodes)) {
               let els = childNodes.filter(n => Boolean(n));
