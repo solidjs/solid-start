@@ -1,1 +1,102 @@
-# TBD
+# Data Loading
+
+- Client/server agnostic data loading
+
+  - Explain `routeData` / `useRouteData` function
+    - Start with JSON object, don't worry about fetch or anything to start with
+    - Aside: explain why `routeData` is outside components
+  - Here is where you can also do async data loading: `createRouteData`
+
+  - Make an aside about how `createRouteData` is similar to `createResource`
+
+    [Add example of server rendering a page and then client-side routing to another page]
+
+- Server-only data loading
+
+  - Introduce `createServerData` as a way to ensure running on the server. Important for using databases or authenticated APIs.
+
+    [Add example of server rendering a page and then client-side routing to another page that has uses `createServerData`]
+
+- Loading states
+
+  - Using `Suspense` for loading states
+  - Multiple resources in the same `routeData` function
+
+    - Different suspense boundaries for different resources, but still in the same `routeData` function`
+
+  - Transitions
+
+- Error states
+
+  - Using `ErrorBoundary` for error states
+  - Server functions should throw `ServerError` to send a message that can be rendered on the client
+  - Set a status code after async. For example, database lookup doesn't exist. Use `HttpStatusCode` component
+
+- Refetching
+
+  - Manually refetching resources
+  - After actions
+
+```tsx
+
+function useCurrentUser() {
+  const user = createServerData(() => "user", async ([_, id]) => {
+    return { user: 1 }
+  });
+
+  const user = createRouteData(() => "user", server(async ([_, id]) => {
+    return { user: 1 }
+  }));
+}
+
+export function routeData({ params }) {
+  return createServerData(() => params.filename, async (filename) => {
+    try {
+      return {
+        file: await fetch(filename).then(res => res.json())
+      }
+    } catch (e) {
+      throw new ServerError('File does not exist');
+    }
+  });
+}
+
+function Component() {
+  const action = createServerAction(async () => {}, {
+    invalidate: false
+  })
+
+  const fileData = useRouteData();
+
+  return (
+    <>
+      <ErrorBoundary fallback={(e) => <Show when={e.message === 'File does not exists'}>
+        <HttpStatusCode code={404} />
+        <HttpHeader name value />
+        <Meta>
+        <Title>
+        <Link>
+        {e.message}
+      </Show>}>
+        <div>{fileData()}</div>
+      </ErrorBoundary>
+    </>
+  )
+}
+
+```
+
+```
+
+- [username]/
+  - settings.tsx
+  - [repo-name]
+    - index.tsx
+    - issues
+      - index.tsx
+      - [id].tsx
+    - tree
+      - [branch]
+        - [...filename].tsx
+
+```
