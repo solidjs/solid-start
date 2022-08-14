@@ -130,12 +130,12 @@ export class Router {
             }).code
           );
 
-          if (exports.find($=>$.n === "default")) {
+          if (exports.find($ => $.n === "default")) {
             routeConfig.componentPath = path;
           }
 
           for (var method of API_METHODS) {
-            if (exports.find($=>$.n === method)) {
+            if (exports.find($ => $.n === method)) {
               if (!routeConfig.apiPath) {
                 routeConfig.apiPath = {};
               }
@@ -145,7 +145,7 @@ export class Router {
             }
           }
 
-          if (exports.find($=>$.n === "routeData")) {
+          if (exports.find($ => $.n === "routeData")) {
             routeConfig.dataPath = path + "?data";
             // this.setRouteData(id, path + "?data");
             // dataFn = src.replace("tsx", "data.ts");
@@ -311,7 +311,7 @@ export function stringifyPageRoutes(routesConfig, options = {}) {
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
-  const routesConfig = { routes: ${stringifiedRoutes}, routeLayouts: ${JSON.stringify(
+  const routesConfig = /*#__PURE__*/ { routes: ${stringifiedRoutes}, routeLayouts: ${JSON.stringify(
     routesConfig.routeLayouts
   )} };`;
 

@@ -1,6 +1,8 @@
 import compression from "compression";
 import { once } from "events";
 import fs from "fs";
+import { readFile } from "fs/promises";
+import { join } from "path";
 import polka from "polka";
 import sirv from "sirv";
 import { createRequest } from "solid-start/node/fetch.js";
@@ -30,7 +32,15 @@ export function createServer({ handler, paths, manifest }) {
       const webRes = await handler({
         request: createRequest(req),
         env: {
-          manifest
+          manifest,
+          getStaticHTML: async assetPath => {
+            let text = await readFile(join(paths.assets, assetPath + ".html"), "utf8");
+            return new Response(text, {
+              headers: {
+                "content-type": "text/html"
+              }
+            });
+          }
         }
       });
 

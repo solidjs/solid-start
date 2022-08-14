@@ -225,7 +225,7 @@ server.createHandler = (_fn, hash) => {
 
     // if called with fn.call(...), we check if we got a valid RequestContext, and use that as
     // the request context for this server function call
-    if (typeof this === "object" && this.request instanceof Request) {
+    if (typeof this === "object") {
       ctx = this;
       // @ts-ignore
     } else if (sharedConfig.context && sharedConfig.context.requestContext) {

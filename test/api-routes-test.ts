@@ -6,132 +6,144 @@ import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 test.describe("api routes", () => {
   let appFixture: AppFixture;
   let fixture: Fixture;
-  test.skip(process.env.ADAPTER !== "solid-start-node");
-  test.beforeAll(async () => {
-    fixture = await createFixture({
-      files: {
-        "src/routes/index.jsx": js`
-          export default () => (
-            <>
-              <a href="/redirect" rel="external">Redirect</a>
-              <a href="/server-data-fetch">Server data fetch</a>
-              <a href="/server-fetch">Server Fetch</a>
-              <form action="/redirect-to" method="post">
-                <input name="destination" value="/redirect-destination" />
-                <button type="submit">Redirect</button>
-              </form>
-            </>
-          )
-        `,
-        "src/routes/redirected.jsx": js`
-          export default () => <div data-testid="redirected">You were redirected</div>;
-        `,
-        "src/routes/redirect.jsx": js`
-          import { redirect } from "solid-start/server";
 
-          export let get = () => redirect("/redirected");
-        `,
-        "src/routes/redirect-to.jsx": js`
-          import { redirect } from "solid-start/server";
+  test.describe("with SSR", () => {
+    runTests(true);
+  });
 
-          export let post = async ({ request }) => {
-            let formData = await request.formData();
-            return redirect(formData.get('destination'));
-          }
-        `,
-        "src/routes/redirect-destination.jsx": js`
-          export default () => <div data-testid="redirect-destination">You made it!</div>
-        `,
-        "src/routes/data.json.jsx": js`
-          import { json } from "solid-start/server";
-          export let get = () => json({hello: "world"});
-        `,
-        "src/routes/api/greeting/hello.js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ params }) => json({hello: "world"});
-        `,
-        "src/routes/api/greeting/[name].js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ params }) => json({welcome: params.name});
-        `,
-        "src/routes/api/greeting/[...unknown].js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ params }) => json({goodbye: params.unknown});
-        `,
-        "src/routes/api/request.js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ request }) => json({ requesting: request.headers.get("name") });
-        `,
-        "src/routes/api/waterfall.js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ request, fetch  }) => fetch('/api/greeting/harry-potter');
-        `,
-        "src/routes/api/double-waterfall.js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ request, fetch }) => fetch('/api/waterfall');
-        `,
-        "src/routes/api/external-fetch.js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ request, fetch }) => fetch('https://hogwarts.deno.dev/');
-        `,
-        "src/routes/api/fetch.js": js`
-          import { json } from "solid-start/server";
-          export let get = ({ request }) => fetch('https://hogwarts.deno.dev/');
-        `,
-        "src/routes/server-fetch.jsx": js`
-          import server from "solid-start/server";
-          import { createResource } from 'solid-js';
+  test.describe("without SSR", () => {
+    runTests(false);
+  });
 
-          export default function Page() {
-            const [data] = createResource(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
+  function runTests(ssr) {
+    test.beforeAll(async () => {
+      fixture = await createFixture({
+        files: {
+          "vite.config.ts": js`
+            import solid from "solid-start/vite";
+            import { defineConfig } from "vite";
+            
+            export default defineConfig({
+              plugins: [
+                solid({ ssr: ${ssr ? "true" : "false"}})
+              ]
+            });
+          `,
+          "src/routes/index.jsx": js`
+            export default () => (
+              <>
+                <a href="/redirect" rel="external">Redirect</a>
+                <a href="/server-data-fetch">Server data fetch</a>
+                <a href="/server-fetch">Server Fetch</a>
+                <form action="/redirect-to" method="post">
+                  <input name="destination" value="/redirect-destination" />
+                  <button type="submit">Redirect</button>
+                </form>
+              </>
+            )
+          `,
+          "src/routes/redirected.jsx": js`
+            export default () => <div data-testid="redirected">You were redirected</div>;
+          `,
+          "src/routes/redirect.jsx": js`
+            import { redirect } from "solid-start/server";
+  
+            export let get = () => redirect("/redirected");
+          `,
+          "src/routes/redirect-to.jsx": js`
+            import { redirect } from "solid-start/server";
+  
+            export let post = async ({ request }) => {
+              let formData = await request.formData();
+              return redirect(formData.get('destination'));
+            }
+          `,
+          "src/routes/redirect-destination.jsx": js`
+            export default () => <div data-testid="redirect-destination">You made it!</div>
+          `,
+          "src/routes/data.json.jsx": js`
+            import { json } from "solid-start/server";
+            export let get = () => json({hello: "world"});
+          `,
+          "src/routes/api/greeting/hello.js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ params }) => json({hello: "world"});
+          `,
+          "src/routes/api/greeting/[name].js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ params }) => json({welcome: params.name});
+          `,
+          "src/routes/api/greeting/[...unknown].js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ params }) => json({goodbye: params.unknown});
+          `,
+          "src/routes/api/request.js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ request }) => json({ requesting: request.headers.get("name") });
+          `,
+          "src/routes/api/waterfall.js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ request, fetch  }) => fetch('/api/greeting/harry-potter');
+          `,
+          "src/routes/api/double-waterfall.js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ request, fetch }) => fetch('/api/waterfall');
+          `,
+          "src/routes/api/external-fetch.js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ request, fetch }) => fetch('https://hogwarts.deno.dev/');
+          `,
+          "src/routes/api/fetch.js": js`
+            import { json } from "solid-start/server";
+            export let get = ({ request }) => fetch('https://hogwarts.deno.dev/');
+          `,
+          "src/routes/server-fetch.jsx": js`
+            import server from "solid-start/server";
+            import { createResource } from 'solid-js';
+  
+            export default function Page() {
+              const [data] = createResource(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
+  
+              return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
+            }
+          `,
+          "src/routes/server-data-fetch.jsx": js`
+            import server, { createServerData } from "solid-start/server";
+  
+            export default function Page() {
+              const data = createServerData(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
+  
+              return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
+            }
+          `
+        }
+      });
 
-            return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
-          }
-        `,
-        "src/routes/server-data-fetch.jsx": js`
-          import server, { createServerData } from "solid-start/server";
-
-          export default function Page() {
-            const data = createServerData(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
-
-            return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
-          }
-        `
-      }
+      appFixture = await fixture.createServer();
     });
 
-    appFixture = await fixture.createServer();
-  });
+    test.afterAll(async () => {
+      await appFixture.close();
+    });
 
-  test.afterAll(async () => {
-    await appFixture.close();
-  });
-
-  test.describe("with JavaScript", () => {
-    runTests();
-  });
-
-  test.describe("without JavaScript", () => {
-    test.use({ javaScriptEnabled: false });
-    runTests();
-  });
-
-  function runTests() {
     test("should redirect to redirected", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/");
+      await app.goto("/", true);
+
       await page.click("a[href='/redirect']");
       await page.waitForSelector("[data-testid='redirected']");
     });
 
     test("should handle post to destination", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/");
+      await app.goto("/", true);
       await page.click("button[type='submit']");
       await page.waitForSelector("[data-testid='redirect-destination']");
     });
 
     test("should render json from API route with .json file extension", async ({ page }) => {
+      test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
+
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/data.json");
       expect(await page.content()).toContain('{"hello":"world"}');
@@ -140,10 +152,10 @@ test.describe("api routes", () => {
     test("should render data from API route using server.fetch", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/server-fetch");
-      let dataEl = await page.$("[data-testid='data']");
+      let dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
 
-      await app.goto("/");
+      await app.goto("/", true);
       await page.click("a[href='/server-fetch']");
       dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
@@ -154,16 +166,18 @@ test.describe("api routes", () => {
     }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/server-data-fetch");
-      let dataEl = await page.$("[data-testid='data']");
+      let dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
 
-      await app.goto("/");
+      await app.goto("/", true);
       await page.click("a[href='/server-data-fetch']");
       dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
     });
 
     test("should return json from API route", async ({ page }) => {
+      test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
+
       let res = await fixture.requestDocument("/data.json");
       expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
       expect(await res.json()).toEqual({ hello: "world" });

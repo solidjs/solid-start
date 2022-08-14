@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import spawn, { sync as spawnSync } from "cross-spawn";
 import fse from "fs-extra";
+import { readFile } from "fs/promises";
 import getPort from "get-port";
 import path from "path";
 import c from "picocolors";
@@ -54,8 +55,8 @@ export async function createFixture(init: FixtureInit) {
     path.resolve(projectDir, "dist", "public", "route-manifest.json")
   );
 
-  if (process.env.ADAPTER !== "solid-start-node") {
-    let ip = process.env.ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
+  if (process.env.START_ADAPTER !== "solid-start-node") {
+    let ip = process.env.START_ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
     let port = await getPort();
     let proc = spawn("npm", ["run", "start"], {
       cwd: projectDir,
@@ -121,7 +122,20 @@ export async function createFixture(init: FixtureInit) {
   let handler = async (request: Request) => {
     return await app.default({
       request: request,
-      env: { manifest }
+      env: {
+        manifest,
+        getStaticHTML: async assetPath => {
+          let text = await readFile(
+            path.join(projectDir, "dist", "public", assetPath + ".html"),
+            "utf8"
+          );
+          return new Response(text, {
+            headers: {
+              "content-type": "text/html"
+            }
+          });
+        }
+      }
     });
   };
 
@@ -253,7 +267,7 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
 function build(
   projectDir: string,
   buildStdio?: boolean,
-  adapter: string | undefined = process.env.ADAPTER
+  adapter: string | undefined = process.env.START_ADAPTER
 ) {
   // let buildArgs = ["node_modules/@remix-run/dev/cli.js", "build"];
   // if (sourcemap) {
@@ -263,7 +277,7 @@ function build(
     cwd: projectDir,
     env: {
       ...process.env,
-      ADAPTER: adapter ? adapter : "solid-start-node"
+      START_ADAPTER: adapter ? adapter : "solid-start-node"
     }
   });
 

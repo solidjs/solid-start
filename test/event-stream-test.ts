@@ -7,7 +7,7 @@ test.describe("check event-stream", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
 
-  test.skip(process.env.ADAPTER !== "solid-start-node");
+  test.skip(process.env.START_ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({

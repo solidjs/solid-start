@@ -44,7 +44,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       if (visitedFiles.has(file.file)) return;
       visitedFiles.add(file.file);
       files.push({
-        type: file.file.endsWith(".css") ? "style" : "script",
+        type: file.file.endsWith(".css") ? "style" : file.file.endsWith(".js") ? "script" : "asset",
         href: "/" + file.file
       });
 
@@ -130,10 +130,16 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
   let entryClient = Object.keys(ssrManifest).find(key =>
     key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
   );
-  const assets = collectAssets();
 
+  const entryClientAssets = collectAssets();
   if (entryClient) {
-    assets.addSrc(entryClient);
+    entryClientAssets.addSrc(entryClient);
+  }
+
+  let indexHtml = Object.keys(assetManifest).find(key => key.match(new RegExp(`index.html$`)));
+  const indexHtmlAssets = collectAssets();
+  if (indexHtml) {
+    indexHtmlAssets.addSrc(indexHtml);
   }
 
   return {
@@ -153,7 +159,8 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
           }
         ];
       }),
-      ["entry-client", assets.getFiles()]
+      ["entry-client", entryClientAssets.getFiles()],
+      ["index.html", indexHtmlAssets.getFiles()]
     ])
   };
 }

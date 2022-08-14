@@ -37,27 +37,23 @@ prog
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
   .option("-p, --port", "Port to start server on", 3000)
-  .action(async ({ config, open, port, root, host }) => {
-    root = root || process.cwd();
-    if (!config) {
-      if (!config) {
-        config = findAny(root, "start.config");
-      }
-      if (!config) {
-        config = findAny(root, "vite.config");
-      }
-
-      if (!config) {
-        config = join(root, "node_modules", "solid-start", "vite", "config.js");
-      }
-      DEBUG('config file: "%s"', config);
+  .action(async ({ config: configFile, open, port, root, host }) => {
+    const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
+    let adapterModule;
+    if (typeof config.solidOptions.adapter === "string") {
+      adapterModule = (await import(config.solidOptions.adapter)).default();
+    } else {
+      adapterModule = config.solidOptions.adapter;
     }
+
     if (open) setTimeout(() => launch(port), 1000);
     spawn(
-      "vite",
+      "node",
       [
+        "--experimental-vm-modules",
+        "node_modules/vite/bin/vite.js",
         "dev",
-        ...(config ? ["--config", config] : []),
+        ...(config ? ["--config", config.configFile] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
       ],
@@ -242,17 +238,31 @@ prog
           DEBUG("starting vite server for index.html");
           let port = await (await import("get-port")).default();
           let proc = spawn(
-            "vite",
-            ["dev", "--mode", "production", "--port", `${port}`, "--config", config.configFile],
+            "node",
+            [
+              "--experimental-vm-modules",
+              "node_modules/vite/bin/vite.js",
+              "dev",
+              "--mode",
+              "production",
+              ...(config ? ["--config", config.configFile] : []),
+              ...(port ? ["--port", port] : [])
+            ],
             {
               stdio: isDebug ? "inherit" : "ignore",
-              shell: true
+              shell: true,
+              env: {
+                ...process.env,
+                START_INDEX_HTML: "true"
+              }
             }
           );
+
           process.on("SIGINT", function () {
             proc.kill();
             process.exit();
           });
+
           await waitOn({
             resources: [`http://localhost:${port}/`],
             verbose: isDebug
@@ -282,7 +292,7 @@ prog
           root: config.root,
           build: {
             outDir: path,
-            minify: false,
+            minify: process.env.START_MINIFY == "false" ? false : "terser",
             ssrManifest: true,
             rollupOptions: {
               input: indexHtml,
@@ -325,11 +335,14 @@ prog
   .describe("Start production build")
   .action(async ({ root, config: configFile, port }) => {
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
-    let adapter = config.solidOptions.adapter;
-    if (typeof adapter === "string") {
-      adapter = (await import(adapter)).default();
+
+    let adapterModule;
+    if (typeof config.solidOptions.adapter === "string") {
+      adapterModule = (await import(config.solidOptions.adapter)).default();
+    } else {
+      adapterModule = config.solidOptions.adapter;
     }
-    let url = await adapter.start(config, { port });
+    let url = await adapterModule.start(config, { port });
     if (url) {
       const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
@@ -356,7 +369,7 @@ prog.parse(process.argv);
 /**
  *
  * @param {*} param0
- * @returns {Promise<import('vite').ResolvedConfig & { solidOptions: import('./types').StartOptions }>}
+ * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
   root = root || process.cwd();

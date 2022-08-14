@@ -22,45 +22,52 @@ export function createDevHandler(viteServer, config, options) {
       request,
       env: {
         ...env,
-        devManifest: options.router.getFlattenedPageRoutes(true),
-        collectStyles: async match => {
-          const styles = {};
-          const deps = new Set();
-          for (const file of match) {
-            const absolutePath = path.resolve(file);
-            await viteServer.ssrLoadModule(absolutePath);
-            const node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
+        __dev: {
+          manifest: options.router.getFlattenedPageRoutes(true),
+          collectStyles: async match => {
+            const styles = {};
+            const deps = new Set();
+            for (const file of match) {
+              const normalizedPath = path.resolve(file).replace(/\\/g, "/");
+              const node = await viteServer.moduleGraph.getModuleById(normalizedPath);
 
-            await find_deps(viteServer, node, deps);
-          }
+              await find_deps(viteServer, node, deps);
+            }
 
-          for (const dep of deps) {
-            const parsed = new URL(dep.url, "http://localhost/");
-            const query = parsed.searchParams;
+            for (const dep of deps) {
+              const parsed = new URL(dep.url, "http://localhost/");
+              const query = parsed.searchParams;
 
-            if (
-              style_pattern.test(dep.file) ||
-              (query.has("svelte") && query.get("type") === "style")
-            ) {
-              try {
-                const mod = await viteServer.ssrLoadModule(dep.url);
-                styles[dep.url] = mod.default;
-              } catch {
-                // this can happen with dynamically imported modules, I think
-                // because the Vite module graph doesn't distinguish between
-                // static and dynamic imports? TODO investigate, submit fix
+              if (
+                style_pattern.test(dep.file) ||
+                (query.has("svelte") && query.get("type") === "style")
+              ) {
+                try {
+                  const mod = await viteServer.ssrLoadModule(dep.url);
+                  styles[dep.url] = mod.default;
+                } catch {
+                  // this can happen with dynamically imported modules, I think
+                  // because the Vite module graph doesn't distinguish between
+                  // static and dynamic imports? TODO investigate, submit fix
+                }
               }
             }
+            return styles;
           }
-          return styles;
         }
       }
     });
   }
 
-  async function handler(req, res) {
+  /**
+   *
+   * @param {import('http').IncomingMessage} req
+   * @param {*} res
+   */
+  async function startHandler(req, res) {
     try {
-      let webRes = await devFetch(createRequest(req));
+      console.log(req.method, req.url);
+      let webRes = await devFetch(createRequest(req), {});
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
 
@@ -78,18 +85,18 @@ export function createDevHandler(viteServer, config, options) {
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
       console.log("ERROR", e);
-      res.statusCode = 500;
-      res.end(e.stack);
+      // res.statusCode = 500;
+      // res.end(e.stack);
     }
   }
 
-  return { fetch: devFetch, handler };
+  return { fetch: devFetch, handler: startHandler };
 }
 
 /**
- * @param {import('vite').ViteDevServer} vite
- * @param {import('vite').ModuleNode} node
- * @param {Set<import('vite').ModuleNode>} deps
+ * @param {import('node_modules/vite').ViteDevServer} vite
+ * @param {import('node_modules/vite').ModuleNode} node
+ * @param {Set<import('node_modules/vite').ModuleNode>} deps
  */
 async function find_deps(vite, node, deps) {
   // since `ssrTransformResult.deps` contains URLs instead of `ModuleNode`s, this process is asynchronous.
@@ -97,7 +104,7 @@ async function find_deps(vite, node, deps) {
   /** @type {Promise<void>[]} */
   const branches = [];
 
-  /** @param {import('vite').ModuleNode} node */
+  /** @param {import('node_modules/vite').ModuleNode} node */
   async function add(node) {
     if (!deps.has(node)) {
       deps.add(node);

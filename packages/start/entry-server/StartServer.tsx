@@ -5,7 +5,7 @@ import { ssr } from "solid-js/web";
 import Root from "~start/root";
 import { apiRoutes } from "../api/middleware";
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
-import { fileRoutes } from "../root/FileRoutes";
+import { routesConfig } from "../root/FileRoutes";
 import { inlineServerFunctions } from "../server/middleware";
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
@@ -82,7 +82,7 @@ export default ({ event }: { event: PageEvent }) => {
           location={path}
           prevLocation={event.prevUrl}
           data={dataFn}
-          routes={fileRoutes}
+          routes={routesConfig.fileRoutes}
         >
           {docType as unknown as any}
           <Root />

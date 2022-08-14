@@ -18,7 +18,7 @@ export type RouteAction<T, U> = {
   error?: FormError | null;
   pending: T[];
   state: ActionState;
-  Form: T extends FormData ? ParentComponent<FormProps> : ParentComponent;
+  Form: T extends FormData ? ParentComponent<FormProps> : never;
   url: string;
   submit: (vars: T) => Promise<U>;
   reset: () => void;
@@ -136,7 +136,7 @@ export function createRouteAction<T, U = void>(
       setData(() => ({}));
     },
     url: (fn as any).url,
-    Form(props: FormProps) {
+    Form: ((props: FormProps) => {
       const formOwner = getOwner();
 
       let url = (fn as any).url;
@@ -153,7 +153,7 @@ export function createRouteAction<T, U = void>(
           {props.children}
         </FormImpl>
       );
-    },
+    }) as T extends FormData ? ParentComponent<FormProps> : never,
     submit
   };
 }

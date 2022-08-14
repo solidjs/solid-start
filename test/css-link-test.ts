@@ -8,7 +8,7 @@ import { getElement } from "./helpers/playwright-fixture.js";
 test.describe("CSS link tags", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
-  test.skip(process.env.ADAPTER !== "solid-start-node");
+  test.skip(process.env.START_ADAPTER !== "solid-start-node");
 
   test.describe("without streaming", () => {
     test.beforeAll(async () => {

@@ -4,10 +4,8 @@ import { devices } from "@playwright/test";
 const config: PlaywrightTestConfig = {
   testDir: ".",
   testMatch: ["**/*-test.ts"],
-  /* Maximum time one test can run for. */
   timeout: 300_000,
   expect: {
-    /* Maximum time expect() should wait for the condition to be met. */
     timeout: 5_000
   },
   forbidOnly: !!process.env.CI,

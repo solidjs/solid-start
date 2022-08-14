@@ -2,19 +2,29 @@
   "name": "solid-start-cloudflare-workers",
   "version": "0.1.0-alpha.99",
   "main": "./index.js",
+  "types": "./index.d.ts",
   "type": "module",
   "solid": {
     "type": "adapter"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.2.0",
+    "@cloudflare/workers-types": "^3.14.1",
+    "@miniflare/core": "^2.6.0",
+    "@miniflare/http-server": "^2.6.0",
+    "@miniflare/shared": "^2.6.0",
+    "@miniflare/web-sockets": "^2.6.0",
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/ws": "^8.5.3",
+    "miniflare": "^2.6.0",
     "rollup": "^2.77.2",
-    "terser": "^5.14.2"
+    "terser": "^5.14.2",
+    "ws": "^8.8.1"
   },
   "devDependencies": {
+    "@types/node": "^18.0.0",
     "solid-start": "0.1.0-alpha.99",
     "vite": "^3.0.4"
   },

@@ -1,6 +1,13 @@
 import { useNavigate } from "@solidjs/router";
-import { createResource, onCleanup, Resource, useContext } from "solid-js";
-import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
+import {
+  createResource,
+  onCleanup,
+  Resource,
+  ResourceOptions,
+  startTransition,
+  useContext
+} from "solid-js";
+import { ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
 import { ServerContext } from "../server/ServerContext";
@@ -53,16 +60,18 @@ export function createRouteData<T, S>(
 
   function handleResponse(response: Response) {
     if (isRedirectResponse(response)) {
-      let url = response.headers.get(LocationHeader);
-      if (url.startsWith("/")) {
-        navigate(response.headers.get(LocationHeader), {
-          replace: true
-        });
-      } else {
-        if (!isServer) {
-          window.location.href = response.headers.get(LocationHeader);
+      startTransition(() => {
+        let url = response.headers.get(LocationHeader);
+        if (url.startsWith("/")) {
+          navigate(url, {
+            replace: true
+          });
+        } else {
+          if (!isServer) {
+            window.location.href = url;
+          }
         }
-      }
+      });
       if (isServer) {
         pageEvent.setStatusCode(response.status);
         response.headers.forEach((head, value) => {
