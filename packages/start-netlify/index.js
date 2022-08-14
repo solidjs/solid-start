@@ -1,4 +1,3 @@
-import { babel } from "@rollup/plugin-babel";
 import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
@@ -38,18 +37,13 @@ export default function ({ edge } = {}) {
       );
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
-        preserveEntrySignatures: false,
         plugins: [
           json(),
           nodeResolve({
             preferBuiltins: true,
             exportConditions: ["node", "solid"]
           }),
-          common(),
-          babel({
-            babelHelpers: "bundled",
-            presets: [["@babel/preset-env", { targets: { node: 14 } }]]
-          })
+          common()
         ]
       });
       // or write the bundle to disk
