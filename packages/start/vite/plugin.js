@@ -1,9 +1,10 @@
+import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
-import fs, { existsSync } from "fs";
+import fs, { copyFileSync, existsSync, rmSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
+import visualizer from "rollup-plugin-visualizer";
 import { loadEnv, normalizePath } from "vite";
-import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
 import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
@@ -33,7 +34,7 @@ function solidStartInlineServerModules(options) {
       vite.httpServer.once("listening", async () => {
         const label = c.bold("Server modules:");
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0]
+          const url = vite.resolvedUrls.local[0];
           // eslint-disable-next-line no-console
           console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
         }, 200);
@@ -142,9 +143,9 @@ function solidStartFileSystemRouter(options) {
       router.listener = listener;
       vite.httpServer.once("listening", async () => {
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0]
+          const url = vite.resolvedUrls.local[0];
           // eslint-disable-next-line no-console
-          printUrls(router,url.substring(0,url.length - 1));
+          printUrls(router, url.substring(0, url.length - 1));
         }, 100);
       });
     },
@@ -477,7 +478,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 };
 
 /**
- * @returns {import('vite').PluginOption[]}
+ * @returns {import('node_modules/vite').PluginOption[]}
  */
 export default function solidStart(options) {
   options = Object.assign(
@@ -514,6 +515,8 @@ export default function solidStart(options) {
     pageExtensions: options.pageExtensions
   });
 
+  let config;
+
   return [
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
@@ -539,7 +542,31 @@ export default function solidStart(options) {
       })
     }),
     solidStartServer(options),
-    solidsStartRouteManifest(options)
+    solidsStartRouteManifest(options),
+    {
+      name: "visualizer",
+      config(c, env) {
+        config = c;
+      },
+      async generateBundle(...args) {
+        if (!config.build.ssr) {
+          return await visualizer.default({ emitFile: true }).generateBundle.call(this, ...args);
+        } else {
+          return;
+        }
+      },
+      closeBundle() {
+        if (!config.build.ssr) {
+          copyFileSync(
+            join(config.build.outDir, "stats.html"),
+            join(config.root, ".solid", "stats.html")
+          );
+          rmSync(join(config.build.outDir, "stats.html"));
+        } else {
+          return;
+        }
+      }
+    }
   ].filter(Boolean);
 }
 
