@@ -75,7 +75,7 @@
     "@babel/preset-typescript": "^7.18.6",
     "@babel/template": "^7.18.6",
     "@types/cookie": "^0.5.1",
-    "@vinxi/vite-plugin-inspect": "^0.6.10",
+    "@vinxi/vite-plugin-inspect": "^0.6.11",
     "chokidar": "^3.5.3",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
