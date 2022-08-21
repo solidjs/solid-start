@@ -154,12 +154,24 @@ function solidStartFileSystemRouter(options) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
 
+      const babelOptions =
+        fn =>
+        (...args) => {
+          const b =
+            typeof options.babel === "function"
+              ? options.babel(...args)
+              : options.babel ?? { plugins: [] };
+          const d = fn(...args);
+          return {
+            plugins: [...b.plugins, ...d.plugins]
+          };
+        };
       let babelSolidCompiler = (/** @type {string} */ code, /** @type {string} */ id, fn) => {
         // @ts-ignore
         return solid({
           ...(options ?? {}),
           ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
-          babel: fn
+          babel: babelOptions
         }).transform(code, id, transformOptions);
       };
 
@@ -567,6 +579,19 @@ export default function solidStart(options) {
     pageExtensions: options.pageExtensions
   });
 
+  const babelOptions =
+    fn =>
+    (...args) => {
+      const b =
+        typeof options.babel === "function"
+          ? options.babel(...args)
+          : options.babel ?? { plugins: [] };
+      const d = fn(...args);
+      return {
+        plugins: [...b.plugins, ...d.plugins]
+      };
+    };
+
   return [
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
@@ -577,18 +602,20 @@ export default function solidStart(options) {
       ...(options ?? {}),
       // if we are building the SPA client for production, we set ssr to false
       ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
-      babel: (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
-        plugins: [
-          [
-            routeResource,
-            { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-          ],
-          [
-            babelServerModule,
-            { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+      babel: babelOptions(
+        (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
+          plugins: [
+            [
+              routeResource,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ],
+            [
+              babelServerModule,
+              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+            ]
           ]
-        ]
-      })
+        })
+      )
     }),
     solidStartServer(options),
     solidsStartRouteManifest(options),
