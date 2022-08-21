@@ -1,9 +1,8 @@
 import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
-import fs, { copyFileSync, existsSync, mkdirSync, rmSync } from "fs";
+import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
-import visualizer from "rollup-plugin-visualizer";
 import { loadEnv, normalizePath } from "vite";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
@@ -509,37 +508,6 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
   return null;
 };
 
-const visualizerPlugin = ({ outDir }) => {
-  let config;
-
-  return {
-    name: "visualizer",
-    config(c, env) {
-      config = c;
-    },
-    async generateBundle(...args) {
-      if (!config.build.ssr) {
-        // @ts-ignore
-        return await visualizer.default({ emitFile: true }).generateBundle.call(this, ...args);
-      } else {
-        return;
-      }
-    },
-    closeBundle() {
-      if (!config.build.ssr) {
-        mkdirSync(join(config.root, outDir), { recursive: true });
-        copyFileSync(
-          join(config.build.outDir, "stats.html"),
-          join(config.root, outDir, "stats.html")
-        );
-        rmSync(join(config.build.outDir, "stats.html"));
-      } else {
-        return;
-      }
-    }
-  };
-};
-
 /**
  * @returns {import('node_modules/vite').PluginOption[]}
  */
@@ -618,10 +586,7 @@ export default function solidStart(options) {
       )
     }),
     solidStartServer(options),
-    solidsStartRouteManifest(options),
-    visualizerPlugin({
-      outDir: join(".solid", "inspect")
-    })
+    solidsStartRouteManifest(options)
   ].filter(Boolean);
 }
 

@@ -78,6 +78,8 @@ prog
     }
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
+    const inspect = join(config.root, ".solid", "inspect");
+
     adapter.build(config, {
       islandsClient: async path => {
         let routeManifestPath = join(config.root, ".solid", "route-manifest");
@@ -175,6 +177,9 @@ prog
         });
 
         writeFileSync(join(path, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
+        writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
+        writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
+        writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
       },
       server: async path => {
         await vite.build({
@@ -213,10 +218,12 @@ prog
         let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
         let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
 
-        writeFileSync(
-          join(path, "route-manifest.json"),
-          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
-        );
+        let routeManifest = prepareManifest(ssrManifest, assetManifest, config);
+        writeFileSync(join(path, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
+
+        writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
+        writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
+        writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
       },
       debug: DEBUG,
       build: async conf => {
@@ -312,11 +319,13 @@ prog
 
         let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
         let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+        let routeManifest = prepareManifest(ssrManifest, assetManifest, config);
 
-        writeFileSync(
-          join(path, "route-manifest.json"),
-          JSON.stringify(prepareManifest(ssrManifest, assetManifest, config), null, 2)
-        );
+        writeFileSync(join(path, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
+
+        writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
+        writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
+        writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
 
         DEBUG("wrote route manifest");
       }
