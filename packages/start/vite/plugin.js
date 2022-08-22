@@ -344,7 +344,6 @@ function solidStartServer(options) {
           typeof config.solidOptions.adapter === "string"
             ? (await import(config.solidOptions.adapter)).default()
             : config.solidOptions.adapter;
-        console.log(adapter);
         if (adapter && adapter.dev) {
           vite.middlewares.use(
             await adapter.dev(config, vite, createDevHandler(vite, config, options))
@@ -553,8 +552,6 @@ export default function solidStart(options) {
         .map((/** @type {string | any[]} */ s) => s.slice(1))) ||
       [])
   ];
-
-  console.log(path.posix.join(options.appRoot, options.routesDir));
 
   const babelOptions =
     fn =>

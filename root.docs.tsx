@@ -65,7 +65,6 @@ function Nav() {
     return Object.values(sections).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
   });
 
-  console.log(data());
   return (
     <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen overflow-scroll">
       <For each={data()}>
@@ -91,7 +90,6 @@ function Nav() {
 function TableOfContents() {
   const path = useLocation();
   const mod = mods[`./docs${path.pathname}.mdx`];
-  console.log(path.pathname, mod);
   return (
     <div class="hidden xl:block px-8 py-8 space-y-4">
       <span class="font-bold uppercase text-xs">On this page</span>

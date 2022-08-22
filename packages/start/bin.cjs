@@ -47,11 +47,11 @@ prog
       adapterModule = config.solidOptions.adapter;
     }
 
-    console.log(config.configFile);
-
     if (open) setTimeout(() => launch(port), 1000);
-    console.log(
+    DEBUG(
       [
+        "running",
+        "node",
         "--experimental-vm-modules",
         inspect ? "--inspect" : undefined,
         "node_modules/vite/bin/vite.js",
@@ -60,7 +60,9 @@ prog
         ...(config ? ["--config", config.configFile] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
-      ].filter(Boolean)
+      ]
+        .filter(Boolean)
+        .join(" ")
     );
     spawn(
       "node",

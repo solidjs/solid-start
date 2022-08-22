@@ -116,7 +116,6 @@ export class Router {
 
     // if its a possible page due to its extension
     const pageRegex = new RegExp(`\\.(${this.pageExtensions.join("|")})$`);
-    console.log(path.match(pageRegex) && !this.ignore.find(i => path.match(i)));
     if (path.match(pageRegex)) {
       log("processing", path);
       let id = path.slice(this.baseDir.length).replace(pageRegex, "");
