@@ -1,3 +1,9 @@
+---
+section: api
+title: useRouteData
+order: 8
+---
+
 # useRouteData
 
 ##### `useRouteData` gives you an object containing the path params of the current route

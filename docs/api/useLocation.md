@@ -1,3 +1,9 @@
+---
+section: api
+title: useLocation
+order: 8
+---
+
 # useLocation
 
 ##### `useLocation` gives you a reactive object describing the URL the user is visiting

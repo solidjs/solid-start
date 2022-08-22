@@ -1,3 +1,9 @@
+---
+section: api
+title: useNavigate
+order: 8
+---
+
 # useNavigate
 
 ##### `useNavigate` gives you an object containing the path params of the current route

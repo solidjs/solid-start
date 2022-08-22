@@ -89,12 +89,12 @@ function Nav() {
 
 function TableOfContents() {
   const path = useLocation();
-  const mod = mods[`./docs${path.pathname}.mdx`];
+  const mod = () => mods[`./docs${path.pathname}.mdx`];
   return (
     <div class="hidden xl:block px-8 py-8 space-y-4">
       <span class="font-bold uppercase text-xs">On this page</span>
       <ul class="space-y-2 text-sm">
-        <For each={mod.getHeadings()}>
+        <For each={mod().getHeadings()}>
           {h => (
             <li>
               <a href={`#${h.slug}`}>{h.text}</a>

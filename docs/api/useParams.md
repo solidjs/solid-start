@@ -1,3 +1,9 @@
+---
+section: api
+title: useParams
+order: 8
+---
+
 # useParams
 
 ##### `useParams` gives you an object containing the path params of the current route

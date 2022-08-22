@@ -1,3 +1,9 @@
+---
+section: api
+title: useSearchParams
+order: 8
+---
+
 # useSearchParams
 
 ##### `useSearchParams` gives you an object containing the path params of the current route
