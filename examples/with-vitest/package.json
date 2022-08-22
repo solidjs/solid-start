@@ -13,7 +13,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@types/testing-library__jest-dom": "^5.14.4",
     "jsdom": "^20.0.0",
-    "solid-js": "1.4.7",
+    "solid-js": "1.4.8",
     "solid-start": "0.1.0-alpha.99",
     "solid-start-node": "0.1.0-alpha.99",
     "solid-testing-library": "^0.3.0",

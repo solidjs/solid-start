@@ -72,7 +72,7 @@ function solidStartFileSystemRouter(options) {
   let lazy;
   let config;
 
-  const { delay = 500, glob: enableGlob = true, router } = options;
+  let { delay = 500, glob: enableGlob = true, router } = options;
   let root = process.cwd();
   let reloadGlobs = [];
   let restartGlobs = [];
@@ -122,6 +122,8 @@ function solidStartFileSystemRouter(options) {
       if (!c.server) c.server = {};
       if (!c.server.watch) c.server.watch = {};
       c.server.watch.disableGlobbing = false;
+
+      router = c.solidOptions.router;
     },
     async configResolved(_config) {
       lazy = _config.command !== "serve" || options.lazy === true;
@@ -371,9 +373,17 @@ function solidStartConfig(options) {
       // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
       options.env = await loadEnv(e.mode, process.cwd(), "");
 
-      options.entryClient = findAny(join(options.root, options.appRoot), "entry-client");
-      if (!options.entryClient) {
-        options.entryClient = join(
+      options.router = new Router({
+        baseDir: path.posix.join(options.appRoot, options.routesDir),
+        pageExtensions: options.pageExtensions,
+        ignore: options.routesIgnore,
+        cwd: options.root
+      });
+
+      options.clientEntry =
+        options.clientEntry ?? findAny(join(options.root, options.appRoot), "entry-client");
+      if (!options.clientEntry) {
+        options.clientEntry = join(
           options.root,
           "node_modules",
           "solid-start",
@@ -381,9 +391,10 @@ function solidStartConfig(options) {
           "entry-client.tsx"
         );
       }
-      options.entryServer = findAny(join(options.root, options.appRoot), "entry-server");
-      if (!options.entryServer) {
-        options.entryServer = join(
+      options.serverEntry =
+        options.serverEntry ?? findAny(join(options.root, options.appRoot), "entry-server");
+      if (!options.serverEntry) {
+        options.serverEntry = join(
           options.root,
           "node_modules",
           "solid-start",
@@ -392,9 +403,9 @@ function solidStartConfig(options) {
         );
       }
 
-      options.appRootFile = findAny(join(options.root, options.appRoot), "root");
-      if (!options.appRootFile) {
-        options.appRootFile = join(
+      options.rootEntry = options.rootEntry ?? findAny(join(options.root, options.appRoot), "root");
+      if (!options.rootEntry) {
+        options.rootEntry = join(
           options.root,
           "node_modules",
           "solid-start",
@@ -427,9 +438,9 @@ function solidStartConfig(options) {
           conditions: options.env["VITEST"] ? ["browser", "solid"] : ["solid"],
           alias: {
             "~": path.join(root, options.appRoot),
-            "~start/root": options.appRootFile,
-            "~start/entry-client": options.entryClient,
-            "~start/entry-server": options.entryServer
+            "~start/root": options.rootEntry,
+            "~start/entry-client": options.clientEntry,
+            "~start/entry-server": options.serverEntry
           }
         },
         ssr: {
@@ -444,8 +455,8 @@ function solidStartConfig(options) {
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
           "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
           "import.meta.env.START_ISLANDS": JSON.stringify(options.islands ? true : false),
-          "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.entryClient),
-          "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.entryServer),
+          "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.clientEntry),
+          "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.serverEntry),
           "import.meta.env.START_INDEX_HTML": JSON.stringify(
             process.env.START_INDEX_HTML === "true" ? true : false
           ),
@@ -523,7 +534,8 @@ export default function solidStart(options) {
       lazy: true,
       prerenderRoutes: [],
       devServer: true,
-      inspect: true
+      inspect: true,
+      routesIgnore: []
     },
     options ?? {}
   );
@@ -542,10 +554,7 @@ export default function solidStart(options) {
       [])
   ];
 
-  options.router = new Router({
-    baseDir: path.posix.join(options.appRoot, options.routesDir),
-    pageExtensions: options.pageExtensions
-  });
+  console.log(path.posix.join(options.appRoot, options.routesDir));
 
   const babelOptions =
     fn =>

@@ -26,8 +26,8 @@ export type StartOptions = {
   inspect: boolean;
   pageExtensions: string[];
   root: string;
-  entryClient: string;
-  entryServer: string;
+  clientEntry: string;
+  serverEntry: string;
   appRootFile: string;
 };
 

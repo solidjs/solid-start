@@ -21,15 +21,18 @@ export class Router {
   pageExtensions;
   cwd;
   watcher;
+  ignore;
   constructor({
     baseDir = "src/routes",
     pageExtensions = ["jsx", "tsx", "js", "ts"],
-    cwd = process.cwd()
+    cwd = process.cwd(),
+    ignore = []
   }) {
     this.baseDir = baseDir;
     this.pageExtensions = pageExtensions;
     this.cwd = cwd;
     this.routes = {};
+    this.ignore = ignore;
   }
 
   async init() {
@@ -113,6 +116,7 @@ export class Router {
 
     // if its a possible page due to its extension
     const pageRegex = new RegExp(`\\.(${this.pageExtensions.join("|")})$`);
+    console.log(path.match(pageRegex) && !this.ignore.find(i => path.match(i)));
     if (path.match(pageRegex)) {
       log("processing", path);
       let id = path.slice(this.baseDir.length).replace(pageRegex, "");

@@ -76,7 +76,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         //       new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`)
         //     )
         //   ) {
-        //     entryClientScripts.push({ type: "style", href: "/" + css });
+        //     clientEntryScripts.push({ type: "style", href: "/" + css });
         //   }
         // }
       });
@@ -127,13 +127,13 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     })
     .filter(Boolean);
 
-  let entryClient = Object.keys(ssrManifest).find(key =>
+  let clientEntry = Object.keys(ssrManifest).find(key =>
     key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
   );
 
-  const entryClientAssets = collectAssets();
-  if (entryClient) {
-    entryClientAssets.addSrc(entryClient);
+  const clientEntryAssets = collectAssets();
+  if (clientEntry) {
+    clientEntryAssets.addSrc(clientEntry);
   }
 
   let indexHtml = Object.keys(assetManifest).find(key => key.match(new RegExp(`index.html$`)));
@@ -159,7 +159,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
           }
         ];
       }),
-      ["entry-client", entryClientAssets.getFiles()],
+      ["entry-client", clientEntryAssets.getFiles()],
       ["index.html", indexHtmlAssets.getFiles()]
     ])
   };

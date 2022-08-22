@@ -36,9 +36,10 @@ prog
   .option("-o, --open", "Open a browser tab", false)
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
+  .option("-i,--inspect", "Node inspector", false)
   .option("-p, --port", "Port to start server on", 3000)
-  .action(async ({ config: configFile, open, port, root, host }) => {
-    const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
+  .action(async ({ config: configFile, open, port, root, host, inspect }) => {
+    const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
     let adapterModule;
     if (typeof config.solidOptions.adapter === "string") {
       adapterModule = (await import(config.solidOptions.adapter)).default();
@@ -46,17 +47,32 @@ prog
       adapterModule = config.solidOptions.adapter;
     }
 
+    console.log(config.configFile);
+
     if (open) setTimeout(() => launch(port), 1000);
+    console.log(
+      [
+        "--experimental-vm-modules",
+        inspect ? "--inspect" : undefined,
+        "node_modules/vite/bin/vite.js",
+        "dev",
+        ...(root ? [root] : []),
+        ...(config ? ["--config", config.configFile] : []),
+        ...(port ? ["--port", port] : []),
+        ...(host ? ["--host"] : [])
+      ].filter(Boolean)
+    );
     spawn(
       "node",
       [
         "--experimental-vm-modules",
+        inspect ? "--inspect" : undefined,
         "node_modules/vite/bin/vite.js",
         "dev",
         ...(config ? ["--config", config.configFile] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
-      ],
+      ].filter(Boolean),
       {
         shell: true,
         stdio: "inherit"
@@ -189,7 +205,7 @@ prog
             ssr: true,
             outDir: path,
             rollupOptions: {
-              input: config.solidOptions.entryServer,
+              input: config.solidOptions.serverEntry,
               output: {
                 inlineDynamicImports: true,
                 format: "esm"
@@ -207,7 +223,7 @@ prog
             ssrManifest: true,
             minify: process.env.START_MINIFY === "false" ? false : "terser",
             rollupOptions: {
-              input: config.solidOptions.entryClient,
+              input: config.solidOptions.clientEntry,
               output: {
                 manualChunks: undefined
               }

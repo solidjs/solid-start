@@ -7,7 +7,7 @@ if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
   // const { default: createDebugger } = await import("debug");
   // window.DEBUG = createDebugger("start:client");
-  window.DEBUG = console.log
+  window.DEBUG = console.log;
 
   DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
   DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
@@ -15,6 +15,10 @@ if (import.meta.env.DEV) {
   DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
   DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
   DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
+
+  window.INSPECT = () => {
+    window.open(window.location.href.replace(window.location.pathname, "/__inspect"));
+  };
 }
 
 export default function mount(code?: () => JSX.Element, element?: Document) {

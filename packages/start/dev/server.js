@@ -27,12 +27,25 @@ export function createDevHandler(viteServer, config, options) {
           collectStyles: async match => {
             const styles = {};
             const deps = new Set();
-            for (const file of match) {
-              const normalizedPath = path.resolve(file).replace(/\\/g, "/");
-              const node = await viteServer.moduleGraph.getModuleById(normalizedPath);
 
-              await find_deps(viteServer, node, deps);
-            }
+            try {
+              for (const file of match) {
+                const normalizedPath = path.resolve(file).replace(/\\/g, "/");
+                let node = await viteServer.moduleGraph.getModuleById(normalizedPath);
+                if (!node) {
+                  const absolutePath = path.resolve(file);
+                  await viteServer.ssrLoadModule(absolutePath);
+                  node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
+
+                  if (!node) {
+                    console.log("not found");
+                    return;
+                  }
+                }
+
+                await find_deps(viteServer, node, deps);
+              }
+            } catch (e) {}
 
             for (const dep of deps) {
               const parsed = new URL(dep.url, "http://localhost/");
