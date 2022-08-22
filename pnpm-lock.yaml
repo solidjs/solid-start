@@ -20,9 +20,11 @@ importers:
       solid-mdx: ^0.0.6
       solid-start: workspace:0.1.0-alpha.99
       solid-start-mdx: workspace:^1.0.0
+      solid-start-node: workspace:0.1.0-alpha.99
       tailwindcss: ^3.0.18
       turbo: ^1.4.0
       typescript: 4.7.4
+      undici: ^5.9.1
       vite: ^3.0.4
     dependencies:
       cross-env: 7.0.3
@@ -42,9 +44,11 @@ importers:
       solid-mdx: 0.0.6_solid-js@1.4.8+vite@3.0.4
       solid-start: link:packages/start
       solid-start-mdx: link:packages/mdx
+      solid-start-node: link:packages/start-node
       tailwindcss: 3.1.4
       turbo: 1.4.0
       typescript: 4.7.4
+      undici: 5.9.1
       vite: 3.0.4
 
   examples/bare:
@@ -9637,6 +9641,11 @@ packages:
   /undici/5.8.0:
     resolution: {integrity: sha512-1F7Vtcez5w/LwH2G2tGnFIihuWUlc58YidwLiCv+jR2Z50x0tNXpRRw7eOIJ+GvqCqIkg9SB7NWAJ/T9TLfv8Q==}
     engines: {node: '>=12.18'}
+
+  /undici/5.9.1:
+    resolution: {integrity: sha512-6fB3a+SNnWEm4CJbgo0/CWR8RGcOCQP68SF4X0mxtYTq2VNN8T88NYrWVBAeSX+zb7bny2dx2iYhP3XHi00omg==}
+    engines: {node: '>=12.18'}
+    dev: true
 
   /unicode-canonical-property-names-ecmascript/2.0.0:
     resolution: {integrity: sha512-yY5PpDlfVIU5+y/BSCxAJRBIS1Zc2dDG3Ujq+sR0U+JjUevW2JhocOF+soROYDSaAezOzOKuyyixhD6mBknSmQ==}
