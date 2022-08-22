@@ -26,10 +26,6 @@ npm install
 npm run dev
 ```
 
-### Documentation
-
-If you want to contribute to documentation, go to [solidjs/solid-docs-next](https://github.com/solidjs/solid-docs-next)
-
 ### Development
 
 The monorepo uses `pnpm` as the package manager. To install `pnpm`, run the following command in your terminal.
