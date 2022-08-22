@@ -172,7 +172,7 @@ function solidStartFileSystemRouter(options) {
         return solid({
           ...(options ?? {}),
           ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
-          babel: babelOptions
+          babel: babelOptions(fn)
         }).transform(code, id, transformOptions);
       };
 
