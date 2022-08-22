@@ -1,8 +1,8 @@
 ---
 section: api
-title: useMatch
+title: vite.config.ts
 order: 8
-subsection: Router
+subsection: Entrypoints
 ---
 
 # useMatch

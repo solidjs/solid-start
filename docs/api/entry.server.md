@@ -1,8 +1,8 @@
 ---
 section: api
-title: useMatch
+title: entry.server.tsx
 order: 8
-subsection: Router
+subsection: Entrypoints
 ---
 
 # useMatch

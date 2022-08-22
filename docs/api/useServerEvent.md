@@ -1,8 +1,8 @@
 ---
 section: api
-title: useMatch
+title: useServerEvent
 order: 8
-subsection: Router
+subsection: Server
 ---
 
 # useMatch

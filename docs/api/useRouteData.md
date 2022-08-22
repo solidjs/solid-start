@@ -2,6 +2,7 @@
 section: api
 title: useRouteData
 order: 8
+subsection: Data
 ---
 
 # useRouteData

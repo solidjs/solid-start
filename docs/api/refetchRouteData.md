@@ -1,10 +1,10 @@
 ---
 section: api
-title: useMatch
+title: refetchRouteData
 order: 8
-subsection: Router
+subsection: Data
 ---
 
-# useMatch
+# refetchRouteData
 
 ##### `useMatch` gives you a reactive object describing the URL the user is visiting

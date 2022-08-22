@@ -2,6 +2,7 @@
 section: api
 title: useLocation
 order: 8
+subsection: Router
 ---
 
 # useLocation

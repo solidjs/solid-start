@@ -1,6 +1,6 @@
 ---
 section: api
-title: useMatch
+title: FileRoutes
 order: 8
 subsection: Router
 ---

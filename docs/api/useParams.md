@@ -2,6 +2,7 @@
 section: api
 title: useParams
 order: 8
+subsection: Router
 ---
 
 # useParams

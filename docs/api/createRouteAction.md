@@ -1,8 +1,8 @@
 ---
 section: api
-title: useMatch
+title: createRouteAction
 order: 8
-subsection: Router
+subsection: Actions
 ---
 
 # useMatch

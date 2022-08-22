@@ -1,10 +1,10 @@
 ---
 section: api
-title: useMatch
-order: 8
-subsection: Router
+title: HttpHeader
+order: 10
+subsection: Document
 ---
 
-# useMatch
+# HttpHeader
 
 ##### `useMatch` gives you a reactive object describing the URL the user is visiting

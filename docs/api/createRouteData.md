@@ -1,8 +1,8 @@
 ---
 section: api
-title: useMatch
+title: createRouteData
 order: 8
-subsection: Router
+subsection: Data
 ---
 
 # useMatch

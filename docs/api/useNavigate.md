@@ -2,6 +2,7 @@
 section: api
 title: useNavigate
 order: 8
+subsection: Router
 ---
 
 # useNavigate

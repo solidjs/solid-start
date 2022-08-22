@@ -1,6 +1,6 @@
 ---
 section: api
-title: useMatch
+title: Navigate
 order: 8
 subsection: Router
 ---

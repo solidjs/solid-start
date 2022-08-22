@@ -1,8 +1,8 @@
 ---
 section: api
-title: useMatch
-order: 8
-subsection: Router
+title: Head
+order: 2
+subsection: Document
 ---
 
 # useMatch

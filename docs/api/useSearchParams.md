@@ -2,6 +2,7 @@
 section: api
 title: useSearchParams
 order: 8
+subsection: Router
 ---
 
 # useSearchParams

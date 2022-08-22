@@ -1,10 +1,10 @@
 ---
 section: api
-title: useMatch
+title: createCookieSessionStorage
 order: 8
-subsection: Router
+subsection: Session
 ---
 
-# useMatch
+# createCookieSessionStorage
 
 ##### `useMatch` gives you a reactive object describing the URL the user is visiting
