@@ -6,6 +6,11 @@ export default defineConfig({
   optimizeDeps: {
     disabled: true
   },
+  css: {
+    postcss: {
+      plugins: [(await import("tailwindcss")).default]
+    }
+  },
   plugins: [
     await mdx(),
     solid({
