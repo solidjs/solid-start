@@ -13,33 +13,33 @@ test.describe("rendering", () => {
     fixture = await createFixture({
       files: {
         "src/root.tsx": js`
-          import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
+          import { Links, Meta, FileRoutes, Scripts, Body, Head, Html } from "solid-start";
           import { Suspense } from "solid-js";
           import { Routes } from "@solidjs/router";
 
           export default function Root() {
             return (
-              <html lang="en">
-                <head>
-                  <meta charset="utf-8" />
-                  <meta name="viewport" content="width=device-width, initial-scale=1" />
-                  <Meta />
-                  <Links />
-                </head>
-                <body>
+              <Html lang="en">
+                <Head>
+                  <Meta charset="utf-8" />
+                  <Meta name="viewport" content="width=device-width, initial-scale=1" />
+                </Head>
+                <Body>
                   <nav>
                     <a href="/">Home</a>
                     <a href="/about">About</a>
                   </nav>
                   <div id="content">
                     <h1>Root</h1>
-                    <Routes>
-                      <FileRoutes />
-                    </Routes>
+                    <Suspense>
+                      <Routes>
+                        <FileRoutes />
+                      </Routes>
+                    </Suspense>
                   </div>
                   <Scripts />
-                </body>
-              </html>
+                </Body>
+              </Html>
             );
           }
         `,
@@ -77,10 +77,10 @@ test.describe("rendering", () => {
     expect(res.headers.get("Content-Type")).toBe("text/html");
     expect(selectHtml(await res.text(), "#content")).toBe(
       prettyHtml(`
-    <div id="content">
+    <div data-hk="0-0-0-0-0-0-0-0-0-1-1" id="content">
       <h1>Root</h1>
       <!--#-->
-      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+      <h2 data-hk="0-0-0-0-0-0-0-0-0-1-2-0-0-1-0-0-0">Index</h2>
       <!--/-->
     </div>`)
     );
@@ -90,10 +90,10 @@ test.describe("rendering", () => {
     expect(res.headers.get("Content-Type")).toBe("text/html");
     expect(selectHtml(await res.text(), "#content")).toBe(
       prettyHtml(`
-    <div id="content">
+    <div data-hk="0-0-0-0-0-0-0-0-0-1-1" id="content">
       <h1>Root</h1>
       <!--#-->
-      <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
+      <h2 data-hk="0-0-0-0-0-0-0-0-0-1-2-0-0-1-0-0-0">About</h2>
       <!--/-->
     </div>`)
     );
@@ -104,10 +104,10 @@ test.describe("rendering", () => {
     await app.goto("/", true);
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
-        <div id="content">
+        <div data-hk="0-0-0-0-0-0-0-0-0-1-1" id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-0-1-2-0-0-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );
@@ -116,10 +116,10 @@ test.describe("rendering", () => {
 
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
-        <div id="content">
+        <div data-hk="0-0-0-0-0-0-0-0-0-1-1" id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">About</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-0-1-2-0-0-1-0-0-0">About</h2>
           <!--/-->
         </div>`)
     );
@@ -130,10 +130,10 @@ test.describe("rendering", () => {
     await app.goto("/", true);
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
-        <div id="content">
+        <div data-hk="0-0-0-0-0-0-0-0-0-1-1" id="content">
           <h1>Root</h1>
           <!--#-->
-          <h2 data-hk="0-0-0-0-0-0-0-0-1-1-0-0-0">Index</h2>
+          <h2 data-hk="0-0-0-0-0-0-0-0-0-1-2-0-0-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
     );
@@ -143,7 +143,7 @@ test.describe("rendering", () => {
 
     expect(await app.getHtml("#content")).toBe(
       prettyHtml(`
-        <div id="content">
+        <div data-hk="0-0-0-0-0-0-0-0-0-1-1" id="content">
           <h1>Root</h1>
           <!--#-->
           <h2>About</h2>
