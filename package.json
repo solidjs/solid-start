@@ -27,12 +27,22 @@
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@solidjs/meta": "^0.28.0",
+    "@solidjs/router": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.4",
     "coveralls": "^3.1.1",
+    "debug": "^4.3.4",
     "lerna": "^5.3.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.77.2",
+    "solid-js": "^1.4.8",
+    "solid-mdx": "^0.0.6",
+    "solid-start": "workspace:0.1.0-alpha.99",
+    "solid-start-mdx": "workspace:^1.0.0",
+    "tailwindcss": "^3.0.18",
     "turbo": "^1.4.0",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "vite": "^3.0.4"
   },
   "dependencies": {
     "cross-env": "^7.0.3"

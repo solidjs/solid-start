@@ -1,4 +1,8 @@
-import { Aside } from "~/components/configurable/Aside";
+---
+section: core-concepts
+title: Head and metadata
+order: 2
+---
 
 # Head and metadata
 
@@ -69,13 +73,12 @@ export default function About() {
 }
 ```
 
-<Aside title="Order of precedence of head tags" type="advanced">
-  For `Title` and `Meta` tags with the same name as one mounted higher up in the
-  tree, the instance that is lower in the tree takes precedence. This means that
-  the `Title` component used inside a Route component will override the `Title`
-  component used in the `Head` component. If you go to a route without a `Title`
-  component, the `Head` component's `Title` component will be used.
-</Aside>
+<aside title="Order of precedence of head tags" type="advanced">
+  For `Title` and `Meta` tags with the same name as one mounted higher up in the tree, the instance
+  that is lower in the tree takes precedence. This means that the `Title` component used inside a
+  Route component will override the `Title` component used in the `Head` component. If you go to a
+  route without a `Title` component, the `Head` component's `Title` component will be used.
+</aside>
 
 ### Adding a site-suffix in Title
 

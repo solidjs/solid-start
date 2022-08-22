@@ -4,7 +4,7 @@
 
 <div class="text-xl">
 
-```ts twoslash
+```ts
 import { useNavigate } from "@solidjs/router";
 // ---cut---
 const params = useNavigate();

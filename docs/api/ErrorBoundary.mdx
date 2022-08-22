@@ -1,4 +1,4 @@
-<Title>Error Boundary</Title>
+# ErrorBoundary
 
 The achilles heel of web apps seems to lie in error handling. An unhandled error in one component can bring your entire app down with it. Preferably, apps can be split into self-contained sections, where the failure of one component does not render the entire app unusable, only that one section.
 
@@ -48,5 +48,5 @@ import { ErrorBoundary } from "solid-start/error-boundary";
   {() => {
     throw new Error("Oh no! An error!");
   }}
-</ErrorBoundary>
+</ErrorBoundary>;
 ```

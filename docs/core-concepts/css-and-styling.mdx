@@ -1,4 +1,4 @@
-<Title>CSS and Syling</Title>
+# CSS and Syling
 
 Some frameworks modify the behavior of the [`<style>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style) tags, however as a standards based framework, instead of modifying behavior, we strive to build on top of it.
 
@@ -55,9 +55,9 @@ You will notice that suddenly your CSS stops working! This is because behind the
 To fix this, you can import classes used in your CSS module. You can think of this import as a object of `humanClass: generatedClass`. We reference the key (the class name we wrote!), and get back the unique, generated class name.
 
 ```tsx
-import styles from "./Card.module.css"
+import styles from "./Card.module.css";
 function Card(props) {
-  return (<div class={styles.card}>{props.text}</div>)
+  return <div class={styles.card}>{props.text}</div>;
 }
 ```
 
