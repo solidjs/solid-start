@@ -7,20 +7,33 @@ import {
   Head,
   Html,
   Meta,
-  NavLink,
   Routes,
   Scripts,
   Title,
-  useLocation
+  unstable_island
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import "./docs/index.css";
 
-const mods = import.meta.glob<
+const NavLink = unstable_island(() => import("./components/NavLink"));
+const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
+export const mods = /*#__PURE__*/ import.meta.glob<
   true,
   any,
   {
-    getHeadings: () => any;
+    getHeadings: () => {
+      depth: number;
+      text: string;
+      slug: string;
+    }[];
+    getFrontMatter: () => {
+      title?: string;
+      sectionTitle?: string;
+      order?: number;
+      section?: string;
+      sectionOrder?: number;
+      subsection?: string;
+    };
   }
 >("./docs/**/*.{md,mdx}", {
   eager: true,
@@ -31,7 +44,15 @@ const mods = import.meta.glob<
 
 function Nav() {
   const data = createMemo(() => {
-    let sections = {};
+    let sections: {
+      [key: string]: {
+        title: string;
+        path: string;
+        order: number;
+        subsection: string;
+        href: string;
+      }[] & { subsection?: Set<string>; title?: string; order?: number };
+    } = {};
     Object.keys(mods).forEach(key => {
       let frontMatter = mods[key].getFrontMatter();
       let {
@@ -92,7 +113,7 @@ function Nav() {
                           {({ title, path, href }) => (
                             <li class="ml-2">
                               <NavLink activeClass="text-blue-700" href={href}>
-                                {title}
+                                <span>{title}</span>
                               </NavLink>
                             </li>
                           )}
@@ -104,7 +125,7 @@ function Nav() {
                     {({ title, path, href }) => (
                       <li class="ml-2">
                         <NavLink activeClass="text-blue-700" href={href}>
-                          {title}
+                          <span>{title}</span>
                         </NavLink>
                       </li>
                     )}
@@ -116,7 +137,7 @@ function Nav() {
                 {({ title, path, href }) => (
                   <li class="ml-2">
                     <NavLink activeClass="text-blue-700" href={href}>
-                      {title}
+                      <span>{title}</span>
                     </NavLink>
                   </li>
                 )}
@@ -126,34 +147,6 @@ function Nav() {
         )}
       </For>
     </nav>
-  );
-}
-
-function TableOfContents() {
-  const path = useLocation();
-  const mod = () => mods[`./docs${path.pathname}.mdx`] ?? mods[`./docs${path.pathname}.md`];
-  return (
-    <div class="hidden xl:block px-8 py-8 space-y-4 w-[32ch]">
-      <span class="font-bold uppercase text-xs">On this page</span>
-      <ul class="space-y-2 text-sm">
-        <For
-          each={mod()
-            .getHeadings()
-            .filter(h => h.depth > 1 && h.depth <= 3)}
-        >
-          {h => (
-            <li
-              classList={{
-                "ml-2": h.depth === 2,
-                "ml-4": h.depth === 3
-              }}
-            >
-              <a href={`#${h.slug}`}>{h.text}</a>
-            </li>
-          )}
-        </For>
-      </ul>
-    </div>
   );
 }
 
@@ -302,7 +295,7 @@ export default function Root() {
           <div class="px-8 py-8 h-screen overflow-scroll xl:w-[65ch]">
             <ErrorBoundary>
               <Suspense>
-                <main class="prose prose-sm">
+                <main class="prose prose-sm max-w-none w-full">
                   <MDXProvider components={components}>
                     <Routes>
                       <FileRoutes />
