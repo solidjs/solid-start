@@ -1,21 +1,31 @@
+import type { Location, Navigator } from "@solidjs/router";
+import { createSignal } from "solid-js";
 interface LocationEntry {
   path: string;
   state: any;
+  pathname: string;
+  search: string;
+  hash: string;
 }
 
 export default function mountRouter() {
   if (import.meta.env.START_ISLANDS_ROUTER) {
     DEBUG("mounting islands router");
-    // console.log(islands);
 
     const basePath = "/";
-    let currentLocation: LocationEntry = getLocation();
+    let [currentLocation, setCurrentLocation] = createSignal<Location>(getLocation());
+    window.LOCATION = currentLocation;
 
-    function getLocation(): LocationEntry {
+    function getLocation(): Location & LocationEntry {
       const { pathname, search, hash } = window.location;
       return {
         path: pathname + search + hash,
-        state: history.state
+        state: history.state,
+        pathname,
+        search,
+        hash,
+        query: {},
+        key: ""
       };
     }
 
@@ -54,6 +64,10 @@ export default function mountRouter() {
       )
         return;
 
+      if (url.pathname === window.location.pathname) {
+        return;
+      }
+
       const to = url.pathname + url.search + url.hash;
       const state = a.getAttribute("state");
 
@@ -72,7 +86,7 @@ export default function mountRouter() {
         } else {
           history.pushState(options.state, "", to);
         }
-        currentLocation = getLocation();
+        setCurrentLocation(getLocation());
       }
     }
 
@@ -84,16 +98,18 @@ export default function mountRouter() {
     }
 
     async function handlePopState(evt: PopStateEvent) {
-      const { path, state } = getLocation();
-      if (await navigate(path)) {
-        currentLocation = getLocation();
+      const { pathname, state } = getLocation();
+      if (currentLocation().pathname !== pathname) {
+        if (await navigate(pathname)) {
+          setCurrentLocation(getLocation());
+        }
       }
     }
 
-    async function navigate(to: string) {
+    async function navigate(to: string, options: NavigateOptions = {}) {
       const response = await fetch(to, {
         headers: {
-          "x-solid-referrer": currentLocation.path
+          "x-solid-referrer": currentLocation().pathname
         }
       });
 
@@ -124,6 +140,8 @@ export default function mountRouter() {
 
       return false;
     }
+
+    window.NAVIGATE = navigate as unknown as Navigator;
 
     document.addEventListener("click", handleAnchorClick);
     window.addEventListener("popstate", handlePopState);

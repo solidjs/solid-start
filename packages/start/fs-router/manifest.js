@@ -29,11 +29,15 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
   let manifest = {};
 
-  function collect(src) {
+  let src;
+  function collect(_src) {
+    src = _src;
     let assets = collectAssets();
-    assets.addSrc(src);
+    assets.addSrc(_src);
 
-    return assets.getFiles();
+    let files = assets.getFiles();
+    src = null;
+    return files;
   }
 
   function collectAssets() {
@@ -49,11 +53,13 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       });
 
       file.imports?.forEach(imp => {
+        if (imp === src) return;
         visitFile(assetManifest[imp]);
       });
 
       file.dynamicImports?.forEach(imp => {
-        if (imp.endsWith("?island")) {
+        if (imp === src) return;
+        if (imp.endsWith("?island") && !src) {
           files.push({ type: "island", href: imp });
           let f = collect(imp);
           manifest[imp] = {

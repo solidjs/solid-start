@@ -82,7 +82,7 @@ export default ({ event }: { event: PageEvent }) => {
           location={path}
           prevLocation={event.prevUrl}
           data={dataFn}
-          routes={routesConfig.fileRoutes}
+          routes={routesConfig.routes}
         >
           {docType as unknown as any}
           <Root />

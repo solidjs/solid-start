@@ -1,4 +1,3 @@
-import { useNavigate } from "@solidjs/router";
 import {
   createResource,
   onCleanup,
@@ -9,6 +8,7 @@ import {
 } from "solid-js";
 import { ResourceSource } from "solid-js/types/reactive/signal";
 import { isServer } from "solid-js/web";
+import { useNavigate } from "../index";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
 import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";

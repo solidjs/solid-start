@@ -1,4 +1,4 @@
-import { children, createContext, JSX, Match, Switch, useContext } from "solid-js";
+import { createContext, JSX, useContext } from "solid-js";
 import { resolveSSRNode } from "solid-js/web";
 export interface RouteDefinition {
   path: string;
@@ -200,11 +200,7 @@ export interface RouterProps {
   out?: any;
 }
 
-export function Routes() {}
-
 export function Router(props: RouterProps) {
-  let diffedRender: JSX.Element;
-
   const next = getMatchedBranch(props.routes, props.location);
   if (!next || !next.routes.length) {
     return [];
@@ -245,6 +241,7 @@ export function Router(props: RouterProps) {
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
         props.out.newOutletId = `outlet-${nextRoute.id}`;
+        console.log(prevRoute, nextRoute);
         console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
         // diffedRender = (
         //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
@@ -262,11 +259,7 @@ export function Router(props: RouterProps) {
     out: props.out
   };
 
-  const fullRender = (
-    <RouterContext.Provider value={state}>{props.children}</RouterContext.Provider>
-  );
-
-  return diffedRender || fullRender;
+  return <RouterContext.Provider value={state}>{props.children}</RouterContext.Provider>;
 }
 
 export function Outlet(props: { children: JSX.Element }) {
@@ -279,19 +272,13 @@ export function Outlet(props: { children: JSX.Element }) {
     route: router.routes[depth]
   };
 
-  const ssred = children(() => (
-    <OutletContext.Provider value={state}>{props.children}</OutletContext.Provider>
-  ));
-
   return (
-    <Switch>
-      <Match when={props.children}>
-        {() => {
-          let ssr = resolveSSRNode(ssred());
-
-          return `<!--outlet-${state.route.id}--><outlet-wrapper id="outlet-${state.route.id}">${ssr}</outlet-wrapper><!--outlet-${state.route.id}-->`;
-        }}
-      </Match>
-    </Switch>
+    <>
+      {`<!--outlet-${state.route.id}--><outlet-wrapper id="outlet-${state.route.id}">`}
+      {resolveSSRNode(
+        <OutletContext.Provider value={state}>{props.children}</OutletContext.Provider>
+      )}
+      {`</outlet-wrapper><!--outlet-${state.route.id}-->`}
+    </>
   );
 }

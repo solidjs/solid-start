@@ -155,6 +155,7 @@ function createPageEvent(event: FetchEvent) {
 
 function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
   if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
+    console.log("hereee", "markup arrived");
     markup = `${pageEvent.routerContext.replaceOutletId}:${
       pageEvent.routerContext.newOutletId
     }=${markup.slice(
@@ -164,6 +165,8 @@ function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
       markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
         `</outlet-wrapper>`.length
     )}`;
+
+    console.log("markup", markup.slice(0, 20));
 
     pageEvent.responseHeaders.set("Content-Type", "text/plain");
   }

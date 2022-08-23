@@ -20,9 +20,6 @@ export default function () {
       const appRoot = config.solidOptions.appRoot;
       const outputDir = join(config.root, ".vercel/output");
 
-      // Static Files
-      await builder.client(join(outputDir, "static"));
-
       // SSR Edge Function
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(outputDir, "static"));

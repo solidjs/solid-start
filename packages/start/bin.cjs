@@ -144,7 +144,7 @@ prog
             minify: process.env.START_MINIFY === "false" ? false : "terser",
             rollupOptions: {
               input: [
-                resolve(join(config.root, config.solidOptions.appRoot, `entry-client`)),
+                config.solidOptions.clientEntry,
                 ...islands.map(i => resolve(join(config.root, i)))
               ],
               output: {

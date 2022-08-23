@@ -1,12 +1,12 @@
 export { Link, Meta, Style, Title } from "@solidjs/meta";
 export {
-  Link as RouterLink, Navigate, NavLink,
+  Link as RouterLink,
+  Navigate,
+  NavLink,
   Route,
   useHref,
   useIsRouting,
-  useLocation,
   useMatch,
-  useNavigate,
   useParams,
   useResolvedPath,
   useRouteData,
@@ -32,13 +32,23 @@ export {
   type CookieParseOptions,
   type CookieSerializeOptions
 } from "./session";
+import type { Accessor } from "solid-js";
 import "./types";
 
-import { Outlet as BaseOutlet, Routes as BaseRoutes } from "@solidjs/router";
+import {
+  Outlet as BaseOutlet,
+  Routes as BaseRoutes,
+  useLocation as useBaseLocation,
+  useNavigate as useBaseNavigate,
+  Navigator,
+  Location
+} from "@solidjs/router";
+import { isServer } from "solid-js/web";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 export function Routes(props) {
   if (import.meta.env.START_ISLANDS_ROUTER) {
+    console.log("ereee");
     return (
       <IslandsOutlet>
         <BaseRoutes>{props.children}</BaseRoutes>
@@ -58,4 +68,32 @@ export function Outlet(props) {
   }
 
   return <BaseOutlet />;
+}
+
+declare global {
+  interface Window {
+    LOCATION: Accessor<Location>;
+    NAVIGATE: Navigator;
+  }
+}
+
+export function useLocation() {
+  if (import.meta.env.START_ISLANDS_ROUTER && !isServer) {
+    return {
+      get pathname() {
+        let location = window.LOCATION();
+        return location.pathname;
+      }
+    };
+  } else {
+    return /*#__PURE__*/ useBaseLocation();
+  }
+}
+
+export function useNavigate() {
+  if (import.meta.env.START_ISLANDS_ROUTER && !isServer) {
+    return ((to, props) => window.NAVIGATE(to, props)) as unknown as Navigator;
+  } else {
+    return /*#__PURE__*/ useBaseNavigate();
+  }
 }

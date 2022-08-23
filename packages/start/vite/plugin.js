@@ -618,8 +618,8 @@ function islands() {
      */
     transform(code, id, ssr) {
       if (code.includes("unstable_island")) {
-        let replaced = code.replace(
-          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/,
+        let replaced = code.replaceAll(
+          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
           (a, b, c) =>
             ssr
               ? `import ${b}_island from "${c}"; 
