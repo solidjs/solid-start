@@ -77,7 +77,7 @@ This means that all you have to do is create a route in your directory structure
 
 While the user can enter your app from any URL that your app serves, once they are using your app, you can provide them a user experience that is designed. You need a way for the user to travel between your pages. As with any website, you can use `a` tags to add links between pages in your app. Nothing special! Lets look at an example,
 
-#### Using links
+### Using links
 
 The easiest way to add a link to another page in your app is to the use the anchor tag `<a>`. Just like you would do in a plain HTML document, you can add a `href` attribute to the `<a>` tag and we will navigate to that route in SPA style.
 
@@ -120,7 +120,7 @@ export default function UsersLayout() {
 
 ```
 
-#### When the user clicks a button
+### When the user clicks a button
 
 There are cases where the `link` tag is not right for your navigation needs. For example,
 
@@ -129,7 +129,7 @@ There are cases where the `link` tag is not right for your navigation needs. For
 
 For these use cases we provide an imperative [`navigate`][usenavigate-navigate] function that can be access using the [`useNavigate`][usenavigate] helper
 
-#### Redirecting
+### Redirecting
 
 - The primary way of redirecting from a route to another is to use the `<Navigate />` component in the tsx. For example, if you want to redirect to the home page, you can use the following code.
 
