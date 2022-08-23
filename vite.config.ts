@@ -17,6 +17,7 @@ export default defineConfig({
       rootEntry: resolve("root.docs.tsx"),
       appRoot: "./docs",
       routesDir: ".",
+      islands: true,
       extensions: [".mdx", ".md"]
     })
   ]
