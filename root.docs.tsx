@@ -74,8 +74,6 @@ function Nav() {
     return Object.values(sections).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
   });
 
-  console.log(data());
-
   return (
     <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen overflow-scroll">
       <For each={data()}>
@@ -171,50 +169,19 @@ function Anchor(props: ParentProps<{ id: string }>) {
   );
 }
 
-const headerBold = "text-solid-default dark:text-solid-darkdefault ";
+const headerBolxd = "text-solid-default dark:text-solid-darkdefault ";
 
 const components = {
   strong: props => <span class="font-bold">{props.children}</span>,
   h1: props => (
-    <h1 {...props} class={headerBold + "break-words leading-tight mdx-heading"}>
+    <h1 {...props}>
       <MetaTitle>{props.children}</MetaTitle>
       {props.children}
     </h1>
   ),
   ssr: props => <>{props.children}</>,
   spa: props => <></>,
-  h2: props => {
-    return (
-      <h2 {...props} class={headerBold + "heading text-3xl leading-10 mt-14 mb-6 mdx-heading"}>
-        {props.children}
-      </h2>
-    );
-  },
-  h3: props => (
-    <h3 {...props} class={headerBold + "heading text-2xl leading-9 mt-14 mb-6 mdx-heading"}>
-      {props.children}
-    </h3>
-  ),
-  h4: props => (
-    <h4 {...props} class="heading text-xl font-bold leading-9 mt-14 mb-4 mdx-heading">
-      {props.children}
-    </h4>
-  ),
-  h5: props => (
-    <h5 {...props} class="text-xl leading-9 mt-4 mb-4 font-medium mdx-heading">
-      {props.children}
-    </h5>
-  ),
-  h6: props => (
-    <h6 {...props} class="text-xl font-400 mdx-heading">
-      {props.children}
-    </h6>
-  ),
-  p: props => (
-    <p {...props} class="text-lg font-400 my-4">
-      {props.children}
-    </p>
-  ),
+  p: props => <p {...props}>{props.children}</p>,
   a: props => {
     return (
       <Link
@@ -335,7 +302,7 @@ export default function Root() {
           <div class="px-8 py-8 h-screen overflow-scroll xl:w-[65ch]">
             <ErrorBoundary>
               <Suspense>
-                <main class="prose prose-md">
+                <main class="prose prose-sm">
                   <MDXProvider components={components}>
                     <Routes>
                       <FileRoutes />
