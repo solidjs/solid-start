@@ -7,20 +7,20 @@
     "type": "adapter"
   },
   "dependencies": {
-    "@babel/core": "^7.18.9",
-    "@babel/preset-env": "^7.18.9",
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
     "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "encoding": "^0.1.13",
-    "node-fetch": "^3.2.9",
-    "rollup": "^2.77.2",
-    "terser": "^5.14.2"
+    "node-fetch": "^3.2.10",
+    "rollup": "^2.78.1",
+    "terser": "^5.15.0"
   },
   "devDependencies": {
-    "solid-start": "0.1.0-alpha.99",
-    "vite": "^3.0.4"
+    "solid-start": "workspace:0.1.0-alpha.99",
+    "vite": "^3.0.9"
   },
   "peerDependencies": {
     "solid-start": "*"
