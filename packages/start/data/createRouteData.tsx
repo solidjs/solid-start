@@ -1,3 +1,4 @@
+import type { ResourceSource, Signal } from "solid-js";
 import {
   createResource,
   onCleanup,
@@ -6,7 +7,8 @@ import {
   startTransition,
   useContext
 } from "solid-js";
-import { ResourceSource } from "solid-js/types/reactive/signal";
+import type { ReconcileOptions } from "solid-js/store";
+import { createStore, reconcile, unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { useNavigate } from "../index";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
@@ -120,7 +122,7 @@ export function createRouteData<T, S>(
         throw e;
       }
     },
-    options
+    { storage: createDeepSignal, ...options }
   );
 
   resources.add(refetch);
@@ -131,6 +133,21 @@ export function createRouteData<T, S>(
 
 export function refetchRouteData(key?: string | any[] | void) {
   for (let refetch of resources) refetch(key);
+}
+
+function createDeepSignal<T>(value: T, options?: ReconcileOptions): Signal<T> {
+  const [store, setStore] = createStore({
+    value
+  });
+  return [
+    () => store.value,
+    (v: T) => {
+      const unwrapped = unwrap(store.value);
+      typeof v === "function" && (v = v(unwrapped));
+      setStore("value", reconcile(v, options));
+      return store.value;
+    }
+  ] as Signal<T>;
 }
 
 /* React Query key matching  https://github.com/tannerlinsley/react-query */

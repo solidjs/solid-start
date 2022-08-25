@@ -9,6 +9,7 @@ function transformRouteData({ types: t }) {
           state.serverImported = false;
           state.routeDataImported = false;
           state.routeActionImported = false;
+          state.routeMultiActionImported = false;
           path.traverse(
             {
               ImportSpecifier(path) {
@@ -17,6 +18,9 @@ function transformRouteData({ types: t }) {
                 }
                 if (path.node.imported.name === "createRouteAction") {
                   state.routeActionImported = true;
+                }
+                if (path.node.imported.name === "createRouteAction") {
+                  state.routeMultiActionImported = true;
                 }
               },
               ImportDeclaration(path) {
@@ -45,6 +49,16 @@ function transformRouteData({ types: t }) {
                   args[0] = t.callExpression(t.identifier("server"), [args[0]]);
                   callPath.replaceWith(
                     t.callExpression(t.identifier("createRouteAction"), callPath.node.arguments)
+                  );
+                  callState.actionRequired = true;
+                }
+
+                if (callPath.get("callee").isIdentifier({ name: "createServerMultiAction" })) {
+                  let args = callPath.node.arguments;
+
+                  args[0] = t.callExpression(t.identifier("server"), [args[0]]);
+                  callPath.replaceWith(
+                    t.callExpression(t.identifier("createRouteMultiAction"), callPath.node.arguments)
                   );
                   callState.actionRequired = true;
                 }
@@ -86,6 +100,21 @@ function transformRouteData({ types: t }) {
                   t.importSpecifier(
                     t.identifier("createRouteAction"),
                     t.identifier("createRouteAction")
+                  )
+                ],
+                t.stringLiteral("solid-start/data")
+              )
+            );
+          }
+
+          if (state.actionRequired && !state.routeActionImported) {
+            path.unshiftContainer(
+              "body",
+              t.importDeclaration(
+                [
+                  t.importSpecifier(
+                    t.identifier("createRouteMultiAction"),
+                    t.identifier("createRouteMultiAction")
                   )
                 ],
                 t.stringLiteral("solid-start/data")
