@@ -325,6 +325,16 @@ function solidsStartRouteManifest(options) {
   };
 }
 
+async function resolveAdapter(config) {
+  if (typeof config.solidOptions.adapter === "string") {
+    return (await import(config.solidOptions.adapter)).default();
+  } else if (Array.isArray(config.solidOptions.adapter)) {
+    return (await import(config.solidOptions.adapter[0])).default(config.solidOptions.adapter[1]);
+  } else {
+    return config.solidOptions.adapter;
+  }
+}
+
 /**
  * @returns {import('node_modules/vite').Plugin}
  * @param {any} options
@@ -340,10 +350,7 @@ function solidStartServer(options) {
       return async () => {
         const { createDevHandler } = await import("../dev/server.js");
         remove_html_middlewares(vite.middlewares);
-        let adapter =
-          typeof config.solidOptions.adapter === "string"
-            ? (await import(config.solidOptions.adapter)).default()
-            : config.solidOptions.adapter;
+        let adapter = await resolveAdapter(config);
         if (adapter && adapter.dev) {
           vite.middlewares.use(
             await adapter.dev(config, vite, createDevHandler(vite, config, options))

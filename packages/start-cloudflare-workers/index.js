@@ -13,6 +13,7 @@ import { createServer } from "./dev-server.js";
 
 export default function (miniflareOptions = {}) {
   return {
+    name: "cloudflare-workers",
     async dev(options, vite, dev) {
       const mf = new Miniflare({
         script: `
@@ -102,6 +103,8 @@ export default function (miniflareOptions = {}) {
         kvPersist: true,
         ...miniflareOptions
       });
+
+      console.log("🔥", "starting miniflare");
 
       return await createServer(vite, mf, {});
     },

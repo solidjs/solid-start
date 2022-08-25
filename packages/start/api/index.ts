@@ -57,3 +57,8 @@ registerApiRoutes(allRoutes);
 export function getApiHandler(url: URL, method: string) {
   return getRouteMatches(allRoutes, url.pathname, method.toLowerCase() as Method);
 }
+
+export function isApiRequest(request: Request) {
+  let apiHandler = getApiHandler(new URL(request.url), request.method);
+  return Boolean(apiHandler);
+}

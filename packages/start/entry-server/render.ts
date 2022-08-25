@@ -1,6 +1,7 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
 import { internalFetch } from "../api/internalFetch";
+import { redirect } from "../server/responses";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
 
 export function renderSync(
@@ -19,7 +20,9 @@ export function renderSync(
 
     let markup = renderToString(() => fn(pageEvent), options);
     if (pageEvent.routerContext.url) {
-      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
+      return redirect(pageEvent.routerContext.url, {
+        headers: pageEvent.responseHeaders
+      });
     }
 
     markup = handleIslandsRouting(pageEvent, markup);
@@ -49,7 +52,9 @@ export function renderAsync(
     let markup = await renderToStringAsync(() => fn(pageEvent), options);
 
     if (pageEvent.routerContext.url) {
-      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
+      return redirect(pageEvent.routerContext.url, {
+        headers: pageEvent.responseHeaders
+      });
     }
 
     markup = handleIslandsRouting(pageEvent, markup);
@@ -81,28 +86,20 @@ export function renderStream(
     if (options.onCompleteAll) {
       const og = options.onCompleteAll;
       options.onCompleteAll = options => {
-        handleRedirect(pageEvent)(options);
+        handleStreamingRedirect(pageEvent)(options);
         og(options);
       };
-    } else options.onCompleteAll = handleRedirect(pageEvent);
+    } else options.onCompleteAll = handleStreamingRedirect(pageEvent);
     const { readable, writable } = new TransformStream();
     const stream = renderToStream(() => fn(pageEvent), options);
 
     if (pageEvent.routerContext.url) {
-      return Response.redirect(new URL(pageEvent.routerContext.url, pageEvent.request.url), 302);
+      return redirect(pageEvent.routerContext.url, {
+        headers: pageEvent.responseHeaders
+      });
     }
 
-    if (pageEvent.routerContext.replaceOutletId) {
-      const writer = writable.getWriter();
-      const encoder = new TextEncoder();
-      writer.write(
-        encoder.encode(
-          `${pageEvent.routerContext.replaceOutletId}:${pageEvent.routerContext.newOutletId}=`
-        )
-      );
-      writer.releaseLock();
-      pageEvent.responseHeaders.set("Content-Type", "text/plain");
-    }
+    handleStreamingIslandsRouting(pageEvent, writable);
 
     stream.pipeTo(writable);
 
@@ -113,7 +110,23 @@ export function renderStream(
   };
 }
 
-function handleRedirect(context) {
+function handleStreamingIslandsRouting(pageEvent: PageEvent, writable: WritableStream<any>) {
+  if (pageEvent.routerContext.replaceOutletId) {
+    const writer = writable.getWriter();
+    const encoder = new TextEncoder();
+    writer.write(
+      encoder.encode(
+        `${pageEvent.routerContext.replaceOutletId}:${pageEvent.routerContext.newOutletId}=`
+      )
+    );
+    writer.releaseLock();
+    pageEvent.responseHeaders.set("Content-Type", "text/plain");
+  }
+}
+
+function handleRedirect() {}
+
+function handleStreamingRedirect(context) {
   return ({ write }) => {
     if (context.routerContext.url)
       write(`<script>window.location="${context.routerContext.url}"</script>`);

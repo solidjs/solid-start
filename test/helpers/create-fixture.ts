@@ -192,7 +192,7 @@ export async function createTestServer(fixture: { projectDir: string; manifest: 
 
       let app = createServer({
         paths,
-        manifest: fixture.manifest,
+        env: { manifest: fixture.manifest },
         handler: fixture.build.default
       });
 

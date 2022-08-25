@@ -52,13 +52,12 @@ export function redirect(url: string, init: number | ResponseInit = 302): Respon
     }
   }
 
+  let headers = new Headers(responseInit.headers);
+  headers.set(LocationHeader, url);
+
   const response = new Response(null, {
     ...responseInit,
-    headers: {
-      ...responseInit.headers,
-      [XSolidStartLocationHeader]: url,
-      [LocationHeader]: url
-    }
+    headers: headers
   });
 
   return response;

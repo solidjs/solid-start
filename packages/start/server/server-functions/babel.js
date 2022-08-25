@@ -112,7 +112,8 @@ function transformServer({ types: t, template }) {
                   let program = path.findParent(p => t.isProgram(p));
                   let statement = path.findParent(p => program.get("body").includes(p));
                   let decl = path.findParent(
-                    p => p.isVariableDeclarator() || p.isFunctionDeclaration()
+                    p =>
+                      p.isVariableDeclarator() || p.isFunctionDeclaration() || p.isObjectProperty()
                   );
                   let serverIndex = state.servers++;
                   let hasher = state.opts.minify ? hashFn : str => str;
@@ -164,7 +165,10 @@ function transformServer({ types: t, template }) {
                     .join(
                       INLINE_SERVER_ROUTE_PREFIX,
                       hash,
-                      decl?.node.id.elements?.[0]?.name ?? decl?.node.id.name ?? "fn"
+                      decl?.node.id?.elements?.[0]?.name ??
+                        decl?.node.id?.name ??
+                        decl?.node.key?.name ??
+                        "fn"
                     )
                     .replaceAll("\\", "/");
 

@@ -56,7 +56,7 @@ async function parseRequest(event: ServerFunctionEvent) {
         throw new Error(`Error parsing request body: ${text}`);
       }
     } else if (contentType.includes("form")) {
-      let formData = await request.formData();
+      let formData = await request.clone().formData();
       args = [formData, event];
     }
   }
@@ -139,6 +139,7 @@ export function respondWith(
       }
     );
   } else if (data instanceof Error) {
+    console.error(data);
     return new Response(
       JSON.stringify({
         error: {

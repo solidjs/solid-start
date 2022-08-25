@@ -40,12 +40,8 @@ prog
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config: configFile, open, port, root, host, inspect }) => {
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
-    let adapterModule;
-    if (typeof config.solidOptions.adapter === "string") {
-      adapterModule = (await import(config.solidOptions.adapter)).default();
-    } else {
-      adapterModule = config.solidOptions.adapter;
-    }
+
+    console.log(config.adapter.name);
 
     if (open) setTimeout(() => launch(port), 1000);
     DEBUG(
@@ -90,15 +86,12 @@ prog
   .describe("Create production build")
   .action(async ({ root, config: configFile }) => {
     const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
-    let adapter = config.solidOptions.adapter;
-    if (typeof adapter === "string") {
-      adapter = (await import(adapter)).default();
-    }
+
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
 
-    adapter.build(config, {
+    config.adapter.build(config, {
       islandsClient: async path => {
         let routeManifestPath = join(config.root, ".solid", "route-manifest");
         await vite.build({
@@ -363,13 +356,7 @@ prog
   .action(async ({ root, config: configFile, port }) => {
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
 
-    let adapterModule;
-    if (typeof config.solidOptions.adapter === "string") {
-      adapterModule = (await import(config.solidOptions.adapter)).default();
-    } else {
-      adapterModule = config.solidOptions.adapter;
-    }
-    let url = await adapterModule.start(config, { port });
+    let url = await config.adapter.start(config, { port });
     if (url) {
       const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
@@ -396,7 +383,7 @@ prog.parse(process.argv);
 /**
  *
  * @param {*} param0
- * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions }>}
+ * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
   root = root || process.cwd();
@@ -415,6 +402,18 @@ async function resolveConfig({ configFile, root, mode, command }) {
   }
 
   let config = await vite.resolveConfig({ mode, configFile, root }, command);
+
+  async function resolveAdapter(config) {
+    if (typeof config.solidOptions.adapter === "string") {
+      return (await import(config.solidOptions.adapter)).default();
+    } else if (Array.isArray(config.solidOptions.adapter)) {
+      return (await import(config.solidOptions.adapter[0])).default(config.solidOptions.adapter[1]);
+    } else {
+      return config.solidOptions.adapter;
+    }
+  }
+
+  config.adapter = await resolveAdapter(config);
   return config;
 }
 
