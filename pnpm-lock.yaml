@@ -75,6 +75,7 @@ importers:
   examples/durable-objects-websocket:
     specifiers:
       '@cloudflare/kv-asset-handler': ^0.1.1
+      '@cloudflare/workers-types': ^3.14.1
       '@solidjs/router': ^0.4.2
       solid-js: 1.4.8
       solid-start: 0.1.0-alpha.99
@@ -84,6 +85,7 @@ importers:
       vite: ^3.0.4
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
+      '@cloudflare/workers-types': 3.14.1
       '@solidjs/router': 0.4.2_solid-js@1.4.8
       solid-js: 1.4.8
       solid-start: link:../../packages/start
@@ -342,7 +344,7 @@ importers:
       '@types/cookie': ^0.5.1
       '@types/debug': ^4.1.7
       '@types/wait-on': ^5.3.1
-      '@vinxi/vite-plugin-inspect': ^0.6.25
+      '@vinxi/vite-plugin-inspect': ^0.6.26
       chokidar: ^3.5.3
       compression: ^1.7.4
       connect: ^3.7.0
@@ -384,7 +386,7 @@ importers:
       '@babel/preset-typescript': 7.18.6_@babel+core@7.18.9
       '@babel/template': 7.18.6
       '@types/cookie': 0.5.1
-      '@vinxi/vite-plugin-inspect': 0.6.25_rollup@2.77.2+vite@3.0.4
+      '@vinxi/vite-plugin-inspect': 0.6.26_rollup@2.77.2+vite@3.0.4
       chokidar: 3.5.3
       compression: 1.7.4
       connect: 3.7.0
@@ -3551,8 +3553,8 @@ packages:
       yargs: 17.5.1
     dev: false
 
-  /@vinxi/vite-plugin-inspect/0.6.25_rollup@2.77.2+vite@3.0.4:
-    resolution: {integrity: sha512-IXcC8ANKnAebd9ONHyN+NcEEz9vfX6TrBmGude47YV6rN0pE06+gUh2bCGnng6frrrCXWgq7iCoodNRCtj8h3Q==}
+  /@vinxi/vite-plugin-inspect/0.6.26_rollup@2.77.2+vite@3.0.4:
+    resolution: {integrity: sha512-PtWsqOLAt/zA/rs0eQykKzCa/JMpSx8VAxr3a05b8h/at/e4dmvNA2K6IZRI+00W/k4UjB1SYlHS8iOwuXXxmw==}
     engines: {node: '>=14'}
     peerDependencies:
       vite: ^3.0.0
@@ -3850,7 +3852,7 @@ packages:
   /axios/0.25.0_debug@4.3.4:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.15.1
+      follow-redirects: 1.15.1_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: false
@@ -5596,6 +5598,18 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /follow-redirects/1.15.1_debug@4.3.4:
+    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4
     dev: false
 
   /forever-agent/0.6.1:
@@ -8934,6 +8948,7 @@ packages:
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
+    dev: false
 
   /solid-mdx/0.0.6_solid-js@1.4.8+vite@3.0.4:
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
