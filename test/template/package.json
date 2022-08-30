@@ -9,7 +9,7 @@
   "devDependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.1",
     "@solidjs/router": "^0.4.2",
-    "solid-js": "1.4.7",
+    "solid-js": "1.5.1",
     "@solidjs/meta": "^0.28.0",
     "solid-start": "0.1.0-alpha.99",
     "solid-start-cloudflare-pages": "0.1.0-alpha.99",
