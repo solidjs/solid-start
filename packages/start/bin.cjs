@@ -3,7 +3,6 @@
 
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
-const vite = require("vite");
 const { resolve, join } = require("path");
 const {
   readFileSync,
@@ -15,11 +14,11 @@ const {
 } = require("fs");
 const waitOn = require("wait-on");
 const pkg = require(join(__dirname, "package.json"));
-console.log(pkg);
 const DEBUG = require("debug")("start");
 globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("alpha");
+console.log("solid-start", pkg.version);
 
 const findAny = (path, name) => {
   for (var ext of [".js", ".ts", ".mjs", ".mts"]) {
@@ -40,11 +39,55 @@ prog
   .option("-i,--inspect", "Node inspector", false)
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config: configFile, open, port, root, host, inspect }) => {
-    const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
 
+
+    if (!existsSync(join(root, "package.json"))) {
+      console.log('No package.json found in "%s"', root);
+      console.log('Creating package.json in "%s"', root);
+      writeFileSync(
+        join(root, "package.json"),
+        JSON.stringify(
+          {
+            name: "my-app",
+            private: true,
+            version: "0.0.0",
+            type: "module",
+            scripts: {
+              dev: "solid-start dev",
+              build: "solid-start build",
+              preview: "solid-start start"
+            },
+            devDependencies: {
+              typescript: pkg.devDependencies["typescript"],
+              vite: pkg.devDependencies["vite"]
+            },
+            dependencies: {
+              "@solidjs/meta": pkg.devDependencies["@solidjs/meta"],
+              "@solidjs/router": pkg.devDependencies["@solidjs/router"],
+              "solid-start": pkg.devDependencies[pkg.version],
+              "solid-js": pkg.devDependencies["solid-js"]
+            }
+          },
+          null,
+          2
+        )
+      );
+
+      console.log("Installing dependencies...");
+      await new Promise((resolve, reject) => {
+        exec("npm install", { cwd: root }, (err, stdout, stderr) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        }).stdout.pipe(process.stdout);
+      });
+    }
+
+    const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
     console.log(config.adapter.name);
 
-    if (open) setTimeout(() => launch(port), 1000);
     DEBUG(
       [
         "running",
@@ -77,6 +120,9 @@ prog
         stdio: "inherit"
       }
     );
+
+
+    if (open) setTimeout(() => launch(port), 1000);
     // (await import("./runtime/devServer.js")).start({ config, port, root });
   });
 
@@ -128,6 +174,8 @@ prog
         );
 
         let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
+
+        const vite = require("vite");
 
         await vite.build({
           configFile: config.configFile,
@@ -374,6 +422,7 @@ prog
   .describe("Use a solid-start feature")
   .action(async feature => {
     const { default: fn } = await import(`./addons/${feature}.js`);
+    const vite = require("vite");
 
     const config = await vite.resolveConfig({}, "serve");
     console.log(await fn(config));
@@ -387,6 +436,7 @@ prog.parse(process.argv);
  * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
+  const vite = require("vite");
   root = root || process.cwd();
   if (!configFile) {
     if (!configFile) {

@@ -3,6 +3,7 @@ import debug from "debug";
 import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
+import { fileURLToPath } from "url";
 import { loadEnv, normalizePath } from "vite";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
@@ -11,8 +12,10 @@ import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
-
 globalThis.DEBUG = debug("start:vite");
+
+let _dirname = dirname(fileURLToPath(import.meta.url));
+// const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
 
 /**
  * @returns {import('node_modules/vite').PluginOption}
@@ -390,17 +393,17 @@ function solidStartConfig(options) {
       options.clientEntry =
         options.clientEntry ?? findAny(join(options.root, options.appRoot), "entry-client");
       if (!options.clientEntry) {
-        options.clientEntry = join(__dirname, "..", "virtual", "entry-client.tsx");
+        options.clientEntry = join(_dirname, "..", "virtual", "entry-client.tsx");
       }
       options.serverEntry =
         options.serverEntry ?? findAny(join(options.root, options.appRoot), "entry-server");
       if (!options.serverEntry) {
-        options.serverEntry = join(__dirname, "..", "virtual", "entry-server.tsx");
+        options.serverEntry = join(_dirname, "..", "virtual", "entry-server.tsx");
       }
 
       options.rootEntry = options.rootEntry ?? findAny(join(options.root, options.appRoot), "root");
       if (!options.rootEntry) {
-        options.rootEntry = join(__dirname, "..", "virtual", "root.tsx");
+        options.rootEntry = join(_dirname, "..", "virtual", "root.tsx");
       }
 
       DEBUG(options);
@@ -415,11 +418,9 @@ function solidStartConfig(options) {
             "~start/entry-server": options.serverEntry
           }
         },
+
         ssr: {
           noExternal: ["@solidjs/router", "@solidjs/meta", "solid-start"]
-        },
-        optimizeDeps: {
-          include: ["debug"]
         },
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
