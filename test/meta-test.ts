@@ -364,13 +364,13 @@ test.describe("meta", () => {
     //   expect(() => selectHtml(html, 'meta[name="description"]')).toThrow();
     // });
 
-    test("with Suspense adds correct <title />, no <meta description />", async ({ page }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/title-from-suspense");
+    // test("with Suspense adds correct <title />, no <meta description />", async ({ page }) => {
+    //   let app = new PlaywrightFixture(appFixture, page);
+    //   await app.goto("/title-from-suspense");
 
-      expect(await app.getHtml("title")).toBeTruthy();
-      await expect(page).toHaveTitle("Hello world");
-      expect(app.getHtml('meta[name="description"]')).rejects.toThrow();
-    });
+    //   expect(await app.getHtml("title")).toBeTruthy();
+    //   await expect(page).toHaveTitle("Hello world");
+    //   expect(app.getHtml('meta[name="description"]')).rejects.toThrow();
+    // });
   }
 });
