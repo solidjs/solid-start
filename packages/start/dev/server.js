@@ -97,7 +97,9 @@ export function createDevHandler(viteServer, config, options) {
       }
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
-      console.log("ERROR", e);
+      if (!e.message.includes("renderToString timed out")) {
+        console.log("ERROR", e);
+      }
       // res.statusCode = 500;
       // res.end(e.stack);
     }

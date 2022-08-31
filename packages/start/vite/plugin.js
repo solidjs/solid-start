@@ -91,13 +91,15 @@ function solidStartFileSystemRouter(options) {
     timer = setTimeout(fn, delay);
   }
 
+  let server;
+
   let listener = function handleFileChange(/** @type {string} */ file) {
     timerState = "restart";
     schedule(() => {
       if (router.watcher) {
         router.watcher.close();
       }
-      touch(configFile);
+      server.restart();
       // eslint-disable-next-line no-console
       console.log(
         c.dim(new Date().toLocaleTimeString()) +
@@ -113,7 +115,6 @@ function solidStartFileSystemRouter(options) {
     //     timerState = "";
     //   });
   };
-  let server;
   return {
     name: "solid-start-file-system-router",
     enforce: "pre",
@@ -389,35 +390,17 @@ function solidStartConfig(options) {
       options.clientEntry =
         options.clientEntry ?? findAny(join(options.root, options.appRoot), "entry-client");
       if (!options.clientEntry) {
-        options.clientEntry = join(
-          options.root,
-          "node_modules",
-          "solid-start",
-          "virtual",
-          "entry-client.tsx"
-        );
+        options.clientEntry = join(__dirname, "..", "virtual", "entry-client.tsx");
       }
       options.serverEntry =
         options.serverEntry ?? findAny(join(options.root, options.appRoot), "entry-server");
       if (!options.serverEntry) {
-        options.serverEntry = join(
-          options.root,
-          "node_modules",
-          "solid-start",
-          "virtual",
-          "entry-server.tsx"
-        );
+        options.serverEntry = join(__dirname, "..", "virtual", "entry-server.tsx");
       }
 
       options.rootEntry = options.rootEntry ?? findAny(join(options.root, options.appRoot), "root");
       if (!options.rootEntry) {
-        options.rootEntry = join(
-          options.root,
-          "node_modules",
-          "solid-start",
-          "virtual",
-          "root.tsx"
-        );
+        options.rootEntry = join(__dirname, "..", "virtual", "root.tsx");
       }
 
       DEBUG(options);

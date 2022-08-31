@@ -14,7 +14,8 @@ const {
   copyFileSync
 } = require("fs");
 const waitOn = require("wait-on");
-
+const pkg = require(join(__dirname, "package.json"));
+console.log(pkg);
 const DEBUG = require("debug")("start");
 globalThis.DEBUG = DEBUG;
 
@@ -396,7 +397,7 @@ async function resolveConfig({ configFile, root, mode, command }) {
     }
 
     if (!configFile) {
-      configFile = join(root, "node_modules", "solid-start", "vite", "config.js");
+      configFile = join(__dirname, "vite", "config.js");
     }
     DEBUG('config file: "%s"', configFile);
   }

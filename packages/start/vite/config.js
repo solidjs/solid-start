@@ -1,4 +1,4 @@
-import solid from "./index.js";
+import solid from "./plugin.js";
 
 export default {
   plugins: [solid()]
