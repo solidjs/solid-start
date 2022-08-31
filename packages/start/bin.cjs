@@ -145,6 +145,7 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
+    const vite = require("vite");
 
     config.adapter.build(config, {
       islandsClient: async path => {
