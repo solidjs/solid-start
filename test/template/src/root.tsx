@@ -7,7 +7,7 @@ export default function Root() {
   return (
     <Html lang="en">
       <Head>
-        <Meta charset="utf-8" />,
+        <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Body>

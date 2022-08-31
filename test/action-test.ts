@@ -52,7 +52,7 @@ test.describe("actions", () => {
               <>
                 <button onClick={e => submit({ hello: "world" })} id="submit-earth">Earth</button>
                 <button onClick={e => submit({ hello: "mars" })} id="submit-mars">Mars</button>
-                <button onClick={e => submission().clear()} id="reset">Reset</button>
+                <button onClick={e => submission.clear()} id="reset">Reset</button>
                 <Show when={submission.result}><p id="result">{submission.result}</p></Show>
                 <Show when={submission.pending}><p id="pending">Pending</p></Show>
                 <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
@@ -123,7 +123,7 @@ test.describe("actions", () => {
     // error submission
     await page.click("button#submit-mars");
     expect(await page.isVisible("#pending")).toBe(true);
-    expect(await page.isVisible("#result")).toBe(true);
+    expect(await page.isVisible("#result")).toBe(false);
     await page.waitForSelector("#error", {
       state: "visible"
     });
@@ -160,7 +160,7 @@ test.describe("actions", () => {
     // error submission
     await page.click("button#submit-mars");
     expect(await page.isVisible("#pending")).toBe(true);
-    expect(await page.isVisible("#result")).toBe(true);
+    expect(await page.isVisible("#result")).toBe(false);
     await page.waitForSelector("#error", {
       state: "visible"
     });
@@ -197,7 +197,7 @@ test.describe("actions", () => {
     // error submission
     await page.click("button#submit-mars");
     expect(await page.isVisible("#pending")).toBe(true);
-    expect(await page.isVisible("#result")).toBe(true);
+    expect(await page.isVisible("#result")).toBe(false);
     await page.waitForSelector("#error", {
       state: "visible"
     });

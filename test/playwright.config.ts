@@ -11,7 +11,9 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
-  reporter: process.env.CI ? "github" : [["html", { open: "never" }]],
+  reporter: process.env.CI
+    ? "github"
+    : [["html", { open: process.env.TEST_REPORT ? "always" : "none" }]],
   use: { actionTimeout: 0 },
   projects: [
     {
