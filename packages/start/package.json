@@ -1,6 +1,6 @@
 {
-  "name": "@vinxi/solid-start",
-  "version": "0.1.3",
+  "name": "solid-start",
+  "version": "0.1.0-alpha.99",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",

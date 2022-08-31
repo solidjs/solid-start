@@ -39,8 +39,7 @@ prog
   .option("-i,--inspect", "Node inspector", false)
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config: configFile, open, port, root, host, inspect }) => {
-
-
+    root = root || process.cwd();
     if (!existsSync(join(root, "package.json"))) {
       console.log('No package.json found in "%s"', root);
       console.log('Creating package.json in "%s"', root);
@@ -85,6 +84,16 @@ prog
       });
     }
 
+    if (!existsSync(join(root, "src"))) {
+      console.log('No src directory found in "%s"', root);
+      console.log('Creating src directory in "%s"', root);
+      mkdirSync(join(root, "src", "routes"), { recursive: true });
+      writeFileSync(
+        join(root, "src", "routes", "index.tsx"),
+        `export default function Page() { return <div>Hello World</div> }`
+      );
+    }
+
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
     console.log(config.adapter.name);
 
@@ -120,7 +129,6 @@ prog
         stdio: "inherit"
       }
     );
-
 
     if (open) setTimeout(() => launch(port), 1000);
     // (await import("./runtime/devServer.js")).start({ config, port, root });
