@@ -53,8 +53,8 @@ export function InlineStyles() {
   // and making it invalid
   return (
     <Suspense>
-      <Show when={resource()}>
-        {resource => {
+      <Show when={resource()} keyed>
+        {(resource) => {
           return (
             <Style>
               {Object.entries(resource)
