@@ -30,7 +30,7 @@ export default function Login() {
   const data = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const loginAction = createServerAction(async (form: FormData) => {
+  const [loggingIn, { Form }] = createServerAction(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");
@@ -87,7 +87,7 @@ export default function Login() {
   return (
     <main>
       <h1>Login</h1>
-      <loginAction.Form method="post">
+      <Form>
         <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
         <fieldset>
           <legend>Login or Register?</legend>
@@ -102,23 +102,23 @@ export default function Login() {
           <label for="username-input">Username</label>
           <input name="username" placeholder="kody" />
         </div>
-          <Show when={loginAction.error?.fieldErrors?.username}>
-            <p role="alert">{loginAction.error.fieldErrors.username}</p>
-          </Show>
+        <Show when={loggingIn.error?.fieldErrors?.username}>
+          <p role="alert">{loggingIn.error.fieldErrors.username}</p>
+        </Show>
         <div>
           <label for="password-input">Password</label>
           <input name="password" type="password" placeholder="twixrox" />
         </div>
-        <Show when={loginAction.error?.fieldErrors?.password}>
-          <p role="alert">{loginAction.error.fieldErrors.password}</p>
+        <Show when={loggingIn.error?.fieldErrors?.password}>
+          <p role="alert">{loggingIn.error.fieldErrors.password}</p>
         </Show>
-        <Show when={loginAction.error}>
+        <Show when={loggingIn.error}>
           <p role="alert" id="error-message">
-            {loginAction.error.message}
+            {loggingIn.error.message}
           </p>
         </Show>
         <button type="submit">{data() ? "Login" : ""}</button>
-      </loginAction.Form>
+      </Form>
     </main>
   );
 }

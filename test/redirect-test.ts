@@ -76,23 +76,23 @@ test.describe("external redirect", () => {
           import { createServerAction, redirect } from "solid-start/server";
 
           export default function Page() {
-            const externalRedirectAction = createServerAction(async () =>
+            const [, { Form: ExternalForm }] = createServerAction(async () =>
               redirect("https://hogwarts.deno.dev/callback")
             );
           
-            const internalRedirectAction = createServerAction(async () => redirect("/redirected"));
+            const [, { Form: InternalForm }] = createServerAction(async () => redirect("/redirected"));
             return (
               <div>
-                <externalRedirectAction.Form>
+                <ExternalForm>
                   <button type="submit" id="external">
                     external redirect
                   </button>
-                </externalRedirectAction.Form>
-                <internalRedirectAction.Form>
+                </ExternalForm>
+                <InternalForm>
                   <button type="submit" id="internal">
                     internal redirect
                   </button>
-                </internalRedirectAction.Form>
+                </InternalForm>
               </div>
             );
           }
@@ -101,25 +101,25 @@ test.describe("external redirect", () => {
           import { createServerAction, redirect } from "solid-start/server";
 
           export default function Page() {
-            const externalRedirectAction = createServerAction(async () => {
+            const [, { Form: ExternalForm }] = createServerAction(async () => {
               throw redirect("https://hogwarts.deno.dev/callback")
             });
           
-            const internalRedirectAction = createServerAction(async () => {
+            const [, { Form: InternalForm }] = createServerAction(async () => {
               throw redirect("/redirected")
             });
             return (
               <div>
-                <externalRedirectAction.Form>
+                <ExternalForm>
                   <button type="submit" id="external">
                     external redirect
                   </button>
-                </externalRedirectAction.Form>
-                <internalRedirectAction.Form>
+                </ExternalForm>
+                <InternalForm>
                   <button type="submit" id="internal">
                     internal redirect
                   </button>
-                </internalRedirectAction.Form>
+                </InternalForm>
               </div>
             );
           }

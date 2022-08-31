@@ -20,22 +20,10 @@ const TodoApp = () => {
   const todos = useRouteData<typeof routeData>();
   const location = useLocation();
 
-  const addTodo = createServerMultiAction(async (form: FormData) => {
-    await db.addTodo(form.get("title") as string);
-    return redirect("/");
-  });
-  const removeTodo = createServerMultiAction(async (form: FormData) => {
-    await db.removeTodo(Number(form.get("id")));
-    return redirect("/");
-  });
-  const toggleAll = createServerAction(async (form: FormData) => {
-    await db.toggleAll(form.get("completed") === "true");
-    return redirect("/");
-  });
-  const clearCompleted = createServerAction(async (form: FormData) => {
-    await db.clearCompleted();
-    return redirect("/");
-  });
+  const [addingTodo, addTodo] = createServerMultiAction(addTodoFn);
+  const [removingTodo, removeTodo] = createServerMultiAction(removeTodoFn);
+  const [togglingAll, toggleAll] = createServerAction(toggleAllFn);
+  const [, clearCompleted] = createServerAction(clearCompletedFn);
 
   const [editingTodoId, setEditingId] = createSignal();
   const setEditing = ({ id, pending }: { id?: number; pending?: () => boolean }) => {
@@ -44,9 +32,9 @@ const TodoApp = () => {
   const remainingCount = createMemo(
     () =>
       todos().length +
-      addTodo.pending.length -
+      addingTodo.pending.length -
       todos().filter(todo => todo.completed).length -
-      removeTodo.pending.length
+      removingTodo.pending.length
   );
   const filterList = (todos: Todo[]) => {
     if (location.query.show === "active") return todos.filter(todo => !todo.completed);
@@ -85,30 +73,20 @@ const TodoApp = () => {
         <ul class="todo-list">
           <For each={filterList(todos())}>
             {todo => {
-              const toggleTodo = createServerAction(async (form: FormData) => {
-                await db.toggleTodo(Number(form.get("id")));
-                return redirect("/");
-              });
-              const editTodo = createServerAction(async (form: FormData) => {
-                await db.editTodo(Number(form.get("id")), String(form.get("title")));
-                return redirect("/");
-              });
+              const [togglingTodo, toggleTodo] = createServerAction(toggleTodoFn);
+              const [editingTodo, editTodo] = createServerAction(editTodoFn);
               const title = () =>
-                editTodo.state === "pending"
-                  ? (editTodo.pending.get("title") as string)
-                  : todo.title;
+                editingTodo.pending ? (editingTodo.input.get("title") as string) : todo.title;
               const pending = () =>
-                toggleAll.state === "pending" ||
-                toggleTodo.state === "pending" ||
-                editTodo.state === "pending";
+                togglingAll.pending || togglingTodo.pending || editingTodo.pending;
               const completed = () =>
-                toggleAll.pending
-                  ? !toggleAll.pending.get("completed")
-                  : toggleTodo.pending
-                  ? !toggleTodo.pending.get("completed")
+                togglingAll.pending
+                  ? !togglingAll.input.get("completed")
+                  : togglingTodo.pending
+                  ? !togglingTodo.input.get("completed")
                   : todo.completed;
-
-              const removing = () => removeTodo.pending.some(data => +data.get("id") === todo.id);
+              const removing = () => removingTodo.some(data => +data.input.get("id") === todo.id);
+              console.log("render", todo.id);
               return (
                 <Show when={!removing()}>
                   <li
@@ -148,16 +126,20 @@ const TodoApp = () => {
                         />
                       </editTodo.Form>
                     </Show>
+                    {togglingTodo.error
+                      ? (setTimeout(() => togglingTodo.clear(), 3000),
+                        (<div class="error todo-update-error">{togglingTodo.error.message}</div>))
+                      : null}
                   </li>
                 </Show>
               );
             }}
           </For>
-          <For each={addTodo.pending}>
-            {data => (
+          <For each={addingTodo}>
+            {sub => (
               <li class="todo pending">
                 <div class="view">
-                  <label>{data.get("title") as string}</label>
+                  <label>{sub.input.get("title") as string}</label>
                   <button disabled class="destroy" />
                 </div>
               </li>
@@ -166,7 +148,7 @@ const TodoApp = () => {
         </ul>
       </section>
 
-      <Show when={todos().length || addTodo.state === "pending"}>
+      <Show when={todos().length || addingTodo.pending.length}>
         <footer class="footer">
           <span class="todo-count">
             <strong>{remainingCount()}</strong> {remainingCount() === 1 ? " item " : " items "} left
@@ -198,5 +180,30 @@ const TodoApp = () => {
     </section>
   );
 };
+
+async function addTodoFn(form: FormData) {
+  await db.addTodo(form.get("title") as string);
+  return redirect("/");
+}
+async function removeTodoFn(form: FormData) {
+  await db.removeTodo(Number(form.get("id")));
+  return redirect("/");
+}
+async function toggleAllFn(form: FormData) {
+  await db.toggleAll(form.get("completed") === "true");
+  return redirect("/");
+}
+async function clearCompletedFn(form: FormData) {
+  await db.clearCompleted();
+  return redirect("/");
+}
+async function toggleTodoFn(form: FormData) {
+  await db.toggleTodo(Number(form.get("id")));
+  return redirect("/");
+}
+async function editTodoFn(form: FormData) {
+  await db.editTodo(Number(form.get("id")), String(form.get("title")));
+  return redirect("/");
+}
 
 export default TodoApp;

@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "sirv-cli": "2.0.2",
-    "solid-ssr": "^1.4.8"
+    "solid-ssr": "^1.5.1"
   },
   "devDependencies": {
     "solid-start": "workspace:0.1.0-alpha.99",

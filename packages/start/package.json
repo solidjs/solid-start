@@ -105,7 +105,7 @@
     "@types/debug": "^4.1.7",
     "@types/wait-on": "^5.3.1",
     "jsdom": "^20.0.0",
-    "solid-js": "1.5.0-beta.7",
+    "solid-js": "^1.5.2",
     "solid-start-cloudflare-pages": "workspace:0.1.0-alpha.99",
     "solid-start-cloudflare-workers": "workspace:0.1.0-alpha.99",
     "solid-start-deno": "workspace:0.1.0-alpha.99",
@@ -120,7 +120,7 @@
   "peerDependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.2",
-    "solid-js": "1.5.0-beta.7",
+    "solid-js": "^1.5.2",
     "vite": "^3.0.4"
   }
 }

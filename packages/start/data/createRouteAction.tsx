@@ -1,8 +1,8 @@
-import { useNavigate } from "@solidjs/router";
-import { createSignal, getOwner, runWithOwner, startTransition, useContext } from "solid-js";
-import { FormImpl, FormProps } from "./Form";
+import { useNavigate, useSearchParams } from "@solidjs/router";
+import { $TRACK, batch, createSignal, startTransition, useContext } from "solid-js";
+import { FormError, FormImpl, FormProps } from "./Form";
 
-import type { Owner, ParentComponent } from "solid-js";
+import type { ParentComponent } from "solid-js";
 import { isRedirectResponse } from "../server/responses";
 import { ServerContext } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
@@ -10,30 +10,35 @@ import { refetchRouteData } from "./createRouteData";
 
 interface ActionEvent extends ServerFunctionEvent {}
 export interface Submission<T, U> {
-  body: T;
+  input: T;
   result?: U;
+  error?: any;
   clear: () => void;
   retry: () => void;
 }
 
-export type ActionState = "idle" | "pending";
-export type RouteAction<T, U> = {
-  submission: Submission<T, U>;
-  pending?: T;
-  result?: U;
-  state: ActionState;
-  Form: T extends FormData ? ParentComponent<FormProps> : never;
-  url: string;
-  submit: (vars: T) => Promise<U>;
-};
-export type RouteMultiAction<T, U> = {
-  submissions: Submission<T, U>[];
-  pending: T[];
-  state: ActionState;
-  Form: T extends FormData ? ParentComponent<FormProps> : never;
-  url: string;
-  submit: (vars: T) => Promise<U>;
-};
+export type RouteAction<T, U> = [
+  {
+    pending: boolean;
+    input?: T;
+    result?: U;
+    error?: unknown;
+    clear: () => void;
+    retry: () => void;
+  },
+  ((vars: T) => Promise<U>) & {
+    Form: T extends FormData ? ParentComponent<FormProps> : never;
+    url: string;
+  }
+];
+export type RouteMultiAction<T, U> = [
+  Submission<T, U>[] & { pending: Submission<T, U>[] },
+  ((vars: T) => Promise<U>) & {
+    Form: T extends FormData ? ParentComponent<FormProps> : never;
+    url: string;
+  }
+];
+
 export function createRouteAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
@@ -46,40 +51,29 @@ export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteAction<T, U> {
-  const [submission, setSubmission] = createSignal<Submission<T, U>>();
-  const [result, setResult] = createSignal<U | { error: any }>();
-  const owner = getOwner();
+  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash(fn);
+  const [input, setInput] = createSignal<T>(init.input);
+  const [result, setResult] = createSignal<{ data?: U; error?: any }>(init.result);
   const navigate = useNavigate();
   const event = useContext(ServerContext);
   let count = 0;
-  let tempOwner: Owner = owner!;
-  let handledError = false;
-
   function submit(variables: T) {
     const p = fn(variables, event);
     const reqId = ++count;
-    setSubmission(() => ({
-      body: variables,
-      get result() {
-        return result();
-      },
-      clear() {
-        setSubmission(undefined);
-      },
-      retry() {
-        mutate(variables);
-      }
-    }));
+    batch(() => {
+      setResult(undefined);
+      setInput(() => variables);
+    });
     return p
-      .then(async res => {
+      .then(async data => {
         if (reqId === count) {
-          if (res instanceof Response) {
-            await handleResponse(res, navigate, options);
-          } else await handleRefetch(res, options);
-          if (!res) setSubmission(undefined);
-          setResult(() => res);
+          if (data instanceof Response) {
+            await handleResponse(data, navigate, options);
+          } else await handleRefetch(data, options);
+          if (!data) setInput(undefined);
+          else setResult({ data });
         }
-        return res;
+        return data;
       })
       .catch(async e => {
         if (reqId === count) {
@@ -87,69 +81,56 @@ export function createRouteAction<T, U = void>(
             await handleResponse(e, navigate, options);
           } else await handleRefetch(e, options);
           if (!isRedirectResponse(e)) {
-            setResult(() => ({ error: e }));
-            return runWithOwner(tempOwner || owner, () => {
-              if (!handledError) throw e;
-            });
-          } else setResult(() => e);
+            setResult({ error: e });
+          } else setInput(undefined);
         }
+        return undefined;
       });
   }
+  submit.url = (fn as any).url;
+  submit.Form = ((props: FormProps) => {
+    let url = (fn as any).url;
+    return (
+      <FormImpl
+        {...props}
+        action={url}
+        onSubmission={submission => {
+          submit(submission.formData as any);
+        }}
+      >
+        {props.children}
+      </FormImpl>
+    );
+  }) as T extends FormData ? ParentComponent<FormProps> : never;
 
-  return {
-    get result() {
-      return result();
+  return [
+    {
+      get pending() {
+        return input() && !result();
+      },
+      get input() {
+        return input();
+      },
+      get result() {
+        return result()?.data;
+      },
+      get error() {
+        return result()?.error;
+      },
+      clear() {
+        batch(() => {
+          setInput(undefined);
+          setResult(undefined);
+        });
+      },
+      retry() {
+        const variables = input();
+        if (!variables) throw new Error("No submission to retry");
+        submit(variables);
+      }
     },
-    get submission() {
-      return submission();
-    },
-    get pending() {
-      return !result() && submission()?.body;
-    },
-    get state() {
-      return this.pending ? "pending" : "idle";
-    },
-    // get error() {
-    //   handledError = true;
-    //   const error = data().error;
-    //   if (!isServer) return error;
-    //   const [params] = useSearchParams();
-
-    //   let param = params.form ? JSON.parse(params.form) : null;
-    //   if (!param || param.url !== (fn as any).url) {
-    //     return error;
-    //   }
-
-    //   return param.error
-    //     ? new FormError(param.error.message, {
-    //         fieldErrors: param.error.fieldErrors,
-    //         stack: param.error.stack,
-    //         form: param.error.form,
-    //         fields: param.error.fields
-    //       })
-    //     : error;
-    // },
-    url: (fn as any).url,
-    Form: ((props: FormProps) => {
-      const formOwner = getOwner();
-
-      let url = (fn as any).url;
-      return (
-        <FormImpl
-          {...props}
-          action={url}
-          onSubmission={submission => {
-            tempOwner = formOwner!;
-            submit(submission.formData as any);
-            tempOwner = owner!;
-          }}
-        >
-          {props.children}
-        </FormImpl>
-      );
-    }) as T extends FormData ? ParentComponent<FormProps> : never,
     submit
-  };
+  ];
 }
 
 export function createRouteMultiAction<T = void, U = void>(
@@ -164,116 +145,91 @@ export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteMultiAction<T, U> {
-  const [submissions, setSubmissions] = createSignal<Submission<T, U>[]>([]);
-  const owner = getOwner();
+  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash(fn);
+  const [submissions, setSubmissions] = createSignal<Submission<T, U>[]>(
+    init.input ? [createSubmission(init.input)[0]] : []
+  );
   const navigate = useNavigate();
   const event = useContext(ServerContext);
   let count = 0;
-  let tempOwner: Owner = owner!;
-  let handledError = false;
 
-  function submit(variables: T) {
-    const p = fn(variables, event);
-    const reqId = ++count;
-    const [result, setResult] = createSignal<U | { error: any }>();
+  function createSubmission(variables: T) {
     let submission;
-    setSubmissions(s => [
-      ...s,
+    const [result, setResult] = createSignal<{ data?: U; error?: any }>();
+    return [
       (submission = {
-        body: variables,
+        input: variables,
         get result() {
-          return result();
+          return result()?.data;
+        },
+        get error() {
+          return result()?.error;
         },
         clear() {
-          setSubmissions(v => v.filter(i => i.body !== variables));
+          setSubmissions(v => v.filter(i => i.input !== variables));
         },
         retry() {
           setResult(undefined);
           return handleSubmit(fn(variables, event));
         }
-      })
-    ]);
-    return handleSubmit(p);
+      }),
+      handleSubmit
+    ] as const;
     function handleSubmit(p) {
-      p.then(async res => {
+      const reqId = ++count;
+      p.then(async data => {
         if (reqId === count) {
-          if (res instanceof Response) {
-            await handleResponse(res, navigate, options);
-          } else await handleRefetch(res, options);
-          res ? setResult(() => res) : submission.clear();
+          if (data instanceof Response) {
+            await handleResponse(data, navigate, options);
+            data = data.body;
+          } else await handleRefetch(data, options);
+          data ? setResult({ data }) : submission.clear();
         }
-        return res;
+        return data;
       }).catch(async e => {
         if (reqId === count) {
           if (e instanceof Response) {
             await handleResponse(e, navigate, options);
           } else await handleRefetch(e, options);
           if (!isRedirectResponse(e)) {
-            setResult(() => ({ error: e }));
-            return runWithOwner(tempOwner || owner, () => {
-              if (!handledError) throw e;
-            });
-          } else setResult(() => e);
+            setResult({ error: e });
+          } else submission.clear();
         }
       });
       return p;
     }
   }
+  function submit(variables: T) {
+    const [submission, handleSubmit] = createSubmission(variables);
+    setSubmissions(s => [...s, submission]);
+    return handleSubmit(fn(variables, event));
+  }
+  submit.url = (fn as any).url;
+  submit.Form = ((props: FormProps) => {
+    let url = (fn as any).url;
+    return (
+      <FormImpl
+        {...props}
+        action={url}
+        onSubmission={submission => {
+          submit(submission.formData as any);
+        }}
+      >
+        {props.children}
+      </FormImpl>
+    );
+  }) as T extends FormData ? ParentComponent<FormProps> : never;
 
-  return {
-    get submissions() {
-      return submissions();
-    },
-    get pending() {
-      return submissions().reduce((m, s) => {
-        !s.result && m.push(s.body);
-        return m;
-      }, []);
-    },
-    get state() {
-      return submissions().some(s => !s.result) ? "pending" : "idle";
-    },
-    // get error() {
-    //   handledError = true;
-    //   const error = data().error;
-    //   if (!isServer) return error;
-    //   const [params] = useSearchParams();
-
-    //   let param = params.form ? JSON.parse(params.form) : null;
-    //   if (!param || param.url !== (fn as any).url) {
-    //     return error;
-    //   }
-
-    //   return param.error
-    //     ? new FormError(param.error.message, {
-    //         fieldErrors: param.error.fieldErrors,
-    //         stack: param.error.stack,
-    //         form: param.error.form,
-    //         fields: param.error.fields
-    //       })
-    //     : error;
-    // },
-    url: (fn as any).url,
-    Form: ((props: FormProps) => {
-      const formOwner = getOwner();
-
-      let url = (fn as any).url;
-      return (
-        <FormImpl
-          {...props}
-          action={url}
-          onSubmission={submission => {
-            tempOwner = formOwner!;
-            submit(submission.formData as any);
-            tempOwner = owner!;
-          }}
-        >
-          {props.children}
-        </FormImpl>
-      );
-    }) as T extends FormData ? ParentComponent<FormProps> : never,
+  return [
+    new Proxy<Submission<T, U>[] & { pending: Submission<T, U>[] }>([] as any, {
+      get(_, property) {
+        if (property === $TRACK) return submissions();
+        if (property === "pending") return submissions().filter(sub => !sub.result);
+        return submissions()[property];
+      }
+    }),
     submit
-  };
+  ];
 }
 
 function handleRefetch(response, options) {
@@ -295,4 +251,28 @@ function handleResponse(response: Response, navigate, options) {
   }
 
   if (response.ok || isRedirectResponse(response)) return handleRefetch(response, options);
+}
+
+function checkFlash(fn: any) {
+  const [params] = useSearchParams();
+
+  let param = params.form ? JSON.parse(params.form) : null;
+  if (!param || param.url !== (fn as any).url) {
+    return {};
+  }
+
+  const input = new Map(param.entries);
+  return {
+    result: {
+      error: param.error
+        ? new FormError(param.error.message, {
+            fieldErrors: param.error.fieldErrors,
+            stack: param.error.stack,
+            form: param.error.form,
+            fields: param.error.fields
+          })
+        : undefined
+    },
+    input
+  };
 }
