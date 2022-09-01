@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 
 export default function () {
   return {
+    name: "cloudflare-pages",
     start(config, { port }) {
       process.env.PORT = port;
       const proc = spawn("node", [

@@ -116,6 +116,29 @@ importers:
       typescript: 4.8.2
       vite: 3.0.9
 
+  examples/ss-pokemon-app:
+    specifiers:
+      '@solidjs/meta': ^0.28.0
+      '@solidjs/router': ^0.4.2
+      '@styils/solid': ^1.0.8
+      solid-js: 1.5.3
+      solid-start: 0.1.0-alpha.99
+      solid-start-netlify: 0.1.0-alpha.99
+      typescript: ^4.4.3
+      undici: ^5.8.0
+      vite: ^3.0.4
+    dependencies:
+      '@solidjs/meta': 0.28.0_solid-js@1.5.3
+      '@solidjs/router': 0.4.2_solid-js@1.5.3
+      '@styils/solid': 1.0.8_solid-js@1.5.3
+      solid-js: 1.5.3
+      solid-start: link:../../packages/start
+      undici: 5.10.0
+    devDependencies:
+      solid-start-netlify: link:../../packages/start-netlify
+      typescript: 4.8.2
+      vite: 3.0.9
+
   examples/todomvc:
     specifiers:
       '@solidjs/meta': ^0.28.0
@@ -3319,6 +3342,14 @@ packages:
       solid-js: ^1.3.5
     dependencies:
       solid-js: 1.5.3
+
+  /@styils/solid/1.0.8_solid-js@1.5.3:
+    resolution: {integrity: sha512-cNfcQp67dGkujfRJlnnxLMuQus0Nu8hkfEu1VzvVBAUZmXIWC76F8mXXc19AjpjzDyagg8Y5C+/mavP2IXotDw==}
+    peerDependencies:
+      solid-js: '>=1.4.0'
+    dependencies:
+      solid-js: 1.5.3
+    dev: false
 
   /@tailwindcss/typography/0.5.4_tailwindcss@3.1.8:
     resolution: {integrity: sha512-QEdg40EmGvE7kKoDei8zr5sf4D1pIayHj4R31bH3lX8x2BtTiR+jNejYPOkhbmy3DXgkMF9jC8xqNiGFAuL9Sg==}

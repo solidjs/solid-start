@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 
 export default function ({ edge } = {}) {
   return {
+    name: "netlify",
     start() {
       const proc = spawn("netlify", ["dev"]);
       proc.stdout.pipe(process.stdout);
@@ -17,15 +18,15 @@ export default function ({ edge } = {}) {
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       if (!config.solidOptions.ssr) {
-        throw new Error("SSR is required for Netlify");
-      }
-
-      if (config.solidOptions.islands) {
+        await builder.spaClient(join(config.root, "netlify"));
+        await builder.server(join(config.root, ".solid", "server"));
+      } else if (config.solidOptions.islands) {
         await builder.islandsClient(join(config.root, "netlify"));
+        await builder.server(join(config.root, ".solid", "server"));
       } else {
         await builder.client(join(config.root, "netlify"));
+        await builder.server(join(config.root, ".solid", "server"));
       }
-      await builder.server(join(config.root, ".solid", "server"));
 
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),

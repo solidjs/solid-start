@@ -10,6 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default function () {
   return {
+    name: "static",
     start(config, { port }) {
       process.env.PORT = port;
       const proc = spawn("npx", ["serve", "./dist/public", "--port", `${process.env.PORT}`]);

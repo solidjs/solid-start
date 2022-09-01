@@ -8,6 +8,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 
 export default function () {
   return {
+    name: "node",
     start(config, { port }) {
       process.env.PORT = port;
       import(pathToFileURL(join(config.root, "dist", "server.js")).toString());

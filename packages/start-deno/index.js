@@ -8,6 +8,7 @@ import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 export default function () {
   return {
+    name: "deno",
     start(config, { port }) {
       process.env.PORT = port;
       console.log();
@@ -36,7 +37,7 @@ export default function () {
         await builder.client(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       }
-      
+
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "handler.js")

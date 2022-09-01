@@ -4,6 +4,7 @@
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const { resolve, join } = require("path");
+const c = require("picocolors");
 const {
   readFileSync,
   writeFileSync,
@@ -18,7 +19,6 @@ const DEBUG = require("debug")("start");
 globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("alpha");
-console.log("solid-start", pkg.version);
 
 const findAny = (path, name) => {
   for (var ext of [".js", ".ts", ".mjs", ".mts"]) {
@@ -39,6 +39,9 @@ prog
   .option("-i,--inspect", "Node inspector", false)
   .option("-p, --port", "Port to start server on", 3000)
   .action(async ({ config: configFile, open, port, root, host, inspect }) => {
+    console.log(c.bgBlue(" solid-start dev "));
+    console.log(c.magenta(" version "), pkg.version);
+
     root = root || process.cwd();
     if (!existsSync(join(root, "package.json"))) {
       console.log('No package.json found in "%s"', root);
@@ -95,7 +98,8 @@ prog
     }
 
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
-    console.log(config.adapter.name);
+
+    config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     DEBUG(
       [
@@ -140,15 +144,23 @@ prog
   .option("-c, --config", "Vite config file")
   .describe("Create production build")
   .action(async ({ root, config: configFile }) => {
+    console.log(c.bgBlue(" solid-start build "));
+    console.log(c.magenta(" version "), pkg.version);
+
     const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
 
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
     const vite = require("vite");
+    config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     config.adapter.build(config, {
       islandsClient: async path => {
+        console.log();
+        console.log(c.blue("solid-start") + c.magenta(" finding islands..."));
+        console.time(c.blue("solid-start") + c.magenta(" found islands in"));
+
         let routeManifestPath = join(config.root, ".solid", "route-manifest");
         await vite.build({
           build: {
@@ -184,8 +196,10 @@ prog
 
         let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
 
-        const vite = require("vite");
-
+        console.timeEnd(c.blue("solid-start") + c.magenta(" found islands in"));
+        console.log();
+        console.log(c.blue("solid-start") + c.magenta(" building islands client..."));
+        console.time(c.blue("solid-start") + c.magenta(" built islands client in"));
         await vite.build({
           configFile: config.configFile,
           root: config.root,
@@ -249,8 +263,12 @@ prog
         writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
         writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
         writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
+        console.timeEnd(c.blue("solid-start") + c.magenta(" built islands client in"));
       },
       server: async path => {
+        console.log();
+        console.log(c.blue("solid-start") + c.magenta(" building server..."));
+        console.time(c.blue("solid-start") + c.magenta(" server built in"));
         await vite.build({
           configFile: config.configFile,
           root: config.root,
@@ -266,8 +284,13 @@ prog
             }
           }
         });
+        console.timeEnd(c.blue("solid-start") + c.magenta(" server built in"));
+        console.log("");
       },
       client: async path => {
+        console.log();
+        console.log(c.blue("solid-start") + c.magenta(" building client..."));
+        console.time(c.blue("solid-start") + c.magenta(" client built in"));
         await vite.build({
           configFile: config.configFile,
           root: config.root,
@@ -293,6 +316,7 @@ prog
         writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
         writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
         writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
+        console.timeEnd(c.blue("solid-start") + c.magenta(" client built in"));
       },
       debug: DEBUG,
       build: async conf => {
@@ -303,7 +327,10 @@ prog
         });
       },
       spaClient: async path => {
-        DEBUG("spa build start");
+        console.log();
+        console.log(c.blue("solid-start") + c.magenta(" building client..."));
+        console.time(c.blue("solid-start") + c.magenta(" client built in"));
+
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
         mkdirSync(join(config.root, ".solid"), { recursive: true });
 
@@ -312,6 +339,8 @@ prog
           indexHtml = join(config.root, "index.html");
         } else {
           DEBUG("starting vite server for index.html");
+          console.log(c.blue("solid-start") + c.magenta(" rendering index.html..."));
+          console.time(c.blue("solid-start") + c.magenta(" index.html rendered in"));
           let port = await (await import("get-port")).default();
           let proc = spawn(
             "node",
@@ -356,6 +385,7 @@ prog
           indexHtml = join(config.root, ".solid", "index.html");
 
           DEBUG("spa index.html created");
+          console.timeEnd(c.blue("solid-start") + c.magenta(" index.html rendered in"));
 
           proc.kill();
         }
@@ -397,6 +427,7 @@ prog
         writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
 
         DEBUG("wrote route manifest");
+        console.timeEnd(c.blue("solid-start") + c.magenta(" client built in"));
       }
     });
   });
@@ -412,9 +443,14 @@ prog
   )
   .describe("Start production build")
   .action(async ({ root, config: configFile, port }) => {
+    console.log(c.bgBlue(" solid-start start "));
+    console.log(c.magenta(" version "), pkg.version);
+
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
 
     let url = await config.adapter.start(config, { port });
+    config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
+    console.log();
     if (url) {
       const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");

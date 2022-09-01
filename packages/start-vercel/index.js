@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 
 export default function () {
   return {
+    name: "vercel",
     async start() {
       const proc = await spawn("vercel", ["deploy", "--prebuilt"], {});
       proc.stdout.pipe(process.stdout);
