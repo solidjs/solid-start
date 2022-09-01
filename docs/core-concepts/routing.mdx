@@ -91,7 +91,7 @@ export default function Index() {
 }
 ```
 
-If you use an `a` tag, you have to use the absolute path to the route you want to navigate to. You might find it easier to specify the path to a route relative to the current route. There are also cases where you might want to know if the `href` matches the current route for styling purposes. For these situations, we have the [NavLink][navlink] component rexported from `@solidjs/router`.
+If you use an `a` tag, you have to use the absolute path to the route you want to navigate to. You might find it easier to specify the path to a route relative to the current route. There are also cases where you might want to know if the `href` matches the current route for styling purposes. For these situations, we have the [NavLink][navlink] component re-exported from `@solidjs/router`.
 
 You can specify class names to add to the `<a>` tag when the current location matches the `href` of the anchor using the `activeClass` prop. Use the `inactive` prop to add a class name to the `<a>` tag if the current route does not match the `href` of the anchor.
 
