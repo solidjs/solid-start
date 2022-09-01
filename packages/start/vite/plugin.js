@@ -289,7 +289,7 @@ function solidStartFileSystemRouter(options) {
               // the routes eagerly so that they can dead-code eliminate properly,
               // for some reason, vite doesn't do it properly when the routes are
               // loaded lazily.
-              lazy: !options.ssr && ssr ? false : true
+              lazy: ssr ? false : true
             })
           )
         };
