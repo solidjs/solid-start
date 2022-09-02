@@ -86,7 +86,6 @@ const TodoApp = () => {
                   ? !togglingTodo.input.get("completed")
                   : todo.completed;
               const removing = () => removingTodo.some(data => +data.input.get("id") === todo.id);
-              console.log("render", todo.id);
               return (
                 <Show when={!removing()}>
                   <li
@@ -126,10 +125,6 @@ const TodoApp = () => {
                         />
                       </editTodo.Form>
                     </Show>
-                    {togglingTodo.error
-                      ? (setTimeout(() => togglingTodo.clear(), 3000),
-                        (<div class="error todo-update-error">{togglingTodo.error.message}</div>))
-                      : null}
                   </li>
                 </Show>
               );

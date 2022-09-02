@@ -247,15 +247,17 @@ export function routeData() {
 
 </details>
 
-<details><summary><h3>createServerAction</h3></summary>
+<details><summary><h3>createServerAction, createServerMultiAction</h3></summary>
 
 ```diff
 - const logoutAction = createServerAction(() => logout(server.request));
-+ const logoutAction = createServerAction((_, { request }) => logout(request));
++ const [logginOut, logOut] = createServerAction((_, { request }) => logout(request));
 
 ```
 
 We pass in a `ServerFunctionEvent` which has a `request` field as the second argument to server actions. You can use this to access to the HTTP Request sent for your action and get the headers from it for things like auth.
+
+We now return a tuple where the first argument is the current submission, and the second is the submit function it also has a progressive enhancible form attached to it `logout.Form`.
 
 </details>
 <details><summary><h3>🆕 HttpStatusCode, HttpHeader</h3></summary>

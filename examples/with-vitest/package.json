@@ -9,11 +9,11 @@
   "type": "module",
   "devDependencies": {
     "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.4.2",
+    "@solidjs/router": "^0.4.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/testing-library__jest-dom": "^5.14.5",
     "jsdom": "^20.0.0",
-    "solid-js": "^1.5.3",
+    "solid-js": "^1.5.4",
     "solid-start": "0.1.0-alpha.99",
     "solid-start-node": "0.1.0-alpha.99",
     "solid-testing-library": "^0.3.0",

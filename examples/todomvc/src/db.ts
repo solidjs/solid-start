@@ -1,8 +1,9 @@
+// TODO: This is terribly broken with HMR. Should use real persistent storage.
 import { Todo } from "~/types";
 
 let COUNTER = 0;
 let TODOS: Todo[] = [];
-const DELAY = 200;
+const DELAY = 120;
 
 function delay<T>(fn: () => T) {
   return new Promise<T>((res) => setTimeout(() => res(fn()), DELAY));

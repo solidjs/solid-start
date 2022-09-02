@@ -100,12 +100,12 @@
   },
   "devDependencies": {
     "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.4.2",
+    "@solidjs/router": "^0.4.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/debug": "^4.1.7",
     "@types/wait-on": "^5.3.1",
     "jsdom": "^20.0.0",
-    "solid-js": "^1.5.3",
+    "solid-js": "^1.5.4",
     "solid-start-cloudflare-pages": "workspace:0.1.0-alpha.99",
     "solid-start-cloudflare-workers": "workspace:0.1.0-alpha.99",
     "solid-start-deno": "workspace:0.1.0-alpha.99",
@@ -120,8 +120,8 @@
   },
   "peerDependencies": {
     "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.4.2",
-    "solid-js": "^1.5.3",
+    "@solidjs/router": "^0.4.3",
+    "solid-js": "^1.5.4",
     "vite": "^3.0.4"
   }
 }
