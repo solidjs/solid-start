@@ -1,6 +1,6 @@
 {
   "name": "solid-start-netlify",
-  "version": "0.1.0-alpha.99",
+  "version": "0.1.0-alpha.100",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -19,7 +19,7 @@
     "terser": "^5.15.0"
   },
   "devDependencies": {
-    "solid-start": "workspace:0.1.0-alpha.99",
+    "solid-start": "workspace:0.1.0-alpha.100",
     "vite": "^3.0.9"
   },
   "peerDependencies": {
