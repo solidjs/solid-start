@@ -8,11 +8,11 @@
     "test:unit": "vitest run"
   },
   "dependencies": {
-    "@playwright/test": "1.25.1",
+    "@playwright/test": "1.23.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "^9.0.13",
-    "@types/node": "^18.7.13",
+    "@types/node": "^18.7.14",
     "@types/testing-library__jest-dom": "^5.14.5",
     "cheerio": "1.0.0-rc.11",
     "compression": "^1.7.4",

@@ -72,7 +72,7 @@ jobs:
       id: playwright-version
       shell: bash
       run: |
-        playwright_version=1.25.1
+        playwright_version=1.23.4
         echo "::set-output name=version::${playwright_version}"
 
     - name: 🤖 Cache Playwright binaries
