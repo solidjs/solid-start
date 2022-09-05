@@ -269,6 +269,7 @@ prog
         console.log();
         console.log(c.blue("solid-start") + c.magenta(" building server..."));
         console.time(c.blue("solid-start") + c.magenta(" server built in"));
+        const ssrExternal = config?.ssr?.external || [];
         await vite.build({
           configFile: config.configFile,
           root: config.root,
@@ -277,6 +278,7 @@ prog
             outDir: path,
             rollupOptions: {
               input: config.solidOptions.serverEntry,
+              external: ssrExternal,
               output: {
                 inlineDynamicImports: true,
                 format: "esm"

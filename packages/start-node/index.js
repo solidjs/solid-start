@@ -15,6 +15,7 @@ export default function () {
       return `http://localhost:${process.env.PORT}`;
     },
     async build(config, builder) {
+      const ssrExternal = config?.ssr?.external || [];
       const __dirname = dirname(fileURLToPath(import.meta.url));
 
       if (!config.solidOptions.ssr) {
@@ -49,7 +50,7 @@ export default function () {
           }),
           common()
         ],
-        external: ["undici", "stream/web", "@prisma/client"]
+        external: ["undici", "stream/web", ...ssrExternal]
       });
       // or write the bundle to disk
       await bundle.write({ format: "esm", dir: join(config.root, "dist") });
