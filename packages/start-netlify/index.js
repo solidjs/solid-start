@@ -49,9 +49,9 @@ export default function ({ edge } = {}) {
       });
       // or write the bundle to disk
       await bundle.write({
-        format: edge ? "esm" : "cjs",
-        manualChunks: {},
-        dir: join(config.root, "netlify", edge ? "edge-functions" : "functions")
+        format: "esm",
+        inlineDynamicImports: true,
+        file: join(config.root, "netlify", edge ? "edge-functions" : "functions", "index.js")
       });
 
       // closes the bundle

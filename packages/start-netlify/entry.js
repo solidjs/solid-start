@@ -1,6 +1,6 @@
-import fetch, { Headers, Request, Response } from "node-fetch";
+import "solid-start/node/globals.js";
 import manifest from "../../netlify/route-manifest.json";
-import handler from "./handler";
+import handle from "./handler";
 
 Response.redirect = function (url, status = 302) {
   let response = new Response(null, { status, headers: { Location: url }, counter: 1 });
@@ -8,17 +8,10 @@ Response.redirect = function (url, status = 302) {
   return response;
 };
 
-Object.assign(globalThis, {
-  Request,
-  Response,
-  Headers,
-  fetch
-});
-
-exports.handler = async function (event, context) {
+export const handler = async function (event, context) {
   console.log(`Received new request: ${event.path}`);
 
-  const webRes = await handler({
+  const webRes = await handle({
     request: createRequest(event),
     env: { manifest }
   });
