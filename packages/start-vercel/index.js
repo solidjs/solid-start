@@ -7,7 +7,7 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
-export default function ({ edge = true } = {}) {
+export default function ({ edge } = {}) {
   return {
     name: "vercel",
     async start() {
@@ -49,15 +49,23 @@ export default function ({ edge = true } = {}) {
 
       const renderEntrypoint = "index.js";
       const renderFuncDir = join(outputDir, "functions/render.func");
-      await bundle.write({
+      await bundle.write(edge ? {
         format: "esm",
         file: join(renderFuncDir, renderEntrypoint)
+      } : {
+        format: "cjs",
+        file: join(renderFuncDir, renderEntrypoint),
+        exports: "auto"
       });
       await bundle.close();
 
-      const renderConfig = {
-        runtime: edge ? "edge" : "nodejs16.x",
+      const renderConfig = edge ? {
+        runtime: "edge" ,
         entrypoint: renderEntrypoint
+      } : {
+        runtime: "nodejs16.x",
+        handler: renderEntrypoint,
+        "launcherType": "Nodejs"
       };
       writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));
 
@@ -68,7 +76,7 @@ export default function ({ edge = true } = {}) {
           // Serve any matching static assets first
           { handle: "filesystem" },
           // Invoke the SSR function if not a static asset
-          { src: "/.*", middlewarePath: "render" }
+          edge ? { src: "/.*", middlewarePath: "render" } : { src: "/.*", dest: "/render" }
         ]
       };
       writeFileSync(join(outputDir, "config.json"), JSON.stringify(outputConfig, null, 2));

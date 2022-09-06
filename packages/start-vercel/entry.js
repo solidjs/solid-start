@@ -3,7 +3,7 @@ import manifest from "../../.vercel/output/static/route-manifest.json";
 import entry from "./entry-server";
 
 export default async (req, res) => {
-  console.log(`Received new request: ${event.path}`);
+  console.log(`Received new request: ${req.url}`);
 
   const webRes = await entry({
     request: createRequest(req),
@@ -16,13 +16,13 @@ export default async (req, res) => {
 
   res.statusMessage = webRes.statusText;
   res.writeHead(
-    nodeResponse.status,
-    nodeResponse.statusText,
+    webRes.status,
+    webRes.statusText,
     headers
   );
 
-  if (nodeResponse.body) {
-    await webRes.text();
+  if (webRes.body) {
+    res.end(await webRes.text());
   } else {
     res.end();
   }
@@ -35,7 +35,7 @@ export default async (req, res) => {
  * Credits to the Remix team:
  * https://github.com/remix-run/remix/blob/main/packages/remix-netlify/server.ts
  */
-export function createRequest(req) {
+function createRequest(req) {
   let host = req.headers["x-forwarded-host"] || req.headers["host"];
   let protocol = req.headers["x-forwarded-proto"] || "https";
   let url = new URL(req.url, `${protocol}://${host}`);
