@@ -7,7 +7,7 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
-export default function () {
+export default function ({ edge = true } = {}) {
   return {
     name: "vercel",
     async start() {
@@ -34,7 +34,7 @@ export default function () {
       }
 
       const entrypoint = join(config.root, ".solid", "server", "server.js");
-      copyFileSync(join(__dirname, "entry.js"), entrypoint);
+      copyFileSync(join(__dirname, edge ? "entry-edge.js" : "entry.js"), entrypoint);
       const bundle = await rollup({
         input: entrypoint,
         plugins: [
@@ -56,7 +56,7 @@ export default function () {
       await bundle.close();
 
       const renderConfig = {
-        runtime: "edge",
+        runtime: edge ? "edge" : "nodejs16.x",
         entrypoint: renderEntrypoint
       };
       writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));

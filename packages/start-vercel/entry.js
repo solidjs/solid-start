@@ -1,18 +1,70 @@
+import "solid-start/node/globals.js";
 import manifest from "../../.vercel/output/static/route-manifest.json";
 import entry from "./entry-server";
 
-export default function (request) {
-  const response = entry({
-    request,
-    env: {
-      manifest,
-      getStaticHTML: path =>
-        new Response(null, {
-          headers: {
-            "x-middleware-rewrite": new URL(`${path}.html`, request.url).href
-          }
-        })
-    }
+export default async (req, res) => {
+  console.log(`Received new request: ${event.path}`);
+
+  const webRes = await entry({
+    request: createRequest(req),
+    env: { manifest }
   });
-  return response;
+  const headers = {};
+  for (const [name, value] of webRes.headers) {
+    headers[name] = [value];
+  }
+
+  res.statusMessage = webRes.statusText;
+  res.writeHead(
+    nodeResponse.status,
+    nodeResponse.statusText,
+    headers
+  );
+
+  if (nodeResponse.body) {
+    await webRes.text();
+  } else {
+    res.end();
+  }
+}
+
+/*!
+ * Original code by Remix Sofware Inc
+ * MIT Licensed, Copyright(c) 2021 Remix software Inc, see LICENSE.remix.md for details
+ *
+ * Credits to the Remix team:
+ * https://github.com/remix-run/remix/blob/main/packages/remix-netlify/server.ts
+ */
+export function createRequest(req) {
+  let host = req.headers["x-forwarded-host"] || req.headers["host"];
+  let protocol = req.headers["x-forwarded-proto"] || "https";
+  let url = new URL(req.url, `${protocol}://${host}`);
+
+  let init = {
+    method: req.method,
+    headers: createHeaders(req.headers)
+  };
+
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    init.body = req;
+  }
+
+  return new Request(url.href, init);
+}
+
+function createHeaders(requestHeaders) {
+  let headers = new Headers();
+
+  for (let key in requestHeaders) {
+    let header = requestHeaders[key];
+    if (Array.isArray(header)) {
+      for (let value of header) {
+        headers.append(key, value);
+      }
+    } else {
+      headers.append(key, header);
+    }
+  }
+
+  return headers;
 }
