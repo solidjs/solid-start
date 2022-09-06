@@ -9,7 +9,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.8",
     "postcss": "^8.4.16",
-    "solid-start-node": "0.1.0-alpha.100",
+    "solid-start-node": "0.1.0-alpha.101",
     "tailwindcss": "^3.1.8",
     "typescript": "^4.8.2",
     "vite": "^3.0.9"
@@ -18,7 +18,7 @@
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.3",
     "solid-js": "^1.5.4",
-    "solid-start": "0.1.0-alpha.100",
+    "solid-start": "0.1.0-alpha.101",
     "undici": "^5.10.0"
   },
   "engines": {

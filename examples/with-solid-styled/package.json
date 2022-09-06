@@ -8,7 +8,7 @@
   "type": "module",
   "devDependencies": {
     "babel-plugin-solid-styled": "^0.6.1",
-    "solid-start-node": "0.1.0-alpha.100",
+    "solid-start-node": "0.1.0-alpha.101",
     "typescript": "^4.8.2",
     "vite": "^3.0.9"
   },
@@ -16,7 +16,7 @@
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.3",
     "solid-js": "^1.5.4",
-    "solid-start": "0.1.0-alpha.100",
+    "solid-start": "0.1.0-alpha.101",
     "solid-styled": "^0.6.1",
     "undici": "^5.10.0"
   },
