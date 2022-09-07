@@ -168,7 +168,6 @@ function createPageEvent(event: FetchEvent) {
 
 function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
   if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
-    console.log("hereee", "markup arrived");
     markup = `${pageEvent.routerContext.replaceOutletId}:${
       pageEvent.routerContext.newOutletId
     }=${markup.slice(
