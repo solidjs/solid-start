@@ -36,19 +36,16 @@ import type { Accessor } from "solid-js";
 import "./types";
 
 import {
-  Outlet as BaseOutlet,
+  Location, Navigator, Outlet as BaseOutlet,
   Routes as BaseRoutes,
   useLocation as useBaseLocation,
-  useNavigate as useBaseNavigate,
-  Navigator,
-  Location
+  useNavigate as useBaseNavigate
 } from "@solidjs/router";
 import { isServer } from "solid-js/web";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 export function Routes(props) {
   if (import.meta.env.START_ISLANDS_ROUTER) {
-    console.log("ereee");
     return (
       <IslandsOutlet>
         <BaseRoutes>{props.children}</BaseRoutes>
