@@ -1,6 +1,6 @@
 {
   "name": "solid-start-static",
-  "version": "0.1.0-alpha.101",
+  "version": "0.1.0-alpha.102",
   "main": "./index.js",
   "type": "module",
   "solid": {
