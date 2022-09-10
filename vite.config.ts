@@ -14,7 +14,7 @@ export default defineConfig({
   plugins: [
     await mdx(),
     solid({
-      rootEntry: resolve("root.docs.tsx"),
+      rootEntry: resolve("docs.root.tsx"),
       appRoot: "./docs",
       routesDir: ".",
       islandsRouter: true,

@@ -1,7 +1,7 @@
 import { For, Suspense } from "solid-js";
 import { useLocation } from "solid-start";
 import { createServerData } from "solid-start/server";
-import { mods } from "../root.docs";
+import { mods } from "../docs.root";
 
 export default function TableOfContents() {
   const path = useLocation();
