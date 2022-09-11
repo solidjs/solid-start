@@ -69,13 +69,14 @@ export function createDevHandler(viteServer, config, options) {
               const parsed = new URL(dep.url, "http://localhost/");
               const query = parsed.searchParams;
 
-              if (
-                style_pattern.test(dep.file) ||
-                (query.has("svelte") && query.get("type") === "style")
-              ) {
+              if (style_pattern.test(dep.file)) {
                 try {
                   const mod = await viteServer.ssrLoadModule(dep.url);
-                  styles[dep.url] = mod.default;
+                  if (/.module.css$/.test(dep.file)) {
+                    styles[dep.url] = env.cssModules?.[dep.file];
+                  } else {
+                    styles[dep.url] = mod.default;
+                  }
                 } catch {
                   // this can happen with dynamically imported modules, I think
                   // because the Vite module graph doesn't distinguish between
@@ -90,6 +91,8 @@ export function createDevHandler(viteServer, config, options) {
     });
   }
 
+  let localEnv = {};
+
   /**
    *
    * @param {import('http').IncomingMessage} req
@@ -98,7 +101,7 @@ export function createDevHandler(viteServer, config, options) {
   async function startHandler(req, res) {
     try {
       console.log(req.method, req.url);
-      let webRes = await devFetch(createRequest(req), {});
+      let webRes = await devFetch(createRequest(req), localEnv);
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
 
@@ -137,7 +140,14 @@ export function createDevHandler(viteServer, config, options) {
     }
   }
 
-  return { fetch: devFetch, handler: startHandler };
+  return {
+    fetch: devFetch,
+    handler: startHandler,
+    handlerWithEnv: env => {
+      localEnv = env;
+      return startHandler;
+    }
+  };
 }
 
 /**

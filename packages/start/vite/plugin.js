@@ -345,10 +345,16 @@ async function resolveAdapter(config) {
  */
 function solidStartServer(options) {
   let config;
+  let env = { cssModules: {} };
   return {
     name: "solid-start-server",
     config(c) {
       config = c;
+    },
+    transform(code, id) {
+      if (id.endsWith(".module.css")) {
+        env.cssModules[id] = code;
+      }
     },
     configureServer(vite) {
       return async () => {
@@ -360,7 +366,7 @@ function solidStartServer(options) {
             await adapter.dev(config, vite, createDevHandler(vite, config, options))
           );
         } else if (config.solidOptions.devServer) {
-          vite.middlewares.use(createDevHandler(vite, config, options).handler);
+          vite.middlewares.use(createDevHandler(vite, config, options).handlerWithEnv(env));
         }
       };
     }
@@ -543,7 +549,7 @@ export default function solidStart(options) {
   return [
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
-    islands(),
+    options.islands ? islands() : undefined,
     options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
