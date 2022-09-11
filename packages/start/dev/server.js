@@ -11,6 +11,24 @@ globalThis.DEBUG = debug("start:server");
 // https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
+process.on("unhandledRejection", function (e) {
+  if (
+    !(
+      (typeof e === "string" && e.includes("renderToString timed out")) ||
+      (e.message && e.message.includes("renderToString timed out"))
+    )
+  ) {
+    console.error(e);
+  }
+});
+
+/**
+ *
+ * @param {import('node_modules/vite').ViteDevServer} viteServer
+ * @param {*} config
+ * @param {*} options
+ * @returns
+ */
 export function createDevHandler(viteServer, config, options) {
   /**
    * @returns {Promise<Response>}
@@ -97,11 +115,25 @@ export function createDevHandler(viteServer, config, options) {
       }
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
-      if (!e.message.includes("renderToString timed out")) {
-        console.log("ERROR", e);
-      }
-      // res.statusCode = 500;
-      // res.end(e.stack);
+      res.statusCode = 500;
+      res.end(`
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <title>Error</title>
+            <script type="module">
+              import { ErrorOverlay } from '/@vite/client'
+              document.body.appendChild(new ErrorOverlay(${JSON.stringify(
+                prepareError(req, e)
+              ).replace(/</g, "\\u003c")}))
+            </script>
+          </head>
+          <body>
+          </body>
+        </html>
+      `);
+      throw e;
     }
   }
 
@@ -149,4 +181,12 @@ async function find_deps(vite, node, deps) {
   }
 
   await Promise.all(branches);
+}
+function prepareError(req, e) {
+  return {
+    message: `An error occured while server rendering ${req.url}:\n\n\t${
+      typeof e === "string" ? e : e.message
+    } `,
+    stack: typeof e === "string" ? "" : e.stack
+  };
 }
