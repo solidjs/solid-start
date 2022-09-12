@@ -1,11 +1,11 @@
 import { useRouteData } from "@solidjs/router";
 import { createEffect, createSignal, onCleanup } from "solid-js";
-import server, { createServerAction, createServerData, redirect } from "solid-start/server";
+import server$, { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { createWebSocketServer } from "solid-start/websocket";
 import { getUser, logout } from "~/session";
 
 const pingPong = createWebSocketServer(
-  server(function (webSocket) {
+  server$(function (webSocket) {
     webSocket.addEventListener("message", async msg => {
       try {
         // Parse the incoming message
@@ -37,7 +37,7 @@ const pingPong = createWebSocketServer(
 );
 
 export function routeData() {
-  return createServerData(async (_, { request, env }) => {
+  return createServerData$(async (_, { request, env }) => {
     const user = await getUser(request);
 
     if (!user) {
@@ -50,9 +50,9 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
-  const logoutAction = createServerAction((_, { request }) => logout(request));
+  const logoutAction = createServerAction$((_, { request }) => logout(request));
   const [lastPing, setLastPing] = createSignal(Date.now().toString());
-  const increment = createServerAction(
+  const increment = createServerAction$(
     async (_, { env }) => {
       await env.app.put("key", `${Number(await this.env.app.get("key")) + 1}`);
       return redirect("/");

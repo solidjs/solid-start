@@ -10,12 +10,12 @@ test.describe("sessions", () => {
       await createFixture({
         files: {
           "src/routes/index.tsx": js`
-            import server, { redirect, createServerData, createServerAction } from "solid-start/server";
+            import server$, { redirect, createServerData$, createServerAction$ } from "solid-start/server";
             import { useRouteData } from "@solidjs/router";
             import { getUser, logout } from "~/session";
 
             export function routeData() {
-              return createServerData(async (_, { request }) => {
+              return createServerData$(async (_, { request }) => {
                 const user = await getUser(request);
 
                 if (!user) {
@@ -28,7 +28,7 @@ test.describe("sessions", () => {
 
             export default function Home() {
               const user = useRouteData<ReturnType<typeof routeData>>();
-              const [, { Form }] = createServerAction((_, { request }) => logout(request));
+              const [, { Form }] = createServerAction$((_, { request }) => logout(request));
 
               return (
                 <main class="w-full p-4 space-y-2">
@@ -46,7 +46,7 @@ test.describe("sessions", () => {
           "src/routes/login.tsx": js`
             import { Show } from "solid-js";
             import { useParams, useRouteData } from "@solidjs/router";
-            import { redirect, createServerData, createServerAction } from "solid-start/server";
+            import { redirect, createServerData$, createServerAction$ } from "solid-start/server";
             import { db, createUserSession, getUser, login, register } from "~/session";
             import { FormError } from "solid-start/data";
             
@@ -63,7 +63,7 @@ test.describe("sessions", () => {
             }
             
             export function routeData() {
-              return createServerData(async (_, { request }) => {
+              return createServerData$(async (_, { request }) => {
                 if (await getUser(request)) {
                   throw redirect("/");
                 }
@@ -75,7 +75,7 @@ test.describe("sessions", () => {
               const data = useRouteData<ReturnType<typeof routeData>>();
               const params = useParams();
             
-              const [loggingIn, { Form }] = createServerAction(async (form: FormData) => {
+              const [loggingIn, { Form }] = createServerAction$(async (form: FormData) => {
                 const loginType = form.get("loginType");
                 const username = form.get("username");
                 const password = form.get("password");

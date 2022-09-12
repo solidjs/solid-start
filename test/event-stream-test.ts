@@ -14,7 +14,7 @@ test.describe("check event-stream", () => {
       files: {
         "src/routes/index.jsx": js`
           import { createEffect, createSignal, onCleanup, Show } from "solid-js";
-          import server, { eventStream } from "solid-start/server";
+          import server$, { eventStream } from "solid-start/server";
           
           function createEventStream({ url }, onMessage) {
             createEffect(() => {
@@ -31,8 +31,8 @@ test.describe("check event-stream", () => {
           export default function Page(){
             let [state, setState] = createSignal('test data');
             createEventStream(
-              server(async () =>
-                eventStream(server.request, (send) => {
+              server$(async () =>
+                eventStream(server$.request, (send) => {
                   send("chat", "Hello world");
                   setTimeout(() => {
                     send("chat", "Goodbye");

@@ -1,15 +1,16 @@
 import { For, Suspense } from "solid-js";
 import { useLocation } from "solid-start";
-import { createServerData } from "solid-start/server";
+import { createServerData$ } from "solid-start/server";
 import { mods } from "../docs.root";
 
 export default function TableOfContents() {
   const path = useLocation();
-  const data = createServerData(
-    () => path.pathname,
+  const data = createServerData$(
     async pathname => {
       let mod = mods[`./docs${pathname}.mdx`] ?? mods[`./docs${pathname}.md`];
       return mod.getHeadings().filter(h => h.depth > 1 && h.depth <= 3);
+    }, {
+      key: () => path.pathname,
     }
   );
 

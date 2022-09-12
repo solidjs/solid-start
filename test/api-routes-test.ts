@@ -98,20 +98,20 @@ test.describe("api routes", () => {
             export let get = ({ request }) => fetch('https://hogwarts.deno.dev/');
           `,
           "src/routes/server-fetch.jsx": js`
-            import server from "solid-start/server";
+            import server$ from "solid-start/server";
             import { createResource } from 'solid-js';
   
             export default function Page() {
-              const [data] = createResource(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
+              const [data] = createResource(() => server$.fetch('/api/greeting/harry-potter').then(res => res.json()));
   
               return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
             }
           `,
           "src/routes/server-data-fetch.jsx": js`
-            import server, { createServerData } from "solid-start/server";
+            import server$, { createServerData$ } from "solid-start/server";
   
             export default function Page() {
-              const data = createServerData(() => server.fetch('/api/greeting/harry-potter').then(res => res.json()));
+              const data = createServerData$(() => server$.fetch('/api/greeting/harry-potter').then(res => res.json()));
   
               return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
             }
@@ -149,7 +149,7 @@ test.describe("api routes", () => {
       expect(await page.content()).toContain('{"hello":"world"}');
     });
 
-    test("should render data from API route using server.fetch", async ({ page }) => {
+    test("should render data from API route using server$.fetch", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/server-fetch");
       let dataEl = await page.waitForSelector("[data-testid='data']");
@@ -161,7 +161,7 @@ test.describe("api routes", () => {
       expect(await dataEl!.innerText()).toBe("harry-potter");
     });
 
-    test("should render data from API route using serverData with server.fetch", async ({
+    test("should render data from API route using serverData with server$.fetch", async ({
       page
     }) => {
       let app = new PlaywrightFixture(appFixture, page);

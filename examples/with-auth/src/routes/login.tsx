@@ -1,7 +1,7 @@
 import { useParams, useRouteData } from "@solidjs/router";
 import { Show } from "solid-js";
 import { FormError } from "solid-start/data";
-import { createServerAction, createServerData, redirect } from "solid-start/server";
+import { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { db } from "~/db";
 import { createUserSession, getUser, login, register } from "~/db/session";
 
@@ -18,7 +18,7 @@ function validatePassword(password: unknown) {
 }
 
 export function routeData() {
-  return createServerData(async (_, { request }) => {
+  return createServerData$(async (_, { request }) => {
     if (await getUser(request)) {
       throw redirect("/");
     }
@@ -30,7 +30,7 @@ export default function Login() {
   const data = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const [loggingIn, { Form }] = createServerAction(async (form: FormData) => {
+  const [loggingIn, { Form }] = createServerAction$(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");

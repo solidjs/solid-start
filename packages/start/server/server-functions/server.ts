@@ -17,7 +17,7 @@ import { ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
 export type { ApiFetchEvent } from "../../api/types";
 
-export const server: CreateServerFunction = (fn => {
+export const server$: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
@@ -189,10 +189,10 @@ export function respondWith(
 export async function handleServerRequest(event: ServerFunctionEvent) {
   const url = new URL(event.request.url);
 
-  if (server.hasHandler(url.pathname)) {
+  if (server$.hasHandler(url.pathname)) {
     try {
       let [name, args] = await parseRequest(event);
-      let handler = server.getHandler(name);
+      let handler = server$.getHandler(name);
       if (!handler) {
         throw {
           status: 404,
@@ -210,8 +210,8 @@ export async function handleServerRequest(event: ServerFunctionEvent) {
 }
 
 const handlers = new Map();
-// server.requestContext = null;
-server.createHandler = (_fn, hash) => {
+// server$.requestContext = null;
+server$.createHandler = (_fn, hash) => {
   // this is run in two ways:
   // called on the server while rendering the App, eg. in a routeData function
   // - pass args as is to the fn, they should maintain identity since they are passed by reference
@@ -271,18 +271,18 @@ server.createHandler = (_fn, hash) => {
   return fn;
 };
 
-server.registerHandler = function (route, handler) {
+server$.registerHandler = function (route, handler) {
   handlers.set(route, handler);
 };
 
-server.getHandler = function (route) {
+server$.getHandler = function (route) {
   return handlers.get(route);
 };
 
-server.hasHandler = function (route) {
+server$.hasHandler = function (route) {
   return handlers.has(route);
 };
 
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server
-server.fetch = internalFetch;
+server$.fetch = internalFetch;

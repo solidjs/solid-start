@@ -1,6 +1,6 @@
 ---
 section: api
-title: createServerAction
+title: createServerAction$
 order: 8
 subsection: Actions
 ---

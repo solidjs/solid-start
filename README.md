@@ -83,6 +83,24 @@ The reason why this is necessary is because `solid-start` creates an `index.html
 
 ## Changelog
 
+### [0.1.0-alpha.103]
+
+Changed special compiled functions like `server`, `createServerData`, `createServerAction$`, `createServerMultiAction$`. to have a postfix `$` to indicate their special compiled (hoisted behavior).
+
+Also moved the optional first argument of `createServerData$` under `key` option. While this hides a very important option it makes the signatures more similar, so it is clear it is the main (first) function that is running on the server.
+
+```js
+const data = createServerData$(
+  async pathname => {
+    let mod = mods[`./docs${pathname}.mdx`] ?? mods[`./docs${pathname}.md`];
+    return mod.getHeadings().filter(h => h.depth > 1 && h.depth <= 3);
+  },
+  {
+    key: () => path.pathname
+  }
+);
+```
+
 <!-- </summary> -->
 
 ### [0.1.0-alpha.??] - Moving towards beta
@@ -225,13 +243,13 @@ export default function Root() {
 - Now, our `root.tsx` even more closely replicates how you would be writing your `index.html`. And this was intentionally done so that we could enable an SPA mode for you that used the same code as the SSR mode without changing anything. How we do this? At build time for SPA mode, we quickly run the vite server, and make a request for your app's index and we tell our `Body` component not to render anything. So the index.html we get is the one you would have written. We then use that `index.html` as your entrypoint. You can still write your own `index.html` if you don't want to use this functionality.
 
 </details>
-<details><summary><h3>createServerResource -> createServerData</h3></summary>
+<details><summary><h3>createServerResource -> createServerData$</h3></summary>
 
 ```diff
 
 export function routeData() {
 -  return createServerResource(async (_, { request }) => {
-+  return createServerData(async (_, { request }) => {
++  return createServerData$(async (_, { request }) => {
     const user = await getUser(request);
 
     if (!user) {
@@ -243,15 +261,15 @@ export function routeData() {
 }
 ```
 
-- Renamed `createServerResource` to `createServerData`, and `createRouteResource` to `createRouteData`: We renamed `createServerResource` to `createServerData` because we were not using the `createResource` signature and that was confusing. We just return one single signal from `createServerData` instead of a tuple like `createResource` does.
+- Renamed `createServerResource` to `createServerData$`, and `createRouteResource` to `createRouteData`: We renamed `createServerResource` to `createServerData$` because we were not using the `createResource` signature and that was confusing and we needed to indicate the function was compiled. We just return one single signal from `createServerData$` instead of a tuple like `createResource` does. And we have moved the source into the options as `key`.
 
 </details>
 
-<details><summary><h3>createServerAction, createServerMultiAction</h3></summary>
+<details><summary><h3>createServerAction$, createServerMultiAction$</h3></summary>
 
 ```diff
 - const logoutAction = createServerAction(() => logout(server.request));
-+ const [logginOut, logOut] = createServerAction((_, { request }) => logout(request));
++ const [logginOut, logOut] = createServerAction$((_, { request }) => logout(request));
 
 ```
 

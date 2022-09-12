@@ -1,6 +1,6 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
 import { useLocation, useRouteData } from "solid-start";
-import { createServerAction, createServerData, createServerMultiAction, redirect } from "solid-start/server";
+import { createServerAction$, createServerData$, createServerMultiAction$, redirect } from "solid-start/server";
 import { CompleteIcon, IncompleteIcon } from "~/components/icons";
 import db from "~/db";
 import { Todo } from "~/types";
@@ -14,16 +14,16 @@ declare module "solid-js" {
 }
 const setFocus = el => setTimeout(() => el.focus());
 
-export const routeData = () => createServerData(db.getTodos, { initialValue: [] });
+export const routeData = () => createServerData$(db.getTodos, { initialValue: [] });
 
 const TodoApp = () => {
   const todos = useRouteData<typeof routeData>();
   const location = useLocation();
 
-  const [addingTodo, addTodo] = createServerMultiAction(addTodoFn);
-  const [removingTodo, removeTodo] = createServerMultiAction(removeTodoFn);
-  const [togglingAll, toggleAll] = createServerAction(toggleAllFn);
-  const [, clearCompleted] = createServerAction(clearCompletedFn);
+  const [addingTodo, addTodo] = createServerMultiAction$(addTodoFn);
+  const [removingTodo, removeTodo] = createServerMultiAction$(removeTodoFn);
+  const [togglingAll, toggleAll] = createServerAction$(toggleAllFn);
+  const [, clearCompleted] = createServerAction$(clearCompletedFn);
 
   const [editingTodoId, setEditingId] = createSignal();
   const setEditing = ({ id, pending }: { id?: number; pending?: () => boolean }) => {
@@ -73,8 +73,8 @@ const TodoApp = () => {
         <ul class="todo-list">
           <For each={filterList(todos())}>
             {todo => {
-              const [togglingTodo, toggleTodo] = createServerAction(toggleTodoFn);
-              const [editingTodo, editTodo] = createServerAction(editTodoFn);
+              const [togglingTodo, toggleTodo] = createServerAction$(toggleTodoFn);
+              const [editingTodo, editTodo] = createServerAction$(editTodoFn);
               const title = () =>
                 editingTodo.pending ? (editingTodo.input.get("title") as string) : todo.title;
               const pending = () =>

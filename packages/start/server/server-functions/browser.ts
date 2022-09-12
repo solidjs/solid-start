@@ -60,7 +60,7 @@ export async function parseResponse(request: Request, response: Response) {
   }
 }
 
-export const server: CreateServerFunction = (fn => {
+export const server$: CreateServerFunction = (fn => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
@@ -124,26 +124,26 @@ function createRequestInit(...args) {
   };
 }
 
-server.createFetcher = route => {
+server$.createFetcher = route => {
   let fetcher: any = function (this: Request, ...args: any[]) {
     if (this instanceof Request) {
     }
     const requestInit = createRequestInit(...args);
     // request body: json, formData, or string
-    return server.call(route, requestInit);
+    return server$.call(route, requestInit);
   };
 
   fetcher.url = route;
-  fetcher.fetch = (init: RequestInit) => server.call(route, init);
+  fetcher.fetch = (init: RequestInit) => server$.call(route, init);
   // fetcher.action = async (...args: any[]) => {
   //   const requestInit = createRequestInit(...args);
   //   // request body: json, formData, or string
-  //   return server.call(route, requestInit);
+  //   return server$.call(route, requestInit);
   // };
   return fetcher as ServerFunction<any, any>;
 };
 
-server.call = async function (route, init: RequestInit) {
+server$.call = async function (route, init: RequestInit) {
   const request = new Request(new URL(route, window.location.href).href, init);
 
   const response = await fetch(request);
@@ -158,7 +158,7 @@ server.call = async function (route, init: RequestInit) {
 
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server
-server.fetch = async function (route: string | URL, init: RequestInit) {
+server$.fetch = async function (route: string | URL, init: RequestInit) {
   if (route instanceof URL || route.startsWith("http")) {
     return await fetch(route, init);
   }

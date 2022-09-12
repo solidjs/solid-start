@@ -1,6 +1,6 @@
 ---
 section: api
-title: createServerData
+title: createServerData$
 order: 8
 subsection: Data
 ---

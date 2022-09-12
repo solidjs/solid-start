@@ -30,33 +30,31 @@ function transformRouteData({ types: t }) {
                 }
               },
               CallExpression(callPath, callState) {
-                if (callPath.get("callee").isIdentifier({ name: "createServerData" })) {
+                if (callPath.get("callee").isIdentifier({ name: "createServerData$" })) {
                   let args = callPath.node.arguments;
 
                   // need to handle more cases assumes inline options object
-                  if (args.length === 1 || t.isObjectExpression(args[1])) {
-                    args[0] = t.callExpression(t.identifier("server"), [args[0]]);
-                  } else args[1] = t.callExpression(t.identifier("server"), [args[1]]);
+                  args[0] = t.callExpression(t.identifier("server$"), [args[0]]);
                   callPath.replaceWith(
                     t.callExpression(t.identifier("createRouteData"), callPath.node.arguments)
                   );
                   callState.resourceRequired = true;
                 }
 
-                if (callPath.get("callee").isIdentifier({ name: "createServerAction" })) {
+                if (callPath.get("callee").isIdentifier({ name: "createServerAction$" })) {
                   let args = callPath.node.arguments;
 
-                  args[0] = t.callExpression(t.identifier("server"), [args[0]]);
+                  args[0] = t.callExpression(t.identifier("server$"), [args[0]]);
                   callPath.replaceWith(
                     t.callExpression(t.identifier("createRouteAction"), callPath.node.arguments)
                   );
                   callState.actionRequired = true;
                 }
 
-                if (callPath.get("callee").isIdentifier({ name: "createServerMultiAction" })) {
+                if (callPath.get("callee").isIdentifier({ name: "createServerMultiAction$" })) {
                   let args = callPath.node.arguments;
 
-                  args[0] = t.callExpression(t.identifier("server"), [args[0]]);
+                  args[0] = t.callExpression(t.identifier("server$"), [args[0]]);
                   callPath.replaceWith(
                     t.callExpression(t.identifier("createRouteMultiAction"), callPath.node.arguments)
                   );
@@ -71,7 +69,7 @@ function transformRouteData({ types: t }) {
             path.unshiftContainer(
               "body",
               t.importDeclaration(
-                [t.importDefaultSpecifier(t.identifier("server"))],
+                [t.importDefaultSpecifier(t.identifier("server$"))],
                 t.stringLiteral("solid-start/server")
               )
             );

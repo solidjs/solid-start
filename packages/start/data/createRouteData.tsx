@@ -1,4 +1,4 @@
-import type { ResourceSource, Signal } from "solid-js";
+import type { Signal } from "solid-js";
 import {
   createResource,
   onCleanup,
@@ -17,46 +17,28 @@ import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";
 
 interface RouteDataEvent extends ServerFunctionEvent {}
 
-type RouteResourceSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
+type RouteDataSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
 
-type RouteResourceFetcher<S, T> = (source: S, event: RouteDataEvent) => T | Promise<T>;
+type RouteDataFetcher<S, T> = (source: S, event: RouteDataEvent) => T | Promise<T>;
+
+type RouteDataOptions<T, S> = ResourceOptions<T> & {
+  key?: RouteDataSource<S>;
+};
 
 const resources = new Set<(k: any) => void>();
 
 export function createRouteData<T, S = true>(
-  fetcher: RouteResourceFetcher<S, T>,
-  options?: ResourceOptions<undefined>
+  fetcher: RouteDataFetcher<S, T>,
+  options?: RouteDataOptions<undefined, S>
 ): Resource<T | undefined>;
 export function createRouteData<T, S = true>(
-  fetcher: RouteResourceFetcher<S, T>,
-  options: ResourceOptions<T>
+  fetcher: RouteDataFetcher<S, T>,
+  options: RouteDataOptions<T, S>
 ): Resource<T>;
 export function createRouteData<T, S>(
-  source: RouteResourceSource<S>,
-  fetcher: RouteResourceFetcher<S, T>,
-  options?: ResourceOptions<undefined>
-): Resource<T | undefined>;
-export function createRouteData<T, S>(
-  source: RouteResourceSource<S>,
-  fetcher: RouteResourceFetcher<S, T>,
-  options: ResourceOptions<T>
-): Resource<T>;
-export function createRouteData<T, S>(
-  source: RouteResourceSource<S> | RouteResourceFetcher<S, T>,
-  fetcher?: RouteResourceFetcher<S, T> | ResourceOptions<T> | ResourceOptions<undefined>,
-  options?: ResourceOptions<T> | ResourceOptions<undefined>
+  fetcher?: RouteDataFetcher<S, T>,
+  options: RouteDataOptions<T, S> | RouteDataOptions<undefined, S> = {}
 ): Resource<T> | Resource<T | undefined> {
-  if (arguments.length === 2) {
-    if (typeof fetcher === "object") {
-      options = fetcher as ResourceOptions<T> | ResourceOptions<undefined>;
-      fetcher = source as RouteResourceFetcher<S, T>;
-      source = true as ResourceSource<S>;
-    }
-  } else if (arguments.length === 1) {
-    fetcher = source as RouteResourceFetcher<S, T>;
-    source = true as ResourceSource<S>;
-  }
-
   const navigate = useNavigate();
   const pageEvent = useContext(ServerContext);
 
@@ -83,46 +65,51 @@ export function createRouteData<T, S>(
     }
   }
 
-  const [resource, { refetch }] = createResource<T, S>(
-    source as RouteResourceSource<S>,
-    async (key, info) => {
-      try {
-        if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
-          return info.value;
-        }
-
-        let event = pageEvent as RouteDataEvent;
-        if (isServer) {
-          event = Object.freeze({
-            request: pageEvent.request,
-            env: pageEvent.env,
-            $type: FETCH_EVENT,
-            fetch: pageEvent.fetch
-          });
-        }
-
-        let response = await (fetcher as any).call(event, key, event);
-        if (response instanceof Response) {
-          if (isServer) {
-            handleResponse(response);
-          } else {
-            setTimeout(() => handleResponse(response), 0);
-          }
-        }
-        return response;
-      } catch (e) {
-        if (e instanceof Response) {
-          if (isServer) {
-            handleResponse(e);
-          } else {
-            setTimeout(() => handleResponse(e), 0);
-          }
-          return e;
-        }
-        throw e;
+  const resourceFetcher = async (key: S, info) => {
+    try {
+      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
+        return info.value;
       }
-    },
-    { storage: createDeepSignal, ...options }
+
+      let event = pageEvent as RouteDataEvent;
+      if (isServer) {
+        event = Object.freeze({
+          request: pageEvent.request,
+          env: pageEvent.env,
+          $type: FETCH_EVENT,
+          fetch: pageEvent.fetch
+        });
+      }
+
+      let response = await (fetcher as any).call(event, key, event);
+      if (response instanceof Response) {
+        if (isServer) {
+          handleResponse(response);
+        } else {
+          setTimeout(() => handleResponse(response), 0);
+        }
+      }
+      return response;
+    } catch (e) {
+      if (e instanceof Response) {
+        if (isServer) {
+          handleResponse(e);
+        } else {
+          setTimeout(() => handleResponse(e), 0);
+        }
+        return e;
+      }
+      throw e;
+    }
+  };
+
+  const [resource, { refetch }] = createResource<T, S>(
+    (options.key || true) as RouteDataSource<S>,
+    resourceFetcher,
+    {
+      storage: createDeepSignal,
+      ...options
+    }
   );
 
   resources.add(refetch);

@@ -81,11 +81,11 @@ test.describe("meta", () => {
           `,
           "src/routes/title-from-route-data.tsx": js`
             import { Title } from 'solid-start';
-            import { createServerData } from 'solid-start/server';
+            import { createServerData$ } from 'solid-start/server';
             import { useRouteData } from "@solidjs/router";
 
             export function routeData() {
-              return createServerData(async () => "Title from route data");
+              return createServerData$(async () => "Title from route data");
             }
 
             export default function TitleFromData() {
@@ -184,11 +184,11 @@ test.describe("meta", () => {
   //         `,
   //         "src/routes/title-from-route-data.tsx": js`
   //           import { Title } from 'solid-start';
-  //           import { createServerData } from 'solid-start/server';
+  //           import { createServerData$ } from 'solid-start/server';
   //           import { useRouteData } from "@solidjs/router";
 
   //           export function routeData() {
-  //             return createServerData(async () => "Title from route data", {
+  //             return createServerData$(async () => "Title from route data", {
   //               deferStream: true
   //             });
   //           }

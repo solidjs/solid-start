@@ -1,6 +1,6 @@
 import { createEffect, createSignal, For, onCleanup } from "solid-js";
 import { useParams, useRouteData } from "solid-start";
-import server, { createServerAction, createServerData, redirect } from "solid-start/server";
+import server$, { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { createWebSocketServer } from "solid-start/websocket";
 import { getUser, logout } from "~/session";
 
@@ -12,7 +12,7 @@ interface User {
 }
 
 const room = createWebSocketServer(
-  server(function (webSocket, { durableObject }) {
+  server$(function (webSocket, { durableObject }) {
     let object = durableObject as { users: Map<string, User>; pings: Map<string, number> };
     if (!object.users) {
       object.users = new Map();
@@ -75,7 +75,7 @@ const room = createWebSocketServer(
 );
 
 export function routeData() {
-  return createServerData(async (_, { request, env }) => {
+  return createServerData$(async (_, { request, env }) => {
     const user = await getUser(request);
 
     if (!user) {
@@ -90,7 +90,7 @@ export default function Home() {
   const user = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const logoutAction = createServerAction((_, { request }) => logout(request));
+  const logoutAction = createServerAction$((_, { request }) => logout(request));
 
   const [users, setUsers] = createSignal([]);
 

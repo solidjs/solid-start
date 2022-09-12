@@ -1,5 +1,5 @@
 import { createEffect, createSignal, onCleanup } from "solid-js";
-import server, { eventStream } from "solid-start/server";
+import server$, { eventStream } from "solid-start/server";
 
 function createEventStream({ url }, onMessage: (ev: MessageEvent) => void) {
   createEffect(() => {
@@ -16,7 +16,7 @@ function createEventStream({ url }, onMessage: (ev: MessageEvent) => void) {
 export default function Page() {
   let [state, setState] = createSignal("test data");
   createEventStream(
-    server(async function () {
+    server$(async function () {
       eventStream(this.request, send => {
         send("chat", "Hello world");
         setTimeout(() => {

@@ -39,12 +39,12 @@ test.describe("external redirect", () => {
           }
         `,
         "src/routes/redirect-data.jsx": js`
-          import { createServerData } from 'solid-start/server';
+          import { createServerData$ } from 'solid-start/server';
           import { redirect } from 'solid-start/server';
           import { useRouteData } from "@solidjs/router";
 
           export function routeData() {
-            return createServerData(async () => redirect('https://hogwarts.deno.dev/callback'));
+            return createServerData$(async () => redirect('https://hogwarts.deno.dev/callback'));
 
           }
 
@@ -55,12 +55,12 @@ test.describe("external redirect", () => {
           }
         `,
         "src/routes/throw-redirect-data.jsx": js`
-          import { createServerData } from 'solid-start/server';
+          import { createServerData$ } from 'solid-start/server';
           import { redirect } from 'solid-start/server';
           import { useRouteData } from "@solidjs/router";
 
           export function routeData() {
-            return createServerData(async () => {
+            return createServerData$(async () => {
               throw redirect('https://hogwarts.deno.dev/callback')
             });
 
@@ -73,14 +73,14 @@ test.describe("external redirect", () => {
           }
         `,
         "src/routes/redirect-action.jsx": js`
-          import { createServerAction, redirect } from "solid-start/server";
+          import { createServerAction$, redirect } from "solid-start/server";
 
           export default function Page() {
-            const [, { Form: ExternalForm }] = createServerAction(async () =>
+            const [, { Form: ExternalForm }] = createServerAction$(async () =>
               redirect("https://hogwarts.deno.dev/callback")
             );
           
-            const [, { Form: InternalForm }] = createServerAction(async () => redirect("/redirected"));
+            const [, { Form: InternalForm }] = createServerAction$(async () => redirect("/redirected"));
             return (
               <div>
                 <ExternalForm>
@@ -98,14 +98,14 @@ test.describe("external redirect", () => {
           }
         `,
         "src/routes/throw-redirect-action.jsx": js`
-          import { createServerAction, redirect } from "solid-start/server";
+          import { createServerAction$, redirect } from "solid-start/server";
 
           export default function Page() {
-            const [, { Form: ExternalForm }] = createServerAction(async () => {
+            const [, { Form: ExternalForm }] = createServerAction$(async () => {
               throw redirect("https://hogwarts.deno.dev/callback")
             });
           
-            const [, { Form: InternalForm }] = createServerAction(async () => {
+            const [, { Form: InternalForm }] = createServerAction$(async () => {
               throw redirect("/redirected")
             });
             return (

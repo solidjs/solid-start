@@ -1,6 +1,6 @@
 // All credit for this work goes to the amazing Next.js team.
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
-// This is adapted to work with any server() calls and transpile it into multiple api function for a file.
+// This is adapted to work with any server$() calls and transpile it into multiple api function for a file.
 
 import crypto from "crypto";
 import nodePath from "path";
@@ -107,7 +107,7 @@ function transformServer({ types: t, template }) {
                 }
               },
               CallExpression: path => {
-                if (path.node.callee.type === "Identifier" && path.node.callee.name === "server") {
+                if (path.node.callee.type === "Identifier" && path.node.callee.name === "server$") {
                   const serverFn = path.get("arguments")[0];
                   let program = path.findParent(p => t.isProgram(p));
                   let statement = path.findParent(p => program.get("body").includes(p));
@@ -124,7 +124,7 @@ function transformServer({ types: t, template }) {
                   serverFn.traverse({
                     MemberExpression(path) {
                       let obj = path.get("object");
-                      if (obj.node.type === "Identifier" && obj.node.name === "server") {
+                      if (obj.node.type === "Identifier" && obj.node.name === "server$") {
                         obj.replaceWith(t.identifier("$$ctx"));
                         return;
                       }
@@ -175,8 +175,8 @@ function transformServer({ types: t, template }) {
                   if (state.opts.ssr) {
                     statement.insertBefore(
                       template(`
-                      const $$server_module${serverIndex} = server.createHandler(%%source%%, "${route}");
-                      server.registerHandler("${route}", $$server_module${serverIndex});
+                      const $$server_module${serverIndex} = server$.createHandler(%%source%%, "${route}");
+                      server$.registerHandler("${route}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
                       })
@@ -187,10 +187,10 @@ function transformServer({ types: t, template }) {
                         `
                         ${
                           process.env.TEST_ENV === "client"
-                            ? `server.registerHandler("${route}", server.createHandler(%%source%%, "${route}"));`
+                            ? `server$.registerHandler("${route}", server$.createHandler(%%source%%, "${route}"));`
                             : ``
                         }
-                        const $$server_module${serverIndex} = server.createFetcher("${route}");`,
+                        const $$server_module${serverIndex} = server$.createFetcher("${route}");`,
                         {
                           syntacticPlaceholders: true
                         }

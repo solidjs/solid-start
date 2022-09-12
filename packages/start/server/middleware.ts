@@ -1,14 +1,14 @@
 import { internalFetch } from "../api/internalFetch";
 import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
 import { ContentTypeHeader, XSolidStartContentTypeHeader, XSolidStartOrigin } from "./responses";
-import { handleServerRequest, server } from "./server-functions/server";
+import { handleServerRequest, server$ } from "./server-functions/server";
 import { FetchEvent, FETCH_EVENT } from "./types";
 
 export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
   return async (event: FetchEvent) => {
     const url = new URL(event.request.url);
 
-    if (server.hasHandler(url.pathname)) {
+    if (server$.hasHandler(url.pathname)) {
       let contentType = event.request.headers.get(ContentTypeHeader);
       let origin = event.request.headers.get(XSolidStartOrigin);
 
