@@ -37,7 +37,7 @@
     "lerna": "^5.5.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.79.0",
-    "solid-js": "^1.5.4",
+    "solid-js": "^1.5.5",
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:0.1.0-alpha.103",
     "solid-start-mdx": "workspace:0.1.0-alpha.103",
