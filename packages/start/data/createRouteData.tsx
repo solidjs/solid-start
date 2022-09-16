@@ -10,7 +10,7 @@ import {
 import type { ReconcileOptions } from "solid-js/store";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
-import { useNavigate } from "../index";
+import { useNavigate } from "../router";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
 import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";

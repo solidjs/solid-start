@@ -3,7 +3,7 @@ import debug from "debug";
 import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { loadEnv, normalizePath } from "vite";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
@@ -159,6 +159,10 @@ function solidStartFileSystemRouter(options) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
 
+      const url = pathToFileURL(id);
+      url.searchParams.delete("v");
+      id = fileURLToPath(url);
+
       const babelOptions =
         fn =>
         (...args) => {
@@ -187,11 +191,19 @@ function solidStartFileSystemRouter(options) {
           plugins: [
             [
               routeResource,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
             ],
             [
               babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
             ]
           ]
         }));
@@ -205,11 +217,19 @@ function solidStartFileSystemRouter(options) {
             plugins: [
               [
                 routeResource,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ]
             ]
           })
@@ -222,15 +242,27 @@ function solidStartFileSystemRouter(options) {
             plugins: [
               [
                 routeResource,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               [
                 routeData,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               !ssr &&
                 process.env.NODE_ENV !== "production" && [
@@ -257,7 +289,11 @@ function solidStartFileSystemRouter(options) {
               ],
               [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               [
                 routeData,
@@ -279,7 +315,11 @@ function solidStartFileSystemRouter(options) {
             plugins: [
               [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ]
             ].filter(Boolean)
           })
@@ -428,6 +468,7 @@ function solidStartConfig(options) {
         ssr: {
           noExternal: ["@solidjs/router", "@solidjs/meta", "solid-start"]
         },
+
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
@@ -448,6 +489,9 @@ function solidStartConfig(options) {
               ? options.adapter
               : options.adapter && options.adapter.name
           )
+        },
+        optimizeDeps: {
+          exclude: ["solid-start", "@solidjs/router", "@solidjs/meta"]
         },
         solidOptions: options
       };
@@ -474,7 +518,9 @@ function detectAdapter() {
   fs.readdirSync(nodeModulesPath).forEach(dir => {
     if (dir.startsWith("solid-start-")) {
       const pkg = JSON.parse(
-        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), { encoding: "utf8" })
+        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
+          encoding: "utf8"
+        })
       );
       if (pkg.solid && pkg.solid.type === "adapter") {
         adapters.push(dir);
@@ -561,11 +607,19 @@ export default function solidStart(options) {
           plugins: [
             [
               routeResource,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
             ],
             [
               babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
             ]
           ]
         })

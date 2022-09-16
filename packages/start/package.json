@@ -29,11 +29,13 @@
     "websocket",
     "bin.cjs",
     "index.tsx",
+    "router.tsx",
     "required-user-files.d.ts",
     "types.ts"
   ],
   "exports": {
     ".": "./index.tsx",
+    "./router": "./router.tsx",
     "./vite": {
       "types": "./vite/plugin.d.ts",
       "import": "./vite/plugin.js"
@@ -51,7 +53,7 @@
     "./islands/*": "./islands/*",
     "./root": "./root/index.tsx",
     "./root/*": "./root/*",
-    "./data": "./data/index.tsx",
+    "./data": "./data/index.ts",
     "./data/*": "./data/*",
     "./node/*": "./node/*",
     "./fs-router/*": "./fs-router/*",
