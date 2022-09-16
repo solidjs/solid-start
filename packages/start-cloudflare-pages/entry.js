@@ -5,7 +5,7 @@ export const onRequestGet = async ({ request, next, env }) => {
   // Handle static assets
   if (/\.\w+$/.test(request.url)) {
     let resp = await next(request);
-    if (resp.status === 200) {
+    if (resp.status === 200 || 304) {
       return resp;
     }
   }
@@ -25,7 +25,7 @@ export const onRequestHead = async ({ request, next, env }) => {
   // Handle static assets
   if (/\.\w+$/.test(request.url)) {
     let resp = await next(request);
-    if (resp.status === 200) {
+    if (resp.status === 200 || 304) {
       return resp;
     }
   }
