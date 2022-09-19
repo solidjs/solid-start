@@ -69,23 +69,27 @@ test.describe("CSS link tags", () => {
 
       files["src/root.tsx"] = js`
         // @refresh reload
-        import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
-        import { ErrorBoundary } from "solid-start/error-boundary";
+        import {
+          Body,
+          ErrorBoundary,
+          FileRoutes,
+          Head,
+          Html,
+          Routes,
+          Scripts
+        } from "solid-start";
         import { Suspense } from "solid-js";
-        import { Routes } from "@solidjs/router";
 
         import "./root.css";
 
         export default function Root() {
           return (
-            <html lang="en">
-              <head>
+            <Html lang="en">
+              <Head>
                 <meta charset="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <Meta />
-                <Links />
-              </head>
-              <body>
+              </Head>
+              <Body>
                 <ErrorBoundary>
                   <Suspense>
                     <Routes>
@@ -94,8 +98,8 @@ test.describe("CSS link tags", () => {
                   </Suspense>
                 </ErrorBoundary>
                 <Scripts />
-              </body>
-            </html>
+              </Body>
+            </Html>
           );
         }
       `;
@@ -159,7 +163,7 @@ test.describe("CSS link tags", () => {
     test("Pathless layout wildcard route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/2/3", 3);
       expectNumberOfUrlsToMatch(cssUrls, "__auth", 1);
-      expectNumberOfUrlsToMatch(cssUrls, "[...wild]", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "_...wild_", 1);
     });
     test("Index of nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested", 3);
@@ -173,12 +177,12 @@ test.describe("CSS link tags", () => {
     });
     test("Index of dynamic nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/__auth", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "[param]", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
       expectNumberOfUrlsToMatch(cssUrls, "index", 1);
     });
     test("Non-index of dynamic nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/__auth/non-index", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "[param]", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
       expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
     });
     test("Pathless layout inside a nested route", async () => {

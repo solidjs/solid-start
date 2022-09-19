@@ -1,3 +1,4 @@
+import type { JSX } from "solid-js";
 import { children, ComponentProps } from "solid-js";
 import { insert, spread, ssrElement } from "solid-js/web";
 import Links from "./Links";
@@ -8,7 +9,7 @@ export function Html(props: ComponentProps<"html">) {
   if (import.meta.env.MPA) {
   }
   if (import.meta.env.SSR) {
-    return ssrElement("html", props, undefined, false);
+    return ssrElement("html", props, undefined, false) as unknown as JSX.Element;
   } else {
     spread(document.documentElement, props, false, true);
     return props.children;
@@ -28,7 +29,7 @@ export function Head(props: ComponentProps<"head">) {
         </>
       ),
       false
-    );
+    ) as unknown as JSX.Element;
   } else {
     spread(document.head, props, false, true);
     return props.children;
@@ -37,7 +38,7 @@ export function Head(props: ComponentProps<"head">) {
 
 export function Body(props: ComponentProps<"body">) {
   if (import.meta.env.SSR) {
-    return ssrElement("body", props, () => import.meta.env.START_SSR ? props.children : <Scripts />, false);
+    return ssrElement("body", props, () => import.meta.env.START_SSR ? props.children : <Scripts />, false) as unknown as JSX.Element;
   } else {
     if (import.meta.env.START_SSR) {
       let child = children(() => props.children);
