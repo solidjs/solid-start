@@ -7,7 +7,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "solid-start-cloudflare-workers": "workspace:0.1.0-alpha.103",
+    "solid-start-cloudflare-workers": "workspace:0.1.0-alpha.104",
     "typescript": "^4.8.3",
     "vite": "^3.1.0"
   },
@@ -16,7 +16,7 @@
     "@cloudflare/workers-types": "^3.16.0",
     "@solidjs/router": "^0.4.3",
     "solid-js": "^1.5.4",
-    "solid-start": "workspace:0.1.0-alpha.103",
+    "solid-start": "workspace:0.1.0-alpha.104",
     "undici": "^5.10.0"
   },
   "engines": {
