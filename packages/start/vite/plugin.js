@@ -466,7 +466,7 @@ function solidStartConfig(options) {
         },
 
         ssr: {
-          noExternal: ["@solidjs/router", "@solidjs/meta", "solid-start"]
+          noExternal: ["solid-start"]
         },
 
         define: {
