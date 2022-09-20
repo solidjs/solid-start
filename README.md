@@ -83,6 +83,10 @@ The reason why this is necessary is because `solid-start` creates an `index.html
 
 ## Changelog
 
+### [0.1.0-alpha.104]
+
+Changed grouped routes from `__name` syntax to `(name)`.
+
 ### [0.1.0-alpha.103]
 
 Changed special compiled functions like `server`, `createServerData`, `createServerAction$`, `createServerMultiAction$`. to have a postfix `$` to indicate their special compiled (hoisted behavior).
