@@ -11,9 +11,7 @@
   },
   "private": true,
   "scripts": {
-    "clean": "npm run clean:artifacts && npm run clean:packages && npm run clean:root",
-    "clean:artifacts": "lerna run clean --parallel",
-    "clean:packages": "lerna clean --yes",
+    "clean": "pnpm run clean:root",
     "clean:root": "rimraf node_modules",
     "publish:release": "lerna publish",
     "docs:dev": "solid-start dev",
