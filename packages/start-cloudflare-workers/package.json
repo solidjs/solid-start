@@ -1,6 +1,6 @@
 {
   "name": "solid-start-cloudflare-workers",
-  "version": "0.1.0-alpha.104",
+  "version": "0.1.0-alpha.105",
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.7.16",
-    "solid-start": "workspace:0.1.0-alpha.104",
+    "solid-start": "workspace:0.1.0-alpha.105",
     "vite": "^3.1.0"
   },
   "peerDependencies": {
