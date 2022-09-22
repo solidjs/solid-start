@@ -6,13 +6,11 @@ Everything you need to build a Solid project, powered by [`solid-start`](https:/
 
 ```bash
 # create a new project in the current directory
-npm init solid@next
+npm init solis
 
 # create a new project in my-app
-npm init solid@next my-app
+npm init solid my-app
 ```
-
-> Note: the `@next` is temporary
 
 ## Developing
 

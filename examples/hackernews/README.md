@@ -3,10 +3,8 @@
 Hackernews example powered by [`solid-start`](https://github.com/ryansolid/solid-start/tree/master/packages/solid-start);
 
 ```bash
-npm init solid@next -- --template hackernews
+npm init solid -- --template hackernews
 ```
-
-> Note: the `@next` is temporary
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/solidjs/solid-start/tree/main/examples/hackernews)
 
