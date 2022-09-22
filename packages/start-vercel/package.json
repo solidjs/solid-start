@@ -1,6 +1,6 @@
 {
   "name": "solid-start-vercel",
-  "version": "0.1.0-alpha.105",
+  "version": "0.1.0",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -14,7 +14,7 @@
     "terser": "^5.15.0"
   },
   "devDependencies": {
-    "solid-start": "workspace:0.1.0-alpha.105",
+    "solid-start": "workspace:*",
     "vite": "^3.1.0"
   },
   "peerDependencies": {
