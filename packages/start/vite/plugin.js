@@ -161,7 +161,7 @@ function solidStartFileSystemRouter(options) {
 
       const url = pathToFileURL(id);
       url.searchParams.delete("v");
-      id = fileURLToPath(url);
+      id = fileURLToPath(url).replace(/\\/g, "/");
 
       const babelOptions =
         fn =>
