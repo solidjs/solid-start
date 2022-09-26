@@ -49,24 +49,32 @@ export default function ({ edge } = {}) {
 
       const renderEntrypoint = "index.js";
       const renderFuncDir = join(outputDir, "functions/render.func");
-      await bundle.write(edge ? {
-        format: "esm",
-        file: join(renderFuncDir, renderEntrypoint)
-      } : {
-        format: "cjs",
-        file: join(renderFuncDir, renderEntrypoint),
-        exports: "auto"
-      });
+      await bundle.write(
+        edge
+          ? {
+              format: "esm",
+              file: join(renderFuncDir, renderEntrypoint),
+              inlineDynamicImports: true
+            }
+          : {
+              format: "cjs",
+              file: join(renderFuncDir, renderEntrypoint),
+              exports: "auto",
+              inlineDynamicImports: true
+            }
+      );
       await bundle.close();
 
-      const renderConfig = edge ? {
-        runtime: "edge" ,
-        entrypoint: renderEntrypoint
-      } : {
-        runtime: "nodejs16.x",
-        handler: renderEntrypoint,
-        "launcherType": "Nodejs"
-      };
+      const renderConfig = edge
+        ? {
+            runtime: "edge",
+            entrypoint: renderEntrypoint
+          }
+        : {
+            runtime: "nodejs16.x",
+            handler: renderEntrypoint,
+            launcherType: "Nodejs"
+          };
       writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));
 
       // Routing Config

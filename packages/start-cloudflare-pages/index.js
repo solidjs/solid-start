@@ -57,6 +57,7 @@ export default function () {
       // or write the bundle to disk
       await bundle.write({
         format: "esm",
+        inlineDynamicImports: true,
         file: join(config.root, "functions", "[[path]].js")
       });
 
