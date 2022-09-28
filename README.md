@@ -46,7 +46,7 @@ Run `pnpm install` to install all the dependencies for the packages and examples
 
 </summary>
 
-If you are using Solid Start within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for yarn), you must include `solid-start` within the optional `"nohoist"` workspaces property.
+If you are using Solid Start within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for yarn), you must include `solid-start` within the optional `"nohoist"` (for yarn v2 or higher, see further down for instructions) workspaces property.
 
 - _In the following, "workspace root" refers to the root of your repository while "project root" refers to the root of a child package within your repository_
 
@@ -78,6 +78,19 @@ If specifying `"nohoist"` options for a specific package using `solid-start`:
 Regardless of where you specify the nohoist option, you also need to include `solid-start` as a devDependency in the child `package.json`.
 
 The reason why this is necessary is because `solid-start` creates an `index.html` file within your project which expects to load a script located in `/node_modules/solid-start/runtime/entry.jsx` (where `/` is the path of your project root). By default, if you hoist the `solid-start` dependency into the workspace root then that script will not be available within the package's `node_modules` folder.
+
+**Yarn v2 or higher**
+
+The `nohoist` option is no longer available in Yarn v2+. In this case, we can use the `installConfig` property in the `package.json` (either workspace package or a specific project package) to make sure our deps are not hoisted.
+
+```jsonc
+// in project root of a workspace child
+{
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  }
+}
+```
 
 </details>
 
