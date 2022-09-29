@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -97,7 +97,7 @@
     "terser": "^5.15.0",
     "undici": "^5.10.0",
     "vite-plugin-inspect": "^0.6.1",
-    "vite-plugin-solid": "^2.3.6",
+    "vite-plugin-solid": "^2.3.9",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
