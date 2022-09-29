@@ -30,9 +30,24 @@ function transformRouteData({ types: t }) {
                 }
               },
               CallExpression(callPath, callState) {
+                function moveEventParam(fn) {
+                  if (fn.params.length >= 2) {
+                    if (!t.isBlockStatement(fn.body)) {
+                      fn.body = t.blockStatement([t.returnStatement(fn.body)]);
+                    }
+                    fn.body.body.unshift(
+                      t.variableDeclaration("let", [
+                        t.variableDeclarator(fn.params[1], t.thisExpression())
+                      ])
+                    );
+                    fn.params = [fn.params[0]];
+                  }
+                }
+
                 if (callPath.get("callee").isIdentifier({ name: "createServerData$" })) {
                   let args = callPath.node.arguments;
 
+                  moveEventParam(args[0]);
                   // need to handle more cases assumes inline options object
                   args[0] = t.callExpression(t.identifier("server$"), [args[0]]);
                   callPath.replaceWith(
@@ -44,6 +59,7 @@ function transformRouteData({ types: t }) {
                 if (callPath.get("callee").isIdentifier({ name: "createServerAction$" })) {
                   let args = callPath.node.arguments;
 
+                  moveEventParam(args[0]);
                   args[0] = t.callExpression(t.identifier("server$"), [args[0]]);
                   callPath.replaceWith(
                     t.callExpression(t.identifier("createRouteAction"), callPath.node.arguments)
@@ -54,9 +70,13 @@ function transformRouteData({ types: t }) {
                 if (callPath.get("callee").isIdentifier({ name: "createServerMultiAction$" })) {
                   let args = callPath.node.arguments;
 
+                  moveEventParam(args[0]);
                   args[0] = t.callExpression(t.identifier("server$"), [args[0]]);
                   callPath.replaceWith(
-                    t.callExpression(t.identifier("createRouteMultiAction"), callPath.node.arguments)
+                    t.callExpression(
+                      t.identifier("createRouteMultiAction"),
+                      callPath.node.arguments
+                    )
                   );
                   callState.actionRequired = true;
                 }
