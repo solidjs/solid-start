@@ -257,7 +257,7 @@ test.describe("actions", () => {
     let app = new PlaywrightFixture(appFixture, page);
     await app.goto("/server-file-action", true);
 
-    // check non-file application/form-data input
+    // check that non-file multipart/form-data has the right value
     await page.click("input#submit");
     await page.waitForSelector("#error,#result", {state: "visible"});
     expect(await app.getHtml("#error,#result")).toBe(prettyHtml(`<p id="error">other had wrong value</p>`));
