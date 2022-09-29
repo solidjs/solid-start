@@ -90,7 +90,48 @@ test.describe("actions", () => {
           export default function Route() {
             return <Action />
           }
-        `
+        `,
+        "src/routes/server-file-action.tsx": js`
+          import { createServerAction$, ServerError } from 'solid-start/server';
+          import { Buffer } from 'node:buffer';
+
+          async function verifyFileContent(file, expectedName, expectedContent) {
+            if (file.name !== expectedName) {
+              throw new ServerError("file had wrong name " + file.name + "; expected " + expectedName);
+            }
+            let decoded = Buffer.from(await file.arrayBuffer()).toString("utf8");
+            if (decoded !== expectedContent) {
+              throw new ServerError("file " + expectedName + " had wrong content " + decoded);
+            }
+          }
+          export default function Index() {
+            const [submission, submit] = createServerAction$(async (formData) => {
+              if (formData.get("other") !== "otherval") {
+                throw new ServerError("other had wrong value " + formData.get("other"));
+              }
+              const files = formData.getAll("files");
+              if (files.length < 2) {
+                throw new ServerError("too few files");
+              }
+              await verifyFileContent(files[0], "a.txt", "a");
+              await verifyFileContent(files[1], "b.txt", "b");
+              return "success";
+            });
+
+            return (
+              <submit.Form enctype="multipart/form-data">
+                <input type="file" name="files" multiple={true}/>
+                <br/>
+                <input name="other"/>
+                <br/>
+                <input type="submit" id="submit"/>
+                <Show when={submission.result}><p id="result">{submission.result}</p></Show>
+                <Show when={submission.pending}><p id="pending">Pending</p></Show>
+                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
+              </submit.Form>
+            );
+          }
+        `,
       }
     });
 
@@ -210,5 +251,38 @@ test.describe("actions", () => {
     expect(await page.isVisible("#pending")).toBe(false);
     expect(await page.isVisible("#result")).toBe(false);
     expect(await page.isVisible("#error")).toBe(false);
+  });
+
+  test("server-side action with files", async ({ page }) => {
+    let app = new PlaywrightFixture(appFixture, page);
+    await app.goto("/server-file-action", true);
+
+    // check non-file application/form-data input
+    await page.click("input#submit");
+    await page.waitForSelector("#error,#result", {state: "visible"});
+    expect(await app.getHtml("#error,#result")).toBe(prettyHtml(`<p id="error">other had wrong value</p>`));
+
+    await page.type("input[name='other']", "otherval");
+    await page.click("input#submit");
+    await page.waitForSelector("#error,#result", {state: "visible"});
+    expect(await app.getHtml("#error,#result")).toBe(prettyHtml(`<p id="error">too few files</p>`));
+
+    await page.setInputFiles("input[name='files']", [
+      {name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('garbled')},
+      {name: 'b.txt', mimeType: 'text/plain', buffer: Buffer.from('garbled')},
+    ]);
+    await page.click("input#submit");
+    await page.waitForSelector("#error,#result", {state: "visible"});
+    expect(await app.getHtml("#error,#result"))
+      .toBe(prettyHtml(`<p id="error">file a.txt had wrong content garbled</p>`));
+
+    await page.setInputFiles("input[name='files']", [
+      {name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('a')},
+      {name: 'b.txt', mimeType: 'text/plain', buffer: Buffer.from('b')},
+    ]);
+    await page.click("input#submit");
+    await page.waitForSelector("#error,#result", {state: "visible"});
+    expect(await app.getHtml("#error,#result")).toBe(prettyHtml(`<p id="result">success</p>`));
+
   });
 });

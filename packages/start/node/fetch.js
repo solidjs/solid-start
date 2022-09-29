@@ -1,5 +1,5 @@
 import multipart from "parse-multipart-data";
-import { FormData, Headers, Request as BaseNodeRequest } from "undici";
+import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
 
 function nodeToWeb(nodeStream) {
   var destroyed = false;
@@ -103,8 +103,18 @@ class NodeRequest extends BaseNodeRequest {
         this.headers.get("content-type").replace("multipart/form-data; boundary=", "")
       );
       const form = new FormData();
-      input.forEach(({ name, data }) => {
-        form.set(name, data);
+      input.forEach(({ name, data, filename, type }) => {
+        // file fields have Content-Type set,
+        // whereas non-file fields must not
+        // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#multipart-form-data
+        const isFile = type !== undefined;
+        if (isFile) {
+          const value = new File([data], filename);
+          form.append(name, value, filename);
+        } else {
+          const value = data.toString('utf-8');
+          form.append(name, value);
+        }
       });
       return form;
     }
