@@ -84,7 +84,7 @@ export default function ({ edge } = {}) {
           // Serve any matching static assets first
           { handle: "filesystem" },
           // Invoke the SSR function if not a static asset
-          edge ? { src: "/.*", middlewarePath: "render" } : { src: "/.*", dest: "/render" }
+          { src: "/.*", dest: "/render" }
         ]
       };
       writeFileSync(join(outputDir, "config.json"), JSON.stringify(outputConfig, null, 2));
