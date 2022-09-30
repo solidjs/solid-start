@@ -491,7 +491,9 @@ function solidStartConfig(options) {
           )
         },
         optimizeDeps: {
-          exclude: ["solid-start", "@solidjs/router", "@solidjs/meta"]
+          exclude: ["solid-start", "@solidjs/router", "@solidjs/meta"],
+          extensions: ["jsx", "tsx"],
+          disabled: true
         },
         solidOptions: options
       };
