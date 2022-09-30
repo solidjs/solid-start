@@ -8,9 +8,11 @@ export default function TableOfContents() {
   const data = createServerData$(
     async pathname => {
       let mod = mods[`./docs${pathname}.mdx`] ?? mods[`./docs${pathname}.md`];
+      if (!mod) return [];
       return mod.getHeadings().filter(h => h.depth > 1 && h.depth <= 3);
-    }, {
-      key: () => path.pathname,
+    },
+    {
+      key: () => path.pathname
     }
   );
 
