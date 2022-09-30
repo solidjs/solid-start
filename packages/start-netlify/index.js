@@ -42,7 +42,7 @@ export default function ({ edge } = {}) {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: edge ? ["deno", "solid"] : ["node", "solid"]
           }),
           common()
         ]

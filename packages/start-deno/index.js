@@ -49,7 +49,7 @@ export default function () {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: ["deno", "solid"]
           }),
           common()
         ]

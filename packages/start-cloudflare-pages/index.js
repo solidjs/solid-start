@@ -3,10 +3,10 @@ import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
 import { copyFileSync } from "fs";
+import { Miniflare } from "miniflare";
 import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-import { Miniflare } from "miniflare";
 import { createServer } from "./dev-server.js";
 export default function (miniflareOptions) {
   return {
@@ -143,7 +143,7 @@ export default function (miniflareOptions) {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: ["worker", "solid"]
           }),
           common()
         ]

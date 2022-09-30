@@ -157,7 +157,7 @@ export default function (miniflareOptions = {}) {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: ["worker", "solid"]
           }),
           common()
         ]

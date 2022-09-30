@@ -17,7 +17,7 @@ importers:
       lerna: ^5.5.1
       rimraf: ^3.0.2
       rollup: ^2.79.0
-      solid-js: ^1.5.5
+      solid-js: ^1.5.7
       solid-mdx: ^0.0.6
       solid-start: workspace:*
       solid-start-mdx: workspace:*
@@ -33,8 +33,8 @@ importers:
       '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.0
       '@rollup/plugin-json': 4.1.0_rollup@2.79.0
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.0
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
       '@tailwindcss/typography': 0.5.7_tailwindcss@3.1.8
       coveralls: 3.1.1
       debug: 4.3.4
@@ -42,8 +42,8 @@ importers:
       lerna: 5.5.1
       rimraf: 3.0.2
       rollup: 2.79.0
-      solid-js: 1.5.5
-      solid-mdx: 0.0.6_solid-js@1.5.5+vite@3.1.2
+      solid-js: 1.5.7
+      solid-mdx: 0.0.6_solid-js@1.5.7+vite@3.1.2
       solid-start: link:packages/start
       solid-start-mdx: link:packages/mdx
       solid-start-node: link:packages/start-node
@@ -57,16 +57,16 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.3
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
       typescript: ^4.8.3
       undici: ^5.10.0
       vite: ^3.1.0
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       undici: 5.10.0
     devDependencies:
@@ -79,7 +79,7 @@ importers:
       '@cloudflare/kv-asset-handler': ^0.1.3
       '@cloudflare/workers-types': ^3.16.0
       '@solidjs/router': ^0.4.3
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-cloudflare-workers: ^0.1.0
       typescript: ^4.8.3
@@ -88,8 +88,8 @@ importers:
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@cloudflare/workers-types': 3.16.0
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       undici: 5.10.0
     devDependencies:
@@ -101,16 +101,16 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.3
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
       typescript: ^4.8.3
       undici: ^5.10.0
       vite: ^3.1.0
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       undici: 5.10.0
     devDependencies:
@@ -123,17 +123,17 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.3
       csstype: 3.1.0
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
       typescript: ^4.8.3
       undici: ^5.10.0
       vite: ^3.1.0
     devDependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
       csstype: 3.1.0
-      solid-js: 1.5.5
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.8.3
@@ -144,16 +144,16 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.3
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
       typescript: ^4.8.3
       undici: ^5.10.0
       vite: ^3.1.0
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       undici: 5.10.0
     devDependencies:
@@ -166,7 +166,7 @@ importers:
       '@mdx-js/rollup': ^2.1.3
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.3
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-mdx: ^0.0.6
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
@@ -174,10 +174,10 @@ importers:
       undici: ^5.10.0
       vite: ^3.1.0
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
-      solid-mdx: 0.0.6_solid-js@1.5.5+vite@3.1.2
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
+      solid-mdx: 0.0.6_solid-js@1.5.7+vite@3.1.2
       solid-start: link:../../packages/start
       undici: 5.10.0
     devDependencies:
@@ -191,7 +191,7 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.3
       babel-plugin-solid-styled: ^0.6.1
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
       solid-styled: ^0.6.1
@@ -199,11 +199,11 @@ importers:
       undici: ^5.10.0
       vite: ^3.1.0
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
-      solid-styled: 0.6.1_solid-js@1.5.5
+      solid-styled: 0.6.1_solid-js@1.5.7
       undici: 5.10.0
     devDependencies:
       babel-plugin-solid-styled: 0.6.1
@@ -217,7 +217,7 @@ importers:
       '@solidjs/router': ^0.4.3
       autoprefixer: ^10.4.9
       postcss: ^8.4.16
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
       tailwindcss: ^3.1.8
@@ -225,9 +225,9 @@ importers:
       undici: ^5.10.0
       vite: ^3.1.0
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       undici: 5.10.0
     devDependencies:
@@ -245,7 +245,7 @@ importers:
       '@testing-library/jest-dom': ^5.16.5
       '@types/testing-library__jest-dom': ^5.14.5
       jsdom: ^20.0.0
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: ^0.1.0
       solid-start-node: ^0.1.0
       solid-testing-library: ^0.3.0
@@ -254,15 +254,15 @@ importers:
       vite: ^3.1.0
       vitest: ^0.20.3
     devDependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
       '@testing-library/jest-dom': 5.16.5
       '@types/testing-library__jest-dom': 5.14.5
       jsdom: 20.0.0
-      solid-js: 1.5.5
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
-      solid-testing-library: 0.3.0_solid-js@1.5.5
+      solid-testing-library: 0.3.0_solid-js@1.5.7
       typescript: 4.8.3
       undici: 5.10.0
       vite: 3.1.2
@@ -366,7 +366,7 @@ importers:
       rollup-route-manifest: ^1.0.0
       sade: ^1.8.1
       sirv: ^2.0.2
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start-cloudflare-pages: workspace:*
       solid-start-cloudflare-workers: workspace:*
       solid-start-deno: workspace:*
@@ -411,16 +411,16 @@ importers:
       terser: 5.15.0
       undici: 5.10.0
       vite-plugin-inspect: 0.6.1_vite@3.1.2
-      vite-plugin-solid: 2.3.9_solid-js@1.5.5+vite@3.1.2
+      vite-plugin-solid: 2.3.9_solid-js@1.5.7+vite@3.1.2
       wait-on: 6.0.1_debug@4.3.4
     devDependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
       '@testing-library/jest-dom': 5.16.5
       '@types/debug': 4.1.7
       '@types/wait-on': 5.3.1
       jsdom: 20.0.0
-      solid-js: 1.5.5
+      solid-js: 1.5.7
       solid-start-cloudflare-pages: link:../start-cloudflare-pages
       solid-start-cloudflare-workers: link:../start-cloudflare-workers
       solid-start-deno: link:../start-deno
@@ -428,7 +428,7 @@ importers:
       solid-start-node: link:../start-node
       solid-start-static: link:../start-static
       solid-start-vercel: link:../start-vercel
-      solid-testing-library: 0.3.0_solid-js@1.5.5
+      solid-testing-library: 0.3.0_solid-js@1.5.7
       typescript: 4.8.3
       vite: 3.1.2_terser@5.15.0
       vitest: 0.20.3_jsdom@20.0.0+terser@5.15.0
@@ -587,14 +587,14 @@ importers:
   packages/start-static:
     specifiers:
       sirv-cli: 2.0.2
-      solid-ssr: ^1.5.4
+      solid-ssr: ^1.5.7
       solid-start: workspace:*
       terser: ^5.15.0
       undici: ^5.10.0
       vite: ^3.1.0
     dependencies:
       sirv-cli: 2.0.2
-      solid-ssr: 1.5.5
+      solid-ssr: 1.5.7
     devDependencies:
       solid-start: link:../start
       terser: 5.15.0
@@ -676,7 +676,7 @@ importers:
       '@cloudflare/kv-asset-handler': ^0.1.3
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.4.3
-      solid-js: ^1.5.4
+      solid-js: ^1.5.7
       solid-start: workspace:*
       solid-start-cloudflare-pages: workspace:*
       solid-start-cloudflare-workers: workspace:*
@@ -690,9 +690,9 @@ importers:
       wrangler: ^2.0.29
     devDependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
-      '@solidjs/meta': 0.28.0_solid-js@1.5.5
-      '@solidjs/router': 0.4.3_solid-js@1.5.5
-      solid-js: 1.5.5
+      '@solidjs/meta': 0.28.0_solid-js@1.5.7
+      '@solidjs/router': 0.4.3_solid-js@1.5.7
+      solid-js: 1.5.7
       solid-start: link:../../packages/start
       solid-start-cloudflare-pages: link:../../packages/start-cloudflare-pages
       solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
@@ -3362,19 +3362,19 @@ packages:
   /@sinclair/typebox/0.24.42:
     resolution: {integrity: sha512-d+2AtrHGyWek2u2ITF0lHRIv6Tt7X0dEHW+0rP+5aDCEjC3fiN2RBjrLD0yU0at52BcZbRGxLbAtXiR0hFCjYw==}
 
-  /@solidjs/meta/0.28.0_solid-js@1.5.5:
+  /@solidjs/meta/0.28.0_solid-js@1.5.7:
     resolution: {integrity: sha512-x52VdB9RZJ1apDB/pAmf58oeJsJ0lGKFXWjnm/TE/MlENIBPg3JaW8H5v2HnGpQC0WUbgiIsDFWpLWVNBo5t6g==}
     peerDependencies:
       solid-js: '>=1.4.0'
     dependencies:
-      solid-js: 1.5.5
+      solid-js: 1.5.7
 
-  /@solidjs/router/0.4.3_solid-js@1.5.5:
+  /@solidjs/router/0.4.3_solid-js@1.5.7:
     resolution: {integrity: sha512-mYpd4HxpH/3UZjHGTr2dhvPGXu034Ktxd05CJGA6nRjRGYCgUfhCQHRdEivyqJyb4LhHyDht4ny5xmwEOkUTaQ==}
     peerDependencies:
       solid-js: ^1.3.5
     dependencies:
-      solid-js: 1.5.5
+      solid-js: 1.5.7
 
   /@tailwindcss/typography/0.5.7_tailwindcss@3.1.8:
     resolution: {integrity: sha512-JTTSTrgZfp6Ki4svhPA4mkd9nmQ/j9EfE7SbHJ1cLtthKkpW2OxsFXzSmxbhYbEkfNIyAyhle5p4SYyKRbz/jg==}
@@ -9370,8 +9370,8 @@ packages:
       smart-buffer: 4.2.0
     dev: true
 
-  /solid-js/1.5.5:
-    resolution: {integrity: sha512-5gXszD7ekhe59IyMa3+AvREJnBWVjwaeC7afL8C3UNPj5gQQCrsMs/cXwI3JRpj6D+3TESTyuQ2sY++m4cYiTg==}
+  /solid-js/1.5.7:
+    resolution: {integrity: sha512-L1UuyMuZZARAwzXo5NZDhE6yxc14aqNbVOUoGzvlcxRZo1Cm4ExhPV0diEfwDyiKG/igqNNLkNurHkXiI5sVEg==}
     dependencies:
       csstype: 3.1.1
 
@@ -9382,16 +9382,16 @@ packages:
       vite: '*'
     dev: false
 
-  /solid-mdx/0.0.6_solid-js@1.5.5+vite@3.1.2:
+  /solid-mdx/0.0.6_solid-js@1.5.7+vite@3.1.2:
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
     dependencies:
-      solid-js: 1.5.5
+      solid-js: 1.5.7
       vite: 3.1.2
 
-  /solid-refresh/0.4.1_solid-js@1.5.5:
+  /solid-refresh/0.4.1_solid-js@1.5.7:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}
     peerDependencies:
       solid-js: ^1.3
@@ -9399,30 +9399,30 @@ packages:
       '@babel/generator': 7.19.0
       '@babel/helper-module-imports': 7.18.6
       '@babel/types': 7.19.0
-      solid-js: 1.5.5
+      solid-js: 1.5.7
     dev: false
 
-  /solid-ssr/1.5.5:
-    resolution: {integrity: sha512-qy2owYaMnvsIkFKvGE8HVxWBCFu6OzcjTWdaCuJg4jPmxDH88TVwnY5phtgs47VV/F6AoOz8ERPyOGOzt6oEDw==}
+  /solid-ssr/1.5.7:
+    resolution: {integrity: sha512-/dX5JqGirQEecBpy6BcQ3pmLR+MqHX9UR+BndHcnpb2uGt/3g4iZtgUkrwAau/aolokFLZb8wXAzRlixvimY5g==}
     dev: false
 
-  /solid-styled/0.6.1_solid-js@1.5.5:
+  /solid-styled/0.6.1_solid-js@1.5.7:
     resolution: {integrity: sha512-THDGW/FUZNYdD2z78CLsNMH5XPNUxOap+q2Apxs3N3zOqzeH2e2ZtbC7iaIC/pVjuqM+6pFhvlI0c1Q/xOnJHA==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.2
     dependencies:
-      solid-js: 1.5.5
+      solid-js: 1.5.7
     dev: false
 
-  /solid-testing-library/0.3.0_solid-js@1.5.5:
+  /solid-testing-library/0.3.0_solid-js@1.5.7:
     resolution: {integrity: sha512-6NWVbySNVzyReBm2N6p3eF8bzxRZXHZTAmPix4vFWYol16QWVjNQsEUxvr+ZOutb0yuMZmNuGx3b6WIJYmjwMQ==}
     engines: {node: '>= 14'}
     peerDependencies:
       solid-js: '>=1.0.0'
     dependencies:
       '@testing-library/dom': 7.31.2
-      solid-js: 1.5.5
+      solid-js: 1.5.7
     dev: true
 
   /sort-keys/2.0.0:
@@ -10376,7 +10376,7 @@ packages:
       - supports-color
     dev: false
 
-  /vite-plugin-solid/2.3.9_solid-js@1.5.5+vite@3.1.2:
+  /vite-plugin-solid/2.3.9_solid-js@1.5.7+vite@3.1.2:
     resolution: {integrity: sha512-+lprsYgt9DVNp0kbDj2d2HWAPI13L8ff5xslk9SjiPBcsY/YUZ/1Wj0J/Oj5aiVAhwfPm8IcM3bzyHJUPlmc8w==}
     peerDependencies:
       solid-js: ^1.3.17
@@ -10386,8 +10386,8 @@ packages:
       '@babel/preset-typescript': 7.18.6_@babel+core@7.19.1
       babel-preset-solid: 1.5.5_@babel+core@7.19.1
       merge-anything: 5.0.4
-      solid-js: 1.5.5
-      solid-refresh: 0.4.1_solid-js@1.5.5
+      solid-js: 1.5.7
+      solid-refresh: 0.4.1_solid-js@1.5.7
       vite: 3.1.2_terser@5.15.0
     transitivePeerDependencies:
       - supports-color
