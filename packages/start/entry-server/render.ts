@@ -178,8 +178,6 @@ function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
         `</outlet-wrapper>`.length
     )}`;
 
-    console.log("markup", markup.slice(0, 20));
-
     pageEvent.responseHeaders.set("Content-Type", "text/plain");
   }
   return markup;

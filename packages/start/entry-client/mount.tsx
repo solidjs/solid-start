@@ -65,7 +65,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
 
     window._$HY.hydrateIslands = () => {
       document.querySelectorAll("solid-island[data-hk]").forEach((el: HTMLElement) => {
-        if (el.dataset.when === "idle") {
+        if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
           requestIdleCallback(() => mountIsland(el));
         } else {
           mountIsland(el as HTMLElement);

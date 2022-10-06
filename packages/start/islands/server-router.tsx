@@ -241,8 +241,8 @@ export function Router(props: RouterProps) {
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
         props.out.newOutletId = `outlet-${nextRoute.id}`;
-        console.log(prevRoute, nextRoute);
-        console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
+        //console.log(prevRoute, nextRoute);
+        //console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
         // diffedRender = (
         //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
         //     <Comp />
