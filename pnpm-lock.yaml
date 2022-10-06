@@ -356,6 +356,7 @@ importers:
       dequal: ^2.0.3
       es-module-lexer: ^1.0.3
       esbuild: ^0.14.54
+      esbuild-plugin-solid: ^0.4.2
       fast-glob: ^3.2.12
       get-port: ^6.1.2
       jsdom: ^20.0.0
@@ -399,6 +400,7 @@ importers:
       dequal: 2.0.3
       es-module-lexer: 1.0.3
       esbuild: 0.14.54
+      esbuild-plugin-solid: 0.4.2_ngv3ltmlriftii5e5ks2ybc4ja
       fast-glob: 3.2.12
       get-port: 6.1.2
       parse-multipart-data: 1.5.0
@@ -5428,6 +5430,21 @@ packages:
     os: [openbsd]
     requiresBuild: true
     optional: true
+
+  /esbuild-plugin-solid/0.4.2_ngv3ltmlriftii5e5ks2ybc4ja:
+    resolution: {integrity: sha512-T5GphLoud3RumjeNYO3K9WVjWDzVKG5evlS7hUEUI0n9tiCL+CnbvJh3SSwFi3xeeXpZRrnZc1gd6FWQsVobTg==}
+    peerDependencies:
+      esbuild: '>=0.12'
+      solid-js: '>= 1.0'
+    dependencies:
+      '@babel/core': 7.19.1
+      '@babel/preset-typescript': 7.18.6_@babel+core@7.19.1
+      babel-preset-solid: 1.5.5_@babel+core@7.19.1
+      esbuild: 0.14.54
+      solid-js: 1.5.7
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /esbuild-sunos-64/0.14.51:
     resolution: {integrity: sha512-HoHaCswHxLEYN8eBTtyO0bFEWvA3Kdb++hSQ/lLG7TyKF69TeSG0RNoBRAs45x/oCeWaTDntEZlYwAfQlhEtJA==}

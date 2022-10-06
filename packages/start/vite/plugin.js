@@ -1,5 +1,6 @@
 import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
+import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
@@ -493,7 +494,14 @@ function solidStartConfig(options) {
         optimizeDeps: {
           exclude: ["solid-start", "@solidjs/router", "@solidjs/meta"],
           extensions: ["jsx", "tsx"],
-          disabled: true
+          esbuildOptions: {
+            plugins: [
+              solidPlugin({
+                hydratable: options.ssr ? true : false,
+                generate: "dom"
+              })
+            ]
+          }
         },
         solidOptions: options
       };
