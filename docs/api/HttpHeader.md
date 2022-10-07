@@ -8,7 +8,7 @@ subsection: Document
 # HttpHeader
 
 ```tsx twoslash
-import { HttpHeader, HttpStatusCode } from "solid-start";
+import { HttpHeader, HttpStatusCode } from "solid-start/server";
 // ---cut---
 export default function NotFound() {
   return (
