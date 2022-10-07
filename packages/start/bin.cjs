@@ -4,6 +4,7 @@
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const { resolve, join } = require("path");
+const path = require("path");
 const c = require("picocolors");
 const {
   readFileSync,
@@ -456,8 +457,12 @@ prog
     if (url) {
       const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
+
       const router = new Router({
-        baseDir: join(config.solidOptions.appRoot, config.solidOptions.routesDir)
+        baseDir: path.posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir),
+        pageExtensions: config.solidOptions.pageExtensions,
+        ignore: config.solidOptions.routesIgnore,
+        cwd: config.solidOptions.root
       });
       await router.init();
       printUrls(router, url);
