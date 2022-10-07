@@ -12,7 +12,6 @@ The achilles heel of web apps seems to lie in error handling. An unhandled error
 Solid achieves this functionality with _Error Boundaries_. Error Boundary is a special component that ensures the unhandled errors of it's children don't extend beyond it's boundary.
 
 ```tsx twoslash
-// @lib: ES2015
 import { ErrorBoundary } from "solid-start/error-boundary";
 
 function Root() {
@@ -35,7 +34,6 @@ function Root() {
 While a simple `ErrorBoundary` component is enough to contain errors, You may notice that the error is very technical and could be a bit much for your users. You can provide a `fallback` prop to replace the default stack trace with your own code. Your fallback function takes a single parameter (the cause of the error, typically some derivative of the [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#instance_properties) object), and returns an element.
 
 ```tsx twoslash {2-12}
-// @lib: ES2015
 import { ErrorBoundary } from "solid-start/error-boundary";
 // ---cut---
 <ErrorBoundary

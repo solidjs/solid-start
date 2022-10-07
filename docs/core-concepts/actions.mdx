@@ -15,7 +15,6 @@ Actions are isomorphic. This means that a submission can be handled on the serve
 Let's stop getting ahead of ourselves! First let's create an action!
 
 ```tsx twoslash
-// @lib: ES2015
 import { createRouteAction } from "solid-start/data";
 
 export function MyComponent() {
@@ -32,7 +31,6 @@ This echo action will act as your backend, however you can substitute it for any
 Naturally, this action won't do anything quite yet. We still need to call it somewhere! For now, let's call it manually from some component using the `submit` method.
 
 ```ts twoslash {3,8}
-// @lib: ES2015
 import { createRouteAction } from "solid-start/data";
 export function MyComponent() {
   const action = createRouteAction(async (message: string) => {
@@ -51,7 +49,6 @@ You should see `Hello from solid!` back in the console!
 In many cases, after submitting data the server sends some data back as well. Anything returned from your action function can be accessed using the reactive `action.value` property. The value of this property can change each time you submit your action.
 
 ```tsx twoslash {2,4,7-9}
-// @lib: ES2015
 import { createRouteAction } from "solid-start/data";
 // ---cut---
 export function MyComponent() {
