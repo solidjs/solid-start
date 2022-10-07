@@ -1,0 +1,43 @@
+name: 📜 Docs
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+
+jobs:
+  docs:
+    name: "📜 Deploy Docs"
+
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Use Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: 👀 Run Integration Tests
+        env:
+          START_ADAPTER: solid-start-deno
+        run: pnpm docs:build
