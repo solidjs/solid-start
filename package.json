@@ -16,6 +16,7 @@
     "publish:release": "lerna publish",
     "docs:dev": "solid-start dev",
     "docs:build": "solid-start build",
+    "docs:start": "solid-start start",
     "clean:test": "rimraf .tmp",
     "build:all": "pnpm run -r --if-present build",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
