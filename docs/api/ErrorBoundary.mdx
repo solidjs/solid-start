@@ -12,7 +12,6 @@ The achilles heel of web apps seems to lie in error handling. An unhandled error
 Solid achieves this functionality with _Error Boundaries_. Error Boundary is a special component that ensures the unhandled errors of it's children don't extend beyond it's boundary.
 
 ```tsx twoslash
-// @lib: es2015
 import { ErrorBoundary } from "solid-start/error-boundary";
 
 function Root() {
