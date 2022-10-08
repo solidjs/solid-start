@@ -33,12 +33,12 @@ Naturally, this action won't do anything quite yet. We still need to call it som
 ```ts twoslash {3,8}
 import { createRouteAction } from "solid-start/data";
 export function MyComponent() {
-  const action = createRouteAction(async (message: string) => {
+  const [, submit] = createRouteAction(async (message: string) => {
     // Imagine this is a call to fetch
     await new Promise((resolve, reject) => setTimeout(resolve, 1000));
     console.log(message);
   });
-  action.submit("Hello from solid!");
+  submit("Hello from solid!");
 }
 ```
 
@@ -52,14 +52,14 @@ In many cases, after submitting data the server sends some data back as well. An
 import { createRouteAction } from "solid-start/data";
 // ---cut---
 export function MyComponent() {
-  const action = createRouteAction(async (message: string) => {
+  const [action, submit] = createRouteAction(async (message: string) => {
     await new Promise((resolve, reject) => setTimeout(resolve, 1000));
     return message;
   });
 
-  action.submit("Hello from solid!");
-  setTimeout(() => action.submit("This is a second submission!"), 1500);
-  return <p>{action.value}</p>;
+  submit("Hello from solid!");
+  setTimeout(() => submit("This is a second submission!"), 1500);
+  return <p>{action.result}</p>;
 }
 ```
 
