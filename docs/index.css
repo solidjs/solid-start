@@ -16,3 +16,11 @@ h3,
 h4 {
   scroll-margin-top: 1em;
 }
+
+.line.highlight {
+  @apply bg-slate-50 bg-opacity-20;
+}
+
+.line {
+  @apply px-3
+}

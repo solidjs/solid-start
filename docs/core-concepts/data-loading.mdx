@@ -31,23 +31,88 @@ export function routeData() {
 
 Now your component can use the `useRouteData` function to access the data that is returned by `routeData`.
 
-```tsx twoslash filename="src/pages/students/index.tsx" bad
+```tsx twoslash filename="/routes/students.tsx"
 import { For, Accessor, createResource } from "solid-js";
 import { useRouteData } from "solid-start";
 
 type Student = { name: string; house: string; }
 
 export function routeData() {
-  const [students] = createResource<Student[]>(async () => {
+  const [students] = createResource(async () => {
     const response = await fetch("https://hogwarts.deno.dev/students");
-    return await response.json();
+    return await response.json() as Student[];
   });
 
   return { students };
 }
 
 export function Page() {
-  const { students } = useRouteData<ReturnType<typeof routeData>>();
+  const { students } = useRouteData<typeof routeData>();
+
+  return (
+    <ul>
+      <For each={students()}>
+        {(student) => <li>{student.name}</li>}
+      </For>
+    </ul>
+  );
+}
+
+```
+
+Caveats:
+
+1. The `routeData` function is only called once per route. This is because the router is managing the lifecycle of the data. If you need to refresh the data, you can use the `refresh` function that is returned by `createResource`. Or other ways to refetch your resources. 
+2. The `routeData` function is called before the route is rendered. It doesn't share the same `context` as the route. The context tree that is exposed to the `routeData` function is anything above the `Routes` component.
+3. The component receives exactly what the `routeData` function returns when they call `useRouteData`. This means that you can return anything you want from the `routeData` function.
+4. The `routeData` function is called on the server and the client. The resources declared in the `routeData` function can hydrate using serialized data from the server-side render.
+5. `routeData` functions are run on the client when you first navigate to a `route` and never again.
+6. The server-side render will only wait for the resources to fetch if the resource signals are accessed under a `Suspense` boundary. 
+
+
+```tsx twoslash filename="/routes/students.tsx"
+import { For, Accessor, createResource } from "solid-js";
+import { useRouteData, createRouteData } from "solid-start";
+
+type Student = { name: string; house: string; }
+
+export function routeData() {
+  return createRouteData(async () => {
+    const response = await fetch("https://hogwarts.deno.dev/students");
+    return await response.json() as Student[];
+  });
+}
+
+export function Page() {
+  const students = useRouteData<typeof routeData>();
+
+  return (
+    <ul>
+      <For each={students()}>
+        {(student) => <li>{student.name}</li>}
+      </For>
+    </ul>
+  );
+}
+
+```
+
+```tsx twoslash {8} filename="/routes/students.tsx"
+import { For, Accessor, createResource } from "solid-js";
+import { useRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
+
+type Student = { name: string; house: string; }
+
+export function routeData() {
+  return createServerData$(async () => {
+    const response = await fetch("https://hogwarts.deno.dev/students");
+    return await response.json() as Student[];
+  });
+}
+
+export function Page() {
+  const students = useRouteData<typeof routeData>();
 
   return (
     <ul>
@@ -62,7 +127,106 @@ export function Page() {
 
 Lets try to understand when the `routeData` is called and why you should setup resources (or use our helpers) inside it. 
 
-When rendering on the server, for each segment along the requested path, the routeData functions are called, parent-first. This means that if you have a route `/users/[id].tsx` and a route `/users.tsx` then the routeData for `/users.tsx` will be called first. The return value will be passed down as the `data` field in routeData arguments.  This is because the routeData for `/users/:id` will be called with the `id` parameter. 
+When rendering on the server, for each segment along the requested path, the routeData functions are called, parent-first. For example, for the following route structure:
+
+```sh
+├── routes
+│   ├── [house].tsx
+│   ├── [house]
+│   │   ├── index.tsx
+│   │   ├── students.tsx
+│   │   ├── students
+│   │   │   ├── index.tsx
+│   │   │   ├── year-[year].tsx
+│   │   └── staff.tsx
+```
+
+When you visit `/gryffindor/students`, the following `routeData` functions are called, in this order:
+
+1. `/routes/[house].tsx`
+2. `/routes/[house]/students.tsx`
+3. `/routes/[house]/students/index.tsx`
+
+You can imagine what the router is doing. _You don't have to write this code_. It's pseudo-code to help you understand what's going on.
+
+```tsx twoslash
+// @filename: routes/[house].tsx
+import { RouteDataArgs, Outlet } from "solid-start";
+import { ParentProps } from 'solid-js'
+export function routeData(args: RouteDataArgs) {
+  return {};
+}
+
+export default function HouseLayout(props: ParentProps) {
+  return <><Outlet /></>
+}
+
+// @filename: routes/[house]/students.tsx
+import { RouteDataArgs, Outlet } from "solid-start";
+import { ParentProps } from 'solid-js'
+export function routeData(args: RouteDataArgs) {
+  return {};
+}
+
+export default function StudentsLayout(props: ParentProps) {
+  return <><Outlet /></>
+}
+
+// @filename: routes/[house]/students/index.tsx
+import { RouteDataArgs } from "solid-start";
+export function routeData(args: RouteDataArgs) {
+  return {};
+}
+
+export default function Students() {
+  return <></>
+}
+
+// @filename: index.tsx
+import { createContext } from 'solid-js';
+const RouteContext = createContext<{ data: any }>({ data: null });
+
+// ---cut---
+import { useLocation, useNavigate } from "solid-start";
+import { 
+  default as HouseLayout, 
+  routeData as getHouseLayoutData 
+} from './routes/[house]';
+import { 
+  default as StudentsLayout, 
+  routeData as getStudentsLayoutData 
+} from './routes/[house]/students';
+import { 
+  default as Students, 
+  routeData as getStudentsData 
+} from './routes/[house]/students/index';
+
+function Routes() {
+  const args = {
+    location: useLocation(),
+    navigate: useNavigate(),
+    params: { house: 'gryffindor' }
+  }
+
+  const houseLayoutData = getHouseLayoutData({ ...args, data: null });
+  const studentsLayoutData = getStudentsLayoutData({ ...args, data: houseLayoutData });
+  const studentsData = getStudentsLayoutData({ ...args, data: studentsLayoutData  });
+
+  return (
+    <RouteContext.Provider value={{ data: houseLayoutData }}>
+      <HouseLayout>
+        <RouteContext.Provider value={{ data: studentsLayoutData }}>
+          <StudentsLayout>
+            <RouteContext.Provider value={{ data: studentsData }}>
+              <Students />
+            </RouteContext.Provider>
+          </StudentsLayout>
+        </RouteContext.Provider>
+      </HouseLayout>
+    </RouteContext.Provider>
+  )
+}
+```
 
 When rendering on the client, the routeData function is called when the route is first rendered. This is because the routeData function is called with the current route parameters.
 

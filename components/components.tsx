@@ -51,16 +51,20 @@ export const components = {
     );
   },
   pre: props => (
-    <>
+    <div>
       <Show when={props.filename?.length > 5}>
-        <span {...props} class="h-4 p-1">
+        <div {...props} class="px-3 py-1 w-full text-xs bg-blueGray-500 rounded-t">
           {props.filename}
-        </span>
+        </div>
       </Show>
       <pre
         {...mergeProps(props, {
           get class() {
-            return props.className + " " + (props.bad ? "border-red-400 border-4" : "");
+            return (
+              props.className +
+              " rounded-b rounded-t-none mt-0 px-0 " +
+              (props.bad ? "border-red-400 border-4" : "")
+            );
           },
           get className() {
             return undefined;
@@ -69,7 +73,7 @@ export const components = {
       >
         {props.children}
       </pre>
-    </>
+    </div>
   ),
   "data-lsp": props => {
     const id = createUniqueId();

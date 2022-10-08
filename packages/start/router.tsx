@@ -44,7 +44,7 @@ const Routes = import.meta.env.START_ISLANDS_ROUTER
   : BaseRoutes;
 
 const Outlet = import.meta.env.START_ISLANDS_ROUTER
-  ? function IslandsOutlet() {
+  ? function HybridOutlet() {
       return (
         <IslandsOutlet>
           <BaseOutlet />
@@ -60,7 +60,7 @@ const useLocation = import.meta.env.START_ISLANDS_ROUTER && !isServer
           let location = window.LOCATION();
           return location.pathname;
         }
-      };
+      } as Location;
     }
   : useBaseLocation;
 
