@@ -43,13 +43,13 @@ Route params are an important part of the routing system. They allow you to acce
 In our router config, we will usually have a few `Route`'s with dynamic parts. For example, take this router config which has a `Route` with path `/users/:id`.
 
 ```tsx twoslash {6}
-import { Router, Route } from "solid-start";
+import { Routes, Route } from "solid-start";
 
 export function App() {
   return (
-    <Router>
+    <Routes>
       <Route path="/users/:id" />
-    </Router>
+    </Routes>
   );
 }
 ```
@@ -79,15 +79,15 @@ We could also have a `Route` with with multiple dynamic parts. For example, a ro
 // @errors: 2571
 // @lib: ES2015,DOM
 import { JSX } from "solid-js";
-import { Router, Route, useParams } from "solid-start";
+import { Routes, Route, useParams } from "solid-start";
 
 export function App() {
   return (
-    <Router>
+    <Routes>
       <Route path="/users/:id">
         <Route path="/projects/:project" />
       </Route>
-    </Router>
+    </Routes>
   );
 }
 
@@ -112,7 +112,7 @@ For example, if you have a route like `/users/:id`, then you can access the `id`
 // @errors: 2571
 // @lib: ES2015,DOM
 
-import { useParams, Router, Route } from "solid-start";
+import { useParams } from "solid-start";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
@@ -130,7 +130,7 @@ Then, you can use the `id` param as the source for your resource. You can fetch 
 ```tsx twoslash {4-7}
 // @lib: ES2015,DOM
 // @errors: 2571
-import { useParams, Router, Route } from "solid-start";
+import { useParams } from "solid-start";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
