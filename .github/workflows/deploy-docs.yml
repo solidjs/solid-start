@@ -42,3 +42,6 @@ jobs:
         env:
           START_ADAPTER: solid-start-deno
         run: pnpm docs:build
+
+      - name: Deploy Docs
+        run: cd dist && deno run --allow-read --allow-write --allow-env --allow-net --allow-run --no-check https://deno.land/x/deploy/deployctl.ts deploy --project=solid-start-docs ./server.js
