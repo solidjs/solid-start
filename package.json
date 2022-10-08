@@ -42,6 +42,7 @@
     "solid-start-mdx": "workspace:*",
     "solid-start-node": "workspace:*",
     "tailwindcss": "^3.1.8",
+    "tippy.js": "^6.3.7",
     "turbo": "^1.4.6",
     "typescript": "4.7.4",
     "undici": "^5.10.0",

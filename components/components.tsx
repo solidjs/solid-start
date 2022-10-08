@@ -1,6 +1,9 @@
 import { Title as MetaTitle } from "@solidjs/meta";
-import { createUniqueId, mergeProps } from "solid-js";
+import { createUniqueId, mergeProps, Show } from "solid-js";
+import { unstable_island } from "solid-start";
+import "tippy.js/dist/tippy.css";
 import A from "./A";
+const Tooltip = unstable_island(() => import("./tooltip"));
 
 export const components = {
   strong: props => <span class="font-bold">{props.children}</span>,
@@ -49,15 +52,15 @@ export const components = {
   },
   pre: props => (
     <>
-      {/* <Show when={props.filename?.length > 5}>
-              <span {...props} class="h-4 p-1">
-                {props.filename}
-              </span>
-            </Show> */}
+      <Show when={props.filename?.length > 5}>
+        <span {...props} class="h-4 p-1">
+          {props.filename}
+        </span>
+      </Show>
       <pre
         {...mergeProps(props, {
           get class() {
-            return props.className + " " + (props.bad ? "border-red-400 border-1" : "");
+            return props.className + " " + (props.bad ? "border-red-400 border-4" : "");
           },
           get className() {
             return undefined;
@@ -70,22 +73,14 @@ export const components = {
   ),
   "data-lsp": props => {
     const id = createUniqueId();
-    // createEffect(() => {
-    //   tippy(`[data-template="${id}"]`, {
-    //     content() {
-    //       const template = document.getElementById(id);
-    //       return template.innerHTML;
-    //     },
-    //     allowHTML: true
-    //   });
-    // });
+
     return (
-      <span class={`data-lsp`} data-template={id}>
+      <Tooltip id={id}>
         {props.children}
         <div id={id} style="display: none;">
           <pre class="text-white bg-transparent text-xs p-0 m-0 border-0">{props.lsp}</pre>
         </div>
-      </span>
+      </Tooltip>
     );
   },
   "docs-error": props => {
@@ -109,7 +104,7 @@ export const components = {
     );
   },
   response: props => {
-    return <span>{props.children}</span>;
+    return <span class="border-1">{props.children}</span>;
   },
   void: props => {
     return <span>{props.children}</span>;

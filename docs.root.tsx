@@ -96,7 +96,7 @@ function Nav() {
   });
 
   return (
-    <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen overflow-scroll">
+    <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen md:block hidden overflow-scroll">
       <For each={data()}>
         {r => (
           <ul>
@@ -156,7 +156,7 @@ export default function Root() {
   return (
     <Html lang="en">
       <Head>
-        <Title>SolidStart - With MDX</Title>
+        <Title>SolidStart</Title>
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
