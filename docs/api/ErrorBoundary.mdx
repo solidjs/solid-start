@@ -31,7 +31,7 @@ function Root() {
 
 ## Fallbacks
 
-While a simple `ErrorBoundary` component is enough to contain errors, You may notice that the error is very technical and could be a bit much for your users. You can provide a `fallback` prop to replace the default stack trace with your own code. Your fallback function takes a single parameter (the cause of the error, typically some derivative of the [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#instance_properties) object), and returns an element.
+While a simple `<ErrorBoundary />` component is enough to contain errors, You may notice that the error is very technical and could be a bit much for your users. You can provide a `fallback` prop to replace the default stack trace with your own code. Your fallback function takes a single parameter (the cause of the error, typically some derivative of the [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#instance_properties) object), and returns an element.
 
 ```tsx twoslash {2-12}
 import { ErrorBoundary } from "solid-start/error-boundary";
