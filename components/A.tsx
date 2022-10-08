@@ -1,16 +1,2 @@
-import { useLocation } from "solid-start";
-
-export default function A(props) {
-  const location = useLocation();
-  return (
-    <a
-      link
-      href={props.href}
-      classList={{
-        [props.activeClass]: location.pathname === props.href
-      }}
-    >
-      {props.children}
-    </a>
-  );
-}
+// islands like lazy need to be default export
+export { A as default } from "solid-start";

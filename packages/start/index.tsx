@@ -1,6 +1,5 @@
 export { Link, Meta, Style, Title } from "@solidjs/meta";
 export {
-  A,
   Navigate,
   Route,
   useHref,

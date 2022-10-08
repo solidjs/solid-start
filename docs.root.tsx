@@ -1,7 +1,8 @@
 // @refresh reload
-import { createMemo, For, Show, Suspense } from "solid-js";
+import { createMemo, createUniqueId, For, mergeProps, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import {
+  A,
   Body,
   FileRoutes,
   Head,
@@ -15,7 +16,7 @@ import {
 import { ErrorBoundary } from "solid-start/error-boundary";
 import "./docs/index.css";
 
-const A = unstable_island(() => import("./components/A"));
+const IslandA = unstable_island(() => import("./components/A"));
 const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
@@ -112,9 +113,9 @@ function Nav() {
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href }) => (
                             <li class="ml-2">
-                              <A activeClass="text-blue-700" href={href}>
+                              <IslandA activeClass="text-blue-700" href={href}>
                                 <span>{title}</span>
-                              </A>
+                              </IslandA>
                             </li>
                           )}
                         </For>
@@ -124,9 +125,9 @@ function Nav() {
                   <For each={r.filter(i => !i.subsection)}>
                     {({ title, path, href }) => (
                       <li class="ml-2">
-                        <A activeClass="text-blue-700" href={href}>
+                        <IslandA activeClass="text-blue-700" href={href}>
                           <span>{title}</span>
-                        </A>
+                        </IslandA>
                       </li>
                     )}
                   </For>
@@ -136,9 +137,9 @@ function Nav() {
               <For each={r}>
                 {({ title, path, href }) => (
                   <li class="ml-2">
-                    <A activeClass="text-blue-700" href={href}>
+                    <IslandA activeClass="text-blue-700" href={href}>
                       <span>{title}</span>
-                    </A>
+                    </IslandA>
                   </li>
                 )}
               </For>
@@ -150,16 +151,13 @@ function Nav() {
   );
 }
 
-import { createUniqueId, mergeProps } from "solid-js";
-import { A as Link, Title as MetaTitle } from "solid-start";
-
 const headerBolxd = "text-solid-default dark:text-solid-darkdefault ";
 
 const components = {
   strong: props => <span class="font-bold">{props.children}</span>,
   h1: props => (
     <h1 {...props}>
-      <MetaTitle>{props.children}</MetaTitle>
+      <Title>{props.children}</Title>
       {props.children}
     </h1>
   ),
@@ -168,12 +166,12 @@ const components = {
   p: props => <p {...props}>{props.children}</p>,
   a: props => {
     return (
-      <Link
+      <A
         {...props}
         class="dark:text-link-dark break-normal border-b border-solid-default border-opacity-0 hover:border-opacity-100 duration-100 ease-in transition font-semibold leading-normal"
       >
         {props.children}
-      </Link>
+      </A>
     );
   },
   li: props => (
@@ -192,7 +190,7 @@ const components = {
     </ol>
   ),
   nav: props => <nav {...props}>{props.children}</nav>,
-  Link,
+  A,
   code: props => {
     return (
       <code className="inline text-code font-mono" {...props}>
