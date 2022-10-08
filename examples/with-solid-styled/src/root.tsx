@@ -2,6 +2,7 @@
 import { Suspense } from "solid-js";
 import { useAssets } from "solid-js/web";
 import {
+  A,
   Body,
   ErrorBoundary,
   FileRoutes,
@@ -78,8 +79,8 @@ export default function Root() {
           <GlobalStyles />
           <Suspense>
             <ErrorBoundary>
-              <a href="/">Index</a>
-              <a href="/about">About</a>
+              <A href="/">Index</A>
+              <A href="/about">About</A>
               <Routes>
                 <FileRoutes />
               </Routes>

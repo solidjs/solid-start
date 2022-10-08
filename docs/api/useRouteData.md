@@ -12,7 +12,7 @@ subsection: Data
 <div class="text-xl">
 
 ```ts twoslash
-import { useRouteData } from "@solidjs/router";
+import { useRouteData } from "solid-start";
 // ---cut---
 const params = useRouteData();
 ```

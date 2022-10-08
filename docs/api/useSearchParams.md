@@ -12,7 +12,7 @@ subsection: Router
 <div class="text-xl">
 
 ```ts twoslash
-import { useSearchParams } from "@solidjs/router";
+import { useSearchParams } from "solid-start";
 // ---cut---
 const params = useSearchParams();
 ```

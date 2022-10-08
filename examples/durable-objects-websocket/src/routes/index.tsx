@@ -1,5 +1,5 @@
-import { useRouteData } from "@solidjs/router";
 import { createEffect, createSignal, onCleanup } from "solid-js";
+import { useRouteData } from "solid-start";
 import server$, { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { createWebSocketServer } from "solid-start/websocket";
 import { getUser, logout } from "~/session";

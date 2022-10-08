@@ -2,6 +2,7 @@ import { For, Suspense } from "solid-js";
 import { useLocation } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { mods } from "../docs.root";
+import A from "./A";
 
 export default function TableOfContents() {
   const path = useLocation();
@@ -29,7 +30,7 @@ export default function TableOfContents() {
                   "ml-4": h.depth === 3
                 }}
               >
-                <a href={`#${h.slug}`}>{h.text}</a>
+                <A link href={`#${h.slug}`}>{h.text}</A>
               </li>
             )}
           </For>

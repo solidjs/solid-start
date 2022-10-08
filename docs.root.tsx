@@ -15,7 +15,7 @@ import {
 import { ErrorBoundary } from "solid-start/error-boundary";
 import "./docs/index.css";
 
-const NavLink = unstable_island(() => import("./components/NavLink"));
+const A = unstable_island(() => import("./components/A"));
 const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
@@ -112,9 +112,9 @@ function Nav() {
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href }) => (
                             <li class="ml-2">
-                              <NavLink activeClass="text-blue-700" href={href}>
+                              <A activeClass="text-blue-700" href={href}>
                                 <span>{title}</span>
-                              </NavLink>
+                              </A>
                             </li>
                           )}
                         </For>
@@ -124,9 +124,9 @@ function Nav() {
                   <For each={r.filter(i => !i.subsection)}>
                     {({ title, path, href }) => (
                       <li class="ml-2">
-                        <NavLink activeClass="text-blue-700" href={href}>
+                        <A activeClass="text-blue-700" href={href}>
                           <span>{title}</span>
-                        </NavLink>
+                        </A>
                       </li>
                     )}
                   </For>
@@ -136,9 +136,9 @@ function Nav() {
               <For each={r}>
                 {({ title, path, href }) => (
                   <li class="ml-2">
-                    <NavLink activeClass="text-blue-700" href={href}>
+                    <A activeClass="text-blue-700" href={href}>
                       <span>{title}</span>
-                    </NavLink>
+                    </A>
                   </li>
                 )}
               </For>
@@ -150,17 +150,8 @@ function Nav() {
   );
 }
 
-import { Title as MetaTitle } from "@solidjs/meta";
-import { Link } from "@solidjs/router";
-import { createUniqueId, mergeProps, ParentProps } from "solid-js";
-
-function Anchor(props: ParentProps<{ id: string }>) {
-  return (
-    <a class="hover:underline" href={`#${props.id}`}>
-      {props.children}
-    </a>
-  );
-}
+import { createUniqueId, mergeProps } from "solid-js";
+import { A as Link, Title as MetaTitle } from "solid-start";
 
 const headerBolxd = "text-solid-default dark:text-solid-darkdefault ";
 

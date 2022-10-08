@@ -1,5 +1,5 @@
-import { useParams, useRouteData } from "@solidjs/router";
 import { Show } from "solid-js";
+import { useParams, useRouteData } from "solid-start";
 import { FormError } from "solid-start/data";
 import { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { db } from "~/db";

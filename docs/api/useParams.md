@@ -12,7 +12,7 @@ subsection: Router
 <div class="text-xl">
 
 ```ts twoslash
-import { useParams } from "@solidjs/router";
+import { useParams } from "solid-start";
 // ---cut---
 const params = useParams();
 ```
@@ -43,7 +43,7 @@ Route params are an important part of the routing system. They allow you to acce
 In our router config, we will usually have a few `Route`'s with dynamic parts. For example, take this router config which has a `Route` with path `/users/:id`.
 
 ```tsx twoslash {6}
-import { Router, Route } from "@solidjs/router";
+import { Router, Route } from "solid-start";
 
 export function App() {
   return (
@@ -60,7 +60,7 @@ To access the `:id` part of the route, call `useParams()` inside a component. Th
 // @errors: 2571
 // @lib: ES2015,DOM
 
-import { useParams } from "@solidjs/router";
+import { useParams } from "solid-start";
 
 function User() {
   const params = useParams<{ id: string }>();
@@ -79,7 +79,7 @@ We could also have a `Route` with with multiple dynamic parts. For example, a ro
 // @errors: 2571
 // @lib: ES2015,DOM
 import { JSX } from "solid-js";
-import { Router, Route, useParams } from "@solidjs/router";
+import { Router, Route, useParams } from "solid-start";
 
 export function App() {
   return (
@@ -112,7 +112,7 @@ For example, if you have a route like `/users/:id`, then you can access the `id`
 // @errors: 2571
 // @lib: ES2015,DOM
 
-import { useParams, Router, Route } from "@solidjs/router";
+import { useParams, Router, Route } from "solid-start";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
@@ -130,7 +130,7 @@ Then, you can use the `id` param as the source for your resource. You can fetch 
 ```tsx twoslash {4-7}
 // @lib: ES2015,DOM
 // @errors: 2571
-import { useParams, Router, Route } from "@solidjs/router";
+import { useParams, Router, Route } from "solid-start";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
@@ -157,7 +157,7 @@ function User() {
 Call `useParams()` inside a component to get the current route params.
 
 ```tsx twoslash
-import { useParams } from "@solidjs/router";
+import { useParams } from "solid-start";
 
 function Component() {
   const params = useParams();

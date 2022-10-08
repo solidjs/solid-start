@@ -12,7 +12,7 @@ subsection: Router
 <div class="text-xl">
 
 ```ts
-import { useNavigate } from "@solidjs/router";
+import { useNavigate } from "solid-start";
 // ---cut---
 const params = useNavigate();
 ```

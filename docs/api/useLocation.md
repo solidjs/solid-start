@@ -12,7 +12,7 @@ subsection: Router
 <div class="text-xl">
 
 ```ts twoslash
-import { useLocation } from "@solidjs/router";
+import { useLocation } from "solid-start";
 // ---cut---
 const location = useLocation();
 ```
@@ -42,7 +42,7 @@ const location = useLocation();
 Call `useLocation()` inside a component to get the current URL (location).
 
 ```tsx twoslash
-import { useLocation } from "@solidjs/router";
+import { useLocation } from "solid-start";
 
 function Component() {
   const location = useLocation();

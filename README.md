@@ -193,7 +193,7 @@ If you were not using SSR and rendering your app client-side:
 // @refresh reload
 import { Suspense } from "solid-js";
 - import { Meta, Link, Routes, Scripts } from "solid-start/root";
-+ import { FileRoutes, Scripts, Html, Head, Body, Routes, Meta, ErrorBoundary } from "solid-start";
++ import { FileRoutes, Scripts, Html, Head, Body, Routes, Meta, ErrorBoundary, A } from "solid-start";
 
 export default function Root() {
   return (
@@ -216,8 +216,8 @@ export default function Root() {
 +      <Body>
          <Suspense>
            <ErrorBoundary>
-             <a href="/">Index</a>
-             <a href="/about">About</a>
+             <A href="/">Index</A>
+             <A href="/about">About</A>
 -            <Routes />
 +            <Routes>
 +              <FileRoutes />

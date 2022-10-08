@@ -46,7 +46,7 @@ test.describe("CSS link tags", () => {
           }
         `;
         files[`src/routes/${path}.tsx`] = js`
-          import { Outlet } from "@solidjs/router";
+          import { Outlet } from "solid-start";
           import "./${name}.css";
           export default function ${pascalCaseName}() {
             return <>

@@ -1,5 +1,5 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
-import { useLocation, useRouteData } from "solid-start";
+import { A, useLocation, useRouteData } from "solid-start";
 import { createServerAction$, createServerData$, createServerMultiAction$, redirect } from "solid-start/server";
 import { CompleteIcon, IncompleteIcon } from "~/components/icons";
 import db from "~/db";
@@ -150,19 +150,19 @@ const TodoApp = () => {
           </span>
           <ul class="filters">
             <li>
-              <a href="?show=all" classList={{ selected: !location.query.show || location.query.show === "all" }}>
+              <A href="?show=all" classList={{ selected: !location.query.show || location.query.show === "all" }}>
                 All
-              </a>
+              </A>
             </li>
             <li>
-              <a href="?show=active" classList={{ selected: location.query.show === "active" }}>
+              <A href="?show=active" classList={{ selected: location.query.show === "active" }}>
                 Active
-              </a>
+              </A>
             </li>
             <li>
-              <a href="?show=completed" classList={{ selected: location.query.show === "completed" }}>
+              <A href="?show=completed" classList={{ selected: location.query.show === "completed" }}>
                 Completed
-              </a>
+              </A>
             </li>
           </ul>
           <Show when={remainingCount() !== todos.length}>
