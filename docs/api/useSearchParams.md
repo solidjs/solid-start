@@ -21,7 +21,7 @@ const params = useSearchParams();
 
 - [Usage](#usage)
 
-  - [Reading `id` param for route `/users/:id`](#accessing-id-param-for-route-users-id)
+  - [Reading `id` param for route `/house/[id]`](#accessing-id-param-for-route-users-id)
   - [Reading both `id` and `project` params for route `/users/:id/projects/:project`](#accessing-id-param-for-route-users-id)
   - [Fetching data based on the path params](#example)
   - [Show helpful error message for catch-all/404 routes](#example)

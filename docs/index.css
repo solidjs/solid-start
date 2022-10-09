@@ -32,3 +32,7 @@ h4 {
 .tippy-content {
   @apply overflow-x-scroll;
 }
+
+.not-prose :where(code):not(:where(pre *)) {
+  @apply p-0.5;
+}

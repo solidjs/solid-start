@@ -46,9 +46,14 @@ export const components = {
   A,
   code: props => {
     return (
-      <code className="inline text-code font-mono" {...props}>
-        {props.children}
-      </code>
+      <span class="not-prose">
+        <code
+          className="inline text-code text-secondary dark:text-secondary-dark rounded-md no-underline bg-slate-300 bg-opacity-20"
+          {...props}
+        >
+          {props.children}
+        </code>
+      </span>
     );
   },
   pre: props => (
@@ -91,6 +96,11 @@ export const components = {
       </Tooltip>
     );
   },
+  h5: props => (
+    <h5 {...props} class="text-lg mb-4">
+      {props.children}
+    </h5>
+  ),
   "docs-error": props => {
     return (
       <div class="docs-error">

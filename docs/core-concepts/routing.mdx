@@ -131,7 +131,7 @@ For these use cases we provide an imperative [`navigate`][usenavigate-navigate] 
 
 ### Redirecting
 
-- The primary way of redirecting from a route to another is to use the `<Navigate />` component in the tsx. For example, if you want to redirect to the home page, you can use the following code.
+- The primary way of redirecting from a route to another is to use the `<Navigate />` component in the JSX. For example, if you want to redirect to the home page, you can use the following code.
 
   - **Server**: When we get a request for this page, we will rend a [`308 (Redirect)`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308) response with `Location` header set to the home page. The browser will then do its normal redirect routine. This also helps crawlers to understand that the page should be redirected.
   - **Client**: When you navigate to this page from another page in the site, we will immediately navigate to the home page.
