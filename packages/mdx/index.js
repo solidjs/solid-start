@@ -196,7 +196,7 @@ export default async function () {
               allowSyntheticDefaultImports: true,
               esModuleInterop: true,
               target: "ESNext",
-              module: "ESNext",
+              module: "esnext",
               lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
               jsxImportSource: "solid-js",
               jsx: "preserve",

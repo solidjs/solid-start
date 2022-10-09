@@ -62,3 +62,6 @@ export function isApiRequest(request: Request) {
   let apiHandler = getApiHandler(new URL(request.url), request.method);
   return Boolean(apiHandler);
 }
+
+export * from "../server/responses";
+export type { ApiFetchEvent } from "./types";
