@@ -2,6 +2,7 @@
 section: core-concepts
 title: CSS and Styling
 order: 7
+active: true
 ---
 
 # CSS and Syling

@@ -6,7 +6,9 @@ order: 4
 
 # Actions
 
-One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". Solid's answer to this is _actions_. Actions give you an asynchronous function and elegant tools to help you easily manage and track submissions. They generally represent a `POST` request.
+One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid's answer to this is _actions_. Actions give you the ability an specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. 
+
+They generally represent a `POST` request.
 
 Actions are isomorphic. This means that a submission can be handled on the server _or_ the client, which ever is optimal. They represent the server component of a [HTML form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form), and even help you use HTML forms to submit data.
 
@@ -18,7 +20,7 @@ Let's stop getting ahead of ourselves! First let's create an action!
 import { createRouteAction } from "solid-start/data";
 
 export function MyComponent() {
-  const action = createRouteAction(async (message: string) => {
+  const [_, logMessage] = createRouteAction(async (message: string) => {
     // Imagine this is a call to fetch
     await new Promise((resolve, reject) => setTimeout(resolve, 1000));
     console.log(message);
@@ -26,19 +28,19 @@ export function MyComponent() {
 }
 ```
 
-This echo action will act as your backend, however you can substitute it for any API, provided you are ok with it running on the client. Typically, route actions are used with some sort of solution like fetch or graphql, and return either a `Response` such as a redirect (we are not returning anything quite yet!) or any value. If you want to ensure the action only runs on the server for things like databases, you will want to use a different function explained below.
+This `echo` action will act as your backend, however you can substitute it for any API, provided you are ok with it running on the client. Typically, route actions are used with some sort of solution like fetch or graphql, and return either a `Response` such as a redirect (we are not returning anything quite yet!) or any value. If you want to ensure the action only runs on the server for things like databases, you will want to use `createServerAction$`. It's been introduced below.
 
 Naturally, this action won't do anything quite yet. We still need to call it somewhere! For now, let's call it manually from some component using the `submit` method.
 
 ```ts twoslash {3,8}
 import { createRouteAction } from "solid-start/data";
 export function MyComponent() {
-  const [, submit] = createRouteAction(async (message: string) => {
+  const [, logMessage] = createRouteAction(async (message: string) => {
     // Imagine this is a call to fetch
     await new Promise((resolve, reject) => setTimeout(resolve, 1000));
     console.log(message);
   });
-  submit("Hello from solid!");
+  logMessage("Hello from solid!");
 }
 ```
 
@@ -52,32 +54,18 @@ In many cases, after submitting data the server sends some data back as well. An
 import { createRouteAction } from "solid-start/data";
 // ---cut---
 export function MyComponent() {
-  const [action, submit] = createRouteAction(async (message: string) => {
+  const [echoing, echo] = createRouteAction(async (message: string) => {
     await new Promise((resolve, reject) => setTimeout(resolve, 1000));
     return message;
   });
 
-  submit("Hello from solid!");
-  setTimeout(() => submit("This is a second submission!"), 1500);
-  return <p>{action.result}</p>;
+  echo("Hello from solid!");
+  setTimeout(() => echo("This is a second submission!"), 1500);
+  return <p>{echoing.result}</p>;
 }
 ```
 
-While this method of using actions works, it leads the implementation details of how you trigger `action.submit` up to you. When handling explicit user input, it's better to use a form for a multitude of reasons.
-
-#### Responses
-
-// Todo
-
-SolidStart provides a number of functions to make creating responses easy. They can be imported from `solid-start/server`
-
-##### redirect
-
-##### json
-
-##### eventStream
-
-##### ResponseError
+While this method of using actions works, it leaves the implementation details of how you trigger `echo` up to you. When handling explicit user input, it's better to use a `form` for a multitude of reasons.
 
 ## Using forms to submit data
 
@@ -87,20 +75,33 @@ When forms are used to submit actions, the first argument is an instance of [`Fo
 
 If you don't return a `Response` from your action, the user will stay on the same page and your resources will be retriggered. You can also return a `redirect` or `ResponseError`.
 
-```tsx
+```tsx twoslash
+import { createRouteAction } from "solid-start";
+import { redirect } from "solid-start/server";
+// ---cut---
 export function MyComponent() {
-  ...
+  const [_, { Form }] = createRouteAction(async (formData: FormData) => {
+    await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+    const username = formData.get("username");
+    if (username === "admin") {
+      return redirect("/admin");
+    } else {
+      throw new Error("Invalid username");
+    }
+    return redirect("/home");
+  });
+
   return (
-    <action.Form>
+    <Form>
       <label for="username">Username:</label>
       <input type="text" name="username" />
       <input type="submit" value="submit" />
-    </action.Form>
+    </Form>
   );
 }
 ```
 
-The only difference between `action.Form` and a normal form is that `action.Form` calls the action as it's submit handler automatically.
+This `Form` is an enhanced version of the normal `form`. It submit handler has already been wired up as well. 
 
 ## Retriggering resources
 

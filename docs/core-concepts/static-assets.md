@@ -6,6 +6,8 @@ order: 5
 
 # Static Assets
 
+<table-of-contents></table-of-contents>
+
 There are two ways to import static assets into your SolidStart project: using the public directory and using imports.
 
 ## Using the public directory
