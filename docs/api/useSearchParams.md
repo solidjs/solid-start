@@ -3,11 +3,22 @@ section: api
 title: useSearchParams
 order: 8
 subsection: Router
+active: true
 ---
 
 # useSearchParams
 
 ##### `useSearchParams` gives you a read/write pair for the search params in the current location
+
+<div class="text-lg">
+
+```ts twoslash
+import { useSearchParams } from "solid-start";
+// ---cut---
+const [searchParams, setSearchParams] = useSearchParams();
+```
+
+</div>
 
 <table-of-contents></table-of-contents>
 
@@ -74,10 +85,11 @@ export function routeData() {
 
 ### Updating search params from the UI
 
-Now, whats the point of a search page without the ability to change the search query. So lets add a search box to the page. We can use the `setSearchParams` function to update the search params. 
+Now, whats the point of a search page without the ability to change the search query. So lets add a search box to the page. We can use the `setSearchParams` function to update the search params.
 
-```tsx twoslash {5,11} filename="routes/search.tsx"
-// ---cut---
+All the instances of `useSearchParams` will be updated with the new search params. So your data will refetch and the UI will update.
+
+```tsx twoslash {4,9} filename="routes/search.tsx"
 import { useSearchParams } from "solid-start";
 
 export default function SearchBox() {
@@ -86,7 +98,6 @@ export default function SearchBox() {
     <div>
       <input
         type="text"
-        value={searchParams.query}
         onInput={(e) => setSearchParams({ query: e.currentTarget.value })}
       />
     </div>

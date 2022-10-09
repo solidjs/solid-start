@@ -5,23 +5,53 @@ order: 3
 subsection: Router
 ---
 
-# Route
+# Routes
 
-```js
+##### `Routes` is a component that renders the matched route component
+
+<div class="text-lg">
+
+```tsx twoslash
+import { Routes, FileRoutes } from "solid-start";
+// ---cut---
+<Routes><FileRoutes /></Routes>
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
+```tsx twoslash filename="root.tsx"
+// @filename: pages/Home.tsx
+export default function Home() {
+  return <div>Home</div>;
+}
+
+// @filename: pages/Users.tsx
+export default function About() {
+  return <div>About</div>;
+}
+
+// @filename: root.tsx
+// ---cut---
 import { Routes, Route } from "solid-start"
 
 import Home from "./pages/Home"
 import Users from "./pages/Users"
 
-export default function App() {
-  return <>
-    <h1>My Site with Lots of Pages</h1>
-    <Routes>
-      <Route path="/" component={Home} />
-      <Route path="/users" component={Users} />
-      <Route path="/about" element={<div>This site was made with Solid</div>} />
-    </Routes>
-  </>
+export default function RootLayout() {
+  return (
+    <>
+      <h1>My Site with Lots of Pages</h1>
+      <Routes>
+        <Route path="/" component={Home} />
+        <Route path="/users" component={Users} />
+        <Route path="/about" element={<div>This site was made with Solid</div>} />
+      </Routes>
+    </>
+  );
 }
 ```
 
@@ -41,14 +71,34 @@ The `<Route>` component allows the manual registration of routes when added as c
 
 If you don't know the path ahead of time, you might want to treat part of the path as a flexible parameter that is passed on to the component. 
 
-```jsx
+```tsx twoslash filename="root.tsx"
+// @filename: pages/Home.tsx
+export default function Home() {
+  return <div>Home</div>;
+}
+
+// @filename: pages/Users.tsx
+export default function Users() {
+  return <div>About</div>;
+}
+
+
+// @filename: pages/User.tsx
+export default function User() {
+  return <div>User</div>;
+}
+
+// @filename: root.tsx
+// ---cut---
+
 import { lazy } from "solid-js";
 import { Routes, Route } from "solid-start"
+
 const Users = lazy(() => import("./pages/Users"));
 const User = lazy(() => import("./pages/User"));
 const Home = lazy(() => import("./pages/Home"));
 
-export default function App() {
+export default function RootLayout() {
   return <>
     <h1>My Site with Lots of Pages</h1>
     <Routes>
@@ -59,6 +109,18 @@ export default function App() {
     </Routes>
   </>
 }
+```
+
+or with file-system routing:
+
+```tsx
+|-- routes
+|   |-- index.tsx
+|   |-- users
+|   |   |-- [id].tsx
+|   |   |-- index.tsx
+|   |-- about.tsx
+|-- root.tsx
 ```
 
 The colon indicates that `id` can be any string, and as long as the URL fits that pattern, the `User` component will show.
@@ -99,6 +161,13 @@ Parameters can be specified as optional by adding a question mark to the end of 
 ```
 
 If you want to expose the wild part of the path to the component as a parameter, you can name it:
+
+```tsx twoslash filename="routes/foo/[...any].tsx"
+const Stories = () => <div>Stories</div>
+// ---cut---
+export default () => <Stories />
+```
+
 
 ```jsx
 <Route path='foo/*any' element={<div>{useParams().any}</div>}/>

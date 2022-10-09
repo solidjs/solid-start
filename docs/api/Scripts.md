@@ -8,9 +8,7 @@ subsection: Document
 # Scripts
 
 ```tsx
-import {
-  ...
-} from "solid-start";
+import { Html, Head, Body, Routes, FileRoutes, Scripts } from "solid-start";
 
 export default function Root() {
   return (

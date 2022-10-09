@@ -2,20 +2,23 @@
 section: core-concepts
 title: Head and metadata
 order: 2
+active: true
 ---
 
 # Head and metadata
 
+<table-of-contents></table-of-contents>
+
 Normally when we are building UIs for our apps, we are dealing with DOM elements that are going to be rendered in the `body` of the `document`. But there are cases where we want to customize what's going to be rendered in the `head` of the `document`. The common elements used in the `head` are:
 
-- `title`: Specifies the title of the page, used by the browser tab and headings of search results,
-- `meta`: Specifies a variety of metadata about the page specified by `name`, ranging from favicon, character set to OG tags for SEO.
-- `link`: Adds assets like stylesheets or scripts for the browser to load for the page
-- `style`: Adds inline styles to the page
+- [`title`][nativetitle]: Specifies the title of the page, used by the browser tab and headings of search results,
+- [`meta`][nativemeta]: Specifies a variety of metadata about the page specified by `name`, ranging from favicon, character set to OG tags for SEO.
+- [`link`][nativelink]: Adds assets like stylesheets or scripts for the browser to load for the page
+- [`style`][nativestyle]: Adds inline styles to the page
 
-### Adding `head` tags
+## Adding `head` tags
 
-In SolidStart, we ship with actual components representing these tags. So: `title` -> `Title`, `meta` -> `Meta`, etc. They can be used, not only as children of `Head` in `root.tsx`, but anywhere in your app, even deep in your component tree. Powered by `@solidjs/meta`, we can interpret these tags and update the `document.head` appropriately.
+In SolidStart, we ship with actual components representing these tags. So: [`title`][nativetitle] -> [`Title`][title], [`meta`][nativemeta] -> [`Meta`][meta], etc. They can be used, not only as children of [`Head`][head] in `root.tsx`, but anywhere in your app, even deep in your component tree. Powered by `@solidjs/meta`, we can interpret these tags and update the `document.head` appropriately.
 
 There are two main places we recommend adding these tags to your page.
 
@@ -80,7 +83,7 @@ export default function About() {
   route without a `Title` component, the `Head` component's `Title` component will be used.
 </aside>
 
-### Adding a site-suffix in Title
+## Adding a site-suffix in Title
 
 You can create custom components that wrap `Title` to add a site-specific prefix to all the titles, eg.
 
@@ -103,7 +106,7 @@ export default function About() {
 }
 ```
 
-### Adding SEO tags
+## Adding SEO tags
 
 You can add SEO related `Meta` tags either in `root.tsx` or inside your routes. Just like with the `Title`, `Meta` tags used inside a Route component will override the `Meta` tags used in the `Head` component.
 
@@ -179,3 +182,13 @@ export default function About() {
   );
 }
 ```
+
+[link]: /api/Link
+[title]: /api/Title
+[meta]: /api/Meta
+[head]: /api/Head
+[nativelink]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link
+[nativestyle]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style
+[nativemeta]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
+[nativetitle]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title
+[nativehead]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/head

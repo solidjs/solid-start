@@ -84,6 +84,7 @@ function Nav() {
         title,
         path: key,
         order,
+        frontMatter: frontMatter,
         subsection: frontMatter?.subsection,
         href: key.slice(6).replace(/\.mdx?$/, "")
       });
@@ -111,8 +112,8 @@ function Nav() {
                       <ul class="ml-2 mt-3">
                         <span class="font-bold text-gray-400 text-md mb-4">{s}</span>
                         <For each={r.filter(i => i.subsection === s)}>
-                          {({ title, path, href }) => (
-                            <li class="ml-2">
+                          {({ title, path, href, frontMatter }) => (
+                            <li class="ml-2" classList={{ "text-gray-300": !frontMatter.active }}>
                               <IslandA activeClass="text-blue-700" href={href}>
                                 <span>{title}</span>
                               </IslandA>
@@ -123,8 +124,8 @@ function Nav() {
                     )}
                   </For>
                   <For each={r.filter(i => !i.subsection)}>
-                    {({ title, path, href }) => (
-                      <li class="ml-2">
+                    {({ title, path, href, frontMatter }) => (
+                      <li class="ml-2" classList={{ "text-gray-300": !frontMatter.active }}>
                         <IslandA activeClass="text-blue-700" href={href}>
                           <span>{title}</span>
                         </IslandA>
@@ -135,8 +136,8 @@ function Nav() {
               }
             >
               <For each={r}>
-                {({ title, path, href }) => (
-                  <li class="ml-2">
+                {({ title, path, href, frontMatter }) => (
+                  <li class="ml-2" classList={{ "text-gray-300": !frontMatter.active }}>
                     <IslandA activeClass="text-blue-700" href={href}>
                       <span>{title}</span>
                     </IslandA>

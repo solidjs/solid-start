@@ -3,9 +3,33 @@ section: api
 title: Routes
 order: 2
 subsection: Router
+active: true
 ---
 
 # Routes
+
+##### `Routes` is a component that renders the matched route component
+
+<div class="text-lg">
+
+```tsx twoslash
+import { Routes, FileRoutes } from "solid-start";
+// ---cut---
+<Routes><FileRoutes /></Routes>
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
+### Defining your own routes
+
+The `<Routes>` component is where the route branches are defined. It receives `<Route>` components as children that define the various pages of your application. The `<Routes>` component also serves as the insertion point for those pages.
+
+Think of it as a `<Switch>` component which uses the `URLPattern` rules with the `path` to match which `Route` to render. And when the user navigates to a different link, switches to the new `Route` and renders it.
+
 
 ```tsx twoslash {9-13} filename="root.tsx"
 // @filename: pages/Home.tsx
@@ -37,9 +61,7 @@ export default function App() {
 }
 ```
 
-The `<Routes>` component is where the Routes are defined. It receives `<Route>` components as children that define the various pages of your application. The `<Routes>` component also serves as the insertion point for those pages.
-
-Think of it as a `<Switch>` component which uses the `URLPattern` rules with the `path` to match which `Route` to render. And when the user navigates to a different link, switches to the new `Route` and renders it.
+### Using file based routing
 
 Manually importing all your routes can be tedious and error prone, so, SolidStart gives you file-system routing. This allows you to define the routes via a folder structure under the `/routes` folder. You can pass them into the `<Routes>` component with the `<FileRoutes>` component.
 
@@ -59,6 +81,6 @@ export default function Root() {
 }
 ```
 
-See the [routing guide](/core-concepts/routing) for more details.
+See the [routing guide](/core-concepts/routing) for more details about how to define routes using files.
 
 

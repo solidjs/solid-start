@@ -3,6 +3,7 @@ section: api
 title: useParams
 order: 8
 subsection: Router
+active: true
 ---
 
 # useParams
