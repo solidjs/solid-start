@@ -21,8 +21,6 @@ const params = useParams();
 
 <table-of-contents></table-of-contents>
 
----
-
 ## Usage
 
 Route params are an important part of the routing system. They allow you to access the dynamic parts of the URL, based on the currently matching [`Route`](/api/router/route).
