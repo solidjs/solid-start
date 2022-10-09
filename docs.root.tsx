@@ -17,6 +17,7 @@ import "./docs/index.css";
 
 const IslandA = unstable_island(() => import("./components/A"));
 const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
+
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
   any,
@@ -151,6 +152,7 @@ function Nav() {
 }
 
 import { components } from "./components/components";
+import { useTableOfContents } from "./components/TableOfContents";
 
 export default function Root() {
   return (
@@ -167,7 +169,40 @@ export default function Root() {
             <ErrorBoundary>
               <Suspense>
                 <main class="prose prose-sm max-w-none w-full">
-                  <MDXProvider components={components}>
+                  <MDXProvider
+                    components={{
+                      ...components,
+                      "table-of-contents": () => {
+                        const headings = useTableOfContents();
+
+                        return (
+                          <>
+                            <div class="xl:hidden space-y-4 overflow-hidden">
+                              <ul class="space-y-2 text-[1rem]">
+                                <Suspense>
+                                  <For each={headings()}>
+                                    {h => (
+                                      <li
+                                        classList={{
+                                          "ml-2": h.depth === 2,
+                                          "ml-4": h.depth === 3
+                                        }}
+                                      >
+                                        <IslandA class="border-0 no-underline" href={`#${h.slug}`}>
+                                          {h.text}
+                                        </IslandA>
+                                      </li>
+                                    )}
+                                  </For>
+                                </Suspense>
+                              </ul>
+                            </div>
+                            <hr class="xl:hidden" />
+                          </>
+                        );
+                      }
+                    }}
+                  >
                     <Routes>
                       <FileRoutes />
                     </Routes>

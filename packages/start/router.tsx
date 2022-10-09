@@ -15,7 +15,12 @@ const A = import.meta.env.START_ISLANDS_ROUTER
   ? function IslandsA(props) {
       const [, rest] = splitProps(props, ["state", "activeClass", "inactiveClass", "end"]);
       const location = useLocation();
-      const isActive = () => location.pathname === props.href;
+      const isActive = () => {
+        console.log(location.hash, props.href);
+        return props.href.startsWith("#")
+          ? location.hash === props.href
+          : location.pathname === props.href;
+      };
 
       return (
         <a
@@ -23,8 +28,8 @@ const A = import.meta.env.START_ISLANDS_ROUTER
           {...rest}
           state={JSON.stringify(props.state)}
           classList={{
-            [props.inactiveClass || "active"]: !isActive(),
-            [props.activeClass || "inactive"]: isActive(),
+            [props.inactiveClass || "inactive"]: !isActive(),
+            [props.activeClass || "active"]: isActive(),
             ...rest.classList
           }}
           aria-current={isActive() ? "page" : undefined}
@@ -53,22 +58,28 @@ const Outlet = import.meta.env.START_ISLANDS_ROUTER
     }
   : BaseOutlet;
 
-const useLocation = import.meta.env.START_ISLANDS_ROUTER && !isServer
-  ? function IslandsUseLocation() {
-      return {
-        get pathname() {
-          let location = window.LOCATION();
-          return location.pathname;
-        }
-      } as Location;
-    }
-  : useBaseLocation;
+const useLocation =
+  import.meta.env.START_ISLANDS_ROUTER && !isServer
+    ? function IslandsUseLocation() {
+        return {
+          get pathname() {
+            let location = window.LOCATION();
+            return location.pathname;
+          },
+          get hash() {
+            let location = window.LOCATION();
+            return location.hash;
+          }
+        } as Location;
+      }
+    : useBaseLocation;
 
-const useNavigate = import.meta.env.START_ISLANDS_ROUTER && !isServer
-  ? function IslandsUseNavigate() {
-      return ((to, props) => window.NAVIGATE(to, props)) as unknown as Navigator;
-    }
-  : useBaseNavigate;
+const useNavigate =
+  import.meta.env.START_ISLANDS_ROUTER && !isServer
+    ? function IslandsUseNavigate() {
+        return ((to, props) => window.NAVIGATE(to, props)) as unknown as Navigator;
+      }
+    : useBaseNavigate;
 
 declare global {
   interface Window {

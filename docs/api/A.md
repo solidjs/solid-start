@@ -7,6 +7,26 @@ subsection: Router
 
 # A
 
+##### `A` is an enhanced version of the [`a`][nativeanchor] element that supports client-side and islands routing
+
+<div class="text-xl">
+
+```tsx twoslash
+import { A } from "solid-start";
+// ---cut---
+<A href="/page/3">Next</A>
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
+### Adding a link to another page
+
+The `<A>` component is designed handle links for client-side routing. It is a wrapper of the native `<a>` element and is a re-export from `@solidjs/router`. These components are progressive enhancible and can work with client-side routing even when not hydrated bridging the gap between Single Page applications and Islands.
+
 ```tsx
 import { A } from "solid-start";
 
@@ -20,11 +40,11 @@ export default function Nav() {
 }
 ```
 
-The `<A>` component is designed handle links for client-side routing. It is a wrapper of the `<a>` element and is a re-export from `@solidjs/router`. These components are progressive enhancible and can work with client-side routing even when not hydrated bridging the gap between Single Page applications and Islands.
-
 The `<A>` tag also has an `active` class if its href matches the current location, and `inactive` otherwise. **Note:** By default matching includes locations that are descendents (eg. href `/users` matches locations `/users` and `/users/123`), use the boolean `end` prop to prevent matching these. This is particularly useful for links to the root route `/` which would match everything.
 
-### A Props
+## Reference
+
+### Props
 
 <table>
   <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
@@ -36,3 +56,5 @@ The `<A>` tag also has an `active` class if its href matches the current locatio
   <tr><td>inactiveClass</td><td>string</td><td>The class to show when the link is inactive (when the current location doesn't match the link).</td></tr>
   <tr><td>end</td><td>boolean</td><td>If `true`, only considers the link to be active when the curent location matches the `href` exactly; if `false`, check if the current location _starts with_ `href`.</td></tr>
 </table>
+
+[nativeanchor]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a

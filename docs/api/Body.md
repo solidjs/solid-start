@@ -7,6 +7,8 @@ subsection: Document
 
 # Body
 
+<table-of-contents></table-of-contents>
+
 ```tsx
 import { Html, Body, Routes, FileRoutes } from "solid-start";
 

@@ -7,27 +7,89 @@ subsection: Router
 
 # useSearchParams
 
-##### `useSearchParams` gives you an object containing the path params of the current route
+##### `useSearchParams` gives you a read/write pair for the search params in the current location
 
-<div class="text-xl">
+<table-of-contents></table-of-contents>
 
-```ts twoslash
-import { useSearchParams } from "solid-start";
+## Usage
+
+### Rendering based on search params
+
+Search params can be a powerful way of controlling the UI. For example, you can use them to control the sorting of a list of items, or to filter the items based on some criteria. What this enables is that you can share that URL and the other person will be able see the same UI as you without configuring anything themselves. It also enables you to use the browser's back/forward buttons to navigate between different states of the UI.
+
+To read the current `URLSearchParams`, call `useSearchParams()` inside a component. The first item in the tuple with be a reactive object with the search params from the current location. You can access them in a listening scope to react to changes.
+
+For example, they can be used in the JSX to customize the UI.
+
+```tsx twoslash {5,11}
+function FilteredList(props: any) {
+  return <></>
+}
+
+type Student = {};
+
 // ---cut---
-const params = useSearchParams();
+import { Resource } from 'solid-js';
+import { useSearchParams, useRouteData } from "solid-start";
+
+export default function Page() {
+  const [searchParams] = useSearchParams();
+  const data = useRouteData<() => Resource<Student[]>>();
+  return (
+    <div>
+      <FilteredList
+        data={data()}
+        filter={searchParams.filter}
+      />
+    </div>
+  );
+}
 ```
 
-</div>
+### Fetching data based on search params
 
-- [Usage](#usage)
+Similar to customizing the UI based on search params, you can also use them to fetch specific data from the server. Imagine a search page. You would want to persist the searched query in the query. if the user cames to the search page with a search param, you can directly show those results. 
 
-  - [Reading `id` param for route `/house/[id]`](#accessing-id-param-for-route-users-id)
-  - [Reading both `id` and `project` params for route `/users/:id/projects/:project`](#accessing-id-param-for-route-users-id)
-  - [Fetching data based on the path params](#example)
-  - [Show helpful error message for catch-all/404 routes](#example)
+So, you need the search param as a source for your resources. You can use `useSearchParams` to get the search params and use them just like you would any other store value.
 
-- [Reference](#reference)
 
-  - [`useSearchParams()`](#hello-world)
+```tsx twoslash {5,9} filename="routes/search.tsx"
+type Student = {};
+const hogwarts = { async search(query: string): Promise<Student[]> { return [] } };
 
-- [Troublehooting](#troublehooting)
+// ---cut---
+import { useSearchParams } from "solid-start";
+import { createServerData$ } from "solid-start/server";
+
+export function routeData() {
+  const [searchParams] = useSearchParams();
+  return createServerData$(async (query) => {
+    return hogwarts.search(query)
+  }, { 
+    key: () => searchParams.query
+  })
+}
+
+```
+
+### Updating search params from the UI
+
+Now, whats the point of a search page without the ability to change the search query. So lets add a search box to the page. We can use the `setSearchParams` function to update the search params. 
+
+```tsx twoslash {5,11} filename="routes/search.tsx"
+// ---cut---
+import { useSearchParams } from "solid-start";
+
+export default function SearchBox() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  return (
+    <div>
+      <input
+        type="text"
+        value={searchParams.query}
+        onInput={(e) => setSearchParams({ query: e.currentTarget.value })}
+      />
+    </div>
+  );
+}
+```

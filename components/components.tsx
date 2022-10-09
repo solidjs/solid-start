@@ -44,6 +44,7 @@ export const components = {
   ),
   nav: props => <nav {...props}>{props.children}</nav>,
   A,
+  "table-of-contents": props => {},
   code: props => {
     return (
       <span class="not-prose">

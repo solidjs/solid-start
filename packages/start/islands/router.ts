@@ -67,7 +67,12 @@ export default function mountRouter() {
       const to = url.pathname + url.search + url.hash;
       const state = a.getAttribute("state");
 
-      if (url.pathname === prevLocation.pathname && url.search === prevLocation.search) return;
+      if (url.pathname === prevLocation.pathname && url.search === prevLocation.search) {
+        if (url.hash !== prevLocation.hash) {
+          window.location.hash = url.hash;
+          setCurrentLocation(getLocation());
+        }
+      }
 
       evt.preventDefault();
 

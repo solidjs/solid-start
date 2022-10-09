@@ -3,9 +3,9 @@ import { A, useLocation } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { mods } from "../docs.root";
 
-export default function TableOfContents() {
+export function useTableOfContents() {
   const path = useLocation();
-  const data = createServerData$(
+  return createServerData$(
     async pathname => {
       let mod = mods[`./docs${pathname}.mdx`] ?? mods[`./docs${pathname}.md`];
       if (!mod) return [];
@@ -15,13 +15,17 @@ export default function TableOfContents() {
       key: () => path.pathname
     }
   );
+}
+
+export default function TableOfContents() {
+  const headings = useTableOfContents();
 
   return (
     <div class="hidden xl:block px-8 py-8 space-y-4 w-[240px] overflow-hidden">
       <span class="font-bold uppercase text-xs">On this page</span>
       <ul class="space-y-2 text-sm">
         <Suspense>
-          <For each={data()}>
+          <For each={headings()}>
             {h => (
               <li
                 classList={{
@@ -29,7 +33,9 @@ export default function TableOfContents() {
                   "ml-4": h.depth === 3
                 }}
               >
-                <A href={`#${h.slug}`}>{h.text}</A>
+                <A activeClass="text-blue-400" href={`#${h.slug}`}>
+                  {h.text}
+                </A>
               </li>
             )}
           </For>

@@ -6,21 +6,7 @@ order: 1
 
 # Routing
 
-- [Creating pages](#creating-pages)
-- [Navigating between pages](#navigation-between-pages)
-
-  - [Using links](#using-links)
-  - [When the user clicks a button](#when-the-user-clicks-a-button)
-  - [Using `Navigate` redirects](#using-navigate-redirects)
-  - [Using redirects from server data functions](#using-redirects-from-server-data-functions)
-  - [Using redirects after actions](#using-redirects-after-actions)
-
-- [Using Nested Routing]()
-- [Using Dynamic Segments]()
-- [Using without file-system routing](#using-without-file-system-routing)
-- [Create Resource Routes]()
-
-<hr />
+<table-of-contents></table-of-contents>
 
 Routing is possibly the most important concept to understand in SolidStart. Everything starts with your routes: the compiler, the initial request, and almost every user interaction afterward. In this section, you'll learn how to write basic routes, navigate between routes, and handle more complex/dynamic routing scenarios.
 
