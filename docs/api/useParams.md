@@ -9,7 +9,7 @@ subsection: Router
 
 ##### `useParams` gives you an object containing the path params of the current route
 
-<div class="text-xl">
+<div class="text-lg">
 
 ```ts twoslash
 import { useParams } from "solid-start";
