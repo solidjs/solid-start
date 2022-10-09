@@ -23,7 +23,7 @@ export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any) => JSX.El
   );
 }
 
-function ErrorMessage(props: { error: any }) {
+export function ErrorMessage(props: { error: any }) {
   createEffect(() => console.error(props.error));
 
   return (

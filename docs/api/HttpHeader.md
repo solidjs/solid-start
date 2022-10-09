@@ -7,9 +7,8 @@ subsection: Document
 
 # HttpHeader
 
-```tsx twoslash
+```tsx twoslash filename="routes/*404.tsx"
 import { HttpHeader, HttpStatusCode } from "solid-start/server";
-// ---cut---
 export default function NotFound() {
   return (
     <div>

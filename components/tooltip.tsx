@@ -9,7 +9,7 @@ export default function Tooltip(props) {
   createEffect(() => {
     console.log("tippy");
     if (!isServer) {
-      tippy(`[data-template="${props.id}"]`, {
+      tippy.default(`[data-template="${props.id}"]`, {
         content() {
           const template = document.getElementById(props.id);
           return template.innerHTML;

@@ -16,7 +16,7 @@ export {
 export type { APIEvent as APIEvent } from "./api";
 export { createRouteAction, createRouteData, FormError, ServerError } from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
-export { default, ErrorBoundary } from "./error-boundary";
+export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
 export { island as unstable_island } from "./islands";
 export { Body, FileRoutes, Head, Html, Scripts } from "./root";
 export * from "./router";
