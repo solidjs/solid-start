@@ -184,7 +184,7 @@ export function createRouteMultiAction<T, U = void>(
             data = data.body;
           } else await handleRefetch(data, options);
           data ? setResult({ data }) : submission.clear();
-        }
+    }
         return data;
       }).catch(async e => {
         if (reqId === count) {
