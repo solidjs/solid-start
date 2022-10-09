@@ -14,7 +14,13 @@ export {
   type RouteDataFuncArgs as RouteDataArgs
 } from "@solidjs/router";
 export type { APIEvent as APIEvent } from "./api";
-export { createRouteAction, createRouteData, FormError, ServerError } from "./data";
+export {
+  createRouteAction,
+  createRouteData,
+  FormError,
+  refetchRouteData,
+  ServerError
+} from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
 export { island as unstable_island } from "./islands";
@@ -30,6 +36,8 @@ export {
   parseCookie,
   serializeCookie,
   type CookieParseOptions,
-  type CookieSerializeOptions
+  type CookieSerializeOptions,
+  type SessionIdStorageStrategy,
+  type SessionStorage
 } from "./session";
 import "./types";

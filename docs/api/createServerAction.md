@@ -5,6 +5,30 @@ order: 8
 subsection: Actions
 ---
 
-# useMatch
+# createServerAction$
 
-##### `useMatch` gives you a reactive object describing the URL the user is visiting
+##### `createServerAction$` creates a controller for managing the submissions of an async user action, where the action always runs on the server
+
+<div class="text-lg">
+
+```tsx twoslash
+import { createServerAction$ } from 'solid-start/server'
+// ---cut---
+const [acting, act] = createServerAction$(async (args) => {
+  // do something
+})
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
+## Reference
+
+### `createServerAction$(action, options)`
+
+#### Returns
+
+
