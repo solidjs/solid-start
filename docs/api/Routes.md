@@ -7,7 +7,19 @@ subsection: Router
 
 # Routes
 
-```js
+```tsx twoslash {9-13} filename="root.tsx"
+// @filename: pages/Home.tsx
+export default function Home() {
+  return <h1>Home</h1>;
+}
+
+// @filename: pages/Users.tsx
+export default function Users() {
+  return <h1>Users</h1>;
+}
+
+// @filename: root.tsx
+// ---cut---
 import { Routes, Route } from "solid-start"
 
 import Home from "./pages/Home"
@@ -27,9 +39,11 @@ export default function App() {
 
 The `<Routes>` component is where the Routes are defined. It receives `<Route>` components as children that define the various pages of your application. The `<Routes>` component also serves as the insertion point for those pages.
 
-However, SolidStart provides file system routing which allows you to define the routes via a folder structure under the `/routes` folder. You can pass them into the `<Routes>` component with the `<FileRoutes>` component.
+Think of it as a `<Switch>` component which uses the `URLPattern` rules with the `path` to match which `Route` to render. And when the user navigates to a different link, switches to the new `Route` and renders it.
 
-```tsx {6-8}
+Manually importing all your routes can be tedious and error prone, so, SolidStart gives you file-system routing. This allows you to define the routes via a folder structure under the `/routes` folder. You can pass them into the `<Routes>` component with the `<FileRoutes>` component.
+
+```tsx twoslash {7-9} filename="root.tsx"
 import { Html, Body, Routes, FileRoutes } from "solid-start";
 
 export default function Root() {

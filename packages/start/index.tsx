@@ -13,7 +13,7 @@ export {
   type RouteDataFunc,
   type RouteDataFuncArgs as RouteDataArgs
 } from "@solidjs/router";
-export type { ApiFetchEvent } from "./api";
+export type { APIEvent as APIEvent } from "./api";
 export { createRouteAction, createRouteData, FormError, ServerError } from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary } from "./error-boundary";

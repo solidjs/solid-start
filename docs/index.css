@@ -24,3 +24,11 @@ h4 {
 .line {
   @apply px-3
 }
+
+.prose {
+  --tw-prose-links: #0284c7;
+}
+
+.tippy-content {
+  @apply overflow-x-scroll;
+}

@@ -6,7 +6,9 @@ order: 8
 
 # API Routes
 
-While we think that using tools like `createServerData$` are the best way to write server-side code for data needed by your UI, sometimes you need to expose API routes. This could be for a variety of reasons:
+While we think that using  [`createServerData$`][createServerData] is the best way to write server-side code for data needed by your UI, sometimes you need to expose API routes.
+
+This are a bunch of reasons for wanting to do this:
 
 * You have additional clients that want to share this logic
 * You want to expose a GraphQL or TRPC endpoint
@@ -15,7 +17,7 @@ While we think that using tools like `createServerData$` are the best way to wri
 * You want to have URLs not serving HTML, but other kinds of documents like PDFs or images
 
 
-SolidStart makes it easy to write these kinds of routes as well.
+SolidStart makes it easy to write routes for these us cases.
 
 ## Writing an API Route
 
@@ -60,12 +62,13 @@ export default function Students() {
 Warning: A route can only export either a default `Page` component or a `GET` handler. You cannot export both.
 
 An API route gets passed an `APIEvent` object as its first argument. This object contains:
+
 * `request`: the `Request` object representing the request sent by the client
 * `params`: object that contains the dynamic route parameters, eg. for `/api/students/:id`, when user requests `/api/students/123` , `params.id` will be `"123"`
 * `env`: the environment context, environment specific settings, bindings
 * `fetch`: an internal `fetch` function that can be used to make requests to other API routes without worrying about the `origin` of the URL.
 
-Lets look at an example of an API route that returns a list of students in a given house, in a specific year:
+An API route is expected to return a [`Response`][response] object. Lets look at an example of an API route that returns a list of students in a given house, in a specific year:
 
 ```tsx twoslash filename="/routes/api/[house]/students/year-[year].ts"
 // @filename: hogwarts.ts
@@ -82,10 +85,10 @@ export default {
 
 // @filename: index.ts
 // ---cut---
-import { ApiFetchEvent, json } from "solid-start/api";
+import { APIEvent, json } from "solid-start/api";
 import hogwarts from "./hogwarts";
 
-export async function GET({ params }: ApiFetchEvent) {
+export async function GET({ params }: APIEvent) {
   console.log(`House: ${params.house}, Year: ${params.year}`);
   const students = await hogwarts.getStudents(params.house, params.year);
   return json({ students })
@@ -118,11 +121,11 @@ export default {
 
 // @filename: index.ts
 // ---cut---
-import { ApiFetchEvent, json } from "solid-start/api";
+import { APIEvent, json } from "solid-start/api";
 import { parseCookie } from "solid-start";
 import hogwarts from "./hogwarts";
 
-export async function GET({ request, params }: ApiFetchEvent) {
+export async function GET({ request, params }: APIEvent) {
   const cookie = parseCookie(request.headers.get("Cookie") ?? "");
   const userId = cookie['userId'];
   if (!userId) {
@@ -145,3 +148,5 @@ You can read more about using HTTP cookies in the [MDN documentation][cookies]
 
 [cookies]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
 [session]: /advanced/session
+[response]: https://developer.mozilla.org/en-US/docs/Web/API/Response
+[createServerData]: /api/createServerData
