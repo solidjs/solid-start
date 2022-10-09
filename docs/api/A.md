@@ -9,7 +9,7 @@ subsection: Router
 
 ##### `A` is an enhanced version of the [`a`][nativeanchor] element that supports client-side and islands routing
 
-<div class="text-xl">
+<div class="text-lg">
 
 ```tsx twoslash
 import { A } from "solid-start";
