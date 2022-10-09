@@ -3686,8 +3686,8 @@ packages:
     resolution: {integrity: sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==}
     dev: true
 
-  /@yarnpkg/parsers/3.0.0-rc.22:
-    resolution: {integrity: sha512-GAWDjXduYBUVmOzlj3X0OwTQ1BV4ZeDdgw8yXST3K0lB95drWEGxa1at0v7BmHDyK2y1F1IJufc8N4yrcuXjWg==}
+  /@yarnpkg/parsers/3.0.0-rc.24:
+    resolution: {integrity: sha512-A5wXsIUOipZUGDly1SHBht1OjKKW4y+E9EzzJxR2tby0Pj3atgCta9RSYa4+aXLkFfIMX3onnykmJnwJWqJj5g==}
     engines: {node: '>=14.15.0'}
     dependencies:
       js-yaml: 3.14.1
@@ -8228,7 +8228,7 @@ packages:
       '@nrwl/tao': 14.8.3_debug@4.3.4
       '@parcel/watcher': 2.0.4
       '@yarnpkg/lockfile': 1.1.0
-      '@yarnpkg/parsers': 3.0.0-rc.22
+      '@yarnpkg/parsers': 3.0.0-rc.24
       '@zkochan/js-yaml': 0.0.6
       axios: 0.21.1_debug@4.3.4
       chalk: 4.1.0

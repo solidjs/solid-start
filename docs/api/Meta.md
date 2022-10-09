@@ -23,7 +23,7 @@ export default function Root() {
 }
 ```
 
-The `Meta` component represents metadata not that cannot be represented by other HTML elements. It is a wrapper of the `meta` element and is a re-export from `@solidjs/meta`. `Meta` components may be placed in the `Head` or can be added throughout the application to add additional metadata or override parents. `Meta` tags are consider to be the same and are overridden if the `name` attribute matches.
+The `<Meta>` component represents metadata not that cannot be represented by other HTML elements. It is a wrapper of the `<meta>` element and is a re-export from `@solidjs/meta`. `Meta` components may be placed in the `Head` or can be added throughout the application to add additional metadata or override parents. `Meta` tags are consider to be the same and are overridden if the `name` attribute matches.
 
 ```tsx twoslash
 import { Meta } from "solid-start";
