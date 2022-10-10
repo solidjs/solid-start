@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+  NETLIFY_AUTH_TOKEM: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
 jobs:
   docs:
@@ -40,11 +40,4 @@ jobs:
 
       - uses: netlify/actions/cli@master
         with:
-          args: deploy --site 577a5e59-05a4-4cb2-b724-c00ba28f0dc7 --build --prod --dir netlify
-      # - name: 👀 Build Docs
-      #   env:
-      #     START_ADAPTER: solid-start-deno
-      #   run: pnpm docs:build
-
-      # - name: Deploy Docs
-      #   run: cd dist && deno run --allow-read --allow-write --allow-env --allow-net --allow-run --no-check https://deno.land/x/deploy/deployctl.ts deploy --project=solid-start-docs --prod ./server.js
+          args: deploy --site 577a5e59-05a4-4cb2-b724-c00ba28f0dc7 --build --prod --dir netlify --auth ${{ env.NETLIFY_AUTH_TOKEN }}
