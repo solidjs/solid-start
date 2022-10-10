@@ -1,14 +1,14 @@
 ---
 section: api
-title: createRouteData
+title: createRouteData/ServerData$
 order: 8
 subsection: Data
 active: true
 ---
 
-# createRouteData
+# createRouteData/createServerData$
 
-##### `createRouteData` allows you to manage async data fetching
+##### `createRouteData/createServerData$` allows you to manage async data fetching
 
 <div class="text-lg">
 
@@ -39,6 +39,24 @@ export function routeData() {
     const response = await fetch("https://hogwarts.deno.dev/students");
     return (await response.json());
   });
+}
+```
+
+### Fetching data from a Database
+
+`createServerData$` is the equivalent to `createRouteData` except it always runs its function on the server, even when instantiated in the browser. It does so using SolidStart's `server$` function internally. This allows you access things only available on the server like databases.
+
+```tsx twoslash
+const prisma = {
+  students: {
+    findMany() {}
+  }
+}
+// ---cut---
+import { createServerData$ } from "solid-start/server";
+
+export function routeData() {
+  return createServerData$(async () => await prisma.students.findMany());
 }
 ```
 
