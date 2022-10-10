@@ -8,7 +8,7 @@ active: true
 
 # Routes
 
-##### `Routes` is a component that renders the matched route component
+##### `Routes` is a special `Switch` component that renders the correct `Route` child based on the users location, and switches between them as the user navigates.
 
 <div class="text-lg">
 
@@ -28,9 +28,9 @@ import { Routes, FileRoutes } from "solid-start";
 
 ### Defining your own routes
 
-The `<Routes>` component is a slightly different Solid component, because instead of accepting DOM elements as children, it actually accepts route configuration objects. Yeah, our `Route` components return route configuration objects that the `Routes` component merges into one big routing configuration. It uses one of Solid's secrets that a component can return anything, and its upto the parent to decide what to do with it. It receives `<Route>` components as children that define the various pages of your application. The `<Routes>` component also serves as the insertion point for those pages.
+The `<Routes>` component is a control flow component. It can be thought of a special `<Switch>` component. Instead of accepting DOM elements as children, it actually accepts route configuration objects. Our `<Route>` components actually return route configuration objects. The `<Routes>` component merges theses into one big routing configuration. It uses one of Solid's secrets that a component can return anything. Its upto the parent to decide what to do with the children. It receives `<Route>` components as children that define the various pages of your application. 
 
-Think of it as a `<Switch>` component which uses the `URLPattern` rules with the `path` to match which `Route` to render. And when the user navigates to a different link, switches to the new `Route` and renders it.
+Like a `<Switch>` component, `<Routes>` decides which of its children to render. It uses the `URLPattern` rules against the `path` to match which `<Route>` child to render. And when the user navigates to a different location, this component will switch to the new `<Route>` and render it.
 
 
 ```tsx twoslash {9-13} filename="root.tsx"
