@@ -3,18 +3,22 @@ section: api
 title: Route
 order: 3
 subsection: Router
+active: true
 ---
 
-# Routes
+# Route
 
-##### `Routes` is a component that renders the matched route component
+##### `<Route>` renders a route configuration object to be used by the `<Routes>` component.
 
 <div class="text-lg">
 
 ```tsx twoslash
-import { Routes, FileRoutes } from "solid-start";
+import { Route } from "solid-start";
+function Students() {
+  return <h1>Home</h1>;
+}
 // ---cut---
-<Routes><FileRoutes /></Routes>
+<Route path="/students" component={Students} />
 ```
 
 </div>
@@ -22,6 +26,8 @@ import { Routes, FileRoutes } from "solid-start";
 <table-of-contents></table-of-contents>
 
 ## Usage
+
+The `<Route>` component allows the manual registration of routes when added as children to the `<Routes>` component. It is a re-export from `@solidjs/router`. If only using file system routing you probably will not need any of the information on this page. But it can serve as a reference to how this works under the hood.
 
 ```tsx twoslash filename="root.tsx"
 // @filename: pages/Home.tsx
@@ -55,9 +61,13 @@ export default function RootLayout() {
 }
 ```
 
-The `<Route>` component allows the manual registration of routes when added as children to the `<Routes>` component. It is a re-export from `@solidjs/router`. If only using file system routing you probably will not need any of the information on this page. But it can serve as a reference to how this works under the hood.
+## Reference
 
-### Route Props
+### `<Route>`
+
+Render `<Route>` components as children of the `<Routes>` component to define your own routes, even alongside the file system routes. They are merged together by the `<Routes>` component.
+
+#### Props
 
 <table>
   <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
@@ -67,7 +77,7 @@ The `<Route>` component allows the manual registration of routes when added as c
   <tr><td>data</td><td>function</td><td>Method for registering data loading functions that run in parallel on route match.</td></tr>
 </table>
 
-## Dynamic Routes
+### Dynamic Routes
 
 If you don't know the path ahead of time, you might want to treat part of the path as a flexible parameter that is passed on to the component. 
 
@@ -111,33 +121,21 @@ export default function RootLayout() {
 }
 ```
 
-or with file-system routing:
-
-```tsx
-|-- routes
-|   |-- index.tsx
-|   |-- users
-|   |   |-- [id].tsx
-|   |   |-- index.tsx
-|   |-- about.tsx
-|-- root.tsx
-```
-
 The colon indicates that `id` can be any string, and as long as the URL fits that pattern, the `User` component will show.
 
 You can then access that `id` from within a route component with `useParams`:
 
-
-```jsx
-//async fetching function
-import { fetchUser } from "api"
+```jsx twoslash {5}
+let fetchUser = (id) => {
+  return { id, name: "Bob" };
+};
+// ---cut---
+import { A, useParams } from "solid-start"
+import { createResource } from "solid-js";
 
 export default function User () {
-
   const params = useParams();
-
   const [userData] = createResource(() => params.id, fetchUser);
-
   return <A href={userData.twitter}>{userData.name}</A>
 }
 ```
@@ -162,13 +160,6 @@ Parameters can be specified as optional by adding a question mark to the end of 
 
 If you want to expose the wild part of the path to the component as a parameter, you can name it:
 
-```tsx twoslash filename="routes/foo/[...any].tsx"
-const Stories = () => <div>Stories</div>
-// ---cut---
-export default () => <Stories />
-```
-
-
 ```jsx
 <Route path='foo/*any' element={<div>{useParams().any}</div>}/>
 ```
@@ -184,41 +175,75 @@ Routes also support defining multiple paths using an array. This allows a route 
 <Route path={["login", "register"]} component={Login}/>
 ```
 
-## Route Data Functions
+### Route Data Functions
+
 In the [above example](#dynamic-routes), the User component is lazy-loaded and then the data is fetched. With route data functions, we can instead start fetching the data parallel to loading the route, so we can use the data as soon as possible.
 
 To do this, create a function that fetches and returns the data using `createResource`. Then pass that function to the `data` prop of the `Route` component. 
 
+```tsx twoslash filename="root.tsx"
+// @filename: api.ts
+export function fetchStudent(id: string) {
+  return fetch(`https://hogwarts.deno.dev/students/${id}`).then(res => res.json());
+}
 
-```js
-import { lazy } from "solid-js";
-import { Route } from "solid-start";
-import { fetchUser } ...
+// @filename: pages/students/[id].tsx
+export default function Student() {
+  return <div>Student</div>;
+}
 
-const User = lazy(() => import("./pages/users/[id].js"));
+// @filename: root.tsx
+import { lazy, createResource } from "solid-js";
+import { Route, RouteDataArgs } from "solid-start";
+import { fetchStudent } from "./api";
 
-//Data function
-function UserData({params, location, navigate, data}) {
-  const [user] = createResource(() => params.id, fetchUser);
-  return user;
+const StudentProfile = lazy(() => import("./pages/students/[id]"));
+
+// ---cut---
+// Route Data function
+function studentData({ params, location, navigate, data }: RouteDataArgs) {
+  const [student] = createResource(() => params.id, fetchStudent);
+  return student;
 }
 
 //Pass it in the route definition
-<Route path="/users/:id" component={User} data={UserData} />;
+<Route 
+  path="/students/:id" 
+  component={StudentProfile} 
+  data={studentData}
+ />;
 ```
 
 When the route is loaded, the data function is called, and the result can be accessed by calling `useRouteData()` in the route component.
 
-```jsx
-//pages/users/[id].js
+```tsx twoslash filename="pages/students/[id].tsx"
+// @filename: api.ts
+type Student = { name: string }
+export function fetchStudent(id: string) {
+  return fetch(`https://hogwarts.deno.dev/students/${id}`).then(res => res.json()) as Promise<Student>;
+}
+
+// @filename: root.tsx
+import { lazy, createResource } from "solid-js";
+import { Route, RouteDataArgs } from "solid-start";
+import { fetchStudent } from "./api";
+
+// Route Data function
+function studentData({ params, location, navigate, data }: RouteDataArgs) {
+  const [student] = createResource(() => params.id, fetchStudent);
+  return student;
+}
+
+// ---cut---
 import { useRouteData } from 'solid-start';
-export default function User() {
-  const user = useRouteData();
-  return <h1>{user().name}</h1>;
+
+export default function StudentProfile() {
+  const student = useRouteData<typeof studentData>();
+  return <h1>{student()?.name}</h1>;
 }
 ```
 
-## Nested Routes
+### Nested Routes
 The following two route definitions have the same result:
 
 ```jsx
@@ -233,17 +258,21 @@ The following two route definitions have the same result:
 
 Only leaf Route nodes (innermost `Route` components) are given a route. If you want to make the parent its own route, you have to specify it separately:
 
-```jsx
-//This won't work the way you'd expect
-<Route path="/users" component={Users}>
+So, if you want to render a page with `<Users>` for `/users` and `<User>` for `/users/:id`, you need to specify both as leaf routes:
+
+```jsx bad {1}
+// This is not a leaf route, its actually a parent layout route
+<Route path="/users" component={Users}> 
   <Route path="/:id" component={User} />
 </Route>
+```
 
-//This works
+```jsx good {0}
 <Route path="/users" component={Users} />
 <Route path="/users/:id" component={User} />
+```
 
-//This also works
+```jsx good {1}
 <Route path="/users">
   <Route path="/" component={Users} />
   <Route path="/:id" component={User} />
