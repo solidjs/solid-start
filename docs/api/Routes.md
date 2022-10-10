@@ -15,7 +15,9 @@ active: true
 ```tsx twoslash
 import { Routes, FileRoutes } from "solid-start";
 // ---cut---
-<Routes><FileRoutes /></Routes>
+<Routes>
+  <FileRoutes />
+</Routes>
 ```
 
 </div>

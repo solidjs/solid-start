@@ -3,11 +3,28 @@ section: api
 title: Scripts
 order: 8
 subsection: Document
+active: true
 ---
 
 # Scripts
 
-```tsx
+##### `Scripts` is a collection of scripts that can be used to build your app
+
+<div class="text-lg">
+
+```tsx twoslash
+import { Scripts } from 'solid-start'
+// ---cut---
+<Scripts />
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
+```tsx twoslash
 import { Html, Head, Body, Routes, FileRoutes, Scripts } from "solid-start";
 
 export default function Root() {

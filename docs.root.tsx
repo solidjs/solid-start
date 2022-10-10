@@ -13,7 +13,7 @@ import {
   unstable_island
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
-import "./docs/index.css";
+import "./components/index.css";
 
 const IslandA = unstable_island(() => import("./components/A"));
 const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
@@ -102,7 +102,9 @@ function Nav() {
       <For each={data()}>
         {r => (
           <ul>
-            <span class="font-bold text-lg mb-4">{r.title}</span>
+            <span class="text-left w-full dark:text-white border-b border-gray-200 dark:border-gray-500 hover:text-gray-400 transition flex flex-wrap content-center justify-between space-x-2 text-xl p-2 py-2 mb-8">
+              {r.title}
+            </span>
             <Show
               when={!r.subsection}
               fallback={
