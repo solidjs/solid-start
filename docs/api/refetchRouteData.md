@@ -31,22 +31,36 @@ Route data is most commonly invalidated and refetched when we perform route acti
 ```tsx twoslash
 import { refetchRouteData } from 'solid-start'
 
-// reload all the data
+// refetch all the resources created with createRouteData
 refetchRouteData()
 ```
 
 ### Refetching specific route data
 
-Additionally `refetchRouteData` accept a `key` as an argument to refetch specific route data. These keys can be strings, or arrays containing strings and objects. Keys will be compared with partial matched making it easier refetcn anmer of rote data resources.
+Additionally `refetchRouteData` accept a `key` as an argument to refetch specific route data. These keys can be strings, or arrays containing strings and objects. Keys will be compared with partial matching, making it easier to refetch groups of route data resources at once.
 
-```tsx twoslash
-import { refetchRouteData } from 'solid-start'
+```tsx twoslash {14,18}
+function fetchStudents() {}
+// ---cut---
+import { refetchRouteData, createRouteData } from 'solid-start'
 
-// reload all route data with users in the key
-refetchRouteData(["users"]);
+const allStudents = createRouteData(
+  fetchStudents, 
+  { key: ['students'] }
+)
 
-// reload route data for route data with a key of user 123
-refetchRouteData(["users", { id: 123 }]);
+const gryffindorStudents = createRouteData(
+  fetchStudents, 
+  { key: ['students', { house: 'gryffindor' }] 
+})
+
+// reload all route data with students in the key, 
+refetchRouteData(['students']);
+// refetches both allStudents and gryffindorStudents
+
+// reload route data for route data with a key of house gryffindor
+refetchRouteData(['students', { house: 'gryffindor' }]);
+// refetches gryffindorStudents only
 ```
 
 
@@ -54,8 +68,7 @@ refetchRouteData(["users", { id: 123 }]);
 
 ### `refetchRouteData(keys)`
 
-
-Call `retchRouteData()` to refetch route data.
+Call `retchRouteData()` to refetch either all the route data on the page, or specific ones based on the `key`.
 
 ```tsx twoslash
 import { refetchRouteData } from "solid-start";
