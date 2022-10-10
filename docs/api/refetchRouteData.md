@@ -61,11 +61,11 @@ Call `retchRouteData()` to refetch route data.
 import { refetchRouteData } from "solid-start";
 
 // refetch all
-retchRouteData();
+refetchRouteData();
 
 // refetch route data for user 123
-retchRouteData(["users", { id: 123 }]);
+refetchRouteData(["users", { id: 123 }]);
 
 // refetch route data pertaining to users
-retchRouteData(["users"]);
+refetchRouteData(["users"]);
 ```
