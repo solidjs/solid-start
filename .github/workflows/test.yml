@@ -10,8 +10,8 @@ on:
       - v*
     paths-ignore:
       - "docs/**"
-      - "docs.root.tsx",
-      - "componnts/**"
+      - "docs.root.tsx"
+      - "components/**"
       - "**/README.md"
   pull_request:
     paths-ignore:
