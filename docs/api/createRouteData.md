@@ -62,7 +62,7 @@ export function routeData() {
 
 ### Fetching data with a key
 
-Often though we want to be able set a key for our routeData both to act as a parameter and to allow easy invalidation.
+Often though we want to be able set a key for our routeData both to act as a parameter and to allow easy invalidation. The fetcher function is not reactive so you must use this option if you wish the route data to update. It is also the only way to pass parameters to fetcher function for `createServerData$`.
 
 ```tsx twoslash
 import { createRouteData, RouteDataArgs } from "solid-start";
