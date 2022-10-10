@@ -19,7 +19,7 @@ const pkg = require(join(__dirname, "package.json"));
 const DEBUG = require("debug")("start");
 globalThis.DEBUG = DEBUG;
 
-const prog = sade("solid-start").version("alpha");
+const prog = sade("solid-start").version("beta");
 
 const findAny = (path, name) => {
   for (var ext of [".js", ".ts", ".mjs", ".mts"]) {

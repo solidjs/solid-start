@@ -96,7 +96,7 @@ The `nohoist` option is no longer available in Yarn v2+. In this case, we can us
 
 ## Changelog
 
-### [0.1.0-alpha.106]
+### [0.1.6]
 
 Renamed API Routes exports from lower case to upper case method names to match closely how people see those functions in the spec and in usage.
 
