@@ -39,7 +39,7 @@ jobs:
           deno-version: v1.x
 
       - name: Build docs
-        run: pnpm run build:docs
+        run: pnpm run docs:build
 
       - uses: netlify/actions/cli@master
         with:
