@@ -23,6 +23,7 @@ type RouteDataFetcher<S, T> = (source: S, event: RouteDataEvent) => T | Promise<
 
 type RouteDataOptions<T, S> = ResourceOptions<T> & {
   key?: RouteDataSource<S>;
+  reconcileOptions?: ReconcileOptions;
 };
 
 const resources = new Set<(k: any) => void>();
@@ -107,7 +108,7 @@ export function createRouteData<T, S>(
     (options.key || true) as RouteDataSource<S>,
     resourceFetcher,
     {
-      storage: createDeepSignal,
+      storage: init => createDeepSignal(init, options.reconcileOptions) as any,
       ...options
     }
   );
@@ -122,7 +123,7 @@ export function refetchRouteData(key?: string | any[] | void) {
   for (let refetch of resources) refetch(key);
 }
 
-function createDeepSignal<T>(value: T, options?: ReconcileOptions): Signal<T> {
+function createDeepSignal<T>(value: T, options?: ReconcileOptions) {
   const [store, setStore] = createStore({
     value
   });
