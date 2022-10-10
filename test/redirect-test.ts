@@ -28,12 +28,12 @@ test.describe("external redirect", () => {
         "src/routes/redirect.jsx": js`
           import { redirect } from "solid-start/server";
 
-          export let get = () => redirect("https://hogwarts.deno.dev/callback");
+          export const GET = () => redirect("https://hogwarts.deno.dev/callback");
         `,
         "src/routes/redirect-to.jsx": js`
           import { redirect } from "solid-start/server";
 
-          export let post = async ({ request }) => {
+          export const POST = async ({ request }) => {
             let formData = await request.formData();
             return redirect(formData.get('destination'));
           }
