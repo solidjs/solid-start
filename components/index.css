@@ -56,9 +56,13 @@ pre {
   min-width: 100%;
 }
 
+.meta-line {
+  display: none;
+}
+
 .prose pre {
   font-size: inherit;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
 }
 
 .dark .prose pre {

@@ -24,24 +24,26 @@ const data = useRouteData();
 
 ## Usage
 
-### Retrieving data set in the routeData function
+### Retrieving data from the routeData function
 
 SolidStart's file system routing allows components defined under the `/routes` to define a `routeData` function that executes when navigation begins to that component. It does so in parallel to loading the code for it.
 
 You can use whatever is returned from the `routeData` function in your component by calling `useRouteData`.
 
-```ts
+```ts twoslash
+let fetchUsers = async () => ({ name: "Harry Potter" });
+// ---cut---
 import { createResource } from "solid-js";
-import { useRouteData } from "solid-start";
+import { useRouteData, RouteDataArgs } from "solid-start";
 
-export function routeData({ params }) {
+export function routeData({ params }: RouteDataArgs) {
   // load some data
   const [users] = createResource(fetchUsers);
   return users;
 }
 
 export default function Component() {
-  const users = useRouteData();
+  const users = useRouteData<typeof routeData>();
 }
 ```
 

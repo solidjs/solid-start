@@ -28,7 +28,7 @@ import { Routes, FileRoutes } from "solid-start";
 
 ### Defining your own routes
 
-The `<Routes>` component is where the route branches are defined. It receives `<Route>` components as children that define the various pages of your application. The `<Routes>` component also serves as the insertion point for those pages.
+The `<Routes>` component is a slightly different Solid component, because instead of accepting DOM elements as children, it actually accepts route configuration objects. Yeah, our `Route` components return route configuration objects that the `Routes` component merges into one big routing configuration. It uses one of Solid's secrets that a component can return anything, and its upto the parent to decide what to do with it. It receives `<Route>` components as children that define the various pages of your application. The `<Routes>` component also serves as the insertion point for those pages.
 
 Think of it as a `<Switch>` component which uses the `URLPattern` rules with the `path` to match which `Route` to render. And when the user navigates to a different link, switches to the new `Route` and renders it.
 

@@ -27,6 +27,13 @@ export const components = {
       </A>
     );
   },
+  "token-link": props => {
+    return (
+      <span class="code-step bg-opacity-10 dark:bg-opacity-20 relative rounded px-1 py-[1.5px] border-b-[2px] border-opacity-60 bg-yellow-400 border-yellow-400 text-yellow-600 dark:text-yellow-300">
+        {props.children}
+      </span>
+    );
+  },
   li: props => (
     <li {...props} class="mb-2">
       {props.children}
@@ -90,7 +97,14 @@ export const components = {
 
     return (
       <Tooltip id={id}>
-        {props.children}
+        <span
+          classList={{
+            "code-step bg-opacity-10 dark:bg-opacity-20 relative rounded px-1 py-[1.5px] border-b-[2px] border-opacity-60 bg-yellow-400 border-yellow-400 text-yellow-600 dark:text-yellow-300":
+              props.style?.borderBottom
+          }}
+        >
+          {props.children}
+        </span>
         <div id={id} style="display: none;">
           <pre class="text-white bg-transparent text-[0.65em] p-0 m-0 border-0 w-full whitespace-pre-wrap">
             {props.lsp}
