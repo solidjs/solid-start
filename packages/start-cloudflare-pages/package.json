@@ -1,6 +1,6 @@
 {
   "name": "solid-start-cloudflare-pages",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "./index.js",
   "type": "module",
   "solid": {
