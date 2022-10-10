@@ -96,6 +96,35 @@ The `nohoist` option is no longer available in Yarn v2+. In this case, we can us
 
 ## Changelog
 
+### [0.1.0-alpha.106]
+
+Renamed API Routes exports from lower case to upper case method names to match closely how people see those functions in the spec and in usage.
+
+```diff
+
+- export function get() {
++ export function GET() {
+  return new Response();
+}
+
+- export function post() {
++ export function POST() {
+
+  return new Response();
+}
+
+- export function patch() {
++ export function PATCH() {
+  return new Response();
+}
+
+- export function del() {
++ export function DELETE() {
+  return new Response();
+}
+
+```
+
 ### [0.1.0-alpha.104]
 
 Changed grouped routes from `__name` syntax to `(name)`.
