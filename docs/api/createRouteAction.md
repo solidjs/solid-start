@@ -34,16 +34,25 @@ While you might think this should be just a straight forward `onClick` handler, 
 
 We want to show a pending status while the action is being performed. The submission has a `pending` property that we can use to show a pending indicator.
 
-```tsx twoslash
-
+```twoslash include lib
 async function enrollInClass(className: string): Promise<void> {
-  // do something
+  throw new Error('You are not allowed to enroll in this class')
 }
 
+async function getClasses() {
+  return [
+    { name: 'Defense against the Dark Arts' },
+    { name: 'Potions' },
+    { name: 'Transfiguration' },
+  ]
+}
+```
+
+```tsx twoslash {10,14-16}
+// @include: lib
 // ---cut---
 import { createRouteAction } from 'solid-start'
 import { Show } from 'solid-js'
-
 
 function EnrollmentPage() {
   const [enrolling, enroll] = createRouteAction(enrollInClass)
@@ -61,7 +70,6 @@ function EnrollmentPage() {
     </div>
   )
 }
-
 ```
 
 ### Handle errors
@@ -107,19 +115,8 @@ You don't have to do anything more to have your `createRouteData` functions refe
 
 If you don't want to refetch all the data, you can use the `invalidate` param to specify which `key`'s to invalidate. This way you only refetch what you know has changed.
 
-```tsx twoslash {17-19} filename="routes/enrollment.tsx"
-async function enrollInClass(className: string): Promise<void> {
-  throw new Error('You are not allowed to enroll in this class')
-}
-
-async function getClasses() {
-  return [
-    { name: 'Defense against the Dark Arts' },
-    { name: 'Potions' },
-    { name: 'Transfiguration' },
-  ]
-}
-
+```tsx twoslash {5,8} filename="routes/enrollment.tsx"
+// @include: lib
 // ---cut---
 import { createRouteAction, createRouteData } from 'solid-start'
 import { Show, For } from 'solid-js'
@@ -160,21 +157,9 @@ export default function EnrollmentPage() {
 Now, since we have Javascript in our hands, we can give the user a more enhanced experience. Sometimes this means pretending an action was successful to provide a more response user experience. This is called an optimistic UI. We can do this in a neat way where you don't need to manage extra state. You have access to the `input` on the submission, so you know what data was sent to the action. And using the `pending` property, you can use the `input` as part of the visible UI. For example, in a list of enrolled classes, you can add the class to the list before the action is complete. Then, if the action fails, you can remove the class from the list. 
 
 
-```tsx twoslash {18-20} filename="routes/enrollment.tsx"
-async function enrollInClass(className: string): Promise<void> {
-  throw new Error('You are not allowed to enroll in this class')
-}
-
-async function getClasses() {
-  return [
-    { name: 'Defense against the Dark Arts' },
-    { name: 'Potions' },
-    { name: 'Transfiguration' },
-  ]
-}
-
+```tsx twoslash {19-21} filename="routes/enrollment.tsx"
+// @include: lib
 // ---cut---
-
 import { createRouteAction, createRouteData } from 'solid-start'
 import { Show, For } from 'solid-js'
 
@@ -187,14 +172,17 @@ export function EnrollmentPage() {
 
   return (
     <div>
-      <ul>
-        <For each={classes()}>
-          {course => <li>{course.name}</li>}  
-        </For>
-        <Show when={enrolling.pending}>
-          <li>{enrolling.input}</li>
-        </Show>
-      </ul>
+      <div>
+        Enrolled Classes
+        <ul>
+          <For each={classes()}>
+            {course => <li>{course.name}</li>}  
+          </For>
+          <Show when={enrolling.pending}>
+            <li>{enrolling.input}</li>
+          </Show>
+        </ul>
+      </div>
       <button  
         onClick={() => enroll('Defense against the Dark Arts')}
         disabled={enrolling.pending}
