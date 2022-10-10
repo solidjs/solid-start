@@ -15,16 +15,14 @@ active: true
 ```tsx twoslash
 import { Body } from "solid-start";
 // ---cut---
-<Body></Body>
+<Body>...</Body>
 ```
 
 </div>
 
 <table-of-contents></table-of-contents>
 
-# Usage
-
-## Adaptive `body` element for SSR/client/islands
+## Usage
 
 The `Body` component is the entry point into our applications. Here is where we insert the top level visual elements of our page live, as well as things like our `Routes` definition. It wraps the `body` element and accepts all the same attributes.
 

@@ -22,7 +22,7 @@ export type RouteAction<T, U> = [
     pending: boolean;
     input?: T;
     result?: U;
-    error?: unknown;
+    error?: any;
     clear: () => void;
     retry: () => void;
   },
@@ -114,7 +114,7 @@ export function createRouteAction<T, U = void>(
       get result() {
         return result()?.data;
       },
-      get error() {
+      get error(): any {
         return result()?.error;
       },
       clear() {
@@ -184,7 +184,7 @@ export function createRouteMultiAction<T, U = void>(
             data = data.body;
           } else await handleRefetch(data, options);
           data ? setResult({ data }) : submission.clear();
-    }
+        }
         return data;
       }).catch(async e => {
         if (reqId === count) {

@@ -7,6 +7,22 @@ subsection: Document
 
 # Meta
 
+##### `Meta` is a component that renders the `meta` element on the server, and hydrates it on the client.
+
+<div class="text-lg>
+
+```tsx twoslash
+import { Meta } from "solid-start";
+// ---cut---
+<Meta name="description" content="My site description" />
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
 ```tsx twoslash
 import { Html, Head, Title, Meta, Link } from "solid-start";
 // ---cut---
