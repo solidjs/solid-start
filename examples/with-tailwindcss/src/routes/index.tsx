@@ -8,9 +8,9 @@ export default function Home() {
       <Counter />
       <p class="mt-8">
         Visit{" "}
-        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
+        <A href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
           solidjs.com
-        </a>{" "}
+        </A>{" "}
         to learn how to build Solid apps.
       </p>
       <p class="my-4">
