@@ -41,6 +41,4 @@ jobs:
       - name: Build docs
         run: pnpm run docs:build
 
-      - uses: netlify/actions/cli@master
-        with:
-          args: deploy --site 577a5e59-05a4-4cb2-b724-c00ba28f0dc7 --build --prod --dir netlify --auth $NETLIFY_AUTH_TOKEN
+      - run: npx netlify-cli deploy --site 577a5e59-05a4-4cb2-b724-c00ba28f0dc7 --build --prod --dir netlify --auth $NETLIFY_AUTH_TOKEN
