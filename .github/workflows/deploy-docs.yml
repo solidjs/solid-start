@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NETLIFY_AUTH_TOKEM: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
 jobs:
   docs:
