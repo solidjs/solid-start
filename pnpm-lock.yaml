@@ -23,6 +23,7 @@ importers:
       solid-mdx: ^0.0.6
       solid-start: workspace:*
       solid-start-mdx: workspace:*
+      solid-start-netlify: workspace:^0.1.6
       solid-start-node: workspace:*
       tailwindcss: ^3.1.8
       tippy.js: ^6.3.7
@@ -52,6 +53,7 @@ importers:
       solid-mdx: 0.0.6_solid-js@1.5.7+vite@3.1.6
       solid-start: link:packages/start
       solid-start-mdx: link:packages/mdx
+      solid-start-netlify: link:packages/start-netlify
       solid-start-node: link:packages/start-node
       tailwindcss: 3.1.8
       tippy.js: 6.3.7

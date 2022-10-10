@@ -1,4 +1,4 @@
-export { Link, Meta, Style, Title } from "@solidjs/meta";
+export { Link, Meta, Style, Stylesheet, Title } from "@solidjs/meta";
 export {
   Navigate,
   Route,

@@ -42,6 +42,7 @@
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:*",
     "solid-start-mdx": "workspace:*",
+    "solid-start-netlify": "workspace:*",
     "solid-start-node": "workspace:*",
     "tailwindcss": "^3.1.8",
     "tippy.js": "^6.3.7",

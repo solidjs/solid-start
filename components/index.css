@@ -359,3 +359,7 @@ h4 {
 .not-prose :where(code):not(:where(pre *)) {
   @apply p-0.5;
 }
+
+.DocSearch-Button {
+  @apply bg-white ml-0 rounded-md w-full
+}

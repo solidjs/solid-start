@@ -9,6 +9,7 @@ import {
   Meta,
   Routes,
   Scripts,
+  Stylesheet,
   Title,
   unstable_island
 } from "solid-start";
@@ -99,6 +100,7 @@ function Nav() {
 
   return (
     <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen md:block hidden overflow-scroll bg-slate-100">
+      <div id="docsearch" />
       <For each={data()}>
         {r => (
           <ul>
@@ -164,6 +166,7 @@ export default function Root() {
         <Title>SolidStart</Title>
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Stylesheet href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
       </Head>
       <Body>
         <div class="flex md:flex-row flex-col justify-around">
@@ -216,6 +219,16 @@ export default function Root() {
           </div>
           <TableOfContents />
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
+        <script>
+          {`docsearch({
+            appId: "VTVVKZ36GX",
+            apiKey: "f520312c8dccf1309453764ee2fed27e",
+            indexName: "solidjs",
+            container: "#docsearch",
+            debug: false 
+          });`}
+        </script>
         <Scripts />
       </Body>
     </Html>

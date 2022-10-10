@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import mdx from "solid-start-mdx";
+import netlify from "solid-start-netlify";
 import solid from "solid-start/vite";
 import { defineConfig } from "vite";
 
@@ -17,7 +18,8 @@ export default defineConfig({
       routesDir: ".",
       islandsRouter: true,
       islands: true,
-      extensions: [".mdx", ".md"]
+      extensions: [".mdx", ".md"],
+      adapter: netlify({ edge: true })
     })
   ]
 });
