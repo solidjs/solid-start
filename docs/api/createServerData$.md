@@ -69,7 +69,7 @@ export function routeData({ params }: RouteDataArgs) {
 
 ### Acessing the `Request`
 
-```tsx twoslash
+```tsx twoslash {7}
 const prisma = {
   students: {
     findUnique(p: { where: { id: string } }) {}
@@ -83,7 +83,9 @@ import { createServerData$, redirect } from "solid-start/server";
 export function routeData({ params }: RouteDataArgs) {
   return createServerData$(
     async ([, id], { request }) => {
-      if (!isLoggedIn(request)) throw redirect("/login");
+      if (!isLoggedIn(request)) {
+        throw redirect("/login");
+      }
 
       return prisma.students.findUnique({ where: { id } })
     },
@@ -95,3 +97,140 @@ export function routeData({ params }: RouteDataArgs) {
 ## Reference
 
 See [createRouteData](./createRouteData) for full API reference.
+
+There are a few constraints that must be met for `createServerData$` to work correctly:
+
+### Serializing 
+All values passed in the `key` must be JSON serializable. When the fetcher function is called from the client, the key is sent to the server and used to look up the data. If the key is not serializable, it will not be sent properly to the server. 
+
+That means, that you shouldn't pass in functions or accessors like signals. You should call the accessors in the `key` function itself. Since `key` is a function it will make things reactive and call the fetcher with actual values instead of accessors. The fetcher function is not reactive, so reading from signals does not subscribe to them.
+
+The data returned from the fetcher function must also be JSON serializable object or a `Response` object.
+
+```tsx twoslash {7} bad
+const prisma = {
+  students: {
+    findUnique(p: { where: { id: string } }) {}
+  }
+};
+// ---cut---
+import { RouteDataArgs } from "solid-start";
+import { createServerData$ } from "solid-start/server";
+
+export function routeData({ params }: RouteDataArgs) {
+  return createServerData$(
+    ([id]) => prisma.students.findUnique({ where: { id: id() } }),
+    { key: () => [() => params.id] } // cant pass a function, not serializable
+  );
+}
+
+```
+
+```tsx twoslash {7} good
+const prisma = {
+  students: {
+    findUnique(p: { where: { id: string } }) {}
+  }
+};
+// ---cut---
+import { RouteDataArgs } from "solid-start";
+import { createServerData$ } from "solid-start/server";
+
+export function routeData({ params }: RouteDataArgs) {
+  return createServerData$(
+    ([id]) => prisma.students.findUnique({ where: { id } }),
+    { key: () => [params.id] } // read the reactive value in the key function
+  );
+}
+
+```
+
+### Hoisting 
+
+The fetcher function must not access anything in its surrounding scope/closure. Since the function is run in an isolated environment, we hoist it out from whereever its declared to the top of the file. It only has access to variables defined at the module level and the arguments passed in. Nothing else. This is why you must pass in any variables you need to access in the fetcher function as arguments, not just the reactive ones.
+
+
+```tsx twoslash {4,6} bad
+const prisma = {
+  students: {
+    findUnique(p: { where: { house: string } }) {}
+  }
+};
+
+// ---cut---
+import { createServerData$ } from "solid-start/server";
+
+export function routeData() {
+  let house = 'griffindor'; // can't use this inside the fetcher function
+  return createServerData$(
+    () => prisma.students.findUnique({ where: { house } }),
+    { key: () => ["students"] }
+  );
+}
+```
+
+```tsx twoslash {6} good
+const prisma = {
+  students: {
+    findUnique(p: { where: { house: string } }) {}
+  }
+};
+
+// ---cut---
+import { createServerData$ } from "solid-start/server";
+
+export function routeData() {
+  return createServerData$(
+    () => {
+      let house = 'griffindor'; // if you can, just declare it inside the function
+      return prisma.students.findUnique({ where: { house } });
+    },
+    { key: () => ["students"] }
+  );
+}
+```
+
+```tsx twoslash {3} good
+const prisma = {
+  students: {
+    findUnique(p: { where: { house: string } }) {}
+  }
+};
+
+// ---cut---
+import { createServerData$ } from "solid-start/server";
+
+let house = 'griffindor'; // see if it can be extracted to module scope
+
+export function routeData() {
+  return createServerData$(
+    () => {
+      return prisma.students.findUnique({ where: { house } });
+    },
+    { key: () => ["students"] }
+  );
+}
+```
+
+```tsx twoslash {4,6,9} good
+const prisma = {
+  students: {
+    findUnique(p: { where: { house: string } }) {}
+  }
+};
+
+// ---cut---
+import { createServerData$ } from "solid-start/server";
+
+export function routeData() {
+  let house = 'griffindor';
+  return createServerData$(
+    ([, house]) => {
+      return prisma.students.findUnique({ where: { house } });
+    },
+    { key: () => ["students", house] } // pass in to the function using the key
+  );
+}
+```
+
+

@@ -79,7 +79,9 @@ export const components = {
             return {
               [props.className]: true,
               ["rounded-b mt-0 px-0"]: true,
-              ["border-red-400 border-4"]: props.bad,
+              ["border-red-400 border-4 bad"]: props.bad,
+              ["border-green-400 border-4 good"]: props.good,
+              ["snippet"]: !props.good && !props.bad,
               ["rounded-t-none"]: props.filename?.length
             };
           },

@@ -329,7 +329,18 @@ h4 {
   scroll-margin-top: 1em;
 }
 
-.line.highlight {
+
+
+.bad .line.highlight {
+  @apply bg-red-800 bg-opacity-20;
+}
+
+
+.good .line.highlight {
+  @apply bg-green-800 bg-opacity-20;
+}
+
+.snippet .line.highlight {
   @apply bg-slate-50 bg-opacity-20;
 }
 
