@@ -1,14 +1,14 @@
 ---
 section: api
-title: createRouteData/ServerData$
+title: createRouteData
 order: 8
 subsection: Data
 active: true
 ---
 
-# createRouteData/createServerData$
+# createRouteData
 
-##### `createRouteData/createServerData$` allows you to manage async data fetching
+##### `createRouteData` allows you to manage async data fetching
 
 <div class="text-lg">
 
@@ -42,27 +42,9 @@ export function routeData() {
 }
 ```
 
-### Fetching data from a Database
-
-`createServerData$` is the equivalent to `createRouteData` except it always runs its function on the server, even when instantiated in the browser. It does so using SolidStart's `server$` function internally. This allows you access things only available on the server like databases.
-
-```tsx twoslash
-const prisma = {
-  students: {
-    findMany() {}
-  }
-}
-// ---cut---
-import { createServerData$ } from "solid-start/server";
-
-export function routeData() {
-  return createServerData$(async () => await prisma.students.findMany());
-}
-```
-
 ### Fetching data with a key
 
-Often though we want to be able set a key for our routeData both to act as a parameter and to allow easy invalidation. The fetcher function is not reactive so you must use this option if you wish the route data to update. It is also the only way to pass parameters to fetcher function for `createServerData$`.
+Often though we want to be able set a `key` for our routeData both to act as a parameter and to allow easy invalidation. The fetcher function does not reactively track so you must use this option if you wish the route data to update. A "falsy" value turns off data fetching.
 
 ```tsx twoslash
 import { createRouteData, RouteDataArgs } from "solid-start";
