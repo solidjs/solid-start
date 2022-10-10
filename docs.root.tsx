@@ -98,7 +98,7 @@ function Nav() {
   });
 
   return (
-    <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen md:block hidden overflow-scroll">
+    <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen md:block hidden overflow-scroll bg-slate-100">
       <For each={data()}>
         {r => (
           <ul>
@@ -115,7 +115,7 @@ function Nav() {
                         <span class="font-bold text-gray-400 text-md mb-4">{s}</span>
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
-                            <li class="ml-2" classList={{ "text-gray-300": !frontMatter.active }}>
+                            <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                               <IslandA activeClass="text-blue-700" href={href}>
                                 <span>{title}</span>
                               </IslandA>
@@ -127,7 +127,7 @@ function Nav() {
                   </For>
                   <For each={r.filter(i => !i.subsection)}>
                     {({ title, path, href, frontMatter }) => (
-                      <li class="ml-2" classList={{ "text-gray-300": !frontMatter.active }}>
+                      <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                         <IslandA activeClass="text-blue-700" href={href}>
                           <span>{title}</span>
                         </IslandA>
@@ -139,7 +139,7 @@ function Nav() {
             >
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
-                  <li class="ml-2" classList={{ "text-gray-300": !frontMatter.active }}>
+                  <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                     <IslandA activeClass="text-blue-700" href={href}>
                       <span>{title}</span>
                     </IslandA>
