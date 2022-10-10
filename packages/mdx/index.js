@@ -191,7 +191,7 @@ export default async function () {
             disableImplicitReactImport: true,
             includeJSDocInHover: true,
             // theme: "css-variables",
-            themes: ["github-light", "github-dark"],
+            themes: ["github-dark", "github-light"],
             defaultCompilerOptions: {
               allowSyntheticDefaultImports: true,
               esModuleInterop: true,

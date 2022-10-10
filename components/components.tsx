@@ -60,7 +60,9 @@ export const components = {
   pre: props => (
     <div>
       <Show when={props.filename?.length > 5}>
-        <div {...props} class="px-3 py-1 w-full text-xs bg-blueGray-500 rounded-t">
+        <div
+          class={`px-3 py-1 w-full text-xs bg-slate-500 rounded-t text-slate-100 ${props.className}`}
+        >
           {props.filename}
         </div>
       </Show>

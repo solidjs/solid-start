@@ -71,7 +71,7 @@ module.exports = {
             "--tw-prose-headings": theme("colors.solid.default"),
             "--tw-prose-invert-headings": theme("colors.solid.darkdefault"),
             "--tw-prose-invert-quote-borders": theme("colors.solid.mediumgray"),
-            "--tw-prose-pre-bg": "transparent",
+            // "--tw-prose-pre-bg": "transparent",
             color: "var(--tw-prose-body)",
             fontFamily: "Gordita",
             "blockquote p:first-of-type::before": { content: "none" },

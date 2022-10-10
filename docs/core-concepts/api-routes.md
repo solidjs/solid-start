@@ -158,7 +158,7 @@ You can read more about using HTTP cookies in the [MDN documentation][cookies]
 
 ## Exposing a GraphQL API
 
-SolidStart makes it easy to implement a GraphQL API. You can use the `graphql` function from `solid-start/api` to create a GraphQL API route. The `graphql` function takes a GraphQL schema and returns a function that can be used as an API route handler.
+SolidStart makes it easy to implement a GraphQL API. The `graphql` function takes a GraphQL schema and returns a function that can be used as an API route handler. TODO: Implementation
 
 ```tsx twoslash filename="routes/api/graphql.ts"
 import { APIEvent } from "solid-start/api";

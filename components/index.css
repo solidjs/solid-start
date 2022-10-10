@@ -54,7 +54,6 @@ html {
 
 pre {
   min-width: 100%;
-  background: transparent;
 }
 
 .prose pre {
@@ -315,7 +314,7 @@ pre {
   display: none;
 }
 
-.github-dark {
+.github-light {
   display: none;
 }
 
