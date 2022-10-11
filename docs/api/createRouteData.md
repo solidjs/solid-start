@@ -96,23 +96,30 @@ function getStudents() {
 import { createRouteData } from "solid-start";
 
 export function routeData() {
-  return createRouteData(getStudents);
+  const data = createRouteData(getStudents);
+
+  data() // null, data is not yet loaded, triggers Suspense
+  data.loading // true, data is loading
+  data.latest // null, data is not yet loaded
 }
 ```
 
 #### Options
 
-- key (_string | Array_, default: true): Parameters for the route data to key by. A falsy value prevents fetching.
-- initialValue (_unknown_, default `undefined`): Initial value of the routeData
-- deferStream (_boolean_, default `false`): Prevent streaming render from flushing until complete
-- reconcileOptions
-  - key (_string_, default `"id"`): The property to use as a key for data diffing.
-  - merge (_boolean_, default `false`): When true diff deep merges unrecognized values instead of replacing them.
+- `key` (_string | Array_, default: true): Parameters for the route data to key by. A falsy value prevents fetching.
+- `initialValue` (_unknown_, default `undefined`): Initial value of the routeData
+- `deferStream` (_boolean_, default `false`): Prevent streaming render from flushing until complete
+- `reconcileOptions`
+  - `key` (_string_, default `"id"`): The property to use as a key for data diffing.
+  - `merge` (_boolean_, default `false`): When true diff deep merges unrecognized values instead of replacing them.
 #### Returns
 
-A Solid Resource. An accessor that returns the data that additionally has these reactive properties:
+A Solid [Resource][Resource]. An accessor that returns the data loaded by the fetcher. The accessor additionally has these reactive properties:
 
-- state (_"unresolved" | "pending" | "ready" | "refreshing" | "errored"_): Current state of the route data.
-- loading (_boolean_): Indicates if it is loading.
-- error (_unknown_): Contains the error if it is currently errored.
-- latest (_unknown_): A way of reading the current value without triggering `Suspense`.
+- `state` (_"unresolved" | "pending" | "ready" | "refreshing" | "errored"_): Current state of the route data.
+- `loading` (_boolean_): Indicates if it is loading.
+- `error` (_unknown_): Contains the error if it is currently errored.
+- `latest` (_unknown_): A way of reading the current value without triggering [`Suspense`][Suspense].
+
+[Resource]: https://www.solidjs.com/docs/latest/api#createresource
+[Suspense]: https://www.solidjs.com/docs/latest/api#suspense
