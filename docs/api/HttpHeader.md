@@ -47,6 +47,18 @@ Keep in mind, when streaming responses(`renderStream`), HTTP headers can only be
 
 ### `<HttpHeader />`
 
+Import from `solid-start/server`.
+
+Use it anywhere in your component tree, and it will add the header if that part of the tree is rendered on the server.
+
+```tsx twoslash
+import { HttpHeader } from "solid-start/server";
+
+function Component() {
+  return <HttpHeader name="my-header" value="header-value" />
+}
+```
+
 #### Props
 
 - `name` - The name of the header to set
