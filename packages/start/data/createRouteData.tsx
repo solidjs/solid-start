@@ -107,10 +107,10 @@ export function createRouteData<T, S>(
         return info.value;
       }
 
+      if (key == true) return fetcher(key, info);
+
       let promise = promises.get(key);
-      if (promise) {
-        return promise;
-      }
+      if (promise) return promise;
       promise = fetcher(key, info);
       promises.set(key, promise);
       promise.finally(() => promises.delete(key));
