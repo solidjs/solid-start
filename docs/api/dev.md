@@ -1,8 +1,9 @@
 ---
 section: api
 title: dev
-order: 2
+order: 1
 subsection: CLI
+active: true
 ---
 
 # `solid-start dev`
