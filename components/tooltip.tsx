@@ -7,7 +7,6 @@ if (!isServer) {
 
 export default function Tooltip(props) {
   createEffect(() => {
-    console.log("tippy");
     if (!isServer) {
       tippy.default(`[data-template="${props.id}"]`, {
         content() {
