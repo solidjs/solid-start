@@ -95,9 +95,29 @@ function Header() {
             <span class="font-semibold ml-1 text-solid-medium">Start</span>
           </div>
         </div>
-        <ul class="flex">
-          <For each={socials} children={social => <SocialIcon {...social} />} />
-        </ul>
+        <div class="flex space-x-10">
+          <div class="flex items-center">
+            <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">
+              SocialJS.com
+              <svg
+                class="h-5 z-50 -mt-1 ltr:ml-1 rtl:mr-1 opacity-30"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </a>
+          </div>
+          <ul class="flex">
+            <For each={socials} children={social => <SocialIcon {...social} />} />
+          </ul>
+        </div>
       </div>
     </header>
   );
@@ -158,7 +178,7 @@ function Nav() {
   });
 
   return (
-    <nav class="min-w-[300px] px-8 py-8 space-y-4 h-screen md:block hidden overflow-scroll bg-slate-100">
+    <nav class="min-w-[300px] px-8 py-8 space-y-4 h-[calc(100vh-3.5rem)] md:block hidden overflow-scroll bg-slate-100">
       <div id="docsearch" />
       <For each={data()}>
         {r => (
@@ -232,7 +252,7 @@ export default function Root() {
         <Header />
         <div class="flex md:flex-row flex-col justify-around">
           <Nav />
-          <div class="px-8 py-8 h-screen overflow-scroll container">
+          <div class="px-8 py-4 h-[calc(100vh-3.5rem)] overflow-scroll container">
             <ErrorBoundary>
               <Suspense>
                 <main class="prose prose-md max-w-none w-full pt-0 lg:px-10">
