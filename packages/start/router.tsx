@@ -16,7 +16,6 @@ const A = import.meta.env.START_ISLANDS_ROUTER
       const [, rest] = splitProps(props, ["state", "activeClass", "inactiveClass", "end"]);
       const location = useLocation();
       const isActive = () => {
-        console.log(location.hash, props.href);
         return props.href.startsWith("#")
           ? location.hash === props.href
           : location.pathname === props.href;
