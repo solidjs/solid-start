@@ -101,7 +101,14 @@ function Nav() {
 
   return (
     <nav class="min-w-[180px] px-8 py-8 space-y-4 h-screen md:block hidden overflow-scroll bg-slate-100">
-      <div id="docsearch" />
+      <div class="flex space-x-2 items-center mb-8">
+        <img src="/logo.svg" class="w-10 h-10" />
+        <div class="text-2xl mt-2">
+          <span>SOLID</span>
+          <span class="font-bold ml-1">START</span>
+        </div>
+      </div>
+      <div id="docsearch" class="" />
       <For each={data()}>
         {r => (
           <ul>
