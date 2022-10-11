@@ -23,14 +23,14 @@ export default function TableOfContents() {
   return (
     <div class="hidden col-start-3 row-start-2 xl:block px-8 py-8 space-y-4 w-[240px] overflow-hidden">
       <span class="font-bold uppercase text-xs">On this page</span>
-      <ul class="space-y-2 text-sm">
+      <ul class="space-y-4 text-sm">
         <Suspense>
           <For each={headings()}>
             {h => (
               <li
                 classList={{
-                  "ml-2": h.depth === 2,
-                  "ml-4": h.depth === 3
+                  "ml-2 font-semibold text-gray-500": h.depth === 2,
+                  "ml-4 text-gray-400": h.depth === 3
                 }}
               >
                 <A activeClass="text-blue-400" href={`#${h.slug}`}>

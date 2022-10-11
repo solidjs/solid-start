@@ -279,7 +279,7 @@ export default function Root() {
           <div class="px-8 py-8 h-full container">
             <ErrorBoundary>
               <Suspense>
-                <main class="prose prose-md max-w-none w-full pt-0 lg:px-10">
+                <main class="prose prose-md max-w-none w-full pt-0 pb-10 lg:px-10">
                   <MDXProvider
                     components={{
                       ...components,
