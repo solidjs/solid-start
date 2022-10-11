@@ -123,7 +123,7 @@ export default function EnrollmentPage() {
 
 If an error occurs, each submission will have an `error` property. We can use this to show an error message.
 
-```tsx twoslash {17-20} filename="routes/enrollment.tsx"
+```tsx twoslash {21-24} filename="routes/enrollment.tsx"
 // @include: lib
 // ---cut---
 import { createRouteMultiAction, createRouteData } from 'solid-start'
@@ -144,10 +144,10 @@ export default function EnrollmentPage() {
         </For>
         <For each={sending}>
           {msg => (
-            <li classList={{ "pending": !msg.error, "error": msg.error }}>
-              {msg.input}
+            <li>
+              <span class="pending">{msg.input}</span>
               <Show when={msg.error}>
-                {msg.error.message}
+                <span class="error">{msg.error.message}</span>
                 <button onClick={() => msg.retry()}>Retry</button>
               </Show>
             </li>
