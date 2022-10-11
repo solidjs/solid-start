@@ -32,7 +32,7 @@ While you might think this should be just a straight forward `onClick` handler, 
 
 ### Run a mutation
 
-If you are coming from `react-query`, this hook is similar to `useMutation`. It allows you to run an async function and manage the state of the action. It also allows you to run the action multiple times.
+If you are coming from [tanstack-query](https://tanstack.com/query/v4), this hook is similar to `useMutation`. It allows you to run an async function and manage the state of the action. It also allows you to run the action multiple times.
 
 ### Show a pending indicator for an action in progress
 
