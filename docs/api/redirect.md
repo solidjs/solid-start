@@ -13,9 +13,9 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { json } from "solid-start";
+import { redirect } from "solid-start/server";
 // ---cut---
-const response = json({ hello: "world" });
+redirect("/my-next-destination");
 ```
 
 </div>
@@ -42,7 +42,7 @@ export function GET() {
 
 Use `redirect('/somewhere')` to create a [`Response`][Response] that's going to redirect the user to `/somewhere`. It will set the [Location][Location] header.
 
-It is useful inside [API Routes](/core-concepts/api-routes), [`server$`](/api/server$) functions, and [middleware](/advanced/middleware). Basically whereever a [`Response`][Response] is expected.
+It is useful inside [API Routes](/core-concepts/api-routes), [`server$`](/api/server$) functions, and [middleware](/advanced/middleware). Basically wherever a [`Response`][Response] is expected.
 
 ```ts twoslash
 import { redirect } from "solid-start";
