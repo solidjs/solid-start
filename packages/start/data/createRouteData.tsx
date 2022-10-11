@@ -27,6 +27,7 @@ type RouteDataOptions<T, S> = ResourceOptions<T> & {
 };
 
 const resources = new Set<(k: any) => void>();
+const promises = new Map<string, Promise<any>>();
 
 export function createRouteData<T, S = true>(
   fetcher: RouteDataFetcher<S, T>,
@@ -68,10 +69,6 @@ export function createRouteData<T, S>(
 
   const resourceFetcher = async (key: S, info) => {
     try {
-      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
-        return info.value;
-      }
-
       let event = pageEvent as RouteDataEvent;
       if (isServer) {
         event = Object.freeze({
@@ -104,9 +101,26 @@ export function createRouteData<T, S>(
     }
   };
 
+  function dedup(fetcher) {
+    return (key, info) => {
+      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
+        return info.value;
+      }
+
+      let promise = promises.get(key);
+      if (promise) {
+        return promise;
+      }
+      promise = fetcher(key, info);
+      promises.set(key, promise);
+      promise.finally(() => promises.delete(key));
+      return promise;
+    };
+  }
+
   const [resource, { refetch }] = createResource<T, S>(
     (options.key || true) as RouteDataSource<S>,
-    resourceFetcher,
+    dedup(resourceFetcher),
     {
       storage: init => createDeepSignal(init, options.reconcileOptions) as any,
       ...options
