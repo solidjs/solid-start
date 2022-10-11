@@ -21,5 +21,5 @@ export default function Counter() {
       border: 2px solid #335d92;
     }
   `;
-  return <button onClick={() => setCount(count() + 1)}>Clicks: {count}</button>;
+  return <button onClick={() => setCount(count() + 1)}>Clicks: {count()}</button>;
 }
