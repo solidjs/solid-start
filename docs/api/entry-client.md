@@ -1,14 +1,14 @@
 ---
 section: api
-title: entry.client.tsx
+title: entry-client.tsx
 order: 8
 subsection: Entrypoints
 active: true
 ---
 
-# entry.client.tsx
+# entry-client.tsx
 
-##### `entry.client.tsx` is where your app starts in the browser.
+##### `entry-client.tsx` is where your app starts in the browser.
 
 <div class="text-lg">
 

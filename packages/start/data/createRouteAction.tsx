@@ -70,7 +70,7 @@ export function createRouteAction<T, U = void>(
           if (data instanceof Response) {
             await handleResponse(data, navigate, options);
           } else await handleRefetch(data, options);
-          if (!data) setInput(undefined);
+          if (!data || isRedirectResponse(data)) setInput(undefined);
           else setResult({ data });
         }
         return data;
@@ -79,7 +79,7 @@ export function createRouteAction<T, U = void>(
         if (reqId === count) {
           if (e instanceof Response) {
             await handleResponse(e, navigate, options);
-          } else await handleRefetch(e, options);
+          }
           if (!isRedirectResponse(e)) {
             setResult({ error: e });
           } else setInput(undefined);
@@ -250,7 +250,7 @@ function handleResponse(response: Response, navigate, options) {
     }
   }
 
-  if (response.ok || isRedirectResponse(response)) return handleRefetch(response, options);
+  if (isRedirectResponse(response)) return handleRefetch(response, options);
 }
 
 function checkFlash(fn: any) {

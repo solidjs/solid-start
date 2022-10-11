@@ -1,14 +1,14 @@
 ---
 section: api
-title: entry.server.tsx
+title: entry-server.tsx
 order: 8
 subsection: Entrypoints
 active: true
 ---
 
-# entry.server.tsx
+# entry-server.tsx
 
-##### `entry.server.tsx` is where your app starts in the browser.
+##### `entry-server.tsx` is where your app starts in the browser.
 
 <div class="text-lg">
 

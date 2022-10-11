@@ -3,6 +3,7 @@ section: api
 title: createRouteAction
 order: 8
 subsection: Actions
+active: true
 ---
 
 # createRouteAction
@@ -35,8 +36,8 @@ While you might think this should be just a straight forward `onClick` handler, 
 We want to show a pending status while the action is being performed. The submission has a `pending` property that we can use to show a pending indicator.
 
 ```twoslash include lib
-async function enrollInClass(className: string): Promise<void> {
-  throw new Error('You are not allowed to enroll in this class')
+async function enrollInClass(className: string): Promise<string> {
+  return className;
 }
 
 async function getClasses() {
@@ -76,7 +77,7 @@ function EnrollmentPage() {
 
 If an error occurs, the submission will have an `error` property. We can use this to show an error message.
 
-```tsx twoslash {17-19} filename="routes/enrollment.tsx"
+```tsx twoslash {17-20} filename="routes/enrollment.tsx"
 
 async function enrollInClass(className: string): Promise<void> {
   throw new Error('You are not allowed to enroll in this class')
@@ -100,6 +101,39 @@ export default function EnrollmentPage() {
       </Show>
       <Show when={enrolling.error}>
         <div>{enrolling.error.message}</div>
+        <button onClick={() => enrolling.retry()}>Retry</button>
+      </Show>
+    </div>
+  )
+}
+```
+
+
+### Showing a success message
+
+If you want to show a success message after an action is complete, you can use the `result` property to get the returned value of the action. 
+
+```tsx twoslash {17-19} filename="routes/enrollment.tsx"
+// @include: lib
+// ---cut---
+import { createRouteAction, createRouteData } from 'solid-start'
+import { Show, For } from 'solid-js'
+
+export function EnrollmentPage() {
+  const [enrolling, enroll] = createRouteAction(enrollInClass)
+  return (
+    <div>
+      <button  
+        onClick={() => enroll('Defense against the Dark Arts')}
+        disabled={enrolling.pending}
+      >
+        Enroll
+      </button>
+      <Show when={enrolling.pending}>
+        <div>Enrolling...</div>
+      </Show>
+      <Show when={enrolling.result}>
+        <div>Successfully enrolled in {enrolling.result}</div>
       </Show>
     </div>
   )
@@ -200,16 +234,40 @@ export function EnrollmentPage() {
 }
 ```
 
+
 ## Reference
 
 ### `createRouteAction(action, options)`
 
-`createRouteAction` is a hook that returns a tuple of two values: The first item in the tuple is the read side of the action. It a reactive object maintaining the state of the submissions of the action. The second item in the tuple is a function used to dispatch the action. 
+Call `createRouteAction` inside a component to create an action controller.
 
-The second item also has another property called `Form` which is a progressively enhanced version of the `form` element. It is a component that can be used to submit the action.
+```ts twoslash
+// @include: lib
+// ---cut---
+import { createRouteAction } from 'solid-start'
 
+function Component() {
+  const [enrolling, enroll] = createRouteAction(enrollInClass)
+}
+```
+
+`createRouteAction` is a hook that returns a tuple of two values: The first item is a reactive object maintaining the state of the submission of the action, along with some helpers. The second item in the tuple is a function used to dispatch the action. 
+
+The second item also has another property called `Form` which is a progressively enhanced version of the `form` element. It is a component that can be used to submit the action, and a `url` can be passed to be the `action` of the `form` element when JS is not available.
 
 #### Returns
 
-`[acting, act]`
+`enrolling` is a `Submission` with the following properties:
+- `pending` - A boolean indicating if the action is currently being performed.
+- `error` - An error object if the action failed.
+- `input` - The input that was passed to the action.
+- `result` - The data returned from the action.
+- And the following methods:
+  - `retry()` - Resets the submission with the same input
+  - `clear()` - Clears the state of the submission.
 
+`enroll` is a function that takes the input to the action and dispatches the action. It returns a promise that resolves to the result of the action.
+
+This is the behaviour of the `enroll` function:
+
+<img src="/actions-machine.png" />
