@@ -66,7 +66,7 @@ The core entry pieces not found in a typical HTML document are the Suspense and 
 
 Inside the `<Body>` a good place to insert any Components that are shared between all pages. Things like top-level navigation. And inside this file is a good place to put any global Context Providers to inject global state into your appication.
 
-### Reference
+## Reference
 
 API reference for the components commonly found in `root.tsx` can be found in the `Document` section:
 

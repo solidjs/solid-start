@@ -27,7 +27,8 @@ export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
 export { island as unstable_island } from "./islands";
 export { Body, FileRoutes, Head, Html, Scripts } from "./root";
 export * from "./router";
-export { ServerContext } from "./server/ServerContext";
+export * from "./server/responses";
+export { ServerContext, useServerContext } from "./server/ServerContext";
 export type { FetchEvent, PageEvent, ServerFunctionEvent } from "./server/types";
 export {
   createCookie,

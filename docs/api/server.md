@@ -1,7 +1,7 @@
 ---
 section: api
-title: server
-order: 8
+title: server$
+order: 100
 subsection: Server
 ---
 

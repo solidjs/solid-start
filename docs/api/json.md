@@ -5,6 +5,22 @@ order: 8
 subsection: Server
 ---
 
-# useMatch
+# json
 
-##### `useMatch` gives you a reactive object describing the URL the user is visiting
+##### `json` is a helper function to send JSON HTTP `Response`s
+
+<div class="text-lg">
+
+```tsx twoslash
+import { json } from "solid-start";
+// ---cut---
+const response = json({ hello: "world" });
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
+`json` is a helper function to send JSON HTTP `Response`s. It is a wrapper around `new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json" } })`. It is useful for sending JSON responses from API Routes.
