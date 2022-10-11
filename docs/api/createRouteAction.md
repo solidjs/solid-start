@@ -1,7 +1,7 @@
 ---
 section: api
 title: createRouteAction
-order: 8
+order: 1
 subsection: Actions
 active: true
 ---
