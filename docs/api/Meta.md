@@ -3,6 +3,7 @@ section: api
 title: Meta
 order: 4
 subsection: Document
+active: true
 ---
 
 # Meta
@@ -23,7 +24,9 @@ import { Meta } from "solid-start";
 
 ## Usage
 
-```tsx twoslash
+### Adding `meta` tag to all routes
+
+```tsx twoslash {5-7}
 import { Html, Head, Title, Meta, Link } from "solid-start";
 // ---cut---
 export default function Root() {
@@ -39,9 +42,9 @@ export default function Root() {
 }
 ```
 
-The `<Meta>` component represents metadata not that cannot be represented by other HTML elements. It is a wrapper of the `<meta>` element and is a re-export from `@solidjs/meta`. `Meta` components may be placed in the `Head` or can be added throughout the application to add additional metadata or override parents. `Meta` tags are consider to be the same and are overridden if the `name` attribute matches.
+### Adding a `meta` tag for a specific page
 
-```tsx twoslash
+```tsx twoslash {4}
 import { Meta } from "solid-start";
 // ---cut---
 export default function MyPage() {
@@ -53,3 +56,14 @@ export default function MyPage() {
   );
 }
 ```
+
+## Reference
+
+### `<Meta />`
+
+The `<Meta>` component represents metadata not that cannot be represented by other HTML elements. It is a wrapper of the `<meta>` element and is a re-export from `@solidjs/meta`. `Meta` components may be placed in the `Head` or can be added throughout the application to add additional metadata or override parents. `Meta` tags are consider to be the same and are overridden if the `name` attribute matches.
+
+Same properties as the native [`meta`][nativemeta] element.
+
+[nativemeta]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
+
