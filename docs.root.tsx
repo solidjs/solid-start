@@ -98,7 +98,7 @@ function Header() {
         <div class="flex space-x-10">
           <div class="flex items-center">
             <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">
-              SocialJS.com
+              SolidJS.com
               <svg
                 class="h-5 z-50 -mt-1 ltr:ml-1 rtl:mr-1 opacity-30"
                 fill="none"
