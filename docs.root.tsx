@@ -178,8 +178,8 @@ function Nav() {
   });
 
   return (
-    <nav class="min-w-[300px] px-8 py-8 space-y-4 h-[calc(100vh-3.5rem)] md:block hidden overflow-scroll bg-slate-100">
-      <div id="docsearch" />
+    <nav class="min-w-[325px] p-10 space-y-4 h-[calc(100vh-3.5rem)] md:block hidden overflow-scroll bg-slate-100">
+      <div id="docsearch" class="mb-7" />
       <For each={data()}>
         {r => (
           <ul>
@@ -192,13 +192,15 @@ function Nav() {
                 <>
                   <For each={[...r.subsection.values()]}>
                     {s => (
-                      <ul class="ml-2 mt-3">
-                        <span class="font-bold text-gray-400 text-md mb-4">{s}</span>
+                      <ul class="ml-2 mt-4">
+                        <div class="font-bold text-gray-500 text-md mb-3">{s}</div>
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
                             <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                               <IslandA activeClass="text-blue-700" href={href}>
-                                <span>{title}</span>
+                                <span class="block ml-4 text-gray-500 pb-2 text-sm break-words hover:text-gray-500 dark:hover:text-gray-300">
+                                  {title}
+                                </span>
                               </IslandA>
                             </li>
                           )}
@@ -222,7 +224,9 @@ function Nav() {
                 {({ title, path, href, frontMatter }) => (
                   <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                     <IslandA activeClass="text-blue-700" href={href}>
-                      <span>{title}</span>
+                      <span class="block text-gray-500 dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
+                        {title}
+                      </span>
                     </IslandA>
                   </li>
                 )}
@@ -242,8 +246,14 @@ export default function Root() {
   return (
     <Html lang="en">
       <Head>
-        <Title>SolidStart</Title>
+        <Title>SolidStart Beta Documentation</Title>
         <Meta charset="utf-8" />
+        <Meta property="og:title" content="SolidStart Documentation" />
+        <Meta property="og:site_name" content="SolidStart Docs" />
+        <Meta property="og:url" content="https://start.solidjs.com" />
+        <Meta property="og:description" content="Documentation and resources for SolidStart Beta" />
+        <Meta property="og:type" content="website" />
+        <Meta property="og:image" content="https://start.solidjs.com/og-share.png" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
         <Link rel="icon" href="/favicon.ico" />
         <Stylesheet href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
@@ -261,7 +271,6 @@ export default function Root() {
                       ...components,
                       "table-of-contents": () => {
                         const headings = useTableOfContents();
-
                         return (
                           <>
                             <div class="xl:hidden space-y-4 overflow-hidden">
