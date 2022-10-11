@@ -1,16 +1,21 @@
 ---
 section: core-concepts
 title: Data loading
-order: 99
+order: 10
+active: true
 ---
 
 # Data loading
 
-What's a modern app without some data to power it. SolidStart aims to make it easy to load data from from data sources. It will help you keep your UI always uptote date with your data. 
+What's a modern app without some data to power it. SolidStart aims to make it easy to load data from you data sources. It will help you keep your UI always uptote date with your data. 
 
-For most your data requirements, you will likely be using the route as the indicator of what data to load. This is because the route is the primary way of navigating your app. SolidStart start already has nested routing to help structure your apps in a heirarchical way. Each route comes with the ability to export its own `routeData` function that will be managed my the router. Yeah, the router is also the data manager.
+For most your data requirements, you will likely be using the route to decide what data to load. The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a heirarchical way, so that you can share layouts. 
 
-Solid has a [`createResource`][createResource] primitive that takes an async function and returns a [signal][signal] from it. Its a great starting place for your data needs. It integrates with Suspense and ErrorBoundary to help you manage your lifecycle. 
+This nested routing comes with other advantages too. It allows you to declare what data you need for each part of the route. This is done by exporting `routeData` functions from the nested routes.
+
+Each route, leaf or layout, comes with the ability to export its own `routeData` function that will be managed my the router. Yeah, the router is also the data manager.
+
+Solid has a [`createResource`][createResource] primitive that takes an async function and returns a [signal][signal] from it. Its a great starting place for your data needs. It integrates with [`Suspense`][Suspense] and [`ErrorBoundary`][ErrorBoundary] to help you manage your lifecycle. 
 
 Lets take a look at how we can use this to load data from a third party API for our app.
 
@@ -62,13 +67,15 @@ export function Page() {
 
 Caveats:
 
-1. The `routeData` function is only called once per route. This is because the router is managing the lifecycle of the data. If you need to refresh the data, you can use the `refresh` function that is returned by `createResource`. Or other ways to refetch your resources. 
+1. The `routeData` function is only called once per route, the first time the user comes to that route. After that, the fine-grained resources that remain alive synchronize with state/url changes to refetch data when needed. If you need to refresh the data, you can use the `refetch` function that is returned by [`createResource`][createresource].
 2. The `routeData` function is called before the route is rendered. It doesn't share the same `context` as the route. The context tree that is exposed to the `routeData` function is anything above the `Routes` component.
-3. The component receives exactly what the `routeData` function returns when they call `useRouteData`. This means that you can return anything you want from the `routeData` function.
-4. The `routeData` function is called on the server and the client. The resources declared in the `routeData` function can hydrate using serialized data from the server-side render.
-5. `routeData` functions are run on the client when you first navigate to a `route` and never again.
-6. The server-side render will only wait for the resources to fetch if the resource signals are accessed under a `Suspense` boundary. 
+3. The component receives exactly what the `routeData` function returns when they call `useRouteData`. This means that you can return anything you want from the `routeData` function. There is no serialization happening in this relationship.
+4. The `routeData` function will be called both on the server and the client. It's the resources that can avoid refetching if they had serialized their data in the server render.
+5. The server-side render will only wait for the resources to fetch and serialize if the resource signals are accessed under a `Suspense` boundary. 
 
+Okay, enough with the rules. We thought `createResource` was too low level for most people needs and did not use the knowledge the router has. So we created `createRouteData`. Its a resource creator that is aware of the router and the [actions][Actions] created on the page. It adds the concept of keys to the resource so that they can be granuraly refetched using `refetchRouteData`.
+
+Here's the same example as above, but using `createRouteData`.
 
 ```tsx twoslash filename="/routes/students.tsx"
 import { For, Accessor, createResource } from "solid-js";
@@ -97,6 +104,8 @@ export function Page() {
 
 ```
 
+Since we are full-stack framework, and we want to make it easy to write data loading code that's meant to run on the server only. It could be database access, or internal APIs, etc. We created `createServerData$` for this. It builds upon our other primitives like `createRouteData` and `server$` to give a generated RPC for your data.
+
 ```tsx twoslash {8} filename="/routes/students.tsx"
 import { For, Accessor, createResource } from "solid-js";
 import { useRouteData } from "solid-start";
@@ -124,6 +133,8 @@ export function Page() {
 }
 
 ```
+
+### Understanding the lifecycle
 
 Lets try to understand when the `routeData` is called and why you should setup resources (or use our helpers) inside it. 
 
@@ -228,10 +239,8 @@ function Routes() {
 }
 ```
 
-When rendering on the client, the routeData function is called when the route is first rendered. This is because the routeData function is called with the current route parameters.
-
-
-This is a great way to load data, but it can be a bit verbose. SolidStart provides a few hooks to make this easier.
-
 [createResource]: https://www.solidjs.com/docs/latest/api#createresource
 [signal]: https://www.solidjs.com/docs/latest/api#createsignal
+[Suspense]: https://www.solidjs.com/docs/latest/api#suspense
+[ErrorBoundary]: https://www.solidjs.com/docs/latest/api#errorboundary
+[Actions]: /core-concepts/actions
