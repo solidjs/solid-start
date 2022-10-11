@@ -84,7 +84,7 @@ function SocialIcon(props) {
 
 function Header() {
   return (
-    <header class="flex px-8 py-2 shadow-md z-10 relative col-span-3 col-start-1 row-start-1">
+    <header class="flex px-8 py-2 shadow-md z-10 md:z-50 relative col-span-3 col-start-1 row-start-1">
       <div class="flex justify-between w-full">
         <div class="flex space-x-3">
           <img src="/logo.svg" class="w-9 h-9" />
@@ -249,7 +249,7 @@ export default function Root() {
         <Title>SolidStart Beta Documentation</Title>
         <Meta charset="utf-8" />
         <Meta property="og:title" content="SolidStart Beta Documentation" />
-        <Meta property="og:site_name" content="SolidStart Docs" />
+        <Meta property="og:site_name" content="SolidStart Beta Docuentation" />
         <Meta property="og:url" content="https://start.solidjs.com" />
         <Meta
           property="og:description"
