@@ -1,5 +1,5 @@
 // @refresh reload
-import { createMemo, For, Show, Suspense } from "solid-js";
+import { createMemo, For, lazy, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import {
   Body,
@@ -11,14 +11,12 @@ import {
   Routes,
   Scripts,
   Stylesheet,
-  Title,
-  unstable_island
+  Title
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import "./components/index.css";
 
-const IslandA = unstable_island(() => import("./components/A"));
-const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
+const IslandA = lazy(() => import("./components/A"));
 
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
@@ -86,16 +84,16 @@ function SocialIcon(props) {
 
 function Header() {
   return (
-    <header class="flex px-8 py-2 shadow-md z-10 relative">
+    <header class="flex px-8 py-2 shadow-md z-10 relative col-span-3 col-start-1 row-start-1">
       <div class="flex justify-between w-full">
         <div class="flex space-x-3">
           <img src="/logo.svg" class="w-9 h-9" />
-          <div class="text-xl mt-2 uppercase">
+          <div class="text-xl mt-2 uppercase hidden md:block">
             <span>Solid</span>
             <span class="font-semibold ml-1 text-solid-medium">Start</span>
           </div>
         </div>
-        <div class="flex space-x-10">
+        <div class="flex space-x-5">
           <div class="flex items-center">
             <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">
               SocialJS.com
@@ -134,6 +132,7 @@ function Nav() {
         href: string;
       }[] & { subsection?: Set<string>; title?: string; order?: number };
     } = {};
+
     Object.keys(mods).forEach(key => {
       let frontMatter = mods[key].getFrontMatter();
       let {
@@ -208,6 +207,7 @@ function Nav() {
                       </ul>
                     )}
                   </For>
+
                   <For each={r.filter(i => !i.subsection)}>
                     {({ title, path, href, frontMatter }) => (
                       <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
@@ -240,11 +240,11 @@ function Nav() {
 }
 
 import { components } from "./components/components";
-import { useTableOfContents } from "./components/TableOfContents";
+import TableOfContents, { useTableOfContents } from "./components/TableOfContents";
 
 export default function Root() {
   return (
-    <Html lang="en">
+    <Html lang="en" class="h-full">
       <Head>
         <Title>SolidStart Beta Documentation</Title>
         <Meta charset="utf-8" />
@@ -258,11 +258,25 @@ export default function Root() {
         <Link rel="icon" href="/favicon.ico" />
         <Stylesheet href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
       </Head>
-      <Body>
+
+      <Body class="h-full grid grid-cols-[auto,1fr,auto] grid-rows-[auto,1fr]">
         <Header />
-        <div class="flex md:flex-row flex-col justify-around">
-          <Nav />
-          <div class="px-8 py-4 h-[calc(100vh-3.5rem)] overflow-scroll container">
+
+        <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />
+
+        <label
+          class="fixed cursor-pointer peer-checked:rotate-90 md:hidden top-20 right-3 text-white rounded-lg transition duration-500 bg-solid-medium reveal-delay opacity-0"
+          for="sidebar-toggle"
+        >
+          <svg class="h-7 w-7" viewBox="0 0 24 24" style="fill: none; stroke: currentcolor;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </label>
+
+        <Nav />
+
+        <div class="col-start-2 row-start-2 h-full overflow-auto">
+          <div class="px-8 py-8 h-full container">
             <ErrorBoundary>
               <Suspense>
                 <main class="prose prose-md max-w-none w-full pt-0 lg:px-10">
@@ -307,8 +321,10 @@ export default function Root() {
               </Suspense>
             </ErrorBoundary>
           </div>
-          <TableOfContents />
         </div>
+
+        <TableOfContents />
+
         <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
         <script>
           {`docsearch({
