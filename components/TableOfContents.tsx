@@ -21,7 +21,7 @@ export default function TableOfContents() {
   const headings = useTableOfContents();
 
   return (
-    <div class="hidden xl:block px-8 py-8 space-y-4 w-[240px] overflow-hidden">
+    <div class="hidden col-start-3 row-start-2 xl:block px-8 py-8 space-y-4 w-[240px] overflow-hidden">
       <span class="font-bold uppercase text-xs">On this page</span>
       <ul class="space-y-2 text-sm">
         <Suspense>
