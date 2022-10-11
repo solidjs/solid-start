@@ -176,7 +176,7 @@ function Component() {
 }
 ```
 
-`createRouteMultiAction` is a hook that returns a tuple of two values: The first item is a reactive list maintaining the state of all the in-flight submissions of the action. The second item in the tuple is a function used to dispatch the action. 
+`createRouteMultiAction` is a hook that returns a tuple of two values: The first item is a reactive list maintaining the state of all the in-flight submissions of the action. The second item in the tuple is a function used to dispatch the action.
 
 The second item also has another property called `Form` which is a progressively enhanced version of the `form` element. It is a component that can be used to submit the action, and a `url` can be passed to be the `action` of the `form` element when JS is not available.
 

@@ -233,4 +233,7 @@ export function routeData() {
 }
 ```
 
+## Reference
+
+Refer to [createRouteData](./createRouteData) for API reference.
 

@@ -62,7 +62,7 @@ function EnrollmentPage() {
   const [enrolling, enroll] = createRouteAction(enrollInClass)
   return (
     <div>
-      <button  
+      <button
         onClick={() => enroll('Defense against the Dark Arts')}
         disabled={enrolling.pending}
       >
@@ -126,7 +126,7 @@ export function EnrollmentPage() {
   const [enrolling, enroll] = createRouteAction(enrollInClass)
   return (
     <div>
-      <button  
+      <button
         onClick={() => enroll('Defense against the Dark Arts')}
         disabled={enrolling.pending}
       >
