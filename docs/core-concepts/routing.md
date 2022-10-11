@@ -2,6 +2,7 @@
 section: core-concepts
 title: Routing
 order: 1
+active: true
 ---
 
 # Routing
@@ -27,9 +28,9 @@ Here are a few examples of files in our directory structure and how they would t
 - `/src/routes/admin/index.tsx` ➜ `mysite.com/admin`
 - `/src/routes/admin/edit-settings.tsx` ➜ `mysite.com/admin/edit-settings`
 
-We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our API routes. For a route to be rendered as a page, it should default export a component. This component represents the content that will be rendered when users visit the page:
+We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our API routes. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
 
-```tsx
+```tsx twoslash filename="routes/index.tsx"
 export default function Index() {
   return <div>Welcome to SolidStart!</div>;
 }
@@ -37,11 +38,9 @@ export default function Index() {
 
 In this example, visiting mysite.com/ will render a `<div>` with the text "Welcome to SolidStart!" inside it.
 
-[show mini demo of mysite.com with text]()
+Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the [`<FileRoutes />`][filerouts] component. The [`<FileRoutes />`][fileroutes] component only includes your page routes, and not your API routes. This component can be used instead of manually specifying your `Route`s inside the `<Routes />` component in `root.tsx`.
 
-Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the `<FileRoutes />` component. The `<FileRoutes />` component only includes your page routes, and not your API routes. This component can be used instead of manually specifying routes inside the `<Routes />` component in `root.tsx`.
-
-```tsx {6-8}
+```tsx twoslash {7-9} filename="root.tsx"
 import { Html, Body, Routes, FileRoutes } from "solid-start";
 
 export default function Root() {
@@ -57,17 +56,21 @@ export default function Root() {
 }
 ```
 
-This means that all you have to do is create a route in your directory structure and SolidStart takes care of everything else needed to make that route available to visit in your application!
+This means that all you have to do is create a file in your `routes` folder and SolidStart takes care of everything else needed to make that route available to visit in your application!
 
 ## Navigating between pages
 
-While the user can enter your app from any URL that your app serves, once they are using your app, you can provide them a user experience that is designed. You need a way for the user to travel between your pages. As with any website, you can use `a` tags to add links between pages in your app. Nothing special! Lets look at an example,
+While the user can enter your app from any route that your app has, once they are using your app, you can provide them a designed user experience. You need a way for the user to travel between your routes. The `HTML` spec has the `a` tag for this purpose. You can use `a` tags to add links between pages in your app. Nothing special and that will work in SolidStart as well. 
+
+But SolidStart also provides an enhanced `a` tag, the `<A>` component. It is a wrapper around the `a` tag and provides a few additional features. Once the app in mounted, when the user navigates to a new page,  the `<A>` will take over the navigation and will render the new page without a full page refresh. This is called client-side navigation. 
 
 ### Using links
 
-The easiest way to add a link to another page in your app is to the use the anchor tag `A`. Similar to what you would do in a plain HTML document, you can add a `href` attribute to the `A` tag and we will navigate to that route in SPA style.
+The best way to add a link to another page in your app is to the use enhanced anchor tag [`A`][a]. You can add the `href` prop to the `A` tag and we will navigate to that route in SPA style. 
 
-```tsx {3}
+```tsx twoslash {6}
+import { A } from 'solid-start';
+
 export default function Index() {
   return (
     <div>
@@ -77,11 +80,10 @@ export default function Index() {
 }
 ```
 
-If you use an `a` tag, you have to use the absolute path to the route you want to navigate to. You might find it easier to specify the path to a route relative to the current route. There are also cases where you might want to know if the `href` matches the current route for styling purposes. For these situations, we have the [A][A] component re-exported from `@solidjs/router`.
 
 You can specify class names to add to the `A` tag when the current location matches the `href` of the anchor using the `activeClass` prop. Use the `inactive` prop to add a class name to the `a` tag if the current route does not match the `href` of the anchor.
 
-```tsx {5-11,14,17}
+```tsx twoslash {6-12,15,18} filenam="routes/users.tsx"
 import { A } from "solid-start"
 
 export default function UsersLayout() {
@@ -117,25 +119,117 @@ For these use cases we provide an imperative [`navigate`][usenavigate-navigate] 
 
 ### Redirecting
 
-- The primary way of redirecting from a route to another is to use the `<Navigate />` component in the JSX. For example, if you want to redirect to the home page, you can use the following code.
+The primary way of redirecting from a route to another is to use the `<Navigate />` component in the JSX. For example, if you want to redirect to the home page, you can use the following code.
+
+```tsx twoslash filename="routes/inactive.tsx" {4}
+import { Navigate } from "solid-start";
+
+export default function InactivePage() {
+  return <Navigate href="/" />;
+}
+```
 
   - **Server**: When we get a request for this page, we will rend a [`308 (Redirect)`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308) response with `Location` header set to the home page. The browser will then do its normal redirect routine. This also helps crawlers to understand that the page should be redirected.
   - **Client**: When you navigate to this page from another page in the site, we will immediately navigate to the home page.
 
-```tsx filename="maths.ts"
-export default function InactivePage() {
-  return <Navigate to="/" />;
+There is another way for redirects to happen in SolidStart. Using your data functions and actions. 
+
+When you throw/return a redirect `Response` from your data function, SolidStart will take the user to the specified location.
+
+```tsx twoslash filename="routes/users.tsx" {6}
+function isLoggedIn(req: Request): boolean {
+  return true;
+}
+// ---cut---
+import { redirect, createServerData$ } from "solid-start/server";
+
+export default function User() {
+  const data = createServerData$((_, { request }) => {
+    if (!isLoggedIn(request)) {
+      throw redirect("/login");
+    }
+
+    return { id: 1 }
+  });
+
+  return <div>User {data()?.id}</div>;
 }
 ```
 
-- routeData, accessing parent route data
-  - Throwing in route data
-- Search query params (not sure yet optimal API for this)
-- Instructions for creating basic pages
-- Nested routes (e.g., `auth.tsx` vs `auth/login.tsx`)
-  - Talk about using route data function in parent route
+Similarly, if your actions dispatched using `createRouteAction`/`createServerAction$` throw/return a redirect `Response`, SolidStart will take the user to the specified location.
 
-[navlink]: /docs/navigation#navigation-links
-[usenavigate]: /start/api/useNavigate
-[usenavigate-navigate]: /start/api/useNavigate#navigate
-[api-routes]: /start/advanced/api-routes
+## Dynamic routes
+
+Dynamic routes are routes that can match any value for one segment of the route. For example, `/users/1` and `/users/2` are both valid routes. If this is the case for any userId, you can't go around defining separate routes for each user. You need dynamic routes. In SolidStart, dynamic routes are defined using square brackets (`[]`). For example, `/users/[id]` is a dynamic route, where `id` is the dynamic segment.
+
+
+```tsx {2}
+|-- routes/
+    |-- users/
+        |-- [id].tsx
+```
+
+```tsx twoslash filename="routes/users/[id].tsx"
+import { useParams } from "solid-start";
+
+export default function UserPage() {
+  const params = useParams();
+  return <div>User {params.id}</div>;
+}
+```
+
+## Catch all routes
+
+Catch all routes are routes that can match any value for any number of segments. For example, `/blog/a/b/c` and `/blog/d/e` are both valid routes. You can defined catch-all routes using square brackets with `...` before the label for the route.For example, `/blog/[...post]` is a dynamic route, where `post` is the dynamic segment.
+
+`post` will be a property on the `params` object that is returned by the `useParams` hook. It will be a string with the value of the dynamic segment.
+
+```tsx {3}
+|-- routes/
+    |-- blog/
+        |-- index.tsx
+        |-- [...post].tsx
+```
+
+```tsx twoslash filename="routes/blog/[...post].tsx"
+import { useParams } from "solid-start";
+
+export default function BlogPage() {
+  const params = useParams();
+  return <div>Blog {params.post}</div>;
+}
+```
+
+## Nested routes
+
+As most UIs evolve, they normally have shared layouts for sections of the app, often driven by the location itself. If you want to add a parent layout to all the children routes in one folder, you can add a file with the same name as that folder, next to that folder itself.
+
+```tsx {1}
+|-- routes/
+    |-- users.tsx
+    |-- users/
+        |-- index.tsx
+        |-- [id].tsx
+        |-- projects.tsx
+```
+
+```tsx twoslash filename="routes/users/index.tsx"
+import { Outlet } from "solid-start";
+
+export default function UsersLayout() {
+  return (
+    <div>
+      <h1>Users</h1>
+      <Outlet />
+    </div>
+  );
+}
+```
+
+[navlink]: /navigation#navigation-links
+[usenavigate]: /api/useNavigate
+[usenavigate-navigate]: /api/useNavigate#navigate
+[api-routes]: /advanced/api-routes
+[components]: /advanced/components
+[fileroutes]: /api/FileRoutes
+[a]: /api/A
