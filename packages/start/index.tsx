@@ -17,6 +17,7 @@ export type { APIEvent as APIEvent } from "./api";
 export {
   createRouteAction,
   createRouteData,
+  createRouteMultiAction,
   FormError,
   refetchRouteData,
   ServerError

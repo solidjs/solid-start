@@ -8,7 +8,7 @@ active: true
 
 # createRouteAction
 
-##### `createRouteAction` creates a controller for managing the submissions of an async user action
+##### `createRouteAction` creates a controller for dispatching and managing the submission state of an async user action
 
 <div class="text-lg">
 
@@ -30,6 +30,9 @@ const [enrolling, enroll] = createRouteAction(enrollInClass)
 
 While you might think this should be just a straight forward `onClick` handler, there are a few things to consider.  You would want to show indicators of the action being performed. You would want to handle errors. You may also want to handle multiple submissions. Lets see how `createRouteAction` helps you deal with some of these issues.
 
+### Run a mutation
+
+If you are coming from `react-query`, this hook is similar to `useMutation`. It allows you to run an async function and manage the state of the action. It also allows you to run the action multiple times.
 
 ### Show a pending indicator for an action in progress
 
