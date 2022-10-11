@@ -3,18 +3,19 @@ section: api
 title: createServerMultiAction$
 order: 4
 subsection: Actions
+active: true
 ---
 
-# createServerAction$
+# createServerMultiAction$
 
-##### `createServerAction$` creates a controller for managing the submissions of an async user action, where the action always runs on the server
+##### `createServerMultiAction$` creates a controller for dispatching and managing multiple simultaneous submissions of an async user action, where the action always runs on the server
 
 <div class="text-lg">
 
 ```tsx twoslash
-import { createServerAction$ } from 'solid-start/server'
+import { createServerMultiAction$ } from 'solid-start/server'
 // ---cut---
-const [acting, act] = createServerAction$(async (args) => {
+const [acting, act] = createServerMultiAction$(async (args) => {
   // do something
 })
 ```
@@ -25,10 +26,11 @@ const [acting, act] = createServerAction$(async (args) => {
 
 ## Usage
 
+### Bring Multi Actions to the Server
+
+`createServerMultiAction$` is the `server$` function enhanced version of `createRouteMultiAction`. It has the same API except it always runs on the server.
+
 ## Reference
 
-### `createServerAction$(action, options)`
-
-#### Returns
-
+Refer to [createRouteMultiAction](./createRouteMultiAction) for API reference.
 
