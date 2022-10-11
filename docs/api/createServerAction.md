@@ -39,7 +39,7 @@ const prisma = {
 function getLoggedInUser(request: Request) {
   return { id: 1 };
 }
-// --- cut ---
+// ---cut---
 import { createServerAction$, redirect } from "solid-start/server";
 
 function EnrollmentPage() {
