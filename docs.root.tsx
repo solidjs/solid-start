@@ -176,7 +176,7 @@ export default function Root() {
           <div class="px-8 py-8 h-screen overflow-scroll xl:w-[65ch]">
             <ErrorBoundary>
               <Suspense>
-                <main class="prose prose-lg max-w-none w-full">
+                <main class="prose prose-md max-w-none w-full">
                   <MDXProvider
                     components={{
                       ...components,
