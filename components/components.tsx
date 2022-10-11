@@ -140,6 +140,15 @@ export const components = {
       </div>
     );
   },
+  aside: props => (
+    <aside
+      {...props}
+      class="bg-orange-200 text-orange-900 dark:bg-slate-700 p-6 rounded-md space-y-2"
+    >
+      <div class="font-bold uppercase text-sm">WARNING</div>
+      <div>{props.children}</div>
+    </aside>
+  ),
   response: props => {
     return <span class="border-1">{props.children}</span>;
   },

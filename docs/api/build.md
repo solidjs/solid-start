@@ -8,11 +8,7 @@ active: true
 
 # `solid-start build`
 
-<table-of-contents></table-of-contents>
-
-# `solid-start dev`
-
-##### `solid-start dev` starts a development server backed by [Vite](https://vitejs.dev/)
+##### `solid-start build` bundles your server and client using [Vite](https://vitejs.dev/)
 
 <div class="text-lg">
 
@@ -21,6 +17,9 @@ solid-start build
 ```
 
 </div>
+
+<table-of-contents></table-of-contents>
+
 
 ## Usage
 

@@ -14,31 +14,37 @@ Routing is possibly the most important concept to understand in SolidStart. Ever
 There are two categories of routes:
 
 - UI routes, which define the user interfaces in your app
-- API routes, which define data endpoints in your app
+- [API routes][api-routes], which define data endpoints in your app
 
-This section of the documentation will mainly focus on UI routes.
+This section of the documentation will mainly focus on UI routes, but you can learn more about API routes in the [API Routes][api-routes] section.
 
 ## Creating pages
 
-SolidStart uses file system-based routing. This means that the directory path of your route files will translate exactly to the route structure in your application.
+SolidStart uses file based routing. This means that the directory structure of your routes folder will translate exactly to the route structure in your application.
 
-Here are a few examples of files in our directory structure and how they would translate to application routes:
+Files in the `routes` directory will be treated as routes. Directories will be treated as additional route segments. For UI routes, they can be used along with parent layout components to form nested routes.
 
-- `/src/routes/index.tsx` ➜ `mysite.com`
-- `/src/routes/admin/index.tsx` ➜ `mysite.com/admin`
-- `/src/routes/admin/edit-settings.tsx` ➜ `mysite.com/admin/edit-settings`
+Here are a few examples of files in our directory structure and how they would translate to routes:
 
-We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our API routes. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
+- `/src/routes/index.tsx` ➜ `hogwarts.com/`
+- `/src/routes/admin/index.tsx` ➜ `hogwarts.com/admin`
+- `/src/routes/admin/edit-settings.tsx` ➜ `hogwarts.com/admin/edit-settings`
+
+There are some special file names that map to `URLPattern` patterns, eg.
+- `/src/routes/students/[id].tsx` ➜ `hogwarts.com/students/:id`
+- `/src/routes/[...missing].tsx` ➜ `hogwarts.com/*missing`
+
+We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
 
 ```tsx twoslash filename="routes/index.tsx"
 export default function Index() {
-  return <div>Welcome to SolidStart!</div>;
+  return <div>Welcome to Hogwarts!</div>;
 }
 ```
 
-In this example, visiting mysite.com/ will render a `<div>` with the text "Welcome to SolidStart!" inside it.
+In this example, visiting `hogwarts.com/` will render a `<div>` with the text "Welcome to Hogwarts!" inside it.
 
-Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the [`<FileRoutes />`][filerouts] component. The [`<FileRoutes />`][fileroutes] component only includes your page routes, and not your API routes. This component can be used instead of manually specifying your `Route`s inside the `<Routes />` component in `root.tsx`.
+Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the [`<FileRoutes />`][fileroutes] component. The [`<FileRoutes />`][fileroutes] component only includes your UI routes, and not your API routes. You can use it instead of manually entering all your `Route`s inside the `<Routes />` component in `root.tsx`. Let the compiler do the boring work!
 
 ```tsx twoslash {7-9} filename="root.tsx"
 import { Html, Body, Routes, FileRoutes } from "solid-start";
@@ -60,13 +66,13 @@ This means that all you have to do is create a file in your `routes` folder and 
 
 ## Navigating between pages
 
-While the user can enter your app from any route that your app has, once they are using your app, you can provide them a designed user experience. You need a way for the user to travel between your routes. The `HTML` spec has the `a` tag for this purpose. You can use `a` tags to add links between pages in your app. Nothing special and that will work in SolidStart as well. 
+While the user can enter your app from any route, once they are in, you can provide them a designed user experience. You need a way for the user to travel between your routes. The HTML spec has the [`<a>`][nativea] tag for this purpose. You can use [`<a>`][nativea] tags to add links between pages in your app. Nothing special. That will work in SolidStart as well. 
 
-But SolidStart also provides an enhanced `a` tag, the `<A>` component. It is a wrapper around the `a` tag and provides a few additional features. Once the app in mounted, when the user navigates to a new page,  the `<A>` will take over the navigation and will render the new page without a full page refresh. This is called client-side navigation. 
+But SolidStart also provides an enhanced [`<a>`][nativea] tag, the [`<A>`][a] component. It is a wrapper around the [`<a>`][nativea] tag and provides a few additional features. Once the app in mounted, when the user navigates to a new page,  the [`<A>`][a] will take over the navigation and will render the new page without a full page refresh. Something that's commonly known as client-side routing. It also know what to do when the app is running in other modes.
 
 ### Using links
 
-The best way to add a link to another page in your app is to the use enhanced anchor tag [`A`][a]. You can add the `href` prop to the `A` tag and we will navigate to that route in SPA style. 
+The best way to add a link to another page in your app is to the use enhanced anchor tag [`<A>`][a]. You can add the `href` prop to the [`<A>`][a] tag and we will navigate to that route in SPA style. 
 
 ```tsx twoslash {6}
 import { A } from 'solid-start';
@@ -80,8 +86,7 @@ export default function Index() {
 }
 ```
 
-
-You can specify class names to add to the `A` tag when the current location matches the `href` of the anchor using the `activeClass` prop. Use the `inactive` prop to add a class name to the `a` tag if the current route does not match the `href` of the anchor.
+You can specify class names to add to the [`<A>`][a] tag when the current location matches the `href` of the anchor using the `activeClass` prop. Use the `inactive` prop to add a class name to the [`<a>`][nativea] tag if the current route does not match the `href` of the anchor.
 
 ```tsx twoslash {6-12,15,18} filenam="routes/users.tsx"
 import { A } from "solid-start"
@@ -110,12 +115,12 @@ export default function UsersLayout() {
 
 ### When the user clicks a button
 
-There are cases where the `link` tag is not right for your navigation needs. For example,
+There are cases where the anchor is not right for your navigation needs. For example,
 
-- You want to navigate after the user clicks a button, and we do some logic.
 - You want to navigate after an async process completes
+- You want to navigate after the user clicks a button, and we do some logic.
 
-For these use cases we provide an imperative [`navigate`][usenavigate-navigate] function that can be access using the [`useNavigate`][usenavigate] helper
+For these use cases you can use an imperative [`navigate`][usenavigate-navigate] function that you can by calling [`useNavigate()`][usenavigate].
 
 ### Redirecting
 
@@ -229,7 +234,8 @@ export default function UsersLayout() {
 [navlink]: /navigation#navigation-links
 [usenavigate]: /api/useNavigate
 [usenavigate-navigate]: /api/useNavigate#navigate
-[api-routes]: /advanced/api-routes
+[api-routes]: /core-concepts/api-routes
 [components]: /advanced/components
 [fileroutes]: /api/FileRoutes
 [a]: /api/A
+[nativea]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a

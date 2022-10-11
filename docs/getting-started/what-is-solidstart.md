@@ -2,12 +2,13 @@
 title: What is SolidStart?
 section: getting-started
 order: 1
+active: true
 ---
 
 # What is SolidStart?
 
 <aside title="Beware of dragons" type="warning">
-  We are very excited about SolidStart, but it is in alpha. There will very likely be **bugs and
+  We are very excited about SolidStart, but it is in beta. There will very likely be **bugs and
   missing documentation**. Come at it with a growth attitude, have fun, and don't use it yet for
   anything critical. If all this darkness doesn't phase you, press onward, and consider joining the
   [discord](https://discord.com/invite/solidjs) to ask questions. We would love to meet you.
@@ -44,6 +45,6 @@ SolidStart touts the following feature set:
 
 We recommend that you know HTML, CSS, and JavaScript before digging in to SolidStart. Since SolidStart is a SolidJS meta-framework, we also recommend you know SolidJS prior to digging in to these docs (or at least [take the SolidJS tutorial](https://www.solidjs.com/tutorial)).
 
-## SolidStart is in Alpha!
+## SolidStart is in Beta!
 
-We're very excited that you're checking out the SolidStart Alpha release! Since SolidStart is in alpha, you may find some bugs as you explore the framework. We would appreciate if you report these bugs to us using [GitHub Issues](https://github.com/solidjs/solid-start/issues).
+We're very excited that you're checking out the SolidStart Beta release! Since SolidStart is in beta, you may find some bugs as you explore the framework. We would appreciate if you report these bugs to us using [GitHub Issues](https://github.com/solidjs/solid-start/issues).
