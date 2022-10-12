@@ -1,5 +1,5 @@
 // @refresh reload
-import { createMemo, For, lazy, Show, Suspense } from "solid-js";
+import { createMemo, For, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import {
   Body,
@@ -11,12 +11,14 @@ import {
   Routes,
   Scripts,
   Stylesheet,
-  Title
+  Title,
+  unstable_island
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import "./components/index.css";
 
-const IslandA = lazy(() => import("./components/A"));
+const IslandA = unstable_island(() => import("./components/A"));
+const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
 
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
@@ -96,7 +98,7 @@ function Header() {
         <div class="flex space-x-5">
           <div class="flex items-center">
             <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">
-              SolidJS.com
+              solidjs.com
               <svg
                 class="h-5 z-50 -mt-1 ltr:ml-1 rtl:mr-1 opacity-30"
                 fill="none"
@@ -195,9 +197,13 @@ function Nav() {
                         <div class="font-bold text-gray-500 text-md mb-3">{s}</div>
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
-                            <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
-                              <IslandA activeClass="text-blue-700" href={href}>
-                                <span class="block ml-4 text-gray-500 pb-2 text-sm break-words hover:text-gray-500 dark:hover:text-gray-300">
+                            <li class="ml-2">
+                              <IslandA
+                                activeClass="text-primary"
+                                inactiveClass="text-gray-500"
+                                href={href}
+                              >
+                                <span class="block ml-4 pb-2 text-sm break-words hover:text-gray-500 dark:hover:text-gray-300">
                                   {title}
                                 </span>
                               </IslandA>
@@ -210,8 +216,12 @@ function Nav() {
 
                   <For each={r.filter(i => !i.subsection)}>
                     {({ title, path, href, frontMatter }) => (
-                      <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
-                        <IslandA activeClass="text-blue-700" href={href}>
+                      <li class="ml-2">
+                        <IslandA
+                          activeClass="text-primary"
+                          inactiveClass="text-gray-500"
+                          href={href}
+                        >
                           <span>{title}</span>
                         </IslandA>
                       </li>
@@ -223,8 +233,8 @@ function Nav() {
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
                   <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
-                    <IslandA activeClass="text-blue-700" href={href}>
-                      <span class="block text-gray-500 dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
+                    <IslandA activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
+                      <span class="block dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
                         {title}
                       </span>
                     </IslandA>
@@ -240,13 +250,13 @@ function Nav() {
 }
 
 import { components } from "./components/components";
-import TableOfContents, { useTableOfContents } from "./components/TableOfContents";
+import { useTableOfContents } from "./components/TableOfContents";
 
 export default function Root() {
   return (
     <Html lang="en" class="h-full">
+      <Title>SolidStart (Beta)</Title>
       <Head>
-        <Title>SolidStart Beta Documentation</Title>
         <Meta charset="utf-8" />
         <Meta property="og:title" content="SolidStart Beta Documentation" />
         <Meta property="og:site_name" content="SolidStart Beta Docuentation" />
