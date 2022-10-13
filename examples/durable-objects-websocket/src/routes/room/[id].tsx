@@ -90,7 +90,7 @@ export default function Home() {
   const user = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const logoutAction = createServerAction$((_, { request }) => logout(request));
+  const [, logoutAction] = createServerAction$((_, { request }) => logout(request));
 
   const [users, setUsers] = createSignal([]);
 

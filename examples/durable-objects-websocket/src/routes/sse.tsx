@@ -17,7 +17,7 @@ export default function Page() {
   let [state, setState] = createSignal("test data");
   createEventStream(
     server$(async function () {
-      eventStream(this.request, send => {
+      return eventStream(this.request, send => {
         send("chat", "Hello world");
         setTimeout(() => {
           send("chat", "Goodbye");

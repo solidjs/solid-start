@@ -50,7 +50,7 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
-  const logoutAction = createServerAction$((_, { request }) => logout(request));
+  const [, logoutAction] = createServerAction$((_, { request }) => logout(request));
   const [lastPing, setLastPing] = createSignal(Date.now().toString());
   const increment = createServerAction$(
     async (_, { env }) => {

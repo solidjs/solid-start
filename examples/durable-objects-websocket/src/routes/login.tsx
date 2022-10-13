@@ -29,7 +29,7 @@ export default function Login() {
   const data = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const loginAction = createServerAction$(async (form: FormData) => {
+  const [_, loginAction] = createServerAction$(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");

@@ -101,6 +101,7 @@ export default function (miniflareOptions = {}) {
         },
         modules: true,
         kvPersist: true,
+        compatibilityFlags: ["streams_enable_constructors"],
         ...miniflareOptions
       });
 
