@@ -64,7 +64,7 @@ export default function About() {
   return (
     <>
       <h1>About</h1>
-      <img src={solid} alt="Solid logo" />
+      <img src={logo} alt="Solid logo" />
       // Renders
       <img src="/assets/solid.2d8efhg.png" alt="Solid logo" />
     </>
