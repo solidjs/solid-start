@@ -26,6 +26,11 @@ import { toPath } from "./path-utils.js";
 export default function prepareManifest(ssrManifest, assetManifest, config, islands = []) {
   const pageRegex = new RegExp(`\\.(${config.solidOptions.pageExtensions.join("|")})$`);
   const baseRoutes = posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir);
+  const basePath = typeof config.base === "string"
+    ? (config.base || "./").endsWith("/")
+      ? config.base
+      : config.base + "/"
+    : "/";
 
   let manifest = {};
 
@@ -49,7 +54,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       visitedFiles.add(file.file);
       files.push({
         type: file.file.endsWith(".css") ? "style" : file.file.endsWith(".js") ? "script" : "asset",
-        href: "/" + file.file
+        href: basePath + file.file
       });
 
       file.imports?.forEach(imp => {
@@ -71,7 +76,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
       file.css?.forEach(css => {
         if (visitedFiles.has(css)) return;
-        files.push({ type: "style", href: "/" + css });
+        files.push({ type: "style", href: basePath + css });
         visitedFiles.add(css);
 
         // if (!visitedScripts.has(file.src)) {
@@ -82,7 +87,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         //       new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`)
         //     )
         //   ) {
-        //     clientEntryScripts.push({ type: "style", href: "/" + css });
+        //     clientEntryScripts.push({ type: "style", href: basePath + css });
         //   }
         // }
       });
@@ -90,7 +95,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
     return {
       addAsset(val) {
-        let asset = Object.values(assetManifest).find(f => "/" + f.file === val);
+        let asset = Object.values(assetManifest).find(f => basePath + f.file === val);
         if (!asset) {
           return;
         }
