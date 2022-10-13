@@ -22,8 +22,12 @@ export function createServer({ handler, paths, env }) {
   });
   const assets_handler = fs.existsSync(paths.assets)
     ? sirv(paths.assets, {
-        maxAge: 31536000,
-        immutable: true
+        setHeaders: (res, pathname) => {
+          const isAsset = pathname.startsWith("/assets/");
+          if (isAsset) {
+            res.setHeader("cache-control", "public, immutable, max-age=31536000");
+          }
+        }
       })
     : (_req, _res, next) => next();
 

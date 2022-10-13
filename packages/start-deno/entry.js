@@ -16,10 +16,17 @@ serve(
 
     try {
       const file = await Deno.readFile(`./public${pathname}`);
+      const isAsset = pathname.startsWith("/assets/");
+
       // Respond to the request with the style.css file.
       return new Response(file, {
         headers: {
-          "content-type": lookup(pathname)
+          "content-type": lookup(pathname),
+          ...(isAsset
+            ? {
+                "cache-control": "public, immutable, max-age=31536000"
+              }
+            : {})
         }
       });
     } catch (e) {}
