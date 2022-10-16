@@ -109,7 +109,7 @@ export function Page() {
 The primary advantage of being a full-stack Javascript framework is that its easy to write data loading code that can run both on the server and client. SolidStart gives them superpowers. You might want to write code that only runs on your server but didn't have to create an API route for it. It could be database access, or internal APIs, etc. It could sit within your functions where you need to use your server. We created `createServerData$` for this. It builds upon our other primitives like `createRouteData` and `server$` to give a generated RPC for your data.
 
 ```tsx twoslash {8} filename="/routes/students.tsx"
-const hogwarts = { students: { list() { return [] } } }
+const hogwarts = { students: { list() { return [] as Student[] } } }
 // ---cut---
 import { For, Accessor, createResource } from "solid-js";
 import { useRouteData } from "solid-start";
