@@ -32,7 +32,9 @@ Here are a few examples of files in our directory structure and how they would t
 
 There are some special file names that map to `URLPattern` patterns, eg.
 - `/src/routes/students/[id].tsx` ➜ `hogwarts.com/students/:id`
+- `/src/routes/students/[id]/[name].tsx` ➜ `hogwarts.com/students/:id/:name`
 - `/src/routes/[...missing].tsx` ➜ `hogwarts.com/*missing`
+
 
 We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
 
