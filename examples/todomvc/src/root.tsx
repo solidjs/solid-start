@@ -11,13 +11,13 @@ export default function Root() {
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Body>
-        <ErrorBoundary>
           <Suspense>
+            <ErrorBoundary>
             <Routes>
               <FileRoutes />
             </Routes>
+            </ErrorBoundary>
           </Suspense>
-        </ErrorBoundary>
         <Scripts />
       </Body>
     </Html>

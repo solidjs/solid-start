@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "@solidjs/router";
-import { $TRACK, batch, createSignal, startTransition, useContext } from "solid-js";
+import { $TRACK, batch, createSignal, useContext } from "solid-js";
 import { FormError, FormImpl, FormProps } from "./Form";
 
 import type { ParentComponent } from "solid-js";
@@ -151,9 +151,9 @@ export function createRouteMultiAction<T, U = void>(
   );
   const navigate = useNavigate();
   const event = useContext(ServerContext);
+  let count = 0;
 
   function createSubmission(variables: T) {
-    let count = 0;
     let submission;
     const [result, setResult] = createSignal<{ data?: U; error?: any }>();
     return [
@@ -179,21 +179,29 @@ export function createRouteMultiAction<T, U = void>(
       const reqId = ++count;
       p.then(async data => {
         if (reqId === count) {
+          const tmp = submissions();
           if (data instanceof Response) {
             await handleResponse(data, navigate, options);
             data = data.body;
           } else await handleRefetch(data, options);
-          data ? setResult({ data }) : submission.clear();
+          batch(() => {
+            data ? setResult({ data }) : submission.clear();
+            tmp.forEach(sub => sub !== submission && sub.clear());
+          });
         }
         return data;
       }).catch(async e => {
         if (reqId === count) {
+          const tmp = submissions();
           if (e instanceof Response) {
             await handleResponse(e, navigate, options);
           } else await handleRefetch(e, options);
-          if (!isRedirectResponse(e)) {
-            setResult({ error: e });
-          } else submission.clear();
+          batch(() => {
+            if (!isRedirectResponse(e)) {
+              setResult({ error: e });
+            } else submission.clear();
+            tmp.forEach(sub => sub !== submission && sub.clear());
+          });
         }
       });
       return p;
@@ -233,11 +241,9 @@ export function createRouteMultiAction<T, U = void>(
 }
 
 function handleRefetch(response, options) {
-  return startTransition(() => {
-    refetchRouteData(
-      typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
-    );
-  });
+  return refetchRouteData(
+    typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
+  );
 }
 
 function handleResponse(response: Response, navigate, options) {

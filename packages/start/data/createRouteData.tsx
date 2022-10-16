@@ -134,7 +134,9 @@ export function createRouteData<T, S>(
 }
 
 export function refetchRouteData(key?: string | any[] | void) {
-  for (let refetch of resources) refetch(key);
+  return startTransition(() => {
+    for (let refetch of resources) refetch(key);
+  });
 }
 
 function createDeepSignal<T>(value: T, options?: ReconcileOptions) {
