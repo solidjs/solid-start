@@ -29,7 +29,7 @@ redirect("/my-next-destination");
 It is useful for sending redirects from `createServerData$`, `createServerAction$` and their variants. [API Routes][APIRoutes] can also use it to send redirects.
 s
 ```tsx twoslash
-import { redirect } from "solid-start";
+import { redirect } from "solid-start/server";
 
 export function GET() {
   return redirect('/some/other/path');
@@ -45,7 +45,7 @@ Use `redirect('/somewhere')` to create a [`Response`][Response] that's going to 
 It is useful inside [API Routes](/core-concepts/api-routes), [`server$`](/api/server$) functions, and [middleware](/advanced/middleware). Basically wherever a [`Response`][Response] is expected.
 
 ```ts twoslash
-import { redirect } from "solid-start";
+import { redirect } from "solid-start/server";
 
 const response = redirect('/somewhere');
 ```
