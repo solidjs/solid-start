@@ -57,6 +57,8 @@ export default function ({ edge } = {}) {
       // closes the bundle
       await bundle.close();
 
+      await promises.writeFile(join(config.root, "netlify", "_headers"), getHeadersFile(), "utf-8");
+
       if (edge) {
         const dir = join(config.root, ".netlify", "edge-functions");
         if (!existsSync(dir)) {
@@ -85,3 +87,13 @@ export default function ({ edge } = {}) {
     }
   };
 }
+
+/**
+ * @see https://docs.netlify.com/routing/headers/
+ */
+// prettier-ignore
+const getHeadersFile = () =>
+`
+/assets/*
+  Cache-Control: public, immutable, max-age=31536000
+`.trim();
