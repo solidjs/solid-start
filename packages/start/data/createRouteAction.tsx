@@ -151,9 +151,9 @@ export function createRouteMultiAction<T, U = void>(
   );
   const navigate = useNavigate();
   const event = useContext(ServerContext);
-  let count = 0;
 
   function createSubmission(variables: T) {
+    let count = 0;
     let submission;
     const [result, setResult] = createSignal<{ data?: U; error?: any }>();
     return [
