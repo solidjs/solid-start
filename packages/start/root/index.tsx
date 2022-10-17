@@ -1,5 +1,4 @@
 // isomorphic exports
-export { default as clientOnly } from "./clientOnly";
 export { Body, Head, Html } from "./Document";
 export { default as FileRoutes } from "./FileRoutes";
 export { default as Links } from "./Links";

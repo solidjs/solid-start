@@ -1,6 +1,7 @@
 import { Component, ComponentProps, lazy, splitProps, useContext } from "solid-js";
 import { ServerContext } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
+export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
   namespace JSX {
