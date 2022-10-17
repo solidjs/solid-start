@@ -11,13 +11,12 @@ export default function clientOnly<T extends Component<any>>(
   if (isServer) return (props: ComponentProps<T> & { fallback?: JSX.Element }) => props.fallback;
 
   const [comp, setComp] = createSignal<T>();
-  let p: Promise<{ default: T }> | undefined;
+  fn().then(m => setComp(() => m.default));
   return (props: ComponentProps<T>) => {
     let Comp: T | undefined;
     let m: boolean;
     const [, rest] = splitProps(props, ["fallback"]);
     if ((Comp = comp()) && !sharedConfig.context) return Comp(rest);
-    (p || (p = fn())).then(m => setComp(() => m.default));
     const [mounted, setMounted] = createSignal(!sharedConfig.context);
     onMount(() => setMounted(true));
     return createMemo(
