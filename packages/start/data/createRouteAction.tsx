@@ -151,7 +151,6 @@ export function createRouteMultiAction<T, U = void>(
   );
   const navigate = useNavigate();
   const event = useContext(ServerContext);
-  let count = 0;
 
   function createSubmission(variables: T) {
     let submission;
@@ -176,33 +175,21 @@ export function createRouteMultiAction<T, U = void>(
       handleSubmit
     ] as const;
     function handleSubmit(p) {
-      const reqId = ++count;
       p.then(async data => {
-        if (reqId === count) {
-          const tmp = submissions();
-          if (data instanceof Response) {
-            await handleResponse(data, navigate, options);
-            data = data.body;
-          } else await handleRefetch(data, options);
-          batch(() => {
-            data ? setResult({ data }) : submission.clear();
-            tmp.forEach(sub => sub !== submission && sub.clear());
-          });
-        }
+        if (data instanceof Response) {
+          await handleResponse(data, navigate, options);
+          data = data.body;
+        } else await handleRefetch(data, options);
+        data ? setResult({ data }) : submission.clear();
+
         return data;
       }).catch(async e => {
-        if (reqId === count) {
-          const tmp = submissions();
-          if (e instanceof Response) {
-            await handleResponse(e, navigate, options);
-          } else await handleRefetch(e, options);
-          batch(() => {
-            if (!isRedirectResponse(e)) {
-              setResult({ error: e });
-            } else submission.clear();
-            tmp.forEach(sub => sub !== submission && sub.clear());
-          });
-        }
+        if (e instanceof Response) {
+          await handleResponse(e, navigate, options);
+        } else await handleRefetch(e, options);
+        if (!isRedirectResponse(e)) {
+          setResult({ error: e });
+        } else submission.clear();
       });
       return p;
     }
