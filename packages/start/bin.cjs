@@ -167,7 +167,7 @@ prog
           build: {
             outDir: routeManifestPath,
             ssrManifest: true,
-            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
                 resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
@@ -207,7 +207,7 @@ prog
           build: {
             outDir: path,
             ssrManifest: true,
-            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
                 config.solidOptions.clientEntry,
@@ -300,7 +300,7 @@ prog
           build: {
             outDir: path,
             ssrManifest: true,
-            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: config.solidOptions.clientEntry,
               output: {
@@ -401,7 +401,7 @@ prog
           root: config.root,
           build: {
             outDir: path,
-            minify: process.env.START_MINIFY == "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY == "false" ? false : config.build?.minify ?? true,
             ssrManifest: true,
             rollupOptions: {
               input: indexHtml,
