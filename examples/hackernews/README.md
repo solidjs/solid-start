@@ -1,6 +1,6 @@
 # SolidStart Hackernews Example
 
-Hackernews example powered by [`solid-start`](https://github.com/ryansolid/solid-start/tree/master/packages/solid-start);
+Hackernews example powered by [`solid-start`](https://start.solidjs.com);
 
 ```bash
 npm init solid -- --template hackernews
