@@ -21,9 +21,9 @@ export default function clientOnly<T extends Component<any>>(
     const [mounted, setMounted] = createSignal(!sharedConfig.context);
     onMount(() => setMounted(true));
     return createMemo(
-      () => (Comp = comp()),
-      (m = mounted()),
-      untrack(() => (Comp && m ? Comp(rest) : props.fallback))
+      () => (
+        (Comp = comp()), (m = mounted()), untrack(() => (Comp && m ? Comp(rest) : props.fallback))
+      )
     );
   };
 }
