@@ -1,4 +1,4 @@
-import type { Component, JSX } from "solid-js";
+import type { Component, ComponentProps, JSX } from "solid-js";
 import { createMemo, createSignal, onMount, sharedConfig, splitProps, untrack } from "solid-js";
 import { isServer } from "solid-js/web";
 
@@ -8,11 +8,11 @@ export default function clientOnly<T extends Component<any>>(
     default: T;
   }>
 ) {
-  if (isServer) return (props: T & { fallback?: () => JSX.Element }) => props.fallback;
+  if (isServer) return (props: ComponentProps<T> & { fallback?: JSX.Element }) => props.fallback;
 
   const [comp, setComp] = createSignal<T>();
   let p: Promise<{ default: T }> | undefined;
-  return (props: T) => {
+  return (props: ComponentProps<T>) => {
     let Comp: T | undefined;
     let m: boolean;
     const [, rest] = splitProps(props, ["fallback"]);
