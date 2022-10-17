@@ -104,7 +104,7 @@ export async function GET({ params }: APIEvent) {
 ```
 
 
-## Session managmment
+## Session management
 
 As HTTP is a stateless protocol, for awesome dynamic experiences, you want to know the state of the session on the client. For example, you want to know who the user is. The secure way of doing this is to use HTTP-only cookies. You can store session data in them and they are persisted by the browser that your user is using. 
 
