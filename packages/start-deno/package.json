@@ -1,6 +1,6 @@
 {
   "name": "solid-start-deno",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "main": "./index.js",
   "type": "module",
   "solid": {
