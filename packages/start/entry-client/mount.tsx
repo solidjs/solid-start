@@ -39,7 +39,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
 
     async function mountIsland(el: HTMLElement) {
       let Component = window._$HY.islandMap[el.dataset.island];
-      if (!Component) return;
+      if (!Component || !el.dataset.hk) return;
       DEBUG(
         "hydrating island",
         el.dataset.island,
@@ -67,6 +67,16 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
       delete el.dataset.hk;
     }
 
+    let queue = [];
+    let queued = false;
+    function runTaskQueue(info) {
+      while (info.timeRemaining() > 0 && queue.length) {
+        mountIsland(queue.shift());
+      }
+      if (queue.length) {
+        requestIdleCallback(runTaskQueue);
+      } else queued = false;
+    }
     window._$HY.hydrateIslands = () => {
       const islands = document.querySelectorAll("solid-island[data-hk]");
       const assets = new Set<string>();
@@ -74,10 +84,12 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
       Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
         islands.forEach((el: HTMLElement) => {
           if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
-            requestIdleCallback(() => mountIsland(el));
-          } else {
-            mountIsland(el as HTMLElement);
-          }
+            if (!queued) {
+              queued = true;
+              requestIdleCallback(runTaskQueue);
+            }
+            queue.push(el);
+          } else mountIsland(el as HTMLElement);
         });
       });
     };

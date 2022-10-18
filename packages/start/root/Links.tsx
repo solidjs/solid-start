@@ -4,11 +4,24 @@ import { ServerContext } from "../server/ServerContext";
 import { ManifestEntry, PageEvent } from "../server/types";
 import { routesConfig } from "./FileRoutes";
 
+function flattenIslands(match, manifest) {
+  let result = [...match];
+  match.forEach(m => {
+    if (m.type !== "island") return;
+    const islandManifest = manifest[m.href];
+    if (islandManifest) {
+      const res = flattenIslands(islandManifest.assets, manifest);
+      result.push(...res);
+    }
+  });
+  return result;
+}
+
 function getAssetsFromManifest(
   manifest: PageEvent["env"]["manifest"],
   routerContext: PageEvent["routerContext"]
 ) {
-  const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
+  let match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
       const route = routesConfig.routeLayouts[fullPath];
@@ -24,6 +37,8 @@ function getAssetsFromManifest(
   }, []);
 
   match.push(...((manifest["entry-client"] || []) as ManifestEntry[]));
+
+  match = flattenIslands(match, manifest);
 
   const links = match.reduce((r, src) => {
     r[src.href] =
@@ -47,8 +62,5 @@ export default function Links() {
   const context = useContext(ServerContext);
   !isDev &&
     import.meta.env.START_SSR &&
-    useAssets(() =>
-      // @ts-expect-error The ssr() types do not match the Assets child types
-      getAssetsFromManifest(context.env.manifest, context.routerContext)
-    );
+    useAssets(() => getAssetsFromManifest(context.env.manifest, context.routerContext));
 }
