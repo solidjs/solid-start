@@ -22,7 +22,7 @@ test.describe("api routes", () => {
           "vite.config.ts": js`
             import solid from "solid-start/vite";
             import { defineConfig } from "vite";
-            
+
             export default defineConfig({
               plugins: [
                 solid({ ssr: ${ssr ? "true" : "false"}})
@@ -47,12 +47,12 @@ test.describe("api routes", () => {
           `,
           "src/routes/redirect.jsx": js`
             import { redirect } from "solid-start/server";
-  
+
             export let GET = () => redirect("/redirected");
           `,
           "src/routes/redirect-to.jsx": js`
             import { redirect } from "solid-start/server";
-  
+
             export let POST = async ({ request }) => {
               let formData = await request.formData();
               return redirect(formData.get('destination'));
@@ -100,20 +100,44 @@ test.describe("api routes", () => {
           "src/routes/server-fetch.jsx": js`
             import server$ from "solid-start/server";
             import { createResource } from 'solid-js';
-  
+
             export default function Page() {
               const [data] = createResource(() => server$.fetch('/api/greeting/harry-potter').then(res => res.json()));
-  
+
               return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
             }
           `,
           "src/routes/server-data-fetch.jsx": js`
             import server$, { createServerData$ } from "solid-start/server";
-  
+
             export default function Page() {
               const data = createServerData$(() => server$.fetch('/api/greeting/harry-potter').then(res => res.json()));
-  
+
               return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
+            }
+          `,
+          "src/routes/api/server-fetch-cookie.js": js`
+            import { parseCookie } from "solid-start";
+
+            export const GET = ({ request }) => {
+              const cookies = parseCookie(request.headers.get("cookie") ?? "");
+
+              if (cookies["secret"] !== "pass") {
+                return new Response("", {
+                  status: 401,
+                });
+              }
+
+              return new Response("pass");
+            }
+          `,
+          "src/routes/server-fetch-cookie.jsx": js`
+            import server$, { createServerData$ } from "solid-start/server";
+
+            export default function Page() {
+              const data = createServerData$(() => server$.fetch('/api/server-fetch-cookie').then(res => res.text()));
+
+              return <Show when={data()}><div data-testid="data">{data()}</div></Show>;
             }
           `
         }
@@ -173,6 +197,23 @@ test.describe("api routes", () => {
       await page.click("a[href='/server-data-fetch']");
       dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("harry-potter");
+    });
+
+    test("cookie header should be forwarded when using server$.fetch", async ({
+      page,
+      context
+    }) => {
+      await context.addCookies([{ name: "secret", value: "pass", url: page.url() }]);
+
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/server-fetch-cookie");
+      let dataEl = await page.waitForSelector("[data-testid='data']");
+      expect(await dataEl!.innerText()).toBe("pass");
+
+      await app.goto("/", true);
+      await page.click("a[href='/server-fetch-cookie']");
+      dataEl = await page.waitForSelector("[data-testid='data']");
+      expect(await dataEl!.innerText()).toBe("pass");
     });
 
     test("should return json from API route", async ({ page }) => {
