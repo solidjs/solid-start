@@ -15,24 +15,14 @@ test.describe("multi actions", () => {
       files: {
         "src/routes/multi-action.tsx": js`
         import { For } from "solid-js";
-        import { FormError } from "solid-start";
+        import { FormError, parseCookie } from "solid-start";
         import { createServerMultiAction$ } from "solid-start/server";
 
         const STANDARD_RESPONSE_DELAY = 500;
-
-        const parseCookies = (cookieString: string) =>
-          cookieString
-            .split(";")
-            .map((v) => v.split("="))
-            .reduce<Record<string, string>>((acc, v) => {
-              if (v[1])
-                acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
-              return acc;
-            }, {});
         
         export default () => {
           const [data, trigger] = createServerMultiAction$(async (_, event) => {
-            const cookies = parseCookies(event.request.headers.get("cookie") ?? "");
+            const cookies = parseCookie(event.request.headers.get("cookie") ?? "");
             const delay = Number(cookies["delay"] ?? STANDARD_RESPONSE_DELAY);
             const shouldError = cookies["state"] === "error";
 
