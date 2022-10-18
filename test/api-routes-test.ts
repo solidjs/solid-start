@@ -35,6 +35,7 @@ test.describe("api routes", () => {
                 <a href="/redirect" rel="external">Redirect</a>
                 <a href="/server-data-fetch">Server data fetch</a>
                 <a href="/server-fetch">Server Fetch</a>
+                <a href="/server-fetch-cookie">Server Fetch Cookie</a>
                 <form action="/redirect-to" method="post">
                   <input name="destination" value="/redirect-destination" />
                   <button type="submit">Redirect</button>
@@ -132,10 +133,11 @@ test.describe("api routes", () => {
             }
           `,
           "src/routes/server-fetch-cookie.jsx": js`
-            import server$, { createServerData$ } from "solid-start/server";
+            import server$ from "solid-start/server";
+            import { createResource } from 'solid-js';
 
             export default function Page() {
-              const data = createServerData$(() => server$.fetch('/api/server-fetch-cookie').then(res => res.text()));
+              const [data] = createResource(() => server$.fetch('/api/server-fetch-cookie').then(res => res.text()));
 
               return <Show when={data()}><div data-testid="data">{data()}</div></Show>;
             }
@@ -203,9 +205,8 @@ test.describe("api routes", () => {
       page,
       context
     }) => {
-      await context.addCookies([{ name: "secret", value: "pass", url: page.url() }]);
-
-      let app = new PlaywrightFixture(appFixture, page);
+      const app = new PlaywrightFixture(appFixture, page);
+      await context.addCookies([{ name: "secret", value: "pass", url: appFixture.serverUrl }]);
       await app.goto("/server-fetch-cookie");
       let dataEl = await page.waitForSelector("[data-testid='data']");
       expect(await dataEl!.innerText()).toBe("pass");
