@@ -1,19 +1,23 @@
 import type { JSX } from "solid-js";
 import { children, ComponentProps } from "solid-js";
-import { insert, spread, ssrElement } from "solid-js/web";
+import { insert, NoHydration, spread, ssrElement } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
 
 export function Html(props: ComponentProps<"html">) {
-  if (import.meta.env.MPA) {
+  if (import.meta.env.START_ISLANDS) {
+    return NoHydration({
+      get children() {
+        return ssrElement("html", props, undefined, false) as unknown as JSX.Element;
+      }
+    });
   }
   if (import.meta.env.SSR) {
     return ssrElement("html", props, undefined, false) as unknown as JSX.Element;
-  } else {
-    spread(document.documentElement, props, false, true);
-    return props.children;
   }
+  spread(document.documentElement, props, false, true);
+  return props.children;
 }
 
 export function Head(props: ComponentProps<"head">) {
@@ -38,7 +42,12 @@ export function Head(props: ComponentProps<"head">) {
 
 export function Body(props: ComponentProps<"body">) {
   if (import.meta.env.SSR) {
-    return ssrElement("body", props, () => import.meta.env.START_SSR ? props.children : <Scripts />, false) as unknown as JSX.Element;
+    return ssrElement(
+      "body",
+      props,
+      () => (import.meta.env.START_SSR ? props.children : <Scripts />),
+      false
+    ) as unknown as JSX.Element;
   } else {
     if (import.meta.env.START_SSR) {
       let child = children(() => props.children);

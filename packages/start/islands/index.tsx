@@ -1,4 +1,5 @@
 import { Component, ComponentProps, lazy, splitProps, useContext } from "solid-js";
+import { Hydration, NoHydration } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
 export { default as clientOnly } from "./clientOnly";
@@ -38,7 +39,9 @@ export function island<T extends Component<any>>(
   function IslandComponent(props) {
     return (
       <Component {...props}>
-        <solid-children>{props.children}</solid-children>
+        <solid-children>
+          <NoHydration>{props.children}</NoHydration>
+        </solid-children>
       </Component>
     );
   }
@@ -57,14 +60,16 @@ export function island<T extends Component<any>>(
       }
 
       return (
-        <solid-island
-          data-props={JSON.stringify(props)}
-          data-component={fpath}
-          data-island={`/` + path}
-          data-when={props["client:idle"] ? "idle" : "load"}
-        >
-          <IslandComponent {...compProps} />
-        </solid-island>
+        <Hydration>
+          <solid-island
+            data-props={JSON.stringify(props)}
+            data-component={fpath}
+            data-island={`/` + path}
+            data-when={props["client:idle"] ? "idle" : "load"}
+          >
+            <IslandComponent {...compProps} />
+          </solid-island>
+        </Hydration>
       );
     } else {
       return <IslandComponent />;
