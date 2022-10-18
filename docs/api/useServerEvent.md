@@ -28,7 +28,7 @@ const serverContext = useServerContext();
 
 ### Accessing the `request` on the server
 
-One common use case of this is to get the cookies. Cookies can be used to save user-preferences as session data. These preferences can be usd to personalize the page on the server and the client identically. 
+One common use case of this is to get the cookies. Cookies can be used to save user-preferences as session data. These preferences can be used to personalize the page on the server and the client identically. 
 
 ```tsx twoslash 
 import { parseCookie, useServerContext } from "solid-start";
