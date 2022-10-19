@@ -8,6 +8,7 @@ declare global {
       island(path: string, comp: Component): void;
       islandMap: { [path: string]: Component };
       hydrateIslands(): void;
+      fe(id: string): void;
     };
   }
 
@@ -37,4 +38,5 @@ export type StartOptions = {
   appRootFile: string;
 };
 
-export {};
+export { };
+

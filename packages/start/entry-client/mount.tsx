@@ -93,6 +93,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
         });
       });
     };
+    window._$HY.fe = window._$HY.hydrateIslands;
 
     window._$HY.hydrateIslands();
 

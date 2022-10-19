@@ -23,6 +23,12 @@ declare global {
       island(path: string, comp: Component): void;
       islandMap: { [path: string]: Component };
       hydrateIslands(): void;
+      fe(id: string): void;
+    };
+  }
+
+  export const DEBUG: Debugger;
+}
     };
   }
 

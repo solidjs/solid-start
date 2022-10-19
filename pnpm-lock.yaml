@@ -18,7 +18,7 @@ importers:
       fast-glob: ^3.2.12
       rimraf: ^3.0.2
       rollup: ^2.79.1
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-mdx: ^0.0.6
       solid-start: workspace:0.1.8
       solid-start-mdx: workspace:0.1.8
@@ -37,8 +37,8 @@ importers:
       '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.1
       '@rollup/plugin-json': 4.1.0_rollup@2.79.1
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
       '@tailwindcss/typography': 0.5.7_tailwindcss@3.1.8
       '@trpc/client': 9.27.4_@trpc+server@9.27.4
       '@trpc/server': 9.27.4
@@ -47,8 +47,8 @@ importers:
       fast-glob: 3.2.12
       rimraf: 3.0.2
       rollup: 2.79.1
-      solid-js: 1.6.0-beta.3
-      solid-mdx: 0.0.6_o3vioxmr6s3zdaaul7xvgdr6ie
+      solid-js: 1.6.0-beta.4
+      solid-mdx: 0.0.6_t4o5mghqyymfajl5tes7hxjls4
       solid-start: link:packages/start
       solid-start-mdx: link:packages/mdx
       solid-start-netlify: link:packages/start-netlify
@@ -65,16 +65,16 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
       typescript: ^4.8.4
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       undici: 5.11.0
     devDependencies:
@@ -87,7 +87,7 @@ importers:
       '@cloudflare/kv-asset-handler': ^0.1.3
       '@cloudflare/workers-types': ^3.17.0
       '@solidjs/router': ^0.5.0
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-cloudflare-workers: workspace:^0.1.8
       typescript: ^4.8.4
@@ -96,8 +96,8 @@ importers:
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@cloudflare/workers-types': 3.17.0
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       undici: 5.11.0
     devDependencies:
@@ -109,16 +109,16 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
       typescript: ^4.8.4
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       undici: 5.11.0
     devDependencies:
@@ -131,17 +131,17 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
       csstype: 3.1.0
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
       typescript: ^4.8.4
       undici: ^5.11.0
       vite: ^3.1.8
     devDependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
       csstype: 3.1.0
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.8.4
@@ -152,16 +152,16 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
       typescript: ^4.8.4
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       undici: 5.11.0
     devDependencies:
@@ -174,7 +174,7 @@ importers:
       '@mdx-js/rollup': ^2.1.5
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-mdx: ^0.0.6
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
@@ -182,10 +182,10 @@ importers:
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
-      solid-mdx: 0.0.6_o3vioxmr6s3zdaaul7xvgdr6ie
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
+      solid-mdx: 0.0.6_t4o5mghqyymfajl5tes7hxjls4
       solid-start: link:../../packages/start
       undici: 5.11.0
     devDependencies:
@@ -199,7 +199,7 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
       babel-plugin-solid-styled: ^0.6.3
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
       solid-styled: ^0.6.3
@@ -207,11 +207,11 @@ importers:
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
-      solid-styled: 0.6.3_solid-js@1.6.0-beta.3
+      solid-styled: 0.6.3_solid-js@1.6.0-beta.4
       undici: 5.11.0
     devDependencies:
       babel-plugin-solid-styled: 0.6.3
@@ -225,7 +225,7 @@ importers:
       '@solidjs/router': ^0.5.0
       autoprefixer: ^10.4.12
       postcss: ^8.4.18
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
       tailwindcss: ^3.1.8
@@ -233,9 +233,9 @@ importers:
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       undici: 5.11.0
     devDependencies:
@@ -253,7 +253,7 @@ importers:
       '@testing-library/jest-dom': ^5.16.5
       '@types/testing-library__jest-dom': ^5.14.5
       jsdom: ^20.0.1
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:^0.1.8
       solid-start-node: workspace:^0.1.8
       solid-testing-library: ^0.3.0
@@ -262,15 +262,15 @@ importers:
       vite: ^3.1.8
       vitest: ^0.20.3
     devDependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
       '@testing-library/jest-dom': 5.16.5
       '@types/testing-library__jest-dom': 5.14.5
       jsdom: 20.0.1
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
-      solid-testing-library: 0.3.0_solid-js@1.6.0-beta.3
+      solid-testing-library: 0.3.0_solid-js@1.6.0-beta.4
       typescript: 4.8.4
       undici: 5.11.0
       vite: 3.1.8
@@ -375,7 +375,7 @@ importers:
       rollup-route-manifest: ^1.0.0
       sade: ^1.8.1
       sirv: ^2.0.2
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start-cloudflare-pages: workspace:0.1.8
       solid-start-cloudflare-workers: workspace:0.1.8
       solid-start-deno: workspace:0.1.8
@@ -408,7 +408,7 @@ importers:
       dequal: 2.0.3
       es-module-lexer: 1.0.5
       esbuild: 0.14.54
-      esbuild-plugin-solid: 0.4.2_lgayiq7ufoiliu55ctfw4iu2gm
+      esbuild-plugin-solid: 0.4.2_dfdbrxjtxv4v6xsgxn4nxpyhxi
       fast-glob: 3.2.12
       get-port: 6.1.2
       parse-multipart-data: 1.5.0
@@ -421,16 +421,16 @@ importers:
       terser: 5.15.1
       undici: 5.11.0
       vite-plugin-inspect: 0.6.1_vite@3.1.8
-      vite-plugin-solid: 2.3.9_o3vioxmr6s3zdaaul7xvgdr6ie
+      vite-plugin-solid: 2.3.9_t4o5mghqyymfajl5tes7hxjls4
       wait-on: 6.0.1_debug@4.3.4
     devDependencies:
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
       '@testing-library/jest-dom': 5.16.5
       '@types/debug': 4.1.7
       '@types/wait-on': 5.3.1
       jsdom: 20.0.1
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
       solid-start-cloudflare-pages: link:../start-cloudflare-pages
       solid-start-cloudflare-workers: link:../start-cloudflare-workers
       solid-start-deno: link:../start-deno
@@ -438,7 +438,7 @@ importers:
       solid-start-node: link:../start-node
       solid-start-static: link:../start-static
       solid-start-vercel: link:../start-vercel
-      solid-testing-library: 0.3.0_solid-js@1.6.0-beta.3
+      solid-testing-library: 0.3.0_solid-js@1.6.0-beta.4
       typescript: 4.8.4
       vite: 3.1.8_terser@5.15.1
       vitest: 0.20.3_jsdom@20.0.1+terser@5.15.1
@@ -454,7 +454,7 @@ importers:
       '@rollup/plugin-commonjs': ^22.0.2
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
-      '@types/node': ^18.11.0
+      '@types/node': ^18.11.2
       '@types/ws': ^8.5.3
       miniflare: ^2.10.0
       rollup: ^2.79.1
@@ -478,7 +478,7 @@ importers:
       terser: 5.15.1
       ws: 8.9.0
     devDependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       solid-start: link:../start
       vite: 3.1.8_terser@5.15.1
 
@@ -493,7 +493,7 @@ importers:
       '@rollup/plugin-commonjs': ^22.0.2
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
-      '@types/node': ^18.11.0
+      '@types/node': ^18.11.2
       '@types/ws': ^8.5.3
       miniflare: ^2.10.0
       rollup: ^2.79.1
@@ -517,7 +517,7 @@ importers:
       terser: 5.15.1
       ws: 8.9.0
     devDependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       solid-start: link:../start
       vite: 3.1.8_terser@5.15.1
 
@@ -597,14 +597,14 @@ importers:
   packages/start-static:
     specifiers:
       sirv-cli: 2.0.2
-      solid-ssr: ^1.6.0-beta.3
+      solid-ssr: ^1.6.0-beta.4
       solid-start: workspace:0.1.8
       terser: ^5.15.1
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
       sirv-cli: 2.0.2
-      solid-ssr: 1.6.0-beta.3
+      solid-ssr: 1.6.0-beta.4
     devDependencies:
       solid-start: link:../start
       terser: 5.15.1
@@ -636,7 +636,7 @@ importers:
       '@testing-library/jest-dom': ^5.16.5
       '@types/cross-spawn': ^6.0.2
       '@types/fs-extra': ^9.0.13
-      '@types/node': ^18.11.0
+      '@types/node': ^18.11.2
       '@types/testing-library__jest-dom': ^5.14.5
       cheerio: 1.0.0-rc.11
       compression: ^1.7.4
@@ -660,7 +660,7 @@ importers:
       '@testing-library/jest-dom': 5.16.5
       '@types/cross-spawn': 6.0.2
       '@types/fs-extra': 9.0.13
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       '@types/testing-library__jest-dom': 5.14.5
       cheerio: 1.0.0-rc.11
       compression: 1.7.4
@@ -686,7 +686,7 @@ importers:
       '@cloudflare/kv-asset-handler': ^0.1.3
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
-      solid-js: ^1.6.0-beta.3
+      solid-js: ^1.6.0-beta.4
       solid-start: workspace:0.1.8
       solid-start-cloudflare-pages: workspace:0.1.8
       solid-start-cloudflare-workers: workspace:0.1.8
@@ -700,9 +700,9 @@ importers:
       wrangler: ^2.1.12
     devDependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
-      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.3
-      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.3
-      solid-js: 1.6.0-beta.3
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0-beta.4
+      '@solidjs/router': 0.5.0_solid-js@1.6.0-beta.4
+      solid-js: 1.6.0-beta.4
       solid-start: link:../../packages/start
       solid-start-cloudflare-pages: link:../../packages/start-cloudflare-pages
       solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
@@ -1968,8 +1968,8 @@ packages:
   /@iarna/toml/2.2.5:
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
-  /@jest/expect-utils/29.2.0:
-    resolution: {integrity: sha512-nz2IDF7nb1qmj9hx8Ja3MFab2q9Ml8QbOaaeJNyX5JQJHU8QUvEDiMctmhGEkk3Kzr8w8vAqz4hPk/ogJSrUhg==}
+  /@jest/expect-utils/29.2.1:
+    resolution: {integrity: sha512-yr4aHNg5Z1CjKby5ozm7sKjgBlCOorlAoFcvrOQ/4rbZRfgZQdnmh7cth192PYIgiPZo2bBXvqdOApnAMWFJZg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       jest-get-type: 29.2.0
@@ -1978,7 +1978,7 @@ packages:
     resolution: {integrity: sha512-3Ab5HgYIIAnS0HjqJHQYZS+zXc4tUmTmBH3z83ajI6afXp8X3ZtdLX+nXx+I7LNkJD7uN9LAVhgnjDgZa2z0kA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@sinclair/typebox': 0.24.46
+      '@sinclair/typebox': 0.24.47
 
   /@jest/types/26.6.2:
     resolution: {integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==}
@@ -1986,19 +1986,19 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       '@types/yargs': 15.0.14
       chalk: 4.1.2
     dev: true
 
-  /@jest/types/29.2.0:
-    resolution: {integrity: sha512-mfgpQz4Z2xGo37m6KD8xEpKelaVzvYVRijmLPePn9pxgaPEtX+SqIyPNzzoeCPXKYbB4L/wYSgXDL8o3Gop78Q==}
+  /@jest/types/29.2.1:
+    resolution: {integrity: sha512-O/QNDQODLnINEPAI0cl9U6zUIDXEWXt6IC1o2N2QENuos7hlGUIthlKyV4p6ki3TvXFX071blj8HUhgLGquPjw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/schemas': 29.0.0
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       '@types/yargs': 17.0.13
       chalk: 4.1.2
 
@@ -2044,7 +2044,7 @@ packages:
     resolution: {integrity: sha512-zEG0lt+Bl/r5U6e0TOS7qDbsXICtemfAPquxWFsMbdzrvlWaqMGemLl+sjVpqlyaaiCiGVQBSGdCk0t1qXjkQg==}
     dependencies:
       '@types/estree-jsx': 1.0.0
-      '@types/mdx': 2.0.2
+      '@types/mdx': 2.0.3
       estree-util-build-jsx: 2.2.0
       estree-util-is-identifier-name: 2.0.1
       estree-util-to-js: 1.1.0
@@ -2251,7 +2251,7 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       playwright-core: 1.23.4
     dev: false
 
@@ -2349,22 +2349,22 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: false
 
-  /@sinclair/typebox/0.24.46:
-    resolution: {integrity: sha512-ng4ut1z2MCBhK/NwDVwIQp3pAUOCs/KNaW3cBxdFB2xTDrOuo1xuNmpr/9HHFhxqIvHrs1NTH3KJg6q+JSy1Kw==}
+  /@sinclair/typebox/0.24.47:
+    resolution: {integrity: sha512-J4Xw0xYK4h7eC34MNOPQi6IkNxGRck6n4VJpWDzXIFVTW8I/D43Gf+NfWz/v/7NHlzWOPd3+T4PJ4OqklQ2u7A==}
 
-  /@solidjs/meta/0.28.0_solid-js@1.6.0-beta.3:
+  /@solidjs/meta/0.28.0_solid-js@1.6.0-beta.4:
     resolution: {integrity: sha512-x52VdB9RZJ1apDB/pAmf58oeJsJ0lGKFXWjnm/TE/MlENIBPg3JaW8H5v2HnGpQC0WUbgiIsDFWpLWVNBo5t6g==}
     peerDependencies:
       solid-js: '>=1.4.0'
     dependencies:
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
 
-  /@solidjs/router/0.5.0_solid-js@1.6.0-beta.3:
+  /@solidjs/router/0.5.0_solid-js@1.6.0-beta.4:
     resolution: {integrity: sha512-rNR07l21tWWDVmCbaapggB89rEX7jlM2XChpTLqEGEnj46LzVZ8zgvjcF6NNKScByAlLpoQUkVIjB2KHpcMi+w==}
     peerDependencies:
       solid-js: ^1.5.3
     dependencies:
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
 
   /@tailwindcss/typography/0.5.7_tailwindcss@3.1.8:
     resolution: {integrity: sha512-JTTSTrgZfp6Ki4svhPA4mkd9nmQ/j9EfE7SbHJ1cLtthKkpW2OxsFXzSmxbhYbEkfNIyAyhle5p4SYyKRbz/jg==}
@@ -2436,7 +2436,7 @@ packages:
   /@types/better-sqlite3/7.6.2:
     resolution: {integrity: sha512-RgmaapusqTq6IMAr4McMyAsC6RshYTCjXCnzwVV59WctUxC8bNPyUfT9t5F81lKcU41lLurhjqjoMHfauzfqGg==}
     dependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
 
   /@types/chai-subset/1.3.3:
     resolution: {integrity: sha512-frBecisrNGz+F4T6bcc+NLeolfiojh5FxW2klu669+8BARtyQv2C/GkNW6FUodVe4BroGMP/wER/YDGc7rEllw==}
@@ -2453,7 +2453,7 @@ packages:
   /@types/cross-spawn/6.0.2:
     resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
     dependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
     dev: false
 
   /@types/css-tree/1.0.7:
@@ -2479,7 +2479,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
     dev: false
 
   /@types/hast/2.3.4:
@@ -2500,25 +2500,25 @@ packages:
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
 
-  /@types/jest/29.1.2:
-    resolution: {integrity: sha512-y+nlX0h87U0R+wsGn6EBuoRWYyv3KFtwRNP3QWp9+k2tJ2/bqcGS3UxD7jgT+tiwJWWq3UsyV4Y+T6rsMT4XMg==}
+  /@types/jest/29.2.0:
+    resolution: {integrity: sha512-KO7bPV21d65PKwv3LLsD8Jn3E05pjNjRZvkm+YTacWhVmykAb07wW6IkZUmQAltwQafNcDUEUrMO2h3jeBSisg==}
     dependencies:
-      expect: 29.2.0
-      pretty-format: 29.2.0
+      expect: 29.2.1
+      pretty-format: 29.2.1
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
     dependencies:
       '@types/unist': 2.0.6
 
-  /@types/mdx/2.0.2:
-    resolution: {integrity: sha512-mJGfgj4aWpiKb8C0nnJJchs1sHBHn0HugkVfqqyQi7Wn6mBRksLeQsPOFvih/Pu8L1vlDzfe/LidhVHBeUk3aQ==}
+  /@types/mdx/2.0.3:
+    resolution: {integrity: sha512-IgHxcT3RC8LzFLhKwP3gbMPeaK7BM9eBH46OdapPA7yvuIUJ8H6zHZV53J8hGZcTSnt95jANt+rTBNUUc22ACQ==}
 
   /@types/ms/0.7.31:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
 
-  /@types/node/18.11.0:
-    resolution: {integrity: sha512-IOXCvVRToe7e0ny7HpT/X9Rb2RYtElG1a+VshjwT00HxrM2dWBApHQoqsI6WiY7Q03vdf2bCrIGzVrkF/5t10w==}
+  /@types/node/18.11.2:
+    resolution: {integrity: sha512-BWN3M23gLO2jVG8g/XHIRFWiiV4/GckeFIqbU/C4V3xpoBBWSMk4OZomouN0wCkfQFPqgZikyLr7DOYDysIkkw==}
 
   /@types/parse5/6.0.3:
     resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==}
@@ -2527,7 +2527,7 @@ packages:
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
 
   /@types/stack-trace/0.0.29:
     resolution: {integrity: sha512-TgfOX+mGY/NyNxJLIbDWrO9DjGoVSW9+aB8H2yy1fy32jsvxijhmyJI9fDFgvz3YP4lvJaq9DzdR/M1bOgVc9g==}
@@ -2538,7 +2538,7 @@ packages:
   /@types/testing-library__jest-dom/5.14.5:
     resolution: {integrity: sha512-SBwbxYoyPIvxHbeHxTZX2Pe/74F/tX2/D3mMvzabdeJ25bBojfW0TyB8BHrbq/9zaaKICJZjLP+8r6AeZMFCuQ==}
     dependencies:
-      '@types/jest': 29.1.2
+      '@types/jest': 29.2.0
 
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
@@ -2546,13 +2546,13 @@ packages:
   /@types/wait-on/5.3.1:
     resolution: {integrity: sha512-2FFOKCF/YydrMUaqg+fkk49qf0e5rDgwt6aQsMzFQzbS419h2gNOXyiwp/o2yYy27bi/C1z+HgfncryjGzlvgQ==}
     dependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
     dev: true
 
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
     dev: false
 
   /@types/yargs-parser/21.0.0:
@@ -2780,7 +2780,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001420
+      caniuse-lite: 1.0.30001422
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -2933,7 +2933,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001420
+      caniuse-lite: 1.0.30001422
       electron-to-chromium: 1.4.284
       node-releases: 2.0.6
       update-browserslist-db: 1.0.10_browserslist@4.21.4
@@ -2973,8 +2973,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /caniuse-lite/1.0.30001420:
-    resolution: {integrity: sha512-OnyeJ9ascFA9roEj72ok2Ikp7PHJTKubtEJIQ/VK3fdsS50q4KWy+Z5X0A1/GswEItKX0ctAp8n4SYDE7wTu6A==}
+  /caniuse-lite/1.0.30001422:
+    resolution: {integrity: sha512-hSesn02u1QacQHhaxl/kNMZwqVG35Sz/8DgvmgedxSH8z9UUpcDYSPYgsj3x5dQNRcNp6BwpSfQfVzYUTm+fog==}
 
   /caseless/0.12.0:
     resolution: {integrity: sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==}
@@ -3883,7 +3883,7 @@ packages:
     requiresBuild: true
     optional: true
 
-  /esbuild-plugin-solid/0.4.2_lgayiq7ufoiliu55ctfw4iu2gm:
+  /esbuild-plugin-solid/0.4.2_dfdbrxjtxv4v6xsgxn4nxpyhxi:
     resolution: {integrity: sha512-T5GphLoud3RumjeNYO3K9WVjWDzVKG5evlS7hUEUI0n9tiCL+CnbvJh3SSwFi3xeeXpZRrnZc1gd6FWQsVobTg==}
     peerDependencies:
       esbuild: '>=0.12'
@@ -3893,7 +3893,7 @@ packages:
       '@babel/preset-typescript': 7.18.6_@babel+core@7.19.3
       babel-preset-solid: 1.5.9_@babel+core@7.19.3
       esbuild: 0.14.54
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -4199,15 +4199,15 @@ packages:
       signal-exit: 3.0.7
       strip-final-newline: 3.0.0
 
-  /expect/29.2.0:
-    resolution: {integrity: sha512-03ClF3GWwUqd9Grgkr9ZSdaCJGMRA69PQ8jT7o+Bx100VlGiAFf9/8oIm9Qve7ZVJhuJxFftqFhviZJRxxNfvg==}
+  /expect/29.2.1:
+    resolution: {integrity: sha512-BJtA754Fba0YWRWHgjKUMTA3ltWarKgITXHQnbZ2mTxTXC4yMQlR0FI7HkB3fJYkhWBf4qjNiqvg3LDtXCcVRQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/expect-utils': 29.2.0
+      '@jest/expect-utils': 29.2.1
       jest-get-type: 29.2.0
-      jest-matcher-utils: 29.2.0
-      jest-message-util: 29.2.0
-      jest-util: 29.2.0
+      jest-matcher-utils: 29.2.1
+      jest-message-util: 29.2.1
+      jest-util: 29.2.1
 
   /extend/3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
@@ -4711,8 +4711,8 @@ packages:
     dependencies:
       builtin-modules: 3.3.0
 
-  /is-core-module/2.10.0:
-    resolution: {integrity: sha512-Erxj2n/LDAZ7H8WNJXd9tw38GYM3dv8rk8Zcs+jJuxYTW7sozH+SS8NtrSjVL1/vpLvWi1hxy96IzjJ3EHTJJg==}
+  /is-core-module/2.11.0:
+    resolution: {integrity: sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==}
     dependencies:
       has: 1.0.3
 
@@ -4800,48 +4800,48 @@ packages:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
     dev: true
 
-  /jest-diff/29.2.0:
-    resolution: {integrity: sha512-GsH07qQL+/D/GxlnU+sSg9GL3fBOcuTlmtr3qr2pnkiODCwubNN2/7slW4m3CvxDsEus/VEOfQKRFLyXsUlnZw==}
+  /jest-diff/29.2.1:
+    resolution: {integrity: sha512-gfh/SMNlQmP3MOUgdzxPOd4XETDJifADpT937fN1iUGz+9DgOu2eUPHH25JDkLVcLwwqxv3GzVyK4VBUr9fjfA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       chalk: 4.1.2
       diff-sequences: 29.2.0
       jest-get-type: 29.2.0
-      pretty-format: 29.2.0
+      pretty-format: 29.2.1
 
   /jest-get-type/29.2.0:
     resolution: {integrity: sha512-uXNJlg8hKFEnDgFsrCjznB+sTxdkuqiCL6zMgA75qEbAJjJYTs9XPrvDctrEig2GDow22T/LvHgO57iJhXB/UA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  /jest-matcher-utils/29.2.0:
-    resolution: {integrity: sha512-FcEfKZ4vm28yCdBsvC69EkrEhcfex+IYlRctNJXsRG9+WC3WxgBNORnECIgqUtj7o/h1d8o7xB/dFUiLi4bqtw==}
+  /jest-matcher-utils/29.2.1:
+    resolution: {integrity: sha512-hUTBh7H/Mnb6GTpihbLh8uF5rjAMdekfW/oZNXUMAXi7bbmym2HiRpzgqf/zzkjgejMrVAkPdVSQj+32enlUww==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       chalk: 4.1.2
-      jest-diff: 29.2.0
+      jest-diff: 29.2.1
       jest-get-type: 29.2.0
-      pretty-format: 29.2.0
+      pretty-format: 29.2.1
 
-  /jest-message-util/29.2.0:
-    resolution: {integrity: sha512-arBfk5yMFMTnMB22GyG601xGSGthA02vWSewPaxoFo0F9wBqDOyxccPbCcYu8uibw3kduSHXdCOd1PsLSgdomg==}
+  /jest-message-util/29.2.1:
+    resolution: {integrity: sha512-Dx5nEjw9V8C1/Yj10S/8ivA8F439VS8vTq1L7hEgwHFn9ovSKNpYW/kwNh7UglaEgXO42XxzKJB+2x0nSglFVw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@babel/code-frame': 7.18.6
-      '@jest/types': 29.2.0
+      '@jest/types': 29.2.1
       '@types/stack-utils': 2.0.1
       chalk: 4.1.2
       graceful-fs: 4.2.10
       micromatch: 4.0.5
-      pretty-format: 29.2.0
+      pretty-format: 29.2.1
       slash: 3.0.0
       stack-utils: 2.0.5
 
-  /jest-util/29.2.0:
-    resolution: {integrity: sha512-8M1dx12ujkBbnhwytrezWY0Ut79hbflwodE+qZKjxSRz5qt4xDp6dQQJaOCFvCmE0QJqp9KyEK33lpPNjnhevw==}
+  /jest-util/29.2.1:
+    resolution: {integrity: sha512-P5VWDj25r7kj7kl4pN2rG/RN2c1TLfYYYZYULnS/35nFDjBai+hBeo3MDrYZS7p6IoY3YHZnt2vq4L6mKnLk0g==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/types': 29.2.0
-      '@types/node': 18.11.0
+      '@jest/types': 29.2.1
+      '@types/node': 18.11.2
       chalk: 4.1.2
       ci-info: 3.5.0
       graceful-fs: 4.2.10
@@ -5906,8 +5906,8 @@ packages:
       react-is: 17.0.2
     dev: true
 
-  /pretty-format/29.2.0:
-    resolution: {integrity: sha512-QCSUFdwOi924g24czhOH5eTkXxUCqlLGZBRCySlwDYHIXRJkdGyjJc9nZaqhlFBZws8dq5Dvk0lCilsmlfsPxw==}
+  /pretty-format/29.2.1:
+    resolution: {integrity: sha512-Y41Sa4aLCtKAXvwuIpTvcFBkyeYp2gdFWzXGA+ZNES3VwURIB165XO/z7CjETwzCCS53MjW/rLMyyqEnTtaOfA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/schemas': 29.0.0
@@ -6147,7 +6147,7 @@ packages:
     resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
     hasBin: true
     dependencies:
-      is-core-module: 2.10.0
+      is-core-module: 2.11.0
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
@@ -6351,8 +6351,8 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
-  /solid-js/1.6.0-beta.3:
-    resolution: {integrity: sha512-6sjrvHnIl0MMdZN1GZZfTPFICCyogwlpH7o+XbM3SsRsstQMzn9Oxu1k9jpzGzvR8qjU5U5ZHcta31Z/o5CE4Q==}
+  /solid-js/1.6.0-beta.4:
+    resolution: {integrity: sha512-X7m4qF/ZrjEwZmXWPbapMEelX7SjWVZVHrO5BdxPN1fSPVpDNhiOV+mj62zKJRld8bqJ8ykCMEvrq1iJ79Btvg==}
     dependencies:
       csstype: 3.1.1
 
@@ -6363,16 +6363,16 @@ packages:
       vite: '*'
     dev: false
 
-  /solid-mdx/0.0.6_o3vioxmr6s3zdaaul7xvgdr6ie:
+  /solid-mdx/0.0.6_t4o5mghqyymfajl5tes7hxjls4:
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
     dependencies:
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
       vite: 3.1.8
 
-  /solid-refresh/0.4.1_solid-js@1.6.0-beta.3:
+  /solid-refresh/0.4.1_solid-js@1.6.0-beta.4:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}
     peerDependencies:
       solid-js: ^1.3
@@ -6380,30 +6380,30 @@ packages:
       '@babel/generator': 7.19.5
       '@babel/helper-module-imports': 7.18.6
       '@babel/types': 7.19.4
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
     dev: false
 
-  /solid-ssr/1.6.0-beta.3:
-    resolution: {integrity: sha512-GeZDIAerc+Gub7Fb0jR3edX0zXDSXQspxjy+P12H4syIJwA5OiirNOn4/QYo8kLqM65sF6ws+ljggYeat8KSEQ==}
+  /solid-ssr/1.6.0-beta.4:
+    resolution: {integrity: sha512-0XlhKD5/4pZIQTs1KnqFClV5KkGWer2saYSRWNIO2PnTDf7/m+wNGXy/Ra0xCPv0pDl5t3UvGxUz2UeEPylutQ==}
     dev: false
 
-  /solid-styled/0.6.3_solid-js@1.6.0-beta.3:
+  /solid-styled/0.6.3_solid-js@1.6.0-beta.4:
     resolution: {integrity: sha512-4yDDifTNL15tPGSH0lKL4ZHb81q5SvxcF6mKypTsomWLGZB6/Y2rh6Hx4DHOwrtRRwT33NiDOwNg6mxHNRiv8g==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.2
     dependencies:
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
     dev: false
 
-  /solid-testing-library/0.3.0_solid-js@1.6.0-beta.3:
+  /solid-testing-library/0.3.0_solid-js@1.6.0-beta.4:
     resolution: {integrity: sha512-6NWVbySNVzyReBm2N6p3eF8bzxRZXHZTAmPix4vFWYol16QWVjNQsEUxvr+ZOutb0yuMZmNuGx3b6WIJYmjwMQ==}
     engines: {node: '>= 14'}
     peerDependencies:
       solid-js: '>=1.0.0'
     dependencies:
       '@testing-library/dom': 7.31.2
-      solid-js: 1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
     dev: true
 
   /source-map-js/1.0.2:
@@ -7030,7 +7030,7 @@ packages:
       - supports-color
     dev: false
 
-  /vite-plugin-solid/2.3.9_o3vioxmr6s3zdaaul7xvgdr6ie:
+  /vite-plugin-solid/2.3.9_t4o5mghqyymfajl5tes7hxjls4:
     resolution: {integrity: sha512-+lprsYgt9DVNp0kbDj2d2HWAPI13L8ff5xslk9SjiPBcsY/YUZ/1Wj0J/Oj5aiVAhwfPm8IcM3bzyHJUPlmc8w==}
     peerDependencies:
       solid-js: ^1.3.17
@@ -7040,8 +7040,8 @@ packages:
       '@babel/preset-typescript': 7.18.6_@babel+core@7.19.3
       babel-preset-solid: 1.5.9_@babel+core@7.19.3
       merge-anything: 5.0.4
-      solid-js: 1.6.0-beta.3
-      solid-refresh: 0.4.1_solid-js@1.6.0-beta.3
+      solid-js: 1.6.0-beta.4
+      solid-refresh: 0.4.1_solid-js@1.6.0-beta.4
       vite: 3.1.8_terser@5.15.1
     transitivePeerDependencies:
       - supports-color
@@ -7127,7 +7127,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       chai: 4.3.6
       debug: 4.3.4
       local-pkg: 0.4.2
@@ -7169,7 +7169,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       chai: 4.3.6
       debug: 4.3.4
       jsdom: 20.0.1
@@ -7212,7 +7212,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.0
+      '@types/node': 18.11.2
       chai: 4.3.6
       debug: 4.3.4
       jsdom: 20.0.1
