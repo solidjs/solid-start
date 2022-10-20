@@ -13,7 +13,7 @@ import { getImageBlurSvg } from "./image-blur-svg";
 import { imageConfigDefault } from "./image-config";
 import { ImageConfigContext } from "./image-config-context";
 import { defaultLoader, handleLoading } from "./loaders";
-import { ImageConfig, ImageProps, ImgElementWithDataProp } from "./types";
+import { ImageConfig, ImageLoaderWithConfig, ImageProps, ImgElementWithDataProp } from "./types";
 import { checkImage, generateImgAttrs, getInt, isStaticImport, isStaticRequire } from "./utils";
 
 const allImgs = new Map<string, { src: string; priority: boolean; placeholder: string }>();
@@ -60,7 +60,7 @@ const Image: Component<ImageProps> = inProps => {
   );
 
   // Use a loader supplied to the context with a fallback to the defaultLoader
-  let loader = config().loader || defaultLoader;
+  let loader: ImageLoaderWithConfig = config().loader || defaultLoader;
 
   if ("loader" in rest) {
     if (rest.loader) {
