@@ -1,20 +1,33 @@
 import { A } from "solid-start";
+import { ImageConfigContext } from "../components/image/image-config-context";
+import { tmdbLoader, tmdbSizeMap } from "../services/tmdbAPI";
+import Image from "./image/Image";
 
 export function Card(props) {
   const media = () =>
     props.item.media_type ? props.item.media_type : props.item.name ? "tv" : "movie";
   return (
-    <div class="card">
-      <A class="card__link" href={`/${media()}/${props.item.id}`}>
-        <div class="card__img">
-          <img
-            src={"https://image.tmdb.org/t/p/original" + props.item.poster_path}
-            width={370}
-            height={556}
-          />
-        </div>
-        <h2>{props.item.title}</h2>
-      </A>
-    </div>
+    <ImageConfigContext.Provider
+      value={{
+        imageSizes: tmdbSizeMap.poster,
+        deviceSizes: tmdbSizeMap.poster,
+        loader: "custom"
+      }}
+    >
+      <div class="card">
+        <A class="card__link" href={`/${media()}/${props.item.id}`}>
+          <div class="card__img">
+            <Image
+              width={342}
+              height={192}
+              src={props.item.poster_path}
+              alt={props.item.name}
+              loader={tmdbLoader}
+            />
+          </div>
+          <h2>{props.item.title}</h2>
+        </A>
+      </div>
+    </ImageConfigContext.Provider>
   );
 }

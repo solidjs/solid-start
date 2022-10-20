@@ -1,12 +1,11 @@
+
 /**
  * API url
  */
 const TMDB_API_URL = "https://api.themoviedb.org/3";
 
-console.log(import.meta.env.VITE_API_KEY);
 const TMDB_API_PARAMS = {
   api_key: import.meta.env.VITE_API_KEY
-  // language: process.env.API_LANG
 };
 
 /**
@@ -163,6 +162,28 @@ function getPerson(id) {
 function search(query, page = 1) {
   return fetchTMD("search/multi", { query, page });
 }
+
+export const tmdbSizeMap = {
+  poster: [ 92, 154, 185, 342, 500, 780 ],
+  logo: [ 45, 92, 154, 185, 300, 500 ],
+  backdrop: [ 300, 780, 1280 ],
+  still: [ 92, 185, 300 ],
+  profile: [ 45, 185, 632 ]
+};
+
+/**
+ * Image loader helper
+ */
+export function tmdbLoader(options: {
+    src: string;
+    width?: number;
+    height?: number;
+    quality?: number;
+    format?: string;
+    fit?: "inside" | "fill" | "cover" | "outside" | "contain";
+  }): string {
+  return `https://image.tmdb.org/t/p/w${options.width}${options.src}`;
+};
 
 /**
  * Get YouTube video info
