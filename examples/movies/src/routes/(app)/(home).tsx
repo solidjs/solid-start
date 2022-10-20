@@ -1,6 +1,7 @@
 import { Show } from "solid-js";
-import { A, createRouteData, useRouteData } from "solid-start";
-import { getMovie, getTrending, getTvShow } from "~/services/tmdbAPI";
+import { createRouteData, useRouteData } from "solid-start";
+import { ListingCarousel } from "~/components/ListingCarousel";
+import { getListItem, getMovie, getTrending, getTvShow } from "~/services/tmdbAPI";
 import { Hero } from "../../components/Hero";
 
 export function routeData() {
@@ -40,6 +41,16 @@ export default function Page() {
     <main class="main">
       <Show when={data()}>
         <Hero item={data()?.featured} />
+        <ListingCarousel
+          items={data()?.trendingMovies.results}
+          viewAllHref={`/movie/categories/trending`}
+          title={getListItem("movie", "trending").TITLE}
+        />
+        <ListingCarousel
+          items={data()?.trendingMovies.results}
+          viewAllHref={`/tv/categories/trending`}
+          title={getListItem("tv", "trending").TITLE}
+        />
       </Show>
       {/* <Show when={trendingMoviesShown}></Show> */}
     </main>
