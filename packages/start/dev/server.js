@@ -10,6 +10,7 @@ globalThis.DEBUG = debug("start:server");
 // Vite doesn't expose this so we just copy the list for now
 // https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
+const module_style_pattern = /\.module\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
 process.on("unhandledRejection", function (e) {
   if (
@@ -72,12 +73,13 @@ export function createDevHandler(viteServer, config, options) {
               if (style_pattern.test(dep.file)) {
                 try {
                   const mod = await viteServer.ssrLoadModule(dep.url);
-                  if (/.module.css$/.test(dep.file)) {
+                  if (module_style_pattern.test(dep.file)) {
                     styles[dep.url] = env.cssModules?.[dep.file];
                   } else {
                     styles[dep.url] = mod.default;
                   }
                 } catch {
+                  console.warn(`Could not load ${dep.file}`);
                   // this can happen with dynamically imported modules, I think
                   // because the Vite module graph doesn't distinguish between
                   // static and dynamic imports? TODO investigate, submit fix
