@@ -1,0 +1,75 @@
+@import '~/assets/css/utilities/_variables.scss';
+
+.button,
+a.button {
+  display: inline-block;
+  padding: 1.5rem 2.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  background-color: $secondary-color;
+  transition: all 0.2s;
+
+  &:hover,
+  &:focus {
+    background-color: #2f2f2f;
+  }
+
+  &:disabled,
+  &[disabled] {
+    color: #666;
+    cursor: default;
+    background-color: #000;
+  }
+
+  .icon {
+    margin-right: 1rem;
+  }
+}
+
+.button--icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+select {
+  padding: 0.8rem 3.5rem 0.8rem 1.5rem;
+  font-size: 1.3rem;
+  color: #fff;
+  background: $secondary-color url('~assets/images/select-arrow.svg') no-repeat 100% 45%;
+  background-size: 30px 60px;
+  border-color: $secondary-color;
+  appearance: none;
+  border-radius: 0;
+
+  &:disabled,
+  &[disabled] {
+    cursor: default;
+    opacity: 0.4;
+  }
+}
+
+// Make sure we are not setting a height / background to multi select
+select[multiple="multiple"] {
+  height: auto;
+  background-image: none;
+}
+
+// IE hide the select arrow
+select::-ms-expand {
+  display: none;
+}
+
+input {
+  font-size: 1.3rem;
+  border-radius: 0;
+}
+
+button {
+  text-align: center;
+  border: 0;
+  border-radius: 0;
+}

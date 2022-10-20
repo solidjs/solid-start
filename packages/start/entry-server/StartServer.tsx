@@ -1,0 +1,93 @@
+import { MetaProvider } from "@solidjs/meta";
+import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
+import { ComponentProps, sharedConfig } from "solid-js";
+import { ssr } from "solid-js/web";
+import Root from "~start/root";
+import { apiRoutes } from "../api/middleware";
+import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
+import { routesConfig } from "../root/FileRoutes";
+import { inlineServerFunctions } from "../server/middleware";
+import { ServerContext } from "../server/ServerContext";
+import { FetchEvent, PageEvent } from "../server/types";
+
+const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
+  default: RouteDataFunc;
+};
+const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
+
+/** Function responsible for listening for streamed [operations]{@link Operation}. */
+export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
+
+/** Input parameters for to an Exchange factory function. */
+export interface MiddlewareInput {
+  forward: MiddlewareFn;
+}
+
+/** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
+export type MiddlewareFn = (event: FetchEvent) => Promise<Response> | Response;
+
+/** This composes an array of Exchanges into a single ExchangeIO function */
+export const composeMiddleware =
+  (exchanges: Middleware[]) =>
+  ({ forward }: MiddlewareInput) =>
+    exchanges.reduceRight(
+      (forward, exchange) =>
+        exchange({
+          forward
+        }),
+      forward
+    );
+
+export function createHandler(...exchanges: Middleware[]) {
+  const exchange = composeMiddleware([apiRoutes, inlineServerFunctions, ...exchanges]);
+  return async (event: FetchEvent) => {
+    return await exchange({
+      forward: async op => {
+        return new Response(null, {
+          status: 404
+        });
+      }
+    })(event);
+  };
+}
+
+export function StartRouter(
+  props: RouterProps & {
+    location: string;
+    prevLocation: string;
+    routes: RouteDefinition | RouteDefinition[];
+  }
+) {
+  if (import.meta.env.START_ISLANDS_ROUTER) {
+    return (
+      <Router {...props}>
+        <IslandsRouter {...props}>{props.children}</IslandsRouter>
+      </Router>
+    );
+  }
+  return <Router {...props}></Router>;
+}
+
+const docType = ssr("<!DOCTYPE html>");
+export default function StartServer({ event }: { event: PageEvent }) {
+  const parsed = new URL(event.request.url);
+  const path = parsed.pathname + parsed.search;
+  sharedConfig.context.requestContext = event;
+  return (
+    <ServerContext.Provider value={event}>
+      <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
+        <StartRouter
+          url={path}
+          out={event.routerContext}
+          location={path}
+          prevLocation={event.prevUrl}
+          data={dataFn}
+          routes={routesConfig.routes}
+        >
+          {docType as unknown as any}
+          <Root />
+        </StartRouter>
+      </MetaProvider>
+    </ServerContext.Provider>
+  );
+};

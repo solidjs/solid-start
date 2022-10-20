@@ -1,0 +1,58 @@
+{
+  "name": "solid-start-monorepo",
+  "description": "Official starter for SolidJS",
+  "version": "0.1.0",
+  "author": "Ryan Carniato",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryansolid/solid-start"
+  },
+  "private": true,
+  "scripts": {
+    "clean": "pnpm run clean:root",
+    "clean:root": "rimraf node_modules",
+    "publish:release": "lerna publish",
+    "docs:dev": "solid-start dev",
+    "docs:build": "solid-start build",
+    "docs:start": "solid-start start",
+    "clean:test": "rimraf .tmp",
+    "build:all": "pnpm run -r --if-present build",
+    "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
+    "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
+    "bump": "node scripts/bump.cjs"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@solidjs/meta": "^0.28.0",
+    "@solidjs/router": "^0.5.0",
+    "@tailwindcss/typography": "^0.5.7",
+    "@trpc/client": "^9.27.4",
+    "@trpc/server": "^9.27.4",
+    "coveralls": "^3.1.1",
+    "debug": "^4.3.4",
+    "fast-glob": "^3.2.12",
+    "lerna": "^5.5.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.79.0",
+    "solid-js": "^1.5.8",
+    "solid-mdx": "^0.0.6",
+    "solid-start": "workspace:*",
+    "solid-start-mdx": "workspace:*",
+    "solid-start-netlify": "workspace:*",
+    "solid-start-node": "workspace:*",
+    "tailwindcss": "^3.1.8",
+    "tippy.js": "^6.3.7",
+    "turbo": "^1.4.6",
+    "typescript": "4.7.4",
+    "undici": "^5.10.0",
+    "vite": "^3.1.0",
+    "zod": "^3.19.1"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

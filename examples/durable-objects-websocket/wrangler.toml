@@ -1,0 +1,15 @@
+name = "workers-websocket-durable-objects"
+compatibility_date = "2022-05-10"
+
+kv_namespaces = [
+  { binding = "app", id = "aed860985abe4e22a594f172c20e1b55", preview_id = "ddb572de18d04c4e98edb3fd1522e5dd" },
+]
+
+[durable_objects]
+bindings = [
+  { name = "DO_WEBSOCKET", class_name = "WebSocketDurableObject" },
+]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["WebSocketDurableObject"] # Array of new classes

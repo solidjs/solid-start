@@ -1,0 +1,37 @@
+{
+  "name": "solid-start-mdx",
+  "version": "0.1.8",
+  "description": "",
+  "main": "./index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mdx-js/mdx": "^2.1.3",
+    "@mdx-js/rollup": "^2.1.3",
+    "@types/mdast": "^3.0.10",
+    "acorn": "^8.8.0",
+    "estree-util-is-identifier-name": "^2.0.1",
+    "estree-util-value-to-estree": "^1.3.0",
+    "github-slugger": "^1.4.0",
+    "mdast": "^3.0.0",
+    "mdast-util-mdx": "^2.0.0",
+    "rehype-raw": "^6.1.1",
+    "rehype-slug": "^5.0.1",
+    "remark-frontmatter": "^4.0.1",
+    "remark-mdx-frontmatter": "^2.0.3",
+    "remark-shiki-twoslash": "^3.1.0",
+    "solid-mdx": "^0.0.6",
+    "unified": "^10.1.2",
+    "unist-util-visit": "^4.1.1",
+    "yaml": "^2.1.1"
+  }
+}

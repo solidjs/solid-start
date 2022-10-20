@@ -1,0 +1,14 @@
+// Vitest Snapshot v1
+
+exports[`<Counter /> > renders 1 1`] = `
+<div>
+  <button
+    class="increment"
+  >
+    Clicks: 
+    <!--#-->
+    0
+    <!--/-->
+  </button>
+</div>
+`;

@@ -1,0 +1,43 @@
+coverage/
+types/
+
+.turbo
+
+packages/create-solid/bin
+*.log
+
+playground
+
+dist
+worker
+.solid
+
+# dependencies
+node_modules
+
+# IDEs and editors
+.idea
+.project
+.classpath
+*.launch
+.settings/
+
+.tmp
+test/playwright-report
+
+# Temp
+gitignore
+
+.env
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Local Netlify folder
+.netlify
+netlify
+
+# miniflare cache
+.mf
+.vercel
