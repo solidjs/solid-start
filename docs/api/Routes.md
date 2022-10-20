@@ -8,7 +8,7 @@ active: true
 
 # Routes
 
-**`Routes` is a special `Switch` component that renders the correct `Route` child based on the users' location, and switches between them as the user navigates.**
+##### `Routes` is a special `Switch` component that renders the correct `Route` child based on the users' location, and switches between them as the user navigates.
 
 <div class="text-lg">
 
