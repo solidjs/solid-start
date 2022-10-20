@@ -26,7 +26,7 @@ const location = useLocation();
 
 ### Getting a reactive object describing the current URL location
 
-The `useLocation` hook gives you a reactive object describing the current URL location. It is a wrapper around the [Location](https://developer.mozilla.org/en-US/docs/Web/API/Location) object from the browser. Since its a store, you can use it in any reactive context and you will subscribe to changes to that part of the URL.
+The `useLocation` hook gives you a reactive object describing the current URL location. It is a wrapper around the [Location](https://developer.mozilla.org/en-US/docs/Web/API/Location) object from the browser. Since it's a store, you can use it in any reactive context, and you will be subscribed to changes to that part of the URL.
 
 ```tsx twoslash {4,6}
 import { useLocation } from "solid-start";

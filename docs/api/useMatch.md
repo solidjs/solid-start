@@ -25,7 +25,7 @@ const match = useMatch(() => "/my-route");
 
 ### Determining if a given path matches the current route
 
-`useMatch` takes an function that returns the path and returns a signal with match information if the current path matches the provided path. We can use this to determine if a given path matches the current route.
+`useMatch` takes a function that returns the path and returns a signal with match information if the current path matches the provided path. We can use this to determine if a given path matches the current route.
 
 ```js
 const match = useMatch(() => routeOfInterest);
@@ -49,7 +49,7 @@ function Component() {
 
 #### Returns
 
-A either undefined if not matched or a reactive object containing the attributes of the match:
+Either undefined if not matched **or** a reactive object containing the attributes of the match:
 
 - `path: string`: the pathname part of the URL, without the query string,
 - `params: reactive object`: object containing key value pairs of dynamic route sections

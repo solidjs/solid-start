@@ -29,7 +29,7 @@ const data = createRouteData(getStudents);
 
 ### Fetching data from an API
 
-`createRouteData` is a primitive for managing async data fetching. It is a light wrapper over `createResource` that is router away so it can handle data refetching. The simplest way to use it is to fetch data from an API.
+`createRouteData` is a primitive for managing async data fetching. It is a light wrapper over `createResource` that is a router away so it can handle data refetching. The simplest way to use it is to fetch data from an API.
 
 ```tsx twoslash
 import { createRouteData } from "solid-start";
@@ -44,7 +44,7 @@ export function routeData() {
 
 ### Fetching data with a key
 
-Often though we want to be able set a `key` for our routeData both to act as a parameter and to allow easy invalidation. The fetcher function does not reactively track so you must use this option if you wish the route data to update. A "falsy" value turns off data fetching.
+Often though we want to be able to set a `key` for our routeData both to act as a parameter and to allow easy invalidation. The fetcher function does not reactively track, so you must use this option if you wish the route data to update. A "falsy" value turns off data fetching.
 
 ```tsx twoslash
 import { createRouteData, RouteDataArgs } from "solid-start";
@@ -62,7 +62,7 @@ export function routeData({ params } : RouteDataArgs) {
 
 ### Setting the reconcile key
 
-`createRouteData` uses a Solid Store under the hood to store its data. This means that when data is refetched it attempts to diff the data to trigger only the finest-grained updates. By default it is configured to key data to `id`. If your backend uses a different field you can set it:
+`createRouteData` uses a Solid Store under the hood to store its data. This means that when data is refetched it attempts to diff the data to trigger only the finest-grained updates. By default, it is configured to key data to `id`. If your backend uses a different field you can set it:
 
 ```tsx twoslash
 import { createRouteData } from "solid-start";
@@ -86,7 +86,7 @@ export function routeData() {
 
 ### `createRouteData(fetcher, options)`
 
-Call `createRouteData()` .
+Call `createRouteData()`.
 
 ```tsx twoslash
 function getStudents() {

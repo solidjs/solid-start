@@ -47,7 +47,7 @@ mount(() => <StartClient />, document);
 #### Parameters
 
 - codeFn (function): function that executes the application code
-- mountEl (Node | Document): element to mount the appliction to
+- mountEl (Node | Document): element to mount the application to
 
 ### `<StartClient />`
 

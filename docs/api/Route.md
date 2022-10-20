@@ -73,7 +73,7 @@ Render `<Route>` components as children of the `<Routes>` component to define yo
   <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
   <tr><td>path</td><td>string</td><td>The path segment for this portion of the route.</td></tr>
   <tr><td>component</td><td>function</td><td>A component definition to be instantiated on route match. Only one of `element` or `component` should be present.</td></tr>
-  <tr><td>element</td><td>unknown</td><td>The element defines a expression that is run when the route is matched. Generally this is an instantiated component. Only one of `element` or `component` should be present.</td></tr>
+  <tr><td>element</td><td>unknown</td><td>The element defines an expression that is run when the route is matched. Generally this is an instantiated component. Only one of `element` or `component` should be present.</td></tr>
   <tr><td>data</td><td>function</td><td>Method for registering data loading functions that run in parallel on route match.</td></tr>
 </table>
 

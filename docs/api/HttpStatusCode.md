@@ -30,7 +30,7 @@ As you render the page you may want to set the status code to the `Response` dep
 
 Since `HttpStatusCode` is just a component, it can be used with `ErrorBoundaries`, `Show`, `Switch` or any of the other JSX control-flow components. So the same logic you are using to decide what to render should inform what status code you are setting. This allows that logic to sit together.
 
-Status codes are important tools for things like caching and SEO, so its a good practise to send meaningful status codes. For example, for a `NotFound` page, you should send a `404` status code.
+Status codes are important tools for things like caching and SEO, so it's a good practise to send meaningful status codes. For example, for a `NotFound` page, you should send a `404` status code.
 
 ```tsx twoslash {6} filename="routes/*404.tsx"
 import { HttpStatusCode } from "solid-start/server";

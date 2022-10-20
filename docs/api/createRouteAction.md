@@ -28,7 +28,7 @@ const [enrolling, enroll] = createRouteAction(enrollInClass)
 
 ### Run an async process when a user clicks a button
 
-While you might think this should be just a straight forward `onClick` handler, there are a few things to consider.  You would want to show indicators of the action being performed. You would want to handle errors. You may also want to handle multiple submissions. Lets see how `createRouteAction` helps you deal with some of these issues.
+While you might think this should be just a straight forward `onClick` handler, there are a few things to consider.  You would want to show indicators of the action being performed. You would want to handle errors. You may also want to handle multiple submissions. Let's see how `createRouteAction` helps you deal with some of these issues.
 
 ### Run a mutation
 

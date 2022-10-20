@@ -30,7 +30,7 @@ Here are a few examples of files in our directory structure and how they would t
 - `/src/routes/admin/index.tsx` ➜ `hogwarts.com/admin`
 - `/src/routes/admin/edit-settings.tsx` ➜ `hogwarts.com/admin/edit-settings`
 
-There are some special file names that map to `URLPattern` patterns, eg.
+There are some special file names that map to `URLPattern` patterns, e.g.
 - `/src/routes/students/[id].tsx` ➜ `hogwarts.com/students/:id`
 - `/src/routes/students/[id]/[name].tsx` ➜ `hogwarts.com/students/:id/:name`
 - `/src/routes/[...missing].tsx` ➜ `hogwarts.com/*missing`
@@ -70,11 +70,11 @@ This means that all you have to do is create a file in your `routes` folder and 
 
 While the user can enter your app from any route, once they are in, you can provide them a designed user experience. You need a way for the user to travel between your routes. The HTML spec has the [`<a>`][nativea] tag for this purpose. You can use [`<a>`][nativea] tags to add links between pages in your app. Nothing special. That will work in SolidStart as well. 
 
-But SolidStart also provides an enhanced [`<a>`][nativea] tag, the [`<A>`][a] component. It is a wrapper around the [`<a>`][nativea] tag and provides a few additional features. Once the app in mounted, when the user navigates to a new page,  the [`<A>`][a] will take over the navigation and will render the new page without a full page refresh. Something that's commonly known as client-side routing. It also know what to do when the app is running in other modes.
+But SolidStart also provides an enhanced [`<a>`][nativea] tag, the [`<A>`][a] component. It is a wrapper around the [`<a>`][nativea] tag and provides a few additional features. Once the app in mounted, when the user navigates to a new page,  the [`<A>`][a] will take over the navigation and will render the new page without a full page refresh. Something that's commonly known as client-side routing. It also knows what to do when the app is running in other modes.
 
 ### Using links
 
-The best way to add a link to another page in your app is to the use enhanced anchor tag [`<A>`][a]. You can add the `href` prop to the [`<A>`][a] tag and we will navigate to that route in SPA style. 
+The best way to add a link to another page in your app is to the use enhanced anchor tag [`<A>`][a]. You can add the `href` prop to the [`<A>`][a] tag, and we will navigate to that route in SPA style. 
 
 ```tsx twoslash {6}
 import { A } from 'solid-start';
@@ -187,7 +187,7 @@ export default function UserPage() {
 
 ## Catch all routes
 
-Catch all routes are routes that can match any value for any number of segments. For example, `/blog/a/b/c` and `/blog/d/e` are both valid routes. You can defined catch-all routes using square brackets with `...` before the label for the route.For example, `/blog/[...post]` is a dynamic route, where `post` is the dynamic segment.
+Catch all routes are routes that can match any value for any number of segments. For example, `/blog/a/b/c` and `/blog/d/e` are both valid routes. You can define catch-all routes using square brackets with `...` before the label for the route.For example, `/blog/[...post]` is a dynamic route, where `post` is the dynamic segment.
 
 `post` will be a property on the `params` object that is returned by the `useParams` hook. It will be a string with the value of the dynamic segment.
 

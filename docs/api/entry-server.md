@@ -46,7 +46,7 @@ export default createHandler(renderAsync(event => <StartServer event={event} />)
 
 Middleware that calls Solid's `renderToStream` under the hood. This asynchronously renders the application and starts responding as soon as it can. All Suspense and data loading on initial load happens on the server.
 
-This method is probably the most desired approach in many cases. However, it requires client-side JavaScript enabled and consideration of when status and head metatags are available as once streaming has began they cannot be updated from the server. This requires careful usage of the `deferStream` option of our Resources(`createRouteData`, `createServerData$`, `createResource`).
+This method is probably the most desired approach in many cases. However, it requires client-side JavaScript enabled and consideration of when status and head meta tags are available as once streaming has begun they cannot be updated from the server. This requires careful usage of the `deferStream` option of our Resources(`createRouteData`, `createServerData$`, `createResource`).
 
 ```tsx twoslash
 import { createHandler, renderStream, StartServer } from "solid-start/entry-server";
@@ -67,7 +67,7 @@ export default createHandler(renderSync(event => <StartServer event={event} />))
 #### Parameters
 
 - codeFn (function): function that executes the application code
-- mountEl (Node | Document): element to mount the appliction to
+- mountEl (Node | Document): element to mount the application to
 
 ### `<StartServer event={event} />`
 

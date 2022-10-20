@@ -8,7 +8,7 @@ active: true
 # What is SolidStart?
 
 <aside title="Beware of dragons" type="warning">
-  We are very excited about SolidStart but it is in beta. There will very likely be **bugs and
+  We are very excited about SolidStart, but it is currently in beta. There will very likely be **bugs and
   missing documentation**. Come at it with a growth attitude, have fun, and don't use it yet for
   anything critical. If all this darkness doesn't phase you, press onward, and consider joining the
   <a href="https://discord.com/invite/solidjs" target="_blank">Discord</a> to ask questions. We would love to meet you.
@@ -29,7 +29,7 @@ SolidStart enables you to render your application in different ways depending on
 
 If you're not familiar with these, that's okay! As we progress through these docs, we'll talk a bit about different ways to render your applications and help you choose the best fit.
 
-One of the driving principles of SolidStart is that code should be _isomorphic_&mdash;you should be able to write code once and it will run correctly regardless of whether it's being run on the client or server. As we move through the docs, we'll discover just how powerful isomorphism is!
+One of the driving principles of SolidStart is that code should be _isomorphic_&mdash;you should be able to write code once, and it will run correctly regardless of whether it's being run on the client or server. As we move through the docs, we'll discover just how powerful isomorphism is!
 
 ## Features
 

@@ -24,7 +24,7 @@ import { FileRoutes } from "solid-start";
 
 ## Usage
 
-### Using file based routing to setup your `Routes`
+### Using file-based routing to set up your `Routes`
 
 The `<FileRoutes>` component collects routes from the file-system in the `/routes` folder to be inserted into a parent `<Routes>` component.
 

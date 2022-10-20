@@ -8,7 +8,7 @@ active: true
 
 # Routes
 
-##### `Routes` is a special `Switch` component that renders the correct `Route` child based on the users location, and switches between them as the user navigates.
+##### `Routes` is a special `Switch` component that renders the correct `Route` child based on the users' location, and switches between them as the user navigates.
 
 <div class="text-lg">
 
@@ -65,7 +65,7 @@ export default function App() {
 
 ### Using file based routing
 
-Manually importing all your routes can be tedious and error prone, so, SolidStart gives you file-system routing. This allows you to define the routes via a folder structure under the `/routes` folder. You can pass them into the `<Routes>` component with the `<FileRoutes>` component.
+Manually importing all your routes can be tedious and error-prone, so, SolidStart gives you file-system routing. This allows you to define the routes via a folder structure under the `/routes` folder. You can pass them into the `<Routes>` component with the `<FileRoutes>` component.
 
 ```tsx twoslash {7-9} filename="root.tsx"
 import { Html, Body, Routes, FileRoutes } from "solid-start";

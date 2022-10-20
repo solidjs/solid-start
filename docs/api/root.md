@@ -60,11 +60,11 @@ export default function Root() {
 
 ### Setting up your application
 
-The `Root` component exported from `root.tsx` is the isomorphic (shared on server and browser) entry into your application. This is the point where the code runs on both sides. It is layed out like a typical HTML document with the exception the tags are all (capitalized) components.
+The `Root` component exported from `root.tsx` is the isomorphic (shared on server and browser) entry into your application. This is the point where the code runs on both sides. It is laid out like a typical HTML document with the exception the tags are all (capitalized) components.
 
 The core entry pieces not found in a typical HTML document are the Suspense and Error Boundaries which act as a harness for handling the loading and error states in our application. Inside those we define our `<Routes>`. Keep in mind there are no rules here in terms of where you want to place these, but we add them by default as `<Suspense>` is required to do asynchronous server rendering and having `<ErrorBoundary>` high up in the tree is a useful catchall especially when developing.
 
-Inside the `<Body>` a good place to insert any Components that are shared between all pages. Things like top-level navigation. And inside this file is a good place to put any global Context Providers to inject global state into your appication.
+Inside the `<Body>` a good place to insert any Components that are shared between all pages. Things like top-level navigation. And inside this file is a good place to put any global Context Providers to inject global state into your application.
 
 ## Reference
 

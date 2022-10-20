@@ -45,4 +45,4 @@ function getPath ({navigate, location}) {
 <Route path="/redirect" element={<Navigate href={getPath}/>}/>
 ```
 
-On the server, if a `Navigate` component is rendered, it will return a HTTP redirect response to let the browser handle the redirect. This also with SEO in mind, as it will let search engines know that the page has moved.
+On the server, if a `Navigate` component is rendered, it will return an HTTP redirect response to let the browser handle the redirect. This also with SEO in mind, as it will let search engines know that the page has moved.
