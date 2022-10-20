@@ -47,7 +47,7 @@ function Component() {
 ```
 
 <aside type="warning">
-Be careful to not access the server-side fields of the `ServerContext`. You should usually wrap the usage in `isServer` to ensure that the code is not executed on the client. You also get access to the page event as the second argument of `createServerData$` and `createServerAction$`. Since most times its the data that needs to be personalized, you can use `createServerData$` to access the request object.
+Be careful to not access the server-side fields of the `ServerContext`. You should usually wrap the usage in `isServer` to ensure that the code is not executed on the client. You also get access to the page event as the second argument of `createServerData$` and `createServerAction$`. Since most times it's the data that needs to be personalized, you can use `createServerData$` to access the request object.
 </aside>
 
 ## Reference

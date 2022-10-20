@@ -8,7 +8,7 @@ active: true
 
 # Link
 
-##### `Link` is a component that renders a `<link>` element in the docment's `<head>`
+##### `Link` is a component that renders a `<link>` element in the document's `<head>`
 
 <div class="text-lg">
 
@@ -45,7 +45,7 @@ export default function Root() {
 
 ### Using an emoji as a favicon
 
-Or, here's a neat trick. You can use an emojia as your favicon:
+Or, here's a neat trick. You can use an emoji as your favicon:
 
 ```tsx twoslash
 import { Html, Head, Link } from "solid-start";

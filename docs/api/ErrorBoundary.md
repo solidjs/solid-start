@@ -30,7 +30,7 @@ import { ErrorBoundary } from "solid-start";
 
 The achilles heel of web apps seems to lie in error handling. An unhandled error in one component can bring your entire app down with it. Preferably, apps can be split into self-contained sections, where the failure of one component does not render the entire app unusable, only that one section.
 
-Solid achieves this functionality with _Error Boundaries_. Error Boundary is a special component that ensures the unhandled errors of it's children don't extend beyond it's boundary.
+Solid achieves this functionality with _Error Boundaries_. Error Boundary is a special component that ensures the unhandled errors of its children don't extend beyond its boundary.
 
 ```tsx twoslash 
 function ComponentThatMightError() {

@@ -34,7 +34,7 @@ const [sending, send] = createRouteMultiAction(sendMessage)
 
 ## Usage
 
-### Track multiple submissions of an action simulataneously
+### Track multiple submissions of an action simultaneously
 
 Imagine a chat application, where the user is furiously typing and entering messages. How would we track this? We can't use `createRouteAction` because it always ignores a previous submission when it gets a new one. `createRouteMultiAction` allows us to track multiple submissions for the same action.
 

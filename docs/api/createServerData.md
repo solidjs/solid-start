@@ -29,7 +29,7 @@ const data = createServerData$(getStudents);
 
 ### Fetching data from a Database
 
-`createServerData$` is a primitive for managing async data fetching that always runs on the server. It is a light wrapper over `createRouteData` that leverages `server$` functions to ensure the fetcher always runs on the server. This allows you access things only available on the server like databases.
+`createServerData$` is a primitive for managing async data fetching that always runs on the server. It is a light wrapper over `createRouteData` that leverages `server$` functions to ensure the fetcher always runs on the server. This allows you to access things only available on the server like databases.
 
 ```tsx twoslash
 const prisma = {
@@ -47,7 +47,7 @@ export function routeData() {
 
 ### Fetching data with a key
 
-Often though we want to be able set a key for our routeData both to act as a parameter and to allow easy invalidation. The fetcher function is not reactive so you must use this option if you wish the route data to update. It is also the only way to pass parameters to fetcher function for `createServerData$` as only variables at top-level scope or passed in can be accessed in `server$` functions.
+Often though we want to be able to set a key for our routeData both to act as a parameter and to allow easy invalidation. The fetcher function is not reactive, so you must use this option if you wish the route data to update. It is also the only way to pass parameters to fetcher function for `createServerData$` as only variables at top-level scope or passed in can be accessed in `server$` functions.
 
 ```tsx twoslash
 const prisma = {
@@ -67,7 +67,7 @@ export function routeData({ params }: RouteDataArgs) {
 }
 ```
 
-### Acessing the `Request`
+### Accessing the `Request`
 
 ```tsx twoslash {7}
 const prisma = {
@@ -147,7 +147,7 @@ export function routeData({ params }: RouteDataArgs) {
 
 ### Hoisting 
 
-The fetcher function must not access anything in its surrounding scope/closure. Since the function is run in an isolated environment, we hoist it out from whereever its declared to the top of the file. It only has access to variables defined at the module level and the arguments passed in. Nothing else. This is why you must pass in any variables you need to access in the fetcher function as arguments, not just the reactive ones.
+The fetcher function must not access anything in its surrounding scope/closure. Since the function is run in an isolated environment, we hoist it out from wherever it's declared to the top of the file. It only has access to variables defined at the module level and the arguments passed in. Nothing else. This is why you must pass in any variables you need to access in the fetcher function as arguments, not just the reactive ones.
 
 
 ```tsx twoslash {4,6} bad

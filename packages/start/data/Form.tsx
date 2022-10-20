@@ -144,7 +144,7 @@ export let FormImpl = (_props: FormImplProps) => {
         replace: false,
         method: "post" as FormMethod,
         action: "/",
-        encType: "application/x-www-form-urlencoded"
+        encType: "application/x-www-form-urlencoded" as FormEncType
       },
       _props
     ),
@@ -212,6 +212,7 @@ export let FormImpl = (_props: FormImplProps) => {
       }}
       method={formMethod}
       action={_props.action}
+      enctype={props.encType}
       // encType={encType}
       onSubmit={
         props.reloadDocument

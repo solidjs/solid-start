@@ -12,7 +12,7 @@ The handler is a function that takes a [FetchEvent][fetchevent] object and retur
 
 The [FetchEvent] API is borrowed from the [Service Worker API][serviceworker]. 
 
-Lets see what the mental model created by these APIs is:
+Let's see what the mental model created by these APIs is:
 
 Imagine a fetch client:
 

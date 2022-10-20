@@ -6,13 +6,13 @@ order: 7
 
 # Sessions
 
-Lets see how some of the common authentication and authorization patterns work:
+Let's see how some common authentication and authorization patterns work:
 
 ## Authentication
 
 We need to know who the user is. This is usually done by checking the request for information. The best way for the client and server to do is using cookies.
 
-We can use the `Request` object to access the `Cookie` header. We can then parse the cookie header to get the cookie value for a specific cookie name, for eg. `"session"`. We can then use the cookie value to identify the session.
+We can use the `Request` object to access the `Cookie` header. We can then parse the cookie header to get the cookie value for a specific cookie name, for e.g. `"session"`. We can then use the cookie value to identify the session.
 
 ```twoslash include hogwarts
 const hogwarts = {
@@ -69,7 +69,7 @@ export async function getUser(request: Request): Promise<User | null> {
 }
 ```
 
-Let's look at an example of how to use the cookie to identify the user. Imagine we are implementating a `getUser` function that returns the user making the request.
+Let's look at an example of how to use the cookie to identify the user. Imagine we are implementing a `getUser` function that returns the user making the request.
 
 ```tsx twoslash {6} filename="/lib/session.ts"
 // @include: hogwarts
@@ -89,7 +89,7 @@ We use a `SessionStorage` to manage the session data on the server. We can creat
 // @include: cookie
 ```
 
-The `SessionStorage` can be passed the cookie to get the session data about the request. How the session data is stored and retrievd is up to the implementation of the `SessionStorage`. It can either save all the state within the `cookie` itself, which `createCookieSessionStorage` does, or it can save the session data in a database, and the cookie merely contains a session id.
+The `SessionStorage` can be passed the cookie to get the session data about the request. How the session data is stored and retrieved is up to the implementation of the `SessionStorage`. It can either save all the state within the `cookie` itself, which `createCookieSessionStorage` does, or it can save the session data in a database, and the cookie merely contains a session id.
 
 So, lets use this `storage` to get the session data for the request:
 
@@ -104,7 +104,7 @@ export async function getUser(request: Request) {
 }
 ```
 
-Typically, we will have saved the `userId` in the session. If we don't find it, that means that this was not a authenticated request. Our `getUser` function returns a `null` when it doesn't find a user. If we find a `userId`, we can use that to get the user from the database:
+Typically, we will have saved the `userId` in the session. If we don't find it, that means that this was not an authenticated request. Our `getUser` function returns a `null` when it doesn't find a user. If we find a `userId`, we can use that to get the user from the database:
 
 ```tsx twoslash {4-6} filename="/lib/session.ts"
 // @include: hogwarts
@@ -116,7 +116,7 @@ Typically, we will have saved the `userId` in the session. If we don't find it, 
 
 This helper can be used in all kinds of situations wherever we want to authenticate the request. They can be used in [server functions][serverfunctions] and [API routes][apiroutes], as well the `createServerData$` and `createServerAction$` primitives.
 
-Lets see how we can use this in a `createServerData$` call to make sure that only authenticated users can access the data. If the user is not authenticated, we can redirect them to the login page:
+Let's see how we can use this in a `createServerData$` call to make sure that only authenticated users can access the data. If the user is not authenticated, we can redirect them to the login page:
 
 ```tsx twoslash {7-8} filename="/routes/api/[house]/admin.ts"
 // @include: hogwarts

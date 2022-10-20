@@ -85,7 +85,7 @@ export default function About() {
 
 ## Adding a site-suffix in Title
 
-You can create custom components that wrap `Title` to add a site-specific prefix to all the titles, eg.
+You can create custom components that wrap `Title` to add a site-specific prefix to all the titles, e.g.
 
 ```tsx
 export default function MySiteTitle() {

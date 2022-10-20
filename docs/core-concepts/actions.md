@@ -6,11 +6,11 @@ order: 98
 
 # Actions
 
-One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid's answer to this is _actions_. Actions give you the ability an specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. 
+One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid's answer to this is _actions_. Actions give you the ability to specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. 
 
 They generally represent a `POST` request.
 
-Actions are isomorphic. This means that a submission can be handled on the server _or_ the client, which ever is optimal. They represent the server component of a [HTML form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form), and even help you use HTML forms to submit data.
+Actions are isomorphic. This means that a submission can be handled on the server _or_ the client, which ever is optimal. They represent the server component of an [HTML form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form), and even help you use HTML forms to submit data.
 
 ## Creating actions
 
@@ -73,7 +73,7 @@ We highly recommend using HTML forms as your method to submit data with actions.
 
 When forms are used to submit actions, the first argument is an instance of [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData). Writing forms using actions is trivial, simply use the `Form` method of your action instead of the normal `<form>` tag, and walk away with amazing, progressively enhanced forms!
 
-If you don't return a `Response` from your action, the user will stay on the same page and your resources will be retriggered. You can also return a `redirect` or `ResponseError`.
+If you don't return a `Response` from your action, the user will stay on the same page and your resources will be re-triggered. You can also return a `redirect` or `ResponseError`.
 
 ```tsx twoslash
 import { createRouteAction } from "solid-start";
@@ -101,7 +101,7 @@ export function MyComponent() {
 }
 ```
 
-This `Form` is an enhanced version of the normal `form`. It submit handler has already been wired up as well. 
+This `Form` is an enhanced version of the normal `form`. It submits handler has already been wired up as well. 
 
 ## Retriggering resources
 
@@ -110,8 +110,8 @@ This `Form` is an enhanced version of the normal `form`. It submit handler has a
 ## Errors
 
 - Errors, error field that's populated if the submission errored, and a status field that's set to `error`
-  - if you read the `submissionState.error` field in your code (JSX, or effects) then the error is considered user-handled and we don't trigger ErrorBoundaries.
-  - if you don't use the error field, then we trigger the error boundary on an error because we assume its unexpected for you
+  - if you read the `submissionState.error` field in your code (JSX, or effects) then the error is considered user-handled, and we don't trigger ErrorBoundaries.
+  - if you don't use the error field, then we trigger the error boundary on an error because we assume it's unexpected for you
 - How to do form errors? Where to put... Here or `ResponseError`?
 
 ## Server Actions
@@ -119,7 +119,7 @@ This `Form` is an enhanced version of the normal `form`. It submit handler has a
 Sometimes we need to make sure our action _only_ runs on the server. This is useful for:
 
 - accessing internal APIs
-- proxing external APIs
+- proxying external APIs
   - To use server secrets
   - To reduce the response payload by postprocessing
   - To bypass CORS

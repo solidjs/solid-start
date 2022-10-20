@@ -40,7 +40,7 @@ export default function About() {
 }
 ```
 
-This is an ideal use case when we want to have a human-readable, stable reference to a static asset. For example, if we have a PDF file and we never want the link to that file to change, we should use the public directory.
+This is an ideal use case when we want to have a human-readable, stable reference to a static asset. For example, if we have a PDF file and never want the link to that file to change, we should use the public directory.
 
 Common assets you might want to put in the public directory include:
 
@@ -74,4 +74,4 @@ export default function About() {
 
 ## When to use the public directory versus imports
 
-One of the largest drivers for choosing the public directory versus imports is whether you want the link to your asset to change when you update it. You fully control the url path to all public directory assets and therefore you can make sure any links to those assets never change. When using imports, the filename is hashed and therefore will not be predictable over time. This can be benficial for cache busting but detrimental if you want to send someone a link to the asset.
+One of the largest drivers for choosing the public directory versus imports is whether you want the link to your asset to change when you update it. You fully control the url path to all public directory assets, and therefore you can make sure any links to those assets never change. When using imports, the filename is hashed and therefore will not be predictable over time. This can be beneficial for cache busting but detrimental if you want to send someone a link to the asset.

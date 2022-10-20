@@ -14,7 +14,7 @@ While we think that using  [`createServerData$`][createServerData] is the best w
 These are reasons for wanting API Routes:
 
 * You have additional clients that want to share this logic
-* You want to expose a GraphQL or TRPC endpoint
+* You want to expose a GraphQL or tRPC endpoint
 * You want to expose a public facing REST API
 * You need to write webhooks or auth callback handlers for OAuth
 * You want to have URLs not serving HTML, but other kinds of documents like PDFs or images
@@ -23,7 +23,7 @@ SolidStart makes it easy to write routes for these use cases.
 
 ## Writing an API Route
 
-API routes are just like any other route and follow the same filename conventions as [UI Routes][Routing]. The only difference is in what you should export from the file. Instead of exporting a default Solid component and a `routeData` function, API Routes export functions that are named after the HTTP method that they handle, eg. a `GET` request would be handled by the exported `GET` function. If a handler is not defined for a given HTTP method, SolidStart will return a `405 Method Not Allowed` response.
+API routes are just like any other route and follow the same filename conventions as [UI Routes][Routing]. The only difference is in what you should export from the file. Instead of exporting a default Solid component and a `routeData` function, API Routes export functions that are named after the HTTP method that they handle, e.g. A `GET` request would be handled by the exported `GET` function. If a handler is not defined for a given HTTP method, SolidStart will return a `405 Method Not Allowed` response.
 
 ```tsx twoslash filename="routes/api/students.ts"
 // handles HTTP GET requests to /api/students
@@ -70,13 +70,13 @@ A route can only export either a default UI component or a `GET` handler. You ca
 An API route gets passed an `APIEvent` object as its first argument. This object contains:
 
 * `request`: the `Request` object representing the request sent by the client
-* `params`: object that contains the dynamic route parameters, eg. for `/api/students/:id`, when user requests `/api/students/123` , `params.id` will be `"123"`
+* `params`: object that contains the dynamic route parameters, e.g. for `/api/students/:id`, when user requests `/api/students/123` , `params.id` will be `"123"`
 * `env`: the environment context, environment specific settings, bindings
 * `fetch`: an internal `fetch` function that can be used to make requests to other API routes without worrying about the `origin` of the URL.
 
 An API route is expected to return a [`Response`][response] object. 
 
-Lets look at an example of an API route that returns a list of students in a given house, in a specific year:
+Let's look at an example of an API route that returns a list of students in a given house, in a specific year:
 
 ```tsx twoslash filename="routes/api/[house]/students/year-[year].ts"
 // @filename: hogwarts.ts
@@ -184,9 +184,9 @@ export const post = handler;
 ```
 
 
-## Exposing a TRPC Server route
+## Exposing a tRPC Server route
 
-Let's see how to expose a [TRPC][trpc] server route.
+Let's see how to expose a [tRPC][trpc] server route.
 
 First you write your router, put it in a separate file so that you can export the type for your client.
 
@@ -202,7 +202,7 @@ export const appRouter = t.router({
 });
 ```
 
-Here is a simple client that you can use in your `routeData` function to fetch data from your [TRPC][trpc] server. You can also use the proxy in `createServerData$` and `createServerAction$` functions, but its usually better to just use it in a `createResource` or `createRouteData` function.
+Here is a simple client that you can use in your `routeData` function to fetch data from your [tRPC][trpc] server. You can also use the proxy in `createServerData$` and `createServerAction$` functions, but it's usually better to just use it in a `createResource` or `createRouteData` function.
 
 ```tsx filename="lib/trpc.ts"
 export type AppRouter = typeof appRouter;
@@ -222,7 +222,7 @@ const client = createTRPCClient<AppRouter>({
 export const proxy = createTRPCClientProxy(client);
 ```
 
-And finally, you can use the `fetch` adapter to write an API route that acts as the TRPC server.
+And finally, you can use the `fetch` adapter to write an API route that acts as the tRPC server.
 
 ```tsx filename="routes/api/trpc.ts"
 import { APIEvent } from "solid-start/api";
@@ -247,7 +247,7 @@ export const post = (event: APIEvent) =>
   });
 ```
 
-Learn more about [TRPC][trpc] here.
+Learn more about [tRPC][trpc] here.
 
 [cookies]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
 [session]: /advanced/session
