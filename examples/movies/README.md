@@ -1,6 +1,6 @@
 # solid-movies
 
-This was adapted using the Nuxt version: https://github.com/tastejs/nuxt-movies
+This was adapted from the Nuxt version: https://github.com/tastejs/nuxt-movies
 
 A SolidStart Movies application using [The Movie Database (TMDb)](https://developers.themoviedb.org/3) API. Built using [Solid](https://github.com/solidjs/solid) and [SolidStart](https://github.com/solidjs/solid-start). Our version is built by the Solid team.
 
