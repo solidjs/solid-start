@@ -10,14 +10,14 @@
     "autoprefixer": "^10.4.12",
     "postcss": "^8.4.18",
     "solid-start-node": "workspace:^0.1.8",
-    "tailwindcss": "^3.1.8",
+    "tailwindcss": "^3.2.0",
     "typescript": "^4.8.4",
     "vite": "^3.1.8"
   },
   "dependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.5.0",
-    "solid-js": "^1.6.0-beta.4",
+    "solid-js": "^1.6.0",
     "solid-start": "workspace:^0.1.8",
     "undici": "^5.11.0"
   },
