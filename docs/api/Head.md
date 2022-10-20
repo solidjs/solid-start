@@ -26,7 +26,7 @@ import { Head, Html, Title, Meta, Link, Body } from "solid-start";
 
 ### Setting the `<head>` of your page
 
-The `Head` component includes machine-readable metadata about the document, like its title, description of its content, and links to scripts and stylesheets. It is a wrapper over the [`head`][nativehead] element and accepts the same attributes. It accepts elements you would place under [`head`][nativehead], like [`title`][nativetitle], [`meta`][nativemeta], and [`link`][nativelink] along with their wrapped counterparts.
+The `Head` component includes machine-readable metadata about the document, like its title, description of its content, links to scripts, and stylesheets. It is a wrapper over the [`head`][nativehead] element and accepts the same attributes. It accepts elements you would usually place under [`head`][nativehead], like [`title`][nativetitle], [`meta`][nativemeta], and [`link`][nativelink] along with their wrapped counterparts.
 
 
 The <token-link id="1" token="Html">`Head`</token-link> is required to be a child of `Html` and should be the first child of <token-link id="1" token="Html">`Html`</token-link>. It serves a few purposes, and a document without the `Head` component will not render correctly.
@@ -57,7 +57,7 @@ Use the `Head` component as the first child of [`Html`][html] to set the [`<head
 
 The `Head` component automatically inserts any `link` elements needed for preloading JavaScript and CSS for the current page and handles the insertion of any meta-tags that are added throughout the application.
 
-It and its descendants are not hydrated on page bootup in the browser after server rendering.
+`Head` and its descendants are not hydrated on page bootup in the browser after server rendering.
 
 Accepts the same props as the native [`<head>`][nativehead] element.
 
