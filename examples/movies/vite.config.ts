@@ -7,6 +7,9 @@ export default defineConfig({
     icons({
       compiler: "solid"
     }),
-    solid()
+    solid({
+      islands: true,
+      islandsRouter: true
+    })
   ]
 });
