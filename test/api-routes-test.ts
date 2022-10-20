@@ -48,12 +48,12 @@ test.describe("api routes", () => {
           "src/routes/redirect.jsx": js`
             import { redirect } from "solid-start/server";
   
-            export let get = () => redirect("/redirected");
+            export let GET = () => redirect("/redirected");
           `,
           "src/routes/redirect-to.jsx": js`
             import { redirect } from "solid-start/server";
   
-            export let post = async ({ request }) => {
+            export let POST = async ({ request }) => {
               let formData = await request.formData();
               return redirect(formData.get('destination'));
             }
@@ -63,39 +63,39 @@ test.describe("api routes", () => {
           `,
           "src/routes/data.json.jsx": js`
             import { json } from "solid-start/server";
-            export let get = () => json({hello: "world"});
+            export let GET = () => json({hello: "world"});
           `,
           "src/routes/api/greeting/hello.js": js`
             import { json } from "solid-start/server";
-            export let get = ({ params }) => json({hello: "world"});
+            export let GET = ({ params }) => json({hello: "world"});
           `,
           "src/routes/api/greeting/[name].js": js`
             import { json } from "solid-start/server";
-            export let get = ({ params }) => json({welcome: params.name});
+            export let GET = ({ params }) => json({welcome: params.name});
           `,
           "src/routes/api/greeting/[...unknown].js": js`
             import { json } from "solid-start/server";
-            export let get = ({ params }) => json({goodbye: params.unknown});
+            export let GET = ({ params }) => json({goodbye: params.unknown});
           `,
           "src/routes/api/request.js": js`
             import { json } from "solid-start/server";
-            export let get = ({ request }) => json({ requesting: request.headers.get("name") });
+            export let GET = ({ request }) => json({ requesting: request.headers.get("name") });
           `,
           "src/routes/api/waterfall.js": js`
             import { json } from "solid-start/server";
-            export let get = ({ request, fetch  }) => fetch('/api/greeting/harry-potter');
+            export let GET = ({ request, fetch  }) => fetch('/api/greeting/harry-potter');
           `,
           "src/routes/api/double-waterfall.js": js`
             import { json } from "solid-start/server";
-            export let get = ({ request, fetch }) => fetch('/api/waterfall');
+            export let GET = ({ request, fetch }) => fetch('/api/waterfall');
           `,
           "src/routes/api/external-fetch.js": js`
             import { json } from "solid-start/server";
-            export let get = ({ request, fetch }) => fetch('https://hogwarts.deno.dev/');
+            export let GET = ({ request, fetch }) => fetch('https://hogwarts.deno.dev/');
           `,
           "src/routes/api/fetch.js": js`
             import { json } from "solid-start/server";
-            export let get = ({ request }) => fetch('https://hogwarts.deno.dev/');
+            export let GET = ({ request }) => fetch('https://hogwarts.deno.dev/');
           `,
           "src/routes/server-fetch.jsx": js`
             import server$ from "solid-start/server";

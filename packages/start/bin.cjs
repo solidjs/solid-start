@@ -4,6 +4,7 @@
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
 const { resolve, join } = require("path");
+const path = require("path");
 const c = require("picocolors");
 const {
   readFileSync,
@@ -18,7 +19,7 @@ const pkg = require(join(__dirname, "package.json"));
 const DEBUG = require("debug")("start");
 globalThis.DEBUG = DEBUG;
 
-const prog = sade("solid-start").version("alpha");
+const prog = sade("solid-start").version("beta");
 
 const findAny = (path, name) => {
   for (var ext of [".js", ".ts", ".mjs", ".mts"]) {
@@ -43,59 +44,59 @@ prog
     console.log(c.magenta(" version "), pkg.version);
 
     root = root || process.cwd();
-    if (!existsSync(join(root, "package.json"))) {
-      console.log('No package.json found in "%s"', root);
-      console.log('Creating package.json in "%s"', root);
-      writeFileSync(
-        join(root, "package.json"),
-        JSON.stringify(
-          {
-            name: "my-app",
-            private: true,
-            version: "0.0.0",
-            type: "module",
-            scripts: {
-              dev: "solid-start dev",
-              build: "solid-start build",
-              preview: "solid-start start"
-            },
-            devDependencies: {
-              typescript: pkg.devDependencies["typescript"],
-              vite: pkg.devDependencies["vite"]
-            },
-            dependencies: {
-              "@solidjs/meta": pkg.devDependencies["@solidjs/meta"],
-              "@solidjs/router": pkg.devDependencies["@solidjs/router"],
-              "solid-start": pkg.devDependencies[pkg.version],
-              "solid-js": pkg.devDependencies["solid-js"]
-            }
-          },
-          null,
-          2
-        )
-      );
+    // if (!existsSync(join(root, "package.json"))) {
+    //   console.log('No package.json found in "%s"', root);
+    //   console.log('Creating package.json in "%s"', root);
+    //   writeFileSync(
+    //     join(root, "package.json"),
+    //     JSON.stringify(
+    //       {
+    //         name: "my-app",
+    //         private: true,
+    //         version: "0.0.0",
+    //         type: "module",
+    //         scripts: {
+    //           dev: "solid-start dev",
+    //           build: "solid-start build",
+    //           preview: "solid-start start"
+    //         },
+    //         devDependencies: {
+    //           typescript: pkg.devDependencies["typescript"],
+    //           vite: pkg.devDependencies["vite"]
+    //         },
+    //         dependencies: {
+    //           "@solidjs/meta": pkg.devDependencies["@solidjs/meta"],
+    //           "@solidjs/router": pkg.devDependencies["@solidjs/router"],
+    //           "solid-start": pkg.devDependencies[pkg.version],
+    //           "solid-js": pkg.devDependencies["solid-js"]
+    //         }
+    //       },
+    //       null,
+    //       2
+    //     )
+    //   );
 
-      console.log("Installing dependencies...");
-      await new Promise((resolve, reject) => {
-        exec("npm install", { cwd: root }, (err, stdout, stderr) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        }).stdout.pipe(process.stdout);
-      });
-    }
+    //   console.log("Installing dependencies...");
+    //   await new Promise((resolve, reject) => {
+    //     exec("npm install", { cwd: root }, (err, stdout, stderr) => {
+    //       if (err) {
+    //         reject(err);
+    //       } else {
+    //         resolve();
+    //       }
+    //     }).stdout.pipe(process.stdout);
+    //   });
+    // }
 
-    if (!existsSync(join(root, "src"))) {
-      console.log('No src directory found in "%s"', root);
-      console.log('Creating src directory in "%s"', root);
-      mkdirSync(join(root, "src", "routes"), { recursive: true });
-      writeFileSync(
-        join(root, "src", "routes", "index.tsx"),
-        `export default function Page() { return <div>Hello World</div> }`
-      );
-    }
+    // if (!existsSync(join(root, "src"))) {
+    //   console.log('No src directory found in "%s"', root);
+    //   console.log('Creating src directory in "%s"', root);
+    //   mkdirSync(join(root, "src", "routes"), { recursive: true });
+    //   writeFileSync(
+    //     join(root, "src", "routes", "index.tsx"),
+    //     `export default function Page() { return <div>Hello World</div> }`
+    //   );
+    // }
 
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
 
@@ -166,7 +167,7 @@ prog
           build: {
             outDir: routeManifestPath,
             ssrManifest: true,
-            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
                 resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
@@ -206,7 +207,7 @@ prog
           build: {
             outDir: path,
             ssrManifest: true,
-            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
                 config.solidOptions.clientEntry,
@@ -299,7 +300,7 @@ prog
           build: {
             outDir: path,
             ssrManifest: true,
-            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: config.solidOptions.clientEntry,
               output: {
@@ -400,7 +401,7 @@ prog
           root: config.root,
           build: {
             outDir: path,
-            minify: process.env.START_MINIFY == "false" ? false : config.build?.minify || true,
+            minify: process.env.START_MINIFY == "false" ? false : config.build?.minify ?? true,
             ssrManifest: true,
             rollupOptions: {
               input: indexHtml,
@@ -456,8 +457,12 @@ prog
     if (url) {
       const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
+
       const router = new Router({
-        baseDir: join(config.solidOptions.appRoot, config.solidOptions.routesDir)
+        baseDir: path.posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir),
+        pageExtensions: config.solidOptions.pageExtensions,
+        ignore: config.solidOptions.routesIgnore,
+        cwd: config.solidOptions.root
       });
       await router.init();
       printUrls(router, url);

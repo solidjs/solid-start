@@ -96,6 +96,35 @@ The `nohoist` option is no longer available in Yarn v2+. In this case, we can us
 
 ## Changelog
 
+### [0.1.6]
+
+Renamed API Routes exports from lower case to upper case method names to match closely how people see those functions in the spec and in usage.
+
+```diff
+
+- export function get() {
++ export function GET() {
+  return new Response();
+}
+
+- export function post() {
++ export function POST() {
+
+  return new Response();
+}
+
+- export function patch() {
++ export function PATCH() {
+  return new Response();
+}
+
+- export function del() {
++ export function DELETE() {
+  return new Response();
+}
+
+```
+
 ### [0.1.0-alpha.104]
 
 Changed grouped routes from `__name` syntax to `(name)`.
@@ -193,7 +222,7 @@ If you were not using SSR and rendering your app client-side:
 // @refresh reload
 import { Suspense } from "solid-js";
 - import { Meta, Link, Routes, Scripts } from "solid-start/root";
-+ import { FileRoutes, Scripts, Html, Head, Body, Routes, Meta, ErrorBoundary } from "solid-start";
++ import { FileRoutes, Scripts, Html, Head, Body, Routes, Meta, ErrorBoundary, A } from "solid-start";
 
 export default function Root() {
   return (
@@ -216,8 +245,8 @@ export default function Root() {
 +      <Body>
          <Suspense>
            <ErrorBoundary>
-             <a href="/">Index</a>
-             <a href="/about">About</a>
+             <A href="/">Index</A>
+             <A href="/about">About</A>
 -            <Routes />
 +            <Routes>
 +              <FileRoutes />

@@ -13,7 +13,7 @@ const ROUTE_KEYS = ["component", "path", "data", "children"];
 
 // Available HTTP methods / verbs for api routes
 // `delete` is a reserved word in JS, so we use `del` instead
-const API_METHODS = ["get", "post", "put", "del", "patch"];
+const API_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 
 export class Router {
   routes;
@@ -339,7 +339,7 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
                     jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
                   }`
               ),
-              i.componentPath ? `get: "skip"` : undefined,
+              i.componentPath ? `GET: "skip"` : undefined,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(

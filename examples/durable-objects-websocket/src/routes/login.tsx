@@ -1,5 +1,5 @@
-import { useParams, useRouteData } from "@solidjs/router";
 import { Show } from "solid-js";
+import { useParams, useRouteData } from "solid-start";
 import { FormError } from "solid-start/data";
 import { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { createUserSession, db, getUser, login, register } from "~/session";
@@ -29,7 +29,7 @@ export default function Login() {
   const data = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const loginAction = createServerAction$(async (form: FormData) => {
+  const [_, loginAction] = createServerAction$(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");

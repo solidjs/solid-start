@@ -1,7 +1,8 @@
 // @refresh reload
 import { Suspense } from "solid-js";
-import { Assets } from "solid-js/web";
+import { useAssets } from "solid-js/web";
 import {
+  A,
   Body,
   ErrorBoundary,
   FileRoutes,
@@ -64,6 +65,7 @@ function GlobalStyles() {
 
 export default function Root() {
   const sheets = [];
+  useAssets(() => renderSheets(sheets))
 
   return (
     <StyleRegistry styles={sheets}>
@@ -72,14 +74,13 @@ export default function Root() {
           <Title>SolidStart - Bare</Title>
           <Meta charset="utf-8" />
           <Meta name="viewport" content="width=device-width, initial-scale=1" />
-          <Assets>{renderSheets(sheets)}</Assets>
         </Head>
         <Body>
           <GlobalStyles />
           <Suspense>
             <ErrorBoundary>
-              <a href="/">Index</a>
-              <a href="/about">About</a>
+              <A href="/">Index</A>
+              <A href="/about">About</A>
               <Routes>
                 <FileRoutes />
               </Routes>

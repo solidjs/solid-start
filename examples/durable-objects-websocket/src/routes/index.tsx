@@ -1,5 +1,5 @@
-import { useRouteData } from "@solidjs/router";
 import { createEffect, createSignal, onCleanup } from "solid-js";
+import { useRouteData } from "solid-start";
 import server$, { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { createWebSocketServer } from "solid-start/websocket";
 import { getUser, logout } from "~/session";
@@ -50,7 +50,7 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
-  const logoutAction = createServerAction$((_, { request }) => logout(request));
+  const [, logoutAction] = createServerAction$((_, { request }) => logout(request));
   const [lastPing, setLastPing] = createSignal(Date.now().toString());
   const increment = createServerAction$(
     async (_, { env }) => {

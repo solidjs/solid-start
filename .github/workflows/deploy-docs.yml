@@ -1,0 +1,44 @@
+name: 📜 Docs
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+jobs:
+  docs:
+    name: "📜 Deploy Docs"
+
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Use Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Build docs
+        run: pnpm run docs:build
+
+      - run: npx netlify-cli deploy --site 577a5e59-05a4-4cb2-b724-c00ba28f0dc7 --build --prod --dir netlify --auth $NETLIFY_AUTH_TOKEN

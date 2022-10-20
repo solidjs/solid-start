@@ -1,61 +1,77 @@
 ---
 section: api
-title: server
-order: 8
+title: server$
+order: 100
 subsection: Server
+active: true
 ---
 
-# Server Runtime API
+# server$
 
-SolidStart provides a server runtime API that allows you to write code that runs on the server. You don't have to worry about setting up the server itself. SolidStart takes care of that. Your job is to write the handler that is called when a request comes in.
+##### `server$` takes a function that should only run on the server and compiles its usage into a RPC call to the server
 
-The handler is a function that takes a [FetchEvent][fetchevent] object and returns a [Response][response] object. These APIs are part of the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API). The idea is that you learn these APIs once and get a much larger bang for the buck by being able to use that knowledge across the stack to orchestrate your application.
+<div class="text-lg">
 
-The [FetchEvent] API is borrowed from the [Service Worker API][serviceworker]. 
-
-Lets see what the mental model created by these APIs is:
-
-Imagine a fetch client:
-
-```js
-fetch('https://example.com')
-  .then(response => response.text())
-  .then(text => console.log(text))
+```tsx twoslash
+import server$ from 'solid-start/server'
+// ---cut---
+const logHello = server$(async (message: string) => {
+  console.log(message)
+})
 ```
 
-Actually, lets use some async/await to make this cleaner:
+</div>
 
-```js
-const response = await fetch('https://example.com')
-const text = await response.text()
-console.log(text)
+<table-of-contents></table-of-contents>
+
+## Usage
+
+### Declare a function that only runs on the server
+
+```tsx twoslash {4-6}
+import server$ from 'solid-start/server'
+
+function Component() {
+  const logHello = server$(async (message: string) => {
+    console.log(message)
+  });
+
+  logHello('Hello')
+}
 ```
 
-When you call `fetch` with a `string`, the `string` uses that to create a URL Object.
+In this code snippet regardless of whether we are server rendering this component or client rendering it, the `logHello` function generates a log on the server console only. How does it work? We use compilation to transform the `server$` function into a RPC call to the server. 
 
+```tsx twoslash {4} filename="Log.tsx[client]"
+import server$ from 'solid-start/server'
 
-creates a [`Request`][request] object:
+// COMPILATION OUTPUT on the client
+const serverFunction1 = server$.createFetcher('/Log.tsx/logHello')
 
-```js
-const request = new Request('https://example.com')
-fetch(request)
-  .then(response => response.text())
-  .then(text => console.log(text))
+function Component() {
+  const logHello = serverFunction1;
+  
+  logHello('Hello')
+}
 ```
 
-Which can be expanded to something like this:
+On the server, we hoist the function to the top-level scope and register it as a handler. If `logHello` is called on the server, it will execute the function directly.
 
-```js
-const request = new Request('https://example.com')
-const response: Response = await fetch(request)
-const text: string = await response.text()
-console.log(text)
+```tsx twoslash {4-10} filename="Log.tsx[server]"
+import server$ from 'solid-start/server'
+
+// COMPILATION OUTPUT on the server
+server$.registerHandler(
+  '/Log.tsx/logHello', 
+  async (message: string) => {
+    console.log(message)
+  }
+)
+const serverFunction1 = server$.createHandler('/Log.tsx/logHello', '#')
+
+function Component() {
+  const logHello = serverFunction1;
+
+  logHello('Hello')
+}
 ```
-
-
-
-
-
-[response]: https://developer.mozilla.org/en-US/docs/Web/API/Response
-[fetchevent]: https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent
-[serviceworker]: https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API

@@ -55,10 +55,13 @@ const allRoutes = (api as Route[]).map(routeToMatchRoute).sort((a, b) => b.score
 registerApiRoutes(allRoutes);
 
 export function getApiHandler(url: URL, method: string) {
-  return getRouteMatches(allRoutes, url.pathname, method.toLowerCase() as Method);
+  return getRouteMatches(allRoutes, url.pathname, method.toUpperCase() as Method);
 }
 
 export function isApiRequest(request: Request) {
   let apiHandler = getApiHandler(new URL(request.url), request.method);
   return Boolean(apiHandler);
 }
+
+export * from "../server/responses";
+export type { APIEvent } from "./types";

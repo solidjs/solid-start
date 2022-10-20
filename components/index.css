@@ -1,0 +1,365 @@
+@font-face {
+  font-family: 'Gordita';
+  src: url('./fonts/Gordita/Gordita-Regular.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/Gordita/Gordita-Regular.woff') format('woff'),
+    url('./fonts/Gordita/Gordita-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: 'Gordita';
+  src: url('./fonts/Gordita/Gordita-Thin.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/Gordita/Gordita-Thin.woff') format('woff'),
+    url('./fonts/Gordita/Gordita-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: 'Gordita';
+  src: url('./fonts/Gordita/Gordita-Medium.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/Gordita/Gordita-Medium.woff') format('woff'),
+    url('./fonts/Gordita/Gordita-Medium.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: 'Gordita';
+  src: url('./fonts/Gordita/Gordita-Bold.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/Gordita/Gordita-Bold.woff') format('woff'),
+    url('./fonts/Gordita/Gordita-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+html {
+  @apply font-display;
+}
+
+.defer {
+  content-visibility: auto;
+}
+
+.header-anchor {
+  margin-right: 0.25em;
+}
+
+pre {
+  min-width: 100%;
+}
+
+.meta-line {
+  display: none;
+}
+
+.prose pre {
+  font-size: inherit;
+  /* border: 1px solid #ddd; */
+}
+
+.dark .prose pre {
+  border-color: #5d5d5d;
+}
+
+.prose h2 code {
+  color: #777 !important;
+}
+
+.dark .prose h2 code {
+  color: #aaa !important;
+}
+
+.prose blockquote {
+  @apply mx-0;
+}
+
+.prose a:not(.header-anchor) {
+  color: #777777;
+  background-image: linear-gradient(#e7e7e7, #e7e7e7);
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: 0 1.1em;
+  padding-bottom: 0.4em;
+  transition: background-size 300ms;
+}
+.dark .prose a:not(.header-anchor) {
+  color: #ccc;
+  background-image: linear-gradient(#666, #666);
+}
+.dark .prose a:not(.header-anchor):hover {
+  color: #ddd;
+  background-image: linear-gradient(#888, #888);
+}
+
+.prose a:not(.header-anchor):hover {
+  color: #2c4f7c;
+  background-image: linear-gradient(#2c4f7c, #2c4f7c);
+  background-size: 100% 4px;
+}
+
+/* TODO: Recreate this class in TW classes */
+.feature-block {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-color: rgb(252, 253, 255);
+  border-radius: 3px;
+}
+.dark .feature-block {
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.35);
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0) 20%);
+  background-color: rgb(54, 55, 56);
+  border-radius: 3px;
+}
+.chevron::after {
+  @apply border-gray-300;
+  border-style: solid;
+  transition: all 250ms;
+  border-width: 0.15em 0.15em 0 0;
+  content: '';
+  display: inline-block;
+  height: 0.5em;
+  width: 0.5em;
+  position: relative;
+  top: 0.45em;
+  transform: rotate(-45deg);
+  vertical-align: top;
+}
+.chevron.chevron-right:after {
+  left: 0.25em;
+  top: 0.43em;
+  transform: rotate(45deg);
+}
+.chevron.chevron-left:after {
+  right: 0.25em;
+  top: 0.43em;
+  transform: rotate(225deg);
+}
+.chevron.chevron-right:hover::after {
+  left: 0.45em;
+}
+.chevron.chevron-left:hover::after {
+  right: 0.45em;
+}
+
+.nav-items-container {
+  flex-shrink: 0;
+  flex-grow: 1;
+  flex-basis: 0px;
+  min-width: 0px;
+}
+/*
+.nav-logo-bg {
+  background: linear-gradient(to right, rgba(255, 255, 255, 1), 92%, rgba(255, 255, 255, 0));
+}
+*/
+
+/* Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.twitter-solid-social > .twitter-tweet {
+  color-scheme: normal;
+}
+
+/* START TOOLTIP STYLES */
+@media (hover: hover) {
+  [data-tooltip] {
+    position: relative;
+  }
+
+  [data-tooltip]::before,
+  [data-tooltip]::after {
+    font-size: 0.75em;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+    display: none;
+    opacity: 0;
+  }
+  [data-tooltip]::before {
+    content: '';
+    border: 5px solid transparent;
+    z-index: 10;
+  }
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    font-family: inherit;
+    font-weight: 600;
+    text-align: center;
+    max-width: 20em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.9ch 1.1ch 1ch;
+    border-radius: 0.3ch;
+    background: #333;
+    color: #fff;
+    z-index: 5;
+  }
+  .dark [data-tooltip]::after {
+    color: #000;
+    background: #dcdcdc;
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:hover::after {
+    display: block;
+  }
+
+  [data-tooltip]:not([flow])::before,
+  [data-tooltip][flow^='up']::before {
+    bottom: calc(100% + 5px);
+    border-bottom-width: 0;
+    border-top-color: #333;
+  }
+  .dark [data-tooltip]:not([flow])::before,
+  .dark [data-tooltip][flow^='up']::before {
+    border-top-color: #dcdcdc;
+  }
+  [data-tooltip]:not([flow])::after,
+  [data-tooltip][flow^='up']::after {
+    bottom: calc(100% + 10px);
+  }
+  [data-tooltip]:not([flow])::before,
+  [data-tooltip]:not([flow])::after,
+  [data-tooltip][flow^='up']::before,
+  [data-tooltip][flow^='up']::after {
+    left: 50%;
+    transform: translate(-50%, -0.25em);
+  }
+
+  @keyframes move-down {
+    to {
+      opacity: 0.9;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  [data-tooltip]:not([flow]):hover::before,
+  [data-tooltip]:not([flow]):hover::after,
+  [data-tooltip][flow^='up']:hover::before,
+  [data-tooltip][flow^='up']:hover::after {
+    animation: move-down 200ms ease-out forwards;
+  }
+}
+
+/* END OF TOOLTIP STYLES */
+
+.reveal-delay {
+  animation: reveal-delay 100ms 600ms forwards;
+}
+
+@keyframes reveal-delay {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes Page-Loading-Bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  /* delay frames in order to work with Safari  */
+  5% {
+    transform: translateX(-100%);
+  }
+  20%,
+  24.5% {
+    transform: translateX(-70%);
+  }
+  30%,
+  37.5% {
+    transform: translateX(-50%);
+  }
+  45%,
+  52.5% {
+    transform: translateX(-30%);
+  }
+  60%,
+  67.5% {
+    transform: translateX(-25%);
+  }
+  75%,
+  82.5% {
+    transform: translateX(-10%);
+  }
+  90%,
+  91.5% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.language-id {
+  display: none;
+}
+
+.github-light {
+  display: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  scroll-margin-top: 2em;
+}
+
+
+
+.bad .line.highlight {
+  @apply bg-red-800 bg-opacity-20;
+}
+
+
+.good .line.highlight {
+  @apply bg-green-800 bg-opacity-20;
+}
+
+.snippet .line.highlight {
+  @apply bg-slate-50 bg-opacity-20;
+}
+
+.line {
+  @apply px-3
+}
+
+.prose {
+  --tw-prose-links: #0284c7;
+}
+
+.tippy-content {
+  @apply overflow-x-scroll;
+}
+
+.not-prose :where(code):not(:where(pre *)) {
+  @apply p-0.5;
+}
+
+.DocSearch-Button {
+  @apply bg-white ml-0 rounded-md w-full
+}

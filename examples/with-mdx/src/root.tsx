@@ -1,8 +1,6 @@
 // @refresh reload
-import { Routes } from "@solidjs/router";
 import { Suspense } from "solid-js";
-import { ErrorBoundary } from "solid-start/error-boundary";
-import { Body, FileRoutes, Head, Html, Meta, Scripts, Title } from "solid-start";
+import { A, Body, ErrorBoundary, FileRoutes, Head, Html, Meta, Routes, Scripts, Title } from "solid-start";
 import "./root.css";
 
 export default function Root() {
@@ -15,8 +13,8 @@ export default function Root() {
       </Head>
       <Body>
         <ErrorBoundary>
-          <a href="/">Index</a>
-          <a href="/about">About</a>
+          <A href="/">Index</A>
+          <A href="/about">About</A>
           <Suspense>
             <main>
               <Routes>

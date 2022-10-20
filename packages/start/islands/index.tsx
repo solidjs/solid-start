@@ -1,6 +1,7 @@
-import { Component, ComponentProps, lazy, useContext } from "solid-js";
+import { Component, ComponentProps, lazy, splitProps, useContext } from "solid-js";
 import { ServerContext } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
+export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
   namespace JSX {
@@ -45,7 +46,7 @@ export function island<T extends Component<any>>(
   return ((compProps: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
       const context = useContext(ServerContext);
-      const { children, ...props } = compProps;
+      const [, props] = splitProps(compProps, ["children"]);
 
       let fpath;
 

@@ -45,7 +45,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
       DEBUG(
         "hydrating island",
         el.dataset.island,
-        el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`,
+        el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
         el
       );
 
@@ -56,7 +56,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
           }),
         el,
         {
-          renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`
+          renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`
         }
       );
 
@@ -65,7 +65,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
 
     window._$HY.hydrateIslands = () => {
       document.querySelectorAll("solid-island[data-hk]").forEach((el: HTMLElement) => {
-        if (el.dataset.when === "idle") {
+        if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
           requestIdleCallback(() => mountIsland(el));
         } else {
           mountIsland(el as HTMLElement);

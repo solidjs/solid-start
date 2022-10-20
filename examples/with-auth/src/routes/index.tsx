@@ -1,4 +1,4 @@
-import { useRouteData } from "@solidjs/router";
+import { useRouteData } from "solid-start";
 import { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { getUser, logout } from "~/db/session";
 

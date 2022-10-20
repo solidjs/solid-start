@@ -44,28 +44,35 @@ export default function mountRouter() {
         .composedPath()
         .find(el => el instanceof Node && el.nodeName.toUpperCase() === "A") as
         | HTMLAnchorElement
-        | SVGAElement
         | undefined;
 
-      if (!a) return;
+      if (!a || !a.hasAttribute("link")) return;
 
-      const isSvg = a instanceof SVGAElement;
-      const href = isSvg ? a.href.baseVal : a.href;
-      const target = isSvg ? a.target.baseVal : a.target;
+      const href = a.href;
+      const target = a.target;
       if (target || (!href && !a.hasAttribute("state"))) return;
 
       const rel = (a.getAttribute("rel") || "").split(/\s+/);
       if (a.hasAttribute("download") || (rel && rel.includes("external"))) return;
 
-      const url = isSvg ? new URL(href, document.baseURI) : new URL(href);
+      const url = new URL(href);
       if (
         url.origin !== window.location.origin ||
         (basePath && url.pathname && !url.pathname.toLowerCase().startsWith(basePath.toLowerCase()))
       )
         return;
 
+      const prevLocation = getLocation();
+
       const to = url.pathname + url.search + url.hash;
       const state = a.getAttribute("state");
+
+      if (url.pathname === prevLocation.pathname && url.search === prevLocation.search) {
+        if (url.hash !== prevLocation.hash) {
+          window.location.hash = url.hash;
+          setCurrentLocation(getLocation());
+        }
+      }
 
       evt.preventDefault();
 

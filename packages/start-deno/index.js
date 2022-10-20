@@ -11,7 +11,6 @@ export default function () {
     name: "deno",
     start(config, { port }) {
       process.env.PORT = port;
-      console.log();
       const proc = spawn(
         "deno",
         ["run", "--allow-net", "--allow-env", "--allow-read", "server.js"],
@@ -49,7 +48,7 @@ export default function () {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: ["deno", "solid"]
           }),
           common()
         ]

@@ -41,7 +41,7 @@ export default function ({ edge } = {}) {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: edge ? ["worker", "solid"] : ["node", "solid"]
           }),
           common()
         ]
@@ -81,6 +81,13 @@ export default function ({ edge } = {}) {
       const outputConfig = {
         version: 3,
         routes: [
+          // https://vercel.com/docs/project-configuration#project-configuration/headers
+          // https://vercel.com/docs/build-output-api/v3#build-output-configuration/supported-properties/routes/source-route
+          {
+            src: "/assets/(.*)",
+            headers: { "Cache-Control": "public, max-age=31556952, immutable" },
+            continue: true
+          },
           // Serve any matching static assets first
           { handle: "filesystem" },
           // Invoke the SSR function if not a static asset

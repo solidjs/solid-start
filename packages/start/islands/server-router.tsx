@@ -1,5 +1,5 @@
 import { createContext, JSX, useContext } from "solid-js";
-import { resolveSSRNode } from "solid-js/web";
+import { ssr } from "solid-js/web";
 export interface RouteDefinition {
   path: string;
   component?: () => JSX.Element;
@@ -241,8 +241,8 @@ export function Router(props: RouterProps) {
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
         props.out.newOutletId = `outlet-${nextRoute.id}`;
-        console.log(prevRoute, nextRoute);
-        console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
+        //console.log(prevRoute, nextRoute);
+        //console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
         // diffedRender = (
         //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
         //     <Comp />
@@ -274,11 +274,9 @@ export function Outlet(props: { children: JSX.Element }) {
 
   return (
     <>
-      {`<!--outlet-${state.route.id}--><outlet-wrapper id="outlet-${state.route.id}">`}
-      {resolveSSRNode(
-        <OutletContext.Provider value={state}>{props.children}</OutletContext.Provider>
-      )}
-      {`</outlet-wrapper><!--outlet-${state.route.id}-->`}
+      {ssr(`<!--outlet-${state.route.id}--><outlet-wrapper id="outlet-${state.route.id}">`)}
+      <OutletContext.Provider value={state}>{props.children}</OutletContext.Provider>
+      {ssr(`</outlet-wrapper><!--outlet-${state.route.id}-->`)}
     </>
   );
 }

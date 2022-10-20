@@ -1,5 +1,5 @@
 import { Component, createResource, For, Show } from "solid-js";
-import { RouteDataArgs, useRouteData } from "solid-start";
+import { A, RouteDataArgs, useRouteData } from "solid-start";
 import Comment from "~/components/comment";
 import fetchAPI from "~/lib/api";
 import { IStory } from "~/types";
@@ -22,7 +22,7 @@ const Story: Component = () => {
             <span class="host">({story().domain})</span>
           </Show>
           <p class="meta">
-            {story().points} points | by <a href={`/users/${story().user}`}>{story().user}</a>{" "}
+            {story().points} points | by <A href={`/users/${story().user}`}>{story().user}</A>{" "}
             {story().time_ago} ago
           </p>
         </div>

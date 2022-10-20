@@ -1,4 +1,5 @@
 import {
+  A as BaseA,
   Location,
   Navigator,
   Outlet as BaseOutlet,
@@ -6,32 +7,78 @@ import {
   useLocation as useBaseLocation,
   useNavigate as useBaseNavigate
 } from "@solidjs/router";
-import { Accessor } from "solid-js";
+import { Accessor, splitProps } from "solid-js";
 import { isServer } from "solid-js/web";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
-export function Routes(props) {
-  if (import.meta.env.START_ISLANDS_ROUTER) {
-    return (
-      <IslandsOutlet>
-        <BaseRoutes>{props.children}</BaseRoutes>
-      </IslandsOutlet>
-    );
-  }
-  return <BaseRoutes>{props.children}</BaseRoutes>;
-}
+const A = import.meta.env.START_ISLANDS_ROUTER
+  ? function IslandsA(props) {
+      const [, rest] = splitProps(props, ["state", "activeClass", "inactiveClass", "end"]);
+      const location = useLocation();
+      const isActive = () => {
+        return props.href.startsWith("#")
+          ? location.hash === props.href
+          : location.pathname === props.href;
+      };
 
-export function Outlet(props) {
-  if (import.meta.env.START_ISLANDS_ROUTER) {
-    return (
-      <IslandsOutlet>
-        <BaseOutlet />
-      </IslandsOutlet>
-    );
-  }
+      return (
+        <a
+          link
+          {...rest}
+          state={JSON.stringify(props.state)}
+          classList={{
+            [props.inactiveClass || "inactive"]: !isActive(),
+            [props.activeClass || "active"]: isActive(),
+            ...rest.classList
+          }}
+          aria-current={isActive() ? "page" : undefined}
+        />
+      );
+    }
+  : BaseA;
 
-  return <BaseOutlet />;
-}
+const Routes = import.meta.env.START_ISLANDS_ROUTER
+  ? function IslandsRoutes(props) {
+      return (
+        <IslandsOutlet>
+          <BaseRoutes>{props.children}</BaseRoutes>
+        </IslandsOutlet>
+      );
+    }
+  : BaseRoutes;
+
+const Outlet = import.meta.env.START_ISLANDS_ROUTER
+  ? function HybridOutlet() {
+      return (
+        <IslandsOutlet>
+          <BaseOutlet />
+        </IslandsOutlet>
+      );
+    }
+  : BaseOutlet;
+
+const useLocation =
+  import.meta.env.START_ISLANDS_ROUTER && !isServer
+    ? function IslandsUseLocation() {
+        return {
+          get pathname() {
+            let location = window.LOCATION();
+            return location.pathname;
+          },
+          get hash() {
+            let location = window.LOCATION();
+            return location.hash;
+          }
+        } as Location;
+      }
+    : useBaseLocation;
+
+const useNavigate =
+  import.meta.env.START_ISLANDS_ROUTER && !isServer
+    ? function IslandsUseNavigate() {
+        return ((to, props) => window.NAVIGATE(to, props)) as unknown as Navigator;
+      }
+    : useBaseNavigate;
 
 declare global {
   interface Window {
@@ -40,23 +87,4 @@ declare global {
   }
 }
 
-export function useLocation() {
-  if (import.meta.env.START_ISLANDS_ROUTER && !isServer) {
-    return {
-      get pathname() {
-        let location = window.LOCATION();
-        return location.pathname;
-      }
-    };
-  } else {
-    return /*#__PURE__*/ useBaseLocation();
-  }
-}
-
-export function useNavigate() {
-  if (import.meta.env.START_ISLANDS_ROUTER && !isServer) {
-    return ((to, props) => window.NAVIGATE(to, props)) as unknown as Navigator;
-  } else {
-    return /*#__PURE__*/ useBaseNavigate();
-  }
-}
+export { A, Outlet, Routes, useLocation, useNavigate };

@@ -101,6 +101,7 @@ export default function (miniflareOptions = {}) {
         },
         modules: true,
         kvPersist: true,
+        compatibilityFlags: ["streams_enable_constructors"],
         ...miniflareOptions
       });
 
@@ -157,7 +158,7 @@ export default function (miniflareOptions = {}) {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: ["worker", "solid"]
           }),
           common()
         ]

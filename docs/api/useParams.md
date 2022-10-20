@@ -3,36 +3,24 @@ section: api
 title: useParams
 order: 8
 subsection: Router
+active: true
 ---
 
 # useParams
 
 ##### `useParams` gives you an object containing the path params of the current route
 
-<div class="text-xl">
+<div class="text-lg">
 
 ```ts twoslash
-import { useParams } from "@solidjs/router";
+import { useParams } from "solid-start";
 // ---cut---
 const params = useParams();
 ```
 
 </div>
 
-- [Usage](#usage)
-
-  - [Reading `id` param for route `/users/:id`](#accessing-id-param-for-route-users-id)
-  - [Reading both `id` and `project` params for route `/users/:id/projects/:project`](#accessing-id-param-for-route-users-id)
-  - [Fetching data based on the path params](#example)
-  - [Show helpful error message for catch-all/404 routes](#example)
-
-- [Reference](#reference)
-
-  - [`useParams()`](#hello-world)
-
-- [Troublehooting](#troublehooting)
-
----
+<table-of-contents></table-of-contents>
 
 ## Usage
 
@@ -43,13 +31,13 @@ Route params are an important part of the routing system. They allow you to acce
 In our router config, we will usually have a few `Route`'s with dynamic parts. For example, take this router config which has a `Route` with path `/users/:id`.
 
 ```tsx twoslash {6}
-import { Router, Route } from "@solidjs/router";
+import { Routes, Route } from "solid-start";
 
 export function App() {
   return (
-    <Router>
+    <Routes>
       <Route path="/users/:id" />
-    </Router>
+    </Routes>
   );
 }
 ```
@@ -60,7 +48,7 @@ To access the `:id` part of the route, call `useParams()` inside a component. Th
 // @errors: 2571
 // @lib: ES2015,DOM
 
-import { useParams } from "@solidjs/router";
+import { useParams } from "solid-start";
 
 function User() {
   const params = useParams<{ id: string }>();
@@ -79,15 +67,15 @@ We could also have a `Route` with with multiple dynamic parts. For example, a ro
 // @errors: 2571
 // @lib: ES2015,DOM
 import { JSX } from "solid-js";
-import { Router, Route, useParams } from "@solidjs/router";
+import { Routes, Route, useParams } from "solid-start";
 
 export function App() {
   return (
-    <Router>
+    <Routes>
       <Route path="/users/:id">
         <Route path="/projects/:project" />
       </Route>
-    </Router>
+    </Routes>
   );
 }
 
@@ -112,7 +100,7 @@ For example, if you have a route like `/users/:id`, then you can access the `id`
 // @errors: 2571
 // @lib: ES2015,DOM
 
-import { useParams, Router, Route } from "@solidjs/router";
+import { useParams } from "solid-start";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
@@ -130,7 +118,7 @@ Then, you can use the `id` param as the source for your resource. You can fetch 
 ```tsx twoslash {4-7}
 // @lib: ES2015,DOM
 // @errors: 2571
-import { useParams, Router, Route } from "@solidjs/router";
+import { useParams } from "solid-start";
 import { createResource, JSX } from "solid-js";
 
 async function fetchUser(id: string): Promise<{ name: string }> {
@@ -157,7 +145,7 @@ function User() {
 Call `useParams()` inside a component to get the current route params.
 
 ```tsx twoslash
-import { useParams } from "@solidjs/router";
+import { useParams } from "solid-start";
 
 function Component() {
   const params = useParams();

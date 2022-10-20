@@ -191,16 +191,13 @@ export default async function () {
             disableImplicitReactImport: true,
             includeJSDocInHover: true,
             // theme: "css-variables",
-            themes: ["github-light", "github-dark"],
-            defaultOptions: {
-              lib: ["dom", "es2015"]
-            },
+            themes: ["github-dark", "github-light"],
             defaultCompilerOptions: {
               allowSyntheticDefaultImports: true,
               esModuleInterop: true,
               target: "ESNext",
-              module: "ESNext",
-              lib: ["dom", "es2015"],
+              module: "esnext",
+              lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
               jsxImportSource: "solid-js",
               jsx: "preserve",
               types: ["vite/client"],

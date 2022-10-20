@@ -1,4 +1,4 @@
 import { ErrorBoundary } from "./ErrorBoundary";
-
-export default ErrorBoundary;
+export { ErrorMessage } from "./ErrorBoundary";
 export { ErrorBoundary };
+export default ErrorBoundary;

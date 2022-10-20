@@ -19,33 +19,29 @@ test.describe("meta", () => {
       fixture = await createFixture({
         files: {
           "src/root.tsx": js`// @refresh reload
-            import { Routes } from "@solidjs/router";
             import { Suspense } from "solid-js";
-            import { ErrorBoundary } from "solid-start/error-boundary";
-            import { FileRoutes, Links, Meta, Scripts } from "solid-start/root";
+            import { A, Routes, FileRoutes, Head, Html, Body, Meta, Scripts, ErrorBoundary } from "solid-start";
             
             export default function Root() {
               return (
-                <html lang="en">
-                  <head>
+                <Html lang="en">
+                  <Head>
                     <meta charset="utf-8" />
                     <meta name="viewport" content="width=device-width, initial-scale=1" />
-                    <Meta />
-                    <Links />
-                  </head>
-                  <body>
+                  </Head>
+                  <Body>
                     <ErrorBoundary>
                       <Suspense>
-                        <a href="/">Home</a>
-                        <a href="/about">About</a>
+                        <A href="/">Home</A>
+                        <A href="/about">About</A>
                         <Routes>
                           <FileRoutes />
                         </Routes>
                       </Suspense>
                     </ErrorBoundary>
                     <Scripts />
-                  </body>
-                </html>
+                  </Body>
+                </Html>
               );
             }
           `,
@@ -80,9 +76,8 @@ test.describe("meta", () => {
             }
           `,
           "src/routes/title-from-route-data.tsx": js`
-            import { Title } from 'solid-start';
+            import { Title, useRouteData } from 'solid-start';
             import { createServerData$ } from 'solid-start/server';
-            import { useRouteData } from "@solidjs/router";
 
             export function routeData() {
               return createServerData$(async () => "Title from route data");
@@ -183,9 +178,8 @@ test.describe("meta", () => {
   //           }
   //         `,
   //         "src/routes/title-from-route-data.tsx": js`
-  //           import { Title } from 'solid-start';
+  //           import { Title, useRouteData } from 'solid-start';
   //           import { createServerData$ } from 'solid-start/server';
-  //           import { useRouteData } from "@solidjs/router";
 
   //           export function routeData() {
   //             return createServerData$(async () => "Title from route data", {
@@ -266,7 +260,7 @@ test.describe("meta", () => {
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toBe("text/html");
       expect(selectHtml(await res.text(), 'meta[charset="utf-8"]')).toBe(
-        prettyHtml(`<meta charset="utf-8" />`)
+        prettyHtml(`<meta data-hk="0-0-0-0-0-0-0-0-0-0-0" charset="utf-8" />`)
       );
     });
 

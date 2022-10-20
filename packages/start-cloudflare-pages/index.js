@@ -2,12 +2,13 @@ import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
-import { copyFileSync } from "fs";
+import { copyFileSync, writeFileSync } from "fs";
+import { Miniflare } from "miniflare";
 import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-import { Miniflare } from "miniflare";
 import { createServer } from "./dev-server.js";
+
 export default function (miniflareOptions) {
   return {
     name: "cloudflare-pages",
@@ -132,6 +133,8 @@ export default function (miniflareOptions) {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
+      writeFileSync(join(config.root, "dist", "public", "_headers"), getHeadersFile(), "utf8");
+
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "handler.js")
@@ -143,7 +146,7 @@ export default function (miniflareOptions) {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: ["worker", "solid"]
           }),
           common()
         ]
@@ -161,3 +164,13 @@ export default function (miniflareOptions) {
     }
   };
 }
+
+/**
+ * @see https://developers.cloudflare.com/pages/platform/headers/
+ */
+// prettier-ignore
+const getHeadersFile = () =>
+`
+/assets/*
+  Cache-Control: public, immutable, max-age=31536000
+`.trim();

@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "@solidjs/router";
-import { $TRACK, batch, createSignal, startTransition, useContext } from "solid-js";
+import { $TRACK, batch, createSignal, useContext } from "solid-js";
 import { FormError, FormImpl, FormProps } from "./Form";
 
 import type { ParentComponent } from "solid-js";
@@ -22,7 +22,7 @@ export type RouteAction<T, U> = [
     pending: boolean;
     input?: T;
     result?: U;
-    error?: unknown;
+    error?: any;
     clear: () => void;
     retry: () => void;
   },
@@ -70,7 +70,7 @@ export function createRouteAction<T, U = void>(
           if (data instanceof Response) {
             await handleResponse(data, navigate, options);
           } else await handleRefetch(data, options);
-          if (!data) setInput(undefined);
+          if (!data || isRedirectResponse(data)) setInput(undefined);
           else setResult({ data });
         }
         return data;
@@ -79,7 +79,7 @@ export function createRouteAction<T, U = void>(
         if (reqId === count) {
           if (e instanceof Response) {
             await handleResponse(e, navigate, options);
-          } else await handleRefetch(e, options);
+          }
           if (!isRedirectResponse(e)) {
             setResult({ error: e });
           } else setInput(undefined);
@@ -114,7 +114,7 @@ export function createRouteAction<T, U = void>(
       get result() {
         return result()?.data;
       },
-      get error() {
+      get error(): any {
         return result()?.error;
       },
       clear() {
@@ -151,7 +151,6 @@ export function createRouteMultiAction<T, U = void>(
   );
   const navigate = useNavigate();
   const event = useContext(ServerContext);
-  let count = 0;
 
   function createSubmission(variables: T) {
     let submission;
@@ -176,25 +175,21 @@ export function createRouteMultiAction<T, U = void>(
       handleSubmit
     ] as const;
     function handleSubmit(p) {
-      const reqId = ++count;
       p.then(async data => {
-        if (reqId === count) {
-          if (data instanceof Response) {
-            await handleResponse(data, navigate, options);
-            data = data.body;
-          } else await handleRefetch(data, options);
-          data ? setResult({ data }) : submission.clear();
-        }
+        if (data instanceof Response) {
+          await handleResponse(data, navigate, options);
+          data = data.body;
+        } else await handleRefetch(data, options);
+        data ? setResult({ data }) : submission.clear();
+
         return data;
       }).catch(async e => {
-        if (reqId === count) {
-          if (e instanceof Response) {
-            await handleResponse(e, navigate, options);
-          } else await handleRefetch(e, options);
-          if (!isRedirectResponse(e)) {
-            setResult({ error: e });
-          } else submission.clear();
-        }
+        if (e instanceof Response) {
+          await handleResponse(e, navigate, options);
+        } else await handleRefetch(e, options);
+        if (!isRedirectResponse(e)) {
+          setResult({ error: e });
+        } else submission.clear();
       });
       return p;
     }
@@ -233,11 +228,9 @@ export function createRouteMultiAction<T, U = void>(
 }
 
 function handleRefetch(response, options) {
-  return startTransition(() => {
-    refetchRouteData(
-      typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
-    );
-  });
+  return refetchRouteData(
+    typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
+  );
 }
 
 function handleResponse(response: Response, navigate, options) {
@@ -250,7 +243,7 @@ function handleResponse(response: Response, navigate, options) {
     }
   }
 
-  if (response.ok || isRedirectResponse(response)) return handleRefetch(response, options);
+  if (isRedirectResponse(response)) return handleRefetch(response, options);
 }
 
 function checkFlash(fn: any) {

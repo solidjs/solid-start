@@ -1,6 +1,6 @@
 # SolidStart Hackernews Example
 
-Hackernews example powered by [`solid-start`](https://github.com/ryansolid/solid-start/tree/master/packages/solid-start);
+Hackernews example powered by [`solid-start`](https://start.solidjs.com);
 
 ```bash
 npm init solid -- --template hackernews
@@ -23,4 +23,4 @@ npm run dev -- --open
 
 SolidStart apps are built with _adapters_, which optimise your project for deployment to different environments.
 
-By default, `npm run build` will generate a Node app that you can run with `npm run start`. To use a different adapter, add it to the `devDependencies` in `package.json` and specify in your `vite.config.js`.
+By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different adapter, add it to the `devDependencies` in `package.json` and specify in your `vite.config.js`.

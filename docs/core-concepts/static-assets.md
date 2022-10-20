@@ -2,9 +2,12 @@
 section: core-concepts
 title: Static Assets
 order: 5
+active: true
 ---
 
 # Static Assets
+
+<table-of-contents></table-of-contents>
 
 There are two ways to import static assets into your SolidStart project: using the public directory and using imports.
 
@@ -61,7 +64,7 @@ export default function About() {
   return (
     <>
       <h1>About</h1>
-      <img src={solid} alt="Solid logo" />
+      <img src={logo} alt="Solid logo" />
       // Renders
       <img src="/assets/solid.2d8efhg.png" alt="Solid logo" />
     </>

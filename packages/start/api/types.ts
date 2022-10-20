@@ -1,6 +1,6 @@
 import { FetchEvent, FETCH_EVENT } from "../server/types";
 
-export interface ApiFetchEvent extends FetchEvent {
+export interface APIEvent extends FetchEvent {
   params: { [key: string]: string };
   $type: typeof FETCH_EVENT;
   fetch: (route: string, init: RequestInit) => Promise<Response>;
@@ -20,5 +20,5 @@ export type MatchRoute = Route & {
   wildcard: boolean;
 };
 
-export type Method = "get" | "post" | "put" | "del" | "patch";
-export type ApiHandler = (event: ApiFetchEvent) => Response | Promise<Response>;
+export type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+export type ApiHandler = (event: APIEvent) => Response | Promise<Response>;

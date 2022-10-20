@@ -4,9 +4,6 @@
  * @returns {string} The uppercase and readable verb name
  */
 function getHTTPVerbName(verb) {
-  if (verb === "del") {
-    return "DELETE";
-  }
   return verb.toUpperCase();
 }
 
