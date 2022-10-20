@@ -30,7 +30,7 @@ const LISTS = {
 async function fetchTMD(url, params = {}) {
   let u = new URL(TMDB_API_URL + "/" + url);
   u.searchParams.set("api_key", TMDB_API_PARAMS.api_key);
-  // console.log(u.href);
+  console.log(u.href);
   return await (await fetch(u)).json();
 }
 
