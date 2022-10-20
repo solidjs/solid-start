@@ -26,7 +26,7 @@ refetchRouteData()
 
 ### Refetching all current route data
 
-Route data is most commonly invalidated and refetched when we perform route actions. However, sometimes we wish to refetch the data manually. The easiest way is execute `refetchRouteData` with no arguments.
+Route data is most commonly invalidated and refetched when we perform route actions. However, sometimes we wish to refetch the data manually. The easiest way is to execute `refetchRouteData` with no arguments.
 
 ```tsx twoslash
 import { refetchRouteData } from 'solid-start'

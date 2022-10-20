@@ -36,9 +36,9 @@ export default defineConfig({
 
 SolidStart is built with [Vite](https://vitejs.dev). It is little more than a collection of Vite plugins that enable all the functionality that we see here. This is an incredibly powerful approach as we get to leverage Vite's whole ecosystem of plugins to enhance our applications.
 
-The core plugin used by SolidStart is found at `solid-start/vite`. The main configuration for it is setting the adapter. Adapter's in SolidStart set the environment to which your project is deployed. Currently SolidStart supports Node, static hosting, Netlify Functions & Edge, Vercel Functions & Edge, Cloudflare Workers & Pages, and Deno Deploy.
+The core plugin used by SolidStart is found at `solid-start/vite`. The main configuration for it is setting the adapter. Adapter's in SolidStart set the environment to which your project is deployed. Currently, SolidStart supports Node, static hosting, Netlify Functions & Edge, Vercel Functions & Edge, Cloudflare Workers & Pages, and Deno Deploy.
 
-The simplest usage is by passing no arguments which default's to the Node adapter.Other adapter's must be installed in your project and added to the configuration via the `adapter` option. For example this uses Netlify Edge:
+The simplest usage is passing no arguments, which defaults to the Node adapter. Other adapters must be installed in your project and added to the configuration via the `adapter` option. For example this uses Netlify Edge:
 
 ```tsx
 import netlify from "solid-start-netlify";
@@ -70,4 +70,4 @@ The vite plugin exposes the following options:
 - inspect (_boolean_, default `true`): turns on whether vite inspect plugin is enabled
 - ssr (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode
 - islands (_boolean_, default `false`): _experimental_ toggles on "islands" mode
-- islandsRouter (_boolean_, default `false`): _experimental_ toggles on hybrod "islands" routing
+- islandsRouter (_boolean_, default `false`): _experimental_ toggles on hybrid "islands" routing

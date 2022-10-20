@@ -8,7 +8,7 @@ active: true
 
 # server$
 
-##### `server$` takes a function that should only run on the server and compiles its usage into a RPC call to the server
+##### `server$` takes a function that should only run on the server and compiles its usage into an RPC call to the server
 
 <div class="text-lg">
 
@@ -40,7 +40,7 @@ function Component() {
 }
 ```
 
-In this code snippet regardless of whether we are server rendering this component or client rendering it, the `logHello` function generates a log on the server console only. How does it work? We use compilation to transform the `server$` function into a RPC call to the server. 
+In this code snippet regardless of whether we are server rendering this component or client rendering it, the `logHello` function generates a log on the server console only. How does it work? We use compilation to transform the `server$` function into an RPC call to the server. 
 
 ```tsx twoslash {4} filename="Log.tsx[client]"
 import server$ from 'solid-start/server'

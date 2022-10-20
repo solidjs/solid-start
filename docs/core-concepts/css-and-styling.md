@@ -5,7 +5,7 @@ order: 7
 active: true
 ---
 
-# CSS and Syling
+# CSS and Styling
 
 Some frameworks modify the behavior of the [`<style>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style) tags, however as a standards based framework, instead of modifying behavior, we strive to build on top of it.
 
@@ -59,7 +59,7 @@ To use the feature, change the file extension from `.css` to `.module.css` (or f
 
 You will notice that suddenly your CSS stops working! This is because behind the scenes, classes defined in the CSS module are being renamed to a series of random letters. When we hard code classes using the class attribute (`class="card"`), solid does not know it should rename card to something different.
 
-To fix this, you can import classes used in your CSS module. You can think of this import as a object of `humanClass: generatedClass`. We reference the key (the class name we wrote!), and get back the unique, generated class name.
+To fix this, you can import classes used in your CSS module. You can think of this import as an object of `humanClass: generatedClass`. We reference the key (the class name we wrote!), and get back the unique, generated class name.
 
 ```tsx
 import styles from "./Card.module.css";

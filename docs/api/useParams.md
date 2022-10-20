@@ -61,7 +61,7 @@ function User() {
 
 ### Reading both `id` and `project` params for route `/users/:id/projects/:project`
 
-We could also have a `Route` with with multiple dynamic parts. For example, a route with path `/users/:id/projects/:project`. In this case, we would have two params: `id` and `project`.
+We could also have a `Route` with multiple dynamic parts. For example, a route with path `/users/:id/projects/:project`. In this case, we would have two params: `id` and `project`.
 
 ```tsx twoslash {6-8,14-18}
 // @errors: 2571
@@ -90,7 +90,7 @@ function User() {
 
 ### Fetch data based on the path params
 
-The route path parameters are usually used to fetch data from the server based on the current route. For the best user experience with parallel loading of data and route code, you should fetch the data in the the `Route`'s data function. The data function is passed the `params` object as an argument.
+The route path parameters are usually used to fetch data from the server based on the current route. For the best user experience with parallel loading of data and route code, you should fetch the data in the `Route`'s data function. The data function is passed the `params` object as an argument.
 
 In some cases, you might want to create async resources within your component tree, outside the `routeData` function. Here, you would need to get the params from the `useParams` hook.
 

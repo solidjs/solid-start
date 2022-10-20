@@ -42,7 +42,7 @@ export function GET() {
 
 Use `json()` to create a [`Response`][Response] by serializing a JSON object. It will set the [content-type][ContentType] to `application/json`.
 
-It is useful inside [API Routes](/core-concepts/api-routes), [`server$`](/api/server$) functions, and [middleware](/advanced/middleware). Basically whereever a [`Response`][Response] is expected.
+It is useful inside [API Routes](/core-concepts/api-routes), [`server$`](/api/server$) functions, and [middleware](/advanced/middleware). Basically wherever a [`Response`][Response] is expected.
 
 ```ts twoslash
 import { json } from "solid-start";

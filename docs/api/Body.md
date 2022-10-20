@@ -28,7 +28,7 @@ The `Body` component is the entry point into our applications. Here is where we 
 
 It is also the starting point for hydration for general Server-Side rendering and root of client rendering for non-SSR mode.
 
-It is a required componnt and should usually be placed as an immediate child of the `Html` component, after the `Head` element. It should include a `Scripts` component and render a `Routes` component to render your application.
+It is a required component and should usually be placed as an immediate child of the `Html` component, after the `Head` element. It should include a `Scripts` component and render a `Routes` component to render your application.
 
 
 ```tsx twoslash {7-13} filename="root.tsx"
