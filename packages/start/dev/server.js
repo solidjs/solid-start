@@ -11,6 +11,24 @@ globalThis.DEBUG = debug("start:server");
 // https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
+process.on("unhandledRejection", function (e) {
+  if (
+    !(
+      (typeof e === "string" && e.includes("renderToString timed out")) ||
+      (e.message && e.message.includes("renderToString timed out"))
+    )
+  ) {
+    console.error(e);
+  }
+});
+
+/**
+ *
+ * @param {import('node_modules/vite').ViteDevServer} viteServer
+ * @param {*} config
+ * @param {*} options
+ * @returns
+ */
 export function createDevHandler(viteServer, config, options) {
   /**
    * @returns {Promise<Response>}
@@ -22,45 +40,68 @@ export function createDevHandler(viteServer, config, options) {
       request,
       env: {
         ...env,
-        devManifest: options.router.getFlattenedPageRoutes(true),
-        collectStyles: async match => {
-          const styles = {};
-          const deps = new Set();
-          for (const file of match) {
-            const absolutePath = path.resolve(file);
-            await viteServer.ssrLoadModule(absolutePath);
-            const node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
+        __dev: {
+          manifest: options.router.getFlattenedPageRoutes(true),
+          collectStyles: async match => {
+            const styles = {};
+            const deps = new Set();
 
-            await find_deps(viteServer, node, deps);
-          }
+            try {
+              for (const file of match) {
+                const normalizedPath = path.resolve(file).replace(/\\/g, "/");
+                let node = await viteServer.moduleGraph.getModuleById(normalizedPath);
+                if (!node) {
+                  const absolutePath = path.resolve(file);
+                  await viteServer.ssrLoadModule(absolutePath);
+                  node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
 
-          for (const dep of deps) {
-            const parsed = new URL(dep.url, "http://localhost/");
-            const query = parsed.searchParams;
+                  if (!node) {
+                    console.log("not found");
+                    return;
+                  }
+                }
 
-            if (
-              style_pattern.test(dep.file) ||
-              (query.has("svelte") && query.get("type") === "style")
-            ) {
-              try {
-                const mod = await viteServer.ssrLoadModule(dep.url);
-                styles[dep.url] = mod.default;
-              } catch {
-                // this can happen with dynamically imported modules, I think
-                // because the Vite module graph doesn't distinguish between
-                // static and dynamic imports? TODO investigate, submit fix
+                await find_deps(viteServer, node, deps);
+              }
+            } catch (e) {}
+
+            for (const dep of deps) {
+              const parsed = new URL(dep.url, "http://localhost/");
+              const query = parsed.searchParams;
+
+              if (style_pattern.test(dep.file)) {
+                try {
+                  const mod = await viteServer.ssrLoadModule(dep.url);
+                  if (/.module.css$/.test(dep.file)) {
+                    styles[dep.url] = env.cssModules?.[dep.file];
+                  } else {
+                    styles[dep.url] = mod.default;
+                  }
+                } catch {
+                  // this can happen with dynamically imported modules, I think
+                  // because the Vite module graph doesn't distinguish between
+                  // static and dynamic imports? TODO investigate, submit fix
+                }
               }
             }
+            return styles;
           }
-          return styles;
         }
       }
     });
   }
 
-  async function handler(req, res) {
+  let localEnv = {};
+
+  /**
+   *
+   * @param {import('http').IncomingMessage} req
+   * @param {*} res
+   */
+  async function startHandler(req, res) {
     try {
-      let webRes = await devFetch(createRequest(req));
+      console.log(req.method, req.url);
+      let webRes = await devFetch(createRequest(req), localEnv);
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
 
@@ -77,19 +118,42 @@ export function createDevHandler(viteServer, config, options) {
       }
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
-      console.log("ERROR", e);
       res.statusCode = 500;
-      res.end(e.stack);
+      res.end(`
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <title>Error</title>
+            <script type="module">
+              import { ErrorOverlay } from '/@vite/client'
+              document.body.appendChild(new ErrorOverlay(${JSON.stringify(
+                prepareError(req, e)
+              ).replace(/</g, "\\u003c")}))
+            </script>
+          </head>
+          <body>
+          </body>
+        </html>
+      `);
+      throw e;
     }
   }
 
-  return { fetch: devFetch, handler };
+  return {
+    fetch: devFetch,
+    handler: startHandler,
+    handlerWithEnv: env => {
+      localEnv = env;
+      return startHandler;
+    }
+  };
 }
 
 /**
- * @param {import('vite').ViteDevServer} vite
- * @param {import('vite').ModuleNode} node
- * @param {Set<import('vite').ModuleNode>} deps
+ * @param {import('node_modules/vite').ViteDevServer} vite
+ * @param {import('node_modules/vite').ModuleNode} node
+ * @param {Set<import('node_modules/vite').ModuleNode>} deps
  */
 async function find_deps(vite, node, deps) {
   // since `ssrTransformResult.deps` contains URLs instead of `ModuleNode`s, this process is asynchronous.
@@ -97,7 +161,7 @@ async function find_deps(vite, node, deps) {
   /** @type {Promise<void>[]} */
   const branches = [];
 
-  /** @param {import('vite').ModuleNode} node */
+  /** @param {import('node_modules/vite').ModuleNode} node */
   async function add(node) {
     if (!deps.has(node)) {
       deps.add(node);
@@ -127,4 +191,12 @@ async function find_deps(vite, node, deps) {
   }
 
   await Promise.all(branches);
+}
+function prepareError(req, e) {
+  return {
+    message: `An error occured while server rendering ${req.url}:\n\n\t${
+      typeof e === "string" ? e : e.message
+    } `,
+    stack: typeof e === "string" ? "" : e.stack
+  };
 }

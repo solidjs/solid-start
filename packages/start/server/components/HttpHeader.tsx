@@ -11,7 +11,6 @@ export function HttpHeader(props: { name: string; value: string }) {
 
   onCleanup(() => {
     if (isServer) {
-      console.log("cleaning up");
       pageContext.responseHeaders.delete(props.name);
     }
   });

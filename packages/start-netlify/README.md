@@ -9,6 +9,7 @@ This is very experimental; the adapter API isn't at all fleshed out, and things 
 Pass the option `edge` to your adapter to have it deploy to edge functions instead of standard Netlify functions. Edge Functions have support for streaming as well.
 
 ```js
+import { defineConfig } from "vite";
 import solid from "solid-start/vite";
 import netlify from "solid-start-netlify";
 

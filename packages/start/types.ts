@@ -14,8 +14,14 @@ declare global {
   export const DEBUG: Debugger;
 }
 
+type Adapter = {
+  start(): void;
+  build(): void;
+  dev?(): void;
+};
+
 export type StartOptions = {
-  adapter: string;
+  adapter: string | Adapter;
   appRoot: string;
   routesDir: string;
   ssr: boolean;
@@ -26,8 +32,8 @@ export type StartOptions = {
   inspect: boolean;
   pageExtensions: string[];
   root: string;
-  entryClient: string;
-  entryServer: string;
+  clientEntry: string;
+  serverEntry: string;
   appRootFile: string;
 };
 

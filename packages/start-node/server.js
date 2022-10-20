@@ -1,6 +1,8 @@
 import compression from "compression";
 import { once } from "events";
 import fs from "fs";
+import { readFile } from "fs/promises";
+import { join } from "path";
 import polka from "polka";
 import sirv from "sirv";
 import { createRequest } from "solid-start/node/fetch.js";
@@ -11,7 +13,7 @@ global.onunhandledrejection = (err, promise) => {
   console.error(promise);
 };
 
-export function createServer({ handler, paths, manifest }) {
+export function createServer({ handler, paths, env }) {
   const comp = compression({
     threshold: 0,
     filter: req => {
@@ -20,18 +22,29 @@ export function createServer({ handler, paths, manifest }) {
   });
   const assets_handler = fs.existsSync(paths.assets)
     ? sirv(paths.assets, {
-        maxAge: 31536000,
-        immutable: true
+        setHeaders: (res, pathname) => {
+          const isAsset = pathname.startsWith("/assets/");
+          if (isAsset) {
+            res.setHeader("cache-control", "public, immutable, max-age=31536000");
+          }
+        }
       })
     : (_req, _res, next) => next();
 
   const render = async (req, res) => {
     try {
+      env.getStaticHTML = async assetPath => {
+        let text = await readFile(join(paths.assets, assetPath + ".html"), "utf8");
+        return new Response(text, {
+          headers: {
+            "content-type": "text/html"
+          }
+        });
+      };
+
       const webRes = await handler({
         request: createRequest(req),
-        env: {
-          manifest
-        }
+        env
       });
 
       res.statusCode = webRes.status;

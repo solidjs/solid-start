@@ -13,7 +13,7 @@ const ROUTE_KEYS = ["component", "path", "data", "children"];
 
 // Available HTTP methods / verbs for api routes
 // `delete` is a reserved word in JS, so we use `del` instead
-const API_METHODS = ["get", "post", "put", "del", "patch"];
+const API_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 
 export class Router {
   routes;
@@ -21,15 +21,18 @@ export class Router {
   pageExtensions;
   cwd;
   watcher;
+  ignore;
   constructor({
     baseDir = "src/routes",
     pageExtensions = ["jsx", "tsx", "js", "ts"],
-    cwd = process.cwd()
+    cwd = process.cwd(),
+    ignore = []
   }) {
     this.baseDir = baseDir;
     this.pageExtensions = pageExtensions;
     this.cwd = cwd;
     this.routes = {};
+    this.ignore = ignore;
   }
 
   async init() {
@@ -130,12 +133,12 @@ export class Router {
             }).code
           );
 
-          if (exports.find($=>$.n === "default")) {
+          if (exports.find($ => $.n === "default")) {
             routeConfig.componentPath = path;
           }
 
           for (var method of API_METHODS) {
-            if (exports.find($=>$.n === method)) {
+            if (exports.find($ => $.n === method)) {
               if (!routeConfig.apiPath) {
                 routeConfig.apiPath = {};
               }
@@ -145,7 +148,7 @@ export class Router {
             }
           }
 
-          if (exports.find($=>$.n === "routeData")) {
+          if (exports.find($ => $.n === "routeData")) {
             routeConfig.dataPath = path + "?data";
             // this.setRouteData(id, path + "?data");
             // dataFn = src.replace("tsx", "data.ts");
@@ -311,7 +314,7 @@ export function stringifyPageRoutes(routesConfig, options = {}) {
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
-  const routesConfig = { routes: ${stringifiedRoutes}, routeLayouts: ${JSON.stringify(
+  const routesConfig = /*#__PURE__*/ { routes: ${stringifiedRoutes}, routeLayouts: ${JSON.stringify(
     routesConfig.routeLayouts
   )} };`;
 
@@ -336,7 +339,7 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
                     jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
                   }`
               ),
-              i.componentPath ? `get: "skip"` : undefined,
+              i.componentPath ? `GET: "skip"` : undefined,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
                 .map(

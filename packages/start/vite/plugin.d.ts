@@ -7,8 +7,11 @@ export type Options = {
   islandsRouter: boolean;
   prerenderRoutes: any[];
   inspect: boolean;
+  rootEntry: string;
+  serverEntry: string;
+  clientEntry: string;
 } & import("vite-plugin-solid").Options;
-import { Plugin } from "vite";
+import { Plugin } from "node_modules/vite";
 
 import type { Debugger } from "debug";
 import type { Component } from "solid-js";

@@ -8,7 +8,7 @@ import { getElement } from "./helpers/playwright-fixture.js";
 test.describe("CSS link tags", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
-  test.skip(process.env.ADAPTER !== "solid-start-node");
+  test.skip(process.env.START_ADAPTER !== "solid-start-node");
 
   test.describe("without streaming", () => {
     test.beforeAll(async () => {
@@ -16,7 +16,7 @@ test.describe("CSS link tags", () => {
 
       const camelize = name => name.replace(/-./g, x => x[1].toUpperCase());
       const pascalize = name => {
-        name = name.replace(/[\[\]\.]/g, "");
+        name = name.replace(/[\[\]\.\(\)]/g, "");
         const cc = camelize(name);
         return cc[0].toUpperCase() + cc.slice(1);
       };
@@ -46,7 +46,7 @@ test.describe("CSS link tags", () => {
           }
         `;
         files[`src/routes/${path}.tsx`] = js`
-          import { Outlet } from "@solidjs/router";
+          import { Outlet } from "solid-start";
           import "./${name}.css";
           export default function ${pascalCaseName}() {
             return <>
@@ -69,23 +69,27 @@ test.describe("CSS link tags", () => {
 
       files["src/root.tsx"] = js`
         // @refresh reload
-        import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
-        import { ErrorBoundary } from "solid-start/error-boundary";
+        import {
+          Body,
+          ErrorBoundary,
+          FileRoutes,
+          Head,
+          Html,
+          Routes,
+          Scripts
+        } from "solid-start";
         import { Suspense } from "solid-js";
-        import { Routes } from "@solidjs/router";
 
         import "./root.css";
 
         export default function Root() {
           return (
-            <html lang="en">
-              <head>
+            <Html lang="en">
+              <Head>
                 <meta charset="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <Meta />
-                <Links />
-              </head>
-              <body>
+              </Head>
+              <Body>
                 <ErrorBoundary>
                   <Suspense>
                     <Routes>
@@ -94,16 +98,16 @@ test.describe("CSS link tags", () => {
                   </Suspense>
                 </ErrorBoundary>
                 <Scripts />
-              </body>
-            </html>
+              </Body>
+            </Html>
           );
         }
       `;
 
-      createNestedRoute("__auth", ["login", "[...wild]"]);
+      createNestedRoute("(auth)", ["login", "[...wild]"]);
       createNestedRoute("nested");
       createNestedRoute("[param]");
-      createNestedRoute("nested/__pathless", ["test"]);
+      createNestedRoute("nested/(pathless)", ["test"]);
       createNestedRoute("nested/double-nested");
       createNestedRoute("nested/double-nested/triple-nested");
 
@@ -141,9 +145,13 @@ test.describe("CSS link tags", () => {
 
   function matchHashedCssFile(name: string) {
     return (x: string) =>
-      new RegExp(`^/assets/${name.replace("[", "\\[").replace("]", "\\]")}\\.[a-f0-9]+\.css$`).test(
-        x
-      );
+      new RegExp(
+        `^/assets/${name
+          .replace("[", "\\[")
+          .replace("]", "\\]")
+          .replace("(", "\\(")
+          .replace(")", "\\)")}\\.[a-f0-9]+\.css$`
+      ).test(x);
   }
 
   function expectNumberOfUrlsToMatch(urls: string[], matchName: string, expectedNumber: number) {
@@ -153,13 +161,13 @@ test.describe("CSS link tags", () => {
   function runTests() {
     test("Pathless layout route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/login", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "__auth", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "(auth)", 1);
       expectNumberOfUrlsToMatch(cssUrls, "login", 1);
     });
     test("Pathless layout wildcard route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/2/3", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "__auth", 1);
-      expectNumberOfUrlsToMatch(cssUrls, "[...wild]", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "(auth)", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "_...wild_", 1);
     });
     test("Index of nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested", 3);
@@ -172,19 +180,19 @@ test.describe("CSS link tags", () => {
       expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
     });
     test("Index of dynamic nested route", async () => {
-      const cssUrls = await getStylesheetUrlsForRoute("/__auth", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "[param]", 1);
+      const cssUrls = await getStylesheetUrlsForRoute("/(auth)", 3);
+      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
       expectNumberOfUrlsToMatch(cssUrls, "index", 1);
     });
     test("Non-index of dynamic nested route", async () => {
-      const cssUrls = await getStylesheetUrlsForRoute("/__auth/non-index", 3);
-      expectNumberOfUrlsToMatch(cssUrls, "[param]", 1);
+      const cssUrls = await getStylesheetUrlsForRoute("/(auth)/non-index", 3);
+      expectNumberOfUrlsToMatch(cssUrls, "_param_", 1);
       expectNumberOfUrlsToMatch(cssUrls, "non-index", 1);
     });
     test("Pathless layout inside a nested route", async () => {
       const cssUrls = await getStylesheetUrlsForRoute("/nested/test", 4);
       expectNumberOfUrlsToMatch(cssUrls, "nested", 1);
-      expectNumberOfUrlsToMatch(cssUrls, "__pathless", 1);
+      expectNumberOfUrlsToMatch(cssUrls, "(pathless)", 1);
       expectNumberOfUrlsToMatch(cssUrls, "test", 1);
     });
     test("Index of double nested route", async () => {

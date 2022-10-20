@@ -7,8 +7,9 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
-export default function () {
+export default function ({ edge } = {}) {
   return {
+    name: "vercel",
     async start() {
       const proc = await spawn("vercel", ["deploy", "--prebuilt"], {});
       proc.stdout.pipe(process.stdout);
@@ -19,9 +20,6 @@ export default function () {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const appRoot = config.solidOptions.appRoot;
       const outputDir = join(config.root, ".vercel/output");
-
-      // Static Files
-      await builder.client(join(outputDir, "static"));
 
       // SSR Edge Function
       if (!config.solidOptions.ssr) {
@@ -36,14 +34,14 @@ export default function () {
       }
 
       const entrypoint = join(config.root, ".solid", "server", "server.js");
-      copyFileSync(join(__dirname, "entry.js"), entrypoint);
+      copyFileSync(join(__dirname, edge ? "entry-edge.js" : "entry.js"), entrypoint);
       const bundle = await rollup({
         input: entrypoint,
         plugins: [
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: edge ? ["worker", "solid"] : ["node", "solid"]
           }),
           common()
         ]
@@ -51,26 +49,49 @@ export default function () {
 
       const renderEntrypoint = "index.js";
       const renderFuncDir = join(outputDir, "functions/render.func");
-      await bundle.write({
-        format: "esm",
-        file: join(renderFuncDir, renderEntrypoint)
-      });
+      await bundle.write(
+        edge
+          ? {
+              format: "esm",
+              file: join(renderFuncDir, renderEntrypoint),
+              inlineDynamicImports: true
+            }
+          : {
+              format: "cjs",
+              file: join(renderFuncDir, renderEntrypoint),
+              exports: "auto",
+              inlineDynamicImports: true
+            }
+      );
       await bundle.close();
 
-      const renderConfig = {
-        runtime: "edge",
-        entrypoint: renderEntrypoint
-      };
+      const renderConfig = edge
+        ? {
+            runtime: "edge",
+            entrypoint: renderEntrypoint
+          }
+        : {
+            runtime: "nodejs16.x",
+            handler: renderEntrypoint,
+            launcherType: "Nodejs"
+          };
       writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));
 
       // Routing Config
       const outputConfig = {
         version: 3,
         routes: [
+          // https://vercel.com/docs/project-configuration#project-configuration/headers
+          // https://vercel.com/docs/build-output-api/v3#build-output-configuration/supported-properties/routes/source-route
+          {
+            src: "/assets/(.*)",
+            headers: { "Cache-Control": "public, max-age=31556952, immutable" },
+            continue: true
+          },
           // Serve any matching static assets first
           { handle: "filesystem" },
           // Invoke the SSR function if not a static asset
-          { src: "/.*", middlewarePath: "render" }
+          { src: "/.*", dest: "/render" }
         ]
       };
       writeFileSync(join(outputDir, "config.json"), JSON.stringify(outputConfig, null, 2));

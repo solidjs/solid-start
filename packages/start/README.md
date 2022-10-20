@@ -7,7 +7,7 @@ The quickest way to get started:
 ```bash
 mkdir my-app
 cd my-app
-npm init solid@next
+npm init solid
 npm install
 npm run dev
 ```

@@ -1,11 +1,9 @@
-import { expect, test, assert, vi, it, beforeAll, afterAll, describe } from "vitest";
+import { assert, expect, it, vi } from "vitest";
 // Edit an assertion and save to see HMR in action
 import "solid-start/node/globals";
-import server, {
+import server$, {
   handleServerRequest,
-  XSolidStartContentTypeHeader,
-  XSolidStartLocationHeader,
-  XSolidStartResponseTypeHeader
+  XSolidStartContentTypeHeader, XSolidStartResponseTypeHeader
 } from "solid-start/server";
 import { MockAgent, setGlobalDispatcher } from "undici";
 
@@ -20,7 +18,7 @@ const mockPool = mockAgent.get("http://localhost:3000");
 if (process.env.TEST_ENV === "client" && process.env.TEST_MODE === "client-server") {
   // tests that the client-server interaction is correct
   // wires the client side Request to the server side handler and parses the Response on the way back
-  let mock = vi.spyOn(server, "fetcher");
+  let mock = vi.spyOn(server$, "fetcher");
   mock.mockImplementation(request =>
     handleServerRequest({ request, responseHeaders: new Headers(), manifest: {} })
   );
@@ -42,7 +40,7 @@ function mockServerFunction(fn, args, status, response, headers?) {
 }
 
 it("should handle no args", async () => {
-  const basic = server(async () => ({ data: "Hello World" }));
+  const basic = server$(async () => ({ data: "Hello World" }));
 
   mockServerFunction(basic, null, 200, {
     data: "Hello World"
@@ -52,7 +50,7 @@ it("should handle no args", async () => {
 });
 
 it("should handle one string arg", async () => {
-  const basicArgs = server(async (name?: string) => ({
+  const basicArgs = server$(async (name?: string) => ({
     data: `Hello ${name ?? "World"}`
   }));
 
@@ -70,7 +68,7 @@ it("should handle one string arg", async () => {
 });
 
 it("should handle multiple args", async () => {
-  const mutipleArgs = server(async (name: string, message: string) => ({
+  const mutipleArgs = server$(async (name: string, message: string) => ({
     data: `${message} ${name}`
   }));
 
@@ -82,7 +80,7 @@ it("should handle multiple args", async () => {
 });
 
 it("should throw object if handler throws", async () => {
-  const throwJSON = server(async (name?: string) => {
+  const throwJSON = server$(async (name?: string) => {
     throw {
       data: `Hello ${name ?? "World"}`
     };
@@ -111,7 +109,7 @@ it("should throw object if handler throws", async () => {
 
 it("should allow curried servers with args explicity passed in", async () => {
   const curriedServer = (message?: string) => (name?: string) =>
-    server(async (name?: string, message?: string) => ({
+    server$(async (name?: string, message?: string) => ({
       data: `${message ?? "Hello"} ${name ?? "World"}`
     }))(name, message);
 
@@ -128,7 +126,7 @@ const MESSAGE = "HELLO";
 
 it("should allow access to module scope inside the handler", async () => {
   const accessModuleScope = () => (name?: string) =>
-    server(async (name?: string) => ({
+    server$(async (name?: string) => ({
       data: `${MESSAGE ?? "Hello"} ${name ?? "World"}`
     }))(name);
 
@@ -142,7 +140,7 @@ it("should allow access to module scope inside the handler", async () => {
 
 it("should throw error when invalid closure", async () => {
   const invalidClosureAccess = (message?: string) => (name?: string) =>
-    server(async (name?: string) => ({
+    server$(async (name?: string) => ({
       data: `${message ?? "Hello"} ${name ?? "World"}`
     }))(name);
 
@@ -163,7 +161,7 @@ it("should throw error when invalid closure", async () => {
 });
 
 it("should return redirect when handler returns redirect", async () => {
-  const redirectServer = server(async () => {
+  const redirectServer = server$(async () => {
     return new Response(null, {
       status: 302,
       headers: {
@@ -187,15 +185,15 @@ it("should return redirect when handler returns redirect", async () => {
   expect(await redirectServer()).satisfies(e => {
     expect(e.headers.get("location")).toBe("/hello");
     expect(e.status).toBe(302);
-    // expect(server.getContext().headers.get("x-solidstart-status-code")).toBe("302");
-    // expect(server.getContext().headers.get("x-solidstart-location")).toBe("/hello");
-    // expect(server.getContext().headers.get("location")).toBe("/hello");
+    // expect(server$.getContext().headers.get("x-solidstart-status-code")).toBe("302");
+    // expect(server$.getContext().headers.get("x-solidstart-location")).toBe("/hello");
+    // expect(server$.getContext().headers.get("location")).toBe("/hello");
     return true;
   });
 });
 
 it("should throw redirect when handler throws redirect", async () => {
-  const throwRedirectServer = server(async () => {
+  const throwRedirectServer = server$(async () => {
     throw new Response(null, {
       status: 302,
       headers: {
@@ -224,14 +222,14 @@ it("should throw redirect when handler throws redirect", async () => {
   } catch (e) {
     expect(e.headers.get("location")).toBe("/hello");
     expect(e.status).toBe(302);
-    // expect(server.getContext().headers.get("x-solidstart-status-code")).toBe("302");
-    // expect(server.getContext().headers.get("x-solidstart-location")).toBe("/hello");
-    // expect(server.getContext().headers.get("location")).toBe("/hello");
+    // expect(server$.getContext().headers.get("x-solidstart-status-code")).toBe("302");
+    // expect(server$.getContext().headers.get("x-solidstart-location")).toBe("/hello");
+    // expect(server$.getContext().headers.get("location")).toBe("/hello");
   }
 });
 
 it("should return response when handler returns response", async () => {
-  const redirectServer = server(async () => {
+  const redirectServer = server$(async () => {
     return new Response("text", {
       status: 404,
       headers: {
@@ -261,7 +259,7 @@ it("should return response when handler returns response", async () => {
 });
 
 it("should throw response when handler throws response", async () => {
-  const throwRedirectServer = server(async () => {
+  const throwRedirectServer = server$(async () => {
     throw new Response("text", {
       status: 404,
       headers: {
@@ -295,7 +293,7 @@ it("should throw response when handler throws response", async () => {
 });
 
 it("should throw error when handler throws error", async () => {
-  const throwRedirectServer = server(async () => {
+  const throwRedirectServer = server$(async () => {
     let error = new Error("Something went wrong");
     error.stack = "Custom stack";
     throw error;
@@ -342,7 +340,7 @@ class FormError extends Error {
 }
 
 it("should throw custom error when handler throws error", async () => {
-  const throwRedirectServer = server(async () => {
+  const throwRedirectServer = server$(async () => {
     let error = new FormError("Something went wrong");
     error.stack = "Custom stack";
     throw error;
@@ -383,7 +381,7 @@ it("should throw custom error when handler throws error", async () => {
 });
 
 it("should send request when caller sends request", async () => {
-  const requestServer = server(async request => {
+  const requestServer = server$(async request => {
     return { data: request.headers.get("x-test") };
   });
 
@@ -415,7 +413,7 @@ it("should send request when caller sends request", async () => {
 });
 
 it("should send request inside an object when caller sends context", async () => {
-  const requestServer = server(async ({ request }) => {
+  const requestServer = server$(async ({ request }) => {
     return { data: request.headers.get("x-test") };
   });
 
@@ -451,7 +449,7 @@ it("should send request inside an object when caller sends context", async () =>
 });
 
 it("should send headers inside an object when caller sends object with headers", async () => {
-  const requestServer = server(async ({ headers }) => {
+  const requestServer = server$(async ({ headers }) => {
     return { data: headers.get("x-test") };
   });
 

@@ -9,17 +9,17 @@
   "type": "module",
   "devDependencies": {
     "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.4.2",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@types/testing-library__jest-dom": "^5.14.4",
+    "@solidjs/router": "^0.5.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@types/testing-library__jest-dom": "^5.14.5",
     "jsdom": "^20.0.0",
-    "solid-js": "1.4.7",
-    "solid-start": "0.1.0-alpha.99",
-    "solid-start-node": "0.1.0-alpha.99",
+    "solid-js": "^1.5.8",
+    "solid-start": "^0.1.0",
+    "solid-start-node": "^0.1.0",
     "solid-testing-library": "^0.3.0",
-    "typescript": "^4.4.3",
-    "undici": "^5.5.1",
-    "vite": "^3.0.4",
-    "vitest": "^0.20.2"
+    "typescript": "^4.8.3",
+    "undici": "^5.10.0",
+    "vite": "^3.1.0",
+    "vitest": "^0.20.3"
   }
 }

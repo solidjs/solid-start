@@ -8,7 +8,7 @@ test.describe("actions", () => {
   let fixture: Fixture;
   let appFixture: AppFixture;
 
-  test.skip(process.env.ADAPTER !== "solid-start-node");
+  test.skip(process.env.START_ADAPTER !== "solid-start-node");
 
   test.beforeAll(async () => {
     fixture = await createFixture({
@@ -17,7 +17,7 @@ test.describe("actions", () => {
           import { createRouteAction } from 'solid-start/data';
 
           export default function Index() {
-            const action = createRouteAction(async (params) => {
+            const [submission, submit] = createRouteAction(async (params) => {
               await new Promise(resolve => setTimeout(resolve, 1000));
               if (params.hello === "world") {
                 return "success";
@@ -26,21 +26,21 @@ test.describe("actions", () => {
             })
             return (
               <>
-                <button onClick={e => action.submit({ hello: "world" })} id="submit-earth">Earth</button>
-                <button onClick={e => action.submit({ hello: "mars" })} id="submit-mars">Mars</button>
-                <button onClick={e => action.reset()} id="reset">Reset</button>
-                <Show when={action.value}><p id="result">{action.value}</p></Show>
-                <Show when={action.state === "pending"}><p id="pending">Pending</p></Show>
-                <Show when={action.error}>{e => <p id="error">{e.message}</p>}</Show>
+                <button onClick={e => submit({ hello: "world" })} id="submit-earth">Earth</button>
+                <button onClick={e => submit({ hello: "mars" })} id="submit-mars">Mars</button>
+                <button onClick={e => submission.clear()} id="reset">Reset</button>
+                <Show when={submission.result}><p id="result">{submission.result}</p></Show>
+                <Show when={submission.pending}><p id="pending">Pending</p></Show>
+                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
               </>
             );
           }
         `,
         "src/routes/server-action.tsx": js`
-          import { createServerAction, ServerError } from 'solid-start/server';
+          import { createServerAction$, ServerError } from 'solid-start/server';
 
           export default function Index() {
-            const action = createServerAction(async (params) => {
+            const [submission, submit] = createServerAction$(async (params) => {
               await new Promise(resolve => setTimeout(resolve, 1000));
               if (params.hello === "world") {
                 return "success";
@@ -50,21 +50,21 @@ test.describe("actions", () => {
 
             return (
               <>
-                <button onClick={e => action.submit({ hello: "world" })} id="submit-earth">Earth</button>
-                <button onClick={e => action.submit({ hello: "mars" })} id="submit-mars">Mars</button>
-                <button onClick={e => action.reset()} id="reset">Reset</button>
-                <Show when={action.value}><p id="result">{action.value}</p></Show>
-                <Show when={action.state === "pending"}><p id="pending">Pending</p></Show>
-                <Show when={action.error}>{e => <p id="error">{e.message}</p>}</Show>
+                <button onClick={e => submit({ hello: "world" })} id="submit-earth">Earth</button>
+                <button onClick={e => submit({ hello: "mars" })} id="submit-mars">Mars</button>
+                <button onClick={e => submission.clear()} id="reset">Reset</button>
+                <Show when={submission.result}><p id="result">{submission.result}</p></Show>
+                <Show when={submission.pending}><p id="pending">Pending</p></Show>
+                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
               </>
             );
           }
         `,
         "src/components/Action.tsx": js`
-          import { createServerAction, ServerError } from 'solid-start/server';
-        
+          import { createServerAction$, ServerError } from 'solid-start/server';
+
           export function Action() {
-            const action = createServerAction(async (params) => {
+            const [submission, submit] = createServerAction$(async (params) => {
               await new Promise(resolve => setTimeout(resolve, 1000));
               if (params.hello === "world") {
                 return "success";
@@ -74,12 +74,12 @@ test.describe("actions", () => {
 
             return (
               <>
-                <button onClick={e => action.submit({ hello: "world" })} id="submit-earth">Earth</button>
-                <button onClick={e => action.submit({ hello: "mars" })} id="submit-mars">Mars</button>
-                <button onClick={e => action.reset()} id="reset">Reset</button>
-                <Show when={action.value}><p id="result">{action.value}</p></Show>
-                <Show when={action.state === "pending"}><p id="pending">Pending</p></Show>
-                <Show when={action.error}>{e => <p id="error">{e.message}</p>}</Show>
+                <button onClick={e => submit({ hello: "world" })} id="submit-earth">Earth</button>
+                <button onClick={e => submit({ hello: "mars" })} id="submit-mars">Mars</button>
+                <button onClick={e => submission.clear()} id="reset">Reset</button>
+                <Show when={submission.result}><p id="result">{submission.result}</p></Show>
+                <Show when={submission.pending}><p id="pending">Pending</p></Show>
+                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
               </>
             );
           }
@@ -89,29 +89,6 @@ test.describe("actions", () => {
           import { Action } from '~/components/Action';
           export default function Route() {
             return <Action />
-          }
-        `,
-        "src/routes/server-action-error-boundary.tsx": js`
-          import { createServerAction, ServerError } from 'solid-start/server';
-
-          export default function Index() {
-            const action = createServerAction(async (params) => {
-              await new Promise(resolve => setTimeout(resolve, 1000));
-              if (params.hello === "world") {
-                return "success";
-              }
-              else throw new ServerError('Wrong planet');
-            })
-
-            return (
-              <>
-                <button onClick={e => action.submit({ hello: "world" })} id="submit-earth">Earth</button>
-                <button onClick={e => action.submit({ hello: "mars" })} id="submit-mars">Mars</button>
-                <button onClick={e => action.reset()} id="reset">Reset</button>
-                <Show when={() => action.value}><p id="result">{action.value}</p></Show>
-                <Show when={action.state === "pending"}><p id="pending">Pending</p></Show>
-              </>
-            );
           }
         `
       }
@@ -146,7 +123,7 @@ test.describe("actions", () => {
     // error submission
     await page.click("button#submit-mars");
     expect(await page.isVisible("#pending")).toBe(true);
-    expect(await page.isVisible("#result")).toBe(true);
+    expect(await page.isVisible("#result")).toBe(false);
     await page.waitForSelector("#error", {
       state: "visible"
     });
@@ -183,7 +160,7 @@ test.describe("actions", () => {
     // error submission
     await page.click("button#submit-mars");
     expect(await page.isVisible("#pending")).toBe(true);
-    expect(await page.isVisible("#result")).toBe(true);
+    expect(await page.isVisible("#result")).toBe(false);
     await page.waitForSelector("#error", {
       state: "visible"
     });
@@ -220,7 +197,7 @@ test.describe("actions", () => {
     // error submission
     await page.click("button#submit-mars");
     expect(await page.isVisible("#pending")).toBe(true);
-    expect(await page.isVisible("#result")).toBe(true);
+    expect(await page.isVisible("#result")).toBe(false);
     await page.waitForSelector("#error", {
       state: "visible"
     });
@@ -233,25 +210,5 @@ test.describe("actions", () => {
     expect(await page.isVisible("#pending")).toBe(false);
     expect(await page.isVisible("#result")).toBe(false);
     expect(await page.isVisible("#error")).toBe(false);
-  });
-
-  test("server-side action when error should hit ErrorBoundary", async ({ page }) => {
-    let app = new PlaywrightFixture(appFixture, page);
-    await app.goto("/server-action-error-boundary", true);
-
-    expect(await page.isVisible("#result")).toBe(false);
-    expect(await page.isVisible("#pending")).toBe(false);
-
-    // error submission
-    await page.click("button#submit-mars");
-    expect(await page.isVisible("#pending")).toBe(true);
-    await page.waitForSelector("#error-message", {
-      state: "visible"
-    });
-    expect(await page.isVisible("#pending")).toBe(false);
-    expect(await page.isVisible("#result")).toBe(false);
-    expect(await app.getHtml("#error-message")).toBe(
-      prettyHtml(`<p id="error-message" style="font-weight: bold">Wrong planet</p>`)
-    );
   });
 });

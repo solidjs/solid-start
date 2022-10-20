@@ -4,11 +4,9 @@ Adapter for Solid apps that work on Vercel.
 
 This is very experimental; the adapter API isn't at all fleshed out, and things will definitely change.
 
-So far this only supports Edge functions but we intend to extend this to other output formats.
-
 ## Usage
 
-Add the adapter in your `vite.config.js` file
+Add the adapter in your `vite.config.js` file. By default this deploys to a Vercel Function.
 
 ```js
 import solid from "solid-start/vite";
@@ -16,6 +14,17 @@ import vercel from "solid-start-vercel";
 
 export default defineConfig({
   plugins: [solid({ adapter: vercel() })]
+});
+```
+
+To deploy to the edge pass in the edge option.
+
+```js
+import solid from "solid-start/vite";
+import vercel from "solid-start-vercel";
+
+export default defineConfig({
+  plugins: [solid({ adapter: vercel({ edge: true }) })]
 });
 ```
 

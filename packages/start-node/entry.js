@@ -15,7 +15,7 @@ const paths = {
 const server = createServer({
   paths,
   handler,
-  manifest
+  env: { manifest },
 });
 
 server.listen(PORT, err => {

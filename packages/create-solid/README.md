@@ -8,16 +8,16 @@ The easiest way to get started with Solid is by using `create-solid`. This CLI t
 
 ```bash
 #or
-npm init solid@next ./my-solid-app
+npm init solid ./my-solid-app
 
 # or
-yarn create solid@next ./my-solid-app
+yarn create solid ./my-solid-app
 ```
 
 ### Why use Create Solid?
 
 `create-solid` allows you to create a new Solid app within seconds. It is officially maintained by the creators of Solid, and includes a number of benefits:
 
-- **Interactive Experience**: Running `npm init solid@next` (with no arguments) launches an interactive experience that guides you through setting up a project.
+- **Interactive Experience**: Running `npm init solid` (with no arguments) launches an interactive experience that guides you through setting up a project.
 - **Zero Dependencies**: Initializing a project is as quick as one second. Create Solid has zero dependencies.
-- **Support for Examples**: Create Solid App can bootstrap your application using an example from the SolidStart official examples collection (e.g. `npm init solid@next --example with-mdx`).
+- **Support for Examples**: Create Solid App can bootstrap your application using an example from the SolidStart official examples collection (e.g. `npm init solid --example with-mdx`).

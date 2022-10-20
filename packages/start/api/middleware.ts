@@ -13,8 +13,16 @@ export const apiRoutes = ({ forward }) => {
         $type: FETCH_EVENT,
         fetch: internalFetch
       });
-
-      return await apiHandler.handler(apiEvent);
+      try {
+        return await apiHandler.handler(apiEvent);
+      } catch (error) {
+        if (error instanceof Response) {
+          return error;
+        }
+        return new Response(JSON.stringify(error), {
+          status: 500
+        });
+      }
     }
     return await forward(event);
   };

@@ -1,11 +1,43 @@
-import { useRouteData } from "@solidjs/router";
-import { createEffect } from "solid-js";
-import server, { createServerAction, createServerData, redirect } from "solid-start/server";
+import { createEffect, createSignal, onCleanup } from "solid-js";
+import { useRouteData } from "solid-start";
+import server$, { createServerAction$, createServerData$, redirect } from "solid-start/server";
+import { createWebSocketServer } from "solid-start/websocket";
 import { getUser, logout } from "~/session";
 
+const pingPong = createWebSocketServer(
+  server$(function (webSocket) {
+    webSocket.addEventListener("message", async msg => {
+      try {
+        // Parse the incoming message
+        let incomingMessage = JSON.parse(msg.data);
+        console.log(incomingMessage);
+
+        switch (incomingMessage.type) {
+          case "ping":
+            webSocket.send(
+              JSON.stringify([
+                {
+                  type: "pong",
+                  data: {
+                    id: incomingMessage.data.id,
+                    time: Date.now()
+                  }
+                }
+              ])
+            );
+            break;
+        }
+      } catch (err) {
+        // Report any exceptions directly back to the client. As with our handleErrors() this
+        // probably isn't what you'd want to do in production, but it's convenient when testing.
+        webSocket.send(JSON.stringify({ error: err.stack }));
+      }
+    });
+  })
+);
+
 export function routeData() {
-  return createServerData(async (_, { request, env }) => {
-    console.log(env);
+  return createServerData$(async (_, { request, env }) => {
     const user = await getUser(request);
 
     if (!user) {
@@ -18,28 +50,28 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
-  const logoutAction = createServerAction((_, { request }) => logout(request));
-
-  const join = server(async function () {
-    console.log(this.env);
-
-    if (this.request.headers.get("upgrade") === "websocket") {
-      const url = new URL(this.request.url);
-      const durableObjectId = this.env.DO_WEBSOCKET.idFromName(url.pathname);
-      const durableObjectStub = this.env.DO_WEBSOCKET.get(durableObjectId);
-      const response = await durableObjectStub.fetch(this.request);
-      console.log(response, response.headers, response.status);
-      return response;
+  const [, logoutAction] = createServerAction$((_, { request }) => logout(request));
+  const [lastPing, setLastPing] = createSignal(Date.now().toString());
+  const increment = createServerAction$(
+    async (_, { env }) => {
+      await env.app.put("key", `${Number(await this.env.app.get("key")) + 1}`);
+      return redirect("/");
+    },
+    {
+      invalidate: () => "k"
     }
-  });
+  );
 
   createEffect(() => {
-    let websocket = new WebSocket(`${location.origin.replace(/^http/, "ws")}${join.url}`);
-    websocket.onopen = console.log;
+    let websocket = pingPong.connect();
 
     websocket.addEventListener("message", event => {
       const messages = JSON.parse(event.data);
-      console.log(messages);
+      let message = messages[0];
+      switch (message.type) {
+        case "pong":
+          setLastPing(message.data.time);
+      }
     });
 
     function sendWebSocketMessage(type, data) {
@@ -51,12 +83,17 @@ export default function Home() {
     });
 
     // client ping <-> server pong
-    setInterval(() => {
+    let interval = setInterval(() => {
       try {
-        const id = self.crypto.randomUUID();
+        const id = crypto.randomUUID();
         sendWebSocketMessage("ping", { id, lastPingMs: 0 });
       } catch (e) {}
     }, 1000);
+
+    onCleanup(() => {
+      clearInterval(interval);
+      websocket.close();
+    });
   });
 
   return (

@@ -1,8 +1,8 @@
 import { JSXElement, useContext } from "solid-js";
-import { Assets } from "solid-js/web";
+import { useAssets } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 import { ManifestEntry, PageEvent } from "../server/types";
-import { routeLayouts } from "./FileRoutes";
+import { routesConfig } from "./FileRoutes";
 
 function getAssetsFromManifest(
   manifest: PageEvent["env"]["manifest"],
@@ -11,7 +11,7 @@ function getAssetsFromManifest(
   const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      const route = routeLayouts[fullPath];
+      const route = routesConfig.routeLayouts[fullPath];
       if (route) {
         memo.push(...((manifest[route.id] || []) as ManifestEntry[]));
         const layoutsManifestEntries = route.layouts.flatMap(
@@ -42,14 +42,13 @@ function getAssetsFromManifest(
  * Links are used to load assets for the server rendered HTML
  * @returns {JSXElement}
  */
-export default function Links(): JSXElement {
+export default function Links() {
   const isDev = import.meta.env.MODE === "development";
   const context = useContext(ServerContext);
-  return (
-    <Assets>
-      {!isDev &&
-        import.meta.env.START_SSR &&
-        getAssetsFromManifest(context.env.manifest, context.routerContext)}
-    </Assets>
-  );
+  !isDev &&
+    import.meta.env.START_SSR &&
+    useAssets(() =>
+      // @ts-expect-error The ssr() types do not match the Assets child types
+      getAssetsFromManifest(context.env.manifest, context.routerContext)
+    );
 }

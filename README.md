@@ -21,14 +21,10 @@ This is the home of the Solid app framework. This is still a **work in progress*
 ```bash
 mkdir my-app
 cd my-app
-npm init solid@next
+npm init solid
 npm install
 npm run dev
 ```
-
-### Documentation
-
-If you want to contribute to documentation, go to [solidjs/solid-docs-next](https://github.com/solidjs/solid-docs-next)
 
 ### Development
 
@@ -50,7 +46,7 @@ Run `pnpm install` to install all the dependencies for the packages and examples
 
 </summary>
 
-If you are using Solid Start within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for yarn), you must include `solid-start` within the optional `"nohoist"` workspaces property.
+If you are using Solid Start within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for yarn), you must include `solid-start` within the optional `"nohoist"` (for yarn v2 or higher, see further down for instructions) workspaces property.
 
 - _In the following, "workspace root" refers to the root of your repository while "project root" refers to the root of a child package within your repository_
 
@@ -83,9 +79,73 @@ Regardless of where you specify the nohoist option, you also need to include `so
 
 The reason why this is necessary is because `solid-start` creates an `index.html` file within your project which expects to load a script located in `/node_modules/solid-start/runtime/entry.jsx` (where `/` is the path of your project root). By default, if you hoist the `solid-start` dependency into the workspace root then that script will not be available within the package's `node_modules` folder.
 
+**Yarn v2 or higher**
+
+The `nohoist` option is no longer available in Yarn v2+. In this case, we can use the `installConfig` property in the `package.json` (either workspace package or a specific project package) to make sure our deps are not hoisted.
+
+```jsonc
+// in project root of a workspace child
+{
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  }
+}
+```
+
 </details>
 
 ## Changelog
+
+### [0.1.6]
+
+Renamed API Routes exports from lower case to upper case method names to match closely how people see those functions in the spec and in usage.
+
+```diff
+
+- export function get() {
++ export function GET() {
+  return new Response();
+}
+
+- export function post() {
++ export function POST() {
+
+  return new Response();
+}
+
+- export function patch() {
++ export function PATCH() {
+  return new Response();
+}
+
+- export function del() {
++ export function DELETE() {
+  return new Response();
+}
+
+```
+
+### [0.1.0-alpha.104]
+
+Changed grouped routes from `__name` syntax to `(name)`.
+
+### [0.1.0-alpha.103]
+
+Changed special compiled functions like `server`, `createServerData`, `createServerAction$`, `createServerMultiAction$`. to have a postfix `$` to indicate their special compiled (hoisted behavior).
+
+Also moved the optional first argument of `createServerData$` under `key` option. While this hides a very important option it makes the signatures more similar, so it is clear it is the main (first) function that is running on the server.
+
+```js
+const data = createServerData$(
+  async pathname => {
+    let mod = mods[`./docs${pathname}.mdx`] ?? mods[`./docs${pathname}.md`];
+    return mod.getHeadings().filter(h => h.depth > 1 && h.depth <= 3);
+  },
+  {
+    key: () => path.pathname
+  }
+);
+```
 
 <!-- </summary> -->
 
@@ -162,7 +222,7 @@ If you were not using SSR and rendering your app client-side:
 // @refresh reload
 import { Suspense } from "solid-js";
 - import { Meta, Link, Routes, Scripts } from "solid-start/root";
-+ import { FileRoutes, Scripts, Html, Head, Body, Routes, Meta, ErrorBoundary } from "solid-start";
++ import { FileRoutes, Scripts, Html, Head, Body, Routes, Meta, ErrorBoundary, A } from "solid-start";
 
 export default function Root() {
   return (
@@ -185,8 +245,8 @@ export default function Root() {
 +      <Body>
          <Suspense>
            <ErrorBoundary>
-             <a href="/">Index</a>
-             <a href="/about">About</a>
+             <A href="/">Index</A>
+             <A href="/about">About</A>
 -            <Routes />
 +            <Routes>
 +              <FileRoutes />
@@ -229,13 +289,13 @@ export default function Root() {
 - Now, our `root.tsx` even more closely replicates how you would be writing your `index.html`. And this was intentionally done so that we could enable an SPA mode for you that used the same code as the SSR mode without changing anything. How we do this? At build time for SPA mode, we quickly run the vite server, and make a request for your app's index and we tell our `Body` component not to render anything. So the index.html we get is the one you would have written. We then use that `index.html` as your entrypoint. You can still write your own `index.html` if you don't want to use this functionality.
 
 </details>
-<details><summary><h3>createServerResource -> createServerData</h3></summary>
+<details><summary><h3>createServerResource -> createServerData$</h3></summary>
 
 ```diff
 
 export function routeData() {
 -  return createServerResource(async (_, { request }) => {
-+  return createServerData(async (_, { request }) => {
++  return createServerData$(async (_, { request }) => {
     const user = await getUser(request);
 
     if (!user) {
@@ -247,19 +307,21 @@ export function routeData() {
 }
 ```
 
-- Renamed `createServerResource` to `createServerData`, and `createRouteResource` to `createRouteData`: We renamed `createServerResource` to `createServerData` because we were not using the `createResource` signature and that was confusing. We just return one single signal from `createServerData` instead of a tuple like `createResource` does.
+- Renamed `createServerResource` to `createServerData$`, and `createRouteResource` to `createRouteData`: We renamed `createServerResource` to `createServerData$` because we were not using the `createResource` signature and that was confusing and we needed to indicate the function was compiled. We just return one single signal from `createServerData$` instead of a tuple like `createResource` does. And we have moved the source into the options as `key`.
 
 </details>
 
-<details><summary><h3>createServerAction</h3></summary>
+<details><summary><h3>createServerAction$, createServerMultiAction$</h3></summary>
 
 ```diff
 - const logoutAction = createServerAction(() => logout(server.request));
-+ const logoutAction = createServerAction((_, { request }) => logout(request));
++ const [logginOut, logOut] = createServerAction$((_, { request }) => logout(request));
 
 ```
 
 We pass in a `ServerFunctionEvent` which has a `request` field as the second argument to server actions. You can use this to access to the HTTP Request sent for your action and get the headers from it for things like auth.
+
+We now return a tuple where the first argument is the current submission, and the second is the submit function it also has a progressive enhancible form attached to it `logout.Form`.
 
 </details>
 <details><summary><h3>🆕 HttpStatusCode, HttpHeader</h3></summary>

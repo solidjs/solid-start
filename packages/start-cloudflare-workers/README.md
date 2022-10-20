@@ -6,7 +6,7 @@ This is very experimental; the adapter API isn't at all fleshed out, and things 
 
 ## Configuration
 
-This adapter expects to find a [wrangler.toml](https://developers.cloudflare.com/workers/platform/sites/configuration) file in the project root. It will determine where to write static assets and the worker based on the `site.bucket` and `site.entry-point` settings.
+This adapter expects to find a [wrangler.toml](https://developers.cloudflare.com/workers/platform/sites/configuration) file in the project root. It will determine where to write static assets and the worker based on the `site.bucket` settings.
 
 Generate this file using `wrangler` from your project directory
 
@@ -17,18 +17,9 @@ $ wrangler init
 Then configure your sites build directory in the config file:
 
 ```toml
-type = "javascript"
+main = "./dist/server.js"
 [site]
-bucket = "./dist"
-entry-point = "./"
-[build]
-command = ""
-upload.format = "service-worker"
-```
-
-You also need to add the main entry to your package.json:
-```
-"main": "./dist/index.js",
+bucket= "./dist/public"
 ```
 
 More info on configuring a cloudflare worker site can be found [here](https://developers.cloudflare.com/workers/platform/sites/start-from-existing)

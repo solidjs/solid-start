@@ -1,5 +1,5 @@
 import { Component, createResource, For, Show } from "solid-js";
-import { RouteDataArgs, useRouteData } from "solid-start";
+import { A, RouteDataArgs, useRouteData } from "solid-start";
 import Story from "~/components/story";
 import fetchAPI from "~/lib/api";
 import { IStory } from "~/types";
@@ -37,9 +37,9 @@ const Stories: Component = () => {
             </span>
           }
         >
-          <a class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
+          <A class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
             {"<"} prev
-          </a>
+          </A>
         </Show>
         <span>page {page()}</span>
         <Show
@@ -50,9 +50,9 @@ const Stories: Component = () => {
             </span>
           }
         >
-          <a class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
+          <A class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
             more {">"}
-          </a>
+          </A>
         </Show>
       </div>
       <main class="news-list">

@@ -109,6 +109,13 @@ class NodeRequest extends BaseNodeRequest {
       return form;
     }
   }
+
+  clone() {
+    let el = super.clone();
+    el.buffer = this.buffer.bind(el);
+    el.formData = this.formData.bind(el);
+    return el;
+  }
 }
 
 export function createRequest(req) {

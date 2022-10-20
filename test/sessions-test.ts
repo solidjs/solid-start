@@ -10,12 +10,12 @@ test.describe("sessions", () => {
       await createFixture({
         files: {
           "src/routes/index.tsx": js`
-            import server, { redirect, createServerData, createServerAction } from "solid-start/server";
-            import { useRouteData } from "@solidjs/router";
+            import server$, { redirect, createServerData$, createServerAction$ } from "solid-start/server";
+            import { useRouteData } from "solid-start";
             import { getUser, logout } from "~/session";
 
             export function routeData() {
-              return createServerData(async (_, { request }) => {
+              return createServerData$(async (_, { request }) => {
                 const user = await getUser(request);
 
                 if (!user) {
@@ -28,25 +28,25 @@ test.describe("sessions", () => {
 
             export default function Home() {
               const user = useRouteData<ReturnType<typeof routeData>>();
-              const logoutAction = createServerAction((_, { request }) => logout(request));
+              const [, { Form }] = createServerAction$((_, { request }) => logout(request));
 
               return (
                 <main class="w-full p-4 space-y-2">
                   <h1 class="font-bold text-3xl">Hello {user()?.username}</h1>
                   <h3 class="font-bold text-xl">Message board</h3>
-                  <logoutAction.Form>
+                  <Form>
                     <button name="logout" type="submit">
                       Logout
                     </button>
-                  </logoutAction.Form>
+                  </Form>
                 </main>
               );
             }
           `,
           "src/routes/login.tsx": js`
             import { Show } from "solid-js";
-            import { useParams, useRouteData } from "@solidjs/router";
-            import { redirect, createServerData, createServerAction } from "solid-start/server";
+            import { useParams, useRouteData } from "solid-start";
+            import { redirect, createServerData$, createServerAction$ } from "solid-start/server";
             import { db, createUserSession, getUser, login, register } from "~/session";
             import { FormError } from "solid-start/data";
             
@@ -63,7 +63,7 @@ test.describe("sessions", () => {
             }
             
             export function routeData() {
-              return createServerData(async (_, { request }) => {
+              return createServerData$(async (_, { request }) => {
                 if (await getUser(request)) {
                   throw redirect("/");
                 }
@@ -75,7 +75,7 @@ test.describe("sessions", () => {
               const data = useRouteData<ReturnType<typeof routeData>>();
               const params = useParams();
             
-              const loginAction = createServerAction(async (form: FormData) => {
+              const [loggingIn, { Form }] = createServerAction$(async (form: FormData) => {
                 const loginType = form.get("loginType");
                 const username = form.get("username");
                 const password = form.get("password");
@@ -134,7 +134,7 @@ test.describe("sessions", () => {
                   <div data-light="">
                     <main class="p-6 mx-auto w-[fit-content] space-y-4 rounded-lg bg-gray-100">
                       <h1 class="font-bold text-xl">Login</h1>
-                      <loginAction.Form method="post" class="flex flex-col space-y-2">
+                      <Form method="post" class="flex flex-col space-y-2">
                         <input type="hidden" name="redirectTo" value={params.redirectTo ?? "/"} />
                         <fieldset class="flex flex-row">
                           <legend class="sr-only">Login or Register?</legend>
@@ -152,9 +152,9 @@ test.describe("sessions", () => {
                             placeholder="kody"
                             class="border-gray-700 border-2 ml-2 rounded-md px-2"
                           />
-                          <Show when={loginAction.error?.fieldErrors?.username}>
+                          <Show when={loggingIn.error?.fieldErrors?.username}>
                             <p class="text-red-400" role="alert">
-                              {loginAction.error.fieldErrors.username}
+                              {loggingIn.error.fieldErrors.username}
                             </p>
                           </Show>
                         </div>
@@ -166,26 +166,26 @@ test.describe("sessions", () => {
                             placeholder="twixrox"
                             class="border-gray-700 border-2 ml-2 rounded-md px-2"
                           />
-                          <Show when={loginAction.error?.fieldErrors?.password}>
+                          <Show when={loggingIn.error?.fieldErrors?.password}>
                             <p class="text-red-400" role="alert">
-                              {loginAction.error.fieldErrors.password}
+                              {loggingIn.error.fieldErrors.password}
                             </p>
                           </Show>
                         </div>
-                        <Show when={loginAction.error}>
+                        <Show when={loggingIn.error}>
                           <p class="text-red-400" role="alert" id="error-message">
-                            {loginAction.error.message}
+                            {loggingIn.error.message}
                           </p>
                         </Show>
                         <button class="focus:bg-white hover:bg-white bg-gray-300 rounded-md px-2" type="submit">
                           {data() ? "Login" : ""}
                         </button>
-                      </loginAction.Form>
+                      </Form>
                     </main>
                   </div>
                 </div>
               );
-            }          
+            }
           `,
           "src/session.tsx": js`
             import { redirect } from "solid-start/server";

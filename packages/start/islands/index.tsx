@@ -1,6 +1,7 @@
-import { Component, ComponentProps, lazy, useContext } from "solid-js";
+import { Component, ComponentProps, lazy, splitProps, useContext } from "solid-js";
 import { ServerContext } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
+export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
   namespace JSX {
@@ -28,7 +29,8 @@ export function island<T extends Component<any>>(
   path?: string
 ): T {
   let Component = Comp as T;
-  if (!import.meta.env.ISLANDS) {
+
+  if (!import.meta.env.START_ISLANDS) {
     // TODO: have some sane semantics for islands used in non-island mode
     return lazy(Comp as () => Promise<{ default: T }>);
   }
@@ -44,7 +46,7 @@ export function island<T extends Component<any>>(
   return ((compProps: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
       const context = useContext(ServerContext);
-      const { children, ...props } = compProps;
+      const [, props] = splitProps(compProps, ["children"]);
 
       let fpath;
 

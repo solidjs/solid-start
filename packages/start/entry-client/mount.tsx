@@ -3,11 +3,17 @@ import { createComponent, hydrate, render } from "solid-js/web";
 
 import mountRouter from "../islands/router";
 
+declare global {
+  interface Window {
+    INSPECT: () => void;
+  }
+}
+
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
   // const { default: createDebugger } = await import("debug");
   // window.DEBUG = createDebugger("start:client");
-  window.DEBUG = console.log
+  window.DEBUG = console.log as unknown as any;
 
   DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
   DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
@@ -15,6 +21,10 @@ if (import.meta.env.DEV) {
   DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
   DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
   DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
+
+  window.INSPECT = () => {
+    window.open(window.location.href.replace(window.location.pathname, "/__inspect"));
+  };
 }
 
 export default function mount(code?: () => JSX.Element, element?: Document) {
@@ -28,21 +38,34 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
         Component = window._$HY.islandMap[el.dataset.island];
       }
 
+      if (!el.dataset.hk) {
+        return;
+      }
+
       DEBUG(
         "hydrating island",
         el.dataset.island,
-        el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`,
+        el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
         el
       );
 
-      hydrate(() => createComponent(Component, JSON.parse(el.dataset.props)), el, {
-        renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`
-      });
+      hydrate(
+        () =>
+          createComponent(Component, {
+            ...JSON.parse(el.dataset.props)
+          }),
+        el,
+        {
+          renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`
+        }
+      );
+
+      delete el.dataset.hk;
     }
 
     window._$HY.hydrateIslands = () => {
-      document.querySelectorAll("solid-island").forEach((el: HTMLElement) => {
-        if (el.dataset.when === "idle") {
+      document.querySelectorAll("solid-island[data-hk]").forEach((el: HTMLElement) => {
+        if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
           requestIdleCallback(() => mountIsland(el));
         } else {
           mountIsland(el as HTMLElement);

@@ -1,21 +1,15 @@
+import type { JSX } from "solid-js";
 import { children, ComponentProps } from "solid-js";
-import { insert, resolveSSRNode, spread, ssrSpread } from "solid-js/web";
+import { insert, spread, ssrElement } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
-
-let _ssrSpread = (props: any, isSvg: boolean, skipChildren: boolean) =>
-  // @ts-ignore
-  ssrSpread(props, isSvg, skipChildren);
 
 export function Html(props: ComponentProps<"html">) {
   if (import.meta.env.MPA) {
   }
   if (import.meta.env.SSR) {
-    return `<html ${_ssrSpread(props, false, true)}>
-        ${resolveSSRNode(children(() => props.children))}
-      </html>
-    `;
+    return ssrElement("html", props, undefined, false) as unknown as JSX.Element;
   } else {
     spread(document.documentElement, props, false, true);
     return props.children;
@@ -24,18 +18,18 @@ export function Html(props: ComponentProps<"html">) {
 
 export function Head(props: ComponentProps<"head">) {
   if (import.meta.env.SSR) {
-    return `<head ${_ssrSpread(props, false, true)}>
-        ${resolveSSRNode(
-          children(() => (
-            <>
-              {props.children}
-              <Meta />
-              <Links />
-            </>
-          ))
-        )}
-      </head>
-    `;
+    return ssrElement(
+      "head",
+      props,
+      () => (
+        <>
+          {props.children}
+          <Meta />
+          <Links />
+        </>
+      ),
+      false
+    ) as unknown as JSX.Element;
   } else {
     spread(document.head, props, false, true);
     return props.children;
@@ -44,11 +38,7 @@ export function Head(props: ComponentProps<"head">) {
 
 export function Body(props: ComponentProps<"body">) {
   if (import.meta.env.SSR) {
-    return `<body ${_ssrSpread(props, false, true)}>${
-      import.meta.env.START_SSR
-        ? resolveSSRNode(children(() => props.children))
-        : resolveSSRNode(<Scripts />)
-    }</body>`;
+    return ssrElement("body", props, () => import.meta.env.START_SSR ? props.children : <Scripts />, false) as unknown as JSX.Element;
   } else {
     if (import.meta.env.START_SSR) {
       let child = children(() => props.children);

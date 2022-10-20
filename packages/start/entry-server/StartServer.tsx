@@ -1,11 +1,11 @@
 import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
-import { ComponentProps } from "solid-js";
+import { ComponentProps, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
 import Root from "~start/root";
 import { apiRoutes } from "../api/middleware";
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
-import { fileRoutes } from "../root/FileRoutes";
+import { routesConfig } from "../root/FileRoutes";
 import { inlineServerFunctions } from "../server/middleware";
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
@@ -69,10 +69,10 @@ export function StartRouter(
 }
 
 const docType = ssr("<!DOCTYPE html>");
-export default ({ event }: { event: PageEvent }) => {
+export default function StartServer({ event }: { event: PageEvent }) {
   const parsed = new URL(event.request.url);
   const path = parsed.pathname + parsed.search;
-
+  sharedConfig.context.requestContext = event;
   return (
     <ServerContext.Provider value={event}>
       <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
@@ -82,7 +82,7 @@ export default ({ event }: { event: PageEvent }) => {
           location={path}
           prevLocation={event.prevUrl}
           data={dataFn}
-          routes={fileRoutes}
+          routes={routesConfig.routes}
         >
           {docType as unknown as any}
           <Root />

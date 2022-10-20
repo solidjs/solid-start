@@ -2,20 +2,20 @@ import { Style } from "@solidjs/meta";
 import { createResource, Show, Suspense, useContext } from "solid-js";
 import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
-import { routeLayouts } from "./FileRoutes";
+import { routesConfig } from "./FileRoutes";
 
 async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["routerContext"]) {
   const match = routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      if (env.devManifest.find(entry => entry.path === fullPath)) {
-        memo.push(env.devManifest.find(entry => entry.path === fullPath)!.componentPath);
+      if (env.__dev.manifest.find(entry => entry.path === fullPath)) {
+        memo.push(env.__dev.manifest.find(entry => entry.path === fullPath)!.componentPath);
       }
-      const route = routeLayouts[fullPath];
+      const route = routesConfig.routeLayouts[fullPath];
       if (route) {
         memo.push(
           ...route.layouts
-            .map(key => env.devManifest.find(entry => entry.path === key || entry.id === key))
+            .map(key => env.__dev.manifest.find(entry => entry.path === key || entry.id === key))
             .filter(entry => entry)
             .map(entry => entry!.componentPath)
         );
@@ -25,7 +25,7 @@ async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["
   }, []);
 
   match.push(import.meta.env.START_ENTRY_SERVER);
-  const styles = await env.collectStyles(match);
+  const styles = await env.__dev.collectStyles(match);
   return styles;
 }
 
@@ -53,8 +53,8 @@ export function InlineStyles() {
   // and making it invalid
   return (
     <Suspense>
-      <Show when={resource()}>
-        {resource => {
+      <Show when={resource()} keyed>
+        {(resource) => {
           return (
             <Style>
               {Object.entries(resource)

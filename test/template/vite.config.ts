@@ -3,8 +3,6 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
-    solid({
-      adapter: process.env.ADAPTER ?? "solid-start-node"
-    })
+    solid()
   ]
 });

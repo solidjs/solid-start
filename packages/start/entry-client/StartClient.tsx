@@ -4,7 +4,9 @@ import Root from "~start/root";
 import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, PageEvent } from "../server/types";
 
-const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0];
+const rootData: { default: <T>() => Promise<T> } = Object.values(
+  import.meta.glob("/src/root.data.(js|ts)", { eager: true })
+)[0] as any;
 const dataFn = rootData ? rootData.default : undefined;
 
 function throwClientError(field: string): any {

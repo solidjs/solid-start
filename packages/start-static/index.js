@@ -1,37 +1,19 @@
+/// <reference types="node" />
+
 import { spawn } from "child_process";
-import { copyFileSync, readdirSync, statSync } from "fs";
+import { copyFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import renderStatic from "solid-ssr/static";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
-  const files = readdirSync(dirPath);
-
-  arrayOfFiles = arrayOfFiles || [];
-
-  files.forEach(file => {
-    if (statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllFiles(dirPath + "/" + file, pageRoot, arrayOfFiles);
-    } else if (file.endsWith("sx") && !file.match(/\[.*\]/)) {
-      arrayOfFiles.push(
-        join(dirPath, "/", file)
-          .replace(pageRoot, "")
-          .replace(/\\/g, "/")
-          .replace(/(\/index)?(.jsx|.tsx)/, "") || "/"
-      );
-    }
-  });
-
-  return arrayOfFiles;
-}
-
 export default function () {
   return {
+    name: "static",
     start(config, { port }) {
       process.env.PORT = port;
-      const proc = spawn("npx", ["sirv-cli", "./dist/public", "--port", `${process.env.PORT}`]);
+      const proc = spawn("npx", ["serve", "./dist/public", "--port", `${process.env.PORT}`]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
 
@@ -49,14 +31,24 @@ export default function () {
       copyFileSync(join(__dirname, "entry.js"), pathToServer);
       const pathToDist = resolve(config.root, "dist", "public");
       const pageRoot = join(config.root, appRoot, config.solidOptions.routesDir);
+      console.log(pageRoot);
+
+      await config.solidOptions.router.init();
       const routes = [
-        ...getAllFiles(pageRoot, pageRoot),
+        ...config.solidOptions.router
+          .getFlattenedPageRoutes()
+          .map(a => a.path)
+          .filter(a => a.includes(":") || a.includes("/")),
+        "/404",
         ...(config.solidOptions.prerenderRoutes || [])
       ];
       renderStatic(
         routes.map(url => ({
           entry: pathToServer,
-          output: join(pathToDist, url.length === 1 ? "index.html" : `${url.slice(1)}.html`),
+          output: join(
+            pathToDist,
+            url.endsWith("/") ? `${url.slice(1)}index.html` : `${url.slice(1)}.html`
+          ),
           url
         }))
       );
