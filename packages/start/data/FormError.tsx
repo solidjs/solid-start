@@ -1,7 +1,9 @@
 export class ServerError extends Error {
-  constructor(message: string, { stack }: { stack?: string } = {}) {
+  status: number;
+  constructor(message: string, { status, stack }: { status?: number; stack?: string } = {}) {
     super(message);
     this.name = "ServerError";
+    this.status = status || 400
     if (stack) {
       this.stack = stack;
     }
