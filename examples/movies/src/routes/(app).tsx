@@ -3,9 +3,9 @@ import { Show } from "solid-js";
 import { A, createRouteData, useRouteData } from "solid-start";
 import { Outlet } from "solid-start";
 import { getMovie, getTrending, getTvShow } from "~/services/tmdbAPI";
-import GitHubIcon from "~icons/ant-design/twitter-outlined";
-import EmailIcon from "~icons/ant-design/twitter-outlined";
-import LinkedInIcon from "~icons/ant-design/twitter-outlined";
+import GitHubIcon from "~icons/ant-design/github-filled";
+import EmailIcon from "~icons/ant-design/mail-filled";
+import LinkedInIcon from "~icons/ant-design/linkedin-filled";
 import TwitterIcon from "~icons/ant-design/twitter-outlined";
 import MagnifierIcon from "~icons/ant-design/search-outlined";
 import HomeIcon from "~icons/ant-design/home-outlined";
@@ -35,7 +35,8 @@ function TheFooter() {
         .
       </p>
       <p>
-        Designed and built by the Nuxt Movies authors, data provided by&nbsp;
+        Designed by the Nuxt Movies authors, and ported by the Solid Movies authors, with the
+        original data provided by&nbsp;
         <a target="_blank" href="https://www.themoviedb.org/" rel="noopener">
           TMDb
         </a>
@@ -92,7 +93,7 @@ export function TheNav() {
           </A>
         </li>
         <li>
-          <A href="/movies" aria-label="Movies">
+          <A href="/movie" aria-label="Movies">
             <MoviesIcon width={24} height={24} color="white" />
           </A>
         </li>
