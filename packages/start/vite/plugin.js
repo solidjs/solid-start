@@ -413,13 +413,14 @@ async function resolveAdapter(config) {
 function solidStartServer(options) {
   let config;
   let env = { cssModules: {} };
+  const module_style_pattern = /\.module\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
   return {
     name: "solid-start-server",
     config(c) {
       config = c;
     },
     transform(code, id) {
-      if (id.endsWith(".module.css")) {
+      if (module_style_pattern.test(id)) {
         env.cssModules[id] = code;
       }
     },

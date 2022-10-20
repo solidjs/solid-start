@@ -8,6 +8,8 @@ var routeLayouts = $ROUTE_LAYOUTS;
 
 export { routeLayouts };
 
+const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
+
 async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["routerContext"]) {
   const match = routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
@@ -62,7 +64,7 @@ export function InlineStyles() {
           return (
             <Style>
               {Object.entries(resource)
-                .filter(([k]) => k.endsWith(".css"))
+                .filter(([k]) => style_pattern.test(k))
                 .map(([k, v]) => {
                   return `/* ${k} */\n` + v;
                 })
