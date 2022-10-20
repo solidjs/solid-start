@@ -80,6 +80,12 @@ export function renderStream(
       return await event.env.getStaticHTML("/index");
     }
 
+    // Hijack after navigation with islands router to be async
+    // Todo streaming into HTML
+    if (import.meta.env.START_ISLANDS_ROUTER && event.request.headers.get("x-solid-referrer")) {
+      return renderAsync(fn, baseOptions)()(event);
+    }
+
     let pageEvent = createPageEvent(event);
 
     const options = { ...baseOptions };
