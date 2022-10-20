@@ -136,7 +136,7 @@ export default function InactivePage() {
 }
 ```
 
-  - **Server**: When we get a request for this page, we will rend a [`308 (Redirect)`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308) response with `Location` header set to the home page. The browser will then do its normal redirect routine. This also helps crawlers to understand that the page should be redirected.
+  - **Server**: When we get a request for this page, we will send a [`308 (Redirect)`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308) response with `Location` header set to the home page. The browser will then do its normal redirect routine. This also helps crawlers to understand that the page should be redirected.
   - **Client**: When you navigate to this page from another page in the site, we will immediately navigate to the home page.
 
 There is another way for redirects to happen in SolidStart. Using your data functions and actions. 
