@@ -9,21 +9,56 @@ export const registerApiRoutes = routes => {
   apiRoutes = routes;
 };
 
-const FORWARDED_HEADERS = ["cookie"];
+// Headers from the original page GET request that should not
+// be copied over to the fetch request
+const SKIPPED_HEADERS = ["Accept"];
+
+// https://fetch.spec.whatwg.org/#forbidden-header-name
+const FORBIDDEN_HEADERS = [
+  `Accept-Charset`,
+  `Accept-Encoding`,
+  `Access-Control-Request-Headers`,
+  `Access-Control-Request-Method`,
+  `Connection`,
+  `Content-Length`,
+  `Cookie`,
+  `Cookie2`,
+  `Date`,
+  `DNT`,
+  `Expect`,
+  `Host`,
+  `Keep-Alive`,
+  `Origin`,
+  `Referer`,
+  `Set-Cookie`,
+  `TE`,
+  `Trailer`,
+  `Transfer-Encoding`,
+  `Upgrade`,
+  `Via`
+];
 
 export async function internalFetch(route: string, init: RequestInit = {}) {
   if (route.startsWith("http")) {
     return await fetch(route, init);
   }
 
-  const headers = new Headers(init.headers);
-  const requestHeaders = useServerContext().request?.headers;
-  if (requestHeaders) {
-    for (const header of FORWARDED_HEADERS) {
-      if (requestHeaders.has(header)) {
-        headers.set(header, requestHeaders.get(header));
-      }
-    }
+  const headers = new Headers(useServerContext().request?.headers);
+  for (const header of SKIPPED_HEADERS) {
+    headers.delete(header);
+  }
+
+  const initHeaders = new Headers(init.headers);
+  for (const header of FORBIDDEN_HEADERS) {
+    initHeaders.delete(header);
+  }
+  for (const [name, value] of initHeaders) {
+    headers.set(name, value);
+  }
+
+  const credentials = init.credentials ?? "same-origin";
+  if (credentials === "omit") {
+    headers.delete("cookie");
   }
 
   const url = new URL(route, "http://internal");
@@ -31,6 +66,7 @@ export async function internalFetch(route: string, init: RequestInit = {}) {
     ...init,
     headers
   });
+
   const handler = getRouteMatches(apiRoutes, url.pathname, request.method.toUpperCase() as Method);
 
   const apiEvent: APIEvent = Object.freeze({
