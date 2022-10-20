@@ -4,6 +4,8 @@ import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
 import { routesConfig } from "./FileRoutes";
 
+const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
+
 async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["routerContext"]) {
   const match = routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
@@ -54,11 +56,11 @@ export function InlineStyles() {
   return (
     <Suspense>
       <Show when={resource()} keyed>
-        {(resource) => {
+        {resource => {
           return (
             <Style>
               {Object.entries(resource)
-                .filter(([k]) => k.endsWith(".css"))
+                .filter(([k]) => style_pattern.test(k))
                 .map(([k, v]) => {
                   return `/* ${k} */\n` + v;
                 })

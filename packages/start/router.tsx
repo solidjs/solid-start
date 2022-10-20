@@ -7,12 +7,12 @@ import {
   useLocation as useBaseLocation,
   useNavigate as useBaseNavigate
 } from "@solidjs/router";
-import { Accessor, splitProps } from "solid-js";
+import { Accessor, ComponentProps, splitProps } from "solid-js";
 import { isServer } from "solid-js/web";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 const A = import.meta.env.START_ISLANDS_ROUTER
-  ? function IslandsA(props) {
+  ? function IslandsA(props: ComponentProps<typeof BaseA>) {
       const [, rest] = splitProps(props, ["state", "activeClass", "inactiveClass", "end"]);
       const location = useLocation();
       const isActive = () => {
