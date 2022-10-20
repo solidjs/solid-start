@@ -1,0 +1,109 @@
+
+@import '~/assets/css/utilities/_variables.scss';
+
+.footer {
+  padding: 2rem 1.5rem 6.5rem;
+  color: $text-color-grey;
+
+  @media (min-width: $breakpoint-small) {
+    padding-right: 4rem;
+    padding-left: 4rem;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    padding: 2rem 5rem;
+  }
+
+  p {
+    margin: 0.3rem 0;
+    font-size: 1.4rem;
+  }
+
+  a {
+    color: $text-color-grey;
+    text-decoration: underline;
+  }
+
+  ul {
+    display: flex;
+    margin: 2rem 0 0 -0.5rem;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 4.4rem;
+      height: 4.4rem;
+
+      svg {
+        transition: all 0.3s ease-in-out;
+      }
+
+      &:hover,
+      &:focus {
+        svg {
+          fill: #fff;
+        }
+      }
+    }
+  }
+}
+
+.nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  height: 4.5rem;
+  background-color: #000;
+
+  @media (min-width: $breakpoint-large) {
+    top: 0;
+    right: auto;
+    width: $layout-nav-width;
+    height: 100%;
+    border-right: 1px solid $secondary-color;
+  }
+
+  ul {
+    display: flex;
+    height: 100%;
+
+    @media (min-width: $breakpoint-large) {
+      flex-direction: column;
+    }
+
+    li {
+      flex: 1 1 auto;
+      height: 100%;
+
+      @media (min-width: $breakpoint-large) {
+        flex: 0 1 auto;
+        height: 10rem;
+      }
+    }
+  }
+
+  button {
+    padding: 0;
+    margin: 0;
+    background: none;
+  }
+
+  a,
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    outline: 0;
+    transition: all 0.2s;
+
+    &:hover,
+    &:focus {
+      opacity: 0.8;
+    }
+  }
+}
