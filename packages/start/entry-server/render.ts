@@ -1,6 +1,5 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { internalFetch } from "../api/internalFetch";
 import { redirect } from "../server/responses";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
 
@@ -160,7 +159,7 @@ function createPageEvent(event: FetchEvent) {
     responseHeaders,
     setStatusCode: setStatusCode,
     getStatusCode: getStatusCode,
-    fetch: internalFetch
+    fetch: event.fetch
   });
 
   return pageEvent;

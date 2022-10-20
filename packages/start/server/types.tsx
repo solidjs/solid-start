@@ -44,7 +44,7 @@ declare global {
      */
     getStaticHTML?(path: string): Promise<Response>;
     /**
-     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     * BE CAREFUL WHILE USING. AVAILABLE IN DEVELOPMENT ONLY.
      */
     __dev?: {
       /**
@@ -59,10 +59,10 @@ declare global {
 export interface FetchEvent {
   request: Request;
   env: Env;
+  fetch(url: string, init: RequestInit): Promise<Response>;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {
-  fetch(url: string, init: RequestInit): Promise<Response>;
   $type: typeof FETCH_EVENT;
 }
 
@@ -73,6 +73,5 @@ export interface PageEvent extends FetchEvent {
   tags?: TagDescription[];
   setStatusCode(code: number): void;
   getStatusCode(): number;
-  fetch(url: string, init: RequestInit): Promise<Response>;
   $type: typeof FETCH_EVENT;
 }

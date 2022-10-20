@@ -42,9 +42,24 @@ export function createServer({ handler, paths, env }) {
         });
       };
 
+      function internalFetch(route, init = {}) {
+        if (route.startsWith("http")) {
+          return fetch(route, init);
+        }
+
+        let url = new URL(route, "http://internal");
+        const request = new Request(url.href, init);
+        return handler({
+          request: request,
+          env,
+          fetch: internalFetch
+        });
+      }
+
       const webRes = await handler({
         request: createRequest(req),
-        env
+        env,
+        fetch: internalFetch
       });
 
       res.statusCode = webRes.status;

@@ -1,4 +1,3 @@
-import { internalFetch } from "../api/internalFetch";
 import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
 import { ContentTypeHeader, XSolidStartContentTypeHeader, XSolidStartOrigin } from "./responses";
 import { handleServerRequest, server$ } from "./server-functions/server";
@@ -33,7 +32,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
 
       let serverFunctionEvent = Object.freeze({
         request: event.request,
-        fetch: internalFetch,
+        fetch: event.fetch,
         $type: FETCH_EVENT,
         env: event.env
       });
