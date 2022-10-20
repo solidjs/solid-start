@@ -13,43 +13,55 @@ import { getImageBlurSvg } from "./image-blur-svg";
 import { imageConfigDefault } from "./image-config";
 import { ImageConfigContext } from "./image-config-context";
 import { defaultLoader, handleLoading } from "./loaders";
-import { ImageConfig, ImageLoaderWithConfig, ImageProps, ImgElementWithDataProp } from "./types";
+import { ImageConfig, ImageProps, ImgElementWithDataProp } from "./types";
 import { checkImage, generateImgAttrs, getInt, isStaticImport, isStaticRequire } from "./utils";
 
 const allImgs = new Map<string, { src: string; priority: boolean; placeholder: string }>();
 let perfObserver: PerformanceObserver | undefined;
 
 const Image: Component<ImageProps> = inProps => {
-  const [props, rest]: Partial<ImageProps>[] = splitProps(inProps, [
-    "src",
-    "sizes",
-    "unoptimized",
-    "priority",
-    "loading",
-    "class",
-    "quality",
-    "width",
-    "height",
-    "fill",
-    "style",
-    "onLoadingComplete",
-    "placeholder",
-    "blurDataURL"
-  ]);
+  const [props, sizes, rest]: Partial<ImageProps>[] = splitProps(
+    inProps,
+    [
+      "src",
+      "sizes",
+      "unoptimized",
+      "priority",
+      "loading",
+      "class",
+      "quality",
+      "width",
+      "height",
+      "fill",
+      "style",
+      "onLoadingComplete",
+      "placeholder",
+      "blurDataURL"
+    ],
+    ["deviceSizes", "imageSizes"]
+  );
   const configContext = useContext(ImageConfigContext);
   // Is this memo really needed? Seems a bit unnecessary for an image component.
   const config = createMemo<ImageConfig>(
     on(
-      () => configContext,
+      () => [configContext, sizes],
       () => {
         const c = configContext || imageConfigDefault;
-        const allSizes = [...c.deviceSizes, ...c.imageSizes].sort((a, b) => a - b);
-        const deviceSizes = c.deviceSizes.sort((a, b) => a - b);
+
+        // Let the user override sizes at the component level
+        let deviceSizes = sizes.deviceSizes || c.deviceSizes;
+        const imageSizes = sizes.imageSizes || c.imageSizes;
+
+        const allSizes = [...deviceSizes, ...imageSizes].sort((a, b) => a - b);
+        deviceSizes = deviceSizes.sort((a, b) => a - b);
         return { ...c, allSizes, deviceSizes };
       }
     )
   );
-  let loader: ImageLoaderWithConfig = defaultLoader;
+
+  // Use a loader supplied to the context with a fallback to the defaultLoader
+  let loader = config().loader || defaultLoader;
+
   if ("loader" in rest) {
     if (rest.loader) {
       const customImageLoader = rest.loader;
