@@ -32,7 +32,20 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     mountRouter();
 
     async function mountIsland(el: HTMLElement) {
+      if (el.dataset.css) {
+        let css = JSON.parse(el.dataset.css);
+        for (let href of css) {
+          if (!document.querySelector(`link[href="${href}"]`)) {
+            let link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = href;
+            document.head.appendChild(link);
+          }
+        }
+      }
+
       let Component = window._$HY.islandMap[el.dataset.island];
+
       if (!Component) {
         await import(/* @vite-ignore */ el.dataset.component);
         Component = window._$HY.islandMap[el.dataset.island];

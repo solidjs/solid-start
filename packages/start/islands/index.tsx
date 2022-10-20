@@ -49,9 +49,11 @@ export function island<T extends Component<any>>(
       const [, props] = splitProps(compProps, ["children"]);
 
       let fpath;
-
+      let styles = [];
       if (import.meta.env.PROD) {
-        fpath = (context.env.manifest[path] as IslandManifest).script.href;
+        let x = context.env.manifest[path] as IslandManifest;
+        fpath = x.script.href;
+        styles = x.assets.filter(v => v.type == "style").map(v => v.href);
       } else {
         fpath = `/` + path;
       }
@@ -61,6 +63,7 @@ export function island<T extends Component<any>>(
           data-props={JSON.stringify(props)}
           data-component={fpath}
           data-island={`/` + path}
+          data-css={JSON.stringify(styles)}
           data-when={props["client:idle"] ? "idle" : "load"}
         >
           <IslandComponent {...compProps} />

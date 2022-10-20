@@ -25,15 +25,18 @@ function getAssetsFromManifest(
 
   match.push(...((manifest["entry-client"] || []) as ManifestEntry[]));
 
-  const links = match.reduce((r, src) => {
+  function reducer(r, src) {
     r[src.href] =
       src.type === "style" ? (
         <link rel="stylesheet" href={src.href} $ServerOnly />
       ) : src.type === "script" ? (
         <link rel="modulepreload" href={src.href} $ServerOnly />
+      ) : src.type === "island" ? (
+        (manifest[src.href].assets.reduce(reducer, r), undefined)
       ) : undefined;
     return r;
-  }, {} as Record<string, JSXElement>);
+  }
+  const links = match.reduce(reducer, {} as Record<string, JSXElement>);
 
   return Object.values(links);
 }
