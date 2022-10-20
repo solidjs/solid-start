@@ -1,0 +1,49 @@
+$font-family--sans-serif: 'Roboto', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+
+// 1rem = 10px
+$base-font-size: 62.5%;
+$base-line-height: 1.6;
+$base-bg: #141414;
+$base-font-color: #fff;
+$base-font-family: $font-family--sans-serif;
+$base-font-weight: 400;
+$base-font-style: normal;
+
+$letter-spacing: 0.4px;
+
+$primary-color: #2196f3;
+$secondary-color: #202124;
+
+$text-color: #fafafa;
+$text-color-grey: #80868b;
+
+$breakpoint-xsmall: 640px;
+$breakpoint-small: 768px;
+$breakpoint-medium: 1024px;
+$breakpoint-large: 1200px;
+$breakpoint-xlarge: 1400px;
+$breakpoint-xlarger1: 1500px;
+$breakpoint-xlarger2: 1800px;
+$breakpoint-xlarger3: 2500px;
+
+$z-index-mobile-stepper: 1000;
+$z-index-speed-dial: 1050;
+$z-index-app-bar: 1100;
+$z-index-drawer: 1200;
+$z-index-modal: 1300;
+$z-index-snack-bar: 1400;
+$z-index-tooltip: 1500;
+
+$layout-nav-width: 10rem;
+
+:export {
+  breakpointXsmall: $breakpoint-xsmall;
+  breakpointSmall: $breakpoint-small;
+  breakpointMedium: $breakpoint-medium;
+  breakpointLarge: $breakpoint-large;
+  breakpointXlarge: $breakpoint-xlarge;
+  breakpointXlarger1: $breakpoint-xlarger1;
+  breakpointXlarger2: $breakpoint-xlarger2;
+  breakpointXlarger3: $breakpoint-xlarger3;
+  layoutNavWidth: $layout-nav-width;
+}

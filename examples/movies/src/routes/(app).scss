@@ -1,0 +1,12 @@
+@import '~/assets/css/utilities/_variables.scss';
+
+a.active {
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+
+  svg {
+    color: $primary-color;
+  }
+}
