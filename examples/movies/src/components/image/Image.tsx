@@ -62,14 +62,6 @@ const Image: Component<ImageProps> = inProps => {
   // Use a loader supplied to the context with a fallback to the defaultLoader
   let loader: ImageLoaderWithConfig = defaultLoader;
 
-  if (config().imageLoader) {
-    loader = obj => {
-      const { config: _, ...opts } = obj;
-      // The config object is internal only so we must
-      // not pass it to the user-defined loader()
-      return config().imageLoader(opts);
-    };
-  }
   if ("loader" in rest) {
     if (rest.loader) {
       const customImageLoader = rest.loader;
@@ -82,6 +74,13 @@ const Image: Component<ImageProps> = inProps => {
     }
     // Remove property so it's not spread on <img>
     delete rest.loader;
+  } else if (config().imageLoader && config().loader === "custom") {
+    loader = obj => {
+      const { config: _, ...opts } = obj;
+      // The config object is internal only so we must
+      // not pass it to the user-defined loader()
+      return config().imageLoader(opts);
+    };
   }
 
   let staticSrc = "";
