@@ -13,19 +13,14 @@ export function Card(props) {
         ...imageConfigDefault,
         imageSizes: tmdbSizeMap.poster,
         deviceSizes: tmdbSizeMap.poster,
-        loader: "custom"
+        loader: "custom",
+        imageLoader: tmdbLoader
       }}
     >
       <div class="card">
         <A class="card__link" href={`/${media()}/${props.item.id}`}>
           <div class="card__img">
-            <Image
-              width={342}
-              height={192}
-              src={props.item.poster_path}
-              alt={props.item.name}
-              loader={tmdbLoader}
-            />
+            <Image width={342} height={192} src={props.item.poster_path} alt={props.item.name} />
           </div>
           <h2>{props.item.title}</h2>
         </A>

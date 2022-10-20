@@ -22,7 +22,7 @@ export function routeData() {
         featured = await getTvShow(randomItem.id);
       }
 
-      console.log(featured);
+      // console.log(featured);
 
       return {
         trendingMovies,

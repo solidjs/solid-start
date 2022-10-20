@@ -42,10 +42,10 @@ export type ImageProps = Omit<
   "src" | "srcSet" | "ref" | "alt" | "width" | "height" | "loading"
 > & {
   /** @see [Device sizes documentation](https://nextjs.org/docs/api-reference/next/image#device-sizes) */
-  deviceSizes: number[];
+  deviceSizes?: number[];
 
   /** @see [Image sizing documentation](https://nextjs.org/docs/basic-features/image-optimization#image-sizing) */
-  imageSizes: number[];
+  imageSizes?: number[];
 
   src: string | StaticImport;
   alt: string;
