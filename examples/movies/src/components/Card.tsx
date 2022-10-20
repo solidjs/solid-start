@@ -1,4 +1,5 @@
 import { A } from "solid-start";
+import { imageConfigDefault } from "../components/image/image-config";
 import { ImageConfigContext } from "../components/image/image-config-context";
 import { tmdbLoader, tmdbSizeMap } from "../services/tmdbAPI";
 import Image from "./image/Image";
@@ -9,6 +10,7 @@ export function Card(props) {
   return (
     <ImageConfigContext.Provider
       value={{
+        ...imageConfigDefault,
         imageSizes: tmdbSizeMap.poster,
         deviceSizes: tmdbSizeMap.poster,
         loader: "custom"
