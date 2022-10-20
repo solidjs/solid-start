@@ -12,8 +12,6 @@ declare global {
 
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
-  // const { default: createDebugger } = await import("debug");
-  // window.DEBUG = createDebugger("start:client");
   window.DEBUG = console.log as unknown as any;
 
   DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
@@ -38,8 +36,21 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     mountRouter();
 
     async function mountIsland(el: HTMLElement) {
+      if (el.dataset.css) {
+        let css = JSON.parse(el.dataset.css);
+        for (let href of css) {
+          if (!document.querySelector(`link[href="${href}"]`)) {
+            let link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = href;
+            document.head.appendChild(link);
+          }
+        }
+      }
+
       let Component = window._$HY.islandMap[el.dataset.island];
       if (!Component || !el.dataset.hk) return;
+
       DEBUG(
         "hydrating island",
         el.dataset.island,
@@ -80,7 +91,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     window._$HY.hydrateIslands = () => {
       const islands = document.querySelectorAll("solid-island[data-hk]");
       const assets = new Set<string>();
-      islands.forEach(el => assets.add(el.dataset.component));
+      islands.forEach((el: HTMLElement) => assets.add(el.dataset.component));
       Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
         islands.forEach((el: HTMLElement) => {
           if (el.dataset.when === "idle" && "requestIdleCallback" in window) {

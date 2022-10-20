@@ -224,6 +224,7 @@ prog
         ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
 
         let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, islands);
+        console.log(islandsManifest["src/components/Hero.tsx?island"]);
 
         let newManifest = {
           ...Object.fromEntries(
@@ -259,6 +260,8 @@ prog
             }
           });
         });
+
+        console.log(newManifest["src/components/Hero.tsx?island"]);
 
         writeFileSync(join(path, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
         writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(newManifest, null, 2));

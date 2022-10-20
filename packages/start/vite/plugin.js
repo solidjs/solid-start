@@ -2,7 +2,7 @@ import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
-import path, { dirname, join } from "path";
+import path, { dirname, join, relative } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
 import { loadEnv, normalizePath } from "vite";
@@ -642,15 +642,21 @@ export default function solidStart(options) {
 }
 
 function islands() {
+  let mode;
   return {
     name: "solid-start-islands",
+    config(c, m) {
+      mode = m;
+    },
     load(id) {
       if (id.endsWith("?island")) {
         return {
           code: `
             import Component from '${id.replace("?island", "")}';
 
-            window._$HY.island("${id.slice(process.cwd().length)}", Component);
+            window._$HY.island("${
+              mode.command === "serve" ? `/@fs${id}` : `/${relative(process.cwd(), id)}`
+            }", Component);
 
             export default Component;
             `
@@ -669,10 +675,12 @@ function islands() {
             ssr
               ? `import ${b}_island from "${c}"; 
                   const ${b} = unstable_island(${b}_island, "${
-                  join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
+                  mode.command === "serve"
+                    ? `@fs${join(dirname(id), c)}` + ".tsx" + "?island"
+                    : `${relative(process.cwd(), join(dirname(id), c))}.tsx?island`
                 }");`
               : `const ${b} = unstable_island(() => import("${c}?island"), "${
-                  join(dirname(id), c) + ".tsx" + "?island"
+                  `@fs/${join(dirname(id), c).slice(1)}` + ".tsx" + "?island"
                 }")`
         );
 

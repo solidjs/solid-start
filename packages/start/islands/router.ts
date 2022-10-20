@@ -8,6 +8,19 @@ interface LocationEntry {
   hash: string;
 }
 
+export function useLocation() {
+  return {
+    get pathname() {
+      let location = window.LOCATION();
+      return location.pathname;
+    },
+    get hash() {
+      let location = window.LOCATION();
+      return location.hash;
+    }
+  } as Location;
+}
+
 export default function mountRouter() {
   if (import.meta.env.START_ISLANDS_ROUTER) {
     DEBUG("mounting islands router");

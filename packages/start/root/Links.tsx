@@ -46,9 +46,9 @@ function getAssetsFromManifest(
         <link rel="stylesheet" href={src.href} $ServerOnly />
       ) : src.type === "script" ? (
         <link rel="modulepreload" href={src.href} $ServerOnly />
-      ) : undefined;
+      ) : null;
     return r;
-  }, {} as Record<string, JSXElement>);
+  });
 
   return Object.values(links);
 }
