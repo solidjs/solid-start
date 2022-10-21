@@ -1,4 +1,4 @@
-import { JSXElement, useContext } from "solid-js";
+import { JSX, useContext } from "solid-js";
 import { useAssets } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 import { ManifestEntry, PageEvent } from "../server/types";
@@ -41,14 +41,15 @@ function getAssetsFromManifest(
   match = flattenIslands(match, manifest);
 
   const links = match.reduce((r, src) => {
-    r[src.href] =
+    let el =
       src.type === "style" ? (
         <link rel="stylesheet" href={src.href} $ServerOnly />
       ) : src.type === "script" ? (
         <link rel="modulepreload" href={src.href} $ServerOnly />
-      ) : null;
+      ) : undefined;
+    if (el) r[src.href] = el;
     return r;
-  });
+  }, {} as Record<string, JSX.Element | null>);
 
   return Object.values(links);
 }
