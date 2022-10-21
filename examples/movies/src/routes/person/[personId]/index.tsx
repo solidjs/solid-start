@@ -1,8 +1,9 @@
 import { Show } from "solid-js";
 import { createRouteData, useRouteData } from "solid-start";
+import { PersonInfo } from "~/components/person/PersonInfo";
 import { getPerson } from "~/services/tmdbAPI";
 
-export function routeData(params) {
+export function routeData({ params }) {
   return createRouteData(
     async id => {
       try {
@@ -18,7 +19,7 @@ export function routeData(params) {
       }
     },
     {
-      key: () => params.id
+      key: () => params.personId
     }
   );
 }
@@ -28,7 +29,9 @@ export default function PersonPage() {
 
   return (
     <main>
-      <Show when={data()}>{/* <Hero item={data()?.item} /> */}</Show>
+      <Show when={data()}>
+        <PersonInfo person={data().item} />
+      </Show>
     </main>
   );
 }
