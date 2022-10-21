@@ -31,7 +31,17 @@ const LISTS = {
 async function fetchTMD(url, params = {}) {
   let u = new URL(TMDB_API_URL + "/" + url);
   u.searchParams.set("api_key", TMDB_API_PARAMS.api_key);
-  return await (await fetch(u)).json();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== void 0) {
+      u.searchParams.set(key, value);
+    }
+  });
+  const response = await fetch(u);
+  if (!response.ok) {
+    console.error(url);
+    throw new Error(response.statusText);
+  }
+  return await response.json();
 }
 
 /**

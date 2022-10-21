@@ -1,7 +1,7 @@
-import { Show } from "solid-js";
-import { createRouteData, useRouteData } from "solid-start";
-import { Hero } from "~/components/Hero";
+import { createRouteData } from "solid-start";
 import { getMovie } from "~/services/tmdbAPI";
+import { MoviePage } from "./[movieId]/layout";
+export default MoviePage;
 
 export function routeData({ params }) {
   return createRouteData(
@@ -19,19 +19,7 @@ export function routeData({ params }) {
       }
     },
     {
-      key: () => params.id
+      key: () => params.movieId
     }
-  );
-}
-
-export default function MoviePage() {
-  const data = useRouteData<typeof routeData>();
-
-  return (
-    <main>
-      <Show when={data()}>
-        <Hero item={data()?.item} />
-      </Show>
-    </main>
   );
 }

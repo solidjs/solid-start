@@ -17,6 +17,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.5.0",
+    "nprogress": "^0.2.0",
     "solid-heroicons": "^3.1.0",
     "solid-js": "^1.5.8",
     "solid-start": "^0.2.0",

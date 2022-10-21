@@ -1,14 +1,10 @@
-import { Icon } from "solid-heroicons";
-import { Show } from "solid-js";
-import { A, createRouteData, useRouteData } from "solid-start";
-import { Outlet } from "solid-start";
-import { getMovie, getTrending, getTvShow } from "~/services/tmdbAPI";
+import { A, Outlet } from "solid-start";
 import GitHubIcon from "~icons/ant-design/github-filled";
-import EmailIcon from "~icons/ant-design/mail-filled";
-import LinkedInIcon from "~icons/ant-design/linkedin-filled";
-import TwitterIcon from "~icons/ant-design/twitter-outlined";
-import MagnifierIcon from "~icons/ant-design/search-outlined";
 import HomeIcon from "~icons/ant-design/home-outlined";
+import LinkedInIcon from "~icons/ant-design/linkedin-filled";
+import EmailIcon from "~icons/ant-design/mail-filled";
+import MagnifierIcon from "~icons/ant-design/search-outlined";
+import TwitterIcon from "~icons/ant-design/twitter-outlined";
 import MoviesIcon from "~icons/pepicons/clapperboard";
 import TVIcon from "~icons/pepicons/television";
 import * as styles from "./(app).module.scss";
@@ -103,9 +99,9 @@ export function TheNav() {
           </A>
         </li>
         <li>
-          <button class="search-toggle" type="button" aria-label="Search" aria-haspopup="true">
+          <A href="/search" aria-label="Search">
             <MagnifierIcon width={24} height={24} color="white" />
-          </button>
+          </A>
         </li>
       </ul>
     </nav>

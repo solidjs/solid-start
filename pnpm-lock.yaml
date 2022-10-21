@@ -131,6 +131,7 @@ importers:
       '@iconify/json': ^2.1.124
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
+      nprogress: ^0.2.0
       sass: ^1.55.0
       solid-heroicons: ^3.1.0
       solid-js: ^1.5.8
@@ -143,6 +144,7 @@ importers:
     dependencies:
       '@solidjs/meta': 0.28.0_solid-js@1.6.0
       '@solidjs/router': 0.5.0_solid-js@1.6.0
+      nprogress: 0.2.0
       solid-heroicons: 3.1.0_solid-js@1.6.0
       solid-js: 1.6.0
       solid-start: link:../../packages/start
@@ -5639,6 +5641,10 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       path-key: 4.0.0
+
+  /nprogress/0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
+    dev: false
 
   /npx-import/1.1.4:
     resolution: {integrity: sha512-3ShymTWOgqGyNlh5lMJAejLuIv3W1K3fbI5Ewc6YErZU3Sp0PqsNs8UIU1O8z5+KVl/Du5ag56Gza9vdorGEoA==}

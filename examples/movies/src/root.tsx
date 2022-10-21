@@ -1,4 +1,5 @@
 // @refresh reload
+import "nprogress/nprogress.css";
 import { Suspense } from "solid-js";
 import {
   Body,

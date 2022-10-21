@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 import { A, createRouteData, useParams, useRouteData } from "solid-start";
+import { Card } from "~/components/Card";
 import { getListItem, getMovies, getTrending } from "~/services/tmdbAPI";
-import { Card } from "../../../../components/Card";
 
 export function routeData({ params }) {
   return createRouteData(
