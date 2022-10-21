@@ -1,19 +1,23 @@
-import { For } from "solid-js";
+import { For, Show } from "solid-js";
 import { A } from "solid-start";
 import { Card } from "./Card";
 
 export function ListingCarousel(props) {
   return (
     <div class="listing listing--carousel">
-      <div v-if="title || viewAllUrl" class="listing__head">
-        <h2 v-if="title" class="listing__title">
-          {props.title}
-        </h2>
+      <Show when={props.title || props.viewAllUrl}>
+        <div class="listing__head">
+          <Show when={props.title}>
+            <h2 class="listing__title">{props.title}</h2>
+          </Show>
 
-        <A v-if="viewAllUrl" href={props.viewAllHref} class="listing__explore">
-          <strong>Explore All</strong>
-        </A>
-      </div>
+          <Show when={props.viewAllUrl}>
+            <A href={props.viewAllHref} class="listing__explore">
+              <strong>Explore All</strong>
+            </A>
+          </Show>
+        </div>
+      </Show>
 
       <div class="carousel">
         <button

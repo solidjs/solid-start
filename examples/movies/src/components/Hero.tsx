@@ -9,15 +9,16 @@ export function Hero(props) {
       <div class={styles.hero}>
         <div class={styles.backdrop}>
           <div>
-            <button
-              v-if="trailer"
-              class={styles.play}
-              type="button"
-              aria-label="Play Trailer"
-              onClick="openModal"
-            >
-              {/* <CirclePlayIcon /> */}
-            </button>
+            <Show when={props.trailer}>
+              <button
+                class={styles.play}
+                type="button"
+                aria-label="Play Trailer"
+                onClick="openModal"
+              >
+                {/* <CirclePlayIcon /> */}
+              </button>
+            </Show>
             <img
               src={"https://image.tmdb.org/t/p/original" + props.item.backdrop_path}
               alt=""
@@ -39,14 +40,14 @@ export function Hero(props) {
             <h1 class={styles.name}>
               {name()}
 
-              {/* <template v-else>
+              {/* <template >
           <A to="{ name: `${type}-id`, params: { id: item.id } }">
             { props.item.name }
           </A>
         </template> */}
             </h1>
             <div class={styles.meta}>
-              <div v-if="stars || item.vote_count" class={styles.rating}>
+              <div class={styles.rating}>
                 <Show when={stars()}>
                   <div class={styles.stars}>
                     <div style={{ width: `${stars()}%` }} />
@@ -62,9 +63,9 @@ export function Hero(props) {
                 <Show when={props.item.number_of_seasons}>
                   <span>Season {props.item.number_of_seasons}</span>
                 </Show>
-                {/* <span v-if="yearStart">{{ yearStart }}</span>
-        <span v-if="item.runtime">{{ item.runtime | runtime }}</span>
-        <span v-if="cert">Cert. {{ cert }}</span> */}
+                {/* <span >{{ yearStart }}</span>
+        <span >{{ item.runtime | runtime }}</span>
+        <span >Cert. {{ cert }}</span> */}
               </div>
             </div>
             <div class={styles.desc}>{props.item.overview}</div>
@@ -74,11 +75,11 @@ export function Hero(props) {
         name="hero">
         <div>
           <h1 class="$style.name">
-            <template v-if="isSingle">
+            <template>
               {{ name }}
             </template>
   
-            <template v-else>
+            <template >
               <nuxt-link :to="{ name: `${type}-id`, params: { id: item.id } }">
                 {{ name }}
               </nuxt-link>
@@ -87,24 +88,24 @@ export function Hero(props) {
   
           <div class="$style.meta">
             <div
-              v-if="stars || item.vote_count"
+              
               class="$style.rating">
               <div
-                v-if="stars"
+                
                 class="$style.stars">
                 <div :style="{ width: `${stars}%` }" />
               </div>
   
-              <div v-if="item.vote_count > 0">
+              <div>
                 {{ item.vote_count | numberWithCommas }} Reviews
               </div>
             </div>
   
             <div class="$style.info">
-              <span v-if="item.number_of_seasons">Season {{ item.number_of_seasons }}</span>
-              <span v-if="yearStart">{{ yearStart }}</span>
-              <span v-if="item.runtime">{{ item.runtime | runtime }}</span>
-              <span v-if="cert">Cert. {{ cert }}</span>
+              <span >Season {{ item.number_of_seasons }}</span>
+              <span>{{ yearStart }}</span>
+              <span >{{ item.runtime | runtime }}</span>
+              <span>Cert. {{ cert }}</span>
             </div>
           </div>
   
@@ -113,7 +114,6 @@ export function Hero(props) {
           </div>
   
           <button
-            v-if="trailer"
             class="button button--icon"
             class="$style.trailer"
             type="button"
