@@ -3,7 +3,6 @@ import { createRouteData, useRouteData } from "solid-start";
 import Hero from "~/components/Hero";
 import { ListingCarousel } from "~/components/ListingCarousel";
 import { getListItem, getMovie, getTrending, getTvShow } from "~/services/tmdbAPI";
-// import { Hero } from "../../components/Hero";
 
 export function routeData() {
   return createRouteData(async () => {

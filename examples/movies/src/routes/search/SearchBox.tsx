@@ -6,9 +6,7 @@ export default function Input(props) {
   const navigate = useNavigate();
   const location = useLocation();
   createEffect(() => {
-    console.log("value", value());
     if (value().length) {
-      console.log(document.activeElement);
       navigate(`${location.pathname}?q=${value()}`);
     }
   });

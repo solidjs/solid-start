@@ -1,8 +1,8 @@
 import { Show } from "solid-js";
 import { createRouteData, useRouteData } from "solid-start";
+import { Hero } from "~/components/Hero";
 import { ListingCarousel } from "~/components/ListingCarousel";
 import { getListItem, getTvShow, getTvShows } from "~/services/tmdbAPI";
-import { Hero } from "../../../components/Hero";
 
 export function routeData() {
   return createRouteData(async () => {
