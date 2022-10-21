@@ -13,6 +13,8 @@ export {
   type RouteDataFunc,
   type RouteDataFuncArgs as RouteDataArgs
 } from "@solidjs/router";
+export { clientOnly as unstable_clientOnly, island as unstable_island } from "./islands";
+
 export type { APIEvent as APIEvent } from "./api";
 export {
   createRouteAction,
@@ -24,7 +26,6 @@ export {
 } from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
-export { clientOnly as unstable_clientOnly, island as unstable_island } from "./islands";
 export { Body, FileRoutes, Head, Html, Scripts } from "./root";
 export * from "./router";
 export * from "./server/responses";

@@ -149,28 +149,45 @@ export default function mountRouter() {
       const content = body.substring(splitIndex + 1);
 
       if (meta) {
-        assets[0].forEach(([assetType, href]) => {
-          if (!document.querySelector(`link[href="${href}"]`)) {
-            let link = document.createElement("link");
-            link.rel = assetType === "style" ? "stylesheet" : "modulepreload";
-            link.href = href;
-            document.head.appendChild(link);
-          }
-        });
+        if (assets.length) {
+          assets[0].forEach(([assetType, href]) => {
+            if (!document.querySelector(`link[href="${href}"]`)) {
+              let link = document.createElement("link");
+              link.rel = assetType === "style" ? "stylesheet" : "modulepreload";
+              link.href = href;
+              document.head.appendChild(link);
+            }
+          });
 
-        assets[1].forEach(([assetType, href]) => {
-          let el = document.querySelector(`link[href="${href}"]`);
-          if (el) {
-            document.head.removeChild(el);
-          }
-        });
+          assets[1].forEach(([assetType, href]) => {
+            let el = document.querySelector(`link[href="${href}"]`);
+            if (el) {
+              document.head.removeChild(el);
+            }
+          });
+        }
 
         const [prev, next] = meta.split(":");
         const outletEl = document.getElementById(prev);
         if (outletEl) {
-          outletEl.innerHTML = content;
-          outletEl.id = next;
-          window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
+          let old = outletEl.firstChild;
+          let doc = document.implementation.createHTMLDocument();
+          doc.write(content);
+
+          console.log(document.activeElement);
+          // outletEl.innerHTML = content;
+          // outletEl.id = next;
+          // window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
+          window._$HY &&
+            window._$HY.replaceIslands &&
+            window._$HY.replaceIslands({
+              outlet: outletEl,
+              old,
+              new: doc,
+              content,
+              next
+            });
+
           window.ROUTER.dispatchEvent(new CustomEvent("navigation-end", { detail: to }));
           return true;
         } else {

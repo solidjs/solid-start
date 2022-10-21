@@ -62,7 +62,8 @@ export function matchPath(path: string, location: string, partial?: boolean): Pa
   const [pattern, splat] = path.split("/*", 2);
   const segments = pattern.split("/").filter(Boolean);
   const len = segments.length;
-  const locSegments = location.split("/").filter(Boolean);
+  const { pathname } = new URL(location, "http://localhost");
+  const locSegments = pathname.split("/").filter(Boolean);
   const lenDiff = locSegments.length - len;
   if (lenDiff < 0 || (lenDiff > 0 && splat === undefined && !partial)) {
     return null;
@@ -210,6 +211,7 @@ export function Router(props: RouterProps) {
   }
 
   const nextRoutes = next.routes;
+  console.log(nextRoutes);
 
   const prev = props.prevLocation ? getMatchedBranch(props.routes, props.prevLocation) : null;
   if (prev) {
