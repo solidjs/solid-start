@@ -22,6 +22,8 @@ export class Router {
   cwd;
   watcher;
   ignore;
+  pageRegex;
+  pageDataRegex;
   constructor({
     baseDir = "src/routes",
     pageExtensions = ["jsx", "tsx", "js", "ts"],
@@ -33,6 +35,8 @@ export class Router {
     this.cwd = cwd;
     this.routes = {};
     this.ignore = ignore;
+    this.pageRegex = new RegExp(`\\.(${this.pageExtensions.join("|")})$`);
+    this.pageDataRegex = new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`);
   }
 
   async init() {
@@ -107,18 +111,17 @@ export class Router {
 
   processFile(path) {
     // if its a route data function
-    const pageDataRegex = new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`);
-    if (path.match(pageDataRegex)) {
-      let id = path.slice(this.baseDir.length).replace(pageDataRegex, "");
+
+    if (path.match(this.pageDataRegex)) {
+      let id = this.getRouteId(path.replace(this.pageDataRegex, ""));
       this.setRouteData(id, path);
       return;
     }
 
     // if its a possible page due to its extension
-    const pageRegex = new RegExp(`\\.(${this.pageExtensions.join("|")})$`);
-    if (path.match(pageRegex)) {
+    if (path.match(this.pageRegex)) {
       log("processing", path);
-      let id = path.slice(this.baseDir.length).replace(pageRegex, "");
+      let id = this.getRouteId(path.replace(this.pageRegex, ""));
 
       let routeConfig = {};
 
@@ -183,6 +186,14 @@ export class Router {
     }
   }
 
+  getRouteId(path) {
+    let id = path.slice(this.baseDir.length);
+    if (id.endsWith("/layout")) {
+      id = id.slice(0, -"/layout".length);
+    }
+    return id;
+  }
+
   getNestedPageRoutes() {
     function processRoute(routes, route, id, full) {
       const parentRoute = Object.values(routes).find(o => {
@@ -204,12 +215,14 @@ export class Router {
       );
     }
 
-    const routes = Object.values(this.routes).reduce((r, route) => {
-      if (route.componentPath) {
-        processRoute(r, route, route.id, route.id);
-      }
-      return r;
-    }, []);
+    const routes = Object.values(this.routes)
+      .sort((a, b) => a.id.localeCompare(b.id))
+      .reduce((r, route) => {
+        if (route.componentPath) {
+          processRoute(r, route, route.id, route.id);
+        }
+        return r;
+      }, []);
 
     const routeLayouts = routes.reduce((routeMap, route) => {
       function buildRouteLayoutsMap(route, path, layouts) {

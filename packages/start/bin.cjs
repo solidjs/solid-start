@@ -228,7 +228,7 @@ prog
         let newManifest = {
           ...Object.fromEntries(
             Object.entries(routeManifest)
-              .filter(([k]) => k.startsWith("/"))
+              .filter(([k]) => k.startsWith("/") || k === "")
               .map(([k, v]) => [k, v.filter(a => a.type !== "script")])
           ),
           ...Object.fromEntries(

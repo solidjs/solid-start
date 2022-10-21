@@ -1,5 +1,4 @@
 // make asset lookup
-import { posix } from "path";
 import { toPath } from "./path-utils.js";
 
 /**
@@ -24,13 +23,12 @@ import { toPath } from "./path-utils.js";
  * @returns
  */
 export default function prepareManifest(ssrManifest, assetManifest, config, islands = []) {
-  const pageRegex = new RegExp(`\\.(${config.solidOptions.pageExtensions.join("|")})$`);
-  const baseRoutes = posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir);
-  const basePath = typeof config.base === "string"
-    ? (config.base || "./").endsWith("/")
-      ? config.base
-      : config.base + "/"
-    : "/";
+  const basePath =
+    typeof config.base === "string"
+      ? (config.base || "./").endsWith("/")
+        ? config.base
+        : config.base + "/"
+      : "/";
 
   let manifest = {};
 
@@ -115,7 +113,11 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
   }
 
   let routes = Object.keys(ssrManifest)
-    .filter(key => key.startsWith(baseRoutes) && key.match(pageRegex))
+    .filter(
+      key =>
+        key.startsWith(config.solidOptions.router.baseDir) &&
+        key.match(config.solidOptions.router.pageRegex)
+    )
     .map(key => [key, ssrManifest[key]])
     .map(([key, value]) => {
       const assets = collectAssets();
@@ -132,7 +134,12 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       }
 
       return [
-        toPath(key.slice(baseRoutes.length).replace(pageRegex, ""), false),
+        toPath(
+          config.solidOptions.router.getRouteId(
+            key.replace(config.solidOptions.router.pageRegex, "")
+          ),
+          false
+        ),
         assets.getFiles()
       ];
     })
