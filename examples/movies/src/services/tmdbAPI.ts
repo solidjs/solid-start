@@ -3,7 +3,6 @@
  */
 const TMDB_API_URL = "https://api.themoviedb.org/3";
 
-console.log(import.meta.env.VITE_API_KEY);
 const TMDB_API_PARAMS = {
   api_key: import.meta.env.VITE_API_KEY
   // language: process.env.API_LANG
@@ -32,7 +31,6 @@ const LISTS = {
 async function fetchTMD(url, params = {}) {
   let u = new URL(TMDB_API_URL + "/" + url);
   u.searchParams.set("api_key", TMDB_API_PARAMS.api_key);
-  console.log(u.href);
   return await (await fetch(u)).json();
 }
 
