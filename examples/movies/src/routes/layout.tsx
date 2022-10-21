@@ -52,7 +52,7 @@ function TheFooter() {
         </li>
         <li>
           <a
-            href="https://github.com/addyosmani/nuxt-movies"
+            href="https://github.com/solidjs/solid-start/tree/movies/examples/movies"
             target="_blank"
             aria-label="Link to GitHub account"
             rel="noopener"
