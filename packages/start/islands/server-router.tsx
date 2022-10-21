@@ -209,6 +209,7 @@ export function Router(props: RouterProps) {
   const nextRoutes = next.routes;
 
   const prev = props.prevLocation ? getMatchedBranch(props.routes, props.prevLocation) : null;
+  console.log(prev, nextRoutes);
   if (prev) {
     const prevRoutes = prev.routes;
 
@@ -236,7 +237,7 @@ export function Router(props: RouterProps) {
           // return diffedRender;
         }
         // Routes are shared
-      } else {
+      } else if (prevRoute && nextRoute) {
         // console.log("diff rendered");
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
