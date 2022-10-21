@@ -174,7 +174,6 @@ export default function mountRouter() {
           let doc = document.implementation.createHTMLDocument();
           doc.write(content);
 
-          console.log(document.activeElement);
           // outletEl.innerHTML = content;
           // outletEl.id = next;
           // window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();

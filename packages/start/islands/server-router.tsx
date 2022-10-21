@@ -211,7 +211,6 @@ export function Router(props: RouterProps) {
   }
 
   const nextRoutes = next.routes;
-  console.log(nextRoutes);
 
   const prev = props.prevLocation ? getMatchedBranch(props.routes, props.prevLocation) : null;
   if (prev) {
