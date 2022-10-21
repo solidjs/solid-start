@@ -14,8 +14,6 @@ type Props = {
 export function ExternalLinks(props: Props) {
   const { links } = props;
 
-  console.log(links);
-
   return (
     <ul class="nolist">
       <Show when={links.twitter_id}>
