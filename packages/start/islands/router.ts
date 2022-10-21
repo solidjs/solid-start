@@ -28,6 +28,7 @@ export default function mountRouter() {
     const basePath = "/";
     let [currentLocation, setCurrentLocation] = createSignal<Location>(getLocation());
     window.LOCATION = currentLocation;
+    window.ROUTER = new EventTarget();
 
     function getLocation(): Location & LocationEntry {
       const { pathname, search, hash } = window.location;
@@ -123,6 +124,7 @@ export default function mountRouter() {
     }
 
     async function navigate(to: string, options: NavigateOptions = {}) {
+      window.ROUTER.dispatchEvent(new CustomEvent("navigation-start", { detail: to }));
       const response = await fetch(to, {
         headers: {
           "x-solid-referrer": currentLocation().pathname
@@ -131,21 +133,45 @@ export default function mountRouter() {
 
       if (!response.ok) {
         console.error(`Navigation failed: ${response.status} ${response.statusText}`);
+        window.ROUTER.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
         return false;
       }
 
-      const body = await response.text();
+      let body = await response.text();
+      let assets = [];
+      if (body.charAt(0) === "a") {
+        const assetsIndex = body.indexOf(";");
+        assets = JSON.parse(body.substring("assets=".length, assetsIndex));
+        body = body.substring(assetsIndex + 1);
+      }
       const splitIndex = body.indexOf("=");
       const meta = body.substring(0, splitIndex);
       const content = body.substring(splitIndex + 1);
 
       if (meta) {
+        assets[0].forEach(([assetType, href]) => {
+          if (!document.querySelector(`link[href="${href}"]`)) {
+            let link = document.createElement("link");
+            link.rel = assetType === "style" ? "stylesheet" : "modulepreload";
+            link.href = href;
+            document.head.appendChild(link);
+          }
+        });
+
+        assets[1].forEach(([assetType, href]) => {
+          let el = document.querySelector(`link[href="${href}"]`);
+          if (el) {
+            document.head.removeChild(el);
+          }
+        });
+
         const [prev, next] = meta.split(":");
         const outletEl = document.getElementById(prev);
         if (outletEl) {
           outletEl.innerHTML = content;
           outletEl.id = next;
           window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
+          window.ROUTER.dispatchEvent(new CustomEvent("navigation-end", { detail: to }));
           return true;
         } else {
           console.warn(`No outlet element with id ${prev}`);
@@ -154,6 +180,7 @@ export default function mountRouter() {
         console.warn(`No meta data in response`);
       }
 
+      window.ROUTER.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
       return false;
     }
 

@@ -174,7 +174,11 @@ function createPageEvent(event: FetchEvent) {
 
 function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
   if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
-    markup = `${pageEvent.routerContext.replaceOutletId}:${
+    markup = `${
+      pageEvent.routerContext.assets
+        ? `assets=${JSON.stringify(pageEvent.routerContext.assets)};`
+        : ``
+    }${pageEvent.routerContext.replaceOutletId}:${
       pageEvent.routerContext.newOutletId
     }=${markup.slice(
       markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) +

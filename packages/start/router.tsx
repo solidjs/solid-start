@@ -51,6 +51,7 @@ declare global {
   interface Window {
     LOCATION: Accessor<Location>;
     NAVIGATE: Navigator;
+    ROUTER: EventTarget;
   }
 }
 
