@@ -7,13 +7,13 @@ active: true
 
 # Data loading
 
-What's a modern app without some data to power it. SolidStart aims to make it easy to load data from you data sources. It will help you keep your UI updated with your data.
+What's a modern app without some data to power it. SolidStart aims to make it easy to load data from your data sources. It will help you keep your UI updated with your data.
 
 For most your data requirements, you will likely be using the route to decide what data to load. The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts.
 
 This nested routing comes with other advantages too. It allows you to declare what data you need for each part of the route. This is done by exporting `routeData` functions from the nested routes.
 
-Each route, leaf or layout, comes with the ability to export its own `routeData` function that will be managed my the router. Yeah, the router is also the data manager.
+Each route, leaf or layout, comes with the ability to export its own `routeData` function that will be managed by the router. Yeah, the router is also the data manager.
 
 Solid has a [`createResource`][createResource] primitive that takes an async function and returns a [signal][signal] from it. It's a great starting place for your data needs. It integrates with [`Suspense`][Suspense] and [`ErrorBoundary`][ErrorBoundary] to help you manage your lifecycle.
 
