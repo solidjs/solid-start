@@ -4,14 +4,26 @@ import * as styles from "./Hero.module.scss";
 export function Hero(props) {
   const stars = () => (props.item.vote_average ? props.item.vote_average * 10 : 0);
   const name = () => (props.item.title ? props.item.title : props.item.name);
+
+  const openTrailer = () => {
+    // !TODO
+  };
+
   return (
     <div>
       <div class={styles.hero}>
         <div class={styles.backdrop}>
           <div>
-            <button class={styles.play} type="button" aria-label="Play Trailer" onClick="openModal">
-              {/* <CirclePlayIcon /> */}
-            </button>
+            <Show when={props.trailer}>
+              <button
+                class={styles.play}
+                type="button"
+                aria-label="Play Trailer"
+                onClick={openTrailer}
+              >
+                {/* <CirclePlayIcon /> */}
+              </button>
+            </Show>
             <img
               src={"https://image.tmdb.org/t/p/original" + props.item.backdrop_path}
               alt=""

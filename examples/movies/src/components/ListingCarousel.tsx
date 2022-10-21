@@ -1,17 +1,21 @@
-import { For } from "solid-js";
+import { For, Show } from "solid-js";
 import { A } from "solid-start";
 import { Card } from "./Card";
 
 export function ListingCarousel(props) {
   return (
     <div class="listing listing--carousel">
-      <div class="listing__head">
-        <h2 class="listing__title">{props.title}</h2>
+      <Show when={props.title || props.viewAllHref}>
+        <div class="listing__head">
+          <Show when={props.title}>
+            <h2 class="listing__title">{props.title}</h2>
+          </Show>
 
-        <A href={props.viewAllHref} class="listing__explore">
-          <strong>Explore All</strong>
-        </A>
-      </div>
+          <A href={props.viewAllHref} class="listing__explore">
+            <strong>Explore All</strong>
+          </A>
+        </div>
+      </Show>
 
       <div class="carousel">
         <button
