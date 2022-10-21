@@ -1,4 +1,5 @@
 import { Show } from "solid-js";
+import { formatDate } from "~/utils/format";
 import { ExternalLinks } from "../ExternalLinks";
 import * as styles from "./PersonInfo.module.scss";
 
@@ -10,14 +11,6 @@ function formatContent(content: string) {
     .join("");
 }
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-us", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  });
-}
-
 function calculateAge(birthday: string, deathday?: string) {
   const cutoffDate = deathday ? Number(new Date(deathday)) : Date.now();
   const ageDifMs = cutoffDate - Number(new Date(birthday));
@@ -27,6 +20,17 @@ function calculateAge(birthday: string, deathday?: string) {
 
 export function PersonInfo(props) {
   const profilePath = props.person.profile_path;
+
+  const links = () => {
+    const externalIds = props.person.external_ids;
+    const homepage = props.person.homepage;
+    return homepage
+      ? {
+          ...externalIds,
+          homepage
+        }
+      : externalIds;
+  };
 
   return (
     <div class={`spacing ${styles.info}`}>
@@ -99,7 +103,7 @@ export function PersonInfo(props) {
         </div>
 
         <div class={styles.external}>
-          <ExternalLinks media="person" links={props.person.external_ids} />
+          <ExternalLinks media="person" links={links()} />
         </div>
       </div>
     </div>

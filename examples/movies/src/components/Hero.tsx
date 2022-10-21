@@ -1,9 +1,17 @@
 import { Show } from "solid-js";
+import { formatRuntime } from "~/utils/format";
 import * as styles from "./Hero.module.scss";
 
 export function Hero(props) {
   const stars = () => (props.item.vote_average ? props.item.vote_average * 10 : 0);
   const name = () => (props.item.title ? props.item.title : props.item.name);
+  const yearStart = () => {
+    const date = props.item.release_date || props.item.first_air_date;
+    if (date) {
+      return date.split("-")[0];
+    }
+  };
+
   return (
     <div>
       <div class={styles.hero}>
@@ -63,9 +71,13 @@ export function Hero(props) {
                 <Show when={props.item.number_of_seasons}>
                   <span>Season {props.item.number_of_seasons}</span>
                 </Show>
-                {/* <span >{{ yearStart }}</span>
-        <span >{{ item.runtime | runtime }}</span>
-        <span >Cert. {{ cert }}</span> */}
+                <Show when={yearStart()}>
+                  <span>{yearStart()}</span>
+                </Show>
+                <Show when={props.item.runtime}>
+                  <span>{formatRuntime(props.item.runtime)}</span>
+                </Show>
+                {/* <span>Cert. {{ cert }}</span> */}
               </div>
             </div>
             <div class={styles.desc}>{props.item.overview}</div>
@@ -78,29 +90,29 @@ export function Hero(props) {
             <template>
               {{ name }}
             </template>
-  
+
             <template >
               <nuxt-link :to="{ name: `${type}-id`, params: { id: item.id } }">
                 {{ name }}
               </nuxt-link>
             </template>
           </h1>
-  
+
           <div class="$style.meta">
             <div
-              
+
               class="$style.rating">
               <div
-                
+
                 class="$style.stars">
                 <div :style="{ width: `${stars}%` }" />
               </div>
-  
+
               <div>
                 {{ item.vote_count | numberWithCommas }} Reviews
               </div>
             </div>
-  
+
             <div class="$style.info">
               <span >Season {{ item.number_of_seasons }}</span>
               <span>{{ yearStart }}</span>
@@ -108,11 +120,11 @@ export function Hero(props) {
               <span>Cert. {{ cert }}</span>
             </div>
           </div>
-  
+
           <div class="$style.desc">
             {{ item.overview | truncate(200) }}
           </div>
-  
+
           <button
             class="button button--icon"
             class="$style.trailer"
