@@ -1,6 +1,7 @@
 import { Show } from "solid-js";
 import { ExternalLinks } from "./ExternalLinks";
 import styles from "./PersonInfo.module.scss";
+import { formatDate } from "~/utils/format";
 
 function formatContent(content: string) {
   return content
@@ -8,14 +9,6 @@ function formatContent(content: string) {
     .filter(section => section !== "")
     .map(section => `<p>${section}</p>`)
     .join("");
-}
-
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-us", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  });
 }
 
 function calculateAge(birthday: string, deathday?: string) {
@@ -26,13 +19,26 @@ function calculateAge(birthday: string, deathday?: string) {
 }
 
 export function PersonInfo(props) {
+  const profilePath = () => props.person.profile_path;
+
+  const links = () => {
+    const externalIds = props.person.external_ids;
+    const homepage = props.person.homepage;
+    return homepage
+      ? {
+          ...externalIds,
+          homepage
+        }
+      : externalIds;
+  };
+
   return (
     <div class={`spacing ${styles.info}`}>
       <div class={styles.left}>
         <div class={styles.poster}>
-          <Show when={props.person.profile_path}>
+          <Show when={profilePath()}>
             <img
-              src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + props.person.profile_path}
+              src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + profilePath()}
               alt={props.person.name}
             />
           </Show>
@@ -44,9 +50,9 @@ export function PersonInfo(props) {
           <h2 class={styles.title}>{props.person.name}</h2>
 
           <Show when={props.person.biography}>
-            <Show when={props.person.profile_path}>
+            <Show when={profilePath()}>
               <img
-                src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + props.person.profile_path}
+                src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + profilePath()}
                 alt={props.person.name}
               />
             </Show>
@@ -97,7 +103,7 @@ export function PersonInfo(props) {
         </div>
 
         <div class={styles.external}>
-          <ExternalLinks media="person" links={props.person.external_ids} />
+          <ExternalLinks media="person" links={links()} />
         </div>
       </div>
     </div>
