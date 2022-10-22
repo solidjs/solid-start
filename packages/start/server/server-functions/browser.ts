@@ -26,7 +26,7 @@ export async function parseResponse(request: Request, response: Response) {
     const data = await response.json();
     return new ServerError(data.error.message, {
       stack: data.error.stack,
-      status: response.status,
+      status: response.status
     });
   } else if (contentType.includes("form-error")) {
     const data = await response.json();
@@ -92,7 +92,7 @@ function createRequestInit(...args) {
       }
     }
     body = JSON.stringify(args, (key, value) => {
-      if (typeof value === "object" && value.$type === FETCH_EVENT) {
+      if (value && typeof value === "object" && value.$type === FETCH_EVENT) {
         return {
           $type: "fetch_event"
         };
