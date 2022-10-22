@@ -184,6 +184,10 @@ export class Router {
   }
 
   getNestedPageRoutes() {
+    if (this._nestedPageRoutes) {
+      return this._nestedPageRoutes;
+    }
+
     function processRoute(routes, route, id, full) {
       const parentRoute = Object.values(routes).find(o => {
         if (o.id.endsWith("/index")) {
@@ -211,7 +215,23 @@ export class Router {
       return r;
     }, []);
 
-    const routeLayouts = routes.reduce((routeMap, route) => {
+    this._nestedPageRoutes = routes;
+
+    return routes;
+  }
+
+  isLayoutRoute(route) {
+    if (route.id.endsWith("/index")) {
+      return false;
+    }
+    return Object.values(this.routes).some(r => {
+      return r.id.startsWith(route.id + "/") && r.componentPath;
+    });
+  }
+
+  getRouteLayouts() {
+    const routes = this.getNestedPageRoutes();
+    return routes.reduce((routeMap, route) => {
       function buildRouteLayoutsMap(route, path, layouts) {
         const fullPath = path + route.path;
         const fullId = toPath(
@@ -233,17 +253,6 @@ export class Router {
 
       return routeMap;
     }, {});
-
-    return { routes, routeLayouts };
-  }
-
-  isLayoutRoute(route) {
-    if (route.id.endsWith("/index")) {
-      return false;
-    }
-    return Object.values(this.routes).some(r => {
-      return r.id.startsWith(route.id + "/") && r.componentPath;
-    });
   }
 
   getFlattenedApiRoutes(includePageRoutes = false) {
@@ -274,7 +283,7 @@ export class Router {
   }
 }
 
-export function stringifyPageRoutes(routesConfig, options = {}) {
+export function stringifyPageRoutes(routes, options = {}) {
   const jsFile = jsCode();
 
   function _stringifyRoutes(r) {
@@ -309,14 +318,12 @@ export function stringifyPageRoutes(routesConfig, options = {}) {
     );
   }
 
-  const stringifiedRoutes = _stringifyRoutes(routesConfig.routes);
+  const stringifiedRoutes = _stringifyRoutes(routes);
 
   const text = `
   ${options.lazy ? `import { lazy } from 'solid-js';` : ""}
   ${jsFile.getImportStatements()}
-  const routesConfig = /*#__PURE__*/ { routes: ${stringifiedRoutes}, routeLayouts: ${JSON.stringify(
-    routesConfig.routeLayouts
-  )} };`;
+  const fileRoutes = /*#__PURE__*/ ${stringifiedRoutes};`;
 
   return text;
 }

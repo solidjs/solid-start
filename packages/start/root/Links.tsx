@@ -2,7 +2,7 @@ import { JSXElement, useContext } from "solid-js";
 import { useAssets } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 import { ManifestEntry, PageEvent } from "../server/types";
-import { routesConfig } from "./FileRoutes";
+import { routeLayouts } from "./InlineStyles";
 
 function flattenIslands(match, manifest) {
   let result = [...match];
@@ -24,7 +24,7 @@ function getAssetsFromManifest(
   let match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      const route = routesConfig.routeLayouts[fullPath];
+      const route = routeLayouts[fullPath];
       if (route) {
         memo.push(...((manifest[route.id] || []) as ManifestEntry[]));
         const layoutsManifestEntries = route.layouts.flatMap(

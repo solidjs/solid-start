@@ -8,6 +8,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { loadEnv, normalizePath } from "vite";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
+import fileRoutesImport from "../fs-router/fileRoutesImport.js";
 import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
 import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
@@ -156,7 +157,7 @@ function solidStartFileSystemRouter(options) {
       });
     },
 
-    async transform(code, id, transformOptions) {
+    transform(code, id, transformOptions) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
 
@@ -325,10 +326,10 @@ function solidStartFileSystemRouter(options) {
             ].filter(Boolean)
           })
         );
-      } else if (code.includes("var routesConfig = $ROUTES_CONFIG;")) {
+      } else if (code.includes("var fileRoutes = $FILE_ROUTES;")) {
         return {
           code: code.replace(
-            "var routesConfig = $ROUTES_CONFIG;",
+            "var fileRoutes = $FILE_ROUTES;",
             stringifyPageRoutes(router.getNestedPageRoutes(), {
               // if we are in SPA mode, and building the server bundle, we import
               // the routes eagerly so that they can dead-code eliminate properly,
@@ -336,6 +337,13 @@ function solidStartFileSystemRouter(options) {
               // loaded lazily.
               lazy: ssr ? false : true
             })
+          )
+        };
+      } else if (code.includes("var routeLayouts = $ROUTE_LAYOUTS;")) {
+        return {
+          code: code.replace(
+            "var routeLayouts = $ROUTE_LAYOUTS;",
+            `const routeLayouts = ${JSON.stringify(router.getRouteLayouts())};`
           )
         };
       } else if (code.includes("var api = $API_ROUTES;")) {
@@ -615,6 +623,7 @@ export default function solidStart(options) {
       babel: babelOptions(
         (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
           plugins: [
+            [fileRoutesImport],
             [
               routeResource,
               {
@@ -666,7 +675,7 @@ function islands() {
           /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
           (a, b, c) =>
             ssr
-              ? `import ${b}_island from "${c}"; 
+              ? `import ${b}_island from "${c}";
                   const ${b} = unstable_island(${b}_island, "${
                   join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
                 }");`
