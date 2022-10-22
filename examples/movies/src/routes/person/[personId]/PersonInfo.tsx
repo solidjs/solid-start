@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
-import { ExternalLinks } from "../ExternalLinks";
-import * as styles from "./PersonInfo.module.scss";
+import { ExternalLinks } from "./ExternalLinks";
+import styles from "./PersonInfo.module.scss";
 
 function formatContent(content: string) {
   return content
@@ -26,15 +26,13 @@ function calculateAge(birthday: string, deathday?: string) {
 }
 
 export function PersonInfo(props) {
-  const profilePath = props.person.profile_path;
-
   return (
     <div class={`spacing ${styles.info}`}>
       <div class={styles.left}>
         <div class={styles.poster}>
-          <Show when={profilePath}>
+          <Show when={props.person.profile_path}>
             <img
-              src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + profilePath}
+              src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + props.person.profile_path}
               alt={props.person.name}
             />
           </Show>
@@ -46,9 +44,9 @@ export function PersonInfo(props) {
           <h2 class={styles.title}>{props.person.name}</h2>
 
           <Show when={props.person.biography}>
-            <Show when={profilePath}>
+            <Show when={props.person.profile_path}>
               <img
-                src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + profilePath}
+                src={"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + props.person.profile_path}
                 alt={props.person.name}
               />
             </Show>

@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { createRouteData, useRouteData } from "solid-start";
-import { PersonInfo } from "~/components/person/PersonInfo";
 import { getPerson } from "~/services/tmdbAPI";
+import { PersonInfo } from "./PersonInfo";
 
 export function routeData({ params }) {
   return createRouteData(
