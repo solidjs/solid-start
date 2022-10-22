@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 import { formatRuntime } from "~/utils/format";
-import * as styles from "./Hero.module.scss";
+import styles from "./Hero.module.scss";
 
 export function Hero(props) {
   const stars = () => (props.item.vote_average ? props.item.vote_average * 10 : 0);
