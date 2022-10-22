@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
-import { ExternalLinks } from "./ExternalLinks";
-import styles from "./PersonInfo.module.scss";
 import { formatDate } from "~/utils/format";
+import { ExternalLinks } from "../../../components/ExternalLinks";
+import styles from "./PersonInfo.module.scss";
 
 function formatContent(content: string) {
   return content

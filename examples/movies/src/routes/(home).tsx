@@ -45,7 +45,7 @@ export default function Page() {
           title={getListItem("movie", "trending").TITLE}
         />
         <ListingCarousel
-          items={data()?.trendingMovies.results}
+          items={data()?.trendingTv.results}
           viewAllHref={`/tv/categories/trending`}
           title={getListItem("tv", "trending").TITLE}
         />

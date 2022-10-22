@@ -8,7 +8,8 @@ export function Card(props) {
       <A class="card__link" href={`/${media()}/${props.item.id}`}>
         <div class="card__img">
           <img
-            src={"https://image.tmdb.org/t/p/original" + props.item.poster_path}
+            // src={"https://image.tmdb.org/t/p/" + props.item.poster_path}
+            src={`https://image.tmdb.org/t/p/w370_and_h556_bestv2${props.item.poster_path}`}
             width={370}
             height={556}
           />

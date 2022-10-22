@@ -28,7 +28,8 @@ export function Hero(props) {
               </button>
             </Show>
             <img
-              src={"https://image.tmdb.org/t/p/original" + props.item.backdrop_path}
+              // src={"https://image.tmdb.org/t/p/original" + props.item.backdrop_path}
+              src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${props.item.backdrop_path}`}
               alt=""
               class={styles.image}
               style={{
