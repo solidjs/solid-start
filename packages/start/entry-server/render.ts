@@ -105,8 +105,6 @@ export function renderStream(
       });
     }
 
-    handleStreamingIslandsRouting(pageEvent, writable);
-
     stream.pipeTo(writable);
 
     return new Response(readable, {

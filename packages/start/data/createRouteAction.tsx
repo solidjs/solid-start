@@ -1,5 +1,5 @@
-import { useNavigate, useSearchParams } from "@solidjs/router";
 import { $TRACK, batch, createSignal, useContext } from "solid-js";
+import { useNavigate, useSearchParams } from "../router";
 import { FormError, FormImpl, FormProps } from "./Form";
 
 import type { ParentComponent } from "solid-js";

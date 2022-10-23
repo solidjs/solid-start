@@ -5,11 +5,15 @@ import {
   Outlet as BaseOutlet,
   Routes as BaseRoutes,
   useLocation as useBaseLocation,
-  useNavigate as useBaseNavigate
+  useNavigate as useBaseNavigate,
+  useSearchParams as useBaseSearchParams
 } from "@solidjs/router";
 import { Accessor } from "solid-js";
 import { island as unstable_island } from "./islands";
-import { useLocation as useIslandsLocation } from "./islands/router";
+import {
+  useLocation as useIslandsLocation,
+  useSearchParams as useIslandsSearchParams
+} from "./islands/router";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 const IslandsA = unstable_island(() => import("./islands/A"));
@@ -47,6 +51,11 @@ const useNavigate =
       }
     : useBaseNavigate;
 
+const useSearchParams =
+  import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
+    ? useIslandsSearchParams
+    : useBaseSearchParams;
+
 declare global {
   interface Window {
     LOCATION: Accessor<Location>;
@@ -55,4 +64,4 @@ declare global {
   }
 }
 
-export { A, Outlet, Routes, useLocation, useNavigate };
+export { A, Outlet, Routes, useLocation, useNavigate, useSearchParams };

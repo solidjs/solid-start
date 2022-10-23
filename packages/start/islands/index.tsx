@@ -61,14 +61,30 @@ export function island<T extends Component<any>>(
         fpath = `/` + path;
       }
 
+      const serialize = props => {
+        let offset = 0;
+        let el = JSON.stringify(props, (key, value) => {
+          if (value && value.t) {
+            offset++;
+            return undefined;
+          }
+          return value;
+        });
+
+        return {
+          "data-props": el,
+          "data-offset": offset
+        };
+      };
+
       return (
         <Hydration>
           <solid-island
-            data-props={JSON.stringify(props)}
             data-component={fpath}
             data-island={`/` + path}
             data-when={props["client:idle"] ? "idle" : "load"}
             data-css={JSON.stringify(styles)}
+            {...serialize(props)}
           >
             <IslandComponent {...compProps} />
           </solid-island>

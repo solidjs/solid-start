@@ -1,5 +1,5 @@
 import type { Location, Navigator } from "@solidjs/router";
-import { createSignal } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 interface LocationEntry {
   path: string;
   state: any;
@@ -17,8 +17,23 @@ export function useLocation() {
     get hash() {
       let location = window.LOCATION();
       return location.hash;
+    },
+    get search() {
+      let location = window.LOCATION();
+      return location.search;
     }
   } as Location;
+}
+
+export function useSearchParams() {
+  const params = () => window.LOCATION().search;
+  const [searchParams, setSearchParams] = createSignal(new URLSearchParams(params()));
+
+  createEffect(() => {
+    setSearchParams(new URLSearchParams(params()));
+  });
+
+  return [searchParams, setSearchParams] as const;
 }
 
 export default function mountRouter() {
@@ -115,11 +130,10 @@ export default function mountRouter() {
     }
 
     async function handlePopState(evt: PopStateEvent) {
-      const { pathname, state } = getLocation();
-      if (currentLocation().pathname !== pathname) {
-        if (await navigate(pathname)) {
-          setCurrentLocation(getLocation());
-        }
+      const { pathname, search, hash, state } = getLocation();
+      const to = pathname + search + hash;
+      if (await navigate(to)) {
+        setCurrentLocation(getLocation());
       }
     }
 
@@ -172,7 +186,9 @@ export default function mountRouter() {
         if (outletEl) {
           let old = outletEl.firstChild;
           let doc = document.implementation.createHTMLDocument();
+          doc.write(`<outlet-wrapper id="${next}">`);
           doc.write(content);
+          doc.write("</outlet-wrapper>");
 
           // outletEl.innerHTML = content;
           // outletEl.id = next;
@@ -200,7 +216,17 @@ export default function mountRouter() {
       return false;
     }
 
-    window.NAVIGATE = navigate as unknown as Navigator;
+    window.NAVIGATE = (async (to, options = {}) => {
+      if (await navigate(to)) {
+        console.log(to);
+        if (options.replace) {
+          history.replaceState(options.state, "", to);
+        } else {
+          history.pushState(options.state, "", to);
+        }
+        setCurrentLocation(getLocation());
+      }
+    }) as unknown as Navigator;
 
     document.addEventListener("click", handleAnchorClick);
     window.addEventListener("popstate", handlePopState);
