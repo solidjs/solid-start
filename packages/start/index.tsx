@@ -25,7 +25,7 @@ export {
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
 export { clientOnly as unstable_clientOnly, island as unstable_island } from "./islands";
-export { Body, FileRoutes, Head, Html, Scripts } from "./root";
+export { Body, Head, Html, Scripts } from "./root";
 export * from "./router";
 export * from "./server/responses";
 export { ServerContext, useServerContext } from "./server/ServerContext";
@@ -42,4 +42,6 @@ export {
   type SessionIdStorageStrategy,
   type SessionStorage
 } from "./session";
+import { JSX } from "solid-js";
 import "./types";
+export declare function FileRoutes(): JSX.Element;
