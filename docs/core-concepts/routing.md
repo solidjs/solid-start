@@ -88,7 +88,7 @@ export default function Index() {
 }
 ```
 
-You can specify class names to add to the [`<A>`][a] tag when the current location matches the `href` of the anchor using the `activeClass` prop. Use the `inactive` prop to add a class name to the [`<a>`][nativea] tag if the current route does not match the `href` of the anchor.
+You can specify class names to add to the [`<A>`][a] tag when the current location matches the `href` of the anchor using the `activeClass` prop. Use the `inactiveClass` prop to add a class name to the [`<a>`][nativea] tag if the current route does not match the `href` of the anchor.
 
 ```tsx twoslash {6-12,15,18} filenam="routes/users.tsx"
 import { A } from "solid-start"
