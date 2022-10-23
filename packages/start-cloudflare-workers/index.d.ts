@@ -1,3 +1,7 @@
-import { MiniflareOptions } from "miniflare";
+import { Miniflare, MiniflareOptions } from "miniflare";
 
-export default function (props: MiniflareOptions): import("solid-start/vite").Adapter;
+export default function (
+  props: MiniflareOptions & {
+    init?: (mf: Miniflare) => void;
+  }
+): import("solid-start/vite").Adapter;
