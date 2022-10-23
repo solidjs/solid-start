@@ -21,7 +21,7 @@ export class NotesDB {
     // same key every request is fast. (That said, you could also store the
     // value in a class member if you prefer.)
 
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 500));
 
     switch (url.pathname) {
       case "/":
