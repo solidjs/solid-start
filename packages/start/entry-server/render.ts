@@ -1,6 +1,5 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { internalFetch } from "../api/internalFetch";
 import { redirect } from "../server/responses";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
 
@@ -164,8 +163,8 @@ function createPageEvent(event: FetchEvent) {
     responseHeaders,
     setStatusCode: setStatusCode,
     getStatusCode: getStatusCode,
-    fetch: internalFetch,
-    $islands: new Set<string>()
+    $islands: new Set<string>(),
+    fetch: event.fetch
   });
 
   return pageEvent;
@@ -187,7 +186,8 @@ function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
         `</outlet-wrapper>`.length
     )}`;
 
-    pageEvent.responseHeaders.set("Content-Type", "text/plain");
+    pageEvent.responseHeaders.set("Content-Type", "text/solid-diff");
+    pageEvent.responseHeaders.set("x-solid-location", pageEvent.request.url);
   }
   return markup;
 }

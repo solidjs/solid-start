@@ -72,9 +72,25 @@ export default {
         return new Response("An unexpected error occurred", { status: 500 });
       }
     }
+
+    function internalFetch(route, init = {}) {
+      if (route.startsWith("http")) {
+        return fetch(route, init);
+      }
+
+      let url = new URL(route, "http://internal");
+      const request = new Request(url.href, init);
+      return handler({
+        request: request,
+        env,
+        fetch: internalFetch
+      });
+    }
+
     return handler({
       request: request,
-      env
+      env,
+      fetch: internalFetch
     });
   }
 };

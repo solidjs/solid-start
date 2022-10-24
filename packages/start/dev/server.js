@@ -37,59 +37,71 @@ export function createDevHandler(viteServer, config, options) {
   async function devFetch(request, env) {
     const entry = (await viteServer.ssrLoadModule("~start/entry-server")).default;
 
-    return await entry({
-      request,
-      env: {
-        ...env,
-        __dev: {
-          manifest: options.router.getFlattenedPageRoutes(true),
-          collectStyles: async match => {
-            const styles = {};
-            const deps = new Set();
+    const devEnv = {
+      ...env,
+      __dev: {
+        manifest: options.router.getFlattenedPageRoutes(true),
+        collectStyles: async match => {
+          const styles = {};
+          const deps = new Set();
 
-            try {
-              for (const file of match) {
-                const normalizedPath = path.resolve(file).replace(/\\/g, "/");
-                let node = await viteServer.moduleGraph.getModuleById(normalizedPath);
+          try {
+            for (const file of match) {
+              const normalizedPath = path.resolve(file).replace(/\\/g, "/");
+              let node = await viteServer.moduleGraph.getModuleById(normalizedPath);
+              if (!node) {
+                const absolutePath = path.resolve(file);
+                await viteServer.ssrLoadModule(absolutePath);
+                node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
+
                 if (!node) {
-                  const absolutePath = path.resolve(file);
-                  await viteServer.ssrLoadModule(absolutePath);
-                  node = await viteServer.moduleGraph.getModuleByUrl(absolutePath);
-
-                  if (!node) {
-                    console.log("not found");
-                    return;
-                  }
+                  console.log("not found");
+                  return;
                 }
-
-                await find_deps(viteServer, node, deps);
               }
-            } catch (e) {}
 
-            for (const dep of deps) {
-              const parsed = new URL(dep.url, "http://localhost/");
-              const query = parsed.searchParams;
+              await find_deps(viteServer, node, deps);
+            }
+          } catch (e) {}
 
-              if (style_pattern.test(dep.file)) {
-                try {
-                  const mod = await viteServer.ssrLoadModule(dep.url);
-                  if (module_style_pattern.test(dep.file)) {
-                    styles[dep.url] = env.cssModules?.[dep.file];
-                  } else {
-                    styles[dep.url] = mod.default;
-                  }
-                } catch {
-                  console.warn(`Could not load ${dep.file}`);
-                  // this can happen with dynamically imported modules, I think
-                  // because the Vite module graph doesn't distinguish between
-                  // static and dynamic imports? TODO investigate, submit fix
+          for (const dep of deps) {
+            const parsed = new URL(dep.url, "http://localhost/");
+            const query = parsed.searchParams;
+
+            if (style_pattern.test(dep.file)) {
+              try {
+                const mod = await viteServer.ssrLoadModule(dep.url);
+                if (module_style_pattern.test(dep.file)) {
+                  styles[dep.url] = env.cssModules?.[dep.file];
+                } else {
+                  styles[dep.url] = mod.default;
                 }
+              } catch {
+                // this can happen with dynamically imported modules, I think
+                // because the Vite module graph doesn't distinguish between
+                // static and dynamic imports? TODO investigate, submit fix
               }
             }
-            return styles;
           }
+          return styles;
         }
       }
+    };
+
+    function internalFetch(route, init = {}) {
+      let url = new URL(route, "http://internal");
+      const request = new Request(url.href, init);
+      return entry({
+        request: request,
+        env: devEnv,
+        fetch: internalFetch
+      });
+    }
+
+    return await entry({
+      request,
+      env: devEnv,
+      fetch: internalFetch
     });
   }
 

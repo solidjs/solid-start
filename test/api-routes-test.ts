@@ -89,6 +89,10 @@ test.describe("api routes", () => {
             import { json } from "solid-start/server";
             export let GET = ({ request, fetch }) => fetch('/api/waterfall');
           `,
+          "src/routes/api/rewrite.js": js`
+            import { json } from "solid-start/server";
+            export let GET = ({ request, fetch }) => fetch('/redirectd');
+          `,
           "src/routes/api/external-fetch.js": js`
             import { json } from "solid-start/server";
             export let GET = ({ request, fetch }) => fetch('https://hogwarts.deno.dev/');
@@ -195,6 +199,12 @@ test.describe("api routes", () => {
       expect(await res.json()).toEqual({ welcome: "harry-potter" });
     });
 
+    test("should rewrite", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/api/rewrite", true);
+      await page.waitForSelector("[data-testid='redirected']");
+    });
+
     test("should return json from /api/greeting/[...unknown] API unmatched route", async () => {
       let res = await fixture.requestDocument("/api/greeting/he/who/must/not/be/named");
       expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
@@ -211,8 +221,8 @@ test.describe("api routes", () => {
 
     test("should return json from internally fetched API route", async () => {
       let res = await fixture.requestDocument("/api/waterfall");
-      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
       expect(await res.json()).toEqual({ welcome: "harry-potter" });
+      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
     });
 
     test("should return json from doubly internally fetched API route", async () => {
