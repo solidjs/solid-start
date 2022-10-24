@@ -6,10 +6,10 @@
 // import NoteListSkeleton from './NoteListSkeleton';
 
 import { unstable_island, useSearchParams } from "solid-start";
-import Note from "../Note";
-import { NoteList } from "../NoteList";
+import Note from "~/components/Note";
+import { NoteList } from "~/components/NoteList";
 import "./index.css";
-const EditButton = unstable_island(() => import("../EditButton"));
+const EditButton = unstable_island(() => import("../components/EditButton"));
 export default function Home() {
   const [searchParams] = useSearchParams();
   return (

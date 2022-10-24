@@ -20,21 +20,11 @@ import NotePreview from "./NotePreview";
 export default function Note(props) {
   const note = createServerData$(
     async ([selectedId], { env }) => {
-      // if (selectedId) {
-      //   let el = JSON.parse(fs.readFileSync(`./notes/meta.json`, "utf8")).find(
-      //     n => n.id === Number(selectedId)
-      //   );
-      //   if (!el) {
-      //     throw new ServerError("Not Found", { status: 404 });
-      //   }
-
-      //   el.body = fs.readFileSync(`./notes/${selectedId}.md`, "utf8").toString();
-      //   return el;
-      // }
-
       const db = env.DO.get(env.DO.idFromName("notes"));
-      const data = await (await db.fetch(`http://notes/get?id=${selectedId}`)).json();
-      console.log(data);
+      const data = await (
+        await db.fetch(`http://notes/get?id=${selectedId}`)
+      ).json<{ error?: string; id: string; body: string; title: string; updated_at: string }>();
+
       if (data.error) {
         return null;
       }
@@ -45,15 +35,7 @@ export default function Note(props) {
       key: () => [props.selectedId]
     }
   );
-  // We could also read from a file instead.
-  // body = readFile(path.resolve(`./notes/${note.id}.md`), 'utf8');
 
-  // Now let's see how the Suspense boundary above lets us not block on this.
-  // fetch('http://localhost:4000/sleep/3000');
-
-  // if (isEditing) {
-  //   return <NoteEditor noteId={id} initialTitle={title} initialBody={body} />;
-  // } else {
   return (
     <Suspense fallback={<div>Waiting</div>}>
       <Show
@@ -98,5 +80,4 @@ export default function Note(props) {
       </Show>
     </Suspense>
   );
-  // }
 }

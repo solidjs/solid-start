@@ -1,5 +1,5 @@
 import { json } from "solid-start";
-import { createHandler, renderStream, StartServer } from "solid-start/entry-server";
+import { createHandler, renderAsync, StartServer } from "solid-start/entry-server";
 
 export class NotesDB {
   storage: DurableObjectStorage;
@@ -20,8 +20,6 @@ export class NotesDB {
     // Durable Object storage is automatically cached in-memory, so reading the
     // same key every request is fast. (That said, you could also store the
     // value in a class member if you prefer.)
-
-    await new Promise(r => setTimeout(r, 500));
 
     switch (url.pathname) {
       case "/":
@@ -59,36 +57,4 @@ export class NotesDB {
   }
 }
 
-export default createHandler(
-  ({ forward }) =>
-    event => {
-      if (!event.env.KV) {
-        let data = {};
-        event.env.KV = {
-          data,
-          async get(key, type) {
-            if (type == "json") return JSON.parse(this.data[key]);
-            return this.data[key];
-          },
-          async put(key, value) {
-            this.data[key] = value;
-          },
-          async delete(key) {
-            delete this.data[key];
-          },
-          async list() {
-            return {
-              keys: Object.keys(this.data).map(k => ({ name: k })),
-              list_complete: true
-            };
-          },
-          async getWithMetadata(key, type) {
-            if (type == "json") return JSON.parse(this.data[key]);
-            return this.data[key];
-          }
-        };
-      }
-      return forward(event);
-    },
-  renderStream(event => <StartServer event={event} />)
-);
+export default createHandler(renderAsync(event => <StartServer event={event} />));
