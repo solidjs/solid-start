@@ -13,7 +13,7 @@ export default function Links() {
   !isDev &&
     import.meta.env.START_SSR &&
     useAssets(() => {
-      let match = getAssetsFromManifest(context.env.manifest, context.routerContext.matches);
+      let match = getAssetsFromManifest(context, context.routerContext.matches);
       const links = match.reduce((r, src) => {
         let el =
           src.type === "style" ? (

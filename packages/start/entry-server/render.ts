@@ -164,7 +164,8 @@ function createPageEvent(event: FetchEvent) {
     responseHeaders,
     setStatusCode: setStatusCode,
     getStatusCode: getStatusCode,
-    fetch: internalFetch
+    fetch: internalFetch,
+    $islands: new Set<string>()
   });
 
   return pageEvent;

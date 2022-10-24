@@ -55,6 +55,7 @@ export function island<T extends Component<any>>(
       let styles = [];
       if (import.meta.env.PROD) {
         let x = context.env.manifest[path] as IslandManifest;
+        context.$islands.add(path);
         fpath = x.script.href;
         styles = x.assets.filter(v => v.type == "style").map(v => v.href);
       } else {

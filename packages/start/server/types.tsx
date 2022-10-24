@@ -75,4 +75,5 @@ export interface PageEvent extends FetchEvent {
   getStatusCode(): number;
   fetch(url: string, init: RequestInit): Promise<Response>;
   $type: typeof FETCH_EVENT;
+  $islands?: Set<string>;
 }

@@ -217,14 +217,14 @@ export function Router(props: RouterProps) {
     const prevRoutes = prev.routes;
 
     if (import.meta.env.PROD) {
-      let nextAssets = getAssetsFromManifest(context.env.manifest, [
+      let nextAssets = getAssetsFromManifest(context, [
         nextRoutes.map(r => ({
           ...r,
           ...r.match
         }))
       ]);
 
-      let prevAssets = getAssetsFromManifest(context.env.manifest, [
+      let prevAssets = getAssetsFromManifest(context, [
         prevRoutes.map(r => ({
           ...r,
           ...r.match

@@ -1,13 +1,13 @@
 import { ManifestEntry, PageEvent } from "../server/types";
 import { routesConfig } from "./FileRoutes";
 
-function flattenIslands(match, manifest) {
+function flattenIslands(match, manifest, islands) {
   let result = [...match];
   match.forEach(m => {
     if (m.type !== "island") return;
     const islandManifest = manifest[m.href];
-    if (islandManifest) {
-      const res = flattenIslands(islandManifest.assets, manifest);
+    if (islandManifest && (!islands || islands.has(m.href))) {
+      const res = flattenIslands(islandManifest.assets, manifest, islands);
       result.push(...res);
     }
   });
@@ -15,17 +15,17 @@ function flattenIslands(match, manifest) {
 }
 
 export function getAssetsFromManifest(
-  manifest: PageEvent["env"]["manifest"],
-  routerContext: PageEvent["routerContext"]["matches"]
+  event: PageEvent,
+  matches: PageEvent["routerContext"]["matches"]
 ) {
-  let match = routerContext.reduce<ManifestEntry[]>((memo, m) => {
+  let match = matches.reduce<ManifestEntry[]>((memo, m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
       const route = routesConfig.routeLayouts[fullPath];
       if (route) {
-        memo.push(...((manifest[route.id] || []) as ManifestEntry[]));
+        memo.push(...((event.env.manifest[route.id] || []) as ManifestEntry[]));
         const layoutsManifestEntries = route.layouts.flatMap(
-          manifestKey => (manifest[manifestKey] || []) as ManifestEntry[]
+          manifestKey => (event.env.manifest[manifestKey] || []) as ManifestEntry[]
         );
         memo.push(...layoutsManifestEntries);
       }
@@ -33,9 +33,9 @@ export function getAssetsFromManifest(
     return memo;
   }, []);
 
-  match.push(...((manifest["entry-client"] || []) as ManifestEntry[]));
+  match.push(...((event.env.manifest["entry-client"] || []) as ManifestEntry[]));
 
-  match = flattenIslands(match, manifest);
+  match = flattenIslands(match, event.env.manifest, event.$islands);
 
   return match;
 }
