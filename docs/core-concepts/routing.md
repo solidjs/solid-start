@@ -70,11 +70,11 @@ This means that all you have to do is create a file in your `routes` folder and 
 
 While the user can enter your app from any route, once they are in, you can provide them a designed user experience. You need a way for the user to travel between your routes. The HTML spec has the [`<a>`][nativea] tag for this purpose. You can use [`<a>`][nativea] tags to add links between pages in your app. Nothing special. That will work in SolidStart as well. 
 
-But SolidStart also provides an enhanced [`<a>`][nativea] tag, the [`<A>`][a] component. It is a wrapper around the [`<a>`][nativea] tag and provides a few additional features. Once the app in mounted, when the user navigates to a new page,  the [`<A>`][a] will take over the navigation and will render the new page without a full page refresh. Something that's commonly known as client-side routing. It also knows what to do when the app is running in other modes.
+But SolidStart also provides an enhanced [`<a>`][nativea] tag, the [`<A>`][a] component. It is a wrapper around the [`<a>`][nativea] tag and provides a few additional features. Once the app is mounted, when the user navigates to a new page,  the [`<A>`][a] will take over the navigation and will render the new page without a full page refresh. This is commonly known as client-side routing. It also knows what to do when the app is running in other modes.
 
 ### Using links
 
-The best way to add a link to another page in your app is to the use enhanced anchor tag [`<A>`][a]. You can add the `href` prop to the [`<A>`][a] tag, and we will navigate to that route in SPA style. 
+The best way to add a link to another page in your app is to use the enhanced anchor tag [`<A>`][a]. You can add the `href` prop to the [`<A>`][a] tag, and we will navigate to that route in SPA style. 
 
 ```tsx twoslash {6}
 import { A } from 'solid-start';
