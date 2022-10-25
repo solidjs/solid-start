@@ -105,7 +105,7 @@ prog
     DEBUG(
       [
         "running",
-        "node",
+        "vite",
         "--experimental-vm-modules",
         inspect ? "--inspect" : undefined,
         "node_modules/vite/bin/vite.js",
@@ -119,11 +119,8 @@ prog
         .join(" ")
     );
     spawn(
-      "node",
+      "vite",
       [
-        "--experimental-vm-modules",
-        inspect ? "--inspect" : undefined,
-        "node_modules/vite/bin/vite.js",
         "dev",
         ...(config ? ["--config", config.configFile] : []),
         ...(port ? ["--port", port] : []),
@@ -131,12 +128,15 @@ prog
       ].filter(Boolean),
       {
         shell: true,
-        stdio: "inherit"
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : undefined}`
+        }
       }
     );
 
     if (open) setTimeout(() => launch(port), 1000);
-    // (await import("./runtime/devServer.js")).start({ config, port, root });
   });
 
 prog
