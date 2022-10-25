@@ -6,7 +6,8 @@
   "license": "MIT",
   "bin": {
     "solid-start": "./bin.cjs",
-    "solid": "./bin.cjs"
+    "solid": "./bin.cjs",
+    "start": "./bin.cjs"
   },
   "main": "./index.tsx",
   "types": "./index.tsx",
