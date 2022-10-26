@@ -1,6 +1,6 @@
 import { diff } from "micromorph";
 import { createStore } from "solid-js/store";
-import { createComponent, getNextElement, getOwner, hydrate } from "solid-js/web";
+import { createComponent, getOwner, hydrate } from "solid-js/web";
 
 function lookupOwner(el: HTMLElement) {
   const parent = el.closest("solid-children");
@@ -30,8 +30,11 @@ export function mountIslands() {
     el.props = createStore({
       ...JSON.parse(el.dataset.props),
       get children() {
-        const el = getNextElement();
-        (el as any).__$owner = getOwner();
+        const p = el.getElementsByTagName("solid-children");
+        console.log(p);
+        [...p].forEach(a => {
+          (p as any).__$owner = getOwner();
+        });
         return;
       }
     });
@@ -149,7 +152,7 @@ export function mountIslands() {
               const element = elements[i];
               if (element.tagName === "SOLID-CHILDREN") {
                 const child = children[i];
-                return patch(el, child, element);
+                patch(el, child, element);
               } else {
                 patchChildren(element, children[i]?.children);
               }
