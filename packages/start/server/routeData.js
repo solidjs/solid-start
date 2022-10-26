@@ -110,9 +110,9 @@ function transformRouteData({ types: t }) {
                 if (specifiers.length) {
                   specifiers.forEach(s => {
                     if (
-                      t.isIdentifier(s.node.exported)
+                      (t.isIdentifier(s.node.exported)
                         ? s.node.exported.name
-                        : s.node.exported.value === "routeData"
+                        : s.node.exported.value) === "routeData"
                     ) {
                       s.remove();
                     }

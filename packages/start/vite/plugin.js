@@ -607,7 +607,6 @@ export default function solidStart(options) {
   return [
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
-    options.islands ? islands() : undefined,
     options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
@@ -638,7 +637,8 @@ export default function solidStart(options) {
       )
     }),
     solidStartServer(options),
-    solidsStartRouteManifest(options)
+    solidsStartRouteManifest(options),
+    options.islands ? islands() : undefined
   ].filter(Boolean);
 }
 
@@ -651,7 +651,7 @@ function islands() {
     },
     load(id) {
       if (id.includes("?island")) {
-        let f = id.match(/export=([A-Z0-9a-z_]+)&?\??$/);
+        let f = id.match(/isle_([A-Z0-9a-z_]+)&?\??$/);
         console.log("LOADING island", id);
         if (!f) {
           return {
@@ -668,13 +668,13 @@ function islands() {
         } else {
           return {
             code: `
+            export { ${f[1]} } from '${id.replace(/\?.*/, "?client")}';
             import { ${f[1]} } from '${id.replace(/\?.*/, "?client")}';
 
             window._$HY.island("${
               mode.command === "serve" ? `/@fs${id}` : `/${relative(process.cwd(), id)}`
             }",  ${f[1]});
 
-            export { ${f[1]} };
             `
           };
         }
@@ -717,10 +717,10 @@ function islands() {
               prep += `
               import {${e.ln} as ${e.ln}Island } from '${id}?client';
               export const ${e.ln} = unstable_island(${e.ln}Island, "${
-                mode.command === "serve" ? `@fs` + id + `?island&export=${e.ln}` : null
+                mode.command === "serve" ? `@fs` + id + `?island&isle_${e.ln}` : null
               }");`;
               client += `
-              export { ${e.ln} } from '${id}?island&export=${e.ln}';
+              export { ${e.ln} } from '${id}?island&isle_${e.ln}';
 
               `;
             } else {
