@@ -74,7 +74,9 @@ class NodeRequest extends BaseNodeRequest {
     if (init && init.data && init.data.on) {
       init = {
         ...init,
-        body: init.data.headers["content-type"].includes("x-www") ? init.data : nodeToWeb(init.data)
+        body: init.data.headers["content-type"]?.includes("x-www")
+          ? init.data
+          : nodeToWeb(init.data)
       };
     }
 
@@ -112,7 +114,7 @@ class NodeRequest extends BaseNodeRequest {
           const value = new File([data], filename);
           form.append(name, value, filename);
         } else {
-          const value = data.toString('utf-8');
+          const value = data.toString("utf-8");
           form.append(name, value);
         }
       });
