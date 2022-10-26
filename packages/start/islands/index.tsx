@@ -1,4 +1,4 @@
-import { $PROXY, Component, ComponentProps, lazy, useContext } from "solid-js";
+import { $PROXY, Component, ComponentProps, lazy, sharedConfig, useContext } from "solid-js";
 import { Hydration, NoHydration } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
@@ -218,6 +218,10 @@ export function island<T extends Component<any>>(
 
       // console.log(compProps, proxy);
 
+      if (!sharedConfig.context.noHydrate) {
+        return <Component {...compProps} />;
+      }
+
       return (
         <Hydration>
           <solid-island
@@ -232,7 +236,7 @@ export function island<T extends Component<any>>(
         </Hydration>
       );
     } else {
-      return <IslandComponent />;
+      return <Component {...compProps} />;
     }
   }) as T;
 }

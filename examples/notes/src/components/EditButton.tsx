@@ -1,3 +1,4 @@
+"use client";
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -6,31 +7,17 @@
  *
  */
 
-import { useTransition } from "solid-js";
-import { useLocation, useNavigate } from "solid-start";
+import { A } from "solid-start";
 
-export default function EditButton(props) {
-  const [isPending, startTransition] = useTransition();
-  const navigate = useNavigate();
+export function EditButton(props) {
   const isDraft = props.noteId == null;
-  const location = useLocation();
   return (
-    <button
+    <A
+      href={props.noteId ? `/notes/${props.noteId}/edit` : `/new`}
       class={["edit-button", isDraft ? "edit-button--solid" : "edit-button--outline"].join(" ")}
-      disabled={isPending()}
-      onClick={() => {
-        // startTransition(() => {
-        console.log(props);
-        const sp = new URLSearchParams(location.search);
-        sp.set("isEditing", "true");
-        if (props.noteId) sp.set("selectedId", props.noteId);
-        else sp.delete("selectedId");
-        navigate(`/?${sp.toString()}`);
-        // });
-      }}
       role="menuitem"
     >
       {props.children}
-    </button>
+    </A>
   );
 }

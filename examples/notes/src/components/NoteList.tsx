@@ -8,19 +8,10 @@ export function NoteList({ searchText }) {
   // WARNING: This is for demo purposes only.
   // We don't encourage this in real apps. There are far safer ways to access
   // data in a real application!
-  const notes = createServerData$(async (_, { env }) =>
-    // db.query(`select * from notes where title ilike $1 order by id desc`, [
-    //   "%" + searchText + "%"
-    // ]).rows
-    {
-      console.log(env);
-      const d = env.DO.get(env.DO.idFromName("notes"));
-      return (await d.fetch("https://notes")).json();
-    }
-  );
-
-  // Now let's see how the Suspense boundary above lets us not block on this.
-  // fetch('http://localhost:4000/sleep/3000');
+  const notes = createServerData$(async (_, { env }) => {
+    const d = env.DO.get(env.DO.idFromName("notes"));
+    return (await d.fetch("https://notes")).json();
+  });
 
   return (
     <Suspense fallback={<div>Waiting</div>}>

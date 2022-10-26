@@ -62,17 +62,19 @@ export function mountIslands() {
     const islands = document.querySelectorAll("solid-island[data-hk]");
     const assets = new Set<string>();
     islands.forEach((el: HTMLElement) => assets.add(el.dataset.component));
-    Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
-      islands.forEach((el: HTMLElement) => {
-        if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
-          if (!queued) {
-            queued = true;
-            requestIdleCallback(runTaskQueue);
-          }
-          queue.push(el);
-        } else mountIsland(el as HTMLElement);
-      });
-    });
+    Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset)))
+      .then(() => {
+        islands.forEach((el: HTMLElement) => {
+          if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
+            if (!queued) {
+              queued = true;
+              requestIdleCallback(runTaskQueue);
+            }
+            queue.push(el);
+          } else mountIsland(el as HTMLElement);
+        });
+      })
+      .catch(e => console.error(e));
   };
   window._$HY.fe = window._$HY.hydrateIslands;
   window._$HY.hydrateIslands();

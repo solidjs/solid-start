@@ -24,7 +24,6 @@ export class NotesDB {
     switch (url.pathname) {
       case "/":
         let d = [...(await state.storage.list()).values()];
-        console.log(d);
         return json(d);
       case "/get":
         let id = url.searchParams.get("id");

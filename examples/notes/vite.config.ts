@@ -6,6 +6,7 @@ export default defineConfig({
     solid({
       islands: true,
       islandsRouter: true,
+      hot: false,
       adapter: startCloudflareWorkers({
         durableObjectsPersist: true,
         kvPersist: false,

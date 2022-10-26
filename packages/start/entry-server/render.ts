@@ -186,8 +186,9 @@ function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
         `</outlet-wrapper>`.length
     )}`;
 
+    let url = new URL(pageEvent.request.url);
     pageEvent.responseHeaders.set("Content-Type", "text/solid-diff");
-    pageEvent.responseHeaders.set("x-solid-location", pageEvent.request.url);
+    pageEvent.responseHeaders.set("x-solid-location", url.pathname + url.search + url.hash);
   }
   return markup;
 }

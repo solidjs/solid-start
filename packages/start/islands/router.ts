@@ -163,10 +163,12 @@ export default function mountRouter() {
     }
 
     window.PUSH = (to, options) => {
+      let u = new URL(to, window.location.origin);
+      console.log(u);
       if (options.replace) {
-        history.replaceState(options.state, "", to);
+        history.replaceState(options.state, "", u);
       } else {
-        history.pushState(options.state, "", to);
+        history.pushState(options.state, "", u);
       }
       setCurrentLocation(getLocation());
     };

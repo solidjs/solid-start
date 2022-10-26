@@ -62,7 +62,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
       file.dynamicImports?.forEach(imp => {
         if (imp === src) return;
-        if (imp.endsWith("?island") && !src) {
+        if (imp.includes("?island") || (imp.includes("?client") && !src)) {
           files.push({ type: "island", href: imp });
           let f = collect(imp);
           manifest[imp] = {

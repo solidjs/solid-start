@@ -7,9 +7,7 @@
  */
 
 import { format, isToday } from "date-fns";
-import { unstable_island } from "solid-start";
-
-const ClientSidebarNote = unstable_island(() => import("./SidebarNote.island"));
+import ClientSidebarNote from "./SidebarNote.client";
 
 export default function SidebarNote(props) {
   const updatedAt = () => new Date(props.note.updated_at);

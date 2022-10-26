@@ -195,7 +195,9 @@ prog
           readFileSync(join(routeManifestPath, "route-manifest.json")).toString()
         );
 
-        let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
+        let islands = Object.keys(routeManifest).filter(
+          a => a.includes("?island") || a.includes("?client")
+        );
 
         console.timeEnd(c.blue("solid-start") + c.magenta(" found islands in"));
         console.log();
@@ -233,7 +235,7 @@ prog
           ),
           ...Object.fromEntries(
             Object.entries(islandsManifest)
-              .filter(([k]) => k.endsWith("?island"))
+              .filter(([k]) => k.includes("?island") || k.includes("?client"))
               .map(([k, v]) => [
                 k,
                 {

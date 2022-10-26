@@ -1,5 +1,7 @@
 import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
+import { parse } from "es-module-lexer";
+import esbuild from "esbuild";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
 import path, { dirname, join, relative } from "path";
@@ -14,7 +16,6 @@ import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
 globalThis.DEBUG = debug("start:vite");
-
 let _dirname = dirname(fileURLToPath(import.meta.url));
 // const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
 
@@ -649,10 +650,13 @@ function islands() {
       mode = m;
     },
     load(id) {
-      if (id.endsWith("?island")) {
-        return {
-          code: `
-            import Component from '${id.replace("?island", "")}';
+      if (id.includes("?island")) {
+        let f = id.match(/export=([A-Z0-9a-z_]+)&?\??$/);
+        console.log("LOADING island", id);
+        if (!f) {
+          return {
+            code: `
+            import Component from '${id.replace("?island", "?client")}';
 
             window._$HY.island("${
               mode.command === "serve" ? `/@fs${id}` : `/${relative(process.cwd(), id)}`
@@ -660,7 +664,20 @@ function islands() {
 
             export default Component;
             `
-        };
+          };
+        } else {
+          return {
+            code: `
+            import { ${f[1]} } from '${id.replace(/\?.*/, "?client")}';
+
+            window._$HY.island("${
+              mode.command === "serve" ? `/@fs${id}` : `/${relative(process.cwd(), id)}`
+            }",  ${f[1]});
+
+            export { ${f[1]} };
+            `
+          };
+        }
       }
     },
     /**
@@ -668,12 +685,64 @@ function islands() {
      * @param {string} code
      */
     transform(code, id, ssr) {
+      if (code.startsWith('"use client"') && !id.includes("?client")) {
+        let [imports, exports] = parse(
+          esbuild.transformSync(code, {
+            jsx: "transform",
+            format: "esm",
+            loader: "tsx"
+          }).code
+        );
+
+        let prep = `
+        import { unstable_island } from 'solid-start';
+
+        `;
+
+        let client = ``;
+
+        console.log();
+        exports.map(e => {
+          if (e.n === "default") {
+            prep += `
+            import Island from '${id}?client';
+            export default unstable_island(Island, "${
+              mode.command === "serve" ? `@fs` + id + "?island" : null
+            }");`;
+            client += `
+              export { default } from '${id}?island';
+            `;
+          } else {
+            if (e.n.charAt(0) === e.n.charAt(0).toUpperCase()) {
+              prep += `
+              import {${e.ln} as ${e.ln}Island } from '${id}?client';
+              export const ${e.ln} = unstable_island(${e.ln}Island, "${
+                mode.command === "serve" ? `@fs` + id + `?island&export=${e.ln}` : null
+              }");`;
+              client += `
+              export { ${e.ln} } from '${id}?island&export=${e.ln}';
+
+              `;
+            } else {
+              prep += `
+              export {${e.ln} } from '${id}?client';`;
+              client += `
+              export { ${e.ln} } from '${id}?client';
+              `;
+            }
+          }
+        });
+        console.log(prep);
+        return {
+          code: ssr ? prep : client
+        };
+      }
       if (code.includes("unstable_island")) {
         let replaced = code.replaceAll(
           /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
           (a, b, c) =>
             ssr
-              ? `import ${b}_island from "${c}"; 
+              ? `import ${b}_island from "${c}?client"; 
                   const ${b} = unstable_island(${b}_island, "${
                   mode.command === "serve"
                     ? `@fs${join(dirname(id), c)}` + ".tsx" + "?island"
