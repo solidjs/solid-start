@@ -13,7 +13,6 @@
   background-color: $secondary-color;
   transition: transform 0.3s ease-in-out;
 
-  img,
   span {
     // TODO: should add styling for span element
     transform: scale(0.97);
@@ -38,7 +37,7 @@
 .card__link:hover,
 .card__link:focus {
   .card__img {
-    transform: scale(1.02);
+    // transform: scale(1.02);
   }
 }
 
