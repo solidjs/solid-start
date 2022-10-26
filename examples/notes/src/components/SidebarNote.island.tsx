@@ -6,7 +6,7 @@
  *
  */
 
-import { createEffect, createSignal, useTransition } from "solid-js";
+import { createEffect, createSignal, Show, useTransition } from "solid-js";
 import { useLocation, useNavigate } from "solid-start";
 
 export default function SidebarNote(props) {
@@ -30,6 +30,13 @@ export default function SidebarNote(props) {
   //     itemRef.current.classList.add("flash");
   //   }
   // }, [title]);
+  let title = props.title;
+  createEffect(() => {
+    if (props.title !== title) {
+      title = props.title;
+      itemRef.classList.add("flash");
+    }
+  });
 
   return (
     <div
@@ -80,11 +87,12 @@ export default function SidebarNote(props) {
           setIsExpanded(isExpanded => !isExpanded);
         }}
       >
-        {isExpanded() ? (
-          <img src="/chevron-down.svg" width="10px" height="10px" alt="Collapse" />
-        ) : (
+        <Show
+          when={isExpanded()}
+          fallback={<img src="/chevron-down.svg" width="10px" height="10px" alt="Collapse" />}
+        >
           <img src="/chevron-up.svg" width="10px" height="10px" alt="Expand" />
-        )}
+        </Show>
       </button>
       <div
         style={{
