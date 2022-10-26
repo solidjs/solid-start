@@ -1,13 +1,14 @@
 .wrapper{
     position: relative;
     &:hover{
-        --scale: 1;
+        --scale: 1.02;
     }
     &::after{
         content: '';
         position: absolute;
         inset: 0;
         background-image: radial-gradient(circle at calc(var(--spot-x, 50) * 1%) calc(var(--spot-y, 50) * 1%), #fff2, transparent);
+        will-change: background-image;
     }
 }
 
