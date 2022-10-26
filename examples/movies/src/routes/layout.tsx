@@ -68,10 +68,13 @@ function TheFooter() {
     </footer>
   );
 }
-export function TheNav() {
+function TheNav() {
   return (
     <nav class={styles.nav}>
       <ul class="nolist">
+        <li class={styles.logo}>
+          <img src="/solidjs.svg" width={48} height={48} />
+        </li>
         <li>
           <A href="/" end aria-label="Home">
             <HomeIcon width={24} height={24} />

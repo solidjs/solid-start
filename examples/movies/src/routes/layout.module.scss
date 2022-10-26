@@ -1,5 +1,4 @@
-
-@import '~/assets/css/utilities/_variables.scss';
+@import "~/assets/css/utilities/_variables.scss";
 
 .footer {
   padding: 2rem 1.5rem 6.5rem;
@@ -72,6 +71,12 @@
 
     @media (min-width: $breakpoint-large) {
       flex-direction: column;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     li {
