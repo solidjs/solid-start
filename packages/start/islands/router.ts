@@ -162,15 +162,19 @@ export default function mountRouter() {
       return false;
     }
 
+    window.PUSH = (to, options) => {
+      if (options.replace) {
+        history.replaceState(options.state, "", to);
+      } else {
+        history.pushState(options.state, "", to);
+      }
+      setCurrentLocation(getLocation());
+    };
+
     window.NAVIGATE = (async (to, options = {}) => {
       if (await navigate(to)) {
         console.log(to);
-        if (options.replace) {
-          history.replaceState(options.state, "", to);
-        } else {
-          history.pushState(options.state, "", to);
-        }
-        setCurrentLocation(getLocation());
+        window.PUSH(to, options);
       }
     }) as unknown as Navigator;
 

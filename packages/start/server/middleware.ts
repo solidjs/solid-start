@@ -68,6 +68,19 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
           }
         });
       }
+
+      if (import.meta.env.START_ISLANDS && serverResponse.status === 204) {
+        console.log(
+          event.request.headers.get("x-solid-referrer"),
+          new URL(serverResponse.headers.get("Location"), event.request.url).href
+        );
+        return await event.fetch(serverResponse.headers.get("Location"), {
+          method: "GET",
+          headers: {
+            "x-solid-referrer": event.request.headers.get("x-solid-referrer")
+          }
+        });
+      }
       return serverResponse;
     }
 

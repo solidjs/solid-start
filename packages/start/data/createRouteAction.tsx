@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "../router";
 import { FormError, FormImpl, FormProps } from "./Form";
 
 import type { ParentComponent } from "solid-js";
-import { isRedirectResponse } from "../server/responses";
+import { isRedirectResponse, XSolidStartOrigin } from "../server/responses";
 import { ServerContext } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
@@ -58,7 +58,20 @@ export function createRouteAction<T, U = void>(
   const event = useContext(ServerContext);
   let count = 0;
   function submit(variables: T) {
-    const p = fn(variables, event);
+    let p;
+    if (fn.url && import.meta.env.START_ISLANDS) {
+      p = fetch(fn.url, {
+        method: "POST",
+        body: JSON.stringify([variables, { $type: "fetch_event" }]),
+        headers: {
+          "Content-Type": "application/json",
+          [XSolidStartOrigin]: "client",
+          "x-solid-referrer": window.LOCATION().pathname
+        }
+      });
+    } else {
+      p = fn(variables, event);
+    }
     const reqId = ++count;
     batch(() => {
       setResult(undefined);
@@ -233,17 +246,21 @@ function handleRefetch(response, options) {
   );
 }
 
-function handleResponse(response: Response, navigate, options) {
-  if (response instanceof Response && isRedirectResponse(response)) {
+async function handleResponse(response: Response, navigate, options) {
+  if (isRedirectResponse(response)) {
     const locationUrl = response.headers.get("Location") || "/";
     if (locationUrl.startsWith("http")) {
       window.location.href = locationUrl;
     } else {
       navigate(locationUrl);
     }
+    return handleRefetch(response, options);
+  } else if (response.headers.get("Content-type") === "text/solid-diff") {
+    let i = await window._$HY.update(await response.text());
+    if (i) {
+      await window.PUSH(response.headers.get("x-solid-location"), {});
+    }
   }
-
-  if (isRedirectResponse(response)) return handleRefetch(response, options);
 }
 
 function checkFlash(fn: any) {
