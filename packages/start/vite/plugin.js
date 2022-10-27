@@ -697,7 +697,8 @@ function remove_html_middlewares(server) {
   const html_middlewares = [
     "viteIndexHtmlMiddleware",
     "vite404Middleware",
-    "viteSpaFallbackMiddleware"
+    "viteSpaFallbackMiddleware",
+    "viteHtmlFallbackMiddleware"
   ];
   for (let i = server.stack.length - 1; i > 0; i--) {
     // @ts-ignore
