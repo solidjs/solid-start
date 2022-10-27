@@ -111,6 +111,7 @@ select {
   --navy-blue: #035e8c;
   --red-25: #bd0d2a;
   --secondary-text: #65676b;
+  --secondary-text-dark: #dde1e9;
   --white: #fff;
   --yellow: #fffae1;
 
@@ -424,10 +425,17 @@ ul.notes-list {
   pointer-events: none;
   z-index: 2;
   flex: 1 1 250px;
-  color: var(--secondary-text);
   position: relative;
   animation: slideIn 100ms;
 }
+
+.light > .sidebar-note-excerpt {
+  color: var(--secondary-text);
+}
+
+.dark > .sidebar-note-excerpt {
+  color: var(--secondary-text-dark);
+} 
 
 .search input {
   padding: 0 16px;

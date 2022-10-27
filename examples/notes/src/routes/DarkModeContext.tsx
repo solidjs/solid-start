@@ -1,8 +1,6 @@
 "use client";
 
-import { createContext, createSignal, Show, useContext } from "solid-js";
-import Moon from "~icons/charm/moon";
-import Sun from "~icons/charm/sun";
+import { createContext, createSignal, useContext } from "solid-js";
 export const context = createContext();
 
 export const Provider = props => {
@@ -26,9 +24,7 @@ export const DarkModeToggle = props => {
         "padding-top": "6px"
       }}
     >
-      <Show when={darkMode()} fallback={<Moon />}>
-        <Sun />
-      </Show>
+      {darkMode() ? "☀️" : "🌙"}
     </button>
   );
 };

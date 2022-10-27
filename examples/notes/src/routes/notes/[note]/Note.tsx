@@ -7,7 +7,7 @@
  */
 
 import { format } from "date-fns";
-import { Show, Suspense } from "solid-js";
+import { Show } from "solid-js";
 import { useRouteData } from "solid-start";
 import { EditButton } from "~/components/EditButton";
 import type { routeData } from "./layout";
@@ -17,23 +17,21 @@ export function Note(props) {
   const note = useRouteData<typeof routeData>();
 
   return (
-    <Suspense fallback={<div>Waiting</div>}>
-      <Show when={note()} keyed>
-        {note => (
-          <div class="note">
-            <div class="note-header">
-              <h1 class="note-title">{note.title}</h1>
-              <div class="note-menu" role="menubar">
-                <small class="note-updated-at" role="status">
-                  Last updated on {format(new Date(note.updated_at), "d MMM yyyy 'at' h:mm bb")}
-                </small>
-                <EditButton noteId={note.id}>Edit</EditButton>
-              </div>
+    <Show when={note()} keyed>
+      {note => (
+        <div class="note">
+          <div class="note-header">
+            <h1 class="note-title">{note.title}</h1>
+            <div class="note-menu" role="menubar">
+              <small class="note-updated-at" role="status">
+                Last updated on {format(new Date(note.updated_at), "d MMM yyyy 'at' h:mm bb")}
+              </small>
+              <EditButton noteId={note.id}>Edit</EditButton>
             </div>
-            <NotePreview body={note.body} />
           </div>
-        )}
-      </Show>
-    </Suspense>
+          <NotePreview body={note.body} />
+        </div>
+      )}
+    </Show>
   );
 }

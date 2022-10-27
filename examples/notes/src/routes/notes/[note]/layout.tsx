@@ -10,7 +10,8 @@ export function routeData({ params }) {
       ).json<{ error?: string; id: string; body: string; title: string; updated_at: string }>();
 
       if (data.error) {
-        return null;
+        console.error(data.error);
+        throw data.error;
       }
 
       return data;

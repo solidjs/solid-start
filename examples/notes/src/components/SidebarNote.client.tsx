@@ -60,21 +60,6 @@ export function SidebarNote(props) {
       >
         Open note for preview
       </A>
-      {/*
-      <button
-        class="sidebar-note-toggle-expand"
-        onClick={e => {
-          e.stopPropagation();
-          setIsExpanded(!isExpanded);
-        }}
-      >
-        {isExpanded ? (
-          <img src="chevron-down.svg" width="10px" height="10px" alt="Collapse" />
-        ) : (
-          <img src="chevron-up.svg" width="10px" height="10px" alt="Expand" />
-        )}
-        </button>*/}
-
       <button
         class="sidebar-note-toggle-expand"
         onClick={e => {
