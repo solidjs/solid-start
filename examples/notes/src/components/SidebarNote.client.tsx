@@ -7,25 +7,21 @@
  *
  */
 
-import { createEffect, createSignal, Show, useTransition } from "solid-js";
+import { createEffect, createSignal, Show, useContext, useTransition } from "solid-js";
 import { A, useLocation } from "solid-start";
+import { context } from "~/routes/DarkModeContext";
 
-export default function SidebarNote(props) {
+export function SidebarNote(props) {
   const location = useLocation();
   const [isPending, startTransition] = useTransition();
   const [isExpanded, setIsExpanded] = createSignal(false);
-  const isActive = () => `/notes/${props.id}` === location.pathname;
+  const isActive = () => {
+    return location.pathname.startsWith(`/notes/${props.id}`);
+  };
   let itemRef;
 
-  // // Animate after title is edited.
-  // const itemRef = useRef(null);
-  // const prevTitleRef = useRef(title);
-  // useEffect(() => {
-  //   if (title !== prevTitleRef.current) {
-  //     prevTitleRef.current = title;
-  //     itemRef.current.classList.add("flash");
-  //   }
-  // }, [title]);
+  const [darkMode] = useContext(context);
+  console.log(darkMode());
   let title = props.title;
   createEffect(() => {
     if (props.title !== title) {
@@ -40,6 +36,9 @@ export default function SidebarNote(props) {
       onAnimationEnd={() => {
         itemRef.classList.remove("flash");
       }}
+      style={{
+        color: darkMode() ? "white" : "black"
+      }}
       class={["sidebar-note-list-item", isExpanded() ? "note-expanded" : ""].join(" ")}
     >
       {props.children}
@@ -50,7 +49,11 @@ export default function SidebarNote(props) {
           "background-color": isPending()
             ? "var(--gray-80)"
             : isActive()
-            ? "var(--tertiary-blue)"
+            ? darkMode()
+              ? "var(--primary-blue"
+              : "var(--tertiary-blue)"
+            : darkMode()
+            ? "var(--gray-20)"
             : "",
           border: isActive() ? "1px solid var(--primary-border)" : "1px solid transparent"
         }}
