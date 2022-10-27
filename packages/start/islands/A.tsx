@@ -1,3 +1,4 @@
+"use client";
 import type { A as BaseA } from "@solidjs/router";
 import { ComponentProps, splitProps } from "solid-js";
 import { useLocation } from "../router";
@@ -22,6 +23,8 @@ export default function IslandsA(props: ComponentProps<typeof BaseA>) {
         ...rest.classList
       }}
       aria-current={isActive() ? "page" : undefined}
-    />
+    >
+      {rest.children}
+    </a>
   );
 }

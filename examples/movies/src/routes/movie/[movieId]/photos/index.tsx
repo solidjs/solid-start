@@ -1,6 +1,4 @@
-import { unstable_island } from "solid-start";
-
-const Images = unstable_island(() => import("./Images"));
+import Images from "./Images";
 
 export default function Photos() {
   return (

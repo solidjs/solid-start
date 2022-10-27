@@ -17,14 +17,18 @@ export async function internalFetch(route: string, init: RequestInit) {
   const request = new Request(url.href, init);
   const handler = getRouteMatches(apiRoutes, url.pathname, request.method.toUpperCase() as Method);
 
-  let apiEvent: APIEvent = Object.freeze({
-    request,
-    params: handler.params,
-    env: {},
-    $type: FETCH_EVENT,
-    fetch: internalFetch
-  });
+  if (handler) {
+    let apiEvent: APIEvent = Object.freeze({
+      request,
+      params: handler.params,
+      env: {},
+      $type: FETCH_EVENT,
+      fetch: internalFetch
+    });
 
-  const response = await handler.handler(apiEvent);
-  return response;
+    const response = await handler.handler(apiEvent);
+    return response;
+  } else {
+    throw new Error(`No handler found for ${request.method} ${url.pathname}`);
+  }
 }

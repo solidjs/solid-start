@@ -212,19 +212,22 @@ export function Router(props: RouterProps) {
 
   const nextRoutes = next.routes;
 
-  const prev = props.prevLocation ? getMatchedBranch(props.routes, props.prevLocation) : null;
+  const prev =
+    context.mutation !== "true" && props.prevLocation
+      ? getMatchedBranch(props.routes, props.prevLocation)
+      : null;
   if (prev) {
     const prevRoutes = prev.routes;
 
     if (import.meta.env.PROD) {
-      let nextAssets = getAssetsFromManifest(context.env.manifest, [
+      let nextAssets = getAssetsFromManifest(context, [
         nextRoutes.map(r => ({
           ...r,
           ...r.match
         }))
       ]);
 
-      let prevAssets = getAssetsFromManifest(context.env.manifest, [
+      let prevAssets = getAssetsFromManifest(context, [
         prevRoutes.map(r => ({
           ...r,
           ...r.match

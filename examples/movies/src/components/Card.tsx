@@ -1,6 +1,5 @@
-import { A, unstable_island } from "solid-start";
-
-const Poster = unstable_island(() => import("./Poster"));
+import { A } from "solid-start";
+import Poster from "./Poster";
 
 export function Card(props) {
   const media = () =>

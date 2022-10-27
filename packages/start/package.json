@@ -88,6 +88,7 @@
     "esbuild-plugin-solid": "^0.4.2",
     "fast-glob": "^3.2.12",
     "get-port": "^6.1.2",
+    "micromorph": "^0.3.1",
     "parse-multipart-data": "^1.5.0",
     "picocolors": "^1.0.0",
     "rollup": "^2.79.1",

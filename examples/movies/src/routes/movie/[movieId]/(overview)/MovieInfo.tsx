@@ -1,10 +1,9 @@
 import { For, Show } from "solid-js";
-import { A, unstable_island } from "solid-start";
+import { A } from "solid-start";
 import { ExternalLinks } from "~/components/ExternalLinks";
+import Poster from "~/components/Poster";
 import { formatCurrency, formatDate, formatLanguage, formatRuntime } from "~/utils/format";
 import styles from "./MovieInfo.module.scss";
-
-const Poster = unstable_island(() => import("../../../../components/Poster"));
 
 export function MovieInfo(props) {
   const directors = () => {

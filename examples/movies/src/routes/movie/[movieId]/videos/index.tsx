@@ -1,6 +1,5 @@
-import { unstable_island, useSearchParams } from "solid-start";
-
-const Images = unstable_island(() => import("./Videos"));
+import { useSearchParams } from "solid-start";
+import Images from "./Videos";
 
 export default function Videos() {
   const [params] = useSearchParams();

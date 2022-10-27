@@ -1,3 +1,4 @@
+"use client";
 import { debounce } from "@solid-primitives/scheduled";
 import { createSignal } from "solid-js";
 import { useLocation, useNavigate } from "solid-start";

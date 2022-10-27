@@ -15,6 +15,38 @@ export default function (miniflareOptions = {}) {
   return {
     name: "cloudflare-workers",
     async dev(options, vite, dev) {
+      let durableObjects = Object.values(miniflareOptions?.durableObjects || {});
+      let globs = {};
+      durableObjects.forEach(obj => {
+        globs[obj + "Proxy"] = class DO {
+          state;
+          env;
+          promise;
+          constructor(state, env) {
+            this.state = state;
+            this.env = env;
+            this.promise = this.createProxy(state, env);
+          }
+
+          async createProxy(state, env) {
+            // const all = await vite.ssrLoadModule("~start/entry-server");
+            // return new all[obj](state, env);
+          }
+
+          async fetch(request) {
+            console.log("DURABLE_OBJECT", request.url);
+            const all = await vite.ssrLoadModule("~start/entry-server");
+
+            try {
+              // let dObject = await this.promise;
+              return await all[obj].fetch(request, this.state);
+            } catch (e) {
+              console.log("error", e);
+            }
+          }
+        };
+      });
+
       const mf = new Miniflare({
         script: `
         export default {
@@ -23,35 +55,10 @@ export default function (miniflareOptions = {}) {
           }
         }
 
-        export const WebSocketDurableObject = WebSocketDurableObject1;
+        ${durableObjects.map(obj => `export const ${obj} = ${obj}Proxy;`).join("\n")}
       `,
         globals: {
-          WebSocketDurableObject1: class DO {
-            state;
-            env;
-            promise;
-            constructor(state, env) {
-              this.state = state;
-              this.env = env;
-              this.promise = this.createProxy(state, env);
-            }
-
-            async createProxy(state, env) {
-              const { WebSocketDurableObject } = await vite.ssrLoadModule("~start/entry-server");
-              return new WebSocketDurableObject(state, env);
-            }
-
-            async fetch(request) {
-              console.log("DURABLE_OBJECT", request.url);
-
-              try {
-                let dObject = await this.promise;
-                return await dObject.fetch(request);
-              } catch (e) {
-                console.log("error", e);
-              }
-            }
-          },
+          ...globs,
           serve: async (req, e, g) => {
             const {
               Request,
@@ -106,6 +113,8 @@ export default function (miniflareOptions = {}) {
       });
 
       console.log("🔥", "starting miniflare");
+
+      miniflareOptions.init?.(mf);
 
       return await createServer(vite, mf, {});
     },

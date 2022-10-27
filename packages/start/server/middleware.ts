@@ -1,4 +1,3 @@
-import { internalFetch } from "../api/internalFetch";
 import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
 import { ContentTypeHeader, XSolidStartContentTypeHeader, XSolidStartOrigin } from "./responses";
 import { handleServerRequest, server$ } from "./server-functions/server";
@@ -33,7 +32,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
 
       let serverFunctionEvent = Object.freeze({
         request: event.request,
-        fetch: internalFetch,
+        fetch: event.fetch,
         $type: FETCH_EVENT,
         env: event.env
       });
@@ -66,6 +65,20 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
                   ...(await serverResponse.json())
                 })
               )
+          }
+        });
+      }
+
+      if (import.meta.env.START_ISLANDS && serverResponse.status === 204) {
+        console.log(
+          event.request.headers.get("x-solid-referrer"),
+          new URL(serverResponse.headers.get("Location"), event.request.url).href
+        );
+        return await event.fetch(serverResponse.headers.get("Location"), {
+          method: "GET",
+          headers: {
+            "x-solid-referrer": event.request.headers.get("x-solid-referrer"),
+            "x-solid-mutation": event.request.headers.get("x-solid-mutation")
           }
         });
       }

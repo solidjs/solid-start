@@ -1,9 +1,8 @@
 import { For } from "solid-js";
-import { createRouteData, unstable_island, useSearchParams } from "solid-start";
+import { createRouteData, useSearchParams } from "solid-start";
 import { Card } from "~/components/Card";
 import { search } from "~/services/tmdbAPI";
-const SearchBox = unstable_island(() => import("./SearchBox"));
-
+import SearchBox from "./SearchBox";
 export default function Search() {
   const [params] = useSearchParams();
   const data = createRouteData(async q => await search(q), {

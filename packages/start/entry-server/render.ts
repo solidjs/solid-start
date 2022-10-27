@@ -1,6 +1,5 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { internalFetch } from "../api/internalFetch";
 import { redirect } from "../server/responses";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
 
@@ -105,8 +104,6 @@ export function renderStream(
       });
     }
 
-    handleStreamingIslandsRouting(pageEvent, writable);
-
     stream.pipeTo(writable);
 
     return new Response(readable, {
@@ -145,6 +142,7 @@ function createPageEvent(event: FetchEvent) {
   });
 
   const prevPath = event.request.headers.get("x-solid-referrer");
+  const mutation = event.request.headers.get("x-solid-mutation");
 
   let statusCode = 200;
 
@@ -160,19 +158,25 @@ function createPageEvent(event: FetchEvent) {
     request: event.request,
     prevUrl: prevPath,
     routerContext: {},
+    mutation: mutation,
     tags: [],
     env: event.env,
     $type: FETCH_EVENT,
     responseHeaders,
     setStatusCode: setStatusCode,
     getStatusCode: getStatusCode,
-    fetch: internalFetch
+    $islands: new Set<string>(),
+    fetch: event.fetch
   });
 
   return pageEvent;
 }
 
 function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
+  if (pageEvent.mutation) {
+    pageEvent.routerContext.replaceOutletId = "outlet-0";
+    pageEvent.routerContext.newOutletId = "outlet-0";
+  }
   if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
     markup = `${
       pageEvent.routerContext.assets
@@ -188,7 +192,15 @@ function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
         `</outlet-wrapper>`.length
     )}`;
 
-    pageEvent.responseHeaders.set("Content-Type", "text/plain");
+    let url = new URL(pageEvent.request.url);
+    pageEvent.responseHeaders.set("Content-Type", "text/solid-diff");
+    pageEvent.responseHeaders.set("x-solid-location", url.pathname + url.search + url.hash);
+  }
+
+  if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.mutation) {
+    let url = new URL(pageEvent.request.url);
+    pageEvent.responseHeaders.set("Content-Type", "text/solid-diff");
+    pageEvent.responseHeaders.set("x-solid-location", url.pathname + url.search + url.hash);
   }
   return markup;
 }

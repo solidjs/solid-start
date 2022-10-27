@@ -1,3 +1,4 @@
+"use client";
 import { createSignal, JSX, splitProps } from "solid-js";
 import styles from "./Poster.module.scss";
 

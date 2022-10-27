@@ -1,6 +1,5 @@
 import { FetchEvent, FETCH_EVENT } from "../server/types";
 import { getApiHandler } from "./index";
-import { internalFetch } from "./internalFetch";
 
 export const apiRoutes = ({ forward }) => {
   return async (event: FetchEvent) => {
@@ -11,7 +10,7 @@ export const apiRoutes = ({ forward }) => {
         params: apiHandler.params,
         env: event.env,
         $type: FETCH_EVENT,
-        fetch: internalFetch
+        fetch: event.fetch
       });
       try {
         return await apiHandler.handler(apiEvent);
@@ -19,9 +18,17 @@ export const apiRoutes = ({ forward }) => {
         if (error instanceof Response) {
           return error;
         }
-        return new Response(JSON.stringify(error), {
-          status: 500
-        });
+        return new Response(
+          JSON.stringify({
+            error: error.message
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json"
+            },
+            status: 500
+          }
+        );
       }
     }
     return await forward(event);
