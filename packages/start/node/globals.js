@@ -7,5 +7,8 @@ Object.assign(globalThis, Streams, {
   Response,
   fetch,
   Headers,
-  crypto: crypto.webcrypto
 });
+
+if (globalThis.crypto != crypto.webcrypto) {
+  globalThis.crypto = crypto.webcrypto;
+}

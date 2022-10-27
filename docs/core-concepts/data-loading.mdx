@@ -51,7 +51,7 @@ export function routeData() {
   return { students };
 }
 
-export function Page() {
+export default function Page() {
   const { students } = useRouteData<typeof routeData>();
 
   return (
@@ -90,7 +90,7 @@ export function routeData() {
   });
 }
 
-export function Page() {
+export default function Page() {
   const students = useRouteData<typeof routeData>();
 
   return (
@@ -121,7 +121,7 @@ export function routeData() {
   return createServerData$(() => hogwarts.students.list());
 }
 
-export function Page() {
+export default function Page() {
   const students = useRouteData<typeof routeData>();
 
   return (
