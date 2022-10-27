@@ -21,7 +21,7 @@
     "solid-heroicons": "^3.1.0",
     "solid-js": "^1.5.8",
     "solid-start": "^0.2.0",
-    "solid-start-netlify": "workspace:^0.2.0",
+    "solid-start-netlify": "^0.2.0",
     "@solid-primitives/scheduled": "1.1.0",
     "undici": "^5.10.0"
   },
