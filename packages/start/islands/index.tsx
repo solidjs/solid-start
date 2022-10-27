@@ -58,7 +58,7 @@ export function island<T extends Component<any>>(
         fpath = x.script.href;
         styles = x.assets.filter(v => v.type == "style").map(v => v.href);
       } else {
-        fpath = `/` + path;
+        fpath = path;
       }
 
       return (
@@ -66,7 +66,7 @@ export function island<T extends Component<any>>(
           <solid-island
             data-props={JSON.stringify(props)}
             data-component={fpath}
-            data-island={`/` + path}
+            data-island={path}
             data-when={props["client:idle"] ? "idle" : "load"}
             data-css={JSON.stringify(styles)}
           >

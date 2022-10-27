@@ -655,7 +655,9 @@ function islands() {
             import Component from '${id.replace("?island", "")}';
 
             window._$HY.island("${
-              mode.command === "serve" ? `/@fs${id}` : `/${relative(process.cwd(), id)}`
+              mode.command === "serve"
+                ? `/@fs/${id}`
+                : `${normalizePath(relative(process.cwd(), id))}`
             }", Component);
 
             export default Component;
@@ -676,11 +678,13 @@ function islands() {
               ? `import ${b}_island from "${c}"; 
                   const ${b} = unstable_island(${b}_island, "${
                   mode.command === "serve"
-                    ? `@fs${join(dirname(id), c)}` + ".tsx" + "?island"
-                    : `${relative(process.cwd(), join(dirname(id), c))}.tsx?island`
+                    ? `/@fs/${normalizePath(join(dirname(id), c))}` + ".tsx" + "?island"
+                    : `${normalizePath(
+                        relative(process.cwd(), normalizePath(join(dirname(id), c)))
+                      )}.tsx?island`
                 }");`
               : `const ${b} = unstable_island(() => import("${c}?island"), "${
-                  `@fs/${join(dirname(id), c).slice(1)}` + ".tsx" + "?island"
+                  `@fs/${normalizePath(join(dirname(id), c)).slice(1)}` + ".tsx" + "?island"
                 }")`
         );
 
