@@ -26,7 +26,9 @@ export default function mountRouter() {
     DEBUG("mounting islands router");
 
     const basePath = "/";
-    let [currentLocation, setCurrentLocation] = createSignal<Location>(getLocation());
+    let [currentLocation, setCurrentLocation] = createSignal<Location & LocationEntry>(
+      getLocation()
+    );
     window.LOCATION = currentLocation;
     window.ROUTER = new EventTarget();
 
@@ -97,14 +99,7 @@ export default function mountRouter() {
         state: state && JSON.parse(state)
       };
 
-      if (await navigate(to)) {
-        if (options.replace) {
-          history.replaceState(options.state, "", to);
-        } else {
-          history.pushState(options.state, "", to);
-        }
-        setCurrentLocation(getLocation());
-      }
+      await navigate(to, options)
     }
 
     interface NavigateOptions {
@@ -115,11 +110,9 @@ export default function mountRouter() {
     }
 
     async function handlePopState(evt: PopStateEvent) {
-      const { pathname, state } = getLocation();
-      if (currentLocation().pathname !== pathname) {
-        if (await navigate(pathname)) {
-          setCurrentLocation(getLocation());
-        }
+      const { path, state } = getLocation();
+      if (currentLocation().path !== path) {
+        await navigate(path, { replace: true, state })
       }
     }
 
@@ -186,6 +179,13 @@ export default function mountRouter() {
               content,
               next
             });
+
+          if (options.replace) {
+            window.history.replaceState(options.state, "", to);
+          } else {
+            window.history.pushState(options.state, "", to);
+          }
+          setCurrentLocation(getLocation());
 
           window.ROUTER.dispatchEvent(new CustomEvent("navigation-end", { detail: to }));
           return true;
