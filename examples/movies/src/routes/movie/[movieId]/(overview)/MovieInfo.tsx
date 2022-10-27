@@ -1,8 +1,10 @@
 import { For, Show } from "solid-js";
-import { A } from "solid-start";
+import { A, unstable_island } from "solid-start";
 import { ExternalLinks } from "~/components/ExternalLinks";
 import { formatCurrency, formatDate, formatLanguage, formatRuntime } from "~/utils/format";
 import styles from "./MovieInfo.module.scss";
+
+const Poster = unstable_island(() => import("../../../../components/Poster"));
 
 export function MovieInfo(props) {
   const directors = () => {
@@ -30,7 +32,7 @@ export function MovieInfo(props) {
     <div class={`spacing ` + styles.info}>
       <div class={styles.left}>
         <div class={styles.poster}>
-          <img
+          <Poster
             width={370}
             height={556}
             alt="name"
