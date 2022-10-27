@@ -1,3 +1,3 @@
-export default function VideosSection() {
-  return <div>ImagesSection</div>;
+export function Images() {
+  return <div>Images</div>;
 }

@@ -2,7 +2,7 @@ import { For } from "solid-js";
 import { createRouteData, useSearchParams } from "solid-start";
 import { Card } from "~/components/Card";
 import { search } from "~/services/tmdbAPI";
-import SearchBox from "./SearchBox";
+import { SearchBox } from "./SearchBox";
 export default function Search() {
   const [params] = useSearchParams();
   const data = createRouteData(async q => await search(q), {

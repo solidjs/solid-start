@@ -4,7 +4,7 @@ import { createSignal } from "solid-js";
 import { useLocation, useNavigate } from "solid-start";
 import styles from "./SearchBox.module.scss";
 
-export default function Input(props) {
+export function SearchBox(props) {
   const [value, setValue] = createSignal(props.value || "");
   const navigate = useNavigate();
   const location = useLocation();
