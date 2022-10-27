@@ -66,7 +66,8 @@ export function createRouteAction<T, U = void>(
         headers: {
           "Content-Type": "application/json",
           [XSolidStartOrigin]: "client",
-          "x-solid-referrer": window.LOCATION().pathname
+          "x-solid-referrer": window.LOCATION().pathname,
+          "x-solid-mutation": "true"
         }
       });
     } else {

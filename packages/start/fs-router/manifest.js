@@ -43,6 +43,16 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     return files;
   }
 
+  function collectAsset(_src) {
+    src = _src;
+    let assets = collectAssets();
+    assets.addChunk(_src);
+
+    let files = assets.getFiles();
+    src = null;
+    return files;
+  }
+
   function collectAssets() {
     let files = [];
     let visitedFiles = new Set();
@@ -57,12 +67,28 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
       file.imports?.forEach(imp => {
         if (imp === src) return;
-        visitFile(assetManifest[imp]);
+        if (
+          (imp.includes("?island") || imp.includes("?client") || imp.includes("_island")) &&
+          !src
+        ) {
+          files.push({ type: "island", href: imp });
+          let f = imp.includes("?island") ? collect(imp) : collectAsset(imp);
+
+          manifest[imp] = {
+            script: f[0],
+            assets: f
+          };
+        } else {
+          visitFile(assetManifest[imp]);
+        }
       });
 
       file.dynamicImports?.forEach(imp => {
         if (imp === src) return;
-        if (imp.includes("?island") || (imp.includes("?client") && !src)) {
+        if (
+          (imp.includes("?island") || imp.includes("?client") || imp.includes("_island")) &&
+          !src
+        ) {
           files.push({ type: "island", href: imp });
           let f = collect(imp);
           manifest[imp] = {
@@ -101,6 +127,13 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       },
       addSrc(val) {
         let asset = Object.values(assetManifest).find(f => f.src === val);
+        if (!asset) {
+          return;
+        }
+        visitFile(asset);
+      },
+      addChunk(val) {
+        let asset = assetManifest[val];
         if (!asset) {
           return;
         }

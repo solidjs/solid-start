@@ -3,7 +3,7 @@
 
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
-const { resolve, join } = require("path");
+const { resolve, join, relative } = require("path");
 const path = require("path");
 const c = require("picocolors");
 const {
@@ -157,12 +157,13 @@ prog
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     config.adapter.build(config, {
-      islandsClient: async path => {
+      islandsClient: async outputDir => {
         console.log();
         console.log(c.blue("solid-start") + c.magenta(" finding islands..."));
         console.time(c.blue("solid-start") + c.magenta(" found islands in"));
 
         let routeManifestPath = join(config.root, ".solid", "route-manifest");
+        let islands = new Set();
         await vite.build({
           build: {
             outDir: routeManifestPath,
@@ -173,7 +174,12 @@ prog
                 resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
               ],
               output: {
-                manualChunks: undefined
+                manualChunks(id, i) {
+                  if (id.includes("?island")) {
+                    islands.add(id);
+                    return path.basename(id);
+                  }
+                }
               }
             }
           }
@@ -195,9 +201,22 @@ prog
           readFileSync(join(routeManifestPath, "route-manifest.json")).toString()
         );
 
-        let islands = Object.keys(routeManifest).filter(
-          a => a.includes("?island") || a.includes("?client")
+        let islandReferences = Object.keys(routeManifest).filter(
+          a => a.includes("?island") || a.includes("?client") || a.includes("_island")
         );
+
+        let islandToReference = {};
+        let referenceToIsland = {};
+        for (let island of islands) {
+          let name = path.basename(island);
+          let reference = islandReferences.find(a =>
+            a.match(new RegExp(`_${name.replace("?", "_").replace("&", "_")}.*`))
+          );
+          if (reference) {
+            islandToReference[relative(config.root, island)] = reference;
+            referenceToIsland[reference] = relative(config.root, island);
+          }
+        }
 
         console.timeEnd(c.blue("solid-start") + c.magenta(" found islands in"));
         console.log();
@@ -207,13 +226,13 @@ prog
           configFile: config.configFile,
           root: config.root,
           build: {
-            outDir: path,
+            outDir: outputDir,
             ssrManifest: true,
             minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
                 config.solidOptions.clientEntry,
-                ...islands.map(i => resolve(join(config.root, i)))
+                ...[...islands.values()].map(i => resolve(i))
               ],
               output: {
                 manualChunks: undefined
@@ -222,27 +241,38 @@ prog
           }
         });
 
-        assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
-        ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+        assetManifest = JSON.parse(readFileSync(join(outputDir, "manifest.json")).toString());
+        ssrManifest = JSON.parse(readFileSync(join(outputDir, "ssr-manifest.json")).toString());
 
-        let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, islands);
+        let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, [
+          ...Object.keys(islandToReference)
+        ]);
 
         let newManifest = {
           ...Object.fromEntries(
             Object.entries(routeManifest)
               .filter(([k]) => k.startsWith("/") || k === "")
-              .map(([k, v]) => [k, v.filter(a => a.type !== "script")])
+              .map(([k, v]) => [
+                k,
+                v
+                  .filter(a => a.type !== "script")
+                  // replace island references with island source paths
+                  .map(v => (v.type === "island" ? { ...v, href: referenceToIsland[v.href] } : v))
+              ])
           ),
           ...Object.fromEntries(
             Object.entries(islandsManifest)
-              .filter(([k]) => k.includes("?island") || k.includes("?client"))
+              .filter(
+                ([k]) => k.includes("?island") || k.includes("?client") || k.includes("_island")
+              )
               .map(([k, v]) => [
                 k,
                 {
                   script: v.script,
                   assets: [
                     ...v.assets.filter(a => a.type === "script"),
-                    ...routeManifest[k].assets.filter(a => a.type === "style")
+                    // load assets via reference tags
+                    ...routeManifest[islandToReference[k]].assets.filter(a => a.type === "style")
                   ]
                 }
               ])
@@ -257,12 +287,12 @@ prog
           let assets = Array.isArray(v) ? v : v.assets;
           assets.forEach(a => {
             if (a.type === "style") {
-              copyFileSync(join(routeManifestPath, a.href), join(path, a.href));
+              copyFileSync(join(routeManifestPath, a.href), join(outputDir, a.href));
             }
           });
         });
 
-        writeFileSync(join(path, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
+        writeFileSync(join(outputDir, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
         writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
         writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
         writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));

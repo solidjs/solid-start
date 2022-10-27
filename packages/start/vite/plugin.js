@@ -652,7 +652,6 @@ function islands() {
     load(id) {
       if (id.includes("?island")) {
         let f = id.match(/isle_([A-Z0-9a-z_]+)&?\??$/);
-        console.log("LOADING island", id);
         if (!f) {
           return {
             code: `
@@ -701,27 +700,30 @@ function islands() {
 
         let client = ``;
 
-        console.log();
         exports.map(e => {
           if (e.n === "default") {
             prep += `
             import Island from '${id}?client';
             export default unstable_island(Island, "${
-              mode.command === "serve" ? `@fs` + id + "?island" : null
+              mode.command === "serve"
+                ? `@fs` + id + "?island"
+                : `${relative(process.cwd(), id)}?island`
             }");`;
-            client += `
-              export { default } from '${id}?island';
+            client += `        
+            export { default } from '${id}?island';
             `;
           } else {
             if (e.n.charAt(0) === e.n.charAt(0).toUpperCase()) {
               prep += `
               import {${e.ln} as ${e.ln}Island } from '${id}?client';
               export const ${e.ln} = unstable_island(${e.ln}Island, "${
-                mode.command === "serve" ? `@fs` + id + `?island&isle_${e.ln}` : null
+                mode.command === "serve"
+                  ? `@fs` + id + `?island&isle_${e.ln}`
+                  : `${relative(process.cwd(), id)}?island&isle_${e.ln}`
               }");`;
               client += `
-              export { ${e.ln} } from '${id}?island&isle_${e.ln}';
-
+                import { ${e.ln} } from '${id}?island&isle_${e.ln}';
+                export { ${e.ln} };
               `;
             } else {
               prep += `
@@ -732,7 +734,6 @@ function islands() {
             }
           }
         });
-        console.log(prep);
         return {
           code: ssr ? prep : client
         };

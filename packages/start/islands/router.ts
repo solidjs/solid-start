@@ -194,57 +194,59 @@ function update(body: string) {
     assets = JSON.parse(body.substring("assets=".length, assetsIndex));
     body = body.substring(assetsIndex + 1);
   }
-  const splitIndex = body.indexOf("=");
-  const meta = body.substring(0, splitIndex);
-  const content = body.substring(splitIndex + 1);
+  if (body.charAt(0) === "o") {
+    const splitIndex = body.indexOf("=");
+    const meta = body.substring(0, splitIndex);
+    const content = body.substring(splitIndex + 1);
 
-  if (meta) {
-    if (assets.length) {
-      assets[0].forEach(([assetType, href]) => {
-        if (!document.querySelector(`link[href="${href}"]`)) {
-          let link = document.createElement("link");
-          link.rel = assetType === "style" ? "stylesheet" : "modulepreload";
-          link.href = href;
-          document.head.appendChild(link);
-        }
-      });
-
-      assets[1].forEach(([assetType, href]) => {
-        let el = document.querySelector(`link[href="${href}"]`);
-        if (el) {
-          document.head.removeChild(el);
-        }
-      });
-    }
-
-    const [prev, next] = meta.split(":");
-    const outletEl = document.getElementById(prev);
-    if (outletEl) {
-      let old = outletEl.firstChild;
-      let doc = document.implementation.createHTMLDocument();
-      doc.write(`<outlet-wrapper id="${next}">`);
-      doc.write(content);
-      doc.write("</outlet-wrapper>");
-
-      // outletEl.innerHTML = content;
-      // outletEl.id = next;
-      // window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
-      window._$HY &&
-        window._$HY.replaceIslands &&
-        window._$HY.replaceIslands({
-          outlet: outletEl,
-          old,
-          new: doc,
-          content,
-          next
+    if (meta) {
+      if (assets.length) {
+        assets[0].forEach(([assetType, href]) => {
+          if (!document.querySelector(`link[href="${href}"]`)) {
+            let link = document.createElement("link");
+            link.rel = assetType === "style" ? "stylesheet" : "modulepreload";
+            link.href = href;
+            document.head.appendChild(link);
+          }
         });
 
-      return true;
+        assets[1].forEach(([assetType, href]) => {
+          let el = document.querySelector(`link[href="${href}"]`);
+          if (el) {
+            document.head.removeChild(el);
+          }
+        });
+      }
+
+      const [prev, next] = meta.split(":");
+      const outletEl = document.getElementById(prev);
+      if (outletEl) {
+        let old = outletEl.firstChild;
+        let doc = document.implementation.createHTMLDocument();
+        doc.write(`<outlet-wrapper id="${next}">`);
+        doc.write(content);
+        doc.write("</outlet-wrapper>");
+
+        // outletEl.innerHTML = content;
+        // outletEl.id = next;
+        // window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
+        window._$HY &&
+          window._$HY.replaceIslands &&
+          window._$HY.replaceIslands({
+            outlet: outletEl,
+            old,
+            new: doc.body.firstChild,
+            content,
+            next
+          });
+
+        return true;
+      } else {
+        console.warn(`No outlet element with id ${prev}`);
+      }
     } else {
-      console.warn(`No outlet element with id ${prev}`);
+      console.warn(`No meta data in response`);
     }
-  } else {
-    console.warn(`No meta data in response`);
   }
   return false;
 }

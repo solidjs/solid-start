@@ -1,6 +1,6 @@
 import { diff } from "micromorph";
 import { createStore } from "solid-js/store";
-import { createComponent, getOwner, hydrate } from "solid-js/web";
+import { createComponent, getNextElement, getOwner, hydrate } from "solid-js/web";
 
 function lookupOwner(el: HTMLElement) {
   const parent = el.closest("solid-children");
@@ -31,9 +31,12 @@ export function mountIslands() {
       ...JSON.parse(el.dataset.props),
       get children() {
         const p = el.getElementsByTagName("solid-children");
+        getNextElement({
+          cloneNode() {}
+        });
         console.log(p);
         [...p].forEach(a => {
-          (p as any).__$owner = getOwner();
+          (a as any).__$owner = getOwner();
         });
         return;
       }
@@ -61,7 +64,7 @@ export function mountIslands() {
   window._$HY.hydrateIslands = () => {
     const islands = document.querySelectorAll("solid-island[data-hk]");
     const assets = new Set<string>();
-    islands.forEach((el: HTMLElement) => assets.add(el.dataset.component));
+    islands.forEach((el: HTMLElement) => el.dataset.component && assets.add(el.dataset.component));
     Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset)))
       .then(() => {
         islands.forEach((el: HTMLElement) => {
@@ -174,19 +177,8 @@ export function mountIslands() {
     }
   }
 
-  window._$HY.replaceIslands = ({
-    outlet,
-    old,
-    new: newEl,
-    content,
-    next
-  }: {
-    outlet: HTMLElement;
-    new: Document;
-    old: HTMLElement;
-  }) => {
-    let d = diff(outlet, newEl.body.firstChild);
-    console.log(d);
+  window._$HY.replaceIslands = ({ outlet, new: newEl }: { outlet: HTMLElement; new: Document }) => {
+    let d = diff(outlet, newEl);
     patch(outlet, d);
     // const islands = newEl.body.querySelectorAll("solid-island[data-hk]");
     // let el = document.activeElement;

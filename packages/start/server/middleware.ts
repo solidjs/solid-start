@@ -77,7 +77,8 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
         return await event.fetch(serverResponse.headers.get("Location"), {
           method: "GET",
           headers: {
-            "x-solid-referrer": event.request.headers.get("x-solid-referrer")
+            "x-solid-referrer": event.request.headers.get("x-solid-referrer"),
+            "x-solid-mutation": event.request.headers.get("x-solid-mutation")
           }
         });
       }
