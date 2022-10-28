@@ -6,5 +6,6 @@ import { ServerContext } from "../server/ServerContext";
 export default function Meta() {
   const context = useContext(ServerContext);
   // @ts-expect-error The ssr() types do not match the Assets child types
-  useAssets(() => ssr(renderTags(context.tags)))
+  useAssets(() => ssr(renderTags(context.tags)));
+  return null;
 }

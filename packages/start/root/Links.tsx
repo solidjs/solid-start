@@ -27,4 +27,5 @@ export default function Links() {
 
       return Object.values(links);
     });
+  return null;
 }
