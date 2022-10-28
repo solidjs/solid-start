@@ -42,7 +42,6 @@ export function renderAsync(
   }
 ) {
   return () => async (event: FetchEvent) => {
-    const time = performance.now();
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
       return await event.env.getStaticHTML("/index");
     }
@@ -58,8 +57,6 @@ export function renderAsync(
     }
 
     markup = handleIslandsRouting(pageEvent, markup);
-    const timeEnd = performance.now();
-    console.log("render time", timeEnd - time, markup.length / 1024);
 
     return new Response(markup, {
       status: pageEvent.getStatusCode(),
