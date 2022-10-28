@@ -15,39 +15,40 @@ export function NoteEditor(props: { noteId: string; initialTitle: string; initia
   const [title, setTitle] = createSignal(props.initialTitle);
   const [body, setBody] = createSignal(props.initialBody);
   const [isNavigating, startNavigating] = useTransition();
-  const [isSaving, saveNote] = createServerAction$(
-    async ({ noteId, body, title }: { noteId: string; body: string; title: string }, { env }) => {
-      if (noteId !== null) {
-        await env.DO.get(env.DO.idFromName("notes")).fetch(
-          `https://notes/update?id=${encodeURIComponent(noteId)}`,
-          {
-            body: JSON.stringify({
-              title,
-              body,
-              updated_at: new Date().toISOString()
-            }),
-            method: "POST"
-          }
-        );
-        return redirect("/notes/" + noteId);
-      } else {
-        let id = `note_${Math.round(Math.random() * 100000)}`;
-        await env.DO.get(env.DO.idFromName("notes")).fetch(
-          `https://notes/update?id=${encodeURIComponent(id)}`,
-          {
-            body: JSON.stringify({
-              title,
-              body,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            }),
-            method: "POST"
-          }
-        );
-        return redirect("/notes/" + id);
-      }
+  const [isSaving, saveNote] = createServerAction$(async (form: FormData, { env }) => {
+    console.log(form.get("title"));
+    let { noteId, title, body } = Object.fromEntries(form.entries()) as any;
+    if (noteId !== null) {
+      await env.DO.get(env.DO.idFromName("notes")).fetch(
+        `https://notes/update?id=${encodeURIComponent(noteId)}`,
+        {
+          body: JSON.stringify({
+            title,
+            body,
+            updated_at: new Date().toISOString()
+          }),
+          method: "POST"
+        }
+      );
+      return redirect("/notes/" + noteId);
+    } else {
+      let id = `note_${Math.round(Math.random() * 100000)}`;
+      await env.DO.get(env.DO.idFromName("notes")).fetch(
+        `https://notes/update?id=${encodeURIComponent(id)}`,
+        {
+          body: JSON.stringify({
+            title,
+            body,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }),
+          method: "POST"
+        }
+      );
+      return redirect("/notes/" + id);
     }
-  );
+  });
+
   const [, deleteNote] = createServerAction$(async ({ noteId }: { noteId: string }, { env }) => {
     if (noteId !== null) {
       await env.DO.get(env.DO.idFromName("notes")).fetch(`http://notes/delete?id=${noteId}`);
@@ -59,13 +60,15 @@ export function NoteEditor(props: { noteId: string; initialTitle: string; initia
 
   return (
     <div class="note-editor">
-      <form class="note-editor-form" autocomplete="off" onSubmit={e => e.preventDefault()}>
+      <saveNote.Form class="note-editor-form" id="note-editor" autocomplete="off">
+        <input type="hidden" name="noteId" value={props.noteId} />
         <label class="offscreen" for="note-title-input">
           Enter a title for your note
         </label>
         <input
           id="note-title-input"
           type="text"
+          name="title"
           value={title()}
           onInput={e => {
             setTitle(e.currentTarget.value);
@@ -75,25 +78,21 @@ export function NoteEditor(props: { noteId: string; initialTitle: string; initia
           Enter the body for your note
         </label>
         <textarea
+          name="body"
           id="note-body-input"
           value={body()}
           onInput={e => {
             setBody(e.currentTarget.value);
           }}
         />
-      </form>
+      </saveNote.Form>
       <div class="note-editor-preview">
         <div class="note-editor-menu" role="menubar">
           <button
             class="note-editor-done"
             disabled={isSaving.pending || isNavigating()}
-            onClick={() =>
-              saveNote({
-                noteId: props.noteId,
-                body: body(),
-                title: title()
-              })
-            }
+            type="submit"
+            form="note-editor"
             role="menuitem"
           >
             <img src="/checkmark.svg" width="14px" height="10px" alt="" role="presentation" />

@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, createSignal, useContext } from "solid-js";
-export const context = createContext();
+import { createContext, createSignal, Signal, useContext } from "solid-js";
+export const context = createContext<Signal<boolean>>();
 
 export const Provider = props => {
   const signal = createSignal(true);

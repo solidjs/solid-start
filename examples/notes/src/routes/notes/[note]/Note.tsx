@@ -8,16 +8,12 @@
 
 import { format } from "date-fns";
 import { Show } from "solid-js";
-import { useRouteData } from "solid-start";
 import { EditButton } from "~/components/EditButton";
-import type { routeData } from "./layout";
 import { NotePreview } from "./NotePreview";
 
 export function Note(props) {
-  const note = useRouteData<typeof routeData>();
-
   return (
-    <Show when={note()} keyed>
+    <Show when={props.note} keyed>
       {note => (
         <div class="note">
           <div class="note-header">

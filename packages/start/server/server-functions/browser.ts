@@ -92,7 +92,7 @@ function createRequestInit(...args) {
       }
     }
     body = JSON.stringify(args, (key, value) => {
-      if (typeof value === "object" && value && value.$type === FETCH_EVENT) {
+      if (value && typeof value === "object" && value.$type === FETCH_EVENT) {
         return {
           $type: "fetch_event"
         };
