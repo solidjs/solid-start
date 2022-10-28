@@ -2,11 +2,7 @@ import { Style } from "@solidjs/meta";
 import { createResource, Show, Suspense, useContext } from "solid-js";
 import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
-
-// @ts-expect-error
-var routeLayouts = $ROUTE_LAYOUTS;
-
-export { routeLayouts };
+import { routeLayouts } from "./routeLayouts";
 
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
