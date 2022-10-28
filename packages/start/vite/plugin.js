@@ -659,7 +659,7 @@ function islands() {
 
             window._$HY.island("${
               mode.command === "serve"
-                ? `/@fs${id}`
+                ? `/@fs/${id}`
                 : `${normalizePath(relative(process.cwd(), id))}`
             }", Component);
 
@@ -673,7 +673,7 @@ function islands() {
             import { ${f[1]} } from '${id.replace(/\?.*/, "?client")}';
 
             window._$HY.island("${
-              mode.command === "serve" ? `/@fs${id}` : `${relative(process.cwd(), id)}`
+              mode.command === "serve" ? `/@fs/${id}` : `${relative(process.cwd(), id)}`
             }",  ${f[1]});
 
             `
@@ -708,7 +708,7 @@ function islands() {
             import Island from '${id}?client';
             export default unstable_island(Island, "${
               mode.command === "serve"
-                ? `/@fs` + id + "?island"
+                ? `/@fs/` + id + "?island"
                 : `${normalizePath(relative(process.cwd(), id))}?island`
             }");`;
             client += `        
@@ -720,7 +720,7 @@ function islands() {
               import {${e.ln} as ${e.ln}Island } from '${id}?client';
               export const ${e.ln} = unstable_island(${e.ln}Island, "${
                 mode.command === "serve"
-                  ? `/@fs` + id + `?island&isle_${e.ln}`
+                  ? `/@fs/` + id + `?island&isle_${e.ln}`
                   : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
               }");`;
               client += `
