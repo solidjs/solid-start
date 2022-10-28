@@ -29,11 +29,6 @@ declare global {
 
   export const DEBUG: Debugger;
 }
-    };
-  }
-
-  export const DEBUG: Debugger;
-}
 
 export const start: (options?: Partial<Options>) => Plugin[];
 export default start;

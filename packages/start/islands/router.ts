@@ -160,7 +160,6 @@ export default function mountRouter() {
 
     window.PUSH = (to, options) => {
       let u = new URL(to, window.location.origin);
-      console.log(u);
       if (options.replace) {
         history.replaceState(options.state, "", u);
       } else {
@@ -171,7 +170,6 @@ export default function mountRouter() {
 
     window.NAVIGATE = (async (to, options = {}) => {
       if (await navigate(to)) {
-        console.log(to);
         window.PUSH(to, options);
       }
     }) as unknown as Navigator;

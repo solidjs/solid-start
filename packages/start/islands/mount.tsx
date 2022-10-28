@@ -32,7 +32,6 @@ export function mountIslands() {
       get children() {
         const p = el.getElementsByTagName("solid-children");
         getHydrationKey();
-        console.log(p);
         [...p].forEach(a => {
           (a as any).__$owner = getOwner();
         });
@@ -107,7 +106,7 @@ export function mountIslands() {
 
   function patchIsland(el, { attributes, children }) {
     if (el.tagName === "SOLID-ISLAND") {
-      console.log("persisted", el, attributes);
+      // console.log("persisted", el, attributes);
       let props = attributes.find(a => a.name === "data-props");
       if (props) {
         el.props[1](JSON.parse(props.value));

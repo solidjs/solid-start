@@ -42,6 +42,7 @@ export function renderAsync(
   }
 ) {
   return () => async (event: FetchEvent) => {
+    const time = performance.now();
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
       return await event.env.getStaticHTML("/index");
     }
@@ -57,6 +58,8 @@ export function renderAsync(
     }
 
     markup = handleIslandsRouting(pageEvent, markup);
+    const timeEnd = performance.now();
+    console.log("render time", timeEnd - time, markup.length / 1024);
 
     return new Response(markup, {
       status: pageEvent.getStatusCode(),
@@ -182,15 +185,17 @@ function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
       pageEvent.routerContext.assets
         ? `assets=${JSON.stringify(pageEvent.routerContext.assets)};`
         : ``
-    }${pageEvent.routerContext.replaceOutletId}:${
-      pageEvent.routerContext.newOutletId
-    }=${markup.slice(
-      markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) +
-        `<!--${pageEvent.routerContext.newOutletId}-->`.length +
-        `<outlet-wrapper id="${pageEvent.routerContext.newOutletId}">`.length,
-      markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
-        `</outlet-wrapper>`.length
-    )}`;
+    }${pageEvent.routerContext.replaceOutletId}:${pageEvent.routerContext.newOutletId}=${
+      pageEvent.routerContext.partial
+        ? markup
+        : markup.slice(
+            markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) +
+              `<!--${pageEvent.routerContext.newOutletId}-->`.length +
+              `<outlet-wrapper id="${pageEvent.routerContext.newOutletId}">`.length,
+            markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
+              `</outlet-wrapper>`.length
+          )
+    }`;
 
     let url = new URL(pageEvent.request.url);
     pageEvent.responseHeaders.set("Content-Type", "text/solid-diff");

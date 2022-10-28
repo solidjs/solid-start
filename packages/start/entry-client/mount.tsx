@@ -11,8 +11,9 @@ declare global {
 }
 
 if (import.meta.env.DEV) {
-  localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
-  window.DEBUG = console.log as unknown as any;
+  window.DEBUG = localStorage.getItem("debug")?.includes("start")
+    ? console.log
+    : ((() => {}) as unknown as any);
 
   DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
   DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
@@ -25,7 +26,6 @@ if (import.meta.env.DEV) {
     window.open(window.location.href.replace(window.location.pathname, "/__inspect"));
   };
 }
-
 
 export default function mount(code?: () => JSX.Element, element?: Document) {
   if (import.meta.env.START_ISLANDS) {

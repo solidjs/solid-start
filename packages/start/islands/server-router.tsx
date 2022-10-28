@@ -1,5 +1,6 @@
-import { createContext, JSX, useContext } from "solid-js";
-import { ssr } from "solid-js/web";
+import { Route, Routes } from "@solidjs/router";
+import { createContext, JSX, Suspense, useContext } from "solid-js";
+import { NoHydration, ssr } from "solid-js/web";
 import { getAssetsFromManifest } from "../root/assets";
 import { useServerContext } from "../server/ServerContext";
 export interface RouteDefinition {
@@ -112,7 +113,7 @@ export function createMatchedRoute(
     return null;
   }
 
-  const { path: originalPath, component = Outlet, children } = routeDef;
+  const { path: originalPath, component = Outlet, children, data } = routeDef;
   const isLeaf = !children || !Array.isArray(children) || !children.length;
   const path = joinPaths(base, originalPath);
   const pattern = isLeaf ? path : path.split("/*", 1)[0];
@@ -127,6 +128,8 @@ export function createMatchedRoute(
     originalPath,
     pattern,
     component,
+    children,
+    data,
     match,
     shared: false
   };
@@ -283,10 +286,13 @@ export function Router(props: RouterProps) {
         }
         // Routes are shared
       } else if (prevRoute && nextRoute) {
+        console.log(prevRoute, nextRoute);
         // console.log("diff rendered");
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
+        props.out.prevRoute = prevRoute;
         props.out.newOutletId = `outlet-${nextRoute.id}`;
+        props.out.nextRoute = nextRoute;
         //console.log(prevRoute, nextRoute);
         //console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
         // diffedRender = (
@@ -304,6 +310,30 @@ export function Router(props: RouterProps) {
     location: props.location,
     out: props.out
   };
+
+  if (props.out.prevRoute) {
+    props.out.partial = true;
+    return (
+      <RouterContext.Provider value={state}>
+        <OutletContext.Provider
+          value={{ depth: nextRoutes.indexOf(props.out.nextRoute) + 1, route: props.out.nextRoute }}
+        >
+          <NoHydration>
+            <Suspense>
+              <Routes>
+                <Route
+                  path={props.out.nextRoute.pattern}
+                  component={props.out.nextRoute.component}
+                  data={props.out.nextRoute.data}
+                  children={props.out.nextRoute.children}
+                />
+              </Routes>
+            </Suspense>
+          </NoHydration>
+        </OutletContext.Provider>
+      </RouterContext.Provider>
+    );
+  }
 
   return <RouterContext.Provider value={state}>{props.children}</RouterContext.Provider>;
 }
