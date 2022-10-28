@@ -286,7 +286,6 @@ export function Router(props: RouterProps) {
         }
         // Routes are shared
       } else if (prevRoute && nextRoute) {
-        console.log(prevRoute, nextRoute);
         // console.log("diff rendered");
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
