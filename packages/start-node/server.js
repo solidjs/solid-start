@@ -2,11 +2,14 @@ import compression from "compression";
 import { once } from "events";
 import fs from "fs";
 import { readFile } from "fs/promises";
-import { join } from "path";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import polka from "polka";
 import sirv from "sirv";
 import { createRequest } from "solid-start/node/fetch.js";
 import { Readable } from "stream";
+
+global.__dirname = dirname(fileURLToPath(import.meta.url));
 
 global.onunhandledrejection = (err, promise) => {
   console.error(err);
