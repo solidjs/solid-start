@@ -3,7 +3,7 @@
 
 .nav {
   display: flex;
-  height: 4.8rem;
+  gap: 1rem;
   background-color: #1b1b1b;
 
   @media (min-width: $breakpoint-large) {
