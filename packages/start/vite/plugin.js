@@ -562,7 +562,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : detectAdapter(),
+      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
