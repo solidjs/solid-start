@@ -62,9 +62,12 @@ export function createRouteAction<T, U = void>(
     if (fn.url && import.meta.env.START_ISLANDS) {
       p = fetch(fn.url, {
         method: "POST",
-        body: JSON.stringify([variables, { $type: "fetch_event" }]),
+        body:
+          variables instanceof FormData
+            ? variables
+            : JSON.stringify([variables, { $type: "fetch_event" }]),
         headers: {
-          "Content-Type": "application/json",
+          ...(variables instanceof FormData ? {} : { "Content-Type": "application/json" }),
           [XSolidStartOrigin]: "client",
           "x-solid-referrer": window.LOCATION().pathname,
           "x-solid-mutation": "true"

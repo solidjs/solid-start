@@ -149,7 +149,7 @@ server$.call = async function (route, init: RequestInit) {
 
   const response = await fetch(request);
 
-  // // throws response, error, form error, json object, string
+// // throws response, error, form error, json object, string
   if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
     throw await parseResponse(request, response);
   } else {
