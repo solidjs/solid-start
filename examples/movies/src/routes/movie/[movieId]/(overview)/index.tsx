@@ -1,12 +1,12 @@
 import { Show } from "solid-js";
-import { useRouteData } from "solid-start";
-import type { routeData } from "../layout";
+import { useParams } from "solid-start";
+import { useMovie } from "../useMovie";
 import { Credits } from "./Credits";
 import { MovieInfo } from "./MovieInfo";
 
 export default function MoviePage() {
-  const data = useRouteData<typeof routeData>();
-
+  const params = useParams();
+  const data = useMovie(params);
   return (
     <Show when={data()}>
       <MovieInfo item={data()?.item} />

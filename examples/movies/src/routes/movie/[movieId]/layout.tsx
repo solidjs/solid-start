@@ -1,34 +1,12 @@
 import { Show } from "solid-js";
-import { A, Outlet, useParams, useRouteData } from "solid-start";
+import { A, Outlet, useParams } from "solid-start";
 import { Hero } from "~/components/Hero";
-// import { routeData } from "../[movieId]";
-import { createRouteData } from "solid-start";
-import { getMovie } from "~/services/tmdbAPI";
 import styles from "./layout.module.scss";
-
-export function routeData({ params }) {
-  return createRouteData(
-    async id => {
-      try {
-        const item = await getMovie(id);
-
-        if (item.adult) {
-          throw new Error("Data not available");
-        } else {
-          return { item };
-        }
-      } catch {
-        throw new Error("Data not available");
-      }
-    },
-    {
-      key: () => params.movieId
-    }
-  );
-}
+import { useMovie } from "./useMovie";
 
 export default function MoviePage() {
-  const data = useRouteData<typeof routeData>();
+  const params = useParams();
+  const data = useMovie(params);
 
   return (
     <main>
