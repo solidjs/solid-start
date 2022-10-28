@@ -92,7 +92,7 @@ function createRequestInit(...args) {
       }
     }
     body = JSON.stringify(args, (key, value) => {
-      if (typeof value === "object" && value && value.$type === FETCH_EVENT) {
+      if (value && typeof value === "object" && value.$type === FETCH_EVENT) {
         return {
           $type: "fetch_event"
         };
@@ -149,7 +149,7 @@ server$.call = async function (route, init: RequestInit) {
 
   const response = await fetch(request);
 
-// // throws response, error, form error, json object, string
+  // // throws response, error, form error, json object, string
   if (response.headers.get(XSolidStartResponseTypeHeader) === "throw") {
     throw await parseResponse(request, response);
   } else {

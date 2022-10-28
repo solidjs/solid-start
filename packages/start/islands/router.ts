@@ -140,6 +140,7 @@ export default function mountRouter() {
     async function navigate(to: string, options: NavigateOptions = {}) {
       window.ROUTER.dispatchEvent(new CustomEvent("navigation-start", { detail: to }));
       const response = await fetch(to, {
+        method: "POST",
         headers: {
           "x-solid-referrer": currentLocation().pathname
         }

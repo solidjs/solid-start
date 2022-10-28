@@ -2,7 +2,11 @@ import { Style } from "@solidjs/meta";
 import { createResource, Show, Suspense, useContext } from "solid-js";
 import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
-import { routesConfig } from "./FileRoutes";
+
+// @ts-expect-error
+var routeLayouts = $ROUTE_LAYOUTS;
+
+export { routeLayouts };
 
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
@@ -13,7 +17,7 @@ async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["
       if (env.__dev.manifest.find(entry => entry.path === fullPath)) {
         memo.push(env.__dev.manifest.find(entry => entry.path === fullPath)!.componentPath);
       }
-      const route = routesConfig.routeLayouts[fullPath];
+      const route = routeLayouts[fullPath];
       if (route) {
         memo.push(
           ...route.layouts
