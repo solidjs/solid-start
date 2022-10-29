@@ -63,4 +63,5 @@ export default function Links() {
   !isDev &&
     import.meta.env.START_SSR &&
     useAssets(() => getAssetsFromManifest(context.env.manifest, context.routerContext));
+  return null;
 }

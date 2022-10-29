@@ -5,22 +5,27 @@ import { Readable } from "stream";
 import { createRequest } from "../node/fetch.js";
 import "../node/globals.js";
 
+// @ts-ignore
 globalThis.DEBUG = debug("start:server");
 
 // Vite doesn't expose this so we just copy the list for now
 // https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
-process.on("unhandledRejection", function (e) {
-  if (
-    !(
-      (typeof e === "string" && e.includes("renderToString timed out")) ||
-      (e.message && e.message.includes("renderToString timed out"))
-    )
-  ) {
-    console.error(e);
+process.on(
+  "unhandledRejection",
+  /** @param {Error | string} err */ err => {
+    if (
+      !(typeof err === "string"
+        ? err.includes("renderToString timed out")
+        : err.message
+        ? err.message.includes("renderToString timed out")
+        : false)
+    ) {
+      console.error(`An unhandler error occured: ${err}`);
+    }
   }
-});
+);
 
 /**
  *
@@ -111,6 +116,7 @@ export function createDevHandler(viteServer, config, options) {
       }
 
       if (webRes.body) {
+        // @ts-ignore
         const readable = Readable.from(webRes.body);
         readable.pipe(res);
         await once(readable, "end");

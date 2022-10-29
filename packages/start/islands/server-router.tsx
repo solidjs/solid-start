@@ -17,7 +17,7 @@ export interface MatchedRoute {
   id: string;
   originalPath: string;
   pattern: string;
-  component: () => JSX.Element;
+  component: (props: any) => JSX.Element;
   match: PathMatch;
   shared: boolean;
 }

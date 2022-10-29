@@ -107,7 +107,7 @@ export function isResponse(value: any): value is Response {
 
 const redirectStatusCodes = new Set([204, 301, 302, 303, 307, 308]);
 
-export function isRedirectResponse(response: Response): boolean {
+export function isRedirectResponse(response: Response | any): response is Response {
   return response && response instanceof Response && redirectStatusCodes.has(response.status);
 }
 

@@ -96,6 +96,7 @@ class NodeRequest extends BaseNodeRequest {
   //   return (await this.buffer()).toString();
   // }
 
+  // @ts-ignore
   async formData() {
     if (this.headers.get("content-type") === "application/x-www-form-urlencoded") {
       return await super.formData();
@@ -123,7 +124,9 @@ class NodeRequest extends BaseNodeRequest {
     }
   }
 
+  // @ts-ignore
   clone() {
+    /** @type {BaseNodeRequest & { buffer?: () => Promise<Buffer>; formData?: () => Promise<FormData> }}  */
     let el = super.clone();
     el.buffer = this.buffer.bind(el);
     el.formData = this.formData.bind(el);

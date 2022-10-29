@@ -1,4 +1,26 @@
 import { webSocketHandlers } from "./webSocketHandlers";
+interface DurableObjectId {
+  toString(): string;
+  equals(other: DurableObjectId): boolean;
+  readonly name?: string;
+}
+
+interface DurableObjectStorage {}
+
+interface DurableObjectState {
+  waitUntil(promise: Promise<any>): void;
+  id: DurableObjectId;
+  readonly storage: DurableObjectStorage;
+  blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+}
+
+declare const WebSocketPair: { new (): { 0: WebSocket; 1: WebSocket } };
+
+declare global {
+  interface ResponseInit {
+    webSocket?: WebSocket;
+  }
+}
 
 export class WebSocketDurableObject {
   storage: DurableObjectStorage;
@@ -8,11 +30,7 @@ export class WebSocketDurableObject {
   constructor(state: DurableObjectState) {
     // We will put the WebSocket objects for each client into `websockets`
     this.storage = state.storage;
-    this.dolocation = "";
     this.state = state;
-
-    // this.scheduleNextAlarm(this.storage);
-    this.getDurableObjectLocation();
   }
 
   async fetch(request: Request) {
@@ -42,11 +60,5 @@ export class WebSocketDurableObject {
     webSocketHandlers
       .find(h => h.url === new URL(request.url).pathname)
       ?.handler.call(websocketEvent, webSocket, websocketEvent);
-  }
-
-  async getDurableObjectLocation() {
-    const res = await fetch("https://workers.cloudflare.com/cf.json");
-    const json = (await res.json()) as IncomingRequestCfProperties;
-    this.dolocation = `${json.city} (${json.country})`;
   }
 }

@@ -51,7 +51,7 @@ export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteAction<T, U> {
-  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash(fn);
+  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [input, setInput] = createSignal<T>(init.input);
   const [result, setResult] = createSignal<{ data?: U; error?: any }>(init.result);
   const navigate = useNavigate();
@@ -145,7 +145,7 @@ export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteMultiAction<T, U> {
-  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash(fn);
+  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [submissions, setSubmissions] = createSignal<Submission<T, U>[]>(
     init.input ? [createSubmission(init.input)[0]] : []
   );
@@ -246,7 +246,7 @@ function handleResponse(response: Response, navigate, options) {
   if (isRedirectResponse(response)) return handleRefetch(response, options);
 }
 
-function checkFlash(fn: any) {
+function checkFlash<T>(fn: any) {
   const [params] = useSearchParams();
 
   let param = params.form ? JSON.parse(params.form) : null;
@@ -266,6 +266,6 @@ function checkFlash(fn: any) {
           })
         : undefined
     },
-    input
+    input: input as unknown as T
   };
 }

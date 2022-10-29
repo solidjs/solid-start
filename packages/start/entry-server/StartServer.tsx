@@ -72,6 +72,8 @@ const docType = ssr("<!DOCTYPE html>");
 export default function StartServer({ event }: { event: PageEvent }) {
   const parsed = new URL(event.request.url);
   const path = parsed.pathname + parsed.search;
+
+  // @ts-ignore
   sharedConfig.context.requestContext = event;
   return (
     <ServerContext.Provider value={event}>
