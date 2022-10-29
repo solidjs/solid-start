@@ -114,7 +114,8 @@ export function createDevHandler(viteServer, config, options) {
    */
   async function startHandler(req, res) {
     try {
-      console.log(req.method, req.url);
+      const url = viteServer.resolvedUrls.local[0];
+      console.log(req.method, new URL(req.url, url).href);
       let webRes = await devFetch(createRequest(req), localEnv);
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;

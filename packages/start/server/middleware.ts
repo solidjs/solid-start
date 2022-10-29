@@ -21,12 +21,14 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
         formRequestBody = new Request(event.request.url, {
           body: read2,
           headers: event.request.headers,
-          method: event.request.method
+          method: event.request.method,
+          duplex: "half"
         });
         event.request = new Request(event.request.url, {
           body: read1,
           headers: event.request.headers,
-          method: event.request.method
+          method: event.request.method,
+          duplex: "half"
         });
       }
 

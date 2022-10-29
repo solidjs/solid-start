@@ -311,11 +311,21 @@ function solidStartFileSystemRouter(options) {
           })
         );
       } else if (code.includes("solid-start/server")) {
+        console.log(id);
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
           (/** @type {any} */ source, /** @type {any} */ id) => ({
             plugins: [
+              [
+                routeResource,
+                {
+                  ssr,
+                  root: process.cwd(),
+                  keep: true,
+                  minify: process.env.NODE_ENV === "production"
+                }
+              ],
               [
                 babelServerModule,
                 {
@@ -789,7 +799,8 @@ function remove_html_middlewares(server) {
   const html_middlewares = [
     "viteIndexHtmlMiddleware",
     "vite404Middleware",
-    "viteSpaFallbackMiddleware"
+    "viteSpaFallbackMiddleware",
+    "viteHtmlFallbackMiddleware"
   ];
   for (let i = server.stack.length - 1; i > 0; i--) {
     // @ts-ignore
