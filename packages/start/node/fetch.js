@@ -73,6 +73,7 @@ class NodeRequest extends BaseNodeRequest {
   constructor(input, init) {
     if (init && init.data && init.data.on) {
       init = {
+        duplex: "half",
         ...init,
         body: init.data.headers["content-type"]?.includes("x-www")
           ? init.data
