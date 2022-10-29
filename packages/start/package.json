@@ -34,6 +34,9 @@
     "required-user-files.d.ts",
     "types.ts"
   ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "exports": {
     ".": "./index.tsx",
     "./router": "./router.tsx",
