@@ -709,7 +709,9 @@ function islands() {
 
         `;
 
-        let client = ``;
+        let client = `
+        import { island } from 'solid-start/islands';
+        `;
 
         exports.map(e => {
           if (e.n === "default") {
@@ -720,9 +722,13 @@ function islands() {
                 ? `/@fs` + id + "?island"
                 : `${normalizePath(relative(process.cwd(), id))}?island`
             }");`;
-            client += `        
-            export { default } from '${id}?island';
-            `;
+            client += `
+            import Island from '${id}?island';
+            export default island(Island, "${
+              mode.command === "serve"
+                ? `/@fs` + id + "?island"
+                : `${normalizePath(relative(process.cwd(), id))}?island`
+            }");`;
           } else {
             if (e.n.charAt(0) === e.n.charAt(0).toUpperCase()) {
               prep += `
@@ -733,9 +739,12 @@ function islands() {
                   : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
               }");`;
               client += `
-                import { ${e.ln} } from '${id}?island&isle_${e.ln}';
-                export { ${e.ln} };
-              `;
+              import {${e.ln} as ${e.ln}Island } from '${id}?island&isle_${e.ln}';
+              export const ${e.ln} = island(${e.ln}Island, "${
+                mode.command === "serve"
+                  ? `/@fs` + id + `?island&isle_${e.ln}`
+                  : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
+              }");`;
             } else {
               prep += `
               export {${e.ln} } from '${id}?client';`;
