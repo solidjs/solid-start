@@ -129,8 +129,9 @@ export function mountIslands() {
       }
 
       patchChildren(el, children);
-      return;
+      return true;
     }
+    return false;
   }
 
   async function patch(parent: Node, PATCH: any, child?: Node) {
@@ -170,7 +171,10 @@ export function mountIslands() {
       case ACTION_UPDATE: {
         if (!el) return;
         const { attributes, children } = PATCH;
-        patchIsland(el, { attributes, children });
+        if (el.tagName === "SOLID-ISLAND") {
+          return patchIsland(el, { attributes, children });
+        }
+
         patchAttributes(el, attributes);
         // Freeze childNodes before mutating
         const elements = Array.from(el.childNodes) as Element[];
