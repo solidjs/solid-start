@@ -20,10 +20,10 @@ importers:
       rollup: ^2.79.1
       solid-js: ^1.6.0
       solid-mdx: ^0.0.6
-      solid-start: workspace:0.2.0
-      solid-start-mdx: workspace:0.2.0
-      solid-start-netlify: workspace:0.2.0
-      solid-start-node: workspace:0.2.0
+      solid-start: workspace:*
+      solid-start-mdx: workspace:*
+      solid-start-netlify: workspace:*
+      solid-start-node: workspace:*
       tailwindcss: ^3.2.0
       tippy.js: ^6.3.7
       turbo: ^1.5.6
@@ -190,6 +190,31 @@ importers:
       undici: 5.12.0
     devDependencies:
       '@mdx-js/rollup': 2.1.5
+      solid-start-node: link:../../packages/start-node
+      typescript: 4.8.4
+      vite: 3.2.1
+
+  examples/with-prisma:
+    specifiers:
+      '@prisma/client': ^4.5.0
+      '@solidjs/meta': ^0.28.0
+      '@solidjs/router': ^0.5.0
+      prisma: ^4.5.0
+      solid-js: ^1.6.0
+      solid-start: ^0.2.0
+      solid-start-node: ^0.2.0
+      typescript: ^4.8.4
+      undici: ^5.11.0
+      vite: ^3.1.8
+    dependencies:
+      '@prisma/client': 4.5.0_prisma@4.5.0
+      '@solidjs/meta': 0.28.0_solid-js@1.6.0
+      '@solidjs/router': 0.5.0_solid-js@1.6.0
+      prisma: 4.5.0
+      solid-js: 1.6.0
+      solid-start: link:../../packages/start
+      undici: 5.12.0
+    devDependencies:
       solid-start-node: link:../../packages/start-node
       typescript: 4.8.4
       vite: 3.2.1
@@ -376,13 +401,13 @@ importers:
       sade: ^1.8.1
       sirv: ^2.0.2
       solid-js: ^1.6.0
-      solid-start-cloudflare-pages: workspace:0.2.0
-      solid-start-cloudflare-workers: workspace:0.2.0
-      solid-start-deno: workspace:0.2.0
-      solid-start-netlify: workspace:0.2.0
-      solid-start-node: workspace:0.2.0
-      solid-start-static: workspace:0.2.0
-      solid-start-vercel: workspace:0.2.0
+      solid-start-cloudflare-pages: workspace:*
+      solid-start-cloudflare-workers: workspace:*
+      solid-start-deno: workspace:*
+      solid-start-netlify: workspace:*
+      solid-start-node: workspace:*
+      solid-start-static: workspace:*
+      solid-start-vercel: workspace:*
       solid-testing-library: ^0.3.0
       terser: ^5.15.1
       typescript: ^4.8.4
@@ -458,7 +483,7 @@ importers:
       '@types/ws': ^8.5.3
       miniflare: ^2.10.0
       rollup: ^2.79.1
-      solid-start: workspace:0.2.0
+      solid-start: workspace:*
       terser: ^5.15.1
       vite: ^3.1.8
       ws: ^8.9.0
@@ -497,7 +522,7 @@ importers:
       '@types/ws': ^8.5.3
       miniflare: ^2.10.0
       rollup: ^2.79.1
-      solid-start: workspace:0.2.0
+      solid-start: workspace:*
       terser: ^5.15.1
       vite: ^3.1.8
       ws: ^8.9.0
@@ -527,7 +552,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.79.1
-      solid-start: workspace:0.2.0
+      solid-start: workspace:*
       terser: ^5.15.1
       vite: ^3.1.8
     dependencies:
@@ -550,7 +575,7 @@ importers:
       '@rollup/plugin-node-resolve': ^13.3.0
       encoding: ^0.1.13
       rollup: ^2.79.1
-      solid-start: workspace:0.2.0
+      solid-start: workspace:*
       terser: ^5.15.1
       vite: ^3.1.8
     dependencies:
@@ -576,7 +601,7 @@ importers:
       polka: ^1.0.0-next.22
       rollup: ^2.79.1
       sirv: ^2.0.2
-      solid-start: workspace:0.2.0
+      solid-start: workspace:*
       terser: ^5.15.1
       undici: ^5.11.0
       vite: ^3.1.8
@@ -598,7 +623,7 @@ importers:
     specifiers:
       sirv-cli: 2.0.2
       solid-ssr: ^1.6.0
-      solid-start: workspace:0.2.0
+      solid-start: workspace:*
       terser: ^5.15.1
       undici: ^5.11.0
       vite: ^3.1.8
@@ -617,7 +642,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^2.79.1
-      solid-start: workspace:0.2.0
+      solid-start: workspace:*
       terser: ^5.15.1
       vite: ^3.1.8
     dependencies:
@@ -648,8 +673,8 @@ importers:
       polka: ^1.0.0-next.22
       prettier: ^2.7.1
       sirv: ^2.0.2
-      solid-start: workspace:0.2.0
-      solid-start-node: workspace:0.2.0
+      solid-start: workspace:*
+      solid-start-node: workspace:*
       strip-indent: ^4.0.0
       undici: ^5.11.0
       vite: ^3.1.8
@@ -687,13 +712,13 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
       solid-js: ^1.6.0
-      solid-start: workspace:0.2.0
-      solid-start-cloudflare-pages: workspace:0.2.0
-      solid-start-cloudflare-workers: workspace:0.2.0
-      solid-start-deno: workspace:0.2.0
-      solid-start-netlify: workspace:0.2.0
-      solid-start-node: workspace:0.2.0
-      solid-start-static: workspace:0.2.0
+      solid-start: workspace:*
+      solid-start-cloudflare-pages: workspace:*
+      solid-start-cloudflare-workers: workspace:*
+      solid-start-deno: workspace:*
+      solid-start-netlify: workspace:*
+      solid-start-node: workspace:*
+      solid-start-static: workspace:*
       typescript: ^4.8.4
       undici: ^5.11.0
       vite: ^3.1.8
@@ -2449,6 +2474,29 @@ packages:
     resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
     dev: true
 
+  /@prisma/client/4.5.0_prisma@4.5.0:
+    resolution: {integrity: sha512-B2cV0OPI1smhdYUxsJoLYQLoMlLH06MUxgFUWQnHodGMX98VRVXKmQE/9OcrTNkqtke5RC+YU24Szxd04tZA2g==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452
+      prisma: 4.5.0
+    dev: false
+
+  /@prisma/engines-version/4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452:
+    resolution: {integrity: sha512-o7LyVx8PPJBLrEzLl6lpxxk2D5VnlM4Fwmrbq0NoT6pr5aa1OuHD9ZG+WJY6TlR/iD9bhmo2LNcxddCMr5Rv2A==}
+    dev: false
+
+  /@prisma/engines/4.5.0:
+    resolution: {integrity: sha512-4t9ir2SbQQr/wMCNU4YpHWp5hU14J2m3wHUZnGJPpmBF8YtkisxyVyQsKd1e6FyLTaGq8LOLhm6VLYHKqKNm+g==}
+    requiresBuild: true
+    dev: false
+
   /@rollup/plugin-babel/5.3.1_vyv4jbhmcriklval33ak5sngky:
     resolution: {integrity: sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q==}
     engines: {node: '>= 10.0.0'}
@@ -2537,6 +2585,14 @@ packages:
 
   /@sinclair/typebox/0.24.51:
     resolution: {integrity: sha512-1P1OROm/rdubP5aFDSZQILU0vrLCJ4fvHt6EoqHEM+2D/G5MK3bIaymUKLit8Js9gbns5UyJnkP/TZROLw4tUA==}
+
+  /@solidjs/meta/0.28.0_solid-js@1.6.0:
+    resolution: {integrity: sha512-x52VdB9RZJ1apDB/pAmf58oeJsJ0lGKFXWjnm/TE/MlENIBPg3JaW8H5v2HnGpQC0WUbgiIsDFWpLWVNBo5t6g==}
+    peerDependencies:
+      solid-js: '>=1.4.0'
+    dependencies:
+      solid-js: 1.6.0
+    dev: false
 
   /@solidjs/meta/0.28.2_solid-js@1.6.0:
     resolution: {integrity: sha512-avlLgBPdk4KVxzRGFlYp/MIJo8B5jVgXPgk6OUnUP8km21Z+ovO+DUd7ZPA7ejv8PBdWi9GE3zCzw8RU2YuV2Q==}
@@ -3142,7 +3198,7 @@ packages:
       streamsearch: 1.1.0
 
   /bytes/3.0.0:
-    resolution: {integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=}
+    resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
     engines: {node: '>= 0.8'}
     dev: false
 
@@ -3323,7 +3379,7 @@ packages:
     dev: false
 
   /concat-map/0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   /connect/3.7.0:
     resolution: {integrity: sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ==}
@@ -3639,7 +3695,7 @@ packages:
     dev: true
 
   /ee-first/1.1.1:
-    resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
+    resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
   /electron-to-chromium/1.4.284:
@@ -6348,6 +6404,15 @@ packages:
       ansi-styles: 5.2.0
       react-is: 18.2.0
 
+  /prisma/4.5.0:
+    resolution: {integrity: sha512-9Aeg4qiKlv9Wsjz4NO8k2CzRzlvS3A4FYVJ5+28sBBZ0eEwbiVOE/Jj7v6rZC1tFW2s4GSICQOAyuOjc6WsNew==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.5.0
+    dev: false
+
   /prompts/2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
@@ -6900,7 +6965,7 @@ packages:
     dev: true
 
   /stack-trace/0.0.10:
-    resolution: {integrity: sha1-VHxws0fo0ytOEI6hoqFZ5f3eGcA=}
+    resolution: {integrity: sha512-KGzahc7puUKkzyMt+IqAep+TVNbKP+k2Lmwhub39m1AsTSkaDutx56aDCo+HLDzf/D26BIHTJWNiTG1KAJiQCg==}
 
   /stack-utils/2.0.5:
     resolution: {integrity: sha512-xrQcmYhOsn/1kX+Vraq+7j4oE2j/6BFscZ0etmYg81xuM8Gq0022Pxb8+IqgOFUIaxHs0KaSb7T1+OegiNrNFA==}
@@ -7426,7 +7491,7 @@ packages:
     dev: true
 
   /utils-merge/1.0.1:
-    resolution: {integrity: sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=}
+    resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
     dev: false
 
@@ -7458,7 +7523,7 @@ packages:
     dev: false
 
   /verror/1.10.0:
-    resolution: {integrity: sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=}
+    resolution: {integrity: sha512-ZZKSmDAEFOijERBLkmYfJ+vmk3w+7hOLYDNkRCuRuMJGEmqYNCNLyBBFwWKVMhfwaEF3WOd0Zlw86U/WC/+nYw==}
     engines: {'0': node >=0.6.0}
     dependencies:
       assert-plus: 1.0.0
