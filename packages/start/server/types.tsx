@@ -19,13 +19,16 @@ type TagDescription = {
 
 type RouterContext = {
   // router matches;
-  matches?: ContextMatches[][];
+  matches: ContextMatches[][];
   // redirected url
-  url?: string;
+  url: string;
 
   // server route fragments
-  replaceOutletId?: string;
-  newOutletId?: string;
+  replaceOutletId: string;
+  newOutletId: string;
+  partial: boolean;
+  nextRoute: any;
+  prevRoute: any;
 };
 
 export type IslandManifest = {
@@ -69,10 +72,10 @@ export interface ServerFunctionEvent extends FetchEvent {
 export interface PageEvent extends FetchEvent {
   prevUrl: string;
   responseHeaders: Headers;
-  routerContext?: RouterContext;
-  tags?: TagDescription[];
+  routerContext: RouterContext;
+  tags: TagDescription[];
   setStatusCode(code: number): void;
   getStatusCode(): number;
   $type: typeof FETCH_EVENT;
-  $islands?: Set<string>;
+  $islands: Set<string>;
 }

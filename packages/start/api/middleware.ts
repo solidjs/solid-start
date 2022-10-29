@@ -1,7 +1,8 @@
+import { Middleware } from "entry-server";
 import { FetchEvent, FETCH_EVENT } from "../server/types";
 import { getApiHandler } from "./index";
 
-export const apiRoutes = ({ forward }) => {
+export const apiRoutes: Middleware = ({ forward }) => {
   return async (event: FetchEvent) => {
     let apiHandler = getApiHandler(new URL(event.request.url), event.request.method);
     if (apiHandler) {

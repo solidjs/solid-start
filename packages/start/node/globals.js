@@ -10,5 +10,6 @@ Object.assign(globalThis, Streams, {
 });
 
 if (globalThis.crypto != crypto.webcrypto) {
+  // @ts-ignore
   globalThis.crypto = crypto.webcrypto;
 }

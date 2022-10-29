@@ -1,3 +1,5 @@
+/// <reference path="./plugin.d.ts" />
+
 import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
 import { parse } from "es-module-lexer";
@@ -16,6 +18,8 @@ import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
+
+// @ts-ignore
 globalThis.DEBUG = debug("start:vite");
 let _dirname = dirname(fileURLToPath(import.meta.url));
 // const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
@@ -72,7 +76,7 @@ function toArray(arr) {
 
 /**
  * @returns {import('node_modules/vite').Plugin}
- * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; }} options
+ * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; babel?: any }} options
  */
 function solidStartFileSystemRouter(options) {
   let lazy;
@@ -130,6 +134,7 @@ function solidStartFileSystemRouter(options) {
       if (!c.server.watch) c.server.watch = {};
       c.server.watch.disableGlobbing = false;
 
+      // @ts-expect-error
       router = c.solidOptions.router;
     },
     async configResolved(_config) {
@@ -180,11 +185,14 @@ function solidStartFileSystemRouter(options) {
         };
       let babelSolidCompiler = (/** @type {string} */ code, /** @type {string} */ id, fn) => {
         // @ts-ignore
-        return solid({
+        let plugin = solid({
           ...(options ?? {}),
           ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
           babel: babelOptions(fn)
-        }).transform(code, id, transformOptions);
+        });
+
+        // @ts-ignore
+        plugin.transform(code, id, transformOptions);
       };
 
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
@@ -541,7 +549,7 @@ function find(locate, cwd) {
   return find(locate, path.join(cwd, ".."));
 }
 
-const nodeModulesPath = find("node_modules");
+const nodeModulesPath = find("node_modules", process.cwd());
 
 function detectAdapter() {
   let adapters = [];

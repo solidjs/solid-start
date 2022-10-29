@@ -27,7 +27,7 @@ if (import.meta.env.DEV) {
   };
 }
 
-export default function mount(code?: () => JSX.Element, element?: Document) {
+export default function mount(code: () => JSX.Element, element: Document) {
   if (import.meta.env.START_ISLANDS) {
     mountRouter();
     mountIslands();

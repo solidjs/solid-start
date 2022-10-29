@@ -28,7 +28,7 @@ export { clientOnly as unstable_clientOnly, island as unstable_island } from "./
 export { Body, Head, Html, Scripts } from "./root";
 export * from "./router";
 export * from "./server/responses";
-export { ServerContext, useServerContext } from "./server/ServerContext";
+export { ServerContext, useRequest as useServerContext } from "./server/ServerContext";
 export type { FetchEvent, PageEvent, ServerFunctionEvent } from "./server/types";
 export {
   createCookie,

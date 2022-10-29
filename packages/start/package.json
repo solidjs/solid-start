@@ -34,6 +34,9 @@
     "required-user-files.d.ts",
     "types.ts"
   ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "exports": {
     ".": "./index.tsx",
     "./router": "./router.tsx",
@@ -104,10 +107,13 @@
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^3.18.0",
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.5.0",
     "@testing-library/jest-dom": "^5.16.5",
+    "@types/babel__core": "^7.1.19",
     "@types/debug": "^4.1.7",
+    "@types/node": "^18.11.3",
     "@types/wait-on": "^5.3.1",
     "jsdom": "^20.0.1",
     "solid-js": "^1.6.0",

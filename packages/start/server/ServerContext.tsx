@@ -6,6 +6,10 @@ export const ServerContext = createContext<PageEvent>({
   $type: FETCH_EVENT
 } as any);
 
-export const useServerContext = () => {
+export const useRequest = () => {
   return useContext(ServerContext)!;
+};
+
+export const useServerContext = () => {
+  throw new Error("useServerContext is deprecated. Use useRequest instead.");
 };

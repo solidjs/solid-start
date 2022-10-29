@@ -12,7 +12,9 @@ declare global {
     };
   }
 
-  export const DEBUG: Debugger;
+  interface RequestInit {
+    duplex?: "half";
+  }
 }
 
 type Adapter = {
@@ -38,5 +40,4 @@ export type StartOptions = {
   appRootFile: string;
 };
 
-export { };
-
+export {};

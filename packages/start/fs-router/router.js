@@ -123,6 +123,7 @@ export class Router {
       log("processing", path);
       let id = this.getRouteId(path.replace(this.pageRegex, ""));
 
+      /** @type {{ dataPath?: string; componentPath?: string; apiPath?: { [key: string]: string  }}} */
       let routeConfig = {};
 
       if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {

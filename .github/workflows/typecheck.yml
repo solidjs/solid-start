@@ -1,0 +1,44 @@
+name: 🧪 Typecheck
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - release-*
+    tags-ignore:
+      - v*
+    paths-ignore:
+      - "docs/**"
+      - "docs.root.tsx"
+      - "components/**"
+      - "**/README.md"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+
+jobs:
+  typecheck:
+    name: "👀 Typecheck"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 👀 Typecheck
+        run: pnpm -r typecheck
