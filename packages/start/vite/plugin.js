@@ -705,7 +705,7 @@ function islands() {
         );
 
         let prep = `
-        import { unstable_island } from 'solid-start';
+        import { island } from 'solid-start/islands';
 
         `;
 
@@ -715,7 +715,7 @@ function islands() {
           if (e.n === "default") {
             prep += `
             import Island from '${id}?client';
-            export default unstable_island(Island, "${
+            export default island(Island, "${
               mode.command === "serve"
                 ? `/@fs` + id + "?island"
                 : `${normalizePath(relative(process.cwd(), id))}?island`
@@ -727,7 +727,7 @@ function islands() {
             if (e.n.charAt(0) === e.n.charAt(0).toUpperCase()) {
               prep += `
               import {${e.ln} as ${e.ln}Island } from '${id}?client';
-              export const ${e.ln} = unstable_island(${e.ln}Island, "${
+              export const ${e.ln} = island(${e.ln}Island, "${
                 mode.command === "serve"
                   ? `/@fs` + id + `?island&isle_${e.ln}`
                   : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
