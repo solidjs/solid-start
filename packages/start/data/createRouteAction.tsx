@@ -4,7 +4,7 @@ import { FormError, FormImpl, FormProps } from "./Form";
 
 import type { ParentComponent } from "solid-js";
 import { isRedirectResponse } from "../server/responses";
-import { ServerContext } from "../server/ServerContext";
+import { ServerContext, useRequest } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
 
@@ -52,10 +52,10 @@ export function createRouteAction<T, U = void>(
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteAction<T, U> {
   let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
-  const [input, setInput] = createSignal<T>(init.input);
-  const [result, setResult] = createSignal<{ data?: U; error?: any }>(init.result);
+  const [input, setInput] = createSignal<T | undefined>(init.input);
+  const [result, setResult] = createSignal<{ data?: U; error?: any } | undefined>(init.result);
   const navigate = useNavigate();
-  const event = useContext(ServerContext);
+  const event = useRequest();
   let count = 0;
   function submit(variables: T) {
     const p = fn(variables, event);

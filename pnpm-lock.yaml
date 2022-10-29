@@ -379,6 +379,7 @@ importers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
       '@testing-library/jest-dom': ^5.16.5
+      '@types/babel__core': ^7.1.19
       '@types/cookie': ^0.5.1
       '@types/debug': ^4.1.7
       '@types/node': ^18.11.3
@@ -455,6 +456,7 @@ importers:
       '@solidjs/meta': 0.28.2_solid-js@1.6.0
       '@solidjs/router': 0.5.0_solid-js@1.6.0
       '@testing-library/jest-dom': 5.16.5
+      '@types/babel__core': 7.1.19
       '@types/debug': 4.1.7
       '@types/node': 18.11.7
       '@types/wait-on': 5.3.1
@@ -2676,6 +2678,35 @@ packages:
 
   /@types/aria-query/4.2.2:
     resolution: {integrity: sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==}
+    dev: true
+
+  /@types/babel__core/7.1.19:
+    resolution: {integrity: sha512-WEOTgRsbYkvA/KCsDwVEGkd7WAr1e3g31VHQ8zy5gul/V1qKullU/BU5I68X5v7V3GnB9eotmom4v5a5gjxorw==}
+    dependencies:
+      '@babel/parser': 7.20.0
+      '@babel/types': 7.20.0
+      '@types/babel__generator': 7.6.4
+      '@types/babel__template': 7.4.1
+      '@types/babel__traverse': 7.18.2
+    dev: true
+
+  /@types/babel__generator/7.6.4:
+    resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
+    dependencies:
+      '@babel/types': 7.20.0
+    dev: true
+
+  /@types/babel__template/7.4.1:
+    resolution: {integrity: sha512-azBFKemX6kMg5Io+/rdGT0dkGreboUVR0Cdm3fz9QJWpaQGJRQXl7C+6hOTCZcMll7KFyEQpgbYI2lHdsS4U7g==}
+    dependencies:
+      '@babel/parser': 7.20.0
+      '@babel/types': 7.20.0
+    dev: true
+
+  /@types/babel__traverse/7.18.2:
+    resolution: {integrity: sha512-FcFaxOr2V5KZCviw1TnutEMVUVsGt4D2hP1TAfXZAMKuHYW3xQhe3jTxNPWutgCJ3/X1c5yX8ZoGVEItxKbwBg==}
+    dependencies:
+      '@babel/types': 7.20.0
     dev: true
 
   /@types/better-sqlite3/7.6.2:
