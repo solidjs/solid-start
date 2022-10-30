@@ -213,8 +213,8 @@ prog
             a.match(new RegExp(`_${name.replace("?", "_").replace("&", "_")}.*`))
           );
           if (reference) {
-            islandToReference[relative(config.root, island)] = reference;
-            referenceToIsland[reference] = relative(config.root, island);
+            islandToReference[vite.normalizePath(relative(config.root, island))] = reference;
+            referenceToIsland[reference] = vite.normalizePath(relative(config.root, island));
           }
         }
 
