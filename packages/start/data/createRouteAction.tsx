@@ -4,7 +4,7 @@ import { FormError, FormImpl, FormProps } from "./Form";
 
 import type { ParentComponent } from "solid-js";
 import { isRedirectResponse } from "../server/responses";
-import { ServerContext } from "../server/ServerContext";
+import { ServerContext, useRequest } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
 
@@ -51,11 +51,11 @@ export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteAction<T, U> {
-  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash(fn);
-  const [input, setInput] = createSignal<T>(init.input);
-  const [result, setResult] = createSignal<{ data?: U; error?: any }>(init.result);
+  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
+  const [input, setInput] = createSignal<T | undefined>(init.input);
+  const [result, setResult] = createSignal<{ data?: U; error?: any } | undefined>(init.result);
   const navigate = useNavigate();
-  const event = useContext(ServerContext);
+  const event = useRequest();
   let count = 0;
   function submit(variables: T) {
     const p = fn(variables, event);
@@ -145,7 +145,7 @@ export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
   options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
 ): RouteMultiAction<T, U> {
-  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash(fn);
+  let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [submissions, setSubmissions] = createSignal<Submission<T, U>[]>(
     init.input ? [createSubmission(init.input)[0]] : []
   );
@@ -246,7 +246,7 @@ function handleResponse(response: Response, navigate, options) {
   if (isRedirectResponse(response)) return handleRefetch(response, options);
 }
 
-function checkFlash(fn: any) {
+function checkFlash<T>(fn: any) {
   const [params] = useSearchParams();
 
   let param = params.form ? JSON.parse(params.form) : null;
@@ -266,6 +266,6 @@ function checkFlash(fn: any) {
           })
         : undefined
     },
-    input
+    input: input as unknown as T
   };
 }

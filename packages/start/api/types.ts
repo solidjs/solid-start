@@ -16,7 +16,7 @@ export type MatchRoute = Route & {
     name: string;
     index: number;
   }[];
-  matchSegments: string[];
+  matchSegments: (string | null)[];
   wildcard: boolean;
 };
 

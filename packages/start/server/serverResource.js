@@ -1,3 +1,7 @@
+/**
+ * @param {{ types: import('@babel/core').types }} api
+ * @return {import('@babel/core').PluginObj}
+ * */
 function transformRouteData({ types: t }) {
   return {
     visitor: {
@@ -13,14 +17,18 @@ function transformRouteData({ types: t }) {
           path.traverse(
             {
               ImportSpecifier(path) {
-                if (path.node.imported.name === "createRouteData") {
-                  state.routeDataImported = true;
-                }
-                if (path.node.imported.name === "createRouteAction") {
-                  state.routeActionImported = true;
-                }
-                if (path.node.imported.name === "createRouteAction") {
-                  state.routeMultiActionImported = true;
+                let imported = path.get("imported");
+
+                if (imported.isIdentifier()) {
+                  if (imported.get("name") === "createRouteData") {
+                    state.routeDataImported = true;
+                  }
+                  if (imported.get("name") === "createRouteAction") {
+                    state.routeActionImported = true;
+                  }
+                  if (path.node.imported.name === "createRouteAction") {
+                    state.routeMultiActionImported = true;
+                  }
                 }
               },
               ImportDeclaration(path) {
@@ -56,7 +64,10 @@ function transformRouteData({ types: t }) {
 
                   args[0] = t.callExpression(t.identifier("server$"), [args[0]]);
                   callPath.replaceWith(
-                    t.callExpression(t.identifier("createRouteMultiAction"), callPath.node.arguments)
+                    t.callExpression(
+                      t.identifier("createRouteMultiAction"),
+                      callPath.node.arguments
+                    )
                   );
                   callState.actionRequired = true;
                 }

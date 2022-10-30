@@ -80,7 +80,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     window._$HY.hydrateIslands = () => {
       const islands = document.querySelectorAll("solid-island[data-hk]");
       const assets = new Set<string>();
-      islands.forEach(el => assets.add(el.dataset.component));
+      islands.forEach((el: HTMLElement) => assets.add(el.dataset.component));
       Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
         islands.forEach((el: HTMLElement) => {
           if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
