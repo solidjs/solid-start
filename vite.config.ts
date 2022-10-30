@@ -10,6 +10,9 @@ export default defineConfig({
       plugins: [(await import("tailwindcss")).default]
     }
   },
+  optimizeDeps: {
+    entries: []
+  },
   plugins: [
     await mdx(),
     solid({
