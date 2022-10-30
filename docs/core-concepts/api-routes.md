@@ -177,9 +177,9 @@ const handler =  graphql(schema, {
   }
 });
 
-export const get = handler;
+export const GET = handler;
 
-export const post = handler;
+export const POST = handler;
 
 ```
 
@@ -229,22 +229,17 @@ import { APIEvent } from "solid-start/api";
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from "~/lib/router";
 
-
-export const get = (event: APIEvent) => 
+const handler = (event: APIEvent) => 
   fetchRequestHandler({
-    endpoint: '',
+    endpoint: '/api/trpc',
     req: event.request,
     router: appRouter,
     createContext: () => ({}),
   });
 
-export const post = (event: APIEvent) => 
-  fetchRequestHandler({
-    endpoint: '',
-    req: event.request,
-    router: appRouter,
-    createContext: () => ({}),
-  });
+export const GET = handler;
+
+export const POST = handler;
 ```
 
 Learn more about [tRPC][trpc] here.
