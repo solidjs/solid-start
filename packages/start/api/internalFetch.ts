@@ -29,6 +29,7 @@ export async function internalFetch(route: string, init: RequestInit) {
     fetch: internalFetch
   });
 
+  if (handler) {
     const response = await handler.handler(apiEvent);
     return response;
   } else {
