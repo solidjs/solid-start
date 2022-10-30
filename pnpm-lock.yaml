@@ -82,29 +82,6 @@ importers:
       typescript: 4.8.4
       vite: 3.2.1
 
-  examples/durable-objects-websocket:
-    specifiers:
-      '@cloudflare/kv-asset-handler': ^0.1.3
-      '@cloudflare/workers-types': ^3.17.0
-      '@solidjs/router': ^0.5.0
-      solid-js: ^1.6.0
-      solid-start: ^0.2.0
-      solid-start-cloudflare-workers: ^0.2.0
-      typescript: ^4.8.4
-      undici: ^5.11.0
-      vite: ^3.1.8
-    dependencies:
-      '@cloudflare/kv-asset-handler': 0.1.3
-      '@cloudflare/workers-types': 3.18.0
-      '@solidjs/router': 0.5.0_solid-js@1.6.0
-      solid-js: 1.6.0
-      solid-start: link:../../packages/start
-      undici: 5.12.0
-    devDependencies:
-      solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
-      typescript: 4.8.4
-      vite: 3.2.1
-
   examples/hackernews:
     specifiers:
       '@solidjs/meta': ^0.28.0
@@ -300,6 +277,29 @@ importers:
       undici: 5.12.0
       vite: 3.2.1
       vitest: 0.20.3_jsdom@20.0.1
+
+  examples/with-websocket:
+    specifiers:
+      '@cloudflare/kv-asset-handler': ^0.1.3
+      '@cloudflare/workers-types': ^3.17.0
+      '@solidjs/router': ^0.5.0
+      solid-js: ^1.6.0
+      solid-start: ^0.2.0
+      solid-start-cloudflare-workers: ^0.2.0
+      typescript: ^4.8.4
+      undici: ^5.11.0
+      vite: ^3.1.8
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.1.3
+      '@cloudflare/workers-types': 3.18.0
+      '@solidjs/router': 0.5.0_solid-js@1.6.0
+      solid-js: 1.6.0
+      solid-start: link:../../packages/start
+      undici: 5.12.0
+    devDependencies:
+      solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
+      typescript: 4.8.4
+      vite: 3.2.1
 
   packages/create-solid:
     specifiers:
