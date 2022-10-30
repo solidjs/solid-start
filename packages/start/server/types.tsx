@@ -62,7 +62,7 @@ declare global {
 export interface FetchEvent {
   request: Request;
   env: Env;
-  fetch(url: string, init: RequestInit): Promise<Response>;
+  fetch(url: string, init?: RequestInit): Promise<Response>;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {

@@ -11,7 +11,7 @@ export {
   useRoutes,
   useSearchParams,
   type RouteDataFunc,
-  type RouteDataFuncArgs as RouteDataArgs
+  type RouteDataFuncArgs
 } from "@solidjs/router";
 export type { APIEvent as APIEvent } from "./api";
 export {

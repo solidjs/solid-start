@@ -15,9 +15,16 @@ export default function (miniflareOptions = {}) {
   return {
     name: "cloudflare-workers",
     async dev(options, vite, dev) {
-      let durableObjects = Object.values(miniflareOptions?.durableObjects || {});
+      if (options.solidOptions.experimental?.websocket) {
+        if (!options.solidOptions.durableObjects) {
+          options.solidOptions.durableObjects = {};
+        }
+        options.solidOptions.durableObjects["DO_WEBSOCKET"] = "solid-start/websocket/handler";
+      }
+      let durableObjects = Object.keys(options.solidOptions.durableObjects ?? {});
       let globs = {};
       durableObjects.forEach(obj => {
+        console.log(obj);
         globs[obj + "Proxy"] = class DO {
           state;
           env;
@@ -26,6 +33,11 @@ export default function (miniflareOptions = {}) {
             this.state = state;
             this.env = env;
             this.promise = this.createProxy(state, env);
+            this.ctx = {
+              state,
+              storage: state.storage,
+              durableObject: this
+            };
           }
 
           async createProxy(state, env) {
@@ -34,12 +46,13 @@ export default function (miniflareOptions = {}) {
           }
 
           async fetch(request) {
-            console.log("DURABLE_OBJECT", request.url);
-            const all = await vite.ssrLoadModule("~start/entry-server");
+            console.log("DURABLE_OBJECT", request.method, request.url);
 
             try {
+              const all = await vite.ssrLoadModule(options.solidOptions.durableObjects[obj]);
+              console.log(all);
               // let dObject = await this.promise;
-              return await all[obj].fetch(request, this.state);
+              return await all.default(request, this.ctx);
             } catch (e) {
               console.log("error", e);
             }
@@ -91,7 +104,7 @@ export default function (miniflareOptions = {}) {
 
             if (req.headers.get("Upgrade") === "websocket") {
               const url = new URL(req.url);
-              console.log(url.search);
+              console.log("WEBSOCKET", url.search);
               const durableObjectId = e.DO_WEBSOCKET.idFromName(url.pathname + url.search);
               const durableObjectStub = e.DO_WEBSOCKET.get(durableObjectId);
               const response = await durableObjectStub.fetch(req);
@@ -109,7 +122,8 @@ export default function (miniflareOptions = {}) {
         modules: true,
         kvPersist: true,
         compatibilityFlags: ["streams_enable_constructors"],
-        ...miniflareOptions
+        ...miniflareOptions,
+        durableObjects: Object.fromEntries(durableObjects.map(obj => [obj, obj]))
       });
 
       console.log("🔥", "starting miniflare");
@@ -154,7 +168,7 @@ export default function (miniflareOptions = {}) {
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
       let durableObjects = Object.values(miniflareOptions?.durableObjects || {});
 
-      if (durableObjects.length > 0) {
+      if (Object.values(durableObjects).length > 0) {
         let text = readFileSync(join(config.root, ".solid", "server", "server.js"), "utf8");
         durableObjects.forEach(item => {
           text += `\nexport { ${item} } from "./handler";`;

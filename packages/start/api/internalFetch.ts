@@ -29,9 +29,6 @@ export async function internalFetch(route: string, init: RequestInit) {
     fetch: internalFetch
   });
 
-    const response = await handler.handler(apiEvent);
-    return response;
-  } else {
-    throw new Error(`No handler found for ${request.method} ${url.pathname}`);
-  }
+  const response = await handler.handler(apiEvent);
+  return response;
 }

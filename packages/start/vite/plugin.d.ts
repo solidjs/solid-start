@@ -1,17 +1,31 @@
+export type Adapter = {
+  start(options: Options): Promise<void>;
+  build(options: Options): Promise<void>;
+  dev(config: UserConfig, viteDevServer: ViteDevServer): Promise<void>;
+  name: string;
+};
+
 export type Options = {
-  adapter: string | { start; build };
+  adapter: string | Adapter;
   appRoot: string;
   routesDir: string;
   ssr: boolean;
   islands: boolean;
   islandsRouter: boolean;
   prerenderRoutes: any[];
+  durableObjects: Record<string, string>;
+  experimental: {
+    islands?: boolean;
+    islandsRouter?: boolean;
+    durableObjects?: boolean;
+    websocket?: boolean;
+  };
   inspect: boolean;
   rootEntry: string;
   serverEntry: string;
   clientEntry: string;
 } & import("vite-plugin-solid").Options;
-import { Plugin } from "node_modules/vite";
+import { Plugin, UserConfig, ViteDevServer } from "vite";
 
 import type { Debugger } from "debug";
 import type { Component } from "solid-js";

@@ -23,7 +23,7 @@ process.on(
         ? err.message.includes("renderToString timed out")
         : false)
     ) {
-      console.error(`An unhandler error occured: ${err}`);
+      console.error(`An unhandler error occured: \n${err}: ${err.stack}`);
     }
   }
 );
@@ -94,10 +94,22 @@ export function createDevHandler(viteServer, config, options) {
     };
 
     function internalFetch(route, init = {}) {
-      let url = new URL(route, "http://internal");
-      const request = new Request(url.href, init);
+      let url = new URL(route, request.url);
+      console.log(url, route);
+      if (config.solidOptions.durableObjects) {
+        for (var key of Object.keys(config.solidOptions.durableObjects)) {
+          if (url.hostname.startsWith(`${key}.`)) {
+            let name = url.hostname.replace(`${key}.`, "");
+            let id = env[key].idFromName(name);
+            let durableObject = env[key].get(id);
+            return durableObject.fetch(url, init);
+          }
+        }
+      }
+
+      const internalRequest = new Request(url.href, init);
       return entry({
-        request: request,
+        request: internalRequest,
         env: devEnv,
         fetch: internalFetch
       });

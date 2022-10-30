@@ -7,14 +7,13 @@ import { getUser, logout } from "~/session";
 interface User {
   websocket: WebSocket;
   id: string;
-  // city: string | undefined;
-  // country: string;
 }
 
 const room = createWebSocketServer(server$(presence));
 
-function presence(webSocket: WebSocket, { durableObject }) {
-  let object = durableObject as { users: Map<string, User>; pings: Map<string, number> };
+function presence(webSocket: WebSocket, ctx) {
+  console.log(ctx);
+  let object = ctx.durableObject as { users: Map<string, User>; pings: Map<string, number> };
   if (!object.users) {
     object.users = new Map();
     object.pings = new Map();

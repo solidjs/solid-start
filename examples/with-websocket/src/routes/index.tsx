@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onCleanup } from "solid-js";
+import { createEffect, onCleanup } from "solid-js";
 import { useRouteData } from "solid-start";
 import server$, { createServerAction$, createServerData$, redirect } from "solid-start/server";
 import { createWebSocketServer } from "solid-start/websocket";
@@ -50,17 +50,7 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
-  const [, logoutAction] = createServerAction$((_, { request }) => logout(request));
-  const [lastPing, setLastPing] = createSignal(Date.now().toString());
-  const increment = createServerAction$(
-    async (_, { env }) => {
-      await env.app.put("key", `${Number(await this.env.app.get("key")) + 1}`);
-      return redirect("/");
-    },
-    {
-      invalidate: () => "k"
-    }
-  );
+  const [, logoutAction] = createServerAction$((_: FormData, { request }) => logout(request));
 
   createEffect(() => {
     let websocket = pingPong.connect();
@@ -70,7 +60,6 @@ export default function Home() {
       let message = messages[0];
       switch (message.type) {
         case "pong":
-          setLastPing(message.data.time);
       }
     });
 

@@ -3,12 +3,13 @@ import {
   Location,
   Navigator,
   Outlet as BaseOutlet,
+  RouteDataFunc,
   Routes as BaseRoutes,
   useLocation as useBaseLocation,
   useNavigate as useBaseNavigate,
   useSearchParams as useBaseSearchParams
 } from "@solidjs/router";
-import { Accessor } from "solid-js";
+import { Accessor, JSX } from "solid-js";
 import IslandsA from "./islands/A";
 import {
   useLocation as useIslandsLocation,
@@ -16,10 +17,19 @@ import {
 } from "./islands/router";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
+export type RouteParams<T extends string> = Record<T, string>;
+
+export type RouteDataArgs<T extends keyof StartRoutes> = {
+  data: T extends RouteDataFunc ? ReturnType<T> : T;
+  params: RouteParams<StartRoutes[T]["params"]>;
+  location: Location;
+  navigate: Navigator;
+};
+
 const A = import.meta.env.START_ISLANDS_ROUTER ? IslandsA : BaseA;
 
 const Routes = import.meta.env.START_ISLANDS_ROUTER
-  ? function IslandsRoutes(props) {
+  ? function IslandsRoutes(props: { children: JSX.Element }) {
       return (
         <IslandsOutlet>
           <BaseRoutes>{props.children}</BaseRoutes>
@@ -61,6 +71,8 @@ declare global {
     NAVIGATE: Navigator;
     ROUTER: EventTarget;
   }
+
+  interface StartRoutes {}
 }
 
 export { A, Outlet, Routes, useLocation, useNavigate, useSearchParams };

@@ -2,18 +2,17 @@
 
 import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
-import { parse } from "es-module-lexer";
-import esbuild from "esbuild";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
-import path, { dirname, join, relative } from "path";
+import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
-import { loadEnv, normalizePath } from "vite";
+import { loadEnv } from "vite";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
 import fileRoutesImport from "../fs-router/fileRoutesImport.js";
 import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
+import { islands } from "../islands/vite-plugin.js";
 import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
@@ -22,28 +21,19 @@ import routeResource from "../server/serverResource.js";
 // @ts-ignore
 globalThis.DEBUG = debug("start:vite");
 let _dirname = dirname(fileURLToPath(import.meta.url));
-// const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
 
 /**
- * @returns {import('node_modules/vite').PluginOption}
- * @param {any} options
+ * @returns {import('vite').PluginOption}
  */
-function solidStartInlineServerModules(options) {
-  let lazy;
-  let config;
-  /** @type {import('node_modules/vite').Plugin} */
+function logServerFunctionURL() {
   return {
-    enforce: "pre",
-    configResolved(_config) {
-      lazy = _config.command !== "serve";
-      config = _config;
-    },
-    name: "solid-start-inline-server-modules",
+    configResolved(_config) {},
+    name: "solid-start-print-server-function-url",
     configureServer(vite) {
-      vite.httpServer.once("listening", async () => {
+      vite.httpServer?.once("listening", async () => {
         const label = `  > Server modules: `;
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0];
+          const url = vite.resolvedUrls?.local[0];
           // eslint-disable-next-line no-console
           console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
         }, 200);
@@ -52,18 +42,6 @@ function solidStartInlineServerModules(options) {
   };
 }
 
-// import micromatch from "micromatch";
-/**
- * @param {fs.PathLike} path
- */
-function touch(path) {
-  const time = new Date();
-  try {
-    fs.utimesSync(path, time, time);
-  } catch (err) {
-    fs.closeSync(fs.openSync(path, "w"));
-  }
-}
 let i = 0;
 /**
  * @param {any} arr
@@ -384,9 +362,7 @@ function solidStartFileSystemRouter(options) {
 function solidsStartRouteManifest(options) {
   return {
     name: "solid-start-route-manifest",
-    config(conf) {
-      const regex = new RegExp(`\\.(${options.pageExtensions.join("|")})$`);
-      const root = normalizePath(conf.root || process.cwd());
+    config() {
       return {
         build: {
           target: "esnext",
@@ -408,7 +384,7 @@ async function resolveAdapter(config) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {any} options
  */
 function solidStartServer(options) {
@@ -634,7 +610,7 @@ export default function solidStart(options) {
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
     options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
-    options.ssr && solidStartInlineServerModules(options),
+    options.ssr && logServerFunctionURL(),
     solid({
       ...(options ?? {}),
       // if we are building the SPA client for production, we set ssr to false
@@ -667,137 +643,6 @@ export default function solidStart(options) {
     solidsStartRouteManifest(options),
     options.islands ? islands() : undefined
   ].filter(Boolean);
-}
-
-function islands() {
-  let mode;
-  return {
-    name: "solid-start-islands",
-    config(c, m) {
-      mode = m;
-    },
-    load(id) {
-      if (id.includes("?island")) {
-        let f = id.match(/isle_([A-Z0-9a-z_]+)&?\??$/);
-        if (!f) {
-          return {
-            code: `
-            import Component from '${id.replace("?island", "?client")}';
-
-            window._$HY.island("${
-              mode.command === "serve"
-                ? `/@fs${id}`
-                : `${normalizePath(relative(process.cwd(), id))}`
-            }", Component);
-
-            export default Component;
-            `
-          };
-        } else {
-          return {
-            code: `
-            export { ${f[1]} } from '${id.replace(/\?.*/, "?client")}';
-            import { ${f[1]} } from '${id.replace(/\?.*/, "?client")}';
-
-            window._$HY.island("${
-              mode.command === "serve" ? `/@fs${id}` : `${relative(process.cwd(), id)}`
-            }",  ${f[1]});
-
-            `
-          };
-        }
-      }
-    },
-    /**
-     * @param {any} id
-     * @param {string} code
-     */
-    transform(code, id, ssr) {
-      if (code.startsWith('"use client"') && !id.includes("?client")) {
-        let [imports, exports] = parse(
-          esbuild.transformSync(code, {
-            jsx: "transform",
-            format: "esm",
-            loader: "tsx"
-          }).code
-        );
-
-        let prep = `
-        import { island } from 'solid-start/islands';
-
-        `;
-
-        let client = `
-        import { island } from 'solid-start/islands';
-        `;
-
-        exports.map(e => {
-          if (e.n === "default") {
-            prep += `
-            import Island from '${id}?client';
-            export default island(Island, "${
-              mode.command === "serve"
-                ? `/@fs` + id + "?island"
-                : `${normalizePath(relative(process.cwd(), id))}?island`
-            }");`;
-            client += `
-            import Island from '${id}?island';
-            export default island(Island, "${
-              mode.command === "serve"
-                ? `/@fs` + id + "?island"
-                : `${normalizePath(relative(process.cwd(), id))}?island`
-            }");`;
-          } else {
-            if (e.n.charAt(0) === e.n.charAt(0).toUpperCase()) {
-              prep += `
-              import {${e.ln} as ${e.ln}Island } from '${id}?client';
-              export const ${e.ln} = island(${e.ln}Island, "${
-                mode.command === "serve"
-                  ? `/@fs` + id + `?island&isle_${e.ln}`
-                  : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
-              }");`;
-              client += `
-              import {${e.ln} as ${e.ln}Island } from '${id}?island&isle_${e.ln}';
-              export const ${e.ln} = island(${e.ln}Island, "${
-                mode.command === "serve"
-                  ? `/@fs` + id + `?island&isle_${e.ln}`
-                  : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
-              }");`;
-            } else {
-              prep += `
-              export {${e.ln} } from '${id}?client';`;
-              client += `
-              export { ${e.ln} } from '${id}?client';
-              `;
-            }
-          }
-        });
-        return {
-          code: ssr ? prep : client
-        };
-      }
-      if (code.includes("unstable_island")) {
-        let replaced = code.replaceAll(
-          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
-          (a, b, c) =>
-            ssr
-              ? `import ${b}_island from "${c}?client";
-                  const ${b} = unstable_island(${b}_island, "${
-                  mode.command === "serve"
-                    ? `/@fs/${normalizePath(join(dirname(id), c))}` + ".tsx" + "?island"
-                    : `${normalizePath(
-                        relative(process.cwd(), normalizePath(join(dirname(id), c)))
-                      )}.tsx?island`
-                }");`
-              : `const ${b} = unstable_island(() => import("${c}?island"), "${
-                  `/@fs/${normalizePath(join(dirname(id), c)).slice(1)}` + ".tsx" + "?island"
-                }")`
-        );
-
-        return replaced;
-      }
-    }
-  };
 }
 
 /**

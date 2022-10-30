@@ -7,9 +7,19 @@ import nodePath from "path";
 
 const INLINE_SERVER_ROUTE_PREFIX = "/_m";
 
+/**
+ *
+ * @param {{ types: import('@babel/core').types; template: import('@babel/core').template }} param0
+ * @returns {import('@babel/core').PluginObj}
+ */
 function transformServer({ types: t, template }) {
+  
+  /** @param {import('@babel/core').NodePath} path  */
   function getIdentifier(path) {
     const parentPath = path.parentPath;
+    if (!parentPath) {
+      return null;
+    }
     if (parentPath.type === "VariableDeclarator") {
       const pp = parentPath;
       const name = pp.get("id");
@@ -25,6 +35,8 @@ function transformServer({ types: t, template }) {
     }
     return path.node.id && path.node.id.type === "Identifier" ? path.get("id") : null;
   }
+
+  /** @param {import('@babel/core').NodePath<import('@babel/core').types.Identifier>} ident  */
   function isIdentifierReferenced(ident) {
     const b = ident.scope.getBinding(ident.node.name);
     if (b && b.referenced) {
@@ -37,6 +49,11 @@ function transformServer({ types: t, template }) {
     }
     return false;
   }
+
+  /** 
+   * @param {import('@babel/core').NodePath} path 
+   * @param {} state
+   */
   function markFunction(path, state) {
     const ident = getIdentifier(path);
     if (ident && ident.node && isIdentifierReferenced(ident)) {
