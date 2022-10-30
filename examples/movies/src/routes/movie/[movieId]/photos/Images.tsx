@@ -1,7 +1,8 @@
+"use client";
 import { For } from "solid-js";
 import "./Images.scss";
 
-export default function ImagesSection(props) {
+export function ImagesSection(props) {
   return (
     <div class="spacing">
       <div class="images__head">

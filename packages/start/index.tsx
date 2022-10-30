@@ -24,7 +24,7 @@ export {
 } from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
-export { clientOnly as unstable_clientOnly, island as unstable_island } from "./islands";
+export { clientOnly as unstable_clientOnly } from "./islands";
 export { Body, Head, Html, Scripts } from "./root";
 export * from "./router";
 export * from "./server/responses";

@@ -1,6 +1,5 @@
-import { Route, Routes } from "@solidjs/router";
-import { createContext, JSX, Suspense, useContext } from "solid-js";
-import { NoHydration, ssr } from "solid-js/web";
+import { createContext, JSX, useContext } from "solid-js";
+import { ssr } from "solid-js/web";
 import { getAssetsFromManifest } from "../root/assets";
 import { useRequest } from "../server/ServerContext";
 export interface RouteDefinition {
@@ -310,29 +309,29 @@ export function Router(props: RouterProps) {
     out: props.out
   };
 
-  if (props.out.prevRoute) {
-    props.out.partial = true;
-    return (
-      <RouterContext.Provider value={state}>
-        <OutletContext.Provider
-          value={{ depth: nextRoutes.indexOf(props.out.nextRoute) + 1, route: props.out.nextRoute }}
-        >
-          <NoHydration>
-            <Suspense>
-              <Routes>
-                <Route
-                  path={props.out.nextRoute.pattern}
-                  component={props.out.nextRoute.component}
-                  data={props.out.nextRoute.data}
-                  children={props.out.nextRoute.children}
-                />
-              </Routes>
-            </Suspense>
-          </NoHydration>
-        </OutletContext.Provider>
-      </RouterContext.Provider>
-    );
-  }
+  // if (props.out.prevRoute) {
+  //   props.out.partial = true;
+  //   return (
+  //     <RouterContext.Provider value={state}>
+  //       <OutletContext.Provider
+  //         value={{ depth: nextRoutes.indexOf(props.out.nextRoute) + 1, route: props.out.nextRoute }}
+  //       >
+  //         <NoHydration>
+  //           <Suspense>
+  //             <Routes>
+  //               <Route
+  //                 path={props.out.nextRoute.pattern}
+  //                 component={props.out.nextRoute.component}
+  //                 data={props.out.nextRoute.data}
+  //                 children={props.out.nextRoute.children}
+  //               />
+  //             </Routes>
+  //           </Suspense>
+  //         </NoHydration>
+  //       </OutletContext.Provider>
+  //     </RouterContext.Provider>
+  //   );
+  // }
 
   return <RouterContext.Provider value={state}>{props.children}</RouterContext.Provider>;
 }

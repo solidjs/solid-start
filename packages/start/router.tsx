@@ -3,7 +3,6 @@ import {
   Location,
   Navigator,
   Outlet as BaseOutlet,
-  RouteDataFunc,
   Routes as BaseRoutes,
   useLocation as useBaseLocation,
   useNavigate as useBaseNavigate,
@@ -19,8 +18,8 @@ import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 export type RouteParams<T extends string> = Record<T, string>;
 
-export type RouteDataArgs<T extends keyof StartRoutes> = {
-  data: T extends RouteDataFunc ? ReturnType<T> : T;
+export type RouteDataArgs<T extends keyof StartRoutes = ""> = {
+  data: StartRoutes[T]["data"];
   params: RouteParams<StartRoutes[T]["params"]>;
   location: Location;
   navigate: Navigator;
@@ -56,7 +55,7 @@ const useLocation =
 const useNavigate =
   import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
     ? function IslandsUseNavigate() {
-        return ((to, props) => window.NAVIGATE(to, props)) as unknown as Navigator;
+        return ((to, props) => window.NAVIGATE(to, props)) as Navigator;
       }
     : useBaseNavigate;
 
@@ -72,7 +71,12 @@ declare global {
     ROUTER: EventTarget;
   }
 
-  interface StartRoutes {}
+  interface StartRoutes {
+    "": {
+      params: any;
+      data: any;
+    };
+  }
 }
 
 export { A, Outlet, Routes, useLocation, useNavigate, useSearchParams };
