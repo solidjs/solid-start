@@ -18,6 +18,7 @@
     "@iconify/json": "^2.1.124",
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.5.0",
+    "@types/marked": "^4.0.7",
     "date-fns": "^2.29.3",
     "excerpts": "^0.0.3",
     "marked": "^4.1.1",

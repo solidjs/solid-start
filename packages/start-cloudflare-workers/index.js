@@ -46,11 +46,10 @@ export default function (miniflareOptions = {}) {
           }
 
           async fetch(request) {
-            console.log("DURABLE_OBJECT", request.method, request.url);
+            console.log("🧬", obj, request.method, request.url);
 
             try {
               const all = await vite.ssrLoadModule(options.solidOptions.durableObjects[obj]);
-              console.log(all);
               // let dObject = await this.promise;
               return await all.default(request, this.ctx);
             } catch (e) {

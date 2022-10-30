@@ -145,6 +145,7 @@ importers:
       '@iconify/json': ^2.1.124
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.5.0
+      '@types/marked': ^4.0.7
       date-fns: ^2.29.3
       excerpts: ^0.0.3
       marked: ^4.1.1
@@ -166,6 +167,7 @@ importers:
       '@iconify/json': 2.1.130
       '@solidjs/meta': 0.28.2_solid-js@1.6.0
       '@solidjs/router': 0.5.0_solid-js@1.6.0
+      '@types/marked': 4.0.7
       date-fns: 2.29.3
       excerpts: 0.0.3
       marked: 4.1.1
@@ -2880,6 +2882,10 @@ packages:
     dependencies:
       expect: 29.2.2
       pretty-format: 29.2.1
+
+  /@types/marked/4.0.7:
+    resolution: {integrity: sha512-eEAhnz21CwvKVW+YvRvcTuFKNU9CV1qH+opcgVK3pIMI6YZzDm6gc8o2vHjldFk6MGKt5pueSB7IOpvpx5Qekw==}
+    dev: false
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}

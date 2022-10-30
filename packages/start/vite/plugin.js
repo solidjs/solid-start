@@ -297,7 +297,6 @@ function solidStartFileSystemRouter(options) {
           })
         );
       } else if (code.includes("solid-start/server")) {
-        console.log(id);
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
@@ -610,6 +609,7 @@ export default function solidStart(options) {
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
     options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
+    options.islands ? islands() : undefined,
     options.ssr && logServerFunctionURL(),
     solid({
       ...(options ?? {}),
@@ -640,8 +640,7 @@ export default function solidStart(options) {
       )
     }),
     solidStartServer(options),
-    solidsStartRouteManifest(options),
-    options.islands ? islands() : undefined
+    solidsStartRouteManifest(options)
   ].filter(Boolean);
 }
 

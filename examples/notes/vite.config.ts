@@ -10,13 +10,12 @@ export default defineConfig({
     solid({
       islands: true,
       islandsRouter: true,
-      hot: false,
+      durableObjects: {
+        db: "./src/db.ts"
+      },
       adapter: startCloudflareWorkers({
         durableObjectsPersist: true,
         kvPersist: false,
-        durableObjects: {
-          DO: "NotesDB"
-        },
         async init(mf) {}
       })
     })

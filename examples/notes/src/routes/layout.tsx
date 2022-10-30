@@ -7,8 +7,8 @@
 
 import { Outlet } from "solid-start";
 import { EditButton } from "~/components/EditButton";
-import { NoteList } from "~/components/NoteList";
-import { DarkModeToggle, Provider } from "./DarkModeContext";
+import { NoteList } from "~/routes/NoteList";
+import { DarkModeToggle, Provider } from "../components/DarkModeContext";
 import "./index.css";
 export default function Home() {
   return (
@@ -29,9 +29,7 @@ export default function Home() {
           <section class="sidebar-menu" role="menubar">
             {/* <SearchField /> */}
             <EditButton noteId={null}>New</EditButton>
-            <DarkModeToggle>
-              
-              </DarkModeToggle>
+            <DarkModeToggle></DarkModeToggle>
           </section>
           <nav>
             {/* <Suspense fallback={<NoteListSkeleton />}> */}

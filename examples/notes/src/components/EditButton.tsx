@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
+import { JSX } from "solid-js";
 import { A } from "solid-start";
 
-export function EditButton(props) {
+export function EditButton(props: { noteId: string; children: JSX.Element }) {
   const isDraft = props.noteId == null;
   return (
     <A

@@ -7,11 +7,16 @@
  *
  */
 
-import { createEffect, createSignal, Show, useContext, useTransition } from "solid-js";
+import { createEffect, createSignal, JSX, Show, useContext, useTransition } from "solid-js";
 import { A, useLocation } from "solid-start";
-import { context } from "~/routes/DarkModeContext";
+import { context } from "~/components/DarkModeContext";
 
-export function SidebarNote(props) {
+export function SidebarNote(props: {
+  id: string;
+  title: string;
+  children?: JSX.Element;
+  expandedChildren?: JSX.Element;
+}) {
   const location = useLocation();
   const [isPending, startTransition] = useTransition();
   const [isExpanded, setIsExpanded] = createSignal(false);

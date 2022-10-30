@@ -44,7 +44,6 @@ function islandProps(props) {
             return a;
           }
           a = descriptors[k].get();
-          console.log(a);
           return a;
         }
       });
@@ -59,7 +58,6 @@ function islandProps(props) {
       });
     }
   });
-  console.log(target, other);
   return [target, other];
 }
 function trueFn() {

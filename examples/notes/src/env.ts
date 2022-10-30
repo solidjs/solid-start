@@ -3,7 +3,7 @@
 declare global {
   interface Env {
     KV: KVNamespace;
-    DO: DurableObjectNamespace;
+    db: DurableObjectNamespace;
   }
 }
 

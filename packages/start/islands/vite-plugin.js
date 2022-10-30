@@ -8,6 +8,7 @@ export function islands() {
   /** @type {import('vite').ConfigEnv} */
   let mode;
   return {
+    enforce: "pre",
     name: "solid-start-islands",
     config(c, m) {
       mode = m;

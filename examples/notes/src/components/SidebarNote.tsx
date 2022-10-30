@@ -7,9 +7,10 @@
  */
 
 import { format, isToday } from "date-fns";
+import { Note } from "~/db";
 import { SidebarNote as ClientSidebarNote } from "./SidebarNote.client";
 
-export default function SidebarNote(props) {
+export default function SidebarNote(props: { note: Note }) {
   const updatedAt = () => new Date(props.note.updated_at);
   const lastUpdatedAt = () =>
     isToday(updatedAt()) ? format(updatedAt(), "h:mm bb") : format(updatedAt(), "M/d/yy");

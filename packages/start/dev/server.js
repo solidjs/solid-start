@@ -95,7 +95,6 @@ export function createDevHandler(viteServer, config, options) {
 
     function internalFetch(route, init = {}) {
       let url = new URL(route, request.url);
-      console.log(url, route);
       if (config.solidOptions.durableObjects) {
         for (var key of Object.keys(config.solidOptions.durableObjects)) {
           if (url.hostname.startsWith(`${key}.`)) {
