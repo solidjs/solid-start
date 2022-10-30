@@ -105,7 +105,7 @@ prog
     DEBUG(
       [
         "running",
-        "node",
+        "vite",
         "--experimental-vm-modules",
         inspect ? "--inspect" : undefined,
         "node_modules/vite/bin/vite.js",
@@ -119,11 +119,8 @@ prog
         .join(" ")
     );
     spawn(
-      "node",
+      "vite",
       [
-        "--experimental-vm-modules",
-        inspect ? "--inspect" : undefined,
-        "node_modules/vite/bin/vite.js",
         "dev",
         ...(config ? ["--config", config.configFile] : []),
         ...(port ? ["--port", port] : []),
@@ -131,12 +128,15 @@ prog
       ].filter(Boolean),
       {
         shell: true,
-        stdio: "inherit"
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : undefined}`
+        }
       }
     );
 
     if (open) setTimeout(() => launch(port), 1000);
-    // (await import("./runtime/devServer.js")).start({ config, port, root });
   });
 
 prog
@@ -499,17 +499,6 @@ prog
       await router.init();
       printUrls(router, url);
     }
-  });
-
-prog
-  .command("use <feature>")
-  .describe("Use a solid-start feature")
-  .action(async feature => {
-    const { default: fn } = await import(`./addons/${feature}.js`);
-    const vite = require("vite");
-
-    const config = await vite.resolveConfig({}, "serve");
-    console.log(await fn(config));
   });
 
 prog.parse(process.argv);

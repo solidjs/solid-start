@@ -91,7 +91,7 @@ test.describe("api routes", () => {
           `,
           "src/routes/api/rewrite.js": js`
             import { json } from "solid-start/server";
-            export let GET = ({ request, fetch }) => fetch('/redirectd');
+            export let GET = ({ request, fetch }) => fetch('/redirected');
           `,
           "src/routes/api/external-fetch.js": js`
             import { json } from "solid-start/server";
@@ -200,6 +200,8 @@ test.describe("api routes", () => {
     });
 
     test("should rewrite", async ({ page }) => {
+      test.skip(!ssr);
+
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/api/rewrite", true);
       await page.waitForSelector("[data-testid='redirected']");

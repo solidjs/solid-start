@@ -1,3 +1,5 @@
+/// <reference path="./plugin.d.ts" />
+
 import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
 import { parse } from "es-module-lexer";
@@ -10,11 +12,14 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { loadEnv, normalizePath } from "vite";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
+import fileRoutesImport from "../fs-router/fileRoutesImport.js";
 import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
 import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
+
+// @ts-ignore
 globalThis.DEBUG = debug("start:vite");
 let _dirname = dirname(fileURLToPath(import.meta.url));
 // const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
@@ -71,7 +76,7 @@ function toArray(arr) {
 
 /**
  * @returns {import('node_modules/vite').Plugin}
- * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; }} options
+ * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; babel?: any }} options
  */
 function solidStartFileSystemRouter(options) {
   let lazy;
@@ -129,6 +134,7 @@ function solidStartFileSystemRouter(options) {
       if (!c.server.watch) c.server.watch = {};
       c.server.watch.disableGlobbing = false;
 
+      // @ts-expect-error
       router = c.solidOptions.router;
     },
     async configResolved(_config) {
@@ -157,7 +163,7 @@ function solidStartFileSystemRouter(options) {
       });
     },
 
-    async transform(code, id, transformOptions) {
+    transform(code, id, transformOptions) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
 
@@ -179,11 +185,14 @@ function solidStartFileSystemRouter(options) {
         };
       let babelSolidCompiler = (/** @type {string} */ code, /** @type {string} */ id, fn) => {
         // @ts-ignore
-        return solid({
+        let plugin = solid({
           ...(options ?? {}),
           ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
           babel: babelOptions(fn)
-        }).transform(code, id, transformOptions);
+        });
+
+        // @ts-ignore
+        plugin.transform(code, id, transformOptions);
       };
 
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
@@ -310,11 +319,21 @@ function solidStartFileSystemRouter(options) {
           })
         );
       } else if (code.includes("solid-start/server")) {
+        console.log(id);
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
           (/** @type {any} */ source, /** @type {any} */ id) => ({
             plugins: [
+              [
+                routeResource,
+                {
+                  ssr,
+                  root: process.cwd(),
+                  keep: true,
+                  minify: process.env.NODE_ENV === "production"
+                }
+              ],
               [
                 babelServerModule,
                 {
@@ -326,10 +345,10 @@ function solidStartFileSystemRouter(options) {
             ].filter(Boolean)
           })
         );
-      } else if (code.includes("var routesConfig = $ROUTES_CONFIG;")) {
+      } else if (code.includes("var fileRoutes = $FILE_ROUTES;")) {
         return {
           code: code.replace(
-            "var routesConfig = $ROUTES_CONFIG;",
+            "var fileRoutes = $FILE_ROUTES;",
             stringifyPageRoutes(router.getNestedPageRoutes(), {
               // if we are in SPA mode, and building the server bundle, we import
               // the routes eagerly so that they can dead-code eliminate properly,
@@ -337,6 +356,13 @@ function solidStartFileSystemRouter(options) {
               // loaded lazily.
               lazy: ssr ? false : true
             })
+          )
+        };
+      } else if (code.includes("var routeLayouts = $ROUTE_LAYOUTS;")) {
+        return {
+          code: code.replace(
+            "var routeLayouts = $ROUTE_LAYOUTS;",
+            `const routeLayouts = ${JSON.stringify(router.getRouteLayouts())};`
           )
         };
       } else if (code.includes("var api = $API_ROUTES;")) {
@@ -523,7 +549,7 @@ function find(locate, cwd) {
   return find(locate, path.join(cwd, ".."));
 }
 
-const nodeModulesPath = find("node_modules");
+const nodeModulesPath = find("node_modules", process.cwd());
 
 function detectAdapter() {
   let adapters = [];
@@ -562,7 +588,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : detectAdapter(),
+      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
@@ -616,6 +642,7 @@ export default function solidStart(options) {
       babel: babelOptions(
         (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
           plugins: [
+            [fileRoutesImport],
             [
               routeResource,
               {
@@ -696,37 +723,46 @@ function islands() {
         );
 
         let prep = `
-        import { unstable_island } from 'solid-start';
+        import { island } from 'solid-start/islands';
 
         `;
 
-        let client = ``;
+        let client = `
+        import { island } from 'solid-start/islands';
+        `;
 
         exports.map(e => {
           if (e.n === "default") {
             prep += `
             import Island from '${id}?client';
-            export default unstable_island(Island, "${
+            export default island(Island, "${
+              mode.command === "serve"
+                ? `/@fs` + id + "?island"
+                : `${normalizePath(relative(process.cwd(), id))}?island`
+            }");`;
+            client += `
+            import Island from '${id}?island';
+            export default island(Island, "${
               mode.command === "serve"
                 ? `/@fs/` + id + "?island"
                 : `${normalizePath(relative(process.cwd(), id))}?island`
             }");`;
-            client += `        
-            export { default } from '${id}?island';
-            `;
           } else {
             if (e.n.charAt(0) === e.n.charAt(0).toUpperCase()) {
               prep += `
               import {${e.ln} as ${e.ln}Island } from '${id}?client';
-              export const ${e.ln} = unstable_island(${e.ln}Island, "${
+              export const ${e.ln} = island(${e.ln}Island, "${
                 mode.command === "serve"
                   ? `/@fs/` + id + `?island&isle_${e.ln}`
                   : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
               }");`;
               client += `
-                import { ${e.ln} } from '${id}?island&isle_${e.ln}';
-                export { ${e.ln} };
-              `;
+              import {${e.ln} as ${e.ln}Island } from '${id}?island&isle_${e.ln}';
+              export const ${e.ln} = island(${e.ln}Island, "${
+                mode.command === "serve"
+                  ? `/@fs` + id + `?island&isle_${e.ln}`
+                  : `${normalizePath(relative(process.cwd(), id))}?island&isle_${e.ln}`
+              }");`;
             } else {
               prep += `
               export {${e.ln} } from '${id}?client';`;
@@ -745,7 +781,7 @@ function islands() {
           /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
           (a, b, c) =>
             ssr
-              ? `import ${b}_island from "${c}?client"; 
+              ? `import ${b}_island from "${c}?client";
                   const ${b} = unstable_island(${b}_island, "${
                   mode.command === "serve"
                     ? `/@fs/${normalizePath(join(dirname(id), c))}` + ".tsx" + "?island"
@@ -771,7 +807,8 @@ function remove_html_middlewares(server) {
   const html_middlewares = [
     "viteIndexHtmlMiddleware",
     "vite404Middleware",
-    "viteSpaFallbackMiddleware"
+    "viteSpaFallbackMiddleware",
+    "viteHtmlFallbackMiddleware"
   ];
   for (let i = server.stack.length - 1; i > 0; i--) {
     // @ts-ignore

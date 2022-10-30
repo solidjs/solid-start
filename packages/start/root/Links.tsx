@@ -1,6 +1,6 @@
-import { JSX, useContext } from "solid-js";
+import { JSX } from "solid-js";
 import { useAssets } from "solid-js/web";
-import { ServerContext } from "../server/ServerContext";
+import { useRequest } from "../server/ServerContext";
 import { getAssetsFromManifest } from "./assets";
 
 /**
@@ -9,7 +9,7 @@ import { getAssetsFromManifest } from "./assets";
  */
 export default function Links() {
   const isDev = import.meta.env.MODE === "development";
-  const context = useContext(ServerContext);
+  const context = useRequest();
   !isDev &&
     import.meta.env.START_SSR &&
     useAssets(() => {

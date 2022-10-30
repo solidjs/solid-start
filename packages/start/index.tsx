@@ -13,8 +13,6 @@ export {
   type RouteDataFunc,
   type RouteDataFuncArgs as RouteDataArgs
 } from "@solidjs/router";
-export { clientOnly as unstable_clientOnly, island as unstable_island } from "./islands";
-
 export type { APIEvent as APIEvent } from "./api";
 export {
   createRouteAction,
@@ -26,10 +24,11 @@ export {
 } from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
 export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
-export { Body, FileRoutes, Head, Html, Scripts } from "./root";
+export { clientOnly as unstable_clientOnly, island as unstable_island } from "./islands";
+export { Body, Head, Html, Scripts } from "./root";
 export * from "./router";
 export * from "./server/responses";
-export { ServerContext, useServerContext } from "./server/ServerContext";
+export { ServerContext, useRequest as useServerContext } from "./server/ServerContext";
 export type { FetchEvent, PageEvent, ServerFunctionEvent } from "./server/types";
 export {
   createCookie,
@@ -43,4 +42,7 @@ export {
   type SessionIdStorageStrategy,
   type SessionStorage
 } from "./session";
+
+import { JSX } from "solid-js";
 import "./types";
+export declare function FileRoutes(): JSX.Element;

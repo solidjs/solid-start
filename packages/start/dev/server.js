@@ -5,6 +5,7 @@ import { Readable } from "stream";
 import { createRequest } from "../node/fetch.js";
 import "../node/globals.js";
 
+// @ts-ignore
 globalThis.DEBUG = debug("start:server");
 
 // Vite doesn't expose this so we just copy the list for now
@@ -12,16 +13,20 @@ globalThis.DEBUG = debug("start:server");
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 const module_style_pattern = /\.module\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
-process.on("unhandledRejection", function (e) {
-  if (
-    !(
-      (typeof e === "string" && e.includes("renderToString timed out")) ||
-      (e.message && e.message.includes("renderToString timed out"))
-    )
-  ) {
-    console.error(e);
+process.on(
+  "unhandledRejection",
+  /** @param {Error | string} err */ err => {
+    if (
+      !(typeof err === "string"
+        ? err.includes("renderToString timed out")
+        : err.message
+        ? err.message.includes("renderToString timed out")
+        : false)
+    ) {
+      console.error(`An unhandler error occured: ${err}`);
+    }
   }
-});
+);
 
 /**
  *
@@ -114,7 +119,8 @@ export function createDevHandler(viteServer, config, options) {
    */
   async function startHandler(req, res) {
     try {
-      console.log(req.method, req.url);
+      const url = viteServer.resolvedUrls.local[0];
+      console.log(req.method, new URL(req.url, url).href);
       let webRes = await devFetch(createRequest(req), localEnv);
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
@@ -124,6 +130,7 @@ export function createDevHandler(viteServer, config, options) {
       }
 
       if (webRes.body) {
+        // @ts-ignore
         const readable = Readable.from(webRes.body);
         readable.pipe(res);
         await once(readable, "end");

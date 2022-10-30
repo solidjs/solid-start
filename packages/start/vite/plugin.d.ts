@@ -17,6 +17,7 @@ import type { Debugger } from "debug";
 import type { Component } from "solid-js";
 
 declare global {
+  export const DEBUG: Debugger;
   interface Window {
     DEBUG: Debugger;
     _$HY: {
@@ -26,8 +27,6 @@ declare global {
       fe(id: string): void;
     };
   }
-
-  export const DEBUG: Debugger;
 }
 
 export const start: (options?: Partial<Options>) => Plugin[];

@@ -1,10 +1,10 @@
 import { FETCH_EVENT } from "../server/types";
 import { getRouteMatches } from "./router";
-import type { APIEvent, Method } from "./types";
+import type { APIEvent, MatchRoute, Method } from "./types";
 
-let apiRoutes;
+let apiRoutes: MatchRoute[];
 
-export const registerApiRoutes = routes => {
+export const registerApiRoutes = (routes: MatchRoute[]) => {
   apiRoutes = routes;
 };
 
@@ -17,14 +17,17 @@ export async function internalFetch(route: string, init: RequestInit) {
   const request = new Request(url.href, init);
   const handler = getRouteMatches(apiRoutes, url.pathname, request.method.toUpperCase() as Method);
 
-  if (handler) {
-    let apiEvent: APIEvent = Object.freeze({
-      request,
-      params: handler.params,
-      env: {},
-      $type: FETCH_EVENT,
-      fetch: internalFetch
-    });
+  if (!handler) {
+    throw new Error(`No handler found for ${request.method} ${request.url}`);
+  }
+
+  let apiEvent: APIEvent = Object.freeze({
+    request,
+    params: handler.params,
+    env: {},
+    $type: FETCH_EVENT,
+    fetch: internalFetch
+  });
 
     const response = await handler.handler(apiEvent);
     return response;

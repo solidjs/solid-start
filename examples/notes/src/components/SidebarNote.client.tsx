@@ -21,7 +21,7 @@ export function SidebarNote(props) {
   let itemRef;
 
   const [darkMode] = useContext(context);
-  console.log(darkMode());
+
   let title = props.title;
   createEffect(() => {
     if (props.title !== title) {

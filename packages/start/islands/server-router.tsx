@@ -20,7 +20,7 @@ export interface MatchedRoute {
   id: string;
   originalPath: string;
   pattern: string;
-  component: () => JSX.Element;
+  component: (props: any) => JSX.Element;
   match: PathMatch;
   shared: boolean;
 }
@@ -286,7 +286,6 @@ export function Router(props: RouterProps) {
         }
         // Routes are shared
       } else if (prevRoute && nextRoute) {
-        console.log(prevRoute, nextRoute);
         // console.log("diff rendered");
         // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;

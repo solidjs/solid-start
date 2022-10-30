@@ -8,7 +8,7 @@ active: true
 
 # A
 
-##### `A` is an enhanced version of the [`a`][nativeanchor] element that supports client-side and islands routing
+##### `A` is an enhanced version of the [`a`][nativeanchor] element that supports client-side and islands routing.
 
 <div class="text-lg">
 
@@ -26,7 +26,7 @@ import { A } from "solid-start";
 
 ### Adding a link to another page
 
-The `<A>` component is designed handle links for client-side routing. It is a wrapper of the native `<a>` element and is a re-export from `@solidjs/router`. These components are progressive enhanceable and can work with client-side routing even when not hydrated bridging the gap between Single Page applications and Islands.
+The `<A>` component is designed to handle links for client-side routing. It is a wrapper of the native `<a>` element and is a re-export from `@solidjs/router`. These components are progressive enhanceable and can work with client-side routing even when not hydrated bridging the gap between Single Page applications and Islands.
 
 ```tsx
 import { A } from "solid-start";
@@ -41,7 +41,7 @@ export default function Nav() {
 }
 ```
 
-The `<A>` tag also has an `active` class if its href matches the current location, and `inactive` otherwise. **Note:** By default matching includes locations that are descendents (e.g. href `/users` matches locations `/users` and `/users/123`), use the boolean `end` prop to prevent matching these. This is particularly useful for links to the root route `/` which would match everything.
+The `<A>` tag also has an `activeClass` class if its href matches the current location, and `inactiveClass` otherwise. **Note:** By default matching includes locations that are descendents (e.g. href `/users` matches locations `/users` and `/users/123`), use the boolean `end` prop to prevent matching these. This is particularly useful for links to the root route `/` which would match everything.
 
 ## Reference
 

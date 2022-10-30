@@ -1,5 +1,6 @@
 import { ManifestEntry, PageEvent } from "../server/types";
-import { routesConfig } from "./FileRoutes";
+import {} from "./FileRoutes";
+import { routeLayouts } from "./routeLayouts";
 
 function flattenIslands(match, manifest, islands) {
   let result = [...match];
@@ -21,7 +22,7 @@ export function getAssetsFromManifest(
   let match = matches.reduce<ManifestEntry[]>((memo, m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      const route = routesConfig.routeLayouts[fullPath];
+      const route = routeLayouts[fullPath];
       if (route) {
         memo.push(...((event.env.manifest[route.id] || []) as ManifestEntry[]));
         const layoutsManifestEntries = route.layouts.flatMap(

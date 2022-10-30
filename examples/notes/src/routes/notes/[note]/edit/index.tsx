@@ -1,7 +1,12 @@
 import { Show } from "solid-js";
 import { useParams, useRouteData } from "solid-start";
-import { routeData } from "../layout";
 import { NoteEditor } from "./NoteEditor";
+
+import { useNote } from "../useNote";
+
+export function routeData({ params }) {
+  return useNote(params);
+}
 
 export default function EditNote() {
   const note = useRouteData<typeof routeData>();
