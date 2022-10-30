@@ -2,7 +2,7 @@ import { Route, Routes } from "@solidjs/router";
 import { createContext, JSX, Suspense, useContext } from "solid-js";
 import { NoHydration, ssr } from "solid-js/web";
 import { getAssetsFromManifest } from "../root/assets";
-import { useServerContext } from "../server/ServerContext";
+import { useRequest } from "../server/ServerContext";
 export interface RouteDefinition {
   path: string;
   component?: () => JSX.Element;
@@ -207,7 +207,7 @@ export interface RouterProps {
 }
 
 export function Router(props: RouterProps) {
-  const context = useServerContext();
+  const context = useRequest();
   const next = getMatchedBranch(props.routes, props.location);
   if (!next || !next.routes.length) {
     return [];
