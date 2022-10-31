@@ -63,7 +63,7 @@ function touch(path) {
     fs.closeSync(fs.openSync(path, "w"));
   }
 }
-let i = 0;
+
 /**
  * @param {any} arr
  */
