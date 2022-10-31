@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
 jobs:
   docs:
@@ -33,12 +33,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Use Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
       - name: Build docs
         run: pnpm run docs:build
 
-      - run: npx netlify-cli deploy --site 577a5e59-05a4-4cb2-b724-c00ba28f0dc7 --build --prod --dir netlify --auth $NETLIFY_AUTH_TOKEN
+      - run: npx wrangler publish

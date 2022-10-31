@@ -1,6 +1,6 @@
 import { resolve } from "path";
+import worker from "solid-start-cloudflare-workers";
 import mdx from "solid-start-mdx";
-import netlify from "solid-start-netlify";
 import solid from "solid-start/vite";
 import { defineConfig } from "vite";
 
@@ -22,7 +22,7 @@ export default defineConfig({
       islandsRouter: true,
       islands: true,
       extensions: [".mdx", ".md"],
-      adapter: netlify({ edge: true })
+      adapter: worker({})
     })
   ]
 });
