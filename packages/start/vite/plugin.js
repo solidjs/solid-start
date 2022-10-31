@@ -96,7 +96,9 @@ function solidStartConfig(options) {
           // handles use of process.env.TEST_ENV in solid-start internal code
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-          "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
+          "import.meta.env.START_SSR": JSON.stringify(
+            options.ssr === true ? "async" : options.ssr ? options.ssr : false
+          ),
           "import.meta.env.START_ISLANDS": JSON.stringify(
             options.experimental.islands ? true : false
           ),
@@ -129,24 +131,6 @@ function solidStartConfig(options) {
         },
         solidOptions: options
       };
-    }
-  };
-}
-/**
- * @returns {import('vite').PluginOption}
- */
-function logServerFunctionURL() {
-  return {
-    name: "solid-start-print-server-function-url",
-    configureServer(vite) {
-      vite.httpServer?.once("listening", async () => {
-        const label = `  > Server modules: `;
-        setTimeout(() => {
-          const url = vite.resolvedUrls?.local[0];
-          // eslint-disable-next-line no-console
-          console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
-        }, 200);
-      });
     }
   };
 }
@@ -437,7 +421,9 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var routeLayouts = $ROUTE_LAYOUTS;",
-            `const routeLayouts = ${JSON.stringify(config.solidOptions.router.getRouteLayouts())};`
+            `const routeLayouts = /*#__PURE__*/ ${JSON.stringify(
+              config.solidOptions.router.getRouteLayouts()
+            )};`
           )
         };
       } else if (code.includes("var api = $API_ROUTES;")) {
@@ -584,7 +570,14 @@ export default function solidStart(options) {
       adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
-      ssr: process.env.START_SSR === "false" ? false : true,
+      ssr:
+        process.env.START_SSR === "false"
+          ? false
+          : process.env.START_SSR === "true"
+          ? "async"
+          : process.env.START_SSR?.length
+          ? process.env.START_SSR
+          : "async",
       islands: process.env.START_ISLANDS === "true" ? true : false,
       islandsRouter: process.env.START_ISLANDS_ROUTER === "true" ? true : false,
       lazy: true,
@@ -603,7 +596,6 @@ export default function solidStart(options) {
     solidStartFileSystemRouter({ delay: 500 }),
     options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
     options.experimental.islands ? islands() : undefined,
-    options.ssr && logServerFunctionURL(),
     solidTransformer(options),
     solidStartServer(options),
     solidStartRouteManifest(options)

@@ -5,11 +5,11 @@ export type Adapter = {
   name: string;
 };
 
-export type Options = {
+export type Options = Omit<import("vite-plugin-solid").Options, "ssr"> & {
   adapter: string | Adapter;
   appRoot: string;
   routesDir: string;
-  ssr: boolean;
+  ssr: boolean | "async" | "sync" | "streaming";
   prerenderRoutes: any[];
   experimental: {
     islands?: boolean;
@@ -21,7 +21,7 @@ export type Options = {
   serverEntry: string;
   clientEntry: string;
   router: import("../fs-router/router").Router;
-} & import("vite-plugin-solid").Options;
+};
 
 import type { Debugger } from "debug";
 import type { Component } from "solid-js";
