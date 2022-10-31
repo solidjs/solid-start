@@ -36,4 +36,4 @@ jobs:
       - name: Build docs
         run: pnpm run docs:build
 
-      - run: npx wrangler deploy publish dist/server.js --name solid-start --latest
+      - run: npx wrangler publish
