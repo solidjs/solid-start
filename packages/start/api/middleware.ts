@@ -1,4 +1,4 @@
-import { Middleware } from "entry-server";
+import { Middleware } from "../entry-server";
 import { FetchEvent, FETCH_EVENT } from "../server/types";
 import { getApiHandler } from "./index";
 
