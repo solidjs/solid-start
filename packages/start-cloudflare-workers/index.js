@@ -152,7 +152,7 @@ export default function (miniflareOptions = {}) {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       } else {
@@ -165,12 +165,28 @@ export default function (miniflareOptions = {}) {
         join(config.root, ".solid", "server", "handler.js")
       );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
-      let durableObjects = Object.values(miniflareOptions?.durableObjects || {});
+      let durableObjects = Object.keys(config.solidOptions.experimental?.durableObjects || {});
 
-      if (Object.values(durableObjects).length > 0) {
+      if (durableObjects.length > 0) {
         let text = readFileSync(join(config.root, ".solid", "server", "server.js"), "utf8");
         durableObjects.forEach(item => {
-          text += `\nexport { ${item} } from "./handler";`;
+          text += `\n import ${item}Fetch from "./${item}"; 
+          
+          class ${item} {
+            ctx;
+            constructor(state) {
+              this.ctx = {
+                state,
+                storage: state.storage,
+                durableObject: this
+              };
+            }
+            async fetch(request) {
+              return await ${item}Fetch(request, this.ctx);
+            }
+          }
+
+          export { ${item} };`;
         });
         writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
       }

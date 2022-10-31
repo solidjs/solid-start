@@ -2,6 +2,13 @@
 import { toPath } from "./path-utils.js";
 
 /**
+ * @typedef {{src?: string;file: string;imports: string[];dynamicImports?: string[];css?: string[];}} AssetManifestEntry
+ */
+
+/**
+ * @typedef {{type: string; href: string;}} AssetRef
+ */
+/**
  * Output:
  * * To be consumed by the Links/Scripts components, using solid-router path syntax
  * {
@@ -18,8 +25,10 @@ import { toPath } from "./path-utils.js";
  *    ],
  * }
  *
- * @param {*} ssrManifest
- * @param {*} assetManifest
+ * @param {{ [key: string]: string[] }} ssrManifest
+ * @param {{ [key: string]: AssetManifestEntry}} assetManifest
+ * @param {import('../vite/plugin').ViteConfig} config
+ * @param {[]} islands
  * @returns
  */
 export default function prepareManifest(ssrManifest, assetManifest, config, islands = []) {
@@ -30,9 +39,19 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         : config.base + "/"
       : "/";
 
+  /**
+   * @type {{ [key: string]: AssetRef[] | { script: AssetRef, assets: AssetRef[] } }}
+   */
   let manifest = {};
 
+  /** @type {string | null} */
   let src;
+
+  /**
+   *
+   * @param {string} _src
+   * @returns
+   */
   function collect(_src) {
     src = _src;
     let assets = collectAssets();
@@ -43,6 +62,11 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     return files;
   }
 
+  /**
+   *
+   * @param {string} _src
+   * @returns
+   */
   function collectAsset(_src) {
     src = _src;
     let assets = collectAssets();
@@ -53,10 +77,16 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     return files;
   }
 
+  /**
+   *
+   * @returns
+   */
   function collectAssets() {
+    /** @type {AssetRef[]} */
     let files = [];
     let visitedFiles = new Set();
 
+    /** @param {AssetManifestEntry} file */
     function visitFile(file) {
       if (visitedFiles.has(file.file)) return;
       visitedFiles.add(file.file);
@@ -118,6 +148,11 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     }
 
     return {
+      /**
+       *
+       * @param {string} val
+       * @returns
+       */
       addAsset(val) {
         let asset = Object.values(assetManifest).find(f => basePath + f.file === val);
         if (!asset) {
@@ -125,6 +160,11 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         }
         visitFile(asset);
       },
+      /**
+       *
+       * @param {string} val
+       * @returns
+       */
       addSrc(val) {
         let asset = Object.values(assetManifest).find(f => f.src === val);
         if (!asset) {
@@ -132,6 +172,11 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         }
         visitFile(asset);
       },
+      /**
+       *
+       * @param {string} val
+       * @returns
+       */
       addChunk(val) {
         let asset = assetManifest[val];
         if (!asset) {
@@ -149,10 +194,10 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     .filter(
       key =>
         key.startsWith(config.solidOptions.router.baseDir) &&
-        key.match(config.solidOptions.router.pageRegex)
+        key.match(config.solidOptions.router.include)
     )
-    .map(key => [key, ssrManifest[key]])
-    .map(([key, value]) => {
+    .map(key => {
+      let value = ssrManifest[key];
       const assets = collectAssets();
       value.forEach(val => {
         assets.addAsset(val);
@@ -162,21 +207,18 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         assets.addSrc(key);
       }
 
-      if (key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
-        return null;
-      }
-
-      return [
+      /** @type {[string, AssetRef[]]} */
+      let routeEntry = [
         toPath(
           config.solidOptions.router.getRouteId(
-            key.replace(config.solidOptions.router.pageRegex, "")
+            key.replace(config.solidOptions.router.include, "")
           ),
           false
         ),
         assets.getFiles()
       ];
-    })
-    .filter(Boolean);
+      return routeEntry;
+    });
 
   let clientEntry = Object.keys(ssrManifest).find(key =>
     key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
@@ -193,25 +235,28 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     indexHtmlAssets.addSrc(indexHtml);
   }
 
+  let entries = Object.fromEntries([
+    ...routes.filter(Boolean),
+    ...islands.map(i => {
+      let asset = collectAssets();
+
+      asset.addSrc(i);
+
+      /** @type {[string, { script: AssetRef; assets: AssetRef[] }]} */
+      return [
+        i,
+        {
+          script: asset.getFiles()[0],
+          assets: asset.getFiles()
+        }
+      ];
+    }),
+    ["entry-client", clientEntryAssets.getFiles()],
+    ["index.html", indexHtmlAssets.getFiles()]
+  ]);
+
   return {
     ...manifest,
-    ...Object.fromEntries([
-      ...routes,
-      ...islands.map(i => {
-        let asset = collectAssets();
-
-        asset.addSrc(i);
-
-        return [
-          i,
-          {
-            script: asset.getFiles()[0],
-            assets: asset.getFiles()
-          }
-        ];
-      }),
-      ["entry-client", clientEntryAssets.getFiles()],
-      ["index.html", indexHtmlAssets.getFiles()]
-    ])
+    ...entries
   };
 }

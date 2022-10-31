@@ -93,18 +93,8 @@ export function createDevHandler(viteServer, config, options) {
       }
     };
 
-    function internalFetch(route, init = {}) {
+    function internalFetch(/** @type {string} */ route, init = {}) {
       let url = new URL(route, request.url);
-      if (config.solidOptions.durableObjects) {
-        for (var key of Object.keys(config.solidOptions.durableObjects)) {
-          if (url.hostname.startsWith(`${key}.`)) {
-            let name = url.hostname.replace(`${key}.`, "");
-            let id = env[key].idFromName(name);
-            let durableObject = env[key].get(id);
-            return durableObject.fetch(url, init);
-          }
-        }
-      }
 
       const internalRequest = new Request(url.href, init);
       return entry({

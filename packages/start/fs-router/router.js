@@ -9,33 +9,39 @@ import path, { join } from "path";
 import { toPath } from "./path-utils.js";
 
 const log = debug("solid-start");
-const ROUTE_KEYS = ["component", "path", "data", "children"];
 
 // Available HTTP methods / verbs for api routes
 // `delete` is a reserved word in JS, so we use `del` instead
 const API_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 
+/**
+ * @typedef {{id: string; path: string; dataPath?: string;componentPath?: string; children?: RouteConfig[]; apiPath?: {[key: string]: string;};}} RouteConfig
+ */
+
 export class Router {
+  /** @type {{ [key: string]: RouteConfig }} */
   routes;
   baseDir;
-  pageExtensions;
+
+  include;
+
+  /** @type {string} */
   cwd;
+
+  /** @type {import('chokidar').FSWatcher | undefined} */
   watcher;
-  ignore;
-  pageRegex;
   pageDataRegex;
+
   constructor({
     baseDir = "src/routes",
-    pageExtensions = ["jsx", "tsx", "js", "ts"],
-    cwd = process.cwd(),
-    ignore = []
+    include = new RegExp(`\\.(${["jsx", "tsx", "js", "ts"].join("|")})$`),
+    cwd = process.cwd()
   }) {
     this.baseDir = baseDir;
-    this.pageExtensions = pageExtensions;
     this.cwd = cwd;
     this.routes = {};
-    this.ignore = ignore;
-    this.pageRegex = new RegExp(`\\.(${this.pageExtensions.join("|")})$`);
+    // this.exclude = exclude;
+    this.include = include;
     this.pageDataRegex = new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`);
   }
 
@@ -55,10 +61,11 @@ export class Router {
     });
   }
 
-  watch(onChange) {
+  watch() {
     if (this.watcher) {
       return;
     }
+
     this.watcher = chokidar.watch(`${this.baseDir}/**/*`, { cwd: this.cwd, ignoreInitial: true });
 
     this.watcher.on("all", (event, filePath) => {
@@ -85,16 +92,21 @@ export class Router {
     });
   }
 
+  /** @type {{ [key: string]: boolean }} */
   rawFiles = {};
 
+  /** @type {((path: string) => void) | undefined} */
   listener;
 
+  /** @param {string} path */
   notify(path) {
     this.listener && this.listener(path);
   }
 
-  notifyFsEvent() {}
-
+  /**
+   * @param {string} route
+   * @param {string} data
+   * */
   setRouteData(route, data) {
     if (!this.routes[route]) {
       this.routes[route] = { id: route, path: toPath(route) || "/", dataPath: data };
@@ -109,9 +121,18 @@ export class Router {
     }
   }
 
+  /** @param {string} path */
+  isRoute(path) {
+    return path.match(this.include);
+  }
+
+  /**
+   *
+   * @param {string} path
+   * @returns
+   */
   processFile(path) {
     // if its a route data function
-
     if (path.match(this.pageDataRegex)) {
       let id = this.getRouteId(path.replace(this.pageDataRegex, ""));
       this.setRouteData(id, path);
@@ -119,57 +140,14 @@ export class Router {
     }
 
     // if its a possible page due to its extension
-    if (path.match(this.pageRegex)) {
+    if (this.isRoute(path)) {
       log("processing", path);
-      let id = this.getRouteId(path.replace(this.pageRegex, ""));
+      let routeConfig = this.createRouteConfig(path);
 
-      /** @type {{ dataPath?: string; componentPath?: string; apiPath?: { [key: string]: string  }}} */
-      let routeConfig = {};
-
-      if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
-        let code = fs.readFileSync(join(this.cwd, path)).toString();
-        try {
-          let [imports, exports] = parse(
-            esbuild.transformSync(code, {
-              jsx: "transform",
-              format: "esm",
-              loader: "tsx"
-            }).code
-          );
-
-          if (exports.find($ => $.n === "default")) {
-            routeConfig.componentPath = path;
-          }
-
-          for (var method of API_METHODS) {
-            if (exports.find($ => $.n === method)) {
-              if (!routeConfig.apiPath) {
-                routeConfig.apiPath = {};
-              }
-
-              routeConfig.apiPath[method] = path;
-              // this.setAPIRoute(id, method, path);
-            }
-          }
-
-          if (exports.find($ => $.n === "routeData")) {
-            routeConfig.dataPath = path + "?data";
-            // this.setRouteData(id, path + "?data");
-            // dataFn = src.replace("tsx", "data.ts");
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      } else {
-        routeConfig.componentPath = path;
-        // this.setRouteComponent(id, path);
-        // this.setRouteComponent(id, path);
-      }
-
-      if (this.routes[id]) {
+      if (this.routes[routeConfig.id]) {
         // get old config, we want to compare the oldConfig with the new one to
         // detect changes and restart the vite server
-        let { id: oldID, path: oldPath, ...oldConfig } = this.routes[id];
+        let { id: oldID, path: oldPath, ...oldConfig } = this.routes[routeConfig.id];
         let newConfig = { ...routeConfig };
 
         if (oldConfig.dataPath && !oldConfig.dataPath.endsWith("?data") && !newConfig.dataPath) {
@@ -177,16 +155,67 @@ export class Router {
         }
 
         if (!dequal(oldConfig, newConfig)) {
-          this.routes[id] = { id, path: toPath(id) ?? "/", ...newConfig };
+          this.routes[routeConfig.id] = { ...newConfig };
           this.notify(path);
         }
       } else {
-        this.routes[id] = { id, path: toPath(id) ?? "/", ...routeConfig };
+        this.routes[routeConfig.id] = routeConfig;
         this.notify(path);
       }
     }
   }
 
+  /** @param {string} path */
+  createRouteConfig(path) {
+    let id = this.getRouteId(path.replace(this.include, ""));
+
+    /** @type {RouteConfig} */
+    let routeConfig = {
+      id,
+      path: toPath(id) ?? "/"
+    };
+
+    if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
+      let code = fs.readFileSync(join(this.cwd, path)).toString();
+      try {
+        let [, exports] = parse(
+          esbuild.transformSync(code, {
+            jsx: "transform",
+            format: "esm",
+            loader: "tsx"
+          }).code
+        );
+
+        if (exports.find($ => $.n === "default")) {
+          routeConfig.componentPath = path;
+        }
+
+        for (var method of API_METHODS) {
+          if (exports.find($ => $.n === method)) {
+            if (!routeConfig.apiPath) {
+              routeConfig.apiPath = {};
+            }
+
+            routeConfig.apiPath[method] = path;
+            // this.setAPIRoute(id, method, path);
+          }
+        }
+
+        if (exports.find($ => $.n === "routeData")) {
+          routeConfig.dataPath = path + "?data";
+          // this.setRouteData(id, path + "?data");
+          // dataFn = src.replace("tsx", "data.ts");
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      routeConfig.componentPath = path;
+    }
+    return routeConfig;
+  }
+
+  /** @param {string} path */
   getRouteId(path) {
     let id = path.slice(this.baseDir.length);
     if (id.endsWith("/layout")) {
@@ -200,27 +229,34 @@ export class Router {
       return this._nestedPageRoutes;
     }
 
-    function processRoute(routes, route, id, full) {
+    /**
+     * @param {RouteConfig[]} routes
+     * @param {RouteConfig} route
+     * @param {string} partialId
+     * @param {string} fullId
+     */
+    function processRoute(routes, route, partialId, fullId) {
       const parentRoute = Object.values(routes).find(o => {
         if (o.id.endsWith("/index")) {
           return false;
         }
-        return id.startsWith(o.id + "/");
+        return partialId.startsWith(o.id + "/");
       });
 
-      if (!parentRoute) {
-        routes.push({ ...route, id, path: toPath(id) });
-        return;
+      if (parentRoute) {
+        processRoute(
+          parentRoute.children || (parentRoute.children = []),
+          route,
+          partialId.slice(parentRoute.id.length),
+          fullId
+        );
+      } else {
+        routes.push({ ...route, id: partialId, path: toPath(partialId) });
       }
-      processRoute(
-        parentRoute.children || (parentRoute.children = []),
-        route,
-        id.slice(parentRoute.id.length),
-        full
-      );
     }
 
-    const routes = Object.values(this.routes)
+    /** @type {RouteConfig[]} */
+    const nestedRoutes = Object.values(this.routes)
       .sort((a, b) => a.id.localeCompare(b.id))
       .reduce((r, route) => {
         if (route.componentPath) {
@@ -229,15 +265,16 @@ export class Router {
         return r;
       }, []);
 
-    this._nestedPageRoutes = routes;
+    this._nestedPageRoutes = nestedRoutes;
 
-    return routes;
+    return nestedRoutes;
   }
 
-  isLayoutRoute(route) {
+  isLayoutRoute(/** @type {RouteConfig} */ route) {
     if (route.id.endsWith("/index")) {
       return false;
     }
+
     return Object.values(this.routes).some(r => {
       return r.id.startsWith(route.id + "/") && r.componentPath;
     });
@@ -245,84 +282,79 @@ export class Router {
 
   getRouteLayouts() {
     const routes = this.getNestedPageRoutes();
-    return routes.reduce((routeMap, route) => {
-      function buildRouteLayoutsMap(route, path, layouts) {
-        const fullPath = path + route.path;
-        const fullId = toPath(
-          layouts.length ? layouts[layouts.length - 1] + route.id : route.id,
-          false
-        );
+    return routes.reduce(
+      (/** @type {{ [key: string]: { id: string; layouts: string[] }}} */ routeMap, route) => {
+        function buildRouteLayoutsMap(
+          /** @type {RouteConfig} */ route,
+          /** @type {string} */ path,
+          /** @type {string[]} */ layouts
+        ) {
+          const fullPath = path + route.path;
+          const fullId = toPath(
+            layouts.length ? layouts[layouts.length - 1] + route.id : route.id,
+            false
+          );
 
-        if (!route.children) {
-          routeMap[fullPath] = { id: fullId, layouts };
-          return;
+          if (!route.children) {
+            routeMap[fullPath] = { id: fullId, layouts };
+            return;
+          }
+
+          const parentLayouts = [...layouts, fullId];
+
+          route.children.forEach(child => buildRouteLayoutsMap(child, fullPath, parentLayouts));
         }
 
-        const parentLayouts = [...layouts, fullId];
+        buildRouteLayoutsMap(route, "", []);
 
-        route.children.forEach(child => buildRouteLayoutsMap(child, fullPath, parentLayouts));
-      }
-
-      buildRouteLayoutsMap(route, "", []);
-
-      return routeMap;
-    }, {});
+        return routeMap;
+      },
+      {}
+    );
   }
 
   getFlattenedApiRoutes(includePageRoutes = false) {
-    const routes = Object.values(this.routes).reduce((r, route) => {
-      if (
-        route.apiPath ||
-        (includePageRoutes && route.componentPath && !this.isLayoutRoute(route))
-      ) {
-        const path = toPath(route.id);
-        r.push({ ...route, id: route.id, path });
-      }
-      return r;
-    }, []);
-
-    return routes;
+    return Object.values(this.routes).filter(
+      route =>
+        route.apiPath || (includePageRoutes && route.componentPath && !this.isLayoutRoute(route))
+    );
   }
 
   getFlattenedPageRoutes(includeLayouts = false) {
-    const routes = Object.values(this.routes).reduce((r, route) => {
-      if (route.componentPath && (!this.isLayoutRoute(route) || includeLayouts)) {
-        const path = toPath(route.id);
-        r.push({ ...route, id: route.id, path });
-      }
-      return r;
-    }, []);
-
-    return routes;
+    return Object.values(this.routes).filter(
+      route => route.componentPath && (!this.isLayoutRoute(route) || includeLayouts)
+    );
   }
 }
 
-export function stringifyPageRoutes(routes, options = {}) {
+export function stringifyPageRoutes(
+  /** @type {RouteConfig[]} */ routes,
+  /** @type {{ lazy?: boolean }} */ options = {}
+) {
   const jsFile = jsCode();
 
-  function _stringifyRoutes(r) {
+  /** @return {string} */
+  function _stringifyRoutes(/** @type {RouteConfig[]} */ routes) {
     return (
       `[\n` +
-      r
+      routes
         .filter(i => i.componentPath || i.children)
         .map(
           i =>
             `{\n${[
-              /.data.(js|ts)$/.test(i.dataPath ?? "")
+              i.dataPath && /.data.(js|ts)$/.test(i.dataPath)
                 ? `data: ${jsFile.addImport(path.posix.resolve(i.dataPath))}`
                 : i.dataPath
                 ? `data: ${jsFile.addNamedImport("routeData", path.posix.resolve(i.dataPath))}`
                 : "",
-              `component: ${
-                options.lazy
-                  ? `lazy(() => import('${path.posix.resolve(i.componentPath)}'))`
-                  : jsFile.addImport(path.posix.resolve(i.componentPath))
-              }`,
-              ...Object.keys(i)
-                .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
-                .map(
-                  k => `${k}: ${k === "children" ? _stringifyRoutes(i[k]) : JSON.stringify(i[k])}`
-                )
+              i.componentPath &&
+                `component: ${
+                  options.lazy
+                    ? `lazy(() => import('${path.posix.resolve(i.componentPath)}'))`
+                    : jsFile.addImport(path.posix.resolve(i.componentPath))
+                }`,
+              i.children && `children: ${_stringifyRoutes(i.children)}`,
+              `path: ${JSON.stringify(i.path)}`
             ]
               .filter(Boolean)
               .join(",\n ")} \n}`
@@ -342,30 +374,29 @@ export function stringifyPageRoutes(routes, options = {}) {
   return text;
 }
 
-export function stringifyApiRoutes(flatRoutes, options = {}) {
+export function stringifyAPIRoutes(
+  /** @type {(RouteConfig)[]} */ flatRoutes,
+  /** @type {{ lazy?: boolean }} */ options = {}
+) {
   const jsFile = jsCode();
 
-  function _stringifyRoutes(r) {
+  /**
+   * @return {string}
+   */
+  function _stringifyRoutes(/** @type {(RouteConfig)[]} */ routes) {
     return (
       `[\n` +
-      r
+      routes
         .map(
           i =>
             `{\n${[
               ...API_METHODS.filter(j => i.apiPath?.[j]).map(
                 v =>
-                  `${v}: ${
-                    // options.lazy
-                    // ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`
-                    jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
-                  }`
+                  i.apiPath != null &&
+                  `${v}: ${jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))}`
               ),
               i.componentPath ? `GET: "skip"` : undefined,
-              ...Object.keys(i)
-                .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
-                .map(
-                  k => `${k}: ${k === "children" ? _stringifyRoutes(i[k]) : JSON.stringify(i[k])}`
-                )
+              `path: ${JSON.stringify(i.path)}`
             ]
               .filter(Boolean)
               .join(",\n ")} \n}`
@@ -388,7 +419,7 @@ function jsCode() {
   let imports = new Map();
   let vars = 0;
 
-  function addImport(p) {
+  function addImport(/** @type {string} */ p) {
     let id = imports.get(p);
     if (!id) {
       id = {};
@@ -400,7 +431,7 @@ function jsCode() {
     return d;
   }
 
-  function addNamedImport(name, p) {
+  function addNamedImport(/** @type {string} */ name, /** @type {string} */ p) {
     let id = imports.get(p);
     if (!id) {
       id = {};
@@ -412,7 +443,7 @@ function jsCode() {
     return d;
   }
 
-  const getNamedExport = p => {
+  const getNamedExport = (/** @type {string} */ p) => {
     let id = imports.get(p);
 
     delete id["default"];

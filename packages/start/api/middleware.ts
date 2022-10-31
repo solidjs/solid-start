@@ -15,7 +15,7 @@ export const apiRoutes: Middleware = ({ forward }) => {
       });
       try {
         return await apiHandler.handler(apiEvent);
-      } catch (error) {
+      } catch (error: any) {
         if (error instanceof Response) {
           return error;
         }

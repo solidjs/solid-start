@@ -44,7 +44,7 @@ export async function parseResponse(request: Request, response: Response) {
     return error;
   } else if (contentType.includes("response")) {
     if (response.status === 204 && response.headers.get(LocationHeader)) {
-      return redirect(response.headers.get(LocationHeader));
+      return redirect(response.headers.get(LocationHeader) ?? "/");
     }
     return response;
   } else {
@@ -55,25 +55,26 @@ export async function parseResponse(request: Request, response: Response) {
       } catch {}
     }
     if (response.status === 204 && response.headers.get(LocationHeader)) {
-      return redirect(response.headers.get(LocationHeader));
+      return redirect(response.headers.get(LocationHeader) ?? "/");
     }
     return response;
   }
 }
 
-export const server$: CreateServerFunction = (fn => {
+export const server$: CreateServerFunction = ((fn: any) => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
-function createRequestInit(...args) {
+function createRequestInit(init: RequestInit, ...args: any[]) {
   // parsing args when a request is made from the browser for a server module
   // FormData
   // Request
   // Headers
   //
   let body,
-    headers = {
-      [XSolidStartOrigin]: "client"
+    headers: Record<string, string> = {
+      [XSolidStartOrigin]: "client",
+      ...((init.headers ?? {}) as Record<string, string>)
     };
 
   if (args[0] instanceof FormData) {
@@ -119,6 +120,7 @@ function createRequestInit(...args) {
   return {
     method: "POST",
     body: body,
+    ...init,
     headers: new Headers({
       ...headers
     })
@@ -129,22 +131,20 @@ server$.createFetcher = route => {
   let fetcher: any = function (this: Request, ...args: any[]) {
     if (this instanceof Request) {
     }
-    const requestInit = createRequestInit(...args);
+    const requestInit = createRequestInit({}, ...args);
     // request body: json, formData, or string
-    return server$.call(route, requestInit);
+    return server$.fetch(route, requestInit);
   };
 
   fetcher.url = route;
-  fetcher.fetch = (init: RequestInit) => server$.call(route, init);
-  // fetcher.action = async (...args: any[]) => {
-  //   const requestInit = createRequestInit(...args);
-  //   // request body: json, formData, or string
-  //   return server$.call(route, requestInit);
-  // };
+  fetcher.fetch = (init: RequestInit, ...args: any[]) => {
+    const requestInit = createRequestInit(init, ...args);
+    return server$.fetch(route, requestInit);
+  };
   return fetcher as ServerFunction<any, any>;
 };
 
-server$.call = async function (route, init: RequestInit) {
+server$.fetch = async function (route: string, init: RequestInit) {
   const request = new Request(new URL(route, window.location.href).href, init);
 
   const response = await fetch(request);

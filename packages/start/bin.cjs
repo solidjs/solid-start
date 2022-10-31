@@ -487,17 +487,9 @@ prog
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
     console.log();
     if (url) {
-      const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
-
-      const router = new Router({
-        baseDir: path.posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir),
-        pageExtensions: config.solidOptions.pageExtensions,
-        ignore: config.solidOptions.routesIgnore,
-        cwd: config.solidOptions.root
-      });
-      await router.init();
-      printUrls(router, url);
+      await config.solidOptions.router.init();
+      printUrls(config.solidOptions.router, url);
     }
   });
 
@@ -506,7 +498,7 @@ prog.parse(process.argv);
 /**
  *
  * @param {*} param0
- * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
+ * @returns {Promise<import('./vite/plugin').ViteConfig>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
   const vite = require("vite");

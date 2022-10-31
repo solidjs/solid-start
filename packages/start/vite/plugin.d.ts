@@ -1,7 +1,7 @@
 export type Adapter = {
   start(options: Options): Promise<void>;
   build(options: Options): Promise<void>;
-  dev(config: UserConfig, viteDevServer: ViteDevServer): Promise<void>;
+  dev(config: UserConfig & { solidOptions: Options }, viteDevServer: ViteDevServer): Promise<void>;
   name: string;
 };
 
@@ -10,25 +10,24 @@ export type Options = {
   appRoot: string;
   routesDir: string;
   ssr: boolean;
-  islands: boolean;
-  islandsRouter: boolean;
   prerenderRoutes: any[];
-  durableObjects: Record<string, string>;
   experimental: {
     islands?: boolean;
     islandsRouter?: boolean;
-    durableObjects?: boolean;
     websocket?: boolean;
   };
   inspect: boolean;
   rootEntry: string;
   serverEntry: string;
   clientEntry: string;
+  router: import("../fs-router/router").Router;
 } & import("vite-plugin-solid").Options;
-import { Plugin, UserConfig, ViteDevServer } from "vite";
 
 import type { Debugger } from "debug";
 import type { Component } from "solid-js";
+import { Plugin, ResolvedConfig, UserConfig, ViteDevServer } from "vite";
+
+export type ViteConfig = ResolvedConfig & { solidOptions: Options; adapter: Adapter };
 
 declare global {
   export const DEBUG: Debugger;

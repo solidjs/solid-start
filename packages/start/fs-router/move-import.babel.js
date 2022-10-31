@@ -1,7 +1,7 @@
 /**
  *
  * @param {{ types: import('@babel/core').types }} param0
- * @returns {import('@babel/core').PluginObj}
+ * @returns {import('@babel/core').PluginObj<{ namespaceSpec: any[] }>}
  */
 export default function fileRoutesImport({ types: t }) {
   return {

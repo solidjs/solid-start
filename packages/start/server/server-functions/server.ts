@@ -13,11 +13,11 @@ import {
   XSolidStartOrigin,
   XSolidStartResponseTypeHeader
 } from "../responses";
-import { ServerFunctionEvent } from "../types";
+import { FetchEvent, ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
 export type { APIEvent } from "../../api/types";
 
-export const server$: CreateServerFunction = (fn => {
+export const server$: CreateServerFunction = ((fn: any) => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
@@ -31,27 +31,25 @@ async function parseRequest(event: ServerFunctionEvent) {
     if (contentType === JSONResponseType) {
       let text = await request.text();
       try {
-        args = JSON.parse(text, (key, value) => {
-          if (!value) {
+        args = JSON.parse(
+          text,
+          (
+            key,
+            value: {
+              $type: "fetch_event";
+            }
+          ) => {
+            if (!value) {
+              return value;
+            }
+
+            if (value.$type === "fetch_event") {
+              return event;
+            }
+
             return value;
           }
-          if (value.$type === "fetch_event") {
-            return event;
-          }
-          if (value.$type === "headers") {
-            let headers = new Headers();
-            request.headers.forEach((value, key) => headers.set(key, value));
-            value.values.forEach(([key, value]) => headers.set(key, value));
-            return headers;
-          }
-          if (value.$type === "request") {
-            return new Request(value.url, {
-              method: value.method,
-              headers: value.headers
-            });
-          }
-          return value;
-        });
+        );
       } catch (e) {
         throw new Error(`Error parsing request body: ${text}`);
       }
@@ -76,7 +74,7 @@ export function respondWith(
     if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
       let headers = new Headers(data.headers);
       headers.set(XSolidStartOrigin, "server");
-      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
+      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader) ?? "/");
       headers.set(XSolidStartResponseTypeHeader, responseType);
       headers.set(XSolidStartContentTypeHeader, "response");
       return new Response(null, {
@@ -201,7 +199,7 @@ export async function handleServerRequest(event: ServerFunctionEvent) {
       }
       const data = await handler.call(event, ...(Array.isArray(args) ? args : [args]));
       return respondWith(event.request, data, "return");
-    } catch (error) {
+    } catch (error: any) {
       return respondWith(event.request, error, "throw");
     }
   }
@@ -221,8 +219,8 @@ server$.createHandler = (_fn, hash) => {
   // called on the server when an HTTP request for this server function is made to the server (by a client)
   // - request is parsed to figure out the args that need to be passed here, we still pass the same args as above, but they are not the same reference
   //   as the ones passed in the client. They are cloned and serialized and made as similar to the ones passed in the client as possible
-  let fn: any = function (...args) {
-    let ctx;
+  let fn: any = function (this: FetchEvent, ...args: any[]) {
+    let ctx: FetchEvent;
 
     // if called with fn.call(...), we check if we got a valid RequestContext, and use that as
     // the request context for this server function call
@@ -235,18 +233,14 @@ server$.createHandler = (_fn, hash) => {
       // @ts-ignore
       ctx = sharedConfig.context.requestContext;
     } else {
-      // this is normally used during a test
-      ctx = {
-        request: new URL(hash, "http://localhost:3000").href,
-        responseHeaders: new Headers()
-      };
+      throw new Error("Server function called without a request context");
     }
 
     const execute = async () => {
       try {
         let e = await _fn.call(ctx, ...args);
         return e;
-      } catch (e) {
+      } catch (e: any) {
         if (/[A-Za-z]+ is not defined/.test(e.message)) {
           const error = new Error(
             e.message +
@@ -264,7 +258,7 @@ server$.createHandler = (_fn, hash) => {
   };
 
   fn.url = hash;
-  fn.action = function (...args) {
+  fn.action = function (...args: any[]) {
     return fn.call(this, ...args);
   };
 

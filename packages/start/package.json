@@ -35,7 +35,7 @@
     "types.ts"
   ],
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --extendedDiagnostics"
   },
   "exports": {
     ".": "./index.tsx",

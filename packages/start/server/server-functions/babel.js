@@ -10,7 +10,7 @@ const INLINE_SERVER_ROUTE_PREFIX = "/_m";
 /**
  *
  * @param {{ types: import('@babel/core').types; template: import('@babel/core').template }} param0
- * @returns {import('@babel/core').PluginObj}
+ * @returns {import('@babel/core').PluginObj<{ refs, done, servers }>}
  */
 function transformServer({ types: t, template }) {
   
@@ -83,13 +83,15 @@ function transformServer({ types: t, template }) {
           path.traverse(
             {
               VariableDeclarator(variablePath, variableState) {
-                if (variablePath.node.id.type === "Identifier") {
+                if (variablePath.get('id').isIdentifier()) {
                   const local = variablePath.get("id");
                   if (isIdentifierReferenced(local)) {
                     variableState.refs.add(local);
                   }
                 } else if (variablePath.node.id.type === "ObjectPattern") {
                   const pattern = variablePath.get("id");
+
+                  /** @type {import('@babel/core').NodePath<import('@babel/core').Node>[]} */
                   const properties = pattern.get("properties");
                   properties.forEach(p => {
                     const local = p.get(

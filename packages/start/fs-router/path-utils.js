@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {string} id
+ * @param {boolean} removePathlessLayouts
+ * @returns
+ */
 export function toPath(id, removePathlessLayouts = true) {
   const idWithoutIndex = id.endsWith("/index") ? id.slice(0, -"index".length) : id;
   return (

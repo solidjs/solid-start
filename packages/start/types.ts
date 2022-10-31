@@ -33,7 +33,6 @@ export type StartOptions = {
   lazy: boolean;
   prerenderRoutes: string[];
   inspect: boolean;
-  pageExtensions: string[];
   root: string;
   clientEntry: string;
   serverEntry: string;

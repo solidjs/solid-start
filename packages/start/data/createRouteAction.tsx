@@ -1,10 +1,12 @@
-import { $TRACK, batch, createSignal, useContext } from "solid-js";
+import { $TRACK, batch, createSignal } from "solid-js";
 import { useNavigate, useSearchParams } from "../router";
 import { FormError, FormImpl, FormProps } from "./Form";
 
+import { Navigator } from "@solidjs/router";
+import { ServerFunction } from "server/server-functions/types";
 import type { ParentComponent } from "solid-js";
 import { isRedirectResponse, XSolidStartOrigin } from "../server/responses";
-import { ServerContext, useRequest } from "../server/ServerContext";
+import { useRequest } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
 
@@ -57,10 +59,10 @@ export function createRouteAction<T, U = void>(
   const navigate = useNavigate();
   const event = useRequest();
   let count = 0;
-  function submit(variables: T) {
-    let p;
-    if (fn.url && import.meta.env.START_ISLANDS) {
-      p = fetch(fn.url, {
+  function submit(variables: T): U {
+    let p: Promise<U>;
+    if (import.meta.env.START_ISLANDS && (fn as ServerFunction<any, any>).url) {
+      p = fetch((fn as ServerFunction<any, any>).url, {
         method: "POST",
         body:
           variables instanceof FormData
@@ -72,7 +74,7 @@ export function createRouteAction<T, U = void>(
           "x-solid-referrer": window.LOCATION().pathname,
           "x-solid-mutation": "true"
         }
-      });
+      }) as unknown as Promise<U>;
     } else {
       p = fn(variables, event);
     }
@@ -92,7 +94,7 @@ export function createRouteAction<T, U = void>(
         }
         return data;
       })
-      .catch(async e => {
+      .catch(async (e: Response | Error) => {
         if (reqId === count) {
           if (e instanceof Response) {
             await handleResponse(e, navigate, options);
@@ -101,7 +103,6 @@ export function createRouteAction<T, U = void>(
             setResult({ error: e });
           } else setInput(undefined);
         }
-        return undefined;
       });
   }
   submit.url = (fn as any).url;
@@ -123,7 +124,7 @@ export function createRouteAction<T, U = void>(
   return [
     {
       get pending() {
-        return input() && !result();
+        return Boolean(input() && !result());
       },
       get input() {
         return input();
@@ -150,27 +151,31 @@ export function createRouteAction<T, U = void>(
   ];
 }
 
+type ActionOptions = {
+  invalidate?: ((r: Response) => string | any[] | void) | string | any[];
+};
+
 export function createRouteMultiAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: ActionOptions
 ): RouteMultiAction<T, U>;
 export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: ActionOptions
 ): RouteMultiAction<T, U>;
 export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
+  options: ActionOptions = {}
 ): RouteMultiAction<T, U> {
   let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [submissions, setSubmissions] = createSignal<Submission<T, U>[]>(
     init.input ? [createSubmission(init.input)[0]] : []
   );
   const navigate = useNavigate();
-  const event = useContext(ServerContext);
+  const event = useRequest();
 
   function createSubmission(variables: T) {
-    let submission;
+    let submission: Submission<T, U>;
     const [result, setResult] = createSignal<{ data?: U; error?: any }>();
     return [
       (submission = {
@@ -191,11 +196,11 @@ export function createRouteMultiAction<T, U = void>(
       }),
       handleSubmit
     ] as const;
-    function handleSubmit(p) {
+    function handleSubmit(p: Promise<U | Response>) {
       p.then(async data => {
         if (data instanceof Response) {
           await handleResponse(data, navigate, options);
-          data = data.body;
+          data = data.body as unknown as U;
         } else await handleRefetch(data, options);
         data ? setResult({ data }) : submission.clear();
 
@@ -244,13 +249,13 @@ export function createRouteMultiAction<T, U = void>(
   ];
 }
 
-function handleRefetch(response, options) {
+function handleRefetch(response: Response, options: ActionOptions) {
   return refetchRouteData(
     typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
   );
 }
 
-async function handleResponse(response: Response, navigate, options) {
+async function handleResponse(response: Response, navigate: Navigator, options: ActionOptions) {
   if (isRedirectResponse(response)) {
     const locationUrl = response.headers.get("Location") || "/";
     if (locationUrl.startsWith("http")) {
@@ -259,7 +264,7 @@ async function handleResponse(response: Response, navigate, options) {
       navigate(locationUrl);
     }
     return handleRefetch(response, options);
-  } else if (response.headers.get("Content-type") === "text/solid-diff") {
+  } else if (response instanceof Response && response.headers.get("Content-type") === "text/solid-diff") {
     let i = await window._$HY.update(await response.text());
     if (i) {
       await window.PUSH(response.headers.get("x-solid-location"), {});
