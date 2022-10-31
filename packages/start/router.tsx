@@ -4,16 +4,12 @@ import {
   Navigator,
   Outlet as BaseOutlet,
   Routes as BaseRoutes,
-  useLocation as useBaseLocation,
   useNavigate as useBaseNavigate,
   useSearchParams as useBaseSearchParams
 } from "@solidjs/router";
 import { Accessor, JSX } from "solid-js";
 import IslandsA from "./islands/A";
-import {
-  useLocation as useIslandsLocation,
-  useSearchParams as useIslandsSearchParams
-} from "./islands/router";
+import { useSearchParams as useIslandsSearchParams } from "./islands/router";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 export type RouteParams<T extends string> = Record<T, string>;
@@ -27,30 +23,25 @@ export type RouteDataArgs<T extends keyof StartRoutes = ""> = {
 
 const A = import.meta.env.START_ISLANDS_ROUTER ? IslandsA : BaseA;
 
-const Routes = import.meta.env.START_ISLANDS_ROUTER
-  ? function IslandsRoutes(props: { children: JSX.Element }) {
+const Routes = /* @__PURE__ */ import.meta.env.START_ISLANDS_ROUTER
+  ? /* @__PURE__ */ function IslandsRoutes(props: { children: JSX.Element }) {
       return (
         <IslandsOutlet>
           <BaseRoutes>{props.children}</BaseRoutes>
         </IslandsOutlet>
       );
     }
-  : BaseRoutes;
+  : /* @__PURE__ */ BaseRoutes;
 
-const Outlet = import.meta.env.START_ISLANDS_ROUTER
-  ? function HybridOutlet() {
+const Outlet = /* @__PURE__ */ import.meta.env.START_ISLANDS_ROUTER
+  ? /* @__PURE__ */ function HybridOutlet() {
       return (
         <IslandsOutlet>
           <BaseOutlet />
         </IslandsOutlet>
       );
     }
-  : BaseOutlet;
-
-const useLocation =
-  import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
-    ? useIslandsLocation
-    : useBaseLocation;
+  : /* @__PURE__ */ BaseOutlet;
 
 const useNavigate =
   import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
@@ -60,9 +51,9 @@ const useNavigate =
     : useBaseNavigate;
 
 const useSearchParams =
-  import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
+  /* @__PURE__ */ import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
     ? useIslandsSearchParams
-    : useBaseSearchParams;
+    : /* @__PURE__ */ useBaseSearchParams;
 
 declare global {
   interface Window {
@@ -79,4 +70,5 @@ declare global {
   }
 }
 
-export { A, Outlet, Routes, useLocation, useNavigate, useSearchParams };
+export { useLocation } from "./islands/useLocation";
+export { A, Outlet, Routes, useNavigate, useSearchParams };

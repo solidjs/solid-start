@@ -133,18 +133,18 @@ server$.createFetcher = route => {
     }
     const requestInit = createRequestInit({}, ...args);
     // request body: json, formData, or string
-    return server$.fetch(route, requestInit);
+    return server$.exec(route, requestInit);
   };
 
   fetcher.url = route;
   fetcher.fetch = (init: RequestInit, ...args: any[]) => {
     const requestInit = createRequestInit(init, ...args);
-    return server$.fetch(route, requestInit);
+    return server$.exec(route, requestInit);
   };
   return fetcher as ServerFunction<any, any>;
 };
 
-server$.fetch = async function (route: string, init: RequestInit) {
+server$.exec = async function (route: string, init: RequestInit) {
   const request = new Request(new URL(route, window.location.href).href, init);
 
   const response = await fetch(request);

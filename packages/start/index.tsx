@@ -13,7 +13,7 @@ export {
   type RouteDataFunc,
   type RouteDataFuncArgs
 } from "@solidjs/router";
-export type { APIEvent as APIEvent } from "./api";
+export type { APIEvent } from "./api";
 export {
   createRouteAction,
   createRouteData,

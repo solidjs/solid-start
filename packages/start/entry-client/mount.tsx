@@ -1,7 +1,7 @@
 import type { JSX } from "solid-js";
 import { hydrate, render } from "solid-js/web";
 
-import { mountIslands } from "../islands/mount";
+import { hydrateServerRouter } from "../islands/mount";
 import mountRouter from "../islands/router";
 
 declare global {
@@ -14,6 +14,7 @@ if (import.meta.env.DEV) {
   window.DEBUG = localStorage.getItem("debug")?.includes("start")
     ? console.log
     : ((() => {}) as unknown as any);
+  window.WARN = console.warn;
 
   DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
   DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
@@ -30,7 +31,7 @@ if (import.meta.env.DEV) {
 export default function mount(code: () => JSX.Element, element: Document) {
   if (import.meta.env.START_ISLANDS) {
     mountRouter();
-    mountIslands();
+    hydrateServerRouter();
     return;
   } else if (import.meta.env.START_ISLANDS_ROUTER) {
     mountRouter();

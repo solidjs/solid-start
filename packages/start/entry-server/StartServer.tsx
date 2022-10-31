@@ -3,10 +3,8 @@ import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
 import { ComponentProps, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
 import Root from "~start/root";
-import { apiRoutes } from "../api/middleware";
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
 import { fileRoutes } from "../root/FileRoutes";
-import { inlineServerFunctions } from "../server/middleware";
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
 
@@ -39,7 +37,7 @@ export const composeMiddleware =
     );
 
 export function createHandler(...exchanges: Middleware[]) {
-  const exchange = composeMiddleware([apiRoutes, inlineServerFunctions, ...exchanges]);
+  const exchange = composeMiddleware(exchanges);
   return async (event: FetchEvent) => {
     return await exchange({
       forward: async op => {
@@ -54,7 +52,7 @@ export function createHandler(...exchanges: Middleware[]) {
 export function StartRouter(
   props: RouterProps & {
     location: string;
-    prevLocation: string;
+    prevLocation: string | null;
     routes: RouteDefinition | RouteDefinition[];
   }
 ) {

@@ -49,6 +49,7 @@ export function createServer({ handler, paths, env }) {
 
         let url = new URL(route, "http://internal");
         const request = new Request(url.href, init);
+        console.log("[internal]", url.method, url.href);
         return handler({
           request: request,
           env,

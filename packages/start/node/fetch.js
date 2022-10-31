@@ -1,57 +1,55 @@
 import multipart from "parse-multipart-data";
 import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
 
-function nodeToWeb(nodeStream) {
+function nodeToWeb(/** @type {NodeJS.ReadStream} */ nodeStream) {
   var destroyed = false;
+  /** @type {{ [key: string]: (...args: any[]) => void }} */
   var listeners = {};
 
-  function start(controller) {
-    listeners["data"] = onData;
-    listeners["end"] = onData;
-    listeners["end"] = onDestroy;
-    listeners["close"] = onDestroy;
-    listeners["error"] = onDestroy;
-    for (var name in listeners) nodeStream.on(name, listeners[name]);
+  return new ReadableStream({
+    start(controller) {
+      listeners["data"] = onData;
+      listeners["end"] = onData;
+      listeners["end"] = onDestroy;
+      listeners["close"] = onDestroy;
+      listeners["error"] = onDestroy;
+      for (var name in listeners) nodeStream.on(name, listeners[name]);
 
-    nodeStream.pause();
-
-    function onData(chunk) {
-      if (destroyed) return;
-      controller.enqueue(chunk);
       nodeStream.pause();
-    }
 
-    function onDestroy(err) {
+      function onData(/** @type {any} */ chunk) {
+        if (destroyed) return;
+        controller.enqueue(chunk);
+        nodeStream.pause();
+      }
+
+      function onDestroy(/** @type {any} */ err) {
+        if (destroyed) return;
+        destroyed = true;
+
+        for (var name in listeners) nodeStream.removeListener(name, listeners[name]);
+
+        if (err) controller.error(err);
+        else controller.close();
+      }
+    },
+    pull() {
       if (destroyed) return;
+      nodeStream.resume();
+    },
+    cancel() {
       destroyed = true;
 
       for (var name in listeners) nodeStream.removeListener(name, listeners[name]);
 
-      if (err) controller.error(err);
-      else controller.close();
+      nodeStream.push(null);
+      nodeStream.pause();
+      nodeStream.destroy();
     }
-  }
-
-  function pull() {
-    if (destroyed) return;
-    nodeStream.resume();
-  }
-
-  function cancel() {
-    destroyed = true;
-
-    for (var name in listeners) nodeStream.removeListener(name, listeners[name]);
-
-    nodeStream.push(null);
-    nodeStream.pause();
-    if (nodeStream.destroy) nodeStream.destroy();
-    else if (nodeStream.close) nodeStream.close();
-  }
-
-  return new ReadableStream({ start: start, pull: pull, cancel: cancel });
+  });
 }
 
-function createHeaders(requestHeaders) {
+function createHeaders(/** @type {object} */ requestHeaders) {
   let headers = new Headers();
 
   for (let [key, values] of Object.entries(requestHeaders)) {
@@ -70,7 +68,10 @@ function createHeaders(requestHeaders) {
 }
 
 class NodeRequest extends BaseNodeRequest {
-  constructor(input, init) {
+  constructor(
+    /** @type {import('undici').RequestInfo} */ input,
+    /** @type {import('undici').RequestInit & { data: any }} */ init
+  ) {
     if (init && init.data && init.data.on) {
       init = {
         duplex: "half",
@@ -100,11 +101,14 @@ class NodeRequest extends BaseNodeRequest {
   async formData() {
     if (this.headers.get("content-type") === "application/x-www-form-urlencoded") {
       return await super.formData();
-    } else {
+    } else if (
+      this.headers.get("content-type") &&
+      this.headers.get("content-type")?.includes("multipart/form-data")
+    ) {
       const data = await this.buffer();
       const input = multipart.parse(
         data,
-        this.headers.get("content-type").replace("multipart/form-data; boundary=", "")
+        this.headers.get("content-type")?.replace("multipart/form-data; boundary=", "") ?? ""
       );
       const form = new FormData();
       input.forEach(({ name, data, filename, type }) => {
@@ -112,16 +116,17 @@ class NodeRequest extends BaseNodeRequest {
         // whereas non-file fields must not
         // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#multipart-form-data
         const isFile = type !== undefined;
-        if (isFile) {
+        if (isFile && filename && name) {
           const value = new File([data], filename);
           form.append(name, value, filename);
-        } else {
+        } else if (name) {
           const value = data.toString("utf-8");
           form.append(name, value);
         }
       });
       return form;
     }
+    return new FormData();
   }
 
   // @ts-ignore
@@ -134,15 +139,15 @@ class NodeRequest extends BaseNodeRequest {
   }
 }
 
-export function createRequest(req) {
+export function createRequest(/** @type {import('http').IncomingMessage} */ req) {
   let origin = req.headers.origin || `http://${req.headers.host}`;
-  let url = new URL(req.url, origin);
+  let url = new URL(req.url ?? "/", origin);
 
   let init = {
     method: req.method,
     headers: createHeaders(req.headers),
     // POST, PUT, & PATCH will be read as body by NodeRequest
-    data: req.method.indexOf("P") === 0 ? req : null
+    data: req.method?.indexOf("P") === 0 ? req : null
   };
 
   return new NodeRequest(url.href, init);

@@ -1,7 +1,7 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { redirect } from "../server/responses";
-import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
+import { redirect } from "./responses";
+import { FetchEvent, FETCH_EVENT, PageEvent } from "./types";
 
 export function renderSync(
   fn: (context: PageEvent) => JSX.Element,
@@ -12,7 +12,9 @@ export function renderSync(
 ) {
   return () => async (event: FetchEvent) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
-      return await event.env.getStaticHTML("/index");
+      return (
+        (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+      );
     }
 
     let pageEvent = createPageEvent(event);
@@ -43,7 +45,9 @@ export function renderAsync(
 ) {
   return () => async (event: FetchEvent) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
-      return await event.env.getStaticHTML("/index");
+      return (
+        (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+      );
     }
 
     let pageEvent = createPageEvent(event);
@@ -76,7 +80,9 @@ export function renderStream(
 ) {
   return () => async (event: FetchEvent) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
-      return await event.env.getStaticHTML("/index");
+      return (
+        (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+      );
     }
 
     // Hijack after navigation with islands router to be async
@@ -129,8 +135,8 @@ function handleStreamingIslandsRouting(pageEvent: PageEvent, writable: WritableS
 
 function handleRedirect() {}
 
-function handleStreamingRedirect(context) {
-  return ({ write }) => {
+function handleStreamingRedirect(context: PageEvent) {
+  return ({ write }: { write: (s: string) => void }) => {
     if (context.routerContext.url)
       write(`<script>window.location="${context.routerContext.url}"</script>`);
   };
@@ -142,7 +148,7 @@ function createPageEvent(event: FetchEvent) {
   });
 
   const prevPath = event.request.headers.get("x-solid-referrer");
-  const mutation = event.request.headers.get("x-solid-mutation");
+  const mutation = event.request.headers.get("x-solid-mutation") === "true";
 
   let statusCode = 200;
 
@@ -154,10 +160,10 @@ function createPageEvent(event: FetchEvent) {
     return statusCode;
   }
 
-  const pageEvent: PageEvent = Object.freeze({
+  const pageEvent: PageEvent = {
     request: event.request,
     prevUrl: prevPath,
-    routerContext: {},
+    routerContext: {} as any,
     mutation: mutation,
     tags: [],
     env: event.env,
@@ -167,7 +173,7 @@ function createPageEvent(event: FetchEvent) {
     getStatusCode: getStatusCode,
     $islands: new Set<string>(),
     fetch: event.fetch
-  });
+  };
 
   return pageEvent;
 }

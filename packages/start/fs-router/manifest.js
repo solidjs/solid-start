@@ -236,7 +236,14 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
   }
 
   let entries = Object.fromEntries([
-    ...routes.filter(Boolean),
+    ...routes.filter(Boolean).map(([key, val]) => [
+      key,
+      {
+        type: "route",
+        script: val[0],
+        assets: val
+      }
+    ]),
     ...islands.map(i => {
       let asset = collectAssets();
 
@@ -246,13 +253,34 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       return [
         i,
         {
+          type: "island",
           script: asset.getFiles()[0],
           assets: asset.getFiles()
         }
       ];
     }),
-    ["entry-client", clientEntryAssets.getFiles()],
-    ["index.html", indexHtmlAssets.getFiles()]
+    [
+      "entry-client",
+      (() => {
+        let assets = clientEntryAssets.getFiles();
+        return {
+          type: "entry",
+          script: assets[0],
+          assets: assets
+        };
+      })()
+    ],
+    [
+      "index.html",
+      (() => {
+        let assets = indexHtmlAssets.getFiles();
+        return {
+          type: "entry",
+          script: assets[0],
+          assets: assets
+        };
+      })()
+    ]
   ]);
 
   return {

@@ -32,8 +32,21 @@ type RouterContext = {
 };
 
 export type IslandManifest = {
+  type: "island";
   script: ManifestEntry;
   assets: ManifestEntry[];
+};
+
+export type RouteManifest = {
+  type: "route";
+  script: ManifestEntry;
+  assets: ManifestEntry[];
+};
+
+export type StartManifest = {
+  [key: string]: RouteManifest | IslandManifest;
+  "entry-client": RouteManifest;
+  "index.html": RouteManifest;
 };
 
 declare global {
@@ -41,7 +54,7 @@ declare global {
     /**
      * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
      */
-    manifest?: Record<string, ManifestEntry[] | IslandManifest>;
+    manifest?: StartManifest;
     /**
      * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
      */
@@ -70,12 +83,13 @@ export interface ServerFunctionEvent extends FetchEvent {
 }
 
 export interface PageEvent extends FetchEvent {
-  prevUrl: string;
+  prevUrl: string | null;
   responseHeaders: Headers;
-  routerContext: RouterContext;
+  routerContext: RouterContext & { assets: ManifestEntry[] };
   tags: TagDescription[];
   setStatusCode(code: number): void;
   getStatusCode(): number;
   $type: typeof FETCH_EVENT;
   $islands: Set<string>;
+  mutation: boolean;
 }

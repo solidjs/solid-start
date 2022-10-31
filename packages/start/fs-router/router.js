@@ -147,7 +147,7 @@ export class Router {
       if (this.routes[routeConfig.id]) {
         // get old config, we want to compare the oldConfig with the new one to
         // detect changes and restart the vite server
-        let { id: oldID, path: oldPath, ...oldConfig } = this.routes[routeConfig.id];
+        let oldConfig = this.routes[routeConfig.id];
         let newConfig = { ...routeConfig };
 
         if (oldConfig.dataPath && !oldConfig.dataPath.endsWith("?data") && !newConfig.dataPath) {
@@ -410,7 +410,7 @@ export function stringifyAPIRoutes(
 
   const text = `
   ${jsFile.getImportStatements()}
-  const api = ${routeConfig};`;
+  const api = /*#__PURE__*/ ${routeConfig};`;
 
   return text;
 }
