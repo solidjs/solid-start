@@ -28,6 +28,7 @@ export type StartOptions = {
   appRoot: string;
   routesDir: string;
   ssr: boolean;
+  hydrationEvents: string[];
   islands: boolean;
   islandsRouter: boolean;
   lazy: boolean;
@@ -40,4 +41,4 @@ export type StartOptions = {
   appRootFile: string;
 };
 
-export {};
+export { };

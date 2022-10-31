@@ -501,6 +501,9 @@ function solidStartConfig(options) {
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
           "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
+          "import.meta.env.HYDRATION_EVENTS": options.hydrationEvents
+            ? JSON.stringify(options.hydrationEvents.join(', '))
+            : undefined,
           "import.meta.env.START_ISLANDS": JSON.stringify(options.islands ? true : false),
           "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.clientEntry),
           "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.serverEntry),
@@ -590,6 +593,9 @@ export default function solidStart(options) {
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
+      hydrationEvents: typeof process.env.HYDRATION_EVENTS === 'string'
+        ? process.env.HYDRATION_EVENTS.split(/\W\s*/g)
+        : undefined,
       islands: process.env.START_ISLANDS === "true" ? true : false,
       islandsRouter: process.env.START_ISLANDS_ROUTER === "true" ? true : false,
       lazy: true,

@@ -3,6 +3,7 @@ export type Options = {
   appRoot: string;
   routesDir: string;
   ssr: boolean;
+  hydrationEvents: string[];
   islands: boolean;
   islandsRouter: boolean;
   prerenderRoutes: any[];

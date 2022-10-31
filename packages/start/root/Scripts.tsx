@@ -5,13 +5,16 @@ import { InlineStyles } from "./InlineStyles";
 
 const isDev = import.meta.env.MODE === "development";
 const isSSR = import.meta.env.START_SSR;
+const hydrationEvents = typeof import.meta.env.HYDRATION_EVENTS === 'string'
+  ? import.meta.env.HYDRATION_EVENTS.split(/\W\s*/g)
+  : undefined;
 const isIslands = import.meta.env.START_ISLANDS;
 
 export default function Scripts() {
   const context = useContext(ServerContext);
   return (
     <>
-      {isSSR && <HydrationScript />}
+      {isSSR && <HydrationScript eventNames={hydrationEvents} />}
       {isIslands && (
         <script>{`
         _$HY.islandMap = {};
