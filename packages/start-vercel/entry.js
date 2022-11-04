@@ -7,7 +7,10 @@ export default async (req, res) => {
 
   const webRes = await entry({
     request: createRequest(req),
-    env: { manifest }
+    env: { 
+      manifest,
+      getStaticHTML: path => fetch(new URL(`${path}.html`, request.url).href)
+    }
   });
   const headers = {};
   for (const [name, value] of webRes.headers) {
