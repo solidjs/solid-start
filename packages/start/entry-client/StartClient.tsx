@@ -62,11 +62,7 @@ export default () => {
   };
 
   function StartRouter(props: RouterProps) {
-    return (
-      <Router {...props}>
-        <Root />
-      </Router>
-    );
+    return <Router {...props}>{props.children}</Router>;
   }
 
   return (

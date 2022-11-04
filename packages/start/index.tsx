@@ -7,7 +7,6 @@ export {
   useMatch,
   useParams,
   useResolvedPath,
-  useRouteData,
   useRoutes,
   useSearchParams,
   type RouteDataFunc,

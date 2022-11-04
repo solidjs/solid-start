@@ -24,7 +24,9 @@ process.on(
         ? err.message.includes("renderToString timed out")
         : false)
     ) {
-      console.error(`An unhandler error occured: \n${err}: ${err.stack}`);
+      console.error(
+        `An unhandler error occured: \n${err}: ${err instanceof Error ? err.stack : ""}`
+      );
     }
   }
 );
@@ -40,14 +42,18 @@ export function createDevHandler(viteServer, config, options) {
   /**
    * @returns {Promise<Response>}
    */
-  async function devFetch(request, env) {
+  async function devFetch(
+    /** @type {import('../node/fetch').NodeRequest} */ request,
+    /** @type {{ cssModules: { [key: string]: string }}} */ env
+  ) {
     const entry = (await viteServer.ssrLoadModule("~start/entry-server")).default;
 
     const devEnv = {
       ...env,
       __dev: {
         manifest: options.router.getFlattenedPageRoutes(true),
-        collectStyles: async match => {
+        collectStyles: async (/** @type {string[]} */ match) => {
+          /** @type {{ [key: string]: string}} */
           const styles = {};
           const deps = new Set();
 
@@ -98,6 +104,7 @@ export function createDevHandler(viteServer, config, options) {
       let url = new URL(route, request.url);
 
       const internalRequest = new Request(url.href, init);
+
       return entry({
         request: internalRequest,
         env: devEnv,
@@ -112,7 +119,7 @@ export function createDevHandler(viteServer, config, options) {
     });
   }
 
-  let localEnv = {};
+  let localEnv = { cssModules: {} };
 
   /**
    *
@@ -121,8 +128,10 @@ export function createDevHandler(viteServer, config, options) {
    */
   async function startHandler(req, res) {
     try {
-      const url = viteServer.resolvedUrls.local[0];
-      console.log(req.method, new URL(req.url, url).href);
+      if (viteServer.resolvedUrls) {
+        const url = viteServer.resolvedUrls.local[0];
+        console.log(req.method, new URL(req.url ?? "/", url).href);
+      }
       let webRes = await devFetch(createRequest(req), localEnv);
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
@@ -139,7 +148,7 @@ export function createDevHandler(viteServer, config, options) {
       } else {
         res.end();
       }
-    } catch (e) {
+    } catch (/** @type {any} */ e) {
       viteServer && viteServer.ssrFixStacktrace(e);
       res.statusCode = 500;
       res.end(`
@@ -166,7 +175,7 @@ export function createDevHandler(viteServer, config, options) {
   return {
     fetch: devFetch,
     handler: startHandler,
-    handlerWithEnv: env => {
+    handlerWithEnv: (/** @type {any} */ env) => {
       localEnv = env;
       return startHandler;
     }
@@ -215,7 +224,8 @@ async function find_deps(vite, node, deps) {
 
   await Promise.all(branches);
 }
-function prepareError(req, e) {
+
+function prepareError(/** @type {import('http').IncomingMessage} */ req, /** @type {Error} */ e) {
   return {
     message: `An error occured while server rendering ${req.url}:\n\n\t${
       typeof e === "string" ? e : e.message

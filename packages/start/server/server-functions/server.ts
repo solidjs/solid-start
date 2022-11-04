@@ -7,7 +7,6 @@ import {
   isRedirectResponse,
   JSONResponseType,
   LocationHeader,
-  ResponseError,
   XSolidStartContentTypeHeader,
   XSolidStartLocationHeader,
   XSolidStartOrigin,
@@ -66,10 +65,6 @@ export function respondWith(
   data: Response | Error | FormError | string | object,
   responseType: "throw" | "return"
 ) {
-  if (data instanceof ResponseError) {
-    data = data.clone();
-  }
-
   if (data instanceof Response) {
     if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
       let headers = new Headers(data.headers);

@@ -1,20 +1,23 @@
 import {
   A as BaseA,
   Location,
+  NavigateOptions,
   Navigator,
   Outlet as BaseOutlet,
+  RouteDataFunc,
   Routes as BaseRoutes,
   useNavigate as useBaseNavigate,
+  useRouteData as useBaseRouteData,
   useSearchParams as useBaseSearchParams
 } from "@solidjs/router";
-import { Accessor, JSX } from "solid-js";
+import { JSX } from "solid-js";
 import IslandsA from "./islands/A";
-import { useSearchParams as useIslandsSearchParams } from "./islands/router";
+import { LocationEntry, useSearchParams as useIslandsSearchParams } from "./islands/router";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
 export type RouteParams<T extends string> = Record<T, string>;
 
-export type RouteDataArgs<T extends keyof StartRoutes = ""> = {
+export type RouteDataArgs<T extends keyof StartRoutes = "$"> = {
   data: StartRoutes[T]["data"];
   params: RouteParams<StartRoutes[T]["params"]>;
   location: Location;
@@ -45,9 +48,10 @@ const Outlet = /* @__PURE__ */ import.meta.env.START_ISLANDS_ROUTER
 
 const useNavigate =
   import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
-    ? function IslandsUseNavigate() {
-        return ((to, props) => window.NAVIGATE(to, props)) as Navigator;
-      }
+    ? (function IslandsUseNavigate() {
+        return (to, props: Partial<NavigateOptions> = {}) =>
+          window.router.navigate(to as string, props);
+      } as typeof useBaseNavigate)
     : useBaseNavigate;
 
 const useSearchParams =
@@ -57,17 +61,32 @@ const useSearchParams =
 
 declare global {
   interface Window {
-    LOCATION: Accessor<Location>;
-    NAVIGATE: Navigator;
-    ROUTER: EventTarget;
+    router: {
+      navigate: (to: string, options?: Partial<NavigateOptions>) => Promise<boolean>;
+      push: (to: string | URL, options: NavigateOptions) => void;
+      update: (body: string) => boolean;
+      router: EventTarget;
+      location: () => LocationEntry;
+    };
   }
 
   interface StartRoutes {
-    "": {
+    $: {
       params: any;
       data: any;
     };
   }
+
+  interface Route {
+    "/notes/[note]": "/notes/[note]";
+  }
+}
+
+export function useRouteData<T extends keyof StartRoutes>(): ReturnType<StartRoutes[T]["data"]>;
+export function useRouteData<T extends RouteDataFunc>(): ReturnType<T>;
+export function useRouteData<T extends keyof StartRoutes>(): ReturnType<StartRoutes[T]["data"]> {
+  // @ts-ignore
+  return useBaseRouteData<T>();
 }
 
 export { useLocation } from "./islands/useLocation";

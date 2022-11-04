@@ -16,12 +16,12 @@ export default function (miniflareOptions = {}) {
     name: "cloudflare-workers",
     async dev(options, vite, dev) {
       if (options.solidOptions.experimental?.websocket) {
-        if (!options.solidOptions.durableObjects) {
-          options.solidOptions.durableObjects = {};
+        if (!miniflareOptions.durableObjects) {
+          miniflareOptions.durableObjects = {};
         }
-        options.solidOptions.durableObjects["DO_WEBSOCKET"] = "solid-start/websocket/handler";
+        miniflareOptions.durableObjects["DO_WEBSOCKET"] = "DO_WEBSOCKET";
       }
-      let durableObjects = Object.keys(options.solidOptions.durableObjects ?? {});
+      let durableObjects = Object.keys(miniflareOptions.durableObjects ?? {});
       let globs = {};
       durableObjects.forEach(obj => {
         console.log(obj);
@@ -49,9 +49,10 @@ export default function (miniflareOptions = {}) {
             console.log("🧬", obj, request.method, request.url);
 
             try {
-              const all = await vite.ssrLoadModule(options.solidOptions.durableObjects[obj]);
+              const all = await vite.ssrLoadModule("~start/entry-server");
+              console.log(all.db.prototype.fetch);
               // let dObject = await this.promise;
-              return await all.default(request, this.ctx);
+              return await all[obj].prototype.fetch.call(this, request, this.ctx);
             } catch (e) {
               console.log("error", e);
             }

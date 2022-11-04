@@ -124,3 +124,22 @@ export interface DurableObjectContext<T extends {} = {}> {
   durableObject: T;
   [key: string]: any;
 }
+
+export function createDurableObject(
+  fn: (request: Request, ctx: DurableObjectContext) => Promise<Response>
+) {
+  return class {
+    ctx: DurableObjectContext;
+    constructor(state: DurableObjectState) {
+      this.ctx = {
+        storage: state.storage,
+        state,
+        durableObject: this
+      };
+    }
+
+    async fetch(request: Request) {
+      return fn(request, this.ctx);
+    }
+  };
+}

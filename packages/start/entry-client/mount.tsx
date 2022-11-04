@@ -21,7 +21,6 @@ if (import.meta.env.DEV) {
   DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
   DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
   DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
-  DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
 
   window.INSPECT = () => {
     window.open(window.location.href.replace(window.location.pathname, "/__inspect"));

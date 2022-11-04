@@ -6,6 +6,7 @@ export interface RouteDefinition {
   path: string;
   component?: () => JSX.Element;
   children?: RouteDefinition | RouteDefinition[];
+  data?: any;
 }
 
 export type Params = Record<string, string>;
@@ -20,7 +21,9 @@ export interface MatchedRoute {
   originalPath: string;
   pattern: string;
   component: (props: any) => JSX.Element;
+  children?: RouteDefinition | RouteDefinition[];
   match: PathMatch;
+  data?: any;
   shared: boolean;
 }
 
@@ -29,8 +32,8 @@ export interface Branch {
   score: number;
 }
 
-const hasSchemeRegex = /^(?:[a-z0-9]+:)?\/\//i;
-const trimPathRegex = /^\/+|\/+$|\s+/g;
+const hasSchemeRegex = /*#__PURE__*/ /^(?:[a-z0-9]+:)?\/\//i;
+const trimPathRegex = /*#__PURE__*/ /^\/+|\/+$|\s+/g;
 
 function normalize(path: string) {
   const s = path.replace(trimPathRegex, "");
@@ -179,7 +182,7 @@ export interface RouterContextState {
   location: string;
 }
 
-export const RouterContext = createContext<RouterContextState>();
+export const RouterContext = /*#__PURE__*/ createContext<RouterContextState>();
 
 export const useRouter = () => useContext(RouterContext)!;
 
@@ -188,7 +191,7 @@ export interface OutletContextState {
   route: MatchedRoute;
 }
 
-export const OutletContext = createContext<OutletContextState>();
+export const OutletContext = /*#__PURE__*/ createContext<OutletContextState>();
 
 export const useOutlet = () => useContext(OutletContext);
 
@@ -199,7 +202,7 @@ export const useRouteParams = () => {
 
 export interface RouterProps {
   location: string;
-  prevLocation: string;
+  prevLocation: string | null;
   routes: RouteDefinition | RouteDefinition[];
   children: JSX.Element;
   out?: any;
@@ -215,7 +218,7 @@ export function Router(props: RouterProps) {
   const nextRoutes = next.routes;
 
   const prev =
-    context.mutation !== "true" && props.prevLocation
+    !context.mutation && props.prevLocation
       ? getMatchedBranch(props.routes, props.prevLocation)
       : null;
   if (prev) {
@@ -241,12 +244,13 @@ export function Router(props: RouterProps) {
         set.add(a.href);
       });
 
-      let assets = [[], []];
+      let assetsToAdd: [string, string][] = [];
 
-      let m = {};
+      let assetsToRemove: Record<string, [string, string]> = {};
+
       nextAssets.forEach(a => {
         if (!set.has(a.href) && (a.type === "script" || a.type === "style")) {
-          m[a.href] = [a.type, a.href];
+          assetsToRemove[a.href] = [a.type, a.href];
         } else {
           set.delete(a.href);
         }
@@ -254,10 +258,12 @@ export function Router(props: RouterProps) {
 
       [...set.entries()].forEach(a => {
         let prev = prevAssets.find(p => p.href === a[1]);
-        assets[1].push([prev.type, prev.href]);
+        if (prev) {
+          assetsToAdd.push([prev.type, prev.href]);
+        }
       });
 
-      props.out.assets = [Object.values(m), assets[1]];
+      props.out.assets = [Object.values(assetsToRemove), assetsToAdd];
     }
 
     for (let i = 0, len = nextRoutes.length; i < len; i++) {
@@ -272,33 +278,17 @@ export function Router(props: RouterProps) {
           props.out.replaceOutletId = `outlet-${prevRoute.id}`;
           props.out.newOutletId = `outlet-${nextRoute.id}`;
         } else {
-          // console.log("diff rendered");
-          // const Comp = nextRoute.component;
           props.out.replaceOutletId = `outlet-${prevRoute.id}`;
           props.out.newOutletId = `outlet-${nextRoute.id}`;
-          // diffedRender = (
-          //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
-          //     <Comp />
-          //   </outlet-wrapper>
-          // );
-          // return diffedRender;
+          props.out.prevRoute = prevRoute;
+          props.out.nextRoute = nextRoute;
         }
         // Routes are shared
       } else if (prevRoute && nextRoute) {
-        // console.log("diff rendered");
-        // const Comp = nextRoute.component;
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
         props.out.prevRoute = prevRoute;
         props.out.newOutletId = `outlet-${nextRoute.id}`;
         props.out.nextRoute = nextRoute;
-        //console.log(prevRoute, nextRoute);
-        //console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
-        // diffedRender = (
-        //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
-        //     <Comp />
-        //   </outlet-wrapper>
-        // );
-        // return diffedRender;
       }
     }
   }

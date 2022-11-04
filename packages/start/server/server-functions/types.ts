@@ -4,7 +4,7 @@ export type ServerFunction<E extends any[], T extends (...args: [...E]) => void>
   ...p: Parameters<T>
 ) => Promise<Awaited<ReturnType<T>>>) & {
   url: string;
-  fetch: (init: RequestInit, ...args: any[]) => Promise<any>;
+  fetch: (init: RequestInit, ...args: [...E]) => Promise<Awaited<ReturnType<T>>>;
 };
 
 export type CreateServerFunction = (<E extends any[], T extends (...args: [...E]) => void>(

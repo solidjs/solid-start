@@ -1,17 +1,21 @@
 import { useLocation as useBaseLocation } from "@solidjs/router";
 
+function getLocation() {
+  return window.router.location();
+}
+
 function useIslandsLocation() {
   return {
     get pathname() {
-      let location = window.LOCATION();
+      let location = getLocation();
       return location.pathname;
     },
     get hash() {
-      let location = window.LOCATION();
+      let location = getLocation();
       return location.hash;
     },
     get search() {
-      let location = window.LOCATION();
+      let location = getLocation();
       return location.search;
     }
   } as Location;

@@ -1,6 +1,7 @@
-import type { Location, Navigator } from "@solidjs/router";
+import type { Location } from "@solidjs/router";
 import { createEffect, createSignal } from "solid-js";
-interface LocationEntry {
+
+export interface LocationEntry {
   path: string;
   state: any;
   pathname: string;
@@ -8,25 +9,8 @@ interface LocationEntry {
   hash: string;
 }
 
-export function useLocation() {
-  return {
-    get pathname() {
-      let location = window.LOCATION();
-      return location.pathname;
-    },
-    get hash() {
-      let location = window.LOCATION();
-      return location.hash;
-    },
-    get search() {
-      let location = window.LOCATION();
-      return location.search;
-    }
-  } as Location;
-}
-
 export function useSearchParams() {
-  const params = () => window.LOCATION().search;
+  const params = () => window.router.location().search;
   const [searchParams, setSearchParams] = createSignal(new URLSearchParams(params()));
 
   createEffect(() => {
@@ -44,8 +28,8 @@ export default function mountRouter() {
     let [currentLocation, setCurrentLocation] = createSignal<Location & LocationEntry>(
       getLocation()
     );
-    window.LOCATION = currentLocation;
-    window.ROUTER = new EventTarget();
+
+    let eventTarget = new EventTarget();
 
     function getLocation(): Location & LocationEntry {
       const { pathname, search, hash } = window.location;
@@ -58,6 +42,16 @@ export default function mountRouter() {
         query: {},
         key: ""
       };
+    }
+
+    function pushRoute(to: string | URL, options: Partial<NavigateOptions>) {
+      let u = new URL(to, window.location.origin);
+      if (options.replace) {
+        history.replaceState(options.state, "", u);
+      } else {
+        history.pushState(options.state, "", u);
+      }
+      setCurrentLocation(getLocation());
     }
 
     async function handleAnchorClick(evt: MouseEvent) {
@@ -115,7 +109,7 @@ export default function mountRouter() {
       };
 
       await navigate(to, options);
-      window.PUSH(to, options);
+      pushRoute(to, options);
     }
 
     interface NavigateOptions {
@@ -133,8 +127,8 @@ export default function mountRouter() {
       }
     }
 
-    async function navigate(to: string, options: NavigateOptions = {}) {
-      window.ROUTER.dispatchEvent(new CustomEvent("navigation-start", { detail: to }));
+    async function doNavigate(to: string, options: Partial<NavigateOptions> = {}) {
+      router.router.dispatchEvent(new CustomEvent("navigation-start", { detail: to }));
       const response = await fetch(to, {
         method: "POST",
         headers: {
@@ -144,58 +138,60 @@ export default function mountRouter() {
 
       if (!response.ok) {
         console.error(`Navigation failed: ${response.status} ${response.statusText}`);
-        window.ROUTER.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
+        router.router.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
         return false;
       }
 
       let body = await response.text();
       let updated = update(body);
       if (updated) {
-        window.ROUTER.dispatchEvent(new CustomEvent("navigation-end", { detail: to }));
+        router.router.dispatchEvent(new CustomEvent("navigation-end", { detail: to }));
         return true;
       }
 
-      window.ROUTER.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
+      router.router.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
       return false;
     }
 
-    window.PUSH = (to, options) => {
-      let u = new URL(to, window.location.origin);
-      if (options.replace) {
-        history.replaceState(options.state, "", u);
-      } else {
-        history.pushState(options.state, "", u);
+    async function navigate(to: string, options: Partial<NavigateOptions> = {}) {
+      if (await doNavigate(to)) {
+        pushRoute(to, options);
+        return true;
       }
-      setCurrentLocation(getLocation());
+      return false;
+    }
+
+    let router = {
+      navigate,
+      push: pushRoute,
+      update,
+      router: eventTarget,
+      location: currentLocation
     };
 
-    window.NAVIGATE = (async (to, options = {}) => {
-      if (await navigate(to)) {
-        window.PUSH(to, options);
-      }
-    }) as unknown as Navigator;
-
-    window._$HY.update = update;
+    window.router = router;
 
     document.addEventListener("click", handleAnchorClick);
     window.addEventListener("popstate", handlePopState);
     DEBUG("mounted islands router");
   }
 }
-function update(body: string) {
-  let assets = [];
+
+async function update(body: string) {
+  let assets: [[string, string][], [string, string][]] | undefined;
   if (body.charAt(0) === "a") {
     const assetsIndex = body.indexOf(";");
     assets = JSON.parse(body.substring("assets=".length, assetsIndex));
     body = body.substring(assetsIndex + 1);
   }
+
   if (body.charAt(0) === "o") {
     const splitIndex = body.indexOf("=");
     const meta = body.substring(0, splitIndex);
     const content = body.substring(splitIndex + 1);
 
     if (meta) {
-      if (assets.length) {
+      if (assets && assets.length) {
         assets[0].forEach(([assetType, href]) => {
           if (!document.querySelector(`link[href="${href}"]`)) {
             let link = document.createElement("link");
@@ -216,25 +212,14 @@ function update(body: string) {
       const [prev, next] = meta.split(":");
       const outletEl = document.getElementById(prev);
       if (outletEl) {
-        let old = outletEl.firstChild;
         let doc = document.implementation.createHTMLDocument();
         doc.write(`<outlet-wrapper id="${next}">`);
         doc.write(content);
         doc.write("</outlet-wrapper>");
 
-        // outletEl.innerHTML = content;
-        // outletEl.id = next;
-        // window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
-        window._$HY &&
-          window._$HY.replaceIslands &&
-          window._$HY.replaceIslands({
-            outlet: outletEl,
-            old,
-            new: doc.body.firstChild,
-            content,
-            next
-          });
-
+        if (import.meta.env.START_ISLANDS) {
+          await window._$HY.morph(outletEl, doc.body.firstChild as HTMLElement);
+        }
         return true;
       } else {
         console.warn(`No outlet element with id ${prev}`);

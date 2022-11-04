@@ -1,13 +1,9 @@
-import { diff } from "micromorph";
+import { diff, Patch } from "micromorph";
 import { createStore } from "solid-js/store";
 import { createComponent, getHydrationKey, getOwner, hydrate } from "solid-js/web";
 
-function lookupOwner(el: HTMLElement) {
-  const parent = el.closest("solid-children");
-  return parent && (parent as any).__$owner;
-}
-
-export function mountIslands() {
+export function hydrateServerRouter() {
+  const map = new WeakMap();
   async function mountIsland(el: HTMLElement) {
     if (el.dataset.css) {
       let css = JSON.parse(el.dataset.css);
@@ -21,14 +17,14 @@ export function mountIslands() {
       }
     }
 
-    let Component = window._$HY.islandMap[el.dataset.island];
+    let Component = window._$HY.islandMap[el.dataset.island!];
     if (!Component || !el.dataset.hk) return;
 
     let hk = el.dataset.hk;
     DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
 
-    el.props = createStore({
-      ...JSON.parse(el.dataset.props),
+    let props = createStore({
+      ...JSON.parse(el.dataset.props!),
       get children() {
         const p = el.getElementsByTagName("solid-children");
         getHydrationKey();
@@ -39,7 +35,9 @@ export function mountIslands() {
       }
     });
 
-    hydrate(() => createComponent(Component, el.props[0]), el, {
+    map.set(el, props);
+
+    hydrate(() => createComponent(Component, props[0]), el, {
       renderId: hk.slice(0, hk.length - 1) + `${1 + Number(el.dataset.offset)}-`,
       owner: lookupOwner(el)
     });
@@ -48,18 +46,19 @@ export function mountIslands() {
     el.dataset.hkk = hk;
   }
 
-  let queue = [];
+  let queue: HTMLElement[] = [];
   let queued = false;
-  function runTaskQueue(info) {
+  function runTaskQueue(info: any) {
     while (info.timeRemaining() > 0 && queue.length) {
-      mountIsland(queue.shift());
+      mountIsland(queue.shift()!);
     }
     if (queue.length) {
       requestIdleCallback(runTaskQueue);
     } else queued = false;
   }
-  window._$HY.hydrateIslands = () => {
-    const islands = document.querySelectorAll("solid-island[data-hk]");
+
+  const hydrateIslands = () => {
+    const islands: NodeListOf<HTMLElement> = document.querySelectorAll("solid-island[data-hk]");
     const assets = new Set<string>();
     islands.forEach((el: HTMLElement) => el.dataset.component && assets.add(el.dataset.component));
     Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset)))
@@ -76,8 +75,11 @@ export function mountIslands() {
       })
       .catch(e => console.error(e));
   };
-  window._$HY.fe = window._$HY.hydrateIslands;
-  window._$HY.hydrateIslands();
+
+  function lookupOwner(el: HTMLElement) {
+    const parent = el.closest("solid-children");
+    return parent && (parent as any).__$owner;
+  }
 
   // Node Types
   const NODE_TYPE_ELEMENT = 1;
@@ -93,7 +95,7 @@ export function mountIslands() {
   const ACTION_SET_ATTR = 4;
   const ACTION_REMOVE_ATTR = 5;
 
-  function patchAttributes(el, patches: any) {
+  function patchAttributes(el: HTMLElement, patches: Patch[]) {
     if (patches.length === 0) return;
     for (const { type, name, value } of patches) {
       if (type === ACTION_REMOVE_ATTR) {
@@ -104,15 +106,14 @@ export function mountIslands() {
     }
   }
 
-  function patchIsland(el, { attributes, children }) {
+  function patchIsland(el: HTMLElement, { attributes, children }: Patch) {
     if (el.tagName === "SOLID-ISLAND") {
-      // console.log("persisted", el, attributes);
-      let props = attributes.find(a => a.name === "data-props");
+      let props = attributes.find((a: { name: string }) => a.name === "data-props");
       if (props) {
-        el.props[1](JSON.parse(props.value));
+        map.get(el)[1](JSON.parse(props.value));
       }
 
-      function patchChildren(el, children) {
+      function patchChildren(el: HTMLElement, children: Patch["children"]) {
         const elements = Array.from(el.childNodes) as Element[];
         for (let i = 0; i < elements.length; i++) {
           const element = elements[i];
@@ -121,9 +122,9 @@ export function mountIslands() {
             patch(el, child, element);
           } else if (element.tagName === "SOLID-ISLAND") {
             const child = children[i];
-            patchIsland(element, child);
+            patchIsland(element as HTMLElement, child);
           } else {
-            patchChildren(element, children[i]?.children);
+            patchChildren(element as HTMLElement, children[i]?.children);
           }
         }
       }
@@ -137,15 +138,17 @@ export function mountIslands() {
   async function patch(parent: Node, PATCH: any, child?: Node) {
     if (!PATCH) return;
 
-    let el;
+    let _el: HTMLElement | Node | null = null;
     if (parent.nodeType === NODE_TYPE_DOCUMENT) {
       parent = (parent as Document).documentElement;
-      el = parent;
+      _el = parent;
     } else if (!child) {
-      el = parent;
+      _el = parent;
     } else {
-      el = child;
+      _el = child;
     }
+
+    let el = _el as HTMLElement;
 
     switch (PATCH.type) {
       case ACTION_CREATE: {
@@ -172,42 +175,54 @@ export function mountIslands() {
         if (!el) return;
         const { attributes, children } = PATCH;
         if (el.tagName === "SOLID-ISLAND") {
-          return patchIsland(el, { attributes, children });
+          return patchIsland(el, { type: ACTION_UPDATE, attributes, children });
         }
 
         patchAttributes(el, attributes);
         // Freeze childNodes before mutating
         const elements = Array.from(el.childNodes) as Element[];
-        await Promise.all(children.map((child, index) => patch(el, child, elements[index])));
+        await Promise.all(
+          children.map((child: Patch, index: number) => patch(el, child, elements[index]))
+        );
         return;
       }
     }
   }
 
-  window._$HY.replaceIslands = ({ outlet, new: newEl }: { outlet: HTMLElement; new: Document }) => {
-    let d = diff(outlet, newEl);
-    patch(outlet, d);
-    // const islands = newEl.body.querySelectorAll("solid-island[data-hk]");
-    // let el = document.activeElement;
-    // islands.forEach((el: HTMLElement) => {
-    //   let oldIsland = old.querySelector(
-    //     `solid-island[data-hkk="${el.dataset.hk}"][data-component="${el.dataset.component}"]`
-    //   );
-    //   if (oldIsland) {
-    //     console.log("persisted island", el.dataset.hk, el, oldIsland);
-    //     oldIsland.props[1](JSON.parse(el.dataset.props));
-    //     let child = oldIsland.querySelector("solid-children");
-    //     let newChildren = el.querySelector("solid-children");
-    //     if (child && newChildren) {
-    //       child.replaceWith(newChildren);
-    //     }
-    //     el.parentElement.replaceChild(oldIsland, el);
-    //   }
-    // });
+  async function swap(prev: HTMLElement, next: HTMLElement) {
+    const newIslands = next.querySelectorAll<HTMLElement>("solid-island[data-hk]");
+    let el = document.activeElement as HTMLElement;
+    newIslands.forEach((el: HTMLElement) => {
+      let oldIsland: null | (HTMLElement & { props: any }) = prev.querySelector(
+        `solid-island[data-hkk="${el.dataset.hk}"][data-component="${el.dataset.component}"]`
+      );
+      if (oldIsland) {
+        console.log("persisted island", el.dataset.hk, el, oldIsland);
+        oldIsland.props[1](JSON.parse(el.dataset.props ?? "{}"));
+        let child = oldIsland.querySelector("solid-children");
+        let newChildren = el.querySelector("solid-children");
+        if (child && newChildren) {
+          child.replaceWith(newChildren);
+        }
 
-    // outlet.id = next;
-    // outlet.replaceChildren(...newEl.body.children);
-    // el.focus();
-    window._$HY.hydrateIslands();
+        if (el.parentElement) {
+          el.parentElement.replaceChild(oldIsland, el);
+        }
+      }
+    });
+
+    prev.id = next.id;
+    prev.replaceChildren(...next.children);
+    el?.focus?.();
+  }
+
+  const replace = async (prev: HTMLElement, next: HTMLElement) => {
+    await patch(prev, diff(prev, next));
+    hydrateIslands();
+    return true;
   };
+
+  window._$HY.fe = hydrateIslands;
+  window._$HY.morph = replace;
+  hydrateIslands();
 }

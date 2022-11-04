@@ -38,6 +38,7 @@ declare global {
       islandMap: { [path: string]: Component };
       hydrateIslands(): void;
       fe(id: string): void;
+      morph(prev: HTMLElement, next: HTMLElement): boolean;
     };
   }
 }

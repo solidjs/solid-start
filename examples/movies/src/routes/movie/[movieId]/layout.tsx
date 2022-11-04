@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 import { A, Outlet, useParams } from "solid-start";
-import { Hero } from "~/components/Hero";
+import Hero from "~/components/Hero";
 import styles from "./layout.module.scss";
 import { useMovie } from "./useMovie";
 
@@ -16,6 +16,7 @@ export default function MoviePage() {
       <div class={`spacing ${styles.nav}`}>
         <A
           href={`/movie/${useParams().movieId}`}
+          end
           activeClass={styles.buttonActive}
           class={styles.button}
         >

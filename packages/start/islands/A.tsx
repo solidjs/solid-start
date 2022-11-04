@@ -1,7 +1,7 @@
 "use client";
 import type { A as BaseA } from "@solidjs/router";
 import { ComponentProps, splitProps } from "solid-js";
-import { useLocation } from "../router";
+import { useLocation } from "./useLocation";
 
 export default function IslandsA(props: ComponentProps<typeof BaseA>) {
   const [, rest] = splitProps(props, ["state", "activeClass", "inactiveClass", "end"]);
