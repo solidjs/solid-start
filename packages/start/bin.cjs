@@ -218,6 +218,8 @@ prog
           }
         }
 
+        console.log(islandReferences);
+
         console.timeEnd(c.blue("solid-start") + c.magenta(" found islands in"));
         console.log();
         console.log(c.blue("solid-start") + c.magenta(" building islands client..."));
@@ -254,7 +256,7 @@ prog
               .filter(([k]) => k.startsWith("/") || k === "")
               .map(([k, v]) => [
                 k,
-                v
+                v.assets
                   .filter(a => a.type !== "script")
                   // replace island references with island source paths
                   .map(v => (v.type === "island" ? { ...v, href: referenceToIsland[v.href] } : v))
@@ -278,8 +280,8 @@ prog
               ])
           ),
           "entry-client": [
-            ...islandsManifest["entry-client"].filter(a => a.type === "script"),
-            ...routeManifest["entry-client"].filter(a => a.type === "style")
+            ...islandsManifest["entry-client"].assets.filter(a => a.type === "script"),
+            ...routeManifest["entry-client"].assets.filter(a => a.type === "style")
           ]
         };
 

@@ -40,7 +40,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       : "/";
 
   /**
-   * @type {{ [key: string]: AssetRef[] | { script: AssetRef, assets: AssetRef[] } }}
+   * @type {{ [key: string]: { script: AssetRef, assets: AssetRef[], type: string } }}
    */
   let manifest = {};
 
@@ -105,6 +105,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
           let f = imp.includes("?island") ? collect(imp) : collectAsset(imp);
 
           manifest[imp] = {
+            type: "island",
             script: f[0],
             assets: f
           };
@@ -122,6 +123,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
           files.push({ type: "island", href: imp });
           let f = collect(imp);
           manifest[imp] = {
+            type: "island",
             script: f[0],
             assets: f
           };

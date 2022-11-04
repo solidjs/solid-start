@@ -669,3 +669,7 @@ function remove_html_middlewares(server) {
     }
   }
 }
+
+export function createAdapter(/** @type {import('./plugin').Adapter} */ adapter) {
+  return adapter;
+}

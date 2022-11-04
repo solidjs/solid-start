@@ -143,7 +143,7 @@ export default function mountRouter() {
       }
 
       let body = await response.text();
-      let updated = update(body);
+      let updated = await update(body);
       if (updated) {
         router.router.dispatchEvent(new CustomEvent("navigation-end", { detail: to }));
         return true;

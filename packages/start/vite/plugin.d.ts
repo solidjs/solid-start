@@ -38,10 +38,12 @@ declare global {
       islandMap: { [path: string]: Component };
       hydrateIslands(): void;
       fe(id: string): void;
-      morph(prev: HTMLElement, next: HTMLElement): boolean;
+      morph(prev: HTMLElement, next: HTMLElement): Promise<boolean>;
     };
   }
 }
+
+export function createAdapter(adapter: Adapter): Adapter;
 
 export const start: (options?: Partial<Options>) => Plugin[];
 export default start;
