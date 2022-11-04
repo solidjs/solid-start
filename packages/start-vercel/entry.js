@@ -5,11 +5,18 @@ import entry from "./entry-server";
 export default async (req, res) => {
   console.log(`Received new request: ${req.url}`);
 
-  const webRes = await entry({
-    request: createRequest(req),
-    env: { 
+  let request = createRequest(req)
+  const webRes = await entryServer({
+    request,
+    env: {
       manifest,
-      getStaticHTML: path => fetch(new URL(`${path}.html`, request.url).href)
+      getStaticHTML: async (path) =>
+        new Response((await fetch(new URL(`${path}.html`, request.url).href)).body, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/html"
+          }
+        })
     }
   });
   const headers = {};
