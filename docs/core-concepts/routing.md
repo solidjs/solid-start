@@ -220,7 +220,7 @@ As most UIs evolve, they normally have shared layouts for sections of the app, o
         |-- projects.tsx
 ```
 
-```tsx twoslash filename="routes/users/index.tsx"
+```tsx twoslash filename="routes/users.tsx"
 import { Outlet } from "solid-start";
 
 export default function UsersLayout() {
