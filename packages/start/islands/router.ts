@@ -108,7 +108,7 @@ export default function mountRouter() {
         state: state && JSON.parse(state)
       };
 
-      await navigate(to, options);
+      await doNavigate(to, options);
       pushRoute(to, options);
     }
 
@@ -122,7 +122,7 @@ export default function mountRouter() {
     async function handlePopState(evt: PopStateEvent) {
       const { pathname, search, hash, state } = getLocation();
       const to = pathname + search + hash;
-      if (await navigate(to)) {
+      if (await doNavigate(to)) {
         setCurrentLocation(getLocation());
       }
     }

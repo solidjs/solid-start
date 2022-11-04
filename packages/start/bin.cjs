@@ -256,10 +256,14 @@ prog
               .filter(([k]) => k.startsWith("/") || k === "")
               .map(([k, v]) => [
                 k,
-                v.assets
-                  .filter(a => a.type !== "script")
-                  // replace island references with island source paths
-                  .map(v => (v.type === "island" ? { ...v, href: referenceToIsland[v.href] } : v))
+                {
+                  type: "route",
+                  script: v.script,
+                  assets: v.assets
+                    .filter(a => a.type !== "script")
+                    // replace island references with island source paths
+                    .map(v => (v.type === "island" ? { ...v, href: referenceToIsland[v.href] } : v))
+                }
               ])
           ),
           ...Object.fromEntries(
@@ -270,6 +274,7 @@ prog
               .map(([k, v]) => [
                 k,
                 {
+                  type: "island",
                   script: v.script,
                   assets: [
                     ...v.assets.filter(a => a.type === "script"),
@@ -279,10 +284,14 @@ prog
                 }
               ])
           ),
-          "entry-client": [
-            ...islandsManifest["entry-client"].assets.filter(a => a.type === "script"),
-            ...routeManifest["entry-client"].assets.filter(a => a.type === "style")
-          ]
+          "entry-client": {
+            type: "entry",
+            script: islandsManifest["entry-client"].script,
+            assets: [
+              ...islandsManifest["entry-client"].assets.filter(a => a.type === "script"),
+              ...routeManifest["entry-client"].assets.filter(a => a.type === "style")
+            ]
+          }
         };
 
         Object.values(newManifest).forEach(v => {
