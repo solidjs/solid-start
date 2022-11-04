@@ -5,9 +5,19 @@ import entry from "./entry-server";
 export default async (req, res) => {
   console.log(`Received new request: ${req.url}`);
 
-  const webRes = await entry({
-    request: createRequest(req),
-    env: { manifest }
+  let request = createRequest(req)
+  const webRes = await entryServer({
+    request,
+    env: {
+      manifest,
+      getStaticHTML: async (path) =>
+        new Response((await fetch(new URL(`${path}.html`, request.url).href)).body, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/html"
+          }
+        })
+    }
   });
   const headers = {};
   for (const [name, value] of webRes.headers) {
@@ -47,6 +57,7 @@ function createRequest(req) {
 
   if (req.method !== "GET" && req.method !== "HEAD") {
     init.body = req;
+    init.duplex = 'half';
   }
 
   return new Request(url.href, init);

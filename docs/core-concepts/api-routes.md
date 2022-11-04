@@ -200,31 +200,28 @@ export const appRouter = t.router({
     return `hello ${input ?? 'world'}`;
   }),
 });
+
+export type AppRouter = typeof appRouter;
 ```
 
 Here is a simple client that you can use in your `routeData` function to fetch data from your [tRPC][trpc] server. You can also use the proxy in `createServerData$` and `createServerAction$` functions, but it's usually better to just use it in a `createResource` or `createRouteData` function.
 
 ```tsx filename="lib/trpc.ts"
-export type AppRouter = typeof appRouter;
-
 import {
-  createTRPCClient,
-  createTRPCClientProxy,
+  createTRPCProxyClient,
   httpBatchLink,
   loggerLink,
 } from '@trpc/client';
-import type { AppRouter } from "./router.ts";
+import type { AppRouter } from "./router";
 
-const client = createTRPCClient<AppRouter>({
+export const client = createTRPCProxyClient<AppRouter>({
   links: [loggerLink(), httpBatchLink({ url: "/api/trpc" })],
 });
-
-export const proxy = createTRPCClientProxy(client);
 ```
 
 And finally, you can use the `fetch` adapter to write an API route that acts as the tRPC server.
 
-```tsx filename="routes/api/trpc.ts"
+```tsx filename="routes/api/trpc/[...].ts"
 import { APIEvent } from "solid-start/api";
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from "~/lib/router";

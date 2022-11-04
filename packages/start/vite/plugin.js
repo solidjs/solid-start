@@ -134,17 +134,6 @@ function solidStartConfig(options) {
     }
   };
 }
-
-let i = 0;
-/**
- * @param {any} arr
- */
-function toArray(arr) {
-  if (!arr) return [];
-  if (Array.isArray(arr)) return arr;
-  return [arr];
-}
-
 /**
  * @returns {import('node_modules/vite').Plugin}
  * @param {{ delay?: number; babel?: any }} options
