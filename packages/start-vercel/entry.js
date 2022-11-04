@@ -47,6 +47,7 @@ function createRequest(req) {
 
   if (req.method !== "GET" && req.method !== "HEAD") {
     init.body = req;
+    init.duplex = 'half';
   }
 
   return new Request(url.href, init);
