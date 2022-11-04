@@ -578,13 +578,14 @@ export default function solidStart(options) {
           : process.env.START_SSR?.length
           ? process.env.START_SSR
           : "async",
-      islands: process.env.START_ISLANDS === "true" ? true : false,
-      islandsRouter: process.env.START_ISLANDS_ROUTER === "true" ? true : false,
       lazy: true,
       prerenderRoutes: [],
       devServer: true,
       inspect: true,
-      experimental: {}
+      experimental: {
+        islands: process.env.START_ISLANDS === "true" ? true : false,
+        islandsRouter: process.env.START_ISLANDS_ROUTER === "true" ? true : false
+      }
     },
     options ?? {}
   );

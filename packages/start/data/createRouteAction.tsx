@@ -5,7 +5,7 @@ import { FormError, FormImpl, FormProps } from "./Form";
 import { Navigator } from "@solidjs/router";
 import { ServerFunction } from "server/server-functions/types";
 import type { ParentComponent } from "solid-js";
-import { isRedirectResponse, XSolidStartOrigin } from "../server/responses";
+import { isRedirectResponse } from "../server/responses";
 import { useRequest } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
@@ -62,19 +62,16 @@ export function createRouteAction<T, U = void>(
   function submit(variables: T): U {
     let p: Promise<U>;
     if (import.meta.env.START_ISLANDS && (fn as ServerFunction<any, any>).url) {
-      p = fetch((fn as ServerFunction<any, any>).url, {
-        method: "POST",
-        body:
-          variables instanceof FormData
-            ? variables
-            : JSON.stringify([variables, { $type: "fetch_event" }]),
-        headers: {
-          ...(variables instanceof FormData ? {} : { "Content-Type": "application/json" }),
-          [XSolidStartOrigin]: "client",
-          "x-solid-referrer": window.LOCATION().pathname,
-          "x-solid-mutation": "true"
-        }
-      }) as unknown as Promise<U>;
+      p = (fn as ServerFunction<any, any>).fetch(
+        {
+          headers: {
+            "x-solid-referrer": window.router.location().pathname,
+            "x-solid-mutation": "true"
+          }
+        },
+        variables,
+        event
+      );
     } else {
       p = fn(variables, event);
     }
@@ -264,10 +261,13 @@ async function handleResponse(response: Response, navigate: Navigator, options: 
       navigate(locationUrl);
     }
     return handleRefetch(response, options);
-  } else if (response instanceof Response && response.headers.get("Content-type") === "text/solid-diff") {
-    let i = await window._$HY.update(await response.text());
+  } else if (
+    response instanceof Response &&
+    response.headers.get("Content-type") === "text/solid-diff"
+  ) {
+    let i = await window.router.update(await response.text());
     if (i) {
-      await window.PUSH(response.headers.get("x-solid-location"), {});
+      window.router.push(response.headers.get("x-solid-location") ?? "/", {});
     }
   }
 }

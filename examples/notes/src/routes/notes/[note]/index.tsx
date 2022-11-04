@@ -6,7 +6,6 @@ export function routeData({ params }) {
   return useNote(params);
 }
 
-
 export default function NotePage() {
   const [searchParams] = useSearchParams();
   const params = useParams();

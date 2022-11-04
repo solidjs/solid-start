@@ -8,14 +8,13 @@ export default defineConfig({
       compiler: "solid"
     }),
     solid({
-      islands: true,
-      islandsRouter: true,
-      durableObjects: {
-        db: "./src/db.ts"
-      },
+      // experimental: { islands: true, islandsRouter: true },
       adapter: startCloudflareWorkers({
         durableObjectsPersist: true,
         kvPersist: false,
+        durableObjects: {
+          db: "db"
+        },
         async init(mf) {}
       })
     })

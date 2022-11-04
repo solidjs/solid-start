@@ -67,7 +67,7 @@ function createHeaders(/** @type {object} */ requestHeaders) {
   return headers;
 }
 
-class NodeRequest extends BaseNodeRequest {
+export class NodeRequest extends BaseNodeRequest {
   constructor(
     /** @type {import('undici').RequestInfo} */ input,
     /** @type {import('undici').RequestInit & { data: any }} */ init

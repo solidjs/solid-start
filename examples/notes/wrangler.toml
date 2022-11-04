@@ -3,7 +3,7 @@ compatibility_date = "2022-05-10"
 
 [durable_objects]
 bindings = [
-  { name = "DO", class_name = "NotesDB" },
+  { name = "db", class_name = "db" },
 ]
 
 [[migrations]]

@@ -7,7 +7,7 @@
  *
  */
 
-import { createSignal, startTransition, useTransition } from "solid-js";
+import { createSignal, useTransition } from "solid-js";
 import { createServerAction$, redirect } from "solid-start/server";
 import { NotePreview } from "../routes/notes/[note]/NotePreview";
 
@@ -15,36 +15,20 @@ export function NoteEditor(props: { noteId: string; initialTitle: string; initia
   const [title, setTitle] = createSignal(props.initialTitle);
   const [body, setBody] = createSignal(props.initialBody);
   const [isNavigating, startNavigating] = useTransition();
-  const [isSaving, saveNote] = createServerAction$(async (form: FormData, { fetch }) => {
+  const [isSaving, saveNote] = createServerAction$(async (form: FormData, { fetch, env }) => {
     let { noteId, title, body } = Object.fromEntries(form.entries()) as any;
     if (noteId.length > 0) {
-      await fetch(`https://db.notes/update?id=${encodeURIComponent(noteId)}`, {
-        body: JSON.stringify({
-          title,
-          body,
-          updated_at: new Date().toISOString()
-        }),
-        method: "POST"
-      });
+      await env.notes.update(noteId, title, body);
       return redirect("/notes/" + noteId);
     } else {
-      let id = `note_${Math.round(Math.random() * 100000)}`;
-      await fetch(`https://db.notes/update?id=${encodeURIComponent(id)}`, {
-        body: JSON.stringify({
-          title,
-          body,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }),
-        method: "POST"
-      });
-      return redirect("/notes/" + id);
+      let note = await env.notes.create(title, body);
+      return redirect("/notes/" + note);
     }
   });
 
-  const [, deleteNote] = createServerAction$(async ({ noteId }: { noteId: string }, { env }) => {
-    if (noteId !== null) {
-      await env.db.get(env.db.idFromName("notes")).fetch(`http://notes/delete?id=${noteId}`);
+  const [, deleteNote] = createServerAction$(async (form: FormData, { env }) => {
+    if (form.get("noteId") !== null) {
+      await env.notes.delete(form.get("noteId") as string);
       return redirect("/");
     }
   });
@@ -92,21 +76,19 @@ export function NoteEditor(props: { noteId: string; initialTitle: string; initia
             Done
           </button>
           {!isDraft && (
-            <button
-              class="note-editor-delete"
-              // disabled={isDeletsing || isNavigating}
-              onClick={() =>
-                startTransition(() =>
-                  deleteNote({
-                    noteId: props.noteId
-                  })
-                )
-              }
-              role="menuitem"
-            >
-              <img src="/cross.svg" width="10px" height="10px" alt="" role="presentation" />
-              Delete
-            </button>
+            <deleteNote.Form>
+              <button
+                name="noteId"
+                value={props.noteId}
+                class="note-editor-delete"
+                // disabled={isDeletsing || isNavigating}
+                type="submit"
+                role="menuitem"
+              >
+                <img src="/cross.svg" width="10px" height="10px" alt="" role="presentation" />
+                Delete
+              </button>
+            </deleteNote.Form>
           )}
         </div>
         <div class="label label--preview" role="status">

@@ -63,8 +63,8 @@ declare global {
   interface Window {
     router: {
       navigate: (to: string, options?: Partial<NavigateOptions>) => Promise<boolean>;
-      push: (to: string | URL, options: NavigateOptions) => void;
-      update: (body: string) => boolean;
+      push: (to: string | URL, options: Partial<NavigateOptions>) => void;
+      update: (body: string) => Promise<boolean>;
       router: EventTarget;
       location: () => LocationEntry;
     };

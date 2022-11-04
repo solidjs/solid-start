@@ -1,12 +1,9 @@
 import { createServerData$ } from "solid-start/server";
-import { Note } from "~/db";
 
-export function useNote(params: Params<"note">) {
+export function useNote(params: { note: string }) {
   return createServerData$(
-    async ([selectedId], { fetch }) => {
-      const data = await (
-        await fetch(`http://db.notes/get?id=${selectedId}`)
-      ).json<{ error?: string } & Note>();
+    async ([selectedId], { env }) => {
+      const data = await env.notes.get(selectedId);
 
       if (data.error) {
         console.error(data.error);
