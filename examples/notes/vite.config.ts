@@ -8,7 +8,7 @@ export default defineConfig({
       compiler: "solid"
     }),
     solid({
-      // experimental: { islands: true, islandsRouter: true },
+      experimental: { islands: true, islandsRouter: true },
       adapter: startCloudflareWorkers({
         durableObjectsPersist: true,
         kvPersist: false,

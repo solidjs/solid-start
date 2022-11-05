@@ -265,6 +265,7 @@ async function handleResponse(response: Response, navigate: Navigator, options: 
     response instanceof Response &&
     response.headers.get("Content-type") === "text/solid-diff"
   ) {
+    console.log(response);
     let i = await window.router.update(await response.text());
     if (i) {
       window.router.push(response.headers.get("x-solid-location") ?? "/", {});
