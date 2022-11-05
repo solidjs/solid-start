@@ -72,6 +72,7 @@ importers:
       solid-js: ^1.6.0
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
+      solid-start-static: workspace:^0.2.5
       typescript: ^4.8.4
       undici: ^5.11.0
       vite: ^3.1.8
@@ -80,6 +81,7 @@ importers:
       '@solidjs/router': 0.5.0_solid-js@1.6.1
       solid-js: 1.6.1
       solid-start: link:../../packages/start
+      solid-start-static: link:../../packages/start-static
       undici: 5.12.0
     devDependencies:
       solid-start-node: link:../../packages/start-node
@@ -631,6 +633,10 @@ importers:
 
   packages/start-static:
     specifiers:
+      '@rollup/plugin-commonjs': ^22.0.2
+      '@rollup/plugin-json': ^4.1.0
+      '@rollup/plugin-node-resolve': ^13.3.0
+      rollup: ^2.79.1
       sirv-cli: 2.0.2
       solid-ssr: ^1.6.0
       solid-start: workspace:*
@@ -638,6 +644,10 @@ importers:
       undici: ^5.11.0
       vite: ^3.1.8
     dependencies:
+      '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.1
+      '@rollup/plugin-json': 4.1.0_rollup@2.79.1
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
+      rollup: 2.79.1
       sirv-cli: 2.0.2
       solid-ssr: 1.6.1
     devDependencies:
