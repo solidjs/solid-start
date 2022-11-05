@@ -6,7 +6,7 @@ export default async (req, res) => {
   console.log(`Received new request: ${req.url}`);
 
   let request = createRequest(req)
-  const webRes = await entryServer({
+  const webRes = await entry({
     request,
     env: {
       manifest,
