@@ -1,9 +1,9 @@
 .global-loader {
-  height: 4px;
+  height: 3px;
   width: 100%;
   display: flex;
   flex-shrink: 0;
-  position: absolute;
+  position: fixed;
   overflow: hidden;
   top: 0;
   left: 0;
@@ -19,7 +19,7 @@
     transform: translateX(0);
     opacity: 0;
     transition: transform 2s ease, opacity 1s ease;
-    background: rgba(52, 82, 255, 0.93);
+    background: #2196f3;
   }
 
   &::after {

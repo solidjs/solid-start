@@ -4,7 +4,7 @@
 const TMDB_API_URL = "https://api.themoviedb.org/3";
 
 const TMDB_API_PARAMS = {
-  api_key: import.meta.env.VITE_API_KEY
+  api_key: "73e6f6e34b28a4c3be0f745176c8225b" // import.meta.env.VITE_API_KEY
   // language: process.env.API_LANG
 };
 
