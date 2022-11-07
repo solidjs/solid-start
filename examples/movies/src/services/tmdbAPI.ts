@@ -33,7 +33,7 @@ async function fetchTMD(url, params = {}) {
   u.searchParams.set("api_key", TMDB_API_PARAMS.api_key);
   Object.entries(params).forEach(([key, value]) => {
     if (value !== void 0) {
-      u.searchParams.set(key, value);
+      u.searchParams.set(key, value as string);
     }
   });
   const response = await fetch(u);
@@ -176,14 +176,13 @@ function search(query, page = 1) {
  * Get YouTube video info
  */
 
-function getYouTubeVideo(id) {
-  return fetch("https://www.googleapis.com/youtube/v3/videos", {
-    params: {
-      key: process.env.API_YOUTUBE_KEY,
-      id,
-      part: "contentDetails"
-    }
+async function getYouTubeVideo(id) {
+  const params = new URLSearchParams({
+    key: import.meta.env.VITE_API_YOUTUBE_KEY,
+    id,
+    part: "contentDetails"
   });
+  return await (await fetch("https://www.googleapis.com/youtube/v3/videos?" + params)).json();
 }
 
 export {

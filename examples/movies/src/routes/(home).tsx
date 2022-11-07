@@ -21,7 +21,6 @@ export function routeData() {
       } else {
         featured = await getTvShow(randomItem.id);
       }
-
       return {
         trendingMovies,
         trendingTv,

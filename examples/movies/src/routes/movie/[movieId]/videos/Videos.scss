@@ -1,0 +1,103 @@
+@import "~/assets/css/utilities/_variables.scss";
+
+.videos__head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: $breakpoint-large) {
+    margin-bottom: 2rem;
+  }
+
+  select {
+    margin-right: 1rem;
+  }
+}
+
+.videos__count {
+  font-size: 1.2rem;
+  color: $text-color-grey;
+  letter-spacing: $letter-spacing;
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.4rem;
+  }
+}
+
+.videos__items {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -1rem;
+  margin-left: -1rem;
+}
+
+.videos-item {
+  display: flex;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  @media (min-width: $breakpoint-xsmall) {
+    width: 50%;
+  }
+  @media (min-width: $breakpoint-medium) {
+    width: 33.3333333%;
+  }
+  @media (min-width: 1450px) {
+    width: 25%;
+  }
+  @media (min-width: 2000px) {
+    width: 20%;
+  }
+  @media (min-width: 3000px) {
+    width: 16.6666667%;
+  }
+}
+
+.videos-item__img {
+  position: relative;
+  background-color: $secondary-color;
+  & img {
+    width: 100%;
+  }
+  // TODO: should add styling for span element
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.videos-item__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.videos-item__duration {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0.4rem 1.2rem 0.2rem;
+  font-size: 1.3rem;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.videos-item__name {
+  flex: 1 0 auto;
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  letter-spacing: $letter-spacing;
+  @media (min-width: $breakpoint-large) {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+}
+
+.videos-item__type {
+  font-size: 1.2rem;
+  color: $text-color-grey;
+  letter-spacing: $letter-spacing;
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.4rem;
+  }
+}

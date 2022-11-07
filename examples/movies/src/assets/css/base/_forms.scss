@@ -1,4 +1,4 @@
-@import '~/assets/css/utilities/_variables.scss';
+@import "~/assets/css/utilities/_variables.scss";
 
 .button,
 a.button {
@@ -39,7 +39,7 @@ select {
   padding: 0.8rem 3.5rem 0.8rem 1.5rem;
   font-size: 1.3rem;
   color: #fff;
-  background: $secondary-color url('~assets/images/select-arrow.svg') no-repeat 100% 45%;
+  background: $secondary-color url("/./src/assets/images/select-arrow.svg") no-repeat 100% 45%;
   background-size: 30px 60px;
   border-color: $secondary-color;
   appearance: none;

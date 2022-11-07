@@ -31,7 +31,6 @@ function ImagesItem(props) {
           // sizes="xsmall:29vw small:29vw medium:17vw large:14vw xlarge:13vw xlarge1:11vw xlarge2:12vw xlarge3:342"
           src={`https://image.tmdb.org/t/p/w${thumbWidth}_and_h${thumbHeight}_bestv2${props.image
             .file_path!}`}
-          style={{ "aspect-ratio": props.image.aspect_ratio }}
         />
       </div>
     </div>
