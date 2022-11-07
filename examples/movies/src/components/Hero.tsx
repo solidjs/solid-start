@@ -22,12 +22,33 @@ export function Hero(props) {
                 class={styles.play}
                 type="button"
                 aria-label="Play Trailer"
-                onClick="openModal"
               >
                 {/* <CirclePlayIcon /> */}
               </button>
             </Show>
-            <img
+            <picture>
+              <source
+                srcset={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${props.item.backdrop_path}`}
+                media="(min-width: 1280px)"
+              />
+              <source
+                srcset={`https://image.tmdb.org/t/p/w1280${props.item.backdrop_path}`}
+                media="(min-width: 780px)"
+              />
+              <source
+                srcset={`https://image.tmdb.org/t/p/w780${props.item.backdrop_path}`}
+                media="(min-width: 300px)"
+              />
+              <img
+                alt={props.item.title || props.item.original_title}
+                class={styles.image}
+                style={{
+                  height: "100%"
+                }}
+                src={`https://image.tmdb.org/t/p/w300${props.item.backdrop_path}`}
+              />
+            </picture>
+            {/* <img
               // src={"https://image.tmdb.org/t/p/original" + props.item.backdrop_path}
               src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${props.item.backdrop_path}`}
               alt=""
@@ -35,7 +56,7 @@ export function Hero(props) {
               style={{
                 height: "100%"
               }}
-            />
+            /> */}
             {/* <nuxt-picture
         class="$style.image"
         sizes="xsmall:100vw medium:71.1vw"

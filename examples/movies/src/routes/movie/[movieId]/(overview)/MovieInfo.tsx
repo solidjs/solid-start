@@ -31,12 +31,7 @@ export function MovieInfo(props) {
     <div class={`spacing ` + styles.info}>
       <div class={styles.left}>
         <div class={styles.poster}>
-          <Poster
-            width={370}
-            height={556}
-            alt="name"
-            src={`https://image.tmdb.org/t/p/w370_and_h556_bestv2${props.item.poster_path}`}
-          />
+          <Poster path={props.item.poster_path} alt={props.item.title} />
           {/* <PlaceholderIcon v-else /> */}
         </div>
       </div>
