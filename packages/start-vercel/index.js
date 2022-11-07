@@ -25,7 +25,7 @@ export default function ({ edge } = {}) {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(outputDir, "static"));
         await builder.server(join(config.root, ".solid", "server"));
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(join(outputDir, "static"));
         await builder.server(join(config.root, ".solid", "server"));
       } else {
