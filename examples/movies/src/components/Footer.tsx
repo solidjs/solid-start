@@ -1,25 +1,10 @@
 import { A, Outlet } from "solid-start";
 import GitHubIcon from "~icons/ant-design/github-filled";
-import HomeIcon from "~icons/ant-design/home-outlined";
 import EmailIcon from "~icons/ant-design/mail-filled";
-import MagnifierIcon from "~icons/ant-design/search-outlined";
 import TwitterIcon from "~icons/ant-design/twitter-outlined";
-import MoviesIcon from "~icons/pepicons/clapperboard";
-import TVIcon from "~icons/pepicons/television";
-import styles from "./layout.module.scss";
-import "./layout.scss";
+import styles from "./Footer.module.scss";
 
-export default function Page() {
-  return (
-    <div>
-      <TheNav />
-      <Outlet />
-      <TheFooter />
-    </div>
-  );
-}
-
-function TheFooter() {
+export default function Footer() {
   return (
     <footer class={styles.footer}>
       <p>
@@ -66,36 +51,5 @@ function TheFooter() {
         </li>
       </ul>
     </footer>
-  );
-}
-function TheNav() {
-  return (
-    <nav class={styles.nav}>
-      <ul class="nolist">
-        <li class={styles.logo}>
-          <img src="/solidjs.svg" width={48} height={48} />
-        </li>
-        <li>
-          <A href="/" end aria-label="Home">
-            <HomeIcon width={24} height={24} />
-          </A>
-        </li>
-        <li>
-          <A href="/movie" aria-label="Movies">
-            <MoviesIcon width={24} height={24} />
-          </A>
-        </li>
-        <li>
-          <A href="/tv" aria-label="TV Shows">
-            <TVIcon width={24} height={24} />
-          </A>
-        </li>
-        <li>
-          <A href="/search" aria-label="Search">
-            <MagnifierIcon width={24} height={24} />
-          </A>
-        </li>
-      </ul>
-    </nav>
   );
 }

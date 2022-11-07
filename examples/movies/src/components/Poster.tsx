@@ -65,7 +65,8 @@ export default function Poster(props: PosterProps) {
           class={[styles.poster, local.class].join(" ")}
           {...imgProps}
           src={`https://image.tmdb.org/t/p/w92${props.path}`}
-          style={{ height: "100%" }}
+          width={342}
+          height={556}
         />
       </picture>
     </div>

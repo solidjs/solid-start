@@ -31,7 +31,7 @@ export function MovieInfo(props) {
     <div class={`spacing ` + styles.info}>
       <div class={styles.left}>
         <div class={styles.poster}>
-          <Poster path={props.item.poster_path} alt={props.item.title} />
+          <Poster path={props.item.poster_path} alt={props.item.title || props.item.name} />
           {/* <PlaceholderIcon v-else /> */}
         </div>
       </div>

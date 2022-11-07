@@ -7,7 +7,6 @@ export function CreditsItem(props) {
       <A class="credits-item__link" href={`/person/${props.person.id}`}>
         <div class="credits-item__img">
           <img
-            v-if="poster"
             loading="lazy"
             width="370"
             height="556"

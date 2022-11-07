@@ -12,6 +12,8 @@ import {
   Scripts,
   Title
 } from "solid-start";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
 import "~/assets/css/global.scss";
 
 export default function Root() {
@@ -24,10 +26,12 @@ export default function Root() {
       </Head>
       <Body>
         <ErrorBoundary>
-          <Suspense fallback={<div>Loading</div>}>
+          <Nav />
+          <Suspense fallback={<div>Loading...</div>}>
             <Routes>
               <FileRoutes />
             </Routes>
+            <Footer />
           </Suspense>
         </ErrorBoundary>
         <Scripts />

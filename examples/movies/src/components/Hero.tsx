@@ -28,10 +28,6 @@ export function Hero(props) {
             </Show>
             <picture>
               <source
-                srcset={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${props.item.backdrop_path}`}
-                media="(min-width: 1280px)"
-              />
-              <source
                 srcset={`https://image.tmdb.org/t/p/w1280${props.item.backdrop_path}`}
                 media="(min-width: 780px)"
               />
@@ -40,7 +36,7 @@ export function Hero(props) {
                 media="(min-width: 300px)"
               />
               <img
-                alt={props.item.title || props.item.original_title}
+                alt={props.item.title || props.item.name}
                 class={styles.image}
                 style={{
                   height: "100%"

@@ -8,7 +8,7 @@ export function Card(props) {
     <div class="card">
       <A class="card__link" href={`/${media()}/${props.item.id}`}>
         <div class="card__img">
-          <Poster path={props.item.poster_path} alt={props.item.title} />
+          <Poster path={props.item.poster_path} alt={props.item.title || props.item.name} loading={props.loading || "eager"} />
         </div>
         <h2>{props.item.title}</h2>
       </A>

@@ -9,3 +9,14 @@
 @import './components/_listing.scss';
 @import './components/_carousel.scss';
 @import './components/_card.scss';
+
+a.active {
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+
+  svg {
+    color: $primary-color;
+  }
+}
