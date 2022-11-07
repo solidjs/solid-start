@@ -1,5 +1,4 @@
 // @refresh reload
-import "nprogress/nprogress.css";
 import { Suspense } from "solid-js";
 import {
   Body,
@@ -14,6 +13,7 @@ import {
 } from "solid-start";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import GlobalLoader from "./components/GlobalLoader";
 import "~/assets/css/global.scss";
 
 export default function Root() {
@@ -26,6 +26,7 @@ export default function Root() {
       </Head>
       <Body>
         <ErrorBoundary>
+          <GlobalLoader />
           <Nav />
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
