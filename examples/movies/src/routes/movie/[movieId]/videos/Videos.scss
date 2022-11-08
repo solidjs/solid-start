@@ -35,6 +35,7 @@
   width: 100%;
   padding: 1rem;
   margin-bottom: 2rem;
+
   @media (min-width: $breakpoint-xsmall) {
     width: 50%;
   }
@@ -50,6 +51,16 @@
   @media (min-width: 3000px) {
     width: 16.6666667%;
   }
+
+  solid-island {
+    width: 100%;
+  }
+}
+
+.videos-item__link {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .videos-item__img {
@@ -58,7 +69,7 @@
   & img {
     width: 100%;
   }
-  // TODO: should add styling for span element
+
   span {
     display: flex;
     align-items: center;
