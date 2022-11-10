@@ -122,7 +122,7 @@ There are cases where the anchor is not right for your navigation needs. For exa
 - You want to navigate after an async process completes
 - You want to navigate after the user clicks a button, and we do some logic.
 
-For these use cases you can use an imperative [`navigate`][usenavigate-navigate] function that you can by calling [`useNavigate()`][usenavigate].
+For these use cases you can use an imperative [`navigate`][usenavigate-navigate] function that you can get by calling [`useNavigate()`][usenavigate].
 
 ### Redirecting
 
