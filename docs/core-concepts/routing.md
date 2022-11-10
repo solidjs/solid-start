@@ -18,23 +18,33 @@ There are two categories of routes:
 
 This section of the documentation will mainly focus on UI routes, but you can learn more about API routes in the [API Routes][api-routes] section.
 
-## Creating pages
+## Creating new pages
 
 SolidStart uses file based routing. This means that the directory structure of your routes folder will translate exactly to the route structure in your application.
 
 Files in the `routes` directory will be treated as routes. Directories will be treated as additional route segments. For UI routes, they can be used along with parent layout components to form nested routes.
 
-Here are a few examples of files in our directory structure and how they would translate to routes:
+Here are a few examples of how to arrange files in the `routes` directory to match a given url. (Note: The file extension could be either: `.tsx` or `.jsx` depending on whether or not you are using [TypeScript](https://www.typescriptlang.org/docs/handbook/jsx.html) in your application.) 
 
-- `/src/routes/index.tsx` ➜ `hogwarts.com/`
-- `/src/routes/admin/index.tsx` ➜ `hogwarts.com/admin`
-- `/src/routes/admin/edit-settings.tsx` ➜ `hogwarts.com/admin/edit-settings`
+To create a new route/page in your application, just create a new file in the `routes` directory with the same name.
+- `hogwarts.com/blog` ➜ `/routes/blog.tsx`
+- `hogwarts.com/contact` ➜ `/routes/contact.tsx`
+- `hogwarts.com/directions ` ➜ `/routes/directions.tsx`
 
-There are some special file names that map to `URLPattern` patterns, e.g.
+To create new pages after a given route segment, simply create a directory with the name of the preceding route segment, and create new files in that directory.
+- `hogwarts.com/admin/edit-settings` ➜ `/routes/admin/edit-settings.tsx` 
+- `hogwarts.com/amenities/chamber-of-secrets` ➜ `/routes/amenities/chamber-of-secrets.tsx` 
+- `hogwarts.com/amenities/quidditch-pitch` ➜ `/routes/amenities/quidditch-pitch.tsx` 
+
+Files named `index` will be rendered when there are no additional URL route segments being requested for a matching directory.
+- `hogwarts.com` ➜ `/routes/index.tsx` 
+- `hogwarts.com/admin` ➜ `/routes/admin/index.tsx` 
+- `hogwarts.com/staff/positions` ➜ `/routes/staff/positions/index.tsx` 
+
+Additionally, there are some special file names that map to [URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) patterns, e.g.
 - `/src/routes/students/[id].tsx` ➜ `hogwarts.com/students/:id`
 - `/src/routes/students/[id]/[name].tsx` ➜ `hogwarts.com/students/:id/:name`
 - `/src/routes/[...missing].tsx` ➜ `hogwarts.com/*missing`
-
 
 We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
 
