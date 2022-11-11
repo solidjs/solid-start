@@ -14,5 +14,8 @@ export const GET = sitemapGET(
     <sitemap>
         <loc>${baseURL}/sitemap-tvs.xml</loc>
     </sitemap>
+    <sitemap>
+        <loc>${baseURL}/sitemap-genres.xml</loc>
+    </sitemap>
 </sitemapindex>`
 );
