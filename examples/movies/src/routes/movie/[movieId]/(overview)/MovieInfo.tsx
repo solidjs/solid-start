@@ -103,7 +103,7 @@ export function MovieInfo(props) {
                   <For each={props.item.genres}>
                     {(genre, i) => (
                       <>
-                        <A href={`/genre/${genre.id}`}>{genre.name}</A>
+                        <A href={`/genre/${genre.id}/movie`}>{genre.name}</A>
                         {i() < props.item.genres.length - 1 ? ", " : ""}
                       </>
                     )}

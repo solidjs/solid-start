@@ -1,0 +1,62 @@
+@import "~/assets/css/utilities/_variables.scss";
+
+.images__head {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: $breakpoint-large) {
+    margin-bottom: 2rem;
+  }
+}
+
+.images__title {
+  font-size: 1.8rem;
+  letter-spacing: $letter-spacing;
+  @media (min-width: $breakpoint-large) {
+    font-size: 2.4rem;
+  }
+}
+
+.images__count {
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  color: $text-color-grey;
+  letter-spacing: $letter-spacing;
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.4rem;
+  }
+}
+
+.images__items {
+    display: grid;
+    margin-right: -0.4rem;
+    margin-left: -0.4rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem,1fr));
+    justify-content: start;
+    gap: 0.5rem;
+}
+
+.images-item {
+  padding: 0.4rem;
+}
+
+.images-item__img {
+  background-color: $secondary-color;
+}
+
+.load-more{
+    font-size: 2rem;
+    display: grid;
+    button{
+        appearance: none;
+        background: transparent;
+        color: white;
+        text-decoration: underline;
+        cursor: pointer;
+        &:disabled{
+            opacity: .5;
+            cursor: not-allowed;
+        }
+    }
+}
