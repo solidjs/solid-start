@@ -50,7 +50,7 @@ The `<A>` tag also has an `activeClass` class if its href matches the current lo
 <table>
   <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
   <tr><td>href</td><td>string</td><td>The path of the route to navigate to. This will be resolved relative to the route that the link is in, but you can preface it with `/` to refer back to the root.</td></tr>
-  <tr><td>noScroll</td><td>boolean</td><td>If true, turn off the default behavior of scrolling to the top of the new page.</td></tr>
+  <tr><td>scroll</td><td>boolean</td><td>If true (default) scrolls to the top of the new page.</td></tr>
   <tr><td>replace</td><td>boolean</td><td>If true, turn off the default behavior of scrolling to the top of the new page.</td></tr>
   <tr><td>state</td><td>unknown</td><td><a href="https://developer.mozilla.org/en-US/docs/Web/API/History/pushState" target="_blank">Push this value</a> to the history stack when navigating.</td></tr>
   <tr><td>activeClass</td><td>string</td><td>The class to show when the link is active.</td></tr>
