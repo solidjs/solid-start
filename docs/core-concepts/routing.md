@@ -233,6 +233,32 @@ export default function UsersLayout() {
 }
 ```
 
+## Route Groups
+
+With file system routing, folders map directly to URL Paths. However, there might be times when you want to create folders for the sake of organization without affecting the URL structure. This can be done by using a Route Group. In SolidStart, Route Groups are defined using parenthesis surrounding the folder name `(example)`.
+
+```tsx {1}
+|-- routes/
+    |-- (static)
+        |-- about-us                // example.com/about-us
+            |-- index.tsx
+        |-- contact-us              // example.com/contact-us
+            |-- index.tsx
+```
+
+## Renaming Index
+By default, the default component that is rendered comed from the default export from the file `index.tsx` in each folder. However, this could make it harder to find which `index.tsx` file is the correct one when searching since there will be multiple files with that name. To avoid this pitfall, we also render the default export from any file that follows `(fileName).tsx` syntax. 
+
+```tsx {1}
+|-- routes/
+    |-- (home).tsx                  // example.com
+    |-- users.tsx
+    |-- users/
+        |-- (all-users).tsx         // example.com/users
+        |-- [id].tsx
+        |-- projects.tsx
+```
+
 [navlink]: /navigation#navigation-links
 [usenavigate]: /api/useNavigate
 [usenavigate-navigate]: /api/useNavigate#navigate
