@@ -1,0 +1,15 @@
+# Production
+dist
+dev-dist
+worker
+.solid
+.output
+.vercel
+.netlify
+
+# Dependencies
+/node_modules
+
+# System Files
+.DS_Store
+Thumbs.db
