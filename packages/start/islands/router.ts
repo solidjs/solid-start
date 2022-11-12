@@ -79,7 +79,7 @@ export default function mountRouter() {
       const options = {
         resolve: false,
         replace: a.hasAttribute("replace"),
-        scroll: a.hasAttribute("scroll") ?? true,
+        scroll: a.getAttribute("scroll") !== 'false',
         state: state && JSON.parse(state)
       };
 
