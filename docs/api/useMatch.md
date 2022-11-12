@@ -8,7 +8,7 @@ active: true
 
 # useMatch
 
-##### `useMatch` returns a signal indicating that the current location matches
+##### `useMatch` returns a signal indicating that the current location matches.
 
 <div class="text-lg">
 
@@ -51,5 +51,5 @@ function Component() {
 
 Either undefined if not matched **or** a reactive object containing the attributes of the match:
 
-- `path: string`: the pathname part of the URL, without the query string,
-- `params: reactive object`: object containing key value pairs of dynamic route sections
+- `path` (_string_): the pathname part of the URL, without the query string.
+- `params` (_reactive object_): object containing key value pairs of dynamic route sections.

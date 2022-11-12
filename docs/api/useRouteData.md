@@ -8,7 +8,7 @@ active: true
 
 # useRouteData
 
-##### `useRouteData` gives you the data defined for the route
+##### `useRouteData` gives you the data defined for the route.
 
 <div class="text-lg">
 

@@ -8,7 +8,7 @@ active: true
 
 # useLocation
 
-##### `useLocation` gives you a reactive object describing the URL the user is visiting
+##### `useLocation` gives you a reactive object describing the URL the user is visiting.
 
 <div class="text-lg">
 
@@ -60,10 +60,9 @@ function Component() {
 
 A [reactive object][reactivity] containing the attributes of the current location (URL):
 
-- `pathname: string`: the pathname part of the URL, without the query string,
-- `search: string`: the query string part of the URL
-- `hash: string`: the hash part of the URL, including the `#`
-
+- `pathname` (_string_): the pathname part of the URL, without the query string.
+- `search` (_string_): the query string part of the URL.
+- `hash` (_string_): the hash part of the URL, including the `#`.
 
 [reactivity]: /api/reactivity
 [usesearchparams]: /api/useSearchParams
