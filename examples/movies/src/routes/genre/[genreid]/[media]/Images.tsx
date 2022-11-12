@@ -1,6 +1,6 @@
 "use client";
 import { batch, createResource, createSignal, For, onMount, Signal } from "solid-js";
-import { createStore, unwrap } from "solid-js/store";
+import { createStore, produce, unwrap } from "solid-js/store";
 import server$ from "solid-start/server";
 import { Card } from "~/components/Card";
 import { getMediaByGenre, MediaByGenre } from "~/services/tmdbAPI";
@@ -45,15 +45,8 @@ export function Images(props: { media: string; genreid: number; title: string })
             if (typeof newValue === "function") {
               toAssign = (newValue as Function)(unwrapped);
             }
-            //we loop through every element to assign and we set the element
-            //as the n-th element of the store. We batch everything to avoid multiple
-            //rerendering
-            batch(() => {
-              for (let index = 0; index < toAssign.length; index++) {
-                const element = toAssign[index];
-                setStore(store.length, element);
-              }
-            });
+            //we can use procude to append elements to the old store
+            setStore(produce((oldStore: MediaByGenre[]) => oldStore.push(...toAssign)));
           }
         ] as Signal<T>;
       }
