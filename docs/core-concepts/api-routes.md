@@ -246,4 +246,4 @@ Learn more about [tRPC][trpc] here.
 [response]: https://developer.mozilla.org/en-US/docs/Web/API/Response
 [createServerData]: /api/createServerData
 [trpc]: https://trpc.io
-[routing]: ./routing
+[routing]: /core-concepts/routing
