@@ -23,7 +23,7 @@ SolidStart makes it easy to write routes for these use cases.
 
 ## Writing an API Route
 
-API routes are just like any other route and follow the same filename conventions as [UI Routes][Routing]. The only difference is in what you should export from the file. Instead of exporting a default Solid component and a `routeData` function, API Routes export functions that are named after the HTTP method that they handle, e.g. A `GET` request would be handled by the exported `GET` function. If a handler is not defined for a given HTTP method, SolidStart will return a `405 Method Not Allowed` response.
+API routes are just like any other route and follow the same filename conventions as [UI Routes][routing]. The only difference is in what you should export from the file. Instead of exporting a default Solid component and a `routeData` function, API Routes export functions that are named after the HTTP method that they handle, e.g. A `GET` request would be handled by the exported `GET` function. If a handler is not defined for a given HTTP method, SolidStart will return a `405 Method Not Allowed` response.
 
 ```tsx twoslash filename="routes/api/students.ts"
 // handles HTTP GET requests to /api/students
@@ -44,7 +44,7 @@ export function DELETE() {
 }
 ```
 
-These functions can also sit in your UI routes besides your component. They can handle non-GET HTTP requests for those routes.
+These functions can also sit in your UI routes beside your component. They can handle non-GET HTTP requests for those routes.
 
 ```tsx twoslash filename="routes/students.tsx"
 export function POST() {
@@ -246,3 +246,4 @@ Learn more about [tRPC][trpc] here.
 [response]: https://developer.mozilla.org/en-US/docs/Web/API/Response
 [createServerData]: /api/createServerData
 [trpc]: https://trpc.io
+[routing]: ./routing
