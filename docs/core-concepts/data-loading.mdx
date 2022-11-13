@@ -9,7 +9,7 @@ active: true
 
 What's a modern app without some data to power it. SolidStart aims to make it easy to load data from your data sources. It will help you keep your UI updated with your data.
 
-For most your data requirements, you will likely be using the route to decide what data to load. The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts.
+For most of your data requirements, you will likely be using the route to decide what data to load. The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts.
 
 This nested routing comes with other advantages too. It allows you to declare what data you need for each part of the route. This is done by exporting `routeData` functions from the nested routes.
 
@@ -73,7 +73,7 @@ Caveats:
 4. The `routeData` function will be called both on the server and the client. It's the resources that can avoid refetching if they had serialized their data in the server render.
 5. The server-side render will only wait for the resources to fetch and serialize if the resource signals are accessed under a `Suspense` boundary. 
 
-Okay, enough with the rules. We thought `createResource` was too low level for most people needs and did not use the knowledge the router has. So we created `createRouteData`. It's a resource creator that is aware of the router and the [actions][Actions] created on the page. It adds the concept of keys to the resource so that they can be granuraly refetched using `refetchRouteData`.
+Okay, enough with the rules. We thought `createResource` was too low-level for most people's needs and did not use the knowledge the router has. So we created `createRouteData`. It's a resource creator that is aware of the router and the [actions][Actions] created on the page. It adds the concept of keys to the resource so that they can be granularly refetched using `refetchRouteData`.
 
 Here's the same example as above, but using `createRouteData`.
 
@@ -106,7 +106,7 @@ export default function Page() {
 
 ### Data loading always on the server
 
-The primary advantage of being a full-stack Javascript framework is that its easy to write data loading code that can run both on the server and client. SolidStart gives them superpowers. You might want to write code that only runs on your server but didn't have to create an API route for it. It could be database access, or internal APIs, etc. It could sit within your functions where you need to use your server. We created `createServerData$` for this. It builds upon our other primitives like `createRouteData` and `server$` to give a generated RPC for your data.
+The primary advantage of being a full-stack Javascript framework is that its easy to write data loading code that can run both on the server and client. SolidStart gives them superpowers. You might want to write code that only runs on your server but didn't want to create an API route for it. It could be database access, or internal APIs, etc. It could sit within your functions where you need to use your server. We created `createServerData$` for this. It builds upon our other primitives like `createRouteData` and `server$` to give a generated RPC for your data.
 
 ```tsx twoslash {8} filename="/routes/students.tsx"
 const hogwarts = { students: { list() { return [] as Student[] } } }
