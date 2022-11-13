@@ -539,12 +539,13 @@ function solidStartConfig(options) {
 /**
  * @param {string} locate
  * @param {string} [cwd]
+ * @returns {string | undefined}
  */
 function find(locate, cwd) {
   cwd = cwd || process.cwd();
   if (cwd.split(path.sep).length < 2) return undefined;
-  const match = fs.readdirSync(cwd).find(f => f === locate);
-  if (match) return match;
+  const found = fs.readdirSync(cwd).some(f => f === locate);
+  if (found) return path.join(cwd, locate);
   return find(locate, path.join(cwd, ".."));
 }
 
