@@ -21,8 +21,6 @@ globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("beta");
 
-const isPnP = process.versions?.pnp ? true : false
-
 const findAny = (path, name) => {
   for (var ext of [".js", ".ts", ".mjs", ".mts"]) {
     const file = join(path, name + ext);
@@ -121,9 +119,8 @@ prog
         .join(" ")
     );
     spawn(
-      isPnP ? "yarn" : "vite",
+      "vite",
       [
-        ...(isPnP ? ["run", "vite"] : []),
         "dev",
         ...(config ? ["--config", config.configFile] : []),
         ...(port ? ["--port", port] : []),
@@ -134,7 +131,13 @@ prog
         stdio: "inherit",
         env: {
           ...process.env,
-          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : undefined}`
+          NODE_OPTIONS: [
+            process.env.NODE_OPTIONS,
+            "--experimental-vm-modules",
+            inspect ? "--inspect" : undefined,
+          ]
+            .filter(Boolean)
+            .join(" "),
         }
       }
     );
@@ -349,9 +352,8 @@ prog
           console.time(c.blue("solid-start") + c.magenta(" index.html rendered in"));
           let port = await (await import("get-port")).default();
           let proc = spawn(
-            isPnP ? "yarn" : "vite",
+            "vite",
             [
-              ...(isPnP ? ["run", "vite"] : []),
               "dev",
               "--mode",
               "production",
@@ -364,7 +366,12 @@ prog
               env: {
                 ...process.env,
                 START_INDEX_HTML: "true",
-                NODE_OPTIONS: "--experimental-vm-modules"
+                NODE_OPTIONS: [
+                  process.env.NODE_OPTIONS,
+                  "--experimental-vm-modules",
+                ]
+                  .filter(Boolean)
+                  .join(" "),
               }
             }
           );
