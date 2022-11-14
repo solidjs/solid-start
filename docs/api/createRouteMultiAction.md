@@ -8,12 +8,13 @@ active: true
 
 # createRouteMultiAction
 
-##### `createRouteMultiAction` creates a controller for dispatching and managing multiple simultaneous submissions of an async user action
+##### `createRouteMultiAction` creates a controller for dispatching and managing multiple simultaneous submissions of an async user action.
 
 <div class="text-lg">
 
 ```tsx twoslash
-import { createRouteMultiAction } from 'solid-start'
+import { createRouteMultiAction } from 'solid-start';
+
 async function sendMessage(message: string) {
 }
 
@@ -22,10 +23,10 @@ async function getMessages() {
     { text: 'Hello' },
     { text: 'How are you?' },
     { text: 'Goodbye' },
-  ]
+  ];
 }
 // ---cut---
-const [sending, send] = createRouteMultiAction(sendMessage)
+const [sending, send] = createRouteMultiAction(sendMessage);
 ```
 
 </div>
@@ -44,7 +45,7 @@ async function getMessages() {
     { text: 'Hello' },
     { text: 'How are you?' },
     { text: 'Goodbye' },
-  ]
+  ];
 }
 
 async function sendMessage(message: string) {
@@ -54,28 +55,24 @@ async function sendMessage(message: string) {
 ```tsx twoslash {4,8}
 // @include: lib
 // ---cut---
-import { createRouteMultiAction } from 'solid-start'
+import { createRouteMultiAction } from 'solid-start';
 
 function Component() {
-  const [sending, send] = createRouteMultiAction(sendMessage)
+  const [sending, send] = createRouteMultiAction(sendMessage);
 
   return (
     <div>
       <button onClick={() => send('Hello World')}>Send</button>
     </div>
-  )
+  );
 }
 ```
 
 Here `sending` is an array of all the submissions. Each submission has its `input` and a `pending` property that we can use to show a pending indicator or optimistic UI. Each submission also has its own `error` property that we can use to show an error message. They have their own `retry()` and `clear()` methods as well.
 
-A chat application is not just a send button. But let's see how this works with a message list
-
-
 ### Refetching data after an action
 
 You don't have to do anything more to have your `createRouteData` functions refetch data after an action.  The `createRouteData` functions will automatically refetch data after an action is performed. 
-
 
 ### Invalidating specific data after an action
 
@@ -83,25 +80,26 @@ If you don't want to refetch all the data, you can use the `invalidate` param to
 
 ### Optimistic UI
 
-Now, since we have Javascript in our hands, we can give the user a more enhanced experience. Sometimes this means pretending an action was successful to provide a more response user experience. This is called an optimistic UI. We can do this in a neat way where you don't need to manage extra state. You have access to the `input` on the submission, so you know what data was sent to the action. And using the `pending` property, you can use the `input` as part of the visible UI. For example, in a list of enrolled classes, you can add the class to the list before the action is complete. Then, if the action fails, you can remove the class from the list. 
+Now, since we have Javascript in our hands, we can give the user a more enhanced experience. Sometimes this means pretending an action was successful to provide a more response user experience. This is called an optimistic UI. We can do this in a neat way where you don't need to manage extra state. You have access to the `input` on the submission, so you know what data was sent to the action.
+
+Using the `pending` property, you can use the `input` as part of the visible UI. For example, in a list of enrolled classes, you can add the class to the list before the action is complete. Then, if the action fails, you can remove the class from the list. 
 
 ### Show a pending indicator for an action in progress
 
 We want to show a pending status while the action is being performed. The submission has a `pending` property that we can use to show a pending indicator.
 
-
 ```tsx twoslash {17-19}
 // @include: lib
 // ---cut---
-import { createRouteMultiAction, createRouteData } from 'solid-start'
-import { For } from 'solid-js'
+import { createRouteMultiAction, createRouteData } from 'solid-start';
+import { For } from 'solid-js';
 
 export default function EnrollmentPage() {
-  const messages = createRouteData(getMessages, { key: 'chat' })
+  const messages = createRouteData(getMessages, { key: 'chat' });
   const [sending, send] = createRouteMultiAction(
     sendMessage, 
     { invalidate: ['chat'] }
-  )
+  );
 
   return (
     <div>
@@ -115,7 +113,7 @@ export default function EnrollmentPage() {
       </ul>
       <button onClick={() => send('Hello World')}>Send</button>
     </div>
-  )
+  );
 }
 ```
 
@@ -126,15 +124,15 @@ If an error occurs, each submission will have an `error` property. We can use th
 ```tsx twoslash {21-24} filename="routes/enrollment.tsx"
 // @include: lib
 // ---cut---
-import { createRouteMultiAction, createRouteData } from 'solid-start'
-import { For, Show } from 'solid-js'
+import { createRouteMultiAction, createRouteData } from 'solid-start';
+import { For, Show } from 'solid-js';
 
 export default function EnrollmentPage() {
-  const messages = createRouteData(getMessages, { key: 'chat' })
+  const messages = createRouteData(getMessages, { key: 'chat' });
   const [sending, send] = createRouteMultiAction(
     sendMessage, 
     { invalidate: ['chat'] }
-  )
+  );
 
   return (
     <div>
@@ -156,7 +154,7 @@ export default function EnrollmentPage() {
       </ul>
       <button onClick={() => send('Hello World')}>Send</button>
     </div>
-  )
+  );
 }
 ```
 
@@ -169,10 +167,10 @@ Call `createRouteMultiAction` inside a component to create an action controller.
 ```ts twoslash
 // @include: lib
 // ---cut---
-import { createRouteMultiAction } from 'solid-start'
+import { createRouteMultiAction } from 'solid-start';
 
 function Component() {
-  const [sending, send] = createRouteMultiAction(sendMessage)
+  const [sending, send] = createRouteMultiAction(sendMessage);
 }
 ```
 
@@ -190,8 +188,6 @@ The second item also has another property called `Form` which is a progressively
   - `retry()` - Resets the submission with the same input
   - `clear()` - Clears the state of the submission.
 
-`enroll` is a function that takes the input to the action and dispatches the action. It returns a promise that resolves to the result of the action.
-
-This is the behaviour of the `enroll` function:
+`enroll` is a function that takes the input to the action and dispatches the action. It returns a promise that resolves to the result of the action. This is the behavior of the `enroll` function:
 
 <img src="/actions-machine.png" />

@@ -8,7 +8,7 @@ active: true
 
 # createServerMultiAction$
 
-##### `createServerMultiAction$` creates a controller for dispatching and managing multiple simultaneous submissions of an async user action, where the action always runs on the server
+##### `createServerMultiAction$` creates a controller for dispatching and managing multiple simultaneous submissions of an async user action, where the action always runs on the server.
 
 <div class="text-lg">
 

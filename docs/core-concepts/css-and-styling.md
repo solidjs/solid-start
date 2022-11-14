@@ -32,14 +32,15 @@ And then import our CSS file in the component:
 
 ```tsx
 import "./Button.css";
+
 function Button(props) {
   return <button>{props.text}</button>;
 }
 ```
 
-You may notice that the CSS you just imported is _global_. This means that all buttons (not just the ones created via this component) will be blue!
+You may notice that the CSS you just imported is _global_. This means that all buttons (not just the ones created via this component) will be blue! In many cases, global CSS is not the intended behavior. One simple solution is to make use of CSS features like [class selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors).
 
-In many cases, global CSS is not the intended behavior. One simple solution is to make use of CSS features like [class selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors). Typically, this would involve adding a class to the root element, and then updating each CSS rule to use a child selector. This works excellent for a small component, but for a complex one, adding a child selector to each CSS rule for the component can get tedious.
+Typically, this would involve adding a class to the root element, and then updating each CSS rule to use a child selector. This works excellent for a small component, but for a complex one, adding a child selector to each CSS rule for the component can get tedious.
 
 ```css
 div.card {
@@ -55,14 +56,15 @@ div.card > p {
 
 SolidStart also supports [vite's CSS modules](https://vitejs.dev/guide/features.html#css-modules). Through [CSS modules](https://github.com/css-modules/css-modules), you can scope certain CSS to a component. This means that you can use the same CSS class in two components, and have both of them styled differently.
 
-To use the feature, change the file extension from `.css` to `.module.css` (or from `.scss` or `.sass` to `.module.scss` or `.module.sass`) and update the import accordingly.
+To use the feature, change the file extension from `.css` to `.module.css` (or from `.scss` or `.sass` to `.module.scss` or `.module.sass`) and update the import accordingly. You will notice that suddenly your CSS stops working!
 
-You will notice that suddenly your CSS stops working! This is because behind the scenes, classes defined in the CSS module are being renamed to a series of random letters. When we hard code classes using the class attribute (`class="card"`), solid does not know it should rename card to something different.
+This is because behind the scenes, classes defined in the CSS module are being renamed to a series of random letters. When we hard code classes using the class attribute (`class="card"`), Solid does not know it should rename card to something different.
 
 To fix this, you can import classes used in your CSS module. You can think of this import as an object of `humanClass: generatedClass`. We reference the key (the class name we wrote!), and get back the unique, generated class name.
 
 ```tsx
 import styles from "./Card.module.css";
+
 function Card(props) {
   return <div class={styles.card}>{props.text}</div>;
 }
@@ -80,7 +82,7 @@ Then change the extension from `.css` to `.scss` and update your imports accordi
 
 ## To-do
 
-- can use tailwind etc
+- Can use Tailwind, etc.
 
-- SSR CSS and using some CSS-in-js solution that requires you to render the stylesheet separately and add it to the HTML before sending it to client
-  - try to use https://github.com/solidjs/solid-styled-components as an example
+- SSR CSS and using some CSS-in-js solution that requires you to render the stylesheet separately and add it to the HTML before sending it to client.
+  - Try to use https://github.com/solidjs/solid-styled-components as an example.
