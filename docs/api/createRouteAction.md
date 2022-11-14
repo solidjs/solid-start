@@ -8,16 +8,17 @@ active: true
 
 # createRouteAction
 
-##### `createRouteAction` creates a controller for dispatching and managing the submission state of an async user action
+##### `createRouteAction` creates a controller for dispatching and managing the submission state of an async user action.
 
 <div class="text-lg">
 
 ```tsx twoslash
-import { createRouteAction } from 'solid-start'
+import { createRouteAction } from 'solid-start';
+
 async function enrollInClass() {
 }
 // ---cut---
-const [enrolling, enroll] = createRouteAction(enrollInClass)
+const [enrolling, enroll] = createRouteAction(enrollInClass);
 ```
 
 </div>
@@ -55,11 +56,11 @@ async function getClasses() {
 ```tsx twoslash {10,14-16}
 // @include: lib
 // ---cut---
-import { createRouteAction } from 'solid-start'
-import { Show } from 'solid-js'
+import { createRouteAction } from 'solid-start';
+import { Show } from 'solid-js';
 
 function EnrollmentPage() {
-  const [enrolling, enroll] = createRouteAction(enrollInClass)
+  const [enrolling, enroll] = createRouteAction(enrollInClass);
   return (
     <div>
       <button
@@ -72,7 +73,7 @@ function EnrollmentPage() {
         <div>Enrolling...</div>
       </Show>
     </div>
-  )
+  );
 }
 ```
 
@@ -86,11 +87,11 @@ async function enrollInClass(className: string): Promise<void> {
   throw new Error('You are not allowed to enroll in this class')
 }
 // ---cut---
-import { createRouteAction } from 'solid-start'
-import { Show } from 'solid-js'
+import { createRouteAction } from 'solid-start';
+import { Show } from 'solid-js';
 
 export default function EnrollmentPage() {
-  const [enrolling, enroll] = createRouteAction(enrollInClass)
+  const [enrolling, enroll] = createRouteAction(enrollInClass);
   return (
     <div>
       <button  
@@ -107,10 +108,9 @@ export default function EnrollmentPage() {
         <button onClick={() => enrolling.retry()}>Retry</button>
       </Show>
     </div>
-  )
+  );
 }
 ```
-
 
 ### Showing a success message
 
@@ -119,11 +119,11 @@ If you want to show a success message after an action is complete, you can use t
 ```tsx twoslash {17-19} filename="routes/enrollment.tsx"
 // @include: lib
 // ---cut---
-import { createRouteAction, createRouteData } from 'solid-start'
-import { Show, For } from 'solid-js'
+import { createRouteAction, createRouteData } from 'solid-start';
+import { Show, For } from 'solid-js';
 
 export function EnrollmentPage() {
-  const [enrolling, enroll] = createRouteAction(enrollInClass)
+  const [enrolling, enroll] = createRouteAction(enrollInClass);
   return (
     <div>
       <button
@@ -139,14 +139,13 @@ export function EnrollmentPage() {
         <div>Successfully enrolled in {enrolling.result}</div>
       </Show>
     </div>
-  )
+  );
 }
 ```
 
 ### Refetching data after an action
 
 You don't have to do anything more to have your `createRouteData` functions refetch data after an action.  The `createRouteData` functions will automatically refetch data after an action is performed. 
-
 
 ### Invalidating specific data after an action
 
@@ -155,15 +154,15 @@ If you don't want to refetch all the data, you can use the `invalidate` param to
 ```tsx twoslash {5,8} filename="routes/enrollment.tsx"
 // @include: lib
 // ---cut---
-import { createRouteAction, createRouteData } from 'solid-start'
-import { Show, For } from 'solid-js'
+import { createRouteAction, createRouteData } from 'solid-start';
+import { Show, For } from 'solid-js';
 
 export default function EnrollmentPage() {
-  const classes = createRouteData(getClasses, { key: 'classes' })
+  const classes = createRouteData(getClasses, { key: 'classes' });
   const [enrolling, enroll] = createRouteAction(
     enrollInClass, 
     { invalidate: ['classes'] }
-  )
+  );
 
   return (
     <div>
@@ -185,27 +184,28 @@ export default function EnrollmentPage() {
         <div>{enrolling.error.message}</div>
       </Show>
     </div>
-  )
+  );
 }
 ```
 
 ### Optimistic UI
 
-Now, since we have Javascript in our hands, we can give the user a more enhanced experience. Sometimes this means pretending an action was successful to provide a more response user experience. This is called an optimistic UI. We can do this in a neat way where you don't need to manage extra state. You have access to the `input` on the submission, so you know what data was sent to the action. And using the `pending` property, you can use the `input` as part of the visible UI. For example, in a list of enrolled classes, you can add the class to the list before the action is complete. Then, if the action fails, you can remove the class from the list. 
+Now, since we have Javascript in our hands, we can give the user a more enhanced experience. Sometimes this means pretending an action was successful to provide a more response user experience. This is called an optimistic UI. We can do this in a neat way where you don't need to manage extra state. You have access to the `input` on the submission, so you know what data was sent to the action.
 
+Using the `pending` property, you can use the `input` as part of the visible UI. For example, in a list of enrolled classes, you can add the class to the list before the action is complete. Then, if the action fails, you can remove the class from the list. 
 
 ```tsx twoslash {19-21} filename="routes/enrollment.tsx"
 // @include: lib
 // ---cut---
-import { createRouteAction, createRouteData } from 'solid-start'
-import { Show, For } from 'solid-js'
+import { createRouteAction, createRouteData } from 'solid-start';
+import { Show, For } from 'solid-js';
 
 export function EnrollmentPage() {
-  const classes = createRouteData(getClasses, { key: 'classes' })
+  const classes = createRouteData(getClasses, { key: 'classes' });
   const [enrolling, enroll] = createRouteAction(
     enrollInClass, 
     { invalidate: ['classes'] }
-  )
+  );
 
   return (
     <div>
@@ -233,7 +233,7 @@ export function EnrollmentPage() {
         <div>{enrolling.error.message}</div>
       </Show>
     </div>
-  )
+  );
 }
 ```
 
@@ -244,13 +244,13 @@ export function EnrollmentPage() {
 
 Call `createRouteAction` inside a component to create an action controller.
 
-```ts twoslash
+```tsx twoslash
 // @include: lib
 // ---cut---
-import { createRouteAction } from 'solid-start'
+import { createRouteAction } from 'solid-start';
 
 function Component() {
-  const [enrolling, enroll] = createRouteAction(enrollInClass)
+  const [enrolling, enroll] = createRouteAction(enrollInClass);
 }
 ```
 
@@ -266,11 +266,11 @@ The second item also has another property called `Form` which is a progressively
 - `input` - The input that was passed to the action.
 - `result` - The data returned from the action.
 - And the following methods:
-  - `retry()` - Resets the submission with the same input
+  - `retry()` - Resets the submission with the same input.
   - `clear()` - Clears the state of the submission.
 
 `enroll` is a function that takes the input to the action and dispatches the action. It returns a promise that resolves to the result of the action.
 
-This is the behaviour of the `enroll` function:
+This is the behavior of the `enroll` function:
 
 <img src="/actions-machine.png" />

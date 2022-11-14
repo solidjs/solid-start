@@ -8,7 +8,7 @@ active: true
 
 # Navigate
 
-##### `Navigate` is a component that immediately navigates to a new location, like a redirect
+##### `Navigate` is a component that immediately navigates to a new location, like a redirect.
 
 <div class="text-lg">
 

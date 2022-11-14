@@ -8,8 +8,7 @@ active: true
 
 # Style
 
-##### `Style` is a component that allows you to add a `style` element to your document's `head`
-
+##### `Style` is a component that allows you to add a `style` element to your document's `head`.
 
 <div class="text-lg">
 
