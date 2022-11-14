@@ -51,7 +51,7 @@ This is an ideal use case when we want to have a human-readable, stable referenc
 
 ## Importing assets
 
-Vite allows you to import assets directly into your Solid components. For example, in the following component imports the `solid.png` file directly.
+Vite allows you to import assets directly into your Solid components. For example, the following component imports the `solid.png` file directly.
 
 When you use imports, Vite will create a hashed filename. For example, importing `solid.png` may get hashed as `solid.2d8efhg.png`.
 
