@@ -8,7 +8,7 @@ active: true
 
 # server$
 
-##### `server$` takes a function that should only run on the server and compiles its usage into an RPC call to the server
+##### `server$` takes a function that should only run on the server and compiles its usage into an RPC call to the server.
 
 <div class="text-lg">
 

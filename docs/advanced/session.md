@@ -56,7 +56,6 @@ const storage = createCookieSessionStorage({
     httpOnly: true
   }
 });
-
 ```
 
 ```twoslash include getUser
@@ -89,9 +88,11 @@ We use a `SessionStorage` to manage the session data on the server. We can creat
 // @include: cookie
 ```
 
-The `SessionStorage` can be passed the cookie to get the session data about the request. How the session data is stored and retrieved is up to the implementation of the `SessionStorage`. It can either save all the state within the `cookie` itself, which `createCookieSessionStorage` does, or it can save the session data in a database, and the cookie merely contains a session id.
+The `SessionStorage` can be passed the cookie to get the session data about the request. How the session data is stored and retrieved is up to the implementation of the `SessionStorage`.
 
-So, lets use this `storage` to get the session data for the request:
+It can either save all the state within the `cookie` itself, which `createCookieSessionStorage` does, or it can save the session data in a database, and the cookie merely contains a session id.
+
+Let's use this `storage` to get the session data for the request:
 
 ```tsx twoslash {3} filename="/lib/session.ts"
 // @include: hogwarts
@@ -139,14 +140,13 @@ export function routeData({ params }: RouteDataArgs) {
     { key: () => params.house }
   );
 }
-
 ```
-
 
 ```tsx twoslash filename="/routes/session.server.ts"
 // @module: esnext
 import { redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
+
 const db = {
   user: {} as any
 };

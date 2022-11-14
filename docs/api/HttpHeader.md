@@ -8,7 +8,7 @@ active: true
 
 # HttpHeader
 
-##### `HttpHeader` is a component that allows you set a header on the HTTP response sent by the server
+##### `HttpHeader` is a component that allows you set a header on the HTTP response sent by the server.
 
 <div class="text-lg">
 
@@ -47,9 +47,7 @@ Keep in mind, when streaming responses(`renderStream`), HTTP headers can only be
 
 ### `<HttpHeader />`
 
-Import from `solid-start/server`.
-
-Use it anywhere in your component tree, and it will add the header if that part of the tree is rendered on the server.
+Import from `solid-start/server` and use it anywhere in your component tree. It will add the header if that part of the tree is rendered on the server.
 
 ```tsx twoslash
 import { HttpHeader } from "solid-start/server";

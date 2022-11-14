@@ -8,7 +8,7 @@ active: true
 
 # Outlet
 
-##### `Outlet` is a component that renders the matched child route component inside a layout component
+##### `Outlet` is a component that renders the matched child route component inside a layout component.
 
 <div class="text-lg">
 
@@ -47,7 +47,7 @@ export default function UsersLayout() {
       <Outlet/>
       <A href="/">Back Home</A>
     </div>
-  )
+  );
 }
 ```
 
@@ -67,7 +67,7 @@ export default function OurRoutes() {
 
 Now our `/users` and `/users/:id` routes share a layout as each nested route elements will appear inside the parent element at the location where the `<Outlet/>` was declared.
 
-You can nest indefinitely - just remember that only leaf nodes will become their own routes. In this example, the only route created is `/layer1/layer2`, and it appears as three nested divs.
+You can nest indefinitely but remember that only leaf nodes will become their own routes. In this example, the only route created is `/layer1/layer2`, and it appears as three nested divs.
 
 ```tsx twoslash filename="routes.tsx"
 // ---cut---

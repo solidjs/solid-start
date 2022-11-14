@@ -8,7 +8,7 @@ active: true
 
 # Scripts
 
-##### `Scripts` is a collection of scripts that can be used to build your app
+##### `Scripts` is a collection of scripts that can be used to build your app.
 
 <div class="text-lg">
 
