@@ -8,7 +8,7 @@ active: true
 
 # useNavigate
 
-##### `useNavigate` provides a function for navigating routes
+##### `useNavigate` provides a function for navigating routes.
 
 <div class="text-xl">
 
@@ -73,10 +73,10 @@ function Component() {
 
 A function to do route navigation. The method accepts a path to navigate to and an optional object with the following options:
 
-- resolve (_boolean_, default `true`): resolve the path against the current route
-- replace (_boolean_, default `false`): replace the history entry
-- scroll (_boolean_, default `true`): scroll to top after navigation
-- state (_any_, default `undefined`): pass custom state to `location.state`
+- `resolve` (_boolean_, default `true`): resolve the path against the current route.
+- `replace` (_boolean_, default `false`): replace the history entry.
+- `scroll` (_boolean_, default `true`): scroll to top after navigation.
+- `state` (_any_, default `undefined`): pass custom state to `location.state`.
 
 __Note:__ The state is serialized using the [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) which does not support all object types.
 

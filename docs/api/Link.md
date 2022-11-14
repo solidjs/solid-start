@@ -8,7 +8,7 @@ active: true
 
 # Link
 
-##### `Link` is a component that renders a `<link>` element in the document's `<head>`
+##### `Link` is a component that renders a `<link>` element in the document's `<head>`.
 
 <div class="text-lg">
 
@@ -67,7 +67,6 @@ export default function Root() {
     </Html>
   );
 }
-
 ```
 
 ### Adding links from routes

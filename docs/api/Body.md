@@ -30,7 +30,6 @@ It is also the starting point for hydration for general Server-Side rendering an
 
 It is a required component and should usually be placed as an immediate child of the `Html` component, after the `Head` element. It should include a `Scripts` component and render a `Routes` component to render your application.
 
-
 ```tsx twoslash {7-13} filename="root.tsx"
 function MyNav() {
   return <></>

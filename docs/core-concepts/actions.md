@@ -6,9 +6,9 @@ order: 98
 
 # Actions
 
-One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid's answer to this is _actions_. Actions give you the ability to specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. 
+One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid's answer to this is _actions_.
 
-They generally represent a `POST` request.
+Actions give you the ability to specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. Actions are isomorphic and generally represent a `POST` request.
 
 Actions are isomorphic. This means that a submission can be handled on the server _or_ the client, whichever is optimal. They represent the server component of an [HTML form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form), and even help you use HTML forms to submit data.
 
@@ -28,7 +28,9 @@ export function MyComponent() {
 }
 ```
 
-This `echo` action will act as your backend, however you can substitute it for any API, provided you are ok with it running on the client. Typically, route actions are used with some sort of solution like fetch or graphql, and return either a `Response` such as a redirect (we are not returning anything quite yet!) or any value. If you want to ensure the action only runs on the server for things like databases, you will want to use `createServerAction$`. It's been introduced below.
+This `echo` action will act as your backend, however you can substitute it for any API, provided you are ok with it running on the client. Typically, route actions are used with some sort of solution like fetch or GraphQL.
+
+These will return either a `Response` such as a redirect (we are not returning anything quite yet!) or any value. If you want to ensure the action only runs on the server for things like databases, you will want to use `createServerAction$`, introduced below.
 
 Naturally, this action won't do anything quite yet. We still need to call it somewhere! For now, let's call it manually from some component using the submit function returned as the second value from `createRouteAction`.
 
@@ -69,9 +71,11 @@ While this method of using actions works, it leaves the implementation details o
 
 ## Using forms to submit data
 
-We highly recommend using HTML forms as your method to submit data with actions. HTML forms can be used even before JavaScript loads, leading to instantly interactive applications. They have the added benefit of implicit accessibility, and can save you valuable time that would have otherwise been spent designing a UI library that will never have the aforementioned benefits.
+We highly recommend using HTML forms as your method to submit data with actions. HTML forms can be used even before JavaScript loads, leading to instantly interactive applications.
 
-When forms are used to submit actions, the first argument is an instance of [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData). Writing forms using actions is trivial, simply use the `Form` method of your action instead of the normal `<form>` tag, and walk away with amazing, progressively enhanced forms!
+They have the added benefit of implicit accessibility. They can save you valuable time that would have otherwise been spent designing a UI library that will never have the aforementioned benefits.
+
+When forms are used to submit actions, the first argument is an instance of [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData). To write a form using actions, simply use the `Form` method of your action instead of the normal `<form>` tag. You can then walk away with amazing, progressively enhanced forms!
 
 If you don't return a `Response` from your action, the user will stay on the same page and your resources will be re-triggered. You can also return a `redirect` or `ResponseError`.
 
@@ -105,25 +109,25 @@ This `Form` is an enhanced version of the normal `form`. Its submit handler has 
 
 ## Retriggering resources
 
-- retriggers route resources
+- Retriggers route resources.
 
 ## Errors
 
-- Errors, error field that's populated if the submission errored, and a status field that's set to `error`
-  - if you read the `submissionState.error` field in your code (JSX, or effects) then the error is considered user-handled, and we don't trigger ErrorBoundaries.
-  - if you don't use the error field, then we trigger the error boundary on an error because we assume it's unexpected for you
+- Errors, error field that's populated if the submission errored, and a status field that's set to `error`.
+  - If you read the `submissionState.error` field in your code (JSX, or effects) then the error is considered user-handled, and we don't trigger ErrorBoundaries.
+  - If you don't use the error field, then we trigger the error boundary on an error because we assume it's unexpected for you.
 - How to do form errors? Where to put... Here or `ResponseError`?
 
 ## Server Actions
 
 Sometimes we need to make sure our action _only_ runs on the server. This is useful for:
 
-- accessing internal APIs
-- proxying external APIs
-  - To use server secrets
-  - To reduce the response payload by postprocessing
-  - To bypass CORS
-- running code incompatible with browsers
-- or even connecting directly to a database (take caution, opinions on if this is a good idea are mixed. You should consider separating your backend and frontend.)
+- Accessing internal APIs.
+- Proxying external APIs.
+  - To use server secrets.
+  - To reduce the response payload by postprocessing.
+  - To bypass CORS.
+- Running code incompatible with browsers.
+- Or even connecting directly to a database. (Take caution, opinions on if this is a good idea are mixed. You should consider separating your backend and frontend).
 
 To do this, simply replace `createRouteAction` with `createServerAction$` and the action will always be run on the server.

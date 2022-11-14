@@ -8,7 +8,7 @@ active: true
 
 # redirect
 
-##### `redirect` is a helper to create redirect [`Response`][Response] objects
+##### `redirect` is a helper to create redirect [`Response`][Response] objects.
 
 <div class="text-lg">
 
@@ -24,10 +24,8 @@ redirect("/my-next-destination");
 
 ## Usage
 
-`redirect` is a helper for creating [responses][Response] objects with the `Location` header and a redirect status code.
+`redirect` is a helper for creating [responses][Response] objects with the `Location` header and a redirect status code. It is useful for sending redirects from `createServerData$`, `createServerAction$` and their variants. [API Routes][APIRoutes] can also use it to send redirects.
 
-It is useful for sending redirects from `createServerData$`, `createServerAction$` and their variants. [API Routes][APIRoutes] can also use it to send redirects.
-s
 ```tsx twoslash
 import { redirect } from "solid-start/server";
 
@@ -40,9 +38,13 @@ export function GET() {
 
 ### `redirect(location: string)`
 
-Use `redirect('/somewhere')` to create a [`Response`][Response] that's going to redirect the user to `/somewhere`. It will set the [Location][Location] header.
+Use `redirect('/somewhere')` to create a [`Response`][Response] that's going to redirect the user to `/somewhere`. It will set the [Location][Location] header. Basically wherever a [`Response`][Response] is expected, it is useful inside.
 
-It is useful inside [API Routes](/core-concepts/api-routes), [`server$`](/api/server$) functions, and [middleware](/advanced/middleware). Basically wherever a [`Response`][Response] is expected.
+For example:
+
+- [API Routes](/core-concepts/api-routes)
+- [`server$`](/api/server$) functions
+- [Middleware](/advanced/middleware)
 
 ```ts twoslash
 import { redirect } from "solid-start/server";
