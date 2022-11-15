@@ -8,8 +8,8 @@ active: true
 # What is SolidStart?
 
 <aside title="Beware of dragons" type="warning">
-  We are very excited about SolidStart, but it is currently in beta. There will very likely be **bugs and
-  missing documentation**. Come at it with a growth attitude, have fun, and don't use it yet for
+  We are very excited about SolidStart, but it is currently in beta. There will very likely be <b>bugs and
+  missing documentation</b>. Come at it with a growth attitude, have fun, and don't use it yet for
   anything critical. If all this darkness doesn't phase you, press onward, and consider joining the
   <a href="https://discord.com/invite/solidjs" target="_blank">Discord</a> to ask questions. We would love to meet you.
 </aside>
