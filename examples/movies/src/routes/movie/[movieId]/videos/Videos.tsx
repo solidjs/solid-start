@@ -1,4 +1,4 @@
-import { For, onMount, Show } from "solid-js";
+import { For, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Modal } from "~/components/Modal";
 
@@ -15,12 +15,6 @@ export default function Videos(props) {
       ?.map(video => video.type)
       .filter((video, index, arr) => arr.indexOf(video) === index);
   };
-
-  onMount(() => {
-    if (props.videos) {
-      console.log(props.videos);
-    }
-  });
 
   const onFilterChange = e => {
     setState("activeFilter", e.currentTarget.value);

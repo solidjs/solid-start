@@ -11,7 +11,7 @@ body.modal-open {
   left: 0;
   z-index: 999;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
   cursor: pointer;
   background-color: #000;
   @media (min-width: $breakpoint-large) {

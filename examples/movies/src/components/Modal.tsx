@@ -1,6 +1,6 @@
 import { debounce } from "@solid-primitives/scheduled";
-import { createEffect, createSignal, on, onCleanup, onMount, Show } from "solid-js";
-import { Portal } from "solid-js/web";
+import { createEffect, createSignal, Match, on, onCleanup, onMount, Switch } from "solid-js";
+import { createStore } from "solid-js/store";
 import ChevronLeftIcon from "~icons/icons/chevron-left.svg?inline";
 import ChevronRightIcon from "~icons/icons/chevron-right.svg?inline";
 import CrossIcon from "~icons/icons/cross.svg?inline";
@@ -19,27 +19,25 @@ interface Props {
 export const Modal = props => {
   const [modalRef, setModalRef] = createSignal<HTMLElement>();
 
-  const [selected, setSelected] = createSignal<number>(props.startAt ?? 0);
-  const [activeItem, setActiveItem] = createSignal<any>();
-
-  const [focusedElBeforeOpen, setFocusedElBeforeOpen] = createSignal<HTMLElement>(
-    document.activeElement as HTMLElement
-  );
-  const [focusableEls, setFocusableEls] = createSignal<HTMLElement[]>();
-
-  const [lastFocusableEl, setLastFocusableEl] = createSignal<HTMLElement>();
-  const [firstFocusableEl, setFirstFocusableEl] = createSignal<HTMLElement>();
+  const [state, setState] = createStore({
+    selected: props.startAt ?? 0,
+    activeItem: null,
+    focusedElBeforeOpen: document.activeElement as HTMLElement,
+    focusableEls: [],
+    lastFocusableEl: undefined,
+    firstFocusableEl: undefined
+  });
 
   const handleForwardTab = e => {
-    if (document.activeElement === lastFocusableEl()) {
+    if (document.activeElement === state.lastFocusableEl) {
       e.preventDefault();
-      firstFocusableEl().focus();
+      state.firstFocusableEl.focus();
     }
   };
   const handleBackwardTab = e => {
-    if (document.activeElement === firstFocusableEl()) {
+    if (document.activeElement === state.firstFocusableEl) {
       e.preventDefault();
-      lastFocusableEl().focus();
+      state.lastFocusableEl.focus();
     }
   };
 
@@ -59,7 +57,7 @@ export const Modal = props => {
       previous();
     } else if (e.keyCode === 9) {
       // tab
-      if (focusableEls().length === 1) {
+      if (state.focusableEls.length === 1) {
         e.preventDefault();
         return;
       }
@@ -91,14 +89,16 @@ export const Modal = props => {
   };
 
   createEffect(
-    on(selected, () => {
-      setActiveItem(props.data[selected()]);
-    })
+    on(
+      () => state.selected,
+      () => {
+        setState("activeItem", props.data[state.selected]);
+      }
+    )
   );
 
   onMount(() => {
-    setSelected(props.startAt);
-    const data = Array.from(
+    const availableFocusable = Array.from(
       modalRef().querySelectorAll(`
           a[href],
           area[href],
@@ -109,14 +109,17 @@ export const Modal = props => {
           [tabindex="0"]
         `)
     ) as HTMLElement[];
-    setFocusableEls(data);
-    const firstFocusableEl = focusableEls()[0];
-    const lastFocusableEl = focusableEls()[focusableEls().length - 1];
-    setFirstFocusableEl(firstFocusableEl);
-    setLastFocusableEl(lastFocusableEl);
-    // focus on the first element
+    const firstFocusableEl = availableFocusable[0];
+    const lastFocusableEl = availableFocusable[availableFocusable.length - 1];
+    setState(prev => ({
+      ...prev,
+      focusableEls: availableFocusable,
+      firstFocusableEl,
+      lastFocusableEl
+    }));
+
     firstFocusableEl.focus();
-    // calculate iframe size for responsive sizing on resize
+
     if (props.type === "iframe") {
       handleIframeSize();
       window.addEventListener("resize", () => {
@@ -133,8 +136,8 @@ export const Modal = props => {
         debounce(handleIframeSize, 600);
       });
     }
-    if (focusedElBeforeOpen()) {
-      focusedElBeforeOpen().focus();
+    if (state.focusedElBeforeOpen) {
+      state.focusedElBeforeOpen.focus();
     }
   });
 
@@ -143,93 +146,98 @@ export const Modal = props => {
   const label = () => {
     if (props.ariaLabel) {
       return props.ariaLabel;
-    } else if (activeItem()?.name) {
-      return activeItem().name;
+    } else if (state.activeItem?.name) {
+      return state.activeItem.name;
     } else {
       return null;
     }
   };
 
-  const isIFrame = () => props.type === "iframe" && activeItem();
+  const isIFrame = () => props.type === "iframe" && state.activeItem;
 
-  const isImage = () => props.type === "image" && activeItem()?.src;
+  const isImage = () => props.type === "image" && state.activeItem?.file_path;
 
   const previous = () => {
-    setSelected(prev => (prev - 1 + props.data.length) % props.data.length);
+    setState("selected", prev => (prev - 1 + props.data.length) % props.data.length);
   };
   const next = () => {
-    setSelected(prev => (prev + 1) % props.data.length);
+    setState("selected", prev => (prev + 1) % props.data.length);
   };
   return (
-    <Portal>
-      <div
-        ref={setModalRef}
-        class={"modal"}
-        classList={{
-          "modal--nav": showNav(),
-          [`modal--${props.type}`]: true,
-          [props.modifier]: true
-        }}
-        tabIndex={-1}
-        aria-hidden="false"
-        role="dialog"
-        onClick={handleClose}
-      >
-        <div class={"modal__wrap"}>
-          <div class={"modal__body"} onClick={e => e.stopPropagation()}>
+    <div
+      ref={setModalRef}
+      class={"modal"}
+      classList={{
+        "modal--nav": showNav(),
+        [`modal--${props.type}`]: true,
+        [props.modifier]: true
+      }}
+      tabIndex={-1}
+      aria-hidden="false"
+      aria-label={label()}
+      role="dialog"
+      onClick={handleClose}
+    >
+      <div class={"modal__wrap"}>
+        <div class={"modal__body"} onClick={e => e.stopPropagation()}>
+          <button
+            class={"modal__close"}
+            aria-label="Close"
+            type="button"
+            onClick={e => {
+              e.stopPropagation();
+              handleClose();
+            }}
+          >
+            <CrossIcon />
+          </button>
+
+          <div class={`modal__${props.type}`}>
+            <Switch>
+              <Match when={isIFrame()}>
+                <iframe
+                  src={state.activeItem.src}
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen
+                />
+              </Match>
+              <Match when={isImage()}>
+                <img src={`https://image.tmdb.org/t/p/original/${state.activeItem.file_path}`} />
+              </Match>
+            </Switch>
+          </div>
+
+          <div class={"modal__nav"}>
             <button
-              class={"modal__close"}
-              aria-label="Close"
+              class={"modal__arrow modal__arrow_prev"}
+              aria-label="Previous"
+              title="Previous"
               type="button"
               onClick={e => {
                 e.stopPropagation();
-                handleClose();
+                previous();
               }}
             >
-              <CrossIcon />
+              <ChevronLeftIcon />
             </button>
-
-            <div class={`modal__${props.type}`}>
-              <Show when={isIFrame()}>
-                <iframe src={activeItem().src} allow="autoplay; encrypted-media" allowfullscreen />
-              </Show>
-              <Show when={isImage()}>
-                <img src={activeItem().src} />
-              </Show>
+            <div class="modal__count">
+              {state.selected + 1} / {props.data.length}
             </div>
-
-            <div class={"modal__nav"}>
-              <button
-                class={"modal__arrow modal__arrow_prev"}
-                aria-label="Previous"
-                title="Previous"
-                type="button"
-                onClick={e => {
-                  e.stopPropagation();
-                  previous();
-                }}
-              >
-                <ChevronLeftIcon />
-              </button>
-              <div class="modal__count">
-                {selected() + 1} / {props.data.length}
-              </div>
-              <button
-                class={"modal__arrow modal__arrow_next"}
-                aria-label="Next"
-                title="Next"
-                type="button"
-                onClick={e => {
-                  e.stopPropagation();
-                  next();
-                }}
-              >
-                <ChevronRightIcon />
-              </button>
-            </div>
+            <button
+              class={"modal__arrow modal__arrow_next"}
+              aria-label="Next"
+              title="Next"
+              type="button"
+              onClick={e => {
+                e.stopPropagation();
+                next();
+              }}
+            >
+              <ChevronRightIcon />
+            </button>
           </div>
         </div>
       </div>
-    </Portal>
+    </div>
   );
 };
