@@ -1,0 +1,162 @@
+@import "~/assets/css/utilities/_variables.scss";
+
+body.modal-open {
+  overflow: hidden;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  overflow-x: hidden;
+  overflow-y: auto;
+  cursor: pointer;
+  background-color: #000;
+  @media (min-width: $breakpoint-large) {
+    padding: 4.4rem $layout-nav-width;
+  }
+}
+.modal__wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.modal__body {
+  position: relative;
+  margin: auto;
+  cursor: default;
+}
+.modal__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  padding: 0;
+  background: none;
+  @media (max-width: ($breakpoint-large - 1)) {
+    position: fixed;
+    left: 0;
+    width: 6rem;
+    height: 6rem;
+  }
+}
+.modal--nav {
+  @media (max-width: ($breakpoint-large - 1)) {
+    padding-bottom: 5rem;
+  }
+  .modal__image img {
+    @media (max-width: ($breakpoint-large - 1)) {
+      max-height: calc(100vh - 5rem);
+    }
+  }
+}
+.modal__nav {
+  position: absolute;
+  right: 0;
+  bottom: -4.4rem;
+  left: 0;
+  display: flex;
+  align-items: center;
+  height: 4.4rem;
+  @media (max-width: ($breakpoint-large - 1)) {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    justify-content: space-between;
+    height: 5rem;
+    background-color: #000;
+  }
+  @media (min-width: $breakpoint-large) {
+    justify-content: flex-end;
+  }
+}
+.modal__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  @media (max-width: ($breakpoint-large - 1)) {
+    flex: 1;
+    height: 5rem;
+  }
+  @media (min-width: $breakpoint-large) {
+    position: fixed;
+    top: 50%;
+    width: $layout-nav-width;
+    height: 10rem;
+    margin-top: -5rem;
+  }
+}
+@media (min-width: $breakpoint-large) {
+  .modal__arrow_prev {
+    left: 0;
+  }
+  .modal__arrow_next {
+    right: 0;
+  }
+}
+.modal__count {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+@media (min-width: $breakpoint-large) {
+  .modal--images {
+    .modal__close {
+      top: -4.4rem;
+    }
+  }
+}
+.modal__image {
+  &.lazyloading {
+    background: url("~assets/images/loader.svg") no-repeat center;
+  }
+  img {
+    max-height: calc(100vh);
+    @media (min-width: $breakpoint-large) {
+      max-height: calc(100vh - 8.8rem);
+    }
+  }
+}
+@media (min-width: $breakpoint-large) {
+  .modal--iframe {
+    .modal__close {
+      top: -4.4rem;
+    }
+  }
+}
+.modal__iframe {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: #000;
+    border: 0;
+  }
+}
+.modal-enter,
+.modal-leave-active {
+  opacity: 0;
+}
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}

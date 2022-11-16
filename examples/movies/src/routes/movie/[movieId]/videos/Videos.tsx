@@ -1,10 +1,17 @@
-import { createMemo, createSignal, For, onMount, Show } from "solid-js";
+import { For, onMount, Show } from "solid-js";
+import { createStore } from "solid-js/store";
+import { Modal } from "~/components/Modal";
 
 export default function Videos(props) {
-  const [activeFilter, setActiveFilter] = createSignal("all");
+  const [state, setState] = createStore({
+    activeFilter: "all",
+    activeVideos: props.videos,
+    modalVisible: false,
+    modalStartAt: 0
+  });
 
   const getVideoTypes = (): string[] => {
-    return props.videos
+    return state.activeVideos
       ?.map(video => video.type)
       .filter((video, index, arr) => arr.indexOf(video) === index);
   };
@@ -15,16 +22,24 @@ export default function Videos(props) {
     }
   });
 
-  const filteredVideos = createMemo(() => {
-    if (!Array.isArray(props.videos)) return [];
-
-    return props.videos?.filter(key =>
-      activeFilter() === "all" ? true : (key as any).type === activeFilter()
-    );
-  });
-
   const onFilterChange = e => {
-    setActiveFilter(e.currentTarget.value);
+    setState("activeFilter", e.currentTarget.value);
+    setState(
+      "activeVideos",
+      props.videos?.filter(key =>
+        state.activeFilter === "all" ? true : (key as any).type === state.activeFilter
+      )
+    );
+  };
+
+  const openModal = index => {
+    setState("modalStartAt", index);
+    setState("modalVisible", true);
+  };
+
+  const closeModal = () => {
+    setState("modalVisible", false);
+    setState("modalStartAt", 0);
   };
 
   return (
@@ -39,13 +54,24 @@ export default function Videos(props) {
               </For>
             </select>
           </Show>
-          <strong class="videos__count">{props.videos?.length} Videos</strong>
+          <strong class="videos__count">{state.activeVideos?.length} Videos</strong>
         </div>
         <div class="videos__items">
           <Show when={props.videos}>
-            <For each={filteredVideos()}>{video => <VideoItem video={video} />}</For>
+            <For each={state.activeVideos}>
+              {(video, index) => <VideoItem video={video} openModal={() => openModal(index())} />}
+            </For>
           </Show>
         </div>
+        <Show when={state.modalVisible}>
+          <Modal
+            data={state.activeVideos}
+            type="iframe"
+            nav
+            startAt={state.modalStartAt}
+            onClose={closeModal}
+          />
+        </Show>
       </div>
     </main>
   );
@@ -96,7 +122,14 @@ function VideoItem(props) {
 
   return (
     <div class="videos-item">
-      <a class="videos-item__link" href={props.video.url}>
+      <a
+        class="videos-item__link"
+        href={props.video.url}
+        onClick={e => {
+          e.preventDefault();
+          props.openModal();
+        }}
+      >
         <div class="videos-item__img">
           <img
             width={props.video.width + "px"}
