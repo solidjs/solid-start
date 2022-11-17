@@ -23,6 +23,7 @@ const isRouting = useIsRouting()
 <table-of-contents></table-of-contents>
 
 ## Usage
+
 ### Getting a signal indicating whether the router navigation is in progress
 
 `useIsRouting` returns a signal that is true when the router is changing to the next route, and false otherwise. It does so by tapping into Solid's Transitions. This signal is not set on initial page render but on any subsequent navigation.
@@ -32,7 +33,7 @@ const isRouting = useIsRouting();
 
 return (
   <div classList={{ "grey-out": isRouting() }}>
-    <MyAwesomeConent />
+    <MyAwesomeContent />
   </div>
 );
 ```

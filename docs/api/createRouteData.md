@@ -8,12 +8,13 @@ active: true
 
 # createRouteData
 
-##### `createRouteData` allows you to manage async data fetching
+##### `createRouteData` allows you to manage async data fetching.
 
 <div class="text-lg">
 
 ```tsx twoslash
 import { createRouteData } from "solid-start";
+
 function getStudents() {
   return [];
 }
@@ -107,11 +108,12 @@ export function routeData() {
 #### Options
 
 - `key` (_string | Array_, default: true): Parameters for the route data to key by. A falsy value prevents fetching.
-- `initialValue` (_unknown_, default `undefined`): Initial value of the routeData
-- `deferStream` (_boolean_, default `false`): Prevent streaming render from flushing until complete
-- `reconcileOptions`
+- `initialValue` (_unknown_, default `undefined`): Initial value of the routeData.
+- `deferStream` (_boolean_, default `false`): Prevent streaming render from flushing until complete.
+- `reconcileOptions`:
   - `key` (_string_, default `"id"`): The property to use as a key for data diffing.
   - `merge` (_boolean_, default `false`): When true diff deep merges unrecognized values instead of replacing them.
+
 #### Returns
 
 A Solid [Resource][Resource]. An accessor that returns the data loaded by the fetcher. The accessor additionally has these reactive properties:

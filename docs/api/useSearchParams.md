@@ -8,7 +8,7 @@ active: true
 
 # useSearchParams
 
-##### `useSearchParams` gives you a read/write pair for the search params in the current location
+##### `useSearchParams` gives you a read/write pair for the search params in the current location.
 
 <div class="text-lg">
 
@@ -26,9 +26,9 @@ const [searchParams, setSearchParams] = useSearchParams();
 
 ### Rendering based on search params
 
-Search params can be a powerful way of controlling the UI. For example, you can use them to control the sorting of a list of items, or to filter the items based on some criteria. What this enables is that you can share that URL and the other person will be able to see the same UI as you without configuring anything themselves. It also enables you to use the browser's back/forward buttons to navigate between different states of the UI.
+Search params can be a powerful way of controlling the UI. For example, you can use them to control the sorting of a list of items, or to filter the items based on some criteria. What does this enable? You can share that URL and the other person will be able to see the same UI as you without configuring anything themselves.
 
-To read the current `URLSearchParams`, call `useSearchParams()` inside a component. The first item in the tuple with be a reactive object with the search params from the current location. You can access them in a listening scope to react to changes.
+It also enables you to use the browser's back/forward buttons to navigate between different states of the UI. To read the current `URLSearchParams`, call `useSearchParams()` inside a component. The first item in the tuple with be a reactive object with the search params from the current location. You can access them in a listening scope to react to changes.
 
 For example, they can be used in the JSX to customize the UI.
 
@@ -63,7 +63,6 @@ Similar to customizing the UI based on search params, you can also use them to f
 
 So, you need the search param as a source for your resources. You can use `useSearchParams` to get the search params and use them just like you would any other store value.
 
-
 ```tsx twoslash {5,9} filename="routes/search.tsx"
 type Student = {};
 const hogwarts = { async search(query: string): Promise<Student[]> { return [] } };
@@ -80,14 +79,11 @@ export function routeData() {
     key: () => searchParams.query
   })
 }
-
 ```
 
 ### Updating search params from the UI
 
-Now, what's the point of a search page without the ability to change the search query. So let's add a search box to the page. We can use the `setSearchParams` function to update the search params.
-
-All the instances of `useSearchParams` will be updated with the new search params. So your data will refetch and the UI will update.
+Now, what's the point of a search page without the ability to change the search query. So let's add a search box to the page. We can use the `setSearchParams` function to update the search params. All the instances of `useSearchParams` will be updated with the new search params. Your data will refetch and the UI will update.
 
 ```tsx twoslash {4,9} filename="routes/search.tsx"
 import { useSearchParams } from "solid-start";
