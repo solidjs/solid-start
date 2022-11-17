@@ -28,10 +28,9 @@ import { Routes, FileRoutes } from "solid-start";
 
 ### Defining your own routes
 
-The `<Routes>` component is a control flow component. It can be thought of a special `<Switch>` component. Instead of accepting DOM elements as children, it actually accepts route configuration objects. Our `<Route>` components actually return route configuration objects. The `<Routes>` component merges theses into one big routing configuration. It uses one of Solid's secrets that a component can return anything. Its upto the parent to decide what to do with the children. It receives `<Route>` components as children that define the various pages of your application. 
+The `<Routes>` component is a control flow component. It can be thought of a special `<Switch>` component. Instead of accepting DOM elements as children, it actually accepts route configuration objects. Our `<Route>` components actually return route configuration objects. The `<Routes>` component merges theses into one big routing configuration. It uses one of Solid's secrets that a component can return anything.
 
-Like a `<Switch>` component, `<Routes>` decides which of its children to render. It uses the `URLPattern` rules against the `path` to match which `<Route>` child to render. And when the user navigates to a different location, this component will switch to the new `<Route>` and render it.
-
+It's up to the parent to decide what to do with the children. It receives `<Route>` components as children that define the various pages of your application. Like a `<Switch>` component, `<Routes>` decides which of its children to render. It uses the `URLPattern` rules against the `path` to match which `<Route>` child to render. And when the user navigates to a different location, this component will switch to the new `<Route>` and render it.
 
 ```tsx twoslash {9-13} filename="root.tsx"
 // @filename: pages/Home.tsx
@@ -46,10 +45,10 @@ export default function Users() {
 
 // @filename: root.tsx
 // ---cut---
-import { Routes, Route } from "solid-start"
+import { Routes, Route } from "solid-start";
 
-import Home from "./pages/Home"
-import Users from "./pages/Users"
+import Home from "./pages/Home";
+import Users from "./pages/Users";
 
 export default function App() {
   return <>
@@ -84,5 +83,3 @@ export default function Root() {
 ```
 
 See the [routing guide](/core-concepts/routing) for more details about how to define routes using files.
-
-

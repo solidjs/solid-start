@@ -8,7 +8,7 @@ active: true
 
 # useServerContext
 
-##### `useServerContext` gives you access to the `PageEvent` received by the server
+##### `useServerContext` gives you access to the `PageEvent` received by the server.
 
 <div class="text-lg">
 
@@ -24,7 +24,7 @@ const serverContext = useServerContext();
 
 ## Usage
 
-`useServerContext` is a hook that gives you access to the `PageEvent` received by the server. This is useful for 
+`useServerContext` is a hook that gives you access to the `PageEvent` received by the server.
 
 ### Accessing the `request` on the server
 
@@ -43,7 +43,6 @@ function Component() {
   );
   return <div>{JSON.stringify(cookie())}</div>;
 }
-
 ```
 
 <aside type="warning">
@@ -63,11 +62,11 @@ function Component() {
 
 Returns the `PageEvent` received by the server. The properties of the `PageEvent` are:
 
-- `request`: The web standard [`Request`][Request] object
+- `request`: The web standard [`Request`][Request] object.
 - `fetch`: internal [`fetch`][fetch] function that can make requests to our own API routes locally.
-- `responseHeaders`: The [`Headers`][Headers] object that will be sent to the client with the [`Response`][Response]
-- `setStatusCode(code: number)`: A function to set the [status code][statuscode] of the [`Response`][Response]
-- `getStatusCode()`: A function to get the [status code][statuscode] of the [`Response`][Response]
+- `responseHeaders`: The [`Headers`][Headers] object that will be sent to the client with the [`Response`][Response].
+- `setStatusCode(code: number)`: A function to set the [status code][statuscode] of the [`Response`][Response].
+- `getStatusCode()`: A function to get the [status code][statuscode] of the [`Response`][Response].
 
 [Request]: https://developer.mozilla.org/en-US/docs/Web/API/Request
 [fetch]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
