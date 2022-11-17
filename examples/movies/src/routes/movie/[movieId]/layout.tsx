@@ -13,7 +13,7 @@ export default function MoviePage() {
       <Show when={data()}>
         <Hero item={data()?.item} />
       </Show>
-      <div class={`spacing ${styles.nav}`}>
+      <div class={`${styles.nav}`}>
         <A
           href={`/movie/${useParams().movieId}`}
           activeClass={styles.buttonActive}
