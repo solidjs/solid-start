@@ -1,6 +1,5 @@
 import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { createStore } from "solid-js/store";
-import { A } from "solid-start";
 import ChevronLeftIcon from "~icons/icons/chevron-left.svg?inline";
 import ChevronRightIcon from "~icons/icons/chevron-right.svg?inline";
 import { Card } from "./Card";
@@ -92,9 +91,9 @@ export function ListingCarousel(props) {
             </Show>
 
             <Show when={props.viewAllHref}>
-              <A href={props.viewAllHref} class="listing__explore">
+              <a href={props.viewAllHref} class="listing__explore">
                 <strong>Explore All</strong>
-              </A>
+              </a>
             </Show>
           </div>
         </Show>
@@ -114,11 +113,11 @@ export function ListingCarousel(props) {
             <For each={props.items}>{item => <Card item={item} />}</For>
 
             <div class="card">
-              <A href={props.viewAllHref} class="card__link card__viewAll">
+              <a href={props.viewAllHref} class="card__link card__viewAll">
                 <div class="card__img">
                   <span>Explore All</span>
                 </div>
-              </A>
+              </a>
             </div>
           </div>
 
