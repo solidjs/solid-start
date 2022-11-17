@@ -1,4 +1,4 @@
-@import '~/assets/css/utilities/_variables.scss';
+@import "~/assets/css/utilities/_variables.scss";
 
 .hero {
   display: flex;
@@ -42,8 +42,13 @@
     bottom: 0;
     left: 0;
     display: block;
-    content: '';
-    background-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 100%);
+    content: "";
+    background-image: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.1) 50%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
 
     @media (min-width: $breakpoint-medium) {
       background-image: linear-gradient(to right, #000 0, transparent 50%, transparent 100%);
@@ -157,7 +162,7 @@
   width: 8.5rem;
   height: 1.4rem;
   margin-right: 1rem;
-  background-image: url('~/assets/images/stars.png');
+  background-image: url("~/assets/images/stars.png");
   background-repeat: no-repeat;
   background-size: auto 100%;
 
@@ -168,7 +173,7 @@
 
   > div {
     height: 100%;
-    background-image: url('~/assets/images/stars-filled.png');
+    background-image: url("~/assets/images/stars-filled.png");
     background-repeat: no-repeat;
     background-size: auto 100%;
   }
@@ -189,7 +194,7 @@
   font-size: 1.5rem;
   color: #fff;
 
-  @media (max-width: $breakpoint-small) {
+  @media (max-width: ($breakpoint-small - 1)) {
     display: none;
   }
 
@@ -201,11 +206,11 @@
 .trailer {
   margin-top: 3rem;
 
-  @media (max-width: $breakpoint-medium) {
+  @media (max-width: ($breakpoint-medium - 1)) {
     display: none;
   }
 
   @media (min-width: 1650px) {
-    font-size: 0.9vw;
+    font-size: 0.9vw !important;
   }
 }

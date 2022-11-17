@@ -1,8 +1,13 @@
-import { Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { formatRuntime } from "~/utils/format";
+import CirclePlayIcon from "~icons/icons/circle-play.svg?inline";
+import PlayIcon from "~icons/icons/play.svg?inline";
 import styles from "./Hero.module.scss";
+import { Modal } from "./Modal";
 
 export function Hero(props) {
+  const [modalVisible, setModalVisible] = createSignal(false);
+
   const stars = () => (props.item.vote_average ? props.item.vote_average * 10 : 0);
   const name = () => (props.item.title ? props.item.title : props.item.name);
   const yearStart = () => {
@@ -12,49 +17,64 @@ export function Hero(props) {
     }
   };
 
+  const trailer = () => {
+    let videos = props.item.videos.results;
+
+    if (!videos.length) {
+      return null;
+    }
+
+    videos = videos.find(video => video.type === "Trailer");
+
+    if (!videos) {
+      return null;
+    }
+
+    return [
+      {
+        name: videos.name,
+        src: `https://www.youtube.com/embed/${videos.key}?rel=0&showinfo=0&autoplay=1`
+      }
+    ];
+  };
+
+  const openModal = () => {
+    console.log("Open modal");
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <div>
       <div class={styles.hero}>
         <div class={styles.backdrop}>
           <div>
-            <Show when={props.trailer}>
+            <Show when={trailer()}>
               <button
                 class={styles.play}
                 type="button"
                 aria-label="Play Trailer"
-                onClick="openModal"
+                onClick={openModal}
               >
-                {/* <CirclePlayIcon /> */}
+                <CirclePlayIcon />
               </button>
             </Show>
             <img
-              // src={"https://image.tmdb.org/t/p/original" + props.item.backdrop_path}
-              src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${props.item.backdrop_path}`}
+              src={`https://image.tmdb.org/t/p/original${props.item.backdrop_path}`}
               alt=""
               class={styles.image}
               style={{
                 height: "100%"
               }}
             />
-            {/* <nuxt-picture
-        class="$style.image"
-        sizes="xsmall:100vw medium:71.1vw"
-        :alt="name"
-        :src="backdrop" /> */}
           </div>
         </div>
 
         <div class={styles.pane}>
           <div>
-            <h1 class={styles.name}>
-              {name()}
-
-              {/* <template >
-          <A to="{ name: `${type}-id`, params: { id: item.id } }">
-            { props.item.name }
-          </A>
-        </template> */}
-            </h1>
+            <h1 class={styles.name}>{name()}</h1>
             <div class={styles.meta}>
               <div class={styles.rating}>
                 <Show when={stars()}>
@@ -82,59 +102,20 @@ export function Hero(props) {
               </div>
             </div>
             <div class={styles.desc}>{props.item.overview}</div>
+            <button
+              class={`${styles.trailer} button button--icon `}
+              type="button"
+              onClick={openModal}
+            >
+              <span class="icon">
+                <PlayIcon />
+              </span>
+              <span class="txt">Watch Trailer</span>
+            </button>
           </div>
-          {/* <transition
-        appear
-        name="hero">
-        <div>
-          <h1 class="$style.name">
-            <template>
-              {{ name }}
-            </template>
-
-            <template >
-              <nuxt-link :to="{ name: `${type}-id`, params: { id: item.id } }">
-                {{ name }}
-              </nuxt-link>
-            </template>
-          </h1>
-
-          <div class="$style.meta">
-            <div
-
-              class="$style.rating">
-              <div
-
-                class="$style.stars">
-                <div :style="{ width: `${stars}%` }" />
-              </div>
-
-              <div>
-                {{ item.vote_count | numberWithCommas }} Reviews
-              </div>
-            </div>
-
-            <div class="$style.info">
-              <span >Season {{ item.number_of_seasons }}</span>
-              <span>{{ yearStart }}</span>
-              <span >{{ item.runtime | runtime }}</span>
-              <span>Cert. {{ cert }}</span>
-            </div>
-          </div>
-
-          <div class="$style.desc">
-            {{ item.overview | truncate(200) }}
-          </div>
-
-          <button
-            class="button button--icon"
-            class="$style.trailer"
-            type="button"
-            onClick="openModal">
-            <PlayIcon class="icon" />
-            <span class="txt">Watch Trailer</span>
-          </button>
-        </div> */}
+          <Show when={modalVisible()}>
+            <Modal type="iframe" data={trailer()} onClose={closeModal} />
+          </Show>
         </div>
       </div>
     </div>

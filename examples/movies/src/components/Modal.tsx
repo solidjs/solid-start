@@ -1,5 +1,5 @@
 import { debounce } from "@solid-primitives/scheduled";
-import { createEffect, createSignal, Match, on, onCleanup, onMount, Switch } from "solid-js";
+import { createEffect, createSignal, Match, on, onCleanup, onMount, Show, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 import ChevronLeftIcon from "~icons/icons/chevron-left.svg?inline";
 import ChevronRightIcon from "~icons/icons/chevron-right.svg?inline";
@@ -207,35 +207,37 @@ export const Modal = props => {
             </Switch>
           </div>
 
-          <div class={"modal__nav"}>
-            <button
-              class={"modal__arrow modal__arrow_prev"}
-              aria-label="Previous"
-              title="Previous"
-              type="button"
-              onClick={e => {
-                e.stopPropagation();
-                previous();
-              }}
-            >
-              <ChevronLeftIcon />
-            </button>
-            <div class="modal__count">
-              {state.selected + 1} / {props.data.length}
+          <Show when={showNav()}>
+            <div class={"modal__nav"}>
+              <button
+                class={"modal__arrow modal__arrow_prev"}
+                aria-label="Previous"
+                title="Previous"
+                type="button"
+                onClick={e => {
+                  e.stopPropagation();
+                  previous();
+                }}
+              >
+                <ChevronLeftIcon />
+              </button>
+              <div class="modal__count">
+                {state.selected + 1} / {props.data.length}
+              </div>
+              <button
+                class={"modal__arrow modal__arrow_next"}
+                aria-label="Next"
+                title="Next"
+                type="button"
+                onClick={e => {
+                  e.stopPropagation();
+                  next();
+                }}
+              >
+                <ChevronRightIcon />
+              </button>
             </div>
-            <button
-              class={"modal__arrow modal__arrow_next"}
-              aria-label="Next"
-              title="Next"
-              type="button"
-              onClick={e => {
-                e.stopPropagation();
-                next();
-              }}
-            >
-              <ChevronRightIcon />
-            </button>
-          </div>
+          </Show>
         </div>
       </div>
     </div>
