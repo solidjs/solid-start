@@ -13,7 +13,7 @@ import {
   Scripts,
   Title
 } from "solid-start";
-import "virtual:uno.css";
+import "uno.css";
 import "./root.css";
 
 export default function Root() {
