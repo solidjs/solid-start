@@ -1,8 +1,9 @@
 import { Show } from "solid-js";
-import { createRouteData, useRouteData } from "solid-start";
-import { Hero } from "~/components/Hero";
-import { ListingCarousel } from "~/components/ListingCarousel";
+import { createRouteData, unstable_island, useRouteData } from "solid-start";
 import { getListItem, getTvShow, getTvShows } from "~/services/tmdbAPI";
+
+const Hero = unstable_island(() => import("../../components/Hero"));
+const ListingCarousel = unstable_island(() => import("../../components/ListingCarousel"));
 
 export function routeData() {
   return createRouteData(async () => {
@@ -32,27 +33,27 @@ export default function Page() {
     <main class="main">
       <Show when={data()}>
         <Hero item={data()?.featured} />
+        <ListingCarousel
+          items={data()?.popular.results}
+          title={getListItem("tv", "popular").TITLE}
+          viewAllHref={`/tv/categories/popular`}
+        />
+        <ListingCarousel
+          items={data()?.topRated.results}
+          viewAllHref={`/tv/categories/top_rated`}
+          title={getListItem("tv", "top_rated").TITLE}
+        />
+        <ListingCarousel
+          items={data()?.onAir.results}
+          title={getListItem("tv", "on_the_air").TITLE}
+          viewAllHref={`/tv/categories/on_the_air`}
+        />
+        <ListingCarousel
+          items={data()?.airingToday.results}
+          title={getListItem("tv", "airing_today").TITLE}
+          viewAllHref={`/tv/categories/airing_today`}
+        />
       </Show>
-      <ListingCarousel
-        items={data()?.popular.results}
-        title={getListItem("tv", "popular").TITLE}
-        viewAllHref={`/tv/categories/popular`}
-      />
-      <ListingCarousel
-        items={data()?.topRated.results}
-        viewAllHref={`/tv/categories/top_rated`}
-        title={getListItem("tv", "top_rated").TITLE}
-      />
-      <ListingCarousel
-        items={data()?.onAir.results}
-        title={getListItem("tv", "on_the_air").TITLE}
-        viewAllHref={`/tv/categories/on_the_air`}
-      />
-      <ListingCarousel
-        items={data()?.airingToday.results}
-        title={getListItem("tv", "airing_today").TITLE}
-        viewAllHref={`/tv/categories/airing_today`}
-      />
       {/* <Show when={trendingMoviesShown}></Show> */}
     </main>
   );

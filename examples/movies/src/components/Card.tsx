@@ -17,9 +17,7 @@ export function Card(props) {
             height={556}
           />
         </div>
-        <h2 class="card__name">
-          {props.item.media_type === "tv" ? props.item.name : props.item.title}
-        </h2>
+        <h2 class="card__name">{props.item.name ? props.item.name : props.item.title}</h2>
         <Show
           when={props.item.media_type !== "person" && (stars() !== 0 || props.item.vote_average)}
         >
