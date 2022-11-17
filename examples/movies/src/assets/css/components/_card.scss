@@ -1,4 +1,4 @@
-@import '~/assets/css/utilities/_variables.scss';
+@import "~/assets/css/utilities/_variables.scss";
 
 .card {
   margin-bottom: 1.5rem;
@@ -34,7 +34,6 @@
   }
 }
 
-
 .card__name {
   margin-top: 1rem;
   overflow: hidden;
@@ -67,19 +66,19 @@
 .card__stars {
   width: 7.3rem;
   height: 1.2rem;
-  background-image: url('~assets/images/stars.png');
+  background-image: url("/./src/assets/images/stars.png");
   background-repeat: no-repeat;
   background-size: auto 100%;
 
   > div {
     height: 100%;
-    background-image: url('~assets/images/stars-filled.png');
+    background-image: url("/./src/assets/images/stars-filled.png");
     background-repeat: no-repeat;
     background-size: auto 100%;
   }
 }
 
-@media (max-width:( $breakpoint-xsmall - 1)) {
+@media (max-width: ( $breakpoint-xsmall - 1)) {
   .card__name,
   .card__rating {
     display: none;
