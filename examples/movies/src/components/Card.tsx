@@ -1,5 +1,6 @@
 import { Show } from "solid-js";
 import { A } from "solid-start";
+import { formatRating } from "~/utils/format";
 import Poster from "./Poster";
 
 export function Card(props) {
@@ -26,7 +27,7 @@ export function Card(props) {
               <div style={{ width: `${stars()}%` }} />
             </div>
 
-            <div class="card__vote">{props.item.vote_average || props.item.rating}</div>
+            <div class="card__vote">{formatRating(props.item.vote_average)}</div>
           </div>
         </Show>
       </A>

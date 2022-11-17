@@ -42,3 +42,11 @@ export function formatLanguage(iso: string) {
 
   return iso;
 }
+
+export function formatRating(rating: number) {
+  if (rating.toString().length <= 1) {
+    return `${rating.toString()}.0`;
+  }
+
+  return rating.toString();
+}
