@@ -18,7 +18,7 @@
   outline: 0;
   transition: opacity 0.25s ease, background-color 0.25s ease;
 
-  @media (max-width: $breakpoint-small - 1) {
+  @media (max-width: ($breakpoint-small - 1)) {
     display: none;
   }
 

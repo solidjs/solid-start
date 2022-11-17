@@ -6,13 +6,13 @@ export function ListingCarousel(props) {
   return (
     <Show when={!!props.items?.length}>
       <div class="listing listing--carousel">
-        <Show when={props.title || props.viewAllUrl}>
+        <Show when={props.title || props.viewAllHref}>
           <div class="listing__head">
             <Show when={props.title}>
               <h2 class="listing__title">{props.title}</h2>
             </Show>
 
-            <Show when={props.viewAllUrl}>
+            <Show when={props.viewAllHref}>
               <A href={props.viewAllHref} class="listing__explore">
                 <strong>Explore All</strong>
               </A>
@@ -35,7 +35,7 @@ export function ListingCarousel(props) {
             <For each={props.items}>{item => <Card item={item} />}</For>
 
             <div class="card">
-              <A href={props.viewAllHref} class="card__link">
+              <A href={props.viewAllHref} class="card__link card__viewAll">
                 <div class="card__img">
                   <span>Explore All</span>
                 </div>

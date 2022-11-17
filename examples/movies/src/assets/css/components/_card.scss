@@ -79,9 +79,24 @@
   }
 }
 
-@media (max-width: $breakpoint-xsmall - 1) {
+@media (max-width:( $breakpoint-xsmall - 1)) {
   .card__name,
   .card__rating {
     display: none;
+  }
+}
+.card__viewAll {
+  .card__img {
+    position: relative;
+    height: 0;
+    padding-top: 150.27%;
+  }
+
+  span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }

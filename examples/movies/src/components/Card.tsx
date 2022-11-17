@@ -15,7 +15,7 @@ export function Card(props) {
             height={556}
           />
         </div>
-        <h2>{props.item.title}</h2>
+        <h2 class="card__name">{props.item.title}</h2>
       </A>
     </div>
   );
