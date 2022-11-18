@@ -3,7 +3,7 @@
 
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
-const { resolve, join } = require("path");
+const { resolve, join, dirname, relative } = require("path");
 const path = require("path");
 const c = require("picocolors");
 const {
@@ -17,6 +17,8 @@ const {
 const waitOn = require("wait-on");
 const pkg = require(join(__dirname, "package.json"));
 const DEBUG = require("debug")("start");
+const { createRequire } = require("module");
+const requireCwd = createRequire(process.cwd());
 globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("beta");
@@ -102,13 +104,15 @@ prog
 
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
+    const relVitePath = relative(process.cwd(), dirname(requireCwd.resolve('vite/package.json')));
+
     DEBUG(
       [
         "running",
         "vite",
         "--experimental-vm-modules",
         inspect ? "--inspect" : undefined,
-        "node_modules/vite/bin/vite.js",
+        `${relVitePath}/bin/vite.js`,
         "dev",
         ...(root ? [root] : []),
         ...(config ? ["--config", config.configFile] : []),
@@ -159,7 +163,8 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
-    const vite = require("vite");
+    const vite = requireCwd("vite");
+    const relVitePath = relative(process.cwd(), dirname(requireCwd.resolve('vite/package.json')));
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     config.adapter.build(config, {
@@ -354,6 +359,8 @@ prog
           let proc = spawn(
             "vite",
             [
+              "--experimental-vm-modules",
+              `${relVitePath}/bin/vite.js`,
               "dev",
               "--mode",
               "production",
@@ -487,7 +494,7 @@ prog.parse(process.argv);
  * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
-  const vite = require("vite");
+  const vite = requireCwd("vite");
   root = root || process.cwd();
   if (!configFile) {
     if (!configFile) {
