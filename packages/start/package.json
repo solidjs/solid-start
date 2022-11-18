@@ -39,6 +39,7 @@
   },
   "exports": {
     ".": "./index.tsx",
+    "./package.json": "./package.json",
     "./router": "./router.tsx",
     "./vite": {
       "types": "./vite/plugin.d.ts",
