@@ -4,6 +4,7 @@ import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
+import { createRequire } from "module";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -16,6 +17,9 @@ import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
+
+const startRequire = createRequire(import.meta.url);
+const requireCwd = createRequire(process.cwd());
 
 // @ts-ignore
 globalThis.DEBUG = debug("start:vite");
@@ -538,32 +542,28 @@ function solidStartConfig(options) {
   };
 }
 
-/**
- * @param {string} locate
- * @param {string} [cwd]
- * @returns {string | undefined}
- */
-function find(locate, cwd) {
-  cwd = cwd || process.cwd();
-  if (cwd.split(path.sep).length < 2) return undefined;
-  const found = fs.readdirSync(cwd).some(f => f === locate);
-  if (found) return path.join(cwd, locate);
-  return find(locate, path.join(cwd, ".."));
-}
-
-const nodeModulesPath = find("node_modules", process.cwd());
-
 function detectAdapter() {
+  const startPkgJson = startRequire("../package.json");
+  const supportedAdapters = Array.from(Object.keys(startPkgJson.devDependencies)).filter(
+    name => name.startsWith("solid-start-")
+  );
+  const cwdPackageJson = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "package.json"), "utf-8")
+  );
+  const allDepdenencies = Array.from(Object.keys({
+    ...cwdPackageJson.dependencies,
+    ...cwdPackageJson.devDependencies
+  }));
+
+  /**
+   * @type {string[]}
+   */
   let adapters = [];
-  fs.readdirSync(nodeModulesPath).forEach(dir => {
-    if (dir.startsWith("solid-start-")) {
-      const pkg = JSON.parse(
-        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
-          encoding: "utf8"
-        })
-      );
-      if (pkg.solid && pkg.solid.type === "adapter") {
-        adapters.push(dir);
+  allDepdenencies.forEach(dep => {
+    if (supportedAdapters.includes(dep)) {
+      const pkg = requireCwd(`${dep}/package.json`);
+      if (pkg.solid?.type === "adapter") {
+        adapters.push(dep);
       }
     }
   });
