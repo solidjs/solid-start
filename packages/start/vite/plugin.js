@@ -402,9 +402,15 @@ function solidsStartRouteManifest(options) {
 
 async function resolveAdapter(config) {
   if (typeof config.solidOptions.adapter === "string") {
-    return (await import(config.solidOptions.adapter)).default();
+    return (await import(
+      requireCwd.resolve(config.solidOptions.adapter)
+    )).default();
   } else if (Array.isArray(config.solidOptions.adapter)) {
-    return (await import(config.solidOptions.adapter[0])).default(config.solidOptions.adapter[1]);
+    return (await import(
+      requireCwd.resolve(config.solidOptions.adapter[0])
+    )).default(
+      requireCwd.resolve(config.solidOptions.adapter[1])
+    );
   } else {
     return config.solidOptions.adapter;
   }
