@@ -1,8 +1,9 @@
 import { Show } from "solid-js";
-import { createRouteData, ServerError, useRouteData } from "solid-start";
-import Hero from "~/components/Hero";
-import { ListingCarousel } from "~/components/ListingCarousel";
+import { createRouteData, ServerError, unstable_island, useRouteData } from "solid-start";
 import { getListItem, getMovie, getMovies } from "~/services/tmdbAPI";
+
+const Hero = unstable_island(() => import("../../../components/Hero"));
+const ListingCarousel = unstable_island(() => import("../../../components/ListingCarousel"));
 
 export function routeData() {
   return createRouteData(async () => {
