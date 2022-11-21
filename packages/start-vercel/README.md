@@ -28,6 +28,49 @@ export default defineConfig({
 });
 ```
 
+To enable ISR/Prerender, pass in the prerender function.
+
+```js
+import { defineConfig } from "vite"
+import solid from "solid-start/vite"
+import vercel from "solid-start-vercel"
+
+export default defineConfig({
+  plugins: [
+    solid({
+      ssr: true,
+      adapter: vercel({
+        prerender: true,
+      }),
+    }),
+  ],
+})
+
+```
+
+You can also set the `expiration` time and/or the `bypassToken`.
+
+```js
+import { defineConfig } from "vite"
+import solid from "solid-start/vite"
+import vercel from "solid-start-vercel"
+
+export default defineConfig({
+  plugins: [
+    solid({
+      ssr: true,
+      adapter: vercel({
+        prerender: {
+          expiration: 60,
+          bypassToken: "87734ad8259d67c3c11747d3e4e112d0",
+        },
+      }),
+    }),
+  ],
+})
+```
+
+
 ## Configuration
 
 You will need to have the [vercel-cli](https://vercel.com/docs/cli) installed globally.
