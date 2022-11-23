@@ -16,7 +16,7 @@ active: true
 
 Web applications often comprise many components: databases, servers, front-ends, bundlers, data fetching/mutations, caching, and infrastructure. Orchestrating these components is challenging and often requires a large amount of shared state and redundant logic across the application stack.
 
-Enter SolidStart: a mata-framework that provides many of these components out-of-the-box and integrates them seamlessly!
+Enter SolidStart: a meta-framework that provides many of these components out-of-the-box and integrates them seamlessly!
 
 SolidStart is considered a _meta-framework_ (a framework built on top of another framework) because, at it's core, SolidStart is powered by [SolidJS](https://solidjs.com) and the [Solid router](https://github.com/solidjs/solid-router).
 
