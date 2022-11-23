@@ -1,0 +1,32 @@
+{
+  "name": "example-with-xata",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start",
+    "xata": "xata codegen --output src/lib/xata.codegen.server.ts",
+    "xata:init": "xata init --schema=schema.template.json --codegen src/lib/xata.codegen.server.ts",
+    "postxata:init": "node scripts/prefix-env-key.cjs"
+  },
+  "type": "module",
+  "optionalDependencies": {
+    "@xata.io/cli": "^0.11.0"
+  },
+  "devDependencies": {
+    "solid-start-node": "^0.2.0",
+    "solid-start-vercel": "^0.2.5",
+    "typescript": "^4.8.4",
+    "vite": "^3.1.8"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.28.0",
+    "@solidjs/router": "^0.5.0",
+    "@xata.io/client": "^0.21.0",
+    "solid-js": "^1.6.0",
+    "solid-start": "^0.2.0",
+    "undici": "^5.11.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
