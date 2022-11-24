@@ -40,53 +40,6 @@ export default function ({ edge } = {}) {
           common()
         ]
       });
-
-      //const appRoot = config.solidOptions.appRoot;
-      //await vite.build({
-      //  build: {
-      //    outDir: "./dist/bucket/",
-      //    minify: "terser",
-      //    rollupOptions: {
-      //      input: resolve(join(config.root, appRoot, `entry-client`)),
-      //      output: {
-      //        manualChunks: undefined
-      //      }
-      //    }
-      //  }
-      //});
-      //await vite.build({
-      //  build: {
-      //    ssr: true,
-      //    outDir: "./.solid/server",
-      //    rollupOptions: {
-      //      input: resolve(join(config.root, appRoot, `entry-server`)),
-      //      output: {
-      //        format: "esm"
-      //      }
-      //    }
-      //  }
-      //});
-
-      //copyFileSync(
-      //  join(config.root, ".solid", "server", `entry-server.js`),
-      //  join(config.root, ".solid", "server", "app.js")
-      //);
-      //copyFileSync(
-      //  join(__dirname, "lambda", edge ? "entry-edge.mjs" : "entry.mjs"),
-      //  join(config.root, ".solid", "server", "index.mjs")
-      //);
-      //const bundle = await rollup({
-      //  input: join(config.root, ".solid", "server", "index.mjs"),
-      //  plugins: [
-      //    json(),
-      //    nodeResolve({
-      //      preferBuiltins: true,
-      //      exportConditions: ["node", "solid"]
-      //    }),
-      //    common()
-      //  ]
-      //});
-      // or write the bundle to disk
       await bundle.write({
         format: "esm",
         dir: join(config.root, "dist", "server")
