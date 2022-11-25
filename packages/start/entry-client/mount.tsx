@@ -38,7 +38,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     mountRouter();
 
     async function mountIsland(el: HTMLElement) {
-      let Component = window._$HY.islandMap[el.dataset.island];
+      let Component = el.dataset.island && window._$HY.islandMap[el.dataset.island];
       if (!Component || !el.dataset.hk) return;
       DEBUG(
         "hydrating island",
@@ -48,9 +48,9 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
       );
 
       hydrate(
-        () =>
+        () => !Component || typeof Component === 'string' ? Component :
           createComponent(Component, {
-            ...JSON.parse(el.dataset.props),
+            ...JSON.parse(el.dataset.props || "undefined"),
             get children() {
               const el = getNextElement();
               (el as any).__$owner = getOwner();
@@ -67,11 +67,11 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
       delete el.dataset.hk;
     }
 
-    let queue = [];
+    let queue: HTMLElement[] = [];
     let queued = false;
-    function runTaskQueue(info) {
+    function runTaskQueue(info: { timeRemaining(): number }) {
       while (info.timeRemaining() > 0 && queue.length) {
-        mountIsland(queue.shift());
+        mountIsland(queue.shift() as HTMLElement);
       }
       if (queue.length) {
         requestIdleCallback(runTaskQueue);
@@ -80,15 +80,15 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     window._$HY.hydrateIslands = () => {
       const islands = document.querySelectorAll("solid-island[data-hk]");
       const assets = new Set<string>();
-      islands.forEach((el: HTMLElement) => assets.add(el.dataset.component));
+      islands.forEach((el: Element) => assets.add((el as HTMLElement).dataset.component || ''));
       Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
-        islands.forEach((el: HTMLElement) => {
-          if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
+        islands.forEach((el: Element) => {
+          if ((el as HTMLElement).dataset.when === "idle" && "requestIdleCallback" in window) {
             if (!queued) {
               queued = true;
               requestIdleCallback(runTaskQueue);
             }
-            queue.push(el);
+            queue.push(el as HTMLElement);
           } else mountIsland(el as HTMLElement);
         });
       });
@@ -104,8 +104,8 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
   }
 
   if (import.meta.env.START_SSR) {
-    hydrate(code, element);
+    code && element && hydrate(code, element);
   } else {
-    render(code, element === document ? element.body : element);
+    code && element && render(code, element === document ? element.body : element);
   }
 }
