@@ -5,8 +5,7 @@
     "build": "solid-start build",
     "start": "solid-start start",
     "xata": "xata codegen --output src/lib/xata.codegen.server.ts",
-    "xata:init": "xata init --schema=schema.template.json --codegen src/lib/xata.codegen.server.ts",
-    "postxata:init": "node scripts/prefix-env-key.cjs"
+    "xata:init": "xata init --schema=schema.template.json --codegen src/lib/xata.codegen.server.ts && node scripts/prefix-env-key.cjs"
   },
   "type": "module",
   "optionalDependencies": {
