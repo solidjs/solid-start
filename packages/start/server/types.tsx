@@ -64,6 +64,7 @@ export interface FetchEvent {
 export interface ServerFunctionEvent extends FetchEvent {
   fetch(url: string, init: RequestInit): Promise<Response>;
   $type: typeof FETCH_EVENT;
+  responseHeaders: Headers;
 }
 
 export interface PageEvent extends FetchEvent {

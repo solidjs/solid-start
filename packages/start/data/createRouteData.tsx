@@ -12,7 +12,7 @@ import { createStore, reconcile, unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { useNavigate } from "../router";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
-import { ServerContext } from "../server/ServerContext";
+import { ServerContext, useRequest } from "../server/ServerContext";
 import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";
 
 interface RouteDataEvent extends ServerFunctionEvent {}
@@ -71,11 +71,13 @@ export function createRouteData<T, S>(
     try {
       let event = pageEvent as RouteDataEvent;
       if (isServer) {
+        const req = useRequest();
         event = Object.freeze({
           request: pageEvent.request,
           env: pageEvent.env,
           $type: FETCH_EVENT,
-          fetch: pageEvent.fetch
+          fetch: pageEvent.fetch,
+          responseHeaders: req.responseHeaders
         });
       }
 

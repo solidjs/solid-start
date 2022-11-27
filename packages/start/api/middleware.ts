@@ -7,15 +7,21 @@ export const apiRoutes: Middleware = ({ forward }) => {
   return async (event: FetchEvent) => {
     let apiHandler = getApiHandler(new URL(event.request.url), event.request.method);
     if (apiHandler) {
+      let responseHeaders = new Headers();
       let apiEvent = Object.freeze({
         request: event.request,
         params: apiHandler.params,
         env: event.env,
         $type: FETCH_EVENT,
-        fetch: internalFetch
+        fetch: internalFetch,
+        responseHeaders
       });
       try {
-        return await apiHandler.handler(apiEvent);
+        const resp = await apiHandler.handler(apiEvent);
+        responseHeaders.forEach((value, name) => {
+          resp.headers.append(name, value);
+        });
+        return resp;
       } catch (error) {
         if (error instanceof Response) {
           return error;
