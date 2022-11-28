@@ -38,7 +38,7 @@
     "fast-glob": "^3.2.12",
     "rimraf": "^3.0.2",
     "rollup": "^2.79.1",
-    "solid-js": "^1.6.0",
+    "solid-js": "^1.6.2",
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:^0.2.2",
