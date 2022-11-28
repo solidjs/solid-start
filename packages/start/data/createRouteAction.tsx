@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "@solidjs/router";
+import { useNavigate, useSearchParams, type Navigator } from "@solidjs/router";
 import { $TRACK, batch, createSignal, useContext } from "solid-js";
 import { FormError, FormImpl, FormProps } from "./Form";
 
@@ -39,17 +39,19 @@ export type RouteMultiAction<T, U> = [
   }
 ];
 
+export type Invalidate = ((r: Response) => string | any[] | void) | string | any[];
+
 export function createRouteAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: { invalidate?: Invalidate }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: { invalidate?: Invalidate }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
+  options: { invalidate?: Invalidate } = {}
 ): RouteAction<T, U> {
   let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [input, setInput] = createSignal<T | undefined>(init.input);
@@ -69,7 +71,7 @@ export function createRouteAction<T, U = void>(
         if (reqId === count) {
           if (data instanceof Response) {
             await handleResponse(data, navigate, options);
-          } else await handleRefetch(data, options);
+          } else await handleRefetch(data as any[], options);
           if (!data || isRedirectResponse(data)) setInput(undefined);
           else setResult({ data });
         }
@@ -85,7 +87,7 @@ export function createRouteAction<T, U = void>(
           } else setInput(undefined);
         }
         return undefined;
-      });
+      }) as Promise<U>;
   }
   submit.url = (fn as any).url;
   submit.Form = ((props: FormProps) => {
@@ -106,7 +108,7 @@ export function createRouteAction<T, U = void>(
   return [
     {
       get pending() {
-        return input() && !result();
+        return !!input() && !result();
       },
       get input() {
         return input();
@@ -135,15 +137,15 @@ export function createRouteAction<T, U = void>(
 
 export function createRouteMultiAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: { invalidate?: Invalidate }
 ): RouteMultiAction<T, U>;
 export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: { invalidate?: Invalidate }
 ): RouteMultiAction<T, U>;
 export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
+  options: { invalidate?: Invalidate } = {}
 ): RouteMultiAction<T, U> {
   let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [submissions, setSubmissions] = createSignal<Submission<T, U>[]>(
@@ -153,7 +155,13 @@ export function createRouteMultiAction<T, U = void>(
   const event = useContext(ServerContext);
 
   function createSubmission(variables: T) {
-    let submission;
+    let submission: {
+      input: T,
+      readonly result: U | undefined,
+      readonly error: Error | undefined,
+      clear(): void,
+      retry(): void
+    };
     const [result, setResult] = createSignal<{ data?: U; error?: any }>();
     return [
       (submission = {
@@ -169,17 +177,17 @@ export function createRouteMultiAction<T, U = void>(
         },
         retry() {
           setResult(undefined);
-          return handleSubmit(fn(variables, event));
+          return event && handleSubmit(fn(variables, event));
         }
       }),
       handleSubmit
     ] as const;
-    function handleSubmit(p) {
+    function handleSubmit(p: Promise<Response & { body: U } | U>): Promise<U> {
       p.then(async data => {
         if (data instanceof Response) {
           await handleResponse(data, navigate, options);
           data = data.body;
-        } else await handleRefetch(data, options);
+        } else await handleRefetch(data as any[], options);
         data ? setResult({ data }) : submission.clear();
 
         return data;
@@ -191,10 +199,13 @@ export function createRouteMultiAction<T, U = void>(
           setResult({ error: e });
         } else submission.clear();
       });
-      return p;
+      return p as Promise<U>;
     }
   }
   function submit(variables: T) {
+    if (!event) {
+      throw new Error('submit was called without an event');
+    }
     const [submission, handleSubmit] = createSubmission(variables);
     setSubmissions(s => [...s, submission]);
     return handleSubmit(fn(variables, event));
@@ -220,20 +231,20 @@ export function createRouteMultiAction<T, U = void>(
       get(_, property) {
         if (property === $TRACK) return submissions();
         if (property === "pending") return submissions().filter(sub => !sub.result);
-        return submissions()[property];
+        return submissions()[property as keyof typeof submissions];
       }
     }),
     submit
   ];
 }
 
-function handleRefetch(response, options) {
+function handleRefetch(response: Response | string | any[], options: { invalidate?: Invalidate } = {}) {
   return refetchRouteData(
-    typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
+    typeof options.invalidate === "function" ? options.invalidate(response as Response) : options.invalidate
   );
 }
 
-function handleResponse(response: Response, navigate, options) {
+function handleResponse(response: Response, navigate: Navigator, options?: { invalidate?: Invalidate }) {
   if (response instanceof Response && isRedirectResponse(response)) {
     const locationUrl = response.headers.get("Location") || "/";
     if (locationUrl.startsWith("http")) {

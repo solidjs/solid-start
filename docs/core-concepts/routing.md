@@ -257,7 +257,7 @@ With file system routing, folders map directly to URL Paths. However, there migh
 ```
 
 ## Renaming Index
-By default, the default component that is rendered comed from the default export from the file `index.tsx` in each folder. However, this could make it harder to find which `index.tsx` file is the correct one when searching since there will be multiple files with that name. To avoid this pitfall, we also render the default export from any file that follows `(fileName).tsx` syntax. 
+By default, the component that is rendered for a route comes from the default export of the `index.tsx` file in each folder. However, this could make it harder to find which `index.tsx` file is the correct one when searching since there will be multiple files with that name. To avoid this pitfall, we also render the default export from any file that follows `(fileName).tsx` syntax. 
 
 ```tsx {1}
 |-- routes/
