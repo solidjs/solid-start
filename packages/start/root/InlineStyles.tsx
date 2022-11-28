@@ -3,8 +3,11 @@ import { createResource, Show, Suspense, useContext } from "solid-js";
 import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
 
-// @ts-expect-error
-var routeLayouts: Record<string, { layouts: any[], id: string }> = $ROUTE_LAYOUTS;
+declare global {
+  const $ROUTE_LAYOUTS: Record<string, { layouts: any[], id: string }>
+}
+
+var routeLayouts = $ROUTE_LAYOUTS;
 
 export { routeLayouts };
 
