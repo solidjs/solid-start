@@ -3,7 +3,6 @@ import { renderToStream, renderToString, renderToStringAsync } from "solid-js/we
 import { internalFetch } from "../api/internalFetch";
 import { redirect } from "../server/responses";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
-import { Middleware } from "./StartServer";
 
 export function renderSync(
   fn: (context: PageEvent) => JSX.Element,
@@ -43,7 +42,7 @@ export function renderAsync(
     nonce?: string;
     renderId?: string;
   }
-): Middleware {
+) {
   return () => async (event: FetchEvent) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
       const getStaticHTML = (event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }).env.getStaticHTML;
@@ -78,9 +77,10 @@ export function renderStream(
     onCompleteAll?: (info: { write: (v: string) => void }) => void;
   } = {}
 ) {
-  return () => async (event: FetchEvent & { env: { getStaticHTML(url: string | URL): Promise<string> }}) => {
+  return () => async (event: FetchEvent) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
-      return await event.env.getStaticHTML("/index");
+      const getStaticHTML = (event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }).env.getStaticHTML;
+      return await getStaticHTML("/index");
     }
 
     // Hijack after navigation with islands router to be async
