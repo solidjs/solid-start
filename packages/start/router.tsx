@@ -1,6 +1,7 @@
 import {
   A as BaseA,
   Location,
+  NavigateOptions,
   Navigator,
   Outlet as BaseOutlet,
   Routes as BaseRoutes,
@@ -37,7 +38,7 @@ const A = import.meta.env.START_ISLANDS_ROUTER
   : BaseA;
 
 const Routes = import.meta.env.START_ISLANDS_ROUTER
-  ? function IslandsRoutes(props) {
+  ? function IslandsRoutes(props: ComponentProps<any>) {
       return (
         <IslandsOutlet>
           <BaseRoutes>{props.children}</BaseRoutes>
@@ -75,7 +76,7 @@ const useLocation =
 const useNavigate =
   import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
     ? function IslandsUseNavigate() {
-        return ((to, props) => window.NAVIGATE(to, props)) as unknown as Navigator;
+        return ((to: string, props?: Partial<NavigateOptions<unknown>>) => window.NAVIGATE(to, props)) as unknown as Navigator;
       }
     : useBaseNavigate;
 

@@ -11,15 +11,16 @@ export function renderSync(
     renderId?: string;
   }
 ) {
-  return () => async (event: FetchEvent) => {
+  return () => async (event: FetchEvent): Promise<Response> => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
-      return await event.env.getStaticHTML("/index");
+      return await (event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } })
+        .env.getStaticHTML("/index");
     }
 
     let pageEvent = createPageEvent(event);
 
     let markup = renderToString(() => fn(pageEvent), options);
-    if (pageEvent.routerContext.url) {
+    if (pageEvent.routerContext && pageEvent.routerContext.url) {
       return redirect(pageEvent.routerContext.url, {
         headers: pageEvent.responseHeaders
       });
@@ -42,7 +43,7 @@ export function renderAsync(
     renderId?: string;
   }
 ) {
-  return () => async (event: FetchEvent) => {
+  return () => async (event: FetchEvent & { env: { getStaticHTML(url: string | URL): Promise<string> }}) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
       return await event.env.getStaticHTML("/index");
     }
@@ -51,7 +52,7 @@ export function renderAsync(
 
     let markup = await renderToStringAsync(() => fn(pageEvent), options);
 
-    if (pageEvent.routerContext.url) {
+    if (pageEvent.routerContext && pageEvent.routerContext.url) {
       return redirect(pageEvent.routerContext.url, {
         headers: pageEvent.responseHeaders
       });
@@ -75,7 +76,7 @@ export function renderStream(
     onCompleteAll?: (info: { write: (v: string) => void }) => void;
   } = {}
 ) {
-  return () => async (event: FetchEvent) => {
+  return () => async (event: FetchEvent & { env: { getStaticHTML(url: string | URL): Promise<string> }}) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
       return await event.env.getStaticHTML("/index");
     }
@@ -99,7 +100,7 @@ export function renderStream(
     const { readable, writable } = new TransformStream();
     const stream = renderToStream(() => fn(pageEvent), options);
 
-    if (pageEvent.routerContext.url) {
+    if (pageEvent.routerContext && pageEvent.routerContext.url) {
       return redirect(pageEvent.routerContext.url, {
         headers: pageEvent.responseHeaders
       });
@@ -117,7 +118,7 @@ export function renderStream(
 }
 
 function handleStreamingIslandsRouting(pageEvent: PageEvent, writable: WritableStream<any>) {
-  if (pageEvent.routerContext.replaceOutletId) {
+  if (pageEvent.routerContext && pageEvent.routerContext.replaceOutletId) {
     const writer = writable.getWriter();
     const encoder = new TextEncoder();
     writer.write(
@@ -130,11 +131,9 @@ function handleStreamingIslandsRouting(pageEvent: PageEvent, writable: WritableS
   }
 }
 
-function handleRedirect() {}
-
-function handleStreamingRedirect(context) {
-  return ({ write }) => {
-    if (context.routerContext.url)
+function handleStreamingRedirect(context: PageEvent) {
+  return ({ write }: { write: (html: string) => void }) => {
+    if (context.routerContext && context.routerContext.url)
       write(`<script>window.location="${context.routerContext.url}"</script>`);
   };
 }
@@ -158,7 +157,7 @@ function createPageEvent(event: FetchEvent) {
 
   const pageEvent: PageEvent = Object.freeze({
     request: event.request,
-    prevUrl: prevPath,
+    prevUrl: prevPath || '',
     routerContext: {},
     tags: [],
     env: event.env,
@@ -173,7 +172,7 @@ function createPageEvent(event: FetchEvent) {
 }
 
 function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
-  if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext.replaceOutletId) {
+  if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext && pageEvent.routerContext.replaceOutletId) {
     markup = `${pageEvent.routerContext.replaceOutletId}:${
       pageEvent.routerContext.newOutletId
     }=${markup.slice(

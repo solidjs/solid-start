@@ -4,34 +4,38 @@ import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
 
 // @ts-expect-error
-var routeLayouts = $ROUTE_LAYOUTS;
+var routeLayouts: Record<string, { layouts: any[], id: string }> = $ROUTE_LAYOUTS;
 
 export { routeLayouts };
 
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
-async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["routerContext"]) {
-  const match = routerContext.matches.reduce((memo: string[], m) => {
+type NotUndefined<T> = T extends undefined ? never : T;
+
+type RouterContext = NotUndefined<PageEvent["routerContext"]>
+
+async function getInlineStyles(env: PageEvent["env"], routerContext: RouterContext) {
+  const match = routerContext.matches ? routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      if (env.__dev.manifest.find(entry => entry.path === fullPath)) {
-        memo.push(env.__dev.manifest.find(entry => entry.path === fullPath)!.componentPath);
+      if (env.__dev!.manifest!.find(entry => entry.path === fullPath)) {
+        memo.push(env.__dev!.manifest!.find(entry => entry.path === fullPath)!.componentPath);
       }
       const route = routeLayouts[fullPath];
       if (route) {
         memo.push(
           ...route.layouts
-            .map(key => env.__dev.manifest.find(entry => entry.path === key || entry.id === key))
+            .map((key: string) => env.__dev!.manifest!.find(entry => entry.path === key || entry.id === key))
             .filter(entry => entry)
             .map(entry => entry!.componentPath)
         );
       }
     }
     return memo;
-  }, []);
+  }, []) : [];
 
   match.push(import.meta.env.START_ENTRY_SERVER);
-  const styles = await env.__dev.collectStyles(match);
+  const styles = await env.__dev!.collectStyles!(match);
   return styles;
 }
 
@@ -45,7 +49,7 @@ export function InlineStyles() {
   const [resource] = createResource(
     async () => {
       if (import.meta.env.SSR) {
-        return await getInlineStyles(context.env, context.routerContext);
+        return await getInlineStyles(context!.env, context!.routerContext!);
       } else {
         return {};
       }
