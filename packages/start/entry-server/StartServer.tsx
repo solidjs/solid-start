@@ -13,7 +13,7 @@ import { FetchEvent, PageEvent } from "../server/types";
 const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
   default: RouteDataFunc;
 };
-const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
+const dataFn: RouteDataFunc | undefined = rootData ? rootData.default : undefined;
 
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;

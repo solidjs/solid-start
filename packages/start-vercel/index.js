@@ -7,7 +7,7 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
-export default function ({ edge } = {}) {
+export default function ({ edge, prerender } = {}) {
   return {
     name: "vercel",
     async start() {
@@ -34,7 +34,12 @@ export default function ({ edge } = {}) {
       }
 
       const entrypoint = join(config.root, ".solid", "server", "server.js");
-      copyFileSync(join(__dirname, edge ? "entry-edge.js" : "entry.js"), entrypoint);
+
+      let baseEntrypoint = "entry.js";
+      if (edge) baseEntrypoint = "entry-edge.js";
+      if (prerender) baseEntrypoint = "entry-prerender.js";
+      copyFileSync(join(__dirname, baseEntrypoint), entrypoint);
+
       const bundle = await rollup({
         input: entrypoint,
         plugins: [
@@ -91,10 +96,21 @@ export default function ({ edge } = {}) {
           // Serve any matching static assets first
           { handle: "filesystem" },
           // Invoke the SSR function if not a static asset
-          { src: "/.*", dest: "/render" }
+          { src: prerender ? "/(?<path>.*)" : "/.*", dest: prerender ? "/render?path=$path" : "/render" }
         ]
       };
       writeFileSync(join(outputDir, "config.json"), JSON.stringify(outputConfig, null, 2));
+
+      // prerender config
+      if (prerender) {
+        const prerenderConfig = {
+          "expiration": prerender?.expiration ?? false,
+          "group": 1,
+          "bypassToken": prerender?.bypassToken,
+          "allowQuery": ["path"]
+        };
+        writeFileSync(join(outputDir, "functions/render.prerender-config.json"), JSON.stringify(prerenderConfig, null, 2));
+      }
     }
   };
 }
