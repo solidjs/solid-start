@@ -114,7 +114,7 @@ export default function (miniflareOptions = {}) {
     },
     start(config, { port }) {
       process.env.PORT = port;
-      const relWranglerPath = relative(process.cwd(), dirname(requireCwd.resolve("wrangler")));
+      const relWranglerPath = relative(process.cwd(), dirname(requireCwd.resolve("wrangler/package.json")));
       const proc = spawn("node", [
         join(relWranglerPath, "bin", "wrangler.js"),
         "dev",
