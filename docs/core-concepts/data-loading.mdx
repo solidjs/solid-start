@@ -133,7 +133,7 @@ export default function Page() {
 
 You can have multiple data sources inside a route. You can even have multiple data sources for the same resource. This is useful when you have a route that needs to load data from multiple sources.
 
-For example, you might have a route that needs to load data from a database and a third party API. You can use `createRouteData` to load data from the database and `createServerData$` to load data from the third party API.
+For example, you might have a route that needs to load data from a database and a third party API. You can use `createRouteData$` to load data from the database and `createServerData` to load data from the third party API.
 
 ```tsx twoslash filename="/routes/students.tsx"
 const hogwarts = { students: { list() { return [] } } }
