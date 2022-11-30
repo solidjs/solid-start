@@ -156,25 +156,50 @@ You can read more about using HTTP cookies in the [MDN documentation][cookies].
 
 SolidStart makes it easy to implement a GraphQL API. The `graphql` function takes a GraphQL schema and returns a function that can be used as an API route handler.
 
-TODO: Implementation
+- Install the `graphql` library
+- Then in any route file you can implement a graphql api like below
 
-```tsx twoslash filename="routes/api/graphql.ts"
-import { APIEvent } from "solid-start/api";
+```ts twoslash filename="routes/graphql.ts"
+import { buildSchema, graphql } from "graphql";
+import { json } from "solid-start";
+import { APIEvent } from "solid-start";
 
-const graphql = (schema: string, resolvers: any) => 
-  (event: APIEvent) => { return new Response("GraphQL Response") }
+// Define GraphQL Schema
+const schema = buildSchema(`
+  type Message {
+      message: String
+  }
 
-const schema = `
   type Query {
-    hello: String
+    hello(input: String): Message
+    goodbye: String
   }
-`;
+`);
 
-const handler =  graphql(schema, {
-  Query: {
-    hello: () => "Hello World"
+// Define GraphQL Resolvers
+const rootValue = {
+    hello: () => {
+        return {
+            message: "Hello World"
+          }
+  },
+  goodbye: () => {
+      return "Goodbye"
   }
-});
+};
+
+// request handler
+const handler = async (event: APIEvent) => {  
+
+  // get request body
+  const body = await new Response(event.request.body).json()
+
+  // pass query and save results
+  const result = await graphql({rootValue, schema, source: body.query})
+
+  // send query results as response
+  return json(result);
+};
 
 export const GET = handler;
 
