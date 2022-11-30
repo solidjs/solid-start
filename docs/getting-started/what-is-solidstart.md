@@ -8,17 +8,17 @@ active: true
 # What is SolidStart?
 
 <aside title="Beware of dragons" type="warning">
-  We are very excited about SolidStart, but it is currently in beta. There will very likely be **bugs and
-  missing documentation**. Come at it with a growth attitude, have fun, and don't use it yet for
-  anything critical. If all this darkness doesn't phase you, press onward, and consider joining the
+  We are very excited about SolidStart, but it is currently in beta. There will very likely be <b>bugs and
+  missing documentation</b>. Come at it with a growth attitude, have fun, and don't use it yet for
+  anything critical. If all this darkness doesn't faze you, press onward, and consider joining the
   <a href="https://discord.com/invite/solidjs" target="_blank">Discord</a> to ask questions. We would love to meet you.
 </aside>
 
 Web applications often comprise many components: databases, servers, front-ends, bundlers, data fetching/mutations, caching, and infrastructure. Orchestrating these components is challenging and often requires a large amount of shared state and redundant logic across the application stack.
 
-Enter SolidStart: a framework that provides many of these components out-of-the-box and integrates them seamlessly!
+Enter SolidStart: a meta-framework that provides many of these components out-of-the-box and integrates them seamlessly!
 
-SolidStart is considered a _meta-framework_ (a framework built on top of another framework) because, at it's core, SolidStart is powered by [SolidJS](https://solidjs.com) and the Solid router.
+SolidStart is considered a _meta-framework_ (a framework built on top of another framework) because, at it's core, SolidStart is powered by [SolidJS](https://solidjs.com) and the [Solid router](https://github.com/solidjs/solid-router).
 
 SolidStart enables you to render your application in different ways depending on what's best for your use case:
 

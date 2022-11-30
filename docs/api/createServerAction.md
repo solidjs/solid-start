@@ -8,7 +8,7 @@ active: true
 
 # createServerAction$
 
-##### `createServerAction$` creates a controller for managing the submissions of an async user action, where the action always runs on the server
+##### `createServerAction$` creates a controller for managing the submissions of an async user action, where the action always runs on the server.
 
 <div class="text-lg">
 

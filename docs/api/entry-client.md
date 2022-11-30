@@ -26,11 +26,9 @@ mount(() => <StartClient />, document);
 
 ### Mounting your application
 
-This file does one thing. It starts your SolidStart application in the browser. It does so by passing in our `<StartClient>` to a `mount` function that also takes our mount element as an argument.
+This file does one thing. It starts your SolidStart application in the browser. It does so by passing in our `<StartClient>` to a `mount` function that also takes our mount element as an argument. What is `mount`? It is an alias over Solid's `hydrate` and `render` methods to ensure that no matter what the client always starts up properly.
 
-What is `mount`? Well it is an alias over Solid's `hydrate` and `render` methods to ensure that no matter if you are using SolidStart to do client-only rendering or our various modes of server-side rendering that the client always starts up properly.
-
-This file is good place to run any other client specific code that you want to happen on startup. Things like registering service workers.
+It doesn't matter if you are using SolidStart to do client-only rendering or if you are using our various modes of server-side rendering. This file is good place to run any other client specific code that you want to happen on startup. Things like registering service workers.
 
 ## Reference
 
@@ -46,10 +44,9 @@ mount(() => <StartClient />, document);
 
 #### Parameters
 
-- codeFn (function): function that executes the application code
-- mountEl (Node | Document): element to mount the application to
+- `codeFn` (_function_): function that executes the application code
+- `mountEl` (_Node_ | _Document_): element to mount the application to
 
 ### `<StartClient />`
 
 Component that wraps our application root. It includes Context providers for Routing and MetaData.
-

@@ -274,9 +274,11 @@ export default async function () {
           id.endsWith(".md?meta")
         ) {
           return {
-            code: code.replace(/lsp="([^"]*)"/g, (match, p1) => {
-              return `lsp={\`${p1.replaceAll("`", `\\\``)}\`}`;
-            })
+            code: code
+              .replace(/lsp="([^"]*)"/g, (match, p1) => {
+                return `lsp={\`${p1.replaceAll("`", `\\\``)}\`}`;
+              })
+              .replace(/{"\\n"}/g, "")
           };
         }
       },

@@ -44,7 +44,7 @@ export async function parseResponse(request: Request, response: Response) {
     return error;
   } else if (contentType.includes("response")) {
     if (response.status === 204 && response.headers.get(LocationHeader)) {
-      return redirect(response.headers.get(LocationHeader));
+      return redirect(response.headers.get(LocationHeader)!);
     }
     return response;
   } else {
@@ -55,24 +55,24 @@ export async function parseResponse(request: Request, response: Response) {
       } catch {}
     }
     if (response.status === 204 && response.headers.get(LocationHeader)) {
-      return redirect(response.headers.get(LocationHeader));
+      return redirect(response.headers.get(LocationHeader)!);
     }
     return response;
   }
 }
 
-export const server$: CreateServerFunction = (fn => {
+export const server$ = ((_fn: any) => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
-function createRequestInit(...args) {
+function createRequestInit(...args: any[]): RequestInit {
   // parsing args when a request is made from the browser for a server module
   // FormData
   // Request
   // Headers
   //
   let body,
-    headers = {
+    headers: Record<string, string> = {
       [XSolidStartOrigin]: "client"
     };
 
@@ -125,17 +125,19 @@ function createRequestInit(...args) {
   };
 }
 
+type ServerCall = (route: string, init: RequestInit) => Promise<Response>;
+
 server$.createFetcher = route => {
   let fetcher: any = function (this: Request, ...args: any[]) {
     if (this instanceof Request) {
     }
     const requestInit = createRequestInit(...args);
     // request body: json, formData, or string
-    return server$.call(route, requestInit);
+    return (server$.call as ServerCall)(route, requestInit);
   };
 
   fetcher.url = route;
-  fetcher.fetch = (init: RequestInit) => server$.call(route, init);
+  fetcher.fetch = (init: RequestInit) => (server$.call as ServerCall)(route, init);
   // fetcher.action = async (...args: any[]) => {
   //   const requestInit = createRequestInit(...args);
   //   // request body: json, formData, or string
@@ -144,7 +146,7 @@ server$.createFetcher = route => {
   return fetcher as ServerFunction<any, any>;
 };
 
-server$.call = async function (route, init: RequestInit) {
+server$.call = async function (route: string, init: RequestInit) {
   const request = new Request(new URL(route, window.location.href).href, init);
 
   const response = await fetch(request);
@@ -155,7 +157,7 @@ server$.call = async function (route, init: RequestInit) {
   } else {
     return await parseResponse(request, response);
   }
-};
+} as any;
 
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server

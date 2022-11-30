@@ -2,6 +2,7 @@ import "solid-start/node/globals.js";
 import manifest from "../../.vercel/output/static/route-manifest.json";
 import entry from "./entry-server";
 
+
 export default async (req, res) => {
   console.log(`Received new request: ${req.url}`);
 
@@ -48,7 +49,12 @@ export default async (req, res) => {
 function createRequest(req) {
   let host = req.headers["x-forwarded-host"] || req.headers["host"];
   let protocol = req.headers["x-forwarded-proto"] || "https";
-  let url = new URL(req.url, `${protocol}://${host}`);
+
+  const params = new Proxy(new URLSearchParams(req.headers["x-now-route-matches"]), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  })
+
+  const url = new URL(params.path, `${protocol}://${host}`);
 
   let init = {
     method: req.method,
