@@ -696,10 +696,14 @@ function islands() {
             ssr
               ? `import ${b}_island from "${c}";
                   const ${b} = unstable_island(${b}_island, "${
-                  join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
+                  join(dirname(id), c)
+                    .slice(process.cwd().length + 1)
+                    .replaceAll("\\", "/") +
+                  ".tsx" +
+                  "?island"
                 }");`
               : `const ${b} = unstable_island(() => import("${c}?island"), "${
-                  join(dirname(id), c) + ".tsx" + "?island"
+                  join(dirname(id), c).replaceAll("\\", "/") + ".tsx" + "?island"
                 }")`
         );
 
