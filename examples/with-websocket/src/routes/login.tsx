@@ -29,7 +29,7 @@ export default function Login() {
   const data = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const [_, loginAction] = createServerAction$(async (form: FormData) => {
+  const [loggingIn, loginAction] = createServerAction$(async (form: FormData) => {
     const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");
@@ -100,20 +100,20 @@ export default function Login() {
           <label for="username-input">Username</label>
           <input name="username" placeholder="kody" />
         </div>
-        <Show when={loginAction.error?.fieldErrors?.username}>
-          <p role="alert">{loginAction.error.fieldErrors.username}</p>
+        <Show when={loggingIn.error?.fieldErrors?.username}>
+          <p role="alert">{loggingIn.error.fieldErrors.username}</p>
         </Show>
         <div>
           <label for="password-input">Password</label>
           <input name="password" type="password" placeholder="twixrox" />
         </div>
-        <Show when={loginAction.error?.fieldErrors?.password}>
-          <p role="alert">{loginAction.error.fieldErrors.password}</p>
+        <Show when={loggingIn.error?.fieldErrors?.password}>
+          <p role="alert">{loggingIn.error.fieldErrors.password}</p>
         </Show>
         <div />
-        <Show when={loginAction.error}>
+        <Show when={loggingIn.error}>
           <p role="alert" id="error-message">
-            {loginAction.error.message}
+            {loggingIn.error.message}
           </p>
         </Show>
         <button type="submit">{data() ? "Login" : ""}</button>

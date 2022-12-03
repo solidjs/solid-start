@@ -12,7 +12,7 @@ export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any, reset: ()
     <ErrorBoundaryBase
       fallback={(e, reset) => {
         return (
-          <Show when={!props.fallback} fallback={props.fallback(e, reset)}>
+          <Show when={!props.fallback} fallback={props.fallback && props.fallback(e, reset)}>
             <ErrorMessage error={e} />
           </Show>
         );

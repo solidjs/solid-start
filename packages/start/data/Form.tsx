@@ -182,7 +182,7 @@ export let FormImpl = (_props: FormImplProps) => {
   // the submit event (even when submitting via keyboard when focused on
   // another form field, yeeeeet) so we should have access to that button's
   // data for use in the submit handler.
-  let clickedButtonRef;
+  let clickedButtonRef: HTMLButtonElement | HTMLInputElement | null = null;
   let form: HTMLFormElement | null = null;
 
   createEffect(() => {
