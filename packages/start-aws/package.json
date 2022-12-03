@@ -1,11 +1,11 @@
 {
-   "name": "solid-start-aws",
-   "version": "1.0.0",
-   "main": "./index.mjs",
-   "type": "module",
-   "solid": {
-     "type": "adapter"
-   },
+  "name": "solid-start-aws",
+  "version": "0.2.7",
+  "main": "./index.mjs",
+  "type": "module",
+  "solid": {
+    "type": "adapter"
+  },
   "dependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^4.1.0",
