@@ -131,7 +131,7 @@ prog
         stdio: "inherit",
         env: {
           ...process.env,
-          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : undefined}`
+          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : ''}`
         }
       }
     );
