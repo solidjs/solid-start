@@ -3,7 +3,7 @@
 Hackernews example powered by [`solid-start`](https://start.solidjs.com);
 
 ```bash
-npm init solid -- --template hackernews
+npm init solid@latest -- --template hackernews
 ```
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/solidjs/solid-start/tree/main/examples/hackernews)
