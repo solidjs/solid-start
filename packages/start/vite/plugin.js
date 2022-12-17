@@ -418,6 +418,9 @@ function solidStartServer(options) {
     name: "solid-start-server",
     config(c) {
       config = c;
+      return {
+        appType: 'custom'
+      }
     },
     transform(code, id) {
       if (module_style_pattern.test(id)) {
@@ -427,7 +430,6 @@ function solidStartServer(options) {
     configureServer(vite) {
       return async () => {
         const { createDevHandler } = await import("../dev/server.js");
-        remove_html_middlewares(vite.middlewares);
         let adapter = await resolveAdapter(config);
         if (adapter && adapter.dev) {
           vite.middlewares.use(
@@ -709,22 +711,4 @@ function islands() {
       }
     }
   };
-}
-
-/**
- * @param {import('node_modules/vite').ViteDevServer['middlewares']} server
- */
-function remove_html_middlewares(server) {
-  const html_middlewares = [
-    "viteIndexHtmlMiddleware",
-    "vite404Middleware",
-    "viteSpaFallbackMiddleware",
-    "viteHtmlFallbackMiddleware"
-  ];
-  for (let i = server.stack.length - 1; i > 0; i--) {
-    // @ts-ignore
-    if (html_middlewares.includes(server.stack[i].handle.name)) {
-      server.stack.splice(i, 1);
-    }
-  }
 }
