@@ -8,7 +8,7 @@ active: true
 
 # entry-server.tsx
 
-##### `entry-server.tsx` is where your app starts in the browser.
+##### `entry-server.tsx` is where your app starts on the server.
 
 <div class="text-lg">
 

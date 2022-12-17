@@ -23,7 +23,7 @@ process.on(
         ? err.message.includes("renderToString timed out")
         : false)
     ) {
-      console.error(`An unhandler error occured: ${err}`);
+      console.error(`An unhandled error occured: ${typeof err === 'string' ? err : (err.stack || err)}`);
     }
   }
 );

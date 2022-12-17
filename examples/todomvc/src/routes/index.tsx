@@ -12,7 +12,7 @@ declare module "solid-js" {
     }
   }
 }
-const setFocus = el => setTimeout(() => el.focus());
+const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
 
 export const routeData = () => createServerData$(db.getTodos, { initialValue: [] });
 
@@ -42,7 +42,7 @@ const TodoApp = () => {
     else return todos;
   };
 
-  let inputRef: HTMLInputElement;
+  let inputRef!: HTMLInputElement;
   return (
     <section class="todoapp">
       <header class="header">

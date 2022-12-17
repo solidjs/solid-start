@@ -42,9 +42,9 @@ Files named `index` will be rendered when there are no additional URL route segm
 - `hogwarts.com/staff/positions` ➜ `/routes/staff/positions/index.tsx` 
 
 Additionally, there are some special file names that map to [URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) patterns, e.g.
-- `/src/routes/students/[id].tsx` ➜ `hogwarts.com/students/:id`
-- `/src/routes/students/[id]/[name].tsx` ➜ `hogwarts.com/students/:id/:name`
-- `/src/routes/[...missing].tsx` ➜ `hogwarts.com/*missing`
+- `hogwarts.com/students/:id` ➜ `/src/routes/students/[id].tsx`
+- `hogwarts.com/students/:id/:name` ➜ `/src/routes/students/[id]/[name].tsx`
+- `hogwarts.com/*missing` ➜ `/src/routes/[...missing].tsx`
 
 We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
 
@@ -257,7 +257,7 @@ With file system routing, folders map directly to URL Paths. However, there migh
 ```
 
 ## Renaming Index
-By default, the default component that is rendered comed from the default export from the file `index.tsx` in each folder. However, this could make it harder to find which `index.tsx` file is the correct one when searching since there will be multiple files with that name. To avoid this pitfall, we also render the default export from any file that follows `(fileName).tsx` syntax. 
+By default, the component that is rendered for a route comes from the default export of the `index.tsx` file in each folder. However, this could make it harder to find which `index.tsx` file is the correct one when searching since there will be multiple files with that name. To avoid this pitfall, we also render the default export from any file that follows `(fileName).tsx` syntax. 
 
 ```tsx {1}
 |-- routes/

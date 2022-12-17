@@ -144,7 +144,7 @@ export class ResponseError extends Error implements Response {
     return this.response();
   }
   get body(): ReadableStream<Uint8Array> {
-    return this.response().body;
+    return this.response().body!;
   }
   bodyUsed: boolean;
   async arrayBuffer(): Promise<ArrayBuffer> {

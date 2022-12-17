@@ -691,16 +691,18 @@ function islands() {
     transform(code, id, ssr) {
       if (code.includes("unstable_island")) {
         let replaced = code.replaceAll(
-          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
-          (a, b, c) =>
-            ssr
+          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\((("([^"]+)")|('([^']+)'))\)\)/g,
+          (a, b, c) => {
+            c = c.slice(1, -1);
+            return ssr
               ? `import ${b}_island from "${c}";
                   const ${b} = unstable_island(${b}_island, "${
                   join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
                 }");`
               : `const ${b} = unstable_island(() => import("${c}?island"), "${
                   join(dirname(id), c) + ".tsx" + "?island"
-                }")`
+                }")`;
+          }
         );
 
         return replaced;
