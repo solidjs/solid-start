@@ -17,6 +17,7 @@ importers:
       cross-env: ^7.0.3
       debug: ^4.3.4
       fast-glob: ^3.2.12
+      graphql: ^16.6.0
       rimraf: ^3.0.2
       rollup: ^2.79.1
       solid-js: ^1.6.2
@@ -48,6 +49,7 @@ importers:
       coveralls: 3.1.1
       debug: 4.3.4
       fast-glob: 3.2.12
+      graphql: 16.6.0
       rimraf: 3.0.2
       rollup: 2.79.1
       solid-js: 1.6.2
@@ -4827,6 +4829,11 @@ packages:
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
 
+  /graphql/16.6.0:
+    resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+    dev: true
+
   /har-schema/2.0.0:
     resolution: {integrity: sha512-Oqluz6zhGX8cyRaTQlFMPw80bSJVG2x/cFb8ZPhUILGgHka9SsokCCOQgpveePerqidZOrT14ipqfJb7ILcW5Q==}
     engines: {node: '>=4'}
@@ -7097,6 +7104,7 @@ packages:
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.0.0
+      postcss: 8.4.18
       postcss-import: 14.1.0
       postcss-js: 4.0.0
       postcss-load-config: 3.1.4
