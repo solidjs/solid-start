@@ -29,7 +29,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.5.0",
+    "@solidjs/router": "^0.6.0",
     "@tailwindcss/typography": "^0.5.7",
     "@trpc/client": "^9.27.4",
     "@trpc/server": "^9.27.4",
