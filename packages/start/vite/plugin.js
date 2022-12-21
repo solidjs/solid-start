@@ -548,8 +548,6 @@ function solidStartConfig(options) {
   };
 }
 
-
-
 function detectAdapter() {
   const startPkgJson = startRequire("../package.json");
   const supportedAdapters = Array.from(Object.keys(startPkgJson.devDependencies)).filter(
