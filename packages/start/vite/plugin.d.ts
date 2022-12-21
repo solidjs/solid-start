@@ -1,5 +1,12 @@
+export type Adapter = {
+  start(options: Options): Promise<void>;
+  build(options: Options): Promise<void>;
+  dev(options: Options): Promise<void>;
+  name: string;
+};
+
 export type Options = {
-  adapter: string | { start(): void; build(): void };
+  adapter: string | Adapter;
   appRoot: string;
   routesDir: string;
   ssr: boolean;
