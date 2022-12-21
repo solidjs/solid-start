@@ -109,14 +109,11 @@ This `Form` is an enhanced version of the normal `form`. Its submit handler has 
 
 ## Retriggering resources
 
-- Retriggers route resources.
+`refetchRouteData` is used to retrigger all current route data or by specific key.
 
 ## Errors
 
-- Errors, error field that's populated if the submission errored, and a status field that's set to `error`.
-  - If you read the `submissionState.error` field in your code (JSX, or effects) then the error is considered user-handled, and we don't trigger ErrorBoundaries.
-  - If you don't use the error field, then we trigger the error boundary on an error because we assume it's unexpected for you.
-- How to do form errors? Where to put... Here or `ResponseError`?
+The `error` field that's populated if the submission errored.
 
 ## Server Actions
 
