@@ -37,10 +37,12 @@ export default defineConfig({
 SolidStart is built with [Vite](https://vitejs.dev). It is little more than a collection of Vite plugins that enable all the functionality that we see here. This is an incredibly powerful approach as we get to leverage Vite's whole ecosystem of plugins to enhance our applications.
 
 The core plugin used by SolidStart is found at `solid-start/vite`. The main configuration for it is setting the adapter. Adapter's in SolidStart set the environment to which your project is deployed. Currently, SolidStart supports:
+
 - Node
 - Static hosting
 - Netlify Functions & Edge
 - Vercel Functions & Edge
+- AWS Lambda & Lambda@Edge
 - Cloudflare Workers & Pages
 - Deno Deploy
 

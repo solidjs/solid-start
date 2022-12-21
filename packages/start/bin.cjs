@@ -3,7 +3,7 @@
 
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
-const { resolve, join } = require("path");
+const { resolve, join, dirname, relative } = require("path");
 const path = require("path");
 const c = require("picocolors");
 const {
@@ -17,6 +17,8 @@ const {
 const waitOn = require("wait-on");
 const pkg = require(join(__dirname, "package.json"));
 const DEBUG = require("debug")("start");
+const { createRequire } = require("module");
+const requireCwd = createRequire(process.cwd());
 globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("beta");
@@ -102,13 +104,15 @@ prog
 
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
+    const relVitePath = relative(process.cwd(), dirname(requireCwd.resolve('vite/package.json')));
+
     DEBUG(
       [
         "running",
         "vite",
         "--experimental-vm-modules",
         inspect ? "--inspect" : undefined,
-        "node_modules/vite/bin/vite.js",
+        `${relVitePath}/bin/vite.js`,
         "dev",
         ...(root ? [root] : []),
         ...(config ? ["--config", config.configFile] : []),
@@ -131,7 +135,13 @@ prog
         stdio: "inherit",
         env: {
           ...process.env,
-          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : undefined}`
+          NODE_OPTIONS: [
+            process.env.NODE_OPTIONS,
+            "--experimental-vm-modules",
+            inspect ? "--inspect" : "",
+          ]
+            .filter(Boolean)
+            .join(" "),
         }
       }
     );
@@ -149,11 +159,13 @@ prog
     console.log(c.magenta(" version "), pkg.version);
 
     const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
+    const startPath = dirname(requireCwd.resolve('solid-start/package.json'));
 
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
-    const vite = require("vite");
+    const vite = requireCwd("vite");
+    const relVitePath = relative(process.cwd(), dirname(requireCwd.resolve('vite/package.json')));
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     config.adapter.build(config, {
@@ -170,7 +182,7 @@ prog
             minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
-                resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
+                join(startPath, "islands", "entry-client")
               ],
               output: {
                 manualChunks: undefined
@@ -346,10 +358,10 @@ prog
           console.time(c.blue("solid-start") + c.magenta(" index.html rendered in"));
           let port = await (await import("get-port")).default();
           let proc = spawn(
-            "node",
+            "vite",
             [
               "--experimental-vm-modules",
-              "node_modules/vite/bin/vite.js",
+              `${relVitePath}/bin/vite.js`,
               "dev",
               "--mode",
               "production",
@@ -361,7 +373,13 @@ prog
               shell: true,
               env: {
                 ...process.env,
-                START_INDEX_HTML: "true"
+                START_INDEX_HTML: "true",
+                NODE_OPTIONS: [
+                  process.env.NODE_OPTIONS,
+                  "--experimental-vm-modules",
+                ]
+                  .filter(Boolean)
+                  .join(" "),
               }
             }
           );
@@ -477,7 +495,7 @@ prog.parse(process.argv);
  * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
-  const vite = require("vite");
+  const vite = requireCwd("vite");
   root = root || process.cwd();
   if (!configFile) {
     if (!configFile) {

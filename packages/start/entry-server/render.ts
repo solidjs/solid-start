@@ -43,9 +43,10 @@ export function renderAsync(
     renderId?: string;
   }
 ) {
-  return () => async (event: FetchEvent & { env: { getStaticHTML(url: string | URL): Promise<string> }}) => {
+  return () => async (event: FetchEvent) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
-      return await event.env.getStaticHTML("/index");
+      const getStaticHTML = (event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }).env.getStaticHTML;
+      return await getStaticHTML("/index");
     }
 
     let pageEvent = createPageEvent(event);
@@ -55,7 +56,7 @@ export function renderAsync(
     if (pageEvent.routerContext && pageEvent.routerContext.url) {
       return redirect(pageEvent.routerContext.url, {
         headers: pageEvent.responseHeaders
-      });
+      }) as Response;
     }
 
     markup = handleIslandsRouting(pageEvent, markup);
@@ -76,9 +77,10 @@ export function renderStream(
     onCompleteAll?: (info: { write: (v: string) => void }) => void;
   } = {}
 ) {
-  return () => async (event: FetchEvent & { env: { getStaticHTML(url: string | URL): Promise<string> }}) => {
+  return () => async (event: FetchEvent) => {
     if (!import.meta.env.DEV && !import.meta.env.START_SSR && !import.meta.env.START_INDEX_HTML) {
-      return await event.env.getStaticHTML("/index");
+      const getStaticHTML = (event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }).env.getStaticHTML;
+      return await getStaticHTML("/index");
     }
 
     // Hijack after navigation with islands router to be async

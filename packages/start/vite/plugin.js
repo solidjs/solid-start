@@ -4,6 +4,7 @@ import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
+import { createRequire } from "module";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -16,6 +17,9 @@ import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
+
+const startRequire = createRequire(import.meta.url);
+const requireCwd = createRequire(process.cwd());
 
 // @ts-ignore
 globalThis.DEBUG = debug("start:vite");
@@ -398,9 +402,15 @@ function solidsStartRouteManifest(options) {
 
 async function resolveAdapter(config) {
   if (typeof config.solidOptions.adapter === "string") {
-    return (await import(config.solidOptions.adapter)).default();
+    return (await import(
+      requireCwd.resolve(config.solidOptions.adapter)
+    )).default();
   } else if (Array.isArray(config.solidOptions.adapter)) {
-    return (await import(config.solidOptions.adapter[0])).default(config.solidOptions.adapter[1]);
+    return (await import(
+      requireCwd.resolve(config.solidOptions.adapter[0])
+    )).default(
+      requireCwd.resolve(config.solidOptions.adapter[1])
+    );
   } else {
     return config.solidOptions.adapter;
   }
@@ -418,6 +428,9 @@ function solidStartServer(options) {
     name: "solid-start-server",
     config(c) {
       config = c;
+      return {
+        appType: 'custom'
+      }
     },
     transform(code, id) {
       if (module_style_pattern.test(id)) {
@@ -427,7 +440,6 @@ function solidStartServer(options) {
     configureServer(vite) {
       return async () => {
         const { createDevHandler } = await import("../dev/server.js");
-        remove_html_middlewares(vite.middlewares);
         let adapter = await resolveAdapter(config);
         if (adapter && adapter.dev) {
           vite.middlewares.use(
@@ -511,7 +523,7 @@ function solidStartConfig(options) {
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.islandsRouter ? true : false
           ),
-          DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis.DEBUG",
+          DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis._$DEBUG",
           "import.meta.env.START_ADAPTER": JSON.stringify(
             typeof options.adapter === "string"
               ? options.adapter
@@ -536,31 +548,28 @@ function solidStartConfig(options) {
   };
 }
 
-/**
- * @param {string} locate
- * @param {string} [cwd]
- */
-function find(locate, cwd) {
-  cwd = cwd || process.cwd();
-  if (cwd.split(path.sep).length < 2) return undefined;
-  const match = fs.readdirSync(cwd).find(f => f === locate);
-  if (match) return match;
-  return find(locate, path.join(cwd, ".."));
-}
-
-const nodeModulesPath = find("node_modules", process.cwd());
-
 function detectAdapter() {
+  const startPkgJson = startRequire("../package.json");
+  const supportedAdapters = Array.from(Object.keys(startPkgJson.devDependencies)).filter(
+    name => name.startsWith("solid-start-")
+  );
+  const cwdPackageJson = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "package.json"), "utf-8")
+  );
+  const allDepdenencies = Array.from(Object.keys({
+    ...cwdPackageJson.dependencies,
+    ...cwdPackageJson.devDependencies
+  }));
+
+  /**
+   * @type {string[]}
+   */
   let adapters = [];
-  fs.readdirSync(nodeModulesPath).forEach(dir => {
-    if (dir.startsWith("solid-start-")) {
-      const pkg = JSON.parse(
-        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
-          encoding: "utf8"
-        })
-      );
-      if (pkg.solid && pkg.solid.type === "adapter") {
-        adapters.push(dir);
+  allDepdenencies.forEach(dep => {
+    if (supportedAdapters.includes(dep)) {
+      const pkg = requireCwd(`${dep}/package.json`);
+      if (pkg.solid?.type === "adapter") {
+        adapters.push(dep);
       }
     }
   });
@@ -691,38 +700,26 @@ function islands() {
     transform(code, id, ssr) {
       if (code.includes("unstable_island")) {
         let replaced = code.replaceAll(
-          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
-          (a, b, c) =>
-            ssr
+          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\((("([^"]+)")|('([^']+)'))\)\)/g,
+          (a, b, c) => {
+            c = c.slice(1, -1);
+            return ssr
               ? `import ${b}_island from "${c}";
                   const ${b} = unstable_island(${b}_island, "${
-                  join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
+                  join(dirname(id), c)
+                    .slice(process.cwd().length + 1)
+                    .replaceAll("\\", "/") +
+                  ".tsx" +
+                  "?island"
                 }");`
               : `const ${b} = unstable_island(() => import("${c}?island"), "${
-                  join(dirname(id), c) + ".tsx" + "?island"
-                }")`
+                  join(dirname(id), c).replaceAll("\\", "/") + ".tsx" + "?island"
+                }")`;
+          }
         );
 
         return replaced;
       }
     }
   };
-}
-
-/**
- * @param {import('node_modules/vite').ViteDevServer['middlewares']} server
- */
-function remove_html_middlewares(server) {
-  const html_middlewares = [
-    "viteIndexHtmlMiddleware",
-    "vite404Middleware",
-    "viteSpaFallbackMiddleware",
-    "viteHtmlFallbackMiddleware"
-  ];
-  for (let i = server.stack.length - 1; i > 0; i--) {
-    // @ts-ignore
-    if (html_middlewares.includes(server.stack[i].handle.name)) {
-      server.stack.splice(i, 1);
-    }
-  }
 }

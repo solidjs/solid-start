@@ -18,7 +18,7 @@ Web applications often comprise many components: databases, servers, front-ends,
 
 Enter SolidStart: a meta-framework that provides many of these components out-of-the-box and integrates them seamlessly!
 
-SolidStart is considered a _meta-framework_ (a framework built on top of another framework) because, at it's core, SolidStart is powered by [SolidJS](https://solidjs.com) and the [Solid router](https://github.com/solidjs/solid-router).
+SolidStart is considered a _meta-framework_ (a framework built on top of another framework) because, at its core, SolidStart is powered by [SolidJS](https://solidjs.com) and the [Solid router](https://github.com/solidjs/solid-router).
 
 SolidStart enables you to render your application in different ways depending on what's best for your use case:
 
@@ -39,7 +39,7 @@ SolidStart touts the following feature set:
 - **Isomorphic, nested routing.** You write the same routes regardless of whether the page is rendered on the client or server. Route nesting provides parent-child relationships that simplify application logic.
 - **Multiple rendering modes.** SolidStart can be used to create CSR, SSR, streaming SSR, or SSG applications.
 - **Command Line Interface (CLI) and templates.** Get up and running quickly with starters.
-- **Deployment adapters.** SolidStart provides adapters to support deployment to your favorite platform&mdash;Netlify, Vercel, and Cloudflare, to name a few.
+- **Deployment adapters.** SolidStart provides adapters to support deployment to your favorite platform&mdash;Netlify, Vercel, AWS, and Cloudflare, to name a few.
 
 ## Prerequisites
 
