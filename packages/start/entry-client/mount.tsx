@@ -13,8 +13,8 @@ declare global {
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
   // const { default: createDebugger } = await import("debug");
-  // window.DEBUG = createDebugger("start:client");
-  window.DEBUG = console.log as unknown as any;
+  // window.SOLID_DEBUG = createDebugger("start:client");
+  window.SOLID_DEBUG = console.log as unknown as any;
 
   DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
   DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
@@ -48,15 +48,17 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
       );
 
       hydrate(
-        () => !Component || typeof Component === 'string' ? Component :
-          createComponent(Component, {
-            ...JSON.parse(el.dataset.props || "undefined"),
-            get children() {
-              const el = getNextElement();
-              (el as any).__$owner = getOwner();
-              return;
-            }
-          }),
+        () =>
+          !Component || typeof Component === "string"
+            ? Component
+            : createComponent(Component, {
+                ...JSON.parse(el.dataset.props || "undefined"),
+                get children() {
+                  const el = getNextElement();
+                  (el as any).__$owner = getOwner();
+                  return;
+                }
+              }),
         el,
         {
           renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
@@ -80,7 +82,7 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     window._$HY.hydrateIslands = () => {
       const islands = document.querySelectorAll("solid-island[data-hk]");
       const assets = new Set<string>();
-      islands.forEach((el: Element) => assets.add((el as HTMLElement).dataset.component || ''));
+      islands.forEach((el: Element) => assets.add((el as HTMLElement).dataset.component || ""));
       Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
         islands.forEach((el: Element) => {
           if ((el as HTMLElement).dataset.when === "idle" && "requestIdleCallback" in window) {
