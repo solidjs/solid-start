@@ -134,7 +134,7 @@ prog
           NODE_OPTIONS: [
             process.env.NODE_OPTIONS,
             "--experimental-vm-modules",
-            inspect ? "--inspect" : undefined,
+            inspect ? "--inspect" : "",
           ]
             .filter(Boolean)
             .join(" "),
