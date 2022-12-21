@@ -9,7 +9,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       '@tailwindcss/typography': ^0.5.7
       '@trpc/client': ^9.27.4
       '@trpc/server': ^9.27.4
@@ -70,7 +70,7 @@ importers:
   examples/bare:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
@@ -91,7 +91,7 @@ importers:
   examples/hackernews:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
@@ -112,7 +112,7 @@ importers:
   examples/todomvc:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       csstype: 3.1.0
       solid-js: ^1.6.2
       solid-start: ^0.2.0
@@ -134,7 +134,7 @@ importers:
   examples/with-auth:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
@@ -156,7 +156,7 @@ importers:
     specifiers:
       '@mdx-js/rollup': ^2.1.5
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       solid-js: ^1.6.2
       solid-mdx: ^0.0.6
       solid-start: ^0.2.0
@@ -181,7 +181,7 @@ importers:
     specifiers:
       '@prisma/client': ^4.5.0
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       prisma: ^4.5.0
       solid-js: ^1.6.2
       solid-start: ^0.2.0
@@ -205,7 +205,7 @@ importers:
   examples/with-solid-styled:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       babel-plugin-solid-styled: ^0.6.3
       solid-js: ^1.6.2
       solid-start: ^0.2.0
@@ -230,7 +230,7 @@ importers:
   examples/with-tailwindcss:
     specifiers:
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       autoprefixer: ^10.4.12
       postcss: ^8.4.18
       solid-js: ^1.6.2
@@ -257,7 +257,7 @@ importers:
   examples/with-vitest:
     specifiers:
       '@solidjs/meta': ^0.28.2
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       '@solidjs/testing-library': ^0.5.1
       '@testing-library/jest-dom': ^5.16.5
       '@types/testing-library__jest-dom': ^5.14.5
@@ -289,7 +289,7 @@ importers:
       '@cloudflare/kv-asset-handler': ^0.1.3
       '@cloudflare/workers-types': ^3.17.0
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-cloudflare-workers: ^0.2.0
@@ -385,7 +385,7 @@ importers:
       '@babel/template': ^7.18.10
       '@cloudflare/workers-types': ^3.18.0
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       '@testing-library/jest-dom': ^5.16.5
       '@types/babel__core': ^7.1.19
       '@types/cookie': ^0.5.1
@@ -751,7 +751,7 @@ importers:
     specifiers:
       '@cloudflare/kv-asset-handler': ^0.1.3
       '@solidjs/meta': ^0.28.0
-      '@solidjs/router': ^0.5.0
+      '@solidjs/router': ^0.6.0
       solid-js: ^1.6.2
       solid-start: workspace:*
       solid-start-cloudflare-pages: workspace:*
