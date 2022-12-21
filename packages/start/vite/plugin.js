@@ -418,6 +418,9 @@ function solidStartServer(options) {
     name: "solid-start-server",
     config(c) {
       config = c;
+      return {
+        appType: 'custom'
+      }
     },
     transform(code, id) {
       if (module_style_pattern.test(id)) {
@@ -427,7 +430,6 @@ function solidStartServer(options) {
     configureServer(vite) {
       return async () => {
         const { createDevHandler } = await import("../dev/server.js");
-        remove_html_middlewares(vite.middlewares);
         let adapter = await resolveAdapter(config);
         if (adapter && adapter.dev) {
           vite.middlewares.use(
@@ -511,7 +513,7 @@ function solidStartConfig(options) {
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.islandsRouter ? true : false
           ),
-          DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis.DEBUG",
+          DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis._$DEBUG",
           "import.meta.env.START_ADAPTER": JSON.stringify(
             typeof options.adapter === "string"
               ? options.adapter
@@ -691,9 +693,10 @@ function islands() {
     transform(code, id, ssr) {
       if (code.includes("unstable_island")) {
         let replaced = code.replaceAll(
-          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\("([^"]+)"\)\)/g,
-          (a, b, c) =>
-            ssr
+          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\((("([^"]+)")|('([^']+)'))\)\)/g,
+          (a, b, c) => {
+            c = c.slice(1, -1);
+            return ssr
               ? `import ${b}_island from "${c}";
                   const ${b} = unstable_island(${b}_island, "${
                   join(dirname(id), c)
@@ -704,29 +707,12 @@ function islands() {
                 }");`
               : `const ${b} = unstable_island(() => import("${c}?island"), "${
                   join(dirname(id), c).replaceAll("\\", "/") + ".tsx" + "?island"
-                }")`
+                }")`;
+          }
         );
 
         return replaced;
       }
     }
   };
-}
-
-/**
- * @param {import('node_modules/vite').ViteDevServer['middlewares']} server
- */
-function remove_html_middlewares(server) {
-  const html_middlewares = [
-    "viteIndexHtmlMiddleware",
-    "vite404Middleware",
-    "viteSpaFallbackMiddleware",
-    "viteHtmlFallbackMiddleware"
-  ];
-  for (let i = server.stack.length - 1; i > 0; i--) {
-    // @ts-ignore
-    if (html_middlewares.includes(server.stack[i].handle.name)) {
-      server.stack.splice(i, 1);
-    }
-  }
 }

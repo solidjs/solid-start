@@ -3,7 +3,7 @@ import type { Component } from "solid-js";
 
 declare global {
   interface Window {
-    DEBUG: Debugger;
+    _$DEBUG: Debugger;
     _$HY: {
       island(path: string, comp: Component): void;
       islandMap: { [path: string]: Component };
@@ -40,4 +40,5 @@ export type StartOptions = {
   appRootFile: string;
 };
 
-export {};
+export { };
+
