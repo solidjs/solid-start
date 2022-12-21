@@ -24,9 +24,9 @@ import type { Debugger } from "debug";
 import type { Component } from "solid-js";
 
 declare global {
-  export const DEBUG: Debugger;
+  export const _$DEBUG: Debugger;
   interface Window {
-    DEBUG: Debugger;
+    _$DEBUG: Debugger;
     _$HY: {
       island(path: string, comp: Component): void;
       islandMap: { [path: string]: Component };
