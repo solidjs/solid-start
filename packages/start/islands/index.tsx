@@ -36,7 +36,7 @@ export function island<T extends Component<any>>(
     return lazy(Comp as () => Promise<{ default: T }>);
   }
 
-  function IslandComponent(props) {
+  function IslandComponent(props: ComponentProps<any>) {
     return (
       <Component {...props}>
         <solid-children>
@@ -53,7 +53,7 @@ export function island<T extends Component<any>>(
 
       let fpath;
 
-      if (import.meta.env.PROD) {
+      if (import.meta.env.PROD && context && context.env.manifest && path && path in context.env.manifest) {
         fpath = (context.env.manifest[path] as IslandManifest).script.href;
       } else {
         fpath = `/` + path;

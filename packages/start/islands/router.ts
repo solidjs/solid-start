@@ -10,7 +10,7 @@ interface LocationEntry {
 
 export default function mountRouter() {
   if (import.meta.env.START_ISLANDS_ROUTER) {
-    DEBUG("mounting islands router");
+    _$DEBUG("mounting islands router");
 
     const basePath = "/";
     let [currentLocation, setCurrentLocation] = createSignal<Location>(getLocation());
@@ -149,6 +149,6 @@ export default function mountRouter() {
 
     document.addEventListener("click", handleAnchorClick);
     window.addEventListener("popstate", handlePopState);
-    DEBUG("mounted islands router");
+    _$DEBUG("mounted islands router");
   }
 }

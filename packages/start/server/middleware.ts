@@ -18,7 +18,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
         contentType.includes("form") &&
         !(origin != null && origin.includes("client"))
       ) {
-        let [read1, read2] = event.request.body.tee();
+        let [read1, read2] = event.request.body!.tee();
         formRequestBody = new Request(event.request.url, {
           body: read2,
           headers: event.request.headers,
@@ -42,7 +42,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
 
       const serverResponse = await handleServerRequest(serverFunctionEvent);
 
-      let responseContentType = serverResponse.headers.get(XSolidStartContentTypeHeader);
+      let responseContentType = serverResponse!.headers.get(XSolidStartContentTypeHeader);
 
       // when a form POST action is made and there is an error throw,
       // and its a non-javascript request potentially,
@@ -59,19 +59,19 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
           status: 302,
           headers: {
             Location:
-              new URL(event.request.headers.get("referer")).pathname +
+              new URL(event.request.headers.get("referer") || "").pathname +
               "?form=" +
               encodeURIComponent(
                 JSON.stringify({
                   url: url.pathname,
                   entries: entries,
-                  ...(await serverResponse.json())
+                  ...(await serverResponse!.json())
                 })
               )
           }
         });
       }
-      return serverResponse;
+      return serverResponse as Response;
     }
 
     const response = await forward(event);

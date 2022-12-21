@@ -1,6 +1,6 @@
 {
   "name": "solid-start-static",
-  "version": "0.2.5",
+  "version": "0.2.7",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "sirv-cli": "2.0.2",
-    "solid-ssr": "^1.6.0",
+    "solid-ssr": "^1.6.2",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",

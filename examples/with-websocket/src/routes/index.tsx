@@ -27,7 +27,7 @@ const pingPong = createWebSocketServer(
             );
             break;
         }
-      } catch (err) {
+      } catch (err: any) {
         // Report any exceptions directly back to the client. As with our handleErrors() this
         // probably isn't what you'd want to do in production, but it's convenient when testing.
         webSocket.send(JSON.stringify({ error: err.stack }));
@@ -50,11 +50,11 @@ export function routeData() {
 
 export default function Home() {
   const user = useRouteData<typeof routeData>();
-  const [, logoutAction] = createServerAction$((_, { request }) => logout(request));
+  const [, logoutAction] = createServerAction$((_: FormData, { request }) => logout(request));
   const [lastPing, setLastPing] = createSignal(Date.now().toString());
   const increment = createServerAction$(
     async (_, { env }) => {
-      await env.app.put("key", `${Number(await this.env.app.get("key")) + 1}`);
+      await env.app.put("key", `${Number(await server$.env.app.get("key")) + 1}`);
       return redirect("/");
     },
     {
@@ -74,7 +74,7 @@ export default function Home() {
       }
     });
 
-    function sendWebSocketMessage(type, data) {
+    function sendWebSocketMessage(type: string, data: { [key: string]: any }) {
       websocket.send(JSON.stringify({ type, data }));
     }
 

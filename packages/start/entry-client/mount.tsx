@@ -13,15 +13,15 @@ declare global {
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
   // const { default: createDebugger } = await import("debug");
-  // window.DEBUG = createDebugger("start:client");
-  window.DEBUG = console.log as unknown as any;
+  // window._$DEBUG = createDebugger("start:client");
+  window._$DEBUG = console.log as unknown as any;
 
-  DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
-  DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
-  DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
-  DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
-  DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
-  DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
+  _$DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
+  _$DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
+  _$DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
+  _$DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
+  _$DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
+  _$DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
 
   window.INSPECT = () => {
     window.open(window.location.href.replace(window.location.pathname, "/__inspect"));
@@ -38,9 +38,9 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     mountRouter();
 
     async function mountIsland(el: HTMLElement) {
-      let Component = window._$HY.islandMap[el.dataset.island];
+      let Component = el.dataset.island && window._$HY.islandMap[el.dataset.island];
       if (!Component || !el.dataset.hk) return;
-      DEBUG(
+      _$DEBUG(
         "hydrating island",
         el.dataset.island,
         el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
@@ -49,14 +49,16 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
 
       hydrate(
         () =>
-          createComponent(Component, {
-            ...JSON.parse(el.dataset.props),
-            get children() {
-              const el = getNextElement();
-              (el as any).__$owner = getOwner();
-              return;
-            }
-          }),
+          !Component || typeof Component === "string"
+            ? Component
+            : createComponent(Component, {
+                ...JSON.parse(el.dataset.props || "undefined"),
+                get children() {
+                  const el = getNextElement();
+                  (el as any).__$owner = getOwner();
+                  return;
+                }
+              }),
         el,
         {
           renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
@@ -67,11 +69,11 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
       delete el.dataset.hk;
     }
 
-    let queue = [];
+    let queue: HTMLElement[] = [];
     let queued = false;
-    function runTaskQueue(info) {
+    function runTaskQueue(info: { timeRemaining(): number }) {
       while (info.timeRemaining() > 0 && queue.length) {
-        mountIsland(queue.shift());
+        mountIsland(queue.shift() as HTMLElement);
       }
       if (queue.length) {
         requestIdleCallback(runTaskQueue);
@@ -80,15 +82,15 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     window._$HY.hydrateIslands = () => {
       const islands = document.querySelectorAll("solid-island[data-hk]");
       const assets = new Set<string>();
-      islands.forEach((el: HTMLElement) => assets.add(el.dataset.component));
+      islands.forEach((el: Element) => assets.add((el as HTMLElement).dataset.component || ""));
       Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
-        islands.forEach((el: HTMLElement) => {
-          if (el.dataset.when === "idle" && "requestIdleCallback" in window) {
+        islands.forEach((el: Element) => {
+          if ((el as HTMLElement).dataset.when === "idle" && "requestIdleCallback" in window) {
             if (!queued) {
               queued = true;
               requestIdleCallback(runTaskQueue);
             }
-            queue.push(el);
+            queue.push(el as HTMLElement);
           } else mountIsland(el as HTMLElement);
         });
       });
@@ -104,8 +106,8 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
   }
 
   if (import.meta.env.START_SSR) {
-    hydrate(code, element);
+    code && element && hydrate(code, element);
   } else {
-    render(code, element === document ? element.body : element);
+    code && element && render(code, element === document ? element.body : element);
   }
 }

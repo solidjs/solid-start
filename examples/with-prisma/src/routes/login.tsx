@@ -19,7 +19,7 @@ function validatePassword(password: unknown) {
 
 export function routeData() {
   return createServerData$(async (_, { request }) => {
-    if (await getUser(request)) {
+    if (await getUser(db, request)) {
       throw redirect("/");
     }
     return {};

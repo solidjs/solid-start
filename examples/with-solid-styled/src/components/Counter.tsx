@@ -9,7 +9,7 @@ export default function Counter() {
       font-size: inherit;
       padding: 1em 2em;
       color: #335d92;
-      background-color: rgba(${count() * 30}, 107, 158, 0.1);
+      background-color: rgba(${String(count() * 30)}, 107, 158, 0.1);
       border-radius: 2em;
       border: 2px solid rgba(68, 107, 158, 0);
       outline: none;

@@ -131,7 +131,13 @@ prog
         stdio: "inherit",
         env: {
           ...process.env,
-          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : undefined}`
+          NODE_OPTIONS: [
+            process.env.NODE_OPTIONS,
+            "--experimental-vm-modules",
+            inspect ? "--inspect" : "",
+          ]
+            .filter(Boolean)
+            .join(" "),
         }
       }
     );
@@ -346,10 +352,8 @@ prog
           console.time(c.blue("solid-start") + c.magenta(" index.html rendered in"));
           let port = await (await import("get-port")).default();
           let proc = spawn(
-            "node",
+            "vite",
             [
-              "--experimental-vm-modules",
-              "node_modules/vite/bin/vite.js",
               "dev",
               "--mode",
               "production",
@@ -361,7 +365,13 @@ prog
               shell: true,
               env: {
                 ...process.env,
-                START_INDEX_HTML: "true"
+                START_INDEX_HTML: "true",
+                NODE_OPTIONS: [
+                  process.env.NODE_OPTIONS,
+                  "--experimental-vm-modules",
+                ]
+                  .filter(Boolean)
+                  .join(" "),
               }
             }
           );

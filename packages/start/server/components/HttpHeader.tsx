@@ -6,12 +6,12 @@ export function HttpHeader(props: { name: string; value: string }) {
   const pageContext = useContext(ServerContext);
 
   if (isServer) {
-    pageContext.responseHeaders.set(props.name, props.value);
+    pageContext!.responseHeaders.set(props.name, props.value);
   }
 
   onCleanup(() => {
     if (isServer) {
-      pageContext.responseHeaders.delete(props.name);
+      pageContext!.responseHeaders.delete(props.name);
     }
   });
 
