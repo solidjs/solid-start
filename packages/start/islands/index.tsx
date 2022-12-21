@@ -1,7 +1,5 @@
-import { Component, ComponentProps, lazy, splitProps, useContext } from "solid-js";
+import { Component, ComponentProps, lazy, splitProps } from "solid-js";
 import { Hydration, NoHydration } from "solid-js/web";
-import { ServerContext } from "../server/ServerContext";
-import { IslandManifest } from "../server/types";
 export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
@@ -9,8 +7,7 @@ declare module "solid-js" {
     interface IntrinsicElements {
       "solid-island": {
         "data-props": string;
-        "data-component": string;
-        "data-island": string;
+        "data-component-id": string;
         "data-when": "idle" | "load";
         children: JSX.Element;
       };
@@ -27,7 +24,7 @@ export function island<T extends Component<any>>(
     | (() => Promise<{
         default: T;
       }>),
-  path?: string
+  componentId?: string
 ): T {
   let Component = Comp as T;
 
@@ -48,23 +45,16 @@ export function island<T extends Component<any>>(
 
   return ((compProps: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
-      const context = useContext(ServerContext);
       const [, props] = splitProps(compProps, ["children"]);
-
-      let fpath;
-
-      if (import.meta.env.PROD && context && context.env.manifest && path && path in context.env.manifest) {
-        fpath = (context.env.manifest[path] as IslandManifest).script.href;
-      } else {
-        fpath = `/` + path;
+      if (!componentId) {
+        throw new Error("componentId should exist");
       }
 
       return (
         <Hydration>
           <solid-island
             data-props={JSON.stringify(props)}
-            data-component={fpath}
-            data-island={`/` + path}
+            data-component-id={componentId}
             data-when={props["client:idle"] ? "idle" : "load"}
           >
             <IslandComponent {...compProps} />

@@ -1,6 +1,7 @@
 /// <reference path="./plugin.d.ts" />
 
 import inspect from "@vinxi/vite-plugin-inspect";
+import crypto from "crypto";
 import debug from "debug";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
@@ -419,8 +420,8 @@ function solidStartServer(options) {
     config(c) {
       config = c;
       return {
-        appType: 'custom'
-      }
+        appType: "custom"
+      };
     },
     transform(code, id) {
       if (module_style_pattern.test(id)) {
@@ -671,44 +672,48 @@ export default function solidStart(options) {
   ].filter(Boolean);
 }
 
+/**
+ * @returns {import('vite').Plugin}
+ */
 function islands() {
   return {
     name: "solid-start-islands",
-    load(id) {
-      if (id.endsWith("?island")) {
-        return {
-          code: `
-            import Component from '${id.replace("?island", "")}';
-
-            window._$HY.island("${id.slice(process.cwd().length)}", Component);
-
-            export default Component;
-            `
-        };
-      }
-    },
-    /**
-     * @param {any} id
-     * @param {string} code
-     */
-    transform(code, id, ssr) {
+    async transform(code, id, opts) {
       if (code.includes("unstable_island")) {
+        const ssr = opts?.ssr === true;
+
+        /** @type {Record<string, string>} */
+        const islandComponentIds = Object.fromEntries(
+          await Promise.all(
+            [
+              ...code.matchAll(
+                /const ([A-Za-z_]+) = unstable_island\(\(\) => import\((("([^"]+)")|('([^']+)'))\)\)/g
+              )
+            ].map(async ([a, b, c]) => {
+              c = c.slice(1, -1);
+              const resolved = await this.resolve(c, id);
+              if (!resolved) {
+                throw new Error(`Cannot resolve ${c} from ${id}`);
+              }
+              const componentId = createHash(resolved.id);
+              return [c, componentId];
+            })
+          )
+        );
+
         let replaced = code.replaceAll(
           /const ([A-Za-z_]+) = unstable_island\(\(\) => import\((("([^"]+)")|('([^']+)'))\)\)/g,
           (a, b, c) => {
             c = c.slice(1, -1);
+            const componentId = islandComponentIds[c];
             return ssr
-              ? `import ${b}_island from "${c}";
-                  const ${b} = unstable_island(${b}_island, "${
-                  join(dirname(id), c)
-                    .slice(process.cwd().length + 1)
-                    .replaceAll("\\", "/") +
-                  ".tsx" +
-                  "?island"
-                }");`
-              : `const ${b} = unstable_island(() => import("${c}?island"), "${
-                  join(dirname(id), c).replaceAll("\\", "/") + ".tsx" + "?island"
-                }")`;
+              ? `import ${b}_island from ${JSON.stringify(c)};
+                  const ${b} = unstable_island(${b}_island, ${JSON.stringify(componentId)});`
+              : `const ${b}_island_loader = () => import(${JSON.stringify(c)});
+                  window._$HY.island(${JSON.stringify(componentId)}, ${b}_island_loader);
+                  const ${b} = unstable_island(${b}_island_loader, ${JSON.stringify(
+                  componentId
+                )});`;
           }
         );
 
@@ -716,4 +721,11 @@ function islands() {
       }
     }
   };
+}
+
+/**
+ * @param {string} input
+ */
+function createHash(input) {
+  return crypto.createHash("md5").update(input).digest().toString("hex");
 }

@@ -38,14 +38,18 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     mountRouter();
 
     async function mountIsland(el: HTMLElement) {
-      let Component = el.dataset.island && window._$HY.islandMap[el.dataset.island];
-      if (!Component || !el.dataset.hk) return;
-      _$DEBUG(
-        "hydrating island",
-        el.dataset.island,
-        el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
-        el
-      );
+      let componentLoader = el.dataset.componentId && window._$HY.islandMap[el.dataset.componentId];
+      if (!componentLoader || !el.dataset.hk) return;
+      const Component = (await componentLoader()).default;
+
+      if (import.meta.env.DEV) {
+        _$DEBUG(
+          "hydrating island",
+          el.dataset.island,
+          el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
+          el
+        );
+      }
 
       hydrate(
         () =>
@@ -81,9 +85,13 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     }
     window._$HY.hydrateIslands = () => {
       const islands = document.querySelectorAll("solid-island[data-hk]");
-      const assets = new Set<string>();
-      islands.forEach((el: Element) => assets.add((el as HTMLElement).dataset.component || ""));
-      Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
+      const componentIds = new Set<string>();
+      islands.forEach((el: Element) =>
+        componentIds.add((el as HTMLElement).dataset.componentId || "")
+      );
+      Promise.all(
+        [...componentIds].map(componentId => window._$HY.islandMap[componentId]?.())
+      ).then(() => {
         islands.forEach((el: Element) => {
           if ((el as HTMLElement).dataset.when === "idle" && "requestIdleCallback" in window) {
             if (!queued) {

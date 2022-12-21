@@ -5,8 +5,8 @@ declare global {
   interface Window {
     _$DEBUG: Debugger;
     _$HY: {
-      island(path: string, comp: Component): void;
-      islandMap: { [path: string]: Component };
+      island(path: string, compLoader: () => Promise<{ default: Component }>): void;
+      islandMap: { [path: string]: () => Promise<{ default: Component }> };
       hydrateIslands(): void;
       fe(id: string): void;
     };
@@ -40,5 +40,4 @@ export type StartOptions = {
   appRootFile: string;
 };
 
-export { };
-
+export {};
