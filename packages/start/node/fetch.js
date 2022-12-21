@@ -113,7 +113,7 @@ class NodeRequest extends BaseNodeRequest {
         // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#multipart-form-data
         const isFile = type !== undefined;
         if (isFile) {
-          const value = new File([data], filename);
+          const value = new File([data], filename, { type });
           form.append(name, value, filename);
         } else {
           const value = data.toString("utf-8");

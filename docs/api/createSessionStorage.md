@@ -40,11 +40,11 @@ const storage = createSessionStorage({
     maxAge: 60 * 60 * 24 * 30, // 30 days
     httpOnly: true
   },
-  async createData(id, data) {
-    return db.sessions.create({ id, ...data });
+  async createData(data, expires) {
+    return db.sessions.create({ data: { ...data, expires } })
   },
-  async updateData(id, data) {
-    return db.sessions.update({ where: { id }, data });
+  async updateData(id, data, expires) {
+    return db.sessions.update({ where: { id }, data: { ...data, expires } });
   },
   async deleteData(id) {
     return db.sessions.delete({ where: { id } });

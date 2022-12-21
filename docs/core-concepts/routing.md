@@ -42,9 +42,9 @@ Files named `index` will be rendered when there are no additional URL route segm
 - `hogwarts.com/staff/positions` ➜ `/routes/staff/positions/index.tsx` 
 
 Additionally, there are some special file names that map to [URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) patterns, e.g.
-- `/src/routes/students/[id].tsx` ➜ `hogwarts.com/students/:id`
-- `/src/routes/students/[id]/[name].tsx` ➜ `hogwarts.com/students/:id/:name`
-- `/src/routes/[...missing].tsx` ➜ `hogwarts.com/*missing`
+- `hogwarts.com/students/:id` ➜ `/src/routes/students/[id].tsx`
+- `hogwarts.com/students/:id/:name` ➜ `/src/routes/students/[id]/[name].tsx`
+- `hogwarts.com/*missing` ➜ `/src/routes/[...missing].tsx`
 
 We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
 

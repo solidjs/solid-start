@@ -25,7 +25,7 @@ This is the home of the Solid app framework. This is still a **work in progress*
 ```bash
 mkdir my-app
 cd my-app
-npm init solid
+npm init solid@latest
 npm install
 npm run dev
 ```

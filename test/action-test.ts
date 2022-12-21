@@ -95,9 +95,12 @@ test.describe("actions", () => {
           import { createServerAction$, ServerError } from 'solid-start/server';
           import { Buffer } from 'node:buffer';
 
-          async function verifyFileContent(file, expectedName, expectedContent) {
+          async function verifyFileContent(file, expectedName, expectedContent, expectedType) {
             if (file.name !== expectedName) {
               throw new ServerError("file had wrong name " + file.name + "; expected " + expectedName);
+            }
+            if (file.type !== expectedType) {
+              throw new ServerError("file had wrong type " + file.type + "; expected " + expectedType);
             }
             let decoded = Buffer.from(await file.arrayBuffer()).toString("utf8");
             if (decoded !== expectedContent) {
@@ -110,11 +113,12 @@ test.describe("actions", () => {
                 throw new ServerError("other had wrong value " + formData.get("other"));
               }
               const files = formData.getAll("files");
-              if (files.length < 2) {
+              if (files.length < 3) {
                 throw new ServerError("too few files");
               }
-              await verifyFileContent(files[0], "a.txt", "a");
-              await verifyFileContent(files[1], "b.txt", "b");
+              await verifyFileContent(files[0], "a.txt", "a", "text/plain");
+              await verifyFileContent(files[1], "b.txt", "b", "text/plain");
+              await verifyFileContent(files[2], "c.json", '{"message":"c"}', "application/json");
               return "success";
             });
 
@@ -131,7 +135,7 @@ test.describe("actions", () => {
               </submit.Form>
             );
           }
-        `,
+        `
       }
     });
 
@@ -259,30 +263,34 @@ test.describe("actions", () => {
 
     // check that non-file multipart/form-data has the right value
     await page.click("input#submit");
-    await page.waitForSelector("#error,#result", {state: "visible"});
-    expect(await app.getHtml("#error,#result")).toBe(prettyHtml(`<p id="error">other had wrong value</p>`));
+    await page.waitForSelector("#error,#result", { state: "visible" });
+    expect(await app.getHtml("#error,#result")).toBe(
+      prettyHtml(`<p id="error">other had wrong value</p>`)
+    );
 
     await page.type("input[name='other']", "otherval");
     await page.click("input#submit");
-    await page.waitForSelector("#error,#result", {state: "visible"});
+    await page.waitForSelector("#error,#result", { state: "visible" });
     expect(await app.getHtml("#error,#result")).toBe(prettyHtml(`<p id="error">too few files</p>`));
 
     await page.setInputFiles("input[name='files']", [
-      {name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('garbled')},
-      {name: 'b.txt', mimeType: 'text/plain', buffer: Buffer.from('garbled')},
+      { name: "a.txt", mimeType: "text/plain", buffer: Buffer.from("garbled") },
+      { name: "b.txt", mimeType: "text/plain", buffer: Buffer.from("garbled") },
+      { name: "c.json", mimeType: "application/json", buffer: Buffer.from('{"message":"garbled"}') }
     ]);
     await page.click("input#submit");
-    await page.waitForSelector("#error,#result", {state: "visible"});
-    expect(await app.getHtml("#error,#result"))
-      .toBe(prettyHtml(`<p id="error">file a.txt had wrong content garbled</p>`));
+    await page.waitForSelector("#error,#result", { state: "visible" });
+    expect(await app.getHtml("#error,#result")).toBe(
+      prettyHtml(`<p id="error">file a.txt had wrong content garbled</p>`)
+    );
 
     await page.setInputFiles("input[name='files']", [
-      {name: 'a.txt', mimeType: 'text/plain', buffer: Buffer.from('a')},
-      {name: 'b.txt', mimeType: 'text/plain', buffer: Buffer.from('b')},
+      { name: "a.txt", mimeType: "text/plain", buffer: Buffer.from("a") },
+      { name: "b.txt", mimeType: "text/plain", buffer: Buffer.from("b") },
+      { name: "c.json", mimeType: "application/json", buffer: Buffer.from('{"message":"c"}') }
     ]);
     await page.click("input#submit");
-    await page.waitForSelector("#error,#result", {state: "visible"});
+    await page.waitForSelector("#error,#result", { state: "visible" });
     expect(await app.getHtml("#error,#result")).toBe(prettyHtml(`<p id="result">success</p>`));
-
   });
 });
