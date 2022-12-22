@@ -457,7 +457,7 @@ function solidStartConfig(options) {
 
       // Load env file based on `mode` in the current working directory.
       // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-      options.env = await loadEnv(e.mode, process.cwd(), "");
+      options.env = await loadEnv(e.mode, options.envDir || process.cwd(), "");
 
       options.router = new Router({
         baseDir: path.posix.join(options.appRoot, options.routesDir),
