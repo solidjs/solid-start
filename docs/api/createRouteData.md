@@ -61,6 +61,24 @@ export function routeData({ params } : RouteDataArgs) {
 }
 ```
 
+### Reactive Keys
+
+The array returned by the `key` function can track signals and automatically refetch data when the key changes. One use case for this is refetching data based on when a query param changes (since query param changes don't actually register as a changed route). Consider the following example which implements basic pagination using an `after` query param:
+
+```tsx twoslash
+import { createRouteData, RouteDataArgs } from "solid-start";
+
+export function routeData({ params, location } : RouteDataArgs) {
+  return createRouteData(
+    async ([, after]) => {
+      const response = await fetch(`https://hogwarts.deno.dev/students?after${after}`);
+      return (await response.json());
+    },
+    { key: () => ["students", location.query['after']] }
+  );
+}
+```
+
 ### Setting the reconcile key
 
 `createRouteData` uses a Solid Store under the hood to store its data. This means that when data is refetched it attempts to diff the data to trigger only the finest-grained updates. By default, it is configured to key data to `id`. If your backend uses a different field you can set it:
