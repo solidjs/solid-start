@@ -56,6 +56,24 @@ function mkdirp(dir) {
   }
 }
 
+function getUserPkgManager() {
+  // This environment variable is set by npm and yarn but pnpm seems less consistent
+  const userAgent = process.env.npm_config_user_agent;
+
+  if (userAgent) {
+    if (userAgent.startsWith("yarn")) {
+      return "yarn";
+    } else if (userAgent.startsWith("pnpm")) {
+      return "pnpm";
+    } else {
+      return "npm";
+    }
+  } else {
+    // If no user agent is set, assume npm
+    return "npm";
+  }
+}
+
 async function main() {
   console.log(gray(`\ncreate-solid version ${version}`));
   console.log(red(disclaimer));
@@ -275,8 +293,14 @@ async function main() {
     console.log(`  ${i++}: ${bold(cyan(`cd ${relative}`))}`);
   }
 
-  console.log(`  ${i++}: ${bold(cyan("npm install"))} (or pnpm install, or yarn)`);
-  console.log(`  ${i++}: ${bold(cyan("npm run dev -- --open"))}`);
+  const userPkgManager = getUserPkgManager();
+
+  console.log(`  ${i++}: ${bold(cyan(`${userPkgManager} install`))}`);
+
+  const devCommand = [`${userPkgManager} run dev`, userPkgManager === "npm" ? "--" : "", "--open"]
+    .filter(Boolean)
+    .join(" ");
+  console.log(`  ${i++}: ${bold(cyan(devCommand))}`);
 
   console.log(`\nTo close the dev server, hit ${bold(cyan("Ctrl-C"))}`);
 }
