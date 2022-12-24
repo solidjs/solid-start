@@ -6,7 +6,7 @@ subsection: CLI
 active: true
 ---
 
-# `solid-start dev`
+# solid-start dev
 
 ##### `solid-start dev` starts a development server backed by [Vite](https://vitejs.dev/).
 

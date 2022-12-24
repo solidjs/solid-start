@@ -6,7 +6,7 @@ subsection: CLI
 active: true
 ---
 
-# `solid-start build`
+# solid-start build
 
 ##### `solid-start build` bundles your server and client using [Vite](https://vitejs.dev/).
 

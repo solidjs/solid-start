@@ -6,7 +6,7 @@ subsection: CLI
 active: true
 ---
 
-# `solid-start start`
+# solid-start start
 
 ##### `solid-start start` starts the production build with a local version of adapter.
 
