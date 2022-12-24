@@ -545,7 +545,7 @@ function solidStartConfig(options) {
       };
       const env = loadServerEnv(envConfig, options.envDir || process.cwd());
       for (const key in env) {
-        if (!key.startsWith("_") && envConfig.env[key] === undefined) {
+        if (!key.startsWith("VITE_") && envConfig.env[key] === undefined) {
           envConfig.env[key] = env[key];
         }
       }

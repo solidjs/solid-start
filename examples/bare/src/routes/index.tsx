@@ -6,7 +6,9 @@ export const routeData = () => {
   return createServerData$(() => {
     // @ts-ignore
     const t = process.env.SERVER_TEST;
-    console.log({ t }); // equals 2
+    // @ts-ignore
+    const s = process.env.VITE_TEST; // not defined - as expected
+    console.log({ s, t }); // equals 2
     return t;
   });
 };
