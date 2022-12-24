@@ -1,0 +1,3 @@
+{
+  "startCommand": "chmod +x ./packages/start/bin.cjs && pnpm run docs:dev"
+}
