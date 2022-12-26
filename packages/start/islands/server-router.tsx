@@ -234,6 +234,7 @@ export function Router(props: RouterProps) {
           //   </outlet-wrapper>
           // );
           // return diffedRender;
+          break;
         }
         // Routes are shared
       } else {
@@ -249,6 +250,7 @@ export function Router(props: RouterProps) {
         //   </outlet-wrapper>
         // );
         // return diffedRender;
+        break;
       }
     }
   }
