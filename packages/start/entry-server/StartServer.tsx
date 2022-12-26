@@ -1,14 +1,13 @@
 import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
-import { ComponentProps, sharedConfig } from "solid-js";
+import { Component, ComponentProps, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
-import Root from "~start/root";
 import { apiRoutes } from "../api/middleware";
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
-import { fileRoutes } from "../root/FileRoutes";
 import { inlineServerFunctions } from "../server/middleware";
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
+import DevRoot from "./DevRoot";
 
 const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
   default: RouteDataFunc;
@@ -68,6 +67,14 @@ export function StartRouter(
   return <Router {...props}></Router>;
 }
 
+let Root: Component, fileRoutes: RouteDefinition[];
+// @ts-ignore
+const devNoSSR = import.meta.env.DEV && !import.meta.env.START_SSR;
+if (!devNoSSR) {
+  Root = (await import("~start/root")).default;
+  fileRoutes = (await import("../root/FileRoutes")).default();
+}
+
 const docType = ssr("<!DOCTYPE html>");
 export default function StartServer({ event }: { event: PageEvent }) {
   const parsed = new URL(event.request.url);
@@ -77,19 +84,23 @@ export default function StartServer({ event }: { event: PageEvent }) {
   sharedConfig.context.requestContext = event;
   return (
     <ServerContext.Provider value={event}>
-      <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
-        <StartRouter
-          url={path}
-          out={event.routerContext}
-          location={path}
-          prevLocation={event.prevUrl}
-          data={dataFn}
-          routes={fileRoutes}
-        >
-          {docType as unknown as any}
-          <Root />
-        </StartRouter>
-      </MetaProvider>
+      {devNoSSR ? (
+        <DevRoot />
+      ) : (
+        <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
+          <StartRouter
+            url={path}
+            out={event.routerContext}
+            location={path}
+            prevLocation={event.prevUrl}
+            data={dataFn}
+            routes={fileRoutes}
+          >
+            {docType as unknown as any}
+            <Root />
+          </StartRouter>
+        </MetaProvider>
+      )}
     </ServerContext.Provider>
   );
 }
