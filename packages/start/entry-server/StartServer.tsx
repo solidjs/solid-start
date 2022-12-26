@@ -10,6 +10,7 @@ import { fileRoutes } from "../root/FileRoutes";
 
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
+import DevRoot from "./DevRoot";
 
 const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
   default: RouteDataFunc;
@@ -69,6 +70,9 @@ export function StartRouter(
   return <Router {...props}></Router>;
 }
 
+// @ts-ignore
+const devNoSSR = import.meta.env.DEV && !import.meta.env.START_SSR;
+
 const docType = ssr("<!DOCTYPE html>");
 export default function StartServer({ event }: { event: PageEvent }) {
   const parsed = new URL(event.request.url);
@@ -78,19 +82,23 @@ export default function StartServer({ event }: { event: PageEvent }) {
   sharedConfig.context.requestContext = event;
   return (
     <ServerContext.Provider value={event}>
-      <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
-        <StartRouter
-          url={path}
-          out={event.routerContext}
-          location={path}
-          prevLocation={event.prevUrl}
-          data={dataFn}
-          routes={fileRoutes}
-        >
-          {docType as unknown as any}
-          <Root />
-        </StartRouter>
-      </MetaProvider>
+      {devNoSSR ? (
+        <DevRoot />
+      ) : (
+        <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
+          <StartRouter
+            url={path}
+            out={event.routerContext}
+            location={path}
+            prevLocation={event.prevUrl}
+            data={dataFn}
+            routes={fileRoutes}
+          >
+            {docType as unknown as any}
+            <Root />
+          </StartRouter>
+        </MetaProvider>
+      )}
     </ServerContext.Provider>
   );
 }
