@@ -87,6 +87,7 @@
     "connect": "^3.7.0",
     "debug": "^4.3.4",
     "dequal": "^2.0.3",
+    "dotenv": "^16.0.3",
     "es-module-lexer": "^1.0.5",
     "esbuild": "^0.14.54",
     "esbuild-plugin-solid": "^0.4.2",
