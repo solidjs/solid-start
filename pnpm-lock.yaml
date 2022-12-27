@@ -398,6 +398,7 @@ importers:
       connect: ^3.7.0
       debug: ^4.3.4
       dequal: ^2.0.3
+      dotenv: ^16.0.3
       es-module-lexer: ^1.0.5
       esbuild: ^0.14.54
       esbuild-plugin-solid: ^0.4.2
@@ -442,6 +443,7 @@ importers:
       connect: 3.7.0
       debug: 4.3.4
       dequal: 2.0.3
+      dotenv: 16.0.3
       es-module-lexer: 1.1.0
       esbuild: 0.14.54
       esbuild-plugin-solid: 0.4.2_6we57ubfqshakcgdszwdwpd52a
@@ -462,7 +464,7 @@ importers:
     devDependencies:
       '@cloudflare/workers-types': 3.18.0
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       '@testing-library/jest-dom': 5.16.5
       '@types/babel__core': 7.1.19
       '@types/debug': 4.1.7
@@ -2640,6 +2642,14 @@ packages:
     dependencies:
       solid-js: 1.6.2
 
+  /@solidjs/router/0.6.0_solid-js@1.6.2:
+    resolution: {integrity: sha512-7ug2fzXXhvvDBL4CQyMvMM9o3dgBE6PoRh38T8UTmMnYz4rcCfROqSZc9yq+YEC96qWt5OvJgZ1Uj/4EAQXlfA==}
+    peerDependencies:
+      solid-js: ^1.5.3
+    dependencies:
+      solid-js: 1.6.2
+    dev: true
+
   /@solidjs/testing-library/0.5.1_solid-js@1.6.2:
     resolution: {integrity: sha512-UVwYzSTRHwxiW7jdgKFP3NERbMtA748MIOQFzF1f4tg1XYl8ACybwlrVPqaiKnPevUCcM2ED+Wsp6Yd5JA//yg==}
     engines: {node: '>= 14'}
@@ -3769,6 +3779,11 @@ packages:
   /dotenv/10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
+
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /ecc-jsbn/0.1.2:
     resolution: {integrity: sha512-eh9O+hwRHNbG4BLTjEl3nw044CkGm5X6LoaCf7LPp7UU8Qrt47JYNi6nPX8xjW97TKGKm1ouctg0QSpZe9qrnw==}

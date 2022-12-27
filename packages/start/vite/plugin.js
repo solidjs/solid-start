@@ -2,6 +2,7 @@
 
 import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
+import dotenv from "dotenv";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
@@ -419,8 +420,8 @@ function solidStartServer(options) {
     config(c) {
       config = c;
       return {
-        appType: 'custom'
-      }
+        appType: "custom"
+      };
     },
     transform(code, id) {
       if (module_style_pattern.test(id)) {
@@ -443,6 +444,85 @@ function solidStartServer(options) {
   };
 }
 
+// credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js
+function loadServerEnv(envConfig, rootDir = process.cwd()) {
+  const env = Object.create(null);
+
+  // Read dotenv
+  if (envConfig.dotenv) {
+    envConfig.dotenv = path.resolve(rootDir, envConfig.dotenv);
+    if (fs.existsSync(envConfig.dotenv)) {
+      const parsed = dotenv.parse(fs.readFileSync(envConfig.dotenv, "utf-8"));
+      Object.assign(env, parsed);
+    }
+  }
+
+  // Apply process.env
+  if (!envConfig.env._applied) {
+    Object.assign(env, envConfig.env);
+    envConfig.env._applied = true;
+  }
+
+  // Interpolate env
+  if (envConfig.expand) {
+    expand(env);
+  }
+
+  return env;
+}
+
+// Based on https://github.com/motdotla/dotenv-expand
+function expand(target, source = {}, parse = v => v) {
+  function getValue(key) {
+    // Source value 'wins' over target value
+    return source[key] !== undefined ? source[key] : target[key];
+  }
+
+  function interpolate(value, parents = []) {
+    if (typeof value !== "string") {
+      return value;
+    }
+    const matches = value.match(/(.?\${?(?:[a-zA-Z0-9_:]+)?}?)/g) || [];
+    return parse(
+      matches.reduce((newValue, match) => {
+        const parts = /(.?)\${?([a-zA-Z0-9_:]+)?}?/g.exec(match);
+        const prefix = parts[1];
+
+        let value, replacePart;
+
+        if (prefix === "\\") {
+          replacePart = parts[0];
+          value = replacePart.replace("\\$", "$");
+        } else {
+          const key = parts[2];
+          replacePart = parts[0].substring(prefix.length);
+
+          // Avoid recursion
+          if (parents.includes(key)) {
+            consola.warn(
+              `Please avoid recursive environment variables ( loop: ${parents.join(
+                " > "
+              )} > ${key} )`
+            );
+            return "";
+          }
+
+          value = getValue(key);
+
+          // Resolve recursive interpolations
+          value = interpolate(value, [...parents, key]);
+        }
+
+        return value !== undefined ? newValue.replace(replacePart, value) : newValue;
+      }, value)
+    );
+  }
+
+  for (const key in target) {
+    target[key] = interpolate(getValue(key));
+  }
+}
+
 /**
  * @returns {import('node_modules/vite').Plugin}
  * @param {any} options
@@ -456,9 +536,22 @@ function solidStartConfig(options) {
       options.root = root;
 
       // Load env file based on `mode` in the current working directory.
-      // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-      options.env = await loadEnv(e.mode, options.envDir || process.cwd(), "");
-
+      // credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js for the server env
+      const envConfig = {
+        dotenv: ".env",
+        env: process.env,
+        expand: true,
+        ...(options?.envConfig ?? {})
+      };
+      const env = loadServerEnv(envConfig, options.envDir || process.cwd());
+      for (const key in env) {
+        if (!key.startsWith("VITE_") && envConfig.env[key] === undefined) {
+          envConfig.env[key] = env[key];
+        }
+      }
+      options._env = env;
+      options._envConfig = envConfig;
+      options.env = await loadEnv(e.mode, options.envDir || process.cwd());
       options.router = new Router({
         baseDir: path.posix.join(options.appRoot, options.routesDir),
         pageExtensions: options.pageExtensions,
