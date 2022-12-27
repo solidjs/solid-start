@@ -13,9 +13,9 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { createCookieSessionStorage } from 'solid-start';
+import { createCookieSessionStorage } from "solid-start";
 // ---cut---
-const storage = createCookieSessionStorage()
+const storage = createCookieSessionStorage();
 ```
 
 </div>
@@ -43,38 +43,34 @@ const storage = createCookieSessionStorage({
 
 ### Creating a `SessionStorage`
 
-```tsx twoslash
+```tsx
 // @include: cookie
 ```
 
 ### Reading the session data of the current request
 
-```tsx twoslash {6}
+```tsx
 // @include: cookie
 // ---cut---
 async function getUserId(request: Request) {
-  const session = await storage.getSession(
-    request.headers.get('Cookie')
-  );
+  const session = await storage.getSession(request.headers.get("Cookie"));
 
-  const userId = session.get('userId');
+  const userId = session.get("userId");
   return userId;
 }
 ```
 
 ### Writing the session data for the current request
 
-```tsx twoslash {5,8}
+```tsx
 // @include: cookie
 // ---cut---
 async function login(request: Request, userId: string) {
-  const session = await storage.getSession(
-    request.headers.get('Cookie')
-  );
-  session.set('userId', userId);
-  const response = new Response('Logged in', {
+  const session = await storage.getSession(request.headers.get("Cookie"));
+  session.set("userId", userId);
+  const response = new Response("Logged in", {
     headers: {
-      'Set-Cookie': await storage.commitSession(session)
+      "Set-Cookie": await storage.commitSession(session)
     }
   });
 }
@@ -82,15 +78,13 @@ async function login(request: Request, userId: string) {
 
 ### Deleting the session data for the current request
 
-```tsx twoslash {10}
+```tsx
 // @include: cookie
 // ---cut---
-import { redirect } from 'solid-start';
+import { redirect } from "solid-start";
 
 async function logout(request: Request) {
-  const session = await storage.getSession(
-    request.headers.get('Cookie')
-  );
+  const session = await storage.getSession(request.headers.get("Cookie"));
 
   return redirect("/login", {
     headers: {
@@ -102,20 +96,16 @@ async function logout(request: Request) {
 
 ### Creating a new session
 
-```tsx twoslash {2,6}
+```tsx
 // @include: cookie
 // ---cut---
 async function signUp(request: Request, userId: string) {
   const session = await storage.getSession();
   session.set("userId", userId);
-  return new Response('Signed Up', {
+  return new Response("Signed Up", {
     headers: {
       "Set-Cookie": await storage.commitSession(session)
     }
   });
 }
 ```
-
-
-
-
