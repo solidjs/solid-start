@@ -54,7 +54,7 @@ export function createHandler(...exchanges: Middleware[]) {
 export function StartRouter(
   props: RouterProps & {
     location: string;
-    prevLocation: string;
+    prevPath: string;
     routes: RouteDefinition | RouteDefinition[];
   }
 ) {
@@ -82,7 +82,7 @@ export default function StartServer({ event }: { event: PageEvent }) {
           url={path}
           out={event.routerContext}
           location={path}
-          prevLocation={event.prevUrl}
+          prevPath={event.prevPath}
           data={dataFn}
           routes={fileRoutes}
         >

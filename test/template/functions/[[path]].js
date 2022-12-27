@@ -1174,7 +1174,7 @@ function createPageEvent(event) {
   }
   const pageEvent = Object.freeze({
     request: event.request,
-    prevUrl: prevPath,
+    prevPath,
     routerContext: {},
     tags: [],
     env: event.env,
@@ -2427,7 +2427,7 @@ function StartServer({
             location: path,
 
             get prevLocation() {
-              return event.prevUrl;
+              return event.prevPath;
             },
 
             data: dataFn,

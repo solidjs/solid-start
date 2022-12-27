@@ -67,7 +67,7 @@ export interface ServerFunctionEvent extends FetchEvent {
 }
 
 export interface PageEvent extends FetchEvent {
-  prevUrl: string;
+  prevPath: string;
   responseHeaders: Headers;
   routerContext?: RouterContext;
   tags?: TagDescription[];

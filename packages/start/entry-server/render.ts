@@ -145,7 +145,7 @@ function createPageEvent(event: FetchEvent) {
     "Content-Type": "text/html"
   });
 
-  const prevPath = event.request.headers.get("x-solid-referrer");
+  const prevPath = event.request.headers.get("x-solid-referrer") ?? '';
 
   let statusCode = 200;
 
@@ -159,7 +159,7 @@ function createPageEvent(event: FetchEvent) {
 
   const pageEvent: PageEvent = Object.freeze({
     request: event.request,
-    prevUrl: prevPath || '',
+    prevPath,
     routerContext: {},
     tags: [],
     env: event.env,

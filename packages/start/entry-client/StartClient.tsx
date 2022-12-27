@@ -22,7 +22,7 @@ export default () => {
         return throwClientError("request");
       }
     },
-    get prevUrl() {
+    get prevPath() {
       if (process.env.NODE_ENV === "development") {
         return throwClientError("request");
       }

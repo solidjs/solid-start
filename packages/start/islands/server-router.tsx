@@ -194,7 +194,7 @@ export const useRouteParams = () => {
 
 export interface RouterProps {
   location: string;
-  prevLocation: string;
+  prevPath: string;
   routes: RouteDefinition | RouteDefinition[];
   children: JSX.Element;
   out?: any;
@@ -208,7 +208,7 @@ export function Router(props: RouterProps) {
 
   const nextRoutes = next.routes;
 
-  const prev = props.prevLocation ? getMatchedBranch(props.routes, props.prevLocation) : null;
+  const prev = props.prevPath ? getMatchedBranch(props.routes, props.prevPath) : null;
   if (prev) {
     const prevRoutes = prev.routes;
 
