@@ -171,7 +171,7 @@ export function getMatchedBranch(
 
 export interface RouterContextState {
   routes: MatchedRoute[];
-  location: string;
+  location: URL;
 }
 
 export const RouterContext = createContext<RouterContextState>();
@@ -193,7 +193,7 @@ export const useRouteParams = () => {
 };
 
 export interface RouterProps {
-  location: string;
+  location: URL;
   prevPath: string;
   routes: RouteDefinition | RouteDefinition[];
   children: JSX.Element;
@@ -201,7 +201,7 @@ export interface RouterProps {
 }
 
 export function Router(props: RouterProps) {
-  const next = getMatchedBranch(props.routes, props.location);
+  const next = getMatchedBranch(props.routes, props.location.pathname);
   if (!next || !next.routes.length) {
     return [];
   }
