@@ -7,6 +7,9 @@
   },
   "type": "module",
   "devDependencies": {
+    "@types/node": "^18.11.9",
+    "esbuild": "^0.14.54",
+    "postcss": "^8.4.18",
     "solid-start-node": "^0.2.0",
     "typescript": "^4.8.4",
     "vite": "^3.1.8"

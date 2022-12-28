@@ -9,7 +9,11 @@
   "devDependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.6.0",
+    "@types/node": "^18.11.9",
     "csstype": "3.1.0",
+    "esbuild": "^0.14.54",
+    "postcss": "^8.4.18",
+    "rollup": "^3.8.1",
     "solid-js": "^1.6.2",
     "solid-start": "^0.2.0",
     "solid-start-node": "^0.2.0",
