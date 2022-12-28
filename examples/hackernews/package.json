@@ -8,6 +8,10 @@
   "type": "module",
   "main": "./dist/index.js",
   "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/babel__core": "^7.1.20",
+    "@types/debug": "^4.1.7",
+    "esbuild": "^0.14.54",
     "solid-start-node": "^0.2.0",
     "typescript": "^4.8.4",
     "vite": "^3.1.8"

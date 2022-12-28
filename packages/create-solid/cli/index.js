@@ -269,6 +269,9 @@ async function main() {
   ); // TODO ^${versions[name]}
 
   if (!ts_response) {
+    delete pkg_json.devDependencies["@types/babel__core"];
+    delete pkg_json.devDependencies["@types/node"];
+    delete pkg_json.devDependencies["@types/debug"];
     delete pkg_json.devDependencies["typescript"];
   }
 

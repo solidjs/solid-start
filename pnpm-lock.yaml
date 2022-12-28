@@ -42,7 +42,7 @@ importers:
       '@rollup/plugin-json': 4.1.0_rollup@2.79.1
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       '@tailwindcss/typography': 0.5.7_tailwindcss@3.2.2
       '@trpc/client': 9.27.4_@trpc+server@9.27.4
       '@trpc/server': 9.27.4
@@ -71,6 +71,9 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.6.0
+      '@types/node': ^18.11.9
+      esbuild: ^0.14.54
+      postcss: ^8.4.18
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
@@ -79,11 +82,14 @@ importers:
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       undici: 5.12.0
     devDependencies:
+      '@types/node': 18.11.9
+      esbuild: 0.14.54
+      postcss: 8.4.18
       solid-start-node: link:../../packages/start-node
       typescript: 4.8.4
       vite: 3.2.2
@@ -92,6 +98,10 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.6.0
+      '@types/babel__core': ^7.1.20
+      '@types/debug': ^4.1.7
+      '@types/node': ^18.11.9
+      esbuild: ^0.14.54
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
@@ -100,11 +110,15 @@ importers:
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       undici: 5.12.0
     devDependencies:
+      '@types/babel__core': 7.1.20
+      '@types/debug': 4.1.7
+      '@types/node': 18.11.9
+      esbuild: 0.14.54
       solid-start-node: link:../../packages/start-node
       typescript: 4.8.4
       vite: 3.2.2
@@ -113,7 +127,11 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.6.0
+      '@types/node': ^18.11.9
       csstype: 3.1.0
+      esbuild: ^0.14.54
+      postcss: ^8.4.18
+      rollup: ^3.8.1
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
@@ -122,8 +140,12 @@ importers:
       vite: ^3.1.8
     devDependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
+      '@types/node': 18.11.9
       csstype: 3.1.0
+      esbuild: 0.14.54
+      postcss: 8.4.18
+      rollup: 3.9.0
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
@@ -135,6 +157,12 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.0
       '@solidjs/router': ^0.6.0
+      '@types/babel__core': ^7.1.20
+      '@types/debug': ^4.1.7
+      '@types/node': ^18.11.9
+      esbuild: ^0.14.54
+      postcss: ^8.4.20
+      rollup: ^3.9.0
       solid-js: ^1.6.2
       solid-start: ^0.2.0
       solid-start-node: ^0.2.0
@@ -143,11 +171,17 @@ importers:
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       undici: 5.12.0
     devDependencies:
+      '@types/babel__core': 7.1.20
+      '@types/debug': 4.1.7
+      '@types/node': 18.11.18
+      esbuild: 0.14.54
+      postcss: 8.4.20
+      rollup: 3.9.0
       solid-start-node: link:../../packages/start-node
       typescript: 4.8.4
       vite: 3.2.2
@@ -166,7 +200,7 @@ importers:
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-mdx: 0.0.6_solid-js@1.6.2+vite@3.2.2
       solid-start: link:../../packages/start
@@ -192,7 +226,7 @@ importers:
     dependencies:
       '@prisma/client': 4.5.0_prisma@4.5.0
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       prisma: 4.5.0
       solid-js: 1.6.2
       solid-start: link:../../packages/start
@@ -216,7 +250,7 @@ importers:
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       solid-styled: 0.7.3_solid-js@1.6.2
@@ -242,7 +276,7 @@ importers:
       vite: ^3.1.8
     dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       undici: 5.12.0
@@ -271,7 +305,7 @@ importers:
       vitest: ^0.25.2
     devDependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       '@solidjs/testing-library': 0.5.1_solid-js@1.6.2
       '@testing-library/jest-dom': 5.16.5
       '@types/testing-library__jest-dom': 5.14.5
@@ -300,7 +334,7 @@ importers:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@cloudflare/workers-types': 3.18.0
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       undici: 5.12.0
@@ -769,7 +803,7 @@ importers:
     devDependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@solidjs/meta': 0.28.2_solid-js@1.6.2
-      '@solidjs/router': 0.5.0_solid-js@1.6.2
+      '@solidjs/router': 0.6.0_solid-js@1.6.2
       solid-js: 1.6.2
       solid-start: link:../../packages/start
       solid-start-cloudflare-pages: link:../../packages/start-cloudflare-pages
@@ -2008,7 +2042,6 @@ packages:
     cpu: [loong64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-loong64/0.15.13:
@@ -2050,7 +2083,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       '@types/yargs': 15.0.14
       chalk: 4.1.2
     dev: true
@@ -2062,7 +2095,7 @@ packages:
       '@jest/schemas': 29.0.0
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       '@types/yargs': 17.0.13
       chalk: 4.1.2
 
@@ -2504,7 +2537,7 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       playwright-core: 1.23.4
     dev: false
 
@@ -2635,20 +2668,12 @@ packages:
     dependencies:
       solid-js: 1.6.2
 
-  /@solidjs/router/0.5.0_solid-js@1.6.2:
-    resolution: {integrity: sha512-rNR07l21tWWDVmCbaapggB89rEX7jlM2XChpTLqEGEnj46LzVZ8zgvjcF6NNKScByAlLpoQUkVIjB2KHpcMi+w==}
-    peerDependencies:
-      solid-js: ^1.5.3
-    dependencies:
-      solid-js: 1.6.2
-
   /@solidjs/router/0.6.0_solid-js@1.6.2:
     resolution: {integrity: sha512-7ug2fzXXhvvDBL4CQyMvMM9o3dgBE6PoRh38T8UTmMnYz4rcCfROqSZc9yq+YEC96qWt5OvJgZ1Uj/4EAQXlfA==}
     peerDependencies:
       solid-js: ^1.5.3
     dependencies:
       solid-js: 1.6.2
-    dev: true
 
   /@solidjs/testing-library/0.5.1_solid-js@1.6.2:
     resolution: {integrity: sha512-UVwYzSTRHwxiW7jdgKFP3NERbMtA748MIOQFzF1f4tg1XYl8ACybwlrVPqaiKnPevUCcM2ED+Wsp6Yd5JA//yg==}
@@ -2751,6 +2776,16 @@ packages:
       '@types/babel__traverse': 7.18.2
     dev: true
 
+  /@types/babel__core/7.1.20:
+    resolution: {integrity: sha512-PVb6Bg2QuscZ30FvOU7z4guG6c926D9YRvOxEaelzndpMsvP+YM74Q/dAFASpg2l6+XLalxSGxcq/lrgYWZtyQ==}
+    dependencies:
+      '@babel/parser': 7.20.2
+      '@babel/types': 7.20.2
+      '@types/babel__generator': 7.6.4
+      '@types/babel__template': 7.4.1
+      '@types/babel__traverse': 7.18.2
+    dev: true
+
   /@types/babel__generator/7.6.4:
     resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
     dependencies:
@@ -2773,7 +2808,7 @@ packages:
   /@types/better-sqlite3/7.6.2:
     resolution: {integrity: sha512-RgmaapusqTq6IMAr4McMyAsC6RshYTCjXCnzwVV59WctUxC8bNPyUfT9t5F81lKcU41lLurhjqjoMHfauzfqGg==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
 
   /@types/chai-subset/1.3.3:
     resolution: {integrity: sha512-frBecisrNGz+F4T6bcc+NLeolfiojh5FxW2klu669+8BARtyQv2C/GkNW6FUodVe4BroGMP/wER/YDGc7rEllw==}
@@ -2790,7 +2825,7 @@ packages:
   /@types/cross-spawn/6.0.2:
     resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
     dev: false
 
   /@types/css-tree/1.0.7:
@@ -2815,7 +2850,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
     dev: false
 
   /@types/hast/2.3.4:
@@ -2853,6 +2888,9 @@ packages:
   /@types/ms/0.7.31:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
 
+  /@types/node/18.11.18:
+    resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
+
   /@types/node/18.11.9:
     resolution: {integrity: sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==}
 
@@ -2863,7 +2901,7 @@ packages:
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
 
   /@types/stack-trace/0.0.29:
     resolution: {integrity: sha512-TgfOX+mGY/NyNxJLIbDWrO9DjGoVSW9+aB8H2yy1fy32jsvxijhmyJI9fDFgvz3YP4lvJaq9DzdR/M1bOgVc9g==}
@@ -2882,13 +2920,13 @@ packages:
   /@types/wait-on/5.3.1:
     resolution: {integrity: sha512-2FFOKCF/YydrMUaqg+fkk49qf0e5rDgwt6aQsMzFQzbS419h2gNOXyiwp/o2yYy27bi/C1z+HgfncryjGzlvgQ==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
     dev: true
 
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
     dev: false
 
   /@types/yargs-parser/21.0.0:
@@ -3849,7 +3887,6 @@ packages:
     cpu: [x64]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-android-64/0.15.13:
@@ -3875,7 +3912,6 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-android-arm64/0.15.13:
@@ -3901,7 +3937,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-darwin-64/0.15.13:
@@ -3927,7 +3962,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-darwin-arm64/0.15.13:
@@ -3953,7 +3987,6 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-freebsd-64/0.15.13:
@@ -3979,7 +4012,6 @@ packages:
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-freebsd-arm64/0.15.13:
@@ -4005,7 +4037,6 @@ packages:
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-32/0.15.13:
@@ -4031,7 +4062,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-64/0.15.13:
@@ -4057,7 +4087,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-arm/0.15.13:
@@ -4083,7 +4112,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-arm64/0.15.13:
@@ -4109,7 +4137,6 @@ packages:
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-mips64le/0.15.13:
@@ -4135,7 +4162,6 @@ packages:
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-ppc64le/0.15.13:
@@ -4161,7 +4187,6 @@ packages:
     cpu: [riscv64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-riscv64/0.15.13:
@@ -4187,7 +4212,6 @@ packages:
     cpu: [s390x]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-linux-s390x/0.15.13:
@@ -4213,7 +4237,6 @@ packages:
     cpu: [x64]
     os: [netbsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-netbsd-64/0.15.13:
@@ -4239,7 +4262,6 @@ packages:
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-openbsd-64/0.15.13:
@@ -4280,7 +4302,6 @@ packages:
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-sunos-64/0.15.13:
@@ -4306,7 +4327,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-windows-32/0.15.13:
@@ -4332,7 +4352,6 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-windows-64/0.15.13:
@@ -4358,7 +4377,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /esbuild-windows-arm64/0.15.13:
@@ -4424,7 +4442,6 @@ packages:
       esbuild-windows-32: 0.14.54
       esbuild-windows-64: 0.14.54
       esbuild-windows-arm64: 0.14.54
-    dev: false
 
   /esbuild/0.15.13:
     resolution: {integrity: sha512-Cu3SC84oyzzhrK/YyN4iEVy2jZu5t2fz66HEOShHURcjSkOSAVL8C/gfUT+lDJxkVHpg8GZ10DD0rMHRPqMFaQ==}
@@ -5326,7 +5343,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.2.1
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       chalk: 4.1.2
       ci-info: 3.5.0
       graceful-fs: 4.2.10
@@ -6405,6 +6422,15 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
+
+  /postcss/8.4.20:
+    resolution: {integrity: sha512-6Q04AXR1212bXr5fh03u8aAwbLxAQNGQ/Q1LNa0VfOI06ZAlhPHtQvE4OIdpj4kLThXilalPnmDSOD65DcHt+g==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.4
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
 
   /prelude-ls/1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
@@ -6766,6 +6792,14 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+
+  /rollup/3.9.0:
+    resolution: {integrity: sha512-nGGylpmblyjTpF4lEUPgmOw6OVxRvnI6Iuuh6Lz4O/X66cVOX1XJSsqP1YamxQ+mPuFE7qJxLFDSCk8rNv5dDw==}
+    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
 
   /route-sort/1.0.0:
     resolution: {integrity: sha512-SFgmvjoIhp5S4iBEDW3XnbT+7PRuZ55oRuNjY+CDB1SGZkyCG9bqQ3/dhaZTctTBYMAvDxd2Uy9dStuaUfgJqQ==}
@@ -7654,7 +7688,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.15.13
-      postcss: 8.4.18
+      postcss: 8.4.20
       resolve: 1.22.1
       rollup: 2.79.1
     optionalDependencies:
@@ -7683,7 +7717,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.15.13
-      postcss: 8.4.18
+      postcss: 8.4.20
       resolve: 1.22.1
       rollup: 2.79.1
       terser: 5.15.1
@@ -7716,14 +7750,14 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.15.13
-      postcss: 8.4.18
+      postcss: 8.4.20
       resolve: 1.22.1
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
 
-  /vite/3.2.4_@types+node@18.11.9:
+  /vite/3.2.4_@types+node@18.11.18:
     resolution: {integrity: sha512-Z2X6SRAffOUYTa+sLy3NQ7nlHFU100xwanq1WDwqaiFiCe+25zdxP1TfCS5ojPV2oDDcXudHIoPnI1Z/66B7Yw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -7748,13 +7782,48 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       esbuild: 0.15.13
-      postcss: 8.4.18
+      postcss: 8.4.20
       resolve: 1.22.1
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.2
+
+  /vite/3.2.4_lpaibns4r62li7rhoernygyrby:
+    resolution: {integrity: sha512-Z2X6SRAffOUYTa+sLy3NQ7nlHFU100xwanq1WDwqaiFiCe+25zdxP1TfCS5ojPV2oDDcXudHIoPnI1Z/66B7Yw==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.11.18
+      esbuild: 0.15.13
+      postcss: 8.4.20
+      resolve: 1.22.1
+      rollup: 2.79.1
+      terser: 5.15.1
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
 
   /vite/3.2.4_terser@5.15.1:
     resolution: {integrity: sha512-Z2X6SRAffOUYTa+sLy3NQ7nlHFU100xwanq1WDwqaiFiCe+25zdxP1TfCS5ojPV2oDDcXudHIoPnI1Z/66B7Yw==}
@@ -7782,42 +7851,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.15.13
-      postcss: 8.4.18
-      resolve: 1.22.1
-      rollup: 2.79.1
-      terser: 5.15.1
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
-
-  /vite/3.2.4_vt5mbdnyaskrzqlb5l6kjsnhi4:
-    resolution: {integrity: sha512-Z2X6SRAffOUYTa+sLy3NQ7nlHFU100xwanq1WDwqaiFiCe+25zdxP1TfCS5ojPV2oDDcXudHIoPnI1Z/66B7Yw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 18.11.9
-      esbuild: 0.15.13
-      postcss: 8.4.18
+      postcss: 8.4.20
       resolve: 1.22.1
       rollup: 2.79.1
       terser: 5.15.1
@@ -7863,13 +7897,13 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       chai: 4.3.6
       debug: 4.3.4
       local-pkg: 0.4.2
       tinypool: 0.2.4
       tinyspy: 1.0.2
-      vite: 3.2.4_@types+node@18.11.9
+      vite: 3.2.4_@types+node@18.11.18
     transitivePeerDependencies:
       - less
       - sass
@@ -7906,14 +7940,14 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       chai: 4.3.6
       debug: 4.3.4
       jsdom: 20.0.2
       local-pkg: 0.4.2
       tinypool: 0.2.4
       tinyspy: 1.0.2
-      vite: 3.2.4_vt5mbdnyaskrzqlb5l6kjsnhi4
+      vite: 3.2.4_lpaibns4r62li7rhoernygyrby
     transitivePeerDependencies:
       - less
       - sass
@@ -7947,7 +7981,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.9
+      '@types/node': 18.11.18
       acorn: 8.8.1
       acorn-walk: 8.2.0
       chai: 4.3.6
@@ -7959,7 +7993,7 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.0
       tinyspy: 1.0.2
-      vite: 3.2.4_@types+node@18.11.9
+      vite: 3.2.4_@types+node@18.11.18
     transitivePeerDependencies:
       - less
       - sass
