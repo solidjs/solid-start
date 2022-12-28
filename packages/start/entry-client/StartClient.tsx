@@ -1,5 +1,6 @@
 import { MetaProvider } from "@solidjs/meta";
 import { Router, RouterProps } from "@solidjs/router";
+// @ts-ignore
 import Root from "~start/root";
 import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, PageEvent } from "../server/types";

@@ -2,6 +2,7 @@ import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
 import { ComponentProps, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
+// @ts-ignore
 import Root from "~start/root";
 import { apiRoutes } from "../api/middleware";
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
