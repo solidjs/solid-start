@@ -145,7 +145,7 @@ async function main() {
       type: "confirm",
       name: "value",
       message: "Use TypeScript?",
-      initial: false
+      initial: true
     })
   ).value;
 
