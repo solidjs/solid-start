@@ -15,11 +15,7 @@ const A = import.meta.env.START_ISLANDS_ROUTER
   ? function IslandsA(props: ComponentProps<typeof BaseA>) {
       const [, rest] = splitProps(props, ["state", "activeClass", "inactiveClass", "end"]);
       const location = useLocation();
-      const isActive = () => {
-        return props.href.startsWith("#")
-          ? location.hash === props.href
-          : location.pathname === props.href;
-      };
+      const isActive = useIsActive(props.href);
 
       return (
         <a
@@ -73,6 +69,15 @@ const useLocation =
       }
     : useBaseLocation;
 
+const useIsActive = (href: string) => {
+  return () => {
+    const location = useLocation();
+    return href.startsWith("#")
+        ? location.hash === href
+        : location.pathname === href;
+  }
+};
+
 const useNavigate =
   import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
     ? function IslandsUseNavigate() {
@@ -87,4 +92,4 @@ declare global {
   }
 }
 
-export { A, Outlet, Routes, useLocation, useNavigate };
+export { A, Outlet, Routes, useLocation, useIsActive, useNavigate };

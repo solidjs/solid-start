@@ -19,6 +19,7 @@ import "./components/index.css";
 
 const IslandA = unstable_island(() => import("./components/A"));
 const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
+const ScrollIndicator = unstable_island(() => import("./components/ScrollIndicator"));
 
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
@@ -179,72 +180,74 @@ function Nav() {
   });
 
   return (
-    <nav class="min-w-[300px] col-start-1 row-start-2 -translate-x-full peer-checked:translate-x-0 pt-8 pb-20 md:pb-8 px-8 space-y-4 h-full fixed md:relative left-0 z-20 md:left-auto top-[52px] md:top-auto overflow-auto bg-slate-100 duration-300 ease-in-out md:translate-x-0">
-      <div id="docsearch" />
-      <For each={data()}>
-        {r => (
-          <ul>
-            <span class="text-left w-full dark:text-white border-b border-gray-200 dark:border-gray-500 hover:text-gray-400 transition flex flex-wrap content-center justify-between space-x-2 text-xl p-2 py-2 mb-8">
-              {r.title}
-            </span>
-            <Show
-              when={!r.subsection}
-              fallback={
-                <>
-                  <For each={[...r.subsection.values()]}>
-                    {s => (
-                      <ul class="ml-2 mt-4">
-                        <div class="font-bold text-gray-500 text-md mb-3">{s}</div>
-                        <For each={r.filter(i => i.subsection === s)}>
-                          {({ title, path, href, frontMatter }) => (
-                            <li class="ml-2">
-                              <IslandA
-                                activeClass="text-primary"
-                                inactiveClass="text-gray-500"
-                                href={href}
-                              >
-                                <span class="block ml-4 pb-2 text-sm break-words hover:text-gray-500 dark:hover:text-gray-300">
-                                  {title}
-                                </span>
-                              </IslandA>
-                            </li>
-                          )}
-                        </For>
-                      </ul>
-                    )}
-                  </For>
+    <nav class="min-w-[300px] col-start-1 row-start-2 -translate-x-full peer-checked:translate-x-0 h-full fixed md:relative left-0 z-20 md:left-auto top-[52px] md:top-auto overflow-auto bg-slate-100 duration-300 ease-in-out md:translate-x-0">
+      <ScrollIndicator class="pt-8 pb-20 md:pb-8 px-8">
+        <div id="docsearch" />
+        <For each={data()}>
+          {r => (
+            <ul class="mt-4">
+              <span class="text-left w-full dark:text-white border-b border-gray-200 dark:border-gray-500 cursor-default transition flex flex-wrap content-center justify-between space-x-2 text-xl p-2 py-2 mb-8">
+                {r.title}
+              </span>
+              <Show
+                when={!r.subsection}
+                fallback={
+                  <>
+                    <For each={[...r.subsection.values()]}>
+                      {s => (
+                        <ul class="ml-2 mt-4">
+                          <div class="font-bold text-gray-500 text-md mb-3">{s}</div>
+                          <For each={r.filter(i => i.subsection === s)}>
+                            {({ title, path, href, frontMatter }) => (
+                              <li class="ml-2">
+                                <IslandA
+                                  activeClass="text-primary"
+                                  inactiveClass="text-gray-500 hover:text-gray-500 dark:hover:text-gray-300"
+                                  href={href}
+                                >
+                                  <span class="block ml-4 pb-2 text-sm break-words">
+                                    {title}
+                                  </span>
+                                </IslandA>
+                              </li>
+                            )}
+                          </For>
+                        </ul>
+                      )}
+                    </For>
 
-                  <For each={r.filter(i => !i.subsection)}>
-                    {({ title, path, href, frontMatter }) => (
-                      <li class="ml-2">
-                        <IslandA
-                          activeClass="text-primary"
-                          inactiveClass="text-gray-500"
-                          href={href}
-                        >
-                          <span>{title}</span>
-                        </IslandA>
-                      </li>
-                    )}
-                  </For>
-                </>
-              }
-            >
-              <For each={r}>
-                {({ title, path, href, frontMatter }) => (
-                  <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
-                    <IslandA activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
-                      <span class="block dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
-                        {title}
-                      </span>
-                    </IslandA>
-                  </li>
-                )}
-              </For>
-            </Show>
-          </ul>
-        )}
-      </For>
+                    <For each={r.filter(i => !i.subsection)}>
+                      {({ title, path, href, frontMatter }) => (
+                        <li class="ml-2">
+                          <IslandA
+                            activeClass="text-primary"
+                            inactiveClass="text-gray-500"
+                            href={href}
+                          >
+                            <span>{title}</span>
+                          </IslandA>
+                        </li>
+                      )}
+                    </For>
+                  </>
+                }
+              >
+                <For each={r}>
+                  {({ title, path, href, frontMatter }) => (
+                    <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
+                      <IslandA activeClass="text-primary" inactiveClass="text-gray-500 hover:text-gray-400 dark:hover:text-gray-400" href={href}>
+                        <span class="block dark:text-gray-300 py-1 text-md font-semibold break-words">
+                          {title}
+                        </span>
+                      </IslandA>
+                    </li>
+                  )}
+                </For>
+              </Show>
+            </ul>
+          )}
+        </For>
+      </ScrollIndicator>
     </nav>
   );
 }

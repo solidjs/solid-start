@@ -329,7 +329,19 @@ h4 {
   scroll-margin-top: 2em;
 }
 
+body > nav a[aria-current="page"] span {
+  position: relative;
+}
 
+body > nav a[aria-current="page"] span::after {
+  width: 10px;
+  content: "\a0";
+  @apply -right-8;
+  position: absolute;
+  pointer-events: none;
+  display: inline-block;
+  background-color: rgb(68 131 193);
+}
 
 .bad .line.highlight {
   @apply bg-red-800 bg-opacity-20;
