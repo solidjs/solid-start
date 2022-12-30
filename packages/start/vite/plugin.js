@@ -43,9 +43,11 @@ function solidStartInlineServerModules(options) {
       vite.httpServer.once("listening", async () => {
         const label = `  > Server modules: `;
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0];
-          // eslint-disable-next-line no-console
-          console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
+          if (vite.resolvedUrls) {
+            const url = vite.resolvedUrls.local[0];
+            // eslint-disable-next-line no-console
+            console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
+          }
         }, 200);
       });
     }
@@ -156,9 +158,11 @@ function solidStartFileSystemRouter(options) {
       router.listener = listener;
       vite.httpServer.once("listening", async () => {
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0];
-          // eslint-disable-next-line no-console
-          printUrls(router, url.substring(0, url.length - 1));
+          if (vite.resolvedUrls) {
+            const url = vite.resolvedUrls.local[0];
+            // eslint-disable-next-line no-console
+            printUrls(router, url.substring(0, url.length - 1));
+          }
         }, 100);
       });
     },
