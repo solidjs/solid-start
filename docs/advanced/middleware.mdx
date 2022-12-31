@@ -14,6 +14,8 @@ export default createHandler(
   ({ forward }) => {
     return async event => {
       // your own logic here
+      const request = event.request;
+      // maybe you want to get the cookie? or block this ip?
       return forward(event); // next
     };
   },
