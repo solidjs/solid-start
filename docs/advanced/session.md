@@ -48,8 +48,8 @@ import { createCookieSessionStorage } from "solid-start";
 const storage = createCookieSessionStorage({
   cookie: {
     name: "session",
-    secure: import.meta.env.PROD,
-    secrets: [import.meta.env.VITE_SESSION_SECRET],
+    secure: process.env.NODE_ENV === "production",
+    secrets: [process.env.SESSION_SECRET],
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -75,7 +75,7 @@ Let's look at an example of how to use the cookie to identify the user. Imagine 
 
 // ---cut---
 export async function getUser(request: Request) {
-  const cookie = request.headers.get("Cookie") ?? ""
+  const cookie = request.headers.get("Cookie") ?? "";
 }
 ```
 
@@ -100,7 +100,7 @@ Let's use this `storage` to get the session data for the request:
 
 // ---cut---
 export async function getUser(request: Request) {
-  const cookie = request.headers.get("Cookie") ?? ""
+  const cookie = request.headers.get("Cookie") ?? "";
   const session = storage.getSession(cookie);
 }
 ```
@@ -134,7 +134,7 @@ export function routeData({ params }: RouteDataArgs) {
       const user = await getUser(event.request);
       if (!user) throw redirect("/login");
       return {
-        students: hogwarts.getStudents(house, "*"),
+        students: hogwarts.getStudents(house, "*")
       };
     },
     { key: () => params.house }
@@ -170,14 +170,12 @@ export async function login({ username, password }: LoginForm) {
   return user;
 }
 
-const sessionSecret = import.meta.env.VITE_SESSION_SECRET;
-
 const storage = createCookieSessionStorage({
   cookie: {
     name: "RJ_session",
     // secure doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
-    secure: import.meta.env.PROD,
+    secure: process.env.NODE_ENV === "production",
     secrets: ["hello"],
     sameSite: "lax",
     path: "/",
