@@ -84,6 +84,20 @@ export default function ({ edge, prerender } = {}) {
 
       // Generate API function
       const apiRoutes = config.solidOptions.router.getFlattenedApiRoutes()
+      const apiRoutesConfig = apiRoutes.map(route => {
+        return { 
+          src: route.path.split('/')
+            .map(path => 
+              path[0] === ':'
+                ? `(?<${path.slice(1)}>[^/]+)`
+              : path[0] === '*'
+                ? `(?<${path.slice(1)}>.*)` 
+              : path
+            )
+            .join('/'),
+          dest: "/api" 
+        }
+      })
       if (apiRoutes.length > 0) {
         let baseEntrypoint = "entry.js";
         if (edge) baseEntrypoint = "entry-edge.js";
@@ -147,7 +161,7 @@ export default function ({ edge, prerender } = {}) {
           // Serve any matching static assets first
           { handle: "filesystem" },
           // Invoke the API function for API routes
-          {...apiRoutes.length > 0 ? { src: "/api/(.*)", dest: "/api" } : {}},
+          ...apiRoutesConfig,
           // Invoke the SSR function if not a static asset
           { src: prerender ? "/(?<path>.*)" : "/.*", dest: prerender ? "/render?path=$path" : "/render" }
         ]
