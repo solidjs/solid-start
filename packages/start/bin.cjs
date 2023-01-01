@@ -130,7 +130,7 @@ prog
         "node_modules/vite/bin/vite.js",
         "dev",
         ...(root ? [root] : []),
-        ...(config ? ["--config", config.configFile] : []),
+        ...(config ? ["--config", `"${config.configFile}"`] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
       ]
@@ -141,7 +141,7 @@ prog
       "vite",
       [
         "dev",
-        ...(config ? ["--config", config.configFile] : []),
+        ...(config ? ["--config", `"${config.configFile}"`] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
       ].filter(Boolean),
