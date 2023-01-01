@@ -102,7 +102,7 @@ export function createRouteData<T, S>(
     }
   };
 
-  function dedup(fetcher: ResourceFetcher<S, T>): ResourceFetcher<S, T> {
+  function dedupe(fetcher: ResourceFetcher<S, T>): ResourceFetcher<S, T> {
     return (key: S, info: ResourceFetcherInfo<T>) => {
       if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching) && info.value) {
         return info.value;
@@ -114,14 +114,13 @@ export function createRouteData<T, S>(
       if (promise) return promise;
       promise = fetcher(key, info) as Promise<T>;
       promises.set(key, promise);
-      promise.finally(() => promises.delete(key));
-      return promise;
+      return promise.finally(() => promises.delete(key));
     };
   }
 
   const [resource, { refetch }] = createResource<T, S>(
     (options.key || true) as RouteDataSource<S>,
-    dedup(resourceFetcher),
+    dedupe(resourceFetcher),
     {
       storage: (init: T | undefined) => createDeepSignal(init, options.reconcileOptions),
       ...options
