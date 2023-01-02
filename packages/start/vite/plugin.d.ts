@@ -18,7 +18,7 @@ export type Options = {
   serverEntry: string;
   clientEntry: string;
 } & import("vite-plugin-solid").Options;
-import { Plugin } from "node_modules/vite";
+import { Plugin } from "vite";
 
 import type { Debugger } from "debug";
 import type { Component } from "solid-js";
