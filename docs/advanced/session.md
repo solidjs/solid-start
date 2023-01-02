@@ -40,9 +40,16 @@ const hogwarts = {
 type User = {}
 ```
 
-```tsx
+```twoslash include cookie
 // @module: esnext
+// ---cut---
 
+const process = { env: {
+  NODE_ENV: "",
+  SESSION_SECRET: ""
+}}
+
+// ---cut---
 import { createCookieSessionStorage } from "solid-start";
 
 const storage = createCookieSessionStorage({
@@ -58,7 +65,7 @@ const storage = createCookieSessionStorage({
 });
 ```
 
-```tsx twoslash include getUser
+```twoslash include getUser
 export async function getUser(request: Request): Promise<User | null> {
   const cookie = request.headers.get("Cookie") ?? ""
   const session = await storage.getSession(cookie);
@@ -144,6 +151,7 @@ export function routeData({ params }: RouteDataArgs) {
 
 ```tsx filename="/routes/session.server.ts"
 // @module: esnext
+// ---cut---
 import { redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
 
