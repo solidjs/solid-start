@@ -5,8 +5,7 @@ import type {
 import {
   createResource,
   onCleanup,
-  startTransition,
-  useContext
+  startTransition, untrack, useContext
 } from "solid-js";
 import type { ReconcileOptions } from "solid-js/store";
 import { createStore, reconcile, unwrap } from "solid-js/store";
@@ -146,7 +145,7 @@ function createDeepSignal<T>(value: T, options?: ReconcileOptions) {
   return [
     () => store.value,
     (v: T) => {
-      const unwrapped = unwrap(store.value);
+      const unwrapped = untrack(() => unwrap(store.value));
       typeof v === "function" && (v = v(unwrapped));
       setStore("value", reconcile(v, options));
       return store.value;
