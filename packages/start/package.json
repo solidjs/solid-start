@@ -72,7 +72,8 @@
     "./session": "./session/index.ts",
     "./session/*": "./session/*",
     "./websocket": "./websocket/index.ts",
-    "./websocket/*": "./websocket/*"
+    "./websocket/*": "./websocket/*",
+    "./env": "./env.d.ts"
   },
   "dependencies": {
     "@babel/core": "^7.19.6",
