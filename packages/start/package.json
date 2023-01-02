@@ -32,6 +32,7 @@
     "index.tsx",
     "router.tsx",
     "required-user-files.d.ts",
+    "env.d.ts",
     "types.ts"
   ],
   "scripts": {

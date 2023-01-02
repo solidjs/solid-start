@@ -200,7 +200,7 @@ export default async function () {
               lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
               jsxImportSource: "solid-js",
               jsx: "preserve",
-              types: ["vite/client"],
+              types: ["solid-start/env"],
               paths: {
                 "~/*": ["./src/*"]
               }
