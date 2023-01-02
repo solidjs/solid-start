@@ -25,13 +25,13 @@ let _dirname = dirname(fileURLToPath(import.meta.url));
 // const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
 
 /**
- * @returns {import('node_modules/vite').PluginOption}
+ * @returns {import('vite').PluginOption}
  * @param {any} options
  */
 function solidStartInlineServerModules(options) {
   let lazy;
   let config;
-  /** @type {import('node_modules/vite').Plugin} */
+  /** @type {import('vite').Plugin} */
   return {
     enforce: "pre",
     configResolved(_config) {
@@ -77,7 +77,7 @@ function toArray(arr) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; babel?: any }} options
  */
 function solidStartFileSystemRouter(options) {
@@ -382,7 +382,7 @@ function solidStartFileSystemRouter(options) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {{ pageExtensions: any[]; }} options
  */
 function solidsStartRouteManifest(options) {
@@ -412,7 +412,7 @@ async function resolveAdapter(config) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {any} options
  */
 function solidStartServer(options) {
@@ -528,7 +528,7 @@ function expand(target, source = {}, parse = v => v) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {any} options
  */
 function solidStartConfig(options) {
@@ -682,7 +682,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 };
 
 /**
- * @returns {import('node_modules/vite').PluginOption[]}
+ * @returns {import('vite').PluginOption[]}
  */
 export default function solidStart(options) {
   options = Object.assign(
