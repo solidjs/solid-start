@@ -4,12 +4,22 @@
 
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
-interface ImportMetaEnv extends Record<`VITE_${string}`, any> {
+interface ImportMetaEnv extends Record<`VITE_${string}`, any>, SolidStartMetaEnv {
   BASE_URL: string;
   MODE: string;
   DEV: boolean;
   PROD: boolean;
   SSR: boolean;
+}
+
+interface SolidStartMetaEnv {
+  START_ISLANDS_ROUTER: string;
+  START_INDEX_HTML: string;
+  START_ENTRY_CLIENT: string;
+  START_SSR: string;
+  START_ISLANDS: string;
+  START_ENTRY_SERVER: string;
+  DEBUG: string;
 }
 
 interface ImportMeta {
