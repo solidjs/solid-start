@@ -446,7 +446,7 @@ importers:
       parse-multipart-data: ^1.5.0
       picocolors: ^1.0.0
       rollup: ^2.79.1
-      rollup-plugin-visualizer: ^5.8.3
+      rollup-plugin-visualizer: ^5.9.0
       rollup-route-manifest: ^1.0.0
       sade: ^1.8.1
       sirv: ^2.0.2
@@ -490,7 +490,7 @@ importers:
       parse-multipart-data: 1.5.0
       picocolors: 1.0.0
       rollup: 2.79.1
-      rollup-plugin-visualizer: 5.8.3_rollup@2.79.1
+      rollup-plugin-visualizer: 5.9.0_rollup@2.79.1
       rollup-route-manifest: 1.0.0_rollup@2.79.1
       sade: 1.8.1
       sirv: 2.0.2
@@ -6980,8 +6980,8 @@ packages:
       rollup-plugin-inject: 3.0.2
     dev: true
 
-  /rollup-plugin-visualizer/5.8.3_rollup@2.79.1:
-    resolution: {integrity: sha512-QGJk4Bqe4AOat5AjipOh8esZH1nck5X2KFpf4VytUdSUuuuSwvIQZjMGgjcxe/zXexltqaXp5Vx1V3LmnQH15Q==}
+  /rollup-plugin-visualizer/5.9.0_rollup@2.79.1:
+    resolution: {integrity: sha512-bbDOv47+Bw4C/cgs0czZqfm8L82xOZssk4ayZjG40y9zbXclNk7YikrZTDao6p7+HDiGxrN0b65SgZiVm9k1Cg==}
     engines: {node: '>=14'}
     hasBin: true
     peerDependencies:
@@ -6991,6 +6991,7 @@ packages:
         optional: true
     dependencies:
       open: 8.4.0
+      picomatch: 2.3.1
       rollup: 2.79.1
       source-map: 0.7.4
       yargs: 17.6.2
