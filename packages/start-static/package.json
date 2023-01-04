@@ -9,9 +9,9 @@
   "dependencies": {
     "sirv-cli": "2.0.2",
     "solid-ssr": "^1.6.2",
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "rollup": "^2.79.1"
   },
   "devDependencies": {
