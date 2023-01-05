@@ -48,7 +48,7 @@ export default function ({ edge, prerender } = {}) {
             preferBuiltins: true,
             exportConditions: edge ? ["worker", "solid"] : ["node", "solid"]
           }),
-          common({ strictRequires: true })
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
 
@@ -112,7 +112,7 @@ export default function ({ edge, prerender } = {}) {
               preferBuiltins: true,
               exportConditions: edge ? ["worker", "solid"] : ["node", "solid"]
             }),
-            common({ strictRequires: true })
+            common({ strictRequires: true, ...config.build.commonjsOptions })
           ]
         });
 

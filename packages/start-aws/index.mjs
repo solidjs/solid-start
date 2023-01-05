@@ -37,7 +37,7 @@ export default function ({ edge } = {}) {
             preferBuiltins: true,
             exportConditions: ["node", "solid"]
           }),
-          common({ strictRequires: true })
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       await bundle.write({
