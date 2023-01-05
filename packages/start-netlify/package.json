@@ -1,6 +1,6 @@
 {
   "name": "solid-start-netlify",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "main": "./index.js",
   "type": "module",
   "solid": {
