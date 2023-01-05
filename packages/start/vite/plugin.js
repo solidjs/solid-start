@@ -739,7 +739,7 @@ export default function solidStart(options) {
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
     options.islands ? islands() : undefined,
-    options.inspect ? inspect({ outputDir: join(".solid", "inspect") }) : undefined,
+    options.inspect ? inspect({ outputDir: join(".solid", "inspect"), build: true }) : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
