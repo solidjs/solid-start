@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
-    "types": ["vite/client"],
+    "types": ["./env"],
     "strict": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "paths": {
