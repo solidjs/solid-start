@@ -42,7 +42,14 @@ type User = {}
 
 ```twoslash include cookie
 // @module: esnext
+// ---cut---
 
+const process = { env: {
+  NODE_ENV: "",
+  SESSION_SECRET: ""
+}}
+
+// ---cut---
 import { createCookieSessionStorage } from "solid-start";
 
 const storage = createCookieSessionStorage({
@@ -142,8 +149,9 @@ export function routeData({ params }: RouteDataArgs) {
 }
 ```
 
-```tsx twoslash filename="/routes/session.server.ts"
+```tsx filename="/routes/session.server.ts"
 // @module: esnext
+// ---cut---
 import { redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
 

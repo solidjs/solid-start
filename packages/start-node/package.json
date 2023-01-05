@@ -1,15 +1,15 @@
 {
   "name": "solid-start-node",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "main": "./index.js",
   "type": "module",
   "solid": {
     "type": "adapter"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "compression": "^1.7.4",
     "polka": "^1.0.0-next.22",
     "rollup": "^2.79.1",

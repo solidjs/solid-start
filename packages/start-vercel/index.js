@@ -82,6 +82,71 @@ export default function ({ edge, prerender } = {}) {
           };
       writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));
 
+      // Generate API function
+      const apiRoutes = config.solidOptions.router.getFlattenedApiRoutes()
+      const apiRoutesConfig = apiRoutes.map(route => {
+        return { 
+          src: route.path.split('/')
+            .map(path => 
+              path[0] === ':'
+                ? `(?<${path.slice(1)}>[^/]+)`
+              : path[0] === '*'
+                ? `(?<${path.slice(1)}>.*)` 
+              : path
+            )
+            .join('/'),
+          dest: "/api" 
+        }
+      })
+      if (apiRoutes.length > 0) {
+        let baseEntrypoint = "entry.js";
+        if (edge) baseEntrypoint = "entry-edge.js";
+        copyFileSync(join(__dirname, baseEntrypoint), entrypoint);
+
+        const bundle = await rollup({
+          // Same as render
+          input: entrypoint,
+          plugins: [
+            json(),
+            nodeResolve({
+              preferBuiltins: true,
+              exportConditions: edge ? ["worker", "solid"] : ["node", "solid"]
+            }),
+            common()
+          ]
+        });
+
+        const apiEntrypoint = "index.js";
+        const apiFuncDir = join(outputDir, "functions/api.func");
+        await bundle.write(
+          edge
+            ? {
+                format: "esm",
+                file: join(apiFuncDir, apiEntrypoint),
+                inlineDynamicImports: true
+              }
+            : {
+                format: "cjs",
+                file: join(apiFuncDir, apiEntrypoint),
+                exports: "auto",
+                inlineDynamicImports: true
+              }
+        );
+        await bundle.close();
+
+        const apiConfig = edge
+          ? {
+              runtime: "edge",
+              entrypoint: apiEntrypoint
+            }
+          : {
+              runtime: "nodejs16.x",
+              handler: apiEntrypoint,
+              launcherType: "Nodejs"
+            };
+        writeFileSync(join(apiFuncDir, ".vc-config.json"), JSON.stringify(apiConfig, null, 2));
+      }
+      
       // Routing Config
       const outputConfig = {
         version: 3,
@@ -95,6 +160,8 @@ export default function ({ edge, prerender } = {}) {
           },
           // Serve any matching static assets first
           { handle: "filesystem" },
+          // Invoke the API function for API routes
+          ...apiRoutesConfig,
           // Invoke the SSR function if not a static asset
           { src: prerender ? "/(?<path>.*)" : "/.*", dest: prerender ? "/render?path=$path" : "/render" }
         ]

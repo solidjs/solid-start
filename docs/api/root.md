@@ -68,12 +68,12 @@ Inside those we define our `<Routes>`. Keep in mind, there are no rules here in 
 
 API reference for the components commonly found in `root.tsx` can be found in the `Document` section:
 
-- [Html](./Html.md)
-- [Head](./Head.md)
-- [Title](./Title.md)
-- [Meta](./Meta.md)
-- [Link](./Link.md)
-- [Style](./Style.md)
-- [Body](./Body.md)
-- [Scripts](./Scripts.md)
-- [ErrorBoundary](./ErrorBoundary.mdx)
+- [Html](./Html)
+- [Head](./Head)
+- [Title](./Title)
+- [Meta](./Meta)
+- [Link](./Link)
+- [Style](./Style)
+- [Body](./Body)
+- [Scripts](./Scripts)
+- [ErrorBoundary](./ErrorBoundary)
