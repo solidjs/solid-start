@@ -134,6 +134,6 @@
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.6.0",
     "solid-js": "^1.6.2",
-    "vite": "^3.0.4"
+    "vite": "^3.1.8"
   }
 }
