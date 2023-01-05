@@ -1,6 +1,5 @@
 /// <reference path="./plugin.d.ts" />
 
-import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
 import dotenv from "dotenv";
 import { solidPlugin } from "esbuild-plugin-solid";
@@ -9,6 +8,7 @@ import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
 import { loadEnv, normalizePath } from "vite";
+import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
 import fileRoutesImport from "../fs-router/fileRoutesImport.js";
