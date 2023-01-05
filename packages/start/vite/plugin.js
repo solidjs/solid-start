@@ -451,25 +451,26 @@ function solidStartServer(options) {
 // credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js
 function loadServerEnv(envConfig, rootDir = process.cwd()) {
   const env = Object.create(null);
-
-  // Read dotenv
-  if (envConfig.dotenv) {
-    envConfig.dotenv = path.resolve(rootDir, envConfig.dotenv);
+  if (!envConfig.dotenv) return env;
+  const t = [...envConfig.dotenv];
+  for (const denv of t) {
+    // Read dotenv
+    envConfig.dotenv = path.resolve(rootDir, denv);
     if (fs.existsSync(envConfig.dotenv)) {
       const parsed = dotenv.parse(fs.readFileSync(envConfig.dotenv, "utf-8"));
       Object.assign(env, parsed);
     }
-  }
 
-  // Apply process.env
-  if (!envConfig.env._applied) {
-    Object.assign(env, envConfig.env);
-    envConfig.env._applied = true;
-  }
+    // Apply process.env
+    if (!envConfig.env._applied) {
+      Object.assign(env, envConfig.env);
+      envConfig.env._applied = true;
+    }
 
-  // Interpolate env
-  if (envConfig.expand) {
-    expand(env);
+    // Interpolate env
+    if (envConfig.expand) {
+      expand(env);
+    }
   }
 
   return env;
@@ -542,7 +543,12 @@ function solidStartConfig(options) {
       // Load env file based on `mode` in the current working directory.
       // credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js for the server env
       const envConfig = {
-        dotenv: ".env",
+        dotenv: [
+          /** default file */ `.env`,
+          /** local file */ `.env.local`,
+          /** mode file */ `.env.${e.mode}`,
+          /** mode local file */ `.env.${e.mode}.local`
+        ],
         env: process.env,
         expand: true,
         ...(options?.envConfig ?? {})
