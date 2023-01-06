@@ -160,7 +160,7 @@ export default function (miniflareOptions = {}) {
             preferBuiltins: true,
             exportConditions: ["worker", "solid"]
           }),
-          common({ strictRequires: true })
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       // or write the bundle to disk

@@ -50,7 +50,7 @@ export default function () {
             preferBuiltins: true,
             exportConditions: ["deno", "solid"]
           }),
-          common({ strictRequires: true })
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       // or write the bundle to disk
