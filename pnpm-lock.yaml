@@ -430,7 +430,6 @@ importers:
       '@types/debug': ^4.1.7
       '@types/node': ^18.11.3
       '@types/wait-on': ^5.3.1
-      '@vinxi/vite-plugin-inspect': ^0.6.27
       chokidar: ^3.5.3
       compression: ^1.7.4
       connect: ^3.7.0
@@ -463,7 +462,7 @@ importers:
       typescript: ^4.8.4
       undici: ^5.11.0
       vite: ^3.1.8
-      vite-plugin-inspect: ^0.6.1
+      vite-plugin-inspect: ^0.7.12
       vite-plugin-solid: ^2.3.10
       vitest: ^0.20.3
       wait-on: ^6.0.1
@@ -475,7 +474,6 @@ importers:
       '@babel/preset-typescript': 7.18.6_@babel+core@7.20.2
       '@babel/template': 7.18.10
       '@types/cookie': 0.5.1
-      '@vinxi/vite-plugin-inspect': 0.6.27_rollup@2.79.1+vite@3.2.2
       chokidar: 3.5.3
       compression: 1.7.4
       connect: 3.7.0
@@ -496,7 +494,7 @@ importers:
       sirv: 2.0.2
       terser: 5.15.1
       undici: 5.12.0
-      vite-plugin-inspect: 0.6.1_vite@3.2.2
+      vite-plugin-inspect: 0.7.12_rollup@2.79.1+vite@3.2.2
       vite-plugin-solid: 2.4.0_solid-js@1.6.2+vite@3.2.2
       wait-on: 6.0.1_debug@4.3.4
     devDependencies:
@@ -2993,39 +2991,6 @@ packages:
       - supports-color
     dev: false
 
-  /@vinxi/rollup-plugin-visualizer/5.7.1_rollup@2.79.1:
-    resolution: {integrity: sha512-gIwdH6B2rh7EoWgtL80yMW/0AM6riSXwNccM7rwMONG5CTVYzHYDQgnccrl40iWHrQLYZI0rvM66EQ1TRB8REA==}
-    engines: {node: '>=14'}
-    hasBin: true
-    peerDependencies:
-      rollup: ^2.0.0
-    dependencies:
-      nanoid: 3.3.4
-      open: 8.4.0
-      rollup: 2.79.1
-      source-map: 0.7.4
-      yargs: 17.6.2
-    dev: false
-
-  /@vinxi/vite-plugin-inspect/0.6.27_rollup@2.79.1+vite@3.2.2:
-    resolution: {integrity: sha512-EI63vk0wGF3XcUYSWsKSeuzisx8lgUnjLSqk9XHnboSnjhbPZKe/cMrcXUbdNi+ZnK/a3L7+w3y/XMYWW4NHRA==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      vite: ^3.0.0
-    dependencies:
-      '@rollup/pluginutils': 4.2.1
-      '@vinxi/rollup-plugin-visualizer': 5.7.1_rollup@2.79.1
-      debug: 4.3.4
-      kolorist: 1.6.0
-      pretty-bytes: 6.0.0
-      sirv: 2.0.2
-      ufo: 0.8.6
-      vite: 3.2.2_terser@5.15.1
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-    dev: false
-
   /@vitest/coverage-c8/0.26.2_q5y6sd2ttlb573zo2al4tbrryy:
     resolution: {integrity: sha512-h7RZ7trUUsq+yixiXhBaGboap7pjee+x59HE9rsz/JbY/evJhgk+biLY5lOgjpyUonPN0Ymz3mxlrXW9Da54SQ==}
     dependencies:
@@ -4871,6 +4836,15 @@ packages:
       universalify: 2.0.0
     dev: false
 
+  /fs-extra/11.1.0:
+    resolution: {integrity: sha512-0rcTq621PD5jM/e0a3EJoGC/1TC5ZBCERW82LQuwfGnCa1V8w7dpYH1yNu+SLb6E5dkeCBzKEyLGlFrnr+dUyw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.10
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+    dev: false
+
   /fs.realpath/1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
 
@@ -6669,11 +6643,6 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  /pretty-bytes/6.0.0:
-    resolution: {integrity: sha512-6UqkYefdogmzqAZWzJ7laYeJnaXDy2/J+ZqiiMtS7t7OfpXWTlaeGMwX8U6EFvPV/YWWEKRkS8hKS4k60WHTOg==}
-    engines: {node: ^14.13.1 || >=16.0.0}
-    dev: false
-
   /pretty-format/26.6.2:
     resolution: {integrity: sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==}
     engines: {node: '>= 10'}
@@ -7646,13 +7615,8 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
 
-  /ufo/0.8.6:
-    resolution: {integrity: sha512-fk6CmUgwKCfX79EzcDQQpSCMxrHstvbLswFChHS0Vump+kFkw7nJBfTZoC1j0bOGoY9I7R3n2DGek5ajbcYnOw==}
-    dev: false
-
   /ufo/1.0.1:
     resolution: {integrity: sha512-boAm74ubXHY7KJQZLlXrtMz52qFvpsbOxDcZOnw/Wf+LS4Mmyu7JxmzD4tDLtUQtmZECypJ0FrCz4QIe6dvKRA==}
-    dev: true
 
   /undici/5.12.0:
     resolution: {integrity: sha512-zMLamCG62PGjd9HHMpo05bSLvvwWOZgGeiWlN/vlqu3+lRo3elxktVGEyLMX+IO7c2eflLjcW74AlkhEZm15mg==}
@@ -7898,19 +7862,21 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-inspect/0.6.1_vite@3.2.2:
-    resolution: {integrity: sha512-MQzIgMoPyiPDuHoO6p7QBOrmheBU/ntg0cgtgcnm21S/Xds5oak1CbVLSAvv4fK1ZpetLK+tlJ+2mlFO9fG3SQ==}
+  /vite-plugin-inspect/0.7.12_rollup@2.79.1+vite@3.2.2:
+    resolution: {integrity: sha512-hI093vkhCVkDW9rnss+iJZ6mgCKKIZNcV0QJ2qnfzn15s67+WQcKK5byBTZEbfx2MBzMJInYsQfWiLdScgneIg==}
     engines: {node: '>=14'}
     peerDependencies:
-      vite: ^3.0.0
+      vite: ^3.1.0 || ^4.0.0
     dependencies:
-      '@rollup/pluginutils': 4.2.1
+      '@rollup/pluginutils': 5.0.2_rollup@2.79.1
       debug: 4.3.4
+      fs-extra: 11.1.0
       kolorist: 1.6.0
       sirv: 2.0.2
-      ufo: 0.8.6
+      ufo: 1.0.1
       vite: 3.2.2_terser@5.15.1
     transitivePeerDependencies:
+      - rollup
       - supports-color
     dev: false
 
