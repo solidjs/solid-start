@@ -654,28 +654,28 @@ function find(locate, cwd) {
   return find(locate, path.join(cwd, ".."));
 }
 
-const nodeModulesPath = find("node_modules", process.cwd());
+// const nodeModulesPath = find("node_modules", process.cwd());
 
-function detectAdapter() {
-  let adapters = [];
-  fs.readdirSync(nodeModulesPath).forEach(dir => {
-    if (dir.startsWith("solid-start-")) {
-      const pkg = JSON.parse(
-        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
-          encoding: "utf8"
-        })
-      );
-      if (pkg.solid && pkg.solid.type === "adapter") {
-        adapters.push(dir);
-      }
-    }
-  });
+// function detectAdapter() {
+//   let adapters = [];
+//   fs.readdirSync(nodeModulesPath).forEach(dir => {
+//     if (dir.startsWith("solid-start-")) {
+//       const pkg = JSON.parse(
+//         fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
+//           encoding: "utf8"
+//         })
+//       );
+//       if (pkg.solid && pkg.solid.type === "adapter") {
+//         adapters.push(dir);
+//       }
+//     }
+//   });
 
-  // Ignore the default adapter.
-  adapters = adapters.filter(adapter => adapter !== "solid-start-node");
+//   // Ignore the default adapter.
+//   adapters = adapters.filter(adapter => adapter !== "solid-start-node");
 
-  return adapters.length > 0 ? adapters[0] : "solid-start-node";
-}
+//   return adapters.length > 0 ? adapters[0] : "solid-start-node";
+// }
 
 const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts"]) => {
   for (var ext of exts) {
@@ -693,7 +693,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : detectAdapter(),
+      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
