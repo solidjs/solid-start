@@ -189,7 +189,7 @@ export let FormImpl = (_props: FormImplProps) => {
     if (!form) return;
 
     function handleClick(event: MouseEvent) {
-      if (!(event.target instanceof HTMLElement)) return;
+      if (!(event.target instanceof HTMLElement || event.target instanceof SVGElement)) return;
       let submitButton = event.target.closest<HTMLButtonElement | HTMLInputElement>(
         "button,input[type=submit]"
       );
