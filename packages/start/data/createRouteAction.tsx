@@ -96,8 +96,9 @@ export function createRouteAction<T, U = void>(
       <FormImpl
         {...props}
         action={url}
-        onSubmission={submission => {
-          submit(submission.formData as any);
+        onSubmission={async submission => {
+          await submit(submission.formData as any);
+          props.onSubmission?.(submission);
         }}
       >
         {props.children}
