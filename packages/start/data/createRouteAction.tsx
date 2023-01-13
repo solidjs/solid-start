@@ -90,15 +90,14 @@ export function createRouteAction<T, U = void>(
       }) as Promise<U>;
   }
   submit.url = (fn as any).url;
-  submit.Form = ((props: FormProps) => {
+  submit.Form = ((props: Omit<FormProps, "action" | "onSubmission">) => {
     let url = (fn as any).url;
     return (
       <FormImpl
         {...props}
         action={url}
-        onSubmission={async submission => {
-          await submit(submission.formData as any);
-          props.onSubmission?.(submission);
+        onSubmission={submission => {
+          submit(submission.formData as any);
         }}
       >
         {props.children}
