@@ -20,13 +20,13 @@ function transformRouteData({ types: t }) {
                 let imported = path.get("imported");
 
                 if (imported.isIdentifier()) {
-                  if (imported.get("name") === "createRouteData") {
+                  if (imported.node.name === "createRouteData") {
                     state.routeDataImported = true;
                   }
-                  if (imported.get("name") === "createRouteAction") {
+                  if (imported.node.name === "createRouteAction") {
                     state.routeActionImported = true;
                   }
-                  if (path.node.imported.name === "createRouteAction") {
+                  if (imported.node.name === "createRouteMultiAction") {
                     state.routeMultiActionImported = true;
                   }
                 }
