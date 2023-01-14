@@ -5,6 +5,7 @@ export default function (request) {
   const response = entry({
     request,
     clientAddress: request.headers.get('x-forwarded-for'),
+    locals: {},
     env: {
       manifest,
       getStaticHTML: path =>

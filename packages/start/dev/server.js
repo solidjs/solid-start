@@ -41,12 +41,13 @@ export function createDevHandler(viteServer, config, options) {
   /**
    * @returns {Promise<Response>}
    */
-  async function devFetch({ request, env, clientAddress }) {
+  async function devFetch({ request, env, clientAddress, locals }) {
     const entry = (await viteServer.ssrLoadModule("~start/entry-server")).default;
 
     return await entry({
       request,
       clientAddress,
+      locals,
       env: {
         ...env,
         __dev: {
@@ -115,7 +116,8 @@ export function createDevHandler(viteServer, config, options) {
       let webRes = await devFetch({
         request: createRequest(req),
         env: localEnv,
-        clientAddress: req.socket.remoteAddress
+        clientAddress: req.socket.remoteAddress,
+        locals: {}
       });
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;

@@ -64,6 +64,7 @@ Returns the `PageEvent` received by the server. The properties of the `PageEvent
 
 - `request`: The web standard [`Request`][Request] object.
 - `clientAddress`: The IP address of the remote client.
+- `locals`: An object for storing local data that lives the life of the request, like user or authentication data.
 - `fetch`: internal [`fetch`][fetch] function that can make requests to our own API routes locally.
 - `responseHeaders`: The [`Headers`][Headers] object that will be sent to the client with the [`Response`][Response].
 - `setStatusCode(code: number)`: A function to set the [status code][statuscode] of the [`Response`][Response].

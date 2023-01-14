@@ -9,6 +9,7 @@ export default async (req, res) => {
   const webRes = await entry({
     request,
     clientAddress: req.headers["x-forwarded-for"],
+    locals: {},
     env: {
       manifest,
       getStaticHTML: async (path) =>

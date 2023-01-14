@@ -68,7 +68,9 @@ export function routeData({ params }: RouteDataArgs) {
 }
 ```
 
-### Accessing the `Request`
+### Accessing the `Event`
+
+The event object has information like the `request`, `clientAddress`, and `locals` on it.
 
 ```tsx twoslash {7}
 const prisma = {

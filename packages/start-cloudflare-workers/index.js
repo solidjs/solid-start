@@ -95,7 +95,8 @@ export default function (miniflareOptions = {}) {
               return await dev.fetch({
                 request: req,
                 env: e,
-                clientAddress: req.headers.get("cf-connecting-ip")
+                clientAddress: req.headers.get("cf-connecting-ip"),
+                locals: {}
               });
             } catch (e) {
               console.log("error", e);

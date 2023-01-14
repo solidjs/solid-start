@@ -164,6 +164,7 @@ function createPageEvent(event: FetchEvent) {
     tags: [],
     env: event.env,
     clientAddress: event.clientAddress,
+    locals: event.locals,
     $type: FETCH_EVENT,
     responseHeaders,
     setStatusCode: setStatusCode,

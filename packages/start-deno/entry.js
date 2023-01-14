@@ -34,6 +34,7 @@ serve(
     return await handler({
       request: request,
       clientAddress: connInfo?.remoteAddr?.hostname,
+      locals: {},
       env: {
         manifest,
         getStaticHTML: async path => {
