@@ -2,12 +2,13 @@ import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
+import glob from 'fast-glob';
 import { copyFileSync, existsSync, promises } from "fs";
-import { dirname, join } from "path";
+import { basename, dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
-export default function ({ edge } = {}) {
+export default function ({ edge, include } = {}) {
   return {
     name: "netlify",
     start() {
@@ -26,6 +27,14 @@ export default function ({ edge } = {}) {
       } else {
         await builder.client(join(config.root, "netlify"));
         await builder.server(join(config.root, ".solid", "server"));
+      }
+
+      // Included files to copy to deployment
+      let includedFiles = []
+      if (include) {
+        includedFiles = glob.sync(include, {
+          cwd: this.cwd,
+        })
       }
 
       copyFileSync(
@@ -56,7 +65,6 @@ export default function ({ edge } = {}) {
 
       // closes the bundle
       await bundle.close();
-
       await promises.writeFile(join(config.root, "netlify", "_headers"), getHeadersFile(), "utf-8");
 
       if (edge) {
@@ -84,6 +92,10 @@ export default function ({ edge } = {}) {
           "utf-8"
         );
       }
+      
+      includedFiles.forEach(filePath => {
+        copyFileSync(filePath, join(config.root, "netlify", edge ? "edge-functions" : "functions", basename(filePath)));
+      })
     }
   };
 }
