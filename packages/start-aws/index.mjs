@@ -1,12 +1,13 @@
 import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import glob from 'fast-glob';
 import { copyFileSync, renameSync } from "fs";
-import { join } from "path";
+import { basename, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
-export default function ({ edge } = {}) {
+export default function ({ edge, include } = {}) {
   return {
     name: "aws",
     start() {},
@@ -51,6 +52,16 @@ export default function ({ edge } = {}) {
 
       // closes the bundle
       await bundle.close();
+
+      // Included files to copy to deployment
+      if (include) {
+        const includedFiles = glob.sync(include, {
+          cwd: this.cwd,
+        })
+        includedFiles.forEach(filePath => {
+          copyFileSync(filePath, join(config.root, "dist", "server", basename(filePath)));
+        })
+      }
     }
   };
 }
