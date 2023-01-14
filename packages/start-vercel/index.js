@@ -2,12 +2,13 @@ import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
+import glob from 'fast-glob';
 import { copyFileSync, writeFileSync } from "fs";
-import { dirname, join } from "path";
+import { basename, dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
-export default function ({ edge, prerender } = {}) {
+export default function ({ edge, prerender, include } = {}) {
   return {
     name: "vercel",
     async start() {
@@ -31,6 +32,14 @@ export default function ({ edge, prerender } = {}) {
       } else {
         await builder.client(join(outputDir, "static"));
         await builder.server(join(config.root, ".solid", "server"));
+      }
+      
+      // Included files to copy to deployment
+      let includedFiles = []
+      if (include) {
+        includedFiles = glob.sync(include, {
+          cwd: this.cwd,
+        })
       }
 
       const entrypoint = join(config.root, ".solid", "server", "server.js");
@@ -81,6 +90,10 @@ export default function ({ edge, prerender } = {}) {
             launcherType: "Nodejs"
           };
       writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));
+      
+      includedFiles.forEach(filePath => {
+        copyFileSync(filePath, join(renderFuncDir, basename(filePath)));
+      })
 
       // Generate API function
       const apiRoutes = config.solidOptions.router.getFlattenedApiRoutes()
@@ -145,6 +158,10 @@ export default function ({ edge, prerender } = {}) {
               launcherType: "Nodejs"
             };
         writeFileSync(join(apiFuncDir, ".vc-config.json"), JSON.stringify(apiConfig, null, 2));
+        
+        includedFiles.forEach(filePath => {
+          copyFileSync(filePath, join(apiFuncDir, basename(filePath)));
+        })
       }
       
       // Routing Config
