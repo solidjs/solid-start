@@ -13,6 +13,7 @@ export const handler = async function (event, context) {
 
   const webRes = await handle({
     request: createRequest(event),
+    clientAddress: event.headers["x-nf-client-connection-ip"],
     env: { manifest }
   });
   const headers = {};

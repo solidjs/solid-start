@@ -5,6 +5,7 @@ import server from "./entry-server";
 export async function handler(event) {
   const response = await server({
     request: createRequest(event),
+    clientAddress: event.requestContext.identity.sourceIp,
     env: { manifest },
   });
 

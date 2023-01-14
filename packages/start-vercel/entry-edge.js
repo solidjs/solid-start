@@ -4,6 +4,7 @@ import entry from "./entry-server";
 export default function (request) {
   const response = entry({
     request,
+    clientAddress: request.headers.get('x-forwarded-for'),
     env: {
       manifest,
       getStaticHTML: path =>

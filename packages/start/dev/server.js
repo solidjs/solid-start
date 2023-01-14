@@ -23,7 +23,9 @@ process.on(
         ? err.message.includes("renderToString timed out")
         : false)
     ) {
-      console.error(`An unhandled error occured: ${typeof err === 'string' ? err : (err.stack || err)}`);
+      console.error(
+        `An unhandled error occured: ${typeof err === "string" ? err : err.stack || err}`
+      );
     }
   }
 );
@@ -39,11 +41,12 @@ export function createDevHandler(viteServer, config, options) {
   /**
    * @returns {Promise<Response>}
    */
-  async function devFetch(request, env) {
+  async function devFetch({ request, env, clientAddress }) {
     const entry = (await viteServer.ssrLoadModule("~start/entry-server")).default;
 
     return await entry({
       request,
+      clientAddress,
       env: {
         ...env,
         __dev: {
@@ -109,7 +112,11 @@ export function createDevHandler(viteServer, config, options) {
     try {
       const url = viteServer.resolvedUrls.local[0];
       console.log(req.method, new URL(req.url, url).href);
-      let webRes = await devFetch(createRequest(req), localEnv);
+      let webRes = await devFetch({
+        request: createRequest(req),
+        env: localEnv,
+        clientAddress: req.socket.remoteAddress
+      });
       res.statusCode = webRes.status;
       res.statusMessage = webRes.statusText;
 

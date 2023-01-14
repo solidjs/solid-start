@@ -5,7 +5,7 @@ import handler from "./handler";
 import { serve } from "https://deno.land/std@0.139.0/http/server.ts";
 
 serve(
-  async request => {
+  async (request, connInfo) => {
     const { pathname } = new URL(request.url);
     console.log(pathname);
 
@@ -33,6 +33,7 @@ serve(
 
     return await handler({
       request: request,
+      clientAddress: connInfo?.remoteAddr?.hostname,
       env: {
         manifest,
         getStaticHTML: async path => {

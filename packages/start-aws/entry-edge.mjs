@@ -5,6 +5,7 @@ import server from "./entry-server";
 export async function handler(event) {
   const response = await server({
     request: createRequest(event),
+    clientAddress: event.Records[0].cf.request.clientIp,
     env: { manifest },
   });
 

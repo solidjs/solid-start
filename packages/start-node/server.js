@@ -44,6 +44,7 @@ export function createServer({ handler, paths, env }) {
 
       const webRes = await handler({
         request: createRequest(req),
+        clientAddress: req.socket.remoteAddress,
         env
       });
 

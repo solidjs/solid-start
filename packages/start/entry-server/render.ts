@@ -163,6 +163,7 @@ function createPageEvent(event: FetchEvent) {
     routerContext: {},
     tags: [],
     env: event.env,
+    clientAddress: event.clientAddress,
     $type: FETCH_EVENT,
     responseHeaders,
     setStatusCode: setStatusCode,
