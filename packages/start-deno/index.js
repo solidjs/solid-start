@@ -2,11 +2,12 @@ import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
+import glob from 'fast-glob';
 import { copyFileSync } from "fs";
-import { dirname, join } from "path";
+import { basename, dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
-export default function () {
+export default function ({ include }) {
   return {
     name: "deno",
     start(config, { port }) {
@@ -58,6 +59,16 @@ export default function () {
 
       // closes the bundle
       await bundle.close();
+      
+      // Included files to copy to deployment
+      if (include) {
+        const includedFiles = glob.sync(include, {
+          cwd: this.cwd,
+        })
+        includedFiles.forEach(filePath => {
+          copyFileSync(filePath, join(config.root, "dist", basename(filePath)));
+        })
+      }
     }
   };
 }
