@@ -2,14 +2,15 @@ import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
+import glob from 'fast-glob';
 import { copyFileSync, writeFileSync } from "fs";
 import { Miniflare } from "miniflare";
-import { dirname, join } from "path";
+import { basename, dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 import { createServer } from "./dev-server.js";
 
-export default function (miniflareOptions) {
+export default function ({ include, ...miniflareOptions } = {}) {
   return {
     name: "cloudflare-pages",
     async dev(options, vite, dev) {
@@ -165,6 +166,16 @@ export default function (miniflareOptions) {
 
       // closes the bundle
       await bundle.close();
+      
+      // Included files to copy to deployment
+      if (include) {
+        const includedFiles = glob.sync(include, {
+          cwd: this.cwd,
+        })
+        includedFiles.forEach(filePath => {
+          copyFileSync(filePath, join(config.root, "functions", basename(filePath)));
+        })
+      }
     }
   };
 }

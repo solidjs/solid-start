@@ -11,4 +11,8 @@ import { MiniflareOptions } from "miniflare";
       adapter: cloudflare({ envPath: true }),
    })
  */
-export default function (props: MiniflareOptions): import("solid-start/vite").Adapter;
+export default function (
+  props: MiniflareOptions & {
+    include?: string | string[];
+  }
+): import("solid-start/vite").Adapter;
