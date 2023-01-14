@@ -29,14 +29,6 @@ export default function ({ edge, include } = {}) {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
-      // Included files to copy to deployment
-      let includedFiles = []
-      if (include) {
-        includedFiles = glob.sync(include, {
-          cwd: this.cwd,
-        })
-      }
-
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "handler.js")
@@ -93,9 +85,15 @@ export default function ({ edge, include } = {}) {
         );
       }
       
-      includedFiles.forEach(filePath => {
-        copyFileSync(filePath, join(config.root, "netlify", edge ? "edge-functions" : "functions", basename(filePath)));
-      })
+      // Included files to copy to deployment
+      if (include) {
+        const includedFiles = glob.sync(include, {
+          cwd: this.cwd,
+        })
+        includedFiles.forEach(filePath => {
+          copyFileSync(filePath, join(config.root, "netlify", edge ? "edge-functions" : "functions", basename(filePath)));
+        })
+      }
     }
   };
 }
