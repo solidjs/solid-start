@@ -1,6 +1,6 @@
 import { assert, expect, it, vi } from "vitest";
 // Edit an assertion and save to see HMR in action
-import "solid-start/node/globals";
+import "solid-start/node/globals.js";
 import server$, {
   handleServerRequest,
   XSolidStartContentTypeHeader, XSolidStartResponseTypeHeader
