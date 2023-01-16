@@ -23,9 +23,19 @@ export default () => {
         return throwClientError("request");
       }
     },
+    get clientAddress() {
+      if (process.env.NODE_ENV === "development") {
+        return throwClientError("clientAddress");
+      }
+    },
+    get locals() {
+      if (process.env.NODE_ENV === "development") {
+        return throwClientError("locals");
+      }
+    },
     get prevUrl() {
       if (process.env.NODE_ENV === "development") {
-        return throwClientError("request");
+        return throwClientError("prevUrl");
       }
     },
     get responseHeaders() {

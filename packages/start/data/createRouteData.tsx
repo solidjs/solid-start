@@ -74,6 +74,8 @@ export function createRouteData<T, S>(
         event = Object.freeze({
           request: pageEvent.request,
           env: pageEvent.env,
+          clientAddress: pageEvent.clientAddress,
+          locals: pageEvent.locals,
           $type: FETCH_EVENT,
           fetch: pageEvent.fetch
         });

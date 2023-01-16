@@ -24,7 +24,9 @@ export async function internalFetch(route: string, init: RequestInit) {
   let apiEvent: APIEvent = Object.freeze({
     request,
     params: handler.params,
+    clientAddress: "127.0.0.1",
     env: {},
+    locals: {},
     $type: FETCH_EVENT,
     fetch: internalFetch
   });
