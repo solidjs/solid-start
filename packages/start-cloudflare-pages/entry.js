@@ -18,6 +18,7 @@ export const onRequestGet = async ({ request, next, env }) => {
   return handler({
     request: request,
     clientAddress: request.headers.get('cf-connecting-ip'),
+    locals: {},
     env
   });
 };

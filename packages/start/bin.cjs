@@ -57,7 +57,7 @@ prog
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
   .option("-i,--inspect", "Node inspector", false)
-  .option("-p, --port", "Port to start server on", 3000)
+  .option("-p, --port", "Port to start server on")
   .action(async ({ config: configFile, open, port, root, host, inspect }) => {
     console.log(c.bgBlue(" solid-start dev "));
     console.log(c.magenta(" version "), pkg.version);
