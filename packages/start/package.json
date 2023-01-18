@@ -105,7 +105,7 @@
     "terser": "^5.15.1",
     "undici": "^5.11.0",
     "vite-plugin-inspect": "^0.7.12",
-    "vite-plugin-solid": "^2.3.10",
+    "vite-plugin-solid": "^2.5.0",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
