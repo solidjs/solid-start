@@ -1,8 +1,7 @@
 import debug from "debug";
-import { once } from "events";
 import path from "path";
-import { Readable } from "stream";
-import { createRequest } from "../node/fetch.js";
+
+import { createRequest, handleNodeResponse } from "../node/fetch.js";
 import "../node/globals.js";
 
 // @ts-ignore
@@ -119,21 +118,7 @@ export function createDevHandler(viteServer, config, options) {
         clientAddress: req.socket.remoteAddress,
         locals: {}
       });
-      res.statusCode = webRes.status;
-      res.statusMessage = webRes.statusText;
-
-      for (const [name, value] of webRes.headers) {
-        res.setHeader(name, value);
-      }
-
-      if (webRes.body) {
-        // @ts-ignore
-        const readable = Readable.from(webRes.body);
-        readable.pipe(res);
-        await once(readable, "end");
-      } else {
-        res.end();
-      }
+      handleNodeResponse(webRes, res);
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
       res.statusCode = 500;

@@ -100,6 +100,7 @@
     "rollup-plugin-visualizer": "^5.9.0",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.8.1",
+    "set-cookie-parser": "^2.5.1",
     "sirv": "^2.0.2",
     "terser": "^5.15.1",
     "undici": "^5.11.0",

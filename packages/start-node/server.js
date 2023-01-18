@@ -1,12 +1,10 @@
 import compression from "compression";
-import { once } from "events";
 import fs from "fs";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import polka from "polka";
 import sirv from "sirv";
-import { createRequest } from "solid-start/node/fetch.js";
-import { Readable } from "stream";
+import { createRequest, handleNodeResponse } from "solid-start/node/fetch.js";
 
 global.onunhandledrejection = (err, promise) => {
   console.error(err);
@@ -49,20 +47,7 @@ export function createServer({ handler, paths, env }) {
         env
       });
 
-      res.statusCode = webRes.status;
-      res.statusMessage = webRes.statusText;
-
-      for (const [name, value] of webRes.headers) {
-        res.setHeader(name, value);
-      }
-
-      if (webRes.body) {
-        const readable = Readable.from(webRes.body);
-        readable.pipe(res);
-        await once(readable, "end");
-      } else {
-        res.end();
-      }
+      handleNodeResponse(webRes, res);
     } catch (err) {
       console.error(err);
       res.statusCode = 500;
