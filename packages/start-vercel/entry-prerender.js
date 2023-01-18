@@ -1,3 +1,4 @@
+import { splitCookiesString } from "solid-start/node/fetch";
 import "solid-start/node/globals.js";
 import manifest from "../../.vercel/output/static/route-manifest.json";
 import entry from "./entry-server";
@@ -24,6 +25,11 @@ export default async (req, res) => {
   for (const [name, value] of webRes.headers) {
     headers[name] = [value];
   }
+  if (webRes.headers.has('set-cookie')) {
+		const header = /** @type {string} */ (webRes.headers.get('set-cookie'));
+		// @ts-expect-error
+		headers['set-cookie'] =  splitCookiesString(header);
+	}
 
   res.statusMessage = webRes.statusText;
   res.writeHead(

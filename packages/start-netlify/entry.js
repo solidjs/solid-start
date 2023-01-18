@@ -1,3 +1,4 @@
+import { splitCookiesString } from "solid-start/node/fetch";
 import "solid-start/node/globals.js";
 import manifest from "../../netlify/route-manifest.json";
 import handle from "./handler";
@@ -21,6 +22,11 @@ export const handler = async function (event, context) {
   for (const [name, value] of webRes.headers) {
     headers[name] = [value];
   }
+  if (webRes.headers.has('set-cookie')) {
+		const header = /** @type {string} */ (webRes.headers.get('set-cookie'));
+		// @ts-expect-error
+		headers['set-cookie'] =  splitCookiesString(header);
+	}
 
   return {
     statusCode: webRes.status,
