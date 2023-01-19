@@ -14,7 +14,7 @@
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "encoding": "^0.1.13",
-    "rollup": "^2.79.1",
+    "rollup": "^3.10.0",
     "terser": "^5.15.1"
   },
   "devDependencies": {
