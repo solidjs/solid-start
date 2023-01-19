@@ -18,8 +18,8 @@ export async function handler(event) {
   for (const [name, value] of response.headers) {
     headers[name] = value;
   }
-  if (webRes.headers.has('set-cookie')) {
-		const header = /** @type {string} */ (webRes.headers.get('set-cookie'));
+  if (response.headers.has('set-cookie')) {
+		const header = /** @type {string} */ (response.headers.get('set-cookie'));
 		// @ts-expect-error
 		headers['set-cookie'] =  splitCookiesString(header);
 	}
