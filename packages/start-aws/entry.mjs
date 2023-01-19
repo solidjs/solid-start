@@ -4,9 +4,12 @@ import manifest from "../../dist/client/route-manifest.json";
 import server from "./entry-server";
 
 export async function handler(event) {
+  const { requestContext } = event
   const response = await server({
     request: createRequest(event),
-    clientAddress: event.requestContext.identity.sourceIp,
+    clientAddress:
+      requestContext.identity?.sourceIp
+      ?? requestContext.http?.sourceIp,
     locals: {},
     env: { manifest },
   });
