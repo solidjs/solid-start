@@ -38,7 +38,7 @@
     "fast-glob": "^3.2.12",
     "graphql": "^16.6.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.79.1",
+    "rollup": "^3.10.0",
     "solid-js": "^1.6.2",
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:*",
