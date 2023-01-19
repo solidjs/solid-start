@@ -7,7 +7,6 @@ import {
   XSolidStartOrigin,
   XSolidStartResponseTypeHeader
 } from "../responses";
-import { FETCH_EVENT } from "../types";
 
 import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
@@ -92,11 +91,6 @@ function createRequestInit(...args: any[]): RequestInit {
       }
     }
     body = JSON.stringify(args, (key, value) => {
-      if (value && typeof value === "object" && value.$type === FETCH_EVENT) {
-        return {
-          $type: "fetch_event"
-        };
-      }
       if (value instanceof Headers) {
         return {
           $type: "headers",
@@ -127,11 +121,11 @@ function createRequestInit(...args: any[]): RequestInit {
 
 type ServerCall = (route: string, init: RequestInit) => Promise<Response>;
 
-server$.createFetcher = route => {
+server$.createFetcher = (route, serverResource) => {
   let fetcher: any = function (this: Request, ...args: any[]) {
     if (this instanceof Request) {
     }
-    const requestInit = createRequestInit(...args);
+    const requestInit = serverResource ? createRequestInit(args[0]) : createRequestInit(...args);
     // request body: json, formData, or string
     return (server$.call as ServerCall)(route, requestInit);
   };
