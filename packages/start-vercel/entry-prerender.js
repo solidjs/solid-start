@@ -1,4 +1,4 @@
-import { splitCookiesString } from "solid-start/node/fetch";
+import { splitCookiesString } from "solid-start/node/fetch.js";
 import "solid-start/node/globals.js";
 import manifest from "../../.vercel/output/static/route-manifest.json";
 import entry from "./entry-server";

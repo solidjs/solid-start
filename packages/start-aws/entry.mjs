@@ -1,4 +1,4 @@
-import { splitCookiesString } from "solid-start/node/fetch";
+import { splitCookiesString } from "solid-start/node/fetch.js";
 import "solid-start/node/globals.js";
 import manifest from "../../dist/client/route-manifest.json";
 import server from "./entry-server";
