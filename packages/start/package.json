@@ -96,7 +96,7 @@
     "get-port": "^6.1.2",
     "parse-multipart-data": "^1.5.0",
     "picocolors": "^1.0.0",
-    "rollup": "^2.79.1",
+    "rollup": "^3.10.0",
     "rollup-plugin-visualizer": "^5.9.0",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.8.1",
