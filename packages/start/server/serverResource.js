@@ -47,6 +47,7 @@ function transformRouteData({ types: t }) {
                     t.callExpression(t.identifier("createRouteData"), callPath.node.arguments)
                   );
                   callState.resourceRequired = true;
+                  callPath.get("arguments")[0].setData("serverResource", true);
                 }
 
                 if (callPath.get("callee").isIdentifier({ name: "createServerAction$" })) {
@@ -57,6 +58,7 @@ function transformRouteData({ types: t }) {
                     t.callExpression(t.identifier("createRouteAction"), callPath.node.arguments)
                   );
                   callState.actionRequired = true;
+                  callPath.get("arguments")[0].setData("serverResource", true);
                 }
 
                 if (callPath.get("callee").isIdentifier({ name: "createServerMultiAction$" })) {
@@ -70,6 +72,7 @@ function transformRouteData({ types: t }) {
                     )
                   );
                   callState.actionRequired = true;
+                  callPath.get("arguments")[0].setData("serverResource", true);
                 }
               }
             },
