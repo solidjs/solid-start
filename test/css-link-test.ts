@@ -150,7 +150,7 @@ test.describe("CSS link tags", () => {
           .replace("[", "\\[")
           .replace("]", "\\]")
           .replace("(", "\\(")
-          .replace(")", "\\)")}\\.[a-f0-9]+\.css$`
+          .replace(")", "\\)")}\[\.\-][a-f0-9]+\.css$`
       ).test(x);
   }
 
