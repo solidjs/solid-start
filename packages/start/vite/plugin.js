@@ -14,8 +14,9 @@ import printUrls from "../dev/print-routes.js";
 import fileRoutesImport from "../fs-router/fileRoutesImport.js";
 import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
 import routeData from "../server/routeData.js";
-import routeDataHmr from "../server/routeDataHmr.js";
+import routeDataHmrFix from "../server/routeDataHmrFix.js";
 import babelServerModule from "../server/server-functions/babel.js";
+import serverIndex from "../server/server-functions/serverIndex.js";
 import routeResource from "../server/serverResource.js";
 
 // @ts-ignore
@@ -264,7 +265,7 @@ function solidStartFileSystemRouter(options) {
                 }
               ],
               [
-                babelServerModule,
+                serverIndex,
                 {
                   ssr,
                   root: process.cwd(),
@@ -281,9 +282,17 @@ function solidStartFileSystemRouter(options) {
               ],
               !ssr &&
                 process.env.NODE_ENV !== "production" && [
-                  routeDataHmr,
+                  routeDataHmrFix,
                   { ssr, root: process.cwd() }
-                ]
+                ],
+              [
+                babelServerModule,
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
+              ]
             ].filter(Boolean)
           })
         );

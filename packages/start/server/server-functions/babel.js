@@ -116,7 +116,11 @@ function transformServer({ types: t, template }) {
                       p.isVariableDeclarator() || p.isFunctionDeclaration() || p.isObjectProperty()
                   );
                   const serverResource = path.getData("serverResource") ?? false;
-                  let serverIndex = state.servers++;
+
+                  /** @type {number} */
+                  const serverIndex = path.getData("serverIndex") ?? state.servers;
+                  state.servers++;
+
                   let hasher = state.opts.minify ? hashFn : str => str;
                   const fName = state.filename.replace(state.opts.root, "").slice(1);
 

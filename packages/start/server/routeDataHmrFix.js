@@ -1,28 +1,30 @@
-import generate from "@babel/generator";
-import template from "@babel/template";
+import { CodeGenerator } from "@babel/generator";
 import crypto from "crypto";
 
-export default function routeDataHmr() {
+/**
+ * @param {{ template: import('@babel/core').template }} param0
+ * @returns {import('@babel/core').PluginObj}
+ */
+export default function routeDataHmrFix({ template }) {
   return {
     visitor: {
       Program(path) {
-        const result = generate.default(path.node);
+        const generator = new CodeGenerator(path.node);
+        const result = generator.generate();
         const hash = crypto.createHash("sha256").update(result.code).digest("base64");
         const modHash = path.scope.generateUidIdentifier("modHash").name;
-        const statements = template.default.ast(`
+        const statements = template.ast(`
         export const ${modHash} = "${hash}";
         if (import.meta.hot) {
-          import.meta.hot.data.modHash = ${modHash};
           import.meta.hot.accept(newMod => {
-            import.meta.hot.data.modHash = ${modHash};
-            if (import.meta.hot.data.modHash !== newMod.${modHash}) {
+            if (${modHash} !== newMod.${modHash}) {
               import.meta.hot.invalidate();
             }
           });
         }
         `);
 
-        path.node.body.push(...statements);
+        path.node.body.push(...(Array.isArray(statements) ? statements : [statements]));
       }
     }
   };

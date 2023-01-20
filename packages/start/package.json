@@ -114,6 +114,7 @@
     "@solidjs/router": "^0.7.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/babel__core": "^7.20.0",
+    "@types/babel__generator": "^7.6.4",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
     "@types/wait-on": "^5.3.1",
