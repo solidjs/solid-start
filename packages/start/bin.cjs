@@ -20,11 +20,14 @@ const DEBUG = require("debug")("start");
 const { createRequire } = require("module");
 const { pathToFileURL } = require("url");
 
-console.log('DEBUG DEBUG DEBUG');
-console.log(process.cwd());
-console.log(join(process.cwd(), "dummy.js"));
-console.log(pathToFileURL(join(process.cwd(), "dummy.js")).href);
-console.log('DEBUG DEBUG DEBUG');
+
+throw new Error(`
+DEBUG DEBUG DEBUG
+process.cwd(): ${process.cwd()}
+join(process.cwd(), "dummy.js"): ${join(process.cwd(), "dummy.js")}
+pathToFileURL(join(process.cwd(), "dummy.js")).href: ${pathToFileURL(join(process.cwd(), "dummy.js")).href}
+DEBUG DEBUG DEBUG
+`);
 
 const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")).href);
 globalThis.DEBUG = DEBUG;
