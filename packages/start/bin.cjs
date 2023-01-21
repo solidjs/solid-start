@@ -181,7 +181,7 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
-    const vite = require("vite");
+    const vite = requireCwd("vite");
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     config.adapter.build(config, {
@@ -509,7 +509,7 @@ prog.parse(process.argv);
  * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
-  const vite = require("vite");
+  const vite = requireCwd("vite");
   root = root || process.cwd();
   if (!configFile) {
     if (!configFile) {
