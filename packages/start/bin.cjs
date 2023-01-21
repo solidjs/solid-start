@@ -3,7 +3,7 @@
 
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
-const { resolve, join } = require("path");
+const { resolve, join, dirname } = require("path");
 const path = require("path");
 const c = require("picocolors");
 const {
@@ -176,6 +176,7 @@ prog
     console.log(c.magenta(" version "), pkg.version);
 
     const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
+    const startPath = dirname(requireCwd.resolve('solid-start/package.json'));
 
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
@@ -197,7 +198,7 @@ prog
             minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
-                resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
+                join(startPath, "islands", "entry-client")
               ],
               output: {
                 manualChunks: undefined
