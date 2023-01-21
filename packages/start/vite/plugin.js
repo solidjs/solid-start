@@ -4,6 +4,7 @@ import debug from "debug";
 import dotenv from "dotenv";
 import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
+import { createRequire } from "module";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -17,6 +18,8 @@ import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
+
+const requireCwd = createRequire(join(process.cwd(), 'dummy.js'));
 
 // @ts-ignore
 globalThis.DEBUG = debug("start:vite");
@@ -402,9 +405,13 @@ function solidsStartRouteManifest(options) {
 
 async function resolveAdapter(config) {
   if (typeof config.solidOptions.adapter === "string") {
-    return (await import(config.solidOptions.adapter)).default();
+    return (await import(
+      requireCwd.resolve(config.solidOptions.adapter)
+    )).default();
   } else if (Array.isArray(config.solidOptions.adapter)) {
-    return (await import(config.solidOptions.adapter[0])).default(config.solidOptions.adapter[1]);
+    return (await import(
+      requireCwd.resolve(config.solidOptions.adapter[0])
+    )).default(config.solidOptions.adapter[1]);
   } else {
     return config.solidOptions.adapter;
   }
