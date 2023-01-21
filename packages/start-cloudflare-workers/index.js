@@ -6,10 +6,13 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
 import { copyFileSync, readFileSync, writeFileSync } from "fs";
 import { Miniflare } from "miniflare";
-import { dirname, join } from "path";
+import { createRequire } from "module";
+import { dirname, join, relative } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 import { createServer } from "./dev-server.js";
+
+const requireCwd = createRequire(join(process.cwd(), 'dummy.js'));
 
 export default function (miniflareOptions = {}) {
   return {
@@ -116,8 +119,9 @@ export default function (miniflareOptions = {}) {
     },
     start(config, { port }) {
       process.env.PORT = port;
+      const relWranglerPath = relative(process.cwd(), dirname(requireCwd.resolve("wrangler/package.json")));
       const proc = spawn("node", [
-        join(config.root, "node_modules", "wrangler", "bin", "wrangler.js"),
+        join(relWranglerPath, "bin", "wrangler.js"),
         "dev",
         "./dist/server.js",
         "--site",
