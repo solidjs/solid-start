@@ -7,7 +7,7 @@ importers:
       '@cloudflare/kv-asset-handler': ^0.2.0
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       '@solidjs/meta': ^0.28.2
       '@solidjs/router': ^0.7.0
       '@tailwindcss/typography': ^0.5.9
@@ -40,7 +40,7 @@ importers:
       '@cloudflare/kv-asset-handler': 0.2.0
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       '@solidjs/meta': 0.28.2_solid-js@1.6.9
       '@solidjs/router': 0.7.0_solid-js@1.6.9
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.4
@@ -526,7 +526,7 @@ importers:
     specifiers:
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^3.10.0
       solid-start: workspace:*
       terser: ^5.16.1
@@ -534,7 +534,7 @@ importers:
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       rollup: 3.10.0
       terser: 5.16.1
     devDependencies:
@@ -551,7 +551,7 @@ importers:
       '@miniflare/web-sockets': ^2.11.0
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       '@types/node': ^18.11.18
       '@types/ws': ^8.5.4
       miniflare: ^2.11.0
@@ -569,7 +569,7 @@ importers:
       '@miniflare/web-sockets': 2.11.0
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       '@types/ws': 8.5.4
       miniflare: 2.11.0
       rollup: 3.10.0
@@ -590,7 +590,7 @@ importers:
       '@miniflare/web-sockets': ^2.11.0
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       '@types/node': ^18.11.18
       '@types/ws': ^8.5.4
       miniflare: ^2.11.0
@@ -608,7 +608,7 @@ importers:
       '@miniflare/web-sockets': 2.11.0
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       '@types/ws': 8.5.4
       miniflare: 2.11.0
       rollup: 3.10.0
@@ -623,7 +623,7 @@ importers:
     specifiers:
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^3.10.0
       solid-start: workspace:*
       terser: ^5.16.1
@@ -631,7 +631,7 @@ importers:
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       rollup: 3.10.0
       terser: 5.16.1
     devDependencies:
@@ -645,7 +645,7 @@ importers:
       '@rollup/plugin-babel': ^6.0.3
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       encoding: ^0.1.13
       rollup: ^3.10.0
       solid-start: workspace:*
@@ -657,7 +657,7 @@ importers:
       '@rollup/plugin-babel': 6.0.3_rwtmcocladng44j6a3ylx32v3q
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       encoding: 0.1.13
       rollup: 3.10.0
       terser: 5.16.1
@@ -669,7 +669,7 @@ importers:
     specifiers:
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       compression: ^1.7.4
       polka: 1.0.0-next.22
       rollup: ^3.10.0
@@ -681,7 +681,7 @@ importers:
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       compression: 1.7.4
       polka: 1.0.0-next.22
       rollup: 3.10.0
@@ -696,7 +696,7 @@ importers:
     specifiers:
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^3.10.0
       sirv-cli: 2.0.2
       solid-ssr: ^1.6.3
@@ -707,7 +707,7 @@ importers:
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       rollup: 3.10.0
       sirv-cli: 2.0.2
       solid-ssr: 1.6.3
@@ -721,7 +721,7 @@ importers:
     specifiers:
       '@rollup/plugin-commonjs': ^24.0.0
       '@rollup/plugin-json': ^6.0.0
-      '@rollup/plugin-node-resolve': ^15.0.1
+      '@rollup/plugin-node-resolve': ^13.3.0
       rollup: ^3.10.0
       solid-start: workspace:*
       terser: ^5.16.1
@@ -729,7 +729,7 @@ importers:
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.10.0
       '@rollup/plugin-json': 6.0.0_rollup@3.10.0
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.0
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@3.10.0
       rollup: 3.10.0
       terser: 5.16.1
     devDependencies:
@@ -2443,21 +2443,29 @@ packages:
       '@rollup/pluginutils': 5.0.2_rollup@3.10.0
       rollup: 3.10.0
 
-  /@rollup/plugin-node-resolve/15.0.1_rollup@3.10.0:
-    resolution: {integrity: sha512-ReY88T7JhJjeRVbfCyNj+NXAG3IIsVMsX9b5/9jC98dRP8/yxlZdz7mHZbHk5zHr24wZZICS5AcXsFZAXYUQEg==}
-    engines: {node: '>=14.0.0'}
+  /@rollup/plugin-node-resolve/13.3.0_rollup@3.10.0:
+    resolution: {integrity: sha512-Lus8rbUo1eEcnS4yTFKLZrVumLPY+YayBdWXgFSHYhTT2iJbMhoaaBL3xl5NCdeRytErGr8tZ0L71BMRmnlwSw==}
+    engines: {node: '>= 10.0.0'}
     peerDependencies:
-      rollup: ^2.78.0||^3.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
+      rollup: ^2.42.0
     dependencies:
-      '@rollup/pluginutils': 5.0.2_rollup@3.10.0
-      '@types/resolve': 1.20.2
+      '@rollup/pluginutils': 3.1.0_rollup@3.10.0
+      '@types/resolve': 1.17.1
       deepmerge: 4.2.2
       is-builtin-module: 3.2.0
       is-module: 1.0.0
       resolve: 1.22.1
+      rollup: 3.10.0
+
+  /@rollup/pluginutils/3.1.0_rollup@3.10.0:
+    resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0
+    dependencies:
+      '@types/estree': 0.0.39
+      estree-walker: 1.0.1
+      picomatch: 2.3.1
       rollup: 3.10.0
 
   /@rollup/pluginutils/5.0.2:
@@ -2685,6 +2693,9 @@ packages:
     dependencies:
       '@types/estree': 1.0.0
 
+  /@types/estree/0.0.39:
+    resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
+
   /@types/estree/1.0.0:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
 
@@ -2736,8 +2747,10 @@ packages:
     resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==}
     dev: false
 
-  /@types/resolve/1.20.2:
-    resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+  /@types/resolve/1.17.1:
+    resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
+    dependencies:
+      '@types/node': 18.11.18
 
   /@types/stack-trace/0.0.29:
     resolution: {integrity: sha512-TgfOX+mGY/NyNxJLIbDWrO9DjGoVSW9+aB8H2yy1fy32jsvxijhmyJI9fDFgvz3YP4lvJaq9DzdR/M1bOgVc9g==}
@@ -4435,6 +4448,9 @@ packages:
   /estree-walker/0.6.1:
     resolution: {integrity: sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==}
     dev: true
+
+  /estree-walker/1.0.1:
+    resolution: {integrity: sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==}
 
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}

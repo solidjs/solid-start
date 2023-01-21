@@ -12,7 +12,7 @@
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "encoding": "^0.1.13",
     "rollup": "^3.10.0",
     "terser": "^5.16.1"
