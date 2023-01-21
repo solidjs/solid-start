@@ -19,7 +19,7 @@ const pkg = require(join(__dirname, "package.json"));
 const DEBUG = require("debug")("start");
 const { createRequire } = require("module");
 const { pathToFileURL } = require("url");
-const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")));
+const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")).href);
 globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("beta");

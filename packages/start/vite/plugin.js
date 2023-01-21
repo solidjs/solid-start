@@ -19,7 +19,7 @@ import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
 
-const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")));
+const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")).href);
 
 // @ts-ignore
 globalThis.DEBUG = debug("start:vite");
