@@ -19,6 +19,13 @@ const pkg = require(join(__dirname, "package.json"));
 const DEBUG = require("debug")("start");
 const { createRequire } = require("module");
 const { pathToFileURL } = require("url");
+
+console.log('DEBUG DEBUG DEBUG');
+console.log(process.cwd());
+console.log(join(process.cwd(), "dummy.js"));
+console.log(pathToFileURL(join(process.cwd(), "dummy.js")).href);
+console.log('DEBUG DEBUG DEBUG');
+
 const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")).href);
 globalThis.DEBUG = DEBUG;
 
