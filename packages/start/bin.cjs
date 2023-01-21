@@ -20,14 +20,15 @@ const DEBUG = require("debug")("start");
 const { createRequire } = require("module");
 const { pathToFileURL } = require("url");
 
-
-throw new Error(`
+if (require('os').platform() === 'win32') {
+  throw new Error(`
 DEBUG DEBUG DEBUG
 process.cwd(): ${process.cwd()}
 join(process.cwd(), "dummy.js"): ${join(process.cwd(), "dummy.js")}
 pathToFileURL(join(process.cwd(), "dummy.js")).href: ${pathToFileURL(join(process.cwd(), "dummy.js")).href}
 DEBUG DEBUG DEBUG
-`);
+  `);
+}
 
 const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")).href);
 globalThis.DEBUG = DEBUG;
