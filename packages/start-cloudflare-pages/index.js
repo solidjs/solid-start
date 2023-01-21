@@ -7,10 +7,10 @@ import { Miniflare } from "miniflare";
 import { createRequire } from "module";
 import { dirname, join, relative } from "path";
 import { rollup } from "rollup";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { createServer } from "./dev-server.js";
 
-const requireCwd = createRequire(join(process.cwd(), 'dummy.js'));
+const requireCwd = createRequire(pathToFileURL(join(process.cwd(), 'dummy.js')));
 
 export default function (miniflareOptions) {
   return {

@@ -18,7 +18,8 @@ const waitOn = require("wait-on");
 const pkg = require(join(__dirname, "package.json"));
 const DEBUG = require("debug")("start");
 const { createRequire } = require("module");
-const requireCwd = createRequire(join(process.cwd(), 'dummy.js'));
+const { pathToFileURL } = require("url");
+const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")));
 globalThis.DEBUG = DEBUG;
 
 const prog = sade("solid-start").version("beta");
@@ -34,8 +35,9 @@ const findAny = (path, name) => {
 };
 
 prog
-  .command("routes").describe("Show all routes in your app")
-  .action(async ({config: configFile, open, port, root, host, inspect}) => {
+  .command("routes")
+  .describe("Show all routes in your app")
+  .action(async ({ config: configFile, open, port, root, host, inspect }) => {
     root = root || process.cwd();
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
 
@@ -155,10 +157,10 @@ prog
           NODE_OPTIONS: [
             process.env.NODE_OPTIONS,
             "--experimental-vm-modules",
-            inspect ? "--inspect" : "",
+            inspect ? "--inspect" : ""
           ]
             .filter(Boolean)
-            .join(" "),
+            .join(" ")
         }
       }
     );
@@ -176,7 +178,7 @@ prog
     console.log(c.magenta(" version "), pkg.version);
 
     const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
-    const startPath = dirname(requireCwd.resolve('solid-start/package.json'));
+    const startPath = dirname(requireCwd.resolve("solid-start/package.json"));
 
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
@@ -197,9 +199,7 @@ prog
             ssrManifest: true,
             minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
-              input: [
-                join(startPath, "islands", "entry-client")
-              ],
+              input: [join(startPath, "islands", "entry-client")],
               output: {
                 manualChunks: undefined
               }
@@ -388,12 +388,9 @@ prog
               env: {
                 ...process.env,
                 START_INDEX_HTML: "true",
-                NODE_OPTIONS: [
-                  process.env.NODE_OPTIONS,
-                  "--experimental-vm-modules",
-                ]
+                NODE_OPTIONS: [process.env.NODE_OPTIONS, "--experimental-vm-modules"]
                   .filter(Boolean)
-                  .join(" "),
+                  .join(" ")
               }
             }
           );
@@ -529,13 +526,11 @@ async function resolveConfig({ configFile, root, mode, command }) {
 
   async function resolveAdapter(config) {
     if (typeof config.solidOptions.adapter === "string") {
-      return (await import(
-        requireCwd.resolve(config.solidOptions.adapter)
-      )).default();
+      return (await import(requireCwd.resolve(config.solidOptions.adapter))).default();
     } else if (Array.isArray(config.solidOptions.adapter)) {
-      return (await import(
-        requireCwd.resolve(config.solidOptions.adapter[0])
-      )).default(config.solidOptions.adapter[1]);
+      return (await import(requireCwd.resolve(config.solidOptions.adapter[0]))).default(
+        config.solidOptions.adapter[1]
+      );
     } else {
       return config.solidOptions.adapter;
     }

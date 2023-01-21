@@ -9,10 +9,10 @@ import { Miniflare } from "miniflare";
 import { createRequire } from "module";
 import { dirname, join, relative } from "path";
 import { rollup } from "rollup";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { createServer } from "./dev-server.js";
 
-const requireCwd = createRequire(join(process.cwd(), 'dummy.js'));
+const requireCwd = createRequire(pathToFileURL(join(process.cwd(), "dummy.js")));
 
 export default function (miniflareOptions = {}) {
   return {
@@ -119,7 +119,10 @@ export default function (miniflareOptions = {}) {
     },
     start(config, { port }) {
       process.env.PORT = port;
-      const relWranglerPath = relative(process.cwd(), dirname(requireCwd.resolve("wrangler/package.json")));
+      const relWranglerPath = relative(
+        process.cwd(),
+        dirname(requireCwd.resolve("wrangler/package.json"))
+      );
       const proc = spawn("node", [
         join(relWranglerPath, "bin", "wrangler.js"),
         "dev",
