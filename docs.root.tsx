@@ -259,7 +259,7 @@ export default function Root() {
       <Head>
         <Meta charset="utf-8" />
         <Meta property="og:title" content="SolidStart Beta Documentation" />
-        <Meta property="og:site_name" content="SolidStart Beta Docuentation" />
+        <Meta property="og:site_name" content="SolidStart Beta Documentation" />
         <Meta property="og:url" content="https://start.solidjs.com" />
         <Meta
           property="og:description"
