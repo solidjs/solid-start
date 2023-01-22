@@ -254,7 +254,7 @@ function handleResponse(response: Response, navigate: Navigator, options?: { inv
     }
   }
 
-  if (isRedirectResponse(response)) return handleRefetch(response, options);
+  if (!isRedirectResponse(response)) return handleRefetch(response, options);
 }
 
 function checkFlash<T>(fn: any) {
