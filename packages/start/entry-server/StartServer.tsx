@@ -3,15 +3,14 @@ import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
 import { ComponentProps, lazy, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
-import DevRoot from "./DevRoot";
-
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
+import DevRoot from "./DevRoot";
 
 const devNoSSR = import.meta.env.DEV && !import.meta.env.START_SSR;
 
 const Root = devNoSSR ? DevRoot : lazy(() => import("~start/root"));
-const fileRoutes = devNoSSR ? [] : lazy(() => import("../root/FileRoutes"))();
+const fileRoutes = devNoSSR ? [] : lazy(() => import("../root/FileRoutes"));
 
 const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
   default: RouteDataFunc;
@@ -90,7 +89,7 @@ export default function StartServer({ event }: { event: PageEvent }) {
             location={path}
             prevLocation={event.prevUrl}
             data={dataFn}
-            routes={fileRoutes}
+            routes={typeof fileRoutes === "function" ? fileRoutes() : fileRoutes}
           >
             {docType as unknown as any}
             <Root />
