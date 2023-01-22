@@ -1,15 +1,17 @@
 import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
-import { ComponentProps, sharedConfig } from "solid-js";
+import { ComponentProps, lazy, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
-// @ts-ignore
-import Root from "~start/root";
-
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
-import { fileRoutes } from "../root/FileRoutes";
+import DevRoot from "./DevRoot";
 
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
+
+const devNoSSR = import.meta.env.DEV && !import.meta.env.START_SSR;
+
+const Root = devNoSSR ? DevRoot : lazy(() => import("~start/root"));
+const fileRoutes = devNoSSR ? [] : lazy(() => import("../root/FileRoutes"))();
 
 const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
   default: RouteDataFunc;
@@ -78,19 +80,23 @@ export default function StartServer({ event }: { event: PageEvent }) {
   sharedConfig.context.requestContext = event;
   return (
     <ServerContext.Provider value={event}>
-      <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
-        <StartRouter
-          url={path}
-          out={event.routerContext}
-          location={path}
-          prevLocation={event.prevUrl}
-          data={dataFn}
-          routes={fileRoutes}
-        >
-          {docType as unknown as any}
-          <Root />
-        </StartRouter>
-      </MetaProvider>
+      {devNoSSR ? (
+        <DevRoot />
+      ) : (
+        <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
+          <StartRouter
+            url={path}
+            out={event.routerContext}
+            location={path}
+            prevLocation={event.prevUrl}
+            data={dataFn}
+            routes={fileRoutes}
+          >
+            {docType as unknown as any}
+            <Root />
+          </StartRouter>
+        </MetaProvider>
+      )}
     </ServerContext.Provider>
   );
 }
