@@ -80,7 +80,16 @@ async function main() {
 
   let args = yargsParser(process.argv.slice(2));
 
-  const target = process.argv[2] || ".";
+  let target =
+    process.argv[2] ||
+    (
+      await prompts({
+        type: "text",
+        name: "value",
+        message: "Where do you want to create the app?",
+        initial: "my-app"
+      })
+    ).value;
 
   let config = {
     directory: args.example_dir ? args.example_dir : "examples",
