@@ -80,7 +80,7 @@ async function main() {
 
   let args = yargsParser(process.argv.slice(2));
 
-  let target =
+  const target =
     process.argv[2] ||
     (
       await prompts({
