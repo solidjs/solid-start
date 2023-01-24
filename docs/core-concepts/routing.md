@@ -195,6 +195,16 @@ export default function UserPage() {
 }
 ```
 
+## Optional parameter
+Optional parameter
+
+matches users and users/123 
+```tsx {3}
+|-- routes/
+    |-- users/
+        |-- [[id]].tsx
+```
+
 ## Catch all routes
 
 Catch all routes are routes that can match any value for any number of segments. For example, `/blog/a/b/c` and `/blog/d/e` are both valid routes. You can define catch-all routes using square brackets with `...` before the label for the route.For example, `/blog/[...post]` is a dynamic route, where `post` is the dynamic segment.
