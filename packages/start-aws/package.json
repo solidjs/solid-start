@@ -1,6 +1,6 @@
 {
   "name": "solid-start-aws",
-  "version": "0.2.13",
+  "version": "0.2.16",
   "main": "./index.mjs",
   "type": "module",
   "solid": {
@@ -9,13 +9,13 @@
   "dependencies": {
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.1",
-    "rollup": "^2.79.1",
-    "terser": "^5.15.1"
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "rollup": "^3.10.0",
+    "terser": "^5.16.1"
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "vite": "^3.1.8"
+    "vite": "^3.2.5"
   },
   "peerDependencies": {
     "solid-start": "*",

@@ -196,7 +196,7 @@ function solidStartFileSystemRouter(options) {
         });
 
         // @ts-ignore
-        plugin.transform(code, id, transformOptions);
+        return plugin.transform(code, id, transformOptions);
       };
 
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
@@ -323,7 +323,6 @@ function solidStartFileSystemRouter(options) {
           })
         );
       } else if (code.includes("solid-start/server")) {
-        console.log(id);
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),

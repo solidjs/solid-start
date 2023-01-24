@@ -198,9 +198,9 @@ Routes also support defining multiple paths using an array. This allows a route 
 
 ### Route Data Functions
 
-In the [above example](#dynamic-routes), the User component is lazy-loaded and then the data is fetched. With route data functions, we can instead start fetching the data parallel to loading the route, so we can use the data as soon as possible.
+In the [above example](#dynamic-routes), the User component is lazy-loaded and then the data is fetched. With route data functions, we can instead start fetching the data in parallel to loading the route, so we can use the data as soon as possible.
 
-To do this, create a function that fetches and returns the data using `createResource`. Then pass that function to the `data` prop of the `Route` component. 
+To do this, create a function that fetches and returns the data using `createResource`. Then pass that function to the `data` prop of the `Route` component.
 
 ```tsx twoslash filename="root.tsx"
 // @filename: api.ts

@@ -46,7 +46,7 @@ The `Title` tag contains the title for the page that is rendered in the browsers
 
 These are typically placed in the `Head` element but can also be placed throughout your application code to overwrite the current title. A `Title` lower in the tree will override a parent's title.
 
-Using a `Title` in a route component will only the that title when the user visits this page.
+Using a `Title` in a route component will only display that title when the user visits this page.
 
 ```tsx twoslash filename="src/routes/profile.tsx" {4}
 import { Title } from "solid-start";

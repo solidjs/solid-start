@@ -1,4 +1,7 @@
+import { once } from "events";
 import multipart from "parse-multipart-data";
+import { splitCookiesString } from "set-cookie-parser";
+import { Readable } from "stream";
 import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
 
 function nodeToWeb(nodeStream) {
@@ -147,3 +150,25 @@ export function createRequest(req) {
 
   return new NodeRequest(url.href, init);
 }
+
+export async function handleNodeResponse(webRes, res) {
+  res.statusCode = webRes.status;
+  res.statusMessage = webRes.statusText;
+
+  for (const [name, value] of webRes.headers) {
+    if (name === "set-cookie") {
+      res.setHeader(name, splitCookiesString(value));
+    } else res.setHeader(name, value);
+  }
+
+  if (webRes.body) {
+    const readable = Readable.from(webRes.body);
+    readable.pipe(res);
+    await once(readable, "end");
+  } else {
+    res.end();
+  }
+}
+
+export { splitCookiesString };
+

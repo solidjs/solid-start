@@ -1,6 +1,6 @@
 {
   "name": "solid-start-node",
-  "version": "0.2.13",
+  "version": "0.2.16",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -9,17 +9,17 @@
   "dependencies": {
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "compression": "^1.7.4",
-    "polka": "^1.0.0-next.22",
-    "rollup": "^2.79.1",
+    "polka": "1.0.0-next.22",
+    "rollup": "^3.10.0",
     "sirv": "^2.0.2",
-    "terser": "^5.15.1"
+    "terser": "^5.16.1"
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "undici": "^5.11.0",
-    "vite": "^3.1.8"
+    "undici": "^5.15.1",
+    "vite": "^3.2.5"
   },
   "peerDependencies": {
     "solid-start": "*",
