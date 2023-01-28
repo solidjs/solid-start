@@ -13,7 +13,7 @@ export default function mountRouter() {
     _$DEBUG("mounting islands router");
 
     const basePath = "/";
-    let [currentLocation, setCurrentLocation] = createSignal<Location>(getLocation());
+    let [currentLocation, setCurrentLocation] = createSignal(getLocation());
     window.LOCATION = currentLocation;
 
     function getLocation(): Location & LocationEntry {
@@ -101,9 +101,9 @@ export default function mountRouter() {
     }
 
     async function handlePopState(evt: PopStateEvent) {
-      const { pathname, state } = getLocation();
-      if (currentLocation().pathname !== pathname) {
-        if (await navigate(pathname)) {
+      const { path, state } = getLocation();
+      if (currentLocation().path !== path) {
+        if (await navigate(path)) {
           setCurrentLocation(getLocation());
         }
       }
