@@ -1,10 +1,13 @@
 import { MetaProvider } from "@solidjs/meta";
 import { Router, RouterProps } from "@solidjs/router";
+// @ts-ignore
 import Root from "~start/root";
 import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, PageEvent } from "../server/types";
 
-const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0];
+const rootData: { default: <T>() => Promise<T> } = Object.values(
+  import.meta.glob("/src/root.data.(js|ts)", { eager: true })
+)[0] as any;
 const dataFn = rootData ? rootData.default : undefined;
 
 function throwClientError(field: string): any {
@@ -20,9 +23,19 @@ export default () => {
         return throwClientError("request");
       }
     },
+    get clientAddress() {
+      if (process.env.NODE_ENV === "development") {
+        return throwClientError("clientAddress");
+      }
+    },
+    get locals() {
+      if (process.env.NODE_ENV === "development") {
+        return throwClientError("locals");
+      }
+    },
     get prevUrl() {
       if (process.env.NODE_ENV === "development") {
-        return throwClientError("request");
+        return throwClientError("prevUrl");
       }
     },
     get responseHeaders() {

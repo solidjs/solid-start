@@ -1,21 +1,31 @@
+import type { Location, Navigator } from "@solidjs/router";
+import { createSignal } from "solid-js";
 interface LocationEntry {
   path: string;
   state: any;
+  pathname: string;
+  search: string;
+  hash: string;
 }
 
 export default function mountRouter() {
   if (import.meta.env.START_ISLANDS_ROUTER) {
-    DEBUG("mounting islands router");
-    // console.log(islands);
+    _$DEBUG("mounting islands router");
 
     const basePath = "/";
-    let currentLocation: LocationEntry = getLocation();
+    let [currentLocation, setCurrentLocation] = createSignal<Location>(getLocation());
+    window.LOCATION = currentLocation;
 
-    function getLocation(): LocationEntry {
+    function getLocation(): Location & LocationEntry {
       const { pathname, search, hash } = window.location;
       return {
         path: pathname + search + hash,
-        state: history.state
+        state: history.state,
+        pathname,
+        search,
+        hash,
+        query: {},
+        key: ""
       };
     }
 
@@ -34,28 +44,35 @@ export default function mountRouter() {
         .composedPath()
         .find(el => el instanceof Node && el.nodeName.toUpperCase() === "A") as
         | HTMLAnchorElement
-        | SVGAElement
         | undefined;
 
-      if (!a) return;
+      if (!a || !a.hasAttribute("link")) return;
 
-      const isSvg = a instanceof SVGAElement;
-      const href = isSvg ? a.href.baseVal : a.href;
-      const target = isSvg ? a.target.baseVal : a.target;
+      const href = a.href;
+      const target = a.target;
       if (target || (!href && !a.hasAttribute("state"))) return;
 
       const rel = (a.getAttribute("rel") || "").split(/\s+/);
       if (a.hasAttribute("download") || (rel && rel.includes("external"))) return;
 
-      const url = isSvg ? new URL(href, document.baseURI) : new URL(href);
+      const url = new URL(href);
       if (
         url.origin !== window.location.origin ||
         (basePath && url.pathname && !url.pathname.toLowerCase().startsWith(basePath.toLowerCase()))
       )
         return;
 
+      const prevLocation = getLocation();
+
       const to = url.pathname + url.search + url.hash;
       const state = a.getAttribute("state");
+
+      if (url.pathname === prevLocation.pathname && url.search === prevLocation.search) {
+        if (url.hash !== prevLocation.hash) {
+          window.location.hash = url.hash;
+          setCurrentLocation(getLocation());
+        }
+      }
 
       evt.preventDefault();
 
@@ -72,7 +89,7 @@ export default function mountRouter() {
         } else {
           history.pushState(options.state, "", to);
         }
-        currentLocation = getLocation();
+        setCurrentLocation(getLocation());
       }
     }
 
@@ -84,16 +101,19 @@ export default function mountRouter() {
     }
 
     async function handlePopState(evt: PopStateEvent) {
-      const { path, state } = getLocation();
-      if (await navigate(path)) {
-        currentLocation = getLocation();
+      const { pathname, state } = getLocation();
+      if (currentLocation().pathname !== pathname) {
+        if (await navigate(pathname)) {
+          setCurrentLocation(getLocation());
+        }
       }
     }
 
-    async function navigate(to: string) {
+    async function navigate(to: string, options: NavigateOptions = {}) {
       const response = await fetch(to, {
+        method: "POST",
         headers: {
-          "x-solid-referrer": currentLocation.path
+          "x-solid-referrer": currentLocation().pathname
         }
       });
 
@@ -125,8 +145,10 @@ export default function mountRouter() {
       return false;
     }
 
+    window.NAVIGATE = navigate as unknown as Navigator;
+
     document.addEventListener("click", handleAnchorClick);
     window.addEventListener("popstate", handlePopState);
-    DEBUG("mounted islands router");
+    _$DEBUG("mounted islands router");
   }
 }

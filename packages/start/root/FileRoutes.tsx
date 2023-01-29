@@ -1,12 +1,7 @@
 /// <reference path="../server/types.tsx" />
 
 // @ts-expect-error
-var routesConfig = $ROUTES_CONFIG;
-
-export const fileRoutes = routesConfig.routes;
-export const routeLayouts = routesConfig.routeLayouts as {
-  [key: string]: { layouts: string[]; id: string };
-};
+var fileRoutes = $FILE_ROUTES;
 
 /**
  * Routes are the file system based routes, used by Solid App Router to show the current page according to the URL.
@@ -17,3 +12,4 @@ const FileRoutes = () => {
 };
 
 export default FileRoutes;
+export { fileRoutes };

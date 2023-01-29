@@ -1,21 +1,31 @@
 {
   "name": "solid-start-cloudflare-pages",
-  "version": "0.1.0-alpha.99",
+  "version": "0.2.16",
   "main": "./index.js",
   "type": "module",
   "solid": {
     "type": "adapter"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^22.0.1",
-    "@rollup/plugin-json": "^4.1.0",
+    "@cloudflare/kv-asset-handler": "^0.2.0",
+    "@cloudflare/workers-types": "^3.19.0",
+    "@miniflare/core": "^2.11.0",
+    "@miniflare/http-server": "^2.11.0",
+    "@miniflare/shared": "^2.11.0",
+    "@miniflare/web-sockets": "^2.11.0",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
-    "rollup": "^2.77.2",
-    "terser": "^5.14.2"
+    "@types/ws": "^8.5.4",
+    "miniflare": "^2.11.0",
+    "rollup": "^3.10.0",
+    "terser": "^5.16.1",
+    "ws": "^8.12.0"
   },
   "devDependencies": {
-    "solid-start": "0.1.0-alpha.99",
-    "vite": "^3.0.4"
+    "@types/node": "^18.11.18",
+    "solid-start": "workspace:*",
+    "vite": "^3.2.5"
   },
   "peerDependencies": {
     "solid-start": "*",

@@ -2,15 +2,15 @@ import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { copyFileSync } from "fs";
 import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 export default function () {
   return {
+    name: "deno",
     start(config, { port }) {
       process.env.PORT = port;
-      console.log();
       const proc = spawn(
         "deno",
         ["run", "--allow-net", "--allow-env", "--allow-read", "server.js"],
@@ -25,17 +25,10 @@ export default function () {
     },
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      const appRoot = config.solidOptions.appRoot;
 
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "dist", "public"));
-
-        mkdirSync(join(config.root, ".solid", "server"), {
-          recursive: true
-        });
-
-        let text = readFileSync(join(__dirname, "spa-handler.js")).toString();
-        writeFileSync(join(config.root, ".solid", "server", "entry-server.js"), text);
+        await builder.server(join(config.root, ".solid", "server"));
       } else if (config.solidOptions.islands) {
         await builder.islandsClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
@@ -43,6 +36,7 @@ export default function () {
         await builder.client(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       }
+
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
         join(config.root, ".solid", "server", "handler.js")
@@ -54,9 +48,9 @@ export default function () {
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: ["deno", "solid"]
           }),
-          common()
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       // or write the bundle to disk

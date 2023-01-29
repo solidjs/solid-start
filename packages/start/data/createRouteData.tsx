@@ -1,69 +1,64 @@
-import { useNavigate } from "@solidjs/router";
-import { createResource, onCleanup, Resource, useContext } from "solid-js";
-import type { ResourceOptions, ResourceSource } from "solid-js/types/reactive/signal";
+import type {
+  Resource,
+  ResourceFetcher, ResourceFetcherInfo, ResourceOptions, Signal
+} from "solid-js";
+import {
+  createResource,
+  onCleanup,
+  startTransition, untrack, useContext
+} from "solid-js";
+import type { ReconcileOptions } from "solid-js/store";
+import { createStore, reconcile, unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
+import { useNavigate } from "../router";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
 import { ServerContext } from "../server/ServerContext";
 import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";
 
 interface RouteDataEvent extends ServerFunctionEvent {}
 
-type RouteResourceSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
+type RouteDataSource<S> = S | false | null | undefined | (() => S | false | null | undefined);
 
-type RouteResourceFetcher<S, T> = (source: S, event: RouteDataEvent) => T | Promise<T>;
+type RouteDataFetcher<S, T> = (source: S, event: RouteDataEvent) => T | Promise<T>;
+
+type RouteDataOptions<T, S> = ResourceOptions<T> & {
+  key?: RouteDataSource<S>;
+  reconcileOptions?: ReconcileOptions;
+};
 
 const resources = new Set<(k: any) => void>();
+const promises = new Map<any, Promise<any>>();
 
 export function createRouteData<T, S = true>(
-  fetcher: RouteResourceFetcher<S, T>,
-  options?: ResourceOptions<undefined>
+  fetcher: RouteDataFetcher<S, T>,
+  options?: RouteDataOptions<undefined, S>
 ): Resource<T | undefined>;
 export function createRouteData<T, S = true>(
-  fetcher: RouteResourceFetcher<S, T>,
-  options: ResourceOptions<T>
+  fetcher: RouteDataFetcher<S, T>,
+  options: RouteDataOptions<T, S>
 ): Resource<T>;
 export function createRouteData<T, S>(
-  source: RouteResourceSource<S>,
-  fetcher: RouteResourceFetcher<S, T>,
-  options?: ResourceOptions<undefined>
-): Resource<T | undefined>;
-export function createRouteData<T, S>(
-  source: RouteResourceSource<S>,
-  fetcher: RouteResourceFetcher<S, T>,
-  options: ResourceOptions<T>
-): Resource<T>;
-export function createRouteData<T, S>(
-  source: RouteResourceSource<S> | RouteResourceFetcher<S, T>,
-  fetcher?: RouteResourceFetcher<S, T> | ResourceOptions<T> | ResourceOptions<undefined>,
-  options?: ResourceOptions<T> | ResourceOptions<undefined>
+  fetcher?: RouteDataFetcher<S, T>,
+  options: RouteDataOptions<T, S> | RouteDataOptions<undefined, S> = {}
 ): Resource<T> | Resource<T | undefined> {
-  if (arguments.length === 2) {
-    if (typeof fetcher === "object") {
-      options = fetcher as ResourceOptions<T> | ResourceOptions<undefined>;
-      fetcher = source as RouteResourceFetcher<S, T>;
-      source = true as ResourceSource<S>;
-    }
-  } else if (arguments.length === 1) {
-    fetcher = source as RouteResourceFetcher<S, T>;
-    source = true as ResourceSource<S>;
-  }
-
   const navigate = useNavigate();
   const pageEvent = useContext(ServerContext);
 
   function handleResponse(response: Response) {
     if (isRedirectResponse(response)) {
-      let url = response.headers.get(LocationHeader);
-      if (url.startsWith("/")) {
-        navigate(response.headers.get(LocationHeader), {
-          replace: true
-        });
-      } else {
-        if (!isServer) {
-          window.location.href = response.headers.get(LocationHeader);
+      startTransition(() => {
+        let url = response.headers.get(LocationHeader);
+        if (url && url.startsWith("/")) {
+          navigate(url, {
+            replace: true
+          });
+        } else {
+          if (!isServer && url) {
+            window.location.href = url;
+          }
         }
-      }
-      if (isServer) {
+      });
+      if (isServer && pageEvent) {
         pageEvent.setStatusCode(response.status);
         response.headers.forEach((head, value) => {
           pageEvent.responseHeaders.set(value, head);
@@ -72,46 +67,65 @@ export function createRouteData<T, S>(
     }
   }
 
-  const [resource, { refetch }] = createResource<T, S>(
-    source as RouteResourceSource<S>,
-    async (key, info) => {
-      try {
-        if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
-          return info.value;
-        }
-
-        let event = pageEvent as RouteDataEvent;
-        if (isServer) {
-          event = Object.freeze({
-            request: pageEvent.request,
-            env: pageEvent.env,
-            $type: FETCH_EVENT,
-            fetch: pageEvent.fetch
-          });
-        }
-
-        let response = await (fetcher as any).call(event, key, event);
-        if (response instanceof Response) {
-          if (isServer) {
-            handleResponse(response);
-          } else {
-            setTimeout(() => handleResponse(response), 0);
-          }
-        }
-        return response;
-      } catch (e) {
-        if (e instanceof Response) {
-          if (isServer) {
-            handleResponse(e);
-          } else {
-            setTimeout(() => handleResponse(e), 0);
-          }
-          return e;
-        }
-        throw e;
+  const resourceFetcher: ResourceFetcher<S, T> = async (key: S) => {
+    try {
+      let event = pageEvent as RouteDataEvent;
+      if (isServer && pageEvent) {
+        event = Object.freeze({
+          request: pageEvent.request,
+          env: pageEvent.env,
+          clientAddress: pageEvent.clientAddress,
+          locals: pageEvent.locals,
+          $type: FETCH_EVENT,
+          fetch: pageEvent.fetch
+        });
       }
-    },
-    options
+
+      let response = await (fetcher as any).call(event, key, event);
+      if (response instanceof Response) {
+        if (isServer) {
+          handleResponse(response);
+        } else {
+          setTimeout(() => handleResponse(response), 0);
+        }
+      }
+      return response;
+    } catch (e: any | Error) {
+      if (e instanceof Response) {
+        if (isServer) {
+          handleResponse(e);
+        } else {
+          setTimeout(() => handleResponse(e), 0);
+        }
+        return e;
+      }
+      throw e;
+    }
+  };
+
+  function dedupe(fetcher: ResourceFetcher<S, T>): ResourceFetcher<S, T> {
+    return (key: S, info: ResourceFetcherInfo<T>) => {
+      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching) && info.value) {
+        return info.value;
+      }
+
+      if (key == true) return fetcher(key, info);
+
+      let promise = promises.get(key);
+      if (promise) return promise;
+      promise = fetcher(key, info) as Promise<T>;
+      promises.set(key, promise);
+      return promise.finally(() => promises.delete(key));
+    };
+  }
+
+  const [resource, { refetch }] = createResource<T, S>(
+    (options.key || true) as RouteDataSource<S>,
+    dedupe(resourceFetcher),
+    {
+      storage: (init: T | undefined) => createDeepSignal(init, options.reconcileOptions),
+      ...options
+    } as any
   );
 
   resources.add(refetch);
@@ -121,22 +135,39 @@ export function createRouteData<T, S>(
 }
 
 export function refetchRouteData(key?: string | any[] | void) {
-  for (let refetch of resources) refetch(key);
+  return startTransition(() => {
+    for (let refetch of resources) refetch(key);
+  });
+}
+
+function createDeepSignal<T>(value: T, options?: ReconcileOptions) {
+  const [store, setStore] = createStore({
+    value
+  });
+  return [
+    () => store.value,
+    (v: T) => {
+      const unwrapped = untrack(() => unwrap(store.value));
+      typeof v === "function" && (v = v(unwrapped));
+      setStore("value", reconcile(v, options));
+      return store.value;
+    }
+  ] as Signal<T>;
 }
 
 /* React Query key matching  https://github.com/tannerlinsley/react-query */
-function partialMatch(a, b) {
+function partialMatch(a: any, b: any) {
   return partialDeepEqual(ensureQueryKeyArray(a), ensureQueryKeyArray(b));
 }
 
-function ensureQueryKeyArray(value) {
-  return Array.isArray(value) ? value : [value];
+function ensureQueryKeyArray<V extends any | any[], R = V extends [] ? V : [V]>(value: V): R {
+  return (Array.isArray(value) ? value : [value]) as R;
 }
 
 /**
  * Checks if `b` partially matches with `a`.
  */
-function partialDeepEqual(a, b) {
+function partialDeepEqual(a: any, b: any): boolean {
   if (a === b) {
     return true;
   }

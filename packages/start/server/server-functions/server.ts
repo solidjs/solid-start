@@ -4,20 +4,20 @@ import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
 import {
   ContentTypeHeader,
-  isRedirectResponse,
   JSONResponseType,
   LocationHeader,
   ResponseError,
   XSolidStartContentTypeHeader,
   XSolidStartLocationHeader,
   XSolidStartOrigin,
-  XSolidStartResponseTypeHeader
+  XSolidStartResponseTypeHeader,
+  isRedirectResponse
 } from "../responses";
-import { ServerFunctionEvent } from "../types";
+import { PageEvent, ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
-export type { ApiFetchEvent } from "../../api/types";
+export type { APIEvent } from "../../api/types";
 
-export const server: CreateServerFunction = (fn => {
+export const server$: CreateServerFunction = ((_fn: any) => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
@@ -31,17 +31,14 @@ async function parseRequest(event: ServerFunctionEvent) {
     if (contentType === JSONResponseType) {
       let text = await request.text();
       try {
-        args = JSON.parse(text, (key, value) => {
+        args = JSON.parse(text, (key: string, value: any) => {
           if (!value) {
             return value;
-          }
-          if (value.$type === "fetch_event") {
-            return event;
           }
           if (value.$type === "headers") {
             let headers = new Headers();
             request.headers.forEach((value, key) => headers.set(key, value));
-            value.values.forEach(([key, value]) => headers.set(key, value));
+            value.values.forEach(([key, value]: [string, any]) => headers.set(key, value));
             return headers;
           }
           if (value.$type === "request") {
@@ -56,7 +53,7 @@ async function parseRequest(event: ServerFunctionEvent) {
         throw new Error(`Error parsing request body: ${text}`);
       }
     } else if (contentType.includes("form")) {
-      let formData = await request.formData();
+      let formData = await request.clone().formData();
       args = [formData, event];
     }
   }
@@ -76,7 +73,7 @@ export function respondWith(
     if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
       let headers = new Headers(data.headers);
       headers.set(XSolidStartOrigin, "server");
-      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader));
+      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader)!);
       headers.set(XSolidStartResponseTypeHeader, responseType);
       headers.set(XSolidStartContentTypeHeader, "response");
       return new Response(null, {
@@ -131,7 +128,7 @@ export function respondWith(
         }
       }),
       {
-        status: 400,
+        status: data.status,
         headers: {
           [XSolidStartResponseTypeHeader]: responseType,
           [XSolidStartContentTypeHeader]: "server-error"
@@ -139,6 +136,7 @@ export function respondWith(
       }
     );
   } else if (data instanceof Error) {
+    console.error(data);
     return new Response(
       JSON.stringify({
         error: {
@@ -188,10 +186,10 @@ export function respondWith(
 export async function handleServerRequest(event: ServerFunctionEvent) {
   const url = new URL(event.request.url);
 
-  if (server.hasHandler(url.pathname)) {
+  if (server$.hasHandler(url.pathname)) {
     try {
       let [name, args] = await parseRequest(event);
-      let handler = server.getHandler(name);
+      let handler = server$.getHandler(name);
       if (!handler) {
         throw {
           status: 404,
@@ -201,7 +199,7 @@ export async function handleServerRequest(event: ServerFunctionEvent) {
       const data = await handler.call(event, ...(Array.isArray(args) ? args : [args]));
       return respondWith(event.request, data, "return");
     } catch (error) {
-      return respondWith(event.request, error, "throw");
+      return respondWith(event.request, error as Error, "throw");
     }
   }
 
@@ -209,8 +207,8 @@ export async function handleServerRequest(event: ServerFunctionEvent) {
 }
 
 const handlers = new Map();
-// server.requestContext = null;
-server.createHandler = (_fn, hash) => {
+// server$.requestContext = null;
+server$.createHandler = (_fn, hash, serverResource) => {
   // this is run in two ways:
   // called on the server while rendering the App, eg. in a routeData function
   // - pass args as is to the fn, they should maintain identity since they are passed by reference
@@ -220,12 +218,12 @@ server.createHandler = (_fn, hash) => {
   // called on the server when an HTTP request for this server function is made to the server (by a client)
   // - request is parsed to figure out the args that need to be passed here, we still pass the same args as above, but they are not the same reference
   //   as the ones passed in the client. They are cloned and serialized and made as similar to the ones passed in the client as possible
-  let fn: any = function (...args) {
-    let ctx;
+  let fn: any = function (this: PageEvent | any, ...args: any[]) {
+    let ctx: any | undefined;
 
     // if called with fn.call(...), we check if we got a valid RequestContext, and use that as
     // the request context for this server function call
-    if (typeof this === "object" && this.request instanceof Request) {
+    if (typeof this === "object") {
       ctx = this;
       // @ts-ignore
     } else if (sharedConfig.context && sharedConfig.context.requestContext) {
@@ -238,15 +236,14 @@ server.createHandler = (_fn, hash) => {
       ctx = {
         request: new URL(hash, "http://localhost:3000").href,
         responseHeaders: new Headers()
-      };
+      } as any;
     }
 
     const execute = async () => {
       try {
-        let e = await _fn.call(ctx, ...args);
-        return e;
+        return serverResource ? _fn.call(ctx, args[0], ctx) : _fn.call(ctx, ...args);
       } catch (e) {
-        if (/[A-Za-z]+ is not defined/.test(e.message)) {
+        if (e instanceof Error && /[A-Za-z]+ is not defined/.test(e.message)) {
           const error = new Error(
             e.message +
               "\n" +
@@ -263,25 +260,25 @@ server.createHandler = (_fn, hash) => {
   };
 
   fn.url = hash;
-  fn.action = function (...args) {
+  fn.action = function (...args: any[]) {
     return fn.call(this, ...args);
   };
 
   return fn;
 };
 
-server.registerHandler = function (route, handler) {
+server$.registerHandler = function (route, handler) {
   handlers.set(route, handler);
 };
 
-server.getHandler = function (route) {
+server$.getHandler = function (route) {
   return handlers.get(route);
 };
 
-server.hasHandler = function (route) {
+server$.hasHandler = function (route) {
   return handlers.has(route);
 };
 
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server
-server.fetch = internalFetch;
+server$.fetch = internalFetch;

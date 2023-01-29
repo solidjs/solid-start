@@ -1,5 +1,5 @@
 import { Component, createResource, For, Show } from "solid-js";
-import { RouteDataArgs, useRouteData } from "solid-start";
+import { A, RouteDataArgs, useRouteData } from "solid-start";
 import Story from "~/components/story";
 import fetchAPI from "~/lib/api";
 import { IStory } from "~/types";
@@ -14,7 +14,7 @@ const mapStories = {
 
 export const routeData = ({ location, params }: RouteDataArgs) => {
   const page = () => +location.query.page || 1;
-  const type = () => params.stories || "top";
+  const type = () => (params.stories || "top") as keyof typeof mapStories;
 
   const [stories] = createResource<IStory[], string>(
     () => `${mapStories[type()]}?page=${page()}`,
@@ -37,22 +37,22 @@ const Stories: Component = () => {
             </span>
           }
         >
-          <a class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
+          <A class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
             {"<"} prev
-          </a>
+          </A>
         </Show>
         <span>page {page()}</span>
         <Show
-          when={stories() && stories().length >= 29}
+          when={stories() && stories()!.length >= 29}
           fallback={
             <span class="page-link disabled" aria-disabled="true">
               more {">"}
             </span>
           }
         >
-          <a class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
+          <A class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
             more {">"}
-          </a>
+          </A>
         </Show>
       </div>
       <main class="news-list">

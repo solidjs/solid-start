@@ -1,44 +1,29 @@
+/// <reference types="node" />
+import common from "@rollup/plugin-commonjs";
+import json from "@rollup/plugin-json";
+import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
-import { copyFileSync, readdirSync, statSync } from "fs";
+import { copyFileSync } from "fs";
 import { dirname, join, resolve } from "path";
+import { rollup } from "rollup";
 import renderStatic from "solid-ssr/static";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-function getAllFiles(dirPath, pageRoot, arrayOfFiles) {
-  const files = readdirSync(dirPath);
-
-  arrayOfFiles = arrayOfFiles || [];
-
-  files.forEach(file => {
-    if (statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllFiles(dirPath + "/" + file, pageRoot, arrayOfFiles);
-    } else if (file.endsWith("sx") && !file.match(/\[.*\]/)) {
-      arrayOfFiles.push(
-        join(dirPath, "/", file)
-          .replace(pageRoot, "")
-          .replace(/\\/g, "/")
-          .replace(/(\/index)?(.jsx|.tsx)/, "") || "/"
-      );
-    }
-  });
-
-  return arrayOfFiles;
-}
-
 export default function () {
   return {
+    name: "static",
     start(config, { port }) {
       process.env.PORT = port;
-      const proc = spawn("npx", ["sirv-cli", "./dist/public", "--port", `${process.env.PORT}`]);
+      const proc = spawn("npx", ["serve", "./dist/public"]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
 
       return `http://localhost:${process.env.PORT}`;
     },
     async build(config, builder) {
-      const appRoot = config.solidOptions.appRoot;
+      const ssrExternal = config?.ssr?.external || [];
       await builder.client(join(config.root, "dist", "public"));
       await builder.server(join(config.root, ".solid", "server"));
       copyFileSync(
@@ -48,15 +33,45 @@ export default function () {
       const pathToServer = join(config.root, ".solid", "server", "server.js");
       copyFileSync(join(__dirname, "entry.js"), pathToServer);
       const pathToDist = resolve(config.root, "dist", "public");
-      const pageRoot = join(config.root, appRoot, config.solidOptions.routesDir);
+
+      builder.debug(`bundling server with rollup`);
+
+      const bundle = await rollup({
+        input: join(config.root, ".solid", "server", "server.js"),
+        plugins: [
+          json(),
+          nodeResolve({
+            preferBuiltins: true,
+            exportConditions: ["node", "solid"]
+          }),
+          common({ strictRequires: true, ...config.build.commonjsOptions })
+        ],
+        external: ["undici", "stream/web", ...ssrExternal]
+      });
+      // or write the bundle to disk
+      await bundle.write({ format: "esm", dir: join(config.root, "dist") });
+
+      // closes the bundle
+      await bundle.close();
+
+      builder.debug(`bundling server done`);
+
+      await config.solidOptions.router.init();
       const routes = [
-        ...getAllFiles(pageRoot, pageRoot),
+        ...config.solidOptions.router
+          .getFlattenedPageRoutes()
+          .map(a => a.path)
+          .filter(a => (a.includes(":") || a.includes("/")) && !a.includes("*")),
+        "/404",
         ...(config.solidOptions.prerenderRoutes || [])
       ];
       renderStatic(
         routes.map(url => ({
-          entry: pathToServer,
-          output: join(pathToDist, url.length === 1 ? "index.html" : `${url.slice(1)}.html`),
+          entry: join(config.root, "dist", "server.js"),
+          output: join(
+            pathToDist,
+            url.endsWith("/") ? `${url.slice(1)}index.html` : `${url.slice(1)}.html`
+          ),
           url
         }))
       );

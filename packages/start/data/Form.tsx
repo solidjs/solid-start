@@ -144,7 +144,7 @@ export let FormImpl = (_props: FormImplProps) => {
         replace: false,
         method: "post" as FormMethod,
         action: "/",
-        encType: "application/x-www-form-urlencoded"
+        encType: "application/x-www-form-urlencoded" as FormEncType
       },
       _props
     ),
@@ -182,14 +182,14 @@ export let FormImpl = (_props: FormImplProps) => {
   // the submit event (even when submitting via keyboard when focused on
   // another form field, yeeeeet) so we should have access to that button's
   // data for use in the submit handler.
-  let clickedButtonRef;
+  let clickedButtonRef: HTMLButtonElement | HTMLInputElement | null = null;
   let form: HTMLFormElement | null = null;
 
   createEffect(() => {
     if (!form) return;
 
     function handleClick(event: MouseEvent) {
-      if (!(event.target instanceof HTMLElement)) return;
+      if (!(event.target instanceof HTMLElement || event.target instanceof SVGElement)) return;
       let submitButton = event.target.closest<HTMLButtonElement | HTMLInputElement>(
         "button,input[type=submit]"
       );
@@ -212,6 +212,7 @@ export let FormImpl = (_props: FormImplProps) => {
       }}
       method={formMethod}
       action={_props.action}
+      enctype={props.encType}
       // encType={encType}
       onSubmit={
         props.reloadDocument

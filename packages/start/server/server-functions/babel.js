@@ -1,6 +1,6 @@
 // All credit for this work goes to the amazing Next.js team.
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
-// This is adapted to work with any server() calls and transpile it into multiple api function for a file.
+// This is adapted to work with any server$() calls and transpile it into multiple api function for a file.
 
 import crypto from "crypto";
 import nodePath from "path";
@@ -107,13 +107,15 @@ function transformServer({ types: t, template }) {
                 }
               },
               CallExpression: path => {
-                if (path.node.callee.type === "Identifier" && path.node.callee.name === "server") {
+                if (path.node.callee.type === "Identifier" && path.node.callee.name === "server$") {
                   const serverFn = path.get("arguments")[0];
                   let program = path.findParent(p => t.isProgram(p));
                   let statement = path.findParent(p => program.get("body").includes(p));
                   let decl = path.findParent(
-                    p => p.isVariableDeclarator() || p.isFunctionDeclaration()
+                    p =>
+                      p.isVariableDeclarator() || p.isFunctionDeclaration() || p.isObjectProperty()
                   );
+                  const serverResource = path.getData("serverResource") ?? false;
                   let serverIndex = state.servers++;
                   let hasher = state.opts.minify ? hashFn : str => str;
                   const fName = state.filename.replace(state.opts.root, "").slice(1);
@@ -123,7 +125,7 @@ function transformServer({ types: t, template }) {
                   serverFn.traverse({
                     MemberExpression(path) {
                       let obj = path.get("object");
-                      if (obj.node.type === "Identifier" && obj.node.name === "server") {
+                      if (obj.node.type === "Identifier" && obj.node.name === "server$") {
                         obj.replaceWith(t.identifier("$$ctx"));
                         return;
                       }
@@ -164,15 +166,18 @@ function transformServer({ types: t, template }) {
                     .join(
                       INLINE_SERVER_ROUTE_PREFIX,
                       hash,
-                      decl?.node.id.elements?.[0]?.name ?? decl?.node.id.name ?? "fn"
+                      decl?.node.id?.elements?.[0]?.name ??
+                        decl?.node.id?.name ??
+                        decl?.node.key?.name ??
+                        "fn"
                     )
                     .replaceAll("\\", "/");
 
                   if (state.opts.ssr) {
                     statement.insertBefore(
                       template(`
-                      const $$server_module${serverIndex} = server.createHandler(%%source%%, "${route}");
-                      server.registerHandler("${route}", $$server_module${serverIndex});
+                      const $$server_module${serverIndex} = server$.createHandler(%%source%%, "${route}", ${serverResource});
+                      server$.registerHandler("${route}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
                       })
@@ -183,10 +188,10 @@ function transformServer({ types: t, template }) {
                         `
                         ${
                           process.env.TEST_ENV === "client"
-                            ? `server.registerHandler("${route}", server.createHandler(%%source%%, "${route}"));`
+                            ? `server$.registerHandler("${route}", server$.createHandler(%%source%%, "${route}", ${serverResource}));`
                             : ``
                         }
-                        const $$server_module${serverIndex} = server.createFetcher("${route}");`,
+                        const $$server_module${serverIndex} = server$.createFetcher("${route}", ${serverResource});`,
                         {
                           syntacticPlaceholders: true
                         }

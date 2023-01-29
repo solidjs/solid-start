@@ -4,16 +4,16 @@ import { devices } from "@playwright/test";
 const config: PlaywrightTestConfig = {
   testDir: ".",
   testMatch: ["**/*-test.ts"],
-  /* Maximum time one test can run for. */
   timeout: 300_000,
   expect: {
-    /* Maximum time expect() should wait for the condition to be met. */
     timeout: 5_000
   },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
-  reporter: process.env.CI ? "github" : [["html", { open: "never" }]],
+  reporter: process.env.CI
+    ? "github"
+    : [["html", { open: process.env.TEST_REPORT ? "always" : "none" }]],
   use: { actionTimeout: 0 },
   projects: [
     {

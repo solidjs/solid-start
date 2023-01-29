@@ -1,4 +1,3 @@
-import { babel } from "@rollup/plugin-babel";
 import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
@@ -10,6 +9,7 @@ import { fileURLToPath } from "url";
 
 export default function ({ edge } = {}) {
   return {
+    name: "netlify",
     start() {
       const proc = spawn("netlify", ["dev"]);
       proc.stdout.pipe(process.stdout);
@@ -18,15 +18,15 @@ export default function ({ edge } = {}) {
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       if (!config.solidOptions.ssr) {
-        throw new Error("SSR is required for Netlify");
-      }
-
-      if (config.solidOptions.islands) {
+        await builder.spaClient(join(config.root, "netlify"));
+        await builder.server(join(config.root, ".solid", "server"));
+      } else if (config.solidOptions.islands) {
         await builder.islandsClient(join(config.root, "netlify"));
+        await builder.server(join(config.root, ".solid", "server"));
       } else {
         await builder.client(join(config.root, "netlify"));
+        await builder.server(join(config.root, ".solid", "server"));
       }
-      await builder.server(join(config.root, ".solid", "server"));
 
       copyFileSync(
         join(config.root, ".solid", "server", `entry-server.js`),
@@ -38,29 +38,26 @@ export default function ({ edge } = {}) {
       );
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "index.js"),
-        preserveEntrySignatures: false,
         plugins: [
           json(),
           nodeResolve({
             preferBuiltins: true,
-            exportConditions: ["node", "solid"]
+            exportConditions: edge ? ["deno", "solid"] : ["node", "solid"]
           }),
-          common(),
-          babel({
-            babelHelpers: "bundled",
-            presets: [["@babel/preset-env", { targets: { node: 14 } }]]
-          })
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       // or write the bundle to disk
       await bundle.write({
-        format: edge ? "esm" : "cjs",
-        manualChunks: {},
-        dir: join(config.root, "netlify", edge ? "edge-functions" : "functions")
+        format: "esm",
+        inlineDynamicImports: true,
+        file: join(config.root, "netlify", edge ? "edge-functions" : "functions", "index.js")
       });
 
       // closes the bundle
       await bundle.close();
+
+      await promises.writeFile(join(config.root, "netlify", "_headers"), getHeadersFile(), "utf-8");
 
       if (edge) {
         const dir = join(config.root, ".netlify", "edge-functions");
@@ -90,3 +87,13 @@ export default function ({ edge } = {}) {
     }
   };
 }
+
+/**
+ * @see https://docs.netlify.com/routing/headers/
+ */
+// prettier-ignore
+const getHeadersFile = () =>
+`
+/assets/*
+  Cache-Control: public, immutable, max-age=31536000
+`.trim();

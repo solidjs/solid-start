@@ -1,0 +1,54 @@
+---
+section: advanced
+title: Middleware
+order: 8
+---
+
+# Middleware
+
+Middlewares may be included when calling the `createHandler` function in `entry-server.tsx`, middlewares should be provided before rendering the `StartServer` component.
+
+```tsx
+export default createHandler(
+  // middleware 1
+  ({ forward }) => {
+    return async event => {
+      // your own logic here
+      const request = event.request;
+      // maybe you want to get the cookie? or block this ip?
+      return forward(event); // next
+    };
+  },
+  // middleware 2
+  ({ forward }) => {
+    return async event => {
+      // your own logic here
+      return forward(event); // next
+    };
+  },
+  renderAsync(event => <StartServer event={event} />)
+);
+```
+
+## Protected Routes
+
+Let's see how can we use a middleware to create a Protected route:
+
+```tsx
+const protectedPaths = ["/protected"]; // add any route you wish in here
+
+export default createHandler(
+  ({ forward }) => {
+    return async event => {
+      if (protectedPaths.includes(new URL(event.request.url).pathname)) {
+        const user = await getUser(event.request);
+        if (!user) {
+          return redirect("/"); // a page for a non logged in user
+        }
+      }
+      return forward(event); // if we got here, and the pathname is inside the `protectedPaths` array - a user is logged in
+    };
+  },
+  renderAsync(event => <StartServer event={event} />)
+);
+```

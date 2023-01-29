@@ -1,12 +1,10 @@
-export { Link, Meta, Style, Title } from "@solidjs/meta";
+export { Link, Meta, Style, Stylesheet, Title } from "@solidjs/meta";
 export {
-  Link as RouterLink, Navigate, NavLink,
+  Navigate,
   Route,
   useHref,
   useIsRouting,
-  useLocation,
   useMatch,
-  useNavigate,
   useParams,
   useResolvedPath,
   useRouteData,
@@ -15,12 +13,22 @@ export {
   type RouteDataFunc,
   type RouteDataFuncArgs as RouteDataArgs
 } from "@solidjs/router";
-export { createRouteAction, createRouteData, FormError, ServerError } from "./data";
+export type { APIEvent as APIEvent } from "./api";
+export {
+  createRouteAction,
+  createRouteData,
+  createRouteMultiAction,
+  FormError,
+  refetchRouteData,
+  ServerError
+} from "./data";
 export type { FormAction, FormMethod, FormProps, SubmitOptions } from "./data";
-export { default, ErrorBoundary } from "./error-boundary";
-export { island as unstable_island } from "./islands";
-export { Body, FileRoutes, Head, Html, Scripts } from "./root";
-export { ServerContext } from "./server/ServerContext";
+export { default, ErrorBoundary, ErrorMessage } from "./error-boundary";
+export { clientOnly as unstable_clientOnly, island as unstable_island } from "./islands";
+export { Body, Head, Html, Scripts } from "./root";
+export * from "./router";
+export * from "./server/responses";
+export { ServerContext, useRequest as useServerContext } from "./server/ServerContext";
 export type { FetchEvent, PageEvent, ServerFunctionEvent } from "./server/types";
 export {
   createCookie,
@@ -30,32 +38,10 @@ export {
   parseCookie,
   serializeCookie,
   type CookieParseOptions,
-  type CookieSerializeOptions
+  type CookieSerializeOptions,
+  type SessionIdStorageStrategy,
+  type SessionStorage
 } from "./session";
+import { JSX } from "solid-js";
 import "./types";
-
-import { Outlet as BaseOutlet, Routes as BaseRoutes } from "@solidjs/router";
-import { Outlet as IslandsOutlet } from "./islands/server-router";
-
-export function Routes(props) {
-  if (import.meta.env.START_ISLANDS_ROUTER) {
-    return (
-      <IslandsOutlet>
-        <BaseRoutes>{props.children}</BaseRoutes>
-      </IslandsOutlet>
-    );
-  }
-  return <BaseRoutes>{props.children}</BaseRoutes>;
-}
-
-export function Outlet(props) {
-  if (import.meta.env.START_ISLANDS_ROUTER) {
-    return (
-      <IslandsOutlet>
-        <BaseOutlet />
-      </IslandsOutlet>
-    );
-  }
-
-  return <BaseOutlet />;
-}
+export declare function FileRoutes(): JSX.Element;

@@ -3,19 +3,28 @@ import type { Component } from "solid-js";
 
 declare global {
   interface Window {
-    DEBUG: Debugger;
+    _$DEBUG: Debugger;
     _$HY: {
       island(path: string, comp: Component): void;
       islandMap: { [path: string]: Component };
       hydrateIslands(): void;
+      fe(id: string): void;
     };
   }
 
-  export const DEBUG: Debugger;
+  interface RequestInit {
+    duplex?: "half";
+  }
 }
 
+type Adapter = {
+  start(): void;
+  build(): void;
+  dev?(): void;
+};
+
 export type StartOptions = {
-  adapter: string;
+  adapter: string | Adapter;
   appRoot: string;
   routesDir: string;
   ssr: boolean;
@@ -26,9 +35,10 @@ export type StartOptions = {
   inspect: boolean;
   pageExtensions: string[];
   root: string;
-  entryClient: string;
-  entryServer: string;
+  clientEntry: string;
+  serverEntry: string;
   appRootFile: string;
 };
 
-export {};
+export { };
+

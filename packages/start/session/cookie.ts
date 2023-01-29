@@ -178,7 +178,7 @@ export function parseCookie(str: string, options?: CookieParseOptions): Record<s
     throw new TypeError("argument str must be a string");
   }
 
-  var obj = {};
+  var obj: Record<string, any> = {};
   var opt = options || {};
   var pairs = str.split(";");
   var dec = opt.decode || decode;
@@ -239,7 +239,7 @@ export function serializeCookie(
   value: string,
   options?: CookieSerializeOptions
 ): string;
-export function serializeCookie(name, val, options) {
+export function serializeCookie(name: string, val: string, options?: CookieSerializeOptions) {
   var opt = options || {};
   var enc = opt.encode || encode;
 
@@ -333,7 +333,7 @@ export function serializeCookie(name, val, options) {
  * @private
  */
 
-function tryDecode(str, decode) {
+function tryDecode(str: string, decode: (str: string) => string) {
   try {
     return decode(str);
   } catch (e) {

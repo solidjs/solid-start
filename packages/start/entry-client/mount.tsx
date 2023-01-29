@@ -1,20 +1,36 @@
 import type { JSX } from "solid-js";
-import { createComponent, hydrate, render } from "solid-js/web";
+import { getOwner } from "solid-js";
+import { createComponent, getNextElement, hydrate, render } from "solid-js/web";
 
 import mountRouter from "../islands/router";
+
+declare global {
+  interface Window {
+    INSPECT: () => void;
+  }
+}
 
 if (import.meta.env.DEV) {
   localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
   // const { default: createDebugger } = await import("debug");
-  // window.DEBUG = createDebugger("start:client");
-  window.DEBUG = console.log
+  // window._$DEBUG = createDebugger("start:client");
+  window._$DEBUG = console.log as unknown as any;
 
-  DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
-  DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
-  DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
-  DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
-  DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
-  DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
+  _$DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
+  _$DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
+  _$DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
+  _$DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
+  _$DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
+  _$DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
+
+  window.INSPECT = () => {
+    window.open(window.location.href.replace(window.location.pathname, "/__inspect"));
+  };
+}
+
+function lookupOwner(el: HTMLElement) {
+  const parent = el.closest("solid-children");
+  return parent && (parent as any).__$owner;
 }
 
 export default function mount(code?: () => JSX.Element, element?: Document) {
@@ -22,33 +38,64 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
     mountRouter();
 
     async function mountIsland(el: HTMLElement) {
-      let Component = window._$HY.islandMap[el.dataset.island];
-      if (!Component) {
-        await import(/* @vite-ignore */ el.dataset.component);
-        Component = window._$HY.islandMap[el.dataset.island];
-      }
-
-      DEBUG(
+      let Component = el.dataset.island && window._$HY.islandMap[el.dataset.island];
+      if (!Component || !el.dataset.hk) return;
+      _$DEBUG(
         "hydrating island",
         el.dataset.island,
-        el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`,
+        el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
         el
       );
 
-      hydrate(() => createComponent(Component, JSON.parse(el.dataset.props)), el, {
-        renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `2-`
-      });
+      hydrate(
+        () =>
+          !Component || typeof Component === "string"
+            ? Component
+            : createComponent(Component, {
+                ...JSON.parse(el.dataset.props || "undefined"),
+                get children() {
+                  const el = getNextElement();
+                  (el as any).__$owner = getOwner();
+                  return;
+                }
+              }),
+        el,
+        {
+          renderId: el.dataset.hk.slice(0, el.dataset.hk.length - 1) + `1-`,
+          owner: lookupOwner(el)
+        }
+      );
+
+      delete el.dataset.hk;
     }
 
+    let queue: HTMLElement[] = [];
+    let queued = false;
+    function runTaskQueue(info: { timeRemaining(): number }) {
+      while (info.timeRemaining() > 0 && queue.length) {
+        mountIsland(queue.shift() as HTMLElement);
+      }
+      if (queue.length) {
+        requestIdleCallback(runTaskQueue);
+      } else queued = false;
+    }
     window._$HY.hydrateIslands = () => {
-      document.querySelectorAll("solid-island").forEach((el: HTMLElement) => {
-        if (el.dataset.when === "idle") {
-          requestIdleCallback(() => mountIsland(el));
-        } else {
-          mountIsland(el as HTMLElement);
-        }
+      const islands = document.querySelectorAll("solid-island[data-hk]");
+      const assets = new Set<string>();
+      islands.forEach((el: Element) => assets.add((el as HTMLElement).dataset.component || ""));
+      Promise.all([...assets].map(asset => import(/* @vite-ignore */ asset))).then(() => {
+        islands.forEach((el: Element) => {
+          if ((el as HTMLElement).dataset.when === "idle" && "requestIdleCallback" in window) {
+            if (!queued) {
+              queued = true;
+              requestIdleCallback(runTaskQueue);
+            }
+            queue.push(el as HTMLElement);
+          } else mountIsland(el as HTMLElement);
+        });
       });
     };
+    window._$HY.fe = window._$HY.hydrateIslands;
 
     window._$HY.hydrateIslands();
 
@@ -59,8 +106,8 @@ export default function mount(code?: () => JSX.Element, element?: Document) {
   }
 
   if (import.meta.env.START_SSR) {
-    hydrate(code, element);
+    code && element && hydrate(code, element);
   } else {
-    render(code, element === document ? element.body : element);
+    code && element && render(code, element === document ? element.body : element);
   }
 }

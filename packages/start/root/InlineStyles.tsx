@@ -2,30 +2,43 @@ import { Style } from "@solidjs/meta";
 import { createResource, Show, Suspense, useContext } from "solid-js";
 import type { PageEvent } from "../server";
 import { ServerContext } from "../server/ServerContext";
-import { routeLayouts } from "./FileRoutes";
 
-async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["routerContext"]) {
-  const match = routerContext.matches.reduce((memo: string[], m) => {
+declare global {
+  const $ROUTE_LAYOUTS: Record<string, { layouts: any[], id: string }>
+}
+
+var routeLayouts = $ROUTE_LAYOUTS;
+
+export { routeLayouts };
+
+const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
+
+type NotUndefined<T> = T extends undefined ? never : T;
+
+type RouterContext = NotUndefined<PageEvent["routerContext"]>
+
+async function getInlineStyles(env: PageEvent["env"], routerContext: RouterContext) {
+  const match = routerContext.matches ? routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      if (env.devManifest.find(entry => entry.path === fullPath)) {
-        memo.push(env.devManifest.find(entry => entry.path === fullPath)!.componentPath);
+      if (env.__dev!.manifest!.find(entry => entry.path === fullPath)) {
+        memo.push(env.__dev!.manifest!.find(entry => entry.path === fullPath)!.componentPath);
       }
       const route = routeLayouts[fullPath];
       if (route) {
         memo.push(
           ...route.layouts
-            .map(key => env.devManifest.find(entry => entry.path === key || entry.id === key))
+            .map((key: string) => env.__dev!.manifest!.find(entry => entry.path === key || entry.id === key))
             .filter(entry => entry)
             .map(entry => entry!.componentPath)
         );
       }
     }
     return memo;
-  }, []);
+  }, []) : [];
 
   match.push(import.meta.env.START_ENTRY_SERVER);
-  const styles = await env.collectStyles(match);
+  const styles = await env.__dev!.collectStyles!(match);
   return styles;
 }
 
@@ -39,7 +52,7 @@ export function InlineStyles() {
   const [resource] = createResource(
     async () => {
       if (import.meta.env.SSR) {
-        return await getInlineStyles(context.env, context.routerContext);
+        return await getInlineStyles(context!.env, context!.routerContext!);
       } else {
         return {};
       }
@@ -53,12 +66,12 @@ export function InlineStyles() {
   // and making it invalid
   return (
     <Suspense>
-      <Show when={resource()}>
+      <Show when={resource()} keyed>
         {resource => {
           return (
             <Style>
               {Object.entries(resource)
-                .filter(([k]) => k.endsWith(".css"))
+                .filter(([k]) => style_pattern.test(k))
                 .map(([k, v]) => {
                   return `/* ${k} */\n` + v;
                 })

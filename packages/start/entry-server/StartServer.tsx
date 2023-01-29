@@ -1,19 +1,20 @@
 import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
-import { ComponentProps } from "solid-js";
+import { ComponentProps, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
+// @ts-ignore
 import Root from "~start/root";
-import { apiRoutes } from "../api/middleware";
+
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
 import { fileRoutes } from "../root/FileRoutes";
-import { inlineServerFunctions } from "../server/middleware";
+
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
 
 const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
   default: RouteDataFunc;
 };
-const dataFn: RouteDataFunc = rootData ? rootData.default : undefined;
+const dataFn: RouteDataFunc | undefined = rootData ? rootData.default : undefined;
 
 /** Function responsible for listening for streamed [operations]{@link Operation}. */
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
@@ -39,7 +40,7 @@ export const composeMiddleware =
     );
 
 export function createHandler(...exchanges: Middleware[]) {
-  const exchange = composeMiddleware([apiRoutes, inlineServerFunctions, ...exchanges]);
+  const exchange = composeMiddleware(exchanges);
   return async (event: FetchEvent) => {
     return await exchange({
       forward: async op => {
@@ -69,10 +70,12 @@ export function StartRouter(
 }
 
 const docType = ssr("<!DOCTYPE html>");
-export default ({ event }: { event: PageEvent }) => {
+export default function StartServer({ event }: { event: PageEvent }) {
   const parsed = new URL(event.request.url);
   const path = parsed.pathname + parsed.search;
 
+  // @ts-ignore
+  sharedConfig.context.requestContext = event;
   return (
     <ServerContext.Provider value={event}>
       <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
@@ -90,4 +93,4 @@ export default ({ event }: { event: PageEvent }) => {
       </MetaProvider>
     </ServerContext.Provider>
   );
-};
+}

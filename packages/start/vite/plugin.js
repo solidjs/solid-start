@@ -1,18 +1,28 @@
+/// <reference path="./plugin.d.ts" />
+
 import debug from "debug";
+import dotenv from "dotenv";
+import { solidPlugin } from "esbuild-plugin-solid";
 import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
+import { fileURLToPath, pathToFileURL } from "url";
 import { loadEnv, normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
+import fileRoutesImport from "../fs-router/fileRoutesImport.js";
 import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
 import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";
 import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
 
+// @ts-ignore
 globalThis.DEBUG = debug("start:vite");
+
+let _dirname = dirname(fileURLToPath(import.meta.url));
+// const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
 
 /**
  * @returns {import('vite').PluginOption}
@@ -31,11 +41,13 @@ function solidStartInlineServerModules(options) {
     name: "solid-start-inline-server-modules",
     configureServer(vite) {
       vite.httpServer.once("listening", async () => {
-        const label = c.bold("Server modules:");
+        const label = `  > Server modules: `;
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0]
-          // eslint-disable-next-line no-console
-          console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
+          if (vite.resolvedUrls) {
+            const url = vite.resolvedUrls.local[0];
+            // eslint-disable-next-line no-console
+            console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
+          }
         }, 200);
       });
     }
@@ -54,7 +66,7 @@ function touch(path) {
     fs.closeSync(fs.openSync(path, "w"));
   }
 }
-let i = 0;
+
 /**
  * @param {any} arr
  */
@@ -66,13 +78,13 @@ function toArray(arr) {
 
 /**
  * @returns {import('vite').Plugin}
- * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; }} options
+ * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; babel?: any }} options
  */
 function solidStartFileSystemRouter(options) {
   let lazy;
   let config;
 
-  const { delay = 500, glob: enableGlob = true, router } = options;
+  let { delay = 500, glob: enableGlob = true, router } = options;
   let root = process.cwd();
   let reloadGlobs = [];
   let restartGlobs = [];
@@ -91,13 +103,15 @@ function solidStartFileSystemRouter(options) {
     timer = setTimeout(fn, delay);
   }
 
+  let server;
+
   let listener = function handleFileChange(/** @type {string} */ file) {
     timerState = "restart";
     schedule(() => {
       if (router.watcher) {
         router.watcher.close();
       }
-      touch(configFile);
+      server.restart();
       // eslint-disable-next-line no-console
       console.log(
         c.dim(new Date().toLocaleTimeString()) +
@@ -113,7 +127,6 @@ function solidStartFileSystemRouter(options) {
     //     timerState = "";
     //   });
   };
-  let server;
   return {
     name: "solid-start-file-system-router",
     enforce: "pre",
@@ -122,6 +135,9 @@ function solidStartFileSystemRouter(options) {
       if (!c.server) c.server = {};
       if (!c.server.watch) c.server.watch = {};
       c.server.watch.disableGlobbing = false;
+
+      // @ts-expect-error
+      router = c.solidOptions.router;
     },
     async configResolved(_config) {
       lazy = _config.command !== "serve" || options.lazy === true;
@@ -142,56 +158,93 @@ function solidStartFileSystemRouter(options) {
       router.listener = listener;
       vite.httpServer.once("listening", async () => {
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0]
-          // eslint-disable-next-line no-console
-          printUrls(router,url.substring(0,url.length - 1));
+          if (vite.resolvedUrls) {
+            const url = vite.resolvedUrls.local[0];
+            // eslint-disable-next-line no-console
+            printUrls(router, url.substring(0, url.length - 1));
+          }
         }, 100);
       });
     },
 
-    async transform(code, id, transformOptions) {
+    transform(code, id, transformOptions) {
       const isSsr =
         transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
 
+      const url = pathToFileURL(id);
+      url.searchParams.delete("v");
+      id = fileURLToPath(url).replace(/\\/g, "/");
+
+      const babelOptions =
+        fn =>
+        (...args) => {
+          const b =
+            typeof options.babel === "function"
+              ? options.babel(...args)
+              : options.babel ?? { plugins: [] };
+          const d = fn(...args);
+          return {
+            plugins: [...b.plugins, ...d.plugins]
+          };
+        };
       let babelSolidCompiler = (/** @type {string} */ code, /** @type {string} */ id, fn) => {
         // @ts-ignore
-        return solid({
+        let plugin = solid({
           ...(options ?? {}),
-          ssr: true,
-          babel: fn
-        }).transform(code, id, transformOptions);
+          ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
+          babel: babelOptions(fn)
+        });
+
+        // @ts-ignore
+        return plugin.transform(code, id, transformOptions);
       };
 
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
 
-      if (/\.test\.(tsx)/.test(id) && config.solidOptions.ssr) {
+      if (/\.test\.(tsx)/.test(id)) {
         return babelSolidCompiler(code, id, (/** @type {any} */ source, /** @type {any} */ id) => ({
           plugins: [
-            options.ssr && [
+            [
               routeResource,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
             ],
-            options.ssr && [
+            [
               babelServerModule,
-              { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
             ]
           ]
         }));
       }
 
-      if (/\.data\.(ts|js)/.test(id) && config.solidOptions.ssr) {
+      if (/\.data\.(ts|js)/.test(id)) {
         return babelSolidCompiler(
           code,
           id.replace(/\.data\.ts/, ".tsx"),
           (/** @type {any} */ source, /** @type {any} */ id) => ({
             plugins: [
-              options.ssr && [
+              [
                 routeResource,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
-              options.ssr && [
+              [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ]
             ]
           })
@@ -202,17 +255,29 @@ function solidStartFileSystemRouter(options) {
           id.replace("?data", ""),
           (/** @type {any} */ source, /** @type {any} */ id) => ({
             plugins: [
-              options.ssr && [
+              [
                 routeResource,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
-              options.ssr && [
+              [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               [
                 routeData,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               !ssr &&
                 process.env.NODE_ENV !== "production" && [
@@ -228,7 +293,7 @@ function solidStartFileSystemRouter(options) {
           id.replace("?data", ""),
           (/** @type {any} */ source, /** @type {any} */ id) => ({
             plugins: [
-              options.ssr && [
+              [
                 routeResource,
                 {
                   ssr,
@@ -237,9 +302,13 @@ function solidStartFileSystemRouter(options) {
                   minify: process.env.NODE_ENV === "production"
                 }
               ],
-              options.ssr && [
+              [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ],
               [
                 routeData,
@@ -259,18 +328,44 @@ function solidStartFileSystemRouter(options) {
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
           (/** @type {any} */ source, /** @type {any} */ id) => ({
             plugins: [
-              options.ssr && [
+              [
+                routeResource,
+                {
+                  ssr,
+                  root: process.cwd(),
+                  keep: true,
+                  minify: process.env.NODE_ENV === "production"
+                }
+              ],
+              [
                 babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
+                {
+                  ssr,
+                  root: process.cwd(),
+                  minify: process.env.NODE_ENV === "production"
+                }
               ]
             ].filter(Boolean)
           })
         );
-      } else if (code.includes("var routesConfig = $ROUTES_CONFIG;")) {
+      } else if (code.includes("var fileRoutes = $FILE_ROUTES;")) {
         return {
           code: code.replace(
-            "var routesConfig = $ROUTES_CONFIG;",
-            stringifyPageRoutes(router.getNestedPageRoutes(), { lazy })
+            "var fileRoutes = $FILE_ROUTES;",
+            stringifyPageRoutes(router.getNestedPageRoutes(), {
+              // if we are in SPA mode, and building the server bundle, we import
+              // the routes eagerly so that they can dead-code eliminate properly,
+              // for some reason, vite doesn't do it properly when the routes are
+              // loaded lazily.
+              lazy: ssr ? false : true
+            })
+          )
+        };
+      } else if (code.includes("var routeLayouts = $ROUTE_LAYOUTS;")) {
+        return {
+          code: code.replace(
+            "var routeLayouts = $ROUTE_LAYOUTS;",
+            `const routeLayouts = ${JSON.stringify(router.getRouteLayouts())};`
           )
         };
       } else if (code.includes("var api = $API_ROUTES;")) {
@@ -305,25 +400,131 @@ function solidsStartRouteManifest(options) {
   };
 }
 
+async function resolveAdapter(config) {
+  if (typeof config.solidOptions.adapter === "string") {
+    return (await import(config.solidOptions.adapter)).default();
+  } else if (Array.isArray(config.solidOptions.adapter)) {
+    return (await import(config.solidOptions.adapter[0])).default(config.solidOptions.adapter[1]);
+  } else {
+    return config.solidOptions.adapter;
+  }
+}
+
 /**
  * @returns {import('vite').Plugin}
  * @param {any} options
  */
 function solidStartServer(options) {
   let config;
+  let env = { cssModules: {} };
+  const module_style_pattern = /\.module\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
   return {
     name: "solid-start-server",
     config(c) {
       config = c;
+      return {
+        appType: "custom"
+      };
+    },
+    transform(code, id) {
+      if (module_style_pattern.test(id)) {
+        env.cssModules[id] = code;
+      }
     },
     configureServer(vite) {
       return async () => {
         const { createDevHandler } = await import("../dev/server.js");
-        remove_html_middlewares(vite.middlewares);
-        vite.middlewares.use(createDevHandler(vite, config, options).handler);
+        let adapter = await resolveAdapter(config);
+        if (adapter && adapter.dev) {
+          vite.middlewares.use(
+            await adapter.dev(config, vite, createDevHandler(vite, config, options))
+          );
+        } else if (config.solidOptions.devServer) {
+          vite.middlewares.use(createDevHandler(vite, config, options).handlerWithEnv(env));
+        }
       };
     }
   };
+}
+
+// credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js
+function loadServerEnv(envConfig, rootDir = process.cwd()) {
+  const env = Object.create(null);
+  if (!envConfig.dotenv) return env;
+  const t = [...envConfig.dotenv];
+  for (const denv of t) {
+    // Read dotenv
+    envConfig.dotenv = path.resolve(rootDir, denv);
+    if (fs.existsSync(envConfig.dotenv)) {
+      const parsed = dotenv.parse(fs.readFileSync(envConfig.dotenv, "utf-8"));
+      Object.assign(env, parsed);
+    }
+
+    // Apply process.env
+    if (!envConfig.env._applied) {
+      Object.assign(env, envConfig.env);
+      envConfig.env._applied = true;
+    }
+
+    // Interpolate env
+    if (envConfig.expand) {
+      expand(env);
+    }
+  }
+
+  return env;
+}
+
+// Based on https://github.com/motdotla/dotenv-expand
+function expand(target, source = {}, parse = v => v) {
+  function getValue(key) {
+    // Source value 'wins' over target value
+    return source[key] !== undefined ? source[key] : target[key];
+  }
+
+  function interpolate(value, parents = []) {
+    if (typeof value !== "string") {
+      return value;
+    }
+    const matches = value.match(/(.?\${?(?:[a-zA-Z0-9_:]+)?}?)/g) || [];
+    return parse(
+      matches.reduce((newValue, match) => {
+        const parts = /(.?)\${?([a-zA-Z0-9_:]+)?}?/g.exec(match);
+        const prefix = parts[1];
+
+        let value, replacePart;
+
+        if (prefix === "\\") {
+          replacePart = parts[0];
+          value = replacePart.replace("\\$", "$");
+        } else {
+          const key = parts[2];
+          replacePart = parts[0].substring(prefix.length);
+
+          // Avoid recursion
+          if (parents.includes(key)) {
+            consola.warn(
+              `Please avoid recursive environment variables ( loop: ${parents.join(
+                " > "
+              )} > ${key} )`
+            );
+            return "";
+          }
+
+          value = getValue(key);
+
+          // Resolve recursive interpolations
+          value = interpolate(value, [...parents, key]);
+        }
+
+        return value !== undefined ? newValue.replace(replacePart, value) : newValue;
+      }, value)
+    );
+  }
+
+  for (const key in target) {
+    target[key] = interpolate(getValue(key));
+  }
 }
 
 /**
@@ -339,93 +540,99 @@ function solidStartConfig(options) {
       options.root = root;
 
       // Load env file based on `mode` in the current working directory.
-      // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-      options.env = await loadEnv(e.mode, process.cwd(), "");
-
-      options.entryClient = findAny(join(options.root, options.appRoot), "entry-client");
-      if (!options.entryClient) {
-        options.entryClient = join(
-          options.root,
-          "node_modules",
-          "solid-start",
-          "virtual",
-          "entry-client.tsx"
-        );
+      // credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js for the server env
+      const envConfig = {
+        dotenv: [
+          /** default file */ `.env`,
+          /** local file */ `.env.local`,
+          /** mode file */ `.env.${e.mode}`,
+          /** mode local file */ `.env.${e.mode}.local`
+        ],
+        env: process.env,
+        expand: true,
+        ...(options?.envConfig ?? {})
+      };
+      const env = loadServerEnv(envConfig, options.envDir || process.cwd());
+      for (const key in env) {
+        if (!key.startsWith("VITE_") && envConfig.env[key] === undefined) {
+          envConfig.env[key] = env[key];
+        }
       }
-      options.entryServer = findAny(join(options.root, options.appRoot), "entry-server");
-      if (!options.entryServer) {
-        options.entryServer = join(
-          options.root,
-          "node_modules",
-          "solid-start",
-          "virtual",
-          "entry-server.tsx"
-        );
+      options._env = env;
+      options._envConfig = envConfig;
+      options.env = await loadEnv(e.mode, options.envDir || process.cwd());
+      options.router = new Router({
+        baseDir: path.posix.join(options.appRoot, options.routesDir),
+        pageExtensions: options.pageExtensions,
+        ignore: options.routesIgnore,
+        cwd: options.root
+      });
+
+      options.clientEntry =
+        options.clientEntry ?? findAny(join(options.root, options.appRoot), "entry-client");
+      if (!options.clientEntry) {
+        options.clientEntry = join(_dirname, "..", "virtual", "entry-client.tsx");
+      }
+      options.serverEntry =
+        options.serverEntry ?? findAny(join(options.root, options.appRoot), "entry-server");
+      if (!options.serverEntry) {
+        options.serverEntry = join(_dirname, "..", "virtual", "entry-server.tsx");
       }
 
-      options.appRootFile = findAny(join(options.root, options.appRoot), "root");
-      if (!options.appRootFile) {
-        options.appRootFile = join(
-          options.root,
-          "node_modules",
-          "solid-start",
-          "virtual",
-          "root.tsx"
-        );
+      options.rootEntry = options.rootEntry ?? findAny(join(options.root, options.appRoot), "root");
+      if (!options.rootEntry) {
+        options.rootEntry = join(_dirname, "..", "virtual", "root.tsx");
       }
 
       DEBUG(options);
 
       return {
-        test: {
-          environment: "jsdom",
-          transformMode: {
-            web: [/\.[tj]sx?$/]
-          },
-          globals: true,
-          setupFiles: "node_modules/solid-start/vitest.setup.ts",
-          // solid needs to be inline to work around
-          // a resolution issue in vitest:
-          // deps: {
-          //   inline: [/solid-js/]
-          // }
-          // if you have few tests, try commenting one
-          // or both out to improve performance:
-          threads: false,
-          isolate: false
-        },
         resolve: {
           conditions: options.env["VITEST"] ? ["browser", "solid"] : ["solid"],
           alias: {
             "~": path.join(root, options.appRoot),
-            "~start/root": options.appRootFile,
-            "~start/entry-client": options.entryClient,
-            "~start/entry-server": options.entryServer
+            "~start/root": options.rootEntry,
+            "~start/entry-client": options.clientEntry,
+            "~start/entry-server": options.serverEntry
           }
         },
+
         ssr: {
-          noExternal: ["@solidjs/router", "@solidjs/meta", "solid-start"]
+          noExternal: ["solid-start", "@solidjs/meta", "@solidjs/router"]
         },
-        optimizeDeps: {
-          include: ["debug"]
-        },
+
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
           "process.env.TEST_ENV": JSON.stringify(process.env.TEST_ENV),
           "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
           "import.meta.env.START_SSR": JSON.stringify(options.ssr ? true : false),
           "import.meta.env.START_ISLANDS": JSON.stringify(options.islands ? true : false),
-          "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.entryClient),
-          "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.entryServer),
+          "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.clientEntry),
+          "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.serverEntry),
+          "import.meta.env.START_INDEX_HTML": JSON.stringify(
+            process.env.START_INDEX_HTML === "true" ? true : false
+          ),
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.islandsRouter ? true : false
           ),
-          DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis.DEBUG",
+          _$DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis._$DEBUG",
           "import.meta.env.START_ADAPTER": JSON.stringify(
             typeof options.adapter === "string"
               ? options.adapter
               : options.adapter && options.adapter.name
           )
+        },
+        optimizeDeps: {
+          exclude: ["solid-start", "@solidjs/router", "@solidjs/meta"],
+          extensions: ["jsx", "tsx"],
+          esbuildOptions: {
+            plugins: [
+              solidPlugin({
+                hydratable: options.ssr ? true : false,
+                generate: "dom"
+              })
+            ]
+          }
         },
         solidOptions: options
       };
@@ -435,36 +642,39 @@ function solidStartConfig(options) {
 
 /**
  * @param {string} locate
- * @param {fs.PathLike} [cwd]
+ * @param {string} [cwd]
+ * @returns {string | undefined}
  */
 function find(locate, cwd) {
   cwd = cwd || process.cwd();
   if (cwd.split(path.sep).length < 2) return undefined;
-  const match = fs.readdirSync(cwd).find(f => f === locate);
-  if (match) return match;
+  const found = fs.readdirSync(cwd).some(f => f === locate);
+  if (found) return path.join(cwd, locate);
   return find(locate, path.join(cwd, ".."));
 }
 
-const nodeModulesPath = find("node_modules");
+// const nodeModulesPath = find("node_modules", process.cwd());
 
-function detectAdapter() {
-  let adapters = [];
-  fs.readdirSync(nodeModulesPath).forEach(dir => {
-    if (dir.startsWith("solid-start-")) {
-      const pkg = JSON.parse(
-        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), { encoding: "utf8" })
-      );
-      if (pkg.solid && pkg.solid.type === "adapter") {
-        adapters.push(dir);
-      }
-    }
-  });
+// function detectAdapter() {
+//   let adapters = [];
+//   fs.readdirSync(nodeModulesPath).forEach(dir => {
+//     if (dir.startsWith("solid-start-")) {
+//       const pkg = JSON.parse(
+//         fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
+//           encoding: "utf8"
+//         })
+//       );
+//       if (pkg.solid && pkg.solid.type === "adapter") {
+//         adapters.push(dir);
+//       }
+//     }
+//   });
 
-  // Ignore the default adapter.
-  adapters = adapters.filter(adapter => adapter !== "solid-start-node");
+//   // Ignore the default adapter.
+//   adapters = adapters.filter(adapter => adapter !== "solid-start-node");
 
-  return adapters.length > 0 ? adapters[0] : "solid-start-node";
-}
+//   return adapters.length > 0 ? adapters[0] : "solid-start-node";
+// }
 
 const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts"]) => {
   for (var ext of exts) {
@@ -482,7 +692,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : detectAdapter(),
+      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
@@ -490,7 +700,9 @@ export default function solidStart(options) {
       islandsRouter: process.env.START_ISLANDS_ROUTER === "true" ? true : false,
       lazy: true,
       prerenderRoutes: [],
-      inspect: true
+      devServer: true,
+      inspect: true,
+      routesIgnore: []
     },
     options ?? {}
   );
@@ -509,34 +721,52 @@ export default function solidStart(options) {
       [])
   ];
 
-  options.router = new Router({
-    baseDir: path.posix.join(options.appRoot, options.routesDir),
-    pageExtensions: options.pageExtensions
-  });
+  const babelOptions =
+    fn =>
+    (...args) => {
+      const b =
+        typeof options.babel === "function"
+          ? options.babel(...args)
+          : options.babel ?? { plugins: [] };
+      const d = fn(...args);
+      return {
+        plugins: [...b.plugins, ...d.plugins]
+      };
+    };
 
   return [
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
-    islands(),
-    options.inspect ? inspect() : undefined,
+    options.islands ? islands() : undefined,
+    options.inspect ? inspect({ outputDir: join(".solid", "inspect"), build: true }) : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
+      // if we are building the SPA client for production, we set ssr to false
       ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
-      babel: (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
-        plugins: options.ssr
-          ? [
-              [
-                routeResource,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-              ],
-              [
-                babelServerModule,
-                { ssr, root: process.cwd(), minify: process.env.NODE_ENV === "production" }
-              ]
+      babel: babelOptions(
+        (/** @type {any} */ source, /** @type {any} */ id, /** @type {any} */ ssr) => ({
+          plugins: [
+            [fileRoutesImport],
+            [
+              routeResource,
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
+            ],
+            [
+              babelServerModule,
+              {
+                ssr,
+                root: process.cwd(),
+                minify: process.env.NODE_ENV === "production"
+              }
             ]
-          : []
-      })
+          ]
+        })
+      )
     }),
     solidStartServer(options),
     solidsStartRouteManifest(options)
@@ -565,38 +795,27 @@ function islands() {
      */
     transform(code, id, ssr) {
       if (code.includes("unstable_island")) {
-        let replaced = code.replace(
-          /const ([A-Za-z_]+) = island\(\(\) => import\("([^"]+)"\)\)/,
-          (a, b, c) =>
-            ssr
-              ? `import ${b}_island from "${c}"; 
+        let replaced = code.replaceAll(
+          /const ([A-Za-z_]+) = unstable_island\(\(\) => import\((("([^"]+)")|('([^']+)'))\)\)/g,
+          (a, b, c) => {
+            c = c.slice(1, -1);
+            return ssr
+              ? `import ${b}_island from "${c}";
                   const ${b} = unstable_island(${b}_island, "${
-                  join(dirname(id), c).slice(process.cwd().length + 1) + ".tsx" + "?island"
+                  join(dirname(id), c)
+                    .slice(process.cwd().length + 1)
+                    .replaceAll("\\", "/") +
+                  ".tsx" +
+                  "?island"
                 }");`
               : `const ${b} = unstable_island(() => import("${c}?island"), "${
-                  join(dirname(id), c) + ".tsx" + "?island"
-                }")`
+                  join(dirname(id), c).replaceAll("\\", "/") + ".tsx" + "?island"
+                }")`;
+          }
         );
 
         return replaced;
       }
     }
   };
-}
-
-/**
- * @param {import('vite').ViteDevServer['middlewares']} server
- */
-function remove_html_middlewares(server) {
-  const html_middlewares = [
-    "viteIndexHtmlMiddleware",
-    "vite404Middleware",
-    "viteSpaFallbackMiddleware"
-  ];
-  for (let i = server.stack.length - 1; i > 0; i--) {
-    // @ts-ignore
-    if (html_middlewares.includes(server.stack[i].handle.name)) {
-      server.stack.splice(i, 1);
-    }
-  }
 }

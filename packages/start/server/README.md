@@ -5,9 +5,9 @@ A server function can be used in any module in your app, be it route file, route
 This is how you would usually create a server function:
 
 ```tsx
-import server from "solid-start/server";
+import server$ from "solid-start/server";
 
-const serverFunction = server(async (name: string) => {
+const serverFunction = server$(async (name: string) => {
   // do some server-side stuff
   return {
     message: `Hello ${name}!`
@@ -21,17 +21,17 @@ const serverFunction = server(async (name: string) => {
   - If you return a javascript object, the server function will return that object.
 
   ```tsx
-  import server from "solid-start/server";
+  import server$ from "solid-start/server";
 
-  const serverFunction = server((name: string) => ({ message: `Hello ${name}` }));
+  const serverFunction = server$((name: string) => ({ message: `Hello ${name}` }));
 
   console.log(message); // "Hello da vinci"
   ```
 
 ```tsx
-import server from "solid-start/server";
+import server$ from "solid-start/server";
 
-const serverFunction = server(async (name: string) => {
+const serverFunction = server$(async (name: string) => {
   throw new Error(`Who is ${name}?`);
 });
 
@@ -43,9 +43,9 @@ try {
 ```
 
 ```tsx
-import server from "solid-start/server";
+import server$ from "solid-start/server";
 
-const serverFunction = server(async (name: string) => {
+const serverFunction = server$(async (name: string) => {
   return new Error(`Who is ${name}?`);
 });
 
@@ -54,9 +54,9 @@ console.log(e.message); // "Who is da vinci?"
 ```
 
 ```tsx
-import server from "solid-start/server";
+import server$ from "solid-start/server";
 
-const serverFunction = server(async (name: string) => {
+const serverFunction = server$(async (name: string) => {
   return new Response(`Hello ${name}`);
 });
 
@@ -72,9 +72,9 @@ console.log(await e.text()); // "Hello da vinci"
   - You can also throw a Response object with a specific status code and headers that will be used as the response status code
 
   ```tsx
-  import server from "solid-start/server";
+  import server$ from "solid-start/server";
 
-  const serverFunction = server(async (name: string) => {
+  const serverFunction = server$(async (name: string) => {
     throw new Response(`Hello ${name}`);
   });
 
@@ -97,10 +97,10 @@ It is designed to be used when this server side functionality is serving the UI 
 
 ```tsx file=src/routes/index.tsx
 import db from "~/db";
-import server from "solid-start/server";
+import server$ from "solid-start/server";
 
 export default function Index() {
-  const [data] = createResource(server(() => db.post.findMany()));
+  const [data] = createResource(server$(() => db.post.findMany()));
 
   return (
     <Show when={data()}>
@@ -120,10 +120,10 @@ We use compilation to make this possible.
 
 ```tsx file=src/routes/index.tsx
 import db from "~/db";
-import server from "solid-start/server";
+import server$ from "solid-start/server";
 
-const $serverFn0 = server.createHandler(() => db.post.findMany());
-server.registerHandler("/_m/src/routes/index.tsx/0", $serverFn0);
+const $serverFn0 = server$.createHandler(() => db.post.findMany());
+server$.registerHandler("/_m/src/routes/index.tsx/0", $serverFn0);
 
 export default function Index() {
   const [data] = createResource($serverFn0);
@@ -143,9 +143,9 @@ export default function Index() {
 ```
 
 ```tsx file=src/routes/index.tsx
-import server from "solid-start/server";
+import server$ from "solid-start/server";
 
-const $serverFn0 = server.createFetcher("/_m/src/routes/index.tsx/0");
+const $serverFn0 = server$.createFetcher("/_m/src/routes/index.tsx/0");
 
 export default function Index() {
   const [data] = createResource($serverFn0);

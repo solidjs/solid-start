@@ -7,12 +7,12 @@ import {
   Show
 } from "solid-js";
 
-export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any) => JSX.Element }>) {
+export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any, reset: () => void) => JSX.Element }>) {
   return (
     <ErrorBoundaryBase
-      fallback={e => {
+      fallback={(e, reset) => {
         return (
-          <Show when={!props.fallback} fallback={props.fallback(e)}>
+          <Show when={!props.fallback} fallback={props.fallback && props.fallback(e, reset)}>
             <ErrorMessage error={e} />
           </Show>
         );
@@ -23,10 +23,8 @@ export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any) => JSX.El
   );
 }
 
-function ErrorMessage(props: { error: any }) {
-  if (import.meta.env.DEV) {
-    createEffect(() => console.error(props.error));
-  }
+export function ErrorMessage(props: { error: any }) {
+  createEffect(() => console.error(props.error));
 
   return (
     <div style={{ padding: "16px" }}>

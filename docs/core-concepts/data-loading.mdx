@@ -1,0 +1,272 @@
+---
+section: core-concepts
+title: Data loading
+order: 10
+active: true
+---
+
+# Data loading
+
+What's a modern app without some data to power it. SolidStart aims to make it easy to load data from your data sources. It will help you keep your UI updated with your data. For most of your data requirements, you will likely be using the route to decide what data to load.
+
+The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts. This nested routing comes with other advantages too.
+
+It allows you to declare what data you need for each part of the route. This is done by exporting `routeData` functions from the nested routes. Each route, leaf or layout, comes with the ability to export its own `routeData` function that will be managed by the router. Yeah, the router is also the data manager.
+
+Solid has a [`createResource`][createResource] primitive that takes an async function and returns a [signal][signal] from it. It's a great starting place for your data needs. It integrates with [`Suspense`][Suspense] and [`ErrorBoundary`][ErrorBoundary] to help you manage your lifecycle. Let's take a look at how we can use this to load data from a third party API for our app.
+
+```tsx twoslash
+
+import { createResource } from "solid-js";
+
+export function routeData() {
+  const [students] = createResource(async () => {
+    const response = await fetch("https://hogwarts.deno.dev/students");
+    return await response.json();
+  });
+
+  return { students };
+}
+```
+
+Now your component can use the `useRouteData` function to access the data that is returned by `routeData`.
+
+```tsx twoslash filename="/routes/students.tsx"
+import { For, Accessor, createResource } from "solid-js";
+import { useRouteData } from "solid-start";
+
+type Student = { name: string; house: string; }
+
+export function routeData() {
+  const [students] = createResource(async () => {
+    const response = await fetch("https://hogwarts.deno.dev/students");
+    return await response.json() as Student[];
+  });
+
+  return { students };
+}
+
+export default function Page() {
+  const { students } = useRouteData<typeof routeData>();
+
+  return (
+    <ul>
+      <For each={students()}>
+        {(student) => <li>{student.name}</li>}
+      </For>
+    </ul>
+  );
+}
+```
+
+Caveats:
+
+1. The `routeData` function is only called once per route, the first time the user comes to that route. After that, the fine-grained resources that remain alive synchronize with state/url changes to refetch data when needed. If you need to refresh the data, you can use the `refetch` function that is returned by [`createResource`][createresource].
+2. The `routeData` function is called before the route is rendered. It doesn't share the same `context` as the route. The context tree that is exposed to the `routeData` function is anything above the `Routes` component.
+3. The component receives exactly what the `routeData` function returns when they call `useRouteData`. This means that you can return anything you want from the `routeData` function. There is no serialization happening in this relationship.
+4. The `routeData` function will be called both on the server and the client. It's the resources that can avoid refetching if they had serialized their data in the server render.
+5. The server-side render will only wait for the resources to fetch and serialize if the resource signals are accessed under a `Suspense` boundary. 
+
+Okay, enough with the rules. We thought `createResource` was too low level for most people's needs and did not use the knowledge the router has. So we created `createRouteData`. It's a resource creator that is aware of the router and the [actions][Actions] created on the page. It adds the concept of keys to the resource so that they can be granularly refetched using `refetchRouteData`.
+
+Here's the same example as above, but using `createRouteData`:
+
+```tsx twoslash filename="/routes/students.tsx"
+import { For, Accessor, createResource } from "solid-js";
+import { useRouteData, createRouteData } from "solid-start";
+
+type Student = { name: string; house: string; }
+
+export function routeData() {
+  return createRouteData(async () => {
+    const response = await fetch("https://hogwarts.deno.dev/students");
+    return await response.json() as Student[];
+  });
+}
+
+export default function Page() {
+  const students = useRouteData<typeof routeData>();
+
+  return (
+    <ul>
+      <For each={students()}>
+        {(student) => <li>{student.name}</li>}
+      </For>
+    </ul>
+  );
+}
+```
+
+### Data loading always on the server
+
+The primary advantage of being a full-stack Javascript framework is that its easy to write data loading code that can run both on the server and client. SolidStart gives them superpowers. You might want to write code that only runs on your server but didn't want to create an API route for it.
+
+It could be database access, or internal APIs, etc. It could sit within your functions where you need to use your server. We created `createServerData$` for this. It builds upon our other primitives like `createRouteData` and `server$` to give a generated RPC for your data.
+
+```tsx twoslash {8} filename="/routes/students.tsx"
+const hogwarts = { students: { list() { return [] as Student[] } } }
+// ---cut---
+import { For, Accessor, createResource } from "solid-js";
+import { useRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
+
+type Student = { name: string; house: string; }
+
+export function routeData() {
+  return createServerData$(() => hogwarts.students.list());
+}
+
+export default function Page() {
+  const students = useRouteData<typeof routeData>();
+
+  return (
+    <ul>
+      <For each={students()}>
+        {(student) => <li>{student.name}</li>}
+      </For>
+    </ul>
+  );
+}
+```
+
+### Multiple data sources inside a route
+
+You can have multiple data sources inside a route. You can even have multiple data sources for the same resource. This is useful when you have a route that needs to load data from multiple sources.
+
+For example, you might have a route that needs to load data from a database and a third party API. You can use `createServerData$` to load data from the database and `createRouteData` to load data from the third party API.
+
+```tsx twoslash filename="/routes/students.tsx"
+const hogwarts = { students: { list() { return [] } } }
+// ---cut---
+import { For, Accessor, createResource } from "solid-js";
+import { useRouteData, createRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
+
+type Student = { name: string; house: string; }
+
+export function routeData() {
+  const students = createRouteData(async () => {
+    const response = await fetch("https://durmstrang.edu/students");
+    return await response.json() as Student[];
+  });
+
+  const localStudents = createServerData$(() => hogwarts.students.list());
+
+  return { students, localStudents };
+}
+```
+
+### Understanding the lifecycle
+
+Let's try to understand when the `routeData` is called and why you should set up resources (or use our helpers) inside it.
+
+When rendering on the server, for each segment along the requested path, the routeData functions are called, parent-first. For example, for the following route structure:
+
+```sh
+├── routes
+│   ├── [house].tsx
+│   ├── [house]
+│   │   ├── index.tsx
+│   │   ├── students.tsx
+│   │   ├── students
+│   │   │   ├── index.tsx
+│   │   │   ├── year-[year].tsx
+│   │   └── staff.tsx
+```
+
+When you visit `/gryffindor/students`, the following `routeData` functions are called, in this order:
+
+1. `/routes/[house].tsx`
+2. `/routes/[house]/students.tsx`
+3. `/routes/[house]/students/index.tsx`
+
+You can imagine what the router is doing. _You don't have to write this code_. It's pseudo-code to help you understand what's going on.
+
+```tsx twoslash
+// @filename: routes/[house].tsx
+import { RouteDataArgs, Outlet } from "solid-start";
+import { ParentProps } from 'solid-js';
+
+export function routeData(args: RouteDataArgs) {
+  return {};
+}
+
+export default function HouseLayout(props: ParentProps) {
+  return <><Outlet /></>;
+}
+
+// @filename: routes/[house]/students.tsx
+import { RouteDataArgs, Outlet } from "solid-start";
+import { ParentProps } from 'solid-js';
+
+export function routeData(args: RouteDataArgs) {
+  return {};
+}
+
+export default function StudentsLayout(props: ParentProps) {
+  return <><Outlet /></>;
+}
+
+// @filename: routes/[house]/students/index.tsx
+import { RouteDataArgs } from "solid-start";
+
+export function routeData(args: RouteDataArgs) {
+  return {};
+}
+
+export default function Students() {
+  return <></>;
+}
+
+// @filename: index.tsx
+import { createContext } from 'solid-js';
+
+const RouteContext = createContext<{ data: any }>({ data: null });
+
+// ---cut---
+import { useLocation, useNavigate } from "solid-start";
+import { 
+  default as HouseLayout, 
+  routeData as getHouseLayoutData 
+} from './routes/[house]';
+import { 
+  default as StudentsLayout, 
+  routeData as getStudentsLayoutData 
+} from './routes/[house]/students';
+import { 
+  default as Students, 
+  routeData as getStudentsData 
+} from './routes/[house]/students/index';
+
+function Routes() {
+  const args = {
+    location: useLocation(),
+    navigate: useNavigate(),
+    params: { house: 'gryffindor' }
+  }
+
+  const houseLayoutData = getHouseLayoutData({ ...args, data: null });
+  const studentsLayoutData = getStudentsLayoutData({ ...args, data: houseLayoutData });
+  const studentsData = getStudentsLayoutData({ ...args, data: studentsLayoutData  });
+
+  return (
+    <RouteContext.Provider value={{ data: houseLayoutData }}>
+      <HouseLayout>
+        <RouteContext.Provider value={{ data: studentsLayoutData }}>
+          <StudentsLayout>
+            <RouteContext.Provider value={{ data: studentsData }}>
+              <Students />
+            </RouteContext.Provider>
+          </StudentsLayout>
+        </RouteContext.Provider>
+      </HouseLayout>
+    </RouteContext.Provider>
+  );
+}
+```
+
+[createResource]: https://www.solidjs.com/docs/latest/api#createresource
+[signal]: https://www.solidjs.com/docs/latest/api#createsignal
+[Suspense]: https://www.solidjs.com/docs/latest/api#suspense
+[ErrorBoundary]: https://www.solidjs.com/docs/latest/api#errorboundary
+[Actions]: /core-concepts/actions

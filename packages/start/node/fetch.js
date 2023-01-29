@@ -1,5 +1,8 @@
+import { once } from "events";
 import multipart from "parse-multipart-data";
-import { FormData, Headers, Request as BaseNodeRequest } from "undici";
+import { splitCookiesString } from "set-cookie-parser";
+import { Readable } from "stream";
+import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
 
 function nodeToWeb(nodeStream) {
   var destroyed = false;
@@ -73,8 +76,11 @@ class NodeRequest extends BaseNodeRequest {
   constructor(input, init) {
     if (init && init.data && init.data.on) {
       init = {
+        duplex: "half",
         ...init,
-        body: init.data.headers["content-type"].includes("x-www") ? init.data : nodeToWeb(init.data)
+        body: init.data.headers["content-type"]?.includes("x-www")
+          ? init.data
+          : nodeToWeb(init.data)
       };
     }
 
@@ -93,6 +99,7 @@ class NodeRequest extends BaseNodeRequest {
   //   return (await this.buffer()).toString();
   // }
 
+  // @ts-ignore
   async formData() {
     if (this.headers.get("content-type") === "application/x-www-form-urlencoded") {
       return await super.formData();
@@ -103,11 +110,30 @@ class NodeRequest extends BaseNodeRequest {
         this.headers.get("content-type").replace("multipart/form-data; boundary=", "")
       );
       const form = new FormData();
-      input.forEach(({ name, data }) => {
-        form.set(name, data);
+      input.forEach(({ name, data, filename, type }) => {
+        // file fields have Content-Type set,
+        // whereas non-file fields must not
+        // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#multipart-form-data
+        const isFile = type !== undefined;
+        if (isFile) {
+          const value = new File([data], filename, { type });
+          form.append(name, value, filename);
+        } else {
+          const value = data.toString("utf-8");
+          form.append(name, value);
+        }
       });
       return form;
     }
+  }
+
+  // @ts-ignore
+  clone() {
+    /** @type {BaseNodeRequest & { buffer?: () => Promise<Buffer>; formData?: () => Promise<FormData> }}  */
+    let el = super.clone();
+    el.buffer = this.buffer.bind(el);
+    el.formData = this.formData.bind(el);
+    return el;
   }
 }
 
@@ -124,3 +150,25 @@ export function createRequest(req) {
 
   return new NodeRequest(url.href, init);
 }
+
+export async function handleNodeResponse(webRes, res) {
+  res.statusCode = webRes.status;
+  res.statusMessage = webRes.statusText;
+
+  for (const [name, value] of webRes.headers) {
+    if (name === "set-cookie") {
+      res.setHeader(name, splitCookiesString(value));
+    } else res.setHeader(name, value);
+  }
+
+  if (webRes.body) {
+    const readable = Readable.from(webRes.body);
+    readable.pipe(res);
+    await once(readable, "end");
+  } else {
+    res.end();
+  }
+}
+
+export { splitCookiesString };
+

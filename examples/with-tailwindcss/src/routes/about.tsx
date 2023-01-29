@@ -1,4 +1,4 @@
-import { Link } from "@solidjs/router";
+import { A } from "solid-start";
 import Counter from "~/components/Counter";
 
 export default function About() {
@@ -8,15 +8,15 @@ export default function About() {
       <Counter />
       <p class="mt-8">
         Visit{" "}
-        <Link href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
+        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
           solidjs.com
-        </Link>{" "}
+        </a>{" "}
         to learn how to build Solid apps.
       </p>
       <p class="my-4">
-        <Link href="/" class="text-sky-600 hover:underline">
+        <A href="/" class="text-sky-600 hover:underline">
           Home
-        </Link>
+        </A>
         {" - "}
         <span>About Page</span>
       </p>

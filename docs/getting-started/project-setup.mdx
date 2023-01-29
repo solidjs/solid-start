@@ -1,0 +1,82 @@
+---
+title: Project setup
+section: getting-started
+order: 2
+active: true
+---
+
+# Project setup
+
+## Using a starter (recommended)
+
+To create your first SolidStart application, create a directory, change into that directory, and initialize `solid`.
+
+```bash
+# npm
+mkdir my-app && cd my-app
+npm init solid@latest
+# pnpm
+mkdir my-app && cd my-app
+pnpm create solid
+```
+
+You will get a list of templates from which to choose. You can view the code for each of these options in the [SolidStart repository](https://github.com/solidjs/solid-start/tree/main/examples).
+
+```bash
+? Which template do you want to use? › - Use arrow-keys. Return to submit.
+❯   bare
+    hackernews
+    with-auth
+    with-mdx
+    with-tailwindcss
+    with-vitest
+```
+
+Next, you'll be asked whether to use Server Side Rendering and TypeScript. Choose your desired options to continue.
+
+Now that the appropriate template has downloaded, you can install dependencies:
+
+```bash
+# npm
+npm install
+# pnpm
+pnpm install
+```
+
+Your app is now set up! You can run it locally by running
+
+```bash
+# npm
+npm run dev
+# pnpm
+pnpm dev
+```
+
+Your application should now be running locally on port 3000. You can view it by navigating to [http://localhost:3000](http://localhost:3000).
+
+## Project files
+
+When you look inside your new application directory, you should see a file structure similar to this:
+
+```
+node_modules/
+public/
+src/
+├── routes/
+│   ├── index.tsx
+├── entry-client.tsx
+├── entry-server.tsx
+├── root.tsx
+```
+
+**Note:** Your file extensions may vary slightly if you chose different configuration options in the previous step.
+
+To get our bearings, let's quickly review what each directory and file does in this structure:
+
+- **node_modules/** - the `node_modules` directory contains any third-party dependencies added to your project.
+- **public/** - the `public` directory contains publicly-available assets (images, styles, fonts, etc.) for your application. You can read more about using [static assets](/core-concepts/static-assets).
+- **src/** - the `src` directory is where most of your SolidStart application code will live. It's aliased to `~/` for importing in your code.
+- **src/routes/** - this is where your file routes/pages will be located. You should read more about [routing](/core-concepts/routing).
+- [**src/entry-client.tsx**](/api/entry-client) - the [`entry-client.tsx`](/api/entry-client) file is what loads and _hydrates_ the JavaScript for our application on the client side (in browser). In many cases, you won't need to modify this file.
+- [**src/entry-server.tsx**](/api/entry-server) - the [`entry-server.tsx`](/api/entry-server) handles requests on the server. In many cases, you won't need to modify this file.
+- [**root.tsx**](/api/root) - this is the HTML root of your application both for client and server rendering. You can think of this as the shell inside which your application will be rendered.

@@ -33,13 +33,34 @@ export type IslandManifest = {
   assets: ManifestEntry[];
 };
 
+declare global {
+  interface Env {
+    /**
+     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     */
+    manifest?: Record<string, ManifestEntry[] | IslandManifest>;
+    /**
+     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     */
+    getStaticHTML?(path: string): Promise<Response>;
+    /**
+     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     */
+    __dev?: {
+      /**
+       * @warning
+       */
+      collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
+      manifest?: [{ path: string; componentPath: string; id: string }];
+    };
+  }
+}
+
 export interface FetchEvent {
   request: Request;
-  env: {
-    manifest?: Record<string, ManifestEntry[] | IslandManifest>;
-    collectStyles?: (matches: string[]) => Promise<Record<string, string>>;
-    devManifest?: [{ path: string; componentPath: string; id: string }];
-  };
+  env: Env;
+  clientAddress: string;
+  locals: Record<string, unknown>;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {

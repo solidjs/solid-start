@@ -14,7 +14,7 @@ test.describe("spa rendering", () => {
       import solid from "solid-start/vite";
 
       export default defineConfig({
-        plugins: [solid({ ssr: false, adapter: process.env.ADAPTER })]
+        plugins: [solid({ ssr: false, adapter: process.env.START_ADAPTER })]
       });
     `,
     "src/routes/index.tsx": js`
@@ -34,8 +34,7 @@ test.describe("spa rendering", () => {
         files: {
           ...files,
           "src/root.tsx": js`
-            import { Links, Meta, FileRoutes, Scripts } from "solid-start/root";
-            import { Routes } from "@solidjs/router";
+            import { Meta, FileRoutes, Scripts, Routes } from "solid-start";
             import { Suspense } from "solid-js";
 
             export default function Root() {

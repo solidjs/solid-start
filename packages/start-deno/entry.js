@@ -5,7 +5,7 @@ import handler from "./handler";
 import { serve } from "https://deno.land/std@0.139.0/http/server.ts";
 
 serve(
-  async request => {
+  async (request, connInfo) => {
     const { pathname } = new URL(request.url);
     console.log(pathname);
 
@@ -16,17 +16,37 @@ serve(
 
     try {
       const file = await Deno.readFile(`./public${pathname}`);
+      const isAsset = pathname.startsWith("/assets/");
+
       // Respond to the request with the style.css file.
       return new Response(file, {
         headers: {
-          "content-type": lookup(pathname)
+          "content-type": lookup(pathname),
+          ...(isAsset
+            ? {
+                "cache-control": "public, immutable, max-age=31536000"
+              }
+            : {})
         }
       });
     } catch (e) {}
 
     return await handler({
       request: request,
-      env: { manifest }
+      clientAddress: connInfo?.remoteAddr?.hostname,
+      locals: {},
+      env: {
+        manifest,
+        getStaticHTML: async path => {
+          console.log(path);
+          let text = await Deno.readFile(`./public${path}.html`);
+          return new Response(text, {
+            headers: {
+              "content-type": "text/html"
+            }
+          });
+        }
+      }
     });
   },
   {

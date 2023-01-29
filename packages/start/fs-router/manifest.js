@@ -26,14 +26,23 @@ import { toPath } from "./path-utils.js";
 export default function prepareManifest(ssrManifest, assetManifest, config, islands = []) {
   const pageRegex = new RegExp(`\\.(${config.solidOptions.pageExtensions.join("|")})$`);
   const baseRoutes = posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir);
+  const basePath = typeof config.base === "string"
+    ? (config.base || "./").endsWith("/")
+      ? config.base
+      : config.base + "/"
+    : "/";
 
   let manifest = {};
 
-  function collect(src) {
+  let src;
+  function collect(_src) {
+    src = _src;
     let assets = collectAssets();
-    assets.addSrc(src);
+    assets.addSrc(_src);
 
-    return assets.getFiles();
+    let files = assets.getFiles();
+    src = null;
+    return files;
   }
 
   function collectAssets() {
@@ -44,16 +53,18 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       if (visitedFiles.has(file.file)) return;
       visitedFiles.add(file.file);
       files.push({
-        type: file.file.endsWith(".css") ? "style" : "script",
-        href: "/" + file.file
+        type: file.file.endsWith(".css") ? "style" : file.file.endsWith(".js") ? "script" : "asset",
+        href: basePath + file.file
       });
 
       file.imports?.forEach(imp => {
+        if (imp === src) return;
         visitFile(assetManifest[imp]);
       });
 
       file.dynamicImports?.forEach(imp => {
-        if (imp.endsWith("?island")) {
+        if (imp === src) return;
+        if (imp.endsWith("?island") && !src) {
           files.push({ type: "island", href: imp });
           let f = collect(imp);
           manifest[imp] = {
@@ -65,7 +76,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
       file.css?.forEach(css => {
         if (visitedFiles.has(css)) return;
-        files.push({ type: "style", href: "/" + css });
+        files.push({ type: "style", href: basePath + css });
         visitedFiles.add(css);
 
         // if (!visitedScripts.has(file.src)) {
@@ -76,7 +87,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         //       new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`)
         //     )
         //   ) {
-        //     entryClientScripts.push({ type: "style", href: "/" + css });
+        //     clientEntryScripts.push({ type: "style", href: basePath + css });
         //   }
         // }
       });
@@ -84,7 +95,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
     return {
       addAsset(val) {
-        let asset = Object.values(assetManifest).find(f => "/" + f.file === val);
+        let asset = Object.values(assetManifest).find(f => basePath + f.file === val);
         if (!asset) {
           return;
         }
@@ -127,13 +138,19 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     })
     .filter(Boolean);
 
-  let entryClient = Object.keys(ssrManifest).find(key =>
+  let clientEntry = Object.keys(ssrManifest).find(key =>
     key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
   );
-  const assets = collectAssets();
 
-  if (entryClient) {
-    assets.addSrc(entryClient);
+  const clientEntryAssets = collectAssets();
+  if (clientEntry) {
+    clientEntryAssets.addSrc(clientEntry);
+  }
+
+  let indexHtml = Object.keys(assetManifest).find(key => key.match(new RegExp(`index.html$`)));
+  const indexHtmlAssets = collectAssets();
+  if (indexHtml) {
+    indexHtmlAssets.addSrc(indexHtml);
   }
 
   return {
@@ -153,7 +170,8 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
           }
         ];
       }),
-      ["entry-client", assets.getFiles()]
+      ["entry-client", clientEntryAssets.getFiles()],
+      ["index.html", indexHtmlAssets.getFiles()]
     ])
   };
 }

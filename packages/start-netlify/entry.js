@@ -1,6 +1,7 @@
-import fetch, { Headers, Request, Response } from "node-fetch";
+import { splitCookiesString } from "solid-start/node/fetch.js";
+import "solid-start/node/globals.js";
 import manifest from "../../netlify/route-manifest.json";
-import handler from "./handler";
+import handle from "./handler";
 
 Response.redirect = function (url, status = 302) {
   let response = new Response(null, { status, headers: { Location: url }, counter: 1 });
@@ -8,24 +9,24 @@ Response.redirect = function (url, status = 302) {
   return response;
 };
 
-Object.assign(globalThis, {
-  Request,
-  Response,
-  Headers,
-  fetch
-});
-
-exports.handler = async function (event, context) {
+export const handler = async function (event, context) {
   console.log(`Received new request: ${event.path}`);
 
-  const webRes = await handler({
+  const webRes = await handle({
     request: createRequest(event),
+    clientAddress: event.headers["x-nf-client-connection-ip"],
+    locals: {},
     env: { manifest }
   });
   const headers = {};
   for (const [name, value] of webRes.headers) {
     headers[name] = [value];
   }
+  if (webRes.headers.has('set-cookie')) {
+		const header = /** @type {string} */ (webRes.headers.get('set-cookie'));
+		// @ts-expect-error
+		headers['set-cookie'] =  splitCookiesString(header);
+	}
 
   return {
     statusCode: webRes.status,

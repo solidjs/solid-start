@@ -1,8 +1,13 @@
 import manifest from "../../netlify/route-manifest.json";
 import handler from "./handler";
 
-export default request =>
-handler({
+export default (request, context) =>
+  handler({
     request,
-    env: { manifest }
+    clientAddress: request.headers.get('x-nf-client-connection-ip'),
+    locals: {},
+    env: {
+      manifest,
+      getStaticHTML: path => context.rewrite(new URL(`${path}.html`, request.url).href)
+    }
   });

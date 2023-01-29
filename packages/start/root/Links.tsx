@@ -1,29 +1,48 @@
 import { JSXElement, useContext } from "solid-js";
-import { Assets } from "solid-js/web";
+import { useAssets } from "solid-js/web";
 import { ServerContext } from "../server/ServerContext";
-import { ManifestEntry, PageEvent } from "../server/types";
-import { routeLayouts } from "./FileRoutes";
+import type { IslandManifest, ManifestEntry, PageEvent } from "../server/types";
+import { routeLayouts } from "./InlineStyles";
+
+type NotUndefined<T> = T extends undefined ? never : T;
+
+type RouterContext = NotUndefined<PageEvent["routerContext"]>
+
+function flattenIslands(match: ManifestEntry[], manifest: Record<string, ManifestEntry> | IslandManifest) {
+  let result = [...match];
+  match.forEach(m => {
+    if (m.type !== "island") return;
+    const islandManifest = manifest[m.href as keyof typeof manifest] as unknown as IslandManifest | undefined;
+    if (islandManifest) {
+      const res = flattenIslands((islandManifest as IslandManifest).assets, manifest);
+      result.push(...res);
+    }
+  });
+  return result;
+}
 
 function getAssetsFromManifest(
   manifest: PageEvent["env"]["manifest"],
-  routerContext: PageEvent["routerContext"]
+  routerContext: RouterContext
 ) {
-  const match = routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
+  let match = routerContext.matches ? routerContext.matches.reduce<ManifestEntry[]>((memo, m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
       const route = routeLayouts[fullPath];
       if (route) {
-        memo.push(...((manifest[route.id] || []) as ManifestEntry[]));
+        memo.push(...((manifest![route.id] || []) as ManifestEntry[]));
         const layoutsManifestEntries = route.layouts.flatMap(
-          manifestKey => (manifest[manifestKey] || []) as ManifestEntry[]
+          manifestKey => (manifest![manifestKey as keyof typeof manifest] || []) as ManifestEntry[]
         );
         memo.push(...layoutsManifestEntries);
       }
     }
     return memo;
-  }, []);
+  }, []) : [];
 
-  match.push(...((manifest["entry-client"] || []) as ManifestEntry[]));
+  match.push(...((manifest!["entry-client"] || []) as ManifestEntry[]));
+
+  match = manifest ? flattenIslands(match, manifest as any) : [];
 
   const links = match.reduce((r, src) => {
     r[src.href] =
@@ -42,14 +61,11 @@ function getAssetsFromManifest(
  * Links are used to load assets for the server rendered HTML
  * @returns {JSXElement}
  */
-export default function Links(): JSXElement {
+export default function Links() {
   const isDev = import.meta.env.MODE === "development";
   const context = useContext(ServerContext);
-  return (
-    <Assets>
-      {!isDev &&
-        import.meta.env.START_SSR &&
-        getAssetsFromManifest(context.env.manifest, context.routerContext)}
-    </Assets>
-  );
+  !isDev &&
+    import.meta.env.START_SSR &&
+    useAssets(() => getAssetsFromManifest(context!.env.manifest, context!.routerContext!));
+  return null;
 }

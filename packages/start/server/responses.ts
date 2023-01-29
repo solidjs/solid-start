@@ -52,13 +52,12 @@ export function redirect(url: string, init: number | ResponseInit = 302): Respon
     }
   }
 
+  let headers = new Headers(responseInit.headers);
+  headers.set(LocationHeader, url);
+
   const response = new Response(null, {
     ...responseInit,
-    headers: {
-      ...responseInit.headers,
-      [XSolidStartLocationHeader]: url,
-      [LocationHeader]: url
-    }
+    headers: headers
   });
 
   return response;
@@ -66,12 +65,12 @@ export function redirect(url: string, init: number | ResponseInit = 302): Respon
 
 export function eventStream(
   request: Request,
-  init: (send: (event: string, data: object) => void) => () => void
+  init: (send: (event: string, data: any) => void) => () => void
 ) {
   let stream = new ReadableStream({
     start(controller) {
       let encoder = new TextEncoder();
-      let send = (event: string, data: object) => {
+      let send = (event: string, data: any) => {
         controller.enqueue(encoder.encode("event: " + event + "\n"));
         controller.enqueue(encoder.encode("data: " + data + "\n" + "\n"));
       };
@@ -108,7 +107,7 @@ export function isResponse(value: any): value is Response {
 
 const redirectStatusCodes = new Set([204, 301, 302, 303, 307, 308]);
 
-export function isRedirectResponse(response: Response): boolean {
+export function isRedirectResponse(response: Response | any): response is Response {
   return response && response instanceof Response && redirectStatusCodes.has(response.status);
 }
 
@@ -145,7 +144,7 @@ export class ResponseError extends Error implements Response {
     return this.response();
   }
   get body(): ReadableStream<Uint8Array> {
-    return this.response().body;
+    return this.response().body!;
   }
   bodyUsed: boolean;
   async arrayBuffer(): Promise<ArrayBuffer> {

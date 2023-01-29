@@ -9,6 +9,7 @@ This is very experimental; the adapter API isn't at all fleshed out, and things 
 Pass the option `edge` to your adapter to have it deploy to edge functions instead of standard Netlify functions. Edge Functions have support for streaming as well.
 
 ```js
+import { defineConfig } from "vite";
 import solid from "solid-start/vite";
 import netlify from "solid-start-netlify";
 
@@ -28,4 +29,6 @@ Alternatively you can setup your netlify.toml to properly locate the built resou
   publish = "netlify/"
 ```
 
-From here you can run `npm run build` and then `netlify deploy --prod --build` to deploy.
+From here you can run `npm run build` and then `netlify deploy --prod` to deploy.
+
+**Important** When running edge functions they need to be built first so you can do so by running `netlify build` or adding `--build` to your deploy cli command.
