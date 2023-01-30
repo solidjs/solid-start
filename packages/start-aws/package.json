@@ -10,6 +10,9 @@
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/aws-lambda": "^8.10.110",
+    "aws-lambda": "^1.0.7",
+    "rollup-plugin-esbuild": "^5.0.0",
     "rollup": "^3.10.0",
     "terser": "^5.16.1"
   },
