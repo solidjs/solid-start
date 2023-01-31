@@ -6,7 +6,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import { nodeFileTrace } from "@vercel/nft";
 import { spawn } from "child_process";
 import { copyFileSync, mkdirSync, rmSync, writeFileSync } from "fs";
-import { dirname, join } from "path";
+import { dirname, join, relative } from "path";
 import process from "process";
 import { rollup } from "rollup";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -17,6 +17,9 @@ import { fileURLToPath, pathToFileURL } from "url";
  * @param {URL} options.outputDir
  * @param {URL} options.workingDir
  * @param {object} options.cache
+ *
+ * @returns {Promise<URL>}
+ * Implemtation based on astro vercel adapter https://github.com/withastro/astro/blob/474ecc7be625a0ff2e9bc145af948e75826de025/packages/integrations/vercel/src/lib/nft.ts#L7
  *
  */
 const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
@@ -38,7 +41,9 @@ const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
 
   for (const file of results) {
     // Create directories recursively
-    mkdirSync(dirname(fileURLToPath(new URL(file, outputDir))), { recursive: true });
+    mkdirSync(dirname(fileURLToPath(new URL(file, outputDir))), {
+      recursive: true
+    });
 
     // convert the none absolute path to absolute path
     const source = new URL(file, base);
@@ -48,6 +53,8 @@ const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
 
     copyFileSync(source, target);
   }
+
+  return base;
 };
 
 /***
@@ -124,25 +131,23 @@ export default function ({ edge, prerender } = {}) {
       );
       await bundle.close();
 
-      const renderConfig = edge
-        ? {
-            runtime: "edge",
-            entrypoint: fileURLToPath(renderFuncEntrypoint)
-          }
-        : {
-            runtime: "nodejs16.x",
-            handler: fileURLToPath(renderFuncEntrypoint),
-            launcherType: "Nodejs"
-          };
-
       const cache = Object.create(null);
-
-      await copyDependencies({
+      const renderBaseUrl = await copyDependencies({
         entry: renderFuncEntrypoint,
         outputDir: renderFuncDir,
         workingDir,
         cache
       });
+      const renderConfig = edge
+        ? {
+            runtime: "edge",
+            entrypoint: relative(fileURLToPath(renderBaseUrl), fileURLToPath(renderFuncEntrypoint))
+          }
+        : {
+            runtime: "nodejs16.x",
+            handler: relative(fileURLToPath(renderBaseUrl), fileURLToPath(renderFuncEntrypoint)),
+            launcherType: "Nodejs"
+          };
 
       writeFileSync(
         new URL("./.vc-config.json", renderFuncDir), // join(renderFuncDir, ".vc-config.json"
@@ -203,23 +208,22 @@ export default function ({ edge, prerender } = {}) {
         );
         await bundle.close();
 
-        const apiConfig = edge
-          ? {
-              runtime: "edge",
-              entrypoint: fileURLToPath(apiFuncEntrypoint)
-            }
-          : {
-              runtime: "nodejs16.x",
-              handler: fileURLToPath(apiFuncEntrypoint),
-              launcherType: "Nodejs"
-            };
-
-        await copyDependencies({
+        const apiBaseUrl = await copyDependencies({
           entry: apiFuncEntrypoint,
           outputDir: apiFuncDir,
           workingDir,
           cache
         });
+        const apiConfig = edge
+          ? {
+              runtime: "edge",
+              entrypoint: relative(fileURLToPath(apiBaseUrl), fileURLToPath(apiFuncEntrypoint))
+            }
+          : {
+              runtime: "nodejs16.x",
+              handler: relative(fileURLToPath(apiBaseUrl), fileURLToPath(apiFuncEntrypoint)),
+              launcherType: "Nodejs"
+            };
 
         writeFileSync(new URL("./.vc-config.json", apiFuncDir), JSON.stringify(apiConfig, null, 2)); // join(apiFuncDir, ".vc-config.json")
         rmSync(outputDir, { recursive: true, force: true });
