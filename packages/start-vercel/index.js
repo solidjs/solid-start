@@ -251,7 +251,7 @@ export default function ({ edge, prerender } = {}) {
         ]
       };
       writeFileSync(
-        new URL("./.vc-config.json", vercelOutputDir),
+        new URL("./config.json", vercelOutputDir),
         JSON.stringify(outputConfig, null, 2)
       ); //join(outputDir, "config.json")
 
