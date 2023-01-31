@@ -3,12 +3,43 @@
 import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import { nodeFileTrace } from "@vercel/nft";
 import { spawn } from "child_process";
-import { copyFileSync, writeFileSync } from "fs";
+import { copyFileSync, mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import process from "process";
 import { rollup } from "rollup";
 import { fileURLToPath, pathToFileURL } from "url";
+
+/***
+ * @param {object} options
+ * @param {URL} options.entry
+ * @param {URL} options.outputDir
+ * @param {URL} options.workingDir
+ * @param {object} options.cache
+ *
+ */
+const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
+  const { fileList, warnings } = await nodeFileTrace([fileURLToPath(entry)], { cache });
+  // TODO: handle warnings some of them can be ignored like .env or .md files
+
+  // remove self and package.json
+  const results = [...fileList].filter(
+    file => !entry.pathname.includes(file) && file !== "package.json" // TODO: handle user includes and excludes
+  );
+
+  for (const file of results) {
+    // Create directories recursively
+    mkdirSync(dirname(fileURLToPath(new URL(file, outputDir))), { recursive: true });
+
+    const source = new URL(file, workingDir);
+    const target = new URL(file, outputDir);
+
+    // TODO: handle symlinks
+
+    copyFileSync(source, target);
+  }
+};
 
 /***
  * @param {object} options
@@ -31,21 +62,21 @@ export default function ({ edge, prerender } = {}) {
           ? pathToFileURL(config.root + "/")
           : new URL(config.root, pathToFileURL(process.cwd() + "/"));
       const outputDir = new URL("./.vercel/output/", workingDir); // join(config.root, ".vercel/output");
-      const solidServerDir = new URL("./.solid/server/", workingDir); //  join(config.root, ".vercel/output");
+      const solidServerDir = new URL("./.solid/server/", workingDir); //  join(config.root, "./.solid/server/");
 
       // SSR Edge Function
       if (!config.solidOptions.ssr) {
         await builder.spaClient(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
-        await builder.server(fileURLToPath(solidServerDir));
+        await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       } else if (config.solidOptions.islands) {
         await builder.islandsClient(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
-        await builder.server(fileURLToPath(solidServerDir));
+        await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       } else {
         await builder.client(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       }
 
-      const entrypoint = new URL("./server.js", solidServerDir); //join(config.root, ".solid", "server", "server.js");
+      const entrypoint = new URL("./server.js", solidServerDir); // join(config.root, ".solid", "server", "server.js");
 
       let baseEntrypoint = "entry.js";
       if (edge) baseEntrypoint = "entry-edge.js";
@@ -66,16 +97,17 @@ export default function ({ edge, prerender } = {}) {
 
       const renderEntrypoint = "index.js";
       const renderFuncDir = new URL("./functions/render.func/", outputDir); // join(outputDir, "functions/render.func");
+      const renderFuncEntrypoint = new URL(`./${renderEntrypoint}`, renderFuncDir); // join(renderFuncDir, renderEntrypoint);
       await bundle.write(
         edge
           ? {
               format: "esm",
-              file: fileURLToPath(new URL(`./${renderEntrypoint}`, renderFuncDir)), // join(renderFuncDir, renderEntrypoint)
+              file: fileURLToPath(renderFuncEntrypoint), // join(renderFuncDir, renderEntrypoint)
               inlineDynamicImports: true
             }
           : {
               format: "cjs",
-              file: fileURLToPath(new URL(`./${renderEntrypoint}`, renderFuncDir)), // join(renderFuncDir, renderEntrypoint)
+              file: fileURLToPath(renderFuncEntrypoint), // join(renderFuncDir, renderEntrypoint)
               exports: "auto",
               inlineDynamicImports: true
             }
@@ -96,6 +128,15 @@ export default function ({ edge, prerender } = {}) {
         new URL("./.vc-config.json", renderFuncDir), // join(renderFuncDir, ".vc-config.json"
         JSON.stringify(renderConfig, null, 2)
       );
+
+      const cache = Object.create(null);
+
+      await copyDependencies({
+        entry: renderFuncEntrypoint,
+        outputDir: renderFuncDir,
+        workingDir,
+        cache
+      });
 
       // Generate API function
       const apiRoutes = config.solidOptions.router.getFlattenedApiRoutes();
@@ -134,16 +175,17 @@ export default function ({ edge, prerender } = {}) {
 
         const apiEntrypoint = "index.js";
         const apiFuncDir = new URL("./functions/api.func/", outputDir); // join(outputDir, "functions/api.func");
+        const apiFuncEntrypoint = new URL(`./${apiEntrypoint}`, apiFuncDir); // join(apiFuncDir, apiEntrypoint);
         await bundle.write(
           edge
             ? {
                 format: "esm",
-                file: fileURLToPath(new URL(`./${apiEntrypoint}`, apiFuncDir)), // join(apiFuncDir, apiEntrypoint)
+                file: fileURLToPath(apiFuncEntrypoint), // join(apiFuncDir, apiEntrypoint)
                 inlineDynamicImports: true
               }
             : {
                 format: "cjs",
-                file: fileURLToPath(new URL(`./${apiEntrypoint}`, apiFuncDir)), // join(apiFuncDir, apiEntrypoint)
+                file: fileURLToPath(apiFuncEntrypoint), // join(apiFuncDir, apiEntrypoint)
                 exports: "auto",
                 inlineDynamicImports: true
               }
@@ -160,6 +202,14 @@ export default function ({ edge, prerender } = {}) {
               handler: apiEntrypoint,
               launcherType: "Nodejs"
             };
+
+        await copyDependencies({
+          entry: apiFuncEntrypoint,
+          outputDir: apiFuncDir,
+          workingDir,
+          cache
+        });
+
         writeFileSync(new URL("./.vc-config.json", apiFuncDir), JSON.stringify(apiConfig, null, 2)); // join(apiFuncDir, ".vc-config.json")
       }
       // Routing Config
