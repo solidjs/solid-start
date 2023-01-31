@@ -5,7 +5,7 @@ import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { nodeFileTrace } from "@vercel/nft";
 import { spawn } from "child_process";
-import { copyFileSync, mkdirSync, writeFileSync } from "fs";
+import { copyFileSync, mkdirSync, rmSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import process from "process";
 import { rollup } from "rollup";
@@ -29,7 +29,6 @@ const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
     cache,
     processCwd: process.cwd(),
     base: fileURLToPath(base)
-    // base: fileURLToPath(new URL("/", import.meta.url))
   });
 
   // TODO: handle warnings some of them can be ignored like .env or .md files
@@ -135,10 +134,6 @@ export default function ({ edge, prerender } = {}) {
             handler: fileURLToPath(renderFuncEntrypoint),
             launcherType: "Nodejs"
           };
-      writeFileSync(
-        new URL("./.vc-config.json", renderFuncDir), // join(renderFuncDir, ".vc-config.json"
-        JSON.stringify(renderConfig, null, 2)
-      );
 
       const cache = Object.create(null);
 
@@ -148,6 +143,12 @@ export default function ({ edge, prerender } = {}) {
         workingDir,
         cache
       });
+
+      writeFileSync(
+        new URL("./.vc-config.json", renderFuncDir), // join(renderFuncDir, ".vc-config.json"
+        JSON.stringify(renderConfig, null, 2)
+      );
+      rmSync(outputDir, { recursive: true, force: true });
 
       // Generate API function
       const apiRoutes = config.solidOptions.router.getFlattenedApiRoutes();
@@ -221,6 +222,7 @@ export default function ({ edge, prerender } = {}) {
         });
 
         writeFileSync(new URL("./.vc-config.json", apiFuncDir), JSON.stringify(apiConfig, null, 2)); // join(apiFuncDir, ".vc-config.json")
+        rmSync(outputDir, { recursive: true, force: true });
       }
       // Routing Config
       const outputConfig = {
