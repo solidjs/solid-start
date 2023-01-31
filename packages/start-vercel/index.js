@@ -112,7 +112,7 @@ export default function ({ edge, prerender } = {}) {
         ]
       });
 
-      const renderFuncEntrypoint = new URL(`./index.js`, outputDir); // join(renderFuncDir, renderEntrypoint);
+      const renderFuncEntrypoint = new URL(`./index.${edge ? "mjs" : "cjs"}`, outputDir); // join(renderFuncDir, renderEntrypoint);
       const renderFuncDir = new URL("./functions/render.func/", vercelOutputDir); // join(outputDir, "functions/render.func");
       mkdirSync(renderFuncDir, { recursive: true });
       await bundle.write(
@@ -190,7 +190,7 @@ export default function ({ edge, prerender } = {}) {
           ]
         });
 
-        const apiFuncEntrypoint = new URL(`./index.js`, outputDir); // join(apiFuncDir, apiEntrypoint);
+        const apiFuncEntrypoint = new URL(`./index.${edge ? "mjs" : "cjs"}`, outputDir); // join(apiFuncDir, apiEntrypoint);
         const apiFuncDir = new URL("./functions/api.func/", vercelOutputDir); // join(outputDir, "functions/api.func");
         await bundle.write(
           edge
