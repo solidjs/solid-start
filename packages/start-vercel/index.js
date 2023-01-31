@@ -20,19 +20,29 @@ import { fileURLToPath, pathToFileURL } from "url";
  *
  */
 const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
-  const { fileList, warnings } = await nodeFileTrace([fileURLToPath(entry)], { cache });
+  let base = entry;
+  while (fileURLToPath(base) !== fileURLToPath(new URL("../", base))) {
+    base = new URL("../", base);
+  }
+
+  const { fileList, warnings, reasons } = await nodeFileTrace([fileURLToPath(entry)], {
+    cache,
+    processCwd: process.cwd(),
+    base: fileURLToPath(base)
+    // base: fileURLToPath(new URL("/", import.meta.url))
+  });
+
   // TODO: handle warnings some of them can be ignored like .env or .md files
 
-  // remove self and package.json
-  const results = [...fileList].filter(
-    file => !entry.pathname.includes(file) && file !== "package.json" // TODO: handle user includes and excludes
-  );
+  // TODO: handle user includes and excludes
+  const results = [...fileList];
 
   for (const file of results) {
     // Create directories recursively
     mkdirSync(dirname(fileURLToPath(new URL(file, outputDir))), { recursive: true });
 
-    const source = new URL(file, workingDir);
+    // convert the none absolute path to absolute path
+    const source = new URL(file, base);
     const target = new URL(file, outputDir);
 
     // TODO: handle symlinks
@@ -61,18 +71,19 @@ export default function ({ edge, prerender } = {}) {
         config.root === process.cwd()
           ? pathToFileURL(config.root + "/")
           : new URL(config.root, pathToFileURL(process.cwd() + "/"));
-      const outputDir = new URL("./.vercel/output/", workingDir); // join(config.root, ".vercel/output");
+      const vercelOutputDir = new URL("./.vercel/output/", workingDir); // join(config.root, ".vercel/output");
+      const outputDir = new URL("./dist/", workingDir); // join(config.root, ".vercel/output");
       const solidServerDir = new URL("./.solid/server/", workingDir); //  join(config.root, "./.solid/server/");
 
       // SSR Edge Function
       if (!config.solidOptions.ssr) {
-        await builder.spaClient(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
+        await builder.spaClient(fileURLToPath(new URL("./static/", vercelOutputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       } else if (config.solidOptions.islands) {
-        await builder.islandsClient(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
+        await builder.islandsClient(fileURLToPath(new URL("./static/", vercelOutputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       } else {
-        await builder.client(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
+        await builder.client(fileURLToPath(new URL("./static/", vercelOutputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       }
 
@@ -95,9 +106,9 @@ export default function ({ edge, prerender } = {}) {
         ]
       });
 
-      const renderEntrypoint = "index.js";
-      const renderFuncDir = new URL("./functions/render.func/", outputDir); // join(outputDir, "functions/render.func");
-      const renderFuncEntrypoint = new URL(`./${renderEntrypoint}`, renderFuncDir); // join(renderFuncDir, renderEntrypoint);
+      const renderFuncEntrypoint = new URL(`./index.js`, outputDir); // join(renderFuncDir, renderEntrypoint);
+      const renderFuncDir = new URL("./functions/render.func/", vercelOutputDir); // join(outputDir, "functions/render.func");
+      mkdirSync(renderFuncDir, { recursive: true });
       await bundle.write(
         edge
           ? {
@@ -117,11 +128,11 @@ export default function ({ edge, prerender } = {}) {
       const renderConfig = edge
         ? {
             runtime: "edge",
-            entrypoint: renderEntrypoint
+            entrypoint: fileURLToPath(renderFuncEntrypoint)
           }
         : {
             runtime: "nodejs16.x",
-            handler: renderEntrypoint,
+            handler: fileURLToPath(renderFuncEntrypoint),
             launcherType: "Nodejs"
           };
       writeFileSync(
@@ -173,9 +184,8 @@ export default function ({ edge, prerender } = {}) {
           ]
         });
 
-        const apiEntrypoint = "index.js";
-        const apiFuncDir = new URL("./functions/api.func/", outputDir); // join(outputDir, "functions/api.func");
-        const apiFuncEntrypoint = new URL(`./${apiEntrypoint}`, apiFuncDir); // join(apiFuncDir, apiEntrypoint);
+        const apiFuncEntrypoint = new URL(`./index.js`, outputDir); // join(apiFuncDir, apiEntrypoint);
+        const apiFuncDir = new URL("./functions/api.func/", vercelOutputDir); // join(outputDir, "functions/api.func");
         await bundle.write(
           edge
             ? {
@@ -195,11 +205,11 @@ export default function ({ edge, prerender } = {}) {
         const apiConfig = edge
           ? {
               runtime: "edge",
-              entrypoint: apiEntrypoint
+              entrypoint: fileURLToPath(apiFuncEntrypoint)
             }
           : {
               runtime: "nodejs16.x",
-              handler: apiEntrypoint,
+              handler: fileURLToPath(apiFuncEntrypoint),
               launcherType: "Nodejs"
             };
 
@@ -234,7 +244,10 @@ export default function ({ edge, prerender } = {}) {
           }
         ]
       };
-      writeFileSync(new URL("./.vc-config.json", outputDir), JSON.stringify(outputConfig, null, 2)); //join(outputDir, "config.json")
+      writeFileSync(
+        new URL("./.vc-config.json", vercelOutputDir),
+        JSON.stringify(outputConfig, null, 2)
+      ); //join(outputDir, "config.json")
 
       // prerender config
       if (prerender) {
@@ -245,7 +258,7 @@ export default function ({ edge, prerender } = {}) {
           allowQuery: ["path"]
         };
         writeFileSync(
-          new URL("./functions/render.prerender-config.json", outputDir), //join(outputDir, "functions/render.prerender-config.json")
+          new URL("./functions/render.prerender-config.json", vercelOutputDir), //join(outputDir, "functions/render.prerender-config.json")
           JSON.stringify(prerenderConfig, null, 2)
         );
       }
