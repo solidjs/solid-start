@@ -1,11 +1,14 @@
+// @ts-check
+
 import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { spawn } from "child_process";
 import { copyFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
+import process from "process";
 import { rollup } from "rollup";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 export default function ({ edge, prerender } = {}) {
   return {
@@ -18,22 +21,26 @@ export default function ({ edge, prerender } = {}) {
     async build(config, builder) {
       // Vercel Build Output API v3 (https://vercel.com/docs/build-output-api/v3)
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      const appRoot = config.solidOptions.appRoot;
-      const outputDir = join(config.root, ".vercel/output");
+      const workingDir =
+        config.root === process.cwd()
+          ? pathToFileURL(config.root + "/")
+          : new URL(config.root, pathToFileURL(process.cwd() + "/"));
+      const outputDir = new URL("./.vercel/output/", workingDir); // join(config.root, ".vercel/output");
+      const solidServerDir = new URL("./.solid/server/", workingDir); //  join(config.root, ".vercel/output");
 
       // SSR Edge Function
       if (!config.solidOptions.ssr) {
-        await builder.spaClient(join(outputDir, "static"));
-        await builder.server(join(config.root, ".solid", "server"));
+        await builder.spaClient(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
+        await builder.server(fileURLToPath(solidServerDir));
       } else if (config.solidOptions.islands) {
-        await builder.islandsClient(join(outputDir, "static"));
-        await builder.server(join(config.root, ".solid", "server"));
+        await builder.islandsClient(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
+        await builder.server(fileURLToPath(solidServerDir));
       } else {
-        await builder.client(join(outputDir, "static"));
-        await builder.server(join(config.root, ".solid", "server"));
+        await builder.client(fileURLToPath(new URL("./static/", outputDir))); // join(outputDir, "static")
+        await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       }
 
-      const entrypoint = join(config.root, ".solid", "server", "server.js");
+      const entrypoint = new URL("./server.js", solidServerDir); //join(config.root, ".solid", "server", "server.js");
 
       let baseEntrypoint = "entry.js";
       if (edge) baseEntrypoint = "entry-edge.js";
@@ -41,7 +48,7 @@ export default function ({ edge, prerender } = {}) {
       copyFileSync(join(__dirname, baseEntrypoint), entrypoint);
 
       const bundle = await rollup({
-        input: entrypoint,
+        input: fileURLToPath(entrypoint),
         plugins: [
           json(),
           nodeResolve({
@@ -53,17 +60,17 @@ export default function ({ edge, prerender } = {}) {
       });
 
       const renderEntrypoint = "index.js";
-      const renderFuncDir = join(outputDir, "functions/render.func");
+      const renderFuncDir = new URL("./functions/render.func/", outputDir); // join(outputDir, "functions/render.func");
       await bundle.write(
         edge
           ? {
               format: "esm",
-              file: join(renderFuncDir, renderEntrypoint),
+              file: fileURLToPath(new URL(`./${renderEntrypoint}`, renderFuncDir)), // join(renderFuncDir, renderEntrypoint)
               inlineDynamicImports: true
             }
           : {
               format: "cjs",
-              file: join(renderFuncDir, renderEntrypoint),
+              file: fileURLToPath(new URL(`./${renderEntrypoint}`, renderFuncDir)), // join(renderFuncDir, renderEntrypoint)
               exports: "auto",
               inlineDynamicImports: true
             }
@@ -80,24 +87,28 @@ export default function ({ edge, prerender } = {}) {
             handler: renderEntrypoint,
             launcherType: "Nodejs"
           };
-      writeFileSync(join(renderFuncDir, ".vc-config.json"), JSON.stringify(renderConfig, null, 2));
+      writeFileSync(
+        new URL("./.vc-config.json", renderFuncDir), // join(renderFuncDir, ".vc-config.json"
+        JSON.stringify(renderConfig, null, 2)
+      );
 
       // Generate API function
-      const apiRoutes = config.solidOptions.router.getFlattenedApiRoutes()
+      const apiRoutes = config.solidOptions.router.getFlattenedApiRoutes();
       const apiRoutesConfig = apiRoutes.map(route => {
-        return { 
-          src: route.path.split('/')
-            .map(path => 
-              path[0] === ':'
+        return {
+          src: route.path
+            .split("/")
+            .map(path =>
+              path[0] === ":"
                 ? `(?<${path.slice(1)}>[^/]+)`
-              : path[0] === '*'
-                ? `(?<${path.slice(1)}>.*)` 
-              : path
+                : path[0] === "*"
+                ? `(?<${path.slice(1)}>.*)`
+                : path
             )
-            .join('/'),
-          dest: "/api" 
-        }
-      })
+            .join("/"),
+          dest: "/api"
+        };
+      });
       if (apiRoutes.length > 0) {
         let baseEntrypoint = "entry.js";
         if (edge) baseEntrypoint = "entry-edge.js";
@@ -105,7 +116,7 @@ export default function ({ edge, prerender } = {}) {
 
         const bundle = await rollup({
           // Same as render
-          input: entrypoint,
+          input: fileURLToPath(entrypoint),
           plugins: [
             json(),
             nodeResolve({
@@ -117,17 +128,17 @@ export default function ({ edge, prerender } = {}) {
         });
 
         const apiEntrypoint = "index.js";
-        const apiFuncDir = join(outputDir, "functions/api.func");
+        const apiFuncDir = new URL("./functions/api.func/", outputDir); // join(outputDir, "functions/api.func");
         await bundle.write(
           edge
             ? {
                 format: "esm",
-                file: join(apiFuncDir, apiEntrypoint),
+                file: fileURLToPath(new URL(`./${apiEntrypoint}`, apiFuncDir)), // join(apiFuncDir, apiEntrypoint)
                 inlineDynamicImports: true
               }
             : {
                 format: "cjs",
-                file: join(apiFuncDir, apiEntrypoint),
+                file: fileURLToPath(new URL(`./${apiEntrypoint}`, apiFuncDir)), // join(apiFuncDir, apiEntrypoint)
                 exports: "auto",
                 inlineDynamicImports: true
               }
@@ -144,9 +155,8 @@ export default function ({ edge, prerender } = {}) {
               handler: apiEntrypoint,
               launcherType: "Nodejs"
             };
-        writeFileSync(join(apiFuncDir, ".vc-config.json"), JSON.stringify(apiConfig, null, 2));
+        writeFileSync(new URL("./.vc-config.json", apiFuncDir), JSON.stringify(apiConfig, null, 2)); // join(apiFuncDir, ".vc-config.json")
       }
-      
       // Routing Config
       const outputConfig = {
         version: 3,
@@ -163,20 +173,26 @@ export default function ({ edge, prerender } = {}) {
           // Invoke the API function for API routes
           ...apiRoutesConfig,
           // Invoke the SSR function if not a static asset
-          { src: prerender ? "/(?<path>.*)" : "/.*", dest: prerender ? "/render?path=$path" : "/render" }
+          {
+            src: prerender ? "/(?<path>.*)" : "/.*",
+            dest: prerender ? "/render?path=$path" : "/render"
+          }
         ]
       };
-      writeFileSync(join(outputDir, "config.json"), JSON.stringify(outputConfig, null, 2));
+      writeFileSync(new URL("./.vc-config.json", outputDir), JSON.stringify(outputConfig, null, 2)); //join(outputDir, "config.json")
 
       // prerender config
       if (prerender) {
         const prerenderConfig = {
-          "expiration": prerender?.expiration ?? false,
-          "group": 1,
-          "bypassToken": prerender?.bypassToken,
-          "allowQuery": ["path"]
+          expiration: prerender?.expiration ?? false,
+          group: 1,
+          bypassToken: prerender?.bypassToken,
+          allowQuery: ["path"]
         };
-        writeFileSync(join(outputDir, "functions/render.prerender-config.json"), JSON.stringify(prerenderConfig, null, 2));
+        writeFileSync(
+          new URL("./functions/render.prerender-config.json", outputDir), //join(outputDir, "functions/render.prerender-config.json")
+          JSON.stringify(prerenderConfig, null, 2)
+        );
       }
     }
   };
