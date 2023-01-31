@@ -34,7 +34,21 @@ const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
     base: fileURLToPath(base)
   });
 
-  // TODO: handle warnings some of them can be ignored like .env or .md files
+  for (const error of warnings) {
+    if (error.message.startsWith("Failed to resolve dependency")) {
+      const [, module, file] = /Cannot find module '(.+?)' loaded from (.+)/.exec(error.message);
+
+      if (fileURLToPath(entry) === file) {
+        console.warn(
+          `[solid-start-vercel] The module "${module}" couldn't be resolved. This may not be a problem, but it's worth checking.`
+        );
+      } else {
+        console.warn(
+          `[solid-start-vercel] The module "${module}" inside the file "${file}" couldn't be resolved. This may not be a problem, but it's worth checking.`
+        );
+      }
+    }
+  }
 
   // TODO: handle user includes and excludes
   const results = [...fileList];
