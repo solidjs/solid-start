@@ -10,6 +10,11 @@ import process from "process";
 import { rollup } from "rollup";
 import { fileURLToPath, pathToFileURL } from "url";
 
+/***
+ * @param {object} options
+ * @param {boolean} [options.edge]
+ * @param {object} [options.prerender]
+ */
 export default function ({ edge, prerender } = {}) {
   return {
     name: "vercel",
