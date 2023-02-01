@@ -119,6 +119,7 @@ prog
 
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
 
+    port || (port = config.server.port || 3000);
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     DEBUG(
