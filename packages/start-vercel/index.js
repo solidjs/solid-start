@@ -95,7 +95,6 @@ const copyDependencies = async ({ entry, outputDir, includes, excludes, workingD
       recursive: true
     });
 
-    // TODO: handle symlinks
     if (stats.isSymbolicLink()) {
       const realPath = realpathSync(source);
       const realdest = new URL(relative(fileURLToPath(base), realPath), outputDir);
