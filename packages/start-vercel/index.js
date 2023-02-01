@@ -5,7 +5,9 @@ import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { nodeFileTrace } from "@vercel/nft";
 import { spawn } from "child_process";
+import glob from "fast-glob";
 import { copyFileSync, mkdirSync, rmSync, writeFileSync } from "fs";
+import mm from "micromatch";
 import { dirname, join, relative } from "path";
 import process from "process";
 import { rollup } from "rollup";
@@ -16,13 +18,16 @@ import { fileURLToPath, pathToFileURL } from "url";
  * @param {URL} options.entry
  * @param {URL} options.outputDir
  * @param {URL} options.workingDir
+ * @param {string | string[] | undefined} options.includes
+ * @param {string | string[] | undefined} options.excludes
+ * @param {URL} options. workingDir
  * @param {object} options.cache
  *
  * @returns {Promise<URL>}
  * Implemtation based on astro vercel adapter https://github.com/withastro/astro/blob/474ecc7be625a0ff2e9bc145af948e75826de025/packages/integrations/vercel/src/lib/nft.ts#L7
  *
  */
-const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
+const copyDependencies = async ({ entry, outputDir, includes, excludes, workingDir, cache }) => {
   let base = entry;
   while (fileURLToPath(base) !== fileURLToPath(new URL("../", base))) {
     base = new URL("../", base);
@@ -30,7 +35,7 @@ const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
 
   const { fileList, warnings, reasons } = await nodeFileTrace([fileURLToPath(entry)], {
     cache,
-    processCwd: process.cwd(),
+    processCwd: fileURLToPath(workingDir),
     base: fileURLToPath(base)
   });
 
@@ -50,8 +55,21 @@ const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
     }
   }
 
-  // TODO: handle user includes and excludes
-  const results = [...fileList];
+  if (includes) {
+    const entries = glob
+      .sync(includes, { cwd: fileURLToPath(workingDir) })
+      .map(p => relative(fileURLToPath(base), fileURLToPath(new URL(p, workingDir))));
+    // dedup the entries from what nft finds
+    for (const entry of entries) {
+      fileList.add(entry);
+    }
+  }
+
+  let results = [...fileList];
+
+  if (excludes) {
+    results = mm.not(results, excludes, { dot: true });
+  }
 
   for (const file of results) {
     // Create directories recursively
@@ -75,8 +93,10 @@ const copyDependencies = async ({ entry, outputDir, workingDir, cache }) => {
  * @param {object} options
  * @param {boolean} [options.edge]
  * @param {object} [options.prerender]
+ * @param {string | string[]} [options.includes]
+ * @param {string | string[]} [options.excludes]
  */
-export default function ({ edge, prerender } = {}) {
+export default function ({ edge, prerender, includes, excludes } = {}) {
   return {
     name: "vercel",
     async start() {
@@ -149,6 +169,8 @@ export default function ({ edge, prerender } = {}) {
       const renderBaseUrl = await copyDependencies({
         entry: renderFuncEntrypoint,
         outputDir: renderFuncDir,
+        includes,
+        excludes,
         workingDir,
         cache
       });
@@ -225,6 +247,8 @@ export default function ({ edge, prerender } = {}) {
         const apiBaseUrl = await copyDependencies({
           entry: apiFuncEntrypoint,
           outputDir: apiFuncDir,
+          includes,
+          excludes,
           workingDir,
           cache
         });
