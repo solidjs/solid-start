@@ -6,7 +6,15 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import { nodeFileTrace } from "@vercel/nft";
 import { spawn } from "child_process";
 import glob from "fast-glob";
-import { copyFileSync, mkdirSync, rmSync, writeFileSync } from "fs";
+import {
+  copyFileSync,
+  lstatSync,
+  mkdirSync,
+  realpathSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync
+} from "fs";
 import mm from "micromatch";
 import { dirname, join, relative } from "path";
 import process from "process";
@@ -23,7 +31,7 @@ import { fileURLToPath, pathToFileURL } from "url";
  * @param {URL} options. workingDir
  * @param {object} options.cache
  *
- * @returns {Promise<URL>}
+ * @returns {Promise<URL>} returns the base directory used for the nft within the outputDir
  * Implemtation based on astro vercel adapter https://github.com/withastro/astro/blob/474ecc7be625a0ff2e9bc145af948e75826de025/packages/integrations/vercel/src/lib/nft.ts#L7
  *
  */
@@ -72,18 +80,29 @@ const copyDependencies = async ({ entry, outputDir, includes, excludes, workingD
   }
 
   for (const file of results) {
+    // convert the relative path to absolute path
+    const source = new URL(file, base);
+    const target = new URL(file, outputDir);
+    const stats = lstatSync(source);
+
     // Create directories recursively
-    mkdirSync(dirname(fileURLToPath(new URL(file, outputDir))), {
+    mkdirSync(dirname(fileURLToPath(target)), {
       recursive: true
     });
 
-    // convert the none absolute path to absolute path
-    const source = new URL(file, base);
-    const target = new URL(file, outputDir);
-
     // TODO: handle symlinks
+    if (stats.isSymbolicLink()) {
+      const realPath = realpathSync(source);
+      const realdest = new URL(relative(fileURLToPath(base), realPath), outputDir);
 
-    copyFileSync(source, target);
+      symlinkSync(
+        relative(dirname(fileURLToPath(target)), fileURLToPath(realdest)),
+        target,
+        "file"
+      );
+    } else {
+      copyFileSync(source, target);
+    }
   }
 
   return base;
