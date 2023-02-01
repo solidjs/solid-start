@@ -30,7 +30,7 @@ const data = createRouteData(getStudents);
 
 ### Fetching data from an API
 
-`createRouteData` is a primitive for managing async data fetching. It is a light wrapper over `createResource` that is a router away so it can handle data refetching. The simplest way to use it is to fetch data from an API.
+`createRouteData` is a primitive for managing async data fetching. It is a light wrapper over `createResource` that is router aware so it can handle data refetching. The simplest way to use it is to fetch data from an API.
 
 ```tsx twoslash
 import { createRouteData } from "solid-start";
