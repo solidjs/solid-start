@@ -21,6 +21,11 @@ import process from "process";
 import { rollup } from "rollup";
 import { fileURLToPath, pathToFileURL } from "url";
 
+const emptyDir = dir => {
+  rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
+};
+
 /***
  * @param {object} options
  * @param {URL} options.entry
@@ -133,6 +138,11 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
       const vercelOutputDir = new URL("./.vercel/output/", workingDir); // join(config.root, ".vercel/output");
       const outputDir = new URL("./dist/", workingDir); // join(config.root, ".vercel/output");
       const solidServerDir = new URL("./.solid/server/", workingDir); //  join(config.root, "./.solid/server/");
+
+      // start with fresh directories
+      emptyDir(vercelOutputDir);
+      emptyDir(outputDir);
+      emptyDir(solidServerDir);
 
       // SSR Edge Function
       if (!config.solidOptions.ssr) {
