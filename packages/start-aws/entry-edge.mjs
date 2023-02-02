@@ -1,10 +1,12 @@
-import "solid-start/node/globals";
+import "solid-start/node/globals.js";
 import manifest from "../../dist/client/route-manifest.json";
 import server from "./entry-server";
 
 export async function handler(event) {
   const response = await server({
     request: createRequest(event),
+    clientAddress: event.Records[0].cf.request.clientIp,
+    locals: {},
     env: { manifest },
   });
 

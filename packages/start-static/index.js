@@ -44,7 +44,7 @@ export default function () {
             preferBuiltins: true,
             exportConditions: ["node", "solid"]
           }),
-          common()
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ],
         external: ["undici", "stream/web", ...ssrExternal]
       });

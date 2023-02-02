@@ -90,7 +90,7 @@ export function createRouteAction<T, U = void>(
       }) as Promise<U>;
   }
   submit.url = (fn as any).url;
-  submit.Form = ((props: FormProps) => {
+  submit.Form = ((props: Omit<FormProps, "action" | "onSubmission">) => {
     let url = (fn as any).url;
     return (
       <FormImpl
@@ -254,7 +254,7 @@ function handleResponse(response: Response, navigate: Navigator, options?: { inv
     }
   }
 
-  if (isRedirectResponse(response)) return handleRefetch(response, options);
+  return handleRefetch(response, options);
 }
 
 function checkFlash<T>(fn: any) {

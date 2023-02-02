@@ -20,13 +20,13 @@ function transformRouteData({ types: t }) {
                 let imported = path.get("imported");
 
                 if (imported.isIdentifier()) {
-                  if (imported.get("name") === "createRouteData") {
+                  if (imported.node.name === "createRouteData") {
                     state.routeDataImported = true;
                   }
-                  if (imported.get("name") === "createRouteAction") {
+                  if (imported.node.name === "createRouteAction") {
                     state.routeActionImported = true;
                   }
-                  if (path.node.imported.name === "createRouteAction") {
+                  if (imported.node.name === "createRouteMultiAction") {
                     state.routeMultiActionImported = true;
                   }
                 }
@@ -47,6 +47,7 @@ function transformRouteData({ types: t }) {
                     t.callExpression(t.identifier("createRouteData"), callPath.node.arguments)
                   );
                   callState.resourceRequired = true;
+                  callPath.get("arguments")[0].setData("serverResource", true);
                 }
 
                 if (callPath.get("callee").isIdentifier({ name: "createServerAction$" })) {
@@ -57,6 +58,7 @@ function transformRouteData({ types: t }) {
                     t.callExpression(t.identifier("createRouteAction"), callPath.node.arguments)
                   );
                   callState.actionRequired = true;
+                  callPath.get("arguments")[0].setData("serverResource", true);
                 }
 
                 if (callPath.get("callee").isIdentifier({ name: "createServerMultiAction$" })) {
@@ -70,6 +72,7 @@ function transformRouteData({ types: t }) {
                     )
                   );
                   callState.actionRequired = true;
+                  callPath.get("arguments")[0].setData("serverResource", true);
                 }
               }
             },

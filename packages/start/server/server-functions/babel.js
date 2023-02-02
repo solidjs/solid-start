@@ -115,6 +115,7 @@ function transformServer({ types: t, template }) {
                     p =>
                       p.isVariableDeclarator() || p.isFunctionDeclaration() || p.isObjectProperty()
                   );
+                  const serverResource = path.getData("serverResource") ?? false;
                   let serverIndex = state.servers++;
                   let hasher = state.opts.minify ? hashFn : str => str;
                   const fName = state.filename.replace(state.opts.root, "").slice(1);
@@ -175,7 +176,7 @@ function transformServer({ types: t, template }) {
                   if (state.opts.ssr) {
                     statement.insertBefore(
                       template(`
-                      const $$server_module${serverIndex} = server$.createHandler(%%source%%, "${route}");
+                      const $$server_module${serverIndex} = server$.createHandler(%%source%%, "${route}", ${serverResource});
                       server$.registerHandler("${route}", $$server_module${serverIndex});
                       `)({
                         source: serverFn.node
@@ -187,10 +188,10 @@ function transformServer({ types: t, template }) {
                         `
                         ${
                           process.env.TEST_ENV === "client"
-                            ? `server$.registerHandler("${route}", server$.createHandler(%%source%%, "${route}"));`
+                            ? `server$.registerHandler("${route}", server$.createHandler(%%source%%, "${route}", ${serverResource}));`
                             : ``
                         }
-                        const $$server_module${serverIndex} = server$.createFetcher("${route}");`,
+                        const $$server_module${serverIndex} = server$.createFetcher("${route}", ${serverResource});`,
                         {
                           syntacticPlaceholders: true
                         }

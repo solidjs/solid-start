@@ -74,6 +74,8 @@ export default {
     }
     return handler({
       request: request,
+      clientAddress: request.headers.get('cf-connecting-ip'),
+      locals: {},
       env
     });
   }

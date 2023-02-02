@@ -1,6 +1,5 @@
 /// <reference path="./plugin.d.ts" />
 
-import inspect from "@vinxi/vite-plugin-inspect";
 import debug from "debug";
 import dotenv from "dotenv";
 import { solidPlugin } from "esbuild-plugin-solid";
@@ -9,6 +8,7 @@ import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
 import { loadEnv, normalizePath } from "vite";
+import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
 import fileRoutesImport from "../fs-router/fileRoutesImport.js";
@@ -25,13 +25,13 @@ let _dirname = dirname(fileURLToPath(import.meta.url));
 // const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
 
 /**
- * @returns {import('node_modules/vite').PluginOption}
+ * @returns {import('vite').PluginOption}
  * @param {any} options
  */
 function solidStartInlineServerModules(options) {
   let lazy;
   let config;
-  /** @type {import('node_modules/vite').Plugin} */
+  /** @type {import('vite').Plugin} */
   return {
     enforce: "pre",
     configResolved(_config) {
@@ -43,9 +43,11 @@ function solidStartInlineServerModules(options) {
       vite.httpServer.once("listening", async () => {
         const label = `  > Server modules: `;
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0];
-          // eslint-disable-next-line no-console
-          console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
+          if (vite.resolvedUrls) {
+            const url = vite.resolvedUrls.local[0];
+            // eslint-disable-next-line no-console
+            console.log(`${label}\n   ${c.magenta(`${url}_m/*`)}\n`);
+          }
         }, 200);
       });
     }
@@ -75,7 +77,7 @@ function toArray(arr) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; babel?: any }} options
  */
 function solidStartFileSystemRouter(options) {
@@ -156,9 +158,11 @@ function solidStartFileSystemRouter(options) {
       router.listener = listener;
       vite.httpServer.once("listening", async () => {
         setTimeout(() => {
-          const url = vite.resolvedUrls.local[0];
-          // eslint-disable-next-line no-console
-          printUrls(router, url.substring(0, url.length - 1));
+          if (vite.resolvedUrls) {
+            const url = vite.resolvedUrls.local[0];
+            // eslint-disable-next-line no-console
+            printUrls(router, url.substring(0, url.length - 1));
+          }
         }, 100);
       });
     },
@@ -192,7 +196,7 @@ function solidStartFileSystemRouter(options) {
         });
 
         // @ts-ignore
-        plugin.transform(code, id, transformOptions);
+        return plugin.transform(code, id, transformOptions);
       };
 
       let ssr = process.env.TEST_ENV === "client" ? false : isSsr;
@@ -319,7 +323,6 @@ function solidStartFileSystemRouter(options) {
           })
         );
       } else if (code.includes("solid-start/server")) {
-        console.log(id);
         return babelSolidCompiler(
           code,
           id.replace(/\.ts$/, ".tsx").replace(/\.js$/, ".jsx"),
@@ -378,7 +381,7 @@ function solidStartFileSystemRouter(options) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {{ pageExtensions: any[]; }} options
  */
 function solidsStartRouteManifest(options) {
@@ -408,7 +411,7 @@ async function resolveAdapter(config) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {any} options
  */
 function solidStartServer(options) {
@@ -447,25 +450,26 @@ function solidStartServer(options) {
 // credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js
 function loadServerEnv(envConfig, rootDir = process.cwd()) {
   const env = Object.create(null);
-
-  // Read dotenv
-  if (envConfig.dotenv) {
-    envConfig.dotenv = path.resolve(rootDir, envConfig.dotenv);
+  if (!envConfig.dotenv) return env;
+  const t = [...envConfig.dotenv];
+  for (const denv of t) {
+    // Read dotenv
+    envConfig.dotenv = path.resolve(rootDir, denv);
     if (fs.existsSync(envConfig.dotenv)) {
       const parsed = dotenv.parse(fs.readFileSync(envConfig.dotenv, "utf-8"));
       Object.assign(env, parsed);
     }
-  }
 
-  // Apply process.env
-  if (!envConfig.env._applied) {
-    Object.assign(env, envConfig.env);
-    envConfig.env._applied = true;
-  }
+    // Apply process.env
+    if (!envConfig.env._applied) {
+      Object.assign(env, envConfig.env);
+      envConfig.env._applied = true;
+    }
 
-  // Interpolate env
-  if (envConfig.expand) {
-    expand(env);
+    // Interpolate env
+    if (envConfig.expand) {
+      expand(env);
+    }
   }
 
   return env;
@@ -524,7 +528,7 @@ function expand(target, source = {}, parse = v => v) {
 }
 
 /**
- * @returns {import('node_modules/vite').Plugin}
+ * @returns {import('vite').Plugin}
  * @param {any} options
  */
 function solidStartConfig(options) {
@@ -538,7 +542,12 @@ function solidStartConfig(options) {
       // Load env file based on `mode` in the current working directory.
       // credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js for the server env
       const envConfig = {
-        dotenv: ".env",
+        dotenv: [
+          /** default file */ `.env`,
+          /** local file */ `.env.local`,
+          /** mode file */ `.env.${e.mode}`,
+          /** mode local file */ `.env.${e.mode}.local`
+        ],
         env: process.env,
         expand: true,
         ...(options?.envConfig ?? {})
@@ -644,28 +653,28 @@ function find(locate, cwd) {
   return find(locate, path.join(cwd, ".."));
 }
 
-const nodeModulesPath = find("node_modules", process.cwd());
+// const nodeModulesPath = find("node_modules", process.cwd());
 
-function detectAdapter() {
-  let adapters = [];
-  fs.readdirSync(nodeModulesPath).forEach(dir => {
-    if (dir.startsWith("solid-start-")) {
-      const pkg = JSON.parse(
-        fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
-          encoding: "utf8"
-        })
-      );
-      if (pkg.solid && pkg.solid.type === "adapter") {
-        adapters.push(dir);
-      }
-    }
-  });
+// function detectAdapter() {
+//   let adapters = [];
+//   fs.readdirSync(nodeModulesPath).forEach(dir => {
+//     if (dir.startsWith("solid-start-")) {
+//       const pkg = JSON.parse(
+//         fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
+//           encoding: "utf8"
+//         })
+//       );
+//       if (pkg.solid && pkg.solid.type === "adapter") {
+//         adapters.push(dir);
+//       }
+//     }
+//   });
 
-  // Ignore the default adapter.
-  adapters = adapters.filter(adapter => adapter !== "solid-start-node");
+//   // Ignore the default adapter.
+//   adapters = adapters.filter(adapter => adapter !== "solid-start-node");
 
-  return adapters.length > 0 ? adapters[0] : "solid-start-node";
-}
+//   return adapters.length > 0 ? adapters[0] : "solid-start-node";
+// }
 
 const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts"]) => {
   for (var ext of exts) {
@@ -678,12 +687,12 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 };
 
 /**
- * @returns {import('node_modules/vite').PluginOption[]}
+ * @returns {import('vite').PluginOption[]}
  */
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : detectAdapter(),
+      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,
@@ -729,7 +738,7 @@ export default function solidStart(options) {
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
     options.islands ? islands() : undefined,
-    options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
+    options.inspect ? inspect({ outputDir: join(".solid", "inspect"), build: true }) : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),

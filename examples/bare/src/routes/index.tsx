@@ -2,7 +2,6 @@ import { Title } from "solid-start";
 import Counter from "~/components/Counter";
 
 export default function Home() {
-  console.log("client", import.meta.env.VITE_TEST); // equals 1
   return (
     <main>
       <Title>Hello World</Title>

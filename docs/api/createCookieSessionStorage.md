@@ -26,6 +26,11 @@ const storage = createCookieSessionStorage();
 
 ```twoslash include cookie
 // @module: esnext
+const process = { env: {
+  NODE_ENV: "",
+  SESSION_SECRET: ""
+}}
+// ---cut---
 import { createCookieSessionStorage } from 'solid-start';
 
 const storage = createCookieSessionStorage({
@@ -43,13 +48,13 @@ const storage = createCookieSessionStorage({
 
 ### Creating a `SessionStorage`
 
-```tsx
+```tsx twoslash
 // @include: cookie
 ```
 
 ### Reading the session data of the current request
 
-```tsx
+```tsx twoslash {6}
 // @include: cookie
 // ---cut---
 async function getUserId(request: Request) {
@@ -62,7 +67,7 @@ async function getUserId(request: Request) {
 
 ### Writing the session data for the current request
 
-```tsx
+```tsx twoslash {5,8}
 // @include: cookie
 // ---cut---
 async function login(request: Request, userId: string) {
@@ -78,7 +83,7 @@ async function login(request: Request, userId: string) {
 
 ### Deleting the session data for the current request
 
-```tsx
+```tsx twoslash {10}
 // @include: cookie
 // ---cut---
 import { redirect } from "solid-start";
@@ -96,7 +101,7 @@ async function logout(request: Request) {
 
 ### Creating a new session
 
-```tsx
+```tsx twoslash {2,6}
 // @include: cookie
 // ---cut---
 async function signUp(request: Request, userId: string) {

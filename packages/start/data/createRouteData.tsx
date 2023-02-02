@@ -5,8 +5,7 @@ import type {
 import {
   createResource,
   onCleanup,
-  startTransition,
-  useContext
+  startTransition, untrack, useContext
 } from "solid-js";
 import type { ReconcileOptions } from "solid-js/store";
 import { createStore, reconcile, unwrap } from "solid-js/store";
@@ -75,6 +74,8 @@ export function createRouteData<T, S>(
         event = Object.freeze({
           request: pageEvent.request,
           env: pageEvent.env,
+          clientAddress: pageEvent.clientAddress,
+          locals: pageEvent.locals,
           $type: FETCH_EVENT,
           fetch: pageEvent.fetch
         });
@@ -102,7 +103,7 @@ export function createRouteData<T, S>(
     }
   };
 
-  function dedup(fetcher: ResourceFetcher<S, T>): ResourceFetcher<S, T> {
+  function dedupe(fetcher: ResourceFetcher<S, T>): ResourceFetcher<S, T> {
     return (key: S, info: ResourceFetcherInfo<T>) => {
       if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching) && info.value) {
         return info.value;
@@ -114,14 +115,13 @@ export function createRouteData<T, S>(
       if (promise) return promise;
       promise = fetcher(key, info) as Promise<T>;
       promises.set(key, promise);
-      promise.finally(() => promises.delete(key));
-      return promise;
+      return promise.finally(() => promises.delete(key));
     };
   }
 
   const [resource, { refetch }] = createResource<T, S>(
     (options.key || true) as RouteDataSource<S>,
-    dedup(resourceFetcher),
+    dedupe(resourceFetcher),
     {
       storage: (init: T | undefined) => createDeepSignal(init, options.reconcileOptions),
       ...options
@@ -147,7 +147,7 @@ function createDeepSignal<T>(value: T, options?: ReconcileOptions) {
   return [
     () => store.value,
     (v: T) => {
-      const unwrapped = unwrap(store.value);
+      const unwrapped = untrack(() => unwrap(store.value));
       typeof v === "function" && (v = v(unwrapped));
       setStore("value", reconcile(v, options));
       return store.value;

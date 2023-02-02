@@ -35,6 +35,8 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
 
       let serverFunctionEvent = Object.freeze({
         request: event.request,
+        clientAddress: event.clientAddress,
+        locals: event.locals,
         fetch: internalFetch,
         $type: FETCH_EVENT,
         env: event.env

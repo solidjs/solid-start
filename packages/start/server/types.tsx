@@ -59,6 +59,8 @@ declare global {
 export interface FetchEvent {
   request: Request;
   env: Env;
+  clientAddress: string;
+  locals: Record<string, unknown>;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {

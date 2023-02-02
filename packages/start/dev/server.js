@@ -1,8 +1,7 @@
 import debug from "debug";
-import { once } from "events";
 import path from "path";
-import { Readable } from "stream";
-import { createRequest } from "../node/fetch.js";
+
+import { createRequest, handleNodeResponse } from "../node/fetch.js";
 import "../node/globals.js";
 
 // @ts-ignore
@@ -23,7 +22,9 @@ process.on(
         ? err.message.includes("renderToString timed out")
         : false)
     ) {
-      console.error(`An unhandled error occured: ${typeof err === 'string' ? err : (err.stack || err)}`);
+      console.error(
+        `An unhandled error occured: ${typeof err === "string" ? err : err.stack || err}`
+      );
     }
   }
 );
@@ -39,11 +40,13 @@ export function createDevHandler(viteServer, config, options) {
   /**
    * @returns {Promise<Response>}
    */
-  async function devFetch(request, env) {
+  async function devFetch({ request, env, clientAddress, locals }) {
     const entry = (await viteServer.ssrLoadModule("~start/entry-server")).default;
 
     return await entry({
       request,
+      clientAddress,
+      locals,
       env: {
         ...env,
         __dev: {
@@ -109,22 +112,13 @@ export function createDevHandler(viteServer, config, options) {
     try {
       const url = viteServer.resolvedUrls.local[0];
       console.log(req.method, new URL(req.url, url).href);
-      let webRes = await devFetch(createRequest(req), localEnv);
-      res.statusCode = webRes.status;
-      res.statusMessage = webRes.statusText;
-
-      for (const [name, value] of webRes.headers) {
-        res.setHeader(name, value);
-      }
-
-      if (webRes.body) {
-        // @ts-ignore
-        const readable = Readable.from(webRes.body);
-        readable.pipe(res);
-        await once(readable, "end");
-      } else {
-        res.end();
-      }
+      let webRes = await devFetch({
+        request: createRequest(req),
+        env: localEnv,
+        clientAddress: req.socket.remoteAddress,
+        locals: {}
+      });
+      handleNodeResponse(webRes, res);
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
       res.statusCode = 500;

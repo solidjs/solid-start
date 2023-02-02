@@ -80,7 +80,16 @@ async function main() {
 
   let args = yargsParser(process.argv.slice(2));
 
-  const target = process.argv[2] || ".";
+  const target =
+    process.argv[2] ||
+    (
+      await prompts({
+        type: "text",
+        name: "value",
+        message: "Where do you want to create the app?",
+        initial: "my-app"
+      })
+    ).value;
 
   let config = {
     directory: args.example_dir ? args.example_dir : "examples",
@@ -145,7 +154,7 @@ async function main() {
       type: "confirm",
       name: "value",
       message: "Use TypeScript?",
-      initial: false
+      initial: true
     })
   ).value;
 
@@ -269,6 +278,9 @@ async function main() {
   ); // TODO ^${versions[name]}
 
   if (!ts_response) {
+    delete pkg_json.devDependencies["@types/babel__core"];
+    delete pkg_json.devDependencies["@types/node"];
+    delete pkg_json.devDependencies["@types/debug"];
     delete pkg_json.devDependencies["typescript"];
   }
 

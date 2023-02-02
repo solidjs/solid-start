@@ -83,8 +83,10 @@ Component that wraps our application root. It includes Context providers for Rou
 
 #### PageEvent
 
-- `request (Request)`: The current request.
-- `responseHeaders (Headers)`: The headers being built for the response.
+- `request: Request`: The current request.
+- `responseHeaders: Headers`: The headers being built for the response.
+- `clientAddress: string`: The IP address of the remote client.
+- `locals: Record<string, unknown>`: An object for storing local data that lives the life of the request, like user or authentication data.
 - `setStatusCode(code: number)`: Sets the status code.
 - `getStatusCode()`: Returns the current status code.
 - `fetch(url: string, init: RequestInit)`: Fetch API that can call API helpers directly on the server.

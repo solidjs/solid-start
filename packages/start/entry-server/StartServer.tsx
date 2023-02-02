@@ -2,9 +2,11 @@ import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
 import { Component, ComponentProps, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
+
 import { apiRoutes } from "../api/middleware";
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
 import { inlineServerFunctions } from "../server/middleware";
+
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
 import DevRoot from "./DevRoot";
@@ -38,7 +40,7 @@ export const composeMiddleware =
     );
 
 export function createHandler(...exchanges: Middleware[]) {
-  const exchange = composeMiddleware([apiRoutes, inlineServerFunctions, ...exchanges]);
+  const exchange = composeMiddleware(exchanges);
   return async (event: FetchEvent) => {
     return await exchange({
       forward: async op => {

@@ -92,7 +92,12 @@ export default function (miniflareOptions = {}) {
             }
 
             try {
-              return await dev.fetch(req, e);
+              return await dev.fetch({
+                request: req,
+                env: e,
+                clientAddress: req.headers.get("cf-connecting-ip"),
+                locals: {}
+              });
             } catch (e) {
               console.log("error", e);
               return new Response(e.toString(), { status: 500 });
@@ -160,7 +165,7 @@ export default function (miniflareOptions = {}) {
             preferBuiltins: true,
             exportConditions: ["worker", "solid"]
           }),
-          common()
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       // or write the bundle to disk

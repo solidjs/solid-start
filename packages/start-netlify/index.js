@@ -44,7 +44,7 @@ export default function ({ edge } = {}) {
             preferBuiltins: true,
             exportConditions: edge ? ["deno", "solid"] : ["node", "solid"]
           }),
-          common()
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       // or write the bundle to disk

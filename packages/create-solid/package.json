@@ -1,6 +1,6 @@
 {
   "name": "create-solid",
-  "version": "0.2.8",
+  "version": "0.2.18",
   "description": "Create Solid apps with low configuration",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -9,14 +9,14 @@
     "build": "rollup -c"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.6",
+    "@babel/core": "^7.20.12",
     "@babel/plugin-syntax-jsx": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "degit": "^2.8.4",
     "gitignore-parser": "^0.0.2",
     "kleur": "^4.1.5",
-    "node-fetch": "^3.2.10",
-    "prettier": "^2.7.1",
+    "node-fetch": "^3.3.0",
+    "prettier": "^2.8.3",
     "prompts": "^2.4.2",
     "tiny-glob": "^0.2.9",
     "yargs-parser": "^21.1.1"

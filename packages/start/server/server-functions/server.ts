@@ -4,14 +4,14 @@ import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
 import {
   ContentTypeHeader,
-  isRedirectResponse,
   JSONResponseType,
   LocationHeader,
   ResponseError,
   XSolidStartContentTypeHeader,
   XSolidStartLocationHeader,
   XSolidStartOrigin,
-  XSolidStartResponseTypeHeader
+  XSolidStartResponseTypeHeader,
+  isRedirectResponse
 } from "../responses";
 import { PageEvent, ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
@@ -34,9 +34,6 @@ async function parseRequest(event: ServerFunctionEvent) {
         args = JSON.parse(text, (key: string, value: any) => {
           if (!value) {
             return value;
-          }
-          if (value.$type === "fetch_event") {
-            return event;
           }
           if (value.$type === "headers") {
             let headers = new Headers();
@@ -211,7 +208,7 @@ export async function handleServerRequest(event: ServerFunctionEvent) {
 
 const handlers = new Map();
 // server$.requestContext = null;
-server$.createHandler = (_fn, hash) => {
+server$.createHandler = (_fn, hash, serverResource) => {
   // this is run in two ways:
   // called on the server while rendering the App, eg. in a routeData function
   // - pass args as is to the fn, they should maintain identity since they are passed by reference
@@ -244,8 +241,7 @@ server$.createHandler = (_fn, hash) => {
 
     const execute = async () => {
       try {
-        let e = await _fn.call(ctx, ...args);
-        return e;
+        return serverResource ? _fn.call(ctx, args[0], ctx) : _fn.call(ctx, ...args);
       } catch (e) {
         if (e instanceof Error && /[A-Za-z]+ is not defined/.test(e.message)) {
           const error = new Error(

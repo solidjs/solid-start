@@ -46,7 +46,7 @@ Additionally, there are some special file names that map to [URLPattern](https:/
 - `hogwarts.com/students/:id/:name` ➜ `/src/routes/students/[id]/[name].tsx`
 - `hogwarts.com/*missing` ➜ `/src/routes/[...missing].tsx`
 
-We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
+We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a Component. This component represents the content that will be rendered when users visit the page:
 
 ```tsx twoslash filename="routes/index.tsx"
 export default function Index() {
@@ -193,6 +193,16 @@ export default function UserPage() {
   const params = useParams();
   return <div>User {params.id}</div>;
 }
+```
+
+## Optional parameter
+Optional parameter
+
+matches users and users/123 
+```tsx {3}
+|-- routes/
+    |-- users/
+        |-- [[id]].tsx
 ```
 
 ## Catch all routes
