@@ -34,3 +34,4 @@ const [acting, act] = createServerMultiAction$(async (args) => {
 
 Refer to [createRouteMultiAction](./createRouteMultiAction) for API reference.
 
+*Note: `createServerMultiAction$` does not work when application is configured to `ssr: false`*

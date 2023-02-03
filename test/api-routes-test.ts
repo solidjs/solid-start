@@ -153,31 +153,33 @@ test.describe("api routes", () => {
       expect(await page.content()).toContain('{"hello":"world"}');
     });
 
-    test("should render data from API route using server$.fetch", async ({ page }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/server-fetch");
-      let dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
+    if (ssr) {
+      test("should render data from API route using server$.fetch", async ({ page }) => {
+        let app = new PlaywrightFixture(appFixture, page);
+        await app.goto("/server-fetch");
+        let dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
 
-      await app.goto("/", true);
-      await page.click("a[href='/server-fetch']");
-      dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
-    });
+        await app.goto("/", true);
+        await page.click("a[href='/server-fetch']");
+        dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
+      });
 
-    test("should render data from API route using serverData with server$.fetch", async ({
-      page
-    }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/server-data-fetch");
-      let dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
+      test("should render data from API route using serverData with server$.fetch", async ({
+        page
+      }) => {
+        let app = new PlaywrightFixture(appFixture, page);
+        await app.goto("/server-data-fetch");
+        let dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
 
-      await app.goto("/", true);
-      await page.click("a[href='/server-data-fetch']");
-      dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
-    });
+        await app.goto("/", true);
+        await page.click("a[href='/server-data-fetch']");
+        dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
+      });
+    }
 
     test("should return json from API route", async ({ page }) => {
       test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");

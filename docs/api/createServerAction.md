@@ -70,3 +70,5 @@ We return a `redirect` to tell the browser where to go upon successful submissio
 ## Reference
 
 Refer to [createRouteAction](./createRouteAction) for API reference.
+
+*Note: createServerAction$ does not work when application is configured to `ssr: false`*

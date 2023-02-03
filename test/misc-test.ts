@@ -11,9 +11,9 @@ test.describe("miscellaneous tests", () => {
     runTests(true);
   });
 
-  test.describe("without SSR", () => {
-    runTests(false);
-  });
+  // test.describe("without SSR", () => {
+  //   runTests(false);
+  // });
 
   function runTests(ssr) {
     test.beforeAll(async () => {

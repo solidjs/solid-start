@@ -240,3 +240,5 @@ export function routeData() {
 
 Refer to [createRouteData](./createRouteData) for API reference.
 
+*Note: `createServerData$` does not work when application is configured to `ssr: false`*
+

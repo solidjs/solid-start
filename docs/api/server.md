@@ -50,7 +50,7 @@ const serverFunction1 = server$.createFetcher('/Log.tsx/logHello')
 
 function Component() {
   const logHello = serverFunction1;
-  
+
   logHello('Hello')
 }
 ```
@@ -75,3 +75,5 @@ function Component() {
   logHello('Hello')
 }
 ```
+
+*Note server$ do not work when application is configured to `ssr: false`*

@@ -6,11 +6,10 @@ import { ssr } from "solid-js/web";
 import Root from "~start/root";
 
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
-import { fileRoutes } from "../root/FileRoutes";
 
+import { fileRoutes } from "../root/FileRoutes";
 import { ServerContext } from "../server/ServerContext";
 import { FetchEvent, PageEvent } from "../server/types";
-import DevRoot from "./DevRoot";
 
 const rootData = Object.values(import.meta.glob("/src/root.data.(js|ts)", { eager: true }))[0] as {
   default: RouteDataFunc;
@@ -83,7 +82,7 @@ export default function StartServer({ event }: { event: PageEvent }) {
   return (
     <ServerContext.Provider value={event}>
       {devNoSSR ? (
-        <DevRoot />
+        <Root />
       ) : (
         <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
           <StartRouter

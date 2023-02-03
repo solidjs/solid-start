@@ -76,6 +76,6 @@ The vite plugin exposes the following options:
 - `serverEntry` (_string_, default `"./entry-server.tsx"`): the file path where to the server entry.
 - `prerenderRoutes` (_string[]_, default `[]`): list of route paths to prerender (currently only works with static adapter).
 - `inspect` (_boolean_, default `true`): turns on whether vite inspect plugin is enabled.
-- `ssr` (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode.
+- `ssr` (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode. `server$` functions do not work with `ssr: false`.
 - `islands` (_boolean_, default `false`): _experimental_ toggles on "islands" mode.
 - `islandsRouter` (_boolean_, default `false`): _experimental_ toggles on hybrid "islands" routing.

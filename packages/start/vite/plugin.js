@@ -54,19 +54,6 @@ function solidStartInlineServerModules(options) {
   };
 }
 
-// import micromatch from "micromatch";
-/**
- * @param {fs.PathLike} path
- */
-function touch(path) {
-  const time = new Date();
-  try {
-    fs.utimesSync(path, time, time);
-  } catch (err) {
-    fs.closeSync(fs.openSync(path, "w"));
-  }
-}
-
 /**
  * @param {any} arr
  */
@@ -352,11 +339,8 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var fileRoutes = $FILE_ROUTES;",
+            !options.ssr && ssr ? "var fileRoutes = [];" :
             stringifyPageRoutes(router.getNestedPageRoutes(), {
-              // if we are in SPA mode, and building the server bundle, we import
-              // the routes eagerly so that they can dead-code eliminate properly,
-              // for some reason, vite doesn't do it properly when the routes are
-              // loaded lazily.
               lazy: ssr ? false : true
             })
           )
@@ -396,6 +380,31 @@ function solidsStartRouteManifest(options) {
           manifest: true
         }
       };
+    }
+  };
+}
+
+/**
+ * @returns {import('vite').Plugin}
+ * @param {any} options
+ */
+function solidStartCsrDev(options) {
+  let csrDev = false;
+  return {
+    name: "solid-start-csr-dev",
+    async configResolved(config) {
+      csrDev = config.command === "serve" && options.ssr !== true;
+    },
+    async transform(code, id, transformOptions) {
+      const isSsr = transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
+      if (isSsr && csrDev && code.includes("~start/root")) {
+        return {
+          code: code.replace(
+            "~start/root",
+            join(_dirname, "..", "dev", "CsrRoot.tsx")
+          )
+        };
+      }
     }
   };
 }
@@ -527,6 +536,7 @@ function expand(target, source = {}, parse = v => v) {
   }
 }
 
+
 /**
  * @returns {import('vite').Plugin}
  * @param {any} options
@@ -640,42 +650,6 @@ function solidStartConfig(options) {
   };
 }
 
-/**
- * @param {string} locate
- * @param {string} [cwd]
- * @returns {string | undefined}
- */
-function find(locate, cwd) {
-  cwd = cwd || process.cwd();
-  if (cwd.split(path.sep).length < 2) return undefined;
-  const found = fs.readdirSync(cwd).some(f => f === locate);
-  if (found) return path.join(cwd, locate);
-  return find(locate, path.join(cwd, ".."));
-}
-
-// const nodeModulesPath = find("node_modules", process.cwd());
-
-// function detectAdapter() {
-//   let adapters = [];
-//   fs.readdirSync(nodeModulesPath).forEach(dir => {
-//     if (dir.startsWith("solid-start-")) {
-//       const pkg = JSON.parse(
-//         fs.readFileSync(path.join(nodeModulesPath, dir, "package.json"), {
-//           encoding: "utf8"
-//         })
-//       );
-//       if (pkg.solid && pkg.solid.type === "adapter") {
-//         adapters.push(dir);
-//       }
-//     }
-//   });
-
-//   // Ignore the default adapter.
-//   adapters = adapters.filter(adapter => adapter !== "solid-start-node");
-
-//   return adapters.length > 0 ? adapters[0] : "solid-start-node";
-// }
-
 const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts"]) => {
   for (var ext of exts) {
     const file = join(path, name + ext);
@@ -737,6 +711,7 @@ export default function solidStart(options) {
   return [
     solidStartConfig(options),
     solidStartFileSystemRouter(options),
+    !options.ssr && solidStartCsrDev(options),
     options.islands ? islands() : undefined,
     options.inspect ? inspect({ outputDir: join(".solid", "inspect"), build: true }) : undefined,
     options.ssr && solidStartInlineServerModules(options),
