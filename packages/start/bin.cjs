@@ -37,7 +37,7 @@ prog
     root = root || process.cwd();
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
 
-    const { Router } = await import("./fs-router/router.js");
+    const { Router } = await import("./fs-router/router.ts");
 
     const router = new Router({
       baseDir: path.posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir),
@@ -485,7 +485,7 @@ prog
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
     console.log();
     if (url) {
-      const { Router } = await import("./fs-router/router.js");
+      const { Router } = await import("./fs-router/router.ts");
       const { default: printUrls } = await import("./dev/print-routes.js");
 
       const router = new Router({
