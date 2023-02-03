@@ -118,6 +118,11 @@ export function createDevHandler(viteServer, config, options) {
         clientAddress: req.socket.remoteAddress,
         locals: {}
       });
+
+      if (!webRes) {
+        throw new Error("No response from fetch handler for " + req.url);
+      }
+
       handleNodeResponse(webRes, res);
     } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
