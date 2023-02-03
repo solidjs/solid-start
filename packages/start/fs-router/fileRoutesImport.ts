@@ -1,9 +1,20 @@
 import type * as BabelTypes from "babel-types";
 
+type Path = {
+  node: { body: any; source: { value: string; }; specifiers: any[]; };
+  scope: { generateUidIdentifier: (arg0: string) => any; };
+  replaceWith: (arg0: any) => void;
+  insertBefore: (arg0: any) => void;
+}
+
+type State = {
+  namespaceSpec: any[];
+}
+
 export default function fileRoutesImport({ types: t }: { types: typeof BabelTypes }) {
   return {
     visitor: {
-      ImportDeclaration(path, state) {
+      ImportDeclaration(path: Path, state: State) {
         if (path.node.source.value !== "solid-start") {
           return;
         }
@@ -31,12 +42,12 @@ export default function fileRoutesImport({ types: t }: { types: typeof BabelType
         }
       },
       Program: {
-        enter(_path, state) {
+        enter(_path: Path, state: State) {
           state.namespaceSpec = [];
         },
-        exit(path, state) {
+        exit(path: Path, state: State) {
           const body = path.node.body;
-          let lastImportIndex;
+          let lastImportIndex: number;
           if (state.namespaceSpec.length) {
             for (let i = 0; i < body.length; i++) {
               if (body[i].type === "ImportDeclaration") {
@@ -51,7 +62,7 @@ export default function fileRoutesImport({ types: t }: { types: typeof BabelType
               t.stringLiteral("solid-start/root/FileRoutes")
             );
             body.unshift(newImport);
-            lastImportIndex++;
+            lastImportIndex!++;
             const namespaceId = path.scope.generateUidIdentifier(specifier.local.name);
             const namespaceFix = t.variableDeclaration("const", [
               t.variableDeclarator(
@@ -62,7 +73,7 @@ export default function fileRoutesImport({ types: t }: { types: typeof BabelType
                 ])
               )
             ]);
-            body.splice(lastImportIndex + 1, 0, namespaceFix);
+            body.splice(lastImportIndex! + 1, 0, namespaceFix);
             specifier.local.name = namespaceId.name;
           }
         }
