@@ -1,4 +1,6 @@
-export default function fileRoutesImport({ types: t }) {
+import type * as BabelTypes from "babel-types";
+
+export default function fileRoutesImport({ types: t }: { types: typeof BabelTypes }) {
   return {
     visitor: {
       ImportDeclaration(path, state) {
