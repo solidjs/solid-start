@@ -778,7 +778,7 @@ importers:
 
   test:
     specifiers:
-      '@playwright/test': 1.25.2
+      '@playwright/test': 1.27.1
       '@testing-library/jest-dom': ^5.16.5
       '@types/cross-spawn': ^6.0.2
       '@types/fs-extra': ^11.0.1
@@ -802,7 +802,7 @@ importers:
       vitest: ^0.28.3
       wait-on: ^7.0.1
     dependencies:
-      '@playwright/test': 1.25.2
+      '@playwright/test': 1.27.1
       '@testing-library/jest-dom': 5.16.5
       '@types/cross-spawn': 6.0.2
       '@types/fs-extra': 11.0.1
@@ -2672,13 +2672,13 @@ packages:
   /@panva/hkdf/1.0.2:
     resolution: {integrity: sha512-MSAs9t3Go7GUkMhpKC44T58DJ5KGk2vBo+h1cqQeqlMfdGkxaVB78ZWpv9gYi/g2fa4sopag9gJsNvS8XGgWJA==}
 
-  /@playwright/test/1.25.2:
-    resolution: {integrity: sha512-6qPznIR4Fw02OMbqXUPMG6bFFg1hDVNEdihKy0t9K0dmRbus1DyP5Q5XFQhGwEHQkLG5hrSfBuu9CW/foqhQHQ==}
+  /@playwright/test/1.27.1:
+    resolution: {integrity: sha512-mrL2q0an/7tVqniQQF6RBL2saskjljXzqNcCOVMUjRIgE6Y38nCNaP+Dc2FBW06bcpD3tqIws/HT9qiMHbNU0A==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@types/node': 18.11.18
-      playwright-core: 1.25.2
+      playwright-core: 1.27.1
     dev: false
 
   /@polka/url/1.0.0-next.21:
@@ -7038,8 +7038,8 @@ packages:
       mlly: 1.1.0
       pathe: 1.0.0
 
-  /playwright-core/1.25.2:
-    resolution: {integrity: sha512-0yTbUE9lIddkEpLHL3u8PoCL+pWiZtj5A/j3U7YoNjcmKKDGBnCrgHJMzwd2J5vy6l28q4ki3JIuz7McLHhl1A==}
+  /playwright-core/1.27.1:
+    resolution: {integrity: sha512-9EmeXDncC2Pmp/z+teoVYlvmPWUC6ejSSYZUln7YaP89Z6lpAaiaAnqroUt/BoLo8tn7WYShcfaCh+xofZa44Q==}
     engines: {node: '>=14'}
     hasBin: true
     dev: false
