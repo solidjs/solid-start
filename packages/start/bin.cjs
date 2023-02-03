@@ -176,7 +176,7 @@ prog
 
     const config = await resolveConfig({ configFile, root, mode: "production", command: "build" });
 
-    const { default: prepareManifest } = await import("./fs-router/manifest.ts");
+    const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
     const vite = require("vite");
