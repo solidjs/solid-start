@@ -1,6 +1,6 @@
 // make asset lookup
 import { posix } from "path";
-import { toPath } from "./path-utils.js";
+import { toPath } from "./path-utils.ts";
 
 /**
  * Output:
