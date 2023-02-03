@@ -90,7 +90,7 @@ export class Router {
     this.listener && this.listener(path);
   }
 
-  notifyFsEvent() {}
+  notifyFsEvent() { }
 
   setRouteData(route, data) {
     if (!this.routes[route]) {
@@ -106,7 +106,7 @@ export class Router {
     }
   }
 
-  processFile(path) {
+  processFile(path: string) {
     // if its a route data function
     const pageDataRegex = new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`);
     if (path.match(pageDataRegex)) {
@@ -121,8 +121,8 @@ export class Router {
       log("processing", path);
       let id = path.slice(this.baseDir.length).replace(pageRegex, "");
 
-      /** @type {{ dataPath?: string; componentPath?: string; apiPath?: { [key: string]: string  }}} */
-      let routeConfig = {};
+
+      let routeConfig: { dataPath?: string; componentPath?: string; apiPath?: { [key: string]: string } } = {};
 
       if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
         let code = fs.readFileSync(join(this.cwd, path)).toString();
@@ -299,12 +299,11 @@ export function stringifyPageRoutes(routes, options = {}) {
               /.data.(js|ts)$/.test(i.dataPath ?? "")
                 ? `data: ${jsFile.addImport(path.posix.resolve(i.dataPath))}`
                 : i.dataPath
-                ? `data: ${jsFile.addNamedImport("routeData", path.posix.resolve(i.dataPath))}`
-                : "",
-              `component: ${
-                options.lazy
-                  ? `lazy(() => import('${path.posix.resolve(i.componentPath)}'))`
-                  : jsFile.addImport(path.posix.resolve(i.componentPath))
+                  ? `data: ${jsFile.addNamedImport("routeData", path.posix.resolve(i.dataPath))}`
+                  : "",
+              `component: ${options.lazy
+                ? `lazy(() => import('${path.posix.resolve(i.componentPath)}'))`
+                : jsFile.addImport(path.posix.resolve(i.componentPath))
               }`,
               ...Object.keys(i)
                 .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
@@ -343,9 +342,9 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
               ...API_METHODS.filter(j => i.apiPath?.[j]).map(
                 v =>
                   `${v}: ${
-                    // options.lazy
-                    // ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`
-                    jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
+                  // options.lazy
+                  // ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`
+                  jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
                   }`
               ),
               i.componentPath ? `GET: "skip"` : undefined,
@@ -407,8 +406,8 @@ function jsCode() {
 
     return Object.keys(id).length > 0
       ? `{ ${Object.keys(id)
-          .map(k => `${k} as ${id[k]}`)
-          .join(", ")} }`
+        .map(k => `${k} as ${id[k]}`)
+        .join(", ")} }`
       : "";
   };
 
@@ -416,10 +415,9 @@ function jsCode() {
     return `${[...imports.keys()]
       .map(
         i =>
-          `import ${
-            imports.get(i).default
-              ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
-              : ""
+          `import ${imports.get(i).default
+            ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
+            : ""
           } ${getNamedExport(i)} from '${i}';`
       )
       .join("\n")}`;
