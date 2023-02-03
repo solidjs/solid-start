@@ -1,3 +1,4 @@
+// @ts-ignore
 import type * as BabelTypes from "@babel/types/lib";
 
 type Path = {
