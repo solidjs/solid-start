@@ -25,8 +25,6 @@ const Protected: VoidComponent = () => {
           <h1>Protected</h1>
           {us.user?.image ? <img src={us.user?.image} /> : null}
           <span>Hey there {us.user?.name}! You are signed in!</span>
-          {/* <h1>Protected</h1>
-          <p>Session: {JSON.stringify(us, null, 2)}</p> */}
           <button onClick={() => signOut()}>Sign Out</button>
         </main>
       )}
