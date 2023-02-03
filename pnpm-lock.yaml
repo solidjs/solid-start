@@ -425,7 +425,6 @@ importers:
       '@solidjs/meta': ^0.28.2
       '@solidjs/router': ^0.7.0
       '@testing-library/jest-dom': ^5.16.5
-      '@types/babel-types': ^7.0.11
       '@types/babel__core': ^7.20.0
       '@types/cookie': ^0.5.1
       '@types/debug': ^4.1.7
@@ -505,7 +504,6 @@ importers:
       '@solidjs/meta': 0.28.2_solid-js@1.6.9
       '@solidjs/router': 0.7.0_solid-js@1.6.9
       '@testing-library/jest-dom': 5.16.5
-      '@types/babel-types': 7.0.11
       '@types/babel__core': 7.20.0
       '@types/debug': 4.1.7
       '@types/node': 18.11.18
@@ -2577,10 +2575,6 @@ packages:
 
   /@types/aria-query/5.0.1:
     resolution: {integrity: sha512-XTIieEY+gvJ39ChLcB4If5zHtPxt3Syj5rgZR+e1ctpmK8NjPf0zFqsz4JpLJT0xla9GFDKjy8Cpu331nrmE1Q==}
-    dev: true
-
-  /@types/babel-types/7.0.11:
-    resolution: {integrity: sha512-pkPtJUUY+Vwv6B1inAz55rQvivClHJxc9aVEPPmaq2cbyeMLCiDpbKpcKyX4LAwpNGi+SHBv0tHv6+0gXv0P2A==}
     dev: true
 
   /@types/babel__core/7.20.0:

@@ -1,4 +1,4 @@
-import type * as BabelTypes from "babel-types";
+import type * as BabelTypes from "@babel/types/lib";
 
 type Path = {
   node: { body: any; source: { value: string; }; specifiers: any[]; };
