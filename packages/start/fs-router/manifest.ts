@@ -46,18 +46,10 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
   }
 
   function collectAssets() {
-    let files: {
-      type: string,
-      href: string
-    }[] = [];
+    let files = [];
     let visitedFiles = new Set();
 
-    function visitFile(file: {
-      file: string,
-      imports: string[]
-      dynamicImports: string[]
-      css: string[]
-    }) {
+    function visitFile(file) {
       if (visitedFiles.has(file.file)) return;
       visitedFiles.add(file.file);
       files.push({
@@ -102,14 +94,14 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     }
 
     return {
-      addAsset(val: string) {
+      addAsset(val) {
         let asset = Object.values(assetManifest).find(f => basePath + f.file === val);
         if (!asset) {
           return;
         }
         visitFile(asset);
       },
-      addSrc(val: string) {
+      addSrc(val) {
         let asset = Object.values(assetManifest).find(f => f.src === val);
         if (!asset) {
           return;
