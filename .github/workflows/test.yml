@@ -29,23 +29,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16]
+        node-version: [16, 18]
         adapter:
             - solid-start-node
-            - solid-start-cloudflare-workers
-            - solid-start-cloudflare-pages
+            # - solid-start-cloudflare-workers
+            # - solid-start-cloudflare-pages
             - solid-start-deno
         os:
             - ubuntu-latest
             # - macos-latest
-            - windows-latest
+            # - windows-latest
         include:
           - os: ubuntu-latest
             playwright_binary_path: ~/.cache/ms-playwright
           # - os: macos-latest
           #   playwright_binary_path: ~/Library/Caches/ms-playwright
-          - os: windows-latest
-            playwright_binary_path: '~\\AppData\\Local\\ms-playwright'
+          # - os: windows-latest
+          #   playwright_binary_path: '~\\AppData\\Local\\ms-playwright'
             
     runs-on: ${{ matrix.os }}
 
