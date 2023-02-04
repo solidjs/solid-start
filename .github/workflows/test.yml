@@ -33,7 +33,7 @@ jobs:
         adapter:
             - solid-start-node
             # - solid-start-cloudflare-workers
-            # - solid-start-cloudflare-pages
+            - solid-start-cloudflare-pages
             - solid-start-deno
         os:
             - ubuntu-latest
