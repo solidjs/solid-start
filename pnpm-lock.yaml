@@ -273,7 +273,6 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.2
       '@solidjs/router': ^0.7.0
-      babel-plugin-solid-styled: ^0.6.3
       solid-js: ^1.6.9
       solid-start: ^0.2.19
       solid-start-node: ^0.2.19
@@ -289,7 +288,6 @@ importers:
       solid-styled: 0.7.4_solid-js@1.6.9
       undici: 5.15.1
     devDependencies:
-      babel-plugin-solid-styled: 0.6.3
       solid-start-node: link:../../packages/start-node
       typescript: 4.9.4
       vite: 3.2.5
@@ -2772,10 +2770,6 @@ packages:
       '@types/node': 18.11.18
     dev: false
 
-  /@types/css-tree/1.0.7:
-    resolution: {integrity: sha512-Pz+DfVODpQTAV6PwPBK6kzyy7+f6EyPbr1+mYkc1YolJfl2NAJ4wbg0TC/AJPBsqn9jWfyiO19A/sgpvFLfqnw==}
-    dev: true
-
   /@types/css-tree/2.0.1:
     resolution: {integrity: sha512-eeRN9rsZK/ZD5nmJCeZXxyTwq+gsvN1EljeCPEyXk+vLOAwsgpsrdXio4lPBzxAuhIKu3MK7QvZxWUw9xDX8Bg==}
     dev: false
@@ -3268,23 +3262,6 @@ packages:
       - supports-color
     dev: false
 
-  /babel-plugin-solid-styled/0.6.3:
-    resolution: {integrity: sha512-Ch3/ChVR87rImnQdcU2cNFHpx0x6h1c8H3YUh3FNMs4DexSHM7l+H7AH/ejNMfbEJP6Q/NV3jeY+/Gm/8yj1dQ==}
-    engines: {node: '>=10'}
-    deprecated: The babel plugin can now be imported through solid-styled/babel
-    peerDependencies:
-      '@babel/core': ^7.16
-    dependencies:
-      '@babel/helper-module-imports': 7.18.6
-      '@babel/traverse': 7.20.12
-      '@babel/types': 7.20.7
-      '@types/css-tree': 1.0.7
-      css-tree: 2.3.1
-      js-xxhash: 1.0.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /babel-preset-solid/1.6.9_@babel+core@7.20.12:
     resolution: {integrity: sha512-Dz4xROTGtAZ2B9+79KYUzi/bhjNGsx+8c+AD3VO/Cg1CisM1qq29XsnkWrRJeTMMn3XZkAI/Bf5Rz37d/gvPVQ==}
     peerDependencies:
@@ -3695,6 +3672,7 @@ packages:
     dependencies:
       mdn-data: 2.0.30
       source-map-js: 1.0.2
+    dev: false
 
   /css-what/6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
@@ -5564,11 +5542,6 @@ packages:
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  /js-xxhash/1.0.4:
-    resolution: {integrity: sha512-S/6Oo7ruxx5k8m4qlMnbpwQdJjRsvvfcIhIk1dA9c5y5GNhYHKYKu9krEK3QgBax6CxJuf4gRL2opgLkdzWIKg==}
-    engines: {node: '>=8.0.0'}
-    dev: true
-
   /js-xxhash/2.0.0:
     resolution: {integrity: sha512-R7Gad0Y0grmuF/WRBUmxgQA1bGpbmRWM/OwNJZQPVdJBAteJIdBYOBYcHbuJeJwxdddqBVIdP3EfrDNFqahJ2A==}
     engines: {node: '>=14.0.0'}
@@ -5908,6 +5881,7 @@ packages:
 
   /mdn-data/2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
+    dev: false
 
   /merge-anything/5.1.4:
     resolution: {integrity: sha512-7PWKwGOs5WWcpw+/OvbiFiAvEP6bv/QHiicigpqMGKIqPPAtGhBLR8LFJW+Zu6m9TXiR/a8+AiPlGG0ko1ruoQ==}
