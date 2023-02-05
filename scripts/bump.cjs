@@ -19,11 +19,13 @@ glob("packages/*/package.json").then(packages => {
 glob("examples/*/package.json").then(packages => {
   packages.forEach(packagePath => {
     const packageJson = JSON.parse(fs.readFileSync(packagePath));
-    packageJson.dependencies =
-      {
-        ...packageJson.dependencies,
-        "solid-start": "^" + version
-      };
-    fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
+    if (packageJson.dependencies?.["solid-start"]) {
+      packageJson.dependencies =
+        {
+          ...packageJson.dependencies,
+          "solid-start": "^" + version
+        };
+      fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
+    }
   });
 });
