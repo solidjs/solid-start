@@ -54,8 +54,8 @@ const copyDependencies = async ({ entry, outputDir, includes, excludes, workingD
 
   for (const error of warnings) {
     if (error.message.startsWith("Failed to resolve dependency")) {
-      const [, module, file] = /Cannot find module '(.+?)' loaded from (.+)/.exec(error.message);
-
+      const match = /Cannot find module '(.+?)' loaded from (.+)/.exec(error.message);
+      const [, module, file] = match ? match : [];
       if (fileURLToPath(entry) === file) {
         console.warn(
           `[solid-start-vercel] The module "${module}" couldn't be resolved. This may not be a problem, but it's worth checking.`
