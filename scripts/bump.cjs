@@ -15,3 +15,15 @@ glob("packages/*/package.json").then(packages => {
     fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
   });
 });
+
+glob("examples/*/package.json").then(packages => {
+  packages.forEach(packagePath => {
+    const packageJson = JSON.parse(fs.readFileSync(packagePath));
+    packageJson.dependencies =
+      {
+        ...packageJson.dependencies,
+        "solid-start": "^" + version
+      };
+    fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
+  });
+});
