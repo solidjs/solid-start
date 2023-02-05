@@ -135,6 +135,40 @@
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.7.0",
     "solid-js": "^1.6.2",
-    "vite": "^3.1.8"
+    "vite": "^3.1.8",
+    "solid-start-aws": "*",
+    "solid-start-cloudflare-pages": "*",
+    "solid-start-cloudflare-workers": "*",
+    "solid-start-deno": "*",
+    "solid-start-netlify": "*",
+    "solid-start-node": "*",
+    "solid-start-vercel": "*",
+    "solid-start-static": "*"
+  },
+  "peerDependenciesMeta": {
+    "solid-start-aws": {
+      "optional": true
+    },
+    "solid-start-cloudflare-pages": {
+      "optional": true
+    },
+    "solid-start-cloudflare-workers": {
+      "optional": true
+    },
+    "solid-start-deno": {
+      "optional": true
+    },
+    "solid-start-netlify": {
+      "optional": true
+    },
+    "solid-start-node": {
+      "optional": true
+    },
+    "solid-start-vercel": {
+      "optional": true
+    },
+    "solid-start-static": {
+      "optional": true
+    }
   }
 }
