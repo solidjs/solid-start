@@ -7,7 +7,6 @@
   },
   "type": "module",
   "devDependencies": {
-    "babel-plugin-solid-styled": "^0.6.3",
     "solid-start-node": "^0.2.19",
     "typescript": "^4.9.4",
     "vite": "^3.2.5"
