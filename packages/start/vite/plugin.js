@@ -401,7 +401,7 @@ function solidStartCsrDev(options) {
         return {
           code: code.replace(
             "~start/root",
-            path.posix.join(_dirname, "..", "dev", "CsrRoot.tsx")
+            join(_dirname, "..", "dev", "CsrRoot.tsx").replaceAll("\\", "/")
           )
         };
       }
