@@ -2,42 +2,9 @@
   "name": "solid-start",
   "version": "0.2.19",
   "description": "Create Solid apps with low configuration",
-  "author": "Ryan Carniato",
   "license": "MIT",
-  "bin": {
-    "solid-start": "./bin.cjs",
-    "solid": "./bin.cjs",
-    "start": "./bin.cjs"
-  },
-  "main": "./index.tsx",
-  "types": "./index.tsx",
+  "author": "Ryan Carniato",
   "type": "module",
-  "files": [
-    "api",
-    "data",
-    "dev",
-    "entry-client",
-    "entry-server",
-    "error-boundary",
-    "fs-router",
-    "islands",
-    "node",
-    "root",
-    "server",
-    "session",
-    "virtual",
-    "vite",
-    "websocket",
-    "bin.cjs",
-    "index.tsx",
-    "router.tsx",
-    "required-user-files.d.ts",
-    "env.d.ts",
-    "types.ts"
-  ],
-  "scripts": {
-    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
-  },
   "exports": {
     ".": "./index.tsx",
     "./router": "./router.tsx",
@@ -74,6 +41,39 @@
     "./websocket": "./websocket/index.ts",
     "./websocket/*": "./websocket/*",
     "./env": "./env.d.ts"
+  },
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "bin": {
+    "solid": "./bin.cjs",
+    "solid-start": "./bin.cjs",
+    "start": "./bin.cjs"
+  },
+  "files": [
+    "api",
+    "data",
+    "dev",
+    "entry-client",
+    "entry-server",
+    "error-boundary",
+    "fs-router",
+    "islands",
+    "node",
+    "root",
+    "server",
+    "session",
+    "virtual",
+    "vite",
+    "websocket",
+    "bin.cjs",
+    "index.tsx",
+    "router.tsx",
+    "required-user-files.d.ts",
+    "env.d.ts",
+    "types.ts"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
   },
   "dependencies": {
     "@babel/core": "^7.20.12",
@@ -135,6 +135,40 @@
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.7.0",
     "solid-js": "^1.6.2",
+    "solid-start-aws": "*",
+    "solid-start-cloudflare-pages": "*",
+    "solid-start-cloudflare-workers": "*",
+    "solid-start-deno": "*",
+    "solid-start-netlify": "*",
+    "solid-start-node": "*",
+    "solid-start-static": "*",
+    "solid-start-vercel": "*",
     "vite": "^3.1.8"
+  },
+  "peerDependenciesMeta": {
+    "solid-start-aws": {
+      "optional": true
+    },
+    "solid-start-cloudflare-pages": {
+      "optional": true
+    },
+    "solid-start-cloudflare-workers": {
+      "optional": true
+    },
+    "solid-start-deno": {
+      "optional": true
+    },
+    "solid-start-netlify": {
+      "optional": true
+    },
+    "solid-start-node": {
+      "optional": true
+    },
+    "solid-start-static": {
+      "optional": true
+    },
+    "solid-start-vercel": {
+      "optional": true
+    }
   }
 }
