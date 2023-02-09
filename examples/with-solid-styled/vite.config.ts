@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [
     solid({
       babel: (_, id) => ({
-        plugins: [["solid-styled", { source: id }]]
+        plugins: [["solid-styled/babel", { source: id }]]
       })
     })
   ]
