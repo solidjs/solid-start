@@ -11,7 +11,7 @@ import { loadEnv, normalizePath } from "vite";
 import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
-import fileRoutesImport from "../fs-router/fileRoutesImport.js";
+import fileRoutesImport from "../fs-router/fileRoutesImport.ts";
 import { Router, stringifyApiRoutes, stringifyPageRoutes } from "../fs-router/router.js";
 import routeData from "../server/routeData.js";
 import routeDataHmr from "../server/routeDataHmr.js";

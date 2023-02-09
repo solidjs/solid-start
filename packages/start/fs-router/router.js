@@ -6,7 +6,7 @@ import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "fs";
 import path, { join } from "path";
-import { toPath } from "./path-utils.js";
+import { toPath } from "./path-utils.ts";
 
 const log = debug("solid-start");
 const ROUTE_KEYS = ["component", "path", "data", "children"];
