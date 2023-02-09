@@ -1,0 +1,29 @@
+{
+  "name": "example-with-solid-bootstrap",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "esbuild": "^0.14.54",
+    "sass": "^1.58.0",
+    "solid-start-node": "^0.2.19",
+    "typescript": "^4.9.4",
+    "vite": "^3.2.5"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.7.0",
+    "solid-bootstrap": "^1.0.13",
+    "bootstrap": "^5.2.3",
+    "solid-js": "^1.6.10",
+    "solid-start": "^0.2.20",
+    "undici": "^5.15.1"
+  },
+  "engines": {
+    "node": ">=16.8"
+  }
+}
