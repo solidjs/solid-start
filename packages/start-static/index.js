@@ -23,6 +23,7 @@ export default function () {
       return `http://localhost:${process.env.PORT}`;
     },
     async build(config, builder) {
+      if(!config?.solidOptions?.ssr) throw new Error('solid-start-static needs ssr to be enabled for pre-rendering routes at build time');
       const ssrExternal = config?.ssr?.external || [];
       await builder.client(join(config.root, "dist", "public"));
       await builder.server(join(config.root, ".solid", "server"));
