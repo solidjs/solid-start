@@ -109,7 +109,6 @@
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
-    "@babel/types": "^7.20.7",
     "@cloudflare/workers-types": "^3.19.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
