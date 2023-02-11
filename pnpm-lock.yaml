@@ -138,19 +138,20 @@ importers:
       typescript: ^4.9.4
       undici: ^5.15.1
       vite: ^3.2.5
-    devDependencies:
+    dependencies:
       '@solidjs/meta': 0.28.2_solid-js@1.6.9
       '@solidjs/router': 0.7.0_solid-js@1.6.9
+      solid-js: 1.6.9
+      solid-start: link:../../packages/start
+      undici: 5.15.1
+    devDependencies:
       '@types/node': 18.11.18
       csstype: 3.1.0
       esbuild: 0.14.54
       postcss: 8.4.21
       rollup: 3.10.0
-      solid-js: 1.6.9
-      solid-start: link:../../packages/start
       solid-start-node: link:../../packages/start-node
       typescript: 4.9.4
-      undici: 5.15.1
       vite: 3.2.5_@types+node@18.11.18
 
   examples/with-auth:
@@ -2621,7 +2622,6 @@ packages:
       solid-js: '>=1.4.0'
     dependencies:
       solid-js: 1.6.9
-    dev: true
 
   /@solidjs/router/0.7.0_solid-js@1.6.10:
     resolution: {integrity: sha512-8HI84twe5FjYRebSLMAhtkL9bRuTDIlxJK56kjfjU9WKGoUCTaWpCnkuj8Hqde1bWZ0X+GOZxKDfNkn1CjtjxA==}
@@ -2637,7 +2637,6 @@ packages:
       solid-js: ^1.5.3
     dependencies:
       solid-js: 1.6.9
-    dev: true
 
   /@solidjs/testing-library/0.5.2_solid-js@1.6.9:
     resolution: {integrity: sha512-GXUiI0Itz/7FfTJrV0RoICS2lL0RE3D1lNSrnuNg9nLC28qKnEQhm9Gfk4gFP9rGVzmsJJJC7yf8kbHMuyR2AA==}
