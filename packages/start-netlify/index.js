@@ -16,6 +16,7 @@ export default function ({ edge } = {}) {
       proc.stderr.pipe(process.stderr);
     },
     async build(config, builder) {
+      const ssrExternal = config?.ssr?.external || [];
       const __dirname = dirname(fileURLToPath(import.meta.url));
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "netlify"));
@@ -45,7 +46,8 @@ export default function ({ edge } = {}) {
             exportConditions: edge ? ["deno", "solid"] : ["node", "solid"]
           }),
           common({ strictRequires: true, ...config.build.commonjsOptions })
-        ]
+        ],
+        external: ssrExternal
       });
       // or write the bundle to disk
       await bundle.write({
