@@ -306,10 +306,6 @@ prog
             rollupOptions: {
               input: config.solidOptions.serverEntry,
               external: ssrExternal,
-              output: {
-                inlineDynamicImports: true,
-                format: "esm"
-              }
             }
           }
         });
