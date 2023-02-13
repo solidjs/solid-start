@@ -4,6 +4,7 @@ import handler from "./handler";
 export default (request, context) =>
   handler({
     request,
+    context,
     clientAddress: request.headers.get('x-nf-client-connection-ip'),
     locals: {},
     env: {
