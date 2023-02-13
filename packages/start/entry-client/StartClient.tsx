@@ -74,9 +74,7 @@ export default () => {
 
   function StartRouter(props: RouterProps) {
     return (
-      <Router {...props}>
-        <Root />
-      </Router>
+      <Router {...props}></Router>
     );
   }
 
