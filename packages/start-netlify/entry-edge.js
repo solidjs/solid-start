@@ -4,10 +4,10 @@ import handler from "./handler";
 export default (request, context) =>
   handler({
     request,
-    context,
     clientAddress: request.headers.get('x-nf-client-connection-ip'),
     locals: {},
     env: {
+      ...context,
       manifest,
       getStaticHTML: path => context.rewrite(new URL(`${path}.html`, request.url).href)
     }
