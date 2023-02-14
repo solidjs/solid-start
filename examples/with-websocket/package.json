@@ -16,8 +16,8 @@
     "@cloudflare/workers-types": "^3.19.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
-    "solid-js": "^1.6.10",
-    "solid-start": "^0.2.20",
+    "solid-js": "^1.6.11",
+    "solid-start": "^0.2.21",
     "undici": "^5.15.1"
   },
   "engines": {

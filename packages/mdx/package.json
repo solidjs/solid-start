@@ -1,6 +1,6 @@
 {
   "name": "solid-start-mdx",
-  "version": "0.2.20",
+  "version": "0.2.21",
   "description": "",
   "main": "./index.js",
   "type": "module",
