@@ -83,7 +83,7 @@ export default () => {
   return (
     <ServerContext.Provider value={mockFetchEvent}>
       <MetaProvider>
-        <StartRouter data={dataFn}>
+        <StartRouter base={import.meta.env.BASE_URL} data={dataFn}>
           <Root />
         </StartRouter>
       </MetaProvider>
