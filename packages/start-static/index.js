@@ -64,7 +64,7 @@ export default function () {
           .map(a => a.path)
           .filter(a => (a.includes(":") || a.includes("/")) && !a.includes("*")),
         "/404",
-        ...(config.solidOptions.prerenderRoutes || [])
+        ...await (config.solidOptions.prerenderRoutes || [])
       ];
       renderStatic(
         routes.map(url => ({
