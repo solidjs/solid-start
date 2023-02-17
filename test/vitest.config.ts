@@ -10,11 +10,11 @@ export default defineConfig({
     transformMode:
       process.env.TEST_ENV === "server"
         ? {
-            ssr: [/.[tj]sx?$/]
-          }
+          ssr: [/.[tj]sx?$/]
+        }
         : {
-            web: [/.[tj]sx?$/]
-          },
+          web: [/.[tj]sx?$/]
+        },
     // solid needs to be inline to work around
     // a resolution issue in vitest:
     deps: {
@@ -26,8 +26,7 @@ export default defineConfig({
     // isolate: false,
   },
   build: {
-    target: "esnext",
-    polyfillDynamicImport: false
+    target: "esnext"
   },
   resolve: {
     conditions: process.env.TEST_ENV === "server" ? [] : ["development", "browser"]

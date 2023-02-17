@@ -13,18 +13,18 @@
   "devDependencies": {
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
-    "@solidjs/testing-library": "^0.5.2",
+    "@solidjs/testing-library": "^0.6.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/testing-library__jest-dom": "^5.14.5",
-    "@vitest/coverage-c8": "^0.26.3",
-    "@vitest/ui": "^0.26.3",
-    "jsdom": "^20.0.3",
+    "@vitest/coverage-c8": "^0.28.5",
+    "@vitest/ui": "^0.28.5",
+    "jsdom": "^21.1.0",
     "solid-js": "^1.6.11",
-    "solid-start": "^0.2.19",
-    "solid-start-node": "^0.2.19",
-    "typescript": "^4.9.4",
-    "undici": "^5.15.1",
-    "vite": "^3.2.5",
-    "vitest": "^0.26.3"
+    "solid-start": "workspace:^0.2.21",
+    "solid-start-node": "workspace:^0.2.21",
+    "typescript": "^4.9.5",
+    "undici": "^5.19.1",
+    "vite": "^4.1.2",
+    "vitest": "^0.28.5"
   }
 }

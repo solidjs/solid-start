@@ -7,23 +7,23 @@
     "type": "adapter"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "compression": "^1.7.4",
     "polka": "1.0.0-next.22",
-    "rollup": "^3.10.0",
+    "rollup": "^3.16.0",
     "sirv": "^2.0.2",
-    "terser": "^5.16.1"
+    "terser": "^5.16.4"
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "undici": "^5.15.1",
-    "vite": "^3.2.5"
+    "undici": "^5.19.1",
+    "vite": "^4.1.2"
   },
   "peerDependencies": {
     "solid-start": "*",
-    "undici": "^5.8.0",
+    "undici": "^5.19.1",
     "vite": "*"
   }
 }

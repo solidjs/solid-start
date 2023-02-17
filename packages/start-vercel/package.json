@@ -8,18 +8,18 @@
     "type": "adapter"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "@vercel/nft": "^0.22.6",
-    "rollup": "^3.10.0",
-    "terser": "^5.16.1",
+    "rollup": "^3.16.0",
+    "terser": "^5.16.4",
     "fast-glob": "3.2.12",
     "micromatch": "4.0.5"
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "vite": "^3.2.5"
+    "vite": "^4.1.2"
   },
   "peerDependencies": {
     "solid-start": "*",
