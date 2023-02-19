@@ -31,7 +31,7 @@ process.on(
 
 /**
  *
- * @param {import('node_modules/vite').ViteDevServer} viteServer
+ * @param {import('vite').ViteDevServer} viteServer
  * @param {*} config
  * @param {*} options
  * @returns
@@ -154,9 +154,9 @@ export function createDevHandler(viteServer, config, options) {
 }
 
 /**
- * @param {import('node_modules/vite').ViteDevServer} vite
- * @param {import('node_modules/vite').ModuleNode} node
- * @param {Set<import('node_modules/vite').ModuleNode>} deps
+ * @param {import('vite').ViteDevServer} vite
+ * @param {import('vite').ModuleNode} node
+ * @param {Set<import('vite').ModuleNode>} deps
  */
 async function find_deps(vite, node, deps) {
   // since `ssrTransformResult.deps` contains URLs instead of `ModuleNode`s, this process is asynchronous.
@@ -164,7 +164,7 @@ async function find_deps(vite, node, deps) {
   /** @type {Promise<void>[]} */
   const branches = [];
 
-  /** @param {import('node_modules/vite').ModuleNode} node */
+  /** @param {import('vite').ModuleNode} node */
   async function add(node) {
     if (!deps.has(node)) {
       deps.add(node);

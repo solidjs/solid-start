@@ -500,7 +500,7 @@ prog.parse(process.argv);
 /**
  *
  * @param {*} param0
- * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
+ * @returns {Promise<import('vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
   const vite = require("vite");
