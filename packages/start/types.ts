@@ -31,7 +31,7 @@ export type StartOptions = {
   islands: boolean;
   islandsRouter: boolean;
   lazy: boolean;
-  prerenderRoutes: string[];
+  prerenderRoutes: string[] | Promise<string[]>;
   inspect: boolean;
   pageExtensions: string[];
   root: string;
