@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "vite": "^3.2.5"
+    "vite": "^4.1.4"
   },
   "peerDependencies": {
     "solid-start": "*",
