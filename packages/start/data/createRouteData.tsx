@@ -128,13 +128,16 @@ export function createRouteData<T, S>(
     } as any
   );
 
-  resources.add(refetch);
-  onCleanup(() => resources.delete(refetch));
+  if (!isServer) {
+    resources.add(refetch);
+    onCleanup(() => resources.delete(refetch));
+  }
 
   return resource;
 }
 
 export function refetchRouteData(key?: string | any[] | void) {
+  if (isServer) throw new Error("Cannot refetch route data on the server.");
   return startTransition(() => {
     for (let refetch of resources) refetch(key);
   });
