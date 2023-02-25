@@ -1,7 +1,7 @@
 import { splitCookiesString } from "solid-start/node/fetch.js";
 import "solid-start/node/globals.js";
 import manifest from "../../netlify/route-manifest.json";
-import handle from "./handler";
+import handle from "./entry-server";
 
 Response.redirect = function (url, status = 302) {
   let response = new Response(null, { status, headers: { Location: url }, counter: 1 });

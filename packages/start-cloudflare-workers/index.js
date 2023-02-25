@@ -143,17 +143,13 @@ export default function (miniflareOptions = {}) {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
       let durableObjects = Object.values(miniflareOptions?.durableObjects || {});
 
       if (durableObjects.length > 0) {
         let text = readFileSync(join(config.root, ".solid", "server", "server.js"), "utf8");
         durableObjects.forEach(item => {
-          text += `\nexport { ${item} } from "./handler";`;
+          text += `\nexport { ${item} } from "./entry-server";`;
         });
         writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
       }

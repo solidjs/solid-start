@@ -140,10 +140,6 @@ export default function (miniflareOptions) {
 
       writeFileSync(join(config.root, "dist", "public", "_headers"), getHeadersFile(), "utf8");
 
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "server.js"),
