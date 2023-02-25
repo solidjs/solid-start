@@ -82,7 +82,10 @@ export default function StartServer({ event }: { event: PageEvent }) {
   return (
     <ServerContext.Provider value={event}>
       {devNoSSR ? (
-        <Root />
+        <>
+          {docType as unknown as any}
+          <Root />
+        </>
       ) : (
         <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
           <StartRouter

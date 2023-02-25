@@ -74,16 +74,14 @@ export default () => {
 
   function StartRouter(props: RouterProps) {
     return (
-      <Router {...props}>
-        <Root />
-      </Router>
+      <Router {...props}></Router>
     );
   }
 
   return (
     <ServerContext.Provider value={mockFetchEvent}>
       <MetaProvider>
-        <StartRouter data={dataFn}>
+        <StartRouter base={import.meta.env.BASE_URL} data={dataFn}>
           <Root />
         </StartRouter>
       </MetaProvider>

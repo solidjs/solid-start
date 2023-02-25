@@ -128,6 +128,7 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
       proc.stderr.pipe(process.stderr);
     },
     async build(config, builder) {
+      const ssrExternal = config?.ssr?.external || [];
       // Vercel Build Output API v3 (https://vercel.com/docs/build-output-api/v3)
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const workingDir =
@@ -171,7 +172,8 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
             exportConditions: edge ? ["worker", "solid"] : ["node", "solid"]
           }),
           common({ strictRequires: true, ...config.build.commonjsOptions })
-        ]
+        ],
+        external: ssrExternal
       });
 
       const renderFuncEntrypoint = new URL(`./index.${edge ? "mjs" : "cjs"}`, outputDir); // join(renderFuncDir, renderEntrypoint);
@@ -251,7 +253,8 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
               exportConditions: edge ? ["worker", "solid"] : ["node", "solid"]
             }),
             common({ strictRequires: true, ...config.build.commonjsOptions })
-          ]
+          ],
+          external: ssrExternal
         });
 
         const apiFuncEntrypoint = new URL(`./index.${edge ? "mjs" : "cjs"}`, outputDir); // join(apiFuncDir, apiEntrypoint);
