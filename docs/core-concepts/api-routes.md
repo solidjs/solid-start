@@ -89,7 +89,7 @@ export default {
 
 // @filename: index.ts
 // ---cut---
-import { APIEvent, json } from "solid-start/api";
+import { type APIEvent, json } from "solid-start/api";
 import hogwarts from "./hogwarts";
 
 export async function GET({ params }: APIEvent) {
@@ -128,7 +128,7 @@ export default {
 
 // @filename: index.ts
 // ---cut---
-import { APIEvent, json } from "solid-start/api";
+import { type APIEvent, json } from "solid-start/api";
 import { parseCookie } from "solid-start";
 import hogwarts from "./hogwarts";
 
@@ -161,7 +161,7 @@ SolidStart makes it easy to implement a GraphQL API. The `graphql` function take
 
 ```ts twoslash filename="routes/graphql.ts"
 import { buildSchema, graphql } from "graphql";
-import { APIEvent, json } from "solid-start";
+import { type APIEvent, json } from "solid-start";
 
 // Define GraphQL Schema
 const schema = buildSchema(`
@@ -242,7 +242,7 @@ export const client = createTRPCProxyClient<AppRouter>({
 Finally, you can use the `fetch` adapter to write an API route that acts as the tRPC server.
 
 ```tsx filename="routes/api/trpc/[...].ts"
-import { APIEvent } from "solid-start/api";
+import { type APIEvent } from "solid-start/api";
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from "~/lib/router";
 

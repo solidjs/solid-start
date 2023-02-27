@@ -92,7 +92,7 @@ export default function About() {
 You can create custom components that wrap `Title` to add a site-specific prefix to all the titles, e.g.
 
 ```tsx
-export default function MySiteTitle() {
+export default function MySiteTitle(props) {
   return <Title>{props.children} | My Site</Title>;
 }
 ```
