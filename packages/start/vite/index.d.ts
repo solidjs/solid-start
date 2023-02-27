@@ -1,4 +1,4 @@
-import { Plugin } from "node_modules/vite";
+import { Plugin } from "vite";
 import { Options } from "./plugin";
 
 export { Adapter } from './plugin';
