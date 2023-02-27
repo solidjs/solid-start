@@ -161,8 +161,7 @@ SolidStart makes it easy to implement a GraphQL API. The `graphql` function take
 
 ```ts twoslash filename="routes/graphql.ts"
 import { buildSchema, graphql } from "graphql";
-import { json } from "solid-start";
-import { type APIEvent } from "solid-start";
+import { type APIEvent, json } from "solid-start";
 
 // Define GraphQL Schema
 const schema = buildSchema(`
