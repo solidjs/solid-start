@@ -1,8 +1,9 @@
 import { FetchEvent } from "../types";
+import { Serialize } from "./serialize";
 
 export type ServerFunction<E extends any[], T extends (...args: [...E]) => void> = ((
   ...p: Parameters<T>
-) => Promise<Awaited<ReturnType<T>>>) & { url: string };
+) => Promise<Serialize<Awaited<ReturnType<T>>>>) & { url: string };
 
 export type CreateServerFunction = (<E extends any[], T extends (...args: [...E]) => void>(
   fn: T
