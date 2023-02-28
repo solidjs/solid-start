@@ -37,10 +37,6 @@ export default function () {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "server.js"),
