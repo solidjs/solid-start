@@ -30,10 +30,6 @@ export default function ({ edge } = {}) {
       }
 
       copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
-      copyFileSync(
         join(__dirname, edge ? "entry-edge.js" : "entry.js"),
         join(config.root, ".solid", "server", "index.js")
       );
