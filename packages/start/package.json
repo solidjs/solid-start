@@ -128,7 +128,7 @@
     "solid-start-vercel": "workspace:*",
     "solid-testing-library": "^0.3.0",
     "typescript": "^4.9.4",
-    "vite": "^3.2.5",
+    "vite": "^4.1.4",
     "vitest": "^0.20.3"
   },
   "peerDependencies": {
@@ -143,7 +143,7 @@
     "solid-start-node": "*",
     "solid-start-static": "*",
     "solid-start-vercel": "*",
-    "vite": "^3.1.8"
+    "vite": "^4.1.4"
   },
   "peerDependenciesMeta": {
     "solid-start-aws": {
