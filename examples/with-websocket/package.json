@@ -9,7 +9,7 @@
   "devDependencies": {
     "solid-start-cloudflare-workers": "^0.2.15",
     "typescript": "^4.9.4",
-    "vite": "^3.2.5"
+    "vite": "^4.1.4"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.3",
