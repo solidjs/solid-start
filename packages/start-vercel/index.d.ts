@@ -15,4 +15,7 @@ export type SolidStartVercelOptions = {
   excludes?: string | string[];
   prerender?: PrerenderFunctionConfig;
 };
-export default function (props: SolidStartVercelOptions): import("solid-start/vite").Adapter;
+
+type ViteAdapter = import("solid-start/vite").Adapter;
+export default function (props: SolidStartVercelOptions): ViteAdapter;
+export default function (): ViteAdapter;
