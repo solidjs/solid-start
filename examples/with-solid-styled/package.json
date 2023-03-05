@@ -16,7 +16,7 @@
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
     "solid-js": "^1.6.11",
-    "solid-start": "^0.2.22",
+    "solid-start": "^0.2.23",
     "solid-styled": "^0.8.1",
     "undici": "^5.15.1"
   },
