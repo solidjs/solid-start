@@ -182,6 +182,11 @@ function transformServer({ types: t, template }) {
                         source: serverFn.node
                       })
                     );
+                    path.replaceWith(
+                      t.identifier(
+                        `server$.createServerResultHandler($$server_module${serverIndex})`
+                      )
+                    );
                   } else {
                     statement.insertBefore(
                       template(
@@ -203,8 +208,8 @@ function transformServer({ types: t, template }) {
                           : {}
                       )
                     );
+                    path.replaceWith(t.identifier(`$$server_module${serverIndex}`));
                   }
-                  path.replaceWith(t.identifier(`$$server_module${serverIndex}`));
                 }
               },
               FunctionDeclaration: markFunction,

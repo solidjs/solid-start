@@ -279,6 +279,27 @@ server$.hasHandler = function (route) {
   return handlers.has(route);
 };
 
+server$.createServerResultHandler = function (handler) {
+  return (...args) =>
+    handler(...args).then((data: any) => {
+      // we need to emulate what respondWith does minus error handling.
+      if (data instanceof ResponseError) {
+        return data.clone();
+      } else if (data instanceof Response) {
+        return data;
+      } else if (
+        typeof data === "object" ||
+        typeof data === "string" ||
+        typeof data === "number" ||
+        typeof data === "boolean"
+      ) {
+        return JSON.stringify(data);
+      }
+
+      return null;
+    });
+};
+
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server
 server$.fetch = internalFetch;
