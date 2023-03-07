@@ -4,14 +4,14 @@ import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
 import {
   ContentTypeHeader,
+  isRedirectResponse,
   JSONResponseType,
   LocationHeader,
   ResponseError,
   XSolidStartContentTypeHeader,
   XSolidStartLocationHeader,
   XSolidStartOrigin,
-  XSolidStartResponseTypeHeader,
-  isRedirectResponse
+  XSolidStartResponseTypeHeader
 } from "../responses";
 import { PageEvent, ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
@@ -280,9 +280,8 @@ server$.hasHandler = function (route) {
 };
 
 server$.createServerResultHandler = function (handler) {
-  return (...args) =>
-    handler(...args).then((data: any) => {
-      // we need to emulate what respondWith does minus error handling.
+  return (...args) => {
+    const handleResponse = (data: any) => {
       if (data instanceof ResponseError) {
         return data.clone();
       } else if (data instanceof Response) {
@@ -295,9 +294,11 @@ server$.createServerResultHandler = function (handler) {
       ) {
         return JSON.stringify(data);
       }
-
-      return null;
-    });
+    };
+    const data = handler(...args);
+    data.then(handleResponse);
+    return data;
+  };
 };
 
 // used to fetch from an API route on the server or client, without falling into
