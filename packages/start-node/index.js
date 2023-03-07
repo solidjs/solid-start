@@ -1,7 +1,7 @@
 import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
-import { copyFileSync, readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -28,11 +28,6 @@ export default function () {
         await builder.client(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       }
-
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
 
       let text = readFileSync(join(__dirname, "entry.js")).toString();
 

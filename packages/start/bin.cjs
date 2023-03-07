@@ -519,7 +519,7 @@ async function resolveConfig({ configFile, root, mode, command }) {
     DEBUG('config file: "%s"', configFile);
   }
 
-  let config = await vite.resolveConfig({ mode, configFile, root }, command);
+  let config = await vite.resolveConfig({ mode, configFile, root }, command, mode, mode);
 
   async function resolveAdapter(config) {
     if (typeof config.solidOptions.adapter === "string") {

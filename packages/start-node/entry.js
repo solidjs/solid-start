@@ -3,7 +3,7 @@ import { createServer } from "solid-start-node/server.js";
 import "solid-start/node/globals.js";
 import { fileURLToPath } from "url";
 import manifest from "../../dist/public/route-manifest.json";
-import handler from "./handler.js";
+import handler from "./entry-server.js";
 
 const { PORT = 3000 } = process.env;
 

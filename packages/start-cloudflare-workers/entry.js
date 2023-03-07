@@ -1,7 +1,7 @@
 import { getAssetFromKV, MethodNotAllowedError, NotFoundError } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import manifest from "../../dist/public/route-manifest.json";
-import handler from "./handler";
+import handler from "./entry-server";
 
 /**
  * @example

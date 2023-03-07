@@ -1,7 +1,7 @@
 import { createRequest } from "solid-start/node/fetch.js";
 import "solid-start/node/globals.js";
 import manifest from "../../dist/public/route-manifest.json";
-import handler from "./handler.js";
+import handler from "./entry-server.js";
 
 const MAX_REDIRECTS = 10;
 async function handleRequest(req) {

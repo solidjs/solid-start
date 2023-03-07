@@ -1,6 +1,6 @@
 {
   "name": "solid-start-aws",
-  "version": "0.2.22",
+  "version": "0.2.23",
   "main": "./index.mjs",
   "type": "module",
   "solid": {
@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "vite": "^3.2.5"
+    "vite": "^4.1.4"
   },
   "peerDependencies": {
     "solid-start": "*",
