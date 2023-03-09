@@ -133,7 +133,7 @@ test.describe("spa rendering", () => {
       </div>`)
       );
 
-      await app.goto("/about");
+      await app.goto("/about", true);
       expect(await app.getHtml("#content")).toBe(
         prettyHtml(`
       <div id="content">
