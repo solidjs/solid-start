@@ -1,5 +1,5 @@
 import manifest from "../../netlify/route-manifest.json";
-import handler from "./handler";
+import handler from "./entry-server.js";
 
 export default (request, context) =>
   handler({
