@@ -1,6 +1,6 @@
 body {
   font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell,
-  'Open Sans', 'Helvetica Neue', sans-serif;
+  'Open Sans', 'Helvetica Neue', sans-serif;  
 }
 
 main {
@@ -13,6 +13,7 @@ main {
 
 h1 {
   margin: 0;
+  font-size: 1.75rem;
 }
 
 p {
@@ -51,9 +52,17 @@ button {
   background: #d1d5db;
   border: none;
   border-radius: 0.3rem;
-  padding: 0.2rem;
+  padding: 0.4rem;
   font-size: 1rem;
   width: 100%;
+  margin-top: 8px;
+  cursor: pointer;
 }
 
+button[type='submit'] {
+  background-color: rgb(0 0 0 / 5%);
+}
 
+.full-width {
+  width: 100%;
+}
