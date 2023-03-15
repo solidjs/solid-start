@@ -14,7 +14,7 @@ export function HttpHeader(props: { name: string; value: string; append?: boolea
   }
 
   onCleanup(() => {
-    if (isServer) {
+    if (!isServer) {
       const value = pageContext!.responseHeaders.get(props.name);
       if (value) {
         const values = value.split(", ");
