@@ -90,19 +90,27 @@ export function createRouteAction<T, U = void>(
       }) as Promise<U>;
   }
   submit.url = (fn as any).url;
-  submit.Form = ((props: Omit<FormProps, "action" | "onSubmission">) => {
+  submit.Form = ((
+    props: { resetOnSuccess?: boolean } & Omit<FormProps, "action" | "onSubmission">
+  ) => {
     let url = (fn as any).url;
-    return (
+    let form = (
       <FormImpl
         {...props}
         action={url}
-        onSubmission={submission => {
-          submit(submission.formData as any);
+        onSubmission={async submission => {
+          await submit(submission.formData as any);
+          if (!result()?.error && props.resetOnSuccess) {
+            if (form instanceof HTMLFormElement) {
+              form.reset();
+            }
+          }
         }}
       >
         {props.children}
       </FormImpl>
     );
+    return form;
   }) as T extends FormData ? ParentComponent<FormProps> : never;
 
   return [
