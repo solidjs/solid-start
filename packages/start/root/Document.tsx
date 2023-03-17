@@ -27,7 +27,7 @@ export function Head(props: ComponentProps<"head">) {
       props,
       () => (
         <>
-          {escape(props.children)}
+          {escape(props.children as string)}
           <Meta />
           <Links />
         </>
@@ -45,7 +45,7 @@ export function Body(props: ComponentProps<"body">) {
     return ssrElement(
       "body",
       props,
-      () => (import.meta.env.START_SSR ? escape(props.children) : <Scripts />),
+      () => (import.meta.env.START_SSR ? escape(props.children as string) : <Scripts />),
       false
     ) as unknown as JSX.Element;
   } else {
