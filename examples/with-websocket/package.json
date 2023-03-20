@@ -15,7 +15,7 @@
     "@cloudflare/kv-asset-handler": "^0.1.3",
     "@cloudflare/workers-types": "^3.19.0",
     "@solidjs/meta": "^0.28.2",
-    "@solidjs/router": "^0.7.0",
+    "@solidjs/router": "^0.8.1",
     "solid-js": "^1.6.11",
     "solid-start": "^0.2.23",
     "undici": "^5.15.1"
