@@ -15,6 +15,7 @@ export type Options = {
   prerenderRoutes: any[];
   inspect: boolean;
   rootEntry: string;
+  csrRootEntry: string;
   serverEntry: string;
   clientEntry: string;
 } & import("vite-plugin-solid").Options;

@@ -84,7 +84,9 @@ export default function StartServer({ event }: { event: PageEvent }) {
       {devNoSSR ? (
         <>
           {docType as unknown as any}
-          <Root />
+          <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
+            <Root />
+          </MetaProvider>
         </>
       ) : (
         <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>

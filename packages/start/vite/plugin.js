@@ -339,10 +339,11 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var fileRoutes = $FILE_ROUTES;",
-            !options.ssr && ssr ? "var fileRoutes = [];" :
-            stringifyPageRoutes(router.getNestedPageRoutes(), {
-              lazy: ssr ? false : true
-            })
+            !options.ssr && ssr
+              ? "var fileRoutes = [];"
+              : stringifyPageRoutes(router.getNestedPageRoutes(), {
+                  lazy: ssr ? false : true
+                })
           )
         };
       } else if (code.includes("var routeLayouts = $ROUTE_LAYOUTS;")) {
@@ -392,17 +393,29 @@ function solidStartCsrDev(options) {
   let csrDev = false;
   return {
     name: "solid-start-csr-dev",
+    async config(config) {
+      options.csrRootEntry =
+        options.csrRootEntry ?? findAny(join(options.root, options.appRoot), "root-csr");
+      if (!options.csrRootEntry) {
+        options.csrRootEntry = join(_dirname, "..", "dev", "CsrRoot.tsx").replaceAll("\\", "/");
+      }
+      return {
+        resolve: {
+          alias: {
+            "~start/root-csr": options.csrRootEntry
+          }
+        }
+      };
+    },
     async configResolved(config) {
       csrDev = config.command === "serve" && options.ssr !== true;
     },
     async transform(code, id, transformOptions) {
-      const isSsr = transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
+      const isSsr =
+        transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
       if (isSsr && csrDev && code.includes("~start/root")) {
         return {
-          code: code.replace(
-            "~start/root",
-            join(_dirname, "..", "dev", "CsrRoot.tsx").replaceAll("\\", "/")
-          )
+          code: code.replace("~start/root", "~start/root-csr")
         };
       }
     }
@@ -535,7 +548,6 @@ function expand(target, source = {}, parse = v => v) {
     target[key] = interpolate(getValue(key));
   }
 }
-
 
 /**
  * @returns {import('vite').Plugin}

@@ -114,6 +114,84 @@ test.describe("spa rendering", () => {
     runTests();
   });
 
+  test.describe("with root-csr.tsx", () => {
+    test.beforeAll(async () => {
+      fixture = await createFixture({
+        files: {
+          ...files,
+          "src/root.tsx": js`
+            import { Meta, FileRoutes, Scripts, Routes } from "solid-start";
+            import { Suspense } from "solid-js";
+
+            export default function Root() {
+              return (
+                <>
+                  <div id="content">
+                    <h1>Root</h1>
+                    <Routes><FileRoutes /></Routes>
+                  </div>
+                </>
+              );
+            }
+          `,
+          "src/root-csr.tsx": js`
+            import { NoHydration } from "solid-js/web";
+            import { Body, Head, Html, Meta, Title } from "solid-start";
+          
+            export default function Root() {
+              return (
+                <Html lang="en">
+                  <Head>
+                    <Title>SolidStart - Bare</Title>
+                    <Meta charset="utf-8" />
+                    <Meta name="viewport" content="width=device-width, initial-scale=1" />
+                    <meta name="test" content="test" />
+                  </Head>
+                  <Body />
+                </Html>
+              );
+            }
+          `
+        }
+      });
+      appFixture = await fixture.createServer();
+    });
+
+    test.afterAll(async () => {
+      await appFixture.close();
+    });
+
+    runTests();
+
+    test("server index.html includes Head", async ({ page }) => {
+      let res = await fixture.requestDocument("/");
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Content-Type")?.includes("text/html")).toBe(true);
+      const html = await res.text();
+      // duplicate test from test-meta.ts but only for csr index.html
+      expect(await selectHtml(html, "title")).toBe(
+        prettyHtml(`<title data-sm="0-0-0-0-0-0-0-0-0-0-0-0" >SolidStart - Bare</title>`)
+      );
+      expect(selectHtml(await html, 'meta[charset="utf-8"]')).toBe(
+        prettyHtml(`<meta data-sm="0-0-0-0-0-0-0-0-0-0-0-1" charset="utf-8" />`)
+      );
+      expect(await selectHtml(html, "meta[name='viewport']")).toBe(
+        prettyHtml(
+          `<meta data-sm="0-0-0-0-0-0-0-0-0-0-0-2" name="viewport" content="width=device-width, initial-scale=1">`
+        )
+      );
+      expect(await selectHtml(html, "meta[name='test']")).toBe(
+        prettyHtml(`<meta name="test" content="test">`)
+      );
+    });
+
+    test("client removes Meta sent from server", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto("/", true);
+      expect(async () => await app.getHtml("meta[data-sm*='0-']")).rejects.toThrow();
+    });
+  });
+
   function runTests() {
     test("server rendering doesn't include content", async () => {
       let res = await fixture.requestDocument("/");

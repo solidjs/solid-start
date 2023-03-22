@@ -27,7 +27,7 @@ export function Head(props: ComponentProps<"head">) {
       props,
       () => (
         <>
-          {escape(props.children as string)}
+          {import.meta.env.START_SSR ? escape(props.children as string) : <NoHydration>{escape(props.children as string)}</NoHydration>}
           <Meta />
           <Links />
         </>
