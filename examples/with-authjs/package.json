@@ -19,7 +19,7 @@
     "@auth/core": "^0.3.0",
     "@auth/solid-start": "^0.1.0",
     "@solidjs/meta": "^0.28.2",
-    "@solidjs/router": "^0.8.1",
+    "@solidjs/router": "^0.8.2",
     "solid-js": "^1.6.11",
     "solid-start": "^0.2.23",
     "undici": "^5.15.1"
