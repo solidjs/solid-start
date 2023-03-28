@@ -119,6 +119,14 @@ test.describe("api routes", () => {
 
               return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
             }
+          `,
+          "src/routes/api/static.js": js`
+            import { json } from "solid-start/server";
+            export let GET = () => json({ static: true });
+          `,
+          "src/routes/api/[param]/index.js": js`
+            import { json } from "solid-start/server";
+            export let GET = ({ params }) => json(params);
           `
         }
       });
@@ -253,6 +261,12 @@ test.describe("api routes", () => {
       let res = await fixture.requestDocument("/api/fetch");
       expect(res.headers.get("content-type")).toEqual("application/json");
       expect(await res.json()).toEqual({ message: "Hello from Hogwarts" });
+    });
+
+    test("/:param/ should not be matched over /static", async () => {
+      let res = await fixture.requestDocument("/api/static");
+      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
+      expect(await res.json()).toEqual({ static: true });
     });
   }
 });
