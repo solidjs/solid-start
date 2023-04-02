@@ -137,8 +137,29 @@ class NodeRequest extends BaseNodeRequest {
   }
 }
 
+/**
+ *
+ * @param {import('http').IncomingMessage} req
+ */
 export function createRequest(req) {
-  let origin = req.headers.origin || `http://${req.headers.host}`;
+  let origin;
+  if (req.httpVersionMajor === 1) {
+    origin = req.headers.origin || `http://${req.headers.host}`;
+    // It's impossible for `host` to be empty since :authority doesn't exist on HTTP/1.
+    // https://www.rfc-editor.org/rfc/rfc9110.html#section-7.2 A user agent MUST generate a Host header field in a request unless it sends that information as an ":authority" pseudo-header field
+    // We initially try the origin header because it has the scheme. The host header doesn't, and so defaults to HTTP
+  } else if (req.httpVersionMajor === 2) {
+    const scheme = req.headers[":scheme"] || "http"; // optimistically assuming http if CONNECT https://www.rfc-editor.org/rfc/rfc7540#section-8.1.2.3 All HTTP/2 requests MUST include exactly one valid value for the ":method", ":scheme", and ":path" pseudo-header fields, unless it is a CONNECT request
+    const host = req.headers[":authority"] || req.headers.host; // :authority may not exist if the server isn't authoritative; fall back to host https://www.rfc-editor.org/rfc/rfc7540#section-8.2 The server MUST include a value in the ":authority" pseudo-header field for which the server is authoritative
+    origin = `${scheme}://${host}`;
+  } else if (req.httpVersionMajor === 3) {
+    const scheme = req.headers[":scheme"] || "http"; // optimistically assuming http if CONNECT https://www.rfc-editor.org/rfc/rfc9114.html#section-4.3.1 All HTTP/3 requests MUST include exactly one value for the :method, :scheme, and :path pseudo-header fields, unless the request is a CONNECT request
+    const host = req.headers[":authority"] || req.headers.host; // :authority or host must exist https://www.rfc-editor.org/rfc/rfc9114.html#section-4.3.1 If the :scheme pseudo-header field identifies a scheme that has a mandatory authority component (including "http" and "https"), the request MUST contain either an :authority pseudo-header field or a Host header field.
+    origin = `${scheme}://${host}`;
+  } else {
+    throw new Error(`Unsupported HTTP version: '${req.httpVersionMajor}'`);
+  }
+
   let url = new URL(req.url, origin);
 
   let init = {
