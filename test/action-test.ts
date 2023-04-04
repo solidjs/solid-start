@@ -31,7 +31,7 @@ test.describe("actions", () => {
                 <button onClick={e => submission.clear()} id="reset">Reset</button>
                 <Show when={submission.result}><p id="result">{submission.result}</p></Show>
                 <Show when={submission.pending}><p id="pending">Pending</p></Show>
-                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
+                <Show when={submission.error} keyed>{e => <p id="error">{e.message}</p>}</Show>
               </>
             );
           }
@@ -55,7 +55,7 @@ test.describe("actions", () => {
                 <button onClick={e => submission.clear()} id="reset">Reset</button>
                 <Show when={submission.result}><p id="result">{submission.result}</p></Show>
                 <Show when={submission.pending}><p id="pending">Pending</p></Show>
-                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
+                <Show when={submission.error} keyed>{e => <p id="error">{e.message}</p>}</Show>
               </>
             );
           }
@@ -79,7 +79,7 @@ test.describe("actions", () => {
                 <button onClick={e => submission.clear()} id="reset">Reset</button>
                 <Show when={submission.result}><p id="result">{submission.result}</p></Show>
                 <Show when={submission.pending}><p id="pending">Pending</p></Show>
-                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
+                <Show when={submission.error} keyed>{e => <p id="error">{e.message}</p>}</Show>
               </>
             );
           }
@@ -131,7 +131,7 @@ test.describe("actions", () => {
                 <input type="submit" id="submit"/>
                 <Show when={submission.result}><p id="result">{submission.result}</p></Show>
                 <Show when={submission.pending}><p id="pending">Pending</p></Show>
-                <Show when={submission.error}>{e => <p id="error">{e.message}</p>}</Show>
+                <Show when={submission.error} keyed>{e => <p id="error">{e.message}</p>}</Show>
               </submit.Form>
             );
           }
