@@ -11,9 +11,9 @@ import {
   Meta,
   Routes,
   Scripts,
-  Title
+  Title,
 } from "solid-start";
-import { css, renderSheets, StyleRegistry } from "solid-styled";
+import { css, renderSheets, StyleRegistry, type StyleData } from "solid-styled";
 
 function GlobalStyles() {
   css`
@@ -64,8 +64,8 @@ function GlobalStyles() {
 }
 
 export default function Root() {
-  const sheets = [];
-  useAssets(() => renderSheets(sheets))
+  const sheets: StyleData[] = [];
+  useAssets(() => renderSheets(sheets));
 
   return (
     <StyleRegistry styles={sheets}>
