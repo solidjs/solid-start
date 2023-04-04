@@ -39,7 +39,7 @@
     "graphql": "^16.6.0",
     "rimraf": "^3.0.2",
     "rollup": "^3.10.0",
-    "solid-js": "^1.6.11",
+    "solid-js": "^1.7.1",
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:^0.2.15",
