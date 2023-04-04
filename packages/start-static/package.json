@@ -2,6 +2,7 @@
   "name": "solid-start-static",
   "version": "0.2.25",
   "main": "./index.js",
+  "types": "./index.d.ts",
   "type": "module",
   "solid": {
     "type": "adapter"
