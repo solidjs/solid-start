@@ -274,6 +274,8 @@ importers:
     specifiers:
       '@solidjs/meta': ^0.28.2
       '@solidjs/router': ^0.8.2
+      '@types/babel__core': ^7.20.0
+      '@types/debug': ^4.1.7
       solid-js: ^1.7.2
       solid-start: ^0.2.25
       solid-start-node: ^0.2.19
@@ -290,6 +292,8 @@ importers:
       solid-styled: 0.8.2_solid-js@1.7.2
       undici: 5.21.0
     devDependencies:
+      '@types/babel__core': 7.20.0
+      '@types/debug': 4.1.7
       solid-start-node: link:../../packages/start-node
       typescript: 4.9.5
       vite: 4.2.1
