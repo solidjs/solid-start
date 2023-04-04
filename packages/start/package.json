@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.2.24",
+  "version": "0.2.25",
   "description": "Create Solid apps with low configuration",
   "license": "MIT",
   "author": "Ryan Carniato",
@@ -90,8 +90,8 @@
     "dequal": "^2.0.3",
     "dotenv": "^16.0.3",
     "es-module-lexer": "^1.1.0",
-    "esbuild": "^0.14.54",
-    "esbuild-plugin-solid": "^0.4.2",
+    "esbuild": "^0.17.15",
+    "esbuild-plugin-solid": "^0.5.0",
     "fast-glob": "^3.2.12",
     "get-port": "^6.1.2",
     "parse-multipart-data": "^1.5.0",
@@ -105,7 +105,7 @@
     "terser": "^5.16.1",
     "undici": "^5.15.1",
     "vite-plugin-inspect": "^0.7.14",
-    "vite-plugin-solid": "^2.6.1",
+    "vite-plugin-solid": "^2.7.0",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {

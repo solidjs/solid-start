@@ -144,7 +144,9 @@ class NodeRequest extends BaseNodeRequest {
 export function createRequest(req) {
   let origin;
   if (req.httpVersionMajor === 1) {
-    origin = req.headers.origin || `http://${req.headers.host}`;
+    origin = req.headers.origin && 'null' !== req.headers.origin
+      ? req.headers.origin
+      : `http://${req.headers.host}`;
     // It's impossible for `host` to be empty since :authority doesn't exist on HTTP/1.
     // https://www.rfc-editor.org/rfc/rfc9110.html#section-7.2 A user agent MUST generate a Host header field in a request unless it sends that information as an ":authority" pseudo-header field
     // We initially try the origin header because it has the scheme. The host header doesn't, and so defaults to HTTP
