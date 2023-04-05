@@ -7,6 +7,10 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
+/***
+ * @param {object} options
+ * @param {boolean} [options.edge]
+ */
 export default function ({ edge } = {}) {
   return {
     name: "netlify",
