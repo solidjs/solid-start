@@ -75,7 +75,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -103,7 +103,7 @@ importers:
       '@types/node': ^18.11.18
       esbuild: ^0.14.54
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -133,7 +133,7 @@ importers:
       postcss: ^8.4.21
       rollup: ^3.10.0
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -165,7 +165,7 @@ importers:
       postcss: ^8.4.21
       rollup: ^3.10.0
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -198,7 +198,7 @@ importers:
       next-auth: ^4.19.2
       postcss: ^8.4.21
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -227,7 +227,7 @@ importers:
       '@solidjs/router': ^0.8.2
       solid-js: ^1.7.2
       solid-mdx: ^0.0.6
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -252,7 +252,7 @@ importers:
       '@solidjs/router': ^0.8.2
       prisma: ^4.9.0
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -277,7 +277,7 @@ importers:
       '@types/babel__core': ^7.20.0
       '@types/debug': ^4.1.7
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       solid-styled: ^0.8.1
       typescript: ^4.9.4
@@ -306,7 +306,7 @@ importers:
       autoprefixer: ^10.4.13
       postcss: ^8.4.21
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-node: ^0.2.19
       tailwindcss: ^3.2.4
       typescript: ^4.9.4
@@ -367,7 +367,7 @@ importers:
       '@solidjs/meta': ^0.28.2
       '@solidjs/router': ^0.8.2
       solid-js: ^1.7.2
-      solid-start: ^0.2.25
+      solid-start: ^0.2.26
       solid-start-cloudflare-workers: ^0.2.15
       typescript: ^4.9.4
       undici: ^5.15.1
@@ -1016,7 +1016,7 @@ packages:
       '@babel/helper-plugin-utils': 7.20.2
       debug: 4.3.4
       lodash.debounce: 4.0.8
-      resolve: 1.22.1
+      resolve: 1.22.2
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -2941,7 +2941,7 @@ packages:
       deepmerge: 4.3.1
       is-builtin-module: 3.2.1
       is-module: 1.0.0
-      resolve: 1.22.1
+      resolve: 1.22.2
       rollup: 3.20.2
 
   /@rollup/pluginutils/4.2.1:
@@ -3580,8 +3580,8 @@ packages:
       - debug
     dev: false
 
-  /babel-plugin-jsx-dom-expressions/0.36.7_@babel+core@7.21.4:
-    resolution: {integrity: sha512-SqrwOKvAO3jM8CJ+FdPsldSFS1smPJvI1VyjsQQRU4VWjvIUgNFL8e1Ze0Z8IgsuNEbsRLUu/y3PDOQBFsarwA==}
+  /babel-plugin-jsx-dom-expressions/0.36.8_@babel+core@7.21.4:
+    resolution: {integrity: sha512-hWG9WOa0gAxD1CKtzBxXMZoDMfn0Fxv8pYrl4y8znOpaS0vLuyNsclLH/w4hv+VBpv1yt9Rn4Gm/ImLBcqUfKA==}
     peerDependencies:
       '@babel/core': ^7.20.12
     dependencies:
@@ -3635,7 +3635,7 @@ packages:
       '@babel/core': ^7.0.0
     dependencies:
       '@babel/core': 7.21.4
-      babel-plugin-jsx-dom-expressions: 0.36.7_@babel+core@7.21.4
+      babel-plugin-jsx-dom-expressions: 0.36.8_@babel+core@7.21.4
     dev: false
 
   /bail/2.0.2:
@@ -3690,7 +3690,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001474
-      electron-to-chromium: 1.4.351
+      electron-to-chromium: 1.4.353
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10_browserslist@4.21.5
 
@@ -4397,8 +4397,8 @@ packages:
     resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
     dev: false
 
-  /electron-to-chromium/1.4.351:
-    resolution: {integrity: sha512-W35n4jAsyj6OZGxeWe+gA6+2Md4jDO19fzfsRKEt3DBwIdlVTT8O9Uv8ojgUAoQeXASdgG9zMU+8n8Xg/W6dRQ==}
+  /electron-to-chromium/1.4.353:
+    resolution: {integrity: sha512-IdJVpMHJoBT/nn0GQ02wPfbhogDVpd1ud95lP//FTf5l35wzxKJwibB4HBdY7Q+xKPA1nkZ0UDLOMyRj5U5IAQ==}
 
   /emoji-regex/8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -7133,7 +7133,7 @@ packages:
     dependencies:
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
-      resolve: 1.22.1
+      resolve: 1.22.2
     dev: true
 
   /postcss-import/14.1.0_postcss@8.4.21:
@@ -7145,7 +7145,7 @@ packages:
       postcss: 8.4.21
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
-      resolve: 1.22.1
+      resolve: 1.22.2
     dev: true
 
   /postcss-js/4.0.1:
@@ -7775,8 +7775,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /resolve/1.22.1:
-    resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
+  /resolve/1.22.2:
+    resolution: {integrity: sha512-Sb+mjNHOULsBv818T40qSPeRiuWLyaGMa5ewydRLFimneixmVy2zdivRl+AF6jaYPC8ERxGDmFSiqui6SfPd+g==}
     hasBin: true
     dependencies:
       is-core-module: 2.11.0
@@ -8319,7 +8319,7 @@ packages:
       postcss-selector-parser: 6.0.11
       postcss-value-parser: 4.2.0
       quick-lru: 5.1.1
-      resolve: 1.22.1
+      resolve: 1.22.2
       sucrase: 3.31.0
     transitivePeerDependencies:
       - ts-node
@@ -8354,7 +8354,7 @@ packages:
       postcss-selector-parser: 6.0.11
       postcss-value-parser: 4.2.0
       quick-lru: 5.1.1
-      resolve: 1.22.1
+      resolve: 1.22.2
       sucrase: 3.31.0
     transitivePeerDependencies:
       - ts-node
@@ -8963,7 +8963,7 @@ packages:
       '@types/node': 18.15.11
       esbuild: 0.15.18
       postcss: 8.4.21
-      resolve: 1.22.1
+      resolve: 1.22.2
       rollup: 2.79.1
       terser: 5.16.8
     optionalDependencies:
@@ -8997,7 +8997,7 @@ packages:
     dependencies:
       esbuild: 0.17.15
       postcss: 8.4.21
-      resolve: 1.22.1
+      resolve: 1.22.2
       rollup: 3.20.2
     optionalDependencies:
       fsevents: 2.3.2
@@ -9030,7 +9030,7 @@ packages:
       '@types/node': 18.15.11
       esbuild: 0.17.15
       postcss: 8.4.21
-      resolve: 1.22.1
+      resolve: 1.22.2
       rollup: 3.20.2
     optionalDependencies:
       fsevents: 2.3.2
@@ -9063,7 +9063,7 @@ packages:
       '@types/node': 18.15.11
       esbuild: 0.17.15
       postcss: 8.4.21
-      resolve: 1.22.1
+      resolve: 1.22.2
       rollup: 3.20.2
       terser: 5.16.8
     optionalDependencies:
@@ -9096,7 +9096,7 @@ packages:
     dependencies:
       esbuild: 0.17.15
       postcss: 8.4.21
-      resolve: 1.22.1
+      resolve: 1.22.2
       rollup: 3.20.2
       terser: 5.16.8
     optionalDependencies:
