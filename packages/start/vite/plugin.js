@@ -7,8 +7,8 @@ import fs, { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
-import { loadEnv, normalizePath } from "vite";
-import inspect from "vite-plugin-inspect";
+import { loadEnv } from "vite";
+// import inspect from "vite-plugin-inspect";
 import solid from "vite-plugin-solid";
 import printUrls from "../dev/print-routes.js";
 import fileRoutesImport from "../fs-router/fileRoutesImport.js";
@@ -22,24 +22,18 @@ import routeResource from "../server/serverResource.js";
 globalThis.DEBUG = debug("start:vite");
 
 let _dirname = dirname(fileURLToPath(import.meta.url));
-// const _dirname = dirname(fileURLToPath(`${import.meta.url}`));
 
 /**
  * @returns {import('vite').PluginOption}
  * @param {any} options
  */
 function solidStartInlineServerModules(options) {
-  let lazy;
-  let config;
   /** @type {import('vite').Plugin} */
   return {
     enforce: "pre",
-    configResolved(_config) {
-      lazy = _config.command !== "serve";
-      config = _config;
-    },
     name: "solid-start-inline-server-modules",
     configureServer(vite) {
+      if (!vite.httpServer) return;
       vite.httpServer.once("listening", async () => {
         const label = `  > Server modules: `;
         setTimeout(() => {
@@ -55,15 +49,6 @@ function solidStartInlineServerModules(options) {
 }
 
 /**
- * @param {any} arr
- */
-function toArray(arr) {
-  if (!arr) return [];
-  if (Array.isArray(arr)) return arr;
-  return [arr];
-}
-
-/**
  * @returns {import('vite').Plugin}
  * @param {{ lazy?: any; restart?: any; reload?: any; ssr?: any; appRoot?: any; routesDir?: any; delay?: any; glob?: any; router?: any; babel?: any }} options
  */
@@ -73,10 +58,6 @@ function solidStartFileSystemRouter(options) {
 
   let { delay = 500, glob: enableGlob = true, router } = options;
   let root = process.cwd();
-  let reloadGlobs = [];
-  let restartGlobs = [];
-  let configFile = "vite.config.js";
-  let timerState = "reload";
   let timer;
   const pathPlatform = process.platform === "win32" ? path.win32 : path.posix;
   function clear() {
@@ -107,12 +88,6 @@ function solidStartFileSystemRouter(options) {
       );
       timerState = "";
     });
-    // } else if (micromatch.isMatch(file, reloadGlobs) && timerState !== "restart") {
-    //   timerState = "reload";
-    //   schedule(() => {
-    //     server.ws.send({ type: "full-reload" });
-    //     timerState = "";
-    //   });
   };
   return {
     name: "solid-start-file-system-router",
@@ -130,19 +105,16 @@ function solidStartFileSystemRouter(options) {
       lazy = _config.command !== "serve" || options.lazy === true;
       config = _config;
       await router.init();
-
-      configFile = _config.configFile;
       // famous last words, but this *appears* to always be an absolute path
       // with all slashes normalized to forward slashes `/`. this is compatible
       // with path.posix.join, so we can use it to make an absolute path glob
       root = config.root;
-      restartGlobs = toArray(options.restart).map(i => path.posix.join(root, i));
-      reloadGlobs = toArray(options.reload).map(i => path.posix.join(root, i));
     },
     configureServer(vite) {
       server = vite;
       router.watch(console.log);
       router.listener = listener;
+      if (!vite.httpServer) return;
       vite.httpServer.once("listening", async () => {
         setTimeout(() => {
           if (vite.resolvedUrls) {
@@ -371,9 +343,7 @@ function solidStartFileSystemRouter(options) {
 function solidsStartRouteManifest(options) {
   return {
     name: "solid-start-route-manifest",
-    config(conf) {
-      const regex = new RegExp(`\\.(${options.pageExtensions.join("|")})$`);
-      const root = normalizePath(conf.root || process.cwd());
+    config() {
       return {
         build: {
           target: "esnext",
@@ -713,7 +683,7 @@ export default function solidStart(options) {
     solidStartFileSystemRouter(options),
     !options.ssr && solidStartCsrDev(options),
     options.islands ? islands() : undefined,
-    options.inspect ? inspect({ outputDir: join(".solid", "inspect"), build: true }) : undefined,
+    // options.inspect ? inspect({ outputDir: join(".solid", "inspect"), build: true }) : undefined,
     options.ssr && solidStartInlineServerModules(options),
     solid({
       ...(options ?? {}),
