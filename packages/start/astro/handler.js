@@ -10,9 +10,15 @@ let devEnv = {
 };
 const all = async ({ cookies, request, ...args }) => {
   try {
+    let manifest;
+    if (!import.meta.env.DEV) {
+      manifest = (await import(new URL('../../../client/route-manifest.json', import.meta.url), {
+        assert: { type: 'json' }
+      })).default;
+    }
     const load = await startHandler({
       request,
-      env: devEnv,
+      env: manifest ? { manifest }: devEnv,
       clientAddress: request.headers.get("x-forwarded-for"),
       locals: {}
     });

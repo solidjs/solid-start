@@ -1,5 +1,6 @@
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import { resolveConfig } from "vite";
 import prepareManifest from "../fs-router/manifest.js";
 import solidStart from "../vite/plugin.js";
 
@@ -19,19 +20,20 @@ export default function(solidOptions = {}) {
           pattern: "/[...all]"
         });
         updateConfig({ vite: {
-          plugins: solidStart(solidOptions),
+          plugins: solidStart(solidOptions)
         }});
       },
-      "astro:build:setup": ({ target, vite }) => {
+      "astro:build:setup": async ({ target, vite }) => {
         if (target === "client") vite.build.ssrManifest = true;
-        config = vite;
+        // resolve it ourselves as Astro doesn't expose it
+        config = await resolveConfig(vite, 'build', 'production', 'production');
       },
-      "astro:build:done": async (props) => {
-        const { dir } = props;
+      "astro:build:done": async ({ dir }) => {
         let assetManifest = JSON.parse((await readFile(fileURLToPath(new URL('./manifest.json', dir)))).toString());
         let ssrManifest = JSON.parse((await readFile(fileURLToPath(new URL('./ssr-manifest.json', dir)))).toString());
         let routeManifest = prepareManifest(ssrManifest, assetManifest, config);
-        console.log(routeManifest);
+        const outFile = fileURLToPath(new URL('./route-manifest.json', dir));
+        await writeFile(outFile, JSON.stringify(routeManifest, null, 2));
       }
     }
   };
