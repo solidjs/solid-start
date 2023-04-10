@@ -8,5 +8,5 @@ export default defineConfig({
 	adapter: node({
 		mode: 'standalone',
 	}),
-	integrations: [start()]
+	integrations: [start()],
 });

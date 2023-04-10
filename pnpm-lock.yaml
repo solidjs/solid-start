@@ -101,34 +101,19 @@ importers:
 
   examples/todomvc:
     specifiers:
+      '@astrojs/node': ^5.0.3
       '@solidjs/meta': ^0.28.2
       '@solidjs/router': ^0.8.2
-      '@types/node': ^18.11.18
-      csstype: 3.1.0
-      esbuild: ^0.14.54
-      postcss: ^8.4.21
-      rollup: ^3.10.0
+      astro: ^2.0.6
       solid-js: ^1.7.2
       solid-start: ^0.2.26
-      solid-start-node: ^0.2.19
-      typescript: ^4.9.4
-      undici: ^5.15.1
-      vite: ^4.1.4
     dependencies:
+      '@astrojs/node': 5.1.1_astro@2.2.0
       '@solidjs/meta': 0.28.4_solid-js@1.7.2
       '@solidjs/router': 0.8.2_solid-js@1.7.2
+      astro: 2.2.0
       solid-js: 1.7.2
       solid-start: link:../../packages/start
-      undici: 5.21.0
-    devDependencies:
-      '@types/node': 18.15.11
-      csstype: 3.1.0
-      esbuild: 0.14.54
-      postcss: 8.4.21
-      rollup: 3.20.2
-      solid-start-node: link:../../packages/start-node
-      typescript: 4.9.5
-      vite: 4.2.1_@types+node@18.15.11
 
   examples/with-auth:
     specifiers:
@@ -4517,10 +4502,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       cssom: 0.3.8
-    dev: true
-
-  /csstype/3.1.0:
-    resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
     dev: true
 
   /csstype/3.1.2:

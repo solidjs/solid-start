@@ -1,27 +1,21 @@
 {
   "name": "example-todomvc",
-  "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start start"
-  },
   "type": "module",
-  "devDependencies": {
-    "@types/node": "^18.11.18",
-    "csstype": "3.1.0",
-    "esbuild": "^0.14.54",
-    "postcss": "^8.4.21",
-    "rollup": "^3.10.0",
-    "solid-start-node": "^0.2.19",
-    "typescript": "^4.9.4",
-    "vite": "^4.1.4"
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "server": "node dist/server/entry.mjs"
   },
   "dependencies": {
+    "@astrojs/node": "^5.0.3",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
+    "astro": "^2.0.6",
     "solid-js": "^1.7.2",
-    "solid-start": "^0.2.26",
-    "undici": "^5.15.1"
+    "solid-start": "^0.2.26"
   },
   "engines": {
     "node": ">=16"
