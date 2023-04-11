@@ -59,6 +59,8 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
       file.imports?.forEach(imp => {
         if (imp === src) return;
+        visitFile(assetManifest["vite/legacy-polyfills"])
+        visitFile(assetManifest["vite/legacy-polyfills-legacy"])
         visitFile(assetManifest[imp]);
       });
 
