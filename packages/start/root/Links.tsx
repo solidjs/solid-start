@@ -46,11 +46,17 @@ function getAssetsFromManifest(
 
   const links = match.reduce((r, src) => {
     r[src.href] =
-      src.type === "style" ? (
-        <link rel="stylesheet" href={src.href} $ServerOnly />
-      ) : src.type === "script" ? (
-        <link rel="modulepreload" href={src.href} $ServerOnly />
-      ) : undefined;
+    src.type === "style" ? (
+      <link rel="stylesheet" href={src.href} $ServerOnly />
+    ) : src.type === "script" && !src.href.includes("legacy") && !src.href.includes("polyfills") ? (
+      <link rel="modulepreload" href={src.href} $ServerOnly />
+    ) : src.type === "script" && src.href.includes("entry-client-legacy") ? (
+      <script src={src.href} $ServerOnly nomodule />
+    ) : src.type === "script" && src.href.includes("/polyfills-legacy") ? (
+      <script src={src.href} $ServerOnly nomodule />
+    ) : src.type === "script" && src.href.includes("/polyfills") ? (
+      <script src={src.href} $ServerOnly />
+    ) : undefined;
     return r;
   }, {} as Record<string, JSXElement>);
 
