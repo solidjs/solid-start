@@ -379,16 +379,6 @@ function solidStartCsrDev(options) {
   };
 }
 
-async function resolveAdapter(config) {
-  if (typeof config.solidOptions.adapter === "string") {
-    return (await import(config.solidOptions.adapter)).default();
-  } else if (Array.isArray(config.solidOptions.adapter)) {
-    return (await import(config.solidOptions.adapter[0])).default(config.solidOptions.adapter[1]);
-  } else {
-    return config.solidOptions.adapter;
-  }
-}
-
 /**
  * @returns {import('vite').Plugin}
  * @param {any} options
@@ -410,19 +400,19 @@ function solidStartServer(options) {
         env.cssModules[id] = code;
       }
     },
-    configureServer(vite) {
-      return async () => {
-        const { createDevHandler } = await import("../dev/server.js");
-        let adapter = await resolveAdapter(config);
-        if (adapter && adapter.dev) {
-          vite.middlewares.use(
-            await adapter.dev(config, vite, createDevHandler(vite, config, options))
-          );
-        } else if (config.solidOptions.devServer) {
-          vite.middlewares.use(createDevHandler(vite, config, options).handlerWithEnv(env));
-        }
-      };
-    }
+    // configureServer(vite) {
+    //   return async () => {
+    //     const { createDevHandler } = await import("../dev/server.js");
+    //     let adapter = await resolveAdapter(config);
+    //     if (adapter && adapter.dev) {
+    //       vite.middlewares.use(
+    //         await adapter.dev(config, vite, createDevHandler(vite, config, options))
+    //       );
+    //     } else if (config.solidOptions.devServer) {
+    //       vite.middlewares.use(createDevHandler(vite, config, options).handlerWithEnv(env));
+    //     }
+    //   };
+    // }
   };
 }
 
@@ -589,18 +579,10 @@ function solidStartConfig(options) {
           "import.meta.env.START_ISLANDS": JSON.stringify(options.islands ? true : false),
           "import.meta.env.START_ENTRY_CLIENT": JSON.stringify(options.clientEntry),
           "import.meta.env.START_ENTRY_SERVER": JSON.stringify(options.serverEntry),
-          "import.meta.env.START_INDEX_HTML": JSON.stringify(
-            process.env.START_INDEX_HTML === "true" ? true : false
-          ),
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.islandsRouter ? true : false
           ),
-          _$DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis._$DEBUG",
-          "import.meta.env.START_ADAPTER": JSON.stringify(
-            typeof options.adapter === "string"
-              ? options.adapter
-              : options.adapter && options.adapter.name
-          )
+          _$DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis._$DEBUG"
         },
         optimizeDeps: {
           exclude: ["solid-start", "@solidjs/router", "@solidjs/meta"],
@@ -636,7 +618,6 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
       appRoot: "src",
       routesDir: "routes",
       ssr: process.env.START_SSR === "false" ? false : true,

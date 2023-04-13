@@ -33,10 +33,10 @@ export default function Scripts() {
           ) : isSSR ? (
             // @ts-ignore
             <script type="module" async src={context!.env.manifest["entry-client"][0].href} />
-          ) : import.meta.env.START_INDEX_HTML ? (
+          ) : process.env.START_INDEX_HTML ? (
             // used in the SPA build index.html mode to create a reference to index html
             // which will be used by the client build
-            <script type="module" async src={import.meta.env.START_ENTRY_CLIENT} $ServerOnly />
+            <script type="module" async src={process.env.START_ENTRY_CLIENT} $ServerOnly />
           ) : (
             // @ts-ignore
             <script type="module" async src={context!.env.manifest["index.html"][0].href} />

@@ -42,10 +42,6 @@ declare global {
     /**
      * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
      */
-    getStaticHTML?(path: string): Promise<Response>;
-    /**
-     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
-     */
     __dev?: {
       /**
        * @warning

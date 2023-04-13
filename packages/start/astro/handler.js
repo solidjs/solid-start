@@ -1,13 +1,5 @@
 import startHandler from "~/entry-server";
 
-let devEnv = {
-  __dev: {
-    collectStyles(matches) {
-      return {};
-    },
-    manifest: []
-  }
-};
 let manifest;
 const all = async ({ cookies, request, ...args }) => {
   try {
@@ -28,5 +20,6 @@ const all = async ({ cookies, request, ...args }) => {
   }
 };
 export {
-  all
+  all,
+  startHandler
 };

@@ -19,11 +19,9 @@ export function renderSync(
         if (
           !import.meta.env.DEV &&
           !import.meta.env.START_SSR &&
-          !import.meta.env.START_INDEX_HTML
+          !process?.env?.START_INDEX_HTML
         ) {
-          return await (
-            event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }
-          ).env.getStaticHTML("/index");
+          throw new Error("SSR is not enabled in production with `ssr: false`.");
         }
 
         let pageEvent = createPageEvent(event);
@@ -60,12 +58,9 @@ export function renderAsync(
         if (
           !import.meta.env.DEV &&
           !import.meta.env.START_SSR &&
-          !import.meta.env.START_INDEX_HTML
+          !process?.env?.START_INDEX_HTML
         ) {
-          const getStaticHTML = (
-            event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }
-          ).env.getStaticHTML;
-          return await getStaticHTML("/index");
+          throw new Error("SSR is not enabled in production with `ssr: false`.");
         }
 
         let pageEvent = createPageEvent(event);
@@ -104,12 +99,9 @@ export function renderStream(
         if (
           !import.meta.env.DEV &&
           !import.meta.env.START_SSR &&
-          !import.meta.env.START_INDEX_HTML
+          !process?.env?.START_INDEX_HTML
         ) {
-          const getStaticHTML = (
-            event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }
-          ).env.getStaticHTML;
-          return await getStaticHTML("/index");
+          throw new Error("SSR is not enabled in production with `ssr: false`.");
         }
 
         let pageEvent = createPageEvent(event);
