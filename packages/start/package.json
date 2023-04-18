@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.2.26",
+  "version": "0.3.0-alpha.0",
   "description": "Create Solid apps with low configuration",
   "license": "MIT",
   "author": "Ryan Carniato",
@@ -114,7 +114,7 @@
     "vite-plugin-inspect": "^0.7.14",
     "vite-plugin-solid": "^2.7.0",
     "vitefu": "0.2.4",
-    "solid-ssr":"1.7.0"
+    "solid-ssr": "1.7.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.19.0",
