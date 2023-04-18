@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "path";
 import c from "picocolors";
@@ -6,17 +6,17 @@ import renderStatic from "solid-ssr/static";
 import { build, resolveConfig } from "vite";
 import prepareManifest from "../fs-router/manifest.js";
 
-export default async function(path, config) {
-  const resolved = await resolveConfig(config, 'build', 'production', 'production')
+export default async function(path, serverPath, config) {
+  const resolved = await resolveConfig(config, 'build', 'production', 'production');
   config.root = resolved.root;
   (config.build || (config.build = {})).minify = resolved.build?.minify;
   const staticRendering = !resolved.solidOptions.ssr
     || resolved.solidOptions.prerenderStatic || resolved.solidOptions.prerenderRoutes;
 
   if (staticRendering) {
-    const serverManifest = JSON.parse(readFileSync(join(path, "../server", "manifest.json")).toString());
+    const serverManifest = JSON.parse(readFileSync(join(serverPath, "manifest.json")).toString());
     const key = Object.keys(serverManifest).find(key => key.startsWith("_all."));
-    process.env.START_ENTRY_STATIC = join(path, "../server", serverManifest[key].file);
+    process.env.START_ENTRY_STATIC = join(serverPath, serverManifest[key].file);
     console.log(process.env.START_ENTRY_STATIC);
   }
 
@@ -32,7 +32,7 @@ export default async function(path, config) {
 
 
 async function client(path, config, resolved) {
-  const inspect = join(config.root, ".solid", "inspect");
+  // const inspect = join(config.root, ".solid", "inspect");
   console.log();
   console.log(c.blue("solid-start") + c.magenta(" building client..."));
   console.time(c.blue("solid-start") + c.magenta(" client built in"));
@@ -67,24 +67,18 @@ async function spaClient(path, config, resolved) {
   console.log(c.blue("solid-start") + c.magenta(" building client..."));
   console.time(c.blue("solid-start") + c.magenta(" client built in"));
 
-  let indexHtml;
-  let replacePath;
+  let keepIndexHtml = false;
   if (existsSync(join(config.root, "index.html"))) {
-    indexHtml = join(config.root, "index.html");
-    replacePath = join(path, "index.html");
+    keepIndexHtml = true;
   } else {
     console.log(c.blue("solid-start") + c.magenta(" rendering index.html..."));
     console.time(c.blue("solid-start") + c.magenta(" index.html rendered in"));
 
-    copyFileSync(fileURLToPath(new URL('./handler-static.js', import.meta.url).toString()), join(config.root, "dist", "server", "handler.js"));
-
     process.env.START_INDEX_HTML = "true";
     process.env.START_ENTRY_CLIENT = resolved.solidOptions.clientEntry;
-    indexHtml = join(config.root, "dist", "server", `index.html`);
-    replacePath = join(path, "dist", "server", "index.html");
     await renderStatic({
-      entry: join(config.root, "dist", "server", "handler.js"),
-      output: indexHtml,
+      entry: fileURLToPath(new URL('./handler-static.js', import.meta.url).toString()),
+      output: "index.html",
       url: "/"
     });
     process.env.START_INDEX_HTML = "false";
@@ -99,7 +93,7 @@ async function spaClient(path, config, resolved) {
       minify: process.env.START_MINIFY == "false" ? false : config.build?.minify ?? true,
       ssrManifest: true,
       rollupOptions: {
-        input: indexHtml,
+        input: "index.html",
         output: {
           manualChunks: undefined
         }
@@ -108,8 +102,8 @@ async function spaClient(path, config, resolved) {
   });
   process.env.START_SPA_CLIENT = "false";
 
-  // weird vite output behavior
-  renameSync(replacePath, join(path, "index.html"));
+  if (!keepIndexHtml) unlinkSync("index.html");
+
 
   let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
   let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
@@ -125,7 +119,7 @@ async function spaClient(path, config, resolved) {
 }
 
 async function islandsClient(path, config, resolved) {
-  const inspect = join(config.root, ".solid", "inspect");
+  // const inspect = join(config.root, ".solid", "inspect");
   console.log();
   console.log(c.blue("solid-start") + c.magenta(" finding islands..."));
   console.time(c.blue("solid-start") + c.magenta(" found islands in"));
@@ -249,10 +243,11 @@ async function preRenderRoutes(path, config) {
   }
   routes = [...routes, ...(config.solidOptions.prerenderRoutes || [])];
   if (!routes.length) return;
-  copyFileSync(fileURLToPath(new URL('./handler-static.js', import.meta.url).toString()), join(config.root, "dist", "server", "handler.js"));
+  console.log(path);
+  process.env.START_BUILD_CLIENT = path;
   await renderStatic(
     routes.map(url => ({
-      entry: join(config.root, "dist", "server", "handler.js"),
+      entry: fileURLToPath(new URL('./handler-static.js', import.meta.url).toString()),
       output: join(
         path,
         url.endsWith("/") ? `${url.slice(1)}index.html` : `${url.slice(1)}.html`
