@@ -1,26 +1,32 @@
 {
   "name": "example-with-prisma",
-  "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start start"
-  },
   "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro preview",
+    "build": "astro build",
+    "astro": "astro",
+    "server": "node dist/server/entry.mjs"
+  },
   "devDependencies": {
-    "solid-start-node": "^0.2.19",
-    "typescript": "^4.9.4",
-    "vite": "^4.1.4"
+    "@types/babel__core": "^7.20.0",
+    "@types/debug": "^4.1.7",
+    "@types/node": "^18.11.18",
+    "esbuild": "^0.14.54",
+    "postcss": "^8.4.21",
+    "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@astrojs/node": "^5.0.3",
     "@prisma/client": "^4.9.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
+    "astro": "^2.0.6",
     "prisma": "^4.9.0",
     "solid-js": "^1.7.2",
-    "solid-start": "^0.2.26",
-    "undici": "^5.15.1"
+    "solid-start": "^0.2.26"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   }
 }

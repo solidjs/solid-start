@@ -1,3 +1,4 @@
+import "solid-start/node/globals.js";
 import startHandler from "~/entry-server";
 
 let manifest;

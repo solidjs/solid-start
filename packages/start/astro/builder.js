@@ -68,8 +68,10 @@ async function spaClient(path, config, resolved) {
   console.time(c.blue("solid-start") + c.magenta(" client built in"));
 
   let indexHtml;
+  let replacePath;
   if (existsSync(join(config.root, "index.html"))) {
     indexHtml = join(config.root, "index.html");
+    replacePath = join(path, "index.html");
   } else {
     console.log(c.blue("solid-start") + c.magenta(" rendering index.html..."));
     console.time(c.blue("solid-start") + c.magenta(" index.html rendered in"));
@@ -79,6 +81,7 @@ async function spaClient(path, config, resolved) {
     process.env.START_INDEX_HTML = "true";
     process.env.START_ENTRY_CLIENT = resolved.solidOptions.clientEntry;
     indexHtml = join(config.root, "dist", "server", `index.html`);
+    replacePath = join(path, "dist", "server", "index.html");
     await renderStatic({
       entry: join(config.root, "dist", "server", "handler.js"),
       output: indexHtml,
@@ -106,7 +109,7 @@ async function spaClient(path, config, resolved) {
   process.env.START_SPA_CLIENT = "false";
 
   // weird vite output behavior
-  renameSync(join(path, indexHtml), join(path, "index.html"));
+  renameSync(replacePath, join(path, "index.html"));
 
   let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
   let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());

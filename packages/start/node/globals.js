@@ -1,15 +1,14 @@
-import Streams from "stream/web";
-import { fetch, Headers, Request, Response } from "undici";
+if (!globalThis.crypto) {
+  const crypto = await import("crypto");
+  // @ts-ignore
+  globalThis.crypto = crypto.webcrypto;
+}
 
-Object.assign(globalThis, Streams, {
-  Request,
-  Response,
-  fetch,
-  Headers
-});
+if (!globalThis.crypto.subtle) {
+  const crypto = await import("crypto");
+  // @ts-ignore
+  globalThis.crypto.subtle = crypto.webcrypto.subtle;
+  globalThis.crypto.randomUUID = crypto.webcrypto.randomUUID.bind(crypto.webcrypto);
+}
 
-
-// if (globalThis.crypto != crypto.webcrypto) {
-//   // @ts-ignore
-//   globalThis.crypto = crypto.webcrypto;
-// }
+export { };

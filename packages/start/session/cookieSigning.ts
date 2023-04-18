@@ -58,26 +58,3 @@ function byteStringToUint8Array(byteString: string): Uint8Array {
 
   return array;
 }
-
-// export async function sign(value: string, secret: string): Promise<string> {
-//     const ec = new TextEncoder();
-//     const signature =
-//       await crypto.subtle.sign('RSASSA-PKCS1-v1_5', secret, ec.encode(value));
-//     return new TextDecoder().decode(signature);
-//   }
-
-//   async function verify(key, signature, data) {
-//     const ec = new TextEncoder();
-//     const verified =
-//       await subtle.verify(
-//         'RSASSA-PKCS1-v1_5',
-//         key,
-//         signature,
-//         ec.encode(data));
-//     return verified;
-//   }
-// }
-
-// export async function unsign(value: string, secret: string): Promise<string | false> {
-//   return cookie.unsign(value, secret);
-// }

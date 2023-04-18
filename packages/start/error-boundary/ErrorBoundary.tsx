@@ -27,7 +27,7 @@ export function ErrorMessage(props: { error: any }) {
   createEffect(() => console.error(props.error));
 
   return (
-    <div style={{ padding: "16px" }}>
+    <div style={`padding: 16px`}>
       <div
         style={`
           background-color: rgba(252, 165, 165);
@@ -38,7 +38,7 @@ export function ErrorMessage(props: { error: any }) {
           margin-bottom: 8px;
         `}
       >
-        <p style="font-weight: bold;" id="error-message">
+        <p style="font-weight: bold" id="error-message">
           {props.error.message}
         </p>
         <button
