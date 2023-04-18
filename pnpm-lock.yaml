@@ -71,7 +71,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
@@ -100,7 +100,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
@@ -129,7 +129,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
@@ -158,7 +158,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
@@ -189,7 +189,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
@@ -221,7 +221,7 @@ importers:
       postcss: ^8.4.21
       solid-js: ^1.7.3
       solid-mdx: ^0.0.6
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
@@ -253,7 +253,7 @@ importers:
       postcss: ^8.4.21
       prisma: ^4.9.0
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
@@ -284,7 +284,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       solid-styled: ^0.8.1
       typescript: ^4.9.4
       vite-plugin-solid-styled: ^0.8.1
@@ -318,7 +318,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       tailwindcss: ^3.2.4
       typescript: ^4.9.4
     dependencies:
@@ -356,7 +356,7 @@ importers:
       jsdom: ^20.0.3
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
       vitest: ^0.26.3
     dependencies:
@@ -393,7 +393,7 @@ importers:
       esbuild: ^0.14.54
       postcss: ^8.4.21
       solid-js: ^1.7.3
-      solid-start: ^0.3.0-alpha.0
+      solid-start: ^0.3.0-alpha.1
       typescript: ^4.9.4
     dependencies:
       '@astrojs/node': 5.1.1_astro@2.2.0
