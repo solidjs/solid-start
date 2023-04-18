@@ -19,14 +19,17 @@ test.describe("api routes", () => {
     test.beforeAll(async () => {
       fixture = await createFixture({
         files: {
-          "vite.config.ts": js`
-            import solid from "solid-start/vite";
-            import { defineConfig } from "vite";
+          "astro.config.js": js`
+            import node from '@astrojs/node';
+            import { defineConfig } from 'astro/config';
+            import start from 'solid-start/astro';
 
             export default defineConfig({
-              plugins: [
-                solid({ ssr: ${ssr ? "true" : "false"}})
-              ]
+              output: 'server',
+              adapter: node({
+                mode: 'standalone',
+              }),
+              integrations: [start({ssr: ${ssr ? "true" : "false"}})]
             });
           `,
           "src/routes/index.jsx": js`
@@ -154,7 +157,7 @@ test.describe("api routes", () => {
     });
 
     test("should render json from API route with .json file extension", async ({ page }) => {
-      test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
+      // test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
 
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/data.json");
@@ -190,7 +193,7 @@ test.describe("api routes", () => {
     }
 
     test("should return json from API route", async ({ page }) => {
-      test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
+      // test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
 
       let res = await fixture.requestDocument("/data.json");
       expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");

@@ -16,7 +16,7 @@ async function handleRequest(req, handler, manifest) {
 export default async req => {
   const [{ _: { startHandler } }, { default: manifest }] = await Promise.all([
     import(process.env.START_ENTRY_STATIC),
-    process.env.START_INDEX_HTML ? { default: {} } : import(join(process.env.START_BUILD_CLIENT, "route-manifest.json"), {
+    process.env.START_INDEX_HTML ? { default: {} } : import(join(process.env.START_BUILD_SERVER, "route-manifest.json"), {
       assert: { type: 'json' }
     })
   ]);

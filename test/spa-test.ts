@@ -9,14 +9,19 @@ test.describe("spa rendering", () => {
   let appFixture: AppFixture;
 
   const files = {
-    "vite.config.ts": js`
-      import { defineConfig } from "vite";
-      import solid from "solid-start/vite";
+    "astro.config.js": js`
+      import node from '@astrojs/node';
+      import { defineConfig } from 'astro/config';
+      import start from 'solid-start/astro';
 
       export default defineConfig({
-        plugins: [solid({ ssr: false, adapter: process.env.START_ADAPTER })]
+        output: 'server',
+        adapter: node({
+          mode: 'standalone',
+        }),
+        integrations: [start({ssr: false})]
       });
-    `,
+  `,
     "src/routes/index.tsx": js`
       export default function Index() {
         return <h2>Index</h2>;

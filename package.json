@@ -19,7 +19,7 @@
     "docs:start": "solid-start start",
     "clean:test": "rimraf .tmp",
     "build:all": "pnpm run -r --if-present build",
-    "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
+    "test:all": "pnpm run clean:test && npm run test",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
     "bump": "node scripts/bump.cjs"
   },

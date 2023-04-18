@@ -1,15 +1,14 @@
 import { test } from "@playwright/test";
 import spawn, { sync as spawnSync } from "cross-spawn";
 import fse from "fs-extra";
-import { readFile } from "fs/promises";
+// import { readFile } from "fs/promises";
 import getPort from "get-port";
 import path from "path";
 import c from "picocolors";
 import stripIndent from "strip-indent";
-import { fileURLToPath, pathToFileURL } from "url";
+import { fileURLToPath } from "url";
 import waitOn from "wait-on";
 
-import { createServer } from "solid-start-node/server.js";
 import "solid-start/node/globals.js";
 import type { FetchEvent } from "solid-start/server/types.js";
 
@@ -40,7 +39,7 @@ export function json(value: object) {
 
 export async function createFixture(init: FixtureInit) {
   let projectDir = await createFixtureProject(init);
-  let buildPath = path.resolve(projectDir, ".solid", "server", "entry-server.js");
+  let buildPath = path.resolve(projectDir, "dist", "server", "entry.mjs");
   if (!fse.existsSync(buildPath)) {
     throw new Error(
       c.red(
@@ -52,11 +51,11 @@ export async function createFixture(init: FixtureInit) {
   }
 
   let manifest = fse.readJSONSync(
-    path.resolve(projectDir, "dist", "public", "route-manifest.json")
+    path.resolve(projectDir, "dist", "server", "route-manifest.json")
   );
 
-  if (process.env.START_ADAPTER !== "solid-start-node") {
-    let ip = process.env.START_ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
+  // if (process.env.START_ADAPTER !== "solid-start-node") {
+    let ip = "localhost";
     let port = await getPort();
     let proc = spawn("npm", ["run", "start"], {
       cwd: projectDir,
@@ -115,126 +114,126 @@ export async function createFixture(init: FixtureInit) {
         };
       }
     };
-  }
+  // }
 
-  let app: EntryServer = await import(pathToFileURL(buildPath).toString());
+  // let app: EntryServer = await import(pathToFileURL(buildPath).toString());
 
-  let handler = async (request: Request) => {
-    return await app.default({
-      request: request,
-      env: {
-        manifest,
-        getStaticHTML: async assetPath => {
-          let text = await readFile(
-            path.join(projectDir, "dist", "public", assetPath + ".html"),
-            "utf8"
-          );
-          return new Response(text, {
-            headers: {
-              "content-type": "text/html"
-            }
-          });
-        }
-      }
-    });
-  };
+  // let handler = async (request: Request) => {
+  //   return await app.default({
+  //     request: request,
+  //     env: {
+  //       manifest,
+  //       getStaticHTML: async assetPath => {
+  //         let text = await readFile(
+  //           path.join(projectDir, "dist", "public", assetPath + ".html"),
+  //           "utf8"
+  //         );
+  //         return new Response(text, {
+  //           headers: {
+  //             "content-type": "text/html"
+  //           }
+  //         });
+  //       }
+  //     }
+  //   });
+  // };
 
-  let requestDocument = async (href: string, init?: RequestInit) => {
-    let url = new URL(href, "test://test");
-    let request = new Request(url, init);
-    return await handler(request);
-  };
+  // let requestDocument = async (href: string, init?: RequestInit) => {
+  //   let url = new URL(href, "test://test");
+  //   let request = new Request(url, init);
+  //   return await handler(request);
+  // };
 
-  let postDocument = async (href: string, data: URLSearchParams | FormData) => {
-    return await requestDocument(href, {
-      method: "POST",
-      body: data,
-      headers: {
-        "Content-Type":
-          data instanceof URLSearchParams
-            ? "application/x-www-form-urlencoded"
-            : "multipart/form-data"
-      }
-    });
-  };
+  // let postDocument = async (href: string, data: URLSearchParams | FormData) => {
+  //   return await requestDocument(href, {
+  //     method: "POST",
+  //     body: data,
+  //     headers: {
+  //       "Content-Type":
+  //         data instanceof URLSearchParams
+  //           ? "application/x-www-form-urlencoded"
+  //           : "multipart/form-data"
+  //     }
+  //   });
+  // };
 
-  let getBrowserAsset = async (asset: string) => {
-    return await fse.readFile(path.join(projectDir, "public", asset.replace(/^\//, "")), "utf8");
-  };
+  // let getBrowserAsset = async (asset: string) => {
+  //   return await fse.readFile(path.join(projectDir, "public", asset.replace(/^\//, "")), "utf8");
+  // };
 
-  return {
-    projectDir,
-    build: app,
-    requestDocument,
-    postDocument,
-    getBrowserAsset,
-    manifest,
-    createServer: () =>
-      createTestServer({
-        projectDir,
-        build: app,
-        manifest
-      })
-  };
+  // return {
+  //   projectDir,
+  //   build: app,
+  //   requestDocument,
+  //   postDocument,
+  //   getBrowserAsset,
+  //   manifest,
+  //   createServer: () =>
+  //     createTestServer({
+  //       projectDir,
+  //       build: app,
+  //       manifest
+  //     })
+  // };
 }
 
-export async function createTestServer(fixture: { projectDir: string; manifest: any; build }) {
-  let startServer = async (): Promise<{
-    port: number;
-    stop: () => Promise<void>;
-  }> => {
-    return new Promise(async (accept, reject) => {
-      let port = await getPort();
+// export async function createTestServer(fixture: { projectDir: string; manifest: any; build }) {
+//   let startServer = async (): Promise<{
+//     port: number;
+//     stop: () => Promise<void>;
+//   }> => {
+//     return new Promise(async (accept, reject) => {
+//       let port = await getPort();
 
-      const paths = {
-        assets: path.join(fixture.projectDir, "dist", "public")
-      };
+//       const paths = {
+//         assets: path.join(fixture.projectDir, "dist", "public")
+//       };
 
-      let app = createServer({
-        paths,
-        env: { manifest: fixture.manifest },
-        handler: fixture.build.default
-      });
+//       let app = createServer({
+//         paths,
+//         env: { manifest: fixture.manifest },
+//         handler: fixture.build.default
+//       });
 
-      let stop = (): Promise<void> => {
-        return new Promise((res, rej) => {
-          app.server.close(err => {
-            if (err) {
-              rej(err);
-            } else {
-              res();
-            }
-          });
-        });
-      };
+//       let stop = (): Promise<void> => {
+//         return new Promise((res, rej) => {
+//           app.server.close(err => {
+//             if (err) {
+//               rej(err);
+//             } else {
+//               res();
+//             }
+//           });
+//         });
+//       };
 
-      app.listen(port, () => {
-        accept({ stop, port });
-      });
-    });
-  };
+//       app.listen(port, () => {
+//         accept({ stop, port });
+//       });
+//     });
+//   };
 
-  let start = async () => {
-    let { stop, port } = await startServer();
+//   let start = async () => {
+//     let { stop, port } = await startServer();
 
-    let serverUrl = `http://localhost:${port}`;
+//     let serverUrl = `http://localhost:${port}`;
 
-    return {
-      serverUrl,
-      /**
-       * Shuts down the fixture app, **you need to call this
-       * at the end of a test** or `afterAll` if the fixture is initialized in a
-       * `beforeAll` block. Also make sure to `await app.close()` or else you'll
-       * have memory leaks.
-       */
-      close: async () => {
-        return await stop();
-      }
-    };
-  };
+//     return {
+//       serverUrl,
+//       /**
+//        * Shuts down the fixture app, **you need to call this
+//        * at the end of a test** or `afterAll` if the fixture is initialized in a
+//        * `beforeAll` block. Also make sure to `await app.close()` or else you'll
+//        * have memory leaks.
+//        */
+//       close: async () => {
+//         return await stop();
+//       }
+//     };
+//   };
 
-  return await start();
-}
+//   return await start();
+// }
 
 ////////////////////////////////////////////////////////////////////////////////
 export async function createFixtureProject(init: FixtureInit): Promise<string> {
@@ -253,11 +252,6 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
   await fse.ensureDir(projectDir);
   await fse.copy(integrationTemplateDir, projectDir);
 
-  // if (init.setup) {
-  //   spawnSync("node", ["node_modules/@remix-run/dev/cli.js", "setup", init.setup], {
-  //     cwd: projectDir
-  //   });
-  // }
   await writeTestFiles(init, projectDir);
   await build(projectDir, init.buildStdio);
 
@@ -266,19 +260,10 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
 
 function build(
   projectDir: string,
-  buildStdio?: boolean,
-  adapter: string | undefined = process.env.START_ADAPTER
+  buildStdio?: boolean
 ) {
-  // let buildArgs = ["node_modules/@remix-run/dev/cli.js", "build"];
-  // if (sourcemap) {
-  //   buildArgs.push("--sourcemap");
-  // }
-  let proc = spawnSync("node", ["node_modules/solid-start/bin.cjs", "build"], {
-    cwd: projectDir,
-    env: {
-      ...process.env,
-      START_ADAPTER: adapter ? adapter : "solid-start-node"
-    }
+  let proc = spawnSync("npm", ["run", "build"], {
+    cwd: projectDir
   });
 
   if (proc.error) {

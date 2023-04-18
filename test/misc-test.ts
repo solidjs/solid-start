@@ -19,14 +19,17 @@ test.describe("miscellaneous tests", () => {
     test.beforeAll(async () => {
       fixture = await createFixture({
         files: {
-          "vite.config.ts": js`
-            import solid from "solid-start/vite";
-            import { defineConfig } from "vite";
+          "astro.config.js": js`
+            import node from '@astrojs/node';
+            import { defineConfig } from 'astro/config';
+            import start from 'solid-start/astro';
 
             export default defineConfig({
-              plugins: [
-                solid({ ssr: ${ssr ? "true" : "false"}})
-              ]
+              output: 'server',
+              adapter: node({
+                mode: 'standalone',
+              }),
+              integrations: [start({ssr: ${ssr ? "true" : "false"}})]
             });
           `,
           "src/server/server-function-in-js-file.js": js`

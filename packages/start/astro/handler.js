@@ -5,7 +5,7 @@ let manifest;
 const all = async ({ cookies, request, ...args }) => {
   try {
     if (!manifest) {
-      manifest = (await import(/* @vite-ignore */new URL('../../../client/route-manifest.json', import.meta.url).toString(), {
+      manifest = (await import(/* @vite-ignore */new URL('../../route-manifest.json', import.meta.url).toString(), {
         assert: { type: 'json' }
       })).default;
     }
