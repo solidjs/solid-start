@@ -9,7 +9,7 @@ export default {
     file: "bin",
     format: "cjs",
     banner: "#!/usr/bin/env node\nglobal.navigator={}",
-    interop: "default",
+    interop: false,
     inlineDynamicImports: true
   },
   plugins: [nodeResolve(), commonjs(), json()],
