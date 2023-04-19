@@ -50,9 +50,7 @@ export async function createFixture(init: FixtureInit) {
     );
   }
 
-  let manifest = fse.readJSONSync(
-    path.resolve(projectDir, "dist", "server", "route-manifest.json")
-  );
+  let manifest = await import(path.resolve(projectDir, "dist", "server", "route-manifest.js"));
 
   // if (process.env.START_ADAPTER !== "solid-start-node") {
     let ip = "localhost";

@@ -27,7 +27,7 @@ export default async function(path, serverPath, config) {
   } else {
     await client(path, serverPath, config, resolved);
   }
-  if (resolved.solidOptions.ssr) await preRenderRoutes(path, resolved);
+  if (resolved.solidOptions.ssr) await preRenderRoutes(path, serverPath, resolved);
 }
 
 
@@ -54,7 +54,7 @@ async function client(path, serverPath, config, resolved) {
   let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
 
   let routeManifest = prepareManifest(ssrManifest, assetManifest, resolved);
-  writeFileSync(join(serverPath, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
+  writeFileSync(join(serverPath, "route-manifest.js"), `export default ${JSON.stringify(routeManifest, null, 2)}`);
 
   // writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
   // writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
@@ -108,8 +108,7 @@ async function spaClient(path, serverPath, config, resolved) {
   let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
   let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
   let routeManifest = prepareManifest(ssrManifest, assetManifest, resolved);
-
-  writeFileSync(join(serverPath, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
+  writeFileSync(join(serverPath, "route-manifest.js"), `export default ${JSON.stringify(routeManifest, null, 2)}`);
 
   // writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(routeManifest, null, 2));
   // writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
@@ -148,15 +147,8 @@ async function islandsClient(path, serverPath, config, resolved) {
   let ssrManifest = JSON.parse(
     readFileSync(join(routeManifestPath, "ssr-manifest.json")).toString()
   );
-
-  writeFileSync(
-    join(routeManifestPath, "route-manifest.json"),
-    JSON.stringify(prepareManifest(ssrManifest, assetManifest, resolved), null, 2)
-  );
-
-  let routeManifest = JSON.parse(
-    readFileSync(join(routeManifestPath, "route-manifest.json")).toString()
-  );
+  let routeManifest = prepareManifest(ssrManifest, assetManifest, resolved);
+  writeFileSync(join(routeManifestPath, "route-manifest.js"), `export default ${JSON.stringify(routeManifest, null, 2)}`);
 
   let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
 
@@ -222,14 +214,14 @@ async function islandsClient(path, serverPath, config, resolved) {
     });
   });
 
-  writeFileSync(join(serverPath, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
+  writeFileSync(join(serverPath, "route-manifest.js"), `export default ${JSON.stringify(routeManifest, null, 2)}`);
   // writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
   // writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
   // writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
   console.timeEnd(c.blue("solid-start") + c.magenta(" built islands client in"));
 }
 
-async function preRenderRoutes(path, config) {
+async function preRenderRoutes(path, serverPath, config) {
   let routes = [];
   if (config.solidOptions.prerenderStatic) {
     await config.solidOptions.router.init();
@@ -243,8 +235,7 @@ async function preRenderRoutes(path, config) {
   }
   routes = [...routes, ...(config.solidOptions.prerenderRoutes || [])];
   if (!routes.length) return;
-  console.log(path);
-  process.env.START_BUILD_SERVER = path;
+  process.env.START_BUILD_SERVER = serverPath;
   await renderStatic(
     routes.map(url => ({
       entry: fileURLToPath(new URL('./handler-static.js', import.meta.url).toString()),

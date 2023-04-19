@@ -1,13 +1,10 @@
-import "solid-start/node/globals.js";
 import startHandler from "~/entry-server";
 
 let manifest;
 const all = async ({ cookies, request, ...args }) => {
   try {
     if (!manifest) {
-      manifest = (await import(/* @vite-ignore */new URL('../../route-manifest.json', import.meta.url).toString(), {
-        assert: { type: 'json' }
-      })).default;
+      manifest = (await import(/* @vite-ignore */new URL('../../route-manifest.js', import.meta.url).toString())).default;
     }
     const load = await startHandler({
       request,
