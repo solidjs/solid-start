@@ -1,14 +1,11 @@
 import startHandler from "~/entry-server";
 
-let manifest;
+const routeManifest = "$ROUTE_MANIFEST";
 const all = async ({ cookies, request, ...args }) => {
   try {
-    if (!manifest) {
-      manifest = (await import(/* @vite-ignore */new URL('../../route-manifest.js', import.meta.url).toString())).default;
-    }
     const load = await startHandler({
       request,
-      env: { manifest },
+      env: { manifest: routeManifest },
       clientAddress: request.headers.get("x-forwarded-for"),
       locals: {}
     });
@@ -19,5 +16,6 @@ const all = async ({ cookies, request, ...args }) => {
 };
 export {
   all,
-  startHandler
+  startHandler,
+  routeManifest
 };

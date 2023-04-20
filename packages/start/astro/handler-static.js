@@ -1,5 +1,4 @@
 // import { createRequestFromNodeRequest } from "astro/app/node";
-import { join } from "node:path";
 import { createRequest } from "solid-start/node/fetch.js";
 import "solid-start/node/globals.js";
 
@@ -15,17 +14,14 @@ async function handleRequest(req, handler, manifest) {
 }
 
 export default async req => {
-  const [{ _: { startHandler } }, { default: manifest }] = await Promise.all([
-    import(process.env.START_ENTRY_STATIC),
-    process.env.START_INDEX_HTML ? { default: {} } : import(join(process.env.START_BUILD_SERVER, "route-manifest.js"))
-  ]);
-  let webRes = await handleRequest(req, startHandler, manifest);
+  const { _: { startHandler, routeManifest } } = await import(process.env.START_ENTRY_STATIC);
+  let webRes = await handleRequest(req, startHandler, process.env.START_INDEX_HTML ? {} : routeManifest);
   if (webRes.status === 200) {
     return webRes.text();
   } else if (webRes.status === 302) {
     let redirects = 1;
     while (redirects < MAX_REDIRECTS) {
-      webRes = await handleRequest({ url: webRes.headers.get("location") }, req, startHandler, manifest);
+      webRes = await handleRequest({ url: webRes.headers.get("location") }, startHandler, process.env.START_INDEX_HTML ? {} : routeManifest);
       if (webRes.status === 200) {
         return webRes.text();
       } else if (webRes.status === 302) {

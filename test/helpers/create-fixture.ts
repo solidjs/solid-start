@@ -50,7 +50,7 @@ export async function createFixture(init: FixtureInit) {
     );
   }
 
-  let manifest = await import(path.resolve(projectDir, "dist", "server", "route-manifest.js"));
+  // let manifest = await import(path.resolve(projectDir, "dist", "server", "route-manifest.js"));
 
   // if (process.env.START_ADAPTER !== "solid-start-node") {
     let ip = "localhost";
@@ -102,7 +102,7 @@ export async function createFixture(init: FixtureInit) {
       requestDocument,
       postDocument,
       getBrowserAsset,
-      manifest,
+      // manifest,
       createServer: async () => {
         return {
           serverUrl: `http://${ip}:${port}`,
