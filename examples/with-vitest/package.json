@@ -33,7 +33,7 @@
     "@solidjs/router": "^0.8.2",
     "astro": "^2.0.6",
     "solid-js": "^1.7.3",
-    "solid-start": "^0.3.0-alpha.2"
+    "solid-start": "^0.3.0-alpha.3"
   },
   "engines": {
     "node": ">=18"
