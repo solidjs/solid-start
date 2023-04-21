@@ -1,8 +1,7 @@
 import node from "@astrojs/node";
+import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import start from "solid-start/astro";
-
-import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
