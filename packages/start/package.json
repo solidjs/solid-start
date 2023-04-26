@@ -122,7 +122,7 @@
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
     "@types/wait-on": "^5.3.1",
-    "astro": "^2.2.0",
+    "astro": "^2.3.1",
     "jsdom": "^20.0.3",
     "solid-js": "^1.7.0",
     "solid-testing-library": "^0.3.0",
@@ -133,7 +133,7 @@
   "peerDependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.8.2",
-    "astro": "^2.2.0",
+    "astro": "^2.3.1",
     "solid-js": "^1.7.0"
   }
 }

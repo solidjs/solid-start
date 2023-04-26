@@ -20,7 +20,7 @@
     "@astrojs/node": "^5.0.3",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "astro": "^2.0.6",
+    "astro": "^2.3.1",
     "solid-js": "^1.7.3",
     "solid-start": "^0.3.0-alpha.3"
   },

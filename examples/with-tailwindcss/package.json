@@ -23,7 +23,7 @@
     "@astrojs/tailwind": "^3.1.1",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "astro": "^2.3.0",
+    "astro": "^2.3.1",
     "solid-js": "^1.7.3",
     "solid-start": "^0.3.0-alpha.3"
   },
