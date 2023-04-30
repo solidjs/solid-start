@@ -22,6 +22,10 @@ dist
 .netlify
 netlify
 
+# Environment
+.env
+.env*.local
+
 # dependencies
 /node_modules
 

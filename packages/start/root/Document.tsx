@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
 import { children, ComponentProps } from "solid-js";
-import { insert, NoHydration, spread, ssrElement } from "solid-js/web";
+import { escape, insert, NoHydration, spread, ssrElement } from "solid-js/web";
 import Links from "./Links";
 import Meta from "./Meta";
 import Scripts from "./Scripts";
@@ -27,7 +27,7 @@ export function Head(props: ComponentProps<"head">) {
       props,
       () => (
         <>
-          {props.children}
+          {escape(props.children as string)}
           <Meta />
           <Links />
         </>
@@ -45,7 +45,7 @@ export function Body(props: ComponentProps<"body">) {
     return ssrElement(
       "body",
       props,
-      () => (import.meta.env.START_SSR ? props.children : <Scripts />),
+      () => (import.meta.env.START_SSR ? escape(props.children as string) : <Scripts />),
       false
     ) as unknown as JSX.Element;
   } else {

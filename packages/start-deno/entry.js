@@ -1,6 +1,6 @@
 import { lookup } from "https://deno.land/x/media_types/mod.ts";
 import manifest from "../../dist/public/route-manifest.json";
-import handler from "./handler";
+import handler from "./entry-server";
 
 import { serve } from "https://deno.land/std@0.139.0/http/server.ts";
 

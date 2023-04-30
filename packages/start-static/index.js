@@ -27,10 +27,6 @@ export default function () {
       const ssrExternal = config?.ssr?.external || [];
       await builder.client(join(config.root, "dist", "public"));
       await builder.server(join(config.root, ".solid", "server"));
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
       const pathToServer = join(config.root, ".solid", "server", "server.js");
       copyFileSync(join(__dirname, "entry.js"), pathToServer);
       const pathToDist = resolve(config.root, "dist", "public");

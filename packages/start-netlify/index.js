@@ -7,6 +7,10 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
+/***
+ * @param {object} options
+ * @param {boolean} [options.edge]
+ */
 export default function ({ edge } = {}) {
   return {
     name: "netlify",
@@ -29,10 +33,6 @@ export default function ({ edge } = {}) {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
       copyFileSync(
         join(__dirname, edge ? "entry-edge.js" : "entry.js"),
         join(config.root, ".solid", "server", "index.js")

@@ -20,6 +20,7 @@ import { dirname, join, relative } from "path";
 import process from "process";
 import { rollup } from "rollup";
 import { fileURLToPath, pathToFileURL } from "url";
+import { normalizePath } from "vite";
 
 const emptyDir = dir => {
   rmSync(dir, { recursive: true, force: true });
@@ -132,9 +133,9 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
       // Vercel Build Output API v3 (https://vercel.com/docs/build-output-api/v3)
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const workingDir =
-        config.root === process.cwd()
+        config.root === normalizePath(process.cwd())
           ? pathToFileURL(config.root + "/")
-          : new URL(config.root, pathToFileURL(process.cwd() + "/"));
+          : new URL(config.root, pathToFileURL(normalizePath(process.cwd()) + "/"));
       const vercelOutputDir = new URL("./.vercel/output/", workingDir); // join(config.root, ".vercel/output");
       const outputDir = new URL("./dist/", workingDir); // join(config.root, ".vercel/output");
       const solidServerDir = new URL("./.solid/server/", workingDir); //  join(config.root, "./.solid/server/");
