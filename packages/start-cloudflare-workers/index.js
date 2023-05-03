@@ -12,6 +12,8 @@ import { fileURLToPath } from "url";
 import { createServer } from "./dev-server.js";
 
 export default function (miniflareOptions = {}) {
+  const durableObjects = miniflareOptions.durableObjects || {};
+
   return {
     name: "cloudflare-workers",
     async dev(options, vite, dev) {
@@ -23,35 +25,51 @@ export default function (miniflareOptions = {}) {
           }
         }
 
-        export const WebSocketDurableObject = WebSocketDurableObject1;
+		${Object.values(durableObjects)
+      .map(durableObject => {
+        return `export const ${durableObject} = ${durableObject}Class;`;
+      })
+      .join("\n")}
       `,
         globals: {
-          WebSocketDurableObject1: class DO {
-            state;
-            env;
-            promise;
-            constructor(state, env) {
-              this.state = state;
-              this.env = env;
-              this.promise = this.createProxy(state, env);
-            }
+          ...Object.fromEntries(
+            Object.values(durableObjects).map(durableObject => {
+              const durableObjectClass = class DO {
+                state;
+                env;
+                promise;
 
-            async createProxy(state, env) {
-              const { WebSocketDurableObject } = await vite.ssrLoadModule("~start/entry-server");
-              return new WebSocketDurableObject(state, env);
-            }
+                constructor(state, env) {
+                  this.state = state;
+                  this.env = env;
+                  this.promise = this.createProxy(state, env);
 
-            async fetch(request) {
-              console.log("DURABLE_OBJECT", request.url);
+                  console.log(durableObject, "constructed");
+                }
 
-              try {
-                let dObject = await this.promise;
-                return await dObject.fetch(request);
-              } catch (e) {
-                console.log("error", e);
-              }
-            }
-          },
+                async createProxy(state, env) {
+                  const durableObjects = await vite.ssrLoadModule("~start/entry-server");
+
+                  const selectedObject = durableObjects[durableObject];
+
+                  return new selectedObject(state, env);
+                }
+
+                async fetch(request) {
+                  console.log("DURABLE_OBJECT", request.url);
+
+                  try {
+                    let dObject = await this.promise;
+                    return await dObject.fetch(request);
+                  } catch (e) {
+                    console.log("error", e);
+                  }
+                }
+              };
+
+              return [`${durableObject}Class`, durableObjectClass];
+            })
+          ),
           serve: async (req, e, g) => {
             const {
               Request,
@@ -68,7 +86,7 @@ export default function (miniflareOptions = {}) {
               Request,
               Response,
               fetch,
-              crypto,
+              ...(!globalThis.crypto && { crypto }),
               Headers,
               ReadableStream,
               WritableStream,
