@@ -19,7 +19,21 @@ Then configure your sites build directory in the config file:
 ```toml
 main = "./dist/server.js"
 [site]
-bucket= "./dist/public"
+bucket = "./dist/public"
 ```
 
 More info on configuring a cloudflare worker site can be found [here](https://developers.cloudflare.com/workers/platform/sites/start-from-existing)
+
+## Durable Objects
+
+During development Durable Objects must be defined in the adapters initialization.
+
+```js
+adapter: cloudflareWorkers({
+  durableObjects: {
+    DO_WEBSOCKET: "WebSocketDurableObject"
+  }
+});
+```
+
+The key of the object is the Durable Object name and the string is the Durable Object Class name (What the Durable Object should be exported as in `entry-server.tsx`).
