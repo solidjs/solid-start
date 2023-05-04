@@ -4,6 +4,13 @@
   "description": "Create Solid apps with low configuration",
   "license": "MIT",
   "author": "Ryan Carniato",
+  "homepage": "https://start.solidjs.com/",
+  "bugs": "https://github.com/solidjs/solid-start/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solidjs/solid-start.git",
+    "directory": "packages/start"
+  },
   "type": "module",
   "exports": {
     ".": "./index.tsx",

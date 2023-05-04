@@ -67,7 +67,7 @@ refetchRouteData(['students', { house: 'gryffindor' }]);
 
 ### `refetchRouteData(keys)`
 
-Call `retchRouteData()` to refetch either all the route data on the page, or specific ones based on the `key`.
+Call `refetchRouteData()` to refetch either all the route data on the page, or specific ones based on the `key`.
 
 ```tsx twoslash
 import { refetchRouteData } from "solid-start";
