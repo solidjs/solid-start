@@ -310,10 +310,11 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var fileRoutes = $FILE_ROUTES;",
-            !options.ssr && ssr ? "var fileRoutes = [];" :
-            stringifyPageRoutes(router.getNestedPageRoutes(), {
-              lazy: ssr ? false : true
-            })
+            !options.ssr && ssr
+              ? "var fileRoutes = [];"
+              : stringifyPageRoutes(router.getNestedPageRoutes(), {
+                  lazy: ssr ? false : true
+                })
           )
         };
       } else if (code.includes("var routeLayouts = $ROUTE_LAYOUTS;")) {
@@ -337,24 +338,6 @@ function solidStartFileSystemRouter(options) {
 
 /**
  * @returns {import('vite').Plugin}
- * @param {{ pageExtensions: any[]; }} options
- */
-function solidsStartRouteManifest(options) {
-  return {
-    name: "solid-start-route-manifest",
-    config() {
-      return {
-        build: {
-          target: "esnext",
-          manifest: true
-        }
-      };
-    }
-  };
-}
-
-/**
- * @returns {import('vite').Plugin}
  * @param {any} options
  */
 function solidStartCsrDev(options) {
@@ -365,7 +348,8 @@ function solidStartCsrDev(options) {
       csrDev = config.command === "serve" && options.ssr !== true;
     },
     async transform(code, id, transformOptions) {
-      const isSsr = transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
+      const isSsr =
+        transformOptions === null || transformOptions === void 0 ? void 0 : transformOptions.ssr;
       if (isSsr && csrDev && code.includes("~start/root")) {
         return {
           code: code.replace(
@@ -389,7 +373,11 @@ function solidStartServer(options) {
     name: "solid-start-server",
     config(c) {
       return {
-        appType: "custom"
+        appType: "custom",
+        build: {
+          target: "esnext",
+          manifest: true
+        }
       };
     },
     transform(code, id) {
@@ -577,8 +565,7 @@ export default function solidStart(options) {
         })
       )
     }),
-    solidStartServer(options),
-    solidsStartRouteManifest(options)
+    solidStartServer(options)
   ].filter(Boolean);
 }
 
