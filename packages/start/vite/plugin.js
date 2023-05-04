@@ -1,9 +1,8 @@
 /// <reference path="./plugin.d.ts" />
 
 import debug from "debug";
-import dotenv from "dotenv";
 import { solidPlugin } from "esbuild-plugin-solid";
-import fs, { existsSync } from "fs";
+import { existsSync } from "fs";
 import path, { dirname, join } from "path";
 import c from "picocolors";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -384,13 +383,11 @@ function solidStartCsrDev(options) {
  * @param {any} options
  */
 function solidStartServer(options) {
-  let config;
   let env = { cssModules: {} };
   const module_style_pattern = /\.module\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
   return {
     name: "solid-start-server",
     config(c) {
-      config = c;
       return {
         appType: "custom"
       };
@@ -399,103 +396,9 @@ function solidStartServer(options) {
       if (module_style_pattern.test(id)) {
         env.cssModules[id] = code;
       }
-    },
-    // configureServer(vite) {
-    //   return async () => {
-    //     const { createDevHandler } = await import("../dev/server.js");
-    //     let adapter = await resolveAdapter(config);
-    //     if (adapter && adapter.dev) {
-    //       vite.middlewares.use(
-    //         await adapter.dev(config, vite, createDevHandler(vite, config, options))
-    //       );
-    //     } else if (config.solidOptions.devServer) {
-    //       vite.middlewares.use(createDevHandler(vite, config, options).handlerWithEnv(env));
-    //     }
-    //   };
-    // }
+    }
   };
 }
-
-// credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js
-function loadServerEnv(envConfig, rootDir = process.cwd()) {
-  const env = Object.create(null);
-  if (!envConfig.dotenv) return env;
-  const t = [...envConfig.dotenv];
-  for (const denv of t) {
-    // Read dotenv
-    envConfig.dotenv = path.resolve(rootDir, denv);
-    if (fs.existsSync(envConfig.dotenv)) {
-      const parsed = dotenv.parse(fs.readFileSync(envConfig.dotenv, "utf-8"));
-      Object.assign(env, parsed);
-    }
-
-    // Apply process.env
-    if (!envConfig.env._applied) {
-      Object.assign(env, envConfig.env);
-      envConfig.env._applied = true;
-    }
-
-    // Interpolate env
-    if (envConfig.expand) {
-      expand(env);
-    }
-  }
-
-  return env;
-}
-
-// Based on https://github.com/motdotla/dotenv-expand
-function expand(target, source = {}, parse = v => v) {
-  function getValue(key) {
-    // Source value 'wins' over target value
-    return source[key] !== undefined ? source[key] : target[key];
-  }
-
-  function interpolate(value, parents = []) {
-    if (typeof value !== "string") {
-      return value;
-    }
-    const matches = value.match(/(.?\${?(?:[a-zA-Z0-9_:]+)?}?)/g) || [];
-    return parse(
-      matches.reduce((newValue, match) => {
-        const parts = /(.?)\${?([a-zA-Z0-9_:]+)?}?/g.exec(match);
-        const prefix = parts[1];
-
-        let value, replacePart;
-
-        if (prefix === "\\") {
-          replacePart = parts[0];
-          value = replacePart.replace("\\$", "$");
-        } else {
-          const key = parts[2];
-          replacePart = parts[0].substring(prefix.length);
-
-          // Avoid recursion
-          if (parents.includes(key)) {
-            consola.warn(
-              `Please avoid recursive environment variables ( loop: ${parents.join(
-                " > "
-              )} > ${key} )`
-            );
-            return "";
-          }
-
-          value = getValue(key);
-
-          // Resolve recursive interpolations
-          value = interpolate(value, [...parents, key]);
-        }
-
-        return value !== undefined ? newValue.replace(replacePart, value) : newValue;
-      }, value)
-    );
-  }
-
-  for (const key in target) {
-    target[key] = interpolate(getValue(key));
-  }
-}
-
 
 /**
  * @returns {import('vite').Plugin}
@@ -508,28 +411,6 @@ function solidStartConfig(options) {
     async config(conf, e) {
       const root = conf.root || process.cwd();
       options.root = root;
-
-      // Load env file based on `mode` in the current working directory.
-      // credits to https://github.com/nuxt/nuxt.js/blob/dev/packages/config/src/load.js for the server env
-      const envConfig = {
-        dotenv: [
-          /** default file */ `.env`,
-          /** local file */ `.env.local`,
-          /** mode file */ `.env.${e.mode}`,
-          /** mode local file */ `.env.${e.mode}.local`
-        ],
-        env: process.env,
-        expand: true,
-        ...(options?.envConfig ?? {})
-      };
-      const env = loadServerEnv(envConfig, options.envDir || process.cwd());
-      for (const key in env) {
-        if (!key.startsWith("VITE_") && envConfig.env[key] === undefined) {
-          envConfig.env[key] = env[key];
-        }
-      }
-      options._env = env;
-      options._envConfig = envConfig;
       options.env = await loadEnv(e.mode, options.envDir || process.cwd());
       options.router = new Router({
         baseDir: path.posix.join(options.appRoot, options.routesDir),
@@ -570,6 +451,8 @@ function solidStartConfig(options) {
         ssr: {
           noExternal: ["solid-start", "@solidjs/meta", "@solidjs/router"]
         },
+
+        envPrefix: "PUBLIC_",
 
         define: {
           // handles use of process.env.TEST_ENV in solid-start internal code
