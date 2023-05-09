@@ -33,7 +33,7 @@ npm run dev
 
 # or with pnpm
 pnpm create solid@latest
-pnpm i
+pnpm install
 pnpm dev
 ```
 
