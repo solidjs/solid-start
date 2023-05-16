@@ -1,11 +1,17 @@
 const fs = require("fs");
 const glob = require("fast-glob");
 const { execSync } = require("child_process");
+const semver = require('semver');
 
 const version = process.argv[2];
 
 if (!version || version === "") {
   console.log("Please provide a version as the second argument");
+  process.exit(1);
+}
+
+if (!semver.valid(version)) {
+  console.error(`Invalid SemVer version provided: "${version}". Please provide a valid SemVer version as the second argument`);
   process.exit(1);
 }
 
