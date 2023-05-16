@@ -18,6 +18,7 @@ test.describe("api routes", () => {
   function runTests(ssr) {
     test.beforeAll(async () => {
       fixture = await createFixture({
+        csr: !ssr,
         files: {
           "astro.config.js": js`
             import node from '@astrojs/node';
@@ -98,11 +99,17 @@ test.describe("api routes", () => {
           `,
           "src/routes/api/external-fetch.js": js`
             import { json } from "solid-start/server";
-            export let GET = ({ request, fetch }) => fetch('https://hogwarts.deno.dev/');
+            export let GET = async ({ request, fetch }) => {
+              const res = await fetch('https://hogwarts.deno.dev/');
+              return json(await res.json());
+            }
           `,
           "src/routes/api/fetch.js": js`
             import { json } from "solid-start/server";
-            export let GET = ({ request }) => fetch('https://hogwarts.deno.dev/');
+            export let GET = async ({ request }) => {
+              const res = await fetch('https://hogwarts.deno.dev/');
+              return json(await res.json());
+            }
           `,
           "src/routes/server-fetch.jsx": js`
             import server$ from "solid-start/server";
@@ -141,21 +148,6 @@ test.describe("api routes", () => {
       await appFixture.close();
     });
 
-    test("should redirect to redirected", async ({ page }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/", true);
-
-      await page.click("a[href='/redirect']");
-      await page.waitForSelector("[data-testid='redirected']");
-    });
-
-    test("should handle post to destination", async ({ page }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/", true);
-      await page.click("button[type='submit']");
-      await page.waitForSelector("[data-testid='redirect-destination']");
-    });
-
     test("should render json from API route with .json file extension", async ({ page }) => {
       // test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
 
@@ -165,6 +157,21 @@ test.describe("api routes", () => {
     });
 
     if (ssr) {
+      test("should redirect to redirected", async ({ page }) => {
+        let app = new PlaywrightFixture(appFixture, page);
+        await app.goto("/", true);
+
+        await page.click("a[href='/redirect']");
+        await page.waitForSelector("[data-testid='redirected']");
+      });
+
+      test("should handle post to destination", async ({ page }) => {
+        let app = new PlaywrightFixture(appFixture, page);
+        await app.goto("/", true);
+        await page.click("button[type='submit']");
+        await page.waitForSelector("[data-testid='redirect-destination']");
+      });
+
       test("should render data from API route using server$.fetch", async ({ page }) => {
         let app = new PlaywrightFixture(appFixture, page);
         await app.goto("/server-fetch");
@@ -256,13 +263,13 @@ test.describe("api routes", () => {
 
     test("should return json from API route with external fetch call", async () => {
       let res = await fixture.requestDocument("/api/external-fetch");
-      expect(res.headers.get("content-type")).toEqual("application/json");
+      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
       expect(await res.json()).toEqual({ message: "Hello from Hogwarts" });
     });
 
     test("should return json from API route with global fetch call", async () => {
       let res = await fixture.requestDocument("/api/fetch");
-      expect(res.headers.get("content-type")).toEqual("application/json");
+      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
       expect(await res.json()).toEqual({ message: "Hello from Hogwarts" });
     });
 

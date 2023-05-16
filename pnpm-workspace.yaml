@@ -3,7 +3,7 @@ packages:
   - 'packages/**'
   - 'examples/**'
   # - 'docs/**'
-  - 'test'
+  - 'test/**'
   - '!**/.tmp/**'
 options:
   prefer-workspace-packages: true

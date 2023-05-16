@@ -36,6 +36,7 @@ test.describe("spa rendering", () => {
   test.describe("with index.html", () => {
     test.beforeAll(async () => {
       fixture = await createFixture({
+        csr: true,
         files: {
           ...files,
           "src/root.tsx": js`
@@ -80,6 +81,7 @@ test.describe("spa rendering", () => {
   test.describe("with root.tsx", () => {
     test.beforeAll(async () => {
       fixture = await createFixture({
+        csr: true,
         files: {
           ...files,
           "src/root.tsx": js`
@@ -134,18 +136,21 @@ test.describe("spa rendering", () => {
         prettyHtml(`
       <div id="content">
         <h1>Root</h1>
+        <!--#-->
         <h2>Index</h2>
+        <!--/-->
       </div>`)
       );
 
-      await app.goto("/about", true);
-      expect(await app.getHtml("#content")).toBe(
-        prettyHtml(`
-      <div id="content">
-        <h1>Root</h1>
-        <h2>About</h2>
-      </div>`)
-      );
+      // we don't handle adapter level redirects here
+      // await app.goto("/about", true);
+      // expect(await app.getHtml("#content")).toBe(
+      //   prettyHtml(`
+      // <div id="content">
+      //   <h1>Root</h1>
+      //   <h2>About</h2>
+      // </div>`)
+      // );
     });
   }
 });

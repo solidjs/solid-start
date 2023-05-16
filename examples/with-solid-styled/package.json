@@ -18,10 +18,10 @@
     "vite-plugin-solid-styled": "^0.8.1"
   },
   "dependencies": {
-    "@astrojs/node": "^5.0.3",
+    "@astrojs/node": "^5.1.2",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "astro": "^2.3.1",
+    "astro": "^2.4.0",
     "solid-js": "^1.7.4",
     "solid-start": "^0.3.0-alpha.4",
     "solid-styled": "^0.8.1"

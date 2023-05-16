@@ -1,3 +1,5 @@
+// for now until astro fix is merged
+import "solid-start/node/globals.js";
 import startHandler from "~/entry-server";
 
 const routeManifest = "$ROUTE_MANIFEST";

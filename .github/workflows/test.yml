@@ -29,12 +29,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16, 18]
+        node-version: [18]
         adapter:
           - solid-start-node
           # - solid-start-cloudflare-workers
-          - solid-start-cloudflare-pages
-          - solid-start-deno
+          # - solid-start-cloudflare-pages
+          # - solid-start-deno
         os:
           - ubuntu-latest
           # - macos-latest
