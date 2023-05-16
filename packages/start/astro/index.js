@@ -10,28 +10,27 @@ export default function (solidOptions = {}) {
     name: "solid-start-astro",
     hooks: {
       "astro:config:setup": async ({ config, updateConfig, injectRoute, command }) => {
-        const randomPort = await getPort({ port: portNumbers(3000, 52000) }) // Prefer 3000, but pick any port if not available
-        process.env.PORT = process.env.PORT ?? (randomPort + '')
+        const randomPort = await getPort({ port: portNumbers(3000, 52000) }); // Prefer 3000, but pick any port if not available
+        process.env.PORT = process.env.PORT ?? randomPort + "";
         inline = config.vite || {};
         injectRoute({
-          entryPoint: new URL(command === "build" ? "./handler.js" : "./handler-dev.js", import.meta.url).pathname,
+          entryPoint: new URL(
+            command === "build" ? "./handler.js" : "./handler-dev.js",
+            import.meta.url
+          ).pathname,
           pattern: "/[...all]"
         });
         updateConfig({
           server: {
-            port: process.env.PORT,
+            port: process.env.PORT
           },
           vite: {
-            plugins: [plugin],
+            plugins: [shutupJSX, plugin]
           }
         });
       },
       "astro:config:done": ({ config }) => {
         serverPath = config.build.server.pathname;
-      },
-      "astro:build:setup": ({ vite }) => {
-        // Silence warning atleast during build
-        vite.plugins = vite.plugins.filter(p => p.name !== "astro:jsx")
       },
       "astro:build:done": async ({ dir }) => {
         inline.plugins || (inline.plugins = []);
@@ -41,3 +40,14 @@ export default function (solidOptions = {}) {
     }
   };
 }
+
+const shutupJSX = {
+  name: "shutup:jsx",
+  enforce: "pre",
+  configResolved(c) {
+    // remove standard astro jsx plugin
+    // TODO: remove this when we figure out how to play nice with others
+    const astro = c.plugins.findIndex(p => p.name === "astro:jsx");
+    if (astro !== -1) c.plugins.splice(astro, 1);
+  }
+};
