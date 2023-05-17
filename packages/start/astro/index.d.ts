@@ -1,2 +1,3 @@
 import type { AstroIntegration } from 'astro';
-export default function (): AstroIntegration;
+import type { Options } from "../vite/plugin.js";
+export default function (options?: Partial<Options>): AstroIntegration;
