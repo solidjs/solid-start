@@ -24,8 +24,8 @@
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
     "astro": "^2.4.0",
-    "solid-js": "^1.7.4",
-    "solid-start": "^0.3.0-alpha.4"
+    "solid-js": "^1.7.5",
+    "solid-start": "^0.3.0-alpha.5"
   },
   "engines": {
     "node": ">=18"

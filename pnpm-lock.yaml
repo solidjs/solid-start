@@ -22,10 +22,10 @@ importers:
         version: 15.0.2(rollup@3.10.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.3.1)
@@ -54,11 +54,11 @@ importers:
         specifier: ^3.10.0
         version: 3.10.0
       solid-js:
-        specifier: ^1.6.11
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.4)(vite@4.1.4)
+        version: 0.0.6(solid-js@1.7.5)(vite@4.1.4)
       solid-start:
         specifier: workspace:*
         version: link:packages/start
@@ -91,18 +91,18 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -131,18 +131,18 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -171,18 +171,18 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -211,18 +211,18 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -254,21 +254,21 @@ importers:
         version: 0.5.0
       '@auth/solid-start':
         specifier: ^0.1.0
-        version: 0.1.0(@auth/core@0.5.0)(solid-js@1.7.4)(solid-start@packages+start)
+        version: 0.1.0(@auth/core@0.5.0)(solid-js@1.7.5)(solid-start@packages+start)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -297,21 +297,21 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.4)(vite@4.3.5)
+        version: 0.0.6(solid-js@1.7.5)(vite@4.3.5)
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -343,10 +343,10 @@ importers:
         version: 4.9.0(prisma@4.9.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
@@ -354,10 +354,10 @@ importers:
         specifier: ^4.9.0
         version: 4.9.0
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -386,22 +386,22 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
       solid-styled:
         specifier: ^0.8.1
-        version: 0.8.1(@babel/core@7.20.12)(solid-js@1.7.4)
+        version: 0.8.1(@babel/core@7.20.12)(solid-js@1.7.5)
     devDependencies:
       '@types/babel__core':
         specifier: ^7.20.0
@@ -435,18 +435,18 @@ importers:
         version: 3.1.1(astro@2.4.0)(tailwindcss@3.3.1)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -481,23 +481,23 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@solidjs/testing-library':
         specifier: ^0.5.2
-        version: 0.5.2(solid-js@1.7.4)
+        version: 0.5.2(solid-js@1.7.5)
       '@testing-library/jest-dom':
         specifier: ^5.16.5
         version: 5.16.5
@@ -542,18 +542,18 @@ importers:
         version: 5.1.2(astro@2.4.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.4)
+        version: 0.28.2(solid-js@1.7.5)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.4)
+        version: 0.8.2(solid-js@1.7.5)
       astro:
         specifier: ^2.4.0
         version: 2.4.0(@types/node@18.11.18)(terser@5.16.1)
       solid-js:
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.4
+        specifier: ^0.3.0-alpha.5
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -669,7 +669,7 @@ importers:
         version: 3.1.0
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.4)(vite@4.3.5)
+        version: 0.0.6(solid-js@1.7.5)(vite@4.3.5)
       unified:
         specifier: ^10.1.2
         version: 10.1.2
@@ -1053,7 +1053,7 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/solid-start@0.1.0(@auth/core@0.5.0)(solid-js@1.7.4)(solid-start@packages+start):
+  /@auth/solid-start@0.1.0(@auth/core@0.5.0)(solid-js@1.7.5)(solid-start@packages+start):
     resolution: {integrity: sha512-nQHDWrP3c7uML0p+vKtGwun+CJh6TyloB8rOcwcZRtKRTRVK879ZCvxKa9pRExyZzQ8KCc+2K3+doQzxawblUg==}
     peerDependencies:
       '@auth/core': ~0.2.2 || ^0.2.2
@@ -1062,7 +1062,7 @@ packages:
     dependencies:
       '@auth/core': 0.5.0
       set-cookie-parser: 2.5.1
-      solid-js: 1.7.4
+      solid-js: 1.7.5
       solid-start: link:packages/start
     dev: false
 
@@ -3228,6 +3228,14 @@ packages:
       solid-js: '>=1.4.0'
     dependencies:
       solid-js: 1.7.4
+    dev: true
+
+  /@solidjs/meta@0.28.2(solid-js@1.7.5):
+    resolution: {integrity: sha512-avlLgBPdk4KVxzRGFlYp/MIJo8B5jVgXPgk6OUnUP8km21Z+ovO+DUd7ZPA7ejv8PBdWi9GE3zCzw8RU2YuV2Q==}
+    peerDependencies:
+      solid-js: '>=1.4.0'
+    dependencies:
+      solid-js: 1.7.5
 
   /@solidjs/router@0.8.2(solid-js@1.7.4):
     resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
@@ -3235,15 +3243,23 @@ packages:
       solid-js: ^1.5.3
     dependencies:
       solid-js: 1.7.4
+    dev: true
 
-  /@solidjs/testing-library@0.5.2(solid-js@1.7.4):
+  /@solidjs/router@0.8.2(solid-js@1.7.5):
+    resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
+    peerDependencies:
+      solid-js: ^1.5.3
+    dependencies:
+      solid-js: 1.7.5
+
+  /@solidjs/testing-library@0.5.2(solid-js@1.7.5):
     resolution: {integrity: sha512-GXUiI0Itz/7FfTJrV0RoICS2lL0RE3D1lNSrnuNg9nLC28qKnEQhm9Gfk4gFP9rGVzmsJJJC7yf8kbHMuyR2AA==}
     engines: {node: '>= 14'}
     peerDependencies:
       solid-js: '>=1.0.0'
     dependencies:
       '@testing-library/dom': 8.20.0
-      solid-js: 1.7.4
+      solid-js: 1.7.5
     dev: true
 
   /@tailwindcss/typography@0.5.9(tailwindcss@3.3.1):
@@ -8967,23 +8983,29 @@ packages:
       csstype: 3.1.2
       seroval: 0.5.1
 
-  /solid-mdx@0.0.6(solid-js@1.7.4)(vite@4.1.4):
+  /solid-js@1.7.5:
+    resolution: {integrity: sha512-GfJ8na1e9FG1oAF5xC24BM+ATLym0sfH+ZblkbBFpueYdq3fWAoA5Ve+jGeIeLI7jmMGfa0rUaKruszNm2sH8w==}
+    dependencies:
+      csstype: 3.1.2
+      seroval: 0.5.1
+
+  /solid-mdx@0.0.6(solid-js@1.7.5)(vite@4.1.4):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
     dependencies:
-      solid-js: 1.7.4
+      solid-js: 1.7.5
       vite: 4.1.4(@types/node@18.11.18)(terser@5.16.1)
     dev: true
 
-  /solid-mdx@0.0.6(solid-js@1.7.4)(vite@4.3.5):
+  /solid-mdx@0.0.6(solid-js@1.7.5)(vite@4.3.5):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
     dependencies:
-      solid-js: 1.7.4
+      solid-js: 1.7.5
       vite: 4.3.5(@types/node@18.11.18)(terser@5.16.1)
     dev: false
 
@@ -9002,7 +9024,7 @@ packages:
     resolution: {integrity: sha512-SK0nycd6gTVrsIHeNgOBrZoIVvpYExZMx4HAu/27zClaW3QAi2tf//RTG/uS/6vHPNdEX0+q6+nvErxQeyaswA==}
     dev: false
 
-  /solid-styled@0.8.1(@babel/core@7.20.12)(solid-js@1.7.4):
+  /solid-styled@0.8.1(@babel/core@7.20.12)(solid-js@1.7.5):
     resolution: {integrity: sha512-OmiDb3/NaeUzCc7593Drk5/iHPAuHt108oNuOx2ty+lGJnAyHX5R1OxgIJHntd4Yp6iAnLeb8sk9wVq9tznEQA==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -9024,7 +9046,7 @@ packages:
       postcss: 8.4.21
       postcss-nested: 6.0.1(postcss@8.4.21)
       postcss-safe-parser: 6.0.0(postcss@8.4.21)
-      solid-js: 1.7.4
+      solid-js: 1.7.5
     transitivePeerDependencies:
       - supports-color
 
@@ -9922,7 +9944,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/preset-typescript': 7.18.6(@babel/core@7.20.12)
       '@rollup/pluginutils': 5.0.2(rollup@3.10.0)
-      solid-styled: 0.8.1(@babel/core@7.20.12)(solid-js@1.7.4)
+      solid-styled: 0.8.1(@babel/core@7.20.12)(solid-js@1.7.5)
       vite: 4.3.5(@types/node@18.11.18)(terser@5.16.1)
     transitivePeerDependencies:
       - rollup
