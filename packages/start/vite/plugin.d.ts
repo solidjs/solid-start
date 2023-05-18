@@ -12,7 +12,7 @@ export type Options = {
   ssr: boolean;
   islands: boolean;
   islandsRouter: boolean;
-  prerenderRoutes: any[];
+  prerenderRoutes: string[];
   inspect: boolean;
   rootEntry: string;
   serverEntry: string;
