@@ -11,6 +11,7 @@
 6. Run tests locally
    - Setup playwright: `pnpm --filter solid-start-tests install:playwright`
    - Run all tests: `pnpm run test:all`
+   - Show report: `pnpm run test:show-report`
 
 ## Requirements
 
