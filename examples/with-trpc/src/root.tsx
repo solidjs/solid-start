@@ -12,6 +12,7 @@ import {
   Scripts,
   Title
 } from "solid-start";
+import { api, queryClient } from "~/utils/api";
 import "./root.css";
 
 export default function Root() {
@@ -24,13 +25,15 @@ export default function Root() {
       </Head>
       <Body>
         <Suspense>
-          <ErrorBoundary>
-            <A href="/">Index</A>
-            <A href="/about">About</A>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </ErrorBoundary>
+          <api.Provider queryClient={queryClient}>
+            <ErrorBoundary>
+              <A href="/">Index</A>
+              <A href="/about">About</A>
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </ErrorBoundary>
+          </api.Provider>
         </Suspense>
         <Scripts />
       </Body>

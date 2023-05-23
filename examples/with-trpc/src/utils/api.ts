@@ -23,12 +23,4 @@ export const api = createTRPCSolidStart<AppRouter>({
   }
 });
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      onError(err) {
-        console.log(err);
-      }
-    }
-  }
-});
+export const queryClient = new QueryClient();
