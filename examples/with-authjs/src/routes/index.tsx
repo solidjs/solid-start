@@ -1,17 +1,17 @@
-import { getSession } from "@auth/solid-start";
-import { signIn } from "@auth/solid-start/client";
+import { getSession } from "@solid-auth/base";
+import { signIn } from "@solid-auth/base/client";
 import { createSignal, onCleanup, Show } from "solid-js";
 import { Navigate, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { authOptions } from "./api/auth/[...solidauth]";
+import { authOptions } from "~/server/auth";
 
 export const routeData = () => {
   return createServerData$(async (_, event) => {
     const session = await getSession(event.request, authOptions);
-
     return { session: session };
   });
 };
+
 export default function Home() {
   const session = useRouteData<typeof routeData>();
   const [redirectIn, setRedirectIn] = createSignal(3);
