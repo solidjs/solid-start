@@ -1,5 +1,4 @@
 // @refresh reload
-import { SessionProvider } from "@solid-auth/base/client";
 import { Suspense } from "solid-js";
 import {
   A,
@@ -13,27 +12,28 @@ import {
   Scripts,
   Title
 } from "solid-start";
+import { api, queryClient } from "~/utils/api";
 import "./root.css";
 
 export default function Root() {
   return (
     <Html lang="en">
       <Head>
-        <Title>SolidStart + AuthJS</Title>
+        <Title>SolidStart - Bare</Title>
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Body>
         <Suspense>
-          <SessionProvider>
+          <api.Provider queryClient={queryClient}>
             <ErrorBoundary>
-              <A href="/">Home</A>
-              <A href="/protected">Protected</A>
+              <A href="/">Index</A>
+              <A href="/about">About</A>
               <Routes>
                 <FileRoutes />
               </Routes>
             </ErrorBoundary>
-          </SessionProvider>
+          </api.Provider>
         </Suspense>
         <Scripts />
       </Body>
