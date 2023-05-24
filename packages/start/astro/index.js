@@ -31,13 +31,12 @@ export default function (solidOptions = {}) {
         });
       },
       "astro:config:done": ({ config }) => {
-        serverPath = fileURLToPath(new URL(config.build.server));
+        serverPath = fileURLToPath(config.build.server);
       },
       "astro:build:done": async ({ dir }) => {
         inline.plugins || (inline.plugins = []);
         inline.plugins.push(plugin);
-        const path = fileURLToPath(new URL(dir));
-        await build(path, serverPath, inline);
+        await build(fileURLToPath(dir), serverPath, inline);
       }
     }
   };
