@@ -1,4 +1,5 @@
 // @refresh reload
+import { SessionProvider } from "@solid-auth/base/client";
 import { Suspense } from "solid-js";
 import {
   A,
@@ -24,13 +25,15 @@ export default function Root() {
       </Head>
       <Body>
         <Suspense>
-          <ErrorBoundary>
-            <A href="/">Home</A>
-            <A href="/protected">Protected</A>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </ErrorBoundary>
+          <SessionProvider>
+            <ErrorBoundary>
+              <A href="/">Home</A>
+              <A href="/protected">Protected</A>
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </ErrorBoundary>
+          </SessionProvider>
         </Suspense>
         <Scripts />
       </Body>
