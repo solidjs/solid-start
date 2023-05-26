@@ -11,7 +11,7 @@ export default function (solidOptions = {}) {
     hooks: {
       "astro:config:setup": async ({ config, updateConfig, injectRoute, command }) => {
         const randomPort = await getPort({ port: portNumbers(3000, 52000) }); // Prefer 3000, but pick any port if not available
-        process.env.PORT = process.env.PORT ?? randomPort + "";
+        process.env.PORT = process.env.PORT ?? config.server?.port ?? randomPort + "";
         inline = config.vite || {};
         injectRoute({
           entryPoint: new URL(
