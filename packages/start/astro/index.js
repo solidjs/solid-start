@@ -1,4 +1,5 @@
 import getPort, { portNumbers } from "get-port";
+import { fileURLToPath } from "node:url";
 import solidStart from "../vite/plugin.js";
 import build from "./builder.js";
 
@@ -30,12 +31,12 @@ export default function (solidOptions = {}) {
         });
       },
       "astro:config:done": ({ config }) => {
-        serverPath = config.build.server.pathname;
+        serverPath = fileURLToPath(config.build.server);
       },
       "astro:build:done": async ({ dir }) => {
         inline.plugins || (inline.plugins = []);
         inline.plugins.push(plugin);
-        await build(dir.pathname, serverPath, inline);
+        await build(fileURLToPath(dir), serverPath, inline);
       }
     }
   };
