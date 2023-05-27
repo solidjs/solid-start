@@ -15,7 +15,7 @@ export default async function(path, serverPath, config) {
 
   if (staticRendering) {
     const serverManifest = JSON.parse(readFileSync(join(serverPath, "manifest.json")).toString());
-    const key = Object.keys(serverManifest).find(key => key.endsWith("/start/astro/handler.js"));
+    const key = Object.keys(serverManifest).find(key => key.endsWith("/solid-start/astro/handler.js"));
     process.env.START_ENTRY_STATIC = join(serverPath, serverManifest[key].file);
   }
 
@@ -31,7 +31,7 @@ export default async function(path, serverPath, config) {
 
 function writeRouteManifest(routeManifest, serverPath) {
   const serverManifest = JSON.parse(readFileSync(join(serverPath, "manifest.json")).toString());
-  const key = Object.keys(serverManifest).find(key => key.endsWith("/start/astro/handler.js"));
+  const key = Object.keys(serverManifest).find(key => key.endsWith("/solid-start/astro/handler.js"));
   const serverEntry = join(serverPath, serverManifest[key].file);
   let code = readFileSync(serverEntry).toString();
   code = code.replace("\"$ROUTE_MANIFEST\"", JSON.stringify(routeManifest, null, 2));
