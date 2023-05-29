@@ -43,7 +43,7 @@ function createRequest(event) {
   }
 
   const init = {
-    method: event.requestContext.http.method,
+    method: event.requestContext.httpMethod,
     headers,
   };
 
