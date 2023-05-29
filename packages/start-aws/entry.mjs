@@ -33,7 +33,7 @@ export async function handler(event) {
 
 function createRequest(event) {
   const url = new URL(
-    event.rawPath,
+    event.path,
     `https://${event.requestContext.domainName}`
   );
 
