@@ -105,7 +105,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -145,7 +145,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -185,7 +185,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -225,7 +225,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -271,7 +271,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -314,7 +314,7 @@ importers:
         specifier: ^0.0.6
         version: 0.0.6(solid-js@1.7.5)(vite@4.3.9)
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -360,7 +360,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -400,7 +400,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
       solid-styled:
         specifier: ^0.8.1
@@ -449,7 +449,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -504,7 +504,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
       solid-start-trpc:
         specifier: ^0.0.16
@@ -553,7 +553,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@solidjs/testing-library':
@@ -614,7 +614,7 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       solid-start:
-        specifier: ^0.3.0-alpha.5
+        specifier: ^0.3.0-alpha.6
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
