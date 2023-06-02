@@ -23,8 +23,8 @@
     "@solidjs/router": "^0.8.2",
     "astro": "^2.5.5",
     "prisma": "^4.9.0",
-    "solid-js": "^1.7.5",
-    "solid-start": "^0.3.0-alpha.6"
+    "solid-js": "^1.7.6",
+    "solid-start": "^0.3.0-alpha.7"
   },
   "engines": {
     "node": ">=18"

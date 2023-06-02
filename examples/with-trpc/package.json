@@ -24,8 +24,8 @@
     "@trpc/client": "^10.27.1",
     "@trpc/server": "^10.27.1",
     "astro": "^2.5.5",
-    "solid-js": "^1.7.5",
-    "solid-start": "^0.3.0-alpha.6",
+    "solid-js": "^1.7.6",
+    "solid-start": "^0.3.0-alpha.7",
     "solid-start-trpc": "^0.0.16",
     "solid-trpc": "1.0.0-alpha.1",
     "zod": "^3.21.4"
