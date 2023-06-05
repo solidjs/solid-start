@@ -1,0 +1,27 @@
+{
+  "name": "example-with-cssed",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/babel__core": "^7.20.0",
+    "@types/debug": "^4.1.7",
+    "solid-start-node": "^0.2.19",
+    "typescript": "^4.9.4",
+    "vite": "^4.1.4"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.8.2",
+    "cssed": "^3.0.6",
+    "solid-js": "^1.7.2",
+    "solid-start": "^0.2.26",
+    "undici": "^5.15.1"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
