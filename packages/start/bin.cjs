@@ -397,8 +397,9 @@ prog
             process.exit();
           });
 
+          const url = `http://127.0.0.1:${port}/`;
           await waitOn({
-            resources: [`http://localhost:${port}/`],
+            resources: [url],
             verbose: isDebug
           });
 
@@ -408,7 +409,7 @@ prog
             join(config.root, ".solid", "index.html"),
             await (
               await import("./dev/create-index-html.js")
-            ).createHTML(`http://localhost:${port}/`)
+            ).createHTML(url)
           );
 
           indexHtml = join(config.root, ".solid", "index.html");
@@ -542,5 +543,5 @@ function launch(port) {
   } else if (process.platform == "linux") {
     cmd = "xdg-open";
   }
-  exec(`${cmd} http://localhost:${port}`);
+  exec(`${cmd} http://127.0.0.1:${port}`);
 }
