@@ -127,7 +127,7 @@ export default function (miniflareOptions = {}) {
       ]);
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
-      return `http://localhost:${process.env.PORT}`;
+      return `http://127.0.0.1:${process.env.PORT}`;
     },
     async build(config, builder) {
       const __dirname = dirname(fileURLToPath(import.meta.url));

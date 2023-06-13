@@ -8,7 +8,7 @@ const getBaseUrl = () => {
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   // replace example.com with your actual production url
   if (process.env.NODE_ENV === "production") return "https://example.com";
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  return `http://127.0.0.1:${process.env.PORT ?? 3000}`;
 };
 
 export const api = createTRPCSolidStart<AppRouter>({

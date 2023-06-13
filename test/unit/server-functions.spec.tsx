@@ -13,7 +13,7 @@ setGlobalDispatcher(mockAgent);
 mockAgent.on("*", console.log);
 
 // Provide the base url to the request
-const mockPool = mockAgent.get("http://localhost:3000");
+const mockPool = mockAgent.get("http://127.0.0.1:3000");
 
 if (process.env.TEST_ENV === "client" && process.env.TEST_MODE === "client-server") {
   // tests that the client-server interaction is correct
@@ -392,7 +392,7 @@ it("should send request when caller sends request", async () => {
       body: JSON.stringify([
         {
           $type: "request",
-          url: "http://localhost:3000/",
+          url: "http://127.0.0.1:3000/",
           method: "GET",
           headers: {
             $type: "headers",
@@ -406,7 +406,7 @@ it("should send request when caller sends request", async () => {
     });
 
   expect(
-    await requestServer(new Request("http://localhost:3000/", { headers: { "x-test": "test" } }))
+    await requestServer(new Request("http://127.0.0.1:3000/", { headers: { "x-test": "test" } }))
   ).toMatchObject({
     data: "test"
   });
@@ -425,7 +425,7 @@ it("should send request inside an object when caller sends context", async () =>
         {
           request: {
             $type: "request",
-            url: "http://localhost:3000/",
+            url: "http://127.0.0.1:3000/",
             method: "GET",
             headers: {
               $type: "headers",
@@ -441,7 +441,7 @@ it("should send request inside an object when caller sends context", async () =>
 
   expect(
     await requestServer({
-      request: new Request("http://localhost:3000/", { headers: { "x-test": "test" } })
+      request: new Request("http://127.0.0.1:3000/", { headers: { "x-test": "test" } })
     })
   ).toMatchObject({
     data: "test"

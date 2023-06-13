@@ -20,7 +20,7 @@ export default function () {
       proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
 
-      return `http://localhost:${process.env.PORT}`;
+      return `http://127.0.0.1:${process.env.PORT}`;
     },
     async build(config, builder) {
       if(!config?.solidOptions?.ssr) throw new Error('solid-start-static needs ssr to be enabled for pre-rendering routes at build time');

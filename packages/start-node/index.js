@@ -12,7 +12,7 @@ export default function () {
     start(config, { port }) {
       process.env.PORT = port;
       import(pathToFileURL(join(config.root, "dist", "server.js")).toString());
-      return `http://localhost:${process.env.PORT}`;
+      return `http://127.0.0.1:${process.env.PORT}`;
     },
     async build(config, builder) {
       const ssrExternal = config?.ssr?.external || [];

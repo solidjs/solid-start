@@ -234,7 +234,7 @@ server$.createHandler = (_fn, hash, serverResource) => {
     } else {
       // this is normally used during a test
       ctx = {
-        request: new URL(hash, "http://localhost:3000").href,
+        request: new URL(hash, "http://127.0.0.1:3000").href,
         responseHeaders: new Headers()
       } as any;
     }
