@@ -17,6 +17,10 @@ export type Options = {
   rootEntry: string;
   serverEntry: string;
   clientEntry: string;
+  root: string;
+  envDir: string;
+  delay: number;
+  glob: boolean;
 } & import("vite-plugin-solid").Options;
 import { Plugin } from "vite";
 
