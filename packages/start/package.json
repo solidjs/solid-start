@@ -133,7 +133,7 @@
     "solid-js": "^1.7.0",
     "solid-testing-library": "^0.3.0",
     "typescript": "^4.9.4",
-    "vite": "^4.1.4",
+    "vite": "^4.3.9",
     "vitest": "^0.20.3"
   },
   "peerDependencies": {
