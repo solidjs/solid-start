@@ -1,16 +1,15 @@
-# SolidStart
+# SolidStart / Supabase Example
 
 Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
 
-## Creating a project
+## Important Supabase/Solid Start information
 
-```bash
-# create a new project in the current directory
-npm init solid@latest
+In order for the Supabase integration to work successfully, there are a couple of rules that you need to understand but aren't really discussed in the Supabase docs:
 
-# create a new project in my-app
-npm init solid@latest my-app
-```
+1. Supabase Auth can _only_ be done on the client-side via the `createBrowserClient` helper.
+2. Once you have authenticated with Supabase, _then_ you can fetch any data on the server you want via the `createServerClient` helper.
+
+This example app does user Server-rendering. However, if you are only interested in building a client-side app, then you can just use the Supabase API as mentioned in the docs and do not need any helper library.
 
 ## Developing
 
