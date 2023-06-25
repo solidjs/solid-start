@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/auth-helpers-remix'
+import { createServerClient } from '@supabase/auth-helpers-solidstart'
 import { type Provider } from '@supabase/supabase-js'
 import { json, redirect } from 'solid-start/server'
 import { supabase } from '~/lib/solidbaseClient.ts'

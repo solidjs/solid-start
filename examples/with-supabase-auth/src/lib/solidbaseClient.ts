@@ -1,4 +1,4 @@
-import { createBrowserClient } from '@supabase/auth-helpers-remix'
+import { createBrowserClient } from '@supabase/auth-helpers-solidstart'
 
 export const supabase = createBrowserClient(
   import.meta.env.VITE_SUPABASE_URL,

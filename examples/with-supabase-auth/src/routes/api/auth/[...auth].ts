@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/auth-helpers-remix'
+import { createServerClient } from '@supabase/auth-helpers-solidstart'
 import { redirect, type APIEvent } from 'solid-start'
 
 export async function GET(event: APIEvent) {
