@@ -1,0 +1,22 @@
+.flex {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.wrapper {
+  composes: flex;
+  height: 100vh;
+}
+
+.formWrapper {
+  composes: flex;
+  align-items: flex-start;
+  border: 1px solid var(--ps-border);
+  border-radius: 6px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 60ch;
+}

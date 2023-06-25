@@ -1,0 +1,22 @@
+.header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.avatar {
+  border-radius: 50%;
+  height: 3rem;
+  overflow: hidden;
+  width: 3rem;
+}
+
+.avatar img {
+  height: 100%;
+  width: 100%;
+}
+
+.main {
+  padding: 1rem;
+}

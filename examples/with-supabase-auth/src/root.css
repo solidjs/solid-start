@@ -1,0 +1,32 @@
+:root {
+  --discord-blue: #404eee;
+}
+
+body {
+  font-family: 'gg sans Normal Regular', Gordita, Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:is(button, a).round {
+  background-color: var(--ps-text-inverse);
+  border: none;
+  border-radius: 3rem;
+  color: var(--discord-blue);
+  cursor: pointer;
+  font-family: 'gg sans Medium Regular';
+  font-size: 1rem;
+  height: 3rem;
+  padding-inline-end: 1rem;
+  padding-inline-start: 1rem;
+  min-width: 6rem;
+}
+
+:is(button, a).action {
+  background-color: var(--ps-action-background);
+  color: var(--ps-action-text);
+  transition: background 200ms ease-in-out;
+}
+
+:is(button, a).action:hover {
+  background-color: var(--ps-action-background-hover);
+}
