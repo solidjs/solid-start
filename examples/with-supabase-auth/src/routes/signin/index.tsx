@@ -1,19 +1,18 @@
+import { type Provider } from '@supabase/supabase-js'
 import { Show } from 'solid-js'
 import { createRouteAction } from 'solid-start'
 import { signInWithMagicLink, signInWithProvider } from '~/db/session'
 import styles from './signin.module.css'
 
 export default function Signin() {
-  const [submission, { Form }] = createRouteAction(async (e: Event) => {
-    const target = e.target as HTMLFormElement
-    const intent = target.intent.value
-
-    e.preventDefault()
+  const [submission, { Form }] = createRouteAction(async (form: FormData) => {
+    const intent = form.get('intent')
 
     if (intent === 'magicLink') {
-      return signInWithMagicLink(target.email.value)
+      signInWithMagicLink(form.get('email') as string)
+      return 'magicLink'
     } else {
-      return signInWithProvider(target.intent.value)
+      return signInWithProvider(intent as Provider)
     }
   })
 
@@ -26,6 +25,12 @@ export default function Signin() {
         <Show when={submission.error}>
           <div>
             <p>Something went wrong: {submission.error.message}</p>
+          </div>
+        </Show>
+
+        <Show when={submission.result === 'magicLink'} fallback={null}>
+          <div>
+            <p>Check your email for a magic link!</p>
           </div>
         </Show>
 
