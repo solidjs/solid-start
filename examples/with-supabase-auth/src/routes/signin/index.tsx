@@ -1,19 +1,20 @@
 import { Show } from 'solid-js'
 import { createRouteAction } from 'solid-start'
+import { signInWithMagicLink, signInWithProvider } from '~/db/session'
 import styles from './signin.module.css'
-import { signInWithMagicLink, signInWithProvider } from '~/db/session.ts'
 
 export default function Signin() {
-  const [magicLink, handleMagicLink] = createRouteAction(async (e: Event) => {
+  const [submission, { Form }] = createRouteAction(async (e: Event) => {
     const target = e.target as HTMLFormElement
-    e.preventDefault()
-    return signInWithMagicLink(target.email.value)
-  })
+    const intent = target.intent.value
 
-  const [provider, handleProvider] = createRouteAction(async (e: Event) => {
-    const target = e.target as HTMLFormElement
     e.preventDefault()
-    return signInWithProvider(target.intent.value)
+
+    if (intent === 'magicLink') {
+      return signInWithMagicLink(target.email.value)
+    } else {
+      return signInWithProvider(target.intent.value)
+    }
   })
 
   return (
@@ -22,40 +23,40 @@ export default function Signin() {
       <p>It's so good to see you again.</p>
 
       <div class={styles.flex}>
-        <Show when={magicLink.error}>
+        <Show when={submission.error}>
           <div>
-            <span>Something went wrong: {magicLink.error.message}</span>
+            <p>Something went wrong: {submission.error.message}</p>
           </div>
         </Show>
 
-        <form class={styles.formWrapper} onSubmit={handleMagicLink}>
+        <Form class={styles.formWrapper}>
           <label html-for="email">Email</label>
           <input type="hidden" name="intent" value="magicLink" />
           <input type="tel" id="email" name="email" />
-          <button disabled={magicLink.pending} type="submit">
+          <button disabled={submission.pending} type="submit">
             Sign in
           </button>
-        </form>
+        </Form>
       </div>
 
       <br />
 
       <div>
-        <form onSubmit={handleProvider}>
+        <Form>
           <input type="hidden" name="intent" value="google" />
-          <button disabled={provider.pending} type="submit">
+          <button disabled={submission.pending} type="submit">
             Sign in with Google
           </button>
-        </form>
+        </Form>
 
         <br />
 
-        <form onSubmit={handleProvider}>
+        <Form>
           <input type="hidden" name="intent" value="discord" />
-          <button disabled={provider.pending} type="submit">
+          <button disabled={submission.pending} type="submit">
             Sign in with Discord
           </button>
-        </form>
+        </Form>
       </div>
     </div>
   )
