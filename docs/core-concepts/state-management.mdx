@@ -29,43 +29,27 @@ When you need to access the `localStorage` API, you can either use a `createEffe
 ```tsx twoslash {19-21} filename="components/ThemePicker.tsx"
 // @include: lib
 // ---cut---
-import { createContext, createEffect, createSignal, useContext } from 'solid-start';
-import { Show, For } from 'solid-js';
+import { createEffect, createSignal } from 'solid-start';
 
-const ThemeContext = createContext(null);
+const LIGHT = 'light';
+const DARK = 'dark';
 
-export function ThemeProvider() {
-  const INTITIAL_THEME = 'light';
-  const [theme, setTheme] = createSignal(INTIAL_THEME),
-    value = [
-      theme,
-      {
-        setTheme(theme) {
-          setTheme(theme);
-          localStorage?.setItem('theme', theme);
-        },
-      }
-    ];
+export function ButtonThemeCacher() {
+  const [theme, setTheme] = createSignal(LIGHT);
 
-  createEffect(() => {
-    localStorage.getItem('theme') && setTheme(localStorage.getItem('theme'));
-  })
-
-  return (
-    <CounterContext.Provider value={value}>
-      {props.children}
-    </CounterContext.Provider>
-  );
-}
-
-export function useTheme() {
-  const context = useContext(ThemeContext);
-
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+  function handleClick() {
+    setTheme(theme() === LIGHT ? DARK : LIGHT);
   }
 
-  return context;
+  createEffect(() => {
+    localStorage.setItem('theme', theme());
+  });
+
+  return (
+    <button onClick={handleClick} type="button">
+      Toggle theme
+    </button>
+  );
 }
 ```
 
@@ -87,7 +71,7 @@ TBD...normal Solid API stuff
 
 - createStore
 - Context
-- useSignal
+- createSignal
 
 ## Server-side state
 
@@ -114,11 +98,3 @@ TBD...
 While it is possible to use global state and computations, Context is sometimes a better solution. Additionally, it is important to note that global state should not be used in SSR (server side rendering) solutions, such as Solid Start.
 
 On the server, global state is shared across requests, and the lack of data isolation can (and will) lead to bugs, memory leaks and has security implications. It is recommended that application state should always be provided via `Context` instead of relying on global.
-
-
-- Where to store different types of information
-  - Client-side states/stores
-  - local/session storage
-  - query params
-  - Cookies, session cookies
-  - Databases
