@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -268,11 +272,11 @@ importers:
   examples/with-authjs:
     dependencies:
       '@auth/core':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.5.1
+        version: 0.5.1
       '@solid-auth/base':
         specifier: ^2.0.3
-        version: 2.0.3(@auth/core@0.3.0)(solid-js@1.7.2)(solid-start@packages+start)
+        version: 2.0.3(@auth/core@0.5.1)(solid-js@1.7.2)(solid-start@packages+start)
       '@solidjs/meta':
         specifier: ^0.28.2
         version: 0.28.2(solid-js@1.7.2)
@@ -1288,10 +1292,10 @@ packages:
     resolution: {integrity: sha512-vy9fM3pIxZmX07dL+VX1aZe7ynZ+YyB0jY+jE6r3hOK6GNY2t6W8rzpFC4tgpbXUYABkFQwgJq2XYXlxbXAI0g==}
     dev: false
 
-  /@auth/core@0.3.0:
-    resolution: {integrity: sha512-4bmPzEiQKSXD825Jrcgj7igSFghBTpkSQ6U/jnYABJRQGhwnWJ/q9FHxEo6SGZWvYvpjOrvJOWhrP4Xng4CGUQ==}
+  /@auth/core@0.5.1:
+    resolution: {integrity: sha512-t9z8F7dkuVceKWBmMy1fd2t6H+vfRju/YJ1lm+6RnJ7pNEvX5qMR874wg0+cYbWvyZazLi8fFK/FA6I3D5sSkA==}
     peerDependencies:
-      nodemailer: 6.8.0
+      nodemailer: ^6.8.0
     peerDependenciesMeta:
       nodemailer:
         optional: true
@@ -3481,14 +3485,14 @@ packages:
   /@sinclair/typebox@0.25.24:
     resolution: {integrity: sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ==}
 
-  /@solid-auth/base@2.0.3(@auth/core@0.3.0)(solid-js@1.7.2)(solid-start@packages+start):
+  /@solid-auth/base@2.0.3(@auth/core@0.5.1)(solid-js@1.7.2)(solid-start@packages+start):
     resolution: {integrity: sha512-WauEsk4SI6OtEYCeK9sGcIErRxO3+Cv+xw3ss7sd/oepoJ7m7cNkusq8RsiB302l4SOgB6nkIHIqvjwmm/yQpQ==}
     peerDependencies:
       '@auth/core': 0.5.1
       solid-js: ^1.5.7
       solid-start: ^0.2.15
     dependencies:
-      '@auth/core': 0.3.0
+      '@auth/core': 0.5.1
       solid-js: 1.7.2
       solid-start: link:packages/start
     dev: false
