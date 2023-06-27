@@ -16,7 +16,7 @@
     "vite": "^4.1.4"
   },
   "dependencies": {
-    "@auth/core": "^0.3.0",
+    "@auth/core": "^0.5.1",
     "@solid-auth/base": "^2.0.3",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
