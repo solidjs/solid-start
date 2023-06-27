@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -253,11 +257,11 @@ importers:
         specifier: ^5.1.2
         version: 5.1.2(astro@2.5.5)
       '@auth/core':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: ^0.5.1
+        version: 0.5.1
       '@solid-auth/base':
         specifier: 1.0.0-alpha.1
-        version: 1.0.0-alpha.1(@auth/core@0.5.0)(@solidjs/router@0.8.2)(solid-js@1.7.6)(solid-start@packages+start)
+        version: 1.0.0-alpha.1(@auth/core@0.5.1)(@solidjs/router@0.8.2)(solid-js@1.7.6)(solid-start@packages+start)
       '@solidjs/meta':
         specifier: ^0.28.2
         version: 0.28.2(solid-js@1.7.6)
@@ -1098,8 +1102,8 @@ packages:
     dependencies:
       undici: 5.22.1
 
-  /@auth/core@0.5.0:
-    resolution: {integrity: sha512-NZu+H1rfYPewBDelZ4nZn7Vd2i6kVSUZQAcrQtEYylbSVVpVglcAfnHDq0FsIFXN1czQk13qdmm+CbIEr/C+iA==}
+  /@auth/core@0.5.1:
+    resolution: {integrity: sha512-t9z8F7dkuVceKWBmMy1fd2t6H+vfRju/YJ1lm+6RnJ7pNEvX5qMR874wg0+cYbWvyZazLi8fFK/FA6I3D5sSkA==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -3488,7 +3492,7 @@ packages:
   /@sinclair/typebox@0.25.24:
     resolution: {integrity: sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ==}
 
-  /@solid-auth/base@1.0.0-alpha.1(@auth/core@0.5.0)(@solidjs/router@0.8.2)(solid-js@1.7.6)(solid-start@packages+start):
+  /@solid-auth/base@1.0.0-alpha.1(@auth/core@0.5.1)(@solidjs/router@0.8.2)(solid-js@1.7.6)(solid-start@packages+start):
     resolution: {integrity: sha512-sf1bbcWZC1z+zExjVdGf5Z23egeNXBMZ3CWOypDlrfzN0M6UuXG7HrogQllCre67bf0i8pzxUwVz3u/t1l7+CA==}
     peerDependencies:
       '@auth/core': 0.5.1
@@ -3496,7 +3500,7 @@ packages:
       solid-js: ^1.5.7
       solid-start: ^0.3.0-alpha.5
     dependencies:
-      '@auth/core': 0.5.0
+      '@auth/core': 0.5.1
       '@solidjs/router': 0.8.2(solid-js@1.7.6)
       '@types/cookie': 0.5.1
       '@types/set-cookie-parser': 2.4.2
