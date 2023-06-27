@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@astrojs/node": "^5.1.2",
-    "@auth/core": "^0.5.0",
+    "@auth/core": "^0.5.1",
     "@solid-auth/base": "1.0.0-alpha.1",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
