@@ -94,7 +94,7 @@ export default function EnrollmentPage() {
   const [enrolling, enroll] = createRouteAction(enrollInClass);
   return (
     <div>
-      <button  
+      <button
         onClick={() => enroll('Defense against the Dark Arts')}
         disabled={enrolling.pending}
       >
@@ -114,7 +114,7 @@ export default function EnrollmentPage() {
 
 ### Showing a success message
 
-If you want to show a success message after an action is complete, you can use the `result` property to get the returned value of the action. 
+If you want to show a success message after an action is complete, you can use the `result` property to get the returned value of the action.
 
 ```tsx twoslash {17-19} filename="routes/enrollment.tsx"
 // @include: lib
@@ -145,7 +145,7 @@ export function EnrollmentPage() {
 
 ### Refetching data after an action
 
-You don't have to do anything more to have your `createRouteData` functions refetch data after an action.  The `createRouteData` functions will automatically refetch data after an action is performed. 
+You don't have to do anything more to have your `createRouteData` functions refetch data after an action.  The `createRouteData` functions will automatically refetch data after an action is performed.
 
 ### Invalidating specific data after an action
 
@@ -160,7 +160,7 @@ import { Show, For } from 'solid-js';
 export default function EnrollmentPage() {
   const classes = createRouteData(getClasses, { key: 'classes' });
   const [enrolling, enroll] = createRouteAction(
-    enrollInClass, 
+    enrollInClass,
     { invalidate: ['classes'] }
   );
 
@@ -168,10 +168,10 @@ export default function EnrollmentPage() {
     <div>
       <ul>
         <For each={classes()}>
-          {course => <li>{course.name}</li>}  
+          {course => <li>{course.name}</li>}
         </For>
       </ul>
-      <button  
+      <button
         onClick={() => enroll('Defense against the Dark Arts')}
         disabled={enrolling.pending}
       >
@@ -192,7 +192,7 @@ export default function EnrollmentPage() {
 
 Now, since we have Javascript in our hands, we can give the user a more enhanced experience. Sometimes this means pretending an action was successful to provide a more response user experience. This is called an optimistic UI. We can do this in a neat way where you don't need to manage extra state. You have access to the `input` on the submission, so you know what data was sent to the action.
 
-Using the `pending` property, you can use the `input` as part of the visible UI. For example, in a list of enrolled classes, you can add the class to the list before the action is complete. Then, if the action fails, you can remove the class from the list. 
+Using the `pending` property, you can use the `input` as part of the visible UI. For example, in a list of enrolled classes, you can add the class to the list before the action is complete. Then, if the action fails, you can remove the class from the list.
 
 ```tsx twoslash {19-21} filename="routes/enrollment.tsx"
 // @include: lib
@@ -203,7 +203,7 @@ import { Show, For } from 'solid-js';
 export function EnrollmentPage() {
   const classes = createRouteData(getClasses, { key: 'classes' });
   const [enrolling, enroll] = createRouteAction(
-    enrollInClass, 
+    enrollInClass,
     { invalidate: ['classes'] }
   );
 
@@ -213,14 +213,14 @@ export function EnrollmentPage() {
         Enrolled Classes
         <ul>
           <For each={classes()}>
-            {course => <li>{course.name}</li>}  
+            {course => <li>{course.name}</li>}
           </For>
           <Show when={enrolling.pending}>
             <li>{enrolling.input}</li>
           </Show>
         </ul>
       </div>
-      <button  
+      <button
         onClick={() => enroll('Defense against the Dark Arts')}
         disabled={enrolling.pending}
       >
@@ -237,6 +237,44 @@ export function EnrollmentPage() {
 }
 ```
 
+### Creating a Enhanced Form
+
+Although we recommend using [progressively enhanced forms on the server](./createServerAction.md#creating-a-progressively-enhanced-form) whenever possible, one of the benefits of running actions on the client is that we can still create enhanced forms. To accomplish this we need to pass information to our action using form elements like `<input>`. Any data need to be sent that end users don't enter can be added with an `<input>` with `type="hidden"`.
+
+```tsx twoslash
+const prisma = {
+  enrollment: {
+    create(arg: { data: { userId: number; subject: string } }) {}
+  }
+};
+function enrollInClass(email: string) {
+  return email;
+}
+// ---cut---
+import { createRouteAction } from "solid-start/server";
+
+function EnrollmentPage() {
+  const [enrolling, { Form }] = createRouteAction(async (form: FormData) => {
+    const data = await enrollInClass(form.get('email') as string)
+    return data
+  });
+
+  return (
+    <Form>
+      <Show when={enrolling.error}>
+        There was an error while enrolling: {enrolling.error.message}
+      </Show>
+
+      <input id="email" name="email" type="email" />
+      <button type="submit" disabled={enrolling.pending}>
+        Enroll
+      </button>
+    </Form>
+  );
+}
+```
+
+We return a email value to tell the browser there was a successful submission so you can give visual feedback to your users or do anything else you may need.
 
 ## Reference
 
@@ -254,7 +292,7 @@ function Component() {
 }
 ```
 
-`createRouteAction` is a hook that returns a tuple of two values: The first item is a reactive object maintaining the state of the submission of the action, along with some helpers. The second item in the tuple is a function used to dispatch the action. 
+`createRouteAction` is a hook that returns a tuple of two values: The first item is a reactive object maintaining the state of the submission of the action, along with some helpers. The second item in the tuple is a function used to dispatch the action.
 
 The second item also has another property called `Form` which is a progressively enhanced version of the `form` element. It is a component that can be used to submit the action, and a `url` can be passed to be the `action` of the `form` element when JS is not available.
 
@@ -270,6 +308,9 @@ The second item also has another property called `Form` which is a progressively
   - `clear()` - Clears the state of the submission.
 
 `enroll` is a function that takes the input to the action and dispatches the action. It returns a promise that resolves to the result of the action.
+- And the following helpers:
+  - `Form`: A `form` smart component to help make using forms easier.
+  - `url`: A URL string that can be passed to be the action of the form element when JS is not available.
 
 This is the behavior of the `enroll` function:
 
