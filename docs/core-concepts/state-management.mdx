@@ -26,10 +26,9 @@ Local storage is a way to store data in the browser. This data is stored in the 
 
 When you need to access the `localStorage` API, you can either use a `createEffect` hook or a `createRouteAction` which gaurantees that the code will run in the browser.
 
-```tsx twoslash {19-21} filename="components/ThemePicker.tsx"
-// @include: lib
+```tsx twoslash {14} filename="components/ThemePicker.tsx"
 // ---cut---
-import { createEffect, createSignal } from 'solid-start';
+import { createEffect, createSignal } from 'solid-js';
 
 const LIGHT = 'light';
 const DARK = 'dark';
@@ -67,11 +66,11 @@ TBD...
 
 ### Client-side stores
 
-TBD...normal Solid API stuff
+TBD...
 
-- createStore
-- Context
-- createSignal
+- [createSignal](https://www.solidjs.com/docs/latest/api#createsignal)
+- [Context](https://www.solidjs.com/docs/latest/api#createcontext)
+- [createStore](https://www.solidjs.com/docs/latest/api#using-stores)
 
 ## Server-side state
 
