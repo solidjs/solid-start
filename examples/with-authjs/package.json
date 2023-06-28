@@ -22,8 +22,8 @@
     "@solid-auth/base": "1.0.0-alpha.1",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "astro": "^2.5.5",
-    "solid-js": "^1.7.6",
+    "astro": "^2.7.1",
+    "solid-js": "^1.7.7",
     "solid-start": "^0.3.0-alpha.7"
   },
   "engines": {
