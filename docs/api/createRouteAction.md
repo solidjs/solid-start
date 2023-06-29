@@ -239,19 +239,18 @@ export function EnrollmentPage() {
 
 ### Creating a Enhanced Form
 
-Although we recommend using [progressively enhanced forms on the server](./createServerAction.md#creating-a-progressively-enhanced-form) whenever possible, one of the benefits of running actions on the client is that we can still create enhanced forms. To accomplish this we need to pass information to our action using form elements like `<input>`. Any data need to be sent that end users don't enter can be added with an `<input>` with `type="hidden"`.
+Although we recommend using [progressively enhanced forms on the server](./createServerAction.md#creating-a-progressively-enhanced-form) whenever possible, we can still take advantage of running actions on the client and used enhanced forms. This is ideal when you need to run an action or API request that can only be done in the browser.
 
-```tsx twoslash
-const prisma = {
-  enrollment: {
-    create(arg: { data: { userId: number; subject: string } }) {}
-  }
-};
-function enrollInClass(email: string) {
-  return email;
+To accomplish this we need to pass information to our action using form elements like `<input>`. Any data need to be sent that end users don't enter can be added with an `<input>` with `type="hidden"`.
+
+```tsx twoslash {5,11} filename="routes/enrollment.tsx"
+async function enrollInClass(className: string): Promise<void> {
+  throw new Error('You are not allowed to enroll in this class')
 }
+
 // ---cut---
-import { createRouteAction } from "solid-start/server";
+import { createRouteAction } from "solid-start";
+import { Show } from 'solid-js';
 
 function EnrollmentPage() {
   const [enrolling, { Form }] = createRouteAction(async (form: FormData) => {
@@ -299,6 +298,7 @@ The second item also has another property called `Form` which is a progressively
 #### Returns
 
 `enrolling` is a `Submission` with the following properties:
+
 - `pending` - A boolean indicating if the action is currently being performed.
 - `error` - An error object if the action failed.
 - `input` - The input that was passed to the action.
@@ -308,6 +308,7 @@ The second item also has another property called `Form` which is a progressively
   - `clear()` - Clears the state of the submission.
 
 `enroll` is a function that takes the input to the action and dispatches the action. It returns a promise that resolves to the result of the action.
+
 - And the following helpers:
   - `Form`: A `form` smart component to help make using forms easier.
   - `url`: A URL string that can be passed to be the action of the form element when JS is not available.
