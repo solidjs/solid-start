@@ -9,6 +9,8 @@
     "server": "node dist/server/entry.mjs"
   },
   "devDependencies": {
+    "@mdx-js/mdx": "^2.3.0",
+    "@mdx-js/rollup": "^2.3.0",
     "@types/babel__core": "^7.20.0",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
@@ -18,8 +20,6 @@
   },
   "dependencies": {
     "@astrojs/node": "^5.1.2",
-    "@mdx-js/mdx": "^2.3.0",
-    "@mdx-js/rollup": "^2.3.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
     "astro": "^2.7.1",
