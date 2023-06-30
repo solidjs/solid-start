@@ -8,11 +8,11 @@
   "type": "module",
   "devDependencies": {
     "@astrojs/node": "^5.1.2",
-    "astro": "^2.5.5",
+    "astro": "^2.7.1",
     "@cloudflare/kv-asset-handler": "^0.1.3",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "solid-js": "^1.7.4",
+    "solid-js": "^1.7.7",
     "solid-start": "workspace:*",
     "typescript": "^4.9.4",
     "vite": "^4.3.9",
