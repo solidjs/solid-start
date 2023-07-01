@@ -12,6 +12,9 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
     devDependencies:
+      '@astrojs/node':
+        specifier: ^5.1.2
+        version: 5.1.2(astro@2.7.1)
       '@cloudflare/kv-asset-handler':
         specifier: ^0.2.0
         version: 0.2.0
@@ -39,6 +42,9 @@ importers:
       '@trpc/server':
         specifier: ^9.27.4
         version: 9.27.4
+      astro:
+        specifier: ^2.7.1
+        version: 2.7.1(@types/node@18.11.18)(terser@5.16.1)
       coveralls:
         specifier: ^3.1.1
         version: 3.1.1
