@@ -134,7 +134,7 @@ function solidStartFileSystemRouter(options) {
     },
     configureServer(vite) {
       server = vite;
-      router.watch(console.log);
+      router.watch();
       router.listener = listener;
       if (!vite.httpServer) return;
       vite.httpServer.once("listening", async () => {
@@ -330,7 +330,7 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var api = $API_ROUTES;",
-            stringifyApiRoutes(router.getFlattenedApiRoutes(true), { lazy })
+            stringifyApiRoutes(router.getFlattenedApiRoutes(true))
           )
         };
       }

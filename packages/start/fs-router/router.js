@@ -9,19 +9,30 @@ import path, { join } from "path";
 import { toPath } from "./path-utils.js";
 
 const log = debug("solid-start");
-const ROUTE_KEYS = ["component", "path", "data", "children"];
+const ROUTE_KEYS = ["component", "path", "data"];
 
 // Available HTTP methods / verbs for api routes
 // `delete` is a reserved word in JS, so we use `del` instead
 const API_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 
+/** @typedef {{ id: string, path: string, componentPath?: string, dataPath?: string, apiPath?: { [method: string]: string }, children?: Route[] }} Route */
+
 export class Router {
+  /** @type {{ [filePath: string]: Route }} */
   routes;
   baseDir;
   pageExtensions;
   cwd;
+  /** @type {chokidar.FSWatcher | undefined} */
   watcher;
   ignore;
+  /** @type {{ [filePath: string]: boolean }} */
+  rawFiles = {};
+  /** @type {((path: string) => void) | undefined} */
+  listener;
+  /**
+   * @param {{ baseDir?: string, pageExtensions?: string[], cwd?: string, ignore?: string[] }} options
+   */
   constructor({
     baseDir = "src/routes",
     pageExtensions = ["jsx", "tsx", "js", "ts"],
@@ -52,7 +63,7 @@ export class Router {
     });
   }
 
-  watch(onChange) {
+  watch() {
     if (this.watcher) {
       return;
     }
@@ -82,16 +93,17 @@ export class Router {
     });
   }
 
-  rawFiles = {};
-
-  listener;
-
+  /**
+   * @param {string} path
+   */
   notify(path) {
     this.listener && this.listener(path);
   }
 
-  notifyFsEvent() {}
-
+  /**
+   * @param {string} route
+   * @param {string} data
+   */
   setRouteData(route, data) {
     if (!this.routes[route]) {
       this.routes[route] = { id: route, path: toPath(route) || "/", dataPath: data };
@@ -106,6 +118,9 @@ export class Router {
     }
   }
 
+  /**
+   * @param {string} path
+   */
   processFile(path) {
     // if its a route data function
     const pageDataRegex = new RegExp(`\\.data\\.(${["ts", "js"].join("|")})$`);
@@ -127,7 +142,7 @@ export class Router {
       if (path.match(new RegExp(`\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))) {
         let code = fs.readFileSync(join(this.cwd, path)).toString();
         try {
-          let [imports, exports] = parse(
+          let [_imports, exports] = parse(
             esbuild.transformSync(code, {
               jsx: "transform",
               format: "esm",
@@ -190,6 +205,12 @@ export class Router {
       return this._nestedPageRoutes;
     }
 
+    /**
+     * @param {Route[]} routes
+     * @param {Route} route
+     * @param {string} id
+     * @param {string} full
+     */
     function processRoute(routes, route, id, full) {
       const parentRoute = Object.values(routes).find(o => {
         if (o.id.endsWith("/index")) {
@@ -210,7 +231,7 @@ export class Router {
       );
     }
 
-    const routes = Object.values(this.routes).reduce((r, route) => {
+    const routes = Object.values(this.routes).reduce((/** @type {Route[]} */ r, route) => {
       if (route.componentPath) {
         processRoute(r, route, route.id, route.id);
       }
@@ -222,6 +243,9 @@ export class Router {
     return routes;
   }
 
+  /**
+   * @param {Route} route
+   */
   isLayoutRoute(route) {
     if (route.id.endsWith("/index")) {
       return false;
@@ -233,7 +257,13 @@ export class Router {
 
   getRouteLayouts() {
     const routes = this.getNestedPageRoutes();
-    return routes.reduce((routeMap, route) => {
+    /** @typedef {{ [route: string]: { id: string, layouts: string[] } }} RouteLayoutsMap */
+    return routes.reduce((/** @type {RouteLayoutsMap} */ routeMap, route) => {
+      /**
+       * @param {Route} route
+       * @param {string} path
+       * @param {string[]} layouts
+       */
       function buildRouteLayoutsMap(route, path, layouts) {
         const fullPath = path + route.path;
         const fullId = toPath(
@@ -258,7 +288,7 @@ export class Router {
   }
 
   getFlattenedApiRoutes(includePageRoutes = false) {
-    const routes = Object.values(this.routes).reduce((r, route) => {
+    const routes = Object.values(this.routes).reduce((/** @type {Route[]} */ r, route) => {
       if (
         route.apiPath ||
         (includePageRoutes && route.componentPath && !this.isLayoutRoute(route))
@@ -273,7 +303,7 @@ export class Router {
   }
 
   getFlattenedPageRoutes(includeLayouts = false) {
-    const routes = Object.values(this.routes).reduce((r, route) => {
+    const routes = Object.values(this.routes).reduce((/** @type {Route[]} */ r, route) => {
       if (route.componentPath && (!this.isLayoutRoute(route) || includeLayouts)) {
         const path = toPath(route.id);
         r.push({ ...route, id: route.id, path });
@@ -285,9 +315,17 @@ export class Router {
   }
 }
 
+/**
+ * @param {Route[]} routes
+ * @param {{ lazy?: boolean }} options
+ */
 export function stringifyPageRoutes(routes, options = {}) {
   const jsFile = jsCode();
 
+  /**
+   * @param {Route[]} r
+   * @returns {string}
+   */
   function _stringifyRoutes(r) {
     return (
       `[\n` +
@@ -296,21 +334,22 @@ export function stringifyPageRoutes(routes, options = {}) {
         .map(
           i =>
             `{\n${[
-              /.data.(js|ts)$/.test(i.dataPath ?? "")
+              i.dataPath && /.data.(js|ts)$/.test(i.dataPath)
                 ? `data: ${jsFile.addImport(path.posix.resolve(i.dataPath))}`
                 : i.dataPath
                 ? `data: ${jsFile.addNamedImport("routeData", path.posix.resolve(i.dataPath))}`
                 : "",
-              `component: ${
-                options.lazy
-                  ? `lazy(() => import('${path.posix.resolve(i.componentPath)}'))`
-                  : jsFile.addImport(path.posix.resolve(i.componentPath))
-              }`,
-              ...Object.keys(i)
-                .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
-                .map(
-                  k => `${k}: ${k === "children" ? _stringifyRoutes(i[k]) : JSON.stringify(i[k])}`
-                )
+              i.componentPath
+                ? `component: ${
+                    options.lazy
+                      ? `lazy(() => import('${path.posix.resolve(i.componentPath)}'))`
+                      : jsFile.addImport(path.posix.resolve(i.componentPath))
+                  }`
+                : "",
+              ...(i.children ? [_stringifyRoutes(i.children)] : []),
+              ...Object.entries(i)
+                .filter(([k, v]) => ROUTE_KEYS.includes(k) && v !== undefined)
+                .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
             ]
               .filter(Boolean)
               .join(",\n ")} \n}`
@@ -330,9 +369,16 @@ export function stringifyPageRoutes(routes, options = {}) {
   return text;
 }
 
-export function stringifyApiRoutes(flatRoutes, options = {}) {
+/**
+ * @param {Route[]} flatRoutes
+ */
+export function stringifyApiRoutes(flatRoutes) {
   const jsFile = jsCode();
 
+  /**
+   * @param {Route[]} r
+   * @returns {string}
+   */
   function _stringifyRoutes(r) {
     return (
       `[\n` +
@@ -340,20 +386,16 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
         .map(
           i =>
             `{\n${[
-              ...API_METHODS.filter(j => i.apiPath?.[j]).map(
-                v =>
-                  `${v}: ${
-                    // options.lazy
-                    // ? `lazy(() => import('${path.posix.resolve(i.componentSrc)}'))`
-                    jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))
-                  }`
-              ),
+              ...(i.apiPath
+                ? Object.entries(i.apiPath).map(
+                    ([k, v]) => `${v}: ${jsFile.addNamedImport(v, path.posix.resolve(v))}`
+                  )
+                : []),
               i.componentPath ? `GET: "skip"` : undefined,
-              ...Object.keys(i)
-                .filter(k => ROUTE_KEYS.indexOf(k) > -1 && i[k] !== undefined)
-                .map(
-                  k => `${k}: ${k === "children" ? _stringifyRoutes(i[k]) : JSON.stringify(i[k])}`
-                )
+              ...(i.children ? [_stringifyRoutes(i.children)] : []),
+              ...Object.entries(i)
+                .filter(([k, v]) => ROUTE_KEYS.includes(k) && v !== undefined)
+                .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
             ]
               .filter(Boolean)
               .join(",\n ")} \n}`
@@ -373,9 +415,13 @@ export function stringifyApiRoutes(flatRoutes, options = {}) {
 }
 
 function jsCode() {
+  /** @type {Map<string, { [name: string]: string }>} */
   let imports = new Map();
   let vars = 0;
 
+  /**
+   * @param {string} p
+   */
   function addImport(p) {
     let id = imports.get(p);
     if (!id) {
@@ -388,6 +434,10 @@ function jsCode() {
     return d;
   }
 
+  /**
+   * @param {string} name
+   * @param {string} p
+   */
   function addNamedImport(name, p) {
     let id = imports.get(p);
     if (!id) {
@@ -400,8 +450,11 @@ function jsCode() {
     return d;
   }
 
+  /**
+   * @param {string} p
+   */
   const getNamedExport = p => {
-    let id = imports.get(p);
+    let id = imports.get(p) ?? {};
 
     delete id["default"];
 
@@ -413,13 +466,11 @@ function jsCode() {
   };
 
   const getImportStatements = () => {
-    return `${[...imports.keys()]
+    return `${[...imports.entries()]
       .map(
-        i =>
+        ([i, v]) =>
           `import ${
-            imports.get(i).default
-              ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
-              : ""
+            v.default ? `${v.default}${Object.keys(v).length > 1 ? ", " : ""}` : ""
           } ${getNamedExport(i)} from '${i}';`
       )
       .join("\n")}`;
