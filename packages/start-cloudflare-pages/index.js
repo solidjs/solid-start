@@ -62,17 +62,30 @@ export default function (miniflareOptions) {
               WebSocketPair,
               TransformStream
             } = g;
-            Object.assign(globalThis, {
-              Request,
-              Response,
-              fetch,
-              crypto,
-              Headers,
-              ReadableStream,
-              WritableStream,
-              TransformStream,
-              WebSocketPair
-            });
+            if (process.version < "v19") {
+              Object.assign(globalThis, {
+                Request,
+                Response,
+                fetch,
+                crypto,
+                Headers,
+                ReadableStream,
+                WritableStream,
+                TransformStream,
+                WebSocketPair
+              });
+            } else {
+              Object.assign(globalThis, {
+                Request,
+                Response,
+                fetch,
+                Headers,
+                ReadableStream,
+                WritableStream,
+                TransformStream,
+                WebSocketPair
+              });
+            }
 
             console.log(
               "🔥",
