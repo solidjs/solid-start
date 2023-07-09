@@ -16,7 +16,7 @@
     ".": "./index.tsx",
     "./router": "./router.tsx",
     "./vite": {
-      "types": "./vite/plugin.d.ts",
+      "types": "./vite/index.d.ts",
       "import": "./vite/plugin.js"
     },
     "./addons/*": "./addons/*",
