@@ -1,5 +1,3 @@
-/// <reference path="./plugin.d.ts" />
-
 import debug from "debug";
 import { solidPlugin } from "esbuild-plugin-solid";
 import { existsSync } from "fs";
@@ -18,8 +16,10 @@ import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
 
 /**
- * @typedef {ReturnType<typeof mergeOptions> & { env?: Record<string, string> }} SolidStartOptions
+ * @typedef {ReturnType<typeof mergeOptions> & { env?: Record<string, string>; router?: Router }} SolidStartOptions
  */
+
+/** @typedef {import('vite').ResolvedConfig & { solidOptions: SolidStartOptions }} SolidStartConfig */
 
 // @ts-ignore
 globalThis.DEBUG = debug("start:vite");
@@ -74,9 +74,6 @@ function solidStartInlineServerModules() {
  * @returns {import('vite').Plugin}
  */
 function solidStartFileSystemRouter(options) {
-  /** @type {boolean | undefined} */
-  let lazy;
-
   let { delay = 500, glob: enableGlob = true } = options;
   let root = process.cwd();
 
@@ -93,17 +90,13 @@ function solidStartFileSystemRouter(options) {
   /** @type {import('vite').ViteDevServer | undefined} */
   let server;
 
-  let router = new Router({
-    baseDir: path.posix.join(options.appRoot, options.routesDir),
-    pageExtensions: options.pageExtensions,
-    ignore: options.routesIgnore,
-    cwd: options.root
-  });
+  /** @type {Router} */
+  let router;
 
   const pathPlatform = process.platform === "win32" ? path.win32 : path.posix;
   let listener = function handleFileChange(/** @type {string} */ file) {
     schedule(() => {
-      if (router.watcher) {
+      if (router?.watcher) {
         router.watcher.close();
       }
       server?.restart();
@@ -118,14 +111,17 @@ function solidStartFileSystemRouter(options) {
   return {
     name: "solid-start-file-system-router",
     enforce: "pre",
-    config(c) {
+    config(/** @type {import('vite').UserConfig & { solidOptions?: SolidStartOptions }} */ c) {
       if (!enableGlob) return;
       if (!c.server) c.server = {};
       if (!c.server.watch) c.server.watch = {};
       c.server.watch.disableGlobbing = false;
+
+      if (c.solidOptions?.router) {
+        router = c.solidOptions.router;
+      }
     },
     async configResolved(config) {
-      lazy = config.command !== "serve" || options.lazy === true;
       await router.init();
       // famous last words, but this *appears* to always be an absolute path
       // with all slashes normalized to forward slashes `/`. this is compatible
@@ -402,6 +398,12 @@ function solidStartConfig(options) {
       const root = conf.root || process.cwd();
       options.root = root;
       options.env = await loadEnv(e.mode, options.envDir || process.cwd());
+      options.router = new Router({
+        baseDir: path.posix.join(options.appRoot, options.routesDir),
+        pageExtensions: options.pageExtensions,
+        ignore: options.routesIgnore,
+        cwd: options.root
+      });
 
       options.clientEntry =
         options.clientEntry ?? findAny(join(options.root, options.appRoot), "entry-client");
@@ -487,7 +489,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 };
 
 /**
- * @param {Partial<import('./plugin.js').Options>} options
+ * @param {Partial<import('./index.js').Options>} options
  */
 function mergeOptions(options) {
   return Object.assign(
@@ -519,7 +521,7 @@ function mergeOptions(options) {
 }
 
 /**
- * @param {Partial<import('./plugin.js').Options>} _options
+ * @param {Partial<import('./index.js').Options>} _options
  * @returns {import('vite').PluginOption[]}
  */
 export default function solidStart(_options) {

@@ -76,6 +76,7 @@
     "root",
     "server",
     "session",
+    "utils",
     "virtual",
     "vite",
     "websocket",

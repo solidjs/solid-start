@@ -15,8 +15,7 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "paths": {
       "vite": ["./node_modules/vite"]
-    },
-    "baseUrl": "./"
+    }
   },
   "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./**/*.jsx"],
   "exclude": ["node_modules", "**/node_modules/*"]

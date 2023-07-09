@@ -5,17 +5,29 @@ import c from "picocolors";
 import renderStatic from "solid-ssr/static";
 import { build, resolveConfig } from "vite";
 import prepareManifest from "../fs-router/manifest.js";
+import { assertDefined } from "../utils";
 
-export default async function(path, serverPath, config) {
-  const resolved = await resolveConfig(config, 'build', 'production', 'production');
+/**
+ * @param {string} path
+ * @param {string} serverPath
+ * @param {import('vite').InlineConfig} config
+ */
+export default async function (path, serverPath, config) {
+  const resolved = /** @type {import('../vite/plugin.js').SolidStartConfig} */ (
+    /** @type {unknown} */ await resolveConfig(config, "build", "production", "production")
+  );
   config.root = resolved.root;
   (config.build || (config.build = {})).minify = resolved.build?.minify;
-  const staticRendering = !resolved.solidOptions.ssr
-    || resolved.solidOptions.prerenderStatic || resolved.solidOptions.prerenderRoutes;
+  const staticRendering =
+    !resolved.solidOptions.ssr ||
+    resolved.solidOptions.prerenderStatic ||
+    resolved.solidOptions.prerenderRoutes;
 
   if (staticRendering) {
     const serverManifest = JSON.parse(readFileSync(join(serverPath, "manifest.json")).toString());
-    const key = Object.keys(serverManifest).find(key => key.endsWith("start/astro/handler.js"));
+    const key = assertDefined(
+      Object.keys(serverManifest).find(key => key.endsWith("start/astro/handler.js"))
+    );
     process.env.START_ENTRY_STATIC = join(serverPath, serverManifest[key].file);
   }
 
@@ -29,16 +41,27 @@ export default async function(path, serverPath, config) {
   if (resolved.solidOptions.ssr) await preRenderRoutes(path, resolved);
 }
 
+/**
+ * @param {ReturnType<typeof prepareManifest>} routeManifest
+ * @param {string} serverPath
+ */
 function writeRouteManifest(routeManifest, serverPath) {
   const serverManifest = JSON.parse(readFileSync(join(serverPath, "manifest.json")).toString());
-  const key = Object.keys(serverManifest).find(key => key.endsWith("start/astro/handler.js"));
+  const key = assertDefined(
+    Object.keys(serverManifest).find(key => key.endsWith("start/astro/handler.js"))
+  );
   const serverEntry = join(serverPath, serverManifest[key].file);
   let code = readFileSync(serverEntry).toString();
-  code = code.replace("\"$ROUTE_MANIFEST\"", JSON.stringify(routeManifest, null, 2));
+  code = code.replace('"$ROUTE_MANIFEST"', JSON.stringify(routeManifest, null, 2));
   writeFileSync(serverEntry, code);
 }
 
-
+/**
+ * @param {string} path
+ * @param {string} serverPath
+ * @param {import('vite').InlineConfig} config
+ * @param {import('../vite/plugin.js').SolidStartConfig} resolved
+ */
 async function client(path, serverPath, config, resolved) {
   console.log();
   console.log(c.blue("solid-start") + c.magenta(" building client..."));
@@ -64,13 +87,19 @@ async function client(path, serverPath, config, resolved) {
   console.timeEnd(c.blue("solid-start") + c.magenta(" client built in"));
 }
 
+/**
+ * @param {string} path
+ * @param {string} serverPath
+ * @param {import('vite').InlineConfig} config
+ * @param {import('../vite/plugin.js').SolidStartConfig} resolved
+ */
 async function spaClient(path, serverPath, config, resolved) {
   console.log();
   console.log(c.blue("solid-start") + c.magenta(" building client..."));
   console.time(c.blue("solid-start") + c.magenta(" client built in"));
 
   let keepIndexHtml = false;
-  if (existsSync(join(config.root, "index.html"))) {
+  if (existsSync(join(resolved.root, "index.html"))) {
     keepIndexHtml = true;
   } else {
     console.log(c.blue("solid-start") + c.magenta(" rendering index.html..."));
@@ -79,7 +108,7 @@ async function spaClient(path, serverPath, config, resolved) {
     process.env.START_INDEX_HTML = "true";
     process.env.START_ENTRY_CLIENT = resolved.solidOptions.clientEntry;
     await renderStatic({
-      entry: fileURLToPath(new URL('./handler-static.js', import.meta.url).toString()),
+      entry: fileURLToPath(new URL("./handler-static.js", import.meta.url).toString()),
       output: "index.html",
       url: "/"
     });
@@ -106,7 +135,6 @@ async function spaClient(path, serverPath, config, resolved) {
 
   if (!keepIndexHtml) unlinkSync("index.html");
 
-
   let assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
   let ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
   writeRouteManifest(prepareManifest(ssrManifest, assetManifest, resolved), serverPath);
@@ -114,12 +142,18 @@ async function spaClient(path, serverPath, config, resolved) {
   console.timeEnd(c.blue("solid-start") + c.magenta(" client built in"));
 }
 
+/**
+ * @param {string} path
+ * @param {string} serverPath
+ * @param {import('vite').InlineConfig} config
+ * @param {import('../vite/plugin.js').SolidStartConfig} resolved
+ */
 async function islandsClient(path, serverPath, config, resolved) {
   console.log();
   console.log(c.blue("solid-start") + c.magenta(" finding islands..."));
   console.time(c.blue("solid-start") + c.magenta(" found islands in"));
 
-  let routeManifestPath = join(config.root, ".solid", "route-manifest");
+  const routeManifestPath = join(resolved.root, ".solid", "route-manifest");
   await build({
     ...config,
     build: {
@@ -128,7 +162,7 @@ async function islandsClient(path, serverPath, config, resolved) {
       minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
       rollupOptions: {
         input: [
-          resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
+          resolve(join(resolved.root, "node_modules", "solid-start", "islands", "entry-client"))
         ],
         output: {
           manualChunks: undefined
@@ -137,16 +171,17 @@ async function islandsClient(path, serverPath, config, resolved) {
     }
   });
 
-  let assetManifest = JSON.parse(
-    readFileSync(join(routeManifestPath, "manifest.json")).toString()
-  );
+  let assetManifest = JSON.parse(readFileSync(join(routeManifestPath, "manifest.json")).toString());
   let ssrManifest = JSON.parse(
     readFileSync(join(routeManifestPath, "ssr-manifest.json")).toString()
   );
-  let routeManifest = prepareManifest(ssrManifest, assetManifest, resolved);
-  writeFileSync(join(routeManifestPath, "route-manifest.js"), `export default ${JSON.stringify(routeManifest, null, 2)}`);
+  const routeManifest = prepareManifest(ssrManifest, assetManifest, resolved);
+  writeFileSync(
+    join(routeManifestPath, "route-manifest.js"),
+    `export default ${JSON.stringify(routeManifest, null, 2)}`
+  );
 
-  let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
+  const islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
 
   console.timeEnd(c.blue("solid-start") + c.magenta(" found islands in"));
   console.log();
@@ -160,8 +195,8 @@ async function islandsClient(path, serverPath, config, resolved) {
       minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
       rollupOptions: {
         input: [
-          resolved.solidOptions.clientEntry,
-          ...islands.map(i => resolve(join(config.root, i)))
+          assertDefined(resolved.solidOptions.clientEntry),
+          ...islands.map(i => resolve(join(resolved.root, i)))
         ],
         output: {
           manualChunks: undefined
@@ -173,9 +208,9 @@ async function islandsClient(path, serverPath, config, resolved) {
   assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
   ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
 
-  let islandsManifest = prepareManifest(ssrManifest, assetManifest, resolved, islands);
+  const islandsManifest = prepareManifest(ssrManifest, assetManifest, resolved, islands);
 
-  let newManifest = {
+  const newManifest = {
     ...Object.fromEntries(
       Object.entries(routeManifest)
         .filter(([k]) => k.startsWith("/"))
@@ -202,7 +237,7 @@ async function islandsClient(path, serverPath, config, resolved) {
   };
 
   Object.values(newManifest).forEach(v => {
-    let assets = Array.isArray(v) ? v : v.assets;
+    const assets = Array.isArray(v) ? v : v.assets;
     assets.forEach(a => {
       if (a.type === "style") {
         copyFileSync(join(routeManifestPath, a.href), join(path, a.href));
@@ -213,27 +248,30 @@ async function islandsClient(path, serverPath, config, resolved) {
   console.timeEnd(c.blue("solid-start") + c.magenta(" built islands client in"));
 }
 
+/**
+ * @param {string} path
+ * @param {import('../vite/plugin.js').SolidStartConfig} config
+ */
 async function preRenderRoutes(path, config) {
+  /** @type {string[]} */
   let routes = [];
   if (config.solidOptions.prerenderStatic) {
-    await config.solidOptions.router.init();
+    const router = assertDefined(config.solidOptions.router);
+    await router.init();
     routes = [
-      ...config.solidOptions.router
+      ...router
         .getFlattenedPageRoutes()
         .map(a => a.path)
         .filter(a => (a.includes(":") || a.includes("/")) && !a.includes("*")),
       "/404"
-    ]
+    ];
   }
   routes = [...routes, ...(config.solidOptions.prerenderRoutes || [])];
   if (!routes.length) return;
   await renderStatic(
     routes.map(url => ({
-      entry: fileURLToPath(new URL('./handler-static.js', import.meta.url).toString()),
-      output: join(
-        path,
-        url.endsWith("/") ? `${url.slice(1)}index.html` : `${url.slice(1)}.html`
-      ),
+      entry: fileURLToPath(new URL("./handler-static.js", import.meta.url).toString()),
+      output: join(path, url.endsWith("/") ? `${url.slice(1)}index.html` : `${url.slice(1)}.html`),
       url
     }))
   );

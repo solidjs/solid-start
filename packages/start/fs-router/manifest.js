@@ -1,6 +1,9 @@
 // make asset lookup
 import { posix } from "path";
+import { isNotNull } from "../utils/index.js";
 import { toPath } from "./path-utils.js";
+
+/** @typedef {{ type: string; href: string }} Asset */
 
 /**
  * Output:
@@ -19,36 +22,45 @@ import { toPath } from "./path-utils.js";
  *    ],
  * }
  *
- * @param {*} ssrManifest
- * @param {*} assetManifest
- * @returns
+ * @param {Record<string, string[]>} ssrManifest
+ * @param {import('vite').Manifest} assetManifest
+ * @param {import('../vite/plugin.js').SolidStartConfig} config
+ * @param {string[]} islands
+ * @returns {Record<string, Asset[] | { script: Asset; assets: Asset[] }>}
  */
 export default function prepareManifest(ssrManifest, assetManifest, config, islands = []) {
   const pageRegex = new RegExp(`\\.(${config.solidOptions.pageExtensions.join("|")})$`);
   const baseRoutes = posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir);
-  const basePath = typeof config.base === "string"
-    ? (config.base || "./").endsWith("/")
-      ? config.base
-      : config.base + "/"
-    : "/";
+  const basePath =
+    typeof config.base === "string"
+      ? (config.base || "./").endsWith("/")
+        ? config.base
+        : config.base + "/"
+      : "/";
 
+  /** @type {Record<string, { script: Asset; assets: Asset[] }>} */
   let manifest = {};
 
+  /** @type {string | null} */
   let src;
+  /** @param {string} _src */
   function collect(_src) {
     src = _src;
-    let assets = collectAssets();
+    const assets = collectAssets();
     assets.addSrc(_src);
 
-    let files = assets.getFiles();
+    const files = assets.getFiles();
     src = null;
     return files;
   }
 
   function collectAssets() {
-    let files = [];
-    let visitedFiles = new Set();
+    /** @type {Asset[]} */
+    const files = [];
+    /** @type {Set<string>} */
+    const visitedFiles = new Set();
 
+    /** @param {import('vite').ManifestChunk} file */
     function visitFile(file) {
       if (visitedFiles.has(file.file)) return;
       visitedFiles.add(file.file);
@@ -94,13 +106,15 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     }
 
     return {
+      /** @param {string} val */
       addAsset(val) {
-        let asset = Object.values(assetManifest).find(f => basePath + f.file === val);
+        const asset = Object.values(assetManifest).find(f => basePath + f.file === val);
         if (!asset) {
           return;
         }
         visitFile(asset);
       },
+      /** @param {string} val */
       addSrc(val) {
         let asset = Object.values(assetManifest).find(f => f.src === val);
         if (!asset) {
@@ -116,8 +130,8 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
 
   let routes = Object.keys(ssrManifest)
     .filter(key => key.startsWith(baseRoutes) && key.match(pageRegex))
-    .map(key => [key, ssrManifest[key]])
-    .map(([key, value]) => {
+    .map(key => {
+      const value = ssrManifest[key];
       const assets = collectAssets();
       value.forEach(val => {
         assets.addAsset(val);
@@ -131,14 +145,14 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
         return null;
       }
 
-      return [
+      return /** @type {const} */ ([
         toPath(key.slice(baseRoutes.length).replace(pageRegex, ""), false),
         assets.getFiles()
-      ];
+      ]);
     })
-    .filter(Boolean);
+    .filter(isNotNull);
 
-  let clientEntry = Object.keys(ssrManifest).find(key =>
+  const clientEntry = Object.keys(ssrManifest).find(key =>
     key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
   );
 
@@ -147,7 +161,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
     clientEntryAssets.addSrc(clientEntry);
   }
 
-  let indexHtml = Object.keys(assetManifest).find(key => key.match(new RegExp(`index.html$`)));
+  const indexHtml = Object.keys(assetManifest).find(key => key.match(new RegExp(`index.html$`)));
   const indexHtmlAssets = collectAssets();
   if (indexHtml) {
     indexHtmlAssets.addSrc(indexHtml);
