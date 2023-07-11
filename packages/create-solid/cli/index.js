@@ -282,10 +282,12 @@ async function main() {
   ); // TODO ^${versions[name]}
 
   if (!ts_response) {
+    delete pkg_json.dependencies["@types/cookie"];
+    delete pkg_json.dependencies["@types/debug"];
     delete pkg_json.devDependencies["@types/babel__core"];
     delete pkg_json.devDependencies["@types/node"];
-    delete pkg_json.devDependencies["@types/debug"];
     delete pkg_json.devDependencies["typescript"];
+    delete pkg_json.devDependencies["@types/wait-on"];
   }
 
   fs.writeFileSync(pkg_file, JSON.stringify(pkg_json, null, 2));

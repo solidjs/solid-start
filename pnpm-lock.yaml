@@ -161,9 +161,6 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.0
         version: 7.20.0
-      '@types/debug':
-        specifier: ^4.1.7
-        version: 4.1.7
       '@types/node':
         specifier: ^18.11.18
         version: 18.11.18
@@ -244,9 +241,6 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.0
         version: 7.20.0
-      '@types/debug':
-        specifier: ^4.1.7
-        version: 4.1.7
       '@types/node':
         specifier: ^18.11.18
         version: 18.11.18
@@ -407,9 +401,6 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.0
         version: 7.20.0
-      '@types/debug':
-        specifier: ^4.1.7
-        version: 4.1.7
       solid-start-node:
         specifier: ^0.2.19
         version: link:../../packages/start-node
@@ -713,6 +704,9 @@ importers:
       '@types/cookie':
         specifier: ^0.5.1
         version: 0.5.1
+      '@types/debug':
+        specifier: ^4.1.7
+        version: 4.1.7
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
@@ -804,9 +798,6 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.0
         version: 7.20.0
-      '@types/debug':
-        specifier: ^4.1.7
-        version: 4.1.7
       '@types/node':
         specifier: ^18.11.18
         version: 18.11.18
