@@ -3,7 +3,7 @@ import { CreditsItem } from "./CreditsItem";
 
 export function Credits(props) {
   return (
-    <div class="listing listing--carousel">
+    <div class="listing listing--carousel" $ServerOnly>
       <div class="listing__head">
         <h2 class="listing__title">Cast</h2>
       </div>

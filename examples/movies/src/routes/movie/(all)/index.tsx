@@ -30,7 +30,7 @@ export function routeData() {
 export default function Page() {
   const data = useRouteData<typeof routeData>();
   return (
-    <main class="main">
+    <main class="main" $ServerOnly>
       <Show when={data()}>
         <Hero item={data()?.featured} />
         <ListingCarousel

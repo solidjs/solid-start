@@ -7,7 +7,7 @@ function flattenIslands(match: ManifestEntry[], manifest: StartManifest, islands
     if (m.type !== "island") return;
     const islandManifest = manifest[m.href];
 
-    if (islandManifest && (!islands || islands.has(m.href))) {
+    if (islandManifest) { //&& (!islands || islands.has(m.href))
       const res = flattenIslands(islandManifest.assets, manifest, islands);
       result.push(...res);
     }

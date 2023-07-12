@@ -18,7 +18,7 @@
     width: 200%;
     transform: translateX(0);
     opacity: 0;
-    transition: transform 2s ease, opacity 1s ease;
+    transition: transform 1s ease, opacity .5s ease;
     background: #2196f3;
   }
 
@@ -33,20 +33,11 @@
     background: rgba(0, 0, 0, 0.2);
   }
 
-  &.is-initing {
-    .global-loader-fill {
-      transition: none;
-      opacity: 1;
-      animation: Indeterminate 5s ease-out;
-      animation-fill-mode: forwards;
-    }
-  }
-
   &.is-loading {
     .global-loader-fill {
       transition: none;
       opacity: 1;
-      animation: Indeterminate 10s ease-out;
+      animation: Indeterminate 5s ease-out;
       animation-fill-mode: forwards;
     }
   }
