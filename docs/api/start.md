@@ -6,9 +6,9 @@ subsection: CLI
 active: true
 ---
 
-# `solid-start start`
+# solid-start start
 
-##### `solid-start start` starts the production build with a local version of adapter
+##### `solid-start start` starts the production build with a local version of adapter.
 
 <div class="text-lg">
 
@@ -20,7 +20,7 @@ solid-start start
 
 ## Usage
 
-Remember to run `solid-start build` before running `solid-start start`
+Remember to run `solid-start build` before running `solid-start start`.
 
 ### Open the browser
 
@@ -42,6 +42,6 @@ solid-start start --config project/vite.config.ts --root project
 
 ## Reference
 
-- `port, -p `: The port to run the server on
-- `open, -o `: Open the browser to the running server
-- `config   `: The path to the Vite config file
+- `port`, `-p`: The port to run the server on.
+- `open`, `-o`: Open the browser to the running server.
+- `config`: The path to the Vite config file.

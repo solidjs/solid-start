@@ -8,14 +8,14 @@ active: true
 
 # createCookieSessionStorage
 
-##### `createCookieSessionStorage` creates a `SessionStorage` that saves all the session data in a cookie
+##### `createCookieSessionStorage` creates a `SessionStorage` that saves all the session data in a cookie.
 
 <div class="text-lg">
 
 ```tsx twoslash
-import { createCookieSessionStorage } from 'solid-start'
+import { createCookieSessionStorage } from "solid-start";
 // ---cut---
-const storage = createCookieSessionStorage()
+const storage = createCookieSessionStorage();
 ```
 
 </div>
@@ -26,19 +26,24 @@ const storage = createCookieSessionStorage()
 
 ```twoslash include cookie
 // @module: esnext
-import { createCookieSessionStorage } from 'solid-start'
+const process = { env: {
+  NODE_ENV: "",
+  SESSION_SECRET: ""
+}}
+// ---cut---
+import { createCookieSessionStorage } from 'solid-start';
 
 const storage = createCookieSessionStorage({
   cookie: {
     name: "session",
-    secure: import.meta.env.PROD,
-    secrets: [import.meta.env.VITE_SESSION_SECRET],
+    secure: process.env.NODE_ENV === "production",
+    secrets: [process.env.SESSION_SECRET],
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30, // 30 days
     httpOnly: true
   }
-})
+});
 ```
 
 ### Creating a `SessionStorage`
@@ -53,12 +58,10 @@ const storage = createCookieSessionStorage({
 // @include: cookie
 // ---cut---
 async function getUserId(request: Request) {
-  const session = await storage.getSession(
-    request.headers.get('Cookie')
-  )
+  const session = await storage.getSession(request.headers.get("Cookie"));
 
-  const userId = session.get('userId')
-  return userId
+  const userId = session.get("userId");
+  return userId;
 }
 ```
 
@@ -68,15 +71,13 @@ async function getUserId(request: Request) {
 // @include: cookie
 // ---cut---
 async function login(request: Request, userId: string) {
-  const session = await storage.getSession(
-    request.headers.get('Cookie')
-  )
-  session.set('userId', userId)
-  const response = new Response('Logged in', {
+  const session = await storage.getSession(request.headers.get("Cookie"));
+  session.set("userId", userId);
+  const response = new Response("Logged in", {
     headers: {
-      'Set-Cookie': await storage.commitSession(session)
+      "Set-Cookie": await storage.commitSession(session)
     }
-  })
+  });
 }
 ```
 
@@ -85,12 +86,10 @@ async function login(request: Request, userId: string) {
 ```tsx twoslash {10}
 // @include: cookie
 // ---cut---
-import { redirect } from 'solid-start'
+import { redirect } from "solid-start";
 
 async function logout(request: Request) {
-  const session = await storage.getSession(
-    request.headers.get('Cookie')
-  )
+  const session = await storage.getSession(request.headers.get("Cookie"));
 
   return redirect("/login", {
     headers: {
@@ -108,15 +107,10 @@ async function logout(request: Request) {
 async function signUp(request: Request, userId: string) {
   const session = await storage.getSession();
   session.set("userId", userId);
-  return new Response('Signed Up', {
+  return new Response("Signed Up", {
     headers: {
       "Set-Cookie": await storage.commitSession(session)
     }
   });
 }
 ```
-
-
-
-
-

@@ -22,6 +22,10 @@ dist
 .netlify
 netlify
 
+# Environment
+.env
+.env*.local
+
 # dependencies
 /node_modules
 
@@ -56,13 +60,40 @@ function mkdirp(dir) {
   }
 }
 
+function getUserPkgManager() {
+  // This environment variable is set by npm and yarn but pnpm seems less consistent
+  const userAgent = process.env.npm_config_user_agent;
+
+  if (userAgent) {
+    if (userAgent.startsWith("yarn")) {
+      return "yarn";
+    } else if (userAgent.startsWith("pnpm")) {
+      return "pnpm";
+    } else {
+      return "npm";
+    }
+  } else {
+    // If no user agent is set, assume npm
+    return "npm";
+  }
+}
+
 async function main() {
   console.log(gray(`\ncreate-solid version ${version}`));
   console.log(red(disclaimer));
 
   let args = yargsParser(process.argv.slice(2));
 
-  const target = process.argv[2] || ".";
+  const target =
+    process.argv[2] ||
+    (
+      await prompts({
+        type: "text",
+        name: "value",
+        message: "Where do you want to create the app?",
+        initial: "my-app"
+      })
+    ).value;
 
   let config = {
     directory: args.example_dir ? args.example_dir : "examples",
@@ -127,7 +158,7 @@ async function main() {
       type: "confirm",
       name: "value",
       message: "Use TypeScript?",
-      initial: false
+      initial: true
     })
   ).value;
 
@@ -251,6 +282,9 @@ async function main() {
   ); // TODO ^${versions[name]}
 
   if (!ts_response) {
+    delete pkg_json.devDependencies["@types/babel__core"];
+    delete pkg_json.devDependencies["@types/node"];
+    delete pkg_json.devDependencies["@types/debug"];
     delete pkg_json.devDependencies["typescript"];
   }
 
@@ -275,8 +309,14 @@ async function main() {
     console.log(`  ${i++}: ${bold(cyan(`cd ${relative}`))}`);
   }
 
-  console.log(`  ${i++}: ${bold(cyan("npm install"))} (or pnpm install, or yarn)`);
-  console.log(`  ${i++}: ${bold(cyan("npm run dev -- --open"))}`);
+  const userPkgManager = getUserPkgManager();
+
+  console.log(`  ${i++}: ${bold(cyan(`${userPkgManager} install`))}`);
+
+  const devCommand = [`${userPkgManager} run dev`, userPkgManager === "npm" ? "--" : "", "--open"]
+    .filter(Boolean)
+    .join(" ");
+  console.log(`  ${i++}: ${bold(cyan(devCommand))}`);
 
   console.log(`\nTo close the dev server, hit ${bold(cyan("Ctrl-C"))}`);
 }

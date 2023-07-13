@@ -7,17 +7,13 @@ active: true
 
 # Data loading
 
-What's a modern app without some data to power it. SolidStart aims to make it easy to load data from your data sources. It will help you keep your UI updated with your data.
+What's a modern app without some data to power it. SolidStart aims to make it easy to load data from your data sources. It will help you keep your UI updated with your data. For most of your data requirements, you will likely be using the route to decide what data to load.
 
-For most your data requirements, you will likely be using the route to decide what data to load. The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts.
+The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts. This nested routing comes with other advantages too.
 
-This nested routing comes with other advantages too. It allows you to declare what data you need for each part of the route. This is done by exporting `routeData` functions from the nested routes.
+It allows you to declare what data you need for each part of the route. This is done by exporting `routeData` functions from the nested routes. Each route, leaf or layout, comes with the ability to export its own `routeData` function that will be managed by the router. Yeah, the router is also the data manager.
 
-Each route, leaf or layout, comes with the ability to export its own `routeData` function that will be managed by the router. Yeah, the router is also the data manager.
-
-Solid has a [`createResource`][createResource] primitive that takes an async function and returns a [signal][signal] from it. It's a great starting place for your data needs. It integrates with [`Suspense`][Suspense] and [`ErrorBoundary`][ErrorBoundary] to help you manage your lifecycle.
-
-Let's take a look at how we can use this to load data from a third party API for our app.
+Solid has a [`createResource`][createResource] primitive that takes an async function and returns a [signal][signal] from it. It's a great starting place for your data needs. It integrates with [`Suspense`][Suspense] and [`ErrorBoundary`][ErrorBoundary] to help you manage your lifecycle. Let's take a look at how we can use this to load data from a third party API for our app.
 
 ```tsx twoslash
 
@@ -31,7 +27,6 @@ export function routeData() {
 
   return { students };
 }
-
 ```
 
 Now your component can use the `useRouteData` function to access the data that is returned by `routeData`.
@@ -62,7 +57,6 @@ export default function Page() {
     </ul>
   );
 }
-
 ```
 
 Caveats:
@@ -73,9 +67,9 @@ Caveats:
 4. The `routeData` function will be called both on the server and the client. It's the resources that can avoid refetching if they had serialized their data in the server render.
 5. The server-side render will only wait for the resources to fetch and serialize if the resource signals are accessed under a `Suspense` boundary. 
 
-Okay, enough with the rules. We thought `createResource` was too low level for most people needs and did not use the knowledge the router has. So we created `createRouteData`. It's a resource creator that is aware of the router and the [actions][Actions] created on the page. It adds the concept of keys to the resource so that they can be granuraly refetched using `refetchRouteData`.
+Okay, enough with the rules. We thought `createResource` was too low level for most people's needs and did not use the knowledge the router has. So we created `createRouteData`. It's a resource creator that is aware of the router and the [actions][Actions] created on the page. It adds the concept of keys to the resource so that they can be granularly refetched using `refetchRouteData`.
 
-Here's the same example as above, but using `createRouteData`.
+Here's the same example as above, but using `createRouteData`:
 
 ```tsx twoslash filename="/routes/students.tsx"
 import { For, Accessor, createResource } from "solid-js";
@@ -101,12 +95,13 @@ export default function Page() {
     </ul>
   );
 }
-
 ```
 
 ### Data loading always on the server
 
-The primary advantage of being a full-stack Javascript framework is that its easy to write data loading code that can run both on the server and client. SolidStart gives them superpowers. You might want to write code that only runs on your server but didn't have to create an API route for it. It could be database access, or internal APIs, etc. It could sit within your functions where you need to use your server. We created `createServerData$` for this. It builds upon our other primitives like `createRouteData` and `server$` to give a generated RPC for your data.
+The primary advantage of being a full-stack Javascript framework is that its easy to write data loading code that can run both on the server and client. SolidStart gives them superpowers. You might want to write code that only runs on your server but didn't want to create an API route for it.
+
+It could be database access, or internal APIs, etc. It could sit within your functions where you need to use your server. We created `createServerData$` for this. It builds upon our other primitives like `createRouteData` and `server$` to give a generated RPC for your data.
 
 ```tsx twoslash {8} filename="/routes/students.tsx"
 const hogwarts = { students: { list() { return [] as Student[] } } }
@@ -132,12 +127,13 @@ export default function Page() {
     </ul>
   );
 }
-
 ```
 
 ### Multiple data sources inside a route
 
-You can have multiple data sources inside a route. You can even have multiple data sources for the same resource. This is useful when you have a route that needs to load data from multiple sources. For example, you might have a route that needs to load data from a database and a third party API. You can use `createRouteData` to load data from the database and `createServerData$` to load data from the third party API.
+You can have multiple data sources inside a route. You can even have multiple data sources for the same resource. This is useful when you have a route that needs to load data from multiple sources.
+
+For example, you might have a route that needs to load data from a database and a third party API. You can use `createServerData$` to load data from the database and `createRouteData` to load data from the third party API.
 
 ```tsx twoslash filename="/routes/students.tsx"
 const hogwarts = { students: { list() { return [] } } }
@@ -158,7 +154,6 @@ export function routeData() {
 
   return { students, localStudents };
 }
-
 ```
 
 ### Understanding the lifecycle
@@ -190,39 +185,43 @@ You can imagine what the router is doing. _You don't have to write this code_. I
 ```tsx twoslash
 // @filename: routes/[house].tsx
 import { RouteDataArgs, Outlet } from "solid-start";
-import { ParentProps } from 'solid-js'
+import { ParentProps } from 'solid-js';
+
 export function routeData(args: RouteDataArgs) {
   return {};
 }
 
 export default function HouseLayout(props: ParentProps) {
-  return <><Outlet /></>
+  return <><Outlet /></>;
 }
 
 
 // @filename: routes/[house]/students.tsx
 import { RouteDataArgs, Outlet } from "solid-start";
-import { ParentProps } from 'solid-js'
+import { ParentProps } from 'solid-js';
+
 export function routeData(args: RouteDataArgs) {
   return {};
 }
 
 export default function StudentsLayout(props: ParentProps) {
-  return <><Outlet /></>
+  return <><Outlet /></>;
 }
 
 // @filename: routes/[house]/students/index.tsx
 import { RouteDataArgs } from "solid-start";
+
 export function routeData(args: RouteDataArgs) {
   return {};
 }
 
 export default function Students() {
-  return <></>
+  return <></>;
 }
 
 // @filename: index.tsx
 import { createContext } from 'solid-js';
+
 const RouteContext = createContext<{ data: any }>({ data: null });
 
 // ---cut---
@@ -263,7 +262,7 @@ function Routes() {
         </RouteContext.Provider>
       </HouseLayout>
     </RouteContext.Provider>
-  )
+  );
 }
 ```
 

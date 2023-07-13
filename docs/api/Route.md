@@ -14,6 +14,7 @@ active: true
 
 ```tsx twoslash
 import { Route } from "solid-start";
+
 function Students() {
   return <h1>Home</h1>;
 }
@@ -42,10 +43,10 @@ export default function About() {
 
 // @filename: root.tsx
 // ---cut---
-import { Routes, Route } from "solid-start"
+import { Routes, Route } from "solid-start";
 
-import Home from "./pages/Home"
-import Users from "./pages/Users"
+import Home from "./pages/Home";
+import Users from "./pages/Users";
 
 export default function RootLayout() {
   return (
@@ -70,11 +71,31 @@ Render `<Route>` components as children of the `<Routes>` component to define yo
 #### Props
 
 <table>
-  <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
-  <tr><td>path</td><td>string</td><td>The path segment for this portion of the route.</td></tr>
-  <tr><td>component</td><td>function</td><td>A component definition to be instantiated on route match. Only one of `element` or `component` should be present.</td></tr>
-  <tr><td>element</td><td>unknown</td><td>The element defines an expression that is run when the route is matched. Generally this is an instantiated component. Only one of `element` or `component` should be present.</td></tr>
-  <tr><td>data</td><td>function</td><td>Method for registering data loading functions that run in parallel on route match.</td></tr>
+  <tr>
+    <th>Prop</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>path</td>
+    <td>string</td>
+    <td>The path segment for this portion of the route.</td>
+  </tr>
+  <tr>
+    <td>component</td>
+    <td>function</td>
+    <td>A component definition to be instantiated on route match. Only one of `element` or `component` should be present.</td>
+  </tr>
+  <tr>
+    <td>element</td>
+    <td>unknown</td>
+    <td>The element defines an expression that is run when the route is matched. Generally this is an instantiated component. Only one of `element` or `component` should be present.</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>function</td>
+    <td>Method for registering data loading functions that run in parallel on route match.</td>
+  </tr>
 </table>
 
 ### Dynamic Routes
@@ -130,7 +151,7 @@ let fetchUser = (id) => {
   return { id, name: "Bob" };
 };
 // ---cut---
-import { A, useParams } from "solid-start"
+import { A, useParams } from "solid-start";
 import { createResource } from "solid-js";
 
 export default function User () {
@@ -145,7 +166,7 @@ export default function User () {
 Parameters can be specified as optional by adding a question mark to the end of the parameter name:
 
 ```jsx
-//Matches stories and stories/123 but not stories/123/comments
+// Matches stories and stories/123 but not stories/123/comments
 <Route path='/stories/:id?' element={<Stories/>} />
 ```
 
@@ -154,7 +175,7 @@ Parameters can be specified as optional by adding a question mark to the end of 
 `:param` lets you match an arbitrary name at that point in the path. You can use `*` to match any end of the path:
 
 ```jsx
-//Matches any path that begins with foo, including foo/, foo/a/, foo/a/b/c
+// Matches any path that begins with foo, including foo/, foo/a/, foo/a/b/c
 <Route path='foo/*' component={Foo}/>
 ```
 
@@ -171,15 +192,15 @@ Note that the wildcard token must be the last part of the path; `foo/*any/bar` w
 Routes also support defining multiple paths using an array. This allows a route to remain mounted and not rerender when switching between two or more locations that it matches:
 
 ```jsx
-//Navigating from login to register does not cause the Login component to re-render
+// Navigating from login to register does not cause the Login component to re-render
 <Route path={["login", "register"]} component={Login}/>
 ```
 
 ### Route Data Functions
 
-In the [above example](#dynamic-routes), the User component is lazy-loaded and then the data is fetched. With route data functions, we can instead start fetching the data parallel to loading the route, so we can use the data as soon as possible.
+In the [above example](#dynamic-routes), the User component is lazy-loaded and then the data is fetched. With route data functions, we can instead start fetching the data in parallel to loading the route, so we can use the data as soon as possible.
 
-To do this, create a function that fetches and returns the data using `createResource`. Then pass that function to the `data` prop of the `Route` component. 
+To do this, create a function that fetches and returns the data using `createResource`. Then pass that function to the `data` prop of the `Route` component.
 
 ```tsx twoslash filename="root.tsx"
 // @filename: api.ts
@@ -206,7 +227,7 @@ function studentData({ params, location, navigate, data }: RouteDataArgs) {
   return student;
 }
 
-//Pass it in the route definition
+// Pass it in the route definition
 <Route 
   path="/students/:id" 
   component={StudentProfile} 
@@ -244,21 +265,22 @@ export default function StudentProfile() {
 ```
 
 ### Nested Routes
+
 The following two route definitions have the same result:
 
 ```jsx
 <Route path="/users/:id" component={User} />
 ```
+
 ```jsx
 <Route path="/users">
   <Route path="/:id" component={User} />
 </Route>
 ```
-`/users/:id` renders the `<User/>` component, and `/users/` is an empty route.
 
-Only leaf Route nodes (innermost `Route` components) are given a route. If you want to make the parent its own route, you have to specify it separately:
+`/users/:id` renders the `<User/>` component, and `/users/` is an empty route. Only leaf Route nodes (innermost `Route` components) are given a route.
 
-So, if you want to render a page with `<Users>` for `/users` and `<User>` for `/users/:id`, you need to specify both as leaf routes:
+If you want to make the parent its own route, you have to specify it separately. So, if you want to render a page with `<Users>` for `/users` and `<User>` for `/users/:id`, you need to specify both as leaf routes:
 
 ```jsx bad {1}
 // This is not a leaf route, its actually a parent layout route
@@ -278,5 +300,3 @@ So, if you want to render a page with `<Users>` for `/users` and `<User>` for `/
   <Route path="/:id" component={User} />
 </Route>
 ```
-
-

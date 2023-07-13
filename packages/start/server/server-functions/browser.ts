@@ -7,7 +7,6 @@ import {
   XSolidStartOrigin,
   XSolidStartResponseTypeHeader
 } from "../responses";
-import { FETCH_EVENT } from "../types";
 
 import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
@@ -61,7 +60,7 @@ export async function parseResponse(request: Request, response: Response) {
   }
 }
 
-export const server$: CreateServerFunction = ((fn: any) => {
+export const server$ = ((_fn: any) => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
@@ -93,11 +92,6 @@ function createRequestInit(init: RequestInit, ...args: any[]) {
       }
     }
     body = JSON.stringify(args, (key, value) => {
-      if (value && typeof value === "object" && value.$type === FETCH_EVENT) {
-        return {
-          $type: "fetch_event"
-        };
-      }
       if (value instanceof Headers) {
         return {
           $type: "headers",
@@ -127,20 +121,19 @@ function createRequestInit(init: RequestInit, ...args: any[]) {
   };
 }
 
-server$.createFetcher = route => {
+type ServerCall = (route: string, init: RequestInit) => Promise<Response>;
+
+server$.createFetcher = (route, serverResource) => {
   let fetcher: any = function (this: Request, ...args: any[]) {
     if (this instanceof Request) {
     }
-    const requestInit = createRequestInit({}, ...args);
+    const requestInit = serverResource ? createRequestInit({}, args[0]) : createRequestInit({}, ...args);
     // request body: json, formData, or string
     return server$.exec(route, requestInit);
   };
 
   fetcher.url = route;
-  fetcher.fetch = (init: RequestInit, ...args: any[]) => {
-    const requestInit = createRequestInit(init, ...args);
-    return server$.exec(route, requestInit);
-  };
+  fetcher.fetch = (init: RequestInit) => server$.exec(route, init);
   return fetcher as ServerFunction<any, any>;
 };
 
@@ -155,7 +148,7 @@ server$.exec = async function (route: string, init: RequestInit) {
   } else {
     return await parseResponse(request, response);
   }
-};
+} as any;
 
 // used to fetch from an API route on the server or client, without falling into
 // fetch problems on the server

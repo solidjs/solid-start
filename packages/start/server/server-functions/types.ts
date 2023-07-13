@@ -11,10 +11,10 @@ export type CreateServerFunction = (<E extends any[], T extends (...args: [...E]
   fn: T
 ) => ServerFunction<E, T>) & {
   getHandler: (route: string) => any;
-  createHandler: (fn: any, hash: string) => any;
+  createHandler: (fn: any, hash: string, serverResource: boolean) => any;
   registerHandler: (route: string, handler: any) => any;
   hasHandler: (route: string) => boolean;
-  createFetcher(route: string): ServerFunction<any, any>;
+  createFetcher(route: string, serverResource: boolean): ServerFunction<any, any>;
   fetch(route: string, init?: RequestInit): Promise<Response>;
   exec(route: string, init?: RequestInit): any;
 } & FetchEvent;

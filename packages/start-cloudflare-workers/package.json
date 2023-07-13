@@ -1,6 +1,6 @@
 {
   "name": "solid-start-cloudflare-workers",
-  "version": "0.2.3",
+  "version": "0.2.26",
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
@@ -9,24 +9,24 @@
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.2.0",
-    "@cloudflare/workers-types": "^3.17.0",
-    "@miniflare/core": "^2.10.0",
-    "@miniflare/http-server": "^2.10.0",
-    "@miniflare/shared": "^2.10.0",
-    "@miniflare/web-sockets": "^2.10.0",
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@types/ws": "^8.5.3",
-    "miniflare": "^2.10.0",
-    "rollup": "^2.79.1",
-    "terser": "^5.15.1",
-    "ws": "^8.9.0"
+    "@cloudflare/workers-types": "^3.19.0",
+    "@miniflare/core": "^2.14.0",
+    "@miniflare/http-server": "^2.14.0",
+    "@miniflare/shared": "^2.14.0",
+    "@miniflare/web-sockets": "^2.14.0",
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@types/ws": "^8.5.5",
+    "miniflare": "^2.14.0",
+    "rollup": "^3.26.2",
+    "terser": "^5.19.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.3",
+    "@types/node": "^18.16.19",
     "solid-start": "workspace:*",
-    "vite": "^3.1.8"
+    "vite": "^4.4.3"
   },
   "peerDependencies": {
     "solid-start": "*",

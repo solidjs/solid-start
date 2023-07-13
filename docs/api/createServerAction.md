@@ -8,7 +8,7 @@ active: true
 
 # createServerAction$
 
-##### `createServerAction$` creates a controller for managing the submissions of an async user action, where the action always runs on the server
+##### `createServerAction$` creates a controller for managing the submissions of an async user action, where the action always runs on the server.
 
 <div class="text-lg">
 
@@ -70,3 +70,5 @@ We return a `redirect` to tell the browser where to go upon successful submissio
 ## Reference
 
 Refer to [createRouteAction](./createRouteAction) for API reference.
+
+*Note: createServerAction$ does not work when application is configured to `ssr: false`*

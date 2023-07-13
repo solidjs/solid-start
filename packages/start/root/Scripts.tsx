@@ -50,13 +50,13 @@ function ProdScripts() {
         <IslandsScript />
         {isServer &&
           (isSSR ? (
-            <script type="module" async src={context.env.manifest?.["entry-client"].script.href} />
+            <script type="module" async src={context!.env.manifest?.["entry-client"].script.href} />
           ) : import.meta.env.START_INDEX_HTML ? (
             // used in the SPA build index.html mode to create a reference to index html
             // which will be used by the client build
             <script type="module" async src={import.meta.env.START_ENTRY_CLIENT} $ServerOnly />
           ) : (
-            <script type="module" async src={context.env.manifest?.["index.html"].script.href} />
+            <script type="module" async src={context!.env.manifest?.["index.html"].script.href} />
           ))}
       </NoHydration>
     </>

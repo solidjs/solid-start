@@ -8,7 +8,7 @@ export const registerApiRoutes = (routes: MatchRoute[]) => {
   apiRoutes = routes;
 };
 
-export async function internalFetch(route: string, init: RequestInit) {
+export async function internalFetch(route: string, init: RequestInit, env: Env = {}, locals: Record<string, unknown> = {}) {
   if (route.startsWith("http")) {
     return await fetch(route, init);
   }
@@ -24,7 +24,9 @@ export async function internalFetch(route: string, init: RequestInit) {
   let apiEvent: APIEvent = Object.freeze({
     request,
     params: handler.params,
-    env: {},
+    clientAddress: "127.0.0.1",
+    env,
+    locals,
     $type: FETCH_EVENT,
     fetch: internalFetch
   });

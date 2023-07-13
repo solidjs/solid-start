@@ -8,7 +8,7 @@ active: true
 
 # json
 
-##### `json` is a helper function to send JSON HTTP `Response`s
+##### `json` is a helper function to send JSON HTTP `Response`s.
 
 <div class="text-lg">
 
@@ -40,9 +40,13 @@ export function GET() {
 
 ### `json(data: any)`
 
-Use `json()` to create a [`Response`][Response] by serializing a JSON object. It will set the [content-type][ContentType] to `application/json`.
+Use `json()` to create a [`Response`][Response] by serializing a JSON object. It will set the [content-type][ContentType] to `application/json`. Basically wherever a [`Response`][Response] is expected, it is useful inside.
 
-It is useful inside [API Routes](/core-concepts/api-routes), [`server$`](/api/server$) functions, and [middleware](/advanced/middleware). Basically wherever a [`Response`][Response] is expected.
+For example:
+
+- [API Routes](/core-concepts/api-routes)
+- [`server$`](/api/server$) functions
+- [Middleware](/advanced/middleware)
 
 ```ts twoslash
 import { json } from "solid-start";

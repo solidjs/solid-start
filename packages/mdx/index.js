@@ -200,7 +200,7 @@ export default async function () {
               lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
               jsxImportSource: "solid-js",
               jsx: "preserve",
-              types: ["vite/client"],
+              types: ["solid-start/env"],
               paths: {
                 "~/*": ["./src/*"]
               }
@@ -274,9 +274,11 @@ export default async function () {
           id.endsWith(".md?meta")
         ) {
           return {
-            code: code.replace(/lsp="([^"]*)"/g, (match, p1) => {
-              return `lsp={\`${p1.replaceAll("`", `\\\``)}\`}`;
-            })
+            code: code
+              .replace(/lsp="([^"]*)"/g, (match, p1) => {
+                return `lsp={\`${p1.replaceAll("`", `\\\``)}\`}`;
+              })
+              .replace(/{"\\n"}/g, "")
           };
         }
       },

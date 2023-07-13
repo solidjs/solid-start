@@ -13,7 +13,7 @@ There are two ways to import static assets into your SolidStart project: using t
 
 ## Using the public directory
 
-Rich web applications use assets to create visuals. In SolidStart, you can use the `/public` directory to store static assets. They will be served at the exact path they are in relative to the public directory. For example,
+Rich web applications use assets to create visuals. In SolidStart, you can use the `/public` directory to store static assets. They will be served at the exact path they are in relative to the public directory. For example:
 
 ```
 |-- public
@@ -40,20 +40,18 @@ export default function About() {
 }
 ```
 
-This is an ideal use case when we want to have a human-readable, stable reference to a static asset. For example, if we have a PDF file and never want the link to that file to change, we should use the public directory.
-
-Common assets you might want to put in the public directory include:
+This is an ideal use case when we want to have a human-readable, stable reference to a static asset. For example, if we have a PDF file and never want the link to that file to change, we should use the public directory. Common assets you might want to put in the public directory include:
 
 - documents
 - service workers
 - images, audio, and video
 - manifest files
-- metadata files (e.g., robots.txt, sitemaps)
+- metadata files (e.g., `robots.txt`, sitemaps)
 - favicon
 
 ## Importing assets
 
-Vite allows you to import assets directly into your Solid components. For example, in the following component imports the `solid.png` file directly.
+Vite allows you to import assets directly into your Solid components. For example, the following component imports the `solid.png` file directly.
 
 When you use imports, Vite will create a hashed filename. For example, importing `solid.png` may get hashed as `solid.2d8efhg.png`.
 
@@ -74,4 +72,6 @@ export default function About() {
 
 ## When to use the public directory versus imports
 
-One of the largest drivers for choosing the public directory versus imports is whether you want the link to your asset to change when you update it. You fully control the url path to all public directory assets, and therefore you can make sure any links to those assets never change. When using imports, the filename is hashed and therefore will not be predictable over time. This can be beneficial for cache busting but detrimental if you want to send someone a link to the asset.
+One of the largest drivers for choosing the public directory versus imports is whether you want the link to your asset to change when you update it. Since you fully control the url path to all public directory assets, you can make sure any links to those assets never change.
+
+When using imports, the filename is hashed and therefore will not be predictable over time. This can be beneficial for cache busting but detrimental if you want to send someone a link to the asset.

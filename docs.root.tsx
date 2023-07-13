@@ -177,7 +177,7 @@ function Nav() {
   });
 
   return (
-    <nav class="min-w-[300px] col-start-1 row-start-2 -translate-x-full peer-checked:translate-x-0 px-8 py-8 space-y-4 h-full fixed md:relative left-0 z-20 md:left-auto top-[52px] md:top-auto overflow-auto bg-slate-100 duration-300 ease-in-out md:translate-x-0">
+    <nav class="min-w-[300px] col-start-1 row-start-2 -translate-x-full peer-checked:translate-x-0 pt-8 pb-20 md:pb-8 px-8 space-y-4 h-full fixed md:relative left-0 z-20 md:left-auto top-[52px] md:top-auto overflow-auto bg-slate-100 duration-300 ease-in-out md:translate-x-0">
       <div id="docsearch" />
       <For each={data()}>
         {r => (
@@ -253,7 +253,7 @@ export default function Root() {
       <Head>
         <Meta charset="utf-8" />
         <Meta property="og:title" content="SolidStart Beta Documentation" />
-        <Meta property="og:site_name" content="SolidStart Beta Docuentation" />
+        <Meta property="og:site_name" content="SolidStart Beta Documentation" />
         <Meta property="og:url" content="https://start.solidjs.com" />
         <Meta
           property="og:description"

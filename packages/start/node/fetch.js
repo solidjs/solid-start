@@ -1,4 +1,7 @@
+import { once } from "events";
 import multipart from "parse-multipart-data";
+import { splitCookiesString } from "set-cookie-parser";
+import { Readable } from "stream";
 import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
 
 function nodeToWeb(/** @type {NodeJS.ReadStream} */ nodeStream) {
@@ -117,7 +120,7 @@ export class NodeRequest extends BaseNodeRequest {
         // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#multipart-form-data
         const isFile = type !== undefined;
         if (isFile && filename && name) {
-          const value = new File([data], filename);
+          const value = new File([data], filename, { type });
           form.append(name, value, filename);
         } else if (name) {
           const value = data.toString("utf-8");
@@ -140,8 +143,10 @@ export class NodeRequest extends BaseNodeRequest {
 }
 
 export function createRequest(/** @type {import('http').IncomingMessage} */ req) {
-  let origin = req.headers.origin || `http://${req.headers.host}`;
-  let url = new URL(req.url ?? "/", origin);
+  let origin = req.headers.origin && 'null' !== req.headers.origin
+      ? req.headers.origin
+      : `http://${req.headers.host}`;
+  let url = new URL(req.url, origin);
 
   let init = {
     method: req.method,
@@ -152,3 +157,25 @@ export function createRequest(/** @type {import('http').IncomingMessage} */ req)
 
   return new NodeRequest(url.href, init);
 }
+
+export async function handleNodeResponse(webRes, res) {
+  res.statusCode = webRes.status;
+  res.statusMessage = webRes.statusText;
+
+  for (const [name, value] of webRes.headers) {
+    if (name === "set-cookie") {
+      res.setHeader(name, splitCookiesString(value));
+    } else res.setHeader(name, value);
+  }
+
+  if (webRes.body) {
+    const readable = Readable.from(webRes.body);
+    readable.pipe(res);
+    await once(readable, "end");
+  } else {
+    res.end();
+  }
+}
+
+export { splitCookiesString };
+

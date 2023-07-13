@@ -8,12 +8,12 @@ active: true
 
 # refetchRouteData
 
-##### `refetchRouteData` allows you to refetch your route data
+##### `refetchRouteData` allows you to refetch your route data.
 
 <div class="text-lg">
 
 ```tsx twoslash
-import { refetchRouteData } from 'solid-start'
+import { refetchRouteData } from 'solid-start';
 // ---cut---
 refetchRouteData()
 ```
@@ -29,7 +29,7 @@ refetchRouteData()
 Route data is most commonly invalidated and refetched when we perform route actions. However, sometimes we wish to refetch the data manually. The easiest way is to execute `refetchRouteData` with no arguments.
 
 ```tsx twoslash
-import { refetchRouteData } from 'solid-start'
+import { refetchRouteData } from 'solid-start';
 
 // refetch all the resources created with createRouteData
 refetchRouteData()
@@ -42,17 +42,17 @@ Additionally `refetchRouteData` accept a `key` as an argument to refetch specifi
 ```tsx twoslash {14,18}
 function fetchStudents() {}
 // ---cut---
-import { refetchRouteData, createRouteData } from 'solid-start'
+import { refetchRouteData, createRouteData } from 'solid-start';
 
 const allStudents = createRouteData(
   fetchStudents, 
   { key: ['students'] }
-)
+);
 
 const gryffindorStudents = createRouteData(
   fetchStudents, 
   { key: ['students', { house: 'gryffindor' }] 
-})
+});
 
 // reload all route data with students in the key, 
 refetchRouteData(['students']);
@@ -63,12 +63,11 @@ refetchRouteData(['students', { house: 'gryffindor' }]);
 // refetches gryffindorStudents only
 ```
 
-
 ## Reference
 
 ### `refetchRouteData(keys)`
 
-Call `retchRouteData()` to refetch either all the route data on the page, or specific ones based on the `key`.
+Call `refetchRouteData()` to refetch either all the route data on the page, or specific ones based on the `key`.
 
 ```tsx twoslash
 import { refetchRouteData } from "solid-start";

@@ -14,7 +14,7 @@ const mapStories = {
 
 export const routeData = ({ location, params }: RouteDataArgs) => {
   const page = () => +location.query.page || 1;
-  const type = () => params.stories || "top";
+  const type = () => (params.stories || "top") as keyof typeof mapStories;
 
   const [stories] = createResource<IStory[], string>(
     () => `${mapStories[type()]}?page=${page()}`,
@@ -43,7 +43,7 @@ const Stories: Component = () => {
         </Show>
         <span>page {page()}</span>
         <Show
-          when={stories() && stories().length >= 29}
+          when={stories() && stories()!.length >= 29}
           fallback={
             <span class="page-link disabled" aria-disabled="true">
               more {">"}

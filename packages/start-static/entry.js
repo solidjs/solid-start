@@ -1,14 +1,7 @@
-import { readFileSync } from "fs";
-import { dirname, join } from "path";
 import { createRequest } from "solid-start/node/fetch.js";
 import "solid-start/node/globals.js";
-import { fileURLToPath } from "url";
-import handler from "./handler.js";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const manifest = JSON.parse(
-  readFileSync(join(__dirname, "..", "..", "dist", "public", "route-manifest.json"), "utf-8")
-);
+import manifest from "../../dist/public/route-manifest.json";
+import handler from "./entry-server.js";
 
 const MAX_REDIRECTS = 10;
 async function handleRequest(req) {
@@ -26,7 +19,6 @@ export default async req => {
   if (webRes.status === 200) {
     return webRes.text();
   } else if (webRes.status === 302) {
-    console.log(webRes.status);
     let redirects = 1;
     while (redirects < MAX_REDIRECTS) {
       webRes = await handleRequest({ url: webRes.headers.get("location") });
@@ -39,4 +31,5 @@ export default async req => {
       }
     }
   }
+  return webRes.text();
 };

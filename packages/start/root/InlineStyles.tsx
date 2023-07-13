@@ -6,8 +6,12 @@ import { routeLayouts } from "./routeLayouts";
 
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
-async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["routerContext"]) {
-  const match = routerContext.matches.reduce((memo: string[], m) => {
+type NotUndefined<T> = T extends undefined ? never : T;
+
+type RouterContext = NotUndefined<PageEvent["routerContext"]>
+
+async function getInlineStyles(env: PageEvent["env"], routerContext: RouterContext) {
+  const match = routerContext.matches ? routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
       if (env.__dev?.manifest?.find(entry => entry.path === fullPath)) {
@@ -24,7 +28,7 @@ async function getInlineStyles(env: PageEvent["env"], routerContext: PageEvent["
       }
     }
     return memo;
-  }, []);
+  }, []) : [];
 
   match.push(import.meta.env.START_ENTRY_SERVER);
   const styles = await env.__dev?.collectStyles?.(match);
@@ -42,7 +46,7 @@ export function InlineStyles() {
 
   if (import.meta.env.START_SSR === "sync") {
     if (!warned) {
-      WARN(
+      _$DEBUG(
         "In sync SSR mode, the CSS will be loaded lazily during development. You might see a flash of unstyled content. Don't worry, this will not happen in production. To avoid this, use async or streaming SSR."
       );
     }
@@ -52,7 +56,7 @@ export function InlineStyles() {
   const [resource] = createResource(
     async () => {
       if (import.meta.env.SSR) {
-        return await getInlineStyles(context.env, context.routerContext);
+        return await getInlineStyles(context!.env, context!.routerContext!);
       } else {
         return {};
       }

@@ -11,16 +11,17 @@ declare global {
 }
 
 if (import.meta.env.DEV) {
-  window.DEBUG = localStorage.getItem("debug")?.includes("start")
-    ? console.log
-    : ((() => {}) as unknown as any);
-  window.WARN = console.warn;
+  localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
+  // const { default: createDebugger } = await import("debug");
+  // window._$DEBUG = createDebugger("start:client");
+  window._$DEBUG = console.log as unknown as any;
 
-  DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
-  DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
-  DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
-  DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
-  DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
+  _$DEBUG(`import.meta.env.DEV = ${import.meta.env.DEV}`);
+  _$DEBUG(`import.meta.env.PROD = ${import.meta.env.PROD}`);
+  _$DEBUG(`import.meta.env.START_SSR = ${import.meta.env.START_SSR}`);
+  _$DEBUG(`import.meta.env.START_ISLANDS = ${import.meta.env.START_ISLANDS}`);
+  _$DEBUG(`import.meta.env.START_ISLANDS_ROUTER = ${import.meta.env.START_ISLANDS_ROUTER}`);
+  _$DEBUG(`import.meta.env.SSR = ${import.meta.env.SSR}`);
 
   window.INSPECT = () => {
     window.open(window.location.href.replace(window.location.pathname, "/__inspect"));
@@ -38,8 +39,8 @@ export default function mount(code: () => JSX.Element, element: Document) {
   }
 
   if (import.meta.env.START_SSR) {
-    hydrate(code, element);
+    code && element && hydrate(code, element);
   } else {
-    render(code, element === document ? element.body : element);
+    code && element && render(code, element === document ? element.body : element);
   }
 }

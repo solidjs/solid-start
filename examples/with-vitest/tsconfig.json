@@ -7,10 +7,12 @@
     "moduleResolution": "node",
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
-    "types": ["vite/client", "@testing-library/jest-dom"],
+    "strict": true,
+    "types": ["solid-start/env", "@testing-library/jest-dom"],
     "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"]
     }
-  }
+  },
+  "types": ["vitest"]
 }

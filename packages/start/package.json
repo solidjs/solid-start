@@ -1,43 +1,17 @@
 {
   "name": "solid-start",
-  "version": "0.2.3",
+  "version": "0.2.26",
   "description": "Create Solid apps with low configuration",
-  "author": "Ryan Carniato",
   "license": "MIT",
-  "bin": {
-    "solid-start": "./bin.cjs",
-    "solid": "./bin.cjs",
-    "start": "./bin.cjs"
+  "author": "Ryan Carniato",
+  "homepage": "https://start.solidjs.com/",
+  "bugs": "https://github.com/solidjs/solid-start/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solidjs/solid-start.git",
+    "directory": "packages/start"
   },
-  "main": "./index.tsx",
-  "types": "./index.tsx",
   "type": "module",
-  "files": [
-    "api",
-    "data",
-    "dev",
-    "durable-object",
-    "entry-client",
-    "entry-server",
-    "error-boundary",
-    "fs-router",
-    "islands",
-    "node",
-    "root",
-    "server",
-    "session",
-    "virtual",
-    "vite",
-    "websocket",
-    "bin.cjs",
-    "index.tsx",
-    "router.tsx",
-    "required-user-files.d.ts",
-    "types.ts"
-  ],
-  "scripts": {
-    "typecheck": "tsc --noEmit --extendedDiagnostics"
-  },
   "exports": {
     ".": "./index.tsx",
     "./router": "./router.tsx",
@@ -73,52 +47,88 @@
     "./session": "./session/index.ts",
     "./session/*": "./session/*",
     "./websocket": "./websocket/index.ts",
-    "./websocket/*": "./websocket/*"
+    "./websocket/*": "./websocket/*",
+    "./env": "./env.d.ts"
+  },
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "bin": {
+    "solid": "./bin.cjs",
+    "solid-start": "./bin.cjs",
+    "start": "./bin.cjs"
+  },
+  "files": [
+    "api",
+    "data",
+    "dev",
+    "durable-object",
+    "entry-client",
+    "entry-server",
+    "error-boundary",
+    "fs-router",
+    "islands",
+    "node",
+    "root",
+    "server",
+    "session",
+    "virtual",
+    "vite",
+    "websocket",
+    "bin.cjs",
+    "index.tsx",
+    "router.tsx",
+    "required-user-files.d.ts",
+    "env.d.ts",
+    "types.ts"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
   },
   "dependencies": {
-    "@babel/core": "^7.19.6",
-    "@babel/generator": "^7.19.6",
-    "@babel/plugin-syntax-jsx": "^7.18.6",
-    "@babel/preset-env": "^7.19.4",
-    "@babel/preset-typescript": "^7.18.6",
-    "@babel/template": "^7.18.10",
+    "@babel/core": "^7.22.9",
+    "@babel/generator": "^7.22.9",
+    "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
+    "@babel/template": "^7.22.5",
     "@types/cookie": "^0.5.1",
-    "@vinxi/vite-plugin-inspect": "^0.6.27",
     "chokidar": "^3.5.3",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
     "debug": "^4.3.4",
     "dequal": "^2.0.3",
-    "es-module-lexer": "^1.0.5",
-    "esbuild": "^0.14.54",
-    "esbuild-plugin-solid": "^0.4.2",
-    "fast-glob": "^3.2.12",
+    "dotenv": "^16.3.1",
+    "es-module-lexer": "^1.3.0",
+    "esbuild": "^0.17.19",
+    "esbuild-plugin-solid": "^0.5.0",
+    "fast-glob": "^3.3.0",
     "get-port": "^6.1.2",
     "micromorph": "^0.3.1",
     "parse-multipart-data": "^1.5.0",
     "picocolors": "^1.0.0",
-    "rollup": "^2.79.1",
-    "rollup-plugin-visualizer": "^5.8.3",
+    "rollup": "^3.26.2",
+    "rollup-plugin-visualizer": "^5.9.2",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.8.1",
-    "sirv": "^2.0.2",
-    "terser": "^5.15.1",
-    "undici": "^5.11.0",
-    "vite-plugin-inspect": "^0.6.1",
-    "vite-plugin-solid": "^2.3.10",
+    "set-cookie-parser": "^2.6.0",
+    "sirv": "^2.0.3",
+    "terser": "^5.19.0",
+    "undici": "^5.22.1",
+    "vite-plugin-inspect": "^0.7.33",
+    "vite-plugin-solid": "^2.7.0",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.18.0",
-    "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.5.0",
+    "@cloudflare/workers-types": "^3.19.0",
+    "@solidjs/meta": "^0.28.5",
+    "@solidjs/router": "^0.8.2",
     "@testing-library/jest-dom": "^5.16.5",
-    "@types/babel__core": "^7.1.19",
-    "@types/debug": "^4.1.7",
-    "@types/node": "^18.11.3",
+    "@types/babel__core": "^7.20.1",
+    "@types/debug": "^4.1.8",
+    "@types/node": "^18.16.19",
     "@types/wait-on": "^5.3.1",
-    "jsdom": "^20.0.1",
-    "solid-js": "^1.6.0",
+    "jsdom": "^20.0.3",
+    "solid-js": "^1.7.8",
     "solid-start-cloudflare-pages": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:*",
     "solid-start-deno": "workspace:*",
@@ -127,14 +137,48 @@
     "solid-start-static": "workspace:*",
     "solid-start-vercel": "workspace:*",
     "solid-testing-library": "^0.3.0",
-    "typescript": "^4.8.4",
-    "vite": "^3.1.8",
+    "typescript": "^4.9.5",
+    "vite": "^4.4.3",
     "vitest": "^0.20.3"
   },
   "peerDependencies": {
     "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.5.0",
-    "solid-js": "^1.6.0",
-    "vite": "^3.0.4"
+    "@solidjs/router": "^0.8.2",
+    "solid-js": "^1.6.2",
+    "solid-start-aws": "*",
+    "solid-start-cloudflare-pages": "*",
+    "solid-start-cloudflare-workers": "*",
+    "solid-start-deno": "*",
+    "solid-start-netlify": "*",
+    "solid-start-node": "*",
+    "solid-start-static": "*",
+    "solid-start-vercel": "*",
+    "vite": "^4.1.4"
+  },
+  "peerDependenciesMeta": {
+    "solid-start-aws": {
+      "optional": true
+    },
+    "solid-start-cloudflare-pages": {
+      "optional": true
+    },
+    "solid-start-cloudflare-workers": {
+      "optional": true
+    },
+    "solid-start-deno": {
+      "optional": true
+    },
+    "solid-start-netlify": {
+      "optional": true
+    },
+    "solid-start-node": {
+      "optional": true
+    },
+    "solid-start-static": {
+      "optional": true
+    },
+    "solid-start-vercel": {
+      "optional": true
+    }
   }
 }

@@ -9,26 +9,28 @@ active: true
 
 <table-of-contents></table-of-contents>
 
-Normally when we are building UIs for our apps, we are dealing with DOM elements that are going to be rendered in the `body` of the `document`. But there are cases where we want to customize what's going to be rendered in the `head` of the `document`. The common elements used in the `head` are:
+Normally when we are building UIs for our apps, we are dealing with DOM elements that are going to be rendered in the `body` of the `document`. But there are cases where we want to customize what's going to be rendered in the `head` of the `document`.
 
-- [`title`][nativetitle]: Specifies the title of the page, used by the browser tab and headings of search results,
+The common elements used in the `head` are:
+
+- [`title`][nativetitle]: Specifies the title of the page, used by the browser tab and headings of search results.
 - [`meta`][nativemeta]: Specifies a variety of metadata about the page specified by `name`, ranging from favicon, character set to OG tags for SEO.
-- [`link`][nativelink]: Adds assets like stylesheets or scripts for the browser to load for the page
-- [`style`][nativestyle]: Adds inline styles to the page
+- [`link`][nativelink]: Adds assets like stylesheets or scripts for the browser to load for the page.
+- [`style`][nativestyle]: Adds inline styles to the page.
 
 ## Adding `head` tags
 
-In SolidStart, we ship with actual components representing these tags. So: [`title`][nativetitle] -> [`Title`][title], [`meta`][nativemeta] -> [`Meta`][meta], etc. They can be used, not only as children of [`Head`][head] in `root.tsx`, but anywhere in your app, even deep in your component tree. Powered by `@solidjs/meta`, we can interpret these tags and update the `document.head` appropriately.
+In SolidStart, we ship with actual components representing these tags. So: [`title`][nativetitle] -> [`Title`][title], [`meta`][nativemeta] -> [`Meta`][meta], etc. They can be used, not only as children of [`Head`][head] in `root.tsx`, but anywhere in your app, even deep in your component tree.
 
-There are two main places we recommend adding these tags to your page.
+Powered by `@solidjs/meta`, we can interpret these tags and update the `document.head` appropriately. There are two main places we recommend adding these tags to your page.
 
-1. **`root.tsx`**: As part of the `Head` component there, you can pass in the `Title`, `Meta` and `Link` tags that you want to be used for all of your routes. This is useful for:
+### `root.tsx`
 
-- Adding a default fallback `title` to be used by all pages (if they don't specify their own),
-- Adding common `meta` tags like `charset` and `viewport` for consistent behavior across the app
-- Adding links to external stylesheets, fonts, manifests, favicon
+As part of the `Head` component there, you can pass in the `Title`, `Meta` and `Link` tags that you want to be used for all of your routes. This is useful for:
 
-See an example below:
+- Adding a default fallback `title` to be used by all pages (if they don't specify their own).
+- Adding common `meta` tags like `charset` and `viewport` for consistent behavior across the app.
+- Adding links to external stylesheets, fonts, manifests, favicon.
 
 ```tsx {10-14} twoslash filename="root.tsx"
 import { Suspense } from "solid-js";
@@ -61,7 +63,9 @@ export default function Root() {
 }
 ```
 
-2. **Inside a Route component**: These tags will be applied for that specific route only and are removed from `document.head` once a user navigates away from the page. You can use `routeData` here to create titles and SEO metadata that is specific to the dynamic parts of the route.
+### Inside a Route component
+
+These tags will be applied for that specific route only and are removed from `document.head` once a user navigates away from the page. You can use `routeData` here to create titles and SEO metadata that is specific to the dynamic parts of the route.
 
 ```tsx {0,5}
 import { Title } from "solid-start";
@@ -88,7 +92,7 @@ export default function About() {
 You can create custom components that wrap `Title` to add a site-specific prefix to all the titles, e.g.
 
 ```tsx
-export default function MySiteTitle() {
+export default function MySiteTitle(props) {
   return <Title>{props.children} | My Site</Title>;
 }
 ```
@@ -135,7 +139,7 @@ Similarly, you can use other information to build up other OG tags for SEO.
 
 ## Adding SEO tags
 
-For SEO tags like `og:title`, `og:description`, `og:image`, `twitter:title`, `twitter:description`, `twitter:image`, you can use the [`Meta`][meta] component. For tags that you want to apply to all the routes, you should add them inside `Head` in your `root.tsx` file
+For SEO tags like `og:title`, `og:description`, `og:image`, `twitter:title`, `twitter:description`, `twitter:image`, you can use the [`Meta`][meta] component. For tags that you want to apply to all the routes, you should add them inside `Head` in your `root.tsx` file:
 
 ```tsx {9-33}
 import { Suspense } from "solid-js";

@@ -1,7 +1,7 @@
 import { getAssetFromKV, MethodNotAllowedError, NotFoundError } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import manifest from "../../dist/public/route-manifest.json";
-import handler from "./handler";
+import handler from "./entry-server";
 
 /**
  * @example
@@ -78,6 +78,8 @@ export default {
       const request = new Request(url.href, init);
       return handler({
         request: request,
+        clientAddress: request.headers.get('cf-connecting-ip'),
+        locals: {},
         env,
         fetch: internalFetch
       });
@@ -85,6 +87,8 @@ export default {
 
     return handler({
       request: request,
+      clientAddress: request.headers.get('cf-connecting-ip'),
+      locals: {},
       env,
       fetch: internalFetch
     });

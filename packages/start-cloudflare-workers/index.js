@@ -112,7 +112,12 @@ export default function (miniflareOptions = {}) {
             }
 
             try {
-              return await dev.fetch(req, e);
+              return await dev.fetch({
+                request: req,
+                env: e,
+                clientAddress: req.headers.get("cf-connecting-ip"),
+                locals: {}
+              });
             } catch (e) {
               console.log("error", e);
               return new Response(e.toString(), { status: 500 });
@@ -161,10 +166,6 @@ export default function (miniflareOptions = {}) {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
       let durableObjects = Object.keys(config.solidOptions.experimental?.durableObjects || {});
 
@@ -187,7 +188,7 @@ export default function (miniflareOptions = {}) {
             }
           }
 
-          export { ${item} };`;
+          export { ${item} } from "./entry-server";`;
         });
         writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
       }
@@ -199,7 +200,7 @@ export default function (miniflareOptions = {}) {
             preferBuiltins: true,
             exportConditions: ["worker", "solid"]
           }),
-          common()
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
       // or write the bundle to disk

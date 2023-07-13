@@ -4,22 +4,27 @@
     "dev": "solid-start dev",
     "build": "solid-start build",
     "start": "solid-start start",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test-watch": "vitest",
+    "test-ui": "vitest --ui",
+    "coverage": "vitest run --coverage"
   },
   "type": "module",
   "devDependencies": {
-    "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.5.0",
+    "@solidjs/meta": "^0.28.5",
+    "@solidjs/router": "^0.8.2",
+    "@solidjs/testing-library": "^0.5.2",
     "@testing-library/jest-dom": "^5.16.5",
-    "@types/testing-library__jest-dom": "^5.14.5",
-    "jsdom": "^20.0.1",
-    "solid-js": "^1.6.0",
-    "solid-start": "^0.2.0",
-    "solid-start-node": "^0.2.0",
-    "solid-testing-library": "^0.3.0",
-    "typescript": "^4.8.4",
-    "undici": "^5.11.0",
-    "vite": "^3.1.8",
-    "vitest": "^0.20.3"
+    "@types/testing-library__jest-dom": "^5.14.8",
+    "@vitest/coverage-c8": "^0.26.3",
+    "@vitest/ui": "^0.26.3",
+    "jsdom": "^20.0.3",
+    "solid-js": "^1.7.8",
+    "solid-start": "workspace:^",
+    "solid-start-node": "workspace:^",
+    "typescript": "^4.9.5",
+    "undici": "^5.22.1",
+    "vite": "^4.4.3",
+    "vitest": "^0.26.3"
   }
 }

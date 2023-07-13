@@ -42,21 +42,27 @@ type User = {}
 
 ```twoslash include cookie
 // @module: esnext
+// ---cut---
 
+const process = { env: {
+  NODE_ENV: "",
+  SESSION_SECRET: ""
+}}
+
+// ---cut---
 import { createCookieSessionStorage } from "solid-start";
 
 const storage = createCookieSessionStorage({
   cookie: {
     name: "session",
-    secure: import.meta.env.PROD,
-    secrets: [import.meta.env.VITE_SESSION_SECRET],
+    secure: process.env.NODE_ENV === "production",
+    secrets: [process.env.SESSION_SECRET],
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30, // 30 days
     httpOnly: true
   }
 });
-
 ```
 
 ```twoslash include getUser
@@ -76,7 +82,7 @@ Let's look at an example of how to use the cookie to identify the user. Imagine 
 
 // ---cut---
 export async function getUser(request: Request) {
-  const cookie = request.headers.get("Cookie") ?? ""
+  const cookie = request.headers.get("Cookie") ?? "";
 }
 ```
 
@@ -89,9 +95,11 @@ We use a `SessionStorage` to manage the session data on the server. We can creat
 // @include: cookie
 ```
 
-The `SessionStorage` can be passed the cookie to get the session data about the request. How the session data is stored and retrieved is up to the implementation of the `SessionStorage`. It can either save all the state within the `cookie` itself, which `createCookieSessionStorage` does, or it can save the session data in a database, and the cookie merely contains a session id.
+The `SessionStorage` can be passed the cookie to get the session data about the request. How the session data is stored and retrieved is up to the implementation of the `SessionStorage`.
 
-So, lets use this `storage` to get the session data for the request:
+It can either save all the state within the `cookie` itself, which `createCookieSessionStorage` does, or it can save the session data in a database, and the cookie merely contains a session id.
+
+Let's use this `storage` to get the session data for the request:
 
 ```tsx twoslash {3} filename="/lib/session.ts"
 // @include: hogwarts
@@ -99,7 +107,7 @@ So, lets use this `storage` to get the session data for the request:
 
 // ---cut---
 export async function getUser(request: Request) {
-  const cookie = request.headers.get("Cookie") ?? ""
+  const cookie = request.headers.get("Cookie") ?? "";
   const session = storage.getSession(cookie);
 }
 ```
@@ -133,20 +141,20 @@ export function routeData({ params }: RouteDataArgs) {
       const user = await getUser(event.request);
       if (!user) throw redirect("/login");
       return {
-        students: hogwarts.getStudents(house, "*"),
+        students: hogwarts.getStudents(house, "*")
       };
     },
     { key: () => params.house }
   );
 }
-
 ```
 
-
-```tsx twoslash filename="/routes/session.server.ts"
+```tsx filename="/routes/session.server.ts"
 // @module: esnext
+// ---cut---
 import { redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
+
 const db = {
   user: {} as any
 };
@@ -170,14 +178,12 @@ export async function login({ username, password }: LoginForm) {
   return user;
 }
 
-const sessionSecret = import.meta.env.VITE_SESSION_SECRET;
-
 const storage = createCookieSessionStorage({
   cookie: {
     name: "RJ_session",
     // secure doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
-    secure: import.meta.env.PROD,
+    secure: process.env.NODE_ENV === "production",
     secrets: ["hello"],
     sameSite: "lax",
     path: "/",

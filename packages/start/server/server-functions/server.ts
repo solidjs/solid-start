@@ -3,20 +3,18 @@ import { internalFetch } from "../../api/internalFetch";
 import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
 import {
-  ContentTypeHeader,
-  isRedirectResponse,
-  JSONResponseType,
+  ContentTypeHeader, isRedirectResponse, JSONResponseType,
   LocationHeader,
   XSolidStartContentTypeHeader,
   XSolidStartLocationHeader,
   XSolidStartOrigin,
   XSolidStartResponseTypeHeader
 } from "../responses";
-import { FetchEvent, ServerFunctionEvent } from "../types";
+import { PageEvent, ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
 export type { APIEvent } from "../../api/types";
 
-export const server$: CreateServerFunction = ((fn: any) => {
+export const server$: CreateServerFunction = ((_fn: any) => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
@@ -33,7 +31,7 @@ async function parseRequest(event: ServerFunctionEvent) {
         args = JSON.parse(
           text,
           (
-            key,
+            key: string,
             value: {
               $type: "fetch_event";
             }
@@ -194,8 +192,8 @@ export async function handleServerRequest(event: ServerFunctionEvent) {
       }
       const data = await handler.call(event, ...(Array.isArray(args) ? args : [args]));
       return respondWith(event.request, data, "return");
-    } catch (error: any) {
-      return respondWith(event.request, error, "throw");
+    } catch (error) {
+      return respondWith(event.request, error as Error, "throw");
     }
   }
 
@@ -204,7 +202,7 @@ export async function handleServerRequest(event: ServerFunctionEvent) {
 
 const handlers = new Map();
 // server$.requestContext = null;
-server$.createHandler = (_fn, hash) => {
+server$.createHandler = (_fn, hash, serverResource) => {
   // this is run in two ways:
   // called on the server while rendering the App, eg. in a routeData function
   // - pass args as is to the fn, they should maintain identity since they are passed by reference
@@ -214,8 +212,8 @@ server$.createHandler = (_fn, hash) => {
   // called on the server when an HTTP request for this server function is made to the server (by a client)
   // - request is parsed to figure out the args that need to be passed here, we still pass the same args as above, but they are not the same reference
   //   as the ones passed in the client. They are cloned and serialized and made as similar to the ones passed in the client as possible
-  let fn: any = function (this: FetchEvent, ...args: any[]) {
-    let ctx: FetchEvent;
+  let fn: any = function (this: PageEvent | any, ...args: any[]) {
+    let ctx: any | undefined;
 
     // if called with fn.call(...), we check if we got a valid RequestContext, and use that as
     // the request context for this server function call
@@ -233,10 +231,9 @@ server$.createHandler = (_fn, hash) => {
 
     const execute = async () => {
       try {
-        let e = await _fn.call(ctx, ...args);
-        return e;
-      } catch (e: any) {
-        if (/[A-Za-z]+ is not defined/.test(e.message)) {
+        return serverResource ? _fn.call(ctx, args[0], ctx) : _fn.call(ctx, ...args);
+      } catch (e) {
+        if (e instanceof Error && /[A-Za-z]+ is not defined/.test(e.message)) {
           const error = new Error(
             e.message +
               "\n" +

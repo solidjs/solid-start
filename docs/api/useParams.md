@@ -8,7 +8,7 @@ active: true
 
 # useParams
 
-##### `useParams` gives you an object containing the path params of the current route
+##### `useParams` gives you an object containing the path params of the current route.
 
 <div class="text-lg">
 
@@ -156,10 +156,10 @@ function Component() {
 
 A reactive object containing the current route params. The fields of the object are the names of the dynamic parts of the route path. For example,
 
-- if route path is `/users/:id` and URL is `/users/123`,
-  - then `params` will be `{ id: 123 }`
-- if route path is `/users/:id/projects/:project` and URL is `/users/123/projects/hello-world`,
-  - then `params` will be `{ id: 123, project: "hello-world" }`
-- If route path is `/*missing` and URL is `/no/matching/route`
-  - then `params` will be `{ missing: "no/matching/route" }`
+- If route path is `/users/:id` and URL is `/users/123`,
+  - then `params` will be `{ id: 123 }`.
+- If route path is `/users/:id/projects/:project` and URL is `/users/123/projects/hello-world`,
+  - then `params` will be `{ id: 123, project: "hello-world" }`.
+- If route path is `/*missing` and URL is `/no/matching/route`,
+  - then `params` will be `{ missing: "no/matching/route" }`.
   - Note: `missing` is not a `string[]` of path segments, but a single `string` containing the whole matched path.

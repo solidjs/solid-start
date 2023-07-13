@@ -22,7 +22,7 @@ test.describe("api routes", () => {
           "vite.config.ts": js`
             import solid from "solid-start/vite";
             import { defineConfig } from "vite";
-            
+
             export default defineConfig({
               plugins: [
                 solid({ ssr: ${ssr ? "true" : "false"}})
@@ -47,12 +47,12 @@ test.describe("api routes", () => {
           `,
           "src/routes/redirect.jsx": js`
             import { redirect } from "solid-start/server";
-  
+
             export let GET = () => redirect("/redirected");
           `,
           "src/routes/redirect-to.jsx": js`
             import { redirect } from "solid-start/server";
-  
+
             export let POST = async ({ request }) => {
               let formData = await request.formData();
               return redirect(formData.get('destination'));
@@ -72,6 +72,10 @@ test.describe("api routes", () => {
           "src/routes/api/greeting/[name].js": js`
             import { json } from "solid-start/server";
             export let GET = ({ params }) => json({welcome: params.name});
+          `,
+          "src/routes/api/greeting/[[title]]/[name]/intro.js": js`
+            import { json } from "solid-start/server";
+            export let GET = ({ params }) => json(params);
           `,
           "src/routes/api/greeting/[...unknown].js": js`
             import { json } from "solid-start/server";
@@ -104,21 +108,29 @@ test.describe("api routes", () => {
           "src/routes/server-fetch.jsx": js`
             import server$ from "solid-start/server";
             import { createResource } from 'solid-js';
-  
+
             export default function Page() {
               const [data] = createResource(() => server$.fetch('/api/greeting/harry-potter').then(res => res.json()));
-  
+
               return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
             }
           `,
           "src/routes/server-data-fetch.jsx": js`
             import server$, { createServerData$ } from "solid-start/server";
-  
+
             export default function Page() {
               const data = createServerData$(() => server$.fetch('/api/greeting/harry-potter').then(res => res.json()));
-  
+
               return <Show when={data()}><div data-testid="data">{data()?.welcome}</div></Show>;
             }
+          `,
+          "src/routes/api/static.js": js`
+            import { json } from "solid-start/server";
+            export let GET = () => json({ static: true });
+          `,
+          "src/routes/api/[param]/index.js": js`
+            import { json } from "solid-start/server";
+            export let GET = ({ params }) => json(params);
           `
         }
       });
@@ -153,31 +165,33 @@ test.describe("api routes", () => {
       expect(await page.content()).toContain('{"hello":"world"}');
     });
 
-    test("should render data from API route using server$.fetch", async ({ page }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/server-fetch");
-      let dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
+    if (ssr) {
+      test("should render data from API route using server$.fetch", async ({ page }) => {
+        let app = new PlaywrightFixture(appFixture, page);
+        await app.goto("/server-fetch");
+        let dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
 
-      await app.goto("/", true);
-      await page.click("a[href='/server-fetch']");
-      dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
-    });
+        await app.goto("/", true);
+        await page.click("a[href='/server-fetch']");
+        dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
+      });
 
-    test("should render data from API route using serverData with server$.fetch", async ({
-      page
-    }) => {
-      let app = new PlaywrightFixture(appFixture, page);
-      await app.goto("/server-data-fetch");
-      let dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
+      test("should render data from API route using serverData with server$.fetch", async ({
+        page
+      }) => {
+        let app = new PlaywrightFixture(appFixture, page);
+        await app.goto("/server-data-fetch");
+        let dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
 
-      await app.goto("/", true);
-      await page.click("a[href='/server-data-fetch']");
-      dataEl = await page.waitForSelector("[data-testid='data']");
-      expect(await dataEl!.innerText()).toBe("harry-potter");
-    });
+        await app.goto("/", true);
+        await page.click("a[href='/server-data-fetch']");
+        dataEl = await page.waitForSelector("[data-testid='data']");
+        expect(await dataEl!.innerText()).toBe("harry-potter");
+      });
+    }
 
     test("should return json from API route", async ({ page }) => {
       test.skip(process.env.START_ADAPTER === "solid-start-cloudflare-pages");
@@ -205,6 +219,16 @@ test.describe("api routes", () => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto("/api/rewrite", true);
       await page.waitForSelector("[data-testid='redirected']");
+    });
+
+    test("should return json from /api/greeting/[[title]]/[name]/intro optional param API route", async () => {
+      let res = await fixture.requestDocument("/api/greeting/mr/harry-potter/intro");
+      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
+      expect(await res.json()).toEqual({ title: "mr", name: "harry-potter" });
+
+      res = await fixture.requestDocument("/api/greeting/hermione-granger/intro");
+      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
+      expect(await res.json()).toEqual({ name: "hermione-granger" });
     });
 
     test("should return json from /api/greeting/[...unknown] API unmatched route", async () => {
@@ -249,6 +273,12 @@ test.describe("api routes", () => {
       let res = await fixture.requestDocument("/api/fetch");
       expect(res.headers.get("content-type")).toEqual("application/json");
       expect(await res.json()).toEqual({ message: "Hello from Hogwarts" });
+    });
+
+    test("/:param/ should not be matched over /static", async () => {
+      let res = await fixture.requestDocument("/api/static");
+      expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
+      expect(await res.json()).toEqual({ static: true });
     });
   }
 });

@@ -8,6 +8,8 @@ export const apiRoutes: Middleware = ({ forward }) => {
     if (apiHandler) {
       let apiEvent = Object.freeze({
         request: event.request,
+        clientAddress: event.clientAddress,
+        locals: event.locals,
         params: apiHandler.params,
         env: event.env,
         $type: FETCH_EVENT,

@@ -41,6 +41,4 @@ export default function Root() {
 }
 ```
 
-It is required to have a `Head` and `Body` component as children of `Html`. The `Head` component is used to render the `head` element on the server and hydrate it on the client. The `Body` component is used to render the `body` element on the server and hydrate it on the client.
-
-The only reason to not have a `Html` component as the root of your application is, if you are using an `index.html` for your SPA.
+It is required to have a `Head` and `Body` component as children of `Html`. The `Head` component is used to render the `head` element on the server and hydrate it on the client. The `Body` component is used to render the `body` element on the server and hydrate it on the client. There is only one reason to not have a `Html` component as the root of your application and that is if you are using an `index.html` for your SPA.

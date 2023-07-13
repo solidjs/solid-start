@@ -11,9 +11,8 @@ interface User {
 
 const room = createWebSocketServer(server$(presence));
 
-function presence(webSocket: WebSocket, ctx) {
-  console.log(ctx);
-  let object = ctx.durableObject as { users: Map<string, User>; pings: Map<string, number> };
+function presence(webSocket: WebSocket, { durableObject }: { durableObject: { users: Map<string, User>; pings: Map<string, number> } }) {
+  let object = durableObject;
   if (!object.users) {
     object.users = new Map();
     object.pings = new Map();
@@ -56,7 +55,7 @@ function presence(webSocket: WebSocket, ctx) {
           webSocket.send(JSON.stringify([msg]));
           break;
       }
-    } catch (err) {
+    } catch (err: any) {
       // Report any exceptions directly back to the client. As with our handleErrors() this
       // probably isn't what you'd want to do in production, but it's convenient when testing.
       webSocket.send(JSON.stringify({ error: err.stack }));
@@ -64,7 +63,7 @@ function presence(webSocket: WebSocket, ctx) {
   });
 
   // On "close" and "error" events, remove the WebSocket from the webSockets list
-  let closeOrErrorHandler = ev => {
+  let closeOrErrorHandler = (ev: any) => {
     console.log("user", userId, ev);
     object.users.delete(userId);
     console.log(object.users.size);
@@ -89,19 +88,19 @@ export default function Home() {
   const user = useRouteData<typeof routeData>();
   const params = useParams();
 
-  const [, logoutAction] = createServerAction$((_, { request }) => logout(request));
+  const [, logoutAction] = createServerAction$((_: FormData, { request }) => logout(request));
 
-  const [users, setUsers] = createSignal([]);
+  const [users, setUsers] = createSignal<Array<string>>([]);
 
   createEffect(() => {
     let websocket = room.connect(params.id);
 
     websocket.addEventListener("message", event => {
-      const messages = JSON.parse(event.data);
+      const messages = JSON.parse(event.data) as Array<{ data: { users: { id: string }[]}}>;
       setUsers(messages[0].data.users.map(user => user.id));
     });
 
-    function sendWebSocketMessage(type, data) {
+    function sendWebSocketMessage(type: string, data: { [key: string]: any }) {
       websocket.send(JSON.stringify({ type, data }));
     }
 

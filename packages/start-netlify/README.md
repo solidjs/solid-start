@@ -29,4 +29,6 @@ Alternatively you can setup your netlify.toml to properly locate the built resou
   publish = "netlify/"
 ```
 
-From here you can run `npm run build` and then `netlify deploy --prod --build` to deploy.
+From here you can run `npm run build` and then `netlify deploy --prod` to deploy.
+
+**Important** When running edge functions they need to be built first so you can do so by running `netlify build` or adding `--build` to your deploy cli command.

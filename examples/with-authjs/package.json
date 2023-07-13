@@ -1,0 +1,30 @@
+{
+  "name": "example-with-authjs",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^18.16.19",
+    "esbuild": "^0.14.54",
+    "next-auth": "^4.22.1",
+    "postcss": "^8.4.26",
+    "solid-start-node": "workspace:^",
+    "typescript": "^4.9.5",
+    "vite": "^4.4.3"
+  },
+  "dependencies": {
+    "@auth/core": "^0.5.1",
+    "@solid-auth/base": "^2.0.3",
+    "@solidjs/meta": "^0.28.5",
+    "@solidjs/router": "^0.8.2",
+    "solid-js": "^1.7.8",
+    "solid-start": "workspace:^",
+    "undici": "^5.22.1"
+  },
+  "engines": {
+    "node": ">=16.8"
+  }
+}

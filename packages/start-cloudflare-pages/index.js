@@ -90,7 +90,12 @@ export default function (miniflareOptions) {
             }
 
             try {
-              return await dev.fetch(req, e);
+              return await dev.fetch({
+                request: req,
+                env: e,
+                clientAddress: req.headers.get("cf-connecting-ip"),
+                locals: {}
+              });
             } catch (e) {
               console.log("error", e);
               return new Response(e.toString(), { status: 500 });
@@ -135,10 +140,6 @@ export default function (miniflareOptions) {
 
       writeFileSync(join(config.root, "dist", "public", "_headers"), getHeadersFile(), "utf8");
 
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
       const bundle = await rollup({
         input: join(config.root, ".solid", "server", "server.js"),
@@ -148,7 +149,7 @@ export default function (miniflareOptions) {
             preferBuiltins: true,
             exportConditions: ["worker", "solid"]
           }),
-          common()
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ]
       });
 

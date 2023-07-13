@@ -41,17 +41,19 @@ export type RouteMultiAction<T, U> = [
   }
 ];
 
+export type Invalidate = ((r: Response) => string | any[] | void) | string | any[];
+
 export function createRouteAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: { invalidate?: Invalidate }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] }
+  options?: { invalidate?: Invalidate }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options: { invalidate?: ((r: Response) => string | any[] | void) | string | any[] } = {}
+  options: { invalidate?: Invalidate } = {}
 ): RouteAction<T, U> {
   let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [input, setInput] = createSignal<T | undefined>(init.input);
@@ -59,7 +61,7 @@ export function createRouteAction<T, U = void>(
   const navigate = useNavigate();
   const event = useRequest();
   let count = 0;
-  function submit(variables: T): U {
+  function submit(variables: T): Promise<U> {
     let p: Promise<U>;
     if (import.meta.env.START_ISLANDS && (fn as ServerFunction<any, any>).url) {
       p = (fn as ServerFunction<any, any>).fetch(
@@ -85,7 +87,7 @@ export function createRouteAction<T, U = void>(
         if (reqId === count) {
           if (data instanceof Response) {
             await handleResponse(data, navigate, options);
-          } else await handleRefetch(data, options);
+          } else await handleRefetch(data as any[], options);
           if (!data || isRedirectResponse(data)) setInput(undefined);
           else setResult({ data });
         }
@@ -100,10 +102,11 @@ export function createRouteAction<T, U = void>(
             setResult({ error: e });
           } else setInput(undefined);
         }
-      });
+        return undefined;
+      }) as Promise<U>;
   }
   submit.url = (fn as any).url;
-  submit.Form = ((props: FormProps) => {
+  submit.Form = ((props: Omit<FormProps, "action" | "onSubmission">) => {
     let url = (fn as any).url;
     return (
       <FormImpl
@@ -121,7 +124,7 @@ export function createRouteAction<T, U = void>(
   return [
     {
       get pending() {
-        return Boolean(input() && !result());
+        return !!input() && !result();
       },
       get input() {
         return input();
@@ -154,15 +157,15 @@ type ActionOptions = {
 
 export function createRouteMultiAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
-  options?: ActionOptions
+  options?: { invalidate?: Invalidate }
 ): RouteMultiAction<T, U>;
 export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options?: ActionOptions
+  options?: { invalidate?: Invalidate }
 ): RouteMultiAction<T, U>;
 export function createRouteMultiAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
-  options: ActionOptions = {}
+  options: { invalidate?: Invalidate } = {}
 ): RouteMultiAction<T, U> {
   let init: { result?: { data?: U; error?: any }; input?: T } = checkFlash<T>(fn);
   const [submissions, setSubmissions] = createSignal<Submission<T, U>[]>(
@@ -172,7 +175,13 @@ export function createRouteMultiAction<T, U = void>(
   const event = useRequest();
 
   function createSubmission(variables: T) {
-    let submission: Submission<T, U>;
+    let submission: {
+      input: T,
+      readonly result: U | undefined,
+      readonly error: Error | undefined,
+      clear(): void,
+      retry(): void
+    };
     const [result, setResult] = createSignal<{ data?: U; error?: any }>();
     return [
       (submission = {
@@ -188,17 +197,17 @@ export function createRouteMultiAction<T, U = void>(
         },
         retry() {
           setResult(undefined);
-          return handleSubmit(fn(variables, event));
+          return event && handleSubmit(fn(variables, event));
         }
       }),
       handleSubmit
     ] as const;
-    function handleSubmit(p: Promise<U | Response>) {
+    function handleSubmit(p: Promise<Response & { body: U } | U>): Promise<U> {
       p.then(async data => {
         if (data instanceof Response) {
           await handleResponse(data, navigate, options);
-          data = data.body as unknown as U;
-        } else await handleRefetch(data, options);
+          data = data.body;
+        } else await handleRefetch(data as any[], options);
         data ? setResult({ data }) : submission.clear();
 
         return data;
@@ -210,10 +219,13 @@ export function createRouteMultiAction<T, U = void>(
           setResult({ error: e });
         } else submission.clear();
       });
-      return p;
+      return p as Promise<U>;
     }
   }
   function submit(variables: T) {
+    if (!event) {
+      throw new Error('submit was called without an event');
+    }
     const [submission, handleSubmit] = createSubmission(variables);
     setSubmissions(s => [...s, submission]);
     return handleSubmit(fn(variables, event));
@@ -239,21 +251,21 @@ export function createRouteMultiAction<T, U = void>(
       get(_, property) {
         if (property === $TRACK) return submissions();
         if (property === "pending") return submissions().filter(sub => !sub.result);
-        return submissions()[property];
+        return submissions()[property as keyof typeof submissions];
       }
     }),
     submit
   ];
 }
 
-function handleRefetch(response: Response, options: ActionOptions) {
+function handleRefetch(response: Response | string | any[], options: { invalidate?: Invalidate } = {}) {
   return refetchRouteData(
-    typeof options.invalidate === "function" ? options.invalidate(response) : options.invalidate
+    typeof options.invalidate === "function" ? options.invalidate(response as Response) : options.invalidate
   );
 }
 
-async function handleResponse(response: Response, navigate: Navigator, options: ActionOptions) {
-  if (isRedirectResponse(response)) {
+async function handleResponse(response: Response, navigate: Navigator, options?: { invalidate?: Invalidate }) {
+  if (response instanceof Response && isRedirectResponse(response)) {
     const locationUrl = response.headers.get("Location") || "/";
     if (locationUrl.startsWith("http")) {
       window.location.href = locationUrl;
@@ -271,6 +283,8 @@ async function handleResponse(response: Response, navigate: Navigator, options: 
       window.router.push(response.headers.get("x-solid-location") ?? "/", {});
     }
   }
+
+  return handleRefetch(response, options);
 }
 
 function checkFlash<T>(fn: any) {

@@ -1,5 +1,12 @@
-import type { Accessor, ResourceFetcher, ResourceFetcherInfo, Setter } from "solid-js";
-import { createResource, onCleanup, Resource, ResourceOptions, startTransition } from "solid-js";
+import type {
+  Accessor, Resource,
+  ResourceFetcher, ResourceFetcherInfo, ResourceOptions, Setter
+} from "solid-js";
+import {
+  createResource,
+  onCleanup,
+  startTransition, untrack
+} from "solid-js";
 import type { ReconcileOptions } from "solid-js/store";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
@@ -20,7 +27,7 @@ type RouteDataOptions<T, S> = ResourceOptions<T> & {
 };
 
 const resources = new Set<(k: any) => void>();
-const promises = new Map<any, Promise<any> | any>();
+const promises = new Map<any, Promise<any>>();
 
 export function createRouteData<T, S = true>(
   fetcher: RouteDataFetcher<S, T>,
@@ -41,18 +48,17 @@ export function createRouteData<T, S = true>(
     if (isRedirectResponse(response)) {
       startTransition(() => {
         let url = response.headers.get(LocationHeader);
-        if (!url) throw new Error("Redirect response missing location header");
-        if (url.startsWith("/")) {
+        if (url && url.startsWith("/")) {
           navigate(url, {
             replace: true
           });
         } else {
-          if (!isServer) {
+          if (!isServer && url) {
             window.location.href = url;
           }
         }
       });
-      if (isServer) {
+      if (isServer && pageEvent) {
         pageEvent.setStatusCode(response.status);
         response.headers.forEach((head, value) => {
           pageEvent.responseHeaders.set(value, head);
@@ -61,16 +67,15 @@ export function createRouteData<T, S = true>(
     }
   }
 
-  const resourceFetcher: ResourceFetcher<S, T> = async function <R>(
-    key: S,
-    info: ResourceFetcherInfo<T, R>
-  ) {
+  const resourceFetcher: ResourceFetcher<S, T> = async (key: S) => {
     try {
       let event = pageEvent as RouteDataEvent;
-      if (isServer) {
+      if (isServer && pageEvent) {
         event = Object.freeze({
           request: pageEvent.request,
           env: pageEvent.env,
+          clientAddress: pageEvent.clientAddress,
+          locals: pageEvent.locals,
           $type: FETCH_EVENT,
           fetch: pageEvent.fetch
         });
@@ -85,7 +90,7 @@ export function createRouteData<T, S = true>(
         }
       }
       return response;
-    } catch (e) {
+    } catch (e: any | Error) {
       if (e instanceof Response) {
         if (isServer) {
           handleResponse(e);
@@ -98,9 +103,9 @@ export function createRouteData<T, S = true>(
     }
   };
 
-  function dedup(fetcher: ResourceFetcher<S, T>) {
-    return ((key: S, info) => {
-      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching)) {
+  function dedupe(fetcher: ResourceFetcher<S, T>): ResourceFetcher<S, T> {
+    return (key: S, info: ResourceFetcherInfo<T>) => {
+      if (info.refetching && info.refetching !== true && !partialMatch(key, info.refetching) && info.value) {
         return info.value;
       }
 
@@ -108,29 +113,31 @@ export function createRouteData<T, S = true>(
 
       let promise = promises.get(key);
       if (promise) return promise;
-      promise = fetcher(key, info);
+      promise = fetcher(key, info) as Promise<T>;
       promises.set(key, promise);
-      promise.finally(() => promises.delete(key));
-      return promise;
-    }) as ResourceFetcher<S, T>;
+      return promise.finally(() => promises.delete(key));
+    };
   }
 
   const [resource, { refetch }] = createResource<T, S>(
     (options.key || true) as RouteDataSource<S>,
-    dedup(resourceFetcher),
+    dedupe(resourceFetcher),
     {
-      storage: init => createDeepSignal<T>(init, options.reconcileOptions),
+      storage: (init: T | undefined) => createDeepSignal(init, options.reconcileOptions),
       ...options
-    } as ResourceOptions<T, S>
+    } as any
   );
 
-  resources.add(refetch);
-  onCleanup(() => resources.delete(refetch));
+  if (!isServer) {
+    resources.add(refetch);
+    onCleanup(() => resources.delete(refetch));
+  }
 
   return resource;
 }
 
 export function refetchRouteData(key?: string | any[] | void) {
+  if (isServer) throw new Error("Cannot refetch route data on the server.");
   return startTransition(() => {
     for (let refetch of resources) refetch(key);
   });
@@ -143,7 +150,7 @@ function createDeepSignal<T>(value: T | undefined, options?: ReconcileOptions) {
   return [
     () => store.value,
     (v: T) => {
-      const unwrapped = unwrap(store.value);
+      const unwrapped = untrack(() => unwrap(store.value));
       typeof v === "function" && (v = v(unwrapped));
       setStore("value", reconcile(v, options));
       return store.value;
@@ -156,8 +163,8 @@ function partialMatch(a: any, b: any) {
   return partialDeepEqual(ensureQueryKeyArray(a), ensureQueryKeyArray(b));
 }
 
-function ensureQueryKeyArray(value: any) {
-  return Array.isArray(value) ? value : [value];
+function ensureQueryKeyArray<V extends any | any[], R = V extends [] ? V : [V]>(value: V): R {
+  return (Array.isArray(value) ? value : [value]) as R;
 }
 
 /**

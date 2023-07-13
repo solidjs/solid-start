@@ -32,13 +32,32 @@ const findAny = (path, name) => {
 };
 
 prog
+  .command("routes").describe("Show all routes in your app")
+  .action(async ({config: configFile, open, port, root, host, inspect}) => {
+    root = root || process.cwd();
+    const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
+
+    const { Router } = await import("./fs-router/router.js");
+
+    const router = new Router({
+      baseDir: path.posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir),
+      pageExtensions: config.solidOptions.pageExtensions,
+      ignore: config.solidOptions.routesIgnore,
+      cwd: config.solidOptions.root
+    });
+    await router.init();
+
+    console.log(JSON.stringify(router.getFlattenedPageRoutes(), null, 2));
+  });
+
+prog
   .command("dev")
   .describe("Start a development server")
   .option("-o, --open", "Open a browser tab", false)
   .option("-r --root", "Root directory")
   .option("-c, --config", "Vite config file")
   .option("-i,--inspect", "Node inspector", false)
-  .option("-p, --port", "Port to start server on", 3000)
+  .option("-p, --port", "Port to start server on")
   .action(async ({ config: configFile, open, port, root, host, inspect }) => {
     console.log(c.bgBlue(" solid-start dev "));
     console.log(c.magenta(" version "), pkg.version);
@@ -100,6 +119,7 @@ prog
 
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
 
+    port || (port = config.server.port || 3000);
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     DEBUG(
@@ -111,7 +131,7 @@ prog
         "node_modules/vite/bin/vite.js",
         "dev",
         ...(root ? [root] : []),
-        ...(config ? ["--config", config.configFile] : []),
+        ...(config ? ["--config", `"${config.configFile}"`] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
       ]
@@ -122,7 +142,7 @@ prog
       "vite",
       [
         "dev",
-        ...(config ? ["--config", config.configFile] : []),
+        ...(config ? ["--config", `"${config.configFile}"`] : []),
         ...(port ? ["--port", port] : []),
         ...(host ? ["--host"] : [])
       ].filter(Boolean),
@@ -131,7 +151,13 @@ prog
         stdio: "inherit",
         env: {
           ...process.env,
-          NODE_OPTIONS: `--experimental-vm-modules ${inspect ? "--inspect" : undefined}`
+          NODE_OPTIONS: [
+            process.env.NODE_OPTIONS,
+            "--experimental-vm-modules",
+            inspect ? "--inspect" : "",
+          ]
+            .filter(Boolean)
+            .join(" "),
         }
       }
     );
@@ -323,10 +349,6 @@ prog
             rollupOptions: {
               input: config.solidOptions.serverEntry,
               external: ssrExternal,
-              output: {
-                inlineDynamicImports: true,
-                format: "esm"
-              }
             }
           }
         });
@@ -389,10 +411,8 @@ prog
           console.time(c.blue("solid-start") + c.magenta(" index.html rendered in"));
           let port = await (await import("get-port")).default();
           let proc = spawn(
-            "node",
+            "vite",
             [
-              "--experimental-vm-modules",
-              "node_modules/vite/bin/vite.js",
               "dev",
               "--mode",
               "production",
@@ -404,7 +424,13 @@ prog
               shell: true,
               env: {
                 ...process.env,
-                START_INDEX_HTML: "true"
+                START_INDEX_HTML: "true",
+                NODE_OPTIONS: [
+                  process.env.NODE_OPTIONS,
+                  "--experimental-vm-modules",
+                ]
+                  .filter(Boolean)
+                  .join(" "),
               }
             }
           );
@@ -528,7 +554,7 @@ async function resolveConfig({ configFile, root, mode, command }) {
     DEBUG('config file: "%s"', configFile);
   }
 
-  let config = await vite.resolveConfig({ mode, configFile, root }, command);
+  let config = await vite.resolveConfig({ mode, configFile, root }, command, mode, mode);
 
   async function resolveAdapter(config) {
     if (typeof config.solidOptions.adapter === "string") {

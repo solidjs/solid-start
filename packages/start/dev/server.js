@@ -1,13 +1,11 @@
 import debug from "debug";
-import { once } from "events";
 import path from "path";
-import { Readable } from "stream";
-import { createRequest } from "../node/fetch.js";
+
+import { createRequest, handleNodeResponse } from "../node/fetch.js";
 import "../node/globals.js";
 
 // @ts-ignore
-globalThis.DEBUG = debug("start:server");
-globalThis.WARN = console.warn;
+globalThis._$DEBUG = debug("start:server");
 
 // Vite doesn't expose this so we just copy the list for now
 // https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96
@@ -25,7 +23,7 @@ process.on(
         : false)
     ) {
       console.error(
-        `An unhandler error occured: \n${err}: ${err instanceof Error ? err.stack : ""}`
+        `An unhandled error occured: ${typeof err === "string" ? err : err.stack || err}`
       );
     }
   }
@@ -42,10 +40,7 @@ export function createDevHandler(viteServer, config, options) {
   /**
    * @returns {Promise<Response>}
    */
-  async function devFetch(
-    /** @type {import('../node/fetch').NodeRequest} */ request,
-    /** @type {{ cssModules: { [key: string]: string }}} */ env
-  ) {
+  async function devFetch({ request, env, clientAddress, locals }) {
     const entry = (await viteServer.ssrLoadModule("~start/entry-server")).default;
 
     const devEnv = {
@@ -115,6 +110,8 @@ export function createDevHandler(viteServer, config, options) {
     return await entry({
       request,
       env: devEnv,
+      clientAddress,
+      locals,
       fetch: internalFetch
     });
   }
@@ -132,23 +129,14 @@ export function createDevHandler(viteServer, config, options) {
         const url = viteServer.resolvedUrls.local[0];
         console.log(req.method, new URL(req.url ?? "/", url).href);
       }
-      let webRes = await devFetch(createRequest(req), localEnv);
-      res.statusCode = webRes.status;
-      res.statusMessage = webRes.statusText;
-
-      for (const [name, value] of webRes.headers) {
-        res.setHeader(name, value);
-      }
-
-      if (webRes.body) {
-        // @ts-ignore
-        const readable = Readable.from(webRes.body);
-        readable.pipe(res);
-        await once(readable, "end");
-      } else {
-        res.end();
-      }
-    } catch (/** @type {any} */ e) {
+      let webRes = await devFetch({
+        request: createRequest(req),
+        env: localEnv,
+        clientAddress: req.socket.remoteAddress,
+        locals: {}
+      });
+      handleNodeResponse(webRes, res);
+    } catch (e) {
       viteServer && viteServer.ssrFixStacktrace(e);
       res.statusCode = 500;
       res.end(`

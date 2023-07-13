@@ -6,12 +6,12 @@ export function HttpStatusCode(props: { code: number }) {
   const context = useRequest();
 
   if (isServer) {
-    context.setStatusCode(props.code);
+    context!.setStatusCode(props.code);
   }
 
   onCleanup(() => {
     if (isServer) {
-      context.setStatusCode(200);
+      context!.setStatusCode(200);
     }
   });
 

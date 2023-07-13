@@ -76,6 +76,8 @@ export interface FetchEvent {
   request: Request;
   env: Env;
   fetch(url: string, init?: RequestInit): Promise<Response>;
+  clientAddress: string;
+  locals: Record<string, unknown>;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {

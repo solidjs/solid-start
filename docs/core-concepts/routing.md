@@ -18,25 +18,35 @@ There are two categories of routes:
 
 This section of the documentation will mainly focus on UI routes, but you can learn more about API routes in the [API Routes][api-routes] section.
 
-## Creating pages
+## Creating new pages
 
 SolidStart uses file based routing. This means that the directory structure of your routes folder will translate exactly to the route structure in your application.
 
 Files in the `routes` directory will be treated as routes. Directories will be treated as additional route segments. For UI routes, they can be used along with parent layout components to form nested routes.
 
-Here are a few examples of files in our directory structure and how they would translate to routes:
+Here are a few examples of how to arrange files in the `routes` directory to match a given url. (Note: The file extension could be either: `.tsx` or `.jsx` depending on whether or not you are using [TypeScript](https://www.typescriptlang.org/docs/handbook/jsx.html) in your application.) 
 
-- `/src/routes/index.tsx` ➜ `hogwarts.com/`
-- `/src/routes/admin/index.tsx` ➜ `hogwarts.com/admin`
-- `/src/routes/admin/edit-settings.tsx` ➜ `hogwarts.com/admin/edit-settings`
+To create a new route/page in your application, just create a new file in the `routes` directory with the same name.
+- `hogwarts.com/blog` ➜ `/routes/blog.tsx`
+- `hogwarts.com/contact` ➜ `/routes/contact.tsx`
+- `hogwarts.com/directions ` ➜ `/routes/directions.tsx`
 
-There are some special file names that map to `URLPattern` patterns, e.g.
-- `/src/routes/students/[id].tsx` ➜ `hogwarts.com/students/:id`
-- `/src/routes/students/[id]/[name].tsx` ➜ `hogwarts.com/students/:id/:name`
-- `/src/routes/[...missing].tsx` ➜ `hogwarts.com/*missing`
+To create new pages after a given route segment, simply create a directory with the name of the preceding route segment, and create new files in that directory.
+- `hogwarts.com/admin/edit-settings` ➜ `/routes/admin/edit-settings.tsx` 
+- `hogwarts.com/amenities/chamber-of-secrets` ➜ `/routes/amenities/chamber-of-secrets.tsx` 
+- `hogwarts.com/amenities/quidditch-pitch` ➜ `/routes/amenities/quidditch-pitch.tsx` 
 
+Files named `index` will be rendered when there are no additional URL route segments being requested for a matching directory.
+- `hogwarts.com` ➜ `/routes/index.tsx` 
+- `hogwarts.com/admin` ➜ `/routes/admin/index.tsx` 
+- `hogwarts.com/staff/positions` ➜ `/routes/staff/positions/index.tsx` 
 
-We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a [Component][components]. This component represents the content that will be rendered when users visit the page:
+Additionally, there are some special file names that map to [URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) patterns, e.g.
+- `hogwarts.com/students/:id` ➜ `/src/routes/students/[id].tsx`
+- `hogwarts.com/students/:id/:name` ➜ `/src/routes/students/[id]/[name].tsx`
+- `hogwarts.com/*missing` ➜ `/src/routes/[...missing].tsx`
+
+We put all our routes in the same top-level directory, `src/routes`. This includes our pages, but also our [API routes][api-routes]. For a route to be rendered as a page, it should default export a Component. This component represents the content that will be rendered when users visit the page:
 
 ```tsx twoslash filename="routes/index.tsx"
 export default function Index() {
@@ -122,7 +132,7 @@ There are cases where the anchor is not right for your navigation needs. For exa
 - You want to navigate after an async process completes
 - You want to navigate after the user clicks a button, and we do some logic.
 
-For these use cases you can use an imperative [`navigate`][usenavigate-navigate] function that you can by calling [`useNavigate()`][usenavigate].
+For these use cases you can use an imperative [`navigate`][usenavigate-navigate] function that you can get by calling [`useNavigate()`][usenavigate].
 
 ### Redirecting
 
@@ -185,6 +195,16 @@ export default function UserPage() {
 }
 ```
 
+## Optional parameter
+Optional parameter
+
+matches users and users/123 
+```tsx {3}
+|-- routes/
+    |-- users/
+        |-- [[id]].tsx
+```
+
 ## Catch all routes
 
 Catch all routes are routes that can match any value for any number of segments. For example, `/blog/a/b/c` and `/blog/d/e` are both valid routes. You can define catch-all routes using square brackets with `...` before the label for the route.For example, `/blog/[...post]` is a dynamic route, where `post` is the dynamic segment.
@@ -231,6 +251,32 @@ export default function UsersLayout() {
     </div>
   );
 }
+```
+
+## Route Groups
+
+With file system routing, folders map directly to URL Paths. However, there might be times when you want to create folders for the sake of organization without affecting the URL structure. This can be done by using a Route Group. In SolidStart, Route Groups are defined using parenthesis surrounding the folder name `(example)`.
+
+```tsx {1}
+|-- routes/
+    |-- (static)
+        |-- about-us                // example.com/about-us
+            |-- index.tsx
+        |-- contact-us              // example.com/contact-us
+            |-- index.tsx
+```
+
+## Renaming Index
+By default, the component that is rendered for a route comes from the default export of the `index.tsx` file in each folder. However, this could make it harder to find which `index.tsx` file is the correct one when searching since there will be multiple files with that name. To avoid this pitfall, we also render the default export from any file that follows `(fileName).tsx` syntax. 
+
+```tsx {1}
+|-- routes/
+    |-- (home).tsx                  // example.com
+    |-- users.tsx
+    |-- users/
+        |-- (all-users).tsx         // example.com/users
+        |-- [id].tsx
+        |-- projects.tsx
 ```
 
 [navlink]: /navigation#navigation-links

@@ -7,6 +7,10 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
+/***
+ * @param {object} options
+ * @param {boolean} [options.edge]
+ */
 export default function ({ edge } = {}) {
   return {
     name: "netlify",
@@ -16,6 +20,7 @@ export default function ({ edge } = {}) {
       proc.stderr.pipe(process.stderr);
     },
     async build(config, builder) {
+      const ssrExternal = config?.ssr?.external || [];
       const __dirname = dirname(fileURLToPath(import.meta.url));
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "netlify"));
@@ -29,10 +34,6 @@ export default function ({ edge } = {}) {
       }
 
       copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
-      copyFileSync(
         join(__dirname, edge ? "entry-edge.js" : "entry.js"),
         join(config.root, ".solid", "server", "index.js")
       );
@@ -44,8 +45,9 @@ export default function ({ edge } = {}) {
             preferBuiltins: true,
             exportConditions: edge ? ["deno", "solid"] : ["node", "solid"]
           }),
-          common()
-        ]
+          common({ strictRequires: true, ...config.build.commonjsOptions })
+        ],
+        external: ssrExternal
       });
       // or write the bundle to disk
       await bundle.write({

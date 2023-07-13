@@ -1,7 +1,7 @@
 import { ServerFunction } from "../server/server-functions/types";
 import { webSocketHandlers } from "./handlers";
 
-function createWebsocket(fn: { url: string }) {
+function createWebsocket(fn: ServerFunction<[WebSocket, WebSocketEvent], (a: WebSocket, b: WebSocketEvent) => void>) {
   return (id: string = "") =>
     new WebSocket(`${location.origin.replace(/^http/, "ws")}${fn.url}?id=${id}`);
 }

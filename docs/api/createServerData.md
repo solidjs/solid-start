@@ -8,12 +8,13 @@ active: true
 
 # createServerData$
 
-##### `createServerData$` allows you to manage async data fetching always on the server
+##### `createServerData$` allows you to manage async data fetching always on the server.
 
 <div class="text-lg">
 
 ```tsx twoslash
 import { createServerData$ } from "solid-start/server";
+
 function getStudents() {
   return [];
 }
@@ -67,7 +68,9 @@ export function routeData({ params }: RouteDataArgs) {
 }
 ```
 
-### Accessing the `Request`
+### Accessing the `Event`
+
+The event object has information like the `request`, `clientAddress`, and `locals` on it.
 
 ```tsx twoslash {7}
 const prisma = {
@@ -161,7 +164,7 @@ const prisma = {
 import { createServerData$ } from "solid-start/server";
 
 export function routeData() {
-  let house = 'griffindor'; // can't use this inside the fetcher function
+  let house = 'gryffindor'; // can't use this inside the fetcher function
   return createServerData$(
     () => prisma.students.findUnique({ where: { house } }),
     { key: () => ["students"] }
@@ -182,7 +185,7 @@ import { createServerData$ } from "solid-start/server";
 export function routeData() {
   return createServerData$(
     () => {
-      let house = 'griffindor'; // if you can, just declare it inside the function
+      let house = 'gryffindor'; // if you can, just declare it inside the function
       return prisma.students.findUnique({ where: { house } });
     },
     { key: () => ["students"] }
@@ -200,7 +203,7 @@ const prisma = {
 // ---cut---
 import { createServerData$ } from "solid-start/server";
 
-let house = 'griffindor'; // see if it can be extracted to module scope
+let house = 'gryffindor'; // see if it can be extracted to module scope
 
 export function routeData() {
   return createServerData$(
@@ -223,7 +226,7 @@ const prisma = {
 import { createServerData$ } from "solid-start/server";
 
 export function routeData() {
-  let house = 'griffindor';
+  let house = 'gryffindor';
   return createServerData$(
     ([, house]) => {
       return prisma.students.findUnique({ where: { house } });
@@ -236,4 +239,6 @@ export function routeData() {
 ## Reference
 
 Refer to [createRouteData](./createRouteData) for API reference.
+
+*Note: `createServerData$` does not work when application is configured to `ssr: false`*
 

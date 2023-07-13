@@ -6,9 +6,9 @@ subsection: CLI
 active: true
 ---
 
-# `solid-start build`
+# solid-start build
 
-##### `solid-start build` bundles your server and client using [Vite](https://vitejs.dev/)
+##### `solid-start build` bundles your server and client using [Vite](https://vitejs.dev/).
 
 <div class="text-lg">
 
@@ -19,7 +19,6 @@ solid-start build
 </div>
 
 <table-of-contents></table-of-contents>
-
 
 ## Usage
 
@@ -37,5 +36,5 @@ solid-start build --config project/vite.config.ts --root project
 
 ## Reference
 
-- `root, -r `: The root directory of the project
-- `config   `: The path to the Vite config file
+- `root`, `-r`: The root directory of the project
+- `config`: The path to the Vite config file

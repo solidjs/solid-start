@@ -53,7 +53,8 @@ export class Router {
     }
 
     const routes = fg.sync([`${this.baseDir}/**/*`], {
-      cwd: this.cwd
+      cwd: this.cwd,
+      dot: true
     });
 
     routes.forEach(route => {

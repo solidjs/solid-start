@@ -8,7 +8,7 @@ active: true
 
 # Head
 
-##### `Head` lets you set the [`<head>`][nativehead] of your page
+##### `Head` lets you set the [`<head>`][nativehead] of your page.
 
 <div class="text-lg">
 
@@ -26,8 +26,9 @@ import { Head, Html, Title, Meta, Link, Body } from "solid-start";
 
 ### Setting the `<head>` of your page
 
-The `Head` component includes machine-readable metadata about the document, like its title, description of its content, links to scripts, and stylesheets. It is a wrapper over the [`head`][nativehead] element and accepts the same attributes. It accepts elements you would usually place under [`head`][nativehead], like [`title`][nativetitle], [`meta`][nativemeta], and [`link`][nativelink] along with their wrapped counterparts.
+The `Head` component includes machine-readable metadata about the document, like its title, description of its content, links to scripts, and stylesheets.
 
+It is a wrapper over the [`head`][nativehead] element and accepts the same attributes. It accepts elements you would usually place under [`head`][nativehead], like [`title`][nativetitle], [`meta`][nativemeta], and [`link`][nativelink] along with their wrapped counterparts.
 
 The <token-link id="1" token="Html">`Head`</token-link> is required to be a child of `Html` and should be the first child of <token-link id="1" token="Html">`Html`</token-link>. It serves a few purposes, and a document without the `Head` component will not render correctly.
 
@@ -55,11 +56,9 @@ export default function Root() {
 
 Use the `Head` component as the first child of [`Html`][html] to set the [`<head>`][nativehead] of your page. It is necessary to have this otherwise your app will break in production (probably in dev too).
 
-The `Head` component automatically inserts any `link` elements needed for preloading JavaScript and CSS for the current page and handles the insertion of any meta-tags that are added throughout the application.
+The `Head` component automatically inserts any `link` elements needed for preloading JavaScript and CSS for the current page. It handles the insertion of any meta-tags that are added throughout the application.
 
-`Head` and its descendants are not hydrated on page bootup in the browser after server rendering.
-
-Accepts the same props as the native [`<head>`][nativehead] element.
+`Head` and its descendants are not hydrated on page boot up in the browser after server rendering. It accepts the same props as the native [`<head>`][nativehead] element.
 
 ```tsx twoslash
 import { Html, Head } from "solid-start";
@@ -78,4 +77,3 @@ export default function Root() {
 [nativemeta]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
 [nativelink]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link
 [html]: /api/Html
-

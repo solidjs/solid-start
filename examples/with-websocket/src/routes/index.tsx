@@ -27,7 +27,7 @@ const pingPong = createWebSocketServer(
             );
             break;
         }
-      } catch (err) {
+      } catch (err: any) {
         // Report any exceptions directly back to the client. As with our handleErrors() this
         // probably isn't what you'd want to do in production, but it's convenient when testing.
         webSocket.send(JSON.stringify({ error: err.stack }));
@@ -63,7 +63,7 @@ export default function Home() {
       }
     });
 
-    function sendWebSocketMessage(type, data) {
+    function sendWebSocketMessage(type: string, data: { [key: string]: any }) {
       websocket.send(JSON.stringify({ type, data }));
     }
 

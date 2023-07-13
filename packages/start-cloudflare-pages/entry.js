@@ -1,5 +1,5 @@
 import manifest from "../../dist/public/route-manifest.json";
-import handler from "./handler";
+import handler from "./entry-server";
 
 export const onRequestGet = async ({ request, next, env }) => {
   // Handle static assets
@@ -17,6 +17,8 @@ export const onRequestGet = async ({ request, next, env }) => {
   };
   return handler({
     request: request,
+    clientAddress: request.headers.get('cf-connecting-ip'),
+    locals: {},
     env
   });
 };

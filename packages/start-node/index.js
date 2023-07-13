@@ -1,7 +1,7 @@
 import common from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
-import { copyFileSync, readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { createAdapter } from "solid-start/vite";
@@ -30,11 +30,6 @@ export default function nodeAdapter() {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
-      copyFileSync(
-        join(config.root, ".solid", "server", `entry-server.js`),
-        join(config.root, ".solid", "server", "handler.js")
-      );
-
       let text = readFileSync(join(__dirname, "entry.js")).toString();
 
       writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
@@ -49,7 +44,7 @@ export default function nodeAdapter() {
             preferBuiltins: true,
             exportConditions: ["node", "solid"]
           }),
-          common()
+          common({ strictRequires: true, ...config.build.commonjsOptions })
         ],
         external: ["stream/web", ...ssrExternal]
       });
