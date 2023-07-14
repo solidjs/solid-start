@@ -422,7 +422,7 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var fileRoutes = $FILE_ROUTES;",
-            !options.ssr && ssr ? "var fileRoutes = [];" :
+            !config.solidOptions.ssr && ssr ? "var fileRoutes = [];" :
             stringifyPageRoutes(config.solidOptions.router.getNestedPageRoutes(), {
               lazy: ssr ? false : true
             })

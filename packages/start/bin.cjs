@@ -63,59 +63,6 @@ prog
     console.log(c.magenta(" version "), pkg.version);
 
     root = root || process.cwd();
-    // if (!existsSync(join(root, "package.json"))) {
-    //   console.log('No package.json found in "%s"', root);
-    //   console.log('Creating package.json in "%s"', root);
-    //   writeFileSync(
-    //     join(root, "package.json"),
-    //     JSON.stringify(
-    //       {
-    //         name: "my-app",
-    //         private: true,
-    //         version: "0.0.0",
-    //         type: "module",
-    //         scripts: {
-    //           dev: "solid-start dev",
-    //           build: "solid-start build",
-    //           preview: "solid-start start"
-    //         },
-    //         devDependencies: {
-    //           typescript: pkg.devDependencies["typescript"],
-    //           vite: pkg.devDependencies["vite"]
-    //         },
-    //         dependencies: {
-    //           "@solidjs/meta": pkg.devDependencies["@solidjs/meta"],
-    //           "@solidjs/router": pkg.devDependencies["@solidjs/router"],
-    //           "solid-start": pkg.devDependencies[pkg.version],
-    //           "solid-js": pkg.devDependencies["solid-js"]
-    //         }
-    //       },
-    //       null,
-    //       2
-    //     )
-    //   );
-
-    //   console.log("Installing dependencies...");
-    //   await new Promise((resolve, reject) => {
-    //     exec("npm install", { cwd: root }, (err, stdout, stderr) => {
-    //       if (err) {
-    //         reject(err);
-    //       } else {
-    //         resolve();
-    //       }
-    //     }).stdout.pipe(process.stdout);
-    //   });
-    // }
-
-    // if (!existsSync(join(root, "src"))) {
-    //   console.log('No src directory found in "%s"', root);
-    //   console.log('Creating src directory in "%s"', root);
-    //   mkdirSync(join(root, "src", "routes"), { recursive: true });
-    //   writeFileSync(
-    //     join(root, "src", "routes", "index.tsx"),
-    //     `export default function Page() { return <div>Hello World</div> }`
-    //   );
-    // }
 
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
 
@@ -179,6 +126,7 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
+    mkdirSync(inspect, { recursive: true });
     const vite = require("vite");
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
@@ -400,7 +348,6 @@ prog
         console.time(c.blue("solid-start") + c.magenta(" client built in"));
 
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
-        mkdirSync(join(config.root, ".solid"), { recursive: true });
 
         let indexHtml;
         if (existsSync(join(config.root, "index.html"))) {
