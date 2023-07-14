@@ -33,8 +33,7 @@ export default defineConfig({
   },
 	integrations: [start({
     rootEntry: resolve("docs.root.tsx"),
-    appRoot: "./docs",
-    routesDir: ".",
+    routesDir: "../docs",
     islandsRouter: true,
     islands: true,
     extensions: [".mdx", ".md"],
