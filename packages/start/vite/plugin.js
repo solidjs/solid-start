@@ -20,7 +20,7 @@ import babelServerModule from "../server/server-functions/babel.js";
 import routeResource from "../server/serverResource.js";
 
 // @ts-ignore
-globalThis.DEBUG = debug("start:vite");
+globalThis._$DEBUG = debug("start:vite");
 let _dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
@@ -98,7 +98,7 @@ function solidStartConfig(options) {
         options.rootEntry = join(_dirname, "..", "virtual", "root.tsx");
       }
 
-      DEBUG(options);
+      _$DEBUG(options);
 
       return {
         root,
@@ -135,7 +135,7 @@ function solidStartConfig(options) {
           "import.meta.env.START_ISLANDS_ROUTER": JSON.stringify(
             options.experimental.islandsRouter ? true : false
           ),
-          DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis.DEBUG",
+          _$DEBUG: process.env.NODE_ENV === "production" ? "(() => {})" : "globalThis._$DEBUG",
           "import.meta.env.START_ADAPTER": JSON.stringify(
             typeof options.adapter === "string"
               ? options.adapter
@@ -663,7 +663,7 @@ export default function solidStart(options) {
     options ?? {}
   );
 
-  DEBUG("options", options);
+  _$DEBUG("options", options);
 
   return [
     solidStartConfig(options),

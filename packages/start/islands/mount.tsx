@@ -21,7 +21,7 @@ export function hydrateServerRouter() {
     if (!Component || !el.dataset.hk) return;
 
     let hk = el.dataset.hk;
-    DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
+    _$DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
 
     let props = createStore({
       ...JSON.parse(el.dataset.props!),
