@@ -28,14 +28,14 @@ export type RouteAction<T, U> = [
     clear: () => void;
     retry: () => void;
   },
-  ((vars: T) => Promise<U>) & {
+  ((vars: T) => Promise<U | undefined>) & {
     Form: T extends FormData ? ParentComponent<FormProps> : never;
     url: string;
   }
 ];
 export type RouteMultiAction<T, U> = [
   Submission<T, U>[] & { pending: Submission<T, U>[] },
-  ((vars: T) => Promise<U>) & {
+  ((vars: T) => Promise<U | undefined>) & {
     Form: T extends FormData ? ParentComponent<FormProps> : never;
     url: string;
   }
