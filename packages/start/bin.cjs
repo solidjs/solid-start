@@ -373,7 +373,7 @@ prog
               "dev",
               "--mode",
               "production",
-              ...(config ? ["--config", config.configFile] : []),
+              ...(config ? ["--config", `"${config.configFile}"`] : []),
               ...(port ? ["--port", port] : [])
             ],
             {
