@@ -1,5 +1,4 @@
 import getPort, { portNumbers } from "get-port";
-import { rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import solidStart from "../vite/plugin.js";
 import build from "./builder.js";
@@ -7,7 +6,6 @@ import build from "./builder.js";
 export default function (solidOptions = {}) {
   let inline;
   let serverPath;
-  let clientPath;
   const plugin = solidStart(solidOptions);
   return {
     name: "solid-start-astro",
@@ -16,7 +14,6 @@ export default function (solidOptions = {}) {
         const randomPort = await getPort({ port: portNumbers(3000, 52000) }); // Prefer 3000, but pick any port if not available
         process.env.PORT = process.env.PORT ?? config.server?.port ?? randomPort + "";
         inline = config.vite || {};
-        clientPath = fileURLToPath(config.build.client);
         injectRoute({
           entryPoint: new URL(
             command === "build" ? "./handler.js" : "./handler-dev.js",
@@ -25,9 +22,6 @@ export default function (solidOptions = {}) {
           pattern: "/[...all]"
         });
         updateConfig({
-          build: {
-            client: new URL('.solid/astro-client', config.root)
-          },
           server: {
             port: process.env.PORT
           },
@@ -40,10 +34,9 @@ export default function (solidOptions = {}) {
         serverPath = fileURLToPath(config.build.server);
       },
       "astro:build:done": async ({ dir }) => {
-        rmSync(fileURLToPath(dir), { recursive: true, force: true })
         inline.plugins || (inline.plugins = []);
         inline.plugins.push(plugin);
-        await build(clientPath, serverPath, inline);
+        await build(fileURLToPath(dir), serverPath, inline);
       }
     }
   };
