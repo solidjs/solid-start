@@ -21,7 +21,7 @@
     "@trpc/client": "^10.34.0",
     "@trpc/server": "^10.34.0",
     "solid-js": "^1.7.8",
-    "solid-start": "workspace:^",
+    "solid-start": "^0.2.27",
     "solid-start-trpc": "^0.0.16",
     "solid-trpc": "0.1.0-sssr.7",
     "undici": "^5.22.1",
