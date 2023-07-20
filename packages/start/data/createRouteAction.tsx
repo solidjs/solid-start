@@ -29,14 +29,14 @@ export type RouteAction<T, U> = [
     retry: () => void;
   },
   ((vars: T) => Promise<U | undefined>) & {
-    Form: T extends FormData ? ParentComponent<FormProps> : never;
+    Form: ParentComponent<FormProps | T>;
     url: string;
   }
 ];
 export type RouteMultiAction<T, U> = [
   Submission<T, U>[] & { pending: Submission<T, U>[] },
   ((vars: T) => Promise<U | undefined>) & {
-    Form: T extends FormData ? ParentComponent<FormProps> : never;
+    Form: ParentComponent<FormProps | T>;
     url: string;
   }
 ];
@@ -87,7 +87,7 @@ export function createRouteAction<T, U = void>(
         if (reqId === count) {
           if (data instanceof Response) {
             await handleResponse(data, navigate, options);
-          } else await handleRefetch(data as any[], options);
+          } else await handleRefetch(data as unknown as any[], options);
           if (!data || isRedirectResponse(data)) setInput(undefined);
           else setResult({ data });
         }
@@ -119,7 +119,7 @@ export function createRouteAction<T, U = void>(
         {props.children}
       </FormImpl>
     );
-  }) as T extends FormData ? ParentComponent<FormProps> : never;
+  }) as ParentComponent<FormProps | T>;
 
   return [
     {
@@ -207,7 +207,7 @@ export function createRouteMultiAction<T, U = void>(
         if (data instanceof Response) {
           await handleResponse(data, navigate, options);
           data = data.body;
-        } else await handleRefetch(data as any[], options);
+        } else await handleRefetch(data as unknown as any[], options);
         data ? setResult({ data }) : submission.clear();
 
         return data;
@@ -244,7 +244,7 @@ export function createRouteMultiAction<T, U = void>(
         {props.children}
       </FormImpl>
     );
-  }) as T extends FormData ? ParentComponent<FormProps> : never;
+  }) as ParentComponent<FormProps | T>;
 
   return [
     new Proxy<Submission<T, U>[] & { pending: Submission<T, U>[] }>([] as any, {
