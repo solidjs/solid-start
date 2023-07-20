@@ -46,6 +46,7 @@ async function client(path, serverPath, config, resolved) {
   await build({
     ...config,
     build: {
+      emptyOutDir: false,
       outDir: path,
       ssrManifest: true,
       minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
@@ -91,6 +92,7 @@ async function spaClient(path, serverPath, config, resolved) {
   await build({
     ...config,
     build: {
+      emptyOutDir: false,
       outDir: path,
       minify: process.env.START_MINIFY == "false" ? false : config.build?.minify ?? true,
       ssrManifest: true,
@@ -155,6 +157,7 @@ async function islandsClient(path, serverPath, config, resolved) {
   await build({
     ...config,
     build: {
+      emptyOutDir: false,
       outDir: path,
       ssrManifest: true,
       minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
