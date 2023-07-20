@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "path";
 import c from "picocolors";
@@ -27,6 +27,8 @@ export default async function(path, serverPath, config) {
     await client(path, serverPath, config, resolved);
   }
   if (resolved.solidOptions.ssr) await preRenderRoutes(path, resolved);
+
+  rmSync(join(path, '_astro'), { force: true, recursive: true });
 }
 
 function writeRouteManifest(routeManifest, serverPath) {
