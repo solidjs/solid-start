@@ -13,22 +13,22 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@astrojs/node": "^5.1.2",
+    "@solidjs/testing-library": "^0.5.2",
+    "@testing-library/jest-dom": "^5.16.5",
     "@types/babel__core": "^7.20.0",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
-    "@solidjs/testing-library": "^0.5.2",
-    "@testing-library/jest-dom": "^5.16.5",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@vitest/coverage-c8": "^0.26.3",
     "@vitest/ui": "^0.26.3",
-    "jsdom": "^20.0.3",
     "esbuild": "^0.14.54",
+    "jsdom": "^20.0.3",
     "postcss": "^8.4.21",
     "typescript": "^4.9.4",
     "vitest": "^0.26.3"
   },
   "dependencies": {
-    "@astrojs/node": "^5.1.2",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
     "astro": "^2.7.1",
