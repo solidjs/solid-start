@@ -11,7 +11,7 @@
 6. Run tests locally
    - Setup playwright: `pnpm run install:playwright`
    - Run all tests: `pnpm run test:all`
-   - Show report: `pnpm run test:show-report`
+   - Show report: `pnpm run show:test-report`
 
 ## Requirements
 
