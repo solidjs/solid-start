@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/node": "^18.11.18",
     "solid-start": "workspace:*",
-    "vite": "^4.1.4"
+    "vite": "^4.4.6"
   },
   "peerDependencies": {
     "solid-start": "*",

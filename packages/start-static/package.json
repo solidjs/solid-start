@@ -19,7 +19,7 @@
     "solid-start": "workspace:*",
     "terser": "^5.16.1",
     "undici": "^5.15.1",
-    "vite": "^4.1.4"
+    "vite": "^4.4.6"
   },
   "peerDependencies": {
     "solid-start": "*",
