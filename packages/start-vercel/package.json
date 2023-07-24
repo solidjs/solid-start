@@ -1,6 +1,6 @@
 {
   "name": "solid-start-vercel",
-  "version": "0.2.28",
+  "version": "0.2.29",
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
