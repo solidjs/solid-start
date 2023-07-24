@@ -9,8 +9,9 @@
 4. Make changes and check if things work in examples
 5. Add integration tests in `test`, if appropriate
 6. Run tests locally
-   - Setup playwright: `pnpm --filter solid-start-tests install:playwright`
+   - Setup playwright: `pnpm run install:playwright`
    - Run all tests: `pnpm run test:all`
+   - Show report: `pnpm run show:test-report`
 
 ## Requirements
 
