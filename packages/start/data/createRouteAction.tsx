@@ -41,12 +41,12 @@ export type RouteMultiAction<T, U> = [
 
 export type Invalidate = ((r: Response) => string | any[] | void) | string | any[];
 
-export function createRouteAction<T = void, U = void>(
-  fn: (arg1: void, event: ActionEvent) => Promise<U>,
-  options?: { invalidate?: Invalidate }
-): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
   fn: (args: T, event: ActionEvent) => Promise<U>,
+  options?: { invalidate?: Invalidate }
+): RouteAction<T, U>;
+export function createRouteAction<T = void, U = void>(
+  fn: (arg1: void, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: Invalidate }
 ): RouteAction<T, U>;
 export function createRouteAction<T, U = void>(
@@ -270,11 +270,11 @@ function checkFlash<T>(fn: any) {
     result: {
       error: param.error
         ? new FormError(param.error.message, {
-            fieldErrors: param.error.fieldErrors,
-            stack: param.error.stack,
-            form: param.error.form,
-            fields: param.error.fields
-          })
+          fieldErrors: param.error.fieldErrors,
+          stack: param.error.stack,
+          form: param.error.form,
+          fields: param.error.fields
+        })
         : undefined
     },
     input: input as unknown as T
