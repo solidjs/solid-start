@@ -1,8 +1,8 @@
 import { Show } from "solid-js";
 import { A, Outlet, useParams } from "solid-start";
 import Hero from "~/components/Hero";
-import styles from "./layout.module.scss";
-import { useMovie } from "./useMovie";
+import styles from "./[movieId].module.scss";
+import { useMovie } from "./[movieId]/useMovie";
 
 export default function MoviePage() {
   const params = useParams();

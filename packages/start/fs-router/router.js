@@ -218,11 +218,7 @@ export class Router {
 
   /** @param {string} path */
   getRouteId(path) {
-    let id = path.slice(this.baseDir.length);
-    if (id.endsWith("/layout")) {
-      id = id.slice(0, -"/layout".length);
-    }
-    return id;
+    return path.slice(this.baseDir.length);
   }
 
   getNestedPageRoutes() {
