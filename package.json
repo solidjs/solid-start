@@ -19,8 +19,10 @@
     "docs:start": "solid-start start",
     "clean:test": "rimraf .tmp",
     "build:all": "pnpm run -r --if-present build",
+    "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
+    "show:test-report": "pnpm --filter solid-start-tests show:test-report",
     "bump": "node scripts/bump.cjs"
   },
   "devDependencies": {

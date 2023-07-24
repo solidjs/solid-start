@@ -5,6 +5,7 @@
     "clean": "rimraf .tmp",
     "install:playwright": "playwright install --with-deps",
     "test": "playwright test --config ./playwright.config.ts",
+    "show:test-report": "playwright show-report",
     "test:unit": "vitest run"
   },
   "dependencies": {
