@@ -9,9 +9,8 @@
   "devDependencies": {
     "solid-start-node": "^0.2.19",
     "typescript": "^4.9.4",
-    "@types/debug": "^4.1.7",
     "@types/babel__core": "^7.20.0",
-    "vite": "^4.1.4",
+    "vite": "^4.4.6",
     "vite-plugin-solid-styled": "^0.8.1"
   },
   "dependencies": {
