@@ -338,7 +338,7 @@ importers:
     devDependencies:
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@3.10.0)
+        version: 2.3.0(rollup@2.78.0)
       solid-start-node:
         specifier: ^0.2.19
         version: link:../../packages/start-node
@@ -626,6 +626,9 @@ importers:
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
+      rollup:
+        specifier: 2.78.x
+        version: 2.78.0
       tiny-glob:
         specifier: ^0.2.9
         version: 0.2.9
@@ -640,7 +643,7 @@ importers:
         version: 2.3.0
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@3.10.0)
+        version: 2.3.0(rollup@2.78.0)
       '@types/mdast':
         specifier: ^3.0.10
         version: 3.0.10
@@ -3070,14 +3073,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@mdx-js/rollup@2.3.0(rollup@3.10.0):
+  /@mdx-js/rollup@2.3.0(rollup@2.78.0):
     resolution: {integrity: sha512-wLvRfJS/M4UmdqTd+WoaySEE7q4BIejYf1xAHXYvtT1du/1Tl/z2450Gg2+Hu7fh05KwRRiehiTP9Yc/Dtn0fA==}
     peerDependencies:
       rollup: '>=2'
     dependencies:
       '@mdx-js/mdx': 2.3.0
-      '@rollup/pluginutils': 5.0.2(rollup@3.10.0)
-      rollup: 3.10.0
+      '@rollup/pluginutils': 5.0.2(rollup@2.78.0)
+      rollup: 2.78.0
       source-map: 0.7.4
       vfile: 5.3.7
     transitivePeerDependencies:
@@ -3453,6 +3456,20 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: false
+
+  /@rollup/pluginutils@5.0.2(rollup@2.78.0):
+    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': 1.0.1
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+      rollup: 2.78.0
 
   /@rollup/pluginutils@5.0.2(rollup@3.10.0):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
@@ -8690,6 +8707,13 @@ packages:
       rollup: 3.10.0
       route-sort: 1.0.0
     dev: false
+
+  /rollup@2.78.0:
+    resolution: {integrity: sha512-4+YfbQC9QEVvKTanHhIAFVUFSRsezvQF8vFOJwtGfb9Bb+r014S+qryr9PSmw8x6sMnPkmFBGAvIFVQxvJxjtg==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
 
   /rollup@2.79.1:
     resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
