@@ -65,7 +65,7 @@ importers:
         version: 1.7.8
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.8)(vite@4.4.3)
+        version: 0.0.6(solid-js@1.7.8)(vite@4.4.6)
       solid-start:
         specifier: workspace:*
         version: link:packages/start
@@ -97,8 +97,8 @@ importers:
         specifier: ^5.22.1
         version: 5.22.1
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -115,7 +115,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -131,14 +131,14 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/hackernews:
     dependencies:
@@ -152,7 +152,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -161,9 +161,6 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.1
         version: 7.20.1
-      '@types/debug':
-        specifier: ^4.1.8
-        version: 4.1.8
       '@types/node':
         specifier: ^18.16.19
         version: 18.16.19
@@ -171,14 +168,14 @@ importers:
         specifier: ^0.14.54
         version: 0.14.54
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/movies:
     dependencies:
@@ -305,7 +302,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -327,14 +324,14 @@ importers:
         specifier: ^3.26.2
         version: 3.26.2
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-auth:
     dependencies:
@@ -348,7 +345,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -357,9 +354,6 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.1
         version: 7.20.1
-      '@types/debug':
-        specifier: ^4.1.8
-        version: 4.1.8
       '@types/node':
         specifier: ^18.16.19
         version: 18.16.19
@@ -373,14 +367,14 @@ importers:
         specifier: ^3.26.2
         version: 3.26.2
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-authjs:
     dependencies:
@@ -400,7 +394,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -419,14 +413,14 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-mdx:
     dependencies:
@@ -441,9 +435,9 @@ importers:
         version: 1.7.8
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.8)(vite@4.4.3)
+        version: 0.0.6(solid-js@1.7.8)(vite@4.4.6)
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -451,16 +445,16 @@ importers:
     devDependencies:
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@3.26.2)
+        version: 2.3.0(rollup@2.78.0)
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-prisma:
     dependencies:
@@ -480,21 +474,21 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
         version: 5.22.1
     devDependencies:
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-solid-styled:
     dependencies:
@@ -508,7 +502,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       solid-styled:
         specifier: ^0.8.2
@@ -520,21 +514,18 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.1
         version: 7.20.1
-      '@types/debug':
-        specifier: ^4.1.8
-        version: 4.1.8
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
-        version: 0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.3)
+        version: 0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.6)
 
   examples/with-tailwindcss:
     dependencies:
@@ -548,7 +539,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -561,7 +552,7 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       tailwindcss:
         specifier: ^3.3.3
@@ -570,8 +561,8 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-trpc:
     dependencies:
@@ -594,7 +585,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       solid-start-trpc:
         specifier: ^0.0.16
@@ -619,14 +610,14 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-vitest:
     devDependencies:
@@ -658,10 +649,10 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -670,8 +661,8 @@ importers:
         specifier: ^5.22.1
         version: 5.22.1
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vitest:
         specifier: ^0.26.3
         version: 0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3)
@@ -694,21 +685,21 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.27
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
         version: 5.22.1
     devDependencies:
       solid-start-cloudflare-workers:
-        specifier: workspace:^
+        specifier: ^0.2.29
         version: link:../../packages/start-cloudflare-workers
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/create-solid:
     devDependencies:
@@ -721,6 +712,15 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.22.5
         version: 7.22.5(@babel/core@7.22.9)
+      '@rollup/plugin-commonjs':
+        specifier: 21.0.0
+        version: 21.0.0(rollup@2.78.0)
+      '@rollup/plugin-json':
+        specifier: 4.0.0
+        version: 4.0.0(rollup@2.78.0)
+      '@rollup/plugin-node-resolve':
+        specifier: 13.0.2
+        version: 13.0.2(rollup@2.78.0)
       degit:
         specifier: ^2.8.4
         version: 2.8.4
@@ -739,6 +739,9 @@ importers:
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
+      rollup:
+        specifier: 2.78.x
+        version: 2.78.0
       tiny-glob:
         specifier: ^0.2.9
         version: 0.2.9
@@ -753,7 +756,7 @@ importers:
         version: 2.3.0
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@3.26.2)
+        version: 2.3.0(rollup@2.78.0)
       '@types/mdast':
         specifier: ^3.0.12
         version: 3.0.12
@@ -792,7 +795,7 @@ importers:
         version: 3.1.3(typescript@4.9.5)
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.8)(vite@4.4.3)
+        version: 0.0.6(solid-js@1.7.8)(vite@4.4.6)
       unified:
         specifier: ^10.1.2
         version: 10.1.2
@@ -826,6 +829,9 @@ importers:
       '@types/cookie':
         specifier: ^0.5.1
         version: 0.5.1
+      '@types/debug':
+        specifier: ^4.1.7
+        version: 4.1.8
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
@@ -897,10 +903,10 @@ importers:
         version: 5.22.1
       vite-plugin-inspect:
         specifier: ^0.7.33
-        version: 0.7.33(rollup@3.26.2)(vite@4.4.3)
+        version: 0.7.33(rollup@3.26.2)(vite@4.4.6)
       vite-plugin-solid:
         specifier: ^2.7.0
-        version: 2.7.0(solid-js@1.7.8)(vite@4.4.3)
+        version: 2.7.0(solid-js@1.7.8)(vite@4.4.6)
       wait-on:
         specifier: ^6.0.1
         version: 6.0.1(debug@4.3.4)
@@ -920,9 +926,6 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.1
         version: 7.20.1
-      '@types/debug':
-        specifier: ^4.1.8
-        version: 4.1.8
       '@types/node':
         specifier: ^18.16.19
         version: 18.16.19
@@ -963,8 +966,8 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vitest:
         specifier: ^0.20.3
         version: 0.20.3(jsdom@20.0.3)(terser@5.19.0)
@@ -991,8 +994,8 @@ importers:
         specifier: workspace:*
         version: link:../start
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/start-cloudflare-pages:
     dependencies:
@@ -1046,8 +1049,8 @@ importers:
         specifier: workspace:*
         version: link:../start
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/start-cloudflare-workers:
     dependencies:
@@ -1101,8 +1104,8 @@ importers:
         specifier: workspace:*
         version: link:../start
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/start-deno:
     dependencies:
@@ -1126,8 +1129,8 @@ importers:
         specifier: workspace:*
         version: link:../start
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/start-netlify:
     dependencies:
@@ -1163,8 +1166,8 @@ importers:
         specifier: workspace:*
         version: link:../start
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/start-node:
     dependencies:
@@ -1200,8 +1203,8 @@ importers:
         specifier: ^5.22.1
         version: 5.22.1
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/start-static:
     dependencies:
@@ -1234,8 +1237,8 @@ importers:
         specifier: ^5.22.1
         version: 5.22.1
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/start-vercel:
     dependencies:
@@ -1268,8 +1271,8 @@ importers:
         specifier: workspace:*
         version: link:../start
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   test:
     dependencies:
@@ -1331,8 +1334,8 @@ importers:
         specifier: ^5.22.1
         version: 5.22.1
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vitest:
         specifier: ^0.28.5
         version: 0.28.5
@@ -1386,8 +1389,8 @@ importers:
         specifier: ^5.22.1
         version: 5.22.1
       vite:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       wrangler:
         specifier: ^2.20.0
         version: 2.20.0
@@ -3452,14 +3455,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@mdx-js/rollup@2.3.0(rollup@3.26.2):
+  /@mdx-js/rollup@2.3.0(rollup@2.78.0):
     resolution: {integrity: sha512-wLvRfJS/M4UmdqTd+WoaySEE7q4BIejYf1xAHXYvtT1du/1Tl/z2450Gg2+Hu7fh05KwRRiehiTP9Yc/Dtn0fA==}
     peerDependencies:
       rollup: '>=2'
     dependencies:
       '@mdx-js/mdx': 2.3.0
-      '@rollup/pluginutils': 5.0.2(rollup@3.26.2)
-      rollup: 3.26.2
+      '@rollup/pluginutils': 5.0.2(rollup@2.78.0)
+      rollup: 2.78.0
       source-map: 0.7.4
       vfile: 5.3.7
     transitivePeerDependencies:
@@ -3954,6 +3957,22 @@ packages:
       rollup: 3.26.2
     dev: false
 
+  /@rollup/plugin-commonjs@21.0.0(rollup@2.78.0):
+    resolution: {integrity: sha512-XDQimjHl0kNotAV5lLo34XoygaI0teqiKGJ100B3iCU8+15YscJPeqk2KqkqD3NIe1H8ZTUo5lYjUFZyEgASTw==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^2.38.3
+    dependencies:
+      '@rollup/pluginutils': 3.1.0(rollup@2.78.0)
+      commondir: 1.0.1
+      estree-walker: 2.0.2
+      glob: 7.2.3
+      is-reference: 1.2.1
+      magic-string: 0.25.9
+      resolve: 1.22.2
+      rollup: 2.78.0
+    dev: true
+
   /@rollup/plugin-commonjs@22.0.2(rollup@2.79.1):
     resolution: {integrity: sha512-//NdP6iIwPbMTcazYsiBMbJW7gfmpHom33u1beiIoHDEM0Q9clvtQB1T0efvMqHeKsGohiHo97BCPCkBXdscwg==}
     engines: {node: '>= 12.0.0'}
@@ -3987,6 +4006,15 @@ packages:
       magic-string: 0.27.0
       rollup: 3.26.2
 
+  /@rollup/plugin-json@4.0.0(rollup@2.78.0):
+    resolution: {integrity: sha512-Z65CtEVWv40+ri4CvmswyhtuUtki9yP5p0UJN/GyCKKyU4jRuDS9CG0ZuV7/XuS7zGkoajyE7E4XBEaC4GW62A==}
+    peerDependencies:
+      rollup: ^1.20.0
+    dependencies:
+      rollup: 2.78.0
+      rollup-pluginutils: 2.8.2
+    dev: true
+
   /@rollup/plugin-json@4.1.0(rollup@2.79.1):
     resolution: {integrity: sha512-yfLbTdNS6amI/2OpmbiBoW12vngr5NW2jCJVZSBEz+H5KfUJZ2M7sDjk0U6GOOdCWFVScShte29o9NezJ53TPw==}
     peerDependencies:
@@ -4007,6 +4035,21 @@ packages:
     dependencies:
       '@rollup/pluginutils': 5.0.2(rollup@3.26.2)
       rollup: 3.26.2
+
+  /@rollup/plugin-node-resolve@13.0.2(rollup@2.78.0):
+    resolution: {integrity: sha512-hv+eAMcA2hQ7qvPVcXbtIyc0dtue4jMyA2sCW4IMkrmh+SeDDEHg1MXTv65VPpKdtjvWzN3+4mHAEl4rT+zgzQ==}
+    engines: {node: '>= 10.0.0'}
+    peerDependencies:
+      rollup: ^2.42.0
+    dependencies:
+      '@rollup/pluginutils': 3.1.0(rollup@2.78.0)
+      '@types/resolve': 1.17.1
+      builtin-modules: 3.3.0
+      deepmerge: 4.3.1
+      is-module: 1.0.0
+      resolve: 1.22.2
+      rollup: 2.78.0
+    dev: true
 
   /@rollup/plugin-node-resolve@13.3.0(rollup@2.79.1):
     resolution: {integrity: sha512-Lus8rbUo1eEcnS4yTFKLZrVumLPY+YayBdWXgFSHYhTT2iJbMhoaaBL3xl5NCdeRytErGr8tZ0L71BMRmnlwSw==}
@@ -4040,6 +4083,18 @@ packages:
       resolve: 1.22.2
       rollup: 3.26.2
 
+  /@rollup/pluginutils@3.1.0(rollup@2.78.0):
+    resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0
+    dependencies:
+      '@types/estree': 0.0.39
+      estree-walker: 1.0.1
+      picomatch: 2.3.1
+      rollup: 2.78.0
+    dev: true
+
   /@rollup/pluginutils@3.1.0(rollup@2.79.1):
     resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
     engines: {node: '>= 8.0.0'}
@@ -4059,6 +4114,20 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: false
+
+  /@rollup/pluginutils@5.0.2(rollup@2.78.0):
+    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': 1.0.1
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+      rollup: 2.78.0
 
   /@rollup/pluginutils@5.0.2(rollup@3.26.2):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
@@ -9456,6 +9525,13 @@ packages:
       route-sort: 1.0.0
     dev: false
 
+  /rollup@2.78.0:
+    resolution: {integrity: sha512-4+YfbQC9QEVvKTanHhIAFVUFSRsezvQF8vFOJwtGfb9Bb+r014S+qryr9PSmw8x6sMnPkmFBGAvIFVQxvJxjtg==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
+
   /rollup@2.79.1:
     resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
     engines: {node: '>=10.0.0'}
@@ -9684,14 +9760,14 @@ packages:
       csstype: 3.1.0
       seroval: 0.5.1
 
-  /solid-mdx@0.0.6(solid-js@1.7.8)(vite@4.4.3):
+  /solid-mdx@0.0.6(solid-js@1.7.8)(vite@4.4.6):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
     dependencies:
       solid-js: 1.7.8
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   /solid-refresh@0.5.3(solid-js@1.7.8):
     resolution: {integrity: sha512-Otg5it5sjOdZbQZJnvo99TEBAr6J7PQ5AubZLNU6szZzg3RQQ5MX04oteBIIGDs0y2Qv8aXKm9e44V8z+UnFdw==}
@@ -10586,7 +10662,7 @@ packages:
       pathe: 0.2.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -10610,7 +10686,7 @@ packages:
       picocolors: 1.0.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -10622,7 +10698,7 @@ packages:
       - terser
     dev: false
 
-  /vite-plugin-inspect@0.7.33(rollup@3.26.2)(vite@4.4.3):
+  /vite-plugin-inspect@0.7.33(rollup@3.26.2)(vite@4.4.6):
     resolution: {integrity: sha512-cQRLQKa/+Ua++5hN0IZfqNn1JYXBg2eCQOSUatPTwhXMO7nwfSvhhSc45E1nXfBBEhzLLOxgr1OdbDu55PiDDA==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -10635,13 +10711,13 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       sirv: 2.0.3
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
     dev: false
 
-  /vite-plugin-solid-styled@0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.3):
+  /vite-plugin-solid-styled@0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.6):
     resolution: {integrity: sha512-o0jPwkOWM9NB4P8XKLOD1r6u3A5UEymt2u3rsxUpqSsiBPtJkDPifhOGzVx4estScvMa5e8lO4job66IpG+VhQ==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -10651,13 +10727,13 @@ packages:
       '@babel/core': 7.22.9
       '@rollup/pluginutils': 5.0.2(rollup@3.26.2)
       solid-styled: 0.8.2(@babel/core@7.22.9)(solid-js@1.7.8)
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
     dev: true
 
-  /vite-plugin-solid@2.7.0(solid-js@1.7.8)(vite@4.4.3):
+  /vite-plugin-solid@2.7.0(solid-js@1.7.8)(vite@4.4.6):
     resolution: {integrity: sha512-avp/Jl5zOp/Itfo67xtDB2O61U7idviaIp4mLsjhCa13PjKNasz+IID0jYTyqUp9SFx6/PmBr6v4KgDppqompg==}
     peerDependencies:
       solid-js: ^1.7.2
@@ -10670,8 +10746,8 @@ packages:
       merge-anything: 5.1.7
       solid-js: 1.7.8
       solid-refresh: 0.5.3(solid-js@1.7.8)
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
-      vitefu: 0.2.4(vite@4.4.3)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vitefu: 0.2.4(vite@4.4.6)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10745,8 +10821,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vite@4.4.3(@types/node@18.16.19)(terser@5.19.0):
-    resolution: {integrity: sha512-IMnXQXXWgLi5brBQx/4WzDxdzW0X3pjO4nqFJAuNvwKtxzAmPzFE1wszW3VDpAGQJm3RZkm/brzRdyGsnwgJIA==}
+  /vite@4.4.6(@types/node@18.16.19)(terser@5.19.0):
+    resolution: {integrity: sha512-EY6Mm8vJ++S3D4tNAckaZfw3JwG3wa794Vt70M6cNJ6NxT87yhq7EC8Rcap3ahyHdo8AhCmV9PTk+vG1HiYn1A==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -10781,7 +10857,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
 
-  /vitefu@0.2.4(vite@4.4.3):
+  /vitefu@0.2.4(vite@4.4.6):
     resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0
@@ -10789,7 +10865,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
     dev: false
 
   /vitest@0.20.3(jsdom@20.0.3)(terser@5.19.0):
@@ -10873,7 +10949,7 @@ packages:
       tinybench: 2.5.0
       tinypool: 0.3.1
       tinyspy: 1.1.1
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vite-node: 0.26.3(@types/node@18.16.19)
     transitivePeerDependencies:
       - less
@@ -10928,7 +11004,7 @@ packages:
       tinybench: 2.5.0
       tinypool: 0.3.1
       tinyspy: 1.1.1
-      vite: 4.4.3(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vite-node: 0.28.5(@types/node@18.16.19)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
