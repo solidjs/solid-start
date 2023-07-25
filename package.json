@@ -19,9 +19,11 @@
     "docs:start": "solid-start start",
     "clean:test": "rimraf .tmp",
     "build:all": "pnpm run -r --if-present build",
+    "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
     "test:report": "pnpm --filter solid-start-tests report",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
+    "show:test-report": "pnpm --filter solid-start-tests show:test-report",
     "bump": "node scripts/bump.cjs"
   },
   "devDependencies": {
@@ -53,7 +55,7 @@
     "turbo": "^1.10.7",
     "typescript": "4.7.4",
     "undici": "^5.22.1",
-    "vite": "^4.4.3",
+    "vite": "^4.4.6",
     "zod": "^3.21.4"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "solid-start-cloudflare-pages",
-  "version": "0.2.27",
+  "version": "0.2.29",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/node": "^18.16.19",
     "solid-start": "workspace:*",
-    "vite": "^4.4.3"
+    "vite": "^4.4.6"
   },
   "peerDependencies": {
     "solid-start": "*",

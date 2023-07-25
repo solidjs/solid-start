@@ -8,16 +8,16 @@
   "type": "module",
   "devDependencies": {
     "@mdx-js/rollup": "^2.3.0",
-    "solid-start-node": "workspace:^",
+    "solid-start-node": "^0.2.29",
     "typescript": "^4.9.5",
-    "vite": "^4.4.3"
+    "vite": "^4.4.6"
   },
   "dependencies": {
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
     "solid-js": "^1.7.8",
     "solid-mdx": "^0.0.6",
-    "solid-start": "^0.2.27",
+    "solid-start": "^0.2.29",
     "undici": "^5.22.1"
   },
   "engines": {

@@ -1,6 +1,6 @@
 {
   "name": "solid-start-static",
-  "version": "0.2.27",
+  "version": "0.2.29",
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
@@ -19,7 +19,7 @@
     "solid-start": "workspace:*",
     "terser": "^5.19.0",
     "undici": "^5.22.1",
-    "vite": "^4.4.3"
+    "vite": "^4.4.6"
   },
   "peerDependencies": {
     "solid-start": "*",
