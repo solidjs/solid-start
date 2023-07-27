@@ -126,6 +126,7 @@ prog
       [
         "running",
         "vite",
+        "--experimental-vm-modules",
         inspect ? "--inspect" : undefined,
         "node_modules/vite/bin/vite.js",
         "dev",
@@ -152,6 +153,7 @@ prog
           ...process.env,
           NODE_OPTIONS: [
             process.env.NODE_OPTIONS,
+            "--experimental-vm-modules",
             inspect ? "--inspect" : "",
           ]
             .filter(Boolean)
@@ -382,6 +384,7 @@ prog
                 START_INDEX_HTML: "true",
                 NODE_OPTIONS: [
                   process.env.NODE_OPTIONS,
+                  "--experimental-vm-modules",
                 ]
                   .filter(Boolean)
                   .join(" "),

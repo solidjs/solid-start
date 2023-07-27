@@ -26,10 +26,10 @@ importers:
         version: 15.0.2(rollup@3.10.0)
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.2)
+        version: 0.28.2(solid-js@1.7.8)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.2)
+        version: 0.8.2(solid-js@1.7.8)
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.2.4)
@@ -61,11 +61,11 @@ importers:
         specifier: ^7.5.1
         version: 7.5.1
       solid-js:
-        specifier: ^1.6.11
-        version: 1.7.2
+        specifier: ^1.7.8
+        version: 1.7.8
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.2)(vite@4.4.6)
+        version: 0.0.6(solid-js@1.7.8)(vite@4.4.6)
       solid-start:
         specifier: workspace:*
         version: link:packages/start
@@ -115,7 +115,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -152,7 +152,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -189,7 +189,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -232,7 +232,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -281,7 +281,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -324,7 +324,7 @@ importers:
         specifier: ^0.0.6
         version: 0.0.6(solid-js@1.7.8)(vite@4.4.6)
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -332,7 +332,7 @@ importers:
     devDependencies:
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@2.78.0)
+        version: 2.3.0(rollup@3.26.3)
       solid-start-node:
         specifier: ^0.2.19
         version: link:../../packages/start-node
@@ -361,7 +361,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -389,7 +389,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       solid-styled:
         specifier: ^0.8.1
@@ -426,7 +426,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -472,7 +472,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       solid-start-trpc:
         specifier: ^0.0.16
@@ -510,13 +510,13 @@ importers:
     devDependencies:
       '@solidjs/meta':
         specifier: ^0.28.2
-        version: 0.28.2(solid-js@1.7.2)
+        version: 0.28.2(solid-js@1.7.8)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.2)
+        version: 0.8.2(solid-js@1.7.8)
       '@solidjs/testing-library':
         specifier: ^0.5.2
-        version: 0.5.2(solid-js@1.7.2)
+        version: 0.5.2(solid-js@1.7.8)
       '@testing-library/jest-dom':
         specifier: ^5.16.5
         version: 5.16.5
@@ -533,8 +533,8 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       solid-js:
-        specifier: ^1.6.11
-        version: 1.7.2
+        specifier: ^1.7.8
+        version: 1.7.8
       solid-start:
         specifier: ^0.2.19
         version: link:../../packages/start
@@ -572,7 +572,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.28
+        specifier: ^0.2.29
         version: link:../../packages/start
       undici:
         specifier: ^5.15.1
@@ -643,7 +643,7 @@ importers:
         version: 2.3.0
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@2.78.0)
+        version: 2.3.0(rollup@3.26.3)
       '@types/mdast':
         specifier: ^3.0.10
         version: 3.0.10
@@ -3073,14 +3073,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@mdx-js/rollup@2.3.0(rollup@2.78.0):
+  /@mdx-js/rollup@2.3.0(rollup@3.26.3):
     resolution: {integrity: sha512-wLvRfJS/M4UmdqTd+WoaySEE7q4BIejYf1xAHXYvtT1du/1Tl/z2450Gg2+Hu7fh05KwRRiehiTP9Yc/Dtn0fA==}
     peerDependencies:
       rollup: '>=2'
     dependencies:
       '@mdx-js/mdx': 2.3.0
-      '@rollup/pluginutils': 5.0.2(rollup@2.78.0)
-      rollup: 2.78.0
+      '@rollup/pluginutils': 5.0.2(rollup@3.26.3)
+      rollup: 3.26.3
       source-map: 0.7.4
       vfile: 5.3.7
     transitivePeerDependencies:
@@ -3509,20 +3509,6 @@ packages:
       picomatch: 2.3.1
     dev: false
 
-  /@rollup/pluginutils@5.0.2(rollup@2.78.0):
-    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@types/estree': 1.0.1
-      estree-walker: 2.0.2
-      picomatch: 2.3.1
-      rollup: 2.78.0
-
   /@rollup/pluginutils@5.0.2(rollup@3.10.0):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
@@ -3536,6 +3522,20 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 3.10.0
+
+  /@rollup/pluginutils@5.0.2(rollup@3.26.3):
+    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': 1.0.1
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+      rollup: 3.26.3
 
   /@sideway/address@4.1.4:
     resolution: {integrity: sha512-7vwq+rOHVWjyXxVlR76Agnvhy8I9rpzjosTESvmhNeXOXdZZB15Fl+TI9x1SiHZH5Jv2wTGduSxFDIaq0m3DUw==}
@@ -3566,28 +3566,12 @@ packages:
       solid-start: link:packages/start
     dev: false
 
-  /@solidjs/meta@0.28.2(solid-js@1.7.2):
-    resolution: {integrity: sha512-avlLgBPdk4KVxzRGFlYp/MIJo8B5jVgXPgk6OUnUP8km21Z+ovO+DUd7ZPA7ejv8PBdWi9GE3zCzw8RU2YuV2Q==}
-    peerDependencies:
-      solid-js: '>=1.4.0'
-    dependencies:
-      solid-js: 1.7.2
-    dev: true
-
   /@solidjs/meta@0.28.2(solid-js@1.7.8):
     resolution: {integrity: sha512-avlLgBPdk4KVxzRGFlYp/MIJo8B5jVgXPgk6OUnUP8km21Z+ovO+DUd7ZPA7ejv8PBdWi9GE3zCzw8RU2YuV2Q==}
     peerDependencies:
       solid-js: '>=1.4.0'
     dependencies:
       solid-js: 1.7.8
-
-  /@solidjs/router@0.8.2(solid-js@1.7.2):
-    resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
-    peerDependencies:
-      solid-js: ^1.5.3
-    dependencies:
-      solid-js: 1.7.2
-    dev: true
 
   /@solidjs/router@0.8.2(solid-js@1.7.8):
     resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
@@ -3596,14 +3580,14 @@ packages:
     dependencies:
       solid-js: 1.7.8
 
-  /@solidjs/testing-library@0.5.2(solid-js@1.7.2):
+  /@solidjs/testing-library@0.5.2(solid-js@1.7.8):
     resolution: {integrity: sha512-GXUiI0Itz/7FfTJrV0RoICS2lL0RE3D1lNSrnuNg9nLC28qKnEQhm9Gfk4gFP9rGVzmsJJJC7yf8kbHMuyR2AA==}
     engines: {node: '>= 14'}
     peerDependencies:
       solid-js: '>=1.0.0'
     dependencies:
       '@testing-library/dom': 8.20.1
-      solid-js: 1.7.2
+      solid-js: 1.7.8
     dev: true
 
   /@swc/helpers@0.5.1:
@@ -8836,6 +8820,7 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /rollup@2.79.1:
     resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
@@ -9019,28 +9004,11 @@ packages:
       is-fullwidth-code-point: 4.0.0
     dev: false
 
-  /solid-js@1.7.2:
-    resolution: {integrity: sha512-01f8GIc+HTTlfDXtK+TFku3AllHyJ3hNsIpxM2qpObRP4VbEGVIP6VbULnThPlpse+J1y/I/1N9QeQ9MNkE8Ow==}
-    dependencies:
-      csstype: 3.1.0
-      seroval: 0.5.1
-    dev: true
-
   /solid-js@1.7.8:
     resolution: {integrity: sha512-XHBWk1FvFd0JMKljko7FfhefJMTSgYEuVKcQ2a8hzRXfiuSJAGsrPPafqEo+f6l+e8Oe3cROSpIL6kbzjC1fjQ==}
     dependencies:
       csstype: 3.1.0
       seroval: 0.5.1
-
-  /solid-mdx@0.0.6(solid-js@1.7.2)(vite@4.4.6):
-    resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
-    peerDependencies:
-      solid-js: ^1.2.6
-      vite: '*'
-    dependencies:
-      solid-js: 1.7.2
-      vite: 4.4.6(@types/node@18.11.18)(terser@5.16.1)
-    dev: true
 
   /solid-mdx@0.0.6(solid-js@1.7.8)(vite@4.4.6):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
@@ -9050,7 +9018,6 @@ packages:
     dependencies:
       solid-js: 1.7.8
       vite: 4.4.6(@types/node@18.11.18)(terser@5.16.1)
-    dev: false
 
   /solid-refresh@0.5.3(solid-js@1.7.8):
     resolution: {integrity: sha512-Otg5it5sjOdZbQZJnvo99TEBAr6J7PQ5AubZLNU6szZzg3RQQ5MX04oteBIIGDs0y2Qv8aXKm9e44V8z+UnFdw==}
