@@ -64,7 +64,7 @@ export const server$ = ((_fn: any) => {
   throw new Error("Should be compiled away");
 }) as unknown as CreateServerFunction;
 
-function createRequestInit(init: RequestInit, ...args: any[]) {
+function createRequestInit(init: RequestInit, ...args: any[]): RequestInit {
   // parsing args when a request is made from the browser for a server module
   // FormData
   // Request
@@ -125,15 +125,16 @@ type ServerCall = (route: string, init: RequestInit) => Promise<Response>;
 
 server$.createFetcher = (route, serverResource) => {
   let fetcher: any = function (this: Request, ...args: any[]) {
-    if (this instanceof Request) {
-    }
     const requestInit = serverResource ? createRequestInit({}, args[0]) : createRequestInit({}, ...args);
     // request body: json, formData, or string
     return server$.exec(route, requestInit);
   };
 
   fetcher.url = route;
-  fetcher.fetch = (init: RequestInit) => server$.exec(route, init);
+  fetcher.fetch = (init: RequestInit, ...args: any[]) => {
+    const requestInit = createRequestInit(init, ...args);
+    (server$.exec as ServerCall)(route, requestInit);
+  }
   return fetcher as ServerFunction<any, any>;
 };
 
