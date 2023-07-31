@@ -19,8 +19,10 @@
     "docs:start": "solid-start start",
     "clean:test": "rimraf .tmp",
     "build:all": "pnpm run -r --if-present build",
+    "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
+    "show:test-report": "pnpm --filter solid-start-tests show:test-report",
     "bump": "node scripts/bump.cjs"
   },
   "devDependencies": {
@@ -39,7 +41,8 @@
     "graphql": "^16.6.0",
     "rimraf": "^3.0.2",
     "rollup": "^3.10.0",
-    "solid-js": "^1.6.11",
+    "semver": "^7.5.1",
+    "solid-js": "^1.7.8",
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:*",
@@ -51,7 +54,7 @@
     "turbo": "^1.7.0",
     "typescript": "4.7.4",
     "undici": "^5.15.1",
-    "vite": "^4.1.4",
+    "vite": "^4.4.6",
     "zod": "^3.20.2"
   },
   "dependencies": {

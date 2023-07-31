@@ -179,6 +179,10 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
+    if (!existsSync(inspect)) mkdirSync(inspect, {
+      recursive: true
+    });
+
     const vite = require("vite");
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
@@ -373,7 +377,7 @@ prog
               "dev",
               "--mode",
               "production",
-              ...(config ? ["--config", config.configFile] : []),
+              ...(config ? ["--config", `"${config.configFile}"`] : []),
               ...(port ? ["--port", port] : [])
             ],
             {

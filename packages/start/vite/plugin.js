@@ -143,15 +143,17 @@ function solidStartFileSystemRouter(options) {
       server = vite;
       router.watch(console.log);
       router.listener = listener;
-      vite.httpServer.once("listening", async () => {
-        setTimeout(() => {
-          if (vite.resolvedUrls) {
-            const url = vite.resolvedUrls.local[0];
-            // eslint-disable-next-line no-console
-            printUrls(router, url.substring(0, url.length - 1));
-          }
-        }, 100);
-      });
+      if(vite.httpServer !== null){
+        vite.httpServer.once("listening", async () => {
+          setTimeout(() => {
+            if (vite.resolvedUrls) {
+              const url = vite.resolvedUrls.local[0];
+              // eslint-disable-next-line no-console
+              printUrls(router, url.substring(0, url.length - 1));
+            }
+          }, 100);
+        });
+      }
     },
 
     transform(code, id, transformOptions) {

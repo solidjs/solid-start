@@ -1,6 +1,6 @@
 {
   "name": "solid-start-node",
-  "version": "0.2.26",
+  "version": "0.2.29",
   "main": "./index.js",
   "type": "module",
   "solid": {
@@ -19,7 +19,7 @@
   "devDependencies": {
     "solid-start": "workspace:*",
     "undici": "^5.15.1",
-    "vite": "^4.1.4"
+    "vite": "^4.4.6"
   },
   "peerDependencies": {
     "solid-start": "*",

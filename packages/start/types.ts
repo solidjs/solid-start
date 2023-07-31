@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-type Adapter = {
+export type Adapter = {
   start(): void;
   build(): void;
   dev?(): void;
@@ -39,6 +39,3 @@ export type StartOptions = {
   serverEntry: string;
   appRootFile: string;
 };
-
-export { };
-
