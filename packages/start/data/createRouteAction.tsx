@@ -5,7 +5,7 @@ import { FormError, FormImpl, FormProps } from "./Form";
 import { Navigator } from "@solidjs/router";
 import { ServerFunction } from "server/server-functions/types";
 import type { ParentComponent } from "solid-js";
-import { isRedirectResponse } from "../server/responses";
+import { isRedirectResponse, XSolidStartOrigin } from "../server/responses";
 import { useRequest } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
@@ -64,16 +64,19 @@ export function createRouteAction<T, U = void>(
   function submit(variables: T): Promise<U> {
     let p: Promise<U>;
     if (import.meta.env.START_ISLANDS && (fn as ServerFunction<any, any>).url) {
-      p = (fn as ServerFunction<any, any>).fetch(
-        {
-          headers: {
-            "x-solid-referrer": window.router.location().pathname,
-            "x-solid-mutation": "true"
-          }
-        },
-        variables,
-        event
-      );
+      p = fetch((fn as ServerFunction<any, any>).url, {
+        method: "POST",
+        body:
+          variables instanceof FormData
+            ? variables
+            : JSON.stringify([variables, { $type: "fetch_event" }]),
+        headers: {
+          ...(variables instanceof FormData ? {} : { "Content-Type": "application/json" }),
+          [XSolidStartOrigin]: "client",
+          "x-solid-referrer": window.router.location().pathname,
+          "x-solid-mutation": "true"
+        }
+      }) as unknown as Promise<U>;
     } else {
       p = fn(variables, event);
     }
@@ -277,7 +280,6 @@ async function handleResponse(response: Response, navigate: Navigator, options?:
     response instanceof Response &&
     response.headers.get("Content-type") === "text/solid-diff"
   ) {
-    console.log(response);
     let i = await window.router.update(await response.text());
     if (i) {
       window.router.push(response.headers.get("x-solid-location") ?? "/", {});

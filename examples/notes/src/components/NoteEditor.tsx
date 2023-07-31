@@ -9,7 +9,7 @@
 
 import { createSignal, useTransition } from "solid-js";
 import { createServerAction$, redirect } from "solid-start/server";
-import { NotePreview } from "../routes/notes/[note]/NotePreview";
+import { NotePreview } from "../routes/(layout)/notes/[note]/NotePreview";
 
 export function NoteEditor(props: { noteId: string; initialTitle: string; initialBody: string }) {
   const [title, setTitle] = createSignal(props.initialTitle);
