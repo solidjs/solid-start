@@ -126,7 +126,10 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
-    mkdirSync(inspect, { recursive: true });
+    if (!existsSync(inspect)) mkdirSync(inspect, {
+      recursive: true
+    });
+
     const vite = require("vite");
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 

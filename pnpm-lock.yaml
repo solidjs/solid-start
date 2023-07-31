@@ -115,7 +115,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -152,7 +152,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -302,7 +302,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -345,7 +345,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -394,7 +394,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -437,7 +437,7 @@ importers:
         specifier: ^0.0.6
         version: 0.0.6(solid-js@1.7.8)(vite@4.4.6)
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -474,7 +474,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -502,7 +502,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       solid-styled:
         specifier: ^0.8.2
@@ -539,7 +539,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1
@@ -585,7 +585,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       solid-start-trpc:
         specifier: ^0.0.16
@@ -685,7 +685,7 @@ importers:
         specifier: ^1.7.8
         version: 1.7.8
       solid-start:
-        specifier: ^0.2.29
+        specifier: ^0.2.30
         version: link:../../packages/start
       undici:
         specifier: ^5.22.1

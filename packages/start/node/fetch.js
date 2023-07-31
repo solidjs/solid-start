@@ -2,7 +2,7 @@ import { once } from "events";
 import multipart from "parse-multipart-data";
 import { splitCookiesString } from "set-cookie-parser";
 import { Readable } from "stream";
-import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
+import { Request as BaseNodeRequest, File, FormData, Headers } from "undici";
 
 function nodeToWeb(/** @type {NodeJS.ReadStream} */ nodeStream) {
   var destroyed = false;
@@ -164,7 +164,7 @@ export async function handleNodeResponse(webRes, res) {
 
   for (const [name, value] of webRes.headers) {
     if (name === "set-cookie") {
-      res.setHeader(name, splitCookiesString(value));
+      res.appendHeader(name, splitCookiesString(value));
     } else res.setHeader(name, value);
   }
 
