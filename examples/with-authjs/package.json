@@ -13,15 +13,15 @@
     "postcss": "^8.4.21",
     "solid-start-node": "^0.2.19",
     "typescript": "^4.9.4",
-    "vite": "^4.1.4"
+    "vite": "^4.4.6"
   },
   "dependencies": {
-    "@auth/core": "^0.3.0",
+    "@auth/core": "^0.5.1",
     "@solid-auth/base": "^2.0.3",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "solid-js": "^1.7.2",
-    "solid-start": "^0.2.26",
+    "solid-js": "^1.7.8",
+    "solid-start": "^0.2.29",
     "undici": "^5.15.1"
   },
   "engines": {
