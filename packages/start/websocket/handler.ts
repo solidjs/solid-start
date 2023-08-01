@@ -1,7 +1,7 @@
-import { DurableObject } from "../durable-object";
+import type { DurableObjectContext } from "../durable-object";
 import { webSocketHandlers } from "./handlers";
 
-export default async (request: Request, ctx: DurableObject<{}>) => {
+export default async (request: Request, ctx: DurableObjectContext<{}>) => {
   // To accept the WebSocket request, we create a WebSocketPair (which is like a socketpair,
   // i.e. two WebSockets that talk to each other), we return one end of the pair in the
   // response, and we operate on the other end. Note that this API is not part of the

@@ -44,7 +44,7 @@ export function createRouteData<T, S = true>(
   const navigate = useNavigate();
   const pageEvent = useRequest();
 
-  function handleResponse(response: T | Response) {
+  function handleResponse(response: Response) {
     if (isRedirectResponse(response)) {
       startTransition(() => {
         let url = response.headers.get(LocationHeader);
@@ -81,7 +81,7 @@ export function createRouteData<T, S = true>(
         });
       }
 
-      let response = await fetcher.call(event, key, event);
+      let response = await (fetcher as any).call(event, key, event);
       if (response instanceof Response) {
         if (isServer) {
           handleResponse(response);

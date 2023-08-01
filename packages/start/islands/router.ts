@@ -1,4 +1,4 @@
-import type { Location } from "@solidjs/router";
+import type { Location, Params } from "@solidjs/router";
 import { createEffect, createSignal } from "solid-js";
 
 export interface LocationEntry {
@@ -9,7 +9,7 @@ export interface LocationEntry {
   hash: string;
 }
 
-export function useSearchParams() {
+export function useSearchParams<T extends Params>() {
   const params = () => window.router.location().search;
   const [searchParams, setSearchParams] = createSignal(new URLSearchParams(params()));
 
@@ -17,7 +17,12 @@ export function useSearchParams() {
     setSearchParams(new URLSearchParams(params()));
   });
 
-  return [searchParams, setSearchParams] as const;
+  return {
+    get "0"() {
+      return searchParams();
+    },
+    get "1"() { return setSearchParams }
+  } as unknown as [T, (params: T) => void];
 }
 
 export default function mountRouter() {
