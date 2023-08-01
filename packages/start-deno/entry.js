@@ -40,7 +40,7 @@ serve(
       const request = new Request(url.href, init);
       return handler({
         request: request,
-        clientAddress: req.socket.remoteAddress,
+        clientAddress: connInfo?.remoteAddr?.hostname,
         locals: {},
         env,
         fetch: internalFetch
