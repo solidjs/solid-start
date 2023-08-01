@@ -31,10 +31,27 @@ serve(
       });
     } catch (e) {}
 
+    function internalFetch(route, init = {}) {
+      if (route.startsWith("http")) {
+        return fetch(route, init);
+      }
+
+      let url = new URL(route, "http://internal");
+      const request = new Request(url.href, init);
+      return handler({
+        request: request,
+        clientAddress: req.socket.remoteAddress,
+        locals: {},
+        env,
+        fetch: internalFetch
+      });
+    }
+
     return await handler({
       request: request,
       clientAddress: connInfo?.remoteAddr?.hostname,
       locals: {},
+      fetch: internalFetch,
       env: {
         manifest,
         getStaticHTML: async path => {
