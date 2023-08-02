@@ -19,6 +19,10 @@ export const onRequestGet = async ({ request, next, env }) => {
   };
 
   function internalFetch(route, init = {}) {
+    if (route.startsWith("http")) {
+      return fetch(route, init);
+    }
+
     let url = new URL(route, "http://internal");
     const request = new Request(url.href, init);
     return handler({
