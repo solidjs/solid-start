@@ -1,4 +1,3 @@
-import { internalFetch } from "../api/internalFetch";
 import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
 import { ContentTypeHeader, XSolidStartContentTypeHeader, XSolidStartOrigin } from "./responses";
 import { handleServerRequest, server$ } from "./server-functions/server";
@@ -37,7 +36,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
         request: event.request,
         clientAddress: event.clientAddress,
         locals: event.locals,
-        fetch: event.fetch || internalFetch,
+        fetch: event.fetch,
         $type: FETCH_EVENT,
         env: event.env
       });
@@ -76,7 +75,7 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
         }
 
         if (import.meta.env.START_ISLANDS && serverResponse.status === 204) {
-          return await (event.fetch || internalFetch)(serverResponse.headers.get("Location") ?? "", {
+          return await event.fetch(serverResponse.headers.get("Location") ?? "", {
             method: "GET",
             headers: {
               "x-solid-referrer": event.request.headers.get("x-solid-referrer")!,

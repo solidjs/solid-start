@@ -7,19 +7,40 @@ import entry from "./entry-server";
 export default async (req, res) => {
   console.log(`Received new request: ${req.url}`);
 
+  const env = {
+    manifest,
+    getStaticHTML: async (path) =>
+      new Response((await fetch(new URL(`${path}.html`, request.url).href)).body, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html"
+        }
+      })
+  }
+
+  function internalFetch(route, init = {}) {
+    if (route.startsWith("http")) {
+      return fetch(route, init);
+    }
+
+    let url = new URL(route, "http://internal");
+    const request = new Request(url.href, init);
+    return entry({
+      request,
+      clientAddress: req.headers["x-forwarded-for"],
+      locals: {},
+      env,
+      fetch: internalFetch
+    });
+  }
+
   let request = createRequest(req)
   const webRes = await entry({
     request,
-    env: {
-      manifest,
-      getStaticHTML: async (path) =>
-        new Response((await fetch(new URL(`${path}.html`, request.url).href)).body, {
-          status: 200,
-          headers: {
-            "Content-Type": "text/html"
-          }
-        })
-    }
+    clientAddress: req.headers["x-forwarded-for"],
+    locals: {},
+    env,
+    fetch: internalFetch
   });
   const headers = {};
   for (const [name, value] of webRes.headers) {

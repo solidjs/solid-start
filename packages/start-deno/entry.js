@@ -52,7 +52,7 @@ serve(
       let url = new URL(route, "http://internal");
       const request = new Request(url.href, init);
       return handler({
-        request: request,
+        request,
         clientAddress: connInfo?.remoteAddr?.hostname,
         locals: {},
         env,
@@ -61,7 +61,7 @@ serve(
     }
 
     return await handler({
-      request: request,
+      request,
       clientAddress: connInfo?.remoteAddr?.hostname,
       locals: {},
       env,

@@ -1,6 +1,5 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { internalFetch } from "../api/internalFetch";
 import { apiRoutes } from "../api/middleware";
 import { inlineServerFunctions } from "../server/middleware";
 import { redirect } from "../server/responses";
@@ -216,7 +215,7 @@ function createPageEvent(event: FetchEvent) {
     setStatusCode: setStatusCode,
     getStatusCode: getStatusCode,
     $islands: new Set<string>(),
-    fetch: event.fetch || internalFetch
+    fetch: event.fetch
   };
 
   return pageEvent;

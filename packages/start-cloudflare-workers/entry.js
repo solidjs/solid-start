@@ -26,6 +26,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const pathname = url.pathname;
+    const clientAddress = request.headers.get("cf-connecting-ip");
 
     if (request.headers.get("Upgrade") === "websocket") {
       const durableObjectId = env.DO_WEBSOCKET.idFromName(url.pathname + url.search);
@@ -77,8 +78,8 @@ export default {
       let url = new URL(route, request.url);
       const request = new Request(url.href, init);
       return handler({
-        request: request,
-        clientAddress: request.headers.get('cf-connecting-ip'),
+        request,
+        clientAddress,
         locals: {},
         env,
         fetch: internalFetch
@@ -86,8 +87,8 @@ export default {
     }
 
     return handler({
-      request: request,
-      clientAddress: request.headers.get('cf-connecting-ip'),
+      request,
+      clientAddress,
       locals: {},
       env,
       fetch: internalFetch
