@@ -130,7 +130,7 @@ prog
       recursive: true
     });
 
-    const vite = require("vite");
+    const vite = await import("vite");
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     config.adapter.build(config, {
@@ -483,12 +483,11 @@ prog
 prog.parse(process.argv);
 
 /**
- *
  * @param {*} param0
  * @returns {Promise<import('./vite/plugin').ViteConfig>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
-  const vite = require("vite");
+  const vite = await import("vite");
   root = root || process.cwd();
   if (!configFile) {
     if (!configFile) {
