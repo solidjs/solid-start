@@ -20,7 +20,7 @@
     "@tanstack/solid-query": "5.0.0-alpha.20",
     "@trpc/client": "^10.34.0",
     "@trpc/server": "^10.34.0",
-    "solid-js": "^1.7.8",
+    "solid-js": "^1.7.9",
     "solid-start": "^0.2.30",
     "solid-start-trpc": "^0.0.16",
     "solid-trpc": "0.1.0-sssr.7",

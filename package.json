@@ -43,7 +43,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^3.26.2",
     "semver": "^7.5.4",
-    "solid-js": "^1.7.8",
+    "solid-js": "^1.7.9",
     "solid-mdx": "^0.0.6",
     "solid-start": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:*",
