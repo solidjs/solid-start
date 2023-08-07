@@ -10,7 +10,7 @@ export default defineConfig({
     solid({
       experimental: { islands: true, islandsRouter: true },
       // adapter: netlify({ edge: true }),
-      ssr: "streaming"
+      ssr: true
     })
   ]
 });

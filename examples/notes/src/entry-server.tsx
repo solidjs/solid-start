@@ -1,5 +1,5 @@
 import { createDurableObject } from "solid-start/durable-object";
-import { createHandler, render, StartServer } from "solid-start/entry-server";
+import { createHandler, renderAsync, StartServer } from "solid-start/entry-server";
 import notesDB, { Note } from "./db";
 
 export const db = createDurableObject(notesDB);
@@ -67,5 +67,5 @@ export default createHandler(
       };
       return forward(event);
     },
-  render(event => <StartServer event={event} />)
+  renderAsync(event => <StartServer event={event} />)
 );

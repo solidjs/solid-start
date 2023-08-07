@@ -19,8 +19,10 @@ export default defineConfig({
       rootEntry: resolve("docs.root.tsx"),
       appRoot: "./docs",
       routesDir: ".",
-      islandsRouter: true,
-      islands: true,
+      experimental: {
+        islandsRouter: true,
+        islands: true
+      },
       extensions: [".mdx", ".md"],
       adapter: worker({})
     })
