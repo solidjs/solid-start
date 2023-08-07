@@ -16,8 +16,8 @@
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
     "prisma": "^4.9.0",
-    "solid-js": "^1.7.8",
-    "solid-start": "^0.2.30",
+    "solid-js": "^1.7.9",
+    "solid-start": "^0.2.31",
     "undici": "^5.15.1"
   },
   "engines": {
