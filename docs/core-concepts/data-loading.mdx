@@ -225,7 +225,7 @@ import { createContext } from 'solid-js';
 const RouteContext = createContext<{ data: any }>({ data: null });
 
 // ---cut---
-import { useLocation, useNavigate } from "solid-start";
+import { useLocation, useNavigate, RouteDataArgs } from "solid-start";
 import { 
   default as HouseLayout, 
   routeData as getHouseLayoutData 
@@ -246,9 +246,9 @@ function Routes() {
     params: { house: 'gryffindor' }
   }
 
-  const houseLayoutData = getHouseLayoutData({ ...args, data: null });
-  const studentsLayoutData = getStudentsLayoutData({ ...args, data: houseLayoutData });
-  const studentsData = getStudentsLayoutData({ ...args, data: studentsLayoutData  });
+  const houseLayoutData = getHouseLayoutData({ ...args, data: null } as RouteDataArgs);
+  const studentsLayoutData = getStudentsLayoutData({ ...args, data: houseLayoutData } as RouteDataArgs);
+  const studentsData = getStudentsLayoutData({ ...args, data: studentsLayoutData  } as RouteDataArgs);
 
   return (
     <RouteContext.Provider value={{ data: houseLayoutData }}>
