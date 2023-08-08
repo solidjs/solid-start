@@ -2,7 +2,7 @@ import { once } from "events";
 import multipart from "parse-multipart-data";
 import { splitCookiesString } from "set-cookie-parser";
 import { Readable } from "stream";
-import { Request as BaseNodeRequest, File, FormData, Headers } from "undici";
+import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
 
 function nodeToWeb(/** @type {NodeJS.ReadStream} */ nodeStream) {
   var destroyed = false;
@@ -143,9 +143,10 @@ export class NodeRequest extends BaseNodeRequest {
 }
 
 export function createRequest(/** @type {import('http').IncomingMessage} */ req) {
+  let protocol = req.headers["x-forwarded-proto"] || "https";
   let origin = req.headers.origin && 'null' !== req.headers.origin
       ? req.headers.origin
-      : `http://${req.headers.host}`;
+      : `${protocol}://${req.headers.host}`;
   let url = new URL(req.url, origin);
 
   let init = {
