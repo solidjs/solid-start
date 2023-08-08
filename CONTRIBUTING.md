@@ -15,4 +15,4 @@
 
 ## Requirements
 
-1. Node.js: ^16.13.0
+1. Node.js: ^18.12.0
