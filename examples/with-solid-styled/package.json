@@ -8,7 +8,7 @@
   "type": "module",
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
-    "solid-start-node": "^0.2.29",
+    "solid-start-node": "^0.3.0",
     "typescript": "^4.9.5",
     "vite": "^4.4.6",
     "vite-plugin-solid-styled": "^0.8.3"
@@ -18,8 +18,7 @@
     "@solidjs/router": "^0.8.2",
     "solid-js": "^1.7.9",
     "solid-start": "^0.3.0",
-    "solid-styled": "^0.8.2",
-    "undici": "^5.22.1"
+    "solid-styled": "^0.8.2"
   },
   "engines": {
     "node": ">=18"

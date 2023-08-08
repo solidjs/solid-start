@@ -2,7 +2,7 @@ import { once } from "events";
 import multipart from "parse-multipart-data";
 import { splitCookiesString } from "set-cookie-parser";
 import { Readable } from "stream";
-import { File, FormData, Headers, Request as BaseNodeRequest } from "undici";
+import { File } from "undici";
 
 function nodeToWeb(/** @type {NodeJS.ReadStream} */ nodeStream) {
   var destroyed = false;
@@ -70,10 +70,10 @@ function createHeaders(/** @type {object} */ requestHeaders) {
   return headers;
 }
 
-export class NodeRequest extends BaseNodeRequest {
+export class NodeRequest extends Request {
   constructor(
-    /** @type {import('undici').RequestInfo} */ input,
-    /** @type {import('undici').RequestInit & { data: any }} */ init
+    input,
+    init
   ) {
     if (init && init.data && init.data.on) {
       init = {
@@ -134,7 +134,7 @@ export class NodeRequest extends BaseNodeRequest {
 
   // @ts-ignore
   clone() {
-    /** @type {BaseNodeRequest & { buffer?: () => Promise<Buffer>; formData?: () => Promise<FormData> }}  */
+    /** @type {Request & { buffer?: () => Promise<Buffer>; formData?: () => Promise<FormData> }}  */
     let el = super.clone();
     el.buffer = this.buffer.bind(el);
     el.formData = this.formData.bind(el);

@@ -43,7 +43,7 @@ export default function () {
           }),
           common({ strictRequires: true, ...config.build.commonjsOptions })
         ],
-        external: ["undici", "stream/web", ...ssrExternal]
+        external: ["stream/web", ...ssrExternal]
       });
       // or write the bundle to disk
       await bundle.write({ format: "esm", dir: join(config.root, "dist") });

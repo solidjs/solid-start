@@ -19,7 +19,6 @@
     "solid-start-node": "workspace:*",
     "solid-start-static": "workspace:*",
     "typescript": "^4.9.5",
-    "undici": "^5.22.1",
     "vite": "^4.4.6",
     "wrangler": "^2.20.0"
   },
