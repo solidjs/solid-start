@@ -3,15 +3,12 @@ import { internalFetch } from "../../api/internalFetch";
 import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
 import {
-  ContentTypeHeader,
-  JSONResponseType,
+  ContentTypeHeader, isRedirectResponse, JSONResponseType,
   LocationHeader,
-  ResponseError,
   XSolidStartContentTypeHeader,
   XSolidStartLocationHeader,
   XSolidStartOrigin,
-  XSolidStartResponseTypeHeader,
-  isRedirectResponse
+  XSolidStartResponseTypeHeader
 } from "../responses";
 import { PageEvent, ServerFunctionEvent } from "../types";
 import { CreateServerFunction } from "./types";
@@ -31,24 +28,25 @@ async function parseRequest(event: ServerFunctionEvent) {
     if (contentType === JSONResponseType) {
       let text = await request.text();
       try {
-        args = JSON.parse(text, (key: string, value: any) => {
-          if (!value) {
+        args = JSON.parse(
+          text,
+          (
+            key: string,
+            value: {
+              $type: "fetch_event";
+            }
+          ) => {
+            if (!value) {
+              return value;
+            }
+
+            if (value.$type === "fetch_event") {
+              return event;
+            }
+
             return value;
           }
-          if (value.$type === "headers") {
-            let headers = new Headers();
-            request.headers.forEach((value, key) => headers.set(key, value));
-            value.values.forEach(([key, value]: [string, any]) => headers.set(key, value));
-            return headers;
-          }
-          if (value.$type === "request") {
-            return new Request(value.url, {
-              method: value.method,
-              headers: value.headers
-            });
-          }
-          return value;
-        });
+        );
       } catch (e) {
         throw new Error(`Error parsing request body: ${text}`);
       }
@@ -65,15 +63,11 @@ export function respondWith(
   data: Response | Error | FormError | string | object,
   responseType: "throw" | "return"
 ) {
-  if (data instanceof ResponseError) {
-    data = data.clone();
-  }
-
   if (data instanceof Response) {
     if (isRedirectResponse(data) && request.headers.get(XSolidStartOrigin) === "client") {
       let headers = new Headers(data.headers);
       headers.set(XSolidStartOrigin, "server");
-      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader)!);
+      headers.set(XSolidStartLocationHeader, data.headers.get(LocationHeader) ?? "/");
       headers.set(XSolidStartResponseTypeHeader, responseType);
       headers.set(XSolidStartContentTypeHeader, "response");
       return new Response(null, {
@@ -232,11 +226,7 @@ server$.createHandler = (_fn, hash, serverResource) => {
       // @ts-ignore
       ctx = sharedConfig.context.requestContext;
     } else {
-      // this is normally used during a test
-      ctx = {
-        request: new URL(hash, "http://localhost:3000").href,
-        responseHeaders: new Headers()
-      } as any;
+      throw new Error("Server function called without a request context");
     }
 
     const execute = async () => {

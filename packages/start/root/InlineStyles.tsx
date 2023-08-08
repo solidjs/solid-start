@@ -1,15 +1,8 @@
 import { Style } from "@solidjs/meta";
-import { createResource, Show, Suspense, useContext } from "solid-js";
+import { createResource, Show, Suspense } from "solid-js";
 import type { PageEvent } from "../server";
-import { ServerContext } from "../server/ServerContext";
-
-declare global {
-  const $ROUTE_LAYOUTS: Record<string, { layouts: any[], id: string }>
-}
-
-var routeLayouts = $ROUTE_LAYOUTS;
-
-export { routeLayouts };
+import { useRequest } from "../server/ServerContext";
+import { routeLayouts } from "./routeLayouts";
 
 const style_pattern = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
 
@@ -21,14 +14,14 @@ async function getInlineStyles(env: PageEvent["env"], routerContext: RouterConte
   const match = routerContext.matches ? routerContext.matches.reduce((memo: string[], m) => {
     if (m.length) {
       const fullPath = m.reduce((previous, match) => previous + match.originalPath, "");
-      if (env.__dev!.manifest!.find(entry => entry.path === fullPath)) {
-        memo.push(env.__dev!.manifest!.find(entry => entry.path === fullPath)!.componentPath);
+      if (env.__dev?.manifest?.find(entry => entry.path === fullPath)) {
+        memo.push(env.__dev.manifest.find(entry => entry.path === fullPath)!.componentPath);
       }
       const route = routeLayouts[fullPath];
       if (route) {
         memo.push(
           ...route.layouts
-            .map((key: string) => env.__dev!.manifest!.find(entry => entry.path === key || entry.id === key))
+            .map(key => env.__dev?.manifest?.find(entry => entry.path === key || entry.id === key))
             .filter(entry => entry)
             .map(entry => entry!.componentPath)
         );
@@ -38,15 +31,26 @@ async function getInlineStyles(env: PageEvent["env"], routerContext: RouterConte
   }, []) : [];
 
   match.push(import.meta.env.START_ENTRY_SERVER);
-  const styles = await env.__dev!.collectStyles!(match);
+  const styles = await env.__dev?.collectStyles?.(match);
   return styles;
 }
 
+let warned = false;
+
 export function InlineStyles() {
   const isDev = import.meta.env.MODE === "development";
-  const context = useContext(ServerContext);
+  const context = useRequest();
   if (!isDev || !import.meta.env.START_SSR) {
     return null;
+  }
+
+  if (import.meta.env.START_SSR === "sync") {
+    if (!warned) {
+      _$DEBUG(
+        "In sync SSR mode, the CSS will be loaded lazily during development. You might see a flash of unstyled content. Don't worry, this will not happen in production. To avoid this, use async or streaming SSR."
+      );
+    }
+    warned = true;
   }
 
   const [resource] = createResource(

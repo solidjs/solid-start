@@ -1,3 +1,8 @@
+/**
+ *
+ * @param {{ types: import('@babel/core').types }} param0
+ * @returns {import('@babel/core').PluginObj<{ namespaceSpec: any[] }>}
+ */
 export default function fileRoutesImport({ types: t }) {
   return {
     visitor: {
@@ -13,6 +18,7 @@ export default function fileRoutesImport({ types: t }) {
             state.namespaceSpec.push(specifier);
           } else if (
             specifier.type === "ImportSpecifier" &&
+            specifier.imported.type === "Identifier" &&
             specifier.imported.name === "FileRoutes"
           ) {
             specifiers.splice(i, 1);
@@ -34,7 +40,7 @@ export default function fileRoutesImport({ types: t }) {
         },
         exit(path, state) {
           const body = path.node.body;
-          let lastImportIndex;
+          let lastImportIndex = 0;
           if (state.namespaceSpec.length) {
             for (let i = 0; i < body.length; i++) {
               if (body[i].type === "ImportDeclaration") {

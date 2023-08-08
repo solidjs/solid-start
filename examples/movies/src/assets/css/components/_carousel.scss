@@ -1,0 +1,188 @@
+@import '~/assets/css/utilities/_variables.scss';
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel__nav {
+  position: absolute;
+  top: 0;
+  bottom: 48px;
+  z-index: 1;
+  width: 30px;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  outline: 0;
+  transition: opacity 0.25s ease, background-color 0.25s ease;
+
+  @media (max-width: $breakpoint-small - 1) {
+    display: none;
+  }
+
+  @media (min-width: $breakpoint-small) {
+    width: 40px;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    bottom: 60px;
+    width: 50px;
+  }
+
+  &:hover,
+  &:focus {
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  &[disabled] {
+    cursor: default;
+    opacity: 0;
+  }
+}
+
+.carousel__nav--left {
+  left: 0;
+}
+
+.carousel__nav--right {
+  right: 0;
+}
+
+.carousel__items {
+  width: 100%;
+  overflow: hidden;
+  overflow-x: scroll;
+  line-height: 0;
+  white-space: nowrap;
+  transform: translateZ(0);
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 15px;
+
+  @media (min-width: $breakpoint-small) {
+    scroll-padding: 40px;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    scroll-padding: 50px;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.carousel__items .card {
+  display: inline-block;
+  width: calc(.33333 * (100% - 22px));
+  padding-right: 8px;
+  margin: 0;
+  white-space: normal;
+  vertical-align: top;
+  scroll-snap-align: start;
+
+  @media (min-width: $breakpoint-xsmall) {
+    width: calc(.25 * (100% - 72px));
+  }
+
+  @media (min-width: $breakpoint-medium) {
+    width: calc(.2 * (100% - 72px));
+  }
+
+  @media (min-width: $breakpoint-large) {
+    width: calc(.2 * (100% - 92px));
+  }
+
+  @media (min-width: $breakpoint-xlarger1) {
+    width: calc(.16667 * (100% - 92px));
+  }
+
+  @media (min-width: $breakpoint-xlarger2) {
+    width: calc(.14286 * (100% - 92px));
+  }
+
+  @media (min-width: $breakpoint-xlarger3) {
+    width: calc(.125 * (100% - 92px));
+  }
+
+  &:first-child {
+    margin-left: 15px;
+
+    @media (min-width: $breakpoint-small) {
+      margin-left: 40px;
+    }
+
+    @media (min-width: $breakpoint-large) {
+      margin-left: 50px;
+    }
+  }
+
+  &:last-child {
+    margin-right: 7px;
+
+    @media (min-width: $breakpoint-small) {
+      margin-right: 32px;
+    }
+
+    @media (min-width: $breakpoint-large) {
+      margin-right: 42px;
+    }
+  }
+}
+
+.carousel__items .credits-item {
+  display: inline-block;
+  width: calc(.33333 * (100% - 22px));
+  padding-right: 8px;
+  margin: 0;
+  white-space: normal;
+  vertical-align: top;
+  scroll-snap-align: start;
+
+  @media (min-width: $breakpoint-small) {
+    width: calc(.25 * (100% - 72px));
+  }
+
+  @media (min-width: 930px) {
+    width: calc(.2 * (100% - 72px));
+  }
+
+  @media (min-width: 1130px) {
+    width: calc(.16667 * (100% - 72px));
+  }
+
+  @media (min-width: $breakpoint-large) {
+    width: calc(.16667 * (100% - 92px));
+  }
+
+  @media (min-width: 1450px) {
+    width: calc(.14286 * (100% - 92px));
+  }
+
+  &:first-child {
+    margin-left: 15px;
+
+    @media (min-width: $breakpoint-small) {
+      margin-left: 40px;
+    }
+
+    @media (min-width: $breakpoint-large) {
+      margin-left: 50px;
+    }
+  }
+
+  &:last-child {
+    margin-right: 7px;
+
+    @media (min-width: $breakpoint-small) {
+      margin-right: 32px;
+    }
+
+    @media (min-width: $breakpoint-large) {
+      margin-right: 42px;
+    }
+  }
+}

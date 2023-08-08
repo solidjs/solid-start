@@ -1,0 +1,139 @@
+
+@import '~/assets/css/utilities/_variables.scss';
+
+.info {
+  @media (min-width: $breakpoint-medium) {
+    display: flex;
+  }
+}
+
+.left {
+  display: none;
+
+  @media (min-width: $breakpoint-medium) {
+    display: block;
+    width: 25%;
+    max-width: 400px;
+    padding-right: 3rem;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    padding-right: 5rem;
+  }
+}
+
+.right {
+  @media (min-width: $breakpoint-medium) {
+    flex: 1;
+  }
+}
+
+.poster {
+  background-color: $secondary-color;
+
+  // TODO: should add styling for span element
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.overview {
+  max-width: 1000px;
+  margin-bottom: 3rem;
+  font-size: 1.5rem;
+  color: $text-color;
+
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.6rem;
+  }
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: #fff;
+  letter-spacing: $letter-spacing;
+
+  @media (min-width: $breakpoint-large) {
+    font-size: 2.4rem;
+  }
+}
+
+.stats {
+  margin-bottom: 3rem;
+  font-size: 1.5rem;
+  color: $text-color;
+
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.6rem;
+  }
+
+  ul {
+    @media (min-width: $breakpoint-medium) {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  li {
+    display: flex;
+    padding: 0.2rem 0;
+
+    @media (min-width: $breakpoint-medium) {
+      width: 50%;
+    }
+
+    @media (min-width: $breakpoint-xlarge) {
+      width: 100%;
+    }
+  }
+
+  a {
+    color: $primary-color;
+    text-decoration: underline;
+  }
+}
+
+.label {
+  flex: 1;
+  max-width: 90px;
+  margin-right: 1.5rem;
+  color: #fff;
+
+  @media (min-width: $breakpoint-xsmall) {
+    max-width: 110px;
+  }
+}
+
+.value {
+  flex: 2;
+}
+
+.external {
+  ul {
+    display: flex;
+    margin-left: -0.5rem;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+
+    svg {
+      transition: all 0.3s ease-in-out;
+    }
+
+    &:hover,
+    &:focus {
+      svg {
+        fill: $primary-color;
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ export function useTableOfContents() {
   );
 }
 
-export default function TableOfContents() {
+export function TableOfContents() {
   const headings = useTableOfContents();
 
   return (

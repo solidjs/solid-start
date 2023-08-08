@@ -19,18 +19,34 @@ type TagDescription = {
 
 type RouterContext = {
   // router matches;
-  matches?: ContextMatches[][];
+  matches: ContextMatches[][];
   // redirected url
-  url?: string;
+  url: string;
 
   // server route fragments
-  replaceOutletId?: string;
-  newOutletId?: string;
+  replaceOutletId: string;
+  newOutletId: string;
+  partial: boolean;
+  nextRoute: any;
+  prevRoute: any;
 };
 
 export type IslandManifest = {
+  type: "island";
   script: ManifestEntry;
   assets: ManifestEntry[];
+};
+
+export type RouteManifest = {
+  type: "route";
+  script: ManifestEntry;
+  assets: ManifestEntry[];
+};
+
+export type StartManifest = {
+  [key: string]: RouteManifest | IslandManifest;
+  "entry-client": RouteManifest;
+  "index.html": RouteManifest;
 };
 
 declare global {
@@ -38,13 +54,13 @@ declare global {
     /**
      * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
      */
-    manifest?: Record<string, ManifestEntry[] | IslandManifest>;
+    manifest?: StartManifest;
     /**
      * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
      */
     getStaticHTML?(path: string): Promise<Response>;
     /**
-     * BE CAREFUL WHILE USING. AVAILABLE IN PRODUCTION ONLY.
+     * BE CAREFUL WHILE USING. AVAILABLE IN DEVELOPMENT ONLY.
      */
     __dev?: {
       /**
@@ -59,22 +75,23 @@ declare global {
 export interface FetchEvent {
   request: Request;
   env: Env;
+  fetch(url: string, init?: RequestInit): Promise<Response>;
   clientAddress: string;
   locals: Record<string, unknown>;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {
-  fetch(url: string, init: RequestInit): Promise<Response>;
   $type: typeof FETCH_EVENT;
 }
 
 export interface PageEvent extends FetchEvent {
-  prevUrl: string;
+  prevUrl: string | null;
   responseHeaders: Headers;
-  routerContext?: RouterContext;
-  tags?: TagDescription[];
+  routerContext: RouterContext & { assets: ManifestEntry[] };
+  tags: TagDescription[];
   setStatusCode(code: number): void;
   getStatusCode(): number;
-  fetch(url: string, init: RequestInit): Promise<Response>;
   $type: typeof FETCH_EVENT;
+  $islands: Set<string>;
+  mutation: boolean;
 }

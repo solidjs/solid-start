@@ -31,22 +31,41 @@ serve(
       });
     } catch (e) {}
 
+    const env = {
+      manifest,
+      getStaticHTML: async path => {
+        console.log(path);
+        let text = await Deno.readFile(`./public${path}.html`);
+        return new Response(text, {
+          headers: {
+            "content-type": "text/html"
+          }
+        });
+      }
+    }
+
+    function internalFetch(route, init = {}) {
+      if (route.startsWith("http")) {
+        return fetch(route, init);
+      }
+
+      let url = new URL(route, "http://internal");
+      const request = new Request(url.href, init);
+      return handler({
+        request,
+        clientAddress: connInfo?.remoteAddr?.hostname,
+        locals: {},
+        env,
+        fetch: internalFetch
+      });
+    }
+
     return await handler({
-      request: request,
+      request,
       clientAddress: connInfo?.remoteAddr?.hostname,
       locals: {},
-      env: {
-        manifest,
-        getStaticHTML: async path => {
-          console.log(path);
-          let text = await Deno.readFile(`./public${path}.html`);
-          return new Response(text, {
-            headers: {
-              "content-type": "text/html"
-            }
-          });
-        }
-      }
+      env,
+      fetch: internalFetch
     });
   },
   {

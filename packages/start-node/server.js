@@ -40,11 +40,29 @@ export function createServer({ handler, paths, env }) {
         });
       };
 
+      function internalFetch(route, init = {}) {
+        if (route.startsWith("http")) {
+          return fetch(route, init);
+        }
+
+        let url = new URL(route, "http://internal");
+        const request = new Request(url.href, init);
+        console.log("[internal]", url.method, url.href);
+        return handler({
+          request: request,
+          clientAddress: req.socket.remoteAddress,
+          locals: {},
+          env,
+          fetch: internalFetch
+        });
+      }
+
       const webRes = await handler({
         request: createRequest(req),
         clientAddress: req.socket.remoteAddress,
         locals: {},
-        env
+        env,
+        fetch: internalFetch
       });
 
       handleNodeResponse(webRes, res);

@@ -41,3 +41,5 @@ netlify
 # miniflare cache
 .mf
 .vercel
+
+vite.config.ts.timestamp*

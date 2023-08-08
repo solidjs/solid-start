@@ -1,0 +1,19 @@
+@import '~/assets/css/utilities/_variables.scss';
+
+@media (min-width: $breakpoint-large) {
+  body {
+    padding-left: $layout-nav-width;
+  }
+}
+
+.spacing {
+  margin: 2.5rem 1.5rem;
+
+  @media (min-width: $breakpoint-small) {
+    margin: 2.5rem 4rem;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    margin: 5rem;
+  }
+}

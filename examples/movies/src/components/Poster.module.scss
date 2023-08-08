@@ -1,0 +1,19 @@
+.wrapper{
+    position: relative;
+    &:hover{
+        --scale: 1.02;
+    }
+    &::after{
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle at calc(var(--spot-x, 50) * 1%) calc(var(--spot-y, 50) * 1%), #fff2, transparent);
+        will-change: background-image;
+    }
+}
+
+.poster{
+    will-change: transform;
+    transition: transform 100ms;
+    transform: perspective(1000px) scale(var(--scale, .97)) rotateX(calc(var(--y-off, 0) * -1deg)) rotateY(calc(var(--x-off, 0) * 1deg));
+}
