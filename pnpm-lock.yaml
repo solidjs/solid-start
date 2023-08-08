@@ -112,7 +112,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       '@types/node':
@@ -146,7 +146,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -189,7 +189,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
       solid-start-netlify:
         specifier: ^0.3.0
@@ -250,7 +250,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
       string_decoder:
         specifier: ^1.3.0
@@ -263,10 +263,10 @@ importers:
         version: 2.20.0
     devDependencies:
       solid-start-cloudflare-workers:
-        specifier: workspace:^
+        specifier: ^0.3.0
         version: link:../../packages/start-cloudflare-workers
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.3.0
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -287,7 +287,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       '@types/node':
@@ -327,7 +327,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -373,7 +373,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       '@types/node':
@@ -413,7 +413,7 @@ importers:
         specifier: ^0.0.6
         version: 0.0.6(solid-js@1.7.9)(vite@4.4.6)
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       '@mdx-js/rollup':
@@ -447,7 +447,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       solid-start-node:
@@ -472,7 +472,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
       solid-styled:
         specifier: ^0.8.2
@@ -506,7 +506,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       autoprefixer:
@@ -549,7 +549,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
       solid-start-trpc:
         specifier: ^0.0.16
@@ -643,7 +643,7 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/start
     devDependencies:
       solid-start-cloudflare-workers:

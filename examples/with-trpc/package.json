@@ -21,7 +21,7 @@
     "@trpc/client": "^10.34.0",
     "@trpc/server": "^10.34.0",
     "solid-js": "^1.7.9",
-    "solid-start": "^0.3.0",
+    "solid-start": "^0.3.1",
     "solid-start-trpc": "^0.0.16",
     "solid-trpc": "0.1.0-sssr.7",
     "zod": "^3.21.4"

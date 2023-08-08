@@ -21,7 +21,7 @@
     "nprogress": "^0.2.0",
     "solid-heroicons": "^3.2.4",
     "solid-js": "^1.7.9",
-    "solid-start": "^0.3.0",
+    "solid-start": "^0.3.1",
     "solid-start-netlify": "^0.3.0"
   },
   "engines": {
