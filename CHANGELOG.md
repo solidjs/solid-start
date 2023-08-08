@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0
+## 0.3.0 - 08/08/2023
 
 This release has a ton of code changes that had been orphaned on an experimental branch. Mostly around Islands router. Biggest update for those is those feature options are under `experimental` option now, and Islands use `use client`. This may not be the final API but it allows us to take the next steps.
 
@@ -20,3 +20,5 @@ export default defineConfig({
 We have updated Docs, and added Movies and Notes apps. These only really work under this Islands mode and will serve as a basis as we fill in the features as we work on the R&D that is being funding by the Chrome team.
 
 Now that codebase is completely merged, we can resume our rebase effort with all the code in place.
+
+We have also changed the base version of SolidStart to be Node 18. This simplifies the need for polyfills and 16 is end of life next month anyway.
