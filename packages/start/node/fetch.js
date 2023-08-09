@@ -163,10 +163,16 @@ export async function handleNodeResponse(webRes, res) {
   res.statusCode = webRes.status;
   res.statusMessage = webRes.statusText;
 
+  const cookiesStrings = [];
+
   for (const [name, value] of webRes.headers) {
     if (name === "set-cookie") {
-      res.appendHeader(name, splitCookiesString(value));
+      cookiesStrings.push(...splitCookiesString(value));
     } else res.setHeader(name, value);
+  }
+
+  if (cookiesStrings.length) {
+    res.setHeader("set-cookie", cookiesStrings);
   }
 
   if (webRes.body) {
