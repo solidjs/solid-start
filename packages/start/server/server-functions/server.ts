@@ -226,7 +226,10 @@ server$.createHandler = (_fn, hash, serverResource) => {
       // @ts-ignore
       ctx = sharedConfig.context.requestContext;
     } else {
-      throw new Error("Server function called without a request context");
+      ctx = {
+        request: new URL(hash, `http://localhost:${process.env.PORT ?? 3000}`).href,
+        responseHeaders: new Headers()
+      } as any;
     }
 
     const execute = async () => {
