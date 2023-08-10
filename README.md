@@ -35,6 +35,11 @@ npm run dev
 pnpm create solid@latest
 pnpm install
 pnpm dev
+
+# or with Bun
+bunx create-solid@latest
+bun install
+bun run dev
 ```
 
 ### Development
