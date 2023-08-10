@@ -36,13 +36,16 @@ export default {
     }
 
     env.manifest = manifest;
+
+    env.waitUntil = function (promise) {
+      return ctx.waitUntil(promise);
+    };
+
     env.getStaticAsset = async request => {
       const response = await getAssetFromKV(
         {
           request,
-          waitUntil(promise) {
-            return ctx.waitUntil(promise);
-          }
+          waitUntil: env.waitUntil
         },
         {
           ASSET_NAMESPACE: env.__STATIC_CONTENT,
