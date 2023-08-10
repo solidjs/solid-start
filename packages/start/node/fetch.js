@@ -143,7 +143,7 @@ export class NodeRequest extends Request {
 }
 
 export function createRequest(/** @type {import('http').IncomingMessage} */ req) {
-  let protocol = req.headers["x-forwarded-proto"] || "https";
+  let protocol = req.headers["x-forwarded-proto"] || "http";
   let origin = req.headers.origin && 'null' !== req.headers.origin
       ? req.headers.origin
       : `${protocol}://${req.headers.host}`;
@@ -163,10 +163,16 @@ export async function handleNodeResponse(webRes, res) {
   res.statusCode = webRes.status;
   res.statusMessage = webRes.statusText;
 
+  const cookiesStrings = [];
+
   for (const [name, value] of webRes.headers) {
     if (name === "set-cookie") {
-      res.appendHeader(name, splitCookiesString(value));
+      cookiesStrings.push(...splitCookiesString(value));
     } else res.setHeader(name, value);
+  }
+
+  if (cookiesStrings.length) {
+    res.setHeader("set-cookie", cookiesStrings);
   }
 
   if (webRes.body) {
