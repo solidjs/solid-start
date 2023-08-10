@@ -90,5 +90,5 @@ test.describe("miscellaneous tests", () => {
       const cookies = await page.context().cookies();
       expect(cookies.length).toBe(2);
     });
-  })
+  });
 });
