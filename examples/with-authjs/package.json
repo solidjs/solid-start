@@ -20,8 +20,8 @@
     "@solid-auth/base": "^2.0.3",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "solid-js": "^1.7.9",
-    "solid-start": "^0.2.31",
+    "solid-js": "^1.7.11",
+    "solid-start": "^0.2.32",
     "undici": "^5.15.1"
   },
   "engines": {
