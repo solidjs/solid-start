@@ -138,7 +138,7 @@ class NodeRequest extends BaseNodeRequest {
 }
 
 export function createRequest(req) {
-  let protocol = req.headers["x-forwarded-proto"] || "https";
+  let protocol = req.headers["x-forwarded-proto"] || "http";
   let origin = req.headers.origin && 'null' !== req.headers.origin
       ? req.headers.origin
       : `${protocol}://${req.headers.host}`;
