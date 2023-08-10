@@ -84,7 +84,7 @@ test.describe("miscellaneous tests", () => {
       await appFixture.close();
     });
   
-    test("appending two cookies to response headers should result in receiving two cookies", async ({ page }) => {
+    test("should set two cookies when appending two cookies to response headers", async ({ page }) => {
       let app = new PlaywrightFixture(appFixture, page);
       await app.goto('/api/cookies');
       const cookies = await page.context().cookies();
