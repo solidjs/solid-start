@@ -1,10 +1,12 @@
-import { useNavigate, useSearchParams, type Navigator } from "@solidjs/router";
-import { $TRACK, batch, createSignal, useContext } from "solid-js";
+import { $TRACK, batch, createSignal } from "solid-js";
+import { useNavigate, useSearchParams } from "../router";
 import { FormError, FormImpl, FormProps } from "./Form";
 
+import { Navigator } from "@solidjs/router";
+import { ServerFunction } from "server/server-functions/types";
 import type { ParentComponent } from "solid-js";
-import { isRedirectResponse } from "../server/responses";
-import { ServerContext, useRequest } from "../server/ServerContext";
+import { isRedirectResponse, XSolidStartOrigin } from "../server/responses";
+import { useRequest } from "../server/ServerContext";
 import { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
 
@@ -59,8 +61,25 @@ export function createRouteAction<T, U = void>(
   const navigate = useNavigate();
   const event = useRequest();
   let count = 0;
-  function submit(variables: T) {
-    const p = fn(variables, event);
+  function submit(variables: T): Promise<U> {
+    let p: Promise<U>;
+    if (import.meta.env.START_ISLANDS && (fn as ServerFunction<any, any>).url) {
+      p = fetch((fn as ServerFunction<any, any>).url, {
+        method: "POST",
+        body:
+          variables instanceof FormData
+            ? variables
+            : JSON.stringify([variables, { $type: "fetch_event" }]),
+        headers: {
+          ...(variables instanceof FormData ? {} : { "Content-Type": "application/json" }),
+          [XSolidStartOrigin]: "client",
+          "x-solid-referrer": window.router.location().pathname,
+          "x-solid-mutation": "true"
+        }
+      }) as unknown as Promise<U>;
+    } else {
+      p = fn(variables, event);
+    }
     const reqId = ++count;
     batch(() => {
       setResult(undefined);
@@ -77,7 +96,7 @@ export function createRouteAction<T, U = void>(
         }
         return data;
       })
-      .catch(async e => {
+      .catch(async (e: Response | Error) => {
         if (reqId === count) {
           if (e instanceof Response) {
             await handleResponse(e, navigate, options);
@@ -135,6 +154,10 @@ export function createRouteAction<T, U = void>(
   ];
 }
 
+type ActionOptions = {
+  invalidate?: ((r: Response) => string | any[] | void) | string | any[];
+};
+
 export function createRouteMultiAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: Invalidate }
@@ -152,7 +175,7 @@ export function createRouteMultiAction<T, U = void>(
     init.input ? [createSubmission(init.input)[0]] : []
   );
   const navigate = useNavigate();
-  const event = useContext(ServerContext);
+  const event = useRequest();
 
   function createSubmission(variables: T) {
     let submission: {
@@ -244,13 +267,22 @@ function handleRefetch(response: Response | string | any[], options: { invalidat
   );
 }
 
-function handleResponse(response: Response, navigate: Navigator, options?: { invalidate?: Invalidate }) {
+async function handleResponse(response: Response, navigate: Navigator, options?: { invalidate?: Invalidate }) {
   if (response instanceof Response && isRedirectResponse(response)) {
     const locationUrl = response.headers.get("Location") || "/";
     if (locationUrl.startsWith("http")) {
       window.location.href = locationUrl;
     } else {
       navigate(locationUrl);
+    }
+    return handleRefetch(response, options);
+  } else if (
+    response instanceof Response &&
+    response.headers.get("Content-type") === "text/solid-diff"
+  ) {
+    let i = await window.router.update(await response.text());
+    if (i) {
+      window.router.push(response.headers.get("x-solid-location") ?? "/", {});
     }
   }
 

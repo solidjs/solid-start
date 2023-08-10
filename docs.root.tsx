@@ -2,6 +2,7 @@
 import { createMemo, For, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import {
+  A,
   Body,
   FileRoutes,
   Head,
@@ -11,14 +12,10 @@ import {
   Routes,
   Scripts,
   Stylesheet,
-  Title,
-  unstable_island
+  Title
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
 import "./components/index.css";
-
-const IslandA = unstable_island(() => import("./components/A"));
-const TableOfContents = unstable_island(() => import("./components/TableOfContents"));
 
 export const mods = /*#__PURE__*/ import.meta.glob<
   true,
@@ -134,6 +131,7 @@ function Nav() {
         order: number;
         subsection: string;
         href: string;
+        frontMatter: any;
       }[] & { subsection?: Set<string>; title?: string; order?: number };
     } = {};
 
@@ -200,7 +198,7 @@ function Nav() {
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
                             <li class="ml-2">
-                              <IslandA
+                              <A
                                 activeClass="text-primary"
                                 inactiveClass="text-gray-500"
                                 href={href}
@@ -208,7 +206,7 @@ function Nav() {
                                 <span class="block ml-4 pb-2 text-sm break-words hover:text-gray-500 dark:hover:text-gray-300">
                                   {title}
                                 </span>
-                              </IslandA>
+                              </A>
                             </li>
                           )}
                         </For>
@@ -219,13 +217,9 @@ function Nav() {
                   <For each={r.filter(i => !i.subsection)}>
                     {({ title, path, href, frontMatter }) => (
                       <li class="ml-2">
-                        <IslandA
-                          activeClass="text-primary"
-                          inactiveClass="text-gray-500"
-                          href={href}
-                        >
+                        <A activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
                           <span>{title}</span>
-                        </IslandA>
+                        </A>
                       </li>
                     )}
                   </For>
@@ -235,11 +229,11 @@ function Nav() {
               <For each={r}>
                 {({ title, path, href, frontMatter }) => (
                   <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
-                    <IslandA activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
+                    <A activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
                       <span class="block dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
                         {title}
                       </span>
-                    </IslandA>
+                    </A>
                   </li>
                 )}
               </For>
@@ -252,7 +246,7 @@ function Nav() {
 }
 
 import { components } from "./components/components";
-import { useTableOfContents } from "./components/TableOfContents";
+import { TableOfContents, useTableOfContents } from "./components/TableOfContents";
 
 export default function Root() {
   return (
@@ -321,9 +315,9 @@ export default function Root() {
                                           "ml-4": h.depth === 3
                                         }}
                                       >
-                                        <IslandA class="border-0 no-underline" href={`#${h.slug}`}>
+                                        <A class="border-0 no-underline" href={`#${h.slug}`}>
                                           {h.text}
-                                        </IslandA>
+                                        </A>
                                       </li>
                                     )}
                                   </For>

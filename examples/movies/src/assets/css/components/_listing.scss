@@ -1,0 +1,105 @@
+@import '~/assets/css/utilities/_variables.scss';
+
+.listing {
+  margin: 2.5rem 1.5rem;
+
+  @media (min-width: $breakpoint-xsmall) {
+    margin: 3rem 1.5rem;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    margin: 5rem;
+  }
+}
+
+.listing__head {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: $breakpoint-large) {
+    margin-bottom: 2rem;
+  }
+}
+
+.listing__title {
+  font-size: 1.8rem;
+  letter-spacing: $letter-spacing;
+
+  @media (min-width: $breakpoint-large) {
+    font-size: 2.4rem;
+  }
+}
+
+.listing__explore {
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  color: $primary-color;
+  letter-spacing: $letter-spacing;
+
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.4rem;
+  }
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+}
+
+.listing__items {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.4rem;
+  margin-left: -0.4rem;
+}
+
+.listing__nav {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.listing--carousel {
+  margin-right: 0;
+  margin-left: 0;
+
+  .listing__head {
+    margin-right: 1.5rem;
+    margin-left: 1.5rem;
+
+    @media (min-width: $breakpoint-small) {
+      margin-right: 4rem;
+      margin-left: 4rem;
+    }
+
+    @media (min-width: $breakpoint-large) {
+      margin-right: 5rem;
+      margin-left: 5rem;
+    }
+  }
+}
+
+.listing__items .card {
+  width: 33.3333333%;
+  padding: 0 0.4rem;
+
+  @media (min-width: $breakpoint-xsmall) {
+    width: 25%;
+  }
+
+  @media (min-width: $breakpoint-medium) {
+    width: 20%;
+  }
+
+  @media (min-width: $breakpoint-xlarger1) {
+    width: 16.6666667%;
+  }
+
+  @media (min-width: $breakpoint-xlarger2) {
+    width: 14.2857143%;
+  }
+
+  @media (min-width: $breakpoint-xlarger3) {
+    width: 12.5%;
+  }
+}

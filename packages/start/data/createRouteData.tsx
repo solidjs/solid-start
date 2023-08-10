@@ -1,18 +1,18 @@
 import type {
-  Resource,
-  ResourceFetcher, ResourceFetcherInfo, ResourceOptions, Signal
+  Accessor, Resource,
+  ResourceFetcher, ResourceFetcherInfo, ResourceOptions, Setter
 } from "solid-js";
 import {
   createResource,
   onCleanup,
-  startTransition, untrack, useContext
+  startTransition, untrack
 } from "solid-js";
 import type { ReconcileOptions } from "solid-js/store";
 import { createStore, reconcile, unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { useNavigate } from "../router";
 import { isRedirectResponse, LocationHeader } from "../server/responses";
-import { ServerContext } from "../server/ServerContext";
+import { useRequest } from "../server/ServerContext";
 import { FETCH_EVENT, ServerFunctionEvent } from "../server/types";
 
 interface RouteDataEvent extends ServerFunctionEvent {}
@@ -37,12 +37,12 @@ export function createRouteData<T, S = true>(
   fetcher: RouteDataFetcher<S, T>,
   options: RouteDataOptions<T, S>
 ): Resource<T>;
-export function createRouteData<T, S>(
-  fetcher?: RouteDataFetcher<S, T>,
+export function createRouteData<T, S = true>(
+  fetcher: RouteDataFetcher<S, T>,
   options: RouteDataOptions<T, S> | RouteDataOptions<undefined, S> = {}
 ): Resource<T> | Resource<T | undefined> {
   const navigate = useNavigate();
-  const pageEvent = useContext(ServerContext);
+  const pageEvent = useRequest();
 
   function handleResponse(response: Response) {
     if (isRedirectResponse(response)) {
@@ -95,7 +95,7 @@ export function createRouteData<T, S>(
         if (isServer) {
           handleResponse(e);
         } else {
-          setTimeout(() => handleResponse(e), 0);
+          setTimeout(() => handleResponse(e as Response), 0);
         }
         return e;
       }
@@ -109,7 +109,7 @@ export function createRouteData<T, S>(
         return info.value;
       }
 
-      if (key == true) return fetcher(key, info);
+      if ((key as unknown as boolean) === true) return fetcher(key, info);
 
       let promise = promises.get(key);
       if (promise) return promise;
@@ -143,7 +143,7 @@ export function refetchRouteData(key?: string | any[] | void) {
   });
 }
 
-function createDeepSignal<T>(value: T, options?: ReconcileOptions) {
+function createDeepSignal<T>(value: T | undefined, options?: ReconcileOptions) {
   const [store, setStore] = createStore({
     value
   });
@@ -155,7 +155,7 @@ function createDeepSignal<T>(value: T, options?: ReconcileOptions) {
       setStore("value", reconcile(v, options));
       return store.value;
     }
-  ] as Signal<T>;
+  ] as [Accessor<T | null>, Setter<T | null>];
 }
 
 /* React Query key matching  https://github.com/tannerlinsley/react-query */

@@ -1,9 +1,12 @@
 import { createContext, JSX, useContext } from "solid-js";
 import { ssr } from "solid-js/web";
+import { getAssetsFromManifest } from "../root/assets";
+import { useRequest } from "../server/ServerContext";
 export interface RouteDefinition {
   path: string;
   component?: () => JSX.Element;
   children?: RouteDefinition | RouteDefinition[];
+  data?: any;
 }
 
 export type Params = Record<string, string>;
@@ -18,7 +21,9 @@ export interface MatchedRoute {
   originalPath: string;
   pattern: string;
   component: (props: any) => JSX.Element;
+  children?: RouteDefinition | RouteDefinition[];
   match: PathMatch;
+  data?: any;
   shared: boolean;
 }
 
@@ -27,8 +32,8 @@ export interface Branch {
   score: number;
 }
 
-const hasSchemeRegex = /^(?:[a-z0-9]+:)?\/\//i;
-const trimPathRegex = /^\/+|\/+$|\s+/g;
+const hasSchemeRegex = /*#__PURE__*/ /^(?:[a-z0-9]+:)?\/\//i;
+const trimPathRegex = /*#__PURE__*/ /^\/+|\/+$|\s+/g;
 
 function normalize(path: string) {
   const s = path.replace(trimPathRegex, "");
@@ -60,7 +65,8 @@ export function matchPath(path: string, location: string, partial?: boolean): Pa
   const [pattern, splat] = path.split("/*", 2);
   const segments = pattern.split("/").filter(Boolean);
   const len = segments.length;
-  const locSegments = location.split("/").filter(Boolean);
+  const { pathname } = new URL(location, "http://localhost");
+  const locSegments = pathname.split("/").filter(Boolean);
   const lenDiff = locSegments.length - len;
   if (lenDiff < 0 || (lenDiff > 0 && splat === undefined && !partial)) {
     return null;
@@ -109,7 +115,7 @@ export function createMatchedRoute(
     return null;
   }
 
-  const { path: originalPath, component = Outlet, children } = routeDef;
+  const { path: originalPath, component = Outlet, children, data } = routeDef;
   const isLeaf = !children || !Array.isArray(children) || !children.length;
   const path = joinPaths(base, originalPath);
   const pattern = isLeaf ? path : path.split("/*", 1)[0];
@@ -124,6 +130,8 @@ export function createMatchedRoute(
     originalPath,
     pattern,
     component,
+    children,
+    data,
     match,
     shared: false
   };
@@ -174,7 +182,7 @@ export interface RouterContextState {
   location: string;
 }
 
-export const RouterContext = createContext<RouterContextState>();
+export const RouterContext = /*#__PURE__*/ createContext<RouterContextState>();
 
 export const useRouter = () => useContext(RouterContext)!;
 
@@ -183,7 +191,7 @@ export interface OutletContextState {
   route: MatchedRoute;
 }
 
-export const OutletContext = createContext<OutletContextState>();
+export const OutletContext = /*#__PURE__*/ createContext<OutletContextState>();
 
 export const useOutlet = () => useContext(OutletContext);
 
@@ -194,13 +202,14 @@ export const useRouteParams = () => {
 
 export interface RouterProps {
   location: string;
-  prevLocation: string;
+  prevLocation: string | null;
   routes: RouteDefinition | RouteDefinition[];
   children: JSX.Element;
   out?: any;
 }
 
 export function Router(props: RouterProps) {
+  const context = useRequest();
   const next = getMatchedBranch(props.routes, props.location);
   if (!next || !next.routes.length) {
     return [];
@@ -208,9 +217,54 @@ export function Router(props: RouterProps) {
 
   const nextRoutes = next.routes;
 
-  const prev = props.prevLocation ? getMatchedBranch(props.routes, props.prevLocation) : null;
+  const prev =
+    !context.mutation && props.prevLocation
+      ? getMatchedBranch(props.routes, props.prevLocation)
+      : null;
   if (prev) {
     const prevRoutes = prev.routes;
+
+    if (import.meta.env.PROD) {
+      let nextAssets = getAssetsFromManifest(context, [
+        nextRoutes.map(r => ({
+          ...r,
+          ...r.match
+        }))
+      ]);
+
+      let prevAssets = getAssetsFromManifest(context, [
+        prevRoutes.map(r => ({
+          ...r,
+          ...r.match
+        }))
+      ]);
+
+      const set = new Set();
+      prevAssets.forEach(a => {
+        set.add(a.href);
+      });
+
+      let assetsToAdd: [string, string][] = [];
+
+      let assetsToRemove: Record<string, [string, string]> = {};
+
+      nextAssets.forEach(a => {
+        if (!set.has(a.href) && (a.type === "script" || a.type === "style")) {
+          assetsToRemove[a.href] = [a.type, a.href];
+        } else {
+          set.delete(a.href);
+        }
+      });
+
+      [...set.entries()].forEach(a => {
+        let prev = prevAssets.find(p => p.href === a[1]);
+        if (prev) {
+          assetsToAdd.push([prev.type, prev.href]);
+        }
+      });
+
+      props.out.assets = [Object.values(assetsToRemove), assetsToAdd];
+    }
 
     for (let i = 0, len = nextRoutes.length; i < len; i++) {
       const nextRoute = nextRoutes[i];
@@ -224,31 +278,17 @@ export function Router(props: RouterProps) {
           props.out.replaceOutletId = `outlet-${prevRoute.id}`;
           props.out.newOutletId = `outlet-${nextRoute.id}`;
         } else {
-          // console.log("diff rendered");
-          // const Comp = nextRoute.component;
           props.out.replaceOutletId = `outlet-${prevRoute.id}`;
           props.out.newOutletId = `outlet-${nextRoute.id}`;
-          // diffedRender = (
-          //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
-          //     <Comp />
-          //   </outlet-wrapper>
-          // );
-          // return diffedRender;
+          props.out.prevRoute = prevRoute;
+          props.out.nextRoute = nextRoute;
         }
         // Routes are shared
-      } else {
-        // console.log("diff rendered");
-        // const Comp = nextRoute.component;
+      } else if (prevRoute && nextRoute) {
         props.out.replaceOutletId = `outlet-${prevRoute.id}`;
+        props.out.prevRoute = prevRoute;
         props.out.newOutletId = `outlet-${nextRoute.id}`;
-        //console.log(prevRoute, nextRoute);
-        //console.log(`diff render from: ${props.prevLocation} to: ${props.location}`);
-        // diffedRender = (
-        //   <outlet-wrapper id={`outlet-${nextRoute.id}`}>
-        //     <Comp />
-        //   </outlet-wrapper>
-        // );
-        // return diffedRender;
+        props.out.nextRoute = nextRoute;
       }
     }
   }
@@ -258,6 +298,30 @@ export function Router(props: RouterProps) {
     location: props.location,
     out: props.out
   };
+
+  // if (props.out.prevRoute) {
+  //   props.out.partial = true;
+  //   return (
+  //     <RouterContext.Provider value={state}>
+  //       <OutletContext.Provider
+  //         value={{ depth: nextRoutes.indexOf(props.out.nextRoute) + 1, route: props.out.nextRoute }}
+  //       >
+  //         <NoHydration>
+  //           <Suspense>
+  //             <Routes>
+  //               <Route
+  //                 path={props.out.nextRoute.pattern}
+  //                 component={props.out.nextRoute.component}
+  //                 data={props.out.nextRoute.data}
+  //                 children={props.out.nextRoute.children}
+  //               />
+  //             </Routes>
+  //           </Suspense>
+  //         </NoHydration>
+  //       </OutletContext.Provider>
+  //     </RouterContext.Provider>
+  //   );
+  // }
 
   return <RouterContext.Provider value={state}>{props.children}</RouterContext.Provider>;
 }

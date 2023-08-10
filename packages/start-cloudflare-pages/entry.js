@@ -10,16 +10,35 @@ export const onRequestGet = async ({ request, next, env }) => {
     }
   }
 
+  const clientAddress = request.headers.get('cf-connecting-ip')
+
   env.manifest = manifest;
   env.next = next;
   env.getStaticHTML = async path => {
     return next();
   };
+
+  function internalFetch(route, init = {}) {
+    if (route.startsWith("http")) {
+      return fetch(route, init);
+    }
+
+    let url = new URL(route, "http://internal");
+    const request = new Request(url.href, init);
+    return handler({
+      request,
+      clientAddress,
+      locals: {},
+      env,
+      fetch: internalFetch
+    });
+  }
   return handler({
-    request: request,
-    clientAddress: request.headers.get('cf-connecting-ip'),
+    request,
+    clientAddress,
     locals: {},
-    env
+    env,
+    fetch: internalFetch
   });
 };
 

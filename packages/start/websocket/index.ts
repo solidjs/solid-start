@@ -1,5 +1,5 @@
 import { ServerFunction } from "../server/server-functions/types";
-import { webSocketHandlers } from "./webSocketHandlers";
+import { webSocketHandlers } from "./handlers";
 
 function createWebsocket(fn: ServerFunction<[WebSocket, WebSocketEvent], (a: WebSocket, b: WebSocketEvent) => void>) {
   return (id: string = "") =>

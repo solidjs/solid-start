@@ -69,7 +69,9 @@ export default () => {
       }
     },
     $type: FETCH_EVENT,
-    fetch
+    fetch,
+    $islands: new Set(),
+    mutation: false
   };
 
   function StartRouter(props: RouterProps) {

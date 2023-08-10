@@ -149,7 +149,7 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(fileURLToPath(new URL("./static/", vercelOutputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(fileURLToPath(new URL("./static/", vercelOutputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       } else {

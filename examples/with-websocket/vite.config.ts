@@ -5,15 +5,9 @@ export default defineConfig({
   plugins: [
     solid({
       ssr: false,
-      durableObjects: {
-        DO_WEBSOCKET: "./src/websocket.ts"
+      experimental: {
+        websocket: true
       }
-      // adapter: cloudflareWorkers({
-      //   durableObjects: {
-      //     DO_WEBSOCKET: "WebSocketDurableObject"
-      //   },
-      //   kvNamespaces: ["app"]
-      // })
     })
   ]
 });

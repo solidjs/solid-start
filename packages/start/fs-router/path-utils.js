@@ -1,6 +1,7 @@
 /**
+ *
  * @param {string} id
- * @param removePathlessLayouts
+ * @param {boolean} removePathlessLayouts
  * @returns
  */
 export function toPath(id, removePathlessLayouts = true) {

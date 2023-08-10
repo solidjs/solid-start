@@ -12,6 +12,9 @@ npm init solid@latest ./my-solid-app
 
 # or
 yarn create solid ./my-solid-app
+
+# or
+bunx create-solid ./my-solid-app
 ```
 
 ### Why use Create Solid?

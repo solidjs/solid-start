@@ -9,6 +9,7 @@ declare global {
       islandMap: { [path: string]: Component };
       hydrateIslands(): void;
       fe(id: string): void;
+      morph(prev: HTMLElement, next: HTMLElement): Promise<boolean>;
     };
   }
 
@@ -33,7 +34,6 @@ export type StartOptions = {
   lazy: boolean;
   prerenderRoutes: string[];
   inspect: boolean;
-  pageExtensions: string[];
   root: string;
   clientEntry: string;
   serverEntry: string;

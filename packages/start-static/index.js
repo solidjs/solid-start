@@ -16,10 +16,10 @@ export default function () {
     name: "static",
     start(config, { port }) {
       process.env.PORT = port;
-      const proc = spawn("npx", ["serve", "./dist/public"]);
-      proc.stdout.pipe(process.stdout);
-      proc.stderr.pipe(process.stderr);
-
+      spawn("npx", ["serve", "./dist/public"], {
+        shell: true,
+        stdio: "inherit"
+      });
       return `http://localhost:${process.env.PORT}`;
     },
     async build(config, builder) {
@@ -43,7 +43,7 @@ export default function () {
           }),
           common({ strictRequires: true, ...config.build.commonjsOptions })
         ],
-        external: ["undici", "stream/web", ...ssrExternal]
+        external: ["stream/web", ...ssrExternal]
       });
       // or write the bundle to disk
       await bundle.write({ format: "esm", dir: join(config.root, "dist") });

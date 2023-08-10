@@ -35,9 +35,16 @@ npm run dev
 pnpm create solid@latest
 pnpm install
 pnpm dev
+
+# or with Bun
+bunx create-solid@latest
+bun install
+bun run dev
 ```
 
 ### Development
+
+You should use a node version manager [compatible with `.node-vesion`](https://stackoverflow.com/a/62978089/565877) ([asdf-vm](https://asdf-vm.com/) is a great option mac/linux users)
 
 The monorepo uses `pnpm` as the package manager. To install `pnpm`, run the following command in your terminal.
 

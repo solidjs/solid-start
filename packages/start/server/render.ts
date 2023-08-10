@@ -1,6 +1,5 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { internalFetch } from "../api/internalFetch";
 import { apiRoutes } from "../api/middleware";
 import { inlineServerFunctions } from "../server/middleware";
 import { redirect } from "../server/responses";
@@ -21,9 +20,9 @@ export function renderSync(
           !import.meta.env.START_SSR &&
           !import.meta.env.START_INDEX_HTML
         ) {
-          return await (
-            event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }
-          ).env.getStaticHTML("/index");
+          return (
+            (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+          );
         }
 
         let pageEvent = createPageEvent(event);
@@ -62,10 +61,9 @@ export function renderAsync(
           !import.meta.env.START_SSR &&
           !import.meta.env.START_INDEX_HTML
         ) {
-          const getStaticHTML = (
-            event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }
-          ).env.getStaticHTML;
-          return await getStaticHTML("/index");
+          return (
+            (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+          );
         }
 
         let pageEvent = createPageEvent(event);
@@ -106,10 +104,9 @@ export function renderStream(
           !import.meta.env.START_SSR &&
           !import.meta.env.START_INDEX_HTML
         ) {
-          const getStaticHTML = (
-            event as unknown as { env: { getStaticHTML(url: string | URL): Promise<Response> } }
-          ).env.getStaticHTML;
-          return await getStaticHTML("/index");
+          return (
+            (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+          );
         }
 
         let pageEvent = createPageEvent(event);
@@ -177,6 +174,8 @@ function handleStreamingIslandsRouting(pageEvent: PageEvent, writable: WritableS
   }
 }
 
+function handleRedirect() {}
+
 function handleStreamingRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
     if (context.routerContext && context.routerContext.url)
@@ -190,6 +189,7 @@ function createPageEvent(event: FetchEvent) {
   });
 
   const prevPath = event.request.headers.get("x-solid-referrer");
+  const mutation = event.request.headers.get("x-solid-mutation") === "true";
 
   let statusCode = 200;
 
@@ -201,10 +201,11 @@ function createPageEvent(event: FetchEvent) {
     return statusCode;
   }
 
-  const pageEvent: PageEvent = Object.freeze({
+  const pageEvent: PageEvent = {
     request: event.request,
     prevUrl: prevPath || "",
-    routerContext: {},
+    routerContext: {} as any,
+    mutation: mutation,
     tags: [],
     env: event.env,
     clientAddress: event.clientAddress,
@@ -213,29 +214,44 @@ function createPageEvent(event: FetchEvent) {
     responseHeaders,
     setStatusCode: setStatusCode,
     getStatusCode: getStatusCode,
-    fetch: internalFetch
-  });
+    $islands: new Set<string>(),
+    fetch: event.fetch
+  };
 
   return pageEvent;
 }
 
 function handleIslandsRouting(pageEvent: PageEvent, markup: string) {
-  if (
-    import.meta.env.START_ISLANDS_ROUTER &&
-    pageEvent.routerContext &&
-    pageEvent.routerContext.replaceOutletId
-  ) {
-    markup = `${pageEvent.routerContext.replaceOutletId}:${
-      pageEvent.routerContext.newOutletId
-    }=${markup.slice(
-      markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) +
-        `<!--${pageEvent.routerContext.newOutletId}-->`.length +
-        `<outlet-wrapper id="${pageEvent.routerContext.newOutletId}">`.length,
-      markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
-        `</outlet-wrapper>`.length
-    )}`;
+  if (pageEvent.mutation) {
+    pageEvent.routerContext.replaceOutletId = "outlet-0";
+    pageEvent.routerContext.newOutletId = "outlet-0";
+  }
+  if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.routerContext?.replaceOutletId) {
+    markup = `${
+      pageEvent.routerContext.assets
+        ? `assets=${JSON.stringify(pageEvent.routerContext.assets)};`
+        : ``
+    }${pageEvent.routerContext.replaceOutletId}:${pageEvent.routerContext.newOutletId}=${
+      pageEvent.routerContext.partial
+        ? markup
+        : markup.slice(
+            markup.indexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) +
+              `<!--${pageEvent.routerContext.newOutletId}-->`.length +
+              `<outlet-wrapper id="${pageEvent.routerContext.newOutletId}">`.length,
+            markup.lastIndexOf(`<!--${pageEvent.routerContext.newOutletId}-->`) -
+              `</outlet-wrapper>`.length
+          )
+    }`;
 
-    pageEvent.responseHeaders.set("Content-Type", "text/plain");
+    let url = new URL(pageEvent.request.url);
+    pageEvent.responseHeaders.set("Content-Type", "text/solid-diff");
+    pageEvent.responseHeaders.set("x-solid-location", url.pathname + url.search + url.hash);
+  }
+
+  if (import.meta.env.START_ISLANDS_ROUTER && pageEvent.mutation) {
+    let url = new URL(pageEvent.request.url);
+    pageEvent.responseHeaders.set("Content-Type", "text/solid-diff");
+    pageEvent.responseHeaders.set("x-solid-location", url.pathname + url.search + url.hash);
   }
   return markup;
 }
