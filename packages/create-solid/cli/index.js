@@ -11,9 +11,9 @@ import prettier from "prettier/esm/standalone.mjs";
 import prompts from "prompts/lib/index";
 import glob from "tiny-glob/sync.js";
 import yargsParser from "yargs-parser";
-import { version } from "../package.json";
+import pkg from "../package.json";
 import { viaContentsApi } from "./github.js";
-
+const version = pkg.version;
 const gitIgnore = `
 dist
 .solid
@@ -69,6 +69,8 @@ function getUserPkgManager() {
       return "yarn";
     } else if (userAgent.startsWith("pnpm")) {
       return "pnpm";
+    } else if (userAgent.startsWith("bun")) {
+      return "bun";
     } else {
       return "npm";
     }
