@@ -11,9 +11,8 @@ import prettier from "prettier/esm/standalone.mjs";
 import prompts from "prompts/lib/index";
 import glob from "tiny-glob/sync.js";
 import yargsParser from "yargs-parser";
-import pkg from "../package.json";
+import { version } from "../package.json";
 import { viaContentsApi } from "./github.js";
-const version = pkg.version;
 const gitIgnore = `
 dist
 .solid
