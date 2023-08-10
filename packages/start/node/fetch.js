@@ -143,7 +143,7 @@ export class NodeRequest extends Request {
 }
 
 export function createRequest(/** @type {import('http').IncomingMessage} */ req) {
-  let protocol = req.headers["x-forwarded-proto"] || "https";
+  let protocol = req.headers["x-forwarded-proto"] || "http";
   let origin = req.headers.origin && 'null' !== req.headers.origin
       ? req.headers.origin
       : `${protocol}://${req.headers.host}`;
