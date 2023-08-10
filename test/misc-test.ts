@@ -69,8 +69,8 @@ test.describe("miscellaneous tests", () => {
           "src/routes/api/cookies.jsx": js`
             export async function GET({ request }) {
               const headers = new Headers();
-              headers.append('Set-Cookie', 'c1=1');
-              headers.append('Set-Cookie', 'c2=2');
+              headers.append('set-cookie', 'c1=1');
+              headers.append('set-cookie', 'c2=2');
               return new Response('', { headers });
             }
           `
