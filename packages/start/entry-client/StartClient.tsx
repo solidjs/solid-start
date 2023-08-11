@@ -80,10 +80,22 @@ export default () => {
     );
   }
 
+  const BASE_URL = import.meta.env.BASE_URL;
+  let basePath = BASE_URL;
+  if (BASE_URL.startsWith("http")) {
+    try {
+      // SolidRouter expects a pathname for the `base` prop, not a full URL.
+      const url = new URL(BASE_URL);
+      basePath = url.pathname;
+    } catch (e) {
+      console.warn('BASE_URL starts with http, but `new URL` failed to parse it. Please check your BASE_URL:', BASE_URL);
+    }
+  }
+
   return (
     <ServerContext.Provider value={mockFetchEvent}>
       <MetaProvider>
-        <StartRouter base={import.meta.env.BASE_URL} data={dataFn}>
+        <StartRouter base={basePath} data={dataFn}>
           <Root />
         </StartRouter>
       </MetaProvider>
