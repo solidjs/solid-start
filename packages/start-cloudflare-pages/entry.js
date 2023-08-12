@@ -3,7 +3,7 @@ import handler from "./entry-server";
 
 export const onRequestGet = async ({ request, next, env }) => {
   // Handle static assets
-  if (/\.\w+$/.test(request.url)) {
+  if (/\.\w+$/.test(request.url.pathname)) {
     let resp = await next(request);
     if (resp.status === 200 || 304) {
       return resp;
@@ -44,7 +44,7 @@ export const onRequestGet = async ({ request, next, env }) => {
 
 export const onRequestHead = async ({ request, next, env }) => {
   // Handle static assets
-  if (/\.\w+$/.test(request.url)) {
+  if (/\.\w+$/.test(request.url.pathname)) {
     let resp = await next(request);
     if (resp.status === 200 || 304) {
       return resp;
