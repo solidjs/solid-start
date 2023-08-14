@@ -1,4 +1,4 @@
-import { useLocation as useBaseLocation } from "@solidjs/router";
+import { useLocation as useBaseLocation, type Location } from "@solidjs/router";
 
 function getLocation() {
   return window.router.location();
