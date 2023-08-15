@@ -83,7 +83,7 @@ declare global {
 }
 
 export function useRouteData<T extends keyof StartRoutes>(): ReturnType<StartRoutes[T]["data"]>;
-export function useRouteData<T extends RouteDataFunc>(): ReturnType<T>;
+export function useRouteData<T extends (...args: any[]) => any>(): T extends RouteDataFunc<infer _, infer R> ? R : ReturnType<T>;
 export function useRouteData<T extends keyof StartRoutes>(): ReturnType<StartRoutes[T]["data"]> {
   // @ts-ignore
   return useBaseRouteData<T>();
