@@ -95,7 +95,7 @@ importers:
         version: 4.7.4
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -364,39 +364,39 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3(@auth/core@0.5.1)(solid-js@1.7.11)(solid-start@packages+start)
       '@solidjs/meta':
-        specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.11)
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
       '@solidjs/router':
-        specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.11)
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: workspace:^
         version: link:../../packages/start
     devDependencies:
       '@types/node':
-        specifier: ^18.16.19
-        version: 18.16.19
+        specifier: ^18.17.5
+        version: 18.17.5
       esbuild:
         specifier: ^0.14.54
         version: 0.14.54
       next-auth:
-        specifier: ^4.22.1
-        version: 4.22.1(next@13.4.16)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^4.23.1
+        version: 4.23.1(next@13.4.16)(react-dom@18.2.0)(react@18.2.0)
       postcss:
-        specifier: ^8.4.26
-        version: 8.4.26
+        specifier: ^8.4.28
+        version: 8.4.28
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: workspace:^
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.9
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/with-mdx:
     dependencies:
@@ -427,7 +427,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-prisma:
     dependencies:
@@ -458,7 +458,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-solid-styled:
     dependencies:
@@ -489,7 +489,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.6)
@@ -526,7 +526,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   examples/with-trpc:
     dependencies:
@@ -620,7 +620,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vitest:
         specifier: ^0.26.3
         version: 0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3)
@@ -654,7 +654,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
   packages/create-solid:
     devDependencies:
@@ -1336,7 +1336,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6
+        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       wrangler:
         specifier: ^2.20.0
         version: 2.20.0
@@ -8229,8 +8229,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /next-auth@4.22.1(next@13.4.16)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-NTR3f6W7/AWXKw8GSsgSyQcDW6jkslZLH8AiZa5PQ09w1kR8uHtR9rez/E9gAq/o17+p0JYHE8QjF3RoniiObA==}
+  /next-auth@4.23.1(next@13.4.16)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-mL083z8KgRtlrIV6CDca2H1kduWJuK/3pTS0Fe2og15KOm4v2kkLGdSDfc2g+019aEBrJUT0pPW2Xx42ImN1WA==}
     peerDependencies:
       next: ^12.2.5 || ^13
       nodemailer: ^6.6.5
@@ -8247,8 +8247,8 @@ packages:
       next: 13.4.16(react-dom@18.2.0)(react@18.2.0)
       oauth: 0.9.15
       openid-client: 5.4.3
-      preact: 10.16.0
-      preact-render-to-string: 5.2.6(preact@10.16.0)
+      preact: 10.17.0
+      preact-render-to-string: 5.2.6(preact@10.17.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       uuid: 8.3.2
@@ -9023,12 +9023,12 @@ packages:
       pretty-format: 3.8.0
     dev: false
 
-  /preact-render-to-string@5.2.6(preact@10.16.0):
+  /preact-render-to-string@5.2.6(preact@10.17.0):
     resolution: {integrity: sha512-JyhErpYOvBV1hEPwIxc/fHWXPfnEGdRKxc8gFdAZ7XV4tlzyzG847XAyEZqoDnynP88akM4eaHcSOzNcLWFguw==}
     peerDependencies:
       preact: '>=10'
     dependencies:
-      preact: 10.16.0
+      preact: 10.17.0
       pretty-format: 3.8.0
     dev: true
 
@@ -9036,8 +9036,8 @@ packages:
     resolution: {integrity: sha512-eY93IVpod/zG3uMF22Unl8h9KkrcKIRs2EGar8hwLZZDU1lkjph303V9HZBwufh2s736U6VXuhD109LYqPoffg==}
     dev: false
 
-  /preact@10.16.0:
-    resolution: {integrity: sha512-XTSj3dJ4roKIC93pald6rWuB2qQJO9gO2iLLyTe87MrjQN+HklueLsmskbywEWqCHlclgz3/M4YLL2iBr9UmMA==}
+  /preact@10.17.0:
+    resolution: {integrity: sha512-SNsI8cbaCcUS5tbv9nlXuCfIXnJ9ysBMWk0WnB6UWwcVA3qZ2O6FxqDFECMAMttvLQcW/HaNZUe2BLidyvrVYw==}
     dev: true
 
   /prettier@2.8.8:
@@ -10746,7 +10746,7 @@ packages:
       '@types/node': 18.16.19
       esbuild: 0.18.20
       postcss: 8.4.28
-      rollup: 3.28.0
+      rollup: 3.26.2
     optionalDependencies:
       fsevents: 2.3.2
     dev: false
@@ -10782,7 +10782,7 @@ packages:
       '@types/node': 18.16.19
       esbuild: 0.18.20
       postcss: 8.4.28
-      rollup: 3.28.0
+      rollup: 3.26.2
       terser: 5.19.0
     optionalDependencies:
       fsevents: 2.3.2
@@ -10818,7 +10818,7 @@ packages:
       '@types/node': 20.5.0
       esbuild: 0.18.20
       postcss: 8.4.28
-      rollup: 3.28.0
+      rollup: 3.26.2
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
