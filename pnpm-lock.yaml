@@ -497,26 +497,26 @@ importers:
   examples/with-tailwindcss:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.11)
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
       '@solidjs/router':
-        specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.11)
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: workspace:^
         version: link:../../packages/start
     devDependencies:
       autoprefixer:
-        specifier: ^10.4.14
-        version: 10.4.14(postcss@8.4.26)
+        specifier: ^10.4.15
+        version: 10.4.15(postcss@8.4.28)
       postcss:
-        specifier: ^8.4.26
-        version: 8.4.26
+        specifier: ^8.4.28
+        version: 8.4.28
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: workspace:^
         version: link:../../packages/start-node
       tailwindcss:
         specifier: ^3.3.3
@@ -525,8 +525,8 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.9
+        version: 4.4.9(sass@1.65.1)
 
   examples/with-trpc:
     dependencies:
@@ -4715,22 +4715,6 @@ packages:
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  /autoprefixer@10.4.14(postcss@8.4.26):
-    resolution: {integrity: sha512-FQzyfOsTlwVzjHxKEqRIAdJx9niO6VCBCoEwax/VLSoQF29ggECcPuBqUMZ+u8jCZOPSy8b8/8KnuFbp0SaFZQ==}
-    engines: {node: ^10 || ^12 || >=14}
-    hasBin: true
-    peerDependencies:
-      postcss: ^8.1.0
-    dependencies:
-      browserslist: 4.21.10
-      caniuse-lite: 1.0.30001519
-      fraction.js: 4.2.0
-      normalize-range: 0.1.2
-      picocolors: 1.0.0
-      postcss: 8.4.26
-      postcss-value-parser: 4.2.0
-    dev: true
-
   /autoprefixer@10.4.15(postcss@8.4.28):
     resolution: {integrity: sha512-KCuPB8ZCIqFdA4HwKXsvz7j6gvSDNhDP7WnUjBleRkKjPdvCmHFuQ77ocavI8FT6NdvlBnE2UFr2H4Mycn8Vew==}
     engines: {node: ^10 || ^12 || >=14}
@@ -4896,7 +4880,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001519
+      caniuse-lite: 1.0.30001521
       electron-to-chromium: 1.4.492
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
@@ -4974,9 +4958,6 @@ packages:
       caniuse-lite: 1.0.30001521
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
-
-  /caniuse-lite@1.0.30001519:
-    resolution: {integrity: sha512-0QHgqR+Jv4bxHMp8kZ1Kn8CH55OikjKJ6JmKkZYP1F3D7w+lnFXF70nG5eNfsZS89jadi5Ywy5UCSKLAglIRkg==}
 
   /caniuse-lite@1.0.30001521:
     resolution: {integrity: sha512-fnx1grfpEOvDGH+V17eccmNjucGUnCbP6KL+l5KqBIerp26WK/+RQ7CIDE37KGJjaPyqWXXlFUyKiWmvdNNKmQ==}
@@ -5207,7 +5188,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   /connect@3.7.0:
     resolution: {integrity: sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ==}
