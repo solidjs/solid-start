@@ -401,33 +401,33 @@ importers:
   examples/with-mdx:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.11)
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
       '@solidjs/router':
-        specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.11)
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.11)(vite@4.4.6)
+        version: 0.0.6(solid-js@1.7.11)(vite@4.4.9)
       solid-start:
-        specifier: ^0.3.3
+        specifier: workspace:^
         version: link:../../packages/start
     devDependencies:
       '@mdx-js/rollup':
         specifier: ^2.3.0
         version: 2.3.0(rollup@3.28.0)
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: workspace:^
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.9
+        version: 4.4.9(sass@1.65.1)
 
   examples/with-prisma:
     dependencies:
@@ -3352,7 +3352,7 @@ packages:
       rollup: '>=2'
     dependencies:
       '@mdx-js/mdx': 2.3.0
-      '@rollup/pluginutils': 5.0.2(rollup@3.28.0)
+      '@rollup/pluginutils': 5.0.3(rollup@3.28.0)
       rollup: 3.28.0
       source-map: 0.7.4
       vfile: 5.3.7
@@ -3968,8 +3968,8 @@ packages:
       picomatch: 2.3.1
       rollup: 3.26.2
 
-  /@rollup/pluginutils@5.0.2(rollup@3.28.0):
-    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
+  /@rollup/pluginutils@5.0.3(rollup@3.28.0):
+    resolution: {integrity: sha512-hfllNN4a80rwNQ9QCxhxuHCGHMAvabXqxNdaChUSSadMre7t4iEUI6fFAhBOn/eIYTgYVhBv7vCLsAJ4u3lf3g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0
@@ -9652,16 +9652,6 @@ packages:
       csstype: 3.1.0
       seroval: 0.5.1
 
-  /solid-mdx@0.0.6(solid-js@1.7.11)(vite@4.4.6):
-    resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
-    peerDependencies:
-      solid-js: ^1.2.6
-      vite: '*'
-    dependencies:
-      solid-js: 1.7.11
-      vite: 4.4.6
-    dev: false
-
   /solid-mdx@0.0.6(solid-js@1.7.11)(vite@4.4.9):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
     peerDependencies:
@@ -10714,6 +10704,7 @@ packages:
       rollup: 3.26.2
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /vite@4.4.6(@types/node@18.16.19):
     resolution: {integrity: sha512-EY6Mm8vJ++S3D4tNAckaZfw3JwG3wa794Vt70M6cNJ6NxT87yhq7EC8Rcap3ahyHdo8AhCmV9PTk+vG1HiYn1A==}
