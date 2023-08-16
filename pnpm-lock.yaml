@@ -273,7 +273,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@20.5.0)
 
   examples/todomvc:
     dependencies:
@@ -427,7 +427,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@20.5.0)
 
   examples/with-prisma:
     dependencies:
@@ -458,7 +458,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@20.5.0)
 
   examples/with-solid-styled:
     dependencies:
@@ -489,7 +489,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@20.5.0)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.9)
@@ -526,7 +526,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@20.5.0)
 
   examples/with-trpc:
     dependencies:
@@ -620,7 +620,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@20.5.0)
       vitest:
         specifier: ^0.26.3
         version: 0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3)
@@ -634,27 +634,27 @@ importers:
         specifier: ^3.19.0
         version: 3.19.0
       '@solidjs/meta':
-        specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.11)
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
       '@solidjs/router':
-        specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.11)
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: workspace:^
         version: link:../../packages/start
     devDependencies:
       solid-start-cloudflare-workers:
-        specifier: ^0.3.0
+        specifier: workspace:^
         version: link:../../packages/start-cloudflare-workers
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.9
+        version: 4.4.9(@types/node@20.5.0)
 
   packages/create-solid:
     devDependencies:
@@ -4073,14 +4073,6 @@ packages:
       solid-js: 1.7.11
     dev: false
 
-  /@solidjs/meta@0.28.5(solid-js@1.7.11):
-    resolution: {integrity: sha512-52luJR6hVNMA1K8Od5OD0d8WVz/svqZG4is8lrDimiUGxdia3DzuLF+pK56dnEzbNt9cA42qVFL134U9LkC9Gg==}
-    peerDependencies:
-      solid-js: '>=1.4.0'
-    dependencies:
-      solid-js: 1.7.11
-    dev: false
-
   /@solidjs/meta@0.28.5(solid-js@1.7.9):
     resolution: {integrity: sha512-52luJR6hVNMA1K8Od5OD0d8WVz/svqZG4is8lrDimiUGxdia3DzuLF+pK56dnEzbNt9cA42qVFL134U9LkC9Gg==}
     peerDependencies:
@@ -4095,14 +4087,6 @@ packages:
       solid-js: '>=1.4.0'
     dependencies:
       solid-js: 1.7.11
-
-  /@solidjs/router@0.8.2(solid-js@1.7.11):
-    resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
-    peerDependencies:
-      solid-js: ^1.5.3
-    dependencies:
-      solid-js: 1.7.11
-    dev: false
 
   /@solidjs/router@0.8.2(solid-js@1.7.9):
     resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
@@ -7049,6 +7033,7 @@ packages:
 
   /immutable@4.3.2:
     resolution: {integrity: sha512-oGXzbEDem9OOpDWZu88jGiYCvIsLHMvGw+8OXlpsvTFvIQplQbjg1B1cvKg8f7Hoch6+NGjpPsH1Fr+Mc2D1aA==}
+    dev: true
 
   /indent-string@4.0.0:
     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
@@ -9555,6 +9540,7 @@ packages:
       chokidar: 3.5.3
       immutable: 4.3.2
       source-map-js: 1.0.2
+    dev: true
 
   /saxes@6.0.0:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
@@ -9714,7 +9700,7 @@ packages:
       vite: '*'
     dependencies:
       solid-js: 1.7.11
-      vite: 4.4.9(sass@1.65.1)
+      vite: 4.4.9(@types/node@20.5.0)
     dev: false
 
   /solid-mdx@0.0.6(solid-js@1.7.9)(vite@4.4.6):
@@ -10666,7 +10652,7 @@ packages:
       '@babel/core': 7.22.10
       '@rollup/pluginutils': 5.0.3(rollup@3.26.2)
       solid-styled: 0.8.2(@babel/core@7.22.10)(solid-js@1.7.11)
-      vite: 4.4.9(sass@1.65.1)
+      vite: 4.4.9(@types/node@20.5.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -10832,7 +10818,6 @@ packages:
       rollup: 3.28.0
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
 
   /vite@4.4.9(sass@1.65.1):
     resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
@@ -10868,6 +10853,7 @@ packages:
       sass: 1.65.1
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /vitefu@0.2.4(vite@4.4.6):
     resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
