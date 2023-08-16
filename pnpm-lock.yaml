@@ -95,7 +95,7 @@ importers:
         version: 4.7.4
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -278,21 +278,21 @@ importers:
   examples/todomvc:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.11)
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
       '@solidjs/router':
-        specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.11)
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: workspace:^
         version: link:../../packages/start
     devDependencies:
       '@types/node':
-        specifier: ^18.16.19
-        version: 18.16.19
+        specifier: ^18.17.5
+        version: 18.17.5
       csstype:
         specifier: 3.1.0
         version: 3.1.0
@@ -300,20 +300,20 @@ importers:
         specifier: ^0.14.54
         version: 0.14.54
       postcss:
-        specifier: ^8.4.26
-        version: 8.4.26
+        specifier: ^8.4.28
+        version: 8.4.28
       rollup:
-        specifier: ^3.26.2
-        version: 3.26.2
+        specifier: ^3.28.0
+        version: 3.28.0
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: workspace:^
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.9
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/with-auth:
     dependencies:
@@ -427,7 +427,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
 
   examples/with-prisma:
     dependencies:
@@ -458,7 +458,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
 
   examples/with-solid-styled:
     dependencies:
@@ -489,7 +489,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.6)
@@ -526,7 +526,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
 
   examples/with-trpc:
     dependencies:
@@ -620,7 +620,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
       vitest:
         specifier: ^0.26.3
         version: 0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3)
@@ -654,7 +654,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
 
   packages/create-solid:
     devDependencies:
@@ -1336,7 +1336,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        version: 4.4.6
       wrangler:
         specifier: ^2.20.0
         version: 2.20.0
@@ -5381,9 +5381,6 @@ packages:
 
   /csstype@3.1.0:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
-
-  /csstype@3.1.2:
-    resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
 
   /dashdash@1.14.1:
     resolution: {integrity: sha512-jRFi8UDGo6j+odZiEpjazZaWqEal3w/basFjQHQEwVtZJGDpxbH1MeYluwCS8Xq5wmLJooDlMgvVarmWfGM44g==}
@@ -9643,7 +9640,7 @@ packages:
   /solid-js@1.7.11:
     resolution: {integrity: sha512-JkuvsHt8jqy7USsy9xJtT18aF9r2pFO+GB8JQ2XGTvtF49rGTObB46iebD25sE3qVNvIbwglXOXdALnJq9IHtQ==}
     dependencies:
-      csstype: 3.1.2
+      csstype: 3.1.0
       seroval: 0.5.1
 
   /solid-js@1.7.9:
@@ -10746,7 +10743,7 @@ packages:
       '@types/node': 18.16.19
       esbuild: 0.18.20
       postcss: 8.4.28
-      rollup: 3.26.2
+      rollup: 3.28.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: false
@@ -10782,7 +10779,7 @@ packages:
       '@types/node': 18.16.19
       esbuild: 0.18.20
       postcss: 8.4.28
-      rollup: 3.26.2
+      rollup: 3.28.0
       terser: 5.19.0
     optionalDependencies:
       fsevents: 2.3.2
@@ -10818,7 +10815,7 @@ packages:
       '@types/node': 20.5.0
       esbuild: 0.18.20
       postcss: 8.4.28
-      rollup: 3.26.2
+      rollup: 3.28.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
