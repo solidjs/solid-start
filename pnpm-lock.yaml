@@ -318,42 +318,42 @@ importers:
   examples/with-auth:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.11)
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
       '@solidjs/router':
-        specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.11)
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: workspace:^
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
         specifier: ^7.20.1
         version: 7.20.1
       '@types/node':
-        specifier: ^18.16.19
-        version: 18.16.19
+        specifier: ^18.17.5
+        version: 18.17.5
       esbuild:
         specifier: ^0.14.54
         version: 0.14.54
       postcss:
-        specifier: ^8.4.26
-        version: 8.4.26
+        specifier: ^8.4.28
+        version: 8.4.28
       rollup:
-        specifier: ^3.26.2
-        version: 3.26.2
+        specifier: ^3.28.0
+        version: 3.28.0
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: workspace:^
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.9
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/with-authjs:
     dependencies:
@@ -5382,6 +5382,9 @@ packages:
   /csstype@3.1.0:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
 
+  /csstype@3.1.2:
+    resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
+
   /dashdash@1.14.1:
     resolution: {integrity: sha512-jRFi8UDGo6j+odZiEpjazZaWqEal3w/basFjQHQEwVtZJGDpxbH1MeYluwCS8Xq5wmLJooDlMgvVarmWfGM44g==}
     engines: {node: '>=0.10'}
@@ -9640,7 +9643,7 @@ packages:
   /solid-js@1.7.11:
     resolution: {integrity: sha512-JkuvsHt8jqy7USsy9xJtT18aF9r2pFO+GB8JQ2XGTvtF49rGTObB46iebD25sE3qVNvIbwglXOXdALnJq9IHtQ==}
     dependencies:
-      csstype: 3.1.0
+      csstype: 3.1.2
       seroval: 0.5.1
 
   /solid-js@1.7.9:
