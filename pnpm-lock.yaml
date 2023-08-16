@@ -531,54 +531,54 @@ importers:
   examples/with-trpc:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.11)
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
       '@solidjs/router':
-        specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.11)
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
       '@tanstack/solid-query':
         specifier: 5.0.0-alpha.20
         version: 5.0.0-alpha.20(solid-js@1.7.11)
       '@trpc/client':
-        specifier: ^10.34.0
-        version: 10.34.0(@trpc/server@10.34.0)
+        specifier: ^10.37.1
+        version: 10.37.1(@trpc/server@10.37.1)
       '@trpc/server':
-        specifier: ^10.34.0
-        version: 10.34.0
+        specifier: ^10.37.1
+        version: 10.37.1
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: workspace:^
         version: link:../../packages/start
       solid-start-trpc:
         specifier: ^0.0.16
-        version: 0.0.16(@trpc/client@10.34.0)(@trpc/server@10.34.0)(solid-js@1.7.11)(solid-start@packages+start)
+        version: 0.0.16(@trpc/client@10.37.1)(@trpc/server@10.37.1)(solid-js@1.7.11)(solid-start@packages+start)
       solid-trpc:
         specifier: 0.1.0-sssr.7
-        version: 0.1.0-sssr.7(@tanstack/solid-query@5.0.0-alpha.20)(@trpc/client@10.34.0)(@trpc/server@10.34.0)(solid-js@1.7.11)(solid-start@packages+start)
+        version: 0.1.0-sssr.7(@tanstack/solid-query@5.0.0-alpha.20)(@trpc/client@10.37.1)(@trpc/server@10.37.1)(solid-js@1.7.11)(solid-start@packages+start)
       zod:
-        specifier: ^3.21.4
-        version: 3.21.4
+        specifier: ^3.22.1
+        version: 3.22.1
     devDependencies:
       '@types/node':
-        specifier: ^18.16.19
-        version: 18.16.19
+        specifier: ^18.17.5
+        version: 18.17.5
       esbuild:
         specifier: ^0.14.54
         version: 0.14.54
       postcss:
-        specifier: ^8.4.26
-        version: 8.4.26
+        specifier: ^8.4.28
+        version: 8.4.28
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: workspace:^
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+        specifier: ^4.4.9
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/with-vitest:
     devDependencies:
@@ -4205,12 +4205,12 @@ packages:
     engines: {node: '>= 10'}
     dev: true
 
-  /@trpc/client@10.34.0(@trpc/server@10.34.0):
-    resolution: {integrity: sha512-nqtDTIqSY/9syo2EjSy4WWWXPU9GsamEh9Tsg698gLAh1nhgFc5+/YYeb+Ne1pbvWGZ5/3t9Dcz3h4wMyyJ9gQ==}
+  /@trpc/client@10.37.1(@trpc/server@10.37.1):
+    resolution: {integrity: sha512-OSblNfeI0Z9ERn3usgLV2x63CwwPoNOHf1FQK85cOT7F8MNaWyEHoEv7tHUwNGJwyzKXmpU+ockZ0movzX3D0g==}
     peerDependencies:
-      '@trpc/server': 10.34.0
+      '@trpc/server': 10.37.1
     dependencies:
-      '@trpc/server': 10.34.0
+      '@trpc/server': 10.37.1
     dev: false
 
   /@trpc/client@9.27.4(@trpc/server@9.27.4):
@@ -4223,8 +4223,8 @@ packages:
       '@trpc/server': 9.27.4
     dev: true
 
-  /@trpc/server@10.34.0:
-    resolution: {integrity: sha512-2VMW44Fpaoyqb50dBtzdSWMhqt8lmoJiocEyBBeDb03R0W+XrzbVD5kU/wqKPlcp1DWeNCkOEIMtetMZCfo1hA==}
+  /@trpc/server@10.37.1:
+    resolution: {integrity: sha512-r3VeA319/braYMBIzj+XLgLKQ9lJSVglvPvP9HUv4kr5w6Y5grQMxMcExhTiZWltE9bnSJHKtBBzHafOo7KC8A==}
     dev: false
 
   /@trpc/server@9.27.4:
@@ -9028,15 +9028,6 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /postcss@8.4.26:
-    resolution: {integrity: sha512-jrXHFF8iTloAenySjM/ob3gSj7pCu0Ji49hnjqzsgSRa50hkWCKD0HQ+gMNJkW38jBI68MpAAg7ZWwHwX8NMMw==}
-    engines: {node: ^10 || ^12 || >=14}
-    dependencies:
-      nanoid: 3.3.6
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
-    dev: true
-
   /postcss@8.4.28:
     resolution: {integrity: sha512-Z7V5j0cq8oEKyejIKfpD8b4eBy9cwW2JWPk0+fB1HOAMsfHbnAXLLS+PfVWlzMSLQaWttKDt607I0XHmpE67Vw==}
     engines: {node: ^10 || ^12 || >=14}
@@ -9718,7 +9709,7 @@ packages:
     resolution: {integrity: sha512-1yxDK8RKYl4FBeaWrc4rRf3JdC7HQtPG+azpujB1k2V3GTexkcUVM8dCxWpiBsozpkfAmrZhjGklpW00N5lIGw==}
     dev: false
 
-  /solid-start-trpc@0.0.16(@trpc/client@10.34.0)(@trpc/server@10.34.0)(solid-js@1.7.11)(solid-start@packages+start):
+  /solid-start-trpc@0.0.16(@trpc/client@10.37.1)(@trpc/server@10.37.1)(solid-js@1.7.11)(solid-start@packages+start):
     resolution: {integrity: sha512-99/EGIE0SObmCVhZR00bYpkEQpCDP22YgjalQpVgm0BKy2+tJzEC6vdvOII2Ppa0Fm7iPwc4LDZoFX2E3KYmsg==}
     peerDependencies:
       '@trpc/client': ^10.0.0
@@ -9726,8 +9717,8 @@ packages:
       solid-js: ^1.5.7
       solid-start: ^0.2.1
     dependencies:
-      '@trpc/client': 10.34.0(@trpc/server@10.34.0)
-      '@trpc/server': 10.34.0
+      '@trpc/client': 10.37.1(@trpc/server@10.37.1)
+      '@trpc/server': 10.37.1
       solid-js: 1.7.11
       solid-start: link:packages/start
     dev: false
@@ -9769,7 +9760,7 @@ packages:
       solid-js: 1.7.9
     dev: true
 
-  /solid-trpc@0.1.0-sssr.7(@tanstack/solid-query@5.0.0-alpha.20)(@trpc/client@10.34.0)(@trpc/server@10.34.0)(solid-js@1.7.11)(solid-start@packages+start):
+  /solid-trpc@0.1.0-sssr.7(@tanstack/solid-query@5.0.0-alpha.20)(@trpc/client@10.37.1)(@trpc/server@10.37.1)(solid-js@1.7.11)(solid-start@packages+start):
     resolution: {integrity: sha512-N/iqU4iFIVEWKFjOY+5J4e2qbOW9STy/eEID1gEjj6mm0w9xYmQtKu/UsBNf8W6nSCYSBjH/ttU5fGCe/0q2Dw==}
     peerDependencies:
       '@tanstack/solid-query': ^5.0.0-alpha.0
@@ -9779,8 +9770,8 @@ packages:
       solid-start: ^0.2.1
     dependencies:
       '@tanstack/solid-query': 5.0.0-alpha.20(solid-js@1.7.11)
-      '@trpc/client': 10.34.0(@trpc/server@10.34.0)
-      '@trpc/server': 10.34.0
+      '@trpc/client': 10.37.1(@trpc/server@10.37.1)
+      '@trpc/server': 10.37.1
       solid-js: 1.7.11
       solid-start: link:packages/start
     dev: false
@@ -11402,6 +11393,11 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: true
+
+  /zod@3.22.1:
+    resolution: {integrity: sha512-+qUhAMl414+Elh+fRNtpU+byrwjDFOS1N7NioLY+tSlcADTx4TkCUua/hxJvxwDXcV4397/nZ420jy4n4+3WUg==}
+    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
