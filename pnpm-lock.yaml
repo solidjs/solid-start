@@ -923,6 +923,9 @@ importers:
 
   packages/start-new:
     dependencies:
+      '@vinxi/solid':
+        specifier: ^0.0.7
+        version: 0.0.7
       vite-plugin-solid:
         specifier: ^2.7.0
         version: 2.7.0(solid-js@1.7.11)(vite@4.4.6)
@@ -4328,6 +4331,10 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  /@vinxi/solid@0.0.7:
+    resolution: {integrity: sha512-oY2+LKM0YvKYwgO/yHGpiuEuJuOHaBvELvXQoCWMqwzW2jllj8xPDMk1gaKKnTG4murqaEZBh9GS1x0Eqziasg==}
+    dev: false
 
   /@vitest/coverage-c8@0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3):
     resolution: {integrity: sha512-sjmVYPozajWY2DawzuvhYX6hEe/LD6p2xv9VmPvh1zzDeNNVCAnyLcvXoaSMQD522x9bqciuyPrlrnh2iNkE/w==}
@@ -11265,7 +11272,7 @@ packages:
       merge-anything: 5.1.7
       solid-js: 1.7.11
       solid-refresh: 0.5.3(solid-js@1.7.11)
-      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6
       vitefu: 0.2.4(vite@4.4.6)
     transitivePeerDependencies:
       - supports-color
@@ -11486,7 +11493,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6
     dev: false
 
   /vitest@0.20.3(jsdom@20.0.3)(terser@5.19.0):

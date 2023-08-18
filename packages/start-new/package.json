@@ -43,6 +43,7 @@
     "vinxi": "0.0.15"
   },
   "dependencies": {
+    "@vinxi/solid": "^0.0.7",
     "vite-plugin-solid": "^2.7.0"
   }
 }
