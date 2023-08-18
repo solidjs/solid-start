@@ -43,3 +43,6 @@ netlify
 .vercel
 
 vite.config.ts.timestamp*
+
+.nitro
+.output
