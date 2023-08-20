@@ -146,7 +146,7 @@ export class Router {
       let routeConfig = this.createRouteConfig(path);
 
       // renamed index should have a trailing slash like index files
-      if (!routeConfig.path.endsWith("/") && /\([^)/]+\)$/.test(routeConfig.id)) {
+      if (!routeConfig.path.endsWith("/") && /\/\([^)/]+\)$/.test(routeConfig.id)) {
         routeConfig.path += "/";
       }
 
