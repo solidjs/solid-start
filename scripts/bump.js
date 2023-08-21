@@ -17,23 +17,19 @@ if (!semver.valid(version)) {
 
 let solidJsVersion = execSync("npm view solid-js version").toString().trim();
 
-const adapters = [];
 const packages = await glob("packages/*/package.json");
-
-await Promise.all(packages.map(async packagePath => {
+const packageNames = await Promise.all(packages.map(async packagePath => {
   const packageJson = JSON.parse(await fs.readFile(packagePath));
   packageJson.version = version;
-  packageJson?.solid?.["type"] === "adapter" && adapters.push(packageJson.name);
   await fs.writeFile(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
+  return packageJson.name
 }));
 
-const startPackages = ["solid-start", ...adapters];
 const examples = await glob("examples/*/package.json");
-
 await Promise.all(examples.map(async packagePath => {
   const packageJson = JSON.parse(await fs.readFile(packagePath));
     
-  startPackages.forEach(packageName => {
+  packageNames.forEach(packageName => {
     packageJson.dependencies?.[packageName] && (packageJson.dependencies[packageName] = `^${version}`);
     packageJson.devDependencies?.[packageName] && (packageJson.devDependencies[packageName] = `^${version}`);
   });
