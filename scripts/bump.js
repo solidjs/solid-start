@@ -30,7 +30,7 @@ await Promise.all(packages.map(async packagePath => {
 const startPackages = ["solid-start", ...adapters];
 const examples = await glob("examples/*/package.json");
 
-const updates = await Promise.all(examples.map(async packagePath => {
+await Promise.all(examples.map(async packagePath => {
   const packageJson = JSON.parse(await fs.readFile(packagePath));
     
   startPackages.forEach(packageName => {
