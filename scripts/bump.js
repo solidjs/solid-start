@@ -22,7 +22,7 @@ const packageNames = await Promise.all(packages.map(async packagePath => {
   const packageJson = JSON.parse(await fs.readFile(packagePath));
   packageJson.version = version;
   await fs.writeFile(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
-  return packageJson.name
+  return packageJson.name;
 }));
 
 const examples = await glob("examples/*/package.json");
@@ -40,5 +40,5 @@ await Promise.all(examples.map(async packagePath => {
   await fs.writeFile(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
 }));
 
-console.log("Updating lock file...")
+console.log("Updating lock file...");
 spawnSync("pnpm i", { shell: true, stdio: "inherit" });
