@@ -11,6 +11,9 @@
 		"checkJs": true,
 		"noEmit": true,
 		"types": ["vinxi/client"],
-		"isolatedModules": true
+		"isolatedModules": true,
+		"paths": {
+      "~/*": ["./src/*"]
+    }
 	}
 }

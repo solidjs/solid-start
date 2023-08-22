@@ -1,0 +1,103 @@
+import {
+	appendResponseHeader,
+	eventHandler,
+	EventHandlerRequest,
+	getRequestIP,
+	getResponseHeader,
+	getResponseStatus,
+	H3Event,
+	removeResponseHeader,
+	send,
+	sendRedirect,
+	setResponseHeader,
+	setResponseStatus,
+	toWebRequest
+} from "vinxi/runtime/server";
+import { FetchEvent, FETCH_EVENT, PageEvent } from "./types";
+
+import { renderToStream } from "solid-js/web";
+import { createRoutes } from "../shared/FileRoutes";
+
+export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
+
+/** Input parameters for to an Exchange factory function. */
+export interface MiddlewareInput {
+  forward: MiddlewareFn;
+}
+
+/** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
+export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
+
+/** This composes an array of Exchanges into a single ExchangeIO function */
+export const composeMiddleware =
+  (exchanges: Middleware[]) =>
+  ({ forward }: MiddlewareInput) =>
+    exchanges.reduceRight(
+      (forward, exchange) =>
+        exchange({
+          forward
+        }),
+      forward
+    );
+
+export function createHandler(...exchanges: Middleware[]) {
+  const exchange = composeMiddleware(exchanges);
+  return eventHandler(async (event: H3Event<EventHandlerRequest>) => {
+    return await exchange({
+      forward: async op => {
+        setResponseStatus(event, 404);
+        return await send(event);
+      }
+    })(createFetchEvent(event));
+  });
+}
+
+export function render(
+  fn: (context: PageEvent) => unknown,
+  options?: { nonce?: string; renderId?: string; timeoutMs?: number; }
+) {
+  return () => {
+    return async event => {
+      const context = await createPageEvent(event);
+      const stream = renderToStream(() => fn(context), options);
+      if (context.routerContext && context.routerContext.url) {
+        return sendRedirect(event, context.routerContext.url);
+      }
+      return stream;
+    };
+  };
+}
+
+function createFetchEvent(event: H3Event<EventHandlerRequest>) {
+	return {
+		request: toWebRequest(event),
+		clientAddress: getRequestIP(event),
+		locals: {},
+		getResponseStatus: () => getResponseStatus(event),
+    setResponseStatus: (code, text) => setResponseStatus(event, code, text),
+    getResponseHeader: name => getResponseHeader(event, name),
+    setResponseHeader: (name, value) => setResponseHeader(event, name, value),
+    appendResponseHeader: (name, value) => appendResponseHeader(event, name, value),
+    removeResponseHeader: name => removeResponseHeader(event, name),
+	}
+}
+
+async function createPageEvent(ctx: FetchEvent) {
+  const clientManifest = import.meta.env.MANIFEST["client"];
+  const prevPath = ctx.request.headers.get("x-solid-referrer");
+  const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
+  const pageEvent: PageEvent = {
+    ...ctx,
+    manifest: await clientManifest.json(),
+    assets: await clientManifest.inputs[clientManifest.handler].assets(),
+    routes: createRoutes(),
+    prevUrl: prevPath || "",
+    routerContext: {} as any,
+    mutation: mutation,
+    tags: [],
+    $type: FETCH_EVENT,
+    $islands: new Set<string>()
+  };
+
+  return pageEvent;
+}

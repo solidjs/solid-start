@@ -1,9 +1,7 @@
 import { join } from "path";
 import { createApp } from "vinxi";
 import {
-	BaseFileSystemRouter,
-	analyzeModule,
-	cleanPath,
+	analyzeModule, BaseFileSystemRouter, cleanPath
 } from "vinxi/file-system-router";
 import { config } from "vinxi/lib/plugins/config";
 import solid from "vite-plugin-solid";
@@ -72,7 +70,8 @@ export function defineConfig({} = {}) {
 						config("root", {
 							resolve: {
 								alias: {
-									"#start/root": join(process.cwd(), "src", "root.tsx"),
+									"#start/app": join(process.cwd(), "src", "app.tsx"),
+									"~": join(process.cwd(), "src"),
 								},
 							},
 						}),
@@ -93,7 +92,8 @@ export function defineConfig({} = {}) {
 						config("root", {
 							resolve: {
 								alias: {
-									"#start/root": join(process.cwd(), "src", "root.tsx"),
+									"#start/app": join(process.cwd(), "src", "app.tsx"),
+									"~": join(process.cwd(), "src"),
 								},
 							},
 						}),

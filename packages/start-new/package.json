@@ -4,35 +4,29 @@
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
-    "src",
+    "client",
+    "config",
+    "server",
+    "shared",
     "*.d.ts"
   ],
-  "types": "./index.d.ts",
+  "types": "./index.tsx",
   "exports": {
-    ".": "./index.js",
-    "./entry-server": "./entry-server/index.tsx",
-    "./entry-client": "./entry-client/index.tsx",
-    "./root": "./root/index.tsx",
-    "./client": "./lib/app-client-plugin.js",
-    "./lib/*": "./lib/*.js",
-    "./runtime/*": "./runtime/*.js"
+    ".": "./shared/index.tsx",
+    "./config": "./config/index.js",
+    "./server": "./server/index.tsx",
+    "./client": "./client/index.tsx"
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./index.d.ts"
+        "./shared/index.tsx"
       ],
-      "./root": [
-        "./root/index.tsx"
+      "./server": [
+        "./server/index.tsx"
       ],
-      "./entry-server": [
-        "./entry-server/index.tsx"
-      ],
-      "./entry-client": [
-        "./entry-client/index.tsx"
-      ],
-      "./routes": [
-        "./routes.d.ts"
+      "./client": [
+        "./client/index.tsx"
       ]
     }
   },

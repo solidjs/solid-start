@@ -1,3 +1,20 @@
-import { createHandler, StartServer } from "@solidjs/start/entry-server";
+import { createHandler, render, StartServer } from "@solidjs/start/server";
 
-export default createHandler((context) => <StartServer context={context} />);
+function Document(props) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        {props.assets}
+      </head>
+      <body>
+        <div id="app">{props.children}</div>
+        {props.scripts}
+      </body>
+    </html>
+  );
+}
+
+export default createHandler(
+  render(context => <StartServer context={context} document={Document} />)
+);
