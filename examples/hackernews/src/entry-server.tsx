@@ -1,10 +1,11 @@
+import { Title } from "@solidjs/meta";
 import { createHandler, render, StartServer } from "@solidjs/start/server";
 
 function Document(props) {
   return (
     <html lang="en">
       <head>
-        <title>SolidStart - Hacker News</title>
+        <Title>SolidStart - Hacker News</Title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Hacker News Clone built with Solid" />
