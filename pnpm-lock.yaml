@@ -26,10 +26,10 @@ importers:
         version: 15.1.0(rollup@3.26.2)
       '@solidjs/meta':
         specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.9)
+        version: 0.28.5(solid-js@1.7.11)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.9)
+        version: 0.8.2(solid-js@1.7.11)
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.3.3)
@@ -61,11 +61,11 @@ importers:
         specifier: ^7.5.4
         version: 7.5.4
       solid-js:
-        specifier: ^1.7.9
-        version: 1.7.9
+        specifier: ^1.7.11
+        version: 1.7.11
       solid-mdx:
         specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.9)(vite@4.4.6)
+        version: 0.0.6(solid-js@1.7.11)(vite@4.4.6)
       solid-start:
         specifier: workspace:*
         version: link:packages/start
@@ -9574,17 +9574,6 @@ packages:
     dependencies:
       solid-js: 1.7.11
       vite: 4.4.6
-    dev: false
-
-  /solid-mdx@0.0.6(solid-js@1.7.9)(vite@4.4.6):
-    resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
-    peerDependencies:
-      solid-js: ^1.2.6
-      vite: '*'
-    dependencies:
-      solid-js: 1.7.9
-      vite: 4.4.6
-    dev: true
 
   /solid-refresh@0.5.3(solid-js@1.7.11):
     resolution: {integrity: sha512-Otg5it5sjOdZbQZJnvo99TEBAr6J7PQ5AubZLNU6szZzg3RQQ5MX04oteBIIGDs0y2Qv8aXKm9e44V8z+UnFdw==}
