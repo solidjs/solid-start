@@ -31,7 +31,7 @@ export default ({
   //   const routerProps = { newProp } as RouterProps;
   //   <StartClient routerProps={routerProps as unknown as undefined} />
   routerProps?: Pick<RouterProps, 'source'>
-}) => {
+} = {}) => {
   let mockFetchEvent: PageEvent = {
     get request() {
       if (process.env.NODE_ENV === "development") {
