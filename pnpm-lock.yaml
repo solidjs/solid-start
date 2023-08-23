@@ -127,7 +127,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       '@types/node':
@@ -161,7 +161,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -204,7 +204,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
       solid-start-netlify:
         specifier: ^0.3.0
@@ -265,7 +265,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
       string_decoder:
         specifier: ^1.3.0
@@ -302,7 +302,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       '@types/node':
@@ -342,7 +342,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       '@types/babel__core':
@@ -388,7 +388,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       '@types/node':
@@ -428,7 +428,7 @@ importers:
         specifier: ^0.0.6
         version: 0.0.6(solid-js@1.7.11)(vite@4.4.6)
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       '@mdx-js/rollup':
@@ -462,7 +462,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       solid-start-node:
@@ -487,7 +487,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
       solid-styled:
         specifier: ^0.8.2
@@ -521,7 +521,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       autoprefixer:
@@ -564,7 +564,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
       solid-start-trpc:
         specifier: ^0.0.16
@@ -658,7 +658,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start
     devDependencies:
       solid-start-cloudflare-workers:
@@ -828,7 +828,7 @@ importers:
         version: 0.18.20
       esbuild-plugin-solid:
         specifier: ^0.5.0
-        version: 0.5.0(esbuild@0.18.20)(solid-js@1.7.11)
+        version: 0.5.0(esbuild@0.17.19)(solid-js@1.7.11)
       fast-glob:
         specifier: ^3.3.0
         version: 3.3.0
@@ -905,6 +905,18 @@ importers:
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
+      solid-start-cloudflare-pages:
+        specifier: workspace:*
+        version: link:../start-cloudflare-pages
+      solid-start-cloudflare-workers:
+        specifier: workspace:*
+        version: link:../start-cloudflare-workers
+      solid-start-deno:
+        specifier: workspace:*
+        version: link:../start-deno
+      solid-start-netlify:
+        specifier: workspace:*
+        version: link:../start-netlify
       solid-start-node:
         specifier: workspace:*
         version: link:../start-node
@@ -1064,6 +1076,21 @@ importers:
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
+      solid-start:
+        specifier: workspace:*
+        version: link:../../packages/start
+      solid-start-cloudflare-pages:
+        specifier: workspace:*
+        version: link:../../packages/start-cloudflare-pages
+      solid-start-cloudflare-workers:
+        specifier: workspace:*
+        version: link:../../packages/start-cloudflare-workers
+      solid-start-deno:
+        specifier: workspace:*
+        version: link:../../packages/start-deno
+      solid-start-netlify:
+        specifier: workspace:*
+        version: link:../../packages/start-netlify
       solid-start-node:
         specifier: workspace:*
         version: link:../../packages/start-node
@@ -4170,6 +4197,14 @@ packages:
     dependencies:
       solid-js: 1.7.11
 
+  /@solidjs/meta@0.28.5(solid-js@1.7.9):
+    resolution: {integrity: sha512-52luJR6hVNMA1K8Od5OD0d8WVz/svqZG4is8lrDimiUGxdia3DzuLF+pK56dnEzbNt9cA42qVFL134U9LkC9Gg==}
+    peerDependencies:
+      solid-js: '>=1.4.0'
+    dependencies:
+      solid-js: 1.7.9
+    dev: true
+
   /@solidjs/router@0.8.2(solid-js@1.7.11):
     resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
     peerDependencies:
@@ -6247,7 +6282,7 @@ packages:
     dev: true
     optional: true
 
-  /esbuild-plugin-solid@0.5.0(esbuild@0.18.20)(solid-js@1.7.11):
+  /esbuild-plugin-solid@0.5.0(esbuild@0.17.19)(solid-js@1.7.11):
     resolution: {integrity: sha512-ITK6n+0ayGFeDVUZWNMxX+vLsasEN1ILrg4pISsNOQ+mq4ljlJJiuXotInd+HE0MzwTcA9wExT1yzDE2hsqPsg==}
     peerDependencies:
       esbuild: '>=0.12'
@@ -6256,7 +6291,7 @@ packages:
       '@babel/core': 7.22.9
       '@babel/preset-typescript': 7.22.5(@babel/core@7.22.9)
       babel-preset-solid: 1.7.7(@babel/core@7.22.9)
-      esbuild: 0.18.20
+      esbuild: 0.17.19
       solid-js: 1.7.11
     transitivePeerDependencies:
       - supports-color
@@ -10309,6 +10344,13 @@ packages:
     dependencies:
       csstype: 3.1.0
       seroval: 0.5.1
+
+  /solid-js@1.7.9:
+    resolution: {integrity: sha512-p1orXnauMQmwYULZtuPAXyKNRGEN2qh60kLX4YURa3jvulxAqjlh2kWEljXCtAVR6UZPC16NXdj9ASHcH383Fg==}
+    dependencies:
+      csstype: 3.1.0
+      seroval: 0.5.1
+    dev: true
 
   /solid-mdx@0.0.6(solid-js@1.7.11)(vite@4.4.6):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
