@@ -1,16 +1,16 @@
 // @refresh reload
-import { A, Routes } from "@solidjs/router";
+import { Routes } from "@solidjs/router";
 import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
 import { Suspense } from "solid-js";
 import "./app.css";
+import Nav from "./components/nav";
 
 export default function App() {
   return (
     <>
-      <A href="/">Index</A>
-      <A href="/about">About</A>
+      <Nav />
       <DefaultErrorBoundary>
-        <Suspense>
+        <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
           <Routes>
             <FileRoutes />
           </Routes>

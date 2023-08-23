@@ -1,5 +1,5 @@
-import { A } from "@solidjs/router";
 import { Component, For, Show } from "solid-js";
+import { A } from "solid-start";
 import { IComment } from "~/types";
 import Toggle from "./toggle";
 

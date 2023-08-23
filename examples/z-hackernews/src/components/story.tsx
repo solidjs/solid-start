@@ -1,5 +1,5 @@
-import { A } from "@solidjs/router";
 import { Component, Show } from "solid-js";
+import { A } from "solid-start";
 
 import type { IStory } from "../types";
 

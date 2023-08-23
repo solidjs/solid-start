@@ -1,10 +1,10 @@
-import { A, RouteDataFuncArgs, useRouteData } from "@solidjs/router";
 import { Component, createResource, For, Show } from "solid-js";
+import { A, RouteDataArgs, useRouteData } from "solid-start";
 import Comment from "~/components/comment";
 import fetchAPI from "~/lib/api";
 import { IStory } from "~/types";
 
-export const routeData = (props: RouteDataFuncArgs) => {
+export const routeData = (props: RouteDataArgs) => {
   const [story] = createResource<IStory, string>(() => `item/${props.params.id}`, fetchAPI);
   return story;
 };

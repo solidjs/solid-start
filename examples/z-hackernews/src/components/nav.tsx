@@ -1,4 +1,4 @@
-import { A } from "@solidjs/router";
+import { A } from "solid-start";
 
 function Nav() {
   return (

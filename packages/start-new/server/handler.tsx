@@ -1,17 +1,17 @@
 import {
-	appendResponseHeader,
-	eventHandler,
-	EventHandlerRequest,
-	getRequestIP,
-	getResponseHeader,
-	getResponseStatus,
-	H3Event,
-	removeResponseHeader,
-	send,
-	sendRedirect,
-	setResponseHeader,
-	setResponseStatus,
-	toWebRequest
+  appendResponseHeader,
+  eventHandler,
+  EventHandlerRequest,
+  getRequestIP,
+  getResponseHeader,
+  getResponseStatus,
+  H3Event,
+  removeResponseHeader,
+  send,
+  sendRedirect,
+  setResponseHeader,
+  setResponseStatus,
+  toWebRequest
 } from "vinxi/runtime/server";
 import { FetchEvent, FETCH_EVENT, PageEvent } from "./types";
 
@@ -63,7 +63,7 @@ export function render(
       if (context.routerContext && context.routerContext.url) {
         return sendRedirect(event, context.routerContext.url);
       }
-      return stream;
+      return { pipeTo: stream.pipeTo };
     };
   };
 }

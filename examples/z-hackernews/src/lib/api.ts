@@ -8,7 +8,7 @@ export default async function fetchAPI(path: string) {
   const headers: Record<string, string> = isServer
     ? { "User-Agent": "chrome" }
     : {};
-
+  
   try {
     let response = await fetch(url, { headers });
     let text = await response.text();
