@@ -40,7 +40,7 @@ const examplesPromises = examples.map(async packagePath => {
   await fs.writeFile(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
 });
 
-const others = ["test/template/package.json", "package.json"];
+const others = ["package.json", "packages/start/package.json", "test/template/package.json"];
 const othersPromises = others.map(async packagePath => {
   const packageJson = JSON.parse(await fs.readFile(packagePath));
 
@@ -52,5 +52,5 @@ const othersPromises = others.map(async packagePath => {
 
 await Promise.all([...examplesPromises, ...othersPromises]);
 
-console.log("Updating lock file...");
+console.log("Updating lock file...\n");
 spawnSync("pnpm i", { shell: true, stdio: "inherit" });
