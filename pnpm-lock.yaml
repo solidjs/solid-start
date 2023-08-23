@@ -125,7 +125,7 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -159,7 +159,7 @@ importers:
         specifier: ^0.14.54
         version: 0.14.54
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -192,7 +192,7 @@ importers:
         specifier: ^0.3.4
         version: link:../../packages/start
       solid-start-netlify:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-netlify
     devDependencies:
       '@iconify/json':
@@ -202,7 +202,7 @@ importers:
         specifier: ^1.63.6
         version: 1.63.6
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -263,10 +263,10 @@ importers:
         version: 2.20.0
     devDependencies:
       solid-start-cloudflare-workers:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-cloudflare-workers
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -306,7 +306,7 @@ importers:
         specifier: ^3.26.2
         version: 3.26.2
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -346,7 +346,7 @@ importers:
         specifier: ^3.26.2
         version: 3.26.2
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -389,7 +389,7 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -420,7 +420,7 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(rollup@3.26.2)
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -451,7 +451,7 @@ importers:
         version: link:../../packages/start
     devDependencies:
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -482,7 +482,7 @@ importers:
         specifier: ^7.20.1
         version: 7.20.1
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -516,7 +516,7 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       tailwindcss:
         specifier: ^3.3.3
@@ -571,7 +571,7 @@ importers:
         specifier: ^8.4.26
         version: 8.4.26
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -584,13 +584,13 @@ importers:
     devDependencies:
       '@solidjs/meta':
         specifier: ^0.28.5
-        version: 0.28.5(solid-js@1.7.9)
+        version: 0.28.5(solid-js@1.7.11)
       '@solidjs/router':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.7.9)
+        version: 0.8.2(solid-js@1.7.11)
       '@solidjs/testing-library':
         specifier: ^0.5.2
-        version: 0.5.2(solid-js@1.7.9)
+        version: 0.5.2(solid-js@1.7.11)
       '@testing-library/jest-dom':
         specifier: ^5.16.5
         version: 5.16.5
@@ -607,13 +607,13 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       solid-js:
-        specifier: ^1.7.9
-        version: 1.7.9
+        specifier: ^1.7.11
+        version: 1.7.11
       solid-start:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start
       solid-start-node:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -647,7 +647,7 @@ importers:
         version: link:../../packages/start
     devDependencies:
       solid-start-cloudflare-workers:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-cloudflare-workers
       typescript:
         specifier: ^4.9.5
@@ -4008,14 +4008,6 @@ packages:
     dependencies:
       solid-js: 1.7.11
 
-  /@solidjs/meta@0.28.5(solid-js@1.7.9):
-    resolution: {integrity: sha512-52luJR6hVNMA1K8Od5OD0d8WVz/svqZG4is8lrDimiUGxdia3DzuLF+pK56dnEzbNt9cA42qVFL134U9LkC9Gg==}
-    peerDependencies:
-      solid-js: '>=1.4.0'
-    dependencies:
-      solid-js: 1.7.9
-    dev: true
-
   /@solidjs/router@0.8.2(solid-js@1.7.11):
     resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
     peerDependencies:
@@ -4023,22 +4015,14 @@ packages:
     dependencies:
       solid-js: 1.7.11
 
-  /@solidjs/router@0.8.2(solid-js@1.7.9):
-    resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
-    peerDependencies:
-      solid-js: ^1.5.3
-    dependencies:
-      solid-js: 1.7.9
-    dev: true
-
-  /@solidjs/testing-library@0.5.2(solid-js@1.7.9):
+  /@solidjs/testing-library@0.5.2(solid-js@1.7.11):
     resolution: {integrity: sha512-GXUiI0Itz/7FfTJrV0RoICS2lL0RE3D1lNSrnuNg9nLC28qKnEQhm9Gfk4gFP9rGVzmsJJJC7yf8kbHMuyR2AA==}
     engines: {node: '>= 14'}
     peerDependencies:
       solid-js: '>=1.0.0'
     dependencies:
       '@testing-library/dom': 8.20.1
-      solid-js: 1.7.9
+      solid-js: 1.7.11
     dev: true
 
   /@swc/helpers@0.5.1:
@@ -9558,13 +9542,6 @@ packages:
     dependencies:
       csstype: 3.1.0
       seroval: 0.5.1
-
-  /solid-js@1.7.9:
-    resolution: {integrity: sha512-p1orXnauMQmwYULZtuPAXyKNRGEN2qh60kLX4YURa3jvulxAqjlh2kWEljXCtAVR6UZPC16NXdj9ASHcH383Fg==}
-    dependencies:
-      csstype: 3.1.0
-      seroval: 0.5.1
-    dev: true
 
   /solid-mdx@0.0.6(solid-js@1.7.11)(vite@4.4.6):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}

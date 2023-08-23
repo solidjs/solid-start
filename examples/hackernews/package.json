@@ -11,7 +11,7 @@
     "@types/babel__core": "^7.20.1",
     "@types/node": "^18.16.19",
     "esbuild": "^0.14.54",
-    "solid-start-node": "^0.3.0",
+    "solid-start-node": "^0.3.4",
     "typescript": "^4.9.5",
     "vite": "^4.4.6"
   },
