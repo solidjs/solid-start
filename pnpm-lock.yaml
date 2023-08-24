@@ -159,7 +159,7 @@ importers:
         specifier: ^0.14.54
         version: 0.14.54
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -610,10 +610,10 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       solid-start:
-        specifier: workspace:^
+        specifier: ^0.3.4
         version: link:../../packages/start
       solid-start-node:
-        specifier: workspace:^
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
