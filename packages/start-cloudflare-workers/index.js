@@ -50,7 +50,7 @@ export default function (miniflareOptions = {}) {
 
             try {
               const all = await vite.ssrLoadModule("~start/entry-server");
-              console.log(all.db.prototype.fetch);
+              console.log(all[obj].prototype.fetch);
               // let dObject = await this.promise;
               return await all[obj].prototype.fetch.call(this, request, this.ctx);
             } catch (e) {
