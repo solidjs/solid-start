@@ -3,7 +3,9 @@ import { internalFetch } from "../../api/internalFetch";
 import { FormError } from "../../data";
 import { ServerError } from "../../data/FormError";
 import {
-  ContentTypeHeader, isRedirectResponse, JSONResponseType,
+  ContentTypeHeader,
+  isRedirectResponse,
+  JSONResponseType,
   LocationHeader,
   XSolidStartContentTypeHeader,
   XSolidStartLocationHeader,
@@ -54,6 +56,10 @@ async function parseRequest(event: ServerFunctionEvent) {
       let formData = await request.clone().formData();
       args = [formData, event];
     }
+  } else if (request.method === "GET") {
+    // Attempt to retrieve args from query string
+    const retrievedArgs = new URL(request.url).searchParams.get("args");
+    if (retrievedArgs) args = JSON.parse(retrievedArgs);
   }
   return [name, args] as const;
 }
