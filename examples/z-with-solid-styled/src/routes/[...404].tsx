@@ -1,5 +1,5 @@
-import { Title } from "@solidjs/meta";
-import { HttpStatusCode } from "@solidjs/start";
+import { Title } from "solid-start";
+import { HttpStatusCode } from "solid-start/server";
 
 export default function NotFound() {
   return (

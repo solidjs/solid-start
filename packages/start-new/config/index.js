@@ -46,7 +46,8 @@ class SolidStartFileSystemRouter extends BaseFileSystemRouter {
 		};
 	}
 }
-export function defineConfig({} = {}) {
+export function defineConfig(baseConfig = {}) {
+	const { plugins = [], ...userConfig } = baseConfig;
 	return createApp({
 		routers: [
 			{
@@ -64,10 +65,12 @@ export function defineConfig({} = {}) {
 				build: {
 					target: "browser",
 					plugins: () => [
+						config("user", userConfig),
+						...plugins,
 						solid({
 							ssr: true,
 						}),
-						config("root", {
+						config("app", {
 							resolve: {
 								alias: {
 									"#start/app": join(process.cwd(), "src", "app.tsx"),
@@ -88,8 +91,10 @@ export function defineConfig({} = {}) {
 				build: {
 					target: "node",
 					plugins: () => [
+						config("user", userConfig),
+						...plugins,
 						solid({ ssr: true }),
-						config("root", {
+						config("app", {
 							resolve: {
 								alias: {
 									"#start/app": join(process.cwd(), "src", "app.tsx"),
