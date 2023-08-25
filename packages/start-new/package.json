@@ -37,6 +37,7 @@
     "vinxi": "0.0.19"
   },
   "dependencies": {
+    "@vinxi/plugin-references": "^0.0.6",
     "@vinxi/solid": "^0.0.7",
     "vite-plugin-solid": "^2.7.0"
   }

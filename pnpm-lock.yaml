@@ -955,6 +955,9 @@ importers:
 
   packages/start-new:
     dependencies:
+      '@vinxi/plugin-references':
+        specifier: ^0.0.6
+        version: 0.0.6(vinxi@0.0.19)
       '@vinxi/solid':
         specifier: ^0.0.7
         version: 0.0.7
@@ -3993,7 +3996,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.3(rollup@3.28.0)
+      '@rollup/pluginutils': 5.0.2(rollup@3.28.0)
       rollup: 3.28.0
 
   /@rollup/plugin-node-resolve@13.0.2(rollup@2.78.0):
@@ -4037,7 +4040,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.28.0)
+      '@rollup/pluginutils': 5.0.3(rollup@3.28.0)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-builtin-module: 3.2.1
@@ -4568,6 +4571,15 @@ packages:
       - encoding
       - supports-color
 
+  /@vinxi/plugin-references@0.0.6(vinxi@0.0.19):
+    resolution: {integrity: sha512-Ij0yBB+CbUEnduwn/OVovVYNqzWTi1zmyqugHbQA9YP4Tyi2kxxYYBdwfipRLaVdrjjVvJHU7+gChJUL6JtKWA==}
+    peerDependencies:
+      vinxi: ^0.0.1
+    dependencies:
+      acorn-loose: 8.3.0
+      vinxi: 0.0.19(debug@4.3.4)(rollup@3.26.2)
+    dev: false
+
   /@vinxi/solid@0.0.7:
     resolution: {integrity: sha512-oY2+LKM0YvKYwgO/yHGpiuEuJuOHaBvELvXQoCWMqwzW2jllj8xPDMk1gaKKnTG4murqaEZBh9GS1x0Eqziasg==}
     dev: false
@@ -4660,6 +4672,13 @@ packages:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       acorn: 8.10.0
+
+  /acorn-loose@8.3.0:
+    resolution: {integrity: sha512-75lAs9H19ldmW+fAbyqHdjgdCrz0pWGXKmnqFoh8PyVd1L2RIb4RzYrSjmopeqv3E1G3/Pimu6GgLlrGbrkF7w==}
+    engines: {node: '>=0.4.0'}
+    dependencies:
+      acorn: 8.10.0
+    dev: false
 
   /acorn-walk@8.2.0:
     resolution: {integrity: sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==}
@@ -11529,7 +11548,7 @@ packages:
       merge-anything: 5.1.7
       solid-js: 1.7.11
       solid-refresh: 0.5.3(solid-js@1.7.11)
-      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6
       vitefu: 0.2.4(vite@4.4.6)
     transitivePeerDependencies:
       - supports-color
@@ -11750,7 +11769,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6
     dev: false
 
   /vitest@0.20.3(jsdom@20.0.3)(terser@5.19.0):

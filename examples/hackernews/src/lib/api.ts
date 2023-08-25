@@ -1,3 +1,4 @@
+"use server";
 import { isServer } from "solid-js/web";
 
 const story = (path: string) => `https://node-hnapi.herokuapp.com/${path}`;
@@ -5,9 +6,7 @@ const user = (path: string) => `https://hacker-news.firebaseio.com/v0/${path}.js
 
 export default async function fetchAPI(path: string) {
   const url = path.startsWith("user") ? user(path) : story(path);
-  const headers: Record<string, string> = isServer
-    ? { "User-Agent": "chrome" }
-    : {};
+  const headers: Record<string, string> = isServer ? { "User-Agent": "chrome" } : {};
 
   try {
     let response = await fetch(url, { headers });
