@@ -1,141 +1,10 @@
 import { references } from "@vinxi/plugin-references";
-import { clientComponents } from "@vinxi/plugin-references/client-components";
-import { SERVER_REFERENCES_MANIFEST, hash } from "@vinxi/plugin-references/constants";
-import { buildServerComponents } from "@vinxi/plugin-references/server-components";
-import {
-  decorateExportsPlugin,
-  shimExportsPlugin,
-  transformReferences,
-  wrapExportsPlugin
-} from "@vinxi/plugin-references/transform-references";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { createApp } from "vinxi";
-import { BaseFileSystemRouter, analyzeModule, cleanPath } from "vinxi/file-system-router";
 import { config } from "vinxi/lib/plugins/config";
 import solid from "vite-plugin-solid";
-
-class SolidStartFileSystemRouter extends BaseFileSystemRouter {
-  toPath(src) {
-    const routePath = cleanPath(src, this.config)
-      // remove the initial slash
-      .slice(1)
-      .replace(/index$/, "")
-      .replace(/\[([^\/]+)\]/g, (_, m) => {
-        if (m.length > 3 && m.startsWith("...")) {
-          return `*${m.slice(3)}`;
-        }
-        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-          return `:${m.slice(1, -1)}?`;
-        }
-        return `:${m}`;
-      });
-
-    return routePath?.length > 0 ? `/${routePath}` : "/";
-  }
-
-  toRoute(src) {
-    let path = this.toPath(src);
-
-    const [_, exports] = analyzeModule(src);
-    const hasRouteData = exports.find(e => e.n === "routeData");
-    return {
-      $component: {
-        src: src,
-        pick: ["default", "$css"]
-      },
-      $$data: hasRouteData
-        ? {
-            src: src,
-            pick: ["routeData"]
-          }
-        : undefined,
-      path,
-      filePath: src
-    };
-  }
-}
-
-function server() {
-  const runtime = fileURLToPath(new URL("./server-runtime.jsx", import.meta.url));
-  // export function serverComponents({
-  // 	resolve = {
-  // 		conditions: ["react-server"],
-  // 	},
-  // 	runtime = "@vinxi/react-server-dom-vite/runtime",
-  // 	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom-vite"],
-  // 	manifest = SERVER_REFERENCES_MANIFEST,
-  // 	transforms = undefined,
-  // } = {}) {
-  const serverModules = new Set();
-  const clientModules = new Set();
-
-  function onReference(type, reference) {
-    if (type === "server") {
-      serverModules.add(reference);
-    } else {
-      clientModules.add(reference);
-    }
-  }
-
-  return [
-    transformReferences({
-      hash: e => `c_${hash(e)}`,
-      runtime,
-      onReference: onReference,
-      transforms: [
-        shimExportsPlugin({
-          runtime: {
-            module: runtime,
-            function: "createServerReference"
-          },
-          onModuleFound: mod => onReference("server", mod),
-          hash: e => `c_${hash(e)}`,
-          apply: (code, id, options) => {
-            return !options.ssr;
-          },
-          pragma: "use server"
-        }),
-        decorateExportsPlugin({
-          runtime: {
-            module: runtime,
-            function: "createServerReference"
-          },
-          onModuleFound: mod => onReference("server", mod),
-          hash: e => `c_${hash(e)}`,
-          apply: (code, id, options) => {
-            return options.ssr;
-          },
-          pragma: "use server"
-        }),
-        wrapExportsPlugin({
-          runtime: {
-            module: runtime,
-            function: "createClientReference"
-          },
-          onModuleFound: mod => onReference("client", mod),
-          hash: e => `c_${hash(e)}`,
-          apply: (code, id, options) => {
-            return options.ssr;
-          },
-          pragma: "use client"
-        })
-      ]
-    }),
-    buildServerComponents({
-      resolve: {
-        conditions: []
-      },
-      transpileDeps: [],
-      manifest: SERVER_REFERENCES_MANIFEST,
-      modules: {
-        server: serverModules,
-        client: clientModules
-      }
-    })
-  ];
-  // }
-}
+import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router";
+import { serverComponents } from "./server-components";
 
 export function defineConfig(baseConfig = {}) {
   const {
@@ -155,7 +24,6 @@ export function defineConfig(baseConfig = {}) {
         brotli: true
       }
     },
-
     routers: [
       {
         name: "public",
@@ -168,14 +36,13 @@ export function defineConfig(baseConfig = {}) {
         mode: "handler",
         handler: "./src/entry-server.tsx",
         dir: "./src/routes",
-        style: SolidStartFileSystemRouter,
+        style: SolidStartServerFileRouter,
         build: {
           target: "node",
           plugins: () => [
-            // inspect(),
             config("user", userConfig),
             ...plugins,
-            start.islands ? server() : null,
+            start.islands ? serverComponents.server() : null,
             solid({ ssr: true }),
             config("app", {
               resolve: {
@@ -199,7 +66,7 @@ export function defineConfig(baseConfig = {}) {
         ...(start.islands
           ? {}
           : {
-              style: SolidStartFileSystemRouter,
+              style: SolidStartClientFileRouter,
               dir: "./src/routes"
             }),
         build: {
@@ -208,14 +75,7 @@ export function defineConfig(baseConfig = {}) {
             config("user", userConfig),
             ...plugins,
             references.clientRouterPlugin(),
-            start.islands
-              ? clientComponents({
-                  server: "ssr",
-                  transpileDeps: [],
-                  manifest: SERVER_REFERENCES_MANIFEST
-                })
-              : null,
-
+            start.islands ? serverComponents.client() : null,
             solid({
               ssr: true
             }),
@@ -240,7 +100,6 @@ export function defineConfig(baseConfig = {}) {
         },
         base: "/_build"
       },
-
       references.serverRouter()
     ]
   });

@@ -1,7 +1,7 @@
 import { lazyRoute } from "@vinxi/solid";
 import { useContext } from "solid-js";
 
-import { routes as routeConfigs } from "./routes";
+import { pageRoutes as routeConfigs } from "./routes";
 import { ServerContext } from "./ServerContext";
 
 export function createRoutes() {

@@ -11,8 +11,7 @@ declare module "solid-js" {
     interface IntrinsicElements {
       "solid-island": {
         "data-props": string;
-        "data-component": string;
-        "data-island": string;
+        "data-id": string;
         "data-when": "idle" | "load";
         children: JSX.Element;
       };

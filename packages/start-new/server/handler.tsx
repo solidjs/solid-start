@@ -17,6 +17,7 @@ import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
 
 import { renderToStream } from "solid-js/web";
 import { createRoutes } from "../shared/FileRoutes";
+import { apiRoutes } from "../shared/routes";
 
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
 
@@ -52,20 +53,41 @@ export function createHandler(...exchanges: Middleware[]) {
   });
 }
 
+function api() {
+  return ({ forward }) => {
+    return async event => {
+      const match = apiRoutes.find(
+        route =>
+          route[`$${event.request.method}`] && new URL(event.request.url).pathname === route.path
+      );
+      if (match) {
+        const mod = await match[`$${event.request.method}`].import();
+        const fn = mod[event.request.method];
+        const result = await fn(event);
+        return result;
+      }
+      return forward(event);
+    };
+  };
+}
+
 export function render(
   fn: (context: PageEvent) => unknown,
   options?: { nonce?: string; renderId?: string; timeoutMs?: number }
 ) {
-  return () => {
-    return async event => {
-      const context = await createPageEvent(event);
-      const stream = renderToStream(() => fn(context), options);
-      if (context.routerContext && context.routerContext.url) {
-        return sendRedirect(event, context.routerContext.url);
-      }
-      return { pipeTo: stream.pipeTo };
-    };
-  };
+  return composeMiddleware([
+    api(),
+    () => {
+      return async event => {
+        const context = await createPageEvent(event);
+        const stream = renderToStream(() => fn(context), options);
+        if (context.routerContext && context.routerContext.url) {
+          return event.redirect(context.routerContext.url);
+        }
+        return { pipeTo: stream.pipeTo };
+      };
+    }
+  ]);
 }
 
 function createFetchEvent(event: H3Event<EventHandlerRequest>) {
@@ -73,6 +95,7 @@ function createFetchEvent(event: H3Event<EventHandlerRequest>) {
     request: toWebRequest(event),
     clientAddress: getRequestIP(event),
     locals: {},
+    redirect: (url, status) => sendRedirect(event, url, status),
     getResponseStatus: () => getResponseStatus(event),
     setResponseStatus: (code, text) => setResponseStatus(event, code, text),
     getResponseHeader: name => getResponseHeader(event, name),

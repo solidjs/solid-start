@@ -1,4 +1,3 @@
-
 export const FETCH_EVENT = "$FETCH";
 
 export type ContextMatches = {
@@ -31,6 +30,7 @@ export interface FetchEvent {
   request: Request;
   clientAddress: string;
   locals: Record<string, unknown>;
+  redirect(url: string, status?: number): void;
   getResponseStatus(): number;
   setResponseStatus(code: number, text?: string): void;
   getResponseHeader(name: string): string | number | string[];
@@ -39,9 +39,9 @@ export interface FetchEvent {
   removeResponseHeader(name: string): void;
 }
 export interface PageEvent extends FetchEvent {
-  manifest: any,
-  assets: any,
-  routes: any[],
+  manifest: any;
+  assets: any;
+  routes: any[];
   prevUrl: string | null;
   routerContext: RouterContext;
   tags: TagDescription[];
