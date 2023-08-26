@@ -15,7 +15,8 @@
     ".": "./shared/index.tsx",
     "./config": "./config/index.js",
     "./server": "./server/index.tsx",
-    "./client": "./client/index.tsx"
+    "./client": "./client/index.tsx",
+    "./client/islands": "./client/islands.tsx"
   },
   "typesVersions": {
     "*": {
@@ -34,11 +35,12 @@
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
     "solid-js": "^1.7.11",
-    "vinxi": "0.0.19"
+    "vinxi": "0.0.20"
   },
   "dependencies": {
-    "@vinxi/plugin-references": "^0.0.6",
+    "@vinxi/plugin-references": "^0.0.11",
     "@vinxi/solid": "^0.0.7",
+    "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.7.0"
   }
 }

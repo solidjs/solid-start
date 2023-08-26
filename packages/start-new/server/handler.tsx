@@ -13,7 +13,7 @@ import {
   setResponseStatus,
   toWebRequest
 } from "vinxi/runtime/server";
-import { FetchEvent, FETCH_EVENT, PageEvent } from "./types";
+import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
 
 import { renderToStream } from "solid-js/web";
 import { createRoutes } from "../shared/FileRoutes";
@@ -54,7 +54,7 @@ export function createHandler(...exchanges: Middleware[]) {
 
 export function render(
   fn: (context: PageEvent) => unknown,
-  options?: { nonce?: string; renderId?: string; timeoutMs?: number; }
+  options?: { nonce?: string; renderId?: string; timeoutMs?: number }
 ) {
   return () => {
     return async event => {
@@ -69,27 +69,33 @@ export function render(
 }
 
 function createFetchEvent(event: H3Event<EventHandlerRequest>) {
-	return {
-		request: toWebRequest(event),
-		clientAddress: getRequestIP(event),
-		locals: {},
-		getResponseStatus: () => getResponseStatus(event),
+  return {
+    request: toWebRequest(event),
+    clientAddress: getRequestIP(event),
+    locals: {},
+    getResponseStatus: () => getResponseStatus(event),
     setResponseStatus: (code, text) => setResponseStatus(event, code, text),
     getResponseHeader: name => getResponseHeader(event, name),
     setResponseHeader: (name, value) => setResponseHeader(event, name, value),
     appendResponseHeader: (name, value) => appendResponseHeader(event, name, value),
-    removeResponseHeader: name => removeResponseHeader(event, name),
-	}
+    removeResponseHeader: name => removeResponseHeader(event, name)
+  };
 }
 
 async function createPageEvent(ctx: FetchEvent) {
   const clientManifest = import.meta.env.MANIFEST["client"];
+  const serverManifest = import.meta.env.MANIFEST["ssr"];
   const prevPath = ctx.request.headers.get("x-solid-referrer");
   const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = {
     ...ctx,
     manifest: await clientManifest.json(),
-    assets: await clientManifest.inputs[clientManifest.handler].assets(),
+    assets: [
+      ...(await clientManifest.inputs[clientManifest.handler].assets()),
+      ...(import.meta.env.START_ISLANDS
+        ? await serverManifest.inputs[serverManifest.handler].assets()
+        : [])
+    ],
     routes: createRoutes(),
     prevUrl: prevPath || "",
     routerContext: {} as any,

@@ -5,7 +5,7 @@ import { Router } from "@solidjs/router";
 import { renderAsset } from "@vinxi/solid";
 import { join } from "path";
 import { useContext } from "solid-js";
-import { Hydration, HydrationScript, NoHydration, ssr, Suspense, useAssets } from "solid-js/web";
+import { Hydration, HydrationScript, NoHydration, ssr, useAssets } from "solid-js/web";
 
 import { ServerContext } from "../shared/ServerContext";
 
@@ -19,7 +19,7 @@ const docType = ssr("<!DOCTYPE html>");
 
 export function StartServer(props) {
   const context = props.context;
-	const parsed = new URL(context.request.url);
+  const parsed = new URL(context.request.url);
   const path = parsed.pathname + parsed.search;
   return (
     <ServerContext.Provider value={context}>
@@ -30,12 +30,12 @@ export function StartServer(props) {
           base={import.meta.env.BASE_URL}
         >
           <NoHydration>
-						{docType as unknown as any}
+            {docType as unknown as any}
             <props.document
               assets={
                 <>
                   <Meta />
-                  <Suspense>{context.assets.map(m => renderAsset(m))}</Suspense>
+                  {context.assets.map(m => renderAsset(m))}
                 </>
               }
               scripts={
@@ -53,9 +53,13 @@ export function StartServer(props) {
                 </>
               }
             >
-              <Hydration>
+              {!import.meta.env.START_ISLANDS ? (
+                <Hydration>
+                  <App />
+                </Hydration>
+              ) : (
                 <App />
-              </Hydration>
+              )}
             </props.document>
           </NoHydration>
         </Router>

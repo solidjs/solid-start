@@ -1,3 +1,5 @@
 import "vinxi/runtime/client";
-export { StartClient } from "./StartClient";
+export function StartClient() {
+  return null;
+}
 export { mount } from "./mount";
