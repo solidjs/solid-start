@@ -11,7 +11,7 @@
     "@solidjs/router": "^0.8.2",
     "@solidjs/start": "workspace:^",
     "solid-js": "^1.7.11",
-    "vinxi": "0.0.20"
+    "vinxi": "0.0.21"
   },
   "engines": {
     "node": ">=18"

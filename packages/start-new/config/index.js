@@ -8,8 +8,8 @@ import {
   transformReferences,
   wrapExportsPlugin
 } from "@vinxi/plugin-references/transform-references";
-import { join } from "path";
-import { fileURLToPath } from "url";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createApp } from "vinxi";
 import { BaseFileSystemRouter, analyzeModule, cleanPath } from "vinxi/file-system-router";
 import { config } from "vinxi/lib/plugins/config";
