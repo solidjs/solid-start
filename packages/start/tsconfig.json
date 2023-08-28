@@ -5,13 +5,15 @@
     "target": "ESNext",
     "allowJs": true,
     "noEmit": true,
-    "checkJs": true,
+    "declaration": true,
+    "checkJs": false,
     "module": "ESNext",
     "moduleResolution": "node",
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
     "types": ["./env"],
     "strict": true,
+    "skipLibCheck": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "paths": {
       "vite": ["./node_modules/vite"]
@@ -19,5 +21,5 @@
     "baseUrl": "./"
   },
   "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./**/*.jsx"],
-  "exclude": ["node_modules", "**/node_modules/*"]
+  "exclude": ["node_modules", "**/node_modules/*", "entry-client"]
 }

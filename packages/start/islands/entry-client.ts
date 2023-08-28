@@ -1,3 +1,3 @@
-import StartClient from "../entry-client/StartClient";
+import StartClient from "../entry-client/src/StartClient";
 
 StartClient();

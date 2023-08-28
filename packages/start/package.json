@@ -23,8 +23,11 @@
     "./api": "./api/index.ts",
     "./api/*": "./api/*",
     "./durable-object": "./durable-object/index.ts",
-    "./entry-client": "./entry-client/index.tsx",
-    "./entry-client/*": "./entry-client/*",
+    "./entry-client": {
+      "types": "./entry-client/dist/index.d.ts",
+      "import": "./entry-client/dist/index.jsx"
+    },
+    "./entry-client/dist/*": "./entry-client/dist/*",
     "./entry-server": "./entry-server/index.ts",
     "./entry-server/*": "./entry-server/*",
     "./error-boundary": "./error-boundary/index.tsx",
@@ -62,7 +65,8 @@
     "data",
     "dev",
     "durable-object",
-    "entry-client",
+    "entry-client/dist",
+    "entry-client/package.json",
     "entry-server",
     "error-boundary",
     "fs-router",

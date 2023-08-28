@@ -1223,6 +1223,8 @@ importers:
         specifier: ^4.4.6
         version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
 
+  packages/start/entry-client: {}
+
   test:
     dependencies:
       '@playwright/test':

@@ -1,8 +1,8 @@
 import type { JSX } from "solid-js";
 import { hydrate, render } from "solid-js/web";
 
-import { hydrateServerRouter } from "../islands/mount";
-import mountRouter from "../islands/router";
+import { hydrateServerRouter } from "solid-start/islands/mount";
+import mountRouter from "solid-start/islands/router";
 
 declare global {
   interface Window {

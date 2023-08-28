@@ -1,0 +1,7 @@
+{
+  "name": "solid-start/entry-client",
+  "module": "./dist/index.jsx",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "sideEffects": false
+}

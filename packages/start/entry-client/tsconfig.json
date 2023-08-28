@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": false,
+    "outDir": "./dist",
+    "types": ["../env", "solid-start/vite/plugin", "solid-start/router"],
+    "paths": {
+      "solid-start/islands": ["../islands"],
+      "solid-start/server": ["../server"]
+    }
+  },
+  "include": ["./src"],
+  "exclude": []
+}

@@ -2,8 +2,8 @@ import { MetaProvider } from "@solidjs/meta";
 import { Router, RouterProps } from "@solidjs/router";
 // @ts-ignore
 import Root from "~start/root";
-import { ServerContext } from "../server/ServerContext";
-import { FETCH_EVENT, PageEvent } from "../server/types";
+import { ServerContext } from "solid-start/server/ServerContext";
+import { FETCH_EVENT, PageEvent } from "solid-start/server/types";
 
 const rootData: { default: <T>() => Promise<T> } = Object.values(
   import.meta.glob("/src/root.data.(js|ts)", { eager: true })
