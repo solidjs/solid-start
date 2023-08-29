@@ -64,6 +64,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: 🔨 Build
+        run: pnpm --filter solid-start build:entry-client
+
       - name: Use Deno
         if: matrix.adapter == 'solid-start-deno'
         uses: denoland/setup-deno@v1

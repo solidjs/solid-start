@@ -86,6 +86,7 @@
     "types.ts"
   ],
   "scripts": {
+    "build:entry-client": "tsc --project ./entry-client/tsconfig.json",
     "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
   },
   "dependencies": {
