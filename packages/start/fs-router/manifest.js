@@ -222,7 +222,8 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       return routeEntry;
     });
 
-  let clientEntry = Object.keys(ssrManifest).find(key =>
+    console.log("qqq ssrManifest is: ", ssrManifest);
+    let clientEntry = Object.keys(ssrManifest).find(key =>
     key.match(new RegExp(`entry-client\\.(${["ts", "tsx", "jsx", "js"].join("|")})$`))
   );
 
@@ -265,6 +266,7 @@ export default function prepareManifest(ssrManifest, assetManifest, config, isla
       "entry-client",
       (() => {
         let assets = clientEntryAssets.getFiles();
+        console.log("qqq assets are: ", assets);
         return {
           type: "entry",
           script: assets[0],

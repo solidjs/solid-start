@@ -82,11 +82,14 @@ function solidStartConfig(options) {
         cwd: root
       });
 
+      console.log("qqq findAny is", findAny(join(root, options.appRoot), "entry-client"));
       options.clientEntry =
         options.clientEntry ?? findAny(join(root, options.appRoot), "entry-client");
+      console.log("qqq options.clientEntry1 is ", options.clientEntry);
       if (!options.clientEntry) {
         options.clientEntry = join(_dirname, "..", "virtual", "entry-client.tsx");
       }
+      console.log("qqq options.clientEntry2 is ", options.clientEntry);
       options.serverEntry =
         options.serverEntry ?? findAny(join(root, options.appRoot), "entry-server");
       if (!options.serverEntry) {
