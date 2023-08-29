@@ -145,6 +145,11 @@ export class Router {
       log("processing", path);
       let routeConfig = this.createRouteConfig(path);
 
+      // renamed index should have a trailing slash like index files
+      if (!routeConfig.path.endsWith("/") && /\/\([^)/]+\)$/.test(routeConfig.id)) {
+        routeConfig.path += "/";
+      }
+
       if (this.routes[routeConfig.id]) {
         // get old config, we want to compare the oldConfig with the new one to
         // detect changes and restart the vite server
