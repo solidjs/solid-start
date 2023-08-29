@@ -16,7 +16,22 @@ function throwClientError(field: string): any {
   );
 }
 
-export default () => {
+export default ({
+  routerProps
+}: {
+  /**
+   * Override props passed to `<Router`.
+   * 
+   * Only `source` is supported today.
+   * 
+   * If you need to pass in other props, please submit a PR.
+   */
+  // Before actually submitting a PR, you can test out the new prop like so:
+  //   import type { RouterProps } from "@solidjs/router";
+  //   const routerProps = { newProp } as RouterProps;
+  //   <StartClient routerProps={routerProps as unknown as undefined} />
+  routerProps?: Pick<RouterProps, 'source'>
+} = {}) => {
   let mockFetchEvent: PageEvent = {
     get request() {
       if (process.env.NODE_ENV === "development") {
@@ -95,7 +110,7 @@ export default () => {
   return (
     <ServerContext.Provider value={mockFetchEvent}>
       <MetaProvider>
-        <StartRouter base={basePath} data={dataFn}>
+        <StartRouter base={basePath} data={dataFn} {...routerProps}>
           <Root />
         </StartRouter>
       </MetaProvider>
