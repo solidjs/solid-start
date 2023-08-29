@@ -125,7 +125,7 @@ importers:
         specifier: ^8.4.28
         version: 8.4.28
       solid-start-node:
-        specifier: ^0.3.3
+        specifier: ^0.3.4
         version: link:../../packages/start-node
       typescript:
         specifier: ^4.9.5
@@ -192,7 +192,7 @@ importers:
         specifier: ^0.3.4
         version: link:../../packages/start
       solid-start-netlify:
-        specifier: ^0.3.0
+        specifier: ^0.3.4
         version: link:../../packages/start-netlify
     devDependencies:
       '@iconify/json':
