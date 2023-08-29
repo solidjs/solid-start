@@ -9,7 +9,7 @@
   "devDependencies": {
     "@iconify/json": "^2.2.102",
     "sass": "^1.65.1",
-    "solid-start-node": "^0.3.4",
+    "solid-start-node": "^0.3.5",
     "typescript": "^4.9.5",
     "unplugin-icons": "^0.14.15",
     "vite": "^4.4.9"
@@ -21,8 +21,8 @@
     "nprogress": "^0.2.0",
     "solid-heroicons": "^3.2.4",
     "solid-js": "^1.7.11",
-    "solid-start": "^0.3.4",
-    "solid-start-netlify": "^0.3.4"
+    "solid-start": "^0.3.5",
+    "solid-start-netlify": "^0.3.5"
   },
   "engines": {
     "node": ">=18"
