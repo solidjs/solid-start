@@ -160,8 +160,8 @@ function solidStartConfig(options) {
   };
 }
 /**
- * @returns {import('node_modules/vite').Plugin}
- * @param {{ delay?: number; babel?: any }} options
+ * @returns {import('vite').Plugin}
+ * @param {{ delay?: number } & Partial<import("vite-plugin-solid").Options>} options
  */
 function solidStartFileSystemRouter(options) {
   /** @type {import('./plugin').ViteConfig} */
@@ -260,7 +260,6 @@ function solidStartFileSystemRouter(options) {
         /** @type {string} */ id,
         /** @type {any} */ fn
       ) => {
-        // @ts-ignore
         let plugin = solid({
           ...(options ?? {}),
           ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
@@ -599,7 +598,7 @@ function expand(target, source = {}, parse = v => v) {
 
           // Avoid recursion
           if (parents.includes(key)) {
-            consola.warn(
+            console.warn(
               `Please avoid recursive environment variables ( loop: ${parents.join(
                 " > "
               )} > ${key} )`
@@ -635,7 +634,7 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
 
 /**
  * @param {import('./plugin').Options} options
- * @returns {import('node_modules/vite').PluginOption[]}
+ * @returns {import('vite').PluginOption[]}
  */
 export default function solidStart(options) {
   options = Object.assign(
@@ -667,7 +666,7 @@ export default function solidStart(options) {
 
   return [
     solidStartConfig(options),
-    solidStartFileSystemRouter({ delay: 500 }),
+    solidStartFileSystemRouter({ delay: 500, typescript: options.typescript, solid: options.solid }),
     !options.ssr && solidStartCsrDev(options),
     options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
     options.experimental.islands ? islands() : undefined,
