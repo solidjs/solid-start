@@ -8,7 +8,7 @@
   "type": "module",
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
-    "solid-start-node": "^0.3.4",
+    "solid-start-node": "^0.3.0",
     "typescript": "^4.9.5",
     "vite": "^4.4.6",
     "vite-plugin-solid-styled": "^0.8.3"
