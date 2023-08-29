@@ -87,7 +87,7 @@
   ],
   "scripts": {
     "build:entry-client": "tsc --project ./entry-client/tsconfig.json",
-    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/core": "^7.22.9",
