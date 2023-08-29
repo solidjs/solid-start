@@ -8,7 +8,6 @@
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
     "strict": true,
-    "types": ["solid-start/env", "dom", "@cloudflare/workers-types"],
     "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"]

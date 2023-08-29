@@ -29,7 +29,7 @@ export function createServer({ handler, paths, env }) {
       })
     : (_req, _res, next) => next();
 
-  const render = async (req, res) => {
+  const render = async (req, res, server) => {
     try {
       env.getStaticHTML = async assetPath => {
         let text = await readFile(join(paths.assets, assetPath + ".html"), "utf8");
@@ -50,6 +50,7 @@ export function createServer({ handler, paths, env }) {
         console.log("[internal]", url.method, url.href);
         return handler({
           request: request,
+          httpServer: server,
           clientAddress: req.socket.remoteAddress,
           locals: {},
           env,
@@ -59,6 +60,7 @@ export function createServer({ handler, paths, env }) {
 
       const webRes = await handler({
         request: createRequest(req),
+        httpServer: server,
         clientAddress: req.socket.remoteAddress,
         locals: {},
         env,
@@ -74,7 +76,8 @@ export function createServer({ handler, paths, env }) {
     }
   };
 
-  const server = polka().use("/", comp, assets_handler).use(comp, render);
+  const server = polka();
+  server.use("/", comp, assets_handler).use(comp, (req, res) => render(req, res, server.server));
 
   return server;
 }

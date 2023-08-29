@@ -102,6 +102,7 @@ export function createDevHandler(viteServer, config, options) {
 
       return entry({
         request: internalRequest,
+        httpServer: viteServer.httpServer,
         env: devEnv,
         fetch: internalFetch
       });
@@ -109,6 +110,7 @@ export function createDevHandler(viteServer, config, options) {
 
     return await entry({
       request,
+      httpServer: viteServer.httpServer,
       env: devEnv,
       clientAddress,
       locals,
