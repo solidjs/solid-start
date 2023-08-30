@@ -111,6 +111,6 @@ export function defineConfig(baseConfig = {}) {
         base: "/_build"
       },
       references.serverRouter()
-    ].filter(Boolean)
+    ]
   });
 }
