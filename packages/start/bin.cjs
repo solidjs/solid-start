@@ -33,7 +33,7 @@ const findAny = (path, name) => {
 
 prog
   .command("routes").describe("Show all routes in your app")
-  .action(async ({config: configFile, open, port, root, host, inspect}) => {
+  .action(async ({ config: configFile, open, port, root, host, inspect }) => {
     root = root || process.cwd();
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
 
@@ -381,12 +381,18 @@ prog
                 ]
                   .filter(Boolean)
                   .join(" "),
-              }
+              },
+              detached: process.platform !== 'win32'
             }
           );
 
+          const terminateShell = () => {
+            if (process.platform === 'win32') proc.kill()
+            else process.kill(-proc.pid);
+          }
+
           process.on("SIGINT", function () {
-            proc.kill();
+            terminateShell()
             process.exit();
           });
 
@@ -409,7 +415,7 @@ prog
           DEBUG("spa index.html created");
           console.timeEnd(c.blue("solid-start") + c.magenta(" index.html rendered in"));
 
-          proc.kill();
+          terminateShell()
         }
 
         DEBUG("building client bundle");
