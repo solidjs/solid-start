@@ -1,4 +1,4 @@
-import { createHandler, render, StartServer } from "@solidjs/start/server";
+import { createHandler, StartServer } from "@solidjs/start/server";
 
 function Document(props) {
   return (
@@ -17,6 +17,4 @@ function Document(props) {
   );
 }
 
-export default createHandler(
-  render(context => <StartServer context={context} document={Document} />)
-);
+export default createHandler(context => <StartServer context={context} document={Document} />);

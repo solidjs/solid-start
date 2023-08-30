@@ -18,6 +18,7 @@ export function mount(fn, el) {
       }
 
       let mod = await import(
+        /* @vite-ignore */
         import.meta.env.MANIFEST["client"].chunks[el.dataset.id.split("#")[0]].output.path
       );
       if (!mod || !el.dataset.hk) return;
@@ -67,7 +68,7 @@ export function mount(fn, el) {
       Promise.all(
         [...assets].map(
           asset =>
-            import(import.meta.env.MANIFEST["client"].chunks[asset.split("#")[0]].output.path)
+            import(/* @vite-ignore */import.meta.env.MANIFEST["client"].chunks[asset.split("#")[0]].output.path)
         )
       )
         .then(() => {

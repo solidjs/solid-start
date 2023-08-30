@@ -1,4 +1,4 @@
-import { createIslandReference } from "../server/island";
+import { createIslandReference } from "../server/islands";
 
 async function fetchServerAction(base, id, args) {
   const response = await fetch(base, {

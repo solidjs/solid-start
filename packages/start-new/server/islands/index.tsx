@@ -2,9 +2,8 @@ import { Component, ComponentProps, lazy, sharedConfig } from "solid-js";
 import { Hydration, NoHydration } from "solid-js/web";
 // import { useRequest } from "../server/ServerContext";
 // import { IslandManifest } from "./types";
-import { useRequest } from "../shared/ServerContext";
+import { useRequest } from "../../shared/ServerContext";
 import { splitProps } from "./utils";
-export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
   namespace JSX {

@@ -1,32 +1,36 @@
+import { renderToStream } from "solid-js/web";
+import { eventHandler, EventHandlerRequest, H3Event } from "vinxi/runtime/server";
 import { createRoutes } from "../shared/FileRoutes";
 import { apiRoutes } from "../shared/routes";
-import { composeMiddleware } from "./fetch-event";
-import { renderStream } from "./render";
-import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
+import { createFetchEvent } from "./middleware";
+import { FetchEvent, FETCH_EVENT, PageEvent } from "./types";
 
-function api() {
-  return ({ forward }) => {
-    return async event => {
-      const match = apiRoutes.find(
-        route =>
-          route[`$${event.request.method}`] && new URL(event.request.url).pathname === route.path
-      );
-      if (match) {
-        const mod = await match[`$${event.request.method}`].import();
-        const fn = mod[event.request.method];
-        const result = await fn(event);
-        return result;
-      }
-      return forward(event);
-    };
-  };
-}
-
-export function render(
+export function createHandler(
   fn: (context: PageEvent) => unknown,
-  options?: { nonce?: string; renderId?: string; timeoutMs?: number }
+  options?: { nonce?: string; renderId?: string; timeoutMs?: number, createPageEvent: (event: FetchEvent) => Promise<PageEvent>; }
 ) {
-  return composeMiddleware([api(), renderStream(fn, { ...options, createPageEvent })]);
+  return eventHandler(async (e: H3Event<EventHandlerRequest>) => {
+    const event = createFetchEvent(e);
+    // api
+    const match = apiRoutes.find(
+      route =>
+        route[`$${event.request.method}`] && new URL(event.request.url).pathname === route.path
+    );
+    if (match) {
+      const mod = await match[`$${event.request.method}`].import();
+      const fn = mod[event.request.method];
+      const result = await fn(event);
+      return result;
+    }
+
+    // render stream
+    const context = await createPageEvent(event);
+    const stream = renderToStream(() => fn(context), options);
+    if (context.routerContext && context.routerContext.url) {
+      return event.redirect(context.routerContext.url);
+    }
+    return { pipeTo: stream.pipeTo };
+  });
 }
 
 export async function createPageEvent(ctx: FetchEvent) {

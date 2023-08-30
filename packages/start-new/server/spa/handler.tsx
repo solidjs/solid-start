@@ -1,11 +1,11 @@
-import { renderStream } from "../render";
-import { FETCH_EVENT, FetchEvent, PageEvent } from "../types";
+import { createHandler as createBaseHandler } from "../handler";
+import { FetchEvent, FETCH_EVENT, PageEvent } from "../types";
 
-export function render(
+export function createHandler(
   fn: (context: PageEvent) => unknown,
   options?: { nonce?: string; renderId?: string; timeoutMs?: number }
 ) {
-  return renderStream(fn, { ...options, createPageEvent });
+  return createBaseHandler(fn, { ...options, createPageEvent });
 }
 
 export async function createPageEvent(ctx: FetchEvent) {

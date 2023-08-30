@@ -1,4 +1,4 @@
-export { StartServer } from "./StartServer";
-export * from "./fetch-event";
-export { render } from "./handler";
+export { createHandler } from "./handler";
 export * from "./middleware";
+export { StartServer } from "./StartServer";
+
