@@ -1,20 +1,17 @@
-import { Title } from "@solidjs/meta";
-import { createHandler, StartServer } from "@solidjs/start/server";
+import { createHandler, StartServer, type DocumentComponentProps } from "@solidjs/start/server";
 
-function Document(props) {
+function Document({ assets, children, scripts }: DocumentComponentProps) {
   return (
     <html lang="en">
       <head>
-        <Title>SolidStart - Hacker News</Title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Hacker News Clone built with Solid" />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        {props.assets}
+        <link rel="icon" href="/favicon.ico" />
+        {assets}
       </head>
       <body>
-        <div id="app">{props.children}</div>
-        {props.scripts}
+        <div id="app">{children}</div>
+        {scripts}
       </body>
     </html>
   );

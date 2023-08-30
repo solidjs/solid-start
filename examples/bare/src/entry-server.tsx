@@ -1,17 +1,17 @@
-import { createHandler, StartServer } from "@solidjs/start/server";
+import { createHandler, StartServer, type DocumentComponentProps } from "@solidjs/start/server";
 
-function Document(props) {
+function Document({ assets, children, scripts }: DocumentComponentProps) {
   return (
     <html lang="en">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        {props.assets}
+        {assets}
       </head>
       <body>
-        <div id="app">{props.children}</div>
-        {props.scripts}
+        <div id="app">{children}</div>
+        {scripts}
       </body>
     </html>
   );

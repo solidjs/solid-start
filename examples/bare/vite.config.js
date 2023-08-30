@@ -2,7 +2,7 @@ import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
   start: {
-    ssr: false,
+    ssr: true,
     islands: false,
     serverPlugins: ["./app/middleware.ts"]
   }

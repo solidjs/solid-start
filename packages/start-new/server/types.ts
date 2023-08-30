@@ -1,4 +1,12 @@
+import { JSX } from "solid-js";
+
 export const FETCH_EVENT = "$FETCH";
+
+export type DocumentComponentProps = {
+  assets: any;
+  scripts: any;
+  children: JSX.Element;
+}
 
 export type ContextMatches = {
   originalPath: string;
