@@ -109,8 +109,8 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.23
-        version: 0.0.23(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.25
+        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
 
   examples/hackernews:
     dependencies:
@@ -127,8 +127,8 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.23
-        version: 0.0.23(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.25
+        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
 
   examples/movies:
     dependencies:
@@ -380,7 +380,7 @@ importers:
     devDependencies:
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@3.28.0)
+        version: 2.3.0(rollup@3.28.1)
       solid-start-node:
         specifier: ^0.3.0
         version: link:../../packages/start-node
@@ -440,8 +440,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(@babel/core@7.22.9)(solid-js@1.7.11)
       vinxi:
-        specifier: 0.0.23
-        version: 0.0.23(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.25
+        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.6)
@@ -470,8 +470,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
-        version: 0.0.23(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.25
+        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
 
   examples/with-trpc:
     dependencies:
@@ -758,7 +758,7 @@ importers:
         version: 2.3.0
       '@mdx-js/rollup':
         specifier: ^2.3.0
-        version: 2.3.0(rollup@3.28.0)
+        version: 2.3.0(rollup@3.28.1)
       '@types/mdast':
         specifier: ^3.0.12
         version: 3.0.12
@@ -956,11 +956,14 @@ importers:
   packages/start-new:
     dependencies:
       '@vinxi/plugin-references':
-        specifier: ^0.0.13
-        version: 0.0.13(vinxi@0.0.23)
+        specifier: ^0.0.15
+        version: 0.0.15(vinxi@0.0.25)
       '@vinxi/solid':
-        specifier: ^0.0.9
-        version: 0.0.9
+        specifier: ^0.0.11
+        version: 0.0.11
+      defu:
+        specifier: ^6.1.2
+        version: 6.1.2
       vite-plugin-inspect:
         specifier: ^0.7.33
         version: 0.7.33(rollup@3.26.2)(vite@4.4.6)
@@ -978,8 +981,8 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.23
-        version: 0.0.23(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.25
+        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
 
   packages/start-node:
     dependencies:
@@ -3372,14 +3375,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@mdx-js/rollup@2.3.0(rollup@3.28.0):
+  /@mdx-js/rollup@2.3.0(rollup@3.28.1):
     resolution: {integrity: sha512-wLvRfJS/M4UmdqTd+WoaySEE7q4BIejYf1xAHXYvtT1du/1Tl/z2450Gg2+Hu7fh05KwRRiehiTP9Yc/Dtn0fA==}
     peerDependencies:
       rollup: '>=2'
     dependencies:
       '@mdx-js/mdx': 2.3.0
-      '@rollup/pluginutils': 5.0.2(rollup@3.28.0)
-      rollup: 3.28.0
+      '@rollup/pluginutils': 5.0.2(rollup@3.28.1)
+      rollup: 3.28.1
       source-map: 0.7.4
       vfile: 5.3.7
     transitivePeerDependencies:
@@ -3912,6 +3915,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -4247,20 +4251,6 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 3.26.2
-
-  /@rollup/pluginutils@5.0.2(rollup@3.28.0):
-    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@types/estree': 1.0.1
-      estree-walker: 2.0.2
-      picomatch: 2.3.1
-      rollup: 3.28.0
 
   /@rollup/pluginutils@5.0.2(rollup@3.28.1):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
@@ -4714,10 +4704,10 @@ packages:
       - encoding
       - supports-color
 
-  /@vinxi/plugin-references@0.0.13(vinxi@0.0.23):
-    resolution: {integrity: sha512-eZzV5Qc7UXWlWe6bAcq+oX8leZizOosxSxRoQceoEhoKRzJ91mMAvK2vYIycky3T87rSSUVekczN4pypLdZu3g==}
+  /@vinxi/plugin-references@0.0.15(vinxi@0.0.25):
+    resolution: {integrity: sha512-06vjkaNofaDc8JakzTwuPflRkA5tNiHhnAHrrrEUjG9Qtc3VM4rl2bc/BIX+AQsb3mmurXMVtloQKAG3HOoceA==}
     peerDependencies:
-      vinxi: ^0.0.23
+      vinxi: ^0.0.25
     dependencies:
       acorn: 8.10.0
       acorn-loose: 8.3.0
@@ -4725,11 +4715,11 @@ packages:
       astring: 1.8.6
       magicast: 0.2.10
       recast: 0.23.4
-      vinxi: 0.0.23(debug@4.3.4)(rollup@3.26.2)
+      vinxi: 0.0.25(debug@4.3.4)(rollup@3.26.2)
     dev: false
 
-  /@vinxi/solid@0.0.9:
-    resolution: {integrity: sha512-F7wQPNNprxSDvaStbXe5aK3pFjzLn/vrJamyR/q1Dj09Bpk/OPnaju4rmIBDsj9drW2xPsynuDryTlOolHGo0Q==}
+  /@vinxi/solid@0.0.11:
+    resolution: {integrity: sha512-TsGwCbo1t+hTcNo5Cv56BqZB1k9dUbXDbOPpTG3lK9GuwtPMsx+eGb0XGwQ0zQux+dfQtfaRZHVonK8yBUW0eA==}
     dev: false
 
   /@vitest/coverage-c8@0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3):
@@ -5266,8 +5256,8 @@ packages:
       defu: 6.1.2
       dotenv: 16.3.1
       giget: 1.1.2
-      jiti: 1.19.1
-      mlly: 1.4.0
+      jiti: 1.19.3
+      mlly: 1.4.1
       ohash: 1.1.3
       pathe: 1.1.1
       perfect-debounce: 1.0.0
@@ -8273,8 +8263,8 @@ packages:
   /magicast@0.2.10:
     resolution: {integrity: sha512-Ah2qatigknxwmoYCd9hx/mmVyrRNhDKiaWZIuW4gL6dWrAGMoOpCVkQ3VpGWARtkaJVFhe8uIphcsxDzLPQUyg==}
     dependencies:
-      '@babel/parser': 7.22.10
-      '@babel/types': 7.22.10
+      '@babel/parser': 7.22.11
+      '@babel/types': 7.22.11
       recast: 0.23.4
     dev: false
 
@@ -8904,6 +8894,9 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+
   /negotiator@0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
@@ -9214,13 +9207,6 @@ packages:
       has-symbols: 1.0.3
       object-keys: 1.1.1
     dev: true
-
-  /ofetch@1.1.1:
-    resolution: {integrity: sha512-SSMoktrp9SNLi20BWfB/BnnKcL0RDigXThD/mZBeQxkIRv1xrd9183MtLdsqRYLYSqW0eTr5t8w8MqjNhvoOQQ==}
-    dependencies:
-      destr: 2.0.1
-      node-fetch-native: 1.4.0
-      ufo: 1.3.0
 
   /ofetch@1.3.3:
     resolution: {integrity: sha512-s1ZCMmQWXy4b5K/TW9i/DtiN8Ku+xCiHcjQ6/J/nDdssirrQNOoB165Zu8EqLMA2lln1JUth9a0aW9Ap2ctrUg==}
@@ -11299,7 +11285,7 @@ packages:
       fast-glob: 3.3.1
       local-pkg: 0.4.3
       magic-string: 0.30.3
-      mlly: 1.4.0
+      mlly: 1.4.1
       pathe: 1.1.1
       pkg-types: 1.0.3
       scule: 1.0.0
@@ -11316,7 +11302,7 @@ packages:
       fast-glob: 3.3.1
       local-pkg: 0.4.3
       magic-string: 0.30.3
-      mlly: 1.4.0
+      mlly: 1.4.1
       pathe: 1.1.1
       pkg-types: 1.0.3
       scule: 1.0.0
@@ -11482,7 +11468,7 @@ packages:
       lru-cache: 10.0.1
       mri: 1.2.0
       node-fetch-native: 1.4.0
-      ofetch: 1.1.1
+      ofetch: 1.3.3
       ufo: 1.3.0
     transitivePeerDependencies:
       - supports-color
@@ -11625,8 +11611,8 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.0.23(debug@4.3.4)(rollup@3.26.2):
-    resolution: {integrity: sha512-kInABUiwAvRmEqBilCIoKz0zrccjWbIaaKGvVk91rTG8//94Hob3qcJcY2jmgJfwH7iGZTxqAYstuFZw2DuRHA==}
+  /vinxi@0.0.25(debug@4.3.4)(rollup@3.26.2):
+    resolution: {integrity: sha512-623aTuVA7w8Df3vXQb/11fXwVvALH66haTU3cNYSJra9tNqf9VbCafNJUBhhq8YNnFzQyGK1MtQlGBvlWrpYFA==}
     hasBin: true
     dependencies:
       '@babel/core': 7.22.11
@@ -11741,7 +11727,7 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       sirv: 2.0.3
-      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -11775,7 +11761,7 @@ packages:
       merge-anything: 5.1.7
       solid-js: 1.7.11
       solid-refresh: 0.5.3(solid-js@1.7.11)
-      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6
       vitefu: 0.2.4(vite@4.4.6)
     transitivePeerDependencies:
       - supports-color
@@ -11843,7 +11829,7 @@ packages:
     dependencies:
       esbuild: 0.17.19
       postcss: 8.4.26
-      rollup: 3.28.0
+      rollup: 3.28.1
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -11996,7 +11982,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+      vite: 4.4.6
     dev: false
 
   /vitest@0.20.3(jsdom@20.0.3)(terser@5.19.0):

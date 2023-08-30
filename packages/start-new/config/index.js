@@ -1,4 +1,5 @@
 import { references } from "@vinxi/plugin-references";
+import defu from "defu";
 import { join } from "node:path";
 import { createApp } from "vinxi";
 import { config } from "vinxi/lib/plugins/config";
@@ -7,13 +8,11 @@ import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-rou
 import { serverComponents } from "./server-components";
 
 export function defineConfig(baseConfig = {}) {
-  const {
-    plugins = [],
-    start = {
-      islands: false
-    },
-    ...userConfig
-  } = baseConfig;
+  let { plugins = [], start = {}, serverPlugins = [], ...userConfig } = baseConfig;
+  start = defu(start, {
+    ssr: true,
+    islands: false
+  });
   return createApp({
     server: {
       plugins: [references.serverPlugin],
@@ -35,10 +34,9 @@ export function defineConfig(baseConfig = {}) {
         name: "ssr",
         mode: "handler",
         handler: "./src/entry-server.tsx",
-        dir: "./src/routes",
-        style: SolidStartServerFileRouter,
+        ...(start.ssr ? { dir: "./src/routes", style: SolidStartServerFileRouter } : {}),
         build: {
-          target: "node",
+          target: "server",
           plugins: () => [
             config("user", userConfig),
             ...plugins,
@@ -48,12 +46,18 @@ export function defineConfig(baseConfig = {}) {
               resolve: {
                 alias: {
                   "#start/app": join(process.cwd(), "src", "app.tsx"),
-                  "~": join(process.cwd(), "src")
+                  "~": join(process.cwd(), "src"),
+                  ...(!start.ssr
+                    ? {
+                        "@solidjs/start/server": "@solidjs/start/server/spa"
+                      }
+                    : {})
                 }
               },
               define: {
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-                "import.meta.env.SSR": JSON.stringify(true)
+                "import.meta.env.SSR": JSON.stringify(true),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr)
               }
             })
           ]
@@ -77,7 +81,7 @@ export function defineConfig(baseConfig = {}) {
             references.clientRouterPlugin(),
             start.islands ? serverComponents.client() : null,
             solid({
-              ssr: true
+              ssr: start.ssr
             }),
             config("app", {
               resolve: {
@@ -88,12 +92,18 @@ export function defineConfig(baseConfig = {}) {
                     ? {
                         "@solidjs/start/client": "@solidjs/start/client/islands"
                       }
+                    : {}),
+                  ...(!start.ssr
+                    ? {
+                        "@solidjs/start/client": "@solidjs/start/client/spa"
+                      }
                     : {})
                 }
               },
               define: {
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-                "import.meta.env.SSR": JSON.stringify(false)
+                "import.meta.env.SSR": JSON.stringify(false),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr)
               }
             })
           ]
@@ -101,6 +111,6 @@ export function defineConfig(baseConfig = {}) {
         base: "/_build"
       },
       references.serverRouter()
-    ]
+    ].filter(Boolean)
   });
 }
