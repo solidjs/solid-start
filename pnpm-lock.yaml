@@ -109,8 +109,8 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.25
-        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.27
+        version: 0.0.27(debug@4.3.4)(rollup@3.26.2)
 
   examples/hackernews:
     dependencies:
@@ -127,8 +127,8 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.25
-        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.27
+        version: 0.0.27(debug@4.3.4)(rollup@3.26.2)
 
   examples/movies:
     dependencies:
@@ -440,8 +440,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(@babel/core@7.22.9)(solid-js@1.7.11)
       vinxi:
-        specifier: 0.0.25
-        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.27
+        version: 0.0.27(debug@4.3.4)(rollup@3.26.2)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.26.2)(solid-styled@0.8.2)(vite@4.4.6)
@@ -470,8 +470,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.25
-        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.27
+        version: 0.0.27(debug@4.3.4)(rollup@3.26.2)
 
   examples/with-trpc:
     dependencies:
@@ -956,8 +956,8 @@ importers:
   packages/start-new:
     dependencies:
       '@vinxi/plugin-references':
-        specifier: ^0.0.15
-        version: 0.0.15(vinxi@0.0.25)
+        specifier: ^0.0.17
+        version: 0.0.17(vinxi@0.0.27)
       '@vinxi/solid':
         specifier: ^0.0.11
         version: 0.0.11
@@ -981,8 +981,8 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.25
-        version: 0.0.25(debug@4.3.4)(rollup@3.26.2)
+        specifier: 0.0.27
+        version: 0.0.27(debug@4.3.4)(rollup@3.26.2)
 
   packages/start-node:
     dependencies:
@@ -4704,10 +4704,10 @@ packages:
       - encoding
       - supports-color
 
-  /@vinxi/plugin-references@0.0.15(vinxi@0.0.25):
-    resolution: {integrity: sha512-06vjkaNofaDc8JakzTwuPflRkA5tNiHhnAHrrrEUjG9Qtc3VM4rl2bc/BIX+AQsb3mmurXMVtloQKAG3HOoceA==}
+  /@vinxi/plugin-references@0.0.17(vinxi@0.0.27):
+    resolution: {integrity: sha512-3voEAg3ufgJJbPN6wp0j0eXvV5O74iLhVrnpjRu/4cWVZS/RiGECYa60vhogy8KG+4wyLaFIeB+O3lEFwO1XQg==}
     peerDependencies:
-      vinxi: ^0.0.25
+      vinxi: ^0.0.27
     dependencies:
       acorn: 8.10.0
       acorn-loose: 8.3.0
@@ -4715,7 +4715,7 @@ packages:
       astring: 1.8.6
       magicast: 0.2.10
       recast: 0.23.4
-      vinxi: 0.0.25(debug@4.3.4)(rollup@3.26.2)
+      vinxi: 0.0.27(debug@4.3.4)(rollup@3.26.2)
     dev: false
 
   /@vinxi/solid@0.0.11:
@@ -11611,8 +11611,8 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.0.25(debug@4.3.4)(rollup@3.26.2):
-    resolution: {integrity: sha512-623aTuVA7w8Df3vXQb/11fXwVvALH66haTU3cNYSJra9tNqf9VbCafNJUBhhq8YNnFzQyGK1MtQlGBvlWrpYFA==}
+  /vinxi@0.0.27(debug@4.3.4)(rollup@3.26.2):
+    resolution: {integrity: sha512-UN8QPY/AsqMN/LAjeMCbev8cYeRj3tjZPZpkGDQsnPQD2xUVM03vXi5VwUu67eyh5UB3KmjIw1OPB/JXJlkPlQ==}
     hasBin: true
     dependencies:
       '@babel/core': 7.22.11
@@ -11727,7 +11727,7 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       sirv: 2.0.3
-      vite: 4.4.6
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -11761,7 +11761,7 @@ packages:
       merge-anything: 5.1.7
       solid-js: 1.7.11
       solid-refresh: 0.5.3(solid-js@1.7.11)
-      vite: 4.4.6
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
       vitefu: 0.2.4(vite@4.4.6)
     transitivePeerDependencies:
       - supports-color
@@ -11982,7 +11982,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.4.6
+      vite: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
     dev: false
 
   /vitest@0.20.3(jsdom@20.0.3)(terser@5.19.0):
