@@ -4,6 +4,6 @@ export default defineConfig({
   start: {
     ssr: true,
     islands: false,
-    serverPlugins: ["./app/middleware.ts"]
+    serverPlugins: ["./src/middleware.ts"]
   }
 });

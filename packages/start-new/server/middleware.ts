@@ -55,8 +55,8 @@ export const composeMiddleware =
 export function createMiddleware(fn: ({ forward }) => (event: FetchEvent) => Promise<Response>) {
   return createServerMiddleware(({ forward }) => {
     const fetchEventHandler = fn({ forward });
-    return eventHandler(h3event => {
-      const fetchEvent = createFetchEvent(h3event);
+    return eventHandler((h3event: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
+      const fetchEvent = h3event.startEvent || (h3event.startEvent = createFetchEvent(h3event));
       return fetchEventHandler(fetchEvent);
     });
   });

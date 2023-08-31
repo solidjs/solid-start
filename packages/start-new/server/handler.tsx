@@ -9,8 +9,9 @@ export function createHandler(
   fn: (context: PageEvent) => unknown,
   options?: { nonce?: string; renderId?: string; timeoutMs?: number, createPageEvent: (event: FetchEvent) => Promise<PageEvent>; }
 ) {
-  return eventHandler(async (e: H3Event<EventHandlerRequest>) => {
-    const event = createFetchEvent(e);
+  return eventHandler(async (e: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
+    const event = e.startEvent || (e.startEvent = createFetchEvent(e));
+    event.locals.start = "start"
     // api
     const match = apiRoutes.find(
       route =>
