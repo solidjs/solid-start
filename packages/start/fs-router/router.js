@@ -394,8 +394,8 @@ export function stringifyAPIRoutes(
           i =>
             `{\n${[
               ...API_METHODS.map(v => {
-                if (!i.apiPath || (i.componentPath && v === "GET")) return undefined;
-                else if (i.apiPath[v]) return `${v}: ${jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))}`;
+                if (i.componentPath && v === "GET") return undefined;
+                else if (i.apiPath && i.apiPath[v]) return `${v}: ${jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))}`;
                 else return `${v}: ${methodNotFound}`;
               }),
               i.componentPath ? `GET: "skip"` : undefined,
