@@ -131,6 +131,10 @@ test.describe("api routes", () => {
           "src/routes/api/[param]/index.js": js`
             import { json } from "solid-start/server";
             export let GET = ({ params }) => json(params);
+          `,
+          "src/api/method-not-found.js": js`
+            import { json } from "solid-start/server";
+            export let GET = () => new Response();
           `
         }
       });
@@ -279,6 +283,11 @@ test.describe("api routes", () => {
       let res = await fixture.requestDocument("/api/static");
       expect(res.headers.get("content-type")).toEqual("application/json; charset=utf-8");
       expect(await res.json()).toEqual({ static: true });
+    });
+
+    test("should return status 405 for not implemented verbs", async () => {
+      let res = await fixture.requestDocument("/api/method-not-found", { method: "POST" });
+      expect(res.status).toEqual(405);
     });
   }
 });
