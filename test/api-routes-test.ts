@@ -132,9 +132,13 @@ test.describe("api routes", () => {
             import { json } from "solid-start/server";
             export let GET = ({ params }) => json(params);
           `,
-          "src/api/method-not-found.js": js`
-            import { json } from "solid-start/server";
-            export let GET = () => new Response();
+          "src/routes/method-not-found.jsx": js`
+            export default function Page() {
+               return <div>page</div>;
+            }
+          `,
+          "src/routes/api/method-not-found.js": js`
+            export function GET () { return new Response(); }
           `
         }
       });
@@ -285,7 +289,12 @@ test.describe("api routes", () => {
       expect(await res.json()).toEqual({ static: true });
     });
 
-    test("should return status 405 for not implemented verbs", async () => {
+    test("should return status 405 on page route for uninplemented verbs", async () => {
+      let res = await fixture.requestDocument("/method-not-found", { method: "POST" });
+      expect(res.status).toEqual(405);
+    });
+
+    test("should return status 405 on api route for uninplemented verbs", async () => {
       let res = await fixture.requestDocument("/api/method-not-found", { method: "POST" });
       expect(res.status).toEqual(405);
     });
