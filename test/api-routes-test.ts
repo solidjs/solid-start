@@ -136,7 +136,7 @@ test.describe("api routes", () => {
             export default function Page() { return <div>page</div>; }
           `,
           "src/routes/api/method-not-found.js": js`
-            export function GET () { return new Response(); }
+            export function POST () { return new Response(); }
           `
         }
       });
@@ -294,8 +294,8 @@ test.describe("api routes", () => {
       })
     });
 
-    test("should return 405 for undefined handlers on route with only a GET export", async () => {
-      ["POST", "PUT", "PATCH", "DELETE"].forEach(async method => {
+    test("should return 405 for undefined handlers on route with only a POST export", async () => {
+      ["GET", "PUT", "PATCH", "DELETE"].forEach(async method => {
         let res = await fixture.requestDocument("/api/method-not-found", { method });
         expect(res.status).toEqual(405);
       });
