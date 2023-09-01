@@ -289,12 +289,12 @@ test.describe("api routes", () => {
       expect(await res.json()).toEqual({ static: true });
     });
 
-    test("should return status 405 on page route for uninplemented verbs", async () => {
+    test("should return status 405 for uninplemented verbs on route with only a default export", async () => {
       let res = await fixture.requestDocument("/method-not-found", { method: "POST" });
       expect(res.status).toEqual(405);
     });
 
-    test("should return status 405 on api route for uninplemented verbs", async () => {
+    test("should return status 405 for uninplemented verbs on route with only a GET export", async () => {
       let res = await fixture.requestDocument("/api/method-not-found", { method: "POST" });
       expect(res.status).toEqual(405);
     });
