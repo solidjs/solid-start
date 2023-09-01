@@ -132,10 +132,10 @@ test.describe("api routes", () => {
             import { json } from "solid-start/server";
             export let GET = ({ params }) => json(params);
           `,
-          "src/routes/method-not-found.jsx": js`
+          "src/routes/method-not-allowed.jsx": js`
             export default function Page() { return <div>page</div>; }
           `,
-          "src/routes/api/method-not-found.js": js`
+          "src/routes/api/method-not-allowed.js": js`
             export function POST () { return new Response(); }
           `
         }
@@ -289,14 +289,14 @@ test.describe("api routes", () => {
 
     test("should return 405 for undefined handlers on route with only a default export", async () => {
       ["POST", "PUT", "PATCH", "DELETE"].forEach(async method => {
-        let res = await fixture.requestDocument("/method-not-found", { method });
+        let res = await fixture.requestDocument("/method-not-allowed", { method });
         expect(res.status).toEqual(405);
       })
     });
 
     test("should return 405 for undefined handlers on route with only a POST export", async () => {
       ["GET", "PUT", "PATCH", "DELETE"].forEach(async method => {
-        let res = await fixture.requestDocument("/api/method-not-found", { method });
+        let res = await fixture.requestDocument("/api/method-not-allowed", { method });
         expect(res.status).toEqual(405);
       });
     });
