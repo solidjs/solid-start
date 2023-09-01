@@ -95,4 +95,3 @@ export function isApiRequest(request: Request) {
 
 export * from "../server/responses";
 export type { APIEvent } from "./types";
-

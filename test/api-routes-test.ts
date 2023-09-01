@@ -287,14 +287,14 @@ test.describe("api routes", () => {
       expect(await res.json()).toEqual({ static: true });
     });
 
-    test("should return status 405 for uninplemented verbs on route with only a default export", async () => {
+    test("should return 405 for undefined handlers on route with only a default export", async () => {
       ["POST", "PUT", "PATCH", "DELETE"].forEach(async method => {
         let res = await fixture.requestDocument("/method-not-found", { method });
         expect(res.status).toEqual(405);
       })
     });
 
-    test("should return status 405 for uninplemented verbs on route with only a GET export", async () => {
+    test("should return 405 for undefined handlers on route with only a GET export", async () => {
       ["POST", "PUT", "PATCH", "DELETE"].forEach(async method => {
         let res = await fixture.requestDocument("/api/method-not-found", { method });
         expect(res.status).toEqual(405);
