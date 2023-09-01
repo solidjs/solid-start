@@ -386,7 +386,7 @@ export function stringifyAPIRoutes(
    * @return {string}
    */
   function _stringifyRoutes(/** @type {(RouteConfig)[]} */ routes) {
-    const methodNotFound = jsFile.addNamedImport("methodNotFound", "solid-start/api");
+    const methodNotFound = jsFile.addNamedImport("methodNotFound", "solid-start/api/utils");
     return (
       `[\n` +
       routes
@@ -396,7 +396,7 @@ export function stringifyAPIRoutes(
               ...API_METHODS.map(v => {
                 if (i.componentPath && v === "GET")
                   return undefined;
-                else if (i.apiPath?.[v]) 
+                else if (i.apiPath?.[v])
                   return `${v}: ${jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))}`;
                 return `${v}: ${methodNotFound}`;
               }),

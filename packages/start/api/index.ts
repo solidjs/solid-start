@@ -93,10 +93,6 @@ export function isApiRequest(request: Request) {
   return Boolean(apiHandler);
 }
 
-export function methodNotFound()  {
-  return new Response(null, { status: 405 });
-}
-
 export * from "../server/responses";
 export type { APIEvent } from "./types";
 
