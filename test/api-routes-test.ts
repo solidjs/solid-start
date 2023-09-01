@@ -133,9 +133,7 @@ test.describe("api routes", () => {
             export let GET = ({ params }) => json(params);
           `,
           "src/routes/method-not-found.jsx": js`
-            export default function Page() {
-               return <div>page</div>;
-            }
+            export default function Page() { return <div>page</div>; }
           `,
           "src/routes/api/method-not-found.js": js`
             export function GET () { return new Response(); }
