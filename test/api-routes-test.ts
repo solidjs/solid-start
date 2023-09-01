@@ -288,15 +288,19 @@ test.describe("api routes", () => {
     });
 
     test("should return 405 for undefined handlers on route with only a default export", async () => {
+      let res = await fixture.requestDocument("/method-not-allowed", { method: "GET" });
+      expect(res.status).toEqual(200);
       ["POST", "PUT", "PATCH", "DELETE"].forEach(async method => {
-        let res = await fixture.requestDocument("/method-not-allowed", { method });
+        res = await fixture.requestDocument("/method-not-allowed", { method });
         expect(res.status).toEqual(405);
       })
     });
 
     test("should return 405 for undefined handlers on route with only a POST export", async () => {
+      let res = await fixture.requestDocument("/api/method-not-allowed", { method: "POST" });
+      expect(res.status).toEqual(200);
       ["GET", "PUT", "PATCH", "DELETE"].forEach(async method => {
-        let res = await fixture.requestDocument("/api/method-not-allowed", { method });
+        res = await fixture.requestDocument("/api/method-not-allowed", { method });
         expect(res.status).toEqual(405);
       });
     });
