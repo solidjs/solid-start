@@ -1,4 +1,4 @@
-export { composeMiddleware, createHandler, default as StartServer } from "./StartServer";
+export { default as StartServer, composeMiddleware, createHandler } from "./StartServer";
 export type { Middleware, MiddlewareFn, MiddlewareInput } from "./StartServer";
 
 import { JSX } from "solid-js";
@@ -21,8 +21,8 @@ export const render = (
   }
 ) =>
   composeMiddleware([
-    apiRoutes,
     inlineServerFunctions,
+    apiRoutes,
     import.meta.env.START_SSR === "async"
       ? _renderAsync(fn, options)
       : import.meta.env.START_SSR === "streaming"
@@ -37,7 +37,7 @@ export const renderAsync = (
     nonce?: string;
     renderId?: string;
   }
-) => composeMiddleware([apiRoutes, inlineServerFunctions, _renderAsync(fn, options)]);
+) => composeMiddleware([inlineServerFunctions, apiRoutes, _renderAsync(fn, options)]);
 
 export const renderStream = (
   fn: (context: PageEvent) => JSX.Element,
@@ -46,7 +46,7 @@ export const renderStream = (
     nonce?: string;
     renderId?: string;
   }
-) => composeMiddleware([apiRoutes, inlineServerFunctions, _renderStream(fn, options)]);
+) => composeMiddleware([inlineServerFunctions, apiRoutes, _renderStream(fn, options)]);
 
 export const renderSync = (
   fn: (context: PageEvent) => JSX.Element,
@@ -55,4 +55,4 @@ export const renderSync = (
     nonce?: string;
     renderId?: string;
   }
-) => composeMiddleware([apiRoutes, inlineServerFunctions, _renderSync(fn, options)]);
+) => composeMiddleware([inlineServerFunctions, apiRoutes, _renderSync(fn, options)]);

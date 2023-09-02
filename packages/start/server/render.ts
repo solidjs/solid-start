@@ -3,7 +3,7 @@ import { renderToStream, renderToString, renderToStringAsync } from "solid-js/we
 import { apiRoutes } from "../api/middleware";
 import { inlineServerFunctions } from "../server/middleware";
 import { redirect } from "../server/responses";
-import { FetchEvent, FETCH_EVENT, PageEvent } from "../server/types";
+import { FETCH_EVENT, FetchEvent, PageEvent } from "../server/types";
 
 export function renderSync(
   fn: (context: PageEvent) => JSX.Element,
@@ -12,8 +12,8 @@ export function renderSync(
     renderId?: string;
   }
 ) {
-  return () => apiRoutes({
-    forward: inlineServerFunctions({
+  return () => inlineServerFunctions({
+    forward: apiRoutes({
       async forward(event: FetchEvent): Promise<Response> {
         if (
           !import.meta.env.DEV &&
@@ -53,8 +53,8 @@ export function renderAsync(
     renderId?: string;
   }
 ) {
-  return () => apiRoutes({
-    forward: inlineServerFunctions({
+  return () => inlineServerFunctions({
+    forward: apiRoutes({
       async forward(event: FetchEvent): Promise<Response> {
         if (
           !import.meta.env.DEV &&
@@ -96,8 +96,8 @@ export function renderStream(
     onCompleteAll?: (info: { write: (v: string) => void }) => void;
   } = {}
 ) {
-  return () => apiRoutes({
-    forward: inlineServerFunctions({
+  return () => inlineServerFunctions({
+    forward: apiRoutes({
       async forward(event: FetchEvent): Promise<Response> {
         if (
           !import.meta.env.DEV &&
