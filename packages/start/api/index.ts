@@ -8,6 +8,12 @@ import { MatchRoute, Method, Route } from "./types";
 // @ts-ignore
 var api = $API_ROUTES;
 
+// used by the compiled configuration of routes
+// @ts-ignore
+function methodNotAllowed()  {
+  return new Response(null, { status: 405 });
+}
+
 // This is copied from https://github.com/solidjs/solid-router/blob/main/src/utils.ts
 function expandOptionals(pattern: string): string[] {
   let match = /(\/?\:[^\/]+)\?/.exec(pattern);
@@ -95,3 +101,4 @@ export function isApiRequest(request: Request) {
 
 export * from "../server/responses";
 export type { APIEvent } from "./types";
+

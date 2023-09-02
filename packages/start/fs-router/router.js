@@ -386,7 +386,6 @@ export function stringifyAPIRoutes(
    * @return {string}
    */
   function _stringifyRoutes(/** @type {(RouteConfig)[]} */ routes) {
-    const methodNotAllowed = jsFile.addNamedImport("methodNotAllowed", "solid-start/api/utils");
     return (
       `[\n` +
       routes
@@ -398,7 +397,7 @@ export function stringifyAPIRoutes(
                   return undefined;
                 else if (i.apiPath?.[v])
                   return `${v}: ${jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))}`;
-                return `${v}: ${methodNotAllowed}`;
+                return `${v}: methodNotAllowed`;
               }),
               i.componentPath ? `GET: "skip"` : undefined,
               `path: ${JSON.stringify(i.path)}`
