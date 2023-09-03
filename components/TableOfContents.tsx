@@ -1,3 +1,4 @@
+"use client";
 import { For, Suspense } from "solid-js";
 import { A, useLocation } from "solid-start";
 import { createServerData$ } from "solid-start/server";
