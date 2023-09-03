@@ -378,7 +378,7 @@ export function stringifyPageRoutes(
 
 export function stringifyAPIRoutes(
   /** @type {(RouteConfig)[]} */ flatRoutes,
-  /** @type {{ lazy?: boolean }} */ options = {}
+  /** @type {{ lazy?: boolean, islands?: boolean }} */ options = {}
 ) {
   const jsFile = jsCode();
 
@@ -393,13 +393,14 @@ export function stringifyAPIRoutes(
           i =>
             `{\n${[
               ...API_METHODS.map(v => {
-                if (i.componentPath && v === "GET")
-                  return undefined;
+                if (v === "GET" && i.componentPath)
+                  return `${v}: "skip"`;
+                if (v === "POST" && options.islands && i.componentPath)
+                  return `${v}: "skip"`;
                 else if (i.apiPath?.[v])
                   return `${v}: ${jsFile.addNamedImport(v, path.posix.resolve(i.apiPath[v]))}`;
                 return `${v}: methodNotAllowed`;
               }),
-              i.componentPath ? `GET: "skip"` : undefined,
               `path: ${JSON.stringify(i.path)}`
             ]
               .filter(Boolean)
