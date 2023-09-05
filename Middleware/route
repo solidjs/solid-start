@@ -1,4 +1,3 @@
-Middleware
 
 Middlewares may be included when calling the createHandler function in entry-server.tsx, middlewares should be provided before rendering the StartServer component.
 
@@ -14,7 +13,7 @@ export default createHandler(
   },
   // middleware 2
   ({ forward }) => {
-    return async event => {
+    return async  event => {
       // your own logic here
       return forward(event); // next
     };
@@ -40,3 +39,4 @@ export default createHandler(
   },
   renderAsync(event => <StartServer event={event} />)
 );
+remember: don't exit code while building on @vercel
