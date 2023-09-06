@@ -37,7 +37,7 @@ export function islands() {
             import { ${f[1]} } from '${id.replace(/\?.*/, "?client")}';
 
             window._$HY.island("${
-              mode.command === "serve" ? `/@fs/${id}` : `${relative(process.cwd(), id)}`
+              mode.command === "serve" ? `/@fs/${id}` : `${normalizePath(relative(process.cwd(), id))}`
             }",  ${f[1]});
 
             `
