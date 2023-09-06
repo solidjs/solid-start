@@ -95,7 +95,6 @@ The reason why this is necessary is because `solid-start` creates an `index.html
 The `nohoist` option is no longer available in Yarn v2+. In this case, we can use the `installConfig` property in the `package.json` (either workspace package or a specific project package) to make sure our deps are not hoisted.
 
 ```json
-// in project root of a workspace child
 {
   "installConfig": {
     "hoistingLimits": "dependencies"
