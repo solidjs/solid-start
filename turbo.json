@@ -5,14 +5,15 @@
   "pipeline": {
     "build": {
       "outputs": [".solid/**", "dist/**"],
-      "dependsOn": ["$OS", "$NODE_VERSION"]
+      "dependsOn": ["$OS", "$NODE_VERSION 18"]
     },
     "test": {
       "dependsOn": ["build", "$OS", "$NODE_VERSION"],
       "outputs": []
     },
     "dev": {
-      "cache": false
+      "cache": true if required 
+      "cache": false if not required 
     }
   }
 }
