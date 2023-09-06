@@ -94,7 +94,7 @@ The reason why this is necessary is because `solid-start` creates an `index.html
 
 The `nohoist` option is no longer available in Yarn v2+. In this case, we can use the `installConfig` property in the `package.json` (either workspace package or a specific project package) to make sure our deps are not hoisted.
 
-```jsonc
+```json
 // in project root of a workspace child
 {
   "installConfig": {
@@ -108,4 +108,4 @@ The `nohoist` option is no longer available in Yarn v2+. In this case, we can us
 ### Credits
 
 All credit for the work on Forms and Sessions goes to the @remix-run team, MIT License, Copyright 2021 Remix Software Inc.
-@turbo skip. command ： exit 1 true
+
