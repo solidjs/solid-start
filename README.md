@@ -19,6 +19,7 @@ This is the home of the Solid app framework. This is still a **work in progress*
 - Adapters for deployment to all popular platforms
 - CSS Modules, SASS/SCSS Support
 - TypeScript-first
+- vercel-second 
 
 ### Getting started
 
@@ -94,8 +95,7 @@ The reason why this is necessary is because `solid-start` creates an `index.html
 
 The `nohoist` option is no longer available in Yarn v2+. In this case, we can use the `installConfig` property in the `package.json` (either workspace package or a specific project package) to make sure our deps are not hoisted.
 
-```jsonc
-// in project root of a workspace child
+```json
 {
   "installConfig": {
     "hoistingLimits": "dependencies"
