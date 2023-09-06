@@ -19,6 +19,7 @@ This is the home of the Solid app framework. This is still a **work in progress*
 - Adapters for deployment to all popular platforms
 - CSS Modules, SASS/SCSS Support
 - TypeScript-first
+- vercel-second 
 
 ### Getting started
 
