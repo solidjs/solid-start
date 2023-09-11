@@ -128,7 +128,7 @@ export function createDevHandler(viteServer, config, options) {
   async function startHandler(req, res) {
     try {
       if (viteServer.resolvedUrls) {
-        const url = viteServer.resolvedUrls.local[0];
+        const url = viteServer.resolvedUrls.local[0] ?? viteServer.resolvedUrls.network[0];
         console.log(req.method, new URL(req.url ?? "/", url).href);
       }
       let webRes = await devFetch({
