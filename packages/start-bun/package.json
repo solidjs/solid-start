@@ -1,0 +1,30 @@
+{
+  "name": "solid-start-bun",
+  "version": "0.3.5",
+  "main": "./index.js",
+  "type": "module",
+  "solid": {
+    "type": "adapter"
+  },
+  "dependencies": {
+    "@elysiajs/static": "^0.6.0",
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "compression": "^1.7.4",
+    "elysia": "^0.6.22",
+    "polka": "1.0.0-next.22",
+    "rollup": "^3.26.2",
+    "sirv": "^2.0.3",
+    "terser": "^5.19.0"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.1",
+    "solid-start": "workspace:*",
+    "vite": "^4.4.6"
+  },
+  "peerDependencies": {
+    "solid-start": "*",
+    "vite": "*"
+  }
+}
