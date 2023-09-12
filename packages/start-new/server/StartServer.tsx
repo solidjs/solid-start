@@ -2,10 +2,10 @@
 import App from "#start/app";
 import { MetaProvider, renderTags } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
-import { renderAsset } from "@vinxi/solid";
 import { join } from "path";
 import { useContext } from "solid-js";
 import { Hydration, HydrationScript, NoHydration, ssr, useAssets } from "solid-js/web";
+import { renderAsset } from "./renderAsset";
 
 import { ServerContext } from "../shared/ServerContext";
 

@@ -1,10 +1,10 @@
 // @ts-ignore
 import { MetaProvider, renderTags } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
-import { renderAsset } from "@vinxi/solid";
 import { join } from "path";
 import { useContext } from "solid-js";
 import { NoHydration, ssr, useAssets } from "solid-js/web";
+import { renderAsset } from "../renderAsset";
 
 import { ServerContext } from "../../shared/ServerContext";
 

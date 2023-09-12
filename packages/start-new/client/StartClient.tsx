@@ -20,7 +20,6 @@ export function StartClient() {
       <MetaProvider>
         <Router>
           <Dummy>
-            <Dummy />
             <Dummy>
               <App />
             </Dummy>
