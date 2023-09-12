@@ -1,4 +1,4 @@
-import { BaseFileSystemRouter, analyzeModule, cleanPath } from "vinxi/file-system-router";
+import { analyzeModule, BaseFileSystemRouter, cleanPath } from "vinxi/file-system-router";
 
 export class SolidStartClientFileRouter extends BaseFileSystemRouter {
   toPath(src) {

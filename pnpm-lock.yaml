@@ -362,34 +362,24 @@ importers:
 
   examples/with-mdx:
     dependencies:
-      '@solidjs/meta':
-        specifier: ^0.28.6
-        version: 0.28.6(solid-js@1.7.11)
-      '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.7.11)
-      solid-js:
-        specifier: ^1.7.11
-        version: 1.7.11
-      solid-mdx:
-        specifier: ^0.0.6
-        version: 0.0.6(solid-js@1.7.11)(vite@4.4.9)
-      solid-start:
-        specifier: ^0.3.5
-        version: link:../../packages/start
-    devDependencies:
       '@mdx-js/rollup':
         specifier: ^2.3.0
         version: 2.3.0(rollup@3.28.1)
-      solid-start-node:
-        specifier: ^0.3.5
-        version: link:../../packages/start-node
-      typescript:
-        specifier: ^4.9.5
-        version: 4.9.5
-      vite:
-        specifier: ^4.4.9
-        version: 4.4.9(@types/node@18.17.5)
+      '@solidjs/meta':
+        specifier: ^0.28.5
+        version: 0.28.6(solid-js@1.7.11)
+      '@solidjs/router':
+        specifier: ^0.8.2
+        version: 0.8.3(solid-js@1.7.11)
+      '@solidjs/start':
+        specifier: workspace:^
+        version: link:../../packages/start-new
+      solid-js:
+        specifier: ^1.7.11
+        version: 1.7.11
+      vinxi:
+        specifier: 0.0.27
+        version: 0.0.27(debug@4.3.4)(rollup@3.28.1)
 
   examples/with-prisma:
     dependencies:
@@ -634,6 +624,37 @@ importers:
       vite:
         specifier: ^4.4.6
         version: 4.4.6(@types/node@18.16.19)(terser@5.19.0)
+
+  examples/z-with-mdx:
+    dependencies:
+      '@solidjs/meta':
+        specifier: ^0.28.6
+        version: 0.28.6(solid-js@1.7.11)
+      '@solidjs/router':
+        specifier: ^0.8.3
+        version: 0.8.3(solid-js@1.7.11)
+      solid-js:
+        specifier: ^1.7.11
+        version: 1.7.11
+      solid-mdx:
+        specifier: ^0.0.6
+        version: 0.0.6(solid-js@1.7.11)(vite@4.4.9)
+      solid-start:
+        specifier: ^0.3.5
+        version: link:../../packages/start
+    devDependencies:
+      '@mdx-js/rollup':
+        specifier: ^2.3.0
+        version: 2.3.0(rollup@3.28.1)
+      solid-start-node:
+        specifier: ^0.3.5
+        version: link:../../packages/start-node
+      typescript:
+        specifier: ^4.9.5
+        version: 4.9.5
+      vite:
+        specifier: ^4.4.9
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/z-with-solid-styled:
     dependencies:
@@ -1379,7 +1400,7 @@ packages:
     resolution: {integrity: sha512-8Dl6+HD/cKifutF5qGd/8ZJi84QeAKh+CEe1sBzz8UayBBGg1dAIJrdHOcOM5b2MpzWL2yuotJTtGjETq0qjXg==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.22.10
+      '@babel/types': 7.22.11
 
   /@babel/helper-module-transforms@7.22.9(@babel/core@7.22.11):
     resolution: {integrity: sha512-t+WA2Xn5K+rTeGtC8jCsdAH52bjggG5TKRuRrAGNM/mjIbO4GxvlLMFOEz9wXY5I2XQ60PMFsAG2WIcG82dQMQ==}
@@ -1536,7 +1557,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.22.10
+      '@babel/types': 7.22.11
 
   /@babel/parser@7.22.11:
     resolution: {integrity: sha512-R5zb8eJIBPJriQtbH/htEQy4k7E2dHWlD2Y2VT07JCzwYZHBxV5ZYtM0UhXSNMT74LyxuM+b1jdL7pSesXbC/g==}
@@ -3159,7 +3180,7 @@ packages:
       '@babel/plugin-transform-unicode-regex': 7.22.5(@babel/core@7.22.11)
       '@babel/plugin-transform-unicode-sets-regex': 7.22.5(@babel/core@7.22.11)
       '@babel/preset-modules': 0.1.6(@babel/core@7.22.11)
-      '@babel/types': 7.22.10
+      '@babel/types': 7.22.11
       babel-plugin-polyfill-corejs2: 0.4.5(@babel/core@7.22.11)
       babel-plugin-polyfill-corejs3: 0.8.3(@babel/core@7.22.11)
       babel-plugin-polyfill-regenerator: 0.5.2(@babel/core@7.22.11)
@@ -3335,8 +3356,8 @@ packages:
       '@babel/helper-function-name': 7.22.5
       '@babel/helper-hoist-variables': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
-      '@babel/parser': 7.22.10
-      '@babel/types': 7.22.10
+      '@babel/parser': 7.22.11
+      '@babel/types': 7.22.11
       debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
@@ -4993,7 +5014,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.28.1)
+      '@rollup/pluginutils': 5.0.3(rollup@3.28.1)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
@@ -5451,18 +5472,18 @@ packages:
   /@types/babel__generator@7.6.4:
     resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
     dependencies:
-      '@babel/types': 7.22.10
+      '@babel/types': 7.22.11
 
   /@types/babel__template@7.4.1:
     resolution: {integrity: sha512-azBFKemX6kMg5Io+/rdGT0dkGreboUVR0Cdm3fz9QJWpaQGJRQXl7C+6hOTCZcMll7KFyEQpgbYI2lHdsS4U7g==}
     dependencies:
-      '@babel/parser': 7.22.10
-      '@babel/types': 7.22.10
+      '@babel/parser': 7.22.11
+      '@babel/types': 7.22.11
 
   /@types/babel__traverse@7.20.1:
     resolution: {integrity: sha512-MitHFXnhtgwsGZWtT68URpOvLN4EREih1u3QtQiN4VdAxWKRVvGCSvw/Qth0M0Qq3pJpnGOu5JaM/ydK7OGbqg==}
     dependencies:
-      '@babel/types': 7.22.10
+      '@babel/types': 7.22.11
 
   /@types/better-sqlite3@7.6.4:
     resolution: {integrity: sha512-dzrRZCYPXIXfSR1/surNbJ/grU3scTaygS0OMzjlGf71i9sc2fGyHPXXiXmEvNIoE0cGwsanEFMVJxPXmco9Eg==}
@@ -6588,7 +6609,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
   /connect@3.7.0:
     resolution: {integrity: sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ==}
@@ -7130,7 +7151,7 @@ packages:
     dev: true
 
   /ee-first@1.1.1:
-    resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
+    resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
 
   /electron-to-chromium@1.4.488:
     resolution: {integrity: sha512-Dv4sTjiW7t/UWGL+H8ZkgIjtUAVZDgb/PwGWvMsCT7jipzUV/u5skbLXPFKb6iV0tiddVi/bcS2/kUrczeWgIQ==}
@@ -9867,14 +9888,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  /mlly@1.4.0:
-    resolution: {integrity: sha512-ua8PAThnTwpprIaU47EPeZ/bPUVp2QYBbWMphUQpVdBI3Lgqzm5KZQ45Agm3YJedHXaIHl6pBGabaLSUPPSptg==}
-    dependencies:
-      acorn: 8.10.0
-      pathe: 1.1.1
-      pkg-types: 1.0.3
-      ufo: 1.2.0
-
   /mlly@1.4.1:
     resolution: {integrity: sha512-SCDs78Q2o09jiZiE2WziwVBEqXQ02XkGdUy45cbJf+BpYRIjArXRJ1Wbowxkb+NaM9DWvS3UC9GiO/6eqvQ/pg==}
     dependencies:
@@ -10449,7 +10462,7 @@ packages:
     resolution: {integrity: sha512-nN7pYi0AQqJnoLPC9eHFQ8AcyaixBUOwvqc5TDnIKCMEE6I0y8P7OKA7fPexsXGCGxQDl/cmrLAp26LhcwxZ4A==}
     dependencies:
       jsonc-parser: 3.2.0
-      mlly: 1.4.0
+      mlly: 1.4.1
       pathe: 1.1.1
 
   /playwright-core@1.25.2:
@@ -12240,9 +12253,6 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
 
-  /ufo@1.2.0:
-    resolution: {integrity: sha512-RsPyTbqORDNDxqAdQPQBpgqhWle1VcTSou/FraClYlHf6TZnQcGslpLcAphNR+sQW4q5lLWLbOsRlh9j24baQg==}
-
   /ufo@1.3.0:
     resolution: {integrity: sha512-bRn3CsoojyNStCZe0BG0Mt4Nr/4KF+rhFlnNXybgqt5pXHNFRlqinSoQaTrGyzE4X8aHplSb+TorH+COin9Yxw==}
 
@@ -12710,13 +12720,71 @@ packages:
       - supports-color
       - terser
 
+  /vinxi@0.0.27(debug@4.3.4)(rollup@3.28.1):
+    resolution: {integrity: sha512-UN8QPY/AsqMN/LAjeMCbev8cYeRj3tjZPZpkGDQsnPQD2xUVM03vXi5VwUu67eyh5UB3KmjIw1OPB/JXJlkPlQ==}
+    hasBin: true
+    dependencies:
+      '@babel/core': 7.22.11
+      '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.22.11)
+      '@babel/plugin-syntax-typescript': 7.22.5(@babel/core@7.22.11)
+      c12: 1.4.2
+      chokidar: 3.5.3
+      consola: 3.2.3
+      defu: 6.1.2
+      es-module-lexer: 1.3.0
+      esbuild: 0.18.20
+      fast-glob: 3.3.1
+      get-port: 6.1.2
+      h3: 1.8.0
+      http-proxy: 1.18.1(debug@4.3.4)
+      listhen: 1.4.1
+      micromatch: 4.0.5
+      mri: 1.2.0
+      nitropack: 2.6.1
+      node-fetch-native: 1.4.0
+      path-to-regexp: 6.2.1
+      pathe: 1.1.1
+      perfect-debounce: 1.0.0
+      rollup-plugin-visualizer: 5.9.2(rollup@3.28.1)
+      serve-placeholder: 2.0.1
+      serve-static: 1.15.0
+      ufo: 1.3.0
+      unenv: 1.7.4
+      unimport: 3.2.0(rollup@3.28.1)
+      unstorage: 1.9.0
+      vite: 4.3.9
+      zod: 3.22.2
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@planetscale/database'
+      - '@types/node'
+      - '@upstash/redis'
+      - '@vercel/kv'
+      - debug
+      - encoding
+      - idb-keyval
+      - less
+      - rollup
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+    dev: false
+
   /vite-node@0.26.3(@types/node@18.17.5):
     resolution: {integrity: sha512-Te2bq0Bfvq6XiO718I+1EinMjpNYKws6SNHKOmVbILAQimKoZKDd+IZLlkaYcBXPpK3HFe2U80k8Zw+m3w/a2w==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     dependencies:
       debug: 4.3.4
-      mlly: 1.4.0
+      mlly: 1.4.1
       pathe: 0.2.0
       source-map: 0.6.1
       source-map-support: 0.5.21
@@ -12739,7 +12807,7 @@ packages:
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
-      mlly: 1.4.0
+      mlly: 1.4.1
       pathe: 1.1.1
       picocolors: 1.0.0
       source-map: 0.6.1

@@ -7,8 +7,11 @@ import solid from "vite-plugin-solid";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router";
 import { serverComponents } from "./server-components";
 
+const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
+
 export function defineConfig(baseConfig = {}) {
   let { plugins = [], start = {}, serverPlugins = [], ...userConfig } = baseConfig;
+	const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
     ssr: true,
     islands: false
@@ -35,6 +38,7 @@ export function defineConfig(baseConfig = {}) {
         mode: "handler",
         handler: "./src/entry-server.tsx",
         ...(start.ssr ? { dir: "./src/routes", style: SolidStartServerFileRouter } : {}),
+				extensions,
         build: {
           target: "server",
           plugins: () => [
@@ -73,6 +77,7 @@ export function defineConfig(baseConfig = {}) {
               style: SolidStartClientFileRouter,
               dir: "./src/routes"
             }),
+				extensions,
         build: {
           target: "browser",
           plugins: () => [
