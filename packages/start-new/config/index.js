@@ -10,11 +10,12 @@ import { serverComponents } from "./server-components";
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
 export function defineConfig(baseConfig = {}) {
-  let { plugins = [], start = {}, serverPlugins = [], ...userConfig } = baseConfig;
-	const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
+  let { plugins = [], start = {}, ...userConfig } = baseConfig;
+  const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
     ssr: true,
-    islands: false
+    islands: false,
+    serverPlugins: []
   });
   return createApp({
     server: {
@@ -33,12 +34,46 @@ export function defineConfig(baseConfig = {}) {
         dir: "./public",
         base: "/"
       },
+      ...start.serverPlugins.map(plugin => {
+        return {
+          middleware: true,
+          name: "middleware",
+          mode: "handler",
+          handler: plugin,
+          build: {
+            target: "server",
+            plugins: () => [
+              config("user", userConfig),
+              ...plugins,
+              solid({ ssr: true }),
+              config("app", {
+                resolve: {
+                  alias: {
+                    "#start/app": join(process.cwd(), "src", "app.tsx"),
+                    "~": join(process.cwd(), "src"),
+                    ...(!start.ssr
+                      ? {
+                          "@solidjs/start/server": "@solidjs/start/server/spa"
+                        }
+                      : {})
+                  }
+                },
+                define: {
+                  "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
+                  "import.meta.env.SSR": JSON.stringify(true),
+                  "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+                }
+              })
+            ]
+          }
+        };
+      }),
       {
         name: "ssr",
         mode: "handler",
         handler: "./src/entry-server.tsx",
         ...(start.ssr ? { dir: "./src/routes", style: SolidStartServerFileRouter } : {}),
-				extensions,
+        extensions,
         build: {
           target: "server",
           plugins: () => [
@@ -77,7 +112,7 @@ export function defineConfig(baseConfig = {}) {
               style: SolidStartClientFileRouter,
               dir: "./src/routes"
             }),
-				extensions,
+        extensions,
         build: {
           target: "browser",
           plugins: () => [

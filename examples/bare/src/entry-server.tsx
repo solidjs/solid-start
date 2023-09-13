@@ -1,4 +1,5 @@
-import { createHandler, StartServer, type DocumentComponentProps } from "@solidjs/start/server";
+import { StartServer, createHandler, type DocumentComponentProps } from "@solidjs/start/server";
+import { defineRequestMiddleware, defineResponseMiddleware } from "vinxi/runtime/server";
 
 function Document({ assets, children, scripts }: DocumentComponentProps) {
   return (
@@ -17,4 +18,17 @@ function Document({ assets, children, scripts }: DocumentComponentProps) {
   );
 }
 
-export default createHandler(context => <StartServer context={context} document={Document} />);
+export default createHandler(context => <StartServer context={context} document={Document} />, {
+  onRequest: [
+    defineRequestMiddleware(event => {
+      const id = Math.random().toString();
+      console.time(`request ${id} ${event.path}`);
+      event.id = id;
+    })
+  ],
+  onBeforeResponse: [
+    defineResponseMiddleware((event, response) => {
+      console.timeEnd(`request ${event.id} ${event.path}`);
+    })
+  ]
+});
