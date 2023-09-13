@@ -6,7 +6,6 @@ import { config } from "vinxi/lib/plugins/config";
 import solid from "vite-plugin-solid";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router";
 import { serverComponents } from "./server-components";
-
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
 export function defineConfig(baseConfig = {}) {
@@ -80,7 +79,7 @@ export function defineConfig(baseConfig = {}) {
             config("user", userConfig),
             ...plugins,
             start.islands ? serverComponents.server() : null,
-            solid({ ssr: true }),
+            solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
             config("app", {
               resolve: {
                 alias: {
@@ -120,9 +119,7 @@ export function defineConfig(baseConfig = {}) {
             ...plugins,
             references.clientRouterPlugin(),
             start.islands ? serverComponents.client() : null,
-            solid({
-              ssr: start.ssr
-            }),
+            solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
             config("app", {
               resolve: {
                 alias: {

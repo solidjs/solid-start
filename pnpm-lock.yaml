@@ -375,8 +375,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/start-new
       '@vinxi/plugin-mdx':
-        specifier: ^3.6.3
-        version: 3.6.3(@mdx-js/mdx@2.3.0)(vite@4.4.9)
+        specifier: ^3.6.5
+        version: 3.6.5(@mdx-js/mdx@2.3.0)(vite@4.4.9)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
@@ -5820,8 +5820,8 @@ packages:
       - encoding
       - supports-color
 
-  /@vinxi/plugin-mdx@3.6.3(@mdx-js/mdx@2.3.0)(vite@4.4.9):
-    resolution: {integrity: sha512-Djnudq4X7amy8vbq+4AA6hw7PQD0lgvv9/RXI2DQePMdqJBX6V6ItzAchmc/sMVEf1sbrH5/Huxp4YM1qxFz6A==}
+  /@vinxi/plugin-mdx@3.6.5(@mdx-js/mdx@2.3.0)(vite@4.4.9):
+    resolution: {integrity: sha512-gzcAApoS61ZcI1CgItYnHg/GJJO9jyRyuxL/bcMCjWEsz/gFC6RBbCA7RDygkvN6ASiQSluL4/V/XbqNEbs4YQ==}
     peerDependencies:
       '@mdx-js/mdx': <3
       vite: <5
