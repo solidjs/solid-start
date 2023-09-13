@@ -108,7 +108,7 @@
     "micromorph": "^0.3.1",
     "parse-multipart-data": "^1.5.0",
     "picocolors": "^1.0.0",
-    "rollup": "^3.26.2",
+    "rollup": "^3.2.2",
     "rollup-plugin-visualizer": "^5.9.2",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.8.1",
@@ -123,7 +123,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^3.19.0",
     "@solidjs/meta": "^0.28.5",
-    "@solidjs/router": "^0.8.2",
+    "@solidjs/router": "^0.8.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/babel__core": "^7.20.1",
     "@types/node": "^18.16.19",
@@ -138,7 +138,7 @@
   },
   "peerDependencies": {
     "@solidjs/meta": "^0.28.0",
-    "@solidjs/router": "^0.8.2",
+    "@solidjs/router": "^0.8.3",
     "solid-js": "^1.6.2",
     "solid-start-node": "*",
     "vite": "^4.4.6"

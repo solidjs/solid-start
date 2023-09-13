@@ -8,7 +8,6 @@ export default defineConfig({
   },
   plugins: [
     mdx.withImports({})({
-      jsx: true,
       jsxImportSource: "solid-js",
       providerImportSource: "solid-mdx"
     })

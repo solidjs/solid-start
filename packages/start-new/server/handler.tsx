@@ -12,14 +12,14 @@ import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
 
 export function createHandler(
   fn: (context: PageEvent) => unknown,
-  options?: {
+  options: {
     nonce?: string;
     renderId?: string;
     timeoutMs?: number;
     createPageEvent?: (event: FetchEvent) => Promise<PageEvent>;
     onRequest?: EventHandlerObject["onRequest"];
     onBeforeResponse?: EventHandlerObject["onBeforeResponse"];
-  }
+  } = {}
 ) {
   return eventHandler({
     onRequest: options.onRequest,

@@ -15,8 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mdx-js/mdx": "^2.3.0",
-    "@mdx-js/rollup": "^2.3.0",
     "@types/mdast": "^3.0.12",
     "acorn": "^8.10.0",
     "estree-util-is-identifier-name": "^2.1.0",

@@ -21,6 +21,20 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 
   toRoute(src) {
     let path = this.toPath(src);
+    console.log(src);
+
+    if (src.endsWith(".md") || src.endsWith(".mdx")) {
+      return {
+        type: "page",
+        $component: {
+          src: src,
+          pick: []
+        },
+        $$data: undefined,
+        path,
+        filePath: src
+      };
+    }
 
     const [_, exports] = analyzeModule(src);
     const hasDefault = exports.find(e => e.n === "default");
@@ -65,6 +79,19 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
 
   toRoute(src) {
     let path = this.toPath(src);
+
+    if (src.endsWith(".md") || src.endsWith(".mdx")) {
+      return {
+        type: "page",
+        $component: {
+          src: src,
+          pick: []
+        },
+        $$data: undefined,
+        path,
+        filePath: src
+      };
+    }
 
     const [_, exports] = analyzeModule(src);
     const hasRouteData = exports.find(e => e.n === "routeData");
