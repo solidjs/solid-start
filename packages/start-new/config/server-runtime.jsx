@@ -16,7 +16,6 @@ async function fetchServerAction(base, id, args) {
 export function createServerReference(fn, id, name) {
   return new Proxy(fn, {
     get(target, prop, receiver) {
-      console.log(target, prop);
     },
     apply(target, thisArg, args) {
       return fetchServerAction("/_server", `${id}#${name}`, args);

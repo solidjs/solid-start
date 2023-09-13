@@ -16,7 +16,6 @@ export function ErrorBoundary(props: ParentProps) {
 function ErrorMessage(props: { error: any }) {
   createEffect(() => console.error(props.error));
 
-  console.log(props.error);
   return (
     <div style="padding: 16px">
       <div

@@ -37,8 +37,6 @@ export function createIslandReference<T extends Component<any>>(
     return lazy(Comp as () => Promise<{ default: T }>);
   }
 
-  console.log("heree");
-
   function IslandComponent(props: ComponentProps<T>) {
     return (
       <Component {...props}>
@@ -48,13 +46,10 @@ export function createIslandReference<T extends Component<any>>(
   }
 
   return ((compProps: ComponentProps<T>) => {
-    console.log("renderng");
-
     if (import.meta.env.SSR) {
       const context = useRequest();
       const [, props] = splitProps(compProps, ["children"] as any);
       const [, spreadProps] = splitProps(compProps, [] as any);
-      console.log("renderng inside ssr");
 
       let fpath: string;
       let styles: string[] = [];

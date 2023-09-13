@@ -48,7 +48,6 @@ export function splitProps<T>(props: T, ...keys: (keyof T)[]): [T, T] {
             return cache;
           }
           let val = props[key];
-          console.log(val);
           if (val?.t) {
             val.t = `<solid-children>${val.t}</solid-children>`;
           } else if (Array.isArray(val) && val.every(v => v?.t)) {
