@@ -13,7 +13,8 @@
     "@solidjs/start": "workspace:^",
     "@vinxi/plugin-mdx": "^3.6.5",
     "solid-js": "^1.7.11",
-    "vinxi": "0.0.27"
+    "vinxi": "0.0.27",
+    "solid-mdx": "^0.0.7"
   },
   "engines": {
     "node": ">=18"

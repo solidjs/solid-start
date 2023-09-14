@@ -380,6 +380,9 @@ importers:
       solid-js:
         specifier: ^1.7.11
         version: 1.7.11
+      solid-mdx:
+        specifier: ^0.0.7
+        version: 0.0.7(solid-js@1.7.11)(vite@4.4.9)
       vinxi:
         specifier: 0.0.27
         version: 0.0.27(debug@4.3.4)(rollup@3.28.1)
@@ -11820,6 +11823,16 @@ packages:
 
   /solid-mdx@0.0.6(solid-js@1.7.11)(vite@4.4.9):
     resolution: {integrity: sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==}
+    peerDependencies:
+      solid-js: ^1.2.6
+      vite: '*'
+    dependencies:
+      solid-js: 1.7.11
+      vite: 4.4.9(@types/node@18.17.5)
+    dev: false
+
+  /solid-mdx@0.0.7(solid-js@1.7.11)(vite@4.4.9):
+    resolution: {integrity: sha512-dYKGOu5ZiaX3sfEMZYtfyXm30u33kF+T/pr67CMeyHzENDkWD3st4XEJ12Akp0J0PG9jzyHe5sAAKEXSnEcDEw==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
