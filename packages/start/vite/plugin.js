@@ -238,7 +238,7 @@ function solidStartFileSystemRouter(options) {
         vite.httpServer.once("listening", async () => {
           setTimeout(() => {
             if (vite.resolvedUrls) {
-              const url = vite.resolvedUrls.local[0];
+              const url = vite.resolvedUrls.local[0] ?? vite.resolvedUrls.network[0];
               // eslint-disable-next-line no-console
               printUrls(config.solidOptions.router, url.substring(0, url.length - 1));
             }
