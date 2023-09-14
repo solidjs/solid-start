@@ -9,13 +9,13 @@ export default function App() {
     <>
       <A href="/">Index</A>
       <A href="/about">About</A>
-        <DefaultErrorBoundary>
-          <Suspense>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </Suspense>
-        </DefaultErrorBoundary>
+      <DefaultErrorBoundary>
+        <Suspense>
+          <Routes>
+            <FileRoutes />
+          </Routes>
+        </Suspense>
+      </DefaultErrorBoundary>
     </>
   );
 }
