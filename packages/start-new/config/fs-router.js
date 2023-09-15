@@ -28,7 +28,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
         type: "page",
         $component: {
           src: src,
-          pick: []
+          pick: ["$css"]
         },
         $$data: undefined,
         path,
@@ -85,7 +85,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
         type: "page",
         $component: {
           src: src,
-          pick: []
+          pick: ["$css"]
         },
         $$data: undefined,
         path,
