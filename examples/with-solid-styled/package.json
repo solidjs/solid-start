@@ -12,7 +12,7 @@
     "@solidjs/start": "workspace:^",
     "solid-js": "^1.7.11",
     "solid-styled": "^0.8.2",
-    "vinxi": "0.0.27",
+    "vinxi": "0.0.29",
     "vite-plugin-solid-styled": "^0.8.3"
   },
   "engines": {
