@@ -33,44 +33,12 @@ export function defineConfig(baseConfig = {}) {
         dir: "./public",
         base: "/"
       },
-      ...start.serverPlugins.map(plugin => {
-        return {
-          middleware: true,
-          name: "middleware",
-          mode: "handler",
-          handler: plugin,
-          build: {
-            target: "server",
-            plugins: () => [
-              config("user", userConfig),
-              ...plugins,
-              solid({ ssr: true }),
-              config("app", {
-                resolve: {
-                  alias: {
-                    "#start/app": join(process.cwd(), "src", "app.tsx"),
-                    "~": join(process.cwd(), "src"),
-                    ...(!start.ssr
-                      ? {
-                          "@solidjs/start/server": "@solidjs/start/server/spa"
-                        }
-                      : {})
-                  }
-                },
-                define: {
-                  "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-                  "import.meta.env.SSR": JSON.stringify(true),
-                  "import.meta.env.START_SSR": JSON.stringify(start.ssr)
-                }
-              })
-            ]
-          }
-        };
-      }),
+
       {
         name: "ssr",
         mode: "handler",
         handler: "./src/entry-server.tsx",
+        middleware: start.middleware,
         ...(start.ssr ? { dir: "./src/routes", style: SolidStartServerFileRouter } : {}),
         extensions,
         build: {
@@ -147,7 +115,9 @@ export function defineConfig(baseConfig = {}) {
         },
         base: "/_build"
       },
-      references.serverRouter()
+      references.serverRouter({
+        middleware: start.middleware
+      })
     ]
   });
 }

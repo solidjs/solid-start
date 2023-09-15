@@ -1,6 +1,6 @@
 import {
   appendResponseHeader,
-  eventHandler,
+  defineMiddleware,
   EventHandlerRequest,
   getRequestIP,
   getResponseHeader,
@@ -51,12 +51,16 @@ export const composeMiddleware =
       forward
     );
 
-export function createMiddleware(fn: (event: FetchEvent) => void) {
+export function createMiddleware({ onRequest, onBeforeResponse }) {
   // return createServerMiddleware(({ forward }) => {
   // const fetchEventHandler = fn({ forward });
-  return eventHandler((h3event: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
-    const fetchEvent = h3event.startEvent || (h3event.startEvent = createFetchEvent(h3event));
-    return fn(fetchEvent, h3event);
+  // return eventHandler((h3event: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
+  //   const fetchEvent = h3event.startEvent || (h3event.startEvent = createFetchEvent(h3event));
+  //   return fn(fetchEvent, h3event);
+  // });
+  return defineMiddleware({
+    onRequest,
+    onBeforeResponse
   });
   // });
 }
