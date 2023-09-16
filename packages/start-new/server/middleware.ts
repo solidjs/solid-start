@@ -8,11 +8,15 @@ import {
   H3Event,
   removeResponseHeader,
   sendRedirect,
+  sendWebResponse,
   setResponseHeader,
   setResponseStatus,
   toWebRequest
 } from "vinxi/runtime/server";
 import { FetchEvent } from "./types";
+
+const h3EventSymbol = Symbol("h3Event");
+const fetchEventSymbol = Symbol("fetchEvent");
 
 export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
   return {
@@ -25,8 +29,25 @@ export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEven
     getResponseHeader: name => getResponseHeader(event, name),
     setResponseHeader: (name, value) => setResponseHeader(event, name, value),
     appendResponseHeader: (name, value) => appendResponseHeader(event, name, value),
-    removeResponseHeader: name => removeResponseHeader(event, name)
+    removeResponseHeader: name => removeResponseHeader(event, name),
+    // @ts-ignore
+    [h3EventSymbol]: event
   };
+}
+
+export function getH3Event(fetchEvent: FetchEvent): H3Event<EventHandlerRequest> {
+  // @ts-ignore
+  return fetchEvent[h3EventSymbol];
+}
+
+export function getFetchEvent(h3Event: H3Event): FetchEvent {
+  if (!h3Event[fetchEventSymbol]) {
+    const fetchEvent = createFetchEvent(h3Event);
+    h3Event[fetchEventSymbol] = fetchEvent;
+    // @ts-ignore
+  }
+
+  return h3Event[fetchEventSymbol];
 }
 
 export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
@@ -51,16 +72,56 @@ export const composeMiddleware =
       forward
     );
 
-export function createMiddleware({ onRequest, onBeforeResponse }) {
-  // return createServerMiddleware(({ forward }) => {
-  // const fetchEventHandler = fn({ forward });
-  // return eventHandler((h3event: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
-  //   const fetchEvent = h3event.startEvent || (h3event.startEvent = createFetchEvent(h3event));
-  //   return fn(fetchEvent, h3event);
-  // });
+type RequestMiddleware = (event: FetchEvent) => Response | Promise<Response> | void | Promise<void>;
+
+type ResponseMiddleware = (
+  event: FetchEvent,
+  response: Response
+) => Response | Promise<Response> | void | Promise<void>;
+
+function wrapRequestMiddleware(onRequest: RequestMiddleware) {
+  return async (h3Event: H3Event) => {
+    const fetchEvent = getFetchEvent(h3Event);
+    const response = await onRequest(fetchEvent);
+    if (!response) {
+      return;
+    } else {
+      sendWebResponse(h3Event, response);
+    }
+  };
+}
+
+function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware) {
+  return async (h3Event: H3Event, response: Response) => {
+    const fetchEvent = getFetchEvent(h3Event);
+    const mwResponse = await onBeforeResponse(fetchEvent, response);
+    if (!mwResponse) {
+      return;
+    } else {
+      sendWebResponse(h3Event, mwResponse);
+    }
+  };
+}
+
+export function createMiddleware({
+  onRequest,
+  onBeforeResponse
+}: {
+  onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
+  onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
+}) {
   return defineMiddleware({
-    onRequest,
-    onBeforeResponse
+    onRequest:
+      typeof onRequest === "function"
+        ? wrapRequestMiddleware(onRequest)
+        : Array.isArray(onRequest)
+        ? onRequest.map(wrapRequestMiddleware)
+        : undefined,
+    onBeforeResponse:
+      typeof onBeforeResponse === "function"
+        ? wrapResponseMiddleware(onBeforeResponse)
+        : Array.isArray(onBeforeResponse)
+        ? onBeforeResponse.map(wrapResponseMiddleware)
+        : undefined
   });
-  // });
 }

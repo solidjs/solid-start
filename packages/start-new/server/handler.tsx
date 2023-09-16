@@ -7,7 +7,7 @@ import {
 } from "vinxi/runtime/server";
 import { createRoutes } from "../shared/FileRoutes";
 import { apiRoutes } from "../shared/routes";
-import { createFetchEvent } from "./middleware";
+import { getFetchEvent } from "./middleware";
 import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
 
 export function createHandler(
@@ -25,7 +25,7 @@ export function createHandler(
     onRequest: options.onRequest,
     onBeforeResponse: options.onBeforeResponse,
     handler: async (e: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
-      const event = e.startEvent || (e.startEvent = createFetchEvent(e));
+      const event = getFetchEvent(e);
       event.locals.start = "start";
       // api
       const match = apiRoutes.find(
