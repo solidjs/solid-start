@@ -1,6 +1,6 @@
 {
   "name": "solid-start",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Create Solid apps with low configuration",
   "license": "MIT",
   "author": "Ryan Carniato",
@@ -128,7 +128,7 @@
     "@types/node": "^18.16.19",
     "@types/wait-on": "^5.3.1",
     "jsdom": "^20.0.3",
-    "solid-js": "^1.7.11",
+    "solid-js": "^1.7.12",
     "solid-start-cloudflare-pages": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:*",
     "solid-start-deno": "workspace:*",
