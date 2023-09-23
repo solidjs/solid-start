@@ -6,6 +6,8 @@
 
 This is the home of the Solid app framework. This is still a **work in progress**. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
 
+## Features
+
 - File-system based routing
 - Supports all rendering modes:
   - Server-side rendering (SSR)
@@ -21,6 +23,8 @@ This is the home of the Solid app framework. This is still a **work in progress*
 - TypeScript-first
 
 ### Getting started
+
+Create a SolidStart application and run a development server using your preferred package manager:
 
 ```bash
 mkdir my-app
