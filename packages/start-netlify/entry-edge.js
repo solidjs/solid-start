@@ -1,7 +1,7 @@
 import manifest from "../../netlify/route-manifest.json";
 import handler from "./entry-server.js";
 
-export default (request, context) => {
+export default async (request, context) => {
   const env = {
       ...context,
       manifest,
@@ -9,20 +9,15 @@ export default (request, context) => {
     },
     clientAddress = request.headers.get("x-nf-client-connection-ip");
 
-  function internalFetch(route, init = {}) {
-    if (route.startsWith("http")) {
-      return fetch(route, init);
-    }
+  // First check for static assets, to avoid shadowing them.
+  const asset = await context.next(request.clone());
+  if (asset.status !== 404) {
+    return asset;
+  }
 
-    let url = new URL(route, "http://internal");
-    const request = new Request(url.href, init);
-    return handler({
-      request,
-      clientAddress,
-      locals: {},
-      env,
-      fetch: internalFetch
-    });
+  function internalFetch(route, init = {}) {
+    const url = new URL(route, request.url);
+    return fetch(url, init);
   }
 
   return handler({
@@ -31,5 +26,5 @@ export default (request, context) => {
     locals: {},
     env,
     fetch: internalFetch
-  })
-}
+  });
+};
