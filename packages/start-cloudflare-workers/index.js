@@ -15,6 +15,51 @@ export default function (miniflareOptions = {}) {
   return {
     name: "cloudflare-workers",
     async dev(options, vite, dev) {
+      if (options.solidOptions.experimental?.websocket) {
+        if (!miniflareOptions.durableObjects) {
+          miniflareOptions.durableObjects = {};
+        }
+        miniflareOptions.durableObjects["DO_WEBSOCKET"] = "DO_WEBSOCKET";
+      }
+      let durableObjects = Object.keys(miniflareOptions.durableObjects ?? {});
+      let globs = {};
+      durableObjects.forEach(obj => {
+        console.log(obj);
+        globs[obj + "Proxy"] = class DO {
+          state;
+          env;
+          promise;
+          constructor(state, env) {
+            this.state = state;
+            this.env = env;
+            this.promise = this.createProxy(state, env);
+            this.ctx = {
+              state,
+              storage: state.storage,
+              durableObject: this
+            };
+          }
+
+          async createProxy(state, env) {
+            // const all = await vite.ssrLoadModule("~start/entry-server");
+            // return new all[obj](state, env);
+          }
+
+          async fetch(request) {
+            console.log("🧬", obj, request.method, request.url);
+
+            try {
+              const all = await vite.ssrLoadModule("~start/entry-server");
+              console.log(all[obj].prototype.fetch);
+              // let dObject = await this.promise;
+              return await all[obj].prototype.fetch.call(this, request, this.ctx);
+            } catch (e) {
+              console.log("error", e);
+            }
+          }
+        };
+      });
+
       const mf = new Miniflare({
         script: `
         export default {
@@ -23,35 +68,10 @@ export default function (miniflareOptions = {}) {
           }
         }
 
-        export const WebSocketDurableObject = WebSocketDurableObject1;
+        ${durableObjects.map(obj => `export const ${obj} = ${obj}Proxy;`).join("\n")}
       `,
         globals: {
-          WebSocketDurableObject1: class DO {
-            state;
-            env;
-            promise;
-            constructor(state, env) {
-              this.state = state;
-              this.env = env;
-              this.promise = this.createProxy(state, env);
-            }
-
-            async createProxy(state, env) {
-              const { WebSocketDurableObject } = await vite.ssrLoadModule("~start/entry-server");
-              return new WebSocketDurableObject(state, env);
-            }
-
-            async fetch(request) {
-              console.log("DURABLE_OBJECT", request.url);
-
-              try {
-                let dObject = await this.promise;
-                return await dObject.fetch(request);
-              } catch (e) {
-                console.log("error", e);
-              }
-            }
-          },
+          ...globs,
           serve: async (req, e, g) => {
             const {
               Request,
@@ -84,7 +104,7 @@ export default function (miniflareOptions = {}) {
 
             if (req.headers.get("Upgrade") === "websocket") {
               const url = new URL(req.url);
-              console.log(url.search);
+              console.log("WEBSOCKET", url.search);
               const durableObjectId = e.DO_WEBSOCKET.idFromName(url.pathname + url.search);
               const durableObjectStub = e.DO_WEBSOCKET.get(durableObjectId);
               const response = await durableObjectStub.fetch(req);
@@ -107,10 +127,13 @@ export default function (miniflareOptions = {}) {
         modules: true,
         kvPersist: true,
         compatibilityFlags: ["streams_enable_constructors"],
-        ...miniflareOptions
+        ...miniflareOptions,
+        durableObjects: Object.fromEntries(durableObjects.map(obj => [obj, obj]))
       });
 
       console.log("🔥", "starting miniflare");
+
+      miniflareOptions.init?.(mf);
 
       return await createServer(vite, mf, {});
     },
@@ -135,7 +158,7 @@ export default function (miniflareOptions = {}) {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       } else {
@@ -144,12 +167,28 @@ export default function (miniflareOptions = {}) {
       }
 
       copyFileSync(join(__dirname, "entry.js"), join(config.root, ".solid", "server", "server.js"));
-      let durableObjects = Object.values(miniflareOptions?.durableObjects || {});
+      let durableObjects = Object.keys(config.solidOptions.experimental?.durableObjects || {});
 
       if (durableObjects.length > 0) {
         let text = readFileSync(join(config.root, ".solid", "server", "server.js"), "utf8");
         durableObjects.forEach(item => {
-          text += `\nexport { ${item} } from "./entry-server";`;
+          text += `\n import ${item}Fetch from "./${item}"; 
+          
+          class ${item} {
+            ctx;
+            constructor(state) {
+              this.ctx = {
+                state,
+                storage: state.storage,
+                durableObject: this
+              };
+            }
+            async fetch(request) {
+              return await ${item}Fetch(request, this.ctx);
+            }
+          }
+
+          export { ${item} } from "./entry-server";`;
         });
         writeFileSync(join(config.root, ".solid", "server", "server.js"), text);
       }

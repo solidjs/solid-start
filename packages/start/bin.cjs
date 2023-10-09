@@ -3,7 +3,7 @@
 
 const { exec, spawn } = require("child_process");
 const sade = require("sade");
-const { resolve, join } = require("path");
+const { resolve, join, relative } = require("path");
 const path = require("path");
 const c = require("picocolors");
 const {
@@ -33,7 +33,7 @@ const findAny = (path, name) => {
 
 prog
   .command("routes").describe("Show all routes in your app")
-  .action(async ({config: configFile, open, port, root, host, inspect}) => {
+  .action(async ({ config: configFile, open, port, root, host, inspect }) => {
     root = root || process.cwd();
     const config = await resolveConfig({ mode: "production", configFile, root, command: "build" });
 
@@ -63,59 +63,6 @@ prog
     console.log(c.magenta(" version "), pkg.version);
 
     root = root || process.cwd();
-    // if (!existsSync(join(root, "package.json"))) {
-    //   console.log('No package.json found in "%s"', root);
-    //   console.log('Creating package.json in "%s"', root);
-    //   writeFileSync(
-    //     join(root, "package.json"),
-    //     JSON.stringify(
-    //       {
-    //         name: "my-app",
-    //         private: true,
-    //         version: "0.0.0",
-    //         type: "module",
-    //         scripts: {
-    //           dev: "solid-start dev",
-    //           build: "solid-start build",
-    //           preview: "solid-start start"
-    //         },
-    //         devDependencies: {
-    //           typescript: pkg.devDependencies["typescript"],
-    //           vite: pkg.devDependencies["vite"]
-    //         },
-    //         dependencies: {
-    //           "@solidjs/meta": pkg.devDependencies["@solidjs/meta"],
-    //           "@solidjs/router": pkg.devDependencies["@solidjs/router"],
-    //           "solid-start": pkg.devDependencies[pkg.version],
-    //           "solid-js": pkg.devDependencies["solid-js"]
-    //         }
-    //       },
-    //       null,
-    //       2
-    //     )
-    //   );
-
-    //   console.log("Installing dependencies...");
-    //   await new Promise((resolve, reject) => {
-    //     exec("npm install", { cwd: root }, (err, stdout, stderr) => {
-    //       if (err) {
-    //         reject(err);
-    //       } else {
-    //         resolve();
-    //       }
-    //     }).stdout.pipe(process.stdout);
-    //   });
-    // }
-
-    // if (!existsSync(join(root, "src"))) {
-    //   console.log('No src directory found in "%s"', root);
-    //   console.log('Creating src directory in "%s"', root);
-    //   mkdirSync(join(root, "src", "routes"), { recursive: true });
-    //   writeFileSync(
-    //     join(root, "src", "routes", "index.tsx"),
-    //     `export default function Page() { return <div>Hello World</div> }`
-    //   );
-    // }
 
     const config = await resolveConfig({ configFile, root, mode: "development", command: "serve" });
 
@@ -179,16 +126,21 @@ prog
     const { default: prepareManifest } = await import("./fs-router/manifest.js");
 
     const inspect = join(config.root, ".solid", "inspect");
-    const vite = require("vite");
+    if (!existsSync(inspect)) mkdirSync(inspect, {
+      recursive: true
+    });
+
+    const vite = await import("vite");
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
 
     config.adapter.build(config, {
-      islandsClient: async path => {
+      islandsClient: async outputDir => {
         console.log();
         console.log(c.blue("solid-start") + c.magenta(" finding islands..."));
         console.time(c.blue("solid-start") + c.magenta(" found islands in"));
 
         let routeManifestPath = join(config.root, ".solid", "route-manifest");
+        let islands = new Set();
         await vite.build({
           build: {
             outDir: routeManifestPath,
@@ -199,7 +151,12 @@ prog
                 resolve(join(config.root, "node_modules", "solid-start", "islands", "entry-client"))
               ],
               output: {
-                manualChunks: undefined
+                manualChunks(id, i) {
+                  if (id.includes("?island")) {
+                    islands.add(id);
+                    return path.basename(id);
+                  }
+                }
               }
             }
           }
@@ -221,7 +178,24 @@ prog
           readFileSync(join(routeManifestPath, "route-manifest.json")).toString()
         );
 
-        let islands = Object.keys(routeManifest).filter(a => a.endsWith("?island"));
+        let islandReferences = Object.keys(routeManifest).filter(
+          a => a.includes("?island") || a.includes("?client") || a.includes("_island")
+        );
+
+        let islandToReference = {};
+        let referenceToIsland = {};
+        for (let island of islands) {
+          let name = path.basename(island);
+          let reference = islandReferences.find(a =>
+            a.match(new RegExp(`_${name.replace("?", "_").replace("&", "_")}.*`))
+          );
+          if (reference) {
+            islandToReference[vite.normalizePath(relative(config.root, island))] = reference;
+            referenceToIsland[reference] = vite.normalizePath(relative(config.root, island));
+          }
+        }
+
+        console.log(islandReferences);
 
         console.timeEnd(c.blue("solid-start") + c.magenta(" found islands in"));
         console.log();
@@ -231,13 +205,13 @@ prog
           configFile: config.configFile,
           root: config.root,
           build: {
-            outDir: path,
+            outDir: outputDir,
             ssrManifest: true,
             minify: process.env.START_MINIFY === "false" ? false : config.build?.minify ?? true,
             rollupOptions: {
               input: [
                 config.solidOptions.clientEntry,
-                ...islands.map(i => resolve(join(config.root, i)))
+                ...[...islands.values()].map(i => resolve(i))
               ],
               output: {
                 manualChunks: undefined
@@ -246,47 +220,67 @@ prog
           }
         });
 
-        assetManifest = JSON.parse(readFileSync(join(path, "manifest.json")).toString());
-        ssrManifest = JSON.parse(readFileSync(join(path, "ssr-manifest.json")).toString());
+        assetManifest = JSON.parse(readFileSync(join(outputDir, "manifest.json")).toString());
+        ssrManifest = JSON.parse(readFileSync(join(outputDir, "ssr-manifest.json")).toString());
 
-        let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, islands);
+        let islandsManifest = prepareManifest(ssrManifest, assetManifest, config, [
+          ...Object.keys(islandToReference)
+        ]);
 
         let newManifest = {
           ...Object.fromEntries(
             Object.entries(routeManifest)
-              .filter(([k]) => k.startsWith("/"))
-              .map(([k, v]) => [k, v.filter(a => a.type !== "script")])
-          ),
-          ...Object.fromEntries(
-            Object.entries(islandsManifest)
-              .filter(([k]) => k.endsWith("?island"))
+              .filter(([k]) => k.startsWith("/") || k === "")
               .map(([k, v]) => [
                 k,
                 {
+                  type: "route",
+                  script: v.script,
+                  assets: v.assets
+                    .filter(a => a.type !== "script")
+                    // replace island references with island source paths
+                    .map(v => (v.type === "island" ? { ...v, href: referenceToIsland[v.href] } : v))
+                }
+              ])
+          ),
+          ...Object.fromEntries(
+            Object.entries(islandsManifest)
+              .filter(
+                ([k]) => k.includes("?island") || k.includes("?client") || k.includes("_island")
+              )
+              .map(([k, v]) => [
+                k,
+                {
+                  type: "island",
                   script: v.script,
                   assets: [
                     ...v.assets.filter(a => a.type === "script"),
-                    ...routeManifest[k].assets.filter(a => a.type === "style")
+                    // load assets via reference tags
+                    ...routeManifest[islandToReference[k]].assets.filter(a => a.type === "style")
                   ]
                 }
               ])
           ),
-          "entry-client": [
-            ...islandsManifest["entry-client"].filter(a => a.type === "script"),
-            ...routeManifest["entry-client"].filter(a => a.type === "style")
-          ]
+          "entry-client": {
+            type: "entry",
+            script: islandsManifest["entry-client"].script,
+            assets: [
+              ...islandsManifest["entry-client"].assets.filter(a => a.type === "script"),
+              ...routeManifest["entry-client"].assets.filter(a => a.type === "style")
+            ]
+          }
         };
 
         Object.values(newManifest).forEach(v => {
           let assets = Array.isArray(v) ? v : v.assets;
           assets.forEach(a => {
             if (a.type === "style") {
-              copyFileSync(join(routeManifestPath, a.href), join(path, a.href));
+              copyFileSync(join(routeManifestPath, a.href), join(outputDir, a.href));
             }
           });
         });
 
-        writeFileSync(join(path, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
+        writeFileSync(join(outputDir, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
         writeFileSync(join(inspect, "route-manifest.json"), JSON.stringify(newManifest, null, 2));
         writeFileSync(join(inspect, "manifest.json"), JSON.stringify(assetManifest, null, 2));
         writeFileSync(join(inspect, "ssr-manifest.json"), JSON.stringify(ssrManifest, null, 2));
@@ -357,7 +351,6 @@ prog
         console.time(c.blue("solid-start") + c.magenta(" client built in"));
 
         let isDebug = process.env.DEBUG && process.env.DEBUG.includes("start");
-        mkdirSync(join(config.root, ".solid"), { recursive: true });
 
         let indexHtml;
         if (existsSync(join(config.root, "index.html"))) {
@@ -373,7 +366,7 @@ prog
               "dev",
               "--mode",
               "production",
-              ...(config ? ["--config", config.configFile] : []),
+              ...(config ? ["--config", `"${config.configFile}"`] : []),
               ...(port ? ["--port", port] : [])
             ],
             {
@@ -388,12 +381,18 @@ prog
                 ]
                   .filter(Boolean)
                   .join(" "),
-              }
+              },
+              detached: process.platform !== 'win32'
             }
           );
 
+          const terminateShell = () => {
+            if (process.platform === 'win32') proc.kill()
+            else process.kill(-proc.pid);
+          }
+
           process.on("SIGINT", function () {
-            proc.kill();
+            terminateShell()
             process.exit();
           });
 
@@ -416,7 +415,7 @@ prog
           DEBUG("spa index.html created");
           console.timeEnd(c.blue("solid-start") + c.magenta(" index.html rendered in"));
 
-          proc.kill();
+          terminateShell()
         }
 
         DEBUG("building client bundle");
@@ -481,29 +480,20 @@ prog
     config.adapter.name && console.log(c.blue(" adapter "), config.adapter.name);
     console.log();
     if (url) {
-      const { Router } = await import("./fs-router/router.js");
       const { default: printUrls } = await import("./dev/print-routes.js");
-
-      const router = new Router({
-        baseDir: path.posix.join(config.solidOptions.appRoot, config.solidOptions.routesDir),
-        pageExtensions: config.solidOptions.pageExtensions,
-        ignore: config.solidOptions.routesIgnore,
-        cwd: config.solidOptions.root
-      });
-      await router.init();
-      printUrls(router, url);
+      await config.solidOptions.router.init();
+      printUrls(config.solidOptions.router, url);
     }
   });
 
 prog.parse(process.argv);
 
 /**
- *
  * @param {*} param0
- * @returns {Promise<import('node_modules/vite').ResolvedConfig & { solidOptions: import('./types').StartOptions, adapter: import('./types').Adapter }>}
+ * @returns {Promise<import('./vite/plugin').ViteConfig>}
  */
 async function resolveConfig({ configFile, root, mode, command }) {
-  const vite = require("vite");
+  const vite = await import("vite");
   root = root || process.cwd();
   if (!configFile) {
     if (!configFile) {

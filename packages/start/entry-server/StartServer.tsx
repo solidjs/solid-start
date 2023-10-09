@@ -4,7 +4,6 @@ import { ComponentProps, sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
 // @ts-ignore
 import Root from "~start/root";
-
 import { RouteDefinition, Router as IslandsRouter } from "../islands/server-router";
 
 import { fileRoutes } from "../root/FileRoutes";
@@ -55,7 +54,7 @@ export function createHandler(...exchanges: Middleware[]) {
 export function StartRouter(
   props: RouterProps & {
     location: string;
-    prevLocation: string;
+    prevLocation: string | null;
     routes: RouteDefinition | RouteDefinition[];
   }
 ) {

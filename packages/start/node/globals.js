@@ -1,13 +1,14 @@
 import crypto from "crypto";
 import Streams from "stream/web";
-import { fetch, Headers, Request, Response } from "undici";
 
-Object.assign(globalThis, Streams, {
-  Request,
-  Response,
-  fetch,
-  Headers
-});
+// Bun does not support this assignment.
+// We only assign globalThis if the runtime
+// is not Bun.
+//
+// https://bun.sh/guides/util/detect-bun
+if (!process.versions.bun) {
+  Object.assign(globalThis, Streams);
+}
 
 if (globalThis.crypto != crypto.webcrypto) {
   // @ts-ignore

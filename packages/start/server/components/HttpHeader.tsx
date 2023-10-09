@@ -1,9 +1,9 @@
-import { onCleanup, useContext } from "solid-js";
+import { onCleanup } from "solid-js";
 import { isServer } from "solid-js/web";
-import { ServerContext } from "../ServerContext";
+import { useRequest } from "../ServerContext";
 
-export function HttpHeader(props: { name: string; value: string; append?: boolean }) {
-  const pageContext = useContext(ServerContext);
+export function HttpHeader(props: { name: string; value: string, append?: boolean  }) {
+  const pageContext = useRequest();
 
   if (isServer) {
     if (props.append) {

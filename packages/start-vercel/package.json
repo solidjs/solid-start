@@ -1,6 +1,6 @@
 {
   "name": "solid-start-vercel",
-  "version": "0.2.26",
+  "version": "0.3.6",
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
@@ -8,18 +8,18 @@
     "type": "adapter"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "@vercel/nft": "^0.22.6",
-    "rollup": "^3.10.0",
-    "terser": "^5.16.1",
     "fast-glob": "3.2.12",
-    "micromatch": "4.0.5"
+    "micromatch": "4.0.5",
+    "rollup": "^3.26.2",
+    "terser": "^5.19.0"
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "vite": "^4.1.4"
+    "vite": "^4.4.6"
   },
   "peerDependencies": {
     "solid-start": "*",

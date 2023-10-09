@@ -120,22 +120,39 @@ export async function createFixture(init: FixtureInit) {
   let app: EntryServer = await import(pathToFileURL(buildPath).toString());
 
   let handler = async (request: Request) => {
+    const env = {
+      manifest,
+      getStaticHTML: async assetPath => {
+        let text = await readFile(
+          path.join(projectDir, "dist", "public", assetPath + ".html"),
+          "utf8"
+        );
+        return new Response(text, {
+          headers: {
+            "content-type": "text/html"
+          }
+        });
+      }
+    };
+
+    function internalFetch(route, init = {}) {
+      if (route.startsWith("http")) {
+        return fetch(route, init);
+      }
+
+      let url = new URL(route, "http://internal");
+      const request = new Request(url.href, init);
+      return app.default({
+        request: request,
+        env,
+        fetch: internalFetch
+      });
+    }
+
     return await app.default({
       request: request,
-      env: {
-        manifest,
-        getStaticHTML: async assetPath => {
-          let text = await readFile(
-            path.join(projectDir, "dist", "public", assetPath + ".html"),
-            "utf8"
-          );
-          return new Response(text, {
-            headers: {
-              "content-type": "text/html"
-            }
-          });
-        }
-      }
+      env,
+      fetch: internalFetch
     });
   };
 

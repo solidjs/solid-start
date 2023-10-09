@@ -1,4 +1,3 @@
-import { internalFetch } from "../api/internalFetch";
 import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
 import { ContentTypeHeader, XSolidStartContentTypeHeader, XSolidStartOrigin } from "./responses";
 import { handleServerRequest, server$ } from "./server-functions/server";
@@ -37,43 +36,55 @@ export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
         request: event.request,
         clientAddress: event.clientAddress,
         locals: event.locals,
-        fetch: internalFetch,
+        fetch: event.fetch,
         $type: FETCH_EVENT,
         env: event.env
       });
 
       const serverResponse = await handleServerRequest(serverFunctionEvent);
 
-      let responseContentType = serverResponse!.headers.get(XSolidStartContentTypeHeader);
+      if (serverResponse) {
+        let responseContentType = serverResponse.headers.get(XSolidStartContentTypeHeader);
 
-      // when a form POST action is made and there is an error throw,
-      // and its a non-javascript request potentially,
-      // we redirect to the referrer with the form state and error serialized
-      // in the url params for the redicted location
-      if (
-        formRequestBody &&
-        responseContentType !== null &&
-        responseContentType.includes("error")
-      ) {
-        const formData = await formRequestBody.formData();
-        let entries = [...formData.entries()];
-        return new Response(null, {
-          status: 302,
-          headers: {
-            Location:
-              new URL(event.request.headers.get("referer") || "").pathname +
-              "?form=" +
-              encodeURIComponent(
-                JSON.stringify({
-                  url: url.pathname,
-                  entries: entries,
-                  ...(await serverResponse!.json())
-                })
-              )
-          }
-        });
+        // when a form POST action is made and there is an error throw,
+        // and its a non-javascript request potentially,
+        // we redirect to the referrer with the form state and error serialized
+        // in the url params for the redicted location
+        if (
+          formRequestBody &&
+          responseContentType !== null &&
+          responseContentType.includes("error")
+        ) {
+          const formData = await formRequestBody.formData();
+          let entries = [...formData.entries()];
+          return new Response(null, {
+            status: 302,
+            headers: {
+              Location:
+                new URL(event.request.headers.get("referer")!).pathname +
+                "?form=" +
+                encodeURIComponent(
+                  JSON.stringify({
+                    url: url.pathname,
+                    entries: entries,
+                    ...(await serverResponse.json())
+                  })
+                )
+            }
+          });
+        }
+
+        if (import.meta.env.START_ISLANDS && serverResponse.status === 204) {
+          return await event.fetch(serverResponse.headers.get("Location") ?? "", {
+            method: "GET",
+            headers: {
+              "x-solid-referrer": event.request.headers.get("x-solid-referrer")!,
+              "x-solid-mutation": event.request.headers.get("x-solid-mutation")!
+            }
+          });
+        }
+        return serverResponse as Response;
       }
-      return serverResponse as Response;
     }
 
     const response = await forward(event);

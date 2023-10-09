@@ -149,7 +149,7 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(fileURLToPath(new URL("./static/", vercelOutputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(fileURLToPath(new URL("./static/", vercelOutputDir))); // join(outputDir, "static")
         await builder.server(fileURLToPath(solidServerDir)); // join(config.root, ".solid", "server")
       } else {
@@ -211,7 +211,7 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
             entrypoint: relative(fileURLToPath(renderBaseUrl), fileURLToPath(renderFuncEntrypoint))
           }
         : {
-            runtime: "nodejs16.x",
+            runtime: "nodejs18.x",
             handler: relative(fileURLToPath(renderBaseUrl), fileURLToPath(renderFuncEntrypoint)),
             launcherType: "Nodejs"
           };
@@ -290,7 +290,7 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
               entrypoint: relative(fileURLToPath(apiBaseUrl), fileURLToPath(apiFuncEntrypoint))
             }
           : {
-              runtime: "nodejs16.x",
+              runtime: "nodejs18.x",
               handler: relative(fileURLToPath(apiBaseUrl), fileURLToPath(apiFuncEntrypoint)),
               launcherType: "Nodejs"
             };

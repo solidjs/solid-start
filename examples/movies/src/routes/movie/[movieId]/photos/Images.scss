@@ -1,0 +1,82 @@
+@import "~/assets/css/utilities/_variables.scss";
+
+.images__head {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: $breakpoint-large) {
+    margin-bottom: 2rem;
+  }
+}
+
+.images__title {
+  font-size: 1.8rem;
+  letter-spacing: $letter-spacing;
+  @media (min-width: $breakpoint-large) {
+    font-size: 2.4rem;
+  }
+}
+
+.images__count {
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  color: $text-color-grey;
+  letter-spacing: $letter-spacing;
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.4rem;
+  }
+}
+
+.images__items {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.4rem;
+  margin-left: -0.4rem;
+}
+
+.images-item {
+  padding: 0.4rem;
+}
+
+.images-item__img {
+  background-color: $secondary-color;
+}
+
+.images-backdrops {
+  width: 50%;
+  @media (min-width: $breakpoint-xsmall) {
+    width: 33.3333333%;
+  }
+  @media (min-width: $breakpoint-medium) {
+    width: 25%;
+  }
+  @media (min-width: $breakpoint-xlarger1) {
+    width: 20%;
+  }
+  @media (min-width: $breakpoint-xlarger2) {
+    width: 16.6666667%;
+  }
+  @media (min-width: $breakpoint-xlarger3) {
+    width: 14.2857143%;
+  }
+}
+
+.images-posters {
+  width: 33.3333333%;
+  @media (min-width: $breakpoint-xsmall) {
+    width: 25%;
+  }
+  @media (min-width: $breakpoint-medium) {
+    width: 20%;
+  }
+  @media (min-width: $breakpoint-xlarger1) {
+    width: 16.6666667%;
+  }
+  @media (min-width: $breakpoint-xlarger2) {
+    width: 14.2857143%;
+  }
+  @media (min-width: $breakpoint-xlarger3) {
+    width: 12.5%;
+  }
+}

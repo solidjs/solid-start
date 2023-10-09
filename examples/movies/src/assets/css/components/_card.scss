@@ -1,0 +1,87 @@
+@import '~/assets/css/utilities/_variables.scss';
+
+.card {
+  margin-bottom: 1.5rem;
+  line-height: $base-line-height;
+
+  @media (min-width: $breakpoint-xsmall) {
+    margin-bottom: 2rem;
+  }
+}
+
+.card__img {
+  background-color: $secondary-color;
+  transition: transform 0.3s ease-in-out;
+
+  span {
+    // TODO: should add styling for span element
+    transform: scale(0.97);
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+
+    @media (min-width: $breakpoint-large) {
+      font-size: 1.6rem;
+    }
+  }
+
+  &.lazyloaded img {
+    transform: scale(1);
+  }
+}
+
+
+.card__name {
+  margin-top: 1rem;
+  overflow: hidden;
+  font-size: 1.3rem;
+  text-overflow: ellipsis;
+  letter-spacing: $letter-spacing;
+  white-space: nowrap;
+
+  @media (min-width: $breakpoint-large) {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+}
+
+.card__rating {
+  display: flex;
+  align-items: center;
+}
+
+.card__vote {
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  color: $text-color-grey;
+
+  @media (min-width: $breakpoint-large) {
+    font-size: 1.4rem;
+  }
+}
+
+.card__stars {
+  width: 7.3rem;
+  height: 1.2rem;
+  background-image: url('~assets/images/stars.png');
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+
+  > div {
+    height: 100%;
+    background-image: url('~assets/images/stars-filled.png');
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+}
+
+@media (max-width: $breakpoint-xsmall - 1) {
+  .card__name,
+  .card__rating {
+    display: none;
+  }
+}

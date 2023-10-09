@@ -29,7 +29,6 @@ Solid apps are built with _adapters_, which optimise your project for deployment
 
 By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different adapter, add it to the `devDependencies` in `package.json` and specify in your `vite.config.js`.
 
-
 ## Testing
 
 Tests are written with `vitest`, `@solidjs/testing-library` and `@testing-library/jest-dom` to extend expect with some helpful custom matchers.

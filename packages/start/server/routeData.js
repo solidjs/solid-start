@@ -1,3 +1,4 @@
+// @ts-nocheck
 // All credit for this work goes to the amazing Next.js team.
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
 // This is adapted to work with routeData functions. It can be run in two modes, one which preserves the routeData and the Component in the same file, and one which creates a
@@ -110,9 +111,9 @@ function transformRouteData({ types: t }) {
                 if (specifiers.length) {
                   specifiers.forEach(s => {
                     if (
-                      t.isIdentifier(s.node.exported)
+                      (t.isIdentifier(s.node.exported)
                         ? s.node.exported.name
-                        : s.node.exported.value === "routeData"
+                        : s.node.exported.value) === "routeData"
                     ) {
                       s.remove();
                     }

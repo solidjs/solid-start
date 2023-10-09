@@ -1,3 +1,4 @@
+// @ts-nocheck
 import generate from "@babel/generator";
 import template from "@babel/template";
 import crypto from "crypto";
