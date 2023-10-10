@@ -206,9 +206,6 @@ function solidStartFileSystemRouter(options) {
   /** @type {boolean} */
   let lazy = true;
 
-  /** @type {boolean} */
-  let islands = false;
-
   const babelOptions =
     (/** @type {any} */ getBabelOptions) =>
     async (/** @type {string} */ source, /** @type {string} */ id, /** @type {boolean} */ ssr) => {
@@ -229,7 +226,6 @@ function solidStartFileSystemRouter(options) {
       // @ts-expect-error
       config = _config;
 
-      islands = _config.solidOptions.experimental.islands;
       lazy = _config.command !== "serve";
       await config.solidOptions.router.init();
     },
@@ -444,7 +440,10 @@ function solidStartFileSystemRouter(options) {
         return {
           code: code.replace(
             "var api = $API_ROUTES;",
-            stringifyAPIRoutes(config.solidOptions.router.getFlattenedApiRoutes(true), { lazy, islands })
+            stringifyAPIRoutes(
+              config.solidOptions.router.getFlattenedApiRoutes(true), 
+              { lazy, islandsRouter: !!config.solidOptions.experimental?.islandsRouter }
+            )
           )
         };
       }
