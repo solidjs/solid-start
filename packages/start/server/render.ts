@@ -1,7 +1,5 @@
 import { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { apiRoutes } from "../api/middleware";
-import { inlineServerFunctions } from "../server/middleware";
 import { redirect } from "../server/responses";
 import { FETCH_EVENT, FetchEvent, PageEvent } from "../server/types";
 
@@ -12,37 +10,33 @@ export function renderSync(
     renderId?: string;
   }
 ) {
-  return () => inlineServerFunctions({
-    forward: apiRoutes({
-      async forward(event: FetchEvent): Promise<Response> {
-        if (
-          !import.meta.env.DEV &&
-          !import.meta.env.START_SSR &&
-          !import.meta.env.START_INDEX_HTML
-        ) {
-          return (
-            (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
-          );
-        }
+  return () => async (event: FetchEvent) => {
+    if (
+      !import.meta.env.DEV &&
+      !import.meta.env.START_SSR &&
+      !import.meta.env.START_INDEX_HTML
+    ) {
+      return (
+        (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+      );
+    }
 
-        let pageEvent = createPageEvent(event);
+    let pageEvent = createPageEvent(event);
 
-        let markup = renderToString(() => fn(pageEvent), options);
-        if (pageEvent.routerContext && pageEvent.routerContext.url) {
-          return redirect(pageEvent.routerContext.url, {
-            headers: pageEvent.responseHeaders
-          });
-        }
+    let markup = renderToString(() => fn(pageEvent), options);
+    if (pageEvent.routerContext && pageEvent.routerContext.url) {
+      return redirect(pageEvent.routerContext.url, {
+        headers: pageEvent.responseHeaders
+      });
+    }
 
-        markup = handleIslandsRouting(pageEvent, markup);
+    markup = handleIslandsRouting(pageEvent, markup);
 
-        return new Response(markup, {
-          status: pageEvent.getStatusCode(),
-          headers: pageEvent.responseHeaders
-        });
-      }
-    })
-  });
+    return new Response(markup, {
+      status: pageEvent.getStatusCode(),
+      headers: pageEvent.responseHeaders
+    });
+  }
 }
 
 export function renderAsync(
@@ -53,38 +47,34 @@ export function renderAsync(
     renderId?: string;
   }
 ) {
-  return () => inlineServerFunctions({
-    forward: apiRoutes({
-      async forward(event: FetchEvent): Promise<Response> {
-        if (
-          !import.meta.env.DEV &&
-          !import.meta.env.START_SSR &&
-          !import.meta.env.START_INDEX_HTML
-        ) {
-          return (
-            (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
-          );
-        }
+  return () => async (event: FetchEvent) => {
+    if (
+      !import.meta.env.DEV &&
+      !import.meta.env.START_SSR &&
+      !import.meta.env.START_INDEX_HTML
+    ) {
+      return (
+        (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+      );
+    }
 
-        let pageEvent = createPageEvent(event);
+    let pageEvent = createPageEvent(event);
 
-        let markup = await renderToStringAsync(() => fn(pageEvent), options);
+    let markup = await renderToStringAsync(() => fn(pageEvent), options);
 
-        if (pageEvent.routerContext && pageEvent.routerContext.url) {
-          return redirect(pageEvent.routerContext.url, {
-            headers: pageEvent.responseHeaders
-          }) as Response;
-        }
+    if (pageEvent.routerContext && pageEvent.routerContext.url) {
+      return redirect(pageEvent.routerContext.url, {
+        headers: pageEvent.responseHeaders
+      }) as Response;
+    }
 
-        markup = handleIslandsRouting(pageEvent, markup);
+    markup = handleIslandsRouting(pageEvent, markup);
 
-        return new Response(markup, {
-          status: pageEvent.getStatusCode(),
-          headers: pageEvent.responseHeaders
-        });
-      }
-    })
-  });
+    return new Response(markup, {
+      status: pageEvent.getStatusCode(),
+      headers: pageEvent.responseHeaders
+    });
+  }
 }
 
 export function renderStream(
@@ -96,68 +86,64 @@ export function renderStream(
     onCompleteAll?: (info: { write: (v: string) => void }) => void;
   } = {}
 ) {
-  return () => inlineServerFunctions({
-    forward: apiRoutes({
-      async forward(event: FetchEvent): Promise<Response> {
-        if (
-          !import.meta.env.DEV &&
-          !import.meta.env.START_SSR &&
-          !import.meta.env.START_INDEX_HTML
-        ) {
-          return (
-            (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
-          );
-        }
+  return () => async (event: FetchEvent) => {
+    if (
+      !import.meta.env.DEV &&
+      !import.meta.env.START_SSR &&
+      !import.meta.env.START_INDEX_HTML
+    ) {
+      return (
+        (await event.env.getStaticHTML?.("/index")) ?? new Response("Not Found", { status: 404 })
+      );
+    }
 
-        let pageEvent = createPageEvent(event);
+    let pageEvent = createPageEvent(event);
 
-        // Hijack after navigation with islands router to be async
-        // Todo streaming into HTML
-        if (import.meta.env.START_ISLANDS_ROUTER && event.request.headers.get("x-solid-referrer")) {
-          let markup = await renderToStringAsync(() => fn(pageEvent), baseOptions);
+    // Hijack after navigation with islands router to be async
+    // Todo streaming into HTML
+    if (import.meta.env.START_ISLANDS_ROUTER && event.request.headers.get("x-solid-referrer")) {
+      let markup = await renderToStringAsync(() => fn(pageEvent), baseOptions);
 
-          if (pageEvent.routerContext && pageEvent.routerContext.url) {
-            return redirect(pageEvent.routerContext.url, {
-              headers: pageEvent.responseHeaders
-            }) as Response;
-          }
-
-          markup = handleIslandsRouting(pageEvent, markup);
-
-          return new Response(markup, {
-            status: pageEvent.getStatusCode(),
-            headers: pageEvent.responseHeaders
-          });
-        }
-
-        const options = { ...baseOptions };
-        if (options.onCompleteAll) {
-          const og = options.onCompleteAll;
-          options.onCompleteAll = options => {
-            handleStreamingRedirect(pageEvent)(options);
-            og(options);
-          };
-        } else options.onCompleteAll = handleStreamingRedirect(pageEvent);
-        const { readable, writable } = new TransformStream();
-        const stream = renderToStream(() => fn(pageEvent), options);
-
-        if (pageEvent.routerContext && pageEvent.routerContext.url) {
-          return redirect(pageEvent.routerContext.url, {
-            headers: pageEvent.responseHeaders
-          });
-        }
-
-        handleStreamingIslandsRouting(pageEvent, writable);
-
-        stream.pipeTo(writable);
-
-        return new Response(readable, {
-          status: pageEvent.getStatusCode(),
+      if (pageEvent.routerContext && pageEvent.routerContext.url) {
+        return redirect(pageEvent.routerContext.url, {
           headers: pageEvent.responseHeaders
-        });
+        }) as Response;
       }
-    })
-  });
+
+      markup = handleIslandsRouting(pageEvent, markup);
+
+      return new Response(markup, {
+        status: pageEvent.getStatusCode(),
+        headers: pageEvent.responseHeaders
+      });
+    }
+
+    const options = { ...baseOptions };
+    if (options.onCompleteAll) {
+      const og = options.onCompleteAll;
+      options.onCompleteAll = options => {
+        handleStreamingRedirect(pageEvent)(options);
+        og(options);
+      };
+    } else options.onCompleteAll = handleStreamingRedirect(pageEvent);
+    const { readable, writable } = new TransformStream();
+    const stream = renderToStream(() => fn(pageEvent), options);
+
+    if (pageEvent.routerContext && pageEvent.routerContext.url) {
+      return redirect(pageEvent.routerContext.url, {
+        headers: pageEvent.responseHeaders
+      });
+    }
+
+    handleStreamingIslandsRouting(pageEvent, writable);
+
+    stream.pipeTo(writable);
+
+    return new Response(readable, {
+      status: pageEvent.getStatusCode(),
+      headers: pageEvent.responseHeaders
+    });
+  }
 }
 
 function handleStreamingIslandsRouting(pageEvent: PageEvent, writable: WritableStream<any>) {
