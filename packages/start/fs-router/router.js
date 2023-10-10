@@ -135,14 +135,15 @@ export class Router {
   processFile(path) {
     // if its a route data function
     if (path.match(this.pageDataRegex)) {
+      log("processFile: pageDataRegex matched", { path });
       let id = this.getRouteId(path.replace(this.pageDataRegex, ""));
       this.setRouteData(id, path);
       return;
     }
 
-    // if its a possible page due to its extension
+    // if it's a possible page due to its extension
     if (this.isRoute(path)) {
-      log("processing", path);
+      log("processFile: isRoute() matched", { path });
       let routeConfig = this.createRouteConfig(path);
 
       // renamed index should have a trailing slash like index files
