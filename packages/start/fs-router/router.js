@@ -8,7 +8,7 @@ import fs from "fs";
 import path, { join } from "path";
 import { toPath } from "./path-utils.js";
 
-const log = debug("solid-start");
+const log = debug("start:fs-router:router");
 
 // Available HTTP methods / verbs for api routes
 // `delete` is a reserved word in JS, so we use `del` instead
