@@ -20,6 +20,7 @@ export type Options = Omit<import("vite-plugin-solid").Options, "ssr"> & {
   rootEntry: string;
   serverEntry: string;
   clientEntry: string;
+  omitNestedClosingTags: boolean;
   router: import("../fs-router/router").Router;
 };
 
