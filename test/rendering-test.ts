@@ -78,7 +78,7 @@ test.describe("rendering", () => {
       prettyHtml(`
     <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
       <h1>Root</h1>
-      <!--#-->
+      <!--$-->
       <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">Index</h2>
       <!--/-->
     </div>`)
@@ -91,7 +91,7 @@ test.describe("rendering", () => {
       prettyHtml(`
     <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
       <h1>Root</h1>
-      <!--#-->
+      <!--$-->
       <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">About</h2>
       <!--/-->
     </div>`)
@@ -105,7 +105,7 @@ test.describe("rendering", () => {
       prettyHtml(`
         <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
           <h1>Root</h1>
-          <!--#-->
+          <!--$-->
           <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
@@ -117,7 +117,7 @@ test.describe("rendering", () => {
       prettyHtml(`
         <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
           <h1>Root</h1>
-          <!--#-->
+          <!--$-->
           <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">About</h2>
           <!--/-->
         </div>`)
@@ -131,7 +131,7 @@ test.describe("rendering", () => {
       prettyHtml(`
         <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
           <h1>Root</h1>
-          <!--#-->
+          <!--$-->
           <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">Index</h2>
           <!--/-->
         </div>`)
@@ -144,7 +144,7 @@ test.describe("rendering", () => {
       prettyHtml(`
         <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
           <h1>Root</h1>
-          <!--#-->
+          <!--$-->
           <h2>About</h2>
           <!--/-->
         </div>`)
