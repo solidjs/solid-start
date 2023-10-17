@@ -9,7 +9,7 @@
     "test:unit": "vitest run"
   },
   "dependencies": {
-    "@playwright/test": "1.25.2",
+    "@playwright/test": "1.38.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "^11.0.1",
