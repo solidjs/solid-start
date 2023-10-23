@@ -606,7 +606,7 @@ importers:
         specifier: ^0.8.3
         version: 0.8.3(solid-js@1.8.3)
       solid-js:
-        specifier: ^1.7.11
+        specifier: ^1.8.3
         version: 1.8.3
       solid-start:
         specifier: ^0.3.4
@@ -640,7 +640,7 @@ importers:
         specifier: ^0.8.3
         version: 0.8.3(solid-js@1.8.3)
       solid-js:
-        specifier: ^1.7.11
+        specifier: ^1.8.3
         version: 1.8.3
       solid-mdx:
         specifier: ^0.0.6
@@ -668,7 +668,7 @@ importers:
         specifier: ^0.8.3
         version: 0.8.3(solid-js@1.8.3)
       solid-js:
-        specifier: ^1.7.11
+        specifier: ^1.8.3
         version: 1.8.3
       solid-start:
         specifier: ^0.3.4
@@ -702,7 +702,7 @@ importers:
         specifier: ^0.8.3
         version: 0.8.3(solid-js@1.8.3)
       solid-js:
-        specifier: ^1.7.11
+        specifier: ^1.8.3
         version: 1.8.3
       solid-start:
         specifier: ^0.3.4
@@ -999,7 +999,7 @@ importers:
         specifier: ^0.8.3
         version: 0.8.3(solid-js@1.8.3)
       solid-js:
-        specifier: ^1.7.11
+        specifier: ^1.8.3
         version: 1.8.3
       vinxi:
         specifier: 0.0.37
