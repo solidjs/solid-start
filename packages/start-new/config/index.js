@@ -1,4 +1,4 @@
-import { references } from "@vinxi/plugin-references";
+import { serverFunctions } from "@vinxi/plugin-server-functions";
 import defu from "defu";
 import { join } from "node:path";
 import { createApp, resolve } from "vinxi";
@@ -42,10 +42,6 @@ export function defineConfig(baseConfig = {}) {
   });
   return createApp({
     server: {
-      plugins: [references.serverPlugin],
-      virtual: {
-        [references.serverPlugin]: references.serverPluginModule()
-      },
       compressPublicAssets: {
         brotli: true
       }
@@ -105,7 +101,7 @@ export function defineConfig(baseConfig = {}) {
         plugins: () => [
           config("user", userConfig),
           ...plugins,
-          references.clientRouterPlugin(),
+          serverFunctions.client(),
           start.islands ? serverComponents.client() : null,
           solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
           config("app", {
@@ -134,7 +130,7 @@ export function defineConfig(baseConfig = {}) {
         ],
         base: "/_build"
       },
-      references.serverRouter({
+      serverFunctions.router({
         middleware: start.middleware
       })
     ]

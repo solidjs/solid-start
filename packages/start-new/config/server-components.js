@@ -4,11 +4,11 @@ import {
   shimExportsPlugin,
   wrapExportsPlugin
 } from "@vinxi/plugin-directives";
-import { clientComponents } from "@vinxi/plugin-references/client-components";
-import { SERVER_REFERENCES_MANIFEST, hash } from "@vinxi/plugin-references/constants";
-import { buildServerComponents } from "@vinxi/plugin-references/server-components";
+import { client as clientComponents } from "@vinxi/plugin-server-components/client";
+import { SERVER_REFERENCES_MANIFEST } from "@vinxi/plugin-server-components/constants";
+import { buildServerComponents } from "@vinxi/plugin-server-components/server";
 import { fileURLToPath } from "node:url";
-
+import { chunkify } from "vinxi/lib/chunks";
 function client() {
   return clientComponents({
     server: "ssr",
@@ -41,7 +41,7 @@ function server() {
 
   return [
     directives({
-      hash: e => `c_${hash(e)}`,
+      hash: chunkify,
       runtime,
       onReference: onReference,
       transforms: [
@@ -51,7 +51,7 @@ function server() {
             function: "createServerReference"
           },
           onModuleFound: mod => onReference("server", mod),
-          hash: e => `c_${hash(e)}`,
+          hash: chunkify,
           apply: (code, id, options) => {
             return !options.ssr;
           },
@@ -63,7 +63,7 @@ function server() {
             function: "createServerReference"
           },
           onModuleFound: mod => onReference("server", mod),
-          hash: e => `c_${hash(e)}`,
+          hash: chunkify,
           apply: (code, id, options) => {
             return options.ssr;
           },
@@ -75,7 +75,7 @@ function server() {
             function: "createClientReference"
           },
           onModuleFound: mod => onReference("client", mod),
-          hash: e => `c_${hash(e)}`,
+          hash: chunkify,
           apply: (code, id, options) => {
             return options.ssr;
           },
