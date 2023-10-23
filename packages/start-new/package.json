@@ -40,8 +40,8 @@
     "vinxi": "0.0.37"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "0.0.28",
-    "@vinxi/plugin-references": "0.0.28",
+    "@vinxi/plugin-directives": "0.0.29",
+    "@vinxi/plugin-references": "0.0.29",
     "@vinxi/solid": "^0.0.13",
     "defu": "^6.1.2",
     "vite-plugin-inspect": "^0.7.33",
