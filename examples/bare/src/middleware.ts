@@ -10,11 +10,5 @@ export default createMiddleware({
       appendCorsHeaders(getH3Event(event), {});
       // return new Response("Hello World!");
     }
-  ],
-  onBeforeResponse: [
-    (event, response) => {
-      console.log(response);
-      return new Response("Hello World!");
-    }
   ]
 });

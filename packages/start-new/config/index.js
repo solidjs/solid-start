@@ -67,7 +67,7 @@ export function defineConfig(baseConfig = {}) {
           ...plugins,
           start.islands ? serverComponents.server() : null,
           solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
-          config("app", {
+          config("app-server", {
             resolve: {
               alias: {
                 "#start/app": join(process.cwd(), "src", "app.tsx"),
@@ -104,7 +104,7 @@ export function defineConfig(baseConfig = {}) {
           serverFunctions.client(),
           start.islands ? serverComponents.client() : null,
           solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
-          config("app", {
+          config("app-client", {
             resolve: {
               alias: {
                 "#start/app": join(process.cwd(), "src", "app.tsx"),
@@ -131,7 +131,30 @@ export function defineConfig(baseConfig = {}) {
         base: "/_build"
       },
       serverFunctions.router({
-        middleware: start.middleware
+        plugins: () => [
+          config("user", userConfig),
+          ...plugins,
+          solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
+          config("app-server", {
+            resolve: {
+              alias: {
+                "#start/app": join(process.cwd(), "src", "app.tsx"),
+                "~": join(process.cwd(), "src"),
+                ...(!start.ssr
+                  ? {
+                      "@solidjs/start/server": "@solidjs/start/server/spa"
+                    }
+                  : {})
+              }
+            },
+            define: {
+              "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
+              "import.meta.env.SSR": JSON.stringify(true),
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+            }
+          })
+        ]
+        // middleware: start.middleware
       })
     ]
   });
