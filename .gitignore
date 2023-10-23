@@ -2,6 +2,8 @@ coverage/
 types/
 
 .turbo
+.nitro
+.output
 
 packages/create-solid/bin
 *.log

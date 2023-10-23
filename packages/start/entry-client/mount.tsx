@@ -11,7 +11,14 @@ declare global {
 }
 
 if (import.meta.env.DEV) {
-  localStorage.setItem("debug", import.meta.env.DEBUG ?? "start*");
+  // Append `start:*` to the list of debug namespaces
+  const existingDebug = localStorage.getItem("debug") || "";
+  const debugNamespaces = existingDebug.split(",").filter(Boolean);
+  if (!debugNamespaces.includes("start:*")) {
+    debugNamespaces.push("start:*");
+    localStorage.setItem("debug", debugNamespaces.join(","));
+  }
+
   // const { default: createDebugger } = await import("debug");
   // window._$DEBUG = createDebugger("start:client");
   window._$DEBUG = console.log as unknown as any;

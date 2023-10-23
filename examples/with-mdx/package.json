@@ -12,7 +12,7 @@
     "@solidjs/router": "^0.8.3",
     "@solidjs/start": "workspace:^",
     "@vinxi/plugin-mdx": "^3.6.5",
-    "solid-js": "^1.7.11",
+    "solid-js": "^1.8.3",
     "vinxi": "0.0.37",
     "solid-mdx": "^0.0.7"
   },
