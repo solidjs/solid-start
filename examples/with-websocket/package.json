@@ -7,7 +7,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "solid-start-cloudflare-workers": "^0.3.7",
+    "solid-start-cloudflare-workers": "^0.3.8",
     "typescript": "^4.9.5",
     "vite": "^4.4.9"
   },
@@ -16,8 +16,8 @@
     "@cloudflare/workers-types": "^3.19.0",
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
-    "solid-js": "^1.8.1",
-    "solid-start": "^0.3.7"
+    "solid-js": "^1.8.3",
+    "solid-start": "^0.3.8"
   },
   "engines": {
     "node": ">=18"

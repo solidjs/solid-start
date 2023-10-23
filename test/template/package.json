@@ -10,7 +10,7 @@
     "@cloudflare/kv-asset-handler": "^0.1.3",
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
-    "solid-js": "^1.8.1",
+    "solid-js": "^1.8.3",
     "solid-start": "workspace:*",
     "solid-start-cloudflare-pages": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:*",
