@@ -1,4 +1,4 @@
-import "vinxi/runtime/client";
+import "vinxi/client";
 export function StartClient() {
   return null;
 }

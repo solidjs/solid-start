@@ -1,10 +1,5 @@
 import { renderToStream } from "solid-js/web";
-import {
-  eventHandler,
-  EventHandlerObject,
-  EventHandlerRequest,
-  H3Event
-} from "vinxi/runtime/server";
+import { eventHandler, EventHandlerObject, EventHandlerRequest, H3Event } from "vinxi/server";
 import { createRoutes } from "../shared/FileRoutes";
 import { apiRoutes } from "../shared/routes";
 import { getFetchEvent } from "./middleware";

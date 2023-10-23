@@ -37,11 +37,12 @@
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.3",
     "solid-js": "^1.7.11",
-    "vinxi": "0.0.29"
+    "vinxi": "0.0.37"
   },
   "dependencies": {
-    "@vinxi/plugin-references": "^0.0.19",
-    "@vinxi/solid": "^0.0.11",
+    "@vinxi/plugin-directives": "0.0.28",
+    "@vinxi/plugin-references": "0.0.28",
+    "@vinxi/solid": "^0.0.13",
     "defu": "^6.1.2",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.7.0"

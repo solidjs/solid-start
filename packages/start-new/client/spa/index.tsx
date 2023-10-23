@@ -1,5 +1,5 @@
 import { render } from "solid-js/web";
-import "vinxi/runtime/client";
+import "vinxi/client";
 
 export function mount(fn, el) {
   render(fn, el);

@@ -1,12 +1,36 @@
 import { references } from "@vinxi/plugin-references";
 import defu from "defu";
 import { join } from "node:path";
-import { createApp } from "vinxi";
-import { config } from "vinxi/lib/plugins/config";
+import { createApp, resolve } from "vinxi";
+import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router";
 import { serverComponents } from "./server-components";
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
+
+function solidStartClientFsRouter(config) {
+  return (router, app) =>
+    new SolidStartClientFileRouter(
+      {
+        dir: resolve.absolute(config.dir, router.root),
+        extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"]
+      },
+      router,
+      app
+    );
+}
+
+function solidStartServerFsRouter(config) {
+  return (router, app) =>
+    new SolidStartServerFileRouter(
+      {
+        dir: resolve.absolute(config.dir, router.root),
+        extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"]
+      },
+      router,
+      app
+    );
+}
 
 export function defineConfig(baseConfig = {}) {
   let { plugins = [], start = {}, ...userConfig } = baseConfig;
@@ -39,35 +63,33 @@ export function defineConfig(baseConfig = {}) {
         mode: "handler",
         handler: "./src/entry-server.tsx",
         middleware: start.middleware,
-        ...(start.ssr ? { dir: "./src/routes", style: SolidStartServerFileRouter } : {}),
+        ...(start.ssr ? { routes: solidStartServerFsRouter({ dir: "./src/routes" }) } : {}),
         extensions,
-        build: {
-          target: "server",
-          plugins: () => [
-            config("user", userConfig),
-            ...plugins,
-            start.islands ? serverComponents.server() : null,
-            solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
-            config("app", {
-              resolve: {
-                alias: {
-                  "#start/app": join(process.cwd(), "src", "app.tsx"),
-                  "~": join(process.cwd(), "src"),
-                  ...(!start.ssr
-                    ? {
-                        "@solidjs/start/server": "@solidjs/start/server/spa"
-                      }
-                    : {})
-                }
-              },
-              define: {
-                "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-                "import.meta.env.SSR": JSON.stringify(true),
-                "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+        target: "server",
+        plugins: () => [
+          config("user", userConfig),
+          ...plugins,
+          start.islands ? serverComponents.server() : null,
+          solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
+          config("app", {
+            resolve: {
+              alias: {
+                "#start/app": join(process.cwd(), "src", "app.tsx"),
+                "~": join(process.cwd(), "src"),
+                ...(!start.ssr
+                  ? {
+                      "@solidjs/start/server": "@solidjs/start/server/spa"
+                    }
+                  : {})
               }
-            })
-          ]
-        }
+            },
+            define: {
+              "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
+              "import.meta.env.SSR": JSON.stringify(true),
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+            }
+          })
+        ]
       },
       {
         name: "client",
@@ -76,43 +98,40 @@ export function defineConfig(baseConfig = {}) {
         ...(start.islands
           ? {}
           : {
-              style: SolidStartClientFileRouter,
-              dir: "./src/routes"
+              routes: solidStartClientFsRouter({ dir: "./src/routes" })
             }),
         extensions,
-        build: {
-          target: "browser",
-          plugins: () => [
-            config("user", userConfig),
-            ...plugins,
-            references.clientRouterPlugin(),
-            start.islands ? serverComponents.client() : null,
-            solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
-            config("app", {
-              resolve: {
-                alias: {
-                  "#start/app": join(process.cwd(), "src", "app.tsx"),
-                  "~": join(process.cwd(), "src"),
-                  ...(start.islands
-                    ? {
-                        "@solidjs/start/client": "@solidjs/start/client/islands"
-                      }
-                    : {}),
-                  ...(!start.ssr
-                    ? {
-                        "@solidjs/start/client": "@solidjs/start/client/spa"
-                      }
-                    : {})
-                }
-              },
-              define: {
-                "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-                "import.meta.env.SSR": JSON.stringify(false),
-                "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+        target: "browser",
+        plugins: () => [
+          config("user", userConfig),
+          ...plugins,
+          references.clientRouterPlugin(),
+          start.islands ? serverComponents.client() : null,
+          solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
+          config("app", {
+            resolve: {
+              alias: {
+                "#start/app": join(process.cwd(), "src", "app.tsx"),
+                "~": join(process.cwd(), "src"),
+                ...(start.islands
+                  ? {
+                      "@solidjs/start/client": "@solidjs/start/client/islands"
+                    }
+                  : {}),
+                ...(!start.ssr
+                  ? {
+                      "@solidjs/start/client": "@solidjs/start/client/spa"
+                    }
+                  : {})
               }
-            })
-          ]
-        },
+            },
+            define: {
+              "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
+              "import.meta.env.SSR": JSON.stringify(false),
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+            }
+          })
+        ],
         base: "/_build"
       },
       references.serverRouter({

@@ -12,7 +12,7 @@ import {
   setResponseHeader,
   setResponseStatus,
   toWebRequest
-} from "vinxi/runtime/server";
+} from "vinxi/server";
 import { FetchEvent } from "./types";
 
 const h3EventSymbol = Symbol("h3Event");

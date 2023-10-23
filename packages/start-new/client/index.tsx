@@ -1,3 +1,3 @@
-import "vinxi/runtime/client";
+import "vinxi/client";
 export { StartClient } from "./StartClient";
 export { mount } from "./mount";

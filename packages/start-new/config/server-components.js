@@ -1,12 +1,12 @@
+import {
+  decorateExportsPlugin,
+  directives,
+  shimExportsPlugin,
+  wrapExportsPlugin
+} from "@vinxi/plugin-directives";
 import { clientComponents } from "@vinxi/plugin-references/client-components";
 import { SERVER_REFERENCES_MANIFEST, hash } from "@vinxi/plugin-references/constants";
 import { buildServerComponents } from "@vinxi/plugin-references/server-components";
-import {
-  decorateExportsPlugin,
-  shimExportsPlugin,
-  transformReferences,
-  wrapExportsPlugin
-} from "@vinxi/plugin-references/transform-references";
 import { fileURLToPath } from "node:url";
 
 function client() {
@@ -40,7 +40,7 @@ function server() {
   }
 
   return [
-    transformReferences({
+    directives({
       hash: e => `c_${hash(e)}`,
       runtime,
       onReference: onReference,

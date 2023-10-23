@@ -1,5 +1,5 @@
 import { createMiddleware, getH3Event } from "@solidjs/start/server";
-import { appendCorsHeaders } from "vinxi/runtime/server";
+import { appendCorsHeaders } from "vinxi/server";
 
 export default createMiddleware({
   onRequest: [
