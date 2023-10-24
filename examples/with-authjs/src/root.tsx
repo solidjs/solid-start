@@ -1,5 +1,5 @@
 // @refresh reload
-import { SessionProvider } from "@solid-auth/base/client";
+import { SessionProvider } from "@solid-mediakit/auth/client";
 import { Suspense } from "solid-js";
 import {
   A,

@@ -13,17 +13,17 @@
   "devDependencies": {
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
-    "@solidjs/testing-library": "^0.5.2",
-    "@testing-library/jest-dom": "^5.17.0",
+    "@solidjs/testing-library": "^0.8.4",
+    "@testing-library/jest-dom": "^6.1.4",
     "@types/testing-library__jest-dom": "^5.14.9",
     "@vitest/coverage-c8": "^0.26.3",
-    "@vitest/ui": "^0.26.3",
-    "jsdom": "^20.0.3",
+    "@vitest/ui": "^0.34.6",
+    "jsdom": "^22.1.0",
     "solid-js": "^1.8.3",
     "solid-start": "^0.3.8",
     "solid-start-node": "^0.3.8",
-    "typescript": "^4.9.5",
-    "vite": "^4.4.9",
-    "vitest": "^0.26.3"
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vitest": "^0.34.6"
   }
 }

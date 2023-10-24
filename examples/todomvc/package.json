@@ -8,13 +8,13 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^18.17.5",
-    "csstype": "3.1.0",
-    "esbuild": "^0.14.54",
-    "postcss": "^8.4.28",
-    "rollup": "^3.28.0",
+    "csstype": "3.1.2",
+    "esbuild": "^0.19.5",
+    "postcss": "^8.4.31",
+    "rollup": "^4.1.4",
     "solid-start-node": "^0.3.8",
-    "typescript": "^4.9.5",
-    "vite": "^4.4.9"
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0"
   },
   "dependencies": {
     "@solidjs/meta": "^0.28.6",

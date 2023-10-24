@@ -1,5 +1,5 @@
-import { getSession } from "@solid-auth/base";
-import { signIn } from "@solid-auth/base/client";
+import { getSession } from "@solid-mediakit/auth";
+import { signIn } from "@solid-mediakit/auth/client";
 import { createSignal, onCleanup, Show } from "solid-js";
 import { Navigate, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";

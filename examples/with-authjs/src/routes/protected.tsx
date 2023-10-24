@@ -1,5 +1,5 @@
-import { getSession } from "@solid-auth/base";
-import { signOut } from "@solid-auth/base/client";
+import { getSession } from "@solid-mediakit/auth";
+import { signOut } from "@solid-mediakit/auth/client";
 import { Show, type VoidComponent } from "solid-js";
 import { useRouteData } from "solid-start";
 import { createServerData$, redirect } from "solid-start/server";

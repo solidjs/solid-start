@@ -7,15 +7,15 @@
   },
   "type": "module",
   "devDependencies": {
-    "@iconify/json": "^2.2.102",
-    "sass": "^1.65.1",
+    "@iconify/json": "^2.2.132",
+    "sass": "^1.69.4",
     "solid-start-node": "^0.3.8",
-    "typescript": "^4.9.5",
-    "unplugin-icons": "^0.14.15",
-    "vite": "^4.4.9"
+    "typescript": "^5.2.2",
+    "unplugin-icons": "^0.17.1",
+    "vite": "^4.5.0"
   },
   "dependencies": {
-    "@solid-primitives/scheduled": "1.1.0",
+    "@solid-primitives/scheduled": "1.4.1",
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
     "nprogress": "^0.2.0",
