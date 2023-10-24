@@ -165,8 +165,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
       vite:
-        specifier: 5.0.0-beta.12
-        version: 5.0.0-beta.12(@types/node@18.17.5)
+        specifier: ^4.5.0
+        version: 4.5.0(@types/node@18.17.5)
 
   examples/movies:
     dependencies:
@@ -11776,42 +11776,6 @@ packages:
       postcss: 8.4.31
       rollup: 3.28.0
       sass: 1.69.4
-    optionalDependencies:
-      fsevents: 2.3.3
-    dev: true
-
-  /vite@5.0.0-beta.12(@types/node@18.17.5):
-    resolution: {integrity: sha512-4O8NQkHxSafv3b48SbuqFYGqJY/dEx9yrKLLg/K1s75/9j0HmbtvZCccmXItIbKGD1BDWErRY+22rhc0XGmjdQ==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 18.17.5
-      esbuild: 0.19.5
-      postcss: 8.4.31
-      rollup: 4.1.4
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
