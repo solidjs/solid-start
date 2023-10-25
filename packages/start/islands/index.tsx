@@ -1,8 +1,7 @@
-import { Component, ComponentProps, lazy, sharedConfig } from "solid-js";
+import { Component, ComponentProps, createUniqueId, lazy, sharedConfig } from "solid-js";
 import { Hydration, NoHydration } from "solid-js/web";
 import { useRequest } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
-import { splitProps } from "./utils";
 export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
@@ -66,8 +65,12 @@ export function island<T extends Component<any>>(
         return <Component {...props} />;
       }
 
+      // FIXME Introduce a new ID generation scheme
+      // for islands
+      const id = createUniqueId();
+
       sharedConfig.context.serialize(
-        // TODO how to get the ID?
+        id,
         props,
       );
       
@@ -75,6 +78,7 @@ export function island<T extends Component<any>>(
       return (
         <Hydration>
           <solid-island
+            data-id={id}
             data-component={fpath!}
             data-island={path}
             data-when={(props as any)["client:idle"] ? "idle" : "load"}

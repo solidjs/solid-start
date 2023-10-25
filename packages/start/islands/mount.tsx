@@ -21,7 +21,7 @@ export function hydrateServerRouter() {
     if (!Component || !el.dataset.hk) return;
 
     let hk = el.dataset.hk;
-    _$DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
+    // _$DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
 
     let props = createStore({
       ...JSON.parse(el.dataset.props!),
@@ -38,7 +38,7 @@ export function hydrateServerRouter() {
     map.set(el, props);
 
     hydrate(() => createComponent(Component, props[0]), el, {
-      renderId: hk.slice(0, hk.length - 1) + `${1 + Number(el.dataset.offset)}-`,
+      renderId: el.dataset.id,
       owner: lookupOwner(el)
     });
 
