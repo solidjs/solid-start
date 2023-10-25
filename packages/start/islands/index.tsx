@@ -9,7 +9,6 @@ declare module "solid-js" {
   namespace JSX {
     interface IntrinsicElements {
       "solid-island": {
-        "data-props": string;
         "data-component": string;
         "data-island": string;
         "data-when": "idle" | "load";
@@ -45,11 +44,9 @@ export function island<T extends Component<any>>(
     );
   }
 
-  return ((compProps: ComponentProps<T>) => {
+  return ((props: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
       const context = useRequest();
-      const [, props] = splitProps(compProps, ["children"] as any);
-      const [, spreadProps] = splitProps(compProps, [] as any);
 
       let fpath: string;
       let styles: string[] = [];
@@ -64,26 +61,16 @@ export function island<T extends Component<any>>(
         fpath = path;
       }
 
-      const serialize = (props: ComponentProps<T>) => {
-        let offset = 0;
-        let el = JSON.stringify(props, (key, value) => {
-          if (value && value.t) {
-            offset++;
-            return undefined;
-          }
-          return value;
-        });
-
-        return {
-          "data-props": el,
-          "data-offset": offset
-        };
-      };
-
       // @ts-expect-error
       if (!sharedConfig.context?.noHydrate) {
-        return <Component {...compProps} />;
+        return <Component {...props} />;
       }
+
+      sharedConfig.context.serialize(
+        // TODO how to get the ID?
+        props,
+      );
+      
 
       return (
         <Hydration>
@@ -92,14 +79,12 @@ export function island<T extends Component<any>>(
             data-island={path}
             data-when={(props as any)["client:idle"] ? "idle" : "load"}
             data-css={JSON.stringify(styles)}
-            {...serialize(props)}
           >
-            <IslandComponent {...spreadProps} />
+            <IslandComponent {...props} />
           </solid-island>
         </Hydration>
       );
-    } else {
-      return <Component {...compProps} />;
     }
+    return <Component {...props} />;
   }) as T;
 }
