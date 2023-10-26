@@ -1,6 +1,5 @@
 // @ts-ignore
 import App from "#start/app";
-import { MetaProvider } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { PageEvent } from "../server/types";
 
@@ -17,15 +16,13 @@ function Dummy(props) {
 export function StartClient() {
   return (
     <ServerContext.Provider value={{ routes } as unknown as PageEvent}>
-      <MetaProvider>
-        <Router>
+      <Router>
+        <Dummy>
           <Dummy>
-            <Dummy>
-              <App />
-            </Dummy>
+            <App />
           </Dummy>
-        </Router>
-      </MetaProvider>
+        </Dummy>
+      </Router>
     </ServerContext.Provider>
   );
 }

@@ -20,7 +20,7 @@
     "@solidjs/router": "^0.8.3",
     "nprogress": "^0.2.0",
     "solid-heroicons": "^3.2.4",
-    "solid-js": "^1.8.3",
+    "solid-js": "^1.8.4",
     "solid-start": "^0.3.8",
     "solid-start-netlify": "^0.3.8"
   },

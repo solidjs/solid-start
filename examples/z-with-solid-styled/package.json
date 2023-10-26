@@ -14,9 +14,9 @@
     "vite-plugin-solid-styled": "^0.8.3"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.28.5",
+    "@solidjs/meta": "^0.29.0",
     "@solidjs/router": "^0.8.3",
-    "solid-js": "^1.8.3",
+    "solid-js": "^1.8.4",
     "solid-start": "^0.3.4",
     "solid-styled": "^0.8.2"
   },

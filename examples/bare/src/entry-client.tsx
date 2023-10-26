@@ -1,6 +1,6 @@
 import { mount, StartClient } from "@solidjs/start/client";
 
-async function hello(name) {
+async function hello(name: string) {
   "use server";
   console.log("hello", name);
 }
