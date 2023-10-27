@@ -1,5 +1,4 @@
 import { diff, Patch } from "micromorph";
-import { sharedConfig } from "solid-js";
 import { createStore } from "solid-js/store";
 import { createComponent, getHydrationKey, getOwner, hydrate } from "solid-js/web";
 
@@ -19,13 +18,13 @@ export function hydrateServerRouter() {
     }
 
     let Component = window._$HY.islandMap[el.dataset.island!];
-    let islandID = el.dataset.id;
-    if (!Component || !islandID || !sharedConfig.load) return;
-    // _$DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
+    if (!Component || !el.dataset.hk) return;
+
+    let hk = el.dataset.hk;
+    _$DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
 
     let props = createStore({
-      ...sharedConfig.load(islandID),
-      // TODO children props,
+      ...JSON.parse(el.dataset.props!),
       get children() {
         const p = el.getElementsByTagName("solid-children");
         getHydrationKey();
@@ -39,9 +38,12 @@ export function hydrateServerRouter() {
     map.set(el, props);
 
     hydrate(() => createComponent(Component, props[0]), el, {
-      renderId: islandID,
+      renderId: hk.slice(0, hk.length - 1) + `${1 + Number(el.dataset.offset)}-`,
       owner: lookupOwner(el)
     });
+
+    delete el.dataset.hk;
+    el.dataset.hkk = hk;
   }
 
   let queue: HTMLElement[] = [];

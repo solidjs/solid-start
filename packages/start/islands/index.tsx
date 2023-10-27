@@ -1,15 +1,15 @@
-import { Component, ComponentProps, createUniqueId, lazy, sharedConfig } from "solid-js";
-import { HydrationContext } from "solid-js/types/render/hydration";
+import { Component, ComponentProps, lazy, sharedConfig } from "solid-js";
 import { Hydration, NoHydration } from "solid-js/web";
 import { useRequest } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
+import { splitProps } from "./utils";
 export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
   namespace JSX {
     interface IntrinsicElements {
       "solid-island": {
-        "data-id": string;
+        "data-props": string;
         "data-component": string;
         "data-island": string;
         "data-when": "idle" | "load";
@@ -21,11 +21,6 @@ declare module "solid-js" {
     }
   }
 }
-
-
-interface HydrationContextWithSerialize extends HydrationContext {
-  serialize(id: string, value: unknown): void;
-};
 
 export function island<T extends Component<any>>(
   Comp:
@@ -50,9 +45,11 @@ export function island<T extends Component<any>>(
     );
   }
 
-  return ((props: ComponentProps<T>) => {
+  return ((compProps: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
       const context = useRequest();
+      const [, props] = splitProps(compProps, ["children"] as any);
+      const [, spreadProps] = splitProps(compProps, [] as any);
 
       let fpath: string;
       let styles: string[] = [];
@@ -67,36 +64,42 @@ export function island<T extends Component<any>>(
         fpath = path;
       }
 
+      const serialize = (props: ComponentProps<T>) => {
+        let offset = 0;
+        let el = JSON.stringify(props, (key, value) => {
+          if (value && value.t) {
+            offset++;
+            return undefined;
+          }
+          return value;
+        });
+
+        return {
+          "data-props": el,
+          "data-offset": offset
+        };
+      };
+
       // @ts-expect-error
       if (!sharedConfig.context?.noHydrate) {
-        return <Component {...props} />;
+        return <Component {...compProps} />;
       }
-
-      // TODO islands ID
-      // Ideally we'd want to create a similar mechanism
-      // to createUniqueId except that we treat
-      // islands as their own tree rather than
-      // createUniqueId's ownership tree.
-      const id = createUniqueId();
-      (sharedConfig.context as HydrationContextWithSerialize).serialize(
-        id,
-        props,
-      );
 
       return (
         <Hydration>
           <solid-island
-            data-id={id}
             data-component={fpath!}
             data-island={path}
             data-when={(props as any)["client:idle"] ? "idle" : "load"}
             data-css={JSON.stringify(styles)}
+            {...serialize(props)}
           >
-            <IslandComponent {...props} />
+            <IslandComponent {...spreadProps} />
           </solid-island>
         </Hydration>
       );
+    } else {
+      return <Component {...compProps} />;
     }
-    return <Component {...props} />;
   }) as T;
 }
