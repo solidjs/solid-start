@@ -1,4 +1,4 @@
-import { StartServer, createHandler, type DocumentComponentProps } from "@solidjs/start/server";
+import { createHandler, StartServer, type DocumentComponentProps } from "@solidjs/start/server";
 import { defineRequestMiddleware, defineResponseMiddleware } from "vinxi/server";
 
 function Document({ assets, children, scripts }: DocumentComponentProps) {

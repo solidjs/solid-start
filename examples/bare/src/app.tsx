@@ -1,5 +1,5 @@
 // @refresh reload
-import { MetaProvider } from "@solidjs/meta";
+import { MetaProvider, Title } from "@solidjs/meta";
 import { A, Routes } from "@solidjs/router";
 import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
 import { Suspense } from "solid-js";
@@ -10,6 +10,7 @@ export default function App() {
   return (
     <MetaProvider>
       <Provider initialCount={10}>
+        <Title>SolidStart - Bare</Title>
         <A href="/">Index</A>
         <A href="/about">About</A>
         <DefaultErrorBoundary>
