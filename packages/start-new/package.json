@@ -42,7 +42,6 @@
     "@vinxi/plugin-directives": "0.0.30",
     "@vinxi/plugin-server-functions": "0.0.30",
     "@vinxi/plugin-server-components": "0.0.30",
-    "@vinxi/solid": "^0.0.13",
     "defu": "^6.1.2",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.7.0"
