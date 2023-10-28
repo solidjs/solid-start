@@ -6,7 +6,7 @@ import "./app.css";
 
 export default function App() {
   return (
-    <>
+    <main>
       <A href="/">Index</A>
       <A href="/about">About</A>
       <DefaultErrorBoundary>
@@ -16,6 +16,6 @@ export default function App() {
           </Routes>
         </Suspense>
       </DefaultErrorBoundary>
-    </>
+    </main>
   );
 }

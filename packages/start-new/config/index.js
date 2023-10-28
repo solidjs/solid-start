@@ -59,7 +59,9 @@ export function defineConfig(baseConfig = {}) {
         mode: "handler",
         handler: "./src/entry-server.tsx",
         middleware: start.middleware,
-        ...(start.ssr ? { routes: solidStartServerFsRouter({ dir: "./src/routes" }) } : {}),
+        ...(start.ssr
+          ? { routes: solidStartServerFsRouter({ dir: "./src/routes", extensions }) }
+          : {}),
         extensions,
         target: "server",
         plugins: () => [
@@ -94,7 +96,7 @@ export function defineConfig(baseConfig = {}) {
         ...(start.islands
           ? {}
           : {
-              routes: solidStartClientFsRouter({ dir: "./src/routes" })
+              routes: solidStartClientFsRouter({ dir: "./src/routes", extensions })
             }),
         extensions,
         target: "browser",

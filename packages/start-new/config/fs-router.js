@@ -21,7 +21,6 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 
   toRoute(src) {
     let path = this.toPath(src);
-    console.log(src);
 
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
