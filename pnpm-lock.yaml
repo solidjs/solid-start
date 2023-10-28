@@ -199,7 +199,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/_TODO/todomvc:
     dependencies:
@@ -353,7 +353,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/_TODO/with-trpc:
     dependencies:
@@ -447,7 +447,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@18.17.5)
       vitest:
         specifier: ^0.26.3
         version: 0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3)
@@ -481,7 +481,7 @@ importers:
         version: 4.9.5
       vite:
         specifier: ^4.4.9
-        version: 4.4.9(sass@1.65.1)
+        version: 4.4.9(@types/node@18.17.5)
 
   examples/bare:
     dependencies:
@@ -498,8 +498,8 @@ importers:
         specifier: ^1.8.4
         version: 1.8.4
       vinxi:
-        specifier: 0.0.39
-        version: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+        specifier: 0.0.40
+        version: 0.0.40(debug@4.3.4)(rollup@3.28.1)
 
   examples/hackernews:
     dependencies:
@@ -513,8 +513,8 @@ importers:
         specifier: ^1.8.4
         version: 1.8.4
       vinxi:
-        specifier: 0.0.39
-        version: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+        specifier: 0.0.40
+        version: 0.0.40(debug@4.3.4)(rollup@3.28.1)
 
   examples/with-mdx:
     dependencies:
@@ -540,8 +540,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.8.4)(vite@4.5.0)
       vinxi:
-        specifier: 0.0.39
-        version: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+        specifier: 0.0.40
+        version: 0.0.40(debug@4.3.4)(rollup@3.28.1)
 
   examples/with-solid-styled:
     dependencies:
@@ -561,8 +561,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(@babel/core@7.23.2)(solid-js@1.8.4)
       vinxi:
-        specifier: 0.0.39
-        version: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+        specifier: 0.0.40
+        version: 0.0.40(debug@4.3.4)(rollup@3.28.1)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.28.1)(solid-styled@0.8.2)(vite@4.5.0)
@@ -591,8 +591,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.39
-        version: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+        specifier: 0.0.40
+        version: 0.0.40(debug@4.3.4)(rollup@3.28.1)
 
   packages/create-solid:
     devDependencies:
@@ -841,14 +841,14 @@ importers:
   packages/start-new:
     dependencies:
       '@vinxi/plugin-directives':
-        specifier: 0.0.31
-        version: 0.0.31(vinxi@0.0.39)
+        specifier: 0.0.32
+        version: 0.0.32(vinxi@0.0.40)
       '@vinxi/plugin-server-components':
-        specifier: 0.0.31
-        version: 0.0.31(vinxi@0.0.39)
+        specifier: 0.0.32
+        version: 0.0.32(vinxi@0.0.40)
       '@vinxi/plugin-server-functions':
-        specifier: 0.0.31
-        version: 0.0.31(vinxi@0.0.39)
+        specifier: 0.0.32
+        version: 0.0.32(vinxi@0.0.40)
       defu:
         specifier: ^6.1.2
         version: 6.1.2
@@ -866,8 +866,8 @@ importers:
         specifier: ^1.8.4
         version: 1.8.4
       vinxi:
-        specifier: 0.0.39
-        version: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+        specifier: 0.0.40
+        version: 0.0.40(debug@4.3.4)(rollup@3.28.1)
 
   packages/start-node:
     dependencies:
@@ -5828,10 +5828,10 @@ packages:
       untun: 0.1.2
       uqr: 0.1.2
 
-  /@vinxi/plugin-directives@0.0.31(vinxi@0.0.39):
-    resolution: {integrity: sha512-YuC7j5eK8l3kOcH5/02E02ME1csuqhhBwWr/iB0wiAMGIt482NTa6TokOC0procSUjYyZB6ZbrYoCCjItqiLYA==}
+  /@vinxi/plugin-directives@0.0.32(vinxi@0.0.40):
+    resolution: {integrity: sha512-N+jJUAt3DdJIOSA0X7aIFeUNYPRfAQzfy8d1BNgFgDjRsNyKz7IXYucV6bIm9ooEc1llMGihjAJCas8VttitqA==}
     peerDependencies:
-      vinxi: ^0.0.39
+      vinxi: ^0.0.40
     dependencies:
       acorn: 8.11.1
       acorn-jsx: 5.3.2(acorn@8.11.1)
@@ -5840,7 +5840,7 @@ packages:
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+      vinxi: 0.0.40(debug@4.3.4)(rollup@3.28.1)
     dev: false
 
   /@vinxi/plugin-mdx@3.6.5(@mdx-js/mdx@2.3.0)(vite@4.5.0):
@@ -5857,34 +5857,34 @@ packages:
       vite: 4.5.0(@types/node@18.17.5)
     dev: false
 
-  /@vinxi/plugin-server-components@0.0.31(vinxi@0.0.39):
-    resolution: {integrity: sha512-lx9TeMzou7rDXjeXdckTE9GJqS3Z71uybqDRsCwiNFg5aVUPYxiCA9nm4bbOq0PVUW5m+OTzMYLWevemK0wz6g==}
+  /@vinxi/plugin-server-components@0.0.32(vinxi@0.0.40):
+    resolution: {integrity: sha512-gNYWE/vQ8DV59szgVVAtas4VX42E1IqwACPiN4751QqdaWme1NUkRa0rqzAT3KgKNmLZcks4aJyS0bP4Cxhg1w==}
     peerDependencies:
-      vinxi: ^0.0.39
+      vinxi: ^0.0.40
     dependencies:
-      '@vinxi/plugin-directives': 0.0.31(vinxi@0.0.39)
+      '@vinxi/plugin-directives': 0.0.32(vinxi@0.0.40)
       acorn: 8.11.1
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.10(acorn@8.11.1)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+      vinxi: 0.0.40(debug@4.3.4)(rollup@3.28.1)
     dev: false
 
-  /@vinxi/plugin-server-functions@0.0.31(vinxi@0.0.39):
-    resolution: {integrity: sha512-W7PD4pGu3GscBR7bomkXKZ5hSolTuUKLDXiZLIYynZqncOxjGb6hl1qAmLsB+KMmrxJIrcRUbsSWmKZ/kCZnXg==}
+  /@vinxi/plugin-server-functions@0.0.32(vinxi@0.0.40):
+    resolution: {integrity: sha512-4+J9GdZy1RClPI1GstKrWzHSU+YHc9zoR08t52L+IKJPVqYLYOwC6r9YILdd+tVFjLjwZYaXPUWffZ6PQayfTQ==}
     peerDependencies:
-      vinxi: ^0.0.39
+      vinxi: ^0.0.40
     dependencies:
-      '@vinxi/plugin-directives': 0.0.31(vinxi@0.0.39)
+      '@vinxi/plugin-directives': 0.0.32(vinxi@0.0.40)
       acorn: 8.11.1
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.10(acorn@8.11.1)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.0.39(debug@4.3.4)(rollup@3.28.1)
+      vinxi: 0.0.40(debug@4.3.4)(rollup@3.28.1)
     dev: false
 
   /@vitest/coverage-c8@0.26.3(@vitest/ui@0.26.3)(jsdom@20.0.3):
@@ -12076,7 +12076,7 @@ packages:
       rollup: 3.29.4
       solid-start: link:packages/start
       terser: 5.22.0
-      vite: 4.4.9(sass@1.65.1)
+      vite: 4.4.9(@types/node@18.17.5)
       ws: 8.14.2
     transitivePeerDependencies:
       - '@miniflare/storage-redis'
@@ -13185,8 +13185,8 @@ packages:
       vfile-message: 3.1.4
     dev: false
 
-  /vinxi@0.0.39(debug@4.3.4)(rollup@3.28.1):
-    resolution: {integrity: sha512-ym07pC5aFkIhDzt+nQEoZFyrj6M6CSnWYvoTKgp07abUBlkTRnGSrNWHQrk7trz2aVJR4UreslDRiF0CSFzHNg==}
+  /vinxi@0.0.40(debug@4.3.4)(rollup@3.28.1):
+    resolution: {integrity: sha512-b4TntexeYdXkRdhQb03+JJT/S13OR1oDYI7eIXvkKQWXJB3Gtmv7CmCp0y6Axd3+bBlplOUG1pXU2gl6LPmahQ==}
     hasBin: true
     dependencies:
       '@babel/core': 7.23.2
