@@ -9,6 +9,8 @@ import { SERVER_REFERENCES_MANIFEST } from "@vinxi/plugin-server-components/cons
 import { buildServerComponents } from "@vinxi/plugin-server-components/server";
 import { fileURLToPath } from "node:url";
 import { chunkify } from "vinxi/lib/chunks";
+import { normalize } from "vinxi/lib/path";
+
 function client() {
   return clientComponents({
     server: "ssr",
@@ -18,7 +20,7 @@ function client() {
 }
 
 function server() {
-  const runtime = fileURLToPath(new URL("./server-runtime.jsx", import.meta.url));
+  const runtime = normalize(fileURLToPath(new URL("./server-runtime.jsx", import.meta.url)));
   // export function serverComponents({
   // 	resolve = {
   // 		conditions: ["react-server"],
