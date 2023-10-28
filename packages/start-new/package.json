@@ -36,12 +36,12 @@
   "devDependencies": {
     "@solidjs/router": "^0.8.3",
     "solid-js": "^1.8.4",
-    "vinxi": "0.0.38"
+    "vinxi": "0.0.39"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "0.0.30",
-    "@vinxi/plugin-server-functions": "0.0.30",
-    "@vinxi/plugin-server-components": "0.0.30",
+    "@vinxi/plugin-directives": "0.0.31",
+    "@vinxi/plugin-server-functions": "0.0.31",
+    "@vinxi/plugin-server-components": "0.0.31",
     "defu": "^6.1.2",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.7.0"
