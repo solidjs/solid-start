@@ -6,7 +6,6 @@ import {
 } from "@vinxi/plugin-directives";
 import { client as clientComponents } from "@vinxi/plugin-server-components/client";
 import { SERVER_REFERENCES_MANIFEST } from "@vinxi/plugin-server-components/constants";
-import { buildServerComponents } from "@vinxi/plugin-server-components/server";
 import { fileURLToPath } from "node:url";
 import { chunkify } from "vinxi/lib/chunks";
 function client() {
@@ -82,18 +81,18 @@ function server() {
           pragma: "use client"
         })
       ]
-    }),
-    buildServerComponents({
-      resolve: {
-        conditions: []
-      },
-      transpileDeps: [],
-      manifest: SERVER_REFERENCES_MANIFEST,
-      modules: {
-        server: serverModules,
-        client: clientModules
-      }
     })
+    // buildServerComponents({
+    //   resolve: {
+    //     conditions: []
+    //   },
+    //   transpileDeps: [],
+    //   manifest: SERVER_REFERENCES_MANIFEST,
+    //   modules: {
+    //     server: serverModules,
+    //     client: clientModules
+    //   }
+    // })
   ];
   // }
 }
