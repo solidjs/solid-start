@@ -88,6 +88,7 @@ export function createRouteData<T, S = true>(
         } else {
           setTimeout(() => handleResponse(response), 0);
         }
+        return;
       }
       return response;
     } catch (e: any | Error) {
@@ -97,7 +98,7 @@ export function createRouteData<T, S = true>(
         } else {
           setTimeout(() => handleResponse(e as Response), 0);
         }
-        return e;
+        return;
       }
       throw e;
     }

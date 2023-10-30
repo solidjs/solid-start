@@ -72,7 +72,7 @@ export default function ({ edge } = {}) {
   "functions": [
     {
       "function": "index",
-      "pattern": "^[^.]*$"
+      "path": "/*"
     }
   ],
   "version": 1
