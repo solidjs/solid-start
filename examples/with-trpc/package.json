@@ -15,12 +15,12 @@
     "vite": "^4.4.9"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.28.6",
+    "@solidjs/meta": "^0.29.1",
     "@solidjs/router": "^0.8.3",
     "@tanstack/solid-query": "5.0.0-alpha.20",
     "@trpc/client": "^10.37.1",
     "@trpc/server": "^10.37.1",
-    "solid-js": "^1.8.3",
+    "solid-js": "^1.8.4",
     "solid-start": "^0.3.8",
     "solid-start-trpc": "^0.0.16",
     "solid-trpc": "0.1.0-sssr.7",

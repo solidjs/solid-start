@@ -121,14 +121,14 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.19.0",
-    "@solidjs/meta": "^0.28.5",
+    "@solidjs/meta": "^0.29.1",
     "@solidjs/router": "^0.8.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/babel__core": "^7.20.1",
     "@types/node": "^18.16.19",
     "@types/wait-on": "^5.3.1",
     "jsdom": "^20.0.3",
-    "solid-js": "^1.8.3",
+    "solid-js": "^1.8.4",
     "solid-start-cloudflare-pages": "workspace:*",
     "solid-start-cloudflare-workers": "workspace:*",
     "solid-start-deno": "workspace:*",
@@ -142,9 +142,9 @@
     "vitest": "^0.20.3"
   },
   "peerDependencies": {
-    "@solidjs/meta": "^0.28.0",
+    "@solidjs/meta": "^0.29.1",
     "@solidjs/router": "^0.8.2",
-    "solid-js": "^1.6.2",
+    "solid-js": "^1.8.4",
     "solid-start-aws": "*",
     "solid-start-cloudflare-pages": "*",
     "solid-start-cloudflare-workers": "*",

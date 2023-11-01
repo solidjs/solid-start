@@ -1,6 +1,6 @@
 import { MetaProvider } from "@solidjs/meta";
 import { RouteDataFunc, Router, RouterProps } from "@solidjs/router";
-import { ComponentProps, sharedConfig } from "solid-js";
+import { sharedConfig } from "solid-js";
 import { ssr } from "solid-js/web";
 // @ts-ignore
 import Root from "~start/root";
@@ -86,7 +86,7 @@ export default function StartServer({ event }: { event: PageEvent }) {
           <Root />
         </>
       ) : (
-        <MetaProvider tags={event.tags as ComponentProps<typeof MetaProvider>["tags"]}>
+        <MetaProvider>
           <StartRouter
             url={path}
             out={event.routerContext}
