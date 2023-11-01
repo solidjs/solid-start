@@ -11,15 +11,15 @@
     "@types/babel__core": "^7.20.1",
     "@types/node": "^18.17.5",
     "esbuild": "^0.14.54",
-    "solid-start-node": "^0.3.8",
+    "solid-start-node": "^0.3.9",
     "typescript": "^4.9.5",
     "vite": "^4.4.9"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.1",
     "@solidjs/router": "^0.8.3",
-    "solid-js": "^1.8.4",
-    "solid-start": "^0.3.8"
+    "solid-js": "^1.8.5",
+    "solid-start": "^0.3.9"
   },
   "engines": {
     "node": ">=18"
