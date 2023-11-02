@@ -1,3 +1,9 @@
+if (!process) {
+  globalThis.process = {
+    env: Netlify.env.toObject()
+  };
+}
+
 import manifest from "../../netlify/route-manifest.json";
 import handler from "./entry-server.js";
 

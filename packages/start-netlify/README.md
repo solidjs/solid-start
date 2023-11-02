@@ -18,6 +18,8 @@ export default defineConfig({
 });
 ```
 
+Environment variables can be accessed via `process.env` (we install a polyfill that calls [`Netlify.env.toObject()`](https://docs.netlify.com/edge-functions/api/#netlify-global-object)). Note that only `env` reads are supported, not any other uses of `process`.
+
 ## Configuration
 
 You will be prompted on deploy to choose a publish directory. Type in "netlify".
