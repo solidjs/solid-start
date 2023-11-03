@@ -33,6 +33,12 @@ export default function ({ edge } = {}) {
         await builder.server(join(config.root, ".solid", "server"));
       }
 
+      if (edge) {
+        copyFileSync(
+          join(__dirname, "prefix-edge.js"),
+          join(config.root, ".solid", "server", "prefix-edge.js")
+        );
+      }
       copyFileSync(
         join(__dirname, edge ? "entry-edge.js" : "entry.js"),
         join(config.root, ".solid", "server", "index.js")
