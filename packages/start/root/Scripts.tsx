@@ -3,7 +3,6 @@ import { useRequest } from "../server/ServerContext";
 import { InlineStyles } from "./InlineStyles";
 
 const isDev = import.meta.env.MODE === "development";
-const isProd = import.meta.env.PROD;
 const isSSR = import.meta.env.START_SSR;
 const isIslands = import.meta.env.START_ISLANDS;
 
@@ -45,7 +44,7 @@ function DevScripts() {
 function ProdScripts() {
   const context = useRequest();
   return (
-    isProd && (
+    !isDev && (
       <>
         {isSSR && <HydrationScript />}
         <NoHydration>
