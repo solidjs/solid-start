@@ -1,12 +1,12 @@
-import { useNavigate, useSearchParams, type Navigator } from "@solidjs/router";
-import { $TRACK, batch, createSignal, useContext } from "solid-js";
-import { FormError, FormImpl, FormProps } from "./Form";
-
-import type { ParentComponent } from "solid-js";
-import { isRedirectResponse } from "../server/responses";
-import { ServerContext, useRequest } from "../server/ServerContext";
-import { ServerFunctionEvent } from "../server/types";
+import { type Navigator } from "@solidjs/router";
+import { $TRACK, batch, createSignal, type ParentComponent } from "solid-js";
+import { useNavigate, useSearchParams } from "../router";
+import { isRedirectResponse, XSolidStartOrigin } from "../server/responses";
+import type { ServerFunction } from "../server/server-functions/types";
+import { useRequest } from "../server/ServerContext";
+import type { ServerFunctionEvent } from "../server/types";
 import { refetchRouteData } from "./createRouteData";
+import { FormError, FormImpl, type FormProps } from "./Form";
 
 interface ActionEvent extends ServerFunctionEvent {}
 export interface Submission<T, U> {
@@ -26,15 +26,15 @@ export type RouteAction<T, U> = [
     clear: () => void;
     retry: () => void;
   },
-  ((vars: T) => Promise<U>) & {
-    Form: T extends FormData ? ParentComponent<FormProps> : never;
+  ((vars: T) => Promise<U | undefined>) & {
+    Form: ParentComponent<FormProps | T>;
     url: string;
   }
 ];
 export type RouteMultiAction<T, U> = [
   Submission<T, U>[] & { pending: Submission<T, U>[] },
-  ((vars: T) => Promise<U>) & {
-    Form: T extends FormData ? ParentComponent<FormProps> : never;
+  ((vars: T) => Promise<U | undefined>) & {
+    Form: ParentComponent<FormProps | T>;
     url: string;
   }
 ];
@@ -59,8 +59,25 @@ export function createRouteAction<T, U = void>(
   const navigate = useNavigate();
   const event = useRequest();
   let count = 0;
-  function submit(variables: T) {
-    const p = fn(variables, event);
+  function submit(variables: T): Promise<U> {
+    let p: Promise<U>;
+    if (import.meta.env.START_ISLANDS && (fn as ServerFunction<any, any>).url) {
+      p = fetch((fn as ServerFunction<any, any>).url, {
+        method: "POST",
+        body:
+          variables instanceof FormData
+            ? variables
+            : JSON.stringify([variables, { $type: "fetch_event" }]),
+        headers: {
+          ...(variables instanceof FormData ? {} : { "Content-Type": "application/json" }),
+          [XSolidStartOrigin]: "client",
+          "x-solid-referrer": window.router.location().pathname,
+          "x-solid-mutation": "true"
+        }
+      }) as unknown as Promise<U>;
+    } else {
+      p = fn(variables, event);
+    }
     const reqId = ++count;
     batch(() => {
       setResult(undefined);
@@ -71,13 +88,13 @@ export function createRouteAction<T, U = void>(
         if (reqId === count) {
           if (data instanceof Response) {
             await handleResponse(data, navigate, options);
-          } else await handleRefetch(data as any[], options);
+          } else await handleRefetch(data as unknown as any[], options);
           if (!data || isRedirectResponse(data)) setInput(undefined);
           else setResult({ data });
         }
         return data;
       })
-      .catch(async e => {
+      .catch(async (e: Response | Error) => {
         if (reqId === count) {
           if (e instanceof Response) {
             await handleResponse(e, navigate, options);
@@ -103,7 +120,7 @@ export function createRouteAction<T, U = void>(
         {props.children}
       </FormImpl>
     );
-  }) as T extends FormData ? ParentComponent<FormProps> : never;
+  }) as ParentComponent<FormProps | T>;
 
   return [
     {
@@ -135,6 +152,10 @@ export function createRouteAction<T, U = void>(
   ];
 }
 
+type ActionOptions = {
+  invalidate?: ((r: Response) => string | any[] | void) | string | any[];
+};
+
 export function createRouteMultiAction<T = void, U = void>(
   fn: (arg1: void, event: ActionEvent) => Promise<U>,
   options?: { invalidate?: Invalidate }
@@ -152,7 +173,7 @@ export function createRouteMultiAction<T, U = void>(
     init.input ? [createSubmission(init.input)[0]] : []
   );
   const navigate = useNavigate();
-  const event = useContext(ServerContext);
+  const event = useRequest();
 
   function createSubmission(variables: T) {
     let submission: {
@@ -187,7 +208,7 @@ export function createRouteMultiAction<T, U = void>(
         if (data instanceof Response) {
           await handleResponse(data, navigate, options);
           data = data.body;
-        } else await handleRefetch(data as any[], options);
+        } else await handleRefetch(data as unknown as any[], options);
         data ? setResult({ data }) : submission.clear();
 
         return data;
@@ -224,7 +245,7 @@ export function createRouteMultiAction<T, U = void>(
         {props.children}
       </FormImpl>
     );
-  }) as T extends FormData ? ParentComponent<FormProps> : never;
+  }) as ParentComponent<FormProps | T>;
 
   return [
     new Proxy<Submission<T, U>[] & { pending: Submission<T, U>[] }>([] as any, {
@@ -244,13 +265,22 @@ function handleRefetch(response: Response | string | any[], options: { invalidat
   );
 }
 
-function handleResponse(response: Response, navigate: Navigator, options?: { invalidate?: Invalidate }) {
+async function handleResponse(response: Response, navigate: Navigator, options?: { invalidate?: Invalidate }) {
   if (response instanceof Response && isRedirectResponse(response)) {
     const locationUrl = response.headers.get("Location") || "/";
     if (locationUrl.startsWith("http")) {
       window.location.href = locationUrl;
     } else {
       navigate(locationUrl);
+    }
+    return handleRefetch(response, options);
+  } else if (
+    response instanceof Response &&
+    response.headers.get("Content-type") === "text/solid-diff"
+  ) {
+    let i = await window.router.update(await response.text());
+    if (i) {
+      window.router.push(response.headers.get("x-solid-location") ?? "/", {});
     }
   }
 

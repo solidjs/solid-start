@@ -5,6 +5,25 @@ import server from "./entry-server";
 
 export async function handler(event) {
   const { requestContext } = event
+
+  function internalFetch(route, init = {}) {
+    if (route.startsWith("http")) {
+      return fetch(route, init);
+    }
+
+    let url = new URL(route, "http://internal");
+    const request = new Request(url.href, init);
+    return server({
+      request,
+      clientAddress:
+        requestContext.identity?.sourceIp
+        ?? requestContext.http?.sourceIp,
+      locals: {},
+      env: { manifest },
+      fetch: internalFetch
+    });
+  }
+
   const response = await server({
     request: createRequest(event),
     clientAddress:
@@ -12,6 +31,7 @@ export async function handler(event) {
       ?? requestContext.http?.sourceIp,
     locals: {},
     env: { manifest },
+    fetch: internalFetch
   });
 
   const headers = {};

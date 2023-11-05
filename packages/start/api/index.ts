@@ -38,7 +38,7 @@ function routeToMatchRoute(route: Route): MatchRoute {
 
   const params: { type: "*" | ":"; name: string; index: number }[] = [];
   const matchSegments: (string | null)[] = [];
-  let score = route.path.endsWith("/") ? 4 : 0;
+  let score = 0;
   let wildcard = false;
 
   for (const [index, segment] of segments.entries()) {
@@ -52,6 +52,7 @@ function routeToMatchRoute(route: Route): MatchRoute {
       });
       matchSegments.push(null);
     } else if (segment[0] === "*") {
+      score -= 1;
       params.push({
         type: "*",
         name: segment.slice(1),

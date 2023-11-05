@@ -1,7 +1,8 @@
-import { Component, ComponentProps, lazy, splitProps, useContext } from "solid-js";
+import { Component, ComponentProps, lazy, sharedConfig } from "solid-js";
 import { Hydration, NoHydration } from "solid-js/web";
-import { ServerContext } from "../server/ServerContext";
+import { useRequest } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
+import { splitProps } from "./utils";
 export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
@@ -27,7 +28,7 @@ export function island<T extends Component<any>>(
     | (() => Promise<{
         default: T;
       }>),
-  path?: string
+  path: string
 ): T {
   let Component = Comp as T;
 
@@ -36,43 +37,69 @@ export function island<T extends Component<any>>(
     return lazy(Comp as () => Promise<{ default: T }>);
   }
 
-  function IslandComponent(props: ComponentProps<any>) {
+  function IslandComponent(props: ComponentProps<T>) {
     return (
       <Component {...props}>
-        <solid-children>
-          <NoHydration>{props.children}</NoHydration>
-        </solid-children>
+        <NoHydration>{props.children}</NoHydration>
       </Component>
     );
   }
 
   return ((compProps: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
-      const context = useContext(ServerContext);
-      const [, props] = splitProps(compProps, ["children"]);
+      const context = useRequest();
+      const [, props] = splitProps(compProps, ["children"] as any);
+      const [, spreadProps] = splitProps(compProps, [] as any);
 
-      let fpath;
-
-      if (import.meta.env.PROD && context && context.env.manifest && path && path in context.env.manifest) {
-        fpath = (context.env.manifest[path] as IslandManifest).script.href;
+      let fpath: string;
+      let styles: string[] = [];
+      if (import.meta.env.PROD) {
+        let x = context.env.manifest?.[path] as IslandManifest;
+        context.$islands.add(path);
+        if (x) {
+          fpath = x.script.href;
+          styles = x.assets.filter(v => v.type == "style").map(v => v.href);
+        }
       } else {
-        fpath = `/` + path;
+        fpath = path;
+      }
+
+      const serialize = (props: ComponentProps<T>) => {
+        let offset = 0;
+        let el = JSON.stringify(props, (key, value) => {
+          if (value && value.t) {
+            offset++;
+            return undefined;
+          }
+          return value;
+        });
+
+        return {
+          "data-props": el,
+          "data-offset": offset
+        };
+      };
+
+      // @ts-expect-error
+      if (!sharedConfig.context?.noHydrate) {
+        return <Component {...compProps} />;
       }
 
       return (
         <Hydration>
           <solid-island
-            data-props={JSON.stringify(props)}
-            data-component={fpath}
-            data-island={`/` + path}
-            data-when={props["client:idle"] ? "idle" : "load"}
+            data-component={fpath!}
+            data-island={path}
+            data-when={(props as any)["client:idle"] ? "idle" : "load"}
+            data-css={JSON.stringify(styles)}
+            {...serialize(props)}
           >
-            <IslandComponent {...compProps} />
+            <IslandComponent {...spreadProps} />
           </solid-island>
         </Hydration>
       );
     } else {
-      return <IslandComponent />;
+      return <Component {...compProps} />;
     }
   }) as T;
 }

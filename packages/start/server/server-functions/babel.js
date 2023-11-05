@@ -1,3 +1,4 @@
+// @ts-nocheck
 // All credit for this work goes to the amazing Next.js team.
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
 // This is adapted to work with any server$() calls and transpile it into multiple api function for a file.
@@ -7,24 +8,53 @@ import nodePath from "path";
 
 const INLINE_SERVER_ROUTE_PREFIX = "/_m";
 
+/** @typedef {{ refs: Set<import('@babel/core').NodePath<import('@babel/core').types.Identifier>>,  filename: string, done: {}, servers: number; opts: { minify: boolean; root: string; ssr: boolean; } }} State */
+
+/**
+ *
+ * @param {{ types: import('@babel/core').types; template: import('@babel/core').template }} param0
+ * @returns {import('@babel/core').PluginObj<State>}
+ */
 function transformServer({ types: t, template }) {
+  /**
+   * @param {import('@babel/core').NodePath} path
+   * @return {import('@babel/core').NodePath<import('@babel/core').types.Identifier> | null}
+   * */
   function getIdentifier(path) {
     const parentPath = path.parentPath;
-    if (parentPath.type === "VariableDeclarator") {
+    if (!parentPath) {
+      return null;
+    } else if (parentPath.isVariableDeclarator()) {
       const pp = parentPath;
       const name = pp.get("id");
-      return name.node.type === "Identifier" ? name : null;
-    }
-    if (parentPath.type === "AssignmentExpression") {
+
+      if (Array.isArray(name)) {
+        return null;
+      } else {
+        return name.isIdentifier() ? name : null;
+      }
+    } else if (parentPath.isAssignmentExpression()) {
       const pp = parentPath;
       const name = pp.get("left");
-      return name.node.type === "Identifier" ? name : null;
+      if (Array.isArray(name)) {
+        return null;
+      } else {
+        return name.isIdentifier() ? name : null;
+      }
     }
-    if (path.node.type === "ArrowFunctionExpression") {
+    if (path.isArrowFunctionExpression()) {
       return null;
     }
-    return path.node.id && path.node.id.type === "Identifier" ? path.get("id") : null;
+
+    let name = path.get("id");
+    if (Array.isArray(name)) {
+      return null;
+    } else {
+      return name.isIdentifier() ? name : null;
+    }
   }
+
+  /** @param {import('@babel/core').NodePath<import('@babel/core').types.Identifier>} ident  */
   function isIdentifierReferenced(ident) {
     const b = ident.scope.getBinding(ident.node.name);
     if (b && b.referenced) {
@@ -37,25 +67,35 @@ function transformServer({ types: t, template }) {
     }
     return false;
   }
+
+  /**
+   * @param {import('@babel/core').NodePath} path
+   * @param {State} state
+   */
   function markFunction(path, state) {
     const ident = getIdentifier(path);
-    if (ident && ident.node && isIdentifierReferenced(ident)) {
+    if (ident && isIdentifierReferenced(ident)) {
       state.refs.add(ident);
     }
   }
-  function markImport(path, state) {
+
+  function markImport(
+    /** @type {import('@babel/core').NodePath<import('@babel/core').types.ImportSpecifier | import('@babel/core').types.ImportDefaultSpecifier | import('@babel/core').types.ImportNamespaceSpecifier>} */ path,
+    /** @type {State} */ state
+  ) {
     const local = path.get("local");
     // if (isIdentifierReferenced(local)) {
     state.refs.add(local);
     // }
   }
 
-  function hashFn(str) {
+  function hashFn(/** @type {string} */ str) {
     return crypto
       .createHash("shake256", { outputLength: 5 /* bytes = 10 hex digits*/ })
       .update(str)
       .digest("hex");
   }
+
   return {
     visitor: {
       Program: {
@@ -66,31 +106,29 @@ function transformServer({ types: t, template }) {
           path.traverse(
             {
               VariableDeclarator(variablePath, variableState) {
-                if (variablePath.node.id.type === "Identifier") {
-                  const local = variablePath.get("id");
-                  if (isIdentifierReferenced(local)) {
-                    variableState.refs.add(local);
+                let id = variablePath.get("id");
+                if (id.isIdentifier()) {
+                  if (isIdentifierReferenced(id)) {
+                    variableState.refs.add(id);
                   }
-                } else if (variablePath.node.id.type === "ObjectPattern") {
-                  const pattern = variablePath.get("id");
-                  const properties = pattern.get("properties");
+                } else if (id.isObjectPattern()) {
+                  // /** @type {import('@babel/core').NodePath<import('@babel/core').Node>[]} */
+                  const properties = id.get("properties");
                   properties.forEach(p => {
-                    const local = p.get(
-                      p.node.type === "ObjectProperty"
-                        ? "value"
-                        : p.node.type === "RestElement"
-                        ? "argument"
-                        : (function () {
-                            throw new Error("invariant");
-                          })()
-                    );
+                    const local = p.isObjectProperty()
+                      ? p.get("value")
+                      : p.isRestElement()
+                      ? p.get("argument")
+                      : (function () {
+                          throw new Error("invariant");
+                        })();
+
                     if (isIdentifierReferenced(local)) {
                       variableState.refs.add(local);
                     }
                   });
-                } else if (variablePath.node.id.type === "ArrayPattern") {
-                  const pattern = variablePath.get("id");
-                  const elements = pattern.get("elements");
+                } else if (id.isArrayPattern()) {
+                  const elements = id.get("elements");
                   elements.forEach(e => {
                     let local;
                     if (e.node && e.node.type === "Identifier") {
@@ -107,17 +145,21 @@ function transformServer({ types: t, template }) {
                 }
               },
               CallExpression: path => {
-                if (path.node.callee.type === "Identifier" && path.node.callee.name === "server$") {
+                let callee = path.get("callee");
+                let program = path.findParent(p => t.isProgram(p));
+                if (program != null && callee.isIdentifier() && callee.node.name === "server$") {
                   const serverFn = path.get("arguments")[0];
-                  let program = path.findParent(p => t.isProgram(p));
-                  let statement = path.findParent(p => program.get("body").includes(p));
+                  let body = program.get("body");
+                  let statement = path.findParent(p =>
+                    Array.isArray(body) ? body.includes(p) : body === p
+                  );
                   let decl = path.findParent(
                     p =>
                       p.isVariableDeclarator() || p.isFunctionDeclaration() || p.isObjectProperty()
                   );
                   const serverResource = path.getData("serverResource") ?? false;
                   let serverIndex = state.servers++;
-                  let hasher = state.opts.minify ? hashFn : str => str;
+                  let hasher = state.opts.minify ? hashFn : (/** @type {string} */ str) => str;
                   const fName = state.filename.replace(state.opts.root, "").slice(1);
 
                   const hash = hasher(nodePath.join(fName, String(serverIndex)));
@@ -135,7 +177,12 @@ function transformServer({ types: t, template }) {
                   if (serverFn.node.type === "ArrowFunctionExpression") {
                     const body = serverFn.get("body");
 
-                    if (body.node.type !== "BlockStatement") {
+                    if (Array.isArray(body)) {
+                      // throw new Error("invariant");
+                      return;
+                    }
+
+                    if (body.isExpression()) {
                       const block = t.blockStatement([t.returnStatement(body.node)]);
                       body.replaceWith(block);
                     }
@@ -144,7 +191,7 @@ function transformServer({ types: t, template }) {
                       t.functionExpression(
                         t.identifier("$$serverHandler" + serverIndex),
                         serverFn.node.params,
-                        serverFn.node.body,
+                        body.node,
                         false,
                         true
                       )
@@ -218,8 +265,10 @@ function transformServer({ types: t, template }) {
           );
 
           const refs = state.refs;
+          /** @type {number} */
           let count;
-          function sweepFunction(sweepPath) {
+
+          function sweepFunction(/** @type {import('@babel/core').NodePath} */ sweepPath) {
             const ident = getIdentifier(sweepPath);
             if (ident && ident.node && refs.has(ident) && !isIdentifierReferenced(ident)) {
               ++count;
@@ -233,7 +282,8 @@ function transformServer({ types: t, template }) {
               }
             }
           }
-          function sweepImport(sweepPath) {
+
+          function sweepImport(/** @type {import('@babel/core').NodePath} */ sweepPath) {
             const local = sweepPath.get("local");
             if (refs.has(local) && !isIdentifierReferenced(local)) {
               ++count;
@@ -260,7 +310,8 @@ function transformServer({ types: t, template }) {
                   const pattern = variablePath.get("id");
                   const beforeCount = count;
                   const properties = pattern.get("properties");
-                  properties.forEach(p => {
+                  let props = Array.isArray(properties) ? properties : [properties];
+                  props.forEach(p => {
                     const local = p.get(
                       p.node.type === "ObjectProperty"
                         ? "value"

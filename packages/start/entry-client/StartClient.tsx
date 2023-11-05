@@ -16,7 +16,22 @@ function throwClientError(field: string): any {
   );
 }
 
-export default () => {
+export default ({
+  routerProps
+}: {
+  /**
+   * Override props passed to `<Router`.
+   * 
+   * Only `source` is supported today.
+   * 
+   * If you need to pass in other props, please submit a PR.
+   */
+  // Before actually submitting a PR, you can test out the new prop like so:
+  //   import type { RouterProps } from "@solidjs/router";
+  //   const routerProps = { newProp } as RouterProps;
+  //   <StartClient routerProps={routerProps as unknown as undefined} />
+  routerProps?: Pick<RouterProps, 'source'>
+} = {}) => {
   let mockFetchEvent: PageEvent = {
     get request() {
       if (process.env.NODE_ENV === "development") {
@@ -69,7 +84,9 @@ export default () => {
       }
     },
     $type: FETCH_EVENT,
-    fetch
+    fetch,
+    $islands: new Set(),
+    mutation: false
   };
 
   function StartRouter(props: RouterProps) {
@@ -78,10 +95,22 @@ export default () => {
     );
   }
 
+  const BASE_URL = import.meta.env.BASE_URL;
+  let basePath = BASE_URL;
+  if (BASE_URL.startsWith("http")) {
+    try {
+      // SolidRouter expects a pathname for the `base` prop, not a full URL.
+      const url = new URL(BASE_URL);
+      basePath = url.pathname;
+    } catch (e) {
+      console.warn('BASE_URL starts with http, but `new URL` failed to parse it. Please check your BASE_URL:', BASE_URL);
+    }
+  }
+
   return (
     <ServerContext.Provider value={mockFetchEvent}>
       <MetaProvider>
-        <StartRouter base={import.meta.env.BASE_URL} data={dataFn}>
+        <StartRouter base={basePath} data={dataFn} {...routerProps}>
           <Root />
         </StartRouter>
       </MetaProvider>

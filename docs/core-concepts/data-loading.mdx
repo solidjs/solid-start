@@ -32,7 +32,7 @@ export function routeData() {
 Now your component can use the `useRouteData` function to access the data that is returned by `routeData`.
 
 ```tsx twoslash filename="/routes/students.tsx"
-import { For, Accessor, createResource } from "solid-js";
+import { For, createResource } from "solid-js";
 import { useRouteData } from "solid-start";
 
 type Student = { name: string; house: string; }
@@ -72,7 +72,7 @@ Okay, enough with the rules. We thought `createResource` was too low level for m
 Here's the same example as above, but using `createRouteData`:
 
 ```tsx twoslash filename="/routes/students.tsx"
-import { For, Accessor, createResource } from "solid-js";
+import { For, createResource } from "solid-js";
 import { useRouteData, createRouteData } from "solid-start";
 
 type Student = { name: string; house: string; }
@@ -106,7 +106,7 @@ It could be database access, or internal APIs, etc. It could sit within your fun
 ```tsx twoslash {8} filename="/routes/students.tsx"
 const hogwarts = { students: { list() { return [] as Student[] } } }
 // ---cut---
-import { For, Accessor, createResource } from "solid-js";
+import { For, createResource } from "solid-js";
 import { useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 
@@ -138,7 +138,7 @@ For example, you might have a route that needs to load data from a database and 
 ```tsx twoslash filename="/routes/students.tsx"
 const hogwarts = { students: { list() { return [] } } }
 // ---cut---
-import { For, Accessor, createResource } from "solid-js";
+import { For, createResource } from "solid-js";
 import { useRouteData, createRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 
@@ -195,6 +195,7 @@ export default function HouseLayout(props: ParentProps) {
   return <><Outlet /></>;
 }
 
+
 // @filename: routes/[house]/students.tsx
 import { RouteDataArgs, Outlet } from "solid-start";
 import { ParentProps } from 'solid-js';
@@ -224,7 +225,7 @@ import { createContext } from 'solid-js';
 const RouteContext = createContext<{ data: any }>({ data: null });
 
 // ---cut---
-import { useLocation, useNavigate } from "solid-start";
+import { useLocation, useNavigate, RouteDataArgs } from "solid-start";
 import { 
   default as HouseLayout, 
   routeData as getHouseLayoutData 
@@ -245,9 +246,9 @@ function Routes() {
     params: { house: 'gryffindor' }
   }
 
-  const houseLayoutData = getHouseLayoutData({ ...args, data: null });
-  const studentsLayoutData = getStudentsLayoutData({ ...args, data: houseLayoutData });
-  const studentsData = getStudentsLayoutData({ ...args, data: studentsLayoutData  });
+  const houseLayoutData = getHouseLayoutData({ ...args, data: null } as RouteDataArgs);
+  const studentsLayoutData = getStudentsLayoutData({ ...args, data: houseLayoutData } as RouteDataArgs);
+  const studentsData = getStudentsLayoutData({ ...args, data: studentsLayoutData  } as RouteDataArgs);
 
   return (
     <RouteContext.Provider value={{ data: houseLayoutData }}>

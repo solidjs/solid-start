@@ -1,0 +1,11 @@
+name = "notes-server-components"
+compatibility_date = "2022-05-10"
+
+[durable_objects]
+bindings = [
+  { name = "db", class_name = "db" },
+]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["NotesDB"] # Array of new classes

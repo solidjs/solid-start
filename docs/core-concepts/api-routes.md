@@ -235,13 +235,13 @@ import {
 import type { AppRouter } from "./router";
 
 export const client = createTRPCProxyClient<AppRouter>({
-  links: [loggerLink(), httpBatchLink({ url: "/api/trpc" })],
+  links: [loggerLink(), httpBatchLink({ url: "http://localhost:3000/api/trpc" })],
 });
 ```
 
 Finally, you can use the `fetch` adapter to write an API route that acts as the tRPC server.
 
-```tsx filename="routes/api/trpc/[...].ts"
+```tsx filename="routes/api/trpc/[trpc].ts"
 import { type APIEvent } from "solid-start/api";
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from "~/lib/router";

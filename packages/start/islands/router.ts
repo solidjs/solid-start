@@ -1,6 +1,7 @@
-import type { Location, Navigator } from "@solidjs/router";
-import { createSignal } from "solid-js";
-interface LocationEntry {
+import type { Location, Params } from "@solidjs/router";
+import { createEffect, createSignal } from "solid-js";
+
+export interface LocationEntry {
   path: string;
   state: any;
   pathname: string;
@@ -8,13 +9,32 @@ interface LocationEntry {
   hash: string;
 }
 
+export function useSearchParams<T extends Params>() {
+  const params = () => window.router.location().search;
+  const [searchParams, setSearchParams] = createSignal(new URLSearchParams(params()));
+
+  createEffect(() => {
+    setSearchParams(new URLSearchParams(params()));
+  });
+
+  return {
+    get "0"() {
+      return searchParams();
+    },
+    get "1"() { return setSearchParams }
+  } as unknown as [T, (params: T) => void];
+}
+
 export default function mountRouter() {
   if (import.meta.env.START_ISLANDS_ROUTER) {
     _$DEBUG("mounting islands router");
 
     const basePath = "/";
-    let [currentLocation, setCurrentLocation] = createSignal<Location>(getLocation());
-    window.LOCATION = currentLocation;
+    let [currentLocation, setCurrentLocation] = createSignal<Location & LocationEntry>(
+      getLocation()
+    );
+
+    let eventTarget = new EventTarget();
 
     function getLocation(): Location & LocationEntry {
       const { pathname, search, hash } = window.location;
@@ -27,6 +47,16 @@ export default function mountRouter() {
         query: {},
         key: ""
       };
+    }
+
+    function pushRoute(to: string | URL, options: Partial<NavigateOptions>) {
+      let u = new URL(to, window.location.origin);
+      if (options.replace) {
+        history.replaceState(options.state, "", u);
+      } else {
+        history.pushState(options.state, "", u);
+      }
+      setCurrentLocation(getLocation());
     }
 
     async function handleAnchorClick(evt: MouseEvent) {
@@ -83,14 +113,8 @@ export default function mountRouter() {
         state: state && JSON.parse(state)
       };
 
-      if (await navigate(to)) {
-        if (options.replace) {
-          history.replaceState(options.state, "", to);
-        } else {
-          history.pushState(options.state, "", to);
-        }
-        setCurrentLocation(getLocation());
-      }
+      await doNavigate(to, options);
+      pushRoute(to, options);
     }
 
     interface NavigateOptions {
@@ -101,15 +125,15 @@ export default function mountRouter() {
     }
 
     async function handlePopState(evt: PopStateEvent) {
-      const { pathname, state } = getLocation();
-      if (currentLocation().pathname !== pathname) {
-        if (await navigate(pathname)) {
-          setCurrentLocation(getLocation());
-        }
+      const { pathname, search, hash, state } = getLocation();
+      const to = pathname + search + hash;
+      if (await doNavigate(to)) {
+        setCurrentLocation(getLocation());
       }
     }
 
-    async function navigate(to: string, options: NavigateOptions = {}) {
+    async function doNavigate(to: string, options: Partial<NavigateOptions> = {}) {
+      router.router.dispatchEvent(new CustomEvent("navigation-start", { detail: to }));
       const response = await fetch(to, {
         method: "POST",
         headers: {
@@ -119,36 +143,95 @@ export default function mountRouter() {
 
       if (!response.ok) {
         console.error(`Navigation failed: ${response.status} ${response.statusText}`);
+        router.router.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
         return false;
       }
 
-      const body = await response.text();
-      const splitIndex = body.indexOf("=");
-      const meta = body.substring(0, splitIndex);
-      const content = body.substring(splitIndex + 1);
-
-      if (meta) {
-        const [prev, next] = meta.split(":");
-        const outletEl = document.getElementById(prev);
-        if (outletEl) {
-          outletEl.innerHTML = content;
-          outletEl.id = next;
-          window._$HY && window._$HY.hydrateIslands && window._$HY.hydrateIslands();
-          return true;
-        } else {
-          console.warn(`No outlet element with id ${prev}`);
-        }
-      } else {
-        console.warn(`No meta data in response`);
+      let body = await response.text();
+      let updated = await update(body);
+      if (updated) {
+        router.router.dispatchEvent(new CustomEvent("navigation-end", { detail: to }));
+        return true;
       }
 
+      router.router.dispatchEvent(new CustomEvent("navigation-error", { detail: to }));
       return false;
     }
 
-    window.NAVIGATE = navigate as unknown as Navigator;
+    async function navigate(to: string, options: Partial<NavigateOptions> = {}) {
+      if (await doNavigate(to)) {
+        pushRoute(to, options);
+        return true;
+      }
+      return false;
+    }
+
+    let router = {
+      navigate,
+      push: pushRoute,
+      update,
+      router: eventTarget,
+      location: currentLocation
+    };
+
+    window.router = router;
 
     document.addEventListener("click", handleAnchorClick);
     window.addEventListener("popstate", handlePopState);
     _$DEBUG("mounted islands router");
   }
+}
+
+async function update(body: string) {
+  let assets: [[string, string][], [string, string][]] | undefined;
+  if (body.charAt(0) === "a") {
+    const assetsIndex = body.indexOf(";");
+    assets = JSON.parse(body.substring("assets=".length, assetsIndex));
+    body = body.substring(assetsIndex + 1);
+  }
+
+  if (body.charAt(0) === "o") {
+    const splitIndex = body.indexOf("=");
+    const meta = body.substring(0, splitIndex);
+    const content = body.substring(splitIndex + 1);
+
+    if (meta) {
+      if (assets && assets.length) {
+        assets[0].forEach(([assetType, href]) => {
+          if (!document.querySelector(`link[href="${href}"]`)) {
+            let link = document.createElement("link");
+            link.rel = assetType === "style" ? "stylesheet" : "modulepreload";
+            link.href = href;
+            document.head.appendChild(link);
+          }
+        });
+
+        assets[1].forEach(([assetType, href]) => {
+          let el = document.querySelector(`link[href="${href}"]`);
+          if (el) {
+            document.head.removeChild(el);
+          }
+        });
+      }
+
+      const [prev, next] = meta.split(":");
+      const outletEl = document.getElementById(prev);
+      if (outletEl) {
+        let doc = document.implementation.createHTMLDocument();
+        doc.write(`<outlet-wrapper id="${next}">`);
+        doc.write(content);
+        doc.write("</outlet-wrapper>");
+
+        if (import.meta.env.START_ISLANDS) {
+          await window._$HY.morph(outletEl, doc.body.firstChild as HTMLElement);
+        }
+        return true;
+      } else {
+        console.warn(`No outlet element with id ${prev}`);
+      }
+    } else {
+      console.warn(`No meta data in response`);
+    }
+  }
+  return false;
 }

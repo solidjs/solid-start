@@ -13,7 +13,6 @@ import glob from "tiny-glob/sync.js";
 import yargsParser from "yargs-parser";
 import { version } from "../package.json";
 import { viaContentsApi } from "./github.js";
-
 const gitIgnore = `
 dist
 .solid
@@ -69,6 +68,8 @@ function getUserPkgManager() {
       return "yarn";
     } else if (userAgent.startsWith("pnpm")) {
       return "pnpm";
+    } else if (userAgent.startsWith("bun")) {
+      return "bun";
     } else {
       return "npm";
     }
@@ -282,10 +283,12 @@ async function main() {
   ); // TODO ^${versions[name]}
 
   if (!ts_response) {
+    delete pkg_json.dependencies["@types/cookie"];
+    delete pkg_json.dependencies["@types/debug"];
     delete pkg_json.devDependencies["@types/babel__core"];
     delete pkg_json.devDependencies["@types/node"];
-    delete pkg_json.devDependencies["@types/debug"];
     delete pkg_json.devDependencies["typescript"];
+    delete pkg_json.devDependencies["@types/wait-on"];
   }
 
   fs.writeFileSync(pkg_file, JSON.stringify(pkg_json, null, 2));

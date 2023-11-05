@@ -26,6 +26,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const pathname = url.pathname;
+    const clientAddress = request.headers.get("cf-connecting-ip");
 
     if (request.headers.get("Upgrade") === "websocket") {
       const durableObjectId = env.DO_WEBSOCKET.idFromName(url.pathname + url.search);
@@ -35,13 +36,16 @@ export default {
     }
 
     env.manifest = manifest;
+
+    env.waitUntil = function (promise) {
+      return ctx.waitUntil(promise);
+    };
+
     env.getStaticAsset = async request => {
       const response = await getAssetFromKV(
         {
           request,
-          waitUntil(promise) {
-            return ctx.waitUntil(promise);
-          }
+          waitUntil: env.waitUntil
         },
         {
           ASSET_NAMESPACE: env.__STATIC_CONTENT,
@@ -72,11 +76,29 @@ export default {
         return new Response("An unexpected error occurred", { status: 500 });
       }
     }
+
+    function internalFetch(route, init = {}) {
+      if (route.startsWith("http")) {
+        return fetch(route, init);
+      }
+
+      let url = new URL(route, "http://internal");
+      const request = new Request(url.href, init);
+      return handler({
+        request,
+        clientAddress,
+        locals: {},
+        env,
+        fetch: internalFetch
+      });
+    }
+
     return handler({
-      request: request,
-      clientAddress: request.headers.get('cf-connecting-ip'),
+      request,
+      clientAddress,
       locals: {},
-      env
+      env,
+      fetch: internalFetch
     });
   }
 };

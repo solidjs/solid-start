@@ -1,0 +1,94 @@
+@import '~/assets/css/utilities/_variables.scss';
+
+.alert {
+  font-size: 1.4rem;
+  color: #fff;
+  background-color: $secondary-color;
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  button {
+    font-size: 1.4rem;
+  }
+}
+
+.alert + .alert {
+  border-top: 1px solid #000;
+}
+
+.alert__close {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 0 3rem;
+  background: none;
+  border-left: 1px solid #000;
+}
+
+.alert__btn--primary {
+  background-color: $primary-color;
+
+  &:hover,
+  &:focus {
+    background-color: #146fb7;
+  }
+}
+
+.alert__btn--secondary {
+  background-color: #000;
+
+  &:hover,
+  &:focus {
+    background-color: #2f2f2f;
+  }
+}
+
+.alert--default {
+  display: flex;
+
+  p {
+    flex: 1;
+    padding: 1.5rem;
+
+    @media (min-width: $breakpoint-small) {
+      padding: 1.5rem 2rem;
+    }
+  }
+}
+
+.alert--alt {
+  padding: 1.5rem;
+
+  @media (min-width: $breakpoint-small) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+  }
+
+  p {
+    @media (min-width: $breakpoint-small) {
+      margin-right: 1rem;
+    }
+  }
+
+  div {
+    flex-shrink: 0;
+  }
+
+  .alert__btn {
+    margin: 1.5rem 1rem 0 0;
+
+    @media (min-width: $breakpoint-small) {
+      flex-shrink: 0;
+      margin: 0 0 0 1rem;
+    }
+  }
+}

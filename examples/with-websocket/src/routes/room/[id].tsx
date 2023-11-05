@@ -7,8 +7,6 @@ import { getUser, logout } from "~/session";
 interface User {
   websocket: WebSocket;
   id: string;
-  // city: string | undefined;
-  // country: string;
 }
 
 const room = createWebSocketServer(server$(presence));

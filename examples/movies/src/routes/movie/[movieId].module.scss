@@ -1,0 +1,56 @@
+
+@import '~/assets/css/utilities/_variables.scss';
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  background-color: #1b1b1b;
+
+  @media (min-width: $breakpoint-large) {
+    justify-content: center;
+    margin-top: 2.5rem;
+    background: none;
+  }
+}
+
+.button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 -0.2rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #585858;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing;
+  background: none;
+  border-right: 1px solid $base-bg;
+  outline: 0;
+  transition: color 0.2s ease;
+
+  @media (min-width: $breakpoint-large) {
+    width: auto;
+    margin: 0 3rem;
+    font-size: 2rem;
+    border-bottom: 2px solid transparent;
+  }
+
+  &:last-child {
+    border-right: 0;
+  }
+
+  &:hover,
+  &:focus {
+    color: #fff;
+  }
+}
+
+.buttonActive {
+  color: #fff;
+  background-color: $base-bg;
+
+  @media (min-width: $breakpoint-large) {
+    background: none;
+    border-bottom-color: #fff;
+  }
+}

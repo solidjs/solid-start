@@ -1,0 +1,24 @@
+{
+  "name": "solid-start-bun",
+  "version": "0.3.9",
+  "main": "./index.js",
+  "type": "module",
+  "solid": {
+    "type": "adapter"
+  },
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "rollup": "^3.26.2"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.1",
+    "solid-start": "workspace:*",
+    "vite": "^4.4.6"
+  },
+  "peerDependencies": {
+    "solid-start": "*",
+    "vite": "*"
+  }
+}

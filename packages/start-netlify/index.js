@@ -7,6 +7,10 @@ import { dirname, join } from "path";
 import { rollup } from "rollup";
 import { fileURLToPath } from "url";
 
+/***
+ * @param {object} options
+ * @param {boolean} [options.edge]
+ */
 export default function ({ edge } = {}) {
   return {
     name: "netlify",
@@ -21,7 +25,7 @@ export default function ({ edge } = {}) {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "netlify"));
         await builder.server(join(config.root, ".solid", "server"));
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(join(config.root, "netlify"));
         await builder.server(join(config.root, ".solid", "server"));
       } else {
@@ -68,7 +72,7 @@ export default function ({ edge } = {}) {
   "functions": [
     {
       "function": "index",
-      "pattern": "^[^.]*$"
+      "path": "/*"
     }
   ],
   "version": 1
