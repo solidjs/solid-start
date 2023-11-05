@@ -56,11 +56,13 @@ declare global {
   }
 }
 
+export interface LocalsExt {}
+
 export interface FetchEvent {
   request: Request;
   env: Env;
   clientAddress: string;
-  locals: Record<string, unknown>;
+  locals: Record<string, unknown> & LocalsExt;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {
