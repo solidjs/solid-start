@@ -1,16 +1,25 @@
 import { createIslandReference } from "../server/islands";
 
 async function fetchServerAction(base, id, args) {
+  console.log("fetching serevr action");
   const response = await fetch(base, {
     method: "POST",
     headers: {
       Accept: "application/json",
+      "Content-Type": "application/json",
       "server-action": id
     },
     body: JSON.stringify(args)
   });
 
-  return response.json();
+  const json = await response.json();
+
+  if (response.status === 200) {
+    return json;
+  } else {
+    console.log(json);
+    throw { message: json.error };
+  }
 }
 
 export function createServerReference(fn, id, name) {

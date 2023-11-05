@@ -14,7 +14,7 @@
     "postcss": "^8.4.26",
     "solid-js": "^1.8.4",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.40"
+    "vinxi": "0.0.47"
   },
   "engines": {
     "node": ">=18"

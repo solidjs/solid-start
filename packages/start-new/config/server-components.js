@@ -4,9 +4,9 @@ import {
   shimExportsPlugin,
   wrapExportsPlugin
 } from "@vinxi/plugin-directives";
-import { client as clientComponents } from "@vinxi/plugin-server-components/client";
-import { SERVER_REFERENCES_MANIFEST } from "@vinxi/plugin-server-components/constants";
-import { buildServerComponents } from "@vinxi/plugin-server-components/server";
+import { client as clientComponents } from "@vinxi/server-components/client";
+import { SERVER_REFERENCES_MANIFEST } from "@vinxi/server-components/constants";
+import { buildServerComponents } from "@vinxi/server-components/server";
 import { fileURLToPath } from "node:url";
 import { chunkify } from "vinxi/lib/chunks";
 import { normalize } from "vinxi/lib/path";

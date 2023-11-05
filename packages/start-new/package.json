@@ -18,6 +18,7 @@
     "./server/spa": "./server/spa/index.tsx",
     "./client": "./client/index.tsx",
     "./client/islands": "./client/islands.tsx",
+    "./middleware": "./server/middleware.ts",
     "./client/spa": "./client/spa/index.tsx"
   },
   "typesVersions": {
@@ -36,12 +37,12 @@
   "devDependencies": {
     "@solidjs/router": "^0.8.3",
     "solid-js": "^1.8.4",
-    "vinxi": "0.0.40"
+    "vinxi": "0.0.47"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "0.0.32",
-    "@vinxi/plugin-server-functions": "0.0.32",
-    "@vinxi/plugin-server-components": "0.0.32",
+    "@vinxi/plugin-directives": "0.0.39",
+    "@vinxi/server-functions": "0.0.39",
+    "@vinxi/server-components": "0.0.39",
     "defu": "^6.1.2",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.7.0"

@@ -1,11 +1,12 @@
-import { serverFunctions } from "@vinxi/plugin-server-functions";
+import { serverFunctions } from "@vinxi/server-functions/plugin";
 import defu from "defu";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createApp, resolve } from "vinxi";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
-import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router";
-import { serverComponents } from "./server-components";
+import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
+import { serverComponents } from "./server-components.js";
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
 function solidStartClientFsRouter(config) {
@@ -103,7 +104,9 @@ export function defineConfig(baseConfig = {}) {
         plugins: () => [
           config("user", userConfig),
           ...plugins,
-          serverFunctions.client(),
+          serverFunctions.client({
+            runtime: fileURLToPath(new URL("./server-runtime.jsx", import.meta.url))
+          }),
           start.islands ? serverComponents.client() : null,
           solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-client", {
@@ -132,6 +135,15 @@ export function defineConfig(baseConfig = {}) {
         ],
         base: "/_build"
       },
+      // {
+      //   name: "server",
+      //   mode: "handler",
+      //   base: "/_server",
+      //   handler: serverFunctions.handler,
+      //   target: "server",
+      //   ...(overrides ?? {}),
+      //   plugins: () => [serverserver(), ...(overrides?.plugins?.() ?? [])],
+      // },
       serverFunctions.router({
         plugins: () => [
           config("user", userConfig),
@@ -155,8 +167,8 @@ export function defineConfig(baseConfig = {}) {
               "import.meta.env.START_SSR": JSON.stringify(start.ssr)
             }
           })
-        ]
-        // middleware: start.middleware
+        ],
+        middleware: start.middleware
       })
     ]
   });

@@ -1,5 +1,5 @@
 {
-  "name": "example-with-mdx",
+  "name": "example-todos",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
@@ -7,14 +7,11 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^2.3.0",
     "@solidjs/meta": "^0.29.0",
     "@solidjs/router": "^0.8.3",
     "@solidjs/start": "workspace:^",
-    "@vinxi/plugin-mdx": "^3.6.5",
     "solid-js": "^1.8.4",
-    "vinxi": "0.0.47",
-    "solid-mdx": "^0.0.7"
+    "vinxi": "0.0.47"
   },
   "engines": {
     "node": ">=18"
