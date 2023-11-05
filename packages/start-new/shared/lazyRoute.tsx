@@ -14,9 +14,7 @@ export default function lazyRoute(
 		if (import.meta.env.DEV) {
 			let manifest = import.meta.env.SSR ? serverManifest : clientManifest;
 
-			const mod = await import(
-				/* @vite-ignore */ manifest.inputs[component.src].output.path
-			);
+			const mod = await manifest.inputs[component.src].import();
 			if (!mod[exported]) console.error(`Module ${component.src} does not export ${exported}`)
 			const Component = mod[exported];
 			let assets = await clientManifest.inputs?.[component.src].assets();

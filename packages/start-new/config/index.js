@@ -3,10 +3,12 @@ import defu from "defu";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createApp, resolve } from "vinxi";
+import { normalize } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { serverComponents } from "./server-components.js";
+
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
 function solidStartClientFsRouter(config) {
@@ -105,7 +107,7 @@ export function defineConfig(baseConfig = {}) {
           config("user", userConfig),
           ...plugins,
           serverFunctions.client({
-            runtime: fileURLToPath(new URL("./server-runtime.jsx", import.meta.url))
+            runtime: normalize(fileURLToPath(new URL("./server-runtime.jsx", import.meta.url)))
           }),
           start.islands ? serverComponents.client() : null,
           solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
