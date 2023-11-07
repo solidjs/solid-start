@@ -53,6 +53,7 @@ export async function createPageEvent(ctx: FetchEvent) {
   const serverManifest = import.meta.env.MANIFEST["ssr"];
   const prevPath = ctx.request.headers.get("x-solid-referrer");
   const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
+  ctx.setResponseHeader("Content-Type", "text/html");
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: await clientManifest.json(),
     assets: [
