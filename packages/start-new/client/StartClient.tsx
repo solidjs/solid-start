@@ -1,6 +1,5 @@
 // @ts-ignore
 import App from "#start/app";
-import { Router } from "@solidjs/router";
 import "./mount";
 
 function Dummy(props) {
@@ -9,12 +8,10 @@ function Dummy(props) {
 
 export function StartClient() {
   return (
-    <Router>
+    <Dummy>
       <Dummy>
-        <Dummy>
-          <App />
-        </Dummy>
+        <App />
       </Dummy>
-    </Router>
+    </Dummy>
   );
 }

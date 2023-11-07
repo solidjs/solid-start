@@ -39,8 +39,8 @@ export function createHandler(
         // render stream
         const context = await createPageEvent(event);
         const stream = renderToStream(() => fn(context), options);
-        if (context.routerContext && context.routerContext.url) {
-          return event.redirect(context.routerContext.url);
+        if (context.response && context.response.url) {
+          return event.redirect(context.response.url);
         }
         return { pipeTo: stream.pipeTo };
       });
@@ -63,9 +63,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     ],
     routes: createRoutes(),
     prevUrl: prevPath || "",
-    routerContext: {} as any,
     mutation: mutation,
-    tags: [],
     $type: FETCH_EVENT,
     $islands: new Set<string>()
   });

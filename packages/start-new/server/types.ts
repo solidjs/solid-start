@@ -51,9 +51,8 @@ export interface PageEvent extends FetchEvent {
   assets: any;
   routes: any[];
   prevUrl: string | null;
-  routerContext: RouterContext;
-  tags: TagDescription[];
   $type: typeof FETCH_EVENT;
   $islands: Set<string>;
   mutation: boolean;
+  response?: Response;
 }

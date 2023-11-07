@@ -28,8 +28,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.3.3)
@@ -489,8 +489,20 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
+      '@solidjs/start':
+        specifier: workspace:^
+        version: link:../../packages/start-new
+      solid-js:
+        specifier: ^1.8.5
+        version: 1.8.5
+      vinxi:
+        specifier: 0.0.47
+        version: 0.0.47(debug@4.3.4)(rollup@3.28.1)
+
+  examples/empty:
+    dependencies:
       '@solidjs/start':
         specifier: workspace:^
         version: link:../../packages/start-new
@@ -504,8 +516,8 @@ importers:
   examples/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
       '@solidjs/start':
         specifier: workspace:^
         version: link:../../packages/start-new
@@ -522,8 +534,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
       '@solidjs/start':
         specifier: workspace:^
         version: link:../../packages/start-new
@@ -543,8 +555,8 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
       '@solidjs/start':
         specifier: workspace:^
         version: link:../../packages/start-new
@@ -567,8 +579,8 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
       '@solidjs/start':
         specifier: workspace:^
         version: link:../../packages/start-new
@@ -591,8 +603,8 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
       '@solidjs/start':
         specifier: workspace:^
         version: link:../../packages/start-new
@@ -877,9 +889,6 @@ importers:
         specifier: ^2.7.0
         version: 2.7.0(solid-js@1.8.5)(vite@4.5.0)
     devDependencies:
-      '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
       solid-js:
         specifier: ^1.8.4
         version: 1.8.5
@@ -1003,8 +1012,8 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.8.3
-        version: 0.8.3(solid-js@1.8.5)
+        specifier: ^0.9.0
+        version: 0.9.0(solid-js@1.8.5)
       solid-js:
         specifier: ^1.8.5
         version: 1.8.5
@@ -1743,7 +1752,7 @@ packages:
     dependencies:
       '@babel/core': 7.22.9
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/template': 7.22.5
+      '@babel/template': 7.22.15
     dev: false
 
   /@babel/plugin-transform-destructuring@7.23.0(@babel/core@7.22.9):
@@ -3867,6 +3876,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -4237,6 +4247,13 @@ packages:
 
   /@solidjs/router@0.8.3(solid-js@1.8.5):
     resolution: {integrity: sha512-oJuqQo10rVTiQYhe1qXIG1NyZIZ2YOwHnlLc8Xx+g/iJhFCJo1saLOIrD/Dkh2fpIaIny5ZMkz1cYYqoTYGJbg==}
+    peerDependencies:
+      solid-js: ^1.5.3
+    dependencies:
+      solid-js: 1.8.5
+
+  /@solidjs/router@0.9.0(solid-js@1.8.5):
+    resolution: {integrity: sha512-q1RxUhLa8lKdbhqEPkG+8RwBQKIH5f5AIWiOxVoUTK4UllgsR0C0FNT++ufnIAb9LNkx3ahE4WxAHZqH4l1vEQ==}
     peerDependencies:
       solid-js: ^1.5.3
     dependencies:
@@ -9084,6 +9101,9 @@ packages:
     resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
 
   /negotiator@0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}

@@ -15,9 +15,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     assets: [...(await clientManifest.inputs[clientManifest.handler].assets())],
     routes: [],
     prevUrl: "",
-    routerContext: {} as any,
     mutation: false,
-    tags: [],
     $type: FETCH_EVENT,
     $islands: new Set<string>()
   });

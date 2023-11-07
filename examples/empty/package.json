@@ -1,5 +1,5 @@
 {
-  "name": "example-bare",
+  "name": "example-empty",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
@@ -7,8 +7,6 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.29.1",
-    "@solidjs/router": "^0.9.0",
     "@solidjs/start": "workspace:^",
     "solid-js": "^1.8.5",
     "vinxi": "0.0.47"

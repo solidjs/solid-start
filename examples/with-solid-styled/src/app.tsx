@@ -1,6 +1,6 @@
 // @refresh reload
 import { MetaProvider } from "@solidjs/meta";
-import { A, Routes } from "@solidjs/router";
+import { A, Router, Routes } from "@solidjs/router";
 import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
 import { Suspense } from "solid-js";
 
@@ -62,18 +62,20 @@ export default function App() {
 
   return (
     <MetaProvider>
-      <StyleRegistry styles={sheets}>
-        <GlobalStyles />
-        <A href="/">Index</A>
-        <A href="/about">About</A>
-        <DefaultErrorBoundary>
-          <Suspense>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </Suspense>
-        </DefaultErrorBoundary>
-      </StyleRegistry>
+      <Router>
+        <StyleRegistry styles={sheets}>
+          <GlobalStyles />
+          <A href="/">Index</A>
+          <A href="/about">About</A>
+          <DefaultErrorBoundary>
+            <Suspense>
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </Suspense>
+          </DefaultErrorBoundary>
+        </StyleRegistry>
+      </Router>
     </MetaProvider>
   );
 }
