@@ -1,6 +1,6 @@
 {
   "name": "solid-start-node",
-  "version": "0.3.8",
+  "version": "0.3.10",
   "main": "./index.js",
   "type": "module",
   "solid": {
