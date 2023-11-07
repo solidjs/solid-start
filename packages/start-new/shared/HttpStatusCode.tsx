@@ -1,10 +1,9 @@
 import { onCleanup } from "solid-js";
-import { isServer } from "solid-js/web";
-import { useRequest } from "./ServerContext";
+import { getRequestEvent, isServer } from "solid-js/web";
 
 export function HttpStatusCode(props: { code: number, text?: string }) {
   if (isServer) {
-    const context = useRequest();
+    const context = getRequestEvent();
     context!.setResponseStatus(props.code, props.text);
     onCleanup(() => {
       context!.setResponseStatus(200);

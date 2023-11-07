@@ -1,13 +1,7 @@
 // @ts-ignore
 import App from "#start/app";
 import { Router } from "@solidjs/router";
-import { PageEvent } from "../server/types";
-
-import { createRoutes } from "../shared/FileRoutes";
-import { ServerContext } from "../shared/ServerContext";
 import "./mount";
-
-const routes = createRoutes();
 
 function Dummy(props) {
   return props.children;
@@ -15,14 +9,12 @@ function Dummy(props) {
 
 export function StartClient() {
   return (
-    <ServerContext.Provider value={{ routes } as unknown as PageEvent}>
-      <Router>
+    <Router>
+      <Dummy>
         <Dummy>
-          <Dummy>
-            <App />
-          </Dummy>
+          <App />
         </Dummy>
-      </Router>
-    </ServerContext.Provider>
+      </Dummy>
+    </Router>
   );
 }

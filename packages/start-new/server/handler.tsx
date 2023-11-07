@@ -53,8 +53,7 @@ export async function createPageEvent(ctx: FetchEvent) {
   const serverManifest = import.meta.env.MANIFEST["ssr"];
   const prevPath = ctx.request.headers.get("x-solid-referrer");
   const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
-  const pageEvent: PageEvent = {
-    ...ctx,
+  const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: await clientManifest.json(),
     assets: [
       ...(await clientManifest.inputs[clientManifest.handler].assets()),
@@ -69,7 +68,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     tags: [],
     $type: FETCH_EVENT,
     $islands: new Set<string>()
-  };
+  });
 
   return pageEvent;
 }

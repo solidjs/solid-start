@@ -1,8 +1,7 @@
-import { useContext } from "solid-js";
+import { getRequestEvent, isServer } from "solid-js/web";
 import lazyRoute from "./lazyRoute";
 
 import { pageRoutes as routeConfigs } from "./routes";
-import { ServerContext } from "./ServerContext";
 
 export function createRoutes() {
   function createRoute(route) {
@@ -23,7 +22,7 @@ export function createRoutes() {
   return routes;
 }
 
+let routes;
 export const FileRoutes = () => {
-  const context = useContext(ServerContext);
-  return context.routes as any;
+  return isServer ? getRequestEvent().routes : (routes || (routes = createRoutes()));
 };
