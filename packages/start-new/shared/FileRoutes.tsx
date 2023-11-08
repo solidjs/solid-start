@@ -7,6 +7,7 @@ export function createRoutes() {
   function createRoute(route) {
     return {
       ...route,
+      ...(route.$$route ? route.$$route.require().route : undefined),
       component: lazyRoute(
         route.$component,
         import.meta.env.START_ISLANDS
@@ -14,7 +15,6 @@ export function createRoutes() {
           : import.meta.env.MANIFEST["client"],
         import.meta.env.MANIFEST["ssr"]
       ),
-      data: route.$$data ? route.$$data.require().routeData : undefined,
       children: route.children ? route.children.map(createRoute) : undefined
     };
   }

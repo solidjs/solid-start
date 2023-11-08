@@ -1,5 +1,5 @@
 import { A, RouteDataFuncArgs, useRouteData } from "@solidjs/router";
-import { Component, createResource, For, Show } from "solid-js";
+import { Component, For, Show, createResource } from "solid-js";
 import Story from "~/components/story";
 import fetchAPI from "~/lib/api";
 import { IStory } from "~/types";
@@ -12,20 +12,22 @@ const mapStories = {
   job: "jobs"
 } as const;
 
-export const routeData = ({ location, params }: RouteDataFuncArgs) => {
-  const page = () => +location.query.page || 1;
-  const type = () => (params.stories || "top") as keyof typeof mapStories;
+export const route = {
+  data({ location, params }: RouteDataFuncArgs) {
+    const page = () => +location.query.page || 1;
+    const type = () => (params.stories || "top") as keyof typeof mapStories;
 
-  const [stories] = createResource<IStory[], string>(
-    () => `${mapStories[type()]}?page=${page()}`,
-    fetchAPI
-  );
+    const [stories] = createResource<IStory[], string>(
+      () => `${mapStories[type()]}?page=${page()}`,
+      fetchAPI
+    );
 
-  return { type, stories, page };
+    return { type, stories, page };
+  }
 };
 
 const Stories: Component = () => {
-  const { page, type, stories } = useRouteData<typeof routeData>();
+  const { page, type, stories } = useRouteData<typeof route.data>();
   return (
     <div class="news-view">
       <div class="news-list-nav">
