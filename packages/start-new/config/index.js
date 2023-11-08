@@ -39,6 +39,7 @@ export function defineConfig(baseConfig = {}) {
   let { plugins = [], start = {}, ...userConfig } = baseConfig;
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
+    appRoot: "./src",
     ssr: true,
     islands: false,
     serverPlugins: []
@@ -60,10 +61,10 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "ssr",
         mode: "handler",
-        handler: "./src/entry-server.tsx",
+        handler: `${start.appRoot}/entry-server.tsx`,
         middleware: start.middleware,
         ...(start.ssr
-          ? { routes: solidStartServerFsRouter({ dir: "./src/routes", extensions }) }
+          ? { routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }) }
           : {}),
         extensions,
         target: "server",
@@ -75,8 +76,8 @@ export function defineConfig(baseConfig = {}) {
           config("app-server", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), "src", "app.tsx"),
-                "~": join(process.cwd(), "src"),
+                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
                       "@solidjs/start/server": "@solidjs/start/server/spa"
@@ -95,11 +96,11 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "client",
         mode: "build",
-        handler: "./src/entry-client.tsx",
+        handler: `${start.appRoot}/entry-client.tsx`,
         ...(start.islands
           ? {}
           : {
-              routes: solidStartClientFsRouter({ dir: "./src/routes", extensions })
+              routes: solidStartClientFsRouter({ dir: `${start.appRoot}/routes`, extensions })
             }),
         extensions,
         target: "browser",
@@ -114,8 +115,8 @@ export function defineConfig(baseConfig = {}) {
           config("app-client", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), "src", "app.tsx"),
-                "~": join(process.cwd(), "src"),
+                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "~": join(process.cwd(), start.appRoot),
                 ...(start.islands
                   ? {
                       "@solidjs/start/client": "@solidjs/start/client/islands"
@@ -154,8 +155,8 @@ export function defineConfig(baseConfig = {}) {
           config("app-server", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), "src", "app.tsx"),
-                "~": join(process.cwd(), "src"),
+                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
                       "@solidjs/start/server": "@solidjs/start/server/spa"

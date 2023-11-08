@@ -1,20 +1,9 @@
 // @refresh reload
+import { MetaProvider, Title } from "@solidjs/meta";
+import { A, Router, Routes } from "@solidjs/router";
+import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
 import { createMemo, For, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
-import {
-  A,
-  Body,
-  FileRoutes,
-  Head,
-  Html,
-  Link,
-  Meta,
-  Routes,
-  Scripts,
-  Stylesheet,
-  Title
-} from "solid-start";
-import { ErrorBoundary } from "solid-start/error-boundary";
 import "./components/index.css";
 
 export const mods = /*#__PURE__*/ import.meta.glob<
@@ -35,7 +24,7 @@ export const mods = /*#__PURE__*/ import.meta.glob<
       subsection?: string;
     };
   }
->("./docs/**/*.{md,mdx}", {
+>("./routes/**/*.{md,mdx}", {
   eager: true,
   query: {
     meta: ""
@@ -248,33 +237,9 @@ import { TableOfContents, useTableOfContents } from "./components/TableOfContent
 
 export default function Root() {
   return (
-    <Html lang="en" class="h-full">
-      <Title>SolidStart (Beta)</Title>
-      <Head>
-        <Meta charset="utf-8" />
-        <Meta property="og:title" content="SolidStart Beta Documentation" />
-        <Meta property="og:site_name" content="SolidStart Beta Documentation" />
-        <Meta property="og:url" content="https://start.solidjs.com" />
-        <Meta
-          property="og:description"
-          content="Early release documentation and resources for SolidStart Beta"
-        />
-        <Meta property="og:type" content="website" />
-        <Meta property="og:image" content="https://start.solidjs.com/og-share.png" />
-        <Meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <Meta
-          name="description"
-          property="og:description"
-          content="Early release documentation and resources for SolidStart Beta"
-        />
-        <Meta name="author" content="@solid_js" />
-
-        <Link rel="icon" href="/favicon.ico" />
-        <Stylesheet href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
-      </Head>
-
-      <Body class="h-full grid grid-cols-[auto,1fr,auto] grid-rows-[auto,1fr]">
+    <Router>
+      <MetaProvider>
+        <Title>SolidStart (Beta)</Title>
         <Header />
 
         <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />
@@ -292,7 +257,7 @@ export default function Root() {
 
         <div class="col-start-2 row-start-2 h-full overflow-auto">
           <div class="px-8 py-8 h-full container">
-            <ErrorBoundary>
+            <DefaultErrorBoundary>
               <Suspense>
                 <main class="prose prose-md max-w-none w-full pt-0 pb-10 lg:px-10">
                   <MDXProvider
@@ -334,24 +299,11 @@ export default function Root() {
                   </MDXProvider>
                 </main>
               </Suspense>
-            </ErrorBoundary>
+            </DefaultErrorBoundary>
           </div>
         </div>
-
         <TableOfContents />
-
-        <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
-        <script>
-          {`docsearch({
-            appId: "VTVVKZ36GX",
-            apiKey: "f520312c8dccf1309453764ee2fed27e",
-            indexName: "solidjs",
-            container: "#docsearch",
-            debug: false 
-          });`}
-        </script>
-        <Scripts />
-      </Body>
-    </Html>
+      </MetaProvider>
+    </Router>
   );
 }

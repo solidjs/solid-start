@@ -1,20 +1,18 @@
-import { For, Suspense } from "solid-js";
-import { A, useLocation } from "solid-start";
-import { createServerData$ } from "solid-start/server";
-import { mods } from "../docs.root";
+import { A, useLocation } from "@solidjs/router";
+import { For, Suspense, createResource } from "solid-js";
+import { mods } from "../app";
 
 export function useTableOfContents() {
   const path = useLocation();
-  return createServerData$(
+  const [table] = createResource(
+    () => path.pathname,
     async pathname => {
-      let mod = mods[`./docs${pathname}.mdx`] ?? mods[`./docs${pathname}.md`];
+      let mod = mods[`./routes${pathname}.mdx`] ?? mods[`./routes${pathname}.md`];
       if (!mod) return [];
       return mod.getHeadings().filter(h => h.depth > 1 && h.depth <= 3);
-    },
-    {
-      key: () => path.pathname
     }
   );
+  return table;
 }
 
 export function TableOfContents() {

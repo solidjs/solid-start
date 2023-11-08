@@ -1,30 +1,20 @@
-import { resolve } from "path";
-import worker from "solid-start-cloudflare-workers";
-import mdx from "solid-start-mdx";
-import solid from "solid-start/vite";
-import { defineConfig } from "vite";
+import { defineConfig } from "@solidjs/start/config";
+import pkg from "@vinxi/plugin-mdx";
 
+const { default: mdx } = pkg;
 export default defineConfig({
-  css: {
-    postcss: {
-      plugins: [(await import("tailwindcss")).default]
-    }
-  },
   optimizeDeps: {
     entries: []
   },
+  start: {
+    appRoot: "./docs",
+    extensions: ["mdx", "md"]
+  },
   plugins: [
-    await mdx(),
-    solid({
-      rootEntry: resolve("docs.root.tsx"),
-      appRoot: "./docs",
-      routesDir: ".",
-      experimental: {
-        islandsRouter: true,
-        islands: true
-      },
-      extensions: [".mdx", ".md"],
-      adapter: worker({})
+    mdx.withImports({})({
+      jsx: true,
+      jsxImportSource: "solid-js",
+      providerImportSource: "solid-mdx"
     })
   ]
 });
