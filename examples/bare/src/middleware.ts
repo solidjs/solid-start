@@ -4,7 +4,7 @@ import { appendCorsHeaders } from "vinxi/server";
 export default createMiddleware({
   onRequest: [
     event => {
-      console.log(event.request.url);
+      console.log("GLOBAL", event.request.url);
     },
     event => {
       appendCorsHeaders(getH3Event(event), {});
