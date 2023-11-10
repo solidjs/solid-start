@@ -1,0 +1,26 @@
+// Entire page load
+.page-enter-active,
+.page-leave-active {
+  transition: all .25s ease-out;
+}
+
+.page-enter,
+.page-leave-active {
+  opacity: 0;
+}
+
+// Slide down
+.slidedown-leave-active,
+.slidedown-enter-active {
+  transition: 0.3s;
+}
+
+.slidedown-enter,
+.slidedown-leave-to {
+  transform: translateY(-100%);
+}
+
+.slidedown-enter-to,
+.slidedown-leave {
+  transform: translateY(0);
+}

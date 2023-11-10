@@ -239,7 +239,7 @@ export function EnrollmentPage() {
 
 ### Creating a Enhanced Form
 
-Although we recommend using [progressively enhanced forms on the server](./createServerAction.md#creating-a-progressively-enhanced-form) whenever possible, we can still take advantage of running actions on the client and used enhanced forms. This is ideal when you need to run an action or API request that can only be done in the browser.
+Although we recommend using [progressively enhanced forms on the server](./createServerAction#creating-a-progressively-enhanced-form) whenever possible, we can still take advantage of running actions on the client and used enhanced forms. This is ideal when you need to run an action or API request that can only be done in the browser.
 
 To accomplish this we need to pass information to our action using form elements like `<input>`. Any data need to be sent that end users don't enter can be added with an `<input>` with `type="hidden"`.
 

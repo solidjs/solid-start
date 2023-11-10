@@ -7,7 +7,9 @@ import {
   Show
 } from "solid-js";
 
-export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any, reset: () => void) => JSX.Element }>) {
+export function ErrorBoundary(
+  props: ParentProps<{ fallback?: (e: any, reset: () => void) => JSX.Element }>
+) {
   return (
     <ErrorBoundaryBase
       fallback={(e, reset) => {
@@ -26,6 +28,7 @@ export function ErrorBoundary(props: ParentProps<{ fallback?: (e: any, reset: ()
 export function ErrorMessage(props: { error: any }) {
   createEffect(() => console.error(props.error));
 
+  console.log(props.error);
   return (
     <div style={{ padding: "16px" }}>
       <div

@@ -6,6 +6,8 @@
 
 This is the home of the Solid app framework. This is still a **work in progress**. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
 
+## Features
+
 - File-system based routing
 - Supports all rendering modes:
   - Server-side rendering (SSR)
@@ -22,6 +24,8 @@ This is the home of the Solid app framework. This is still a **work in progress*
 
 ### Getting started
 
+Create a SolidStart application and run a development server using your preferred package manager:
+
 ```bash
 mkdir my-app
 cd my-app
@@ -35,9 +39,16 @@ npm run dev
 pnpm create solid@latest
 pnpm install
 pnpm dev
+
+# or with Bun
+bunx create-solid@latest
+bun install
+bun run dev
 ```
 
 ### Development
+
+You should use a node version manager [compatible with `.node-version`](https://stackoverflow.com/a/62978089/565877) ([asdf-vm](https://asdf-vm.com/) is a great option mac/linux users)
 
 The monorepo uses `pnpm` as the package manager. To install `pnpm`, run the following command in your terminal.
 

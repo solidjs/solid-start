@@ -29,7 +29,7 @@ export default function () {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       } else {

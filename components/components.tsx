@@ -1,9 +1,8 @@
 import { Title as MetaTitle } from "@solidjs/meta";
 import { createUniqueId, mergeProps, Show } from "solid-js";
-import { unstable_island } from "solid-start";
 import "tippy.js/dist/tippy.css";
 import A from "./A";
-const Tooltip = unstable_island(() => import("./tooltip"));
+import Tooltip from "./tooltip";
 
 export const components = {
   strong: props => <span class="font-bold">{props.children}</span>,

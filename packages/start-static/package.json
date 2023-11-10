@@ -1,6 +1,6 @@
 {
   "name": "solid-start-static",
-  "version": "0.2.29",
+  "version": "0.3.10",
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
@@ -8,22 +8,20 @@
     "type": "adapter"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
-    "rollup": "^3.10.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "rollup": "^3.26.2",
     "sirv-cli": "2.0.2",
-    "solid-ssr": "^1.6.3"
+    "solid-ssr": "^1.7.2"
   },
   "devDependencies": {
     "solid-start": "workspace:*",
-    "terser": "^5.16.1",
-    "undici": "^5.15.1",
+    "terser": "^5.19.0",
     "vite": "^4.4.6"
   },
   "peerDependencies": {
     "solid-start": "*",
-    "undici": "^5.8.0",
     "vite": "*"
   }
 }

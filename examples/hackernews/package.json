@@ -8,21 +8,20 @@
   "type": "module",
   "main": "./dist/index.js",
   "devDependencies": {
-    "@types/babel__core": "^7.20.0",
-    "@types/node": "^18.11.18",
+    "@types/babel__core": "^7.20.1",
+    "@types/node": "^18.17.5",
     "esbuild": "^0.14.54",
-    "solid-start-node": "^0.2.19",
-    "typescript": "^4.9.4",
-    "vite": "^4.4.6"
+    "solid-start-node": "^0.3.10",
+    "typescript": "^4.9.5",
+    "vite": "^4.4.9"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.28.2",
-    "@solidjs/router": "^0.8.2",
-    "solid-js": "^1.7.8",
-    "solid-start": "^0.2.29",
-    "undici": "^5.15.1"
+    "@solidjs/meta": "^0.29.1",
+    "@solidjs/router": "^0.8.3",
+    "solid-js": "^1.8.5",
+    "solid-start": "^0.3.10"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   }
 }

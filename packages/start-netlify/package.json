@@ -1,21 +1,21 @@
 {
   "name": "solid-start-netlify",
-  "version": "0.2.29",
+  "version": "0.3.10",
   "main": "./index.js",
   "type": "module",
   "solid": {
     "type": "adapter"
   },
   "dependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/preset-env": "^7.20.2",
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
     "@rollup/plugin-babel": "^6.0.3",
-    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "encoding": "^0.1.13",
-    "rollup": "^3.10.0",
-    "terser": "^5.16.1"
+    "rollup": "^3.26.2",
+    "terser": "^5.19.0"
   },
   "devDependencies": {
     "solid-start": "workspace:*",

@@ -4,87 +4,91 @@ import {
   NavigateOptions,
   Navigator,
   Outlet as BaseOutlet,
+  RouteDataFunc,
   Routes as BaseRoutes,
-  useLocation as useBaseLocation,
-  useNavigate as useBaseNavigate
+  useNavigate as useBaseNavigate,
+  useRouteData as useBaseRouteData,
+  useSearchParams as useBaseSearchParams
 } from "@solidjs/router";
-import { Accessor, ComponentProps, splitProps } from "solid-js";
+import { JSX } from "solid-js";
+import IslandsA from "./islands/A";
+import { LocationEntry, useSearchParams as useIslandsSearchParams } from "./islands/router";
 import { Outlet as IslandsOutlet } from "./islands/server-router";
 
-const A = import.meta.env.START_ISLANDS_ROUTER
-  ? function IslandsA(props: ComponentProps<typeof BaseA>) {
-      const [, rest] = splitProps(props, ["state", "activeClass", "inactiveClass", "end"]);
-      const location = useLocation();
-      const isActive = () => {
-        return props.href.startsWith("#")
-          ? location.hash === props.href
-          : location.pathname === props.href;
-      };
+export type RouteParams<T extends string> = Record<T, string>;
 
-      return (
-        <a
-          link
-          {...rest}
-          state={JSON.stringify(props.state)}
-          classList={{
-            [props.inactiveClass || "inactive"]: !isActive(),
-            [props.activeClass || "active"]: isActive(),
-            ...rest.classList
-          }}
-          aria-current={isActive() ? "page" : undefined}
-        />
-      );
-    }
-  : BaseA;
+export type RouteDataArgs<T extends keyof StartRoutes = "$"> = {
+  data: StartRoutes[T]["data"];
+  params: RouteParams<StartRoutes[T]["params"]>;
+  location: Location;
+  navigate: Navigator;
+};
 
-const Routes = import.meta.env.START_ISLANDS_ROUTER
-  ? function IslandsRoutes(props: ComponentProps<any>) {
+const A = import.meta.env.START_ISLANDS_ROUTER ? IslandsA : BaseA;
+
+const Routes = /* @__PURE__ */ import.meta.env.START_ISLANDS_ROUTER
+  ? /* @__PURE__ */ function IslandsRoutes(props: { children: JSX.Element }) {
       return (
         <IslandsOutlet>
           <BaseRoutes>{props.children}</BaseRoutes>
         </IslandsOutlet>
       );
     }
-  : BaseRoutes;
+  : /* @__PURE__ */ BaseRoutes;
 
-const Outlet = import.meta.env.START_ISLANDS_ROUTER
-  ? function HybridOutlet() {
+const Outlet = /* @__PURE__ */ import.meta.env.START_ISLANDS_ROUTER
+  ? /* @__PURE__ */ function HybridOutlet() {
       return (
         <IslandsOutlet>
           <BaseOutlet />
         </IslandsOutlet>
       );
     }
-  : BaseOutlet;
-
-const useLocation =
-  import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
-    ? function IslandsUseLocation() {
-        return {
-          get pathname() {
-            let location = window.LOCATION();
-            return location.pathname;
-          },
-          get hash() {
-            let location = window.LOCATION();
-            return location.hash;
-          }
-        } as Location;
-      }
-    : useBaseLocation;
+  : /* @__PURE__ */ BaseOutlet;
 
 const useNavigate =
   import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
-    ? function IslandsUseNavigate() {
-        return ((to: string, props?: Partial<NavigateOptions<unknown>>) => window.NAVIGATE(to, props)) as unknown as Navigator;
-      }
+    ? (function IslandsUseNavigate() {
+        return (to, props: Partial<NavigateOptions> = {}) =>
+          window.router.navigate(to as string, props);
+      } as typeof useBaseNavigate)
     : useBaseNavigate;
+
+const useSearchParams =
+  /* @__PURE__ */ import.meta.env.START_ISLANDS_ROUTER && !import.meta.env.SSR
+    ? useIslandsSearchParams
+    : /* @__PURE__ */ useBaseSearchParams;
 
 declare global {
   interface Window {
-    LOCATION: Accessor<Location>;
-    NAVIGATE: Navigator;
+    router: {
+      navigate: (to: string, options?: Partial<NavigateOptions>) => Promise<boolean>;
+      push: (to: string | URL, options: Partial<NavigateOptions>) => void;
+      update: (body: string) => Promise<boolean>;
+      router: EventTarget;
+      location: () => LocationEntry;
+    };
+  }
+
+  interface StartRoutes {
+    $: {
+      params: any;
+      data: any;
+    };
+  }
+
+  interface Route {
+    "/notes/[note]": "/notes/[note]";
   }
 }
 
-export { A, Outlet, Routes, useLocation, useNavigate };
+export function useRouteData<T extends keyof StartRoutes>(): ReturnType<StartRoutes[T]["data"]>;
+export function useRouteData<T extends (...args: any[]) => any>(): T extends RouteDataFunc<infer _, infer R> ? R : ReturnType<T>;
+export function useRouteData<T extends keyof StartRoutes>(): ReturnType<StartRoutes[T]["data"]> {
+  // @ts-ignore
+  return useBaseRouteData<T>();
+}
+
+export { useLocation } from "./islands/useLocation";
+export { A, Outlet, Routes, useNavigate, useSearchParams };
+

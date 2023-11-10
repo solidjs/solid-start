@@ -2,6 +2,8 @@ coverage/
 types/
 
 .turbo
+.nitro
+.output
 
 packages/create-solid/bin
 *.log
@@ -41,3 +43,5 @@ netlify
 # miniflare cache
 .mf
 .vercel
+
+vite.config.ts.timestamp*

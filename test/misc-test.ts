@@ -61,4 +61,34 @@ test.describe("miscellaneous tests", () => {
       expect(await dataEl!.innerText()).toBe("hello");
     });
   }
+
+  test.describe("cookies", () => {
+    test.beforeAll(async () => {
+      fixture = await createFixture({
+        files: {
+          "src/routes/api/cookies.jsx": js`
+            export async function GET({ request }) {
+              const headers = new Headers();
+              headers.append('set-cookie', 'c1=1');
+              headers.append('set-cookie', 'c2=2');
+              return new Response('', { headers });
+            }
+          `
+        }
+      });
+  
+      appFixture = await fixture.createServer();
+    });
+  
+    test.afterAll(async () => {
+      await appFixture.close();
+    });
+  
+    test("should set two cookies when appending two cookies to response headers", async ({ page }) => {
+      let app = new PlaywrightFixture(appFixture, page);
+      await app.goto('/api/cookies');
+      const cookies = await page.context().cookies();
+      expect(cookies.length).toBe(2);
+    });
+  });
 });

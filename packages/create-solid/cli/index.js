@@ -13,7 +13,6 @@ import glob from "tiny-glob/sync.js";
 import yargsParser from "yargs-parser";
 import { version } from "../package.json";
 import { viaContentsApi } from "./github.js";
-
 const gitIgnore = `
 dist
 .solid
@@ -69,6 +68,8 @@ function getUserPkgManager() {
       return "yarn";
     } else if (userAgent.startsWith("pnpm")) {
       return "pnpm";
+    } else if (userAgent.startsWith("bun")) {
+      return "bun";
     } else {
       return "npm";
     }

@@ -25,7 +25,7 @@ export default function ({ edge } = {}) {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "netlify"));
         await builder.server(join(config.root, ".solid", "server"));
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(join(config.root, "netlify"));
         await builder.server(join(config.root, ".solid", "server"));
       } else {
@@ -72,7 +72,7 @@ export default function ({ edge } = {}) {
   "functions": [
     {
       "function": "index",
-      "pattern": "^[^.]*$"
+      "path": "/*"
     }
   ],
   "version": 1

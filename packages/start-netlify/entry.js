@@ -12,11 +12,28 @@ Response.redirect = function (url, status = 302) {
 export const handler = async function (event, context) {
   console.log(`Received new request: ${event.path}`);
 
+  function internalFetch(route, init = {}) {
+    if (route.startsWith("http")) {
+      return fetch(route, init);
+    }
+
+    let url = new URL(route, "http://internal");
+    const request = new Request(url.href, init);
+    return handle({
+      request,
+      clientAddress: event.headers["x-nf-client-connection-ip"],
+      locals: {},
+      env: { ...context, manifest },
+      fetch: internalFetch
+    });
+  }
+
   const webRes = await handle({
     request: createRequest(event),
     clientAddress: event.headers["x-nf-client-connection-ip"],
     locals: {},
-    env: { ...context, manifest }
+    env: { ...context, manifest },
+    fetch: internalFetch
   });
   const headers = {};
   for (const [name, value] of webRes.headers) {

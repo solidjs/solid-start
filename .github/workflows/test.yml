@@ -29,11 +29,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16, 18]
+        node-version: [18, 20]
         adapter:
           - solid-start-node
           # - solid-start-cloudflare-workers
-          - solid-start-cloudflare-pages
+          # - solid-start-cloudflare-pages
           - solid-start-deno
         os:
           - ubuntu-latest
@@ -74,7 +74,7 @@ jobs:
         id: playwright-version
         shell: bash
         run: |
-          playwright_version=1.25.2
+          playwright_version=1.38.1
           echo "::set-output name=version::${playwright_version}"
 
       - name: 🤖 Cache Playwright binaries

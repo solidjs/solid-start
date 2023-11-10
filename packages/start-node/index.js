@@ -4,12 +4,13 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import { readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { rollup } from "rollup";
+import { createAdapter } from "solid-start/vite";
 import { fileURLToPath, pathToFileURL } from "url";
 
-export default function () {
-  return {
+export default function nodeAdapter() {
+  return createAdapter({
     name: "node",
-    start(config, { port }) {
+    start: (config, { port }) => {
       process.env.PORT = port;
       import(pathToFileURL(join(config.root, "dist", "server.js")).toString());
       return `http://localhost:${process.env.PORT}`;
@@ -21,7 +22,7 @@ export default function () {
       if (!config.solidOptions.ssr) {
         await builder.spaClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
-      } else if (config.solidOptions.islands) {
+      } else if (config.solidOptions.experimental.islands) {
         await builder.islandsClient(join(config.root, "dist", "public"));
         await builder.server(join(config.root, ".solid", "server"));
       } else {
@@ -45,7 +46,7 @@ export default function () {
           }),
           common({ strictRequires: true, ...config.build.commonjsOptions })
         ],
-        external: ["undici", "stream/web", ...ssrExternal]
+        external: ["stream/web", ...ssrExternal]
       });
       // or write the bundle to disk
       await bundle.write({ format: "esm", dir: join(config.root, "dist") });
@@ -55,5 +56,5 @@ export default function () {
 
       builder.debug(`bundling server done`);
     }
-  };
+  });
 }

@@ -107,61 +107,6 @@ export function isResponse(value: any): value is Response {
 
 const redirectStatusCodes = new Set([204, 301, 302, 303, 307, 308]);
 
-export function isRedirectResponse(response: Response | any): response is Response {
+export function isRedirectResponse(response: Response | any): boolean {
   return response && response instanceof Response && redirectStatusCodes.has(response.status);
-}
-
-export class ResponseError extends Error implements Response {
-  status: number;
-  headers: Headers;
-  name = "ResponseError";
-  ok: boolean;
-  statusText: string;
-  redirected: boolean;
-  url: string;
-  constructor(response: Response) {
-    let message = JSON.stringify({
-      $type: "response",
-      status: response.status,
-      message: response.statusText,
-      headers: [...response.headers.entries()]
-    });
-    super(message);
-    this.status = response.status;
-    this.headers = new Map([...response.headers.entries()]) as any as Headers;
-    this.url = response.url;
-    this.ok = response.ok;
-    this.statusText = response.statusText;
-    this.redirected = response.redirected;
-    this.bodyUsed = false;
-    this.type = response.type;
-    this.response = () => response;
-  }
-
-  response: () => Response;
-  type: ResponseType;
-  clone(): Response {
-    return this.response();
-  }
-  get body(): ReadableStream<Uint8Array> {
-    return this.response().body!;
-  }
-  bodyUsed: boolean;
-  async arrayBuffer(): Promise<ArrayBuffer> {
-    return await this.response().arrayBuffer();
-  }
-  async blob(): Promise<Blob> {
-    return await this.response().blob();
-  }
-  async formData(): Promise<FormData> {
-    return await this.response().formData();
-  }
-
-  async text() {
-    return await this.response().text();
-  }
-
-  async json() {
-    return await this.response().json();
-  }
 }
