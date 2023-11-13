@@ -8,16 +8,16 @@
   "type": "module",
   "main": "./dist/index.js",
   "devDependencies": {
-    "@types/babel__core": "^7.20.1",
+    "@types/babel__core": "^7.20.4",
     "@types/node": "^18.17.5",
-    "esbuild": "^0.14.54",
+    "esbuild": "^0.19.5",
     "solid-start-node": "^0.3.10",
-    "typescript": "^4.9.5",
-    "vite": "^4.4.9"
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.1",
-    "@solidjs/router": "^0.8.3",
+    "@solidjs/router": "^0.9.1",
     "solid-js": "^1.8.5",
     "solid-start": "^0.3.10"
   },

@@ -14,7 +14,7 @@ export default function Root() {
       <Body>
         <ErrorBoundary>
           <A href="/">Index</A>
-          <A href="/about">About</A>
+          <A href="/docs">MDX Docs</A>
           <Suspense>
             <main>
               <Routes>
