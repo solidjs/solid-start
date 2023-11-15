@@ -1,3 +1,4 @@
+/* @refresh skip */
 import { getRequestEvent, isServer } from "solid-js/web";
 import lazyRoute from "./lazyRoute";
 

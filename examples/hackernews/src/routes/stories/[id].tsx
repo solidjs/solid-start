@@ -1,18 +1,17 @@
-import { A, RouteDataFuncArgs, useRouteData } from "@solidjs/router";
-import { Component, For, Show, createResource } from "solid-js";
+import { createAsync, type RouteDefinition } from "@solidjs/router";
+import { RouteSectionProps } from "@solidjs/router/dist/types";
+import { For, Show } from "solid-js";
 import Comment from "~/components/comment";
-import fetchAPI from "~/lib/api";
-import { IStory } from "~/types";
+import { getStory } from "~/lib/api";
 
 export const route = {
-  data(props: RouteDataFuncArgs) {
-    const [story] = createResource<IStory, string>(() => `item/${props.params.id}`, fetchAPI);
-    return story;
+  load({ params }) {
+    void getStory(params.id);
   }
-};
+} satisfies RouteDefinition;
 
-const Story: Component = () => {
-  const story = useRouteData<typeof route.data>();
+export default function Story(props: RouteSectionProps) {
+  const story = createAsync(() => getStory(props.params.id));
   return (
     <Show when={story()}>
       <div class="item-view">
@@ -24,7 +23,7 @@ const Story: Component = () => {
             <span class="host">({story()!.domain})</span>
           </Show>
           <p class="meta">
-            {story()!.points} points | by <A href={`/users/${story()!.user}`}>{story()!.user}</A>{" "}
+            {story()!.points} points | by <a href={`/users/${story()!.user}`}>{story()!.user}</a>{" "}
             {story()!.time_ago} ago
           </p>
         </div>
@@ -39,6 +38,4 @@ const Story: Component = () => {
       </div>
     </Show>
   );
-};
-
-export default Story;
+}

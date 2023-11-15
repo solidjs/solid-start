@@ -1,12 +1,12 @@
 // @refresh reload
 import { MetaProvider } from "@solidjs/meta";
-import { A, Router, Routes } from "@solidjs/router";
-import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start";
 import { Suspense } from "solid-js";
 
 import { useAssets } from "solid-js/web";
 
-import { css, renderSheets, StyleRegistry, type StyleData } from "solid-styled";
+import { StyleRegistry, css, renderSheets, type StyleData } from "solid-styled";
 
 function GlobalStyles() {
   css`
@@ -61,21 +61,21 @@ export default function App() {
   useAssets(() => renderSheets(sheets));
 
   return (
-    <MetaProvider>
-      <Router>
-        <StyleRegistry styles={sheets}>
-          <GlobalStyles />
-          <A href="/">Index</A>
-          <A href="/about">About</A>
-          <DefaultErrorBoundary>
-            <Suspense>
-              <Routes>
-                <FileRoutes />
-              </Routes>
-            </Suspense>
-          </DefaultErrorBoundary>
-        </StyleRegistry>
+    <Suspense>
+      <Router
+        root={props => (
+          <MetaProvider>
+            <StyleRegistry styles={sheets}>
+              <GlobalStyles />
+              <a href="/">Index</a>
+              <a href="/about">About</a>
+              {props.children}
+            </StyleRegistry>
+          </MetaProvider>
+        )}
+      >
+        <FileRoutes />
       </Router>
-    </MetaProvider>
+    </Suspense>
   );
 }

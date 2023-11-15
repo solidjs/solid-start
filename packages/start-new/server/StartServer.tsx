@@ -1,14 +1,15 @@
 // @ts-ignore
 import App from "#start/app";
-import { Hydration, HydrationScript, NoHydration, ssr } from "solid-js/web";
+import type { Component } from "solid-js";
+import { Hydration, HydrationScript, NoHydration, getRequestEvent, ssr } from "solid-js/web";
+import { ErrorBoundary } from "../shared/ErrorBoundary";
 import { renderAsset } from "./renderAsset";
+import type { DocumentComponentProps } from "./types";
 
 const docType = ssr("<!DOCTYPE html>");
 
-export function StartServer(props) {
-  const context = props.context;
-  const parsed = new URL(context.request.url);
-  const path = parsed.pathname + parsed.search;
+export function StartServer(props: { document: Component<DocumentComponentProps> }) {
+  const context = getRequestEvent() as any;
   return (
     <NoHydration>
       {docType as unknown as any}
@@ -31,10 +32,14 @@ export function StartServer(props) {
       >
         {!import.meta.env.START_ISLANDS ? (
           <Hydration>
-            <App />
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
           </Hydration>
         ) : (
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         )}
       </props.document>
     </NoHydration>

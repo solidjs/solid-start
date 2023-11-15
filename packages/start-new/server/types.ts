@@ -3,8 +3,8 @@ import { JSX } from "solid-js";
 export const FETCH_EVENT = "$FETCH";
 
 export type DocumentComponentProps = {
-  assets: any;
-  scripts: any;
+  assets: JSX.Element;
+  scripts: JSX.Element;
   children: JSX.Element;
 }
 

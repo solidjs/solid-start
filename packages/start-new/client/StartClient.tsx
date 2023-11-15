@@ -1,5 +1,6 @@
 // @ts-ignore
 import App from "#start/app";
+import { ErrorBoundary } from "../shared/ErrorBoundary";
 import "./mount";
 
 function Dummy(props) {
@@ -10,7 +11,9 @@ export function StartClient() {
   return (
     <Dummy>
       <Dummy>
-        <App />
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
       </Dummy>
     </Dummy>
   );
