@@ -1,8 +1,11 @@
 {
   "name": "@solidjs/start",
-  "version": "0.4.0",
+  "version": "0.4.0-alpha.0",
   "type": "module",
-  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "author": "Ryan Carniato",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "client",
     "config",

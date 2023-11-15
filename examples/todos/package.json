@@ -9,8 +9,8 @@
   "dependencies": {
     "@solidjs/meta": "^0.29.0",
     "@solidjs/router": "^0.9.0",
-    "@solidjs/start": "workspace:^",
-    "solid-js": "^1.8.4",
+    "@solidjs/start": "^0.4.0-alpha.0",
+    "solid-js": "^1.8.5",
     "vinxi": "0.0.47"
   },
   "engines": {
