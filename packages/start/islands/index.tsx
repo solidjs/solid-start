@@ -2,14 +2,13 @@ import { Component, ComponentProps, lazy, sharedConfig } from "solid-js";
 import { Hydration, NoHydration } from "solid-js/web";
 import { useRequest } from "../server/ServerContext";
 import { IslandManifest } from "../server/types";
-import { splitProps } from "./utils";
 export { default as clientOnly } from "./clientOnly";
 
 declare module "solid-js" {
   namespace JSX {
     interface IntrinsicElements {
       "solid-island": {
-        "data-props": string;
+        "data-id": string;
         "data-component": string;
         "data-island": string;
         "data-when": "idle" | "load";
@@ -45,12 +44,9 @@ export function island<T extends Component<any>>(
     );
   }
 
-  return ((compProps: ComponentProps<T>) => {
+  return ((props: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
       const context = useRequest();
-      const [, props] = splitProps(compProps, ["children"] as any);
-      const [, spreadProps] = splitProps(compProps, [] as any);
-
       let fpath: string;
       let styles: string[] = [];
       if (import.meta.env.PROD) {
@@ -64,42 +60,31 @@ export function island<T extends Component<any>>(
         fpath = path;
       }
 
-      const serialize = (props: ComponentProps<T>) => {
-        let offset = 0;
-        let el = JSON.stringify(props, (key, value) => {
-          if (value && value.t) {
-            offset++;
-            return undefined;
-          }
-          return value;
-        });
-
-        return {
-          "data-props": el,
-          "data-offset": offset
-        };
-      };
-
       // @ts-expect-error
       if (!sharedConfig.context?.noHydrate) {
-        return <Component {...compProps} />;
+        return <Component {...props} />;
       }
+      
+      // TODO
+      const islandID = sharedConfig.context.push(props)
+
+      // Replace
+      sharedConfig.context.id = islandID;
 
       return (
         <Hydration>
           <solid-island
+            data-id={islandID}
             data-component={fpath!}
             data-island={path}
             data-when={(props as any)["client:idle"] ? "idle" : "load"}
             data-css={JSON.stringify(styles)}
-            {...serialize(props)}
           >
-            <IslandComponent {...spreadProps} />
+            <IslandComponent {...props} />
           </solid-island>
         </Hydration>
       );
-    } else {
-      return <Component {...compProps} />;
     }
+    return <Component {...props} />;
   }) as T;
 }
