@@ -1,21 +1,21 @@
 // @refresh reload
-import { Routes } from "@solidjs/router";
-import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start";
 import { Suspense } from "solid-js";
 import "./app.css";
 import Nav from "./components/nav";
 
 export default function App() {
   return (
-    <>
-      <Nav />
-      <DefaultErrorBoundary>
+    <Router
+      root={props => (
         <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
-          <Routes>
-            <FileRoutes />
-          </Routes>
+          <Nav />
+          {props.children}
         </Suspense>
-      </DefaultErrorBoundary>
-    </>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }

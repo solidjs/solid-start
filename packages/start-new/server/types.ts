@@ -3,8 +3,8 @@ import { JSX } from "solid-js";
 export const FETCH_EVENT = "$FETCH";
 
 export type DocumentComponentProps = {
-  assets: any;
-  scripts: any;
+  assets: JSX.Element;
+  scripts: JSX.Element;
   children: JSX.Element;
 }
 
@@ -51,9 +51,8 @@ export interface PageEvent extends FetchEvent {
   assets: any;
   routes: any[];
   prevUrl: string | null;
-  routerContext: RouterContext;
-  tags: TagDescription[];
   $type: typeof FETCH_EVENT;
   $islands: Set<string>;
   mutation: boolean;
+  response?: Response;
 }

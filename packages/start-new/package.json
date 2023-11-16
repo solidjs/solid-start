@@ -1,8 +1,11 @@
 {
   "name": "@solidjs/start",
-  "version": "0.4.0",
+  "version": "0.4.0-alpha.0",
   "type": "module",
-  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "author": "Ryan Carniato",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "client",
     "config",
@@ -18,6 +21,7 @@
     "./server/spa": "./server/spa/index.tsx",
     "./client": "./client/index.tsx",
     "./client/islands": "./client/islands.tsx",
+    "./middleware": "./server/middleware.ts",
     "./client/spa": "./client/spa/index.tsx"
   },
   "typesVersions": {
@@ -34,16 +38,13 @@
     }
   },
   "devDependencies": {
-    "@solidjs/meta": "^0.28.5",
-    "@solidjs/router": "^0.8.3",
-    "solid-js": "^1.8.3",
-    "vinxi": "0.0.38"
+    "solid-js": "^1.8.5",
+    "vinxi": "0.0.47"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "0.0.30",
-    "@vinxi/plugin-server-functions": "0.0.30",
-    "@vinxi/plugin-server-components": "0.0.30",
-    "@vinxi/solid": "^0.0.13",
+    "@vinxi/plugin-directives": "0.0.39",
+    "@vinxi/server-functions": "0.0.39",
+    "@vinxi/server-components": "0.0.39",
     "defu": "^6.1.2",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.7.0"

@@ -1,6 +1,7 @@
 {
   "name": "solid-start-node",
-  "version": "0.3.8",
+  "version": "0.4.0-alpha.0",
+  "private": true,
   "main": "./index.js",
   "type": "module",
   "solid": {

@@ -21,7 +21,6 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 
   toRoute(src) {
     let path = this.toPath(src);
-    console.log(src);
 
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
@@ -30,7 +29,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
           src: src,
           pick: ["$css"]
         },
-        $$data: undefined,
+        $$route: undefined,
         path,
         filePath: src
       };
@@ -38,7 +37,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 
     const [_, exports] = analyzeModule(src);
     const hasDefault = exports.find(e => e.n === "default");
-    const hasRouteData = exports.find(e => e.n === "routeData");
+    const hasRouteConfig = exports.find(e => e.n === "route");
     if (hasDefault) {
       return {
         type: "page",
@@ -46,10 +45,10 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
           src: src,
           pick: ["default", "$css"]
         },
-        $$data: hasRouteData
+        $$route: hasRouteConfig
           ? {
               src: src,
-              pick: ["routeData"]
+              pick: ["route"]
             }
           : undefined,
         path,
@@ -87,14 +86,14 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
           src: src,
           pick: ["$css"]
         },
-        $$data: undefined,
+        $$route: undefined,
         path,
         filePath: src
       };
     }
 
     const [_, exports] = analyzeModule(src);
-    const hasRouteData = exports.find(e => e.n === "routeData");
+    const hasRouteConfig = exports.find(e => e.n === "route");
     if (exports.find(exp => exp.n === "default")) {
       return {
         type: "page",
@@ -102,10 +101,10 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
           src: src,
           pick: ["default", "$css"]
         },
-        $$data: hasRouteData
+        $$route: hasRouteConfig
           ? {
               src: src,
-              pick: ["routeData"]
+              pick: ["route"]
             }
           : undefined,
         path,

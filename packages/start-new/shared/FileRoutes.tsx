@@ -1,13 +1,14 @@
-import { lazyRoute } from "@vinxi/solid";
-import { useContext } from "solid-js";
+/* @refresh skip */
+import { getRequestEvent, isServer } from "solid-js/web";
+import lazyRoute from "./lazyRoute";
 
 import { pageRoutes as routeConfigs } from "./routes";
-import { ServerContext } from "./ServerContext";
 
 export function createRoutes() {
   function createRoute(route) {
     return {
       ...route,
+      ...(route.$$route ? route.$$route.require().route : undefined),
       component: lazyRoute(
         route.$component,
         import.meta.env.START_ISLANDS
@@ -15,7 +16,6 @@ export function createRoutes() {
           : import.meta.env.MANIFEST["client"],
         import.meta.env.MANIFEST["ssr"]
       ),
-      data: route.$$data ? route.$$data.require().routeData : undefined,
       children: route.children ? route.children.map(createRoute) : undefined
     };
   }
@@ -23,7 +23,7 @@ export function createRoutes() {
   return routes;
 }
 
+let routes;
 export const FileRoutes = () => {
-  const context = useContext(ServerContext);
-  return context.routes as any;
+  return isServer ? getRequestEvent().routes : (routes || (routes = createRoutes()));
 };

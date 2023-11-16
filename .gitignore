@@ -4,6 +4,7 @@ types/
 .turbo
 .nitro
 .output
+.vinxi
 
 packages/create-solid/bin
 *.log

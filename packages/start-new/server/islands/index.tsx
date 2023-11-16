@@ -1,8 +1,6 @@
 import { Component, ComponentProps, lazy, sharedConfig } from "solid-js";
-import { Hydration, NoHydration } from "solid-js/web";
-// import { useRequest } from "../server/ServerContext";
+import { getRequestEvent, Hydration, NoHydration } from "solid-js/web";
 // import { IslandManifest } from "./types";
-import { useRequest } from "../../shared/ServerContext";
 import { splitProps } from "./utils";
 
 declare module "solid-js" {
@@ -47,7 +45,7 @@ export function createIslandReference<T extends Component<any>>(
 
   return ((compProps: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
-      const context = useRequest();
+      const context = getRequestEvent();
       const [, props] = splitProps(compProps, ["children"] as any);
       const [, spreadProps] = splitProps(compProps, [] as any);
 

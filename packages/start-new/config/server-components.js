@@ -4,11 +4,13 @@ import {
   shimExportsPlugin,
   wrapExportsPlugin
 } from "@vinxi/plugin-directives";
-import { client as clientComponents } from "@vinxi/plugin-server-components/client";
-import { SERVER_REFERENCES_MANIFEST } from "@vinxi/plugin-server-components/constants";
-import { buildServerComponents } from "@vinxi/plugin-server-components/server";
+import { client as clientComponents } from "@vinxi/server-components/client";
+import { SERVER_REFERENCES_MANIFEST } from "@vinxi/server-components/constants";
+import { buildServerComponents } from "@vinxi/server-components/server";
 import { fileURLToPath } from "node:url";
 import { chunkify } from "vinxi/lib/chunks";
+import { normalize } from "vinxi/lib/path";
+
 function client() {
   return clientComponents({
     server: "ssr",
@@ -18,7 +20,7 @@ function client() {
 }
 
 function server() {
-  const runtime = fileURLToPath(new URL("./server-runtime.jsx", import.meta.url));
+  const runtime = normalize(fileURLToPath(new URL("./server-runtime.jsx", import.meta.url)));
   // export function serverComponents({
   // 	resolve = {
   // 		conditions: ["react-server"],
@@ -85,7 +87,7 @@ function server() {
     }),
     buildServerComponents({
       resolve: {
-        conditions: []
+        conditions: ["solid"]
       },
       transpileDeps: [],
       manifest: SERVER_REFERENCES_MANIFEST,

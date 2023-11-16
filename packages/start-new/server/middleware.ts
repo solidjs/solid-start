@@ -15,6 +15,8 @@ import {
 } from "vinxi/server";
 import { FetchEvent } from "./types";
 
+export * from "vinxi/server";
+
 const h3EventSymbol = Symbol("h3Event");
 const fetchEventSymbol = Symbol("fetchEvent");
 
