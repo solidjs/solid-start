@@ -6,18 +6,16 @@ import "./app.css";
 
 export default function App() {
   return (
-    <Suspense>
-      <Router
-        root={props => (
-          <main>
-            <a href="/">Index</a>
-            <a href="/about">About</a>
-            {props.children}
-          </main>
-        )}
-      >
-        <FileRoutes />
-      </Router>
-    </Suspense>
+    <Router
+      root={props => (
+        <main>
+          <a href="/">Index</a>
+          <a href="/about">About</a>
+          <Suspense>{props.children}</Suspense>
+        </main>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }
