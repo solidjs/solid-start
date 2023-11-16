@@ -13,7 +13,7 @@
     "esbuild": "^0.14.54",
     "solid-start-node": "^0.3.10",
     "typescript": "^4.9.5",
-    "vite": "^4.4.9"
+    "vite": "^5.0.0"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.1",

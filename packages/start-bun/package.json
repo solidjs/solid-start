@@ -15,7 +15,7 @@
   "devDependencies": {
     "bun-types": "^1.0.1",
     "solid-start": "workspace:*",
-    "vite": "^4.4.6"
+    "vite": "^5.0.0"
   },
   "peerDependencies": {
     "solid-start": "*",
