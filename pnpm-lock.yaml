@@ -28,8 +28,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.10.0-beta.0
-        version: 0.10.0-beta.0(solid-js@1.8.5)
+        specifier: ^0.10.0-beta.1
+        version: 0.10.0-beta.1(solid-js@1.8.5)
       '@solidjs/start':
         specifier: workspace:*
         version: link:packages/start-new
@@ -504,8 +504,8 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.10.0-beta.0
-        version: 0.10.0-beta.0(solid-js@1.8.5)
+        specifier: ^0.10.0-beta.1
+        version: 0.10.0-beta.1(solid-js@1.8.5)
       '@solidjs/start':
         specifier: ^0.4.0-alpha.0
         version: link:../../packages/start-new
@@ -522,8 +522,8 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.10.0-beta.0
-        version: 0.10.0-beta.0(solid-js@1.8.5)
+        specifier: ^0.10.0-beta.1
+        version: 0.10.0-beta.1(solid-js@1.8.5)
       '@solidjs/start':
         specifier: ^0.4.0-alpha.0
         version: link:../../packages/start-new
@@ -537,8 +537,8 @@ importers:
   examples/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.0-beta.0
-        version: 0.10.0-beta.0(solid-js@1.8.5)
+        specifier: ^0.10.0-beta.1
+        version: 0.10.0-beta.1(solid-js@1.8.5)
       '@solidjs/start':
         specifier: ^0.4.0-alpha.0
         version: link:../../packages/start-new
@@ -555,8 +555,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       '@solidjs/router':
-        specifier: ^0.10.0-beta.0
-        version: 0.10.0-beta.0(solid-js@1.8.5)
+        specifier: ^0.10.0-beta.1
+        version: 0.10.0-beta.1(solid-js@1.8.5)
       '@solidjs/start':
         specifier: ^0.4.0-alpha.0
         version: link:../../packages/start-new
@@ -579,8 +579,8 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1(solid-js@1.8.5)
       '@solidjs/router':
-        specifier: ^0.10.0-beta.0
-        version: 0.10.0-beta.0(solid-js@1.8.5)
+        specifier: ^0.10.0-beta.1
+        version: 0.10.0-beta.1(solid-js@1.8.5)
       '@solidjs/start':
         specifier: ^0.4.0-alpha.0
         version: link:../../packages/start-new
@@ -600,8 +600,8 @@ importers:
   examples/with-tailwindcss:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.0-beta.0
-        version: 0.10.0-beta.0(solid-js@1.8.5)
+        specifier: ^0.10.0-beta.1
+        version: 0.10.0-beta.1(solid-js@1.8.5)
       '@solidjs/start':
         specifier: ^0.4.0-alpha.0
         version: link:../../packages/start-new
@@ -5089,8 +5089,8 @@ packages:
     dependencies:
       solid-js: 1.8.5
 
-  /@solidjs/router@0.10.0-beta.0(solid-js@1.8.5):
-    resolution: {integrity: sha512-vWdoQd+VQqb/UVvH+IbNZvh6B7RC7DmWnKqHFe1uKBC6+swG+bdVIE0QfJWZh0WIRCYAHufVZvSY/EtGfQNgpA==}
+  /@solidjs/router@0.10.0-beta.1(solid-js@1.8.5):
+    resolution: {integrity: sha512-rsx+VGatJgwjuoiMhoLfwCYxnui4YOKtH4/5XHm1FdRUHC+1EU6uiU5S42uy/I8Xr8VWSa6hOW/oPie5sBIsNw==}
     peerDependencies:
       solid-js: ^1.8.4
     dependencies:
