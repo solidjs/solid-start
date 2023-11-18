@@ -61,21 +61,19 @@ export default function App() {
   useAssets(() => renderSheets(sheets));
 
   return (
-    <Suspense>
-      <Router
-        root={props => (
-          <MetaProvider>
-            <StyleRegistry styles={sheets}>
-              <GlobalStyles />
-              <a href="/">Index</a>
-              <a href="/about">About</a>
-              {props.children}
-            </StyleRegistry>
-          </MetaProvider>
-        )}
-      >
-        <FileRoutes />
-      </Router>
-    </Suspense>
+    <Router
+      root={props => (
+        <MetaProvider>
+          <StyleRegistry styles={sheets}>
+            <GlobalStyles />
+            <a href="/">Index</a>
+            <a href="/about">About</a>
+            <Suspense>{props.children}</Suspense>
+          </StyleRegistry>
+        </MetaProvider>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }

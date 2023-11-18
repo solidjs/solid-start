@@ -1,5 +1,4 @@
-import { createAsync, type RouteDefinition } from "@solidjs/router";
-import { RouteSectionProps } from "@solidjs/router/dist/types";
+import { createAsync, type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
 import { Show } from "solid-js";
 import { getUser } from "~/lib/api";
 

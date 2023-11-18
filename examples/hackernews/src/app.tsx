@@ -9,10 +9,12 @@ export default function App() {
   return (
     <Router
       root={props => (
-        <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
+        <>
           <Nav />
-          {props.children}
-        </Suspense>
+          <Suspense fallback={<div class="news-list-nav">Loading...</div>}>
+            {props.children}
+          </Suspense>
+        </>
       )}
     >
       <FileRoutes />

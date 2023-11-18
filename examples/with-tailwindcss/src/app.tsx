@@ -7,10 +7,15 @@ import "./app.css";
 
 export default function App() {
   return (
-    <Suspense>
-      <Router root={Nav}>
-        <FileRoutes />
-      </Router>
-    </Suspense>
+    <Router
+      root={props => (
+        <>
+          <Nav />
+          <Suspense>{props.children}</Suspense>
+        </>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }

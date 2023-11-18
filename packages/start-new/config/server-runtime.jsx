@@ -1,7 +1,6 @@
 import { createIslandReference } from "../server/islands";
 
 async function fetchServerAction(base, id, args) {
-  console.log("fetching serevr action");
   const response = await fetch(base, {
     method: "POST",
     headers: {

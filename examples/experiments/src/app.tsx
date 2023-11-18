@@ -8,21 +8,19 @@ import Provider from "./components/Provider";
 
 export default function App() {
   return (
-    <Suspense>
-      <Router
-        root={props => (
-          <MetaProvider>
-            <Provider initialCount={10}>
-              <Title>SolidStart - Bare</Title>
-              <a href="/">Index</a>
-              <a href="/about">About</a>
-              {props.children}
-            </Provider>
-          </MetaProvider>
-        )}
-      >
-        <FileRoutes />
-      </Router>
-    </Suspense>
+    <Router
+      root={props => (
+        <MetaProvider>
+          <Provider initialCount={10}>
+            <Title>SolidStart - Bare</Title>
+            <a href="/">Index</a>
+            <a href="/about">About</a>
+            <Suspense>{props.children}</Suspense>
+          </Provider>
+        </MetaProvider>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }
