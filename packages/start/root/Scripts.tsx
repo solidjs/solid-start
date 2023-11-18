@@ -17,6 +17,7 @@ function IslandsScript() {
 }
 
 function DevScripts() {
+  const BASE_URL = import.meta.env.BASE_URL;
   return (
     isDev && (
       <>
@@ -24,11 +25,11 @@ function DevScripts() {
         <NoHydration>
           {isServer && (
             <>
-              <script type="module" src="/@vite/client" $ServerOnly></script>
+              <script type="module" src={BASE_URL + "@vite/client"} $ServerOnly></script>
               <script
                 type="module"
                 async
-                src={"/@fs/" + import.meta.env.START_ENTRY_CLIENT}
+                src={BASE_URL + "@fs/" + import.meta.env.START_ENTRY_CLIENT}
                 $ServerOnly
               ></script>
             </>
