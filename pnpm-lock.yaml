@@ -879,6 +879,9 @@ importers:
       defu:
         specifier: ^6.1.2
         version: 6.1.2
+      seroval:
+        specifier: ^0.13.0
+        version: 0.13.0
       vite-plugin-inspect:
         specifier: ^0.7.33
         version: 0.7.33(rollup@3.28.1)(vite@4.5.0)
@@ -11463,6 +11466,11 @@ packages:
   /seroval@0.12.0:
     resolution: {integrity: sha512-5qvk9WRORhvOdHVtDv6KEKrTDbG8O9nODDdETfQcJ0u9iaZJ6mAASg/nQgPzqtuV9cqln9msE7WNmD+sJomrIw==}
     engines: {node: '>=10'}
+
+  /seroval@0.13.0:
+    resolution: {integrity: sha512-V1qVsFpYYwKn3sF6Tnq1JcbenFrUzyAxQNzMVkK7l5++adNzsaKxzOeufWbHXP0FLVyXzBcICE41Dy9K2sh5sA==}
+    engines: {node: '>=10'}
+    dev: false
 
   /serve-placeholder@2.0.1:
     resolution: {integrity: sha512-rUzLlXk4uPFnbEaIz3SW8VISTxMuONas88nYWjAWaM2W9VDbt9tyFOr3lq8RhVOFrT3XISoBw8vni5una8qMnQ==}

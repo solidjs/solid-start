@@ -1,3 +1,4 @@
+import { fromCrossJSON, toJSONAsync } from "seroval";
 import { createIslandReference } from "../server/islands";
 
 async function fetchServerAction(base, id, args) {
@@ -8,17 +9,29 @@ async function fetchServerAction(base, id, args) {
       "Content-Type": "application/json",
       "server-action": id
     },
-    body: JSON.stringify(args)
+    body: JSON.stringify(await toJSONAsync(args)),
   });
 
-  const json = await response.json();
+  const refs = new Map();
+  const decoder = new TextDecoder();
 
-  if (response.status === 200) {
-    return json;
-  } else {
-    console.log(json);
-    throw { message: json.error };
+  const reader = response.body.getReader();
+
+  async function pop() {
+    const bytes = await reader.read();
+    if (bytes.done) {
+      return undefined;
+    }
+    // The rest are parsed non-blockingly
+    pop();
+    const serialized = decoder.decode(bytes.value);
+    const parsed = JSON.parse(serialized);
+    return fromCrossJSON(parsed, {
+      refs,
+    });
   }
+
+  return pop();
 }
 
 export function createServerReference(fn, id, name) {
