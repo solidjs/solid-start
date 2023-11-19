@@ -112,6 +112,7 @@
     "rollup-plugin-visualizer": "^5.9.2",
     "rollup-route-manifest": "^1.0.0",
     "sade": "^1.8.1",
+    "seroval": "^0.13.0",
     "set-cookie-parser": "^2.6.0",
     "sirv": "^2.0.3",
     "terser": "^5.19.0",
