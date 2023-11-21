@@ -1,94 +1,129 @@
-import { Middleware as ServerMiddleware } from "../entry-server/StartServer";
-import { ContentTypeHeader, XSolidStartContentTypeHeader, XSolidStartOrigin } from "./responses";
-import { handleServerRequest, server$ } from "./server-functions/server";
-import { FetchEvent, FETCH_EVENT } from "./types";
+import {
+  appendResponseHeader,
+  defineMiddleware,
+  EventHandlerRequest,
+  getRequestIP,
+  getResponseHeader,
+  getResponseStatus,
+  H3Event,
+  removeResponseHeader,
+  sendRedirect,
+  sendWebResponse,
+  setResponseHeader,
+  setResponseStatus,
+  toWebRequest
+} from "vinxi/server";
+import { FetchEvent } from "./types";
 
-export const inlineServerFunctions: ServerMiddleware = ({ forward }) => {
-  return async (event: FetchEvent) => {
-    const url = new URL(event.request.url);
+export * from "vinxi/server";
 
-    if (server$.hasHandler(url.pathname)) {
-      let contentType = event.request.headers.get(ContentTypeHeader);
-      let origin = event.request.headers.get(XSolidStartOrigin);
+const h3EventSymbol = Symbol("h3Event");
+const fetchEventSymbol = Symbol("fetchEvent");
 
-      let formRequestBody;
-      if (
-        contentType != null &&
-        contentType.includes("form") &&
-        !(origin != null && origin.includes("client"))
-      ) {
-        let [read1, read2] = event.request.body!.tee();
-        formRequestBody = new Request(event.request.url, {
-          body: read2,
-          headers: event.request.headers,
-          method: event.request.method,
-          duplex: "half"
-        });
-        event.request = new Request(event.request.url, {
-          body: read1,
-          headers: event.request.headers,
-          method: event.request.method,
-          duplex: "half"
-        });
-      }
-
-      let serverFunctionEvent = Object.freeze({
-        request: event.request,
-        clientAddress: event.clientAddress,
-        locals: event.locals,
-        fetch: event.fetch,
-        $type: FETCH_EVENT,
-        env: event.env
-      });
-
-      const serverResponse = await handleServerRequest(serverFunctionEvent);
-
-      if (serverResponse) {
-        let responseContentType = serverResponse.headers.get(XSolidStartContentTypeHeader);
-
-        // when a form POST action is made and there is an error throw,
-        // and its a non-javascript request potentially,
-        // we redirect to the referrer with the form state and error serialized
-        // in the url params for the redicted location
-        if (
-          formRequestBody &&
-          responseContentType !== null &&
-          responseContentType.includes("error")
-        ) {
-          const formData = await formRequestBody.formData();
-          let entries = [...formData.entries()];
-          return new Response(null, {
-            status: 302,
-            headers: {
-              Location:
-                new URL(event.request.headers.get("referer")!).pathname +
-                "?form=" +
-                encodeURIComponent(
-                  JSON.stringify({
-                    url: url.pathname,
-                    entries: entries,
-                    ...(await serverResponse.json())
-                  })
-                )
-            }
-          });
-        }
-
-        if (import.meta.env.START_ISLANDS && serverResponse.status === 204) {
-          return await event.fetch(serverResponse.headers.get("Location") ?? "", {
-            method: "GET",
-            headers: {
-              "x-solid-referrer": event.request.headers.get("x-solid-referrer")!,
-              "x-solid-mutation": event.request.headers.get("x-solid-mutation")!
-            }
-          });
-        }
-        return serverResponse as Response;
-      }
-    }
-
-    const response = await forward(event);
-
-    return response;
+export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
+  return {
+    request: toWebRequest(event),
+    clientAddress: getRequestIP(event),
+    locals: {},
+    redirect: (url, status) => sendRedirect(event, url, status),
+    getResponseStatus: () => getResponseStatus(event),
+    setResponseStatus: (code, text) => setResponseStatus(event, code, text),
+    getResponseHeader: name => getResponseHeader(event, name),
+    setResponseHeader: (name, value) => setResponseHeader(event, name, value),
+    appendResponseHeader: (name, value) => appendResponseHeader(event, name, value),
+    removeResponseHeader: name => removeResponseHeader(event, name),
+    // @ts-ignore
+    [h3EventSymbol]: event
   };
-};
+}
+
+export function getH3Event(fetchEvent: FetchEvent): H3Event<EventHandlerRequest> {
+  // @ts-ignore
+  return fetchEvent[h3EventSymbol];
+}
+
+export function getFetchEvent(h3Event: H3Event): FetchEvent {
+  if (!h3Event[fetchEventSymbol]) {
+    const fetchEvent = createFetchEvent(h3Event);
+    h3Event[fetchEventSymbol] = fetchEvent;
+    // @ts-ignore
+  }
+
+  return h3Event[fetchEventSymbol];
+}
+
+export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
+/** Input parameters for to an Exchange factory function. */
+
+export interface MiddlewareInput {
+  forward: MiddlewareFn;
+}
+/** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
+
+export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
+/** This composes an array of Exchanges into a single ExchangeIO function */
+
+export const composeMiddleware =
+  (exchanges: Middleware[]) =>
+  ({ forward }: MiddlewareInput) =>
+    exchanges.reduceRight(
+      (forward, exchange) =>
+        exchange({
+          forward
+        }),
+      forward
+    );
+
+type RequestMiddleware = (event: FetchEvent) => Response | Promise<Response> | void | Promise<void>;
+
+type ResponseMiddleware = (
+  event: FetchEvent,
+  response: Response
+) => Response | Promise<Response> | void | Promise<void>;
+
+function wrapRequestMiddleware(onRequest: RequestMiddleware) {
+  return async (h3Event: H3Event) => {
+    const fetchEvent = getFetchEvent(h3Event);
+    const response = await onRequest(fetchEvent);
+    if (!response) {
+      return;
+    } else {
+      sendWebResponse(h3Event, response);
+    }
+  };
+}
+
+function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware) {
+  return async (h3Event: H3Event, response: Response) => {
+    const fetchEvent = getFetchEvent(h3Event);
+    const mwResponse = await onBeforeResponse(fetchEvent, response);
+    if (!mwResponse) {
+      return;
+    } else {
+      sendWebResponse(h3Event, mwResponse);
+    }
+  };
+}
+
+export function createMiddleware({
+  onRequest,
+  onBeforeResponse
+}: {
+  onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
+  onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
+}) {
+  return defineMiddleware({
+    onRequest:
+      typeof onRequest === "function"
+        ? wrapRequestMiddleware(onRequest)
+        : Array.isArray(onRequest)
+        ? onRequest.map(wrapRequestMiddleware)
+        : undefined,
+    onBeforeResponse:
+      typeof onBeforeResponse === "function"
+        ? wrapResponseMiddleware(onBeforeResponse)
+        : Array.isArray(onBeforeResponse)
+        ? onBeforeResponse.map(wrapResponseMiddleware)
+        : undefined
+  });
+}

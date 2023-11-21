@@ -8,9 +8,12 @@
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"allowJs": true,
-		"checkJs": true,
+		"strict": true,
 		"noEmit": true,
 		"types": ["vinxi/client"],
-		"isolatedModules": true
+		"isolatedModules": true,
+		"paths": {
+      "~/*": ["./src/*"]
+    }
 	}
 }

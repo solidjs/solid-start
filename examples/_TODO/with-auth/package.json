@@ -1,5 +1,5 @@
 {
-  "name": "example-with-auth",
+  "name": "example-with-auth-old",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
