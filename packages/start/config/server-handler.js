@@ -1,5 +1,5 @@
 /// <reference types="vinxi/types/server" />
-import { crossSerializeStream } from "seroval";
+import { crossSerializeStream, fromJSON } from "seroval";
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
 import { eventHandler } from "vinxi/server";
@@ -15,7 +15,7 @@ function serializeToStream(id, value) {
                 ? `($R["${id}"]=[],${data})`
                 : data;
             controller.enqueue(
-                new TextEncoder().encode(`${result}\n`),
+                new TextEncoder().encode(`${result};\n`),
             );
         },
         onDone() {
@@ -51,14 +51,15 @@ export async function handleServerAction(event) {
             });
         });
         const { instance, args } = JSON.parse(text);
-        const fetchEvent = getFetchEvent(event);
+        const parsed = fromJSON(args);
+        let result = provideRequestEvent(getFetchEvent(event), () => action.apply(null, parsed));
         try {
-            const result = await provideRequestEvent(fetchEvent, () => action.apply(null, args));
+            result = await result;
             event.node.res.setHeader("Content-Type", "text/javascript");
             event.node.res.setHeader("Router", "server-fns");
             return serializeToStream(instance, result);
         } catch (x) {
-            return new Response(serializeToStream(x), {
+            return new Response(serializeToStream(instance, x), {
                 status: 500,
                 headers: {
                     "Content-Type": "text/javascript",
