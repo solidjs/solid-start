@@ -1,42 +1,8 @@
 "use server";
+import { redirect } from "@solidjs/router";
 import { getH3Event, useSession } from "@solidjs/start/server";
 import { getRequestEvent } from "solid-js/web";
 import { db } from "./db";
-
-function redirect(url: string, init: number | ResponseInit = 302): Response {
-  let responseInit = init;
-  if (typeof responseInit === "number") {
-    responseInit = { status: responseInit };
-  } else if (typeof responseInit.status === "undefined") {
-    responseInit.status = 302;
-  }
-
-  if (url === "") {
-    url = "/";
-  }
-
-  if (process.env.NODE_ENV === "development") {
-    if (url.startsWith(".")) {
-      throw new Error("Relative URLs are not allowed in redirect");
-    }
-  }
-
-  let headers = new Headers(responseInit.headers);
-  headers.set("Location", url);
-
-  const response = new Response(null, {
-    ...responseInit,
-    headers: headers
-  });
-
-  return response;
-}
-
-type User = {
-  id: number;
-  username: string;
-  password: string;
-};
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
