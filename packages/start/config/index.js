@@ -148,6 +148,7 @@ export function defineConfig(baseConfig = {}) {
       //   plugins: () => [serverserver(), ...(overrides?.plugins?.() ?? [])],
       // },
       serverFunctions.router({
+        handler: normalize(fileURLToPath(new URL("./server-handler.js", import.meta.url))),
         plugins: () => [
           config("user", userConfig),
           ...plugins,

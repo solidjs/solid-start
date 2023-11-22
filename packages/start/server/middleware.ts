@@ -52,27 +52,10 @@ export function getFetchEvent(h3Event: H3Event): FetchEvent {
   return h3Event[fetchEventSymbol];
 }
 
-export type Middleware = (input: MiddlewareInput) => MiddlewareFn;
-/** Input parameters for to an Exchange factory function. */
-
-export interface MiddlewareInput {
-  forward: MiddlewareFn;
-}
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
 
 export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
 /** This composes an array of Exchanges into a single ExchangeIO function */
-
-export const composeMiddleware =
-  (exchanges: Middleware[]) =>
-  ({ forward }: MiddlewareInput) =>
-    exchanges.reduceRight(
-      (forward, exchange) =>
-        exchange({
-          forward
-        }),
-      forward
-    );
 
 type RequestMiddleware = (event: FetchEvent) => Response | Promise<Response> | void | Promise<void>;
 
