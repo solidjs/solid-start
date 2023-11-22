@@ -46,7 +46,7 @@ async function fetchServerAction(base, id, args) {
       "server-action": id
     },
     body: JSON.stringify({
-      instance: `${INSTANCE++}:${id}`,
+      instance: `server-action:${INSTANCE++}`,
       args: await toJSONAsync(args),
     }),
   });
