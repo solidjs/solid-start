@@ -46,7 +46,7 @@
     "@vinxi/server-components": "0.0.39",
     "@vinxi/server-functions": "0.0.39",
     "defu": "^6.1.2",
-    "seroval": "^0.13.2",
+    "seroval": "^0.14.1",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.7.0"
   }

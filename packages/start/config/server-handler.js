@@ -19,9 +19,11 @@ function serializeToStream(id, value) {
             );
         },
         onDone() {
+            // controller.enqueue(`delete $R["${id}"];\n`);
             controller.close();
         },
         onError(error) {
+            // controller.enqueue(`delete $R["${id}"];\n`);
             controller.error(error);
         },
       });
