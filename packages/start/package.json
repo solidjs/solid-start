@@ -38,7 +38,7 @@
     }
   },
   "devDependencies": {
-    "solid-js": "^1.8.5",
+    "solid-js": "^1.8.6",
     "vinxi": "0.0.47"
   },
   "dependencies": {
