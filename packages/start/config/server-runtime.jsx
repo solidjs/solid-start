@@ -1,4 +1,41 @@
+import { deserialize, toJSONAsync } from "seroval";
 import { createIslandReference } from "../server/islands";
+
+async function deserializeStream(response) {
+  if (!response.body) {
+    throw new Error('missing body');
+  }
+  const reader = response.body.getReader();
+
+  async function pop() {
+    const result = await reader.read();
+    if (!result.done) {
+      const serialized = new TextDecoder().decode(result.value);
+      const splits = serialized.split('\n');
+      for (const split of splits) {
+        if (split !== '') {
+          deserialize(split);
+        }
+      }
+      await pop();
+    }
+  }
+
+  const result = await reader.read();
+  if (result.done) {
+    throw new Error('Unexpected end of body');
+  }
+  const serialized = new TextDecoder().decode(result.value);
+  const revived = deserialize(serialized);
+
+  pop().catch(() => {
+    // no-op
+  });
+
+  return revived;
+}
+
+let INSTANCE = 0;
 
 async function fetchServerAction(base, id, args) {
   const response = await fetch(base, {
@@ -8,17 +45,15 @@ async function fetchServerAction(base, id, args) {
       "Content-Type": "application/json",
       "server-action": id
     },
-    body: JSON.stringify(args)
+    body: JSON.stringify({
+      instance: `${INSTANCE++}:${id}`,
+      args: await toJSONAsync(args),
+    }),
   });
-
-  const json = await response.json();
-
-  if (response.status === 200) {
-    return json;
-  } else {
-    console.log(json);
-    throw { message: json.error };
+  if (response.ok) {
+    return deserializeStream(response);
   }
+  throw deserializeStream(response);
 }
 
 export function createServerReference(fn, id, name) {
