@@ -1,7 +1,7 @@
 import { deserialize, toJSONAsync } from "seroval";
 import { createIslandReference } from "../server/islands";
 
-async function deserializeStream(response) {
+async function deserializeStream(id, response) {
   if (!response.body) {
     throw new Error('missing body');
   }
@@ -28,7 +28,9 @@ async function deserializeStream(response) {
   const serialized = new TextDecoder().decode(result.value);
   const revived = deserialize(serialized);
 
-  pop().catch(() => {
+  pop().then(() => {
+    delete self.$R[id];
+  }, () => {
     // no-op
   });
 
@@ -38,6 +40,7 @@ async function deserializeStream(response) {
 let INSTANCE = 0;
 
 async function fetchServerAction(base, id, args) {
+  const instance = `server-action:${INSTANCE++}`;
   const response = await fetch(base, {
     method: "POST",
     headers: {
@@ -46,14 +49,15 @@ async function fetchServerAction(base, id, args) {
       "server-action": id
     },
     body: JSON.stringify({
-      instance: `server-action:${INSTANCE++}`,
+      instance,
       args: await toJSONAsync(args),
     }),
   });
+  const result = deserializeStream(instance, response);
   if (response.ok) {
-    return deserializeStream(response);
+    return result;
   }
-  throw deserializeStream(response);
+  throw result;
 }
 
 export function createServerReference(fn, id, name) {
