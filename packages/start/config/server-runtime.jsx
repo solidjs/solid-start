@@ -39,14 +39,14 @@ async function deserializeStream(id, response) {
 
 let INSTANCE = 0;
 
-async function fetchServerAction(base, id, args) {
-  const instance = `server-action:${INSTANCE++}`;
+async function fetchServerFunction(base, id, args) {
+  const instance = `server-fn:${INSTANCE++}`;
   const response = await fetch(base, {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "server-action": id
+      "server-fn": id
     },
     body: JSON.stringify({
       instance,
@@ -68,7 +68,7 @@ export function createServerReference(fn, id, name) {
       }
     },
     apply(target, thisArg, args) {
-      return fetchServerAction("/_server", `${id}#${name}`, args);
+      return fetchServerFunction("/_server", `${id}#${name}`, args);
     }
   });
 }

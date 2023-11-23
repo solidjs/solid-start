@@ -31,12 +31,12 @@ function serializeToStream(id, value) {
   });
 }
 
-export async function handleServerAction(event) {
+async function handleServerFunction(event) {
     invariant(event.method === "POST", "Invalid method");
 
-    const serverReference = event.node.req.headers["server-action"];
+    const serverReference = event.node.req.headers["server-fn"];
     if (serverReference) {
-        invariant(typeof serverReference === "string", "Invalid server action");
+        invariant(typeof serverReference === "string", "Invalid server function");
         const [filepath, name] = serverReference.split("#");
         const action = (
             await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[
@@ -74,4 +74,4 @@ export async function handleServerAction(event) {
     }
 }
 
-export default eventHandler(handleServerAction);
+export default eventHandler(handleServerFunction);
