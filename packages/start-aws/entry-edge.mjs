@@ -32,8 +32,8 @@ export async function handler(event) {
     responseHeaders[name] = [
       {
         key: name,
-        value: value,
-      },
+        value: value
+      }
     ];
   }
 
@@ -41,7 +41,7 @@ export async function handler(event) {
     status: response.status,
     statusDescription: "OK",
     headers: responseHeaders,
-    body: await response.text(),
+    body: await response.text()
   };
 }
 
@@ -49,19 +49,19 @@ function createRequest(event) {
   const record = event.Records[0].cf;
 
   // Build URL
-  const url = new URL(
-    record.request.uri,
-    `https://${record.config.distributionDomainName}`
-  );
+  const base = record.request.origin?.custom.domainName
+    ? `${record.request.origin.custom.protocol}://${record.request.origin.custom.domainName}`
+    : `https://${record.config.distributionDomainName}`;
+  const url = new URL(record.request.uri, base);
 
   // Build headers
   const headers = new Headers();
   for (const [key, value] of Object.entries(record.request.headers)) {
-    headers.append(key, value[0]);
+    headers.append(key, value[0].value);
   }
 
   return new Request(url, {
     method: record.request.method,
-    headers,
+    headers
   });
 }
