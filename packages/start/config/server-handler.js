@@ -1,8 +1,35 @@
 /// <reference types="vinxi/types/server" />
+import { crossSerializeStream, fromJSON } from "seroval";
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
 import { eventHandler } from "vinxi/server";
 import { getFetchEvent } from "../server/middleware";
+
+function serializeToStream(id, value) {
+  return new ReadableStream({
+    start(controller) {
+      crossSerializeStream(value, {
+        scopeId: id,
+        onSerialize(data, initial) {
+            const result = initial
+                ? `($R["${id}"]=[],${data})`
+                : data;
+            controller.enqueue(
+                new TextEncoder().encode(`${result};\n`),
+            );
+        },
+        onDone() {
+            // controller.enqueue(`delete $R["${id}"];\n`);
+            controller.close();
+        },
+        onError(error) {
+            // controller.enqueue(`delete $R["${id}"];\n`);
+            controller.error(error);
+        },
+      });
+    },
+  });
+}
 
 export async function handleServerAction(event) {
     invariant(event.method === "POST", "Invalid method");
@@ -25,20 +52,19 @@ export async function handleServerAction(event) {
                 resolve(requestBody.join(""));
             });
         });
-        const json = JSON.parse(text);
-        const result = provideRequestEvent(getFetchEvent(event), () => action.apply(null, json));
+        const { instance, args } = JSON.parse(text);
+        const parsed = fromJSON(args);
+        let result = provideRequestEvent(getFetchEvent(event), () => action.apply(null, parsed));
         try {
-            const response = await result;
-            event.node.res.setHeader("Content-Type", "application/json");
+            result = await result;
+            event.node.res.setHeader("Content-Type", "text/javascript");
             event.node.res.setHeader("Router", "server-fns");
-
-            return JSON.stringify(response ?? null);
+            return serializeToStream(instance, result);
         } catch (x) {
-            console.error(x);
-            return new Response(JSON.stringify({ error: x.message }), {
+            return new Response(serializeToStream(instance, x), {
                 status: 500,
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "text/javascript",
                     "x-server-function": "error",
                 },
             });
