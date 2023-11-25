@@ -100,7 +100,7 @@ async function main() {
     directory: args.example_dir ? args.example_dir : "examples",
     repository: args.repo ? args.repo.split("/")[1] : "solid-start",
     user: args.repo ? args.repo.split("/")[0] : "solidjs",
-    ref: args.branch ? args.branch : "main"
+    ref: args.branch ? args.branch : "vinxi"
   };
 
   let templates = {};

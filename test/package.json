@@ -24,10 +24,8 @@
     "polka": "1.0.0-next.22",
     "prettier": "^2.8.8",
     "sirv": "^2.0.3",
-    "solid-start": "workspace:*",
-    "solid-start-node": "workspace:*",
+    "@solidjs/start": "workspace:*",
     "strip-indent": "^4.0.0",
-    "undici": "^5.22.1",
     "vite": "^4.4.6",
     "vitest": "^0.29.0",
     "wait-on": "^7.0.1"

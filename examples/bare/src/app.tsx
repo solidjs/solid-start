@@ -1,26 +1,22 @@
 // @refresh reload
-import { MetaProvider, Title } from "@solidjs/meta";
-import { A, Routes } from "@solidjs/router";
-import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
-import { Suspense } from "solid-js";
+import { createSignal } from "solid-js";
 import "./app.css";
-import Provider from "./components/Provider";
 
 export default function App() {
+  const [count, setCount] = createSignal(0);
   return (
-    <MetaProvider>
-      <Provider initialCount={10}>
-        <Title>SolidStart - Bare</Title>
-        <A href="/">Index</A>
-        <A href="/about">About</A>
-        <DefaultErrorBoundary>
-          <Suspense>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </Suspense>
-        </DefaultErrorBoundary>
-      </Provider>
-    </MetaProvider>
+    <main>
+      <h1>Hello world!</h1>
+      <button class="increment" onClick={() => setCount(count() + 1)}>
+        Clicks: {count()}
+      </button>
+      <p>
+        Visit{" "}
+        <a href="https://start.solidjs.com" target="_blank">
+          start.solidjs.com
+        </a>{" "}
+        to learn how to build SolidStart apps.
+      </p>
+    </main>
   );
 }

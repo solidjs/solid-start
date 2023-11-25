@@ -1,21 +1,21 @@
 // @refresh reload
-import { A, Routes } from "@solidjs/router";
-import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start";
 import { Suspense } from "solid-js";
 import "./app.css";
 
 export default function App() {
   return (
-    <main>
-      <A href="/">Index</A>
-      <A href="/about">About</A>
-      <DefaultErrorBoundary>
-        <Suspense>
-          <Routes>
-            <FileRoutes />
-          </Routes>
-        </Suspense>
-      </DefaultErrorBoundary>
-    </main>
+    <Router
+      root={props => (
+        <main>
+          <a href="/">Index</a>
+          <a href="/about">About</a>
+          <Suspense>{props.children}</Suspense>
+        </main>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }
