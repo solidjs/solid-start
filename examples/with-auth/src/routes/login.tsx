@@ -2,6 +2,7 @@ import {
   useSubmission,
   type RouteSectionProps
 } from "@solidjs/router";
+import { Show } from "solid-js";
 import { loginOrRegister } from "~/api";
 
 export default function Login(props: RouteSectionProps) {
@@ -37,7 +38,7 @@ export default function Login(props: RouteSectionProps) {
         </Show>
         <Show when={loggingIn.result}>
           <p role="alert" id="error-message">
-            {loggingIn.result.message}
+            {loggingIn.result!.message}
           </p>
         </Show>
         <button type="submit">Login</button>
