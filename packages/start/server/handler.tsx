@@ -3,7 +3,8 @@ import { provideRequestEvent } from "solid-js/web/storage";
 import { eventHandler, EventHandlerObject, EventHandlerRequest, H3Event } from "vinxi/server";
 import { apiRoutes } from "../shared/routes";
 import { getFetchEvent } from "./middleware";
-import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
+import { createPageEvent } from "./page-event";
+import { FetchEvent, PageEvent } from "./types";
 
 export function createHandler(
   fn: (context: PageEvent) => unknown,
@@ -61,27 +62,4 @@ function handleStreamingRedirect(context: PageEvent) {
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location="${to}"</script>`);
   };
-}
-
-export async function createPageEvent(ctx: FetchEvent) {
-  const clientManifest = import.meta.env.MANIFEST["client"];
-  const serverManifest = import.meta.env.MANIFEST["ssr"];
-  const prevPath = ctx.request.headers.get("x-solid-referrer");
-  const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
-  const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: await clientManifest.json(),
-    assets: [
-      ...(await clientManifest.inputs[clientManifest.handler].assets()),
-      ...(import.meta.env.START_ISLANDS
-        ? await serverManifest.inputs[serverManifest.handler].assets()
-        : [])
-    ],
-    routes: createRoutes(),
-    prevUrl: prevPath || "",
-    mutation: mutation,
-    $type: FETCH_EVENT,
-    $islands: new Set<string>()
-  });
-
-  return pageEvent;
 }
