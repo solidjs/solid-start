@@ -137,18 +137,8 @@ export function defineConfig(baseConfig = {}) {
         ],
         base: "/_build"
       },
-      // {
-      //   name: "server",
-      //   mode: "handler",
-      //   base: "/_server",
-      //   handler: serverFunctions.handler,
-      //   target: "server",
-      //   ...(overrides ?? {}),
-      //   plugins: () => [serverserver(), ...(overrides?.plugins?.() ?? [])],
-      // },
       serverFunctions.router({
         handler: normalize(fileURLToPath(new URL("./server-handler.js", import.meta.url))),
-        routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: () => [
           config("user", userConfig),
           ...plugins,

@@ -1,4 +1,5 @@
 import {
+  useAction,
   useSubmission,
   type RouteSectionProps
 } from "@solidjs/router";
@@ -7,11 +8,17 @@ import { loginOrRegister } from "~/api";
 
 export default function Login(props: RouteSectionProps) {
   const loggingIn = useSubmission(loginOrRegister);
+  const login = useAction(loginOrRegister);
 
   return (
     <main>
       <h1>Login</h1>
-      <form action={loginOrRegister}>
+      <form onSubmit={
+        e => {
+          e.preventDefault();
+          login(new FormData(e.currentTarget));
+        }
+      }>
         <input type="hidden" name="redirectTo" value={props.params.redirectTo ?? "/"} />
         <fieldset>
           <legend>Login or Register?</legend>
@@ -26,16 +33,10 @@ export default function Login(props: RouteSectionProps) {
           <label for="username-input">Username</label>
           <input name="username" placeholder="kody" />
         </div>
-        <Show when={loggingIn.result?.fieldErrors?.username}>
-          <p role="alert">{loggingIn.result.fieldErrors.username}</p>
-        </Show>
         <div>
           <label for="password-input">Password</label>
           <input name="password" type="password" placeholder="twixrox" />
         </div>
-        <Show when={loggingIn.result?.fieldErrors?.password}>
-          <p role="alert">{loggingIn.result?.fieldErrors.password}</p>
-        </Show>
         <Show when={loggingIn.result}>
           <p role="alert" id="error-message">
             {loggingIn.result!.message}

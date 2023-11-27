@@ -42,44 +42,36 @@ export async function loginOrRegister(formData: FormData) {
   const password = String(formData.get("password"));
   const loginType = String(formData.get("loginType"));
   let error = validateUsername(username) || validatePassword(password);
-  if (error) throw new Error(error);
+  if (error) return new Error(error);
 
-  let user = await (loginType !== "login"
-    ? register(username, password)
-    : login(username, password));
-  const session = await getSession();
-  session.update(d => (d.userId = user!.id));
-  return redirect("/");
-  // return redirect(redirectTo, {
-  //   headers: {
-  //     "Set-Cookie": await storage.commitSession(session)
-  //   }
-  // });
+  try {
+    const user = await (loginType !== "login"
+      ? register(username, password)
+      : login(username, password));
+    const session = await getSession();
+    await session.update(d => (d.userId = user!.id));
+    throw redirect("/");
+  } catch (err) {
+    return err as Error;
+  }
 }
 
 export async function logout() {
   const session = await getSession();
-  session.update(d => (d.userId = null));
-  return redirect("/login");
-  // return redirect("/login", {
-  //   headers: {
-  //     "Set-Cookie": await storage.destroySession(session)
-  //   }
-  // });
+  await session.update(d => (d.userId = undefined));
+  throw redirect("/login");
 }
 
 export async function getUser() {
   const session = await getSession();
   const userId = session.data.userId;
-  if (!userId || typeof userId !== "string") throw redirect("/login");
+  if (userId === undefined) throw redirect("/login");
 
   try {
-    const user = await db.user.findUnique({ where: { id: Number(userId) } });
+    const user = await db.user.findUnique({ where: { id: userId } });
     if (!user) throw redirect("/login");
     return user;
   } catch {
     throw logout();
   }
-};
-
-
+}
