@@ -1,11 +1,11 @@
 // @ts-ignore
-import { NoHydration, ssr } from "solid-js/web";
+import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
 import { renderAsset } from "../renderAsset";
 
 const docType = ssr("<!DOCTYPE html>");
 
 export function StartServer(props) {
-  const context = props.context;
+  const context = getRequestEvent() as any;
   return (
     <NoHydration>
       {docType as unknown as any}

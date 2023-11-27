@@ -1,4 +1,10 @@
-import fileRoutes, { Route } from "vinxi/routes";
+import fileRoutes, { RouteModule } from "vinxi/routes";
+
+interface Route {
+  path: string;
+  type: "api" | "page";
+  children?: Route[];
+}
 
 declare module "vinxi/routes" {
   export interface Register {
@@ -10,7 +16,7 @@ declare module "vinxi/routes" {
   }
 }
 
-const defineRoutes = (fileRoutes: Route[]) => {
+const defineRoutes = (fileRoutes: RouteModule[]) => {
   function processRoute(routes: Route[], route: Route, id: string, full: string) {
     const parentRoute = Object.values(routes).find(o => {
       // if (o.id.endsWith("/index")) {

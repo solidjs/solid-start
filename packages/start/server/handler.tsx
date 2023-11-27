@@ -1,7 +1,6 @@
 import { renderToStream } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import { eventHandler, EventHandlerObject, EventHandlerRequest, H3Event } from "vinxi/server";
-import { createRoutes } from "../shared/FileRoutes";
 import { apiRoutes } from "../shared/routes";
 import { getFetchEvent } from "./middleware";
 import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
@@ -41,7 +40,7 @@ export function createHandler(
         const context = await createPageEvent(event);
         let cloned = { ...options };
         if (cloned.onCompleteAll) {
-          const og =  cloned.onCompleteAll;
+          const og = cloned.onCompleteAll;
           cloned.onCompleteAll = options => {
             handleStreamingRedirect(context)(options);
             og(options);

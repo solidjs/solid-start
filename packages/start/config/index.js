@@ -36,14 +36,15 @@ function solidStartServerFsRouter(config) {
 }
 
 export function defineConfig(baseConfig = {}) {
-  let { plugins = [], start = {}, ...userConfig } = baseConfig;
+  let { plugins = [], ssr = true, start = {}, ...userConfig } = baseConfig;
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
     appRoot: "./src",
-    ssr: true,
+    ssr,
     islands: false,
     serverPlugins: []
   });
+
   return createApp({
     server: {
       compressPublicAssets: {
@@ -63,9 +64,7 @@ export function defineConfig(baseConfig = {}) {
         mode: "handler",
         handler: `${start.appRoot}/entry-server.tsx`,
         middleware: start.middleware,
-        ...(start.ssr
-          ? { routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }) }
-          : {}),
+        routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         extensions,
         target: "server",
         plugins: () => [
@@ -149,6 +148,7 @@ export function defineConfig(baseConfig = {}) {
       // },
       serverFunctions.router({
         handler: normalize(fileURLToPath(new URL("./server-handler.js", import.meta.url))),
+        routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: () => [
           config("user", userConfig),
           ...plugins,
