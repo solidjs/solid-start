@@ -1,63 +1,73 @@
+"use server";
+
 import { redirect } from "@solidjs/router";
+import { createStorage } from "unstorage";
+import fsLiteDriver from "unstorage/drivers/fs-lite";
 import { Todo } from "~/types";
 
-let COUNTER = 0;
-let TODOS: Todo[] = [];
-const DELAY = 120;
+// this uses file system driver for unstorage that works only on node.js
+// swap with the key value of your choice in your deployed environment
+const storage = createStorage({
+  driver: fsLiteDriver({
+    base: "./.data"
+  })
+});
+// storage.setItem("todos:data", []);
+// storage.setItem("todos:counter", 0);
 
-function delay<T>(fn: () => T) {
-  return new Promise<T>(res => setTimeout(() => res(fn()), DELAY));
-}
-
-export function getTodosFn() {
-  return delay(() => TODOS);
+export async function getTodosFn() {
+  return await storage.getItem("todos:data") as Todo[];
 }
 
 export async function addTodoFn(formData: FormData) {
   const title = formData.get("title") as string;
-  await delay(() => TODOS.push({ id: COUNTER++, title, completed: false }));
+  const [{value: todos}, {value: index}] = await storage.getItems(["todos:data", "todos:counter"]);
+
+  await Promise.all([
+    storage.setItem("todos:data", [...todos as Todo[], { id: index as number, title, completed: false }]),
+    storage.setItem("todos:counter", index as number + 1)
+  ]);
   return redirect("/");
 }
 export async function removeTodoFn(formData: FormData) {
   const id = Number(formData.get("id"));
-  await delay(() => (TODOS = TODOS.filter(todo => todo.id !== id)));
+  const todos = await storage.getItem("todos:data") as Todo[];
+  await storage.setItem("todos:data", todos.filter(todo => todo.id !== id));
   return redirect("/");
 }
 
 export async function toggleTodoFn(formData: FormData) {
   const id = Number(formData.get("id"));
-  await delay(() =>
-    TODOS.forEach((todo, index) => {
-      if (todo.id === id) {
-        TODOS[index] = { ...todo, completed: !todo.completed };
-      }
-    })
-  );
+  const todos = await storage.getItem("todos:data") as Todo[];
+  await storage.setItem("todos:data", todos.map(todo => {
+    if (todo.id === id) {
+      todo.completed = !todo.completed;
+    }
+    return todo;
+  }));
   return redirect("/");
 }
 
 export async function editTodoFn(formData: FormData) {
   const id = Number(formData.get("id"));
   const title = String(formData.get("title"));
-  await delay(() =>
-    TODOS.forEach((todo, index) => {
-      if (todo.id === id) {
-        TODOS[index] = { ...todo, title };
-      }
-    })
-  );
+  const todos = await storage.getItem("todos:data") as Todo[];
+  await storage.setItem("todos", todos.map(todo => {
+    if (todo.id === id) {
+      todo.title = title;
+    }
+    return todo;
+  }));
   return redirect("/");
 }
 export async function clearCompletedFn() {
-  await delay(() => (TODOS = TODOS.filter(todo => !todo.completed)));
+  const todos = await storage.getItem("todos:data") as Todo[];
+  await storage.setItem("todos:data", todos.filter(todo => !todo.completed));
   return redirect("/");
 }
 export async function toggleAllFn(formData: FormData) {
   const completed = formData.get("completed") === "false";
-  await delay(() =>
-    TODOS.forEach((todo, index) => {
-      TODOS[index] = { ...todo, completed };
-    })
-  );
+  const todos = await storage.getItem("todos:data") as Todo[];
+  await storage.setItem("todos:data", todos.map(todo => ({ ...todo, completed })));
   return redirect("/");
 }
