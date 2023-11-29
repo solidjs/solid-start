@@ -1,6 +1,6 @@
 import { renderToStream } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler, EventHandlerObject, EventHandlerRequest, H3Event } from "vinxi/server";
+import { eventHandler, EventHandlerObject, EventHandlerRequest, H3Event, setHeader, setResponseStatus } from "vinxi/server";
 import { apiRoutes } from "../shared/routes";
 import { getFetchEvent } from "./middleware";
 import { createPageEvent } from "./page-event";
@@ -13,6 +13,7 @@ export function createHandler(
     renderId?: string;
     timeoutMs?: number;
     onCompleteAll?: (options: { write: (v: any) => void }) => void;
+    onCompleteShell?: (options: { write: (v: any) => void }) => void;
     createPageEvent?: (event: FetchEvent) => Promise<PageEvent>;
     onRequest?: EventHandlerObject["onRequest"];
     onBeforeResponse?: EventHandlerObject["onBeforeResponse"];
@@ -43,10 +44,17 @@ export function createHandler(
         if (cloned.onCompleteAll) {
           const og = cloned.onCompleteAll;
           cloned.onCompleteAll = options => {
-            handleStreamingRedirect(context)(options);
+            handleStreamCompleteRedirect(context)(options);
             og(options);
           };
-        } else cloned.onCompleteAll = handleStreamingRedirect(context);
+        } else cloned.onCompleteAll = handleStreamCompleteRedirect(context);
+        if (cloned.onCompleteShell) {
+          const og = cloned.onCompleteShell;
+          cloned.onCompleteShell = options => {
+            handleShellCompleteRedirect(context, e)();
+            og(options);
+          };
+        } else cloned.onCompleteShell = handleShellCompleteRedirect(context, e);
         const stream = renderToStream(() => fn(context), cloned);
         if (context.response && context.response.headers.get("Location")) {
           return event.redirect(context.response.headers.get("Location"));
@@ -57,7 +65,16 @@ export function createHandler(
   });
 }
 
-function handleStreamingRedirect(context: PageEvent) {
+function handleShellCompleteRedirect(context: PageEvent, e: H3Event<EventHandlerRequest>) {
+  return () => {
+    if (context.response && context.response.headers.get("Location")) {
+      setResponseStatus(e, 302);
+      setHeader(e, "Location", context.response.headers.get("Location"));
+    }
+  }
+}
+
+function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location="${to}"</script>`);

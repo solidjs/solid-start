@@ -1,6 +1,6 @@
 import { JSX } from "solid-js";
 
-export const FETCH_EVENT = "$FETCH";
+// export const FETCH_EVENT = "$FETCH";
 
 export type DocumentComponentProps = {
   assets: JSX.Element;
@@ -13,25 +13,6 @@ export type ContextMatches = {
   pattern: string;
   path: string;
   params: unknown;
-};
-
-type TagDescription = {
-  tag: string;
-  props: Record<string, unknown>;
-};
-
-type RouterContext = {
-  // router matches;
-  matches: ContextMatches[][];
-  // redirected url
-  url: string;
-
-  // server route fragments
-  replaceOutletId: string;
-  newOutletId: string;
-  partial: boolean;
-  nextRoute: any;
-  prevRoute: any;
 };
 
 export interface FetchEvent {
@@ -50,9 +31,9 @@ export interface PageEvent extends FetchEvent {
   manifest: any;
   assets: any;
   routes: any[];
-  prevUrl: string | null;
-  $type: typeof FETCH_EVENT;
+  // prevUrl: string | null;
+  // $type: typeof FETCH_EVENT;
   $islands: Set<string>;
-  mutation: boolean;
+  // mutation: boolean;
   response?: Response;
 }

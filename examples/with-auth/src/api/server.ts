@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "@solidjs/router";
 import { getH3Event, useSession } from "@solidjs/start/server";
+import { fileURLToPath } from "node:url";
 import { getRequestEvent } from "solid-js/web";
 import { db } from "./db";
 
@@ -50,17 +51,20 @@ export async function loginOrRegister(formData: FormData) {
       : login(username, password));
     const session = await getSession();
     await session.update(d => (d.userId = user!.id));
-    throw redirect("/");
   } catch (err) {
     return err as Error;
   }
+  throw redirect("/");
 }
+// hack until Vinxi update
+loginOrRegister.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${loginOrRegister.name}`
 
 export async function logout() {
   const session = await getSession();
   await session.update(d => (d.userId = undefined));
   throw redirect("/login");
 }
+logout.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${logout.name}`
 
 export async function getUser() {
   const session = await getSession();

@@ -41,18 +41,29 @@ let INSTANCE = 0;
 
 async function fetchServerFunction(base, id, args) {
   const instance = `server-fn:${INSTANCE++}`;
-  const response = await fetch(base, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      "server-fn": id
-    },
-    body: JSON.stringify({
-      instance,
-      args: await toJSONAsync(args),
-    }),
-  });
+  let response;
+  if (args.length === 1 && args[0] instanceof FormData) {
+    response = await fetch(base, {
+      method: "POST",
+      headers: {
+        "server-fn": id,
+        "server-fn-instance": instance
+      },
+      body: args[0]
+    });
+  } else {
+    response = await fetch(base, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "server-fn": id,
+        "server-fn-instance": instance
+      },
+      body: JSON.stringify(await toJSONAsync(args)),
+    });
+  }
+  if (response.headers.get("Location")) throw response;
   const result = deserializeStream(instance, response);
   if (response.ok) {
     return result;

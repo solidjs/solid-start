@@ -1,11 +1,11 @@
 import { createRoutes } from "../shared/FileRoutes";
-import { FETCH_EVENT, FetchEvent, PageEvent } from "./types";
+import { FetchEvent, PageEvent } from "./types";
 
 export async function createPageEvent(ctx: FetchEvent) {
   const clientManifest = import.meta.env.MANIFEST["client"];
   const serverManifest = import.meta.env.MANIFEST["ssr"];
-  const prevPath = ctx.request.headers.get("x-solid-referrer");
-  const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
+  // const prevPath = ctx.request.headers.get("x-solid-referrer");
+  // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: await clientManifest.json(),
     assets: [
@@ -15,9 +15,9 @@ export async function createPageEvent(ctx: FetchEvent) {
         : [])
     ],
     routes: createRoutes(),
-    prevUrl: prevPath || "",
-    mutation: mutation,
-    $type: FETCH_EVENT,
+    // prevUrl: prevPath || "",
+    // mutation: mutation,
+    // $type: FETCH_EVENT,
     $islands: new Set<string>()
   });
 
