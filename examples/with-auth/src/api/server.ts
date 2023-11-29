@@ -74,7 +74,7 @@ export async function getUser() {
   try {
     const user = await db.user.findUnique({ where: { id: userId } });
     if (!user) throw redirect("/login");
-    return user;
+    return { id: user.id, username: user.username };
   } catch {
     throw logout();
   }

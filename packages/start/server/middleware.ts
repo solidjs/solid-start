@@ -3,7 +3,6 @@ import {
   defineMiddleware,
   EventHandlerRequest,
   getRequestIP,
-  getRequestURL,
   getResponseHeader,
   getResponseStatus,
   H3Event,
@@ -11,7 +10,8 @@ import {
   sendRedirect,
   sendWebResponse,
   setResponseHeader,
-  setResponseStatus
+  setResponseStatus,
+  toWebRequest
 } from "vinxi/server";
 import { FetchEvent } from "./types";
 
@@ -21,11 +21,8 @@ const h3EventSymbol = Symbol("h3Event");
 const fetchEventSymbol = Symbol("fetchEvent");
 
 export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
-  // TODO: fix request in Vinxi
   return {
-    request: {
-      url: getRequestURL(event).toString(),
-    } as Request,
+    request: toWebRequest(event),
     clientAddress: getRequestIP(event),
     locals: {},
     redirect: (url, status) => sendRedirect(event, url, status),
