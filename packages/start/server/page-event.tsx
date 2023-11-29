@@ -4,6 +4,7 @@ import { FetchEvent, PageEvent } from "./types";
 export async function createPageEvent(ctx: FetchEvent) {
   const clientManifest = import.meta.env.MANIFEST["client"];
   const serverManifest = import.meta.env.MANIFEST["ssr"];
+  ctx.setResponseHeader("Content-Type", "text/html");
   // const prevPath = ctx.request.headers.get("x-solid-referrer");
   // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = Object.assign(ctx, {

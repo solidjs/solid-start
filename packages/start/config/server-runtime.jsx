@@ -3,7 +3,7 @@ import { createIslandReference } from "../server/islands";
 
 async function deserializeStream(id, response) {
   if (!response.body) {
-    throw new Error('missing body');
+    throw new Error("missing body");
   }
   const reader = response.body.getReader();
 
@@ -11,9 +11,9 @@ async function deserializeStream(id, response) {
     const result = await reader.read();
     if (!result.done) {
       const serialized = new TextDecoder().decode(result.value);
-      const splits = serialized.split('\n');
+      const splits = serialized.split("\n");
       for (const split of splits) {
-        if (split !== '') {
+        if (split !== "") {
           deserialize(split);
         }
       }
@@ -23,14 +23,14 @@ async function deserializeStream(id, response) {
 
   const result = await reader.read();
   if (result.done) {
-    throw new Error('Unexpected end of body');
+    throw new Error("Unexpected end of body");
   }
   const serialized = new TextDecoder().decode(result.value);
   let pending = true;
   let revived;
-  const splits = serialized.split('\n');
+  const splits = serialized.split("\n");
   for (const split of splits) {
-    if (split !== '') {
+    if (split !== "") {
       const current = deserialize(split);
       if (pending) {
         revived = current;
@@ -39,41 +39,38 @@ async function deserializeStream(id, response) {
     }
   }
 
-  pop().then(() => {
-    delete self.$R[id];
-  }, () => {
-    // no-op
-  });
+  pop().then(
+    () => {
+      delete self.$R[id];
+    },
+    () => {
+      // no-op
+    }
+  );
 
   return revived;
 }
 
 let INSTANCE = 0;
 
+function createRequest(base, id, instance, body, contentType) {
+  return fetch(base, {
+    method: "POST",
+    headers: {
+      "x-server-id": id,
+      "x-server-instance": instance,
+      ...(contentType ? { "Content-Type": contentType } : {})
+    },
+    body
+  });
+}
+
 async function fetchServerFunction(base, id, args) {
   const instance = `server-fn:${INSTANCE++}`;
-  let response;
-  if (args.length === 1 && args[0] instanceof FormData) {
-    response = await fetch(base, {
-      method: "POST",
-      headers: {
-        "server-fn": id,
-        "server-fn-instance": instance
-      },
-      body: args[0]
-    });
-  } else {
-    response = await fetch(base, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "server-fn": id,
-        "server-fn-instance": instance
-      },
-      body: JSON.stringify(await toJSONAsync(args)),
-    });
-  }
+  const response = await (args.length === 1 && args[0] instanceof FormData
+    ? createRequest(base, id, instance, args[0])
+    : createRequest(base, id, instance, JSON.stringify(await toJSONAsync(args)), "application/json"));
+
   if (response.headers.get("Location")) throw response;
   const result = deserializeStream(instance, response);
   if (response.ok) {

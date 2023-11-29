@@ -30,8 +30,8 @@ function serializeToStream(id, value) {
 async function handleServerFunction(event) {
   invariant(event.method === "POST", `Invalid method ${event.method}. Expected POST.`);
 
-  const serverReference = getHeader(event, "server-fn");
-  const instance = getHeader(event, "server-fn-instance");
+  const serverReference = getHeader(event, "x-server-id");
+  const instance = getHeader(event, "x-server-instance");
   const url = getRequestURL(event);
   let filepath, name;
   if (serverReference) {
@@ -93,8 +93,7 @@ async function handleServerFunction(event) {
     return new Response(serializeToStream(instance, x), {
       status: 500,
       headers: {
-        "Content-Type": "text/javascript",
-        "x-server-function": "error"
+        "Content-Type": "text/javascript"
       }
     });
   }
