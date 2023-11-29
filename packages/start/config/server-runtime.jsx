@@ -26,7 +26,18 @@ async function deserializeStream(id, response) {
     throw new Error('Unexpected end of body');
   }
   const serialized = new TextDecoder().decode(result.value);
-  const revived = deserialize(serialized);
+  let pending = true;
+  let revived;
+  const splits = serialized.split('\n');
+  for (const split of splits) {
+    if (split !== '') {
+      const current = deserialize(split);
+      if (pending) {
+        revived = current;
+        pending = false;
+      }
+    }
+  }
 
   pop().then(() => {
     delete self.$R[id];
