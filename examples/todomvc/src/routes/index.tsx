@@ -1,6 +1,21 @@
-import { action, cache, createAsync, useSubmission, useSubmissions, type RouteSectionProps } from "@solidjs/router";
+import {
+  action,
+  cache,
+  createAsync,
+  useSubmission,
+  useSubmissions,
+  type RouteSectionProps
+} from "@solidjs/router";
 import { For, Show, createMemo, createSignal } from "solid-js";
-import { addTodoFn, clearCompletedFn, editTodoFn, getTodosFn, removeTodoFn, toggleAllFn, toggleTodoFn } from "~/api";
+import {
+  addTodoFn,
+  clearCompletedFn,
+  editTodoFn,
+  getTodosFn,
+  removeTodoFn,
+  toggleAllFn,
+  toggleTodoFn
+} from "~/api";
 import { CompleteIcon, IncompleteIcon } from "~/components/icons";
 import { Todo } from "~/types";
 
@@ -21,7 +36,7 @@ const editTodo = action(editTodoFn, "editTodo");
 const toggleTodo = action(toggleTodoFn, "toggleTodo");
 
 export default function TodoApp(props: RouteSectionProps) {
-  const todos = createAsync(getTodos, { initialValue: [] });
+  const todos = createAsync(getTodos, { initialValue: [], deferStream: true });
   const location = props.location;
 
   const addingTodo = useSubmissions(addTodo);
@@ -50,10 +65,14 @@ export default function TodoApp(props: RouteSectionProps) {
     <section class="todoapp">
       <header class="header">
         <h1>todos</h1>
-        <form action={addTodo} onSubmit={e => {
-          if (!inputRef.value.trim()) e.preventDefault();
-          setTimeout(() => (inputRef.value = ""));
-        }}>
+        <form
+          action={addTodo}
+          method="post"
+          onSubmit={e => {
+            if (!inputRef.value.trim()) e.preventDefault();
+            setTimeout(() => (inputRef.value = ""));
+          }}
+        >
           <input
             name="title"
             class="new-todo"
@@ -66,7 +85,7 @@ export default function TodoApp(props: RouteSectionProps) {
 
       <section class="main">
         <Show when={todos().length > 0}>
-          <form action={toggleAll}>
+          <form action={toggleAll} method="post">
             <input name="completed" type="hidden" value={String(!remainingCount())} />
             <button class={`toggle-all ${!remainingCount() ? "checked" : ""}`} type="submit">
               ❯
@@ -88,7 +107,8 @@ export default function TodoApp(props: RouteSectionProps) {
                   : togglingTodo.pending
                   ? !togglingTodo.input.get("completed")
                   : todo.completed;
-              const removing = () => removingTodo.some(data => Number(data.input.get("id")) === todo.id);
+              const removing = () =>
+                removingTodo.some(data => Number(data.input.get("id")) === todo.id);
               return (
                 <Show when={!removing()}>
                   <li
@@ -100,20 +120,20 @@ export default function TodoApp(props: RouteSectionProps) {
                     }}
                   >
                     <div class="view">
-                      <form action={toggleTodo}>
+                      <form action={toggleTodo} method="post">
                         <input type="hidden" name="id" value={todo.id} />
                         <button type="submit" class="toggle" disabled={pending()}>
                           {completed() ? <CompleteIcon /> : <IncompleteIcon />}
                         </button>
                       </form>
                       <label onDblClick={[setEditing, { id: todo.id, pending }]}>{title()}</label>
-                      <form action={removeTodo}>
+                      <form action={removeTodo} method="post">
                         <input type="hidden" name="id" value={todo.id} />
                         <button type="submit" class="destroy" />
                       </form>
                     </div>
                     <Show when={editingTodoId() === todo.id}>
-                      <form action={editTodo} onSubmit={() => setEditing({})}>
+                      <form action={editTodo} method="post" onSubmit={() => setEditing({})}>
                         <input type="hidden" name="id" value={todo.id} />
                         <input
                           name="title"
@@ -169,7 +189,7 @@ export default function TodoApp(props: RouteSectionProps) {
             </li>
           </ul>
           <Show when={remainingCount() !== todos.length}>
-            <form action={clearCompleted}>
+            <form action={clearCompleted} method="post">
               <button class="clear-completed">Clear completed</button>
             </form>
           </Show>
@@ -177,4 +197,4 @@ export default function TodoApp(props: RouteSectionProps) {
       </Show>
     </section>
   );
-};
+}

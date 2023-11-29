@@ -28,7 +28,7 @@ function serializeToStream(id, value) {
 }
 
 async function handleServerFunction(event) {
-  invariant(event.method === "POST", "Invalid method");
+  invariant(event.method === "POST", `Invalid method ${event.method}. Expected POST.`);
 
   const serverReference = getHeader(event, "server-fn");
   const instance = getHeader(event, "server-fn-instance");
