@@ -1,15 +1,12 @@
 import { cache } from "@solidjs/router";
 import { Story, StoryTypes, User } from "~/types";
 
-import { isServer } from "solid-js/web";
-
 const story = (path: string) => `https://node-hnapi.herokuapp.com/${path}`;
 const user = (path: string) => `https://hacker-news.firebaseio.com/v0/${path}.json`;
 
-export async function fetchAPI(path: string) {
-  "use server";
+async function fetchAPI(path: string) {
   const url = path.startsWith("user") ? user(path) : story(path);
-  const headers: Record<string, string> = isServer ? { "User-Agent": "chrome" } : {};
+  const headers: Record<string, string> = { "User-Agent": "chrome" };
 
   try {
     let response = await fetch(url, { headers });
@@ -37,13 +34,17 @@ const mapStories = {
   job: "jobs"
 } as const;
 
-export const getStories = cache(
-  async (type: StoryTypes, page: number): Promise<Story[]> =>
-    fetchAPI(`${mapStories[type]}?page=${page}`),
-  "stories"
-);
-export const getStory = cache(
-  async (id: string): Promise<Story> => fetchAPI(`item/${id}`),
-  "story"
-);
-export const getUser = cache(async (id: string): Promise<User> => fetchAPI(`user/${id}`), "user");
+export const getStories = cache(async (type: StoryTypes, page: number): Promise<Story[]> => {
+  "use server";
+  return fetchAPI(`${mapStories[type]}?page=${page}`);
+}, "stories");
+
+export const getStory = cache(async (id: string): Promise<Story> => {
+  "use server";
+  return fetchAPI(`item/${id}`);
+}, "story");
+
+export const getUser = cache(async (id: string): Promise<User> => {
+  "use server";
+  return fetchAPI(`user/${id}`);
+}, "user");

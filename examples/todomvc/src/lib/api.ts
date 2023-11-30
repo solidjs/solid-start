@@ -1,6 +1,5 @@
 "use server";
 
-import { fileURLToPath } from "node:url";
 import { createStorage } from "unstorage";
 import fsLiteDriver from "unstorage/drivers/fs-lite";
 import { Todo } from "~/types";
@@ -62,12 +61,3 @@ export async function toggleAllFn(formData: FormData) {
   const todos = await storage.getItem("todos:data") as Todo[];
   await storage.setItem("todos:data", todos.map(todo => ({ ...todo, completed })));
 }
-
-// temporary hack
-getTodosFn.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${getTodosFn.name}`
-addTodoFn.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${addTodoFn.name}`
-removeTodoFn.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${removeTodoFn.name}`
-toggleTodoFn.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${toggleTodoFn.name}`
-editTodoFn.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${editTodoFn.name}`
-clearCompletedFn.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${clearCompletedFn.name}`
-toggleAllFn.url = `/_server?id=${encodeURIComponent(fileURLToPath(new URL(import.meta.url)))}&name=${toggleAllFn.name}`

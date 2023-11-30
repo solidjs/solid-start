@@ -7,6 +7,7 @@ import {
   type RouteSectionProps
 } from "@solidjs/router";
 import { For, Show, createMemo, createSignal } from "solid-js";
+import { CompleteIcon, IncompleteIcon } from "~/components/icons";
 import {
   addTodoFn,
   clearCompletedFn,
@@ -15,8 +16,7 @@ import {
   removeTodoFn,
   toggleAllFn,
   toggleTodoFn
-} from "~/api";
-import { CompleteIcon, IncompleteIcon } from "~/components/icons";
+} from "~/lib/api";
 import { Todo } from "~/types";
 
 declare module "solid-js" {

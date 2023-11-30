@@ -30,12 +30,12 @@ export default function Login(props: RouteSectionProps) {
           <label for="password-input">Password</label>
           <input name="password" type="password" placeholder="twixrox" />
         </div>
+        <button type="submit">Login</button>
         <Show when={loggingIn.result}>
-          <p role="alert" id="error-message">
+          <p style={{color: "red"}} role="alert" id="error-message">
             {loggingIn.result!.message}
           </p>
         </Show>
-        <button type="submit">Login</button>
       </form>
     </main>
   );

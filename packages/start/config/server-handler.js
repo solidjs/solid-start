@@ -69,20 +69,22 @@ async function handleServerFunction(event) {
     // handle no JS success case
     if (!instance) {
       const isError = result instanceof Error;
+      const refererUrl = new URL(getHeader(event, "referer"));
+      if (result !== undefined)
+        refererUrl.searchParams.set(
+          "form",
+          JSON.stringify({
+            url: url.pathname + url.search,
+            result: isError ? result.message : result,
+            error: isError,
+            entries: [...parsed[0].entries()]
+          })
+        );
+      else refererUrl.searchParams.delete("form");
       return new Response(null, {
         status: 302,
         headers: {
-          Location:
-            new URL(getHeader(event, "referer")).pathname +
-            "?form=" +
-            encodeURIComponent(
-              JSON.stringify({
-                url: url.pathname + url.search,
-                result: isError ? result.message : result,
-                error: isError,
-                entries: [...parsed[0].entries()]
-              })
-            )
+          Location: refererUrl.pathname + refererUrl.search
         }
       });
     }
