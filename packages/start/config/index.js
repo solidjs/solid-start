@@ -1,4 +1,5 @@
 import { serverFunctions } from "@vinxi/server-functions/plugin";
+import { serverTransform } from "@vinxi/server-functions/server";
 import defu from "defu";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -70,6 +71,9 @@ export function defineConfig(baseConfig = {}) {
         plugins: () => [
           config("user", userConfig),
           ...plugins,
+          serverTransform({
+            runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url)))
+          }),
           start.islands ? serverComponents.server() : null,
           solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-server", {
@@ -139,6 +143,8 @@ export function defineConfig(baseConfig = {}) {
       },
       serverFunctions.router({
         handler: normalize(fileURLToPath(new URL("./server-handler.js", import.meta.url))),
+        runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url))),
+        // routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: () => [
           config("user", userConfig),
           ...plugins,

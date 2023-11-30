@@ -39,12 +39,12 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.6",
-    "vinxi": "0.0.47"
+    "vinxi": "0.0.48"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "0.0.39",
-    "@vinxi/server-components": "0.0.39",
-    "@vinxi/server-functions": "0.0.39",
+    "@vinxi/plugin-directives": "0.0.44",
+    "@vinxi/server-components": "0.0.44",
+    "@vinxi/server-functions": "0.0.45",
     "defu": "^6.1.2",
     "seroval": "^0.14.1",
     "vite-plugin-inspect": "^0.7.33",

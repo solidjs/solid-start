@@ -1,6 +1,13 @@
 import { renderToStream } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler, EventHandlerObject, EventHandlerRequest, H3Event, setHeader, setResponseStatus } from "vinxi/server";
+import {
+  eventHandler,
+  EventHandlerObject,
+  EventHandlerRequest,
+  H3Event,
+  setHeader,
+  setResponseStatus
+} from "vinxi/server";
 import { apiRoutes } from "../shared/routes";
 import { getFetchEvent } from "./middleware";
 import { createPageEvent } from "./page-event";
