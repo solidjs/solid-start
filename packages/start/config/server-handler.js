@@ -2,7 +2,14 @@
 import { crossSerializeStream, fromJSON } from "seroval";
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
-import { eventHandler, getHeader, getRequestURL, readBody, readFormData, setHeader } from "vinxi/server";
+import {
+  eventHandler,
+  getHeader,
+  getRequestURL,
+  readBody,
+  readFormData,
+  setHeader
+} from "vinxi/server";
 import { getFetchEvent } from "../server/middleware";
 
 function serializeToStream(id, value) {
@@ -38,7 +45,7 @@ async function handleServerFunction(event) {
     invariant(typeof serverReference === "string", "Invalid server function");
     [filepath, name] = serverReference.split("#");
   } else {
-    filepath = url.searchParams.get("id")
+    filepath = url.searchParams.get("id");
     name = url.searchParams.get("name");
     if (!filepath || !name) throw new Error("Invalid request");
   }
@@ -48,19 +55,20 @@ async function handleServerFunction(event) {
   )[name];
   let parsed;
   const contentType = getHeader(event, "content-type");
-  if (contentType.startsWith("multipart/form-data") || contentType.startsWith("application/x-www-form-urlencoded")) {
+  if (
+    contentType.startsWith("multipart/form-data") ||
+    contentType.startsWith("application/x-www-form-urlencoded")
+  ) {
     parsed = [await readFormData(event)];
   } else {
     parsed = fromJSON(await readBody(event));
   }
   try {
-    const result = await provideRequestEvent(getFetchEvent(event), () =>
-      action.apply(null, parsed)
-    );
+    const result = await provideRequestEvent(getFetchEvent(event), () => action(...parsed));
 
     // handle no JS success case
     if (!instance) {
-      const isError = result instanceof Error
+      const isError = result instanceof Error;
       return new Response(null, {
         status: 302,
         headers: {

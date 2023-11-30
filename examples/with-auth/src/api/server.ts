@@ -33,7 +33,7 @@ async function register(username: string, password: string) {
 function getSession() {
   const event = getH3Event(getRequestEvent() as any);
   return useSession(event, {
-    password: process.env.SESSION_SECRET
+    password: process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace"
   });
 }
 
