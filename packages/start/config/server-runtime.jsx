@@ -72,6 +72,13 @@ async function fetchServerFunction(base, id, args) {
     : createRequest(base, id, instance, JSON.stringify(await toJSONAsync(args)), "application/json"));
 
   if (response.headers.get("Location")) throw response;
+  if (response.headers.get("X-Revalidate")) {
+    /* ts-ignore-next-line */
+    response.customBody = () => {
+      return deserializeStream(instance, response);
+    }
+    throw response;
+  }
   const result = deserializeStream(instance, response);
   if (response.ok) {
     return result;
