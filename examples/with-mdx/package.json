@@ -9,9 +9,9 @@
   "dependencies": {
     "@mdx-js/mdx": "^2.3.0",
     "@solidjs/router": "^0.10.0-beta.6",
-    "@solidjs/start": "^0.4.0-alpha.0",
+    "@solidjs/start": "^0.4.0-alpha.1",
     "@vinxi/plugin-mdx": "^3.6.5",
-    "solid-js": "^1.8.6",
+    "solid-js": "^1.8.7",
     "vinxi": "0.0.48",
     "solid-mdx": "^0.0.7"
   },
