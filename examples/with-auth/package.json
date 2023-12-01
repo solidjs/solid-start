@@ -6,6 +6,9 @@
     "build": "vinxi build",
     "start": "vinxi start"
   },
+  "devDependencies": {
+    "@types/node": "^20.10.1"
+  },
   "dependencies": {
     "@solidjs/router": "^0.10.0-beta.4",
     "@solidjs/start": "^0.4.0-alpha.0",
