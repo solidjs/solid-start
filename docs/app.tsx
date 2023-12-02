@@ -1,7 +1,7 @@
 // @refresh reload
 import { MetaProvider, Title } from "@solidjs/meta";
-import { A, Router, Routes } from "@solidjs/router";
-import { DefaultErrorBoundary, FileRoutes } from "@solidjs/start";
+import { A, Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start";
 import { createMemo, For, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import "./components/index.css";
@@ -27,7 +27,7 @@ export const mods = /*#__PURE__*/ import.meta.glob<
 >("./routes/**/*.{md,mdx}", {
   eager: true,
   query: {
-    meta: ""
+    pick: "getFrontMatter"
   }
 });
 
@@ -62,7 +62,7 @@ function SocialIcon(props) {
     <li class="mx-2">
       <a href={props.href} rel="noopener" target="_blank">
         <span class="sr-only">{props.alt}</span>
-        <svg viewBox="0 0 24 24" class="h-8 transition hover:opacity-50 opacity-60">
+        <svg viewBox="0 0 24 24" class="h-8 opacity-60 transition hover:opacity-50">
           <path fill="currentColor" d={props.icon} />
         </svg>
       </a>
@@ -72,13 +72,13 @@ function SocialIcon(props) {
 
 function Header() {
   return (
-    <header class="flex px-8 py-2 shadow-md z-10 md:z-50 relative col-span-3 col-start-1 row-start-1">
-      <div class="flex justify-between w-full">
+    <header class="relative z-10 col-span-3 col-start-1 row-start-1 flex px-8 py-2 shadow-md md:z-50">
+      <div class="flex w-full justify-between">
         <div class="flex space-x-3">
-          <img src="/logo.svg" class="w-9 h-9" />
-          <div class="text-xl mt-2 uppercase hidden md:block">
+          <img src="/logo.svg" class="h-9 w-9" />
+          <div class="mt-2 hidden text-xl uppercase md:block">
             <span>Solid</span>
-            <span class="font-semibold ml-1 text-solid-medium">Start</span>
+            <span class="text-solid-medium ml-1 font-semibold">Start</span>
           </div>
         </div>
         <div class="flex space-x-5">
@@ -86,7 +86,7 @@ function Header() {
             <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">
               solidjs.com
               <svg
-                class="h-5 z-50 -mt-1 ltr:ml-1 rtl:mr-1 opacity-30"
+                class="z-50 -mt-1 h-5 opacity-30 ltr:ml-1 rtl:mr-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -122,8 +122,10 @@ function Nav() {
       }[] & { subsection?: Set<string>; title?: string; order?: number };
     } = {};
 
+    console.log(mods);
+
     Object.keys(mods).forEach(key => {
-      let frontMatter = mods[key].getFrontMatter();
+      let frontMatter = mods[key];
       let {
         title = mods[key].getHeadings().find(h => h.depth === 1)?.text ?? "",
         section = "",
@@ -166,12 +168,12 @@ function Nav() {
   });
 
   return (
-    <nav class="min-w-[300px] col-start-1 row-start-2 -translate-x-full peer-checked:translate-x-0 pt-8 pb-20 md:pb-8 px-8 space-y-4 h-full fixed md:relative left-0 z-20 md:left-auto top-[52px] md:top-auto overflow-auto bg-slate-100 duration-300 ease-in-out md:translate-x-0">
+    <nav class="fixed left-0 top-[52px] z-20 col-start-1 row-start-2 h-full min-w-[300px] -translate-x-full space-y-4 overflow-auto bg-slate-100 px-8 pb-20 pt-8 duration-300 ease-in-out peer-checked:translate-x-0 md:relative md:left-auto md:top-auto md:translate-x-0 md:pb-8">
       <div id="docsearch" />
       <For each={data()}>
         {r => (
           <ul>
-            <span class="text-left w-full dark:text-white border-b border-gray-200 dark:border-gray-500 hover:text-gray-400 transition flex flex-wrap content-center justify-between space-x-2 text-xl p-2 py-2 mb-8">
+            <span class="mb-8 flex w-full flex-wrap content-center justify-between space-x-2 border-b border-gray-200 p-2 py-2 text-left text-xl transition hover:text-gray-400 dark:border-gray-500 dark:text-white">
               {r.title}
             </span>
             <Show
@@ -181,7 +183,7 @@ function Nav() {
                   <For each={[...r.subsection.values()]}>
                     {s => (
                       <ul class="ml-2 mt-4">
-                        <div class="font-bold text-gray-500 text-md mb-3">{s}</div>
+                        <div class="text-md mb-3 font-bold text-gray-500">{s}</div>
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
                             <li class="ml-2">
@@ -190,7 +192,7 @@ function Nav() {
                                 inactiveClass="text-gray-500"
                                 href={href}
                               >
-                                <span class="block ml-4 pb-2 text-sm break-words hover:text-gray-500 dark:hover:text-gray-300">
+                                <span class="ml-4 block break-words pb-2 text-sm hover:text-gray-500 dark:hover:text-gray-300">
                                   {title}
                                 </span>
                               </A>
@@ -217,7 +219,7 @@ function Nav() {
                 {({ title, path, href, frontMatter }) => (
                   <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                     <A activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
-                      <span class="block dark:text-gray-300 py-1 text-md font-semibold break-words hover:text-gray-400 dark:hover:text-gray-400">
+                      <span class="text-md block break-words py-1 font-semibold hover:text-gray-400 dark:text-gray-300 dark:hover:text-gray-400">
                         {title}
                       </span>
                     </A>
@@ -237,37 +239,39 @@ import { TableOfContents, useTableOfContents } from "./components/TableOfContent
 
 export default function Root() {
   return (
-    <Router>
-      <MetaProvider>
-        <Title>SolidStart (Beta)</Title>
-        <Header />
+    <Router
+      root={props => (
+        <MetaProvider>
+          <Title>SolidStart (Beta)</Title>
+          <Header />
 
-        <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />
+          <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />
 
-        <label
-          class="fixed cursor-pointer peer-checked:rotate-90 md:hidden top-20 right-3 text-white rounded-lg transition duration-500 bg-solid-medium reveal-delay opacity-0"
-          for="sidebar-toggle"
-        >
-          <svg class="h-7 w-7" viewBox="0 0 24 24" style="fill: none; stroke: currentcolor;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </label>
+          <label
+            class="bg-solid-medium reveal-delay fixed right-3 top-20 cursor-pointer rounded-lg text-white opacity-0 transition duration-500 peer-checked:rotate-90 md:hidden"
+            for="sidebar-toggle"
+          >
+            <svg class="h-7 w-7" viewBox="0 0 24 24" style="fill: none; stroke: currentcolor;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </label>
 
-        <Nav />
+          <Nav />
 
-        <div class="col-start-2 row-start-2 h-full overflow-auto">
-          <div class="px-8 py-8 h-full container">
-            <DefaultErrorBoundary>
+          <div class="col-start-2 row-start-2 h-full overflow-auto">
+            <div class="container h-full px-8 py-8">
+              {/* <DefaultErrorBoundary> */}
               <Suspense>
-                <main class="prose prose-md max-w-none w-full pt-0 pb-10 lg:px-10">
+                <main class="prose prose-md w-full max-w-none pb-10 pt-0 lg:px-10">
                   <MDXProvider
                     components={{
                       ...components,
                       "table-of-contents": () => {
+                        return null;
                         const headings = useTableOfContents();
                         return (
                           <>
-                            <div class="xl:hidden space-y-4 overflow-hidden">
+                            <div class="space-y-4 overflow-hidden xl:hidden">
                               <ul class="space-y-2 text-[1rem]">
                                 <Suspense>
                                   <For each={headings()}>
@@ -293,17 +297,21 @@ export default function Root() {
                       }
                     }}
                   >
-                    <Routes>
-                      <FileRoutes />
-                    </Routes>
+                    {props.children}
+                    {/* <Routes>
+                        <FileRoutes />
+                      </Routes> */}
                   </MDXProvider>
                 </main>
               </Suspense>
-            </DefaultErrorBoundary>
+              {/* </DefaultErrorBoundary> */}
+            </div>
           </div>
-        </div>
-        <TableOfContents />
-      </MetaProvider>
+          {/* <TableOfContents /> */}
+        </MetaProvider>
+      )}
+    >
+      <FileRoutes />
     </Router>
   );
 }

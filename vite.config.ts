@@ -1,7 +1,8 @@
 import { defineConfig } from "@solidjs/start/config";
-import pkg from "@vinxi/plugin-mdx";
+import { docsMdx } from "solid-start-mdx";
+import { config } from "vinxi/plugins/config";
+import tailwindcss from "tailwindcss";
 
-const { default: mdx } = pkg;
 export default defineConfig({
   optimizeDeps: {
     entries: []
@@ -11,10 +12,13 @@ export default defineConfig({
     extensions: ["mdx", "md"]
   },
   plugins: [
-    mdx.withImports({})({
-      jsx: true,
-      jsxImportSource: "solid-js",
-      providerImportSource: "solid-mdx"
-    })
+    config("tailwind", {
+      css: {
+        postcss: {
+          plugins: [tailwindcss]
+        }
+      }
+    }),
+    docsMdx()
   ]
 });
