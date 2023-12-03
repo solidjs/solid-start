@@ -156,7 +156,7 @@ function Nav() {
         order,
         frontMatter: frontMatter,
         subsection: frontMatter?.subsection,
-        href: key.slice(6).replace(/\.mdx?$/, "")
+        href: key.slice(`./routes`.length).replace(/\.mdx?$/, "")
       });
     });
 
