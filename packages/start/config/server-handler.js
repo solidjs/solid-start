@@ -53,13 +53,19 @@ async function handleServerFunction(event) {
   const action = (
     await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[filepath].import()
   )[name];
-  let parsed;
+  let parsed = [];
+
+  // grab bound arguments from url when no JS
+  if (!instance) {
+    const args = url.searchParams.get("args");
+    if (args) JSON.parse(args).forEach(arg => parsed.push(arg));
+  }
   const contentType = getHeader(event, "content-type");
   if (
     contentType.startsWith("multipart/form-data") ||
     contentType.startsWith("application/x-www-form-urlencoded")
   ) {
-    parsed = [await readFormData(event)];
+    parsed.push(await readFormData(event));
   } else {
     parsed = fromJSON(await readBody(event));
   }
@@ -70,21 +76,16 @@ async function handleServerFunction(event) {
     if (!instance) {
       const isError = result instanceof Error;
       const refererUrl = new URL(getHeader(event, "referer"));
-      if (result !== undefined)
-        refererUrl.searchParams.set(
-          "form",
-          JSON.stringify({
-            url: url.pathname + url.search,
-            result: isError ? result.message : result,
-            error: isError,
-            entries: [...parsed[0].entries()]
-          })
-        );
-      else refererUrl.searchParams.delete("form");
       return new Response(null, {
         status: 302,
         headers: {
-          Location: refererUrl.pathname + refererUrl.search
+          Location: refererUrl.toString(),
+          ...(result ? { "Set-Cookie": `flash=${JSON.stringify({
+            url: url.pathname + encodeURIComponent(url.search),
+            result: isError ? result.message : result,
+            error: isError,
+            input: [...parsed.slice(0, -1), [...parsed[parsed.length-1].entries()]]
+          })}; Secure; HttpOnly;`} : {})
         }
       });
     }

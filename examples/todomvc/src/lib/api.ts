@@ -26,13 +26,11 @@ export async function addTodoFn(formData: FormData) {
     storage.setItem("todos:counter", index as number + 1)
   ]);
 }
-export async function removeTodoFn(formData: FormData) {
-  const id = Number(formData.get("id"));
+export async function removeTodoFn(id: number) {
   const todos = await storage.getItem("todos:data") as Todo[];
   await storage.setItem("todos:data", todos.filter(todo => todo.id !== id));
 }
-export async function toggleTodoFn(formData: FormData) {
-  const id = Number(formData.get("id"));
+export async function toggleTodoFn(id: number) {
   const todos = await storage.getItem("todos:data") as Todo[];
   await storage.setItem("todos:data", todos.map(todo => {
     if (todo.id === id) {
@@ -41,8 +39,7 @@ export async function toggleTodoFn(formData: FormData) {
     return todo;
   }));
 }
-export async function editTodoFn(formData: FormData) {
-  const id = Number(formData.get("id"));
+export async function editTodoFn(id: number, formData: FormData) {
   const title = String(formData.get("title"));
   const todos = await storage.getItem("todos:data") as Todo[];
   await storage.setItem("todos", todos.map(todo => {
@@ -56,8 +53,7 @@ export async function clearCompletedFn() {
   const todos = await storage.getItem("todos:data") as Todo[];
   await storage.setItem("todos:data", todos.filter(todo => !todo.completed));
 }
-export async function toggleAllFn(formData: FormData) {
-  const completed = formData.get("completed") === "false";
+export async function toggleAllFn(completed: boolean) {
   const todos = await storage.getItem("todos:data") as Todo[];
   await storage.setItem("todos:data", todos.map(todo => ({ ...todo, completed })));
 }

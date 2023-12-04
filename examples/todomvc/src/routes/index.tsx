@@ -85,8 +85,7 @@ export default function TodoApp(props: RouteSectionProps) {
 
       <section class="main">
         <Show when={todos().length > 0}>
-          <form action={toggleAll} method="post">
-            <input name="completed" type="hidden" value={String(!remainingCount())} />
+          <form action={toggleAll.with(!remainingCount())} method="post">
             <button class={`toggle-all ${!remainingCount() ? "checked" : ""}`} type="submit">
               ❯
             </button>
@@ -95,20 +94,18 @@ export default function TodoApp(props: RouteSectionProps) {
         <ul class="todo-list">
           <For each={filterList(todos())}>
             {todo => {
-              const togglingTodo = useSubmission(toggleTodo, f => Number(f.get("id")) == todo.id);
-              const editingTodo = useSubmission(editTodo, f => Number(f.get("id")) == todo.id);
-              const title = () =>
-                editingTodo.pending ? (editingTodo.input.get("title") as string) : todo.title;
+              const togglingTodo = useSubmission(toggleTodo, input => input[0] == todo.id);
+              const editingTodo = useSubmission(editTodo, input => input[0] == todo.id);
+              const title = () => (editingTodo.pending ? editingTodo.input[0] : todo.title);
               const pending = () =>
                 togglingAll.pending || togglingTodo.pending || editingTodo.pending;
               const completed = () =>
                 togglingAll.pending
-                  ? !togglingAll.input.get("completed")
+                  ? !togglingAll.input[0]
                   : togglingTodo.pending
-                  ? !togglingTodo.input.get("completed")
+                  ? !togglingTodo.input[0]
                   : todo.completed;
-              const removing = () =>
-                removingTodo.some(data => Number(data.input.get("id")) === todo.id);
+              const removing = () => removingTodo.some(data => data.input[0] === todo.id);
               return (
                 <Show when={!removing()}>
                   <li
@@ -119,22 +116,23 @@ export default function TodoApp(props: RouteSectionProps) {
                       pending: pending()
                     }}
                   >
-                    <div class="view">
-                      <form action={toggleTodo} method="post">
-                        <input type="hidden" name="id" value={todo.id} />
-                        <button type="submit" class="toggle" disabled={pending()}>
-                          {completed() ? <CompleteIcon /> : <IncompleteIcon />}
-                        </button>
-                      </form>
+                    <form class="view" method="post">
+                      <button
+                        formAction={toggleTodo.with(todo.id)}
+                        class="toggle"
+                        disabled={pending()}
+                      >
+                        {completed() ? <CompleteIcon /> : <IncompleteIcon />}
+                      </button>
                       <label onDblClick={[setEditing, { id: todo.id, pending }]}>{title()}</label>
-                      <form action={removeTodo} method="post">
-                        <input type="hidden" name="id" value={todo.id} />
-                        <button type="submit" class="destroy" />
-                      </form>
-                    </div>
+                      <button formAction={removeTodo.with(todo.id)} class="destroy" />
+                    </form>
                     <Show when={editingTodoId() === todo.id}>
-                      <form action={editTodo} method="post" onSubmit={() => setEditing({})}>
-                        <input type="hidden" name="id" value={todo.id} />
+                      <form
+                        action={editTodo.with(todo.id)}
+                        method="post"
+                        onSubmit={() => setEditing({})}
+                      >
                         <input
                           name="title"
                           class="edit"
@@ -157,7 +155,7 @@ export default function TodoApp(props: RouteSectionProps) {
             {sub => (
               <li class="todo pending">
                 <div class="view">
-                  <label>{sub.input.get("title") as string}</label>
+                  <label>{sub.input[0].get("title") as string}</label>
                   <button disabled class="destroy" />
                 </div>
               </li>
