@@ -13,7 +13,7 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { HttpHeader } from "@solidjs/start/server";
+import { HttpHeader } from "@solidjs/start";
 // ---cut---
 <HttpHeader name="x-robots-tog" value="noindex" />
 ```
@@ -27,7 +27,7 @@ import { HttpHeader } from "@solidjs/start/server";
 ### Setting a header for catch-all routes
 
 ```tsx twoslash filename="routes/*404.tsx"
-import { HttpHeader, HttpStatusCode } from "@solidjs/start/server";
+import { HttpHeader, HttpStatusCode } from "@solidjs/start";
 
 export default function NotFound() {
   return (
@@ -41,16 +41,16 @@ export default function NotFound() {
 
 As you render the page you may want to add additional HTTP headers to the response. The `HttpHeader` component will do that for you. You can pass it a `name` and `value` and that will get added to the `Response` headers sent back to the browser.
 
-Keep in mind, when streaming responses(`renderStream`), HTTP headers can only be included that are added before the stream first flushed. Be sure to add `deferStream` to any resources or `createServerData$` calls that needed to be loaded before responding.
+Keep in mind, when streaming responses(`renderStream`), HTTP headers can only be included that are added before the stream first flushed. Be sure to add `deferStream` to any resources that needed to be loaded before responding.
 
 ## Reference
 
 ### `<HttpHeader />`
 
-Import from `"@solidjs/start/server"` and use it anywhere in your component tree. It will add the header if that part of the tree is rendered on the server.
+Import from `"@solidjs/start"` and use it anywhere in your component tree. It will add the header if that part of the tree is rendered on the server.
 
 ```tsx twoslash
-import { HttpHeader } from "@solidjs/start/server";
+import { HttpHeader } from "@solidjs/start";
 
 function Component() {
   return <HttpHeader name="my-header" value="header-value" />

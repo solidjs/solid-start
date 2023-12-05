@@ -1,14 +1,14 @@
 ---
 section: api
-title: root.tsx
+title: app.tsx
 order: 8
 subsection: Entrypoints
 active: true
 ---
 
-# root.tsx
+# app.tsx
 
-##### `root.tsx` defines the document that your application renders.
+##### `app.tsx` defines the document that your application renders.
 
 <div class="text-lg">
 

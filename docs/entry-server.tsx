@@ -44,4 +44,4 @@ function Document({ assets, children, scripts }: DocumentComponentProps) {
   );
 }
 
-export default createHandler(context => <StartServer context={context} document={Document} />);
+export default createHandler(() => <StartServer document={Document} />);

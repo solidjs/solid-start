@@ -1,7 +1,7 @@
 import { defineConfig } from "@solidjs/start/config";
 import { docsMdx } from "solid-start-mdx";
-import { config } from "vinxi/plugins/config";
 import tailwindcss from "tailwindcss";
+import { config } from "vinxi/plugins/config";
 
 export default defineConfig({
   optimizeDeps: {
@@ -9,7 +9,7 @@ export default defineConfig({
   },
   start: {
     appRoot: "./docs",
-    extensions: ["mdx", "md"]
+    extensions: ["mdx", "md"],
   },
   plugins: [
     config("tailwind", {

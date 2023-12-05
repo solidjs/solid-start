@@ -235,7 +235,7 @@ function Nav() {
 }
 
 import { components } from "./components/components";
-import { TableOfContents, useTableOfContents } from "./components/TableOfContents";
+import { useTableOfContents } from "./components/TableOfContents";
 
 export default function Root() {
   return (
@@ -260,7 +260,6 @@ export default function Root() {
 
           <div class="col-start-2 row-start-2 h-full overflow-auto">
             <div class="container h-full px-8 py-8">
-              {/* <DefaultErrorBoundary> */}
               <Suspense>
                 <main class="prose prose-md w-full max-w-none pb-10 pt-0 lg:px-10">
                   <MDXProvider
@@ -298,13 +297,9 @@ export default function Root() {
                     }}
                   >
                     {props.children}
-                    {/* <Routes>
-                        <FileRoutes />
-                      </Routes> */}
                   </MDXProvider>
                 </main>
               </Suspense>
-              {/* </DefaultErrorBoundary> */}
             </div>
           </div>
           {/* <TableOfContents /> */}

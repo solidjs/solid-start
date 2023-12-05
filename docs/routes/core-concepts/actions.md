@@ -17,14 +17,16 @@ Actions are isomorphic. This means that a submission can be handled on the serve
 Let's stop getting ahead of ourselves! First, let's create an action!
 
 ```tsx twoslash
-import { createRouteAction } from "solid-start/data";
+import { action, useAction } from "@solidjs/router";
+
+const echo = action(async (message: string) => {
+  // Imagine this is a call to fetch
+  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+  console.log(message);
+});
 
 export function MyComponent() {
-  const [_, echo] = createRouteAction(async (message: string) => {
-    // Imagine this is a call to fetch
-    await new Promise((resolve, reject) => setTimeout(resolve, 1000));
-    console.log(message);
-  });
+  const myEcho = useAction(echo);
 }
 ```
 
@@ -34,15 +36,18 @@ These will return either a `Response` such as a redirect (we are not returning a
 
 Naturally, this action won't do anything quite yet. We still need to call it somewhere! For now, let's call it manually from some component using the submit function returned as the second value from `createRouteAction`.
 
-```ts twoslash {3,8}
-import { createRouteAction } from "solid-start/data";
+```tsx twoslash
+import { action, useAction } from "@solidjs/router";
+
+const echo = action(async (message: string) => {
+  // Imagine this is a call to fetch
+  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+  console.log(message);
+});
+
 export function MyComponent() {
-  const [, echo] = createRouteAction(async (message: string) => {
-    // Imagine this is a call to fetch
-    await new Promise((resolve, reject) => setTimeout(resolve, 1000));
-    console.log(message);
-  });
-  echo("Hello from solid!");
+  const myEcho = useAction(echo);
+  myEcho("Hello from solid!");
 }
 ```
 
@@ -50,17 +55,18 @@ You should see `Hello from solid!` back in the console!
 
 ### Returning from actions
 
-In many cases, after submitting data the server sends some data back as well. Anything returned from your action function can be accessed using the reactive `action.result` property. The value of this property can change each time you submit your action.
+In many cases, after submitting data the server sends some data back as well. Usually an error message if something failed. Anything returned from your action function can be accessed using the reactive `action.result` property. The value of this property can change each time you submit your action.
 
-```tsx twoslash {2,4,7-9}
-import { createRouteAction } from "solid-start/data";
-// ---cut---
+```tsx twoslash
+import { action, useAction, useSubmission } from "@solidjs/router";
+const echo = action(async (message: string) => {
+  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+  return message;
+});
+
 export function MyComponent() {
-  const [echoing, echo] = createRouteAction(async (message: string) => {
-    await new Promise((resolve, reject) => setTimeout(resolve, 1000));
-    return message;
-  });
-
+  const myEcho = useAction(echo);
+  const echoing = useSubmission(echo);
   echo("Hello from solid!");
   setTimeout(() => echo("This is a second submission!"), 1500);
   return <p>{echoing.result}</p>;
@@ -75,45 +81,30 @@ We highly recommend using HTML forms as your method to submit data with actions.
 
 They have the added benefit of implicit accessibility. They can save you valuable time that would have otherwise been spent designing a UI library that will never have the aforementioned benefits.
 
-When forms are used to submit actions, the first argument is an instance of [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData). To write a form using actions, simply use the `Form` method of your action instead of the normal `<form>` tag. You can then walk away with amazing, progressively enhanced forms!
+When forms are used to submit actions, the first argument is an instance of [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData). To write a form using actions, pass the action to the action property of your form. You can then walk away with amazing, progressively enhanced forms!
 
-If you don't return a `Response` from your action, the user will stay on the same page and your resources will be re-triggered. You can also return a `redirect` or `ResponseError`.
+If you don't return a `Response` from your action, the user will stay on the same page and your resources will be re-triggered. You can also throw a `redirect` to tell the browser to navigate.
 
 ```tsx twoslash
-import { createRouteAction } from "@solidjs/start";
-import { redirect } from "@solidjs/start/server";
-// ---cut---
-export function MyComponent() {
-  const [_, { Form }] = createRouteAction(async (formData: FormData) => {
-    await new Promise((resolve, reject) => setTimeout(resolve, 1000));
-    const username = formData.get("username");
-    if (username === "admin") {
-      return redirect("/admin");
-    } else {
-      throw new Error("Invalid username");
-    }
-    return redirect("/home");
-  });
+import { action, redirect } from "@solidjs/router";
 
+const isAdmin = action(async (formData: FormData) => {
+  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+  const username = formData.get("username");
+  if (username === "admin") throw redirect("/admin");
+  return new Error("Invalid username");
+});
+
+export function MyComponent() {
   return (
-    <Form>
+    <form action={isAdmin} method="post">
       <label for="username">Username:</label>
       <input type="text" name="username" />
       <input type="submit" value="submit" />
-    </Form>
+    </form>
   );
 }
 ```
-
-This `Form` is an enhanced version of the normal `form`. Its submit handler has already been wired up as well.
-
-## Retriggering resources
-
-`refetchRouteData` is used to retrigger all current route data or by specific key.
-
-## Errors
-
-The `error` field that's populated if the submission errored.
 
 ## Server Actions
 
@@ -127,4 +118,25 @@ Sometimes we need to make sure our action _only_ runs on the server. This is use
 - Running code incompatible with browsers.
 - Or even connecting directly to a database. (Take caution, opinions on if this is a good idea are mixed. You should consider separating your backend and frontend).
 
-To do this, simply replace `createRouteAction` with `createServerAction$` and the action will always be run on the server.
+To do this, put a `"use server";` directive in your action function:
+```tsx twoslash
+import { action, redirect } from "@solidjs/router";
+
+const isAdmin = action(async (formData: FormData) => {
+  "use server";
+  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+  const username = formData.get("username");
+  if (username === "admin") throw redirect("/admin");
+  return new Error("Invalid username");
+});
+
+export function MyComponent() {
+  return (
+    <form action={isAdmin} method="post">
+      <label for="username">Username:</label>
+      <input type="text" name="username" />
+      <input type="submit" value="submit" />
+    </form>
+  );
+}
+

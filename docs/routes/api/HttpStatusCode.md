@@ -13,9 +13,9 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { HttpStatusCode } from "@solidjs/start/server";
+import { HttpStatusCode } from "@solidjs/start";
 // ---cut---
-<HttpStatusCode code={404} />
+<HttpStatusCode code={404} />;
 ```
 
 </div>
@@ -33,7 +33,7 @@ Since `HttpStatusCode` is just a component, it can be used with `ErrorBoundaries
 Status codes are important tools for things like caching and SEO, so it's a good practice to send meaningful status codes. For example, for a `NotFound` page, you should send a `404` status code.
 
 ```tsx twoslash {6} filename="routes/*404.tsx"
-import { HttpStatusCode } from "@solidjs/start/server";
+import { HttpStatusCode } from "@solidjs/start";
 
 export default function NotFound() {
   return (
@@ -47,40 +47,35 @@ export default function NotFound() {
 
 ### Setting a 404 status code for missing pages for dynamic routes
 
-When you use dynamic params in routes, you may want to set a 404 status code if the given parameter for a segment points to a missing resource. Usually, you will find out that the param is missing when you do some async request with that param. You are probably inside a resource fetcher, either in `createServerData$`, or `createResource`.
+When you use dynamic params in routes, you may want to set a 404 status code if the given parameter for a segment points to a missing resource. Usually, you will find out that the param is missing when you do some async request with that param. You are probably inside a resource fetcher.
 
 You can throw errors from inside these fetchers. These will be caught by the nearest `<ErrorBoundary>` component from where the data is accessed. `<HttpStatusCode>` pairs very well with error boundaries. You can inspect the error in the ErrorBoundary's fallback. If the fetcher throws an error indicating the data was not found, render a `<HttpStatusCode code={404} />`.
 
-Keep in mind, when streaming responses (`renderStream`), the HTTP Status can only be included if added before the stream first flushed. Be sure to add `deferStream` to any resources or `createServerData$` calls that needed to be loaded before responding.
+Keep in mind, when streaming responses (`renderStream`), the HTTP Status can only be included if added before the stream first flushed. Be sure to add `deferStream` to any resources calls that need to be loaded before responding.
 
 ```tsx twoslash {8,18-23} filename="routes/[house].tsx"
-import { Show } from 'solid-js';
-import { ErrorBoundary, useRouteData, RouteDataArgs, ErrorMessage } from 'solid-start';
-import { HttpStatusCode, createServerData$, ServerError } from "@solidjs/start/server";
+import { Show, ErrorBoundary } from "solid-js";
+import { cache, createAsync } from "@solidjs/router"
+import { HttpStatusCode } from "@solidjs/start";
 
-export function routeData({ params }: RouteDataArgs) {
-  return createServerData$(async (house: string) => {
-    if (house != 'gryffindor') {
-      throw new ServerError('House not found')
-    }
-    return { house }
-  }, { key: () => params.house, deferStream: true });
-}
+const getHouse = cache(async (house: string) => {
+  if (house != "gryffindor") {
+    throw new Error("House not found");
+  }
+  return house;
+}, "house");
 
-export default function House() {
-  const house = useRouteData<typeof routeData>();
+export default function House(props: { name: string }) {
+  const house = createAsync(() => getHouse(props.name), { deferStream: true })
   return (
     <ErrorBoundary
       fallback={e => (
-        <Show when={e.message === 'House not found'}>
+        <Show when={e.message === "House not found"}>
           <HttpStatusCode code={404} />
-          <ErrorMessage error={e} />
         </Show>
       )}
     >
-      <div>
-        Gryffindor
-      </div>
+      <div>{house()}</div>
     </ErrorBoundary>
   );
 }

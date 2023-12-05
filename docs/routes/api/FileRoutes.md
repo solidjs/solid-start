@@ -30,27 +30,22 @@ The `<FileRoutes>` component collects routes from the file-system in the `/route
 
 Since `FileRoutes` returns a route configuration, it must be placed directly inside a `<Routes>`, usually the one in your `root.tsx` file.
 
-```tsx twoslash {8-10} filename="root.tsx"
-import { Html, Head, Body, Scripts, Routes, FileRoutes } from "@solidjs/start";
+```tsx twoslash {8-10} filename="app.tsx"
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start";
 
-export default function Root() {
+export default function App() {
   return (
-    <Html>
-      <Head />
-      <Body>
-        <Routes>
-          <FileRoutes />
-        </Routes>
-        <Scripts />
-      </Body>
-    </Html>
+    <Router>
+      <FileRoutes />
+    </Router>
   );
 }
 ```
 
 <aside>
 
-Be careful before you decide to remove the `FileRoutes` component from your `root.tsx` file. If you do, you will need to manually add all of your routes to the `<Routes>` component.
+Be careful before you decide to remove the `FileRoutes` component from your `app.tsx` file. If you do, you will need to manually add all of your routes to the `<Routes>` component.
 
 You will still lose out on some optimizations that are enabled by file-system routing. While we will caution you however, always be free to explore what you can do.
 
