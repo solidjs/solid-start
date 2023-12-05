@@ -1,8 +1,8 @@
 export { StartServer } from "./StartServer";
 export * from "./middleware";
-export type { DocumentComponentProps } from "./types";
-import { createPageEvent } from "./page-event";
+export * from "./types";
 import { createHandler as createBaseHandler } from "./handler";
+import { createPageEvent } from "./page-event";
 import type { PageEvent } from "./types";
 
 export function createHandler(

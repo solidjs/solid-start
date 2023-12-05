@@ -16,9 +16,11 @@ active: true
 
 Web applications often comprise many components: databases, servers, front-ends, bundlers, data fetching/mutations, caching, and infrastructure. Orchestrating these components is challenging and often requires a large amount of shared state and redundant logic across the application stack.
 
-Enter SolidStart: a meta-framework that provides many of these components out-of-the-box and integrates them seamlessly!
+Enter SolidStart: a meta-framework that provides the platform to put all of these pieces together in a one location.
 
-SolidStart is considered a _meta-framework_ (a framework built on top of another framework) because, at its core, SolidStart is powered by [SolidJS](https://solidjs.com) and the [Solid router](https://github.com/solidjs/solid-router).
+Start is considered a _meta-framework_ (a framework built on top of another framework) because, at its core, Start is powered by [SolidJS](https://solidjs.com). It uses [Vinxi](https://vinxi.vercel.app/) an agnostic Framework Bundler combining the power of [Vite](https://vitejs.dev) and [Nitro](https://nitro.unjs.io/).
+
+Unlike other Metaframeworks SolidStart does not aim to be too opinionated. It provides the minimal amount of pieces to get you up and going. While there are templates that include many of the expected tools, SolidStart itself does not ship with a Router or Metadata library. Instead it leaves it open to using which ever libraries you feel comfortable with.
 
 SolidStart enables you to render your application in different ways depending on what's best for your use case:
 

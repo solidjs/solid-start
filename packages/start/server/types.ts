@@ -37,3 +37,7 @@ export interface PageEvent extends FetchEvent {
   // mutation: boolean;
   response?: Response;
 }
+
+export interface APIEvent extends FetchEvent {
+  params: { [key: string]: string };
+}

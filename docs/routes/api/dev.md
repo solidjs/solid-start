@@ -8,7 +8,7 @@ active: true
 
 # solid-start dev
 
-##### `solid-start dev` starts a development server backed by [Vite](https://vitejs.dev/).
+##### `solid-start dev` starts a development server backed by [Vinxi](https://vinxi.vercel.app/).
 
 <div class="text-lg">
 
@@ -19,12 +19,6 @@ solid-start dev
 </div>
 
 ## Usage
-
-### Open the browser
-
-```bash
-solid-start dev --open
-```
 
 ### Specify a port
 
@@ -40,8 +34,5 @@ solid-start dev --config project/vite.config.ts --root project
 
 ## Reference
 
-- `root`, `-r`: The root directory of the project.
 - `port`, `-p`: The port to run the server on.
-- `host`, `-h`: The host to run the server on.
-- `open`, `-o`: Open the browser to the running server.
 - `config`: The path to the Vite config file.

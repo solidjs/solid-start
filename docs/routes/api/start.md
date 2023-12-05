@@ -22,12 +22,6 @@ solid-start start
 
 Remember to run `solid-start build` before running `solid-start start`.
 
-### Open the browser
-
-```bash
-solid-start start --open
-```
-
 ### Specify a port
 
 ```bash
@@ -43,5 +37,4 @@ solid-start start --config project/vite.config.ts --root project
 ## Reference
 
 - `port`, `-p`: The port to run the server on.
-- `open`, `-o`: Open the browser to the running server.
 - `config`: The path to the Vite config file.

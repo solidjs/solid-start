@@ -14,15 +14,12 @@ active: true
 
 ```tsx
 import netlify from "solid-start-netlify";
-import solid from "solid-start/vite";
-import { defineConfig } from "vite";
+import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  plugins: [
-    solid({
-      adapter: netlify({ edge: true })
-    })
-  ]
+  start: {
+    adapter: netlify({ edge: true })
+  }
 });
 ```
 
@@ -50,32 +47,23 @@ The simplest usage is passing no arguments, which defaults to the Node adapter. 
 
 ```tsx
 import netlify from "solid-start-netlify";
-import solid from "solid-start/vite";
-import { defineConfig } from "vite";
+import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  plugins: [
-    solid({
-      adapter: netlify({ edge: true })
-    })
-  ]
+  start: {
+    adapter: netlify({ edge: true })
+  }
 });
 ```
 
 ## Reference
 
-### `solid-start/vite`
+### `@solidjs/start/config`
 
 The vite plugin exposes the following options:
 
 - `adapter` (_string_ | Adapter, default `"node"`): sets the adapter.
 - `appRoot` (_string_, default `"./src"`): sets the root of the application code.
 - `routesDir` (_string_, default `"./routes"`): the path to where the routes are located.
-- `rootEntry` (_string_, default `"./root.tsx"`): the file path where to the root.
-- `clientEntry` (_string_, default `"./entry-client.tsx"`): the file path where to the client entry.
-- `serverEntry` (_string_, default `"./entry-server.tsx"`): the file path where to the server entry.
-- `prerenderRoutes` (_string[]_, default `[]`): list of route paths to prerender (currently only works with static adapter).
-- `inspect` (_boolean_, default `true`): turns on whether vite inspect plugin is enabled.
-- `ssr` (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode. `server$` functions do not work with `ssr: false`.
+- `ssr` (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode.
 - `islands` (_boolean_, default `false`): _experimental_ toggles on "islands" mode.
-- `islandsRouter` (_boolean_, default `false`): _experimental_ toggles on hybrid "islands" routing.

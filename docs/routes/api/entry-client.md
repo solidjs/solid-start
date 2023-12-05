@@ -13,7 +13,7 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { mount, StartClient } from "solid-start/entry-client";
+import { mount, StartClient } from "@solidjs/start/client";
 
 mount(() => <StartClient />, document);
 ```
@@ -37,9 +37,9 @@ It doesn't matter if you are using SolidStart to do client-only rendering or if 
 Method that either calls `render` or `hydrate` depending on the configuration.
 
 ```tsx twoslash
-import { mount, StartClient } from "solid-start/entry-client";
+import { mount, StartClient } from "@solidjs/start/client";
 
-mount(() => <StartClient />, document);
+mount(() => <StartClient />, document.getElementById("app"));
 ```
 
 #### Parameters
@@ -49,4 +49,4 @@ mount(() => <StartClient />, document);
 
 ### `<StartClient />`
 
-Component that wraps our application root. It includes Context providers for Routing and MetaData.
+Component that wraps our application root.

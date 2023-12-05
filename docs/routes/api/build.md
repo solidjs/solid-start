@@ -8,7 +8,7 @@ active: true
 
 # solid-start build
 
-##### `solid-start build` bundles your server and client using [Vite](https://vitejs.dev/).
+##### `solid-start build` bundles your server and client using [Vinxi](https://vinxi.vercel.app/).
 
 <div class="text-lg">
 
@@ -17,8 +17,6 @@ solid-start build
 ```
 
 </div>
-
-<table-of-contents></table-of-contents>
 
 ## Usage
 

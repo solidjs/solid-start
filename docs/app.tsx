@@ -122,8 +122,6 @@ function Nav() {
       }[] & { subsection?: Set<string>; title?: string; order?: number };
     } = {};
 
-    console.log(mods);
-
     Object.keys(mods).forEach(key => {
       let frontMatter = mods[key];
       let {

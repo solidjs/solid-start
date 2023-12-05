@@ -6,7 +6,7 @@ order: 98
 
 # Actions
 
-One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid's answer to this is _actions_.
+One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid Router's answer to this is _actions_.
 
 Actions give you the ability to specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. Actions are isomorphic and generally represent a `POST` request.
 
@@ -32,9 +32,9 @@ export function MyComponent() {
 
 This `echo` action will act as your backend, however you can substitute it for any API, provided you are ok with it running on the client. Typically, route actions are used with some sort of solution like fetch or GraphQL.
 
-These will return either a `Response` such as a redirect (we are not returning anything quite yet!) or any value. If you want to ensure the action only runs on the server for things like databases, you will want to use `createServerAction$`, introduced below.
+These will return either a `Response` such as a redirect (we are not returning anything quite yet!) or any value. If you want to ensure the action only runs on the server for things like databases, you will want to use `"use server"`, introduced below.
 
-Naturally, this action won't do anything quite yet. We still need to call it somewhere! For now, let's call it manually from some component using the submit function returned as the second value from `createRouteAction`.
+Naturally, this action won't do anything quite yet. We still need to call it somewhere! For now, let's call it manually from some component using the submit function returned from `action`.
 
 ```tsx twoslash
 import { action, useAction } from "@solidjs/router";

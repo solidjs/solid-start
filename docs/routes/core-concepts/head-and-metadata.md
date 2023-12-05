@@ -9,7 +9,7 @@ active: true
 
 <table-of-contents></table-of-contents>
 
-Normally when we are building UIs for our apps, we are dealing with DOM elements that are going to be rendered in the `body` of the `document`. But there are cases where we want to customize what's going to be rendered in the `head` of the `document`.
+Normally when we are building UIs for our apps, we are dealing with DOM elements that are going to be rendered in the `body` of the `document`. But there are cases where we want to customize what's going to be rendered in the `head` of the `document`. Start doesn't come with a metadata library so we will use `@solidjs/meta` in these examples.
 
 The common elements used in the `head` are:
 
@@ -18,57 +18,13 @@ The common elements used in the `head` are:
 - [`link`][nativelink]: Adds assets like stylesheets or scripts for the browser to load for the page.
 - [`style`][nativestyle]: Adds inline styles to the page.
 
-## Adding `head` tags
-
-In SolidStart, we ship with actual components representing these tags. So: [`title`][nativetitle] -> [`Title`][title], [`meta`][nativemeta] -> [`Meta`][meta], etc. They can be used, not only as children of [`Head`][head] in `root.tsx`, but anywhere in your app, even deep in your component tree.
-
-Powered by `@solidjs/meta`, we can interpret these tags and update the `document.head` appropriately. There are two main places we recommend adding these tags to your page.
-
-### `root.tsx`
-
-As part of the `Head` component there, you can pass in the `Title`, `Meta` and `Link` tags that you want to be used for all of your routes. This is useful for:
-
-- Adding a default fallback `title` to be used by all pages (if they don't specify their own).
-- Adding common `meta` tags like `charset` and `viewport` for consistent behavior across the app.
-- Adding links to external stylesheets, fonts, manifests, favicon.
-
-```tsx {10-14} twoslash filename="root.tsx"
-import { Suspense } from "solid-js";
-import {
-  Html, Head, Title, Meta, Link, Body, Routes, FileRoutes, Scripts, ErrorBoundary
-} from "@solidjs/start";
-
-export default function Root() {
-  return (
-    <Html lang="en">
-      <Head>
-        <Title>Solid - Hacker News</Title>
-        <Meta charset="utf-8" />
-        <Meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta name="description" content="Hacker News Clone built with Solid" />
-        <Link rel="manifest" href="/manifest.webmanifest" />
-      </Head>
-      <Body>
-        <ErrorBoundary>
-          <Suspense>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </Suspense>
-        </ErrorBoundary>
-        <Scripts />
-      </Body>
-    </Html>
-  );
-}
-```
 
 ### Inside a Route component
 
 These tags will be applied for that specific route only and are removed from `document.head` once a user navigates away from the page. You can use `routeData` here to create titles and SEO metadata that is specific to the dynamic parts of the route.
 
 ```tsx {0,5}
-import { Title } from "@solidjs/start";
+import { Title } from "@solidjs/meta";
 
 export default function About() {
   return (
@@ -112,19 +68,17 @@ export default function About() {
 
 ## Using async data in `Title`
 
-You can use `routeData` to create titles that are specific to the dynamic parts of the route. For example, if you have a route that looks like `/users/:id`, you can use `routeData` to get the `id` and fetch the user's name from the server. Then you can use that name in the `Title` component.
+You can use resources to create titles that are specific to the dynamic parts of the route. For example, if you have a route that looks like `/users/:id`, you can use `routeData` to get the `id` and fetch the user's name from the server. Then you can use that name in the `Title` component.
 
 ```tsx {0,5} twoslash
 let fetchUser = (id: string) => ({ name: "Harry Potter" });
 // ---cut---
-import { Title, useRouteData, RouteDataArgs, createRouteData } from "@solidjs/start";
+import { Title, } from "@solidjs/meta";
+import { RouteSectionProps } from "@solidjs/router";
 import { createResource, Show } from "solid-js";
 
-export const routeData = ({ params }: RouteDataArgs) =>
-  createRouteData(fetchUser, { key: () => params.id });
-
-export default function User() {
-  const user = useRouteData<typeof routeData>();
+export default function User(props: RouteSectionProps) {
+  const [user] = createResource(() => fetchUser(props.params.id));
 
   return (
     <Show when={user()}>
@@ -206,10 +160,6 @@ export default function About() {
 }
 ```
 
-[link]: /api/Link
-[title]: /api/Title
-[meta]: /api/Meta
-[head]: /api/Head
 [nativelink]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link
 [nativestyle]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style
 [nativemeta]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta

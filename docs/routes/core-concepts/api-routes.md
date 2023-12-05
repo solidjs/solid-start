@@ -9,7 +9,7 @@ active: true
 
 <table-of-contents></table-of-contents>
 
-While we think that using  [`createServerData$`][createServerData] is the best way to write server-side code for data needed by your UI, sometimes you need to expose API routes. Reasons for wanting API Routes include:
+While we think that using `Server Functions` is the best way to write server-side code for data needed by your UI, sometimes you need to expose API routes. Reasons for wanting API Routes include:
 
 - You have additional clients that want to share this logic.
 - You want to expose a GraphQL or tRPC endpoint.
@@ -50,10 +50,9 @@ An API route gets passed an `APIEvent` object as its first argument. This object
 
 - `request`: `Request` object representing the request sent by the client.
 - `params`: Object that contains the dynamic route parameters, e.g. for `/api/students/:id`, when user requests `/api/students/123` , `params.id` will be `"123"`.
-- `env`: Environment context, environment specific settings, and bindings.
 - `fetch`: An internal `fetch` function that can be used to make requests to other API routes without worrying about the `origin` of the URL.
 
-An API route is expected to return a [`Response`][response] object. Let's look at an example of an API route that returns a list of students in a given house, in a specific year:
+An API route is expected to return JSON or a [`Response`][response] object. Let's look at an example of an API route that returns a list of students in a given house, in a specific year:
 
 ```tsx twoslash filename="routes/api/[house]/students/year-[year].ts"
 // @filename: hogwarts.ts
@@ -69,13 +68,13 @@ export default {
 
 // @filename: index.ts
 // ---cut---
-import { type APIEvent, json } from "solid-start/api";
+import { type APIEvent } from "@solidjs/start/server";
 import hogwarts from "./hogwarts";
 
 export async function GET({ params }: APIEvent) {
   console.log(`House: ${params.house}, Year: ${params.year}`);
   const students = await hogwarts.getStudents(params.house, params.year);
-  return json({ students });
+  return students;
 }
 ```
 
@@ -107,9 +106,9 @@ export default {
 };
 
 // @filename: index.ts
+const parseCookie = (t: string) => ({} as Record<string, any>)
 // ---cut---
-import { type APIEvent, json } from "solid-start/api";
-import { parseCookie } from "@solidjs/start";
+import { type APIEvent  } from "@solidjs/start/server";
 import hogwarts from "./hogwarts";
 
 export async function GET({ request, params }: APIEvent) {
@@ -122,9 +121,7 @@ export async function GET({ request, params }: APIEvent) {
   if (houseMaster.id !== userId) {
     return new Response("Not authorized", { status: 403 });
   }
-  return json({
-    students: await hogwarts.getStudents(params.house, params.year)
-  });
+  return await hogwarts.getStudents(params.house, params.year)
 }
 ```
 
@@ -141,7 +138,7 @@ SolidStart makes it easy to implement a GraphQL API. The `graphql` function take
 
 ```ts twoslash filename="routes/graphql.ts"
 import { buildSchema, graphql } from "graphql";
-import { type APIEvent, json } from "@solidjs/start";
+import { type APIEvent } from "@solidjs/start/server";
 
 // Define GraphQL Schema
 const schema = buildSchema(`
@@ -176,8 +173,8 @@ const handler = async (event: APIEvent) => {
   // pass query and save results
   const result = await graphql({rootValue, schema, source: body.query})
 
-  // send query results as response
-  return json(result);
+  // send query result
+  return result;
 };
 
 export const GET = handler;
