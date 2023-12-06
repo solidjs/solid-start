@@ -8,18 +8,30 @@ import {
 } from "vinxi/server";
 import { FetchEvent } from "./types";
 
+const h3EventSymbol = Symbol("h3Event");
 const fetchEventSymbol = Symbol("fetchEvent");
+const eventTraps = {
+  get(target, prop) {
+    if (prop === fetchEventSymbol) return target;
+    return target[prop] ?? target[h3EventSymbol][prop];
+  }
+};
 
 export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
-  return new Proxy({
-    request: toWebRequest(event),
-    clientAddress: getRequestIP(event),
-    locals: {},
-  }, {
-    get(target, prop) {
-      return target[prop] ?? event[prop];
-    }
-  }) as unknown as FetchEvent;
+  return new Proxy(
+    {
+      request: toWebRequest(event),
+      clientAddress: getRequestIP(event),
+      locals: {},
+      // @ts-ignore
+      [h3EventSymbol]: event
+    },
+    eventTraps
+  ) as unknown as FetchEvent;
+}
+
+export function cloneEvent<T extends FetchEvent>(fetchEvent: T): T {
+  return new Proxy({ ...fetchEvent[fetchEventSymbol] }, eventTraps);
 }
 
 export function getFetchEvent(h3Event: H3Event): FetchEvent {

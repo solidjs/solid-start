@@ -1,10 +1,11 @@
 import { renderToStream } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-  eventHandler,
   EventHandlerObject,
   EventHandlerRequest,
   H3Event,
+  eventHandler,
+  sendRedirect,
   setHeader,
   setResponseStatus
 } from "vinxi/server";
@@ -64,7 +65,7 @@ export function createHandler(
         } else cloned.onCompleteShell = handleShellCompleteRedirect(context, e);
         const stream = renderToStream(() => fn(context), cloned);
         if (context.response && context.response.headers.get("Location")) {
-          return event.redirect(context.response.headers.get("Location"));
+          return sendRedirect(event, context.response.headers.get("Location"));
         }
         return { pipeTo: stream.pipeTo };
       });

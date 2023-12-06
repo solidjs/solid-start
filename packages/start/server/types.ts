@@ -37,5 +37,7 @@ export interface APIEvent extends FetchEvent {
 }
 
 declare module "solid-js/web" {
-  interface RequestEvent extends FetchEvent {}
+  interface RequestEvent extends FetchEvent {
+    serverOnly?: boolean;
+  }
 }

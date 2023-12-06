@@ -31,7 +31,7 @@ export async function createPageEvent(ctx: FetchEvent) {
         : [])
     ],
     initialSubmission: initFromFlash(ctx),
-    routes: createRoutes(ctx),
+    routes: createRoutes(),
     // prevUrl: prevPath || "",
     // mutation: mutation,
     // $type: FETCH_EVENT,
