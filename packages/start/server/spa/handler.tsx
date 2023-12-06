@@ -1,5 +1,5 @@
 import { createHandler as createBaseHandler } from "../handler";
-import { FetchEvent, FETCH_EVENT, PageEvent } from "../types";
+import { FetchEvent, PageEvent } from "../types";
 
 export function createHandler(
   fn: (context: PageEvent) => unknown,
@@ -14,9 +14,9 @@ export async function createPageEvent(ctx: FetchEvent) {
     manifest: await clientManifest.json(),
     assets: [...(await clientManifest.inputs[clientManifest.handler].assets())],
     routes: [],
-    prevUrl: "",
-    mutation: false,
-    $type: FETCH_EVENT,
+    // prevUrl: "",
+    // mutation: false,
+    // $type: FETCH_EVENT,
     $islands: new Set<string>()
   });
 

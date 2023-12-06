@@ -2,6 +2,7 @@
 import { getRequestEvent, isServer } from "solid-js/web";
 import lazyRoute from "./lazyRoute";
 
+import { PageEvent } from "../server";
 import { pageRoutes as routeConfigs } from "./routes";
 
 export function createRoutes() {
@@ -25,5 +26,5 @@ export function createRoutes() {
 
 let routes;
 export const FileRoutes = () => {
-  return isServer ? getRequestEvent().routes : (routes || (routes = createRoutes()));
+  return isServer ? (getRequestEvent() as PageEvent).routes : (routes || (routes = createRoutes()));
 };
