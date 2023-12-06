@@ -14,6 +14,7 @@ export function StartServer(props) {
         scripts={
           <>
             <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
+            <script>$R = [];</script>
             <script
               type="module"
               src={

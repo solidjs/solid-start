@@ -155,7 +155,7 @@ export default function TodoApp(props: RouteSectionProps) {
             {sub => (
               <li class="todo pending">
                 <div class="view">
-                  <label>{sub.input[0].get("title") as string}</label>
+                  <label>{String(sub.input[0].get("title"))}</label>
                   <button disabled class="destroy" />
                 </div>
               </li>
