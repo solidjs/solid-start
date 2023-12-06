@@ -1,4 +1,5 @@
 import { JSX } from "solid-js";
+import { EventHandlerRequest, H3Event } from "vinxi/server";
 
 // export const FETCH_EVENT = "$FETCH";
 
@@ -15,17 +16,10 @@ export type ContextMatches = {
   params: unknown;
 };
 
-export interface FetchEvent {
+export interface FetchEvent extends H3Event<EventHandlerRequest> {
   request: Request;
   clientAddress: string;
   locals: Record<string, unknown>;
-  redirect(url: string, status?: number): void;
-  getResponseStatus(): number;
-  setResponseStatus(code: number, text?: string): void;
-  getResponseHeader(name: string): string | number | string[];
-  setResponseHeader(name: string, value: string): void;
-  appendResponseHeader(name: string, value: string): void;
-  removeResponseHeader(name: string): void;
 }
 export interface PageEvent extends FetchEvent {
   manifest: any;
@@ -40,4 +34,8 @@ export interface PageEvent extends FetchEvent {
 
 export interface APIEvent extends FetchEvent {
   params: { [key: string]: string };
+}
+
+declare module "solid-js/web" {
+  interface RequestEvent extends FetchEvent {}
 }

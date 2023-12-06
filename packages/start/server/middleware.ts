@@ -1,45 +1,25 @@
 import {
-  appendResponseHeader,
   defineMiddleware,
   EventHandlerRequest,
   getRequestIP,
-  getResponseHeader,
-  getResponseStatus,
   H3Event,
-  removeResponseHeader,
-  sendRedirect,
   sendWebResponse,
-  setResponseHeader,
-  setResponseStatus,
   toWebRequest
 } from "vinxi/server";
 import { FetchEvent } from "./types";
 
-export * from "vinxi/server";
-
-const h3EventSymbol = Symbol("h3Event");
 const fetchEventSymbol = Symbol("fetchEvent");
 
 export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
-  return {
+  return new Proxy({
     request: toWebRequest(event),
     clientAddress: getRequestIP(event),
     locals: {},
-    redirect: (url, status) => sendRedirect(event, url, status),
-    getResponseStatus: () => getResponseStatus(event),
-    setResponseStatus: (code, text) => setResponseStatus(event, code, text),
-    getResponseHeader: name => getResponseHeader(event, name),
-    setResponseHeader: (name, value) => setResponseHeader(event, name, value),
-    appendResponseHeader: (name, value) => appendResponseHeader(event, name, value),
-    removeResponseHeader: name => removeResponseHeader(event, name),
-    // @ts-ignore
-    [h3EventSymbol]: event
-  };
-}
-
-export function getH3Event(fetchEvent: FetchEvent): H3Event<EventHandlerRequest> {
-  // @ts-ignore
-  return fetchEvent[h3EventSymbol];
+  }, {
+    get(target, prop) {
+      return target[prop] ?? event[prop];
+    }
+  }) as unknown as FetchEvent;
 }
 
 export function getFetchEvent(h3Event: H3Event): FetchEvent {

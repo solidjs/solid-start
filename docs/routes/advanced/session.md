@@ -12,9 +12,14 @@ Let's see how some common authentication and authorization patterns work:
 
 We need to know who the user is. This is usually done by checking the request for information. The best way for the client and server to do is using cookies.
 
-We can use the `Request` object to access the `Cookie` header. We can then parse the cookie header to get the cookie value for a specific cookie name, for e.g. `"session"`. We can then use the cookie value to identify the session.
+We can use the `Request` object to access the `Cookie` header. We can then parse the cookie header to get the cookie value for a specific cookie name, for e.g. `"session"`. We can then use the cookie value to identify the session. Fortunately, Nitro already comes with helpers that enable this.
 
 ```twoslash include hogwarts
+// @module: esnext
+const process = { env: {
+  NODE_ENV: "",
+  SESSION_SECRET: ""
+}}
 const hogwarts = {
   getStudents(house: string, year: string) {
     return [
@@ -40,36 +45,16 @@ const hogwarts = {
 type User = {}
 ```
 
-```twoslash include cookie
-// @module: esnext
-// ---cut---
-
-const process = { env: {
-  NODE_ENV: "",
-  SESSION_SECRET: ""
-}}
-
-// ---cut---
-import { createCookieSessionStorage } from "@solidjs/start";
-
-const storage = createCookieSessionStorage({
-  cookie: {
-    name: "session",
-    secure: process.env.NODE_ENV === "production",
-    secrets: [process.env.SESSION_SECRET],
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
-    httpOnly: true
-  }
-});
-```
-
 ```twoslash include getUser
-export async function getUser(request: Request): Promise<User | null> {
-  const cookie = request.headers.get("Cookie") ?? ""
-  const session = await storage.getSession(cookie);
-  const userId = session.get("userId");
+import { getRequestEvent } from "solid-js/web";
+import { useSession } from "@solidjs/start/server";
+
+export async function getUser(): Promise<User | null> {
+  const event = getRequestEvent();
+  const session = await useSession(event, {
+    password: process.env.SESSION_SECRET
+  });
+  const userId = session.data.userId
   if (!userId) return null;
   return await hogwarts.getUser(userId);
 }
@@ -81,34 +66,26 @@ Let's look at an example of how to use the cookie to identify the user. Imagine 
 // @include: hogwarts
 
 // ---cut---
-export async function getUser(request: Request) {
-  const cookie = request.headers.get("Cookie") ?? "";
+export async function getUser() {
+  // return user
 }
 ```
 
-We use a `SessionStorage` to manage the session data on the server. We can create one using the various storage factories we export: `createCookieSessionStorage`, `createMemorySessionStorage`, `createSessionStorage`.
+The session cookie can be used to get the session data about the request. How the session data is stored and retrieved is up to the implementation of the `useSession`.
+
+Let's use this `useSession` to get the session data for the request:
 
 ```tsx twoslash filename="/lib/session.ts"
 // @include: hogwarts
 
 // ---cut---
-// @include: cookie
-```
-
-The `SessionStorage` can be passed the cookie to get the session data about the request. How the session data is stored and retrieved is up to the implementation of the `SessionStorage`.
-
-It can either save all the state within the `cookie` itself, which `createCookieSessionStorage` does, or it can save the session data in a database, and the cookie merely contains a session id.
-
-Let's use this `storage` to get the session data for the request:
-
-```tsx twoslash {3} filename="/lib/session.ts"
-// @include: hogwarts
-// @include: cookie
-
-// ---cut---
+import { getRequestEvent } from "solid-js/web";
+import { useSession } from "@solidjs/start/server";
 export async function getUser(request: Request) {
-  const cookie = request.headers.get("Cookie") ?? "";
-  const session = storage.getSession(cookie);
+  const event = getRequestEvent();
+  const session = await useSession(event, {
+    password: process.env.SESSION_SECRET
+  });
 }
 ```
 
@@ -116,137 +93,80 @@ Typically, we will have saved the `userId` in the session. If we don't find it, 
 
 ```tsx twoslash {4-6} filename="/lib/session.ts"
 // @include: hogwarts
-// @include: cookie
 
 // ---cut---
 // @include: getUser
 ```
 
-This helper can be used in all kinds of situations wherever we want to authenticate the request. They can be used in [server functions][serverfunctions] and [API routes][apiroutes], as well the `createServerData$` and `createServerAction$` primitives.
+This helper can be used in all kinds of situations wherever we want to authenticate the request. They can be used in [server functions][serverfunctions] and [API routes][apiroutes].
 
-Let's see how we can use this in a `createServerData$` call to make sure that only authenticated users can access the data. If the user is not authenticated, we can redirect them to the login page:
+Let's see how we can use this in a `cache` call to make sure that only authenticated users can access the data. If the user is not authenticated, we can redirect them to the login page:
 
-```tsx twoslash {7-8} filename="/routes/api/[house]/admin.ts"
+```tsx twoslash filename="/routes/api/[house]/admin.ts"
 // @include: hogwarts
-// @include: cookie
 // @include: getUser
 
 // ---cut---
-import { createServerData$, redirect } from "@solidjs/start/server";
-import { RouteDataArgs } from "@solidjs/start";
+import { cache, createAsync, redirect } from "@solidjs/router";
 
-export function routeData({ params }: RouteDataArgs) {
-  return createServerData$(
-    async (house, event) => {
-      const user = await getUser(event.request);
-      if (!user) throw redirect("/login");
-      return {
-        students: hogwarts.getStudents(house, "*")
-      };
-    },
-    { key: () => params.house }
-  );
+const getStudents = cache(async (house: string) => {
+  "use server";
+  const user = await getUser();
+  if (!user) throw redirect("/login");
+  return hogwarts.getStudents(house, "*");
+});
+
+// page component
+export default function Students() {
+  const students = createAsync(getStudents)
 }
 ```
 
-```tsx filename="/routes/session.server.ts"
+We can log in or logout in a similar manner.
+```tsx twoslash filename="/routes/session.server.ts"
 // @module: esnext
-// ---cut---
-import { redirect } from "@solidjs/start/server";
-import { createCookieSessionStorage } from "solid-start/session";
-
+const process = { env: {
+  NODE_ENV: "",
+  SESSION_SECRET: ""
+}}
 const db = {
   user: {} as any
 };
 
-type LoginForm = {
-  username: string;
-  password: string;
-};
+// ---cut---
+import { redirect } from "@solidjs/router";
+import { useSession } from "@solidjs/start/server";
+import { getRequestEvent } from "solid-js/web";
 
-export async function register({ username, password }: LoginForm) {
-  return db.user.create({
-    data: { username: username, password }
+type UserSession = {
+  userId?: number
+}
+
+function getSession() {
+  return useSession(getRequestEvent()!, {
+    password: process.env.SESSION_SECRET
   });
 }
 
-export async function login({ username, password }: LoginForm) {
-  const user = await db.user.findUnique({ where: { username } });
-  if (!user) return null;
-  const isCorrectPassword = password === user.password;
-  if (!isCorrectPassword) return null;
-  return user;
-}
-
-const storage = createCookieSessionStorage({
-  cookie: {
-    name: "RJ_session",
-    // secure doesn't work on localhost for Safari
-    // https://web.dev/when-to-use-local-https/
-    secure: process.env.NODE_ENV === "production",
-    secrets: ["hello"],
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-    httpOnly: true
-  }
-});
-
-export function getUserSession(request: Request) {
-  return storage.getSession(request.headers.get("Cookie"));
-}
-
-export async function getUserId(request: Request) {
-  const session = await getUserSession(request);
-  const userId = session.get("userId");
-  if (!userId || typeof userId !== "string") return null;
-  return userId;
-}
-
-export async function requireUserId(
-  request: Request,
-  redirectTo: string = new URL(request.url).pathname
-) {
-  const session = await getUserSession(request);
-  const userId = session.get("userId");
-  if (!userId || typeof userId !== "string") {
-    const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-    throw redirect(`/login?${searchParams}`);
-  }
-  return userId;
-}
-
-export async function getUser(request: Request) {
-  const userId = await getUserId(request);
-  if (typeof userId !== "string") {
-    return null;
-  }
-
+export async function login(formData: FormData) {
+  const username = String(formData.get("username"));
+  const password = String(formData.get("password"));
+  // do validation
   try {
-    const user = await db.user.findUnique({ where: { id: Number(userId) } });
-    return user;
-  } catch {
-    throw logout(request);
+    const session = await getSession();
+    const user = await db.user.findUnique({ where: { username } });
+    if (!user || password !== user.password) return new Error("Invalid login");
+    await session.update((d: UserSession) => (d.userId = user!.id));
+  } catch (err) {
+    return err as Error;
   }
+  throw redirect("/");
 }
 
-export async function logout(request: Request) {
-  const session = await storage.getSession(request.headers.get("Cookie"));
-  return redirect("/login", {
-    headers: {
-      "Set-Cookie": await storage.destroySession(session)
-    }
-  });
-}
-
-export async function createUserSession(userId: string, redirectTo: string) {
-  const session = await storage.getSession();
-  session.set("userId", userId);
-  return redirect(redirectTo, {
-    headers: {
-      "Set-Cookie": await storage.commitSession(session)
-    }
-  });
+export async function logout() {
+  const session = await getSession();
+  await session.update((d: UserSession) => (d.userId = undefined));
+  throw redirect("/login");
 }
 ```
 

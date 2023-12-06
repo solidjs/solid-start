@@ -13,12 +13,13 @@ active: true
 <div class="text-lg">
 
 ```tsx
-import netlify from "solid-start-netlify";
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
   start: {
-    adapter: netlify({ edge: true })
+    server: {
+      preset: "netlify"
+    }
   }
 });
 ```
@@ -31,9 +32,9 @@ export default defineConfig({
 
 ### Configuring your application
 
-SolidStart is built with [Vite](https://vitejs.dev). It is little more than a collection of Vite plugins that enable all the functionality that we see here. This is an incredibly powerful approach as we get to leverage Vite's whole ecosystem of plugins to enhance our applications.
+SolidStart is built with [Vite](https://vitejs.dev) and [Nitro](https://nitro.unjs.io). It is little more than a collection of Vite plugins that enable all the functionality that we see here. This is an incredibly powerful approach as we get to leverage Vite's whole ecosystem of plugins to enhance our applications.
 
-The core plugin used by SolidStart is found at `solid-start/vite`. The main configuration for it is setting the adapter. Adapter's in SolidStart set the environment to which your project is deployed. Currently, SolidStart supports:
+The core configuration used by SolidStart is found at `@solidjs/start/config`. SolidStart uses Nitro which can run on a number of platforms.
 
 - Node
 - Static hosting
@@ -43,15 +44,16 @@ The core plugin used by SolidStart is found at `solid-start/vite`. The main conf
 - Cloudflare Workers & Pages
 - Deno Deploy
 
-The simplest usage is passing no arguments, which defaults to the Node adapter. Other adapters must be installed in your project and added to the configuration via the `adapter` option. For example, this uses Netlify Edge:
+The simplest usage is passing no arguments, which defaults to the Node preset. Some presets may be autodetected by the provider. Otherwise they must added to the configuration via the `start.server.preset` option. For example, this uses Netlify Edge:
 
 ```tsx
-import netlify from "solid-start-netlify";
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
   start: {
-    adapter: netlify({ edge: true })
+    server: {
+      preset: "netlify_edge"
+    }
   }
 });
 ```
@@ -60,9 +62,9 @@ export default defineConfig({
 
 ### `@solidjs/start/config`
 
-The vite plugin exposes the following options:
+The vite options are same as the default with exception of the `start` property exposes the following options:
 
-- `adapter` (_string_ | Adapter, default `"node"`): sets the adapter.
+- `server` (_object_): Nitro server config options
 - `appRoot` (_string_, default `"./src"`): sets the root of the application code.
 - `routesDir` (_string_, default `"./routes"`): the path to where the routes are located.
 - `ssr` (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode.

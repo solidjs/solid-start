@@ -1,5 +1,4 @@
-import { createMiddleware, getH3Event } from "@solidjs/start/server";
-import { appendCorsHeaders } from "vinxi/server";
+import { appendCorsHeaders, createMiddleware } from "@solidjs/start/server";
 
 export default createMiddleware({
   onRequest: [
@@ -7,7 +6,7 @@ export default createMiddleware({
       console.log("GLOBAL", event.request.url);
     },
     event => {
-      appendCorsHeaders(getH3Event(event), {});
+      appendCorsHeaders(event, {});
       // return new Response("Hello World!");
     }
   ]

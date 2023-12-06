@@ -1,6 +1,6 @@
 "use server";
 import { redirect } from "@solidjs/router";
-import { getH3Event, useSession } from "@solidjs/start/server";
+import { useSession } from "@solidjs/start/server";
 import { getRequestEvent } from "solid-js/web";
 import { db } from "./db";
 
@@ -31,8 +31,7 @@ async function register(username: string, password: string) {
 }
 
 function getSession() {
-  const event = getH3Event(getRequestEvent() as any);
-  return useSession(event, {
+  return useSession(getRequestEvent()!, {
     password: process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace"
   });
 }

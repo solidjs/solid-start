@@ -43,14 +43,18 @@ export function defineConfig(baseConfig = {}) {
     appRoot: "./src",
     ssr,
     islands: false,
-    serverPlugins: []
   });
+  let server = start.server;
+  if (!start.ssr) {
+    server = { ...server, prerender: { routes: ["/"] }  };
+  }
 
   return createApp({
     server: {
       compressPublicAssets: {
         brotli: true
-      }
+      },
+      ...server
     },
     routers: [
       {

@@ -201,7 +201,7 @@ export const appRouter = t.router({
 export type AppRouter = typeof appRouter;
 ```
 
-Here is a simple client that you can use in your `routeData` function to fetch data from your [tRPC][trpc] server. You can also use the proxy in `createServerData$` and `createServerAction$` functions, but it's usually better to just use it in a `createResource` or `createRouteData` function.
+Here is a simple client that you can use to fetch data from your [tRPC][trpc] server.
 
 ```tsx filename="lib/trpc.ts"
 import {
