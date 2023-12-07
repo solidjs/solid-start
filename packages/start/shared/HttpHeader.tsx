@@ -1,17 +1,18 @@
 import { onCleanup } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
+import { appendResponseHeader, getResponseHeader, removeResponseHeader, setResponseHeader } from "vinxi/server";
 
 export function HttpHeader(props: { name: string; value: string; append?: boolean }) {
   if (isServer) {
-    const pageContext = getRequestEvent();
+    const event = getRequestEvent();
     if (props.append) {
-      pageContext!.appendResponseHeader(props.name, props.value);
+      appendResponseHeader(event, props.name, props.value);
     } else {
-      pageContext!.setResponseHeader(props.name, props.value);
+      setResponseHeader(event, props.name, props.value);
     }
 
     onCleanup(() => {
-      const value = pageContext!.getResponseHeader(props.name);
+      const value = getResponseHeader(event, props.name);
 
       // Todo: review this logic still the same in H3
       // H3 supports arrays so its possible there is no need to split..
@@ -20,8 +21,8 @@ export function HttpHeader(props: { name: string; value: string; append?: boolea
         const values = value.split(", ");
         const index = values.indexOf(props.value);
         index !== -1 && values.splice(index, 1);
-        if (values.length) pageContext!.setResponseHeader(props.name, values.join(", "));
-        else pageContext!.removeResponseHeader(props.name);
+        if (values.length) setResponseHeader(event, props.name, values.join(", "));
+        else removeResponseHeader(event, props.name);
       }
     });
   }

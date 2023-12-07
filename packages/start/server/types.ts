@@ -36,6 +36,10 @@ export interface APIEvent extends FetchEvent {
   params: { [key: string]: string };
 }
 
+export interface APIHandler {
+  (event: APIEvent): Promise<any>;
+}
+
 declare module "solid-js/web" {
   interface RequestEvent extends FetchEvent {
     serverOnly?: boolean;

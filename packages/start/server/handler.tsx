@@ -9,7 +9,7 @@ import {
   setHeader,
   setResponseStatus
 } from "vinxi/server";
-import { apiRoutes } from "../shared/routes";
+import { matchAPIRoute } from "../shared/routes";
 import { getFetchEvent } from "./middleware";
 import { createPageEvent } from "./page-event";
 import { FetchEvent, PageEvent } from "./types";
@@ -35,13 +35,12 @@ export function createHandler(
 
       return provideRequestEvent(event, async () => {
         // api
-        const match = apiRoutes.find(
-          route =>
-            route[`$${event.request.method}`] && new URL(event.request.url).pathname === route.path
-        );
+        const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method)
+        console.log(match);
         if (match) {
-          const mod = await match[`$${event.request.method}`].import();
+          const mod = await match.handler.import();
           const fn = mod[event.request.method];
+          event.params = match.params;
           const result = await fn(event);
           return result;
         }
