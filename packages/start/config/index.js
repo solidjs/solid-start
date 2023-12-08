@@ -37,11 +37,11 @@ function solidStartServerFsRouter(config) {
 }
 
 export function defineConfig(baseConfig = {}) {
-  let { plugins = [], ssr = true, start = {}, ...userConfig } = baseConfig;
+  let { plugins = [], start = {}, ...userConfig } = baseConfig;
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
     appRoot: "./src",
-    ssr,
+    ssr: true,
     islands: false,
   });
   let server = start.server;
