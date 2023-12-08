@@ -2,7 +2,7 @@ import { createEffect } from "solid-js";
 import { isServer } from "solid-js/web";
 let tippy;
 if (!isServer) {
-  tippy = await import("tippy.js");
+  import("tippy.js").then(mod => tippy = mod);
 }
 
 export default function Tooltip(props) {
