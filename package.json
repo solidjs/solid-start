@@ -1,7 +1,7 @@
 {
   "name": "solid-start-monorepo",
   "description": "Official starter for SolidJS",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Ryan Carniato",
   "type": "module",
   "license": "MIT",
