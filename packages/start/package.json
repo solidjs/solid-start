@@ -16,7 +16,7 @@
     "shared",
     "*.d.ts"
   ],
-  "types": "./index.tsx",
+  "types": "./shared/index.tsx",
   "exports": {
     ".": "./shared/index.tsx",
     "./config": "./config/index.js",
