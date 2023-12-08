@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "node ./.output/server/index.mjs"
   },
   "type": "module",
   "devDependencies": {

@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "node ./.output/server/index.mjs"
   },
   "dependencies": {
     "@mdx-js/mdx": "^2.3.0",

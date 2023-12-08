@@ -16,7 +16,7 @@
     "publish:release": "lerna publish",
     "docs:dev": "vinxi dev",
     "docs:build": "vinxi build",
-    "docs:start": "vinxi start",
+    "docs:start": "node ./.output/server/index.mjs",
     "clean:test": "rimraf .tmp",
     "build:all": "pnpm run -r --if-present build",
     "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
