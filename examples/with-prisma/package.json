@@ -1,0 +1,23 @@
+{
+  "name": "example-with-prisma",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.0",
+    "@solidjs/router": "^0.10.1",
+    "@solidjs/start": "^0.4.0-alpha.1",
+    "prisma": "^5.7.0",
+    "solid-js": "^1.8.7",
+    "vinxi": "0.0.48"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
