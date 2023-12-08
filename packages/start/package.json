@@ -6,6 +6,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
+  },
   "files": [
     "client",
     "config",

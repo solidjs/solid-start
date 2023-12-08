@@ -1,9 +1,11 @@
 import { renderToStream } from "solid-js/web";
+/* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
   EventHandlerObject,
   EventHandlerRequest,
   H3Event,
+  HTTPMethod,
   eventHandler,
   sendRedirect,
   setHeader,
@@ -35,7 +37,7 @@ export function createHandler(
 
       return provideRequestEvent(event, async () => {
         // api
-        const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method)
+        const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method as HTTPMethod)
         if (match) {
           const mod = await match.handler.import();
           const fn = mod[event.request.method];

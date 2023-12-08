@@ -1,4 +1,5 @@
-import fileRoutes, { RouteModule } from "vinxi/routes";
+import fileRoutes from "vinxi/routes";
+import { HTTPMethod } from "vinxi/server";
 
 interface Route {
   path: string;
@@ -27,10 +28,10 @@ declare module "vinxi/routes" {
   }
 }
 
-export const pageRoutes = defineRoutes(fileRoutes.filter(o => o.type === "page"));
-export const apiRoutes = defineAPIRoutes(fileRoutes.filter(o => o.type === "api"));
+export const pageRoutes = defineRoutes((fileRoutes as unknown as Route[]).filter(o => o.type === "page"));
+export const apiRoutes = defineAPIRoutes((fileRoutes as unknown as Route[]).filter(o => o.type === "api"));
 
-export function matchAPIRoute(path: string, method: Method) {
+export function matchAPIRoute(path: string, method: HTTPMethod) {
   const segments = path.split("/").filter(Boolean);
 
   routeLoop: for (const route of apiRoutes) {
@@ -72,7 +73,7 @@ export function matchAPIRoute(path: string, method: Method) {
   }
 }
 
-function defineRoutes(fileRoutes: RouteModule[]) {
+function defineRoutes(fileRoutes: Route[]) {
   function processRoute(routes: Route[], route: Route, id: string, full: string) {
     const parentRoute = Object.values(routes).find(o => {
       // if (o.id.endsWith("/index")) {
