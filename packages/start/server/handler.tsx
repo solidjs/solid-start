@@ -12,7 +12,7 @@ import {
 import { matchAPIRoute } from "../shared/routes";
 import { getFetchEvent } from "./middleware";
 import { createPageEvent } from "./page-event";
-import { FetchEvent, PageEvent } from "./types";
+import { APIEvent, FetchEvent, PageEvent } from "./types";
 
 export function createHandler(
   fn: (context: PageEvent) => unknown,
@@ -36,13 +36,11 @@ export function createHandler(
       return provideRequestEvent(event, async () => {
         // api
         const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method)
-        console.log(match);
         if (match) {
           const mod = await match.handler.import();
           const fn = mod[event.request.method];
-          event.params = match.params;
-          const result = await fn(event);
-          return result;
+          (event as APIEvent).params = match.params;
+          return await fn(event);
         }
 
         // render stream

@@ -1,0 +1,23 @@
+{
+  "name": "example-with-trpc",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "@decs/typeschema": "^0.12.1",
+    "@trpc/client": "^10.44.1",
+    "@trpc/server": "^10.44.1",
+    "@solidjs/meta": "^0.29.1",
+    "@solidjs/router": "^0.10.1",
+    "@solidjs/start": "^0.4.0-alpha.1",
+    "solid-js": "^1.8.7",
+    "valibot": "^0.23.0",
+    "vinxi": "0.0.48"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
