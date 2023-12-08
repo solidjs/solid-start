@@ -48,6 +48,6 @@
     "defu": "^6.1.2",
     "seroval": "^0.14.1",
     "vite-plugin-inspect": "^0.7.33",
-    "vite-plugin-solid": "^2.7.0"
+    "vite-plugin-solid": "^2.8.0"
   }
 }
