@@ -131,7 +131,10 @@ export default function TodoApp(props: RouteSectionProps) {
                       <form
                         action={editTodo.with(todo.id)}
                         method="post"
-                        onSubmit={() => setEditing({})}
+                        onSubmit={e => {
+                          e.preventDefault();
+                          setTimeout(() => setEditing({}));
+                        }}
                       >
                         <input
                           name="title"
@@ -140,7 +143,7 @@ export default function TodoApp(props: RouteSectionProps) {
                           onBlur={e => {
                             if (todo.title !== e.currentTarget.value) {
                               e.currentTarget.form!.requestSubmit();
-                            } else setEditing({});
+                            } else setTimeout(() => setEditing({}));
                           }}
                           use:setFocus
                         />
@@ -171,7 +174,10 @@ export default function TodoApp(props: RouteSectionProps) {
           </span>
           <ul class="filters">
             <li>
-              <a href="?show=all" classList={{ selected: !location.query.show || location.query.show === "all" }}>
+              <a
+                href="?show=all"
+                classList={{ selected: !location.query.show || location.query.show === "all" }}
+              >
                 All
               </a>
             </li>
@@ -181,7 +187,10 @@ export default function TodoApp(props: RouteSectionProps) {
               </a>
             </li>
             <li>
-              <a href="?show=completed" classList={{ selected: location.query.show === "completed" }}>
+              <a
+                href="?show=completed"
+                classList={{ selected: location.query.show === "completed" }}
+              >
                 Completed
               </a>
             </li>

@@ -42,7 +42,7 @@ export async function toggleTodoFn(id: number) {
 export async function editTodoFn(id: number, formData: FormData) {
   const title = String(formData.get("title"));
   const todos = await storage.getItem("todos:data") as Todo[];
-  await storage.setItem("todos", todos.map(todo => {
+  await storage.setItem("todos:data", todos.map(todo => {
     if (todo.id === id) {
       todo.title = title;
     }
