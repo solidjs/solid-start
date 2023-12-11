@@ -1,4 +1,12 @@
-import { getCookie, setCookie, setResponseHeader } from "vinxi/server";
+import {
+  appendResponseHeader,
+  getCookie,
+  getResponseHeader,
+  removeResponseHeader,
+  setCookie,
+  setResponseHeader,
+  setResponseStatus
+} from "vinxi/server";
 import { createRoutes } from "../shared/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
 
@@ -32,6 +40,34 @@ export async function createPageEvent(ctx: FetchEvent) {
     ],
     initialSubmission: initFromFlash(ctx),
     routes: createRoutes(),
+    components: {
+      status: props => {
+        setResponseStatus(ctx, props.code, props.text);
+        return () => setResponseStatus(ctx, 200);
+      },
+      header: props => {
+        if (props.append) {
+          appendResponseHeader(ctx, props.name, props.value);
+        } else {
+          setResponseHeader(ctx, props.name, props.value);
+        }
+
+        return () => {
+          const value = getResponseHeader(ctx, props.name);
+
+          // Todo: review this logic still the same in H3
+          // H3 supports arrays so its possible there is no need to split..
+          // typeof check here is to guard but ultimately may be unneeded
+          if (value && typeof value === "string") {
+            const values = value.split(", ");
+            const index = values.indexOf(props.value);
+            index !== -1 && values.splice(index, 1);
+            if (values.length) setResponseHeader(ctx, props.name, values.join(", "));
+            else removeResponseHeader(ctx, props.name);
+          }
+        };
+      }
+    },
     // prevUrl: prevPath || "",
     // mutation: mutation,
     // $type: FETCH_EVENT,

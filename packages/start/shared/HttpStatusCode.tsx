@@ -1,14 +1,10 @@
 import { onCleanup } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
-import { setResponseStatus } from "vinxi/server";
 
 export function HttpStatusCode(props: { code: number, text?: string }) {
   if (isServer) {
-    const context = getRequestEvent()!;
-    setResponseStatus(context, props.code, props.text);
-    onCleanup(() => {
-      setResponseStatus(context, 200);
-    });
+    const event = getRequestEvent();
+    if (event) onCleanup((event as any).components.status(props));
   }
   return null;
 }
