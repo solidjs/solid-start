@@ -1,11 +1,11 @@
-export interface Comment {
+export interface CommentDefinition {
   user: string;
   time_ago: string;
   content: string;
-  comments: Comment[];
+  comments: CommentDefinition[];
 }
 
-export interface Story {
+export interface StoryDefinition {
   id: string;
   points: string;
   url: string;
@@ -15,10 +15,10 @@ export interface Story {
   time_ago: string;
   user: string;
   comments_count: number;
-  comments: Comment[];
+  comments: CommentDefinition[];
 }
 
-export interface User {
+export interface UserDefinition {
   error: string;
   id: string;
   created: string;

@@ -1,9 +1,9 @@
 import { A } from "@solidjs/router";
 import { Component, Show } from "solid-js";
 
-import type { Story } from "../types";
+import type { StoryDefinition } from "../types";
 
-const Story: Component<{ story: Story }> = props => {
+const Story: Component<{ story: StoryDefinition }> = props => {
   return (
     <li class="news-item">
       <span class="score">{props.story.points}</span>

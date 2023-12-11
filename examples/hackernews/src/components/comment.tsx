@@ -1,9 +1,9 @@
 import { A } from "@solidjs/router";
 import { Component, For, Show } from "solid-js";
-import { Comment } from "~/types";
+import { CommentDefinition } from "~/types";
 import Toggle from "./toggle";
 
-const Comment: Component<{ comment: Comment }> = props => {
+const Comment: Component<{ comment: CommentDefinition }> = props => {
   return (
     <li class="comment">
       <div class="by">
