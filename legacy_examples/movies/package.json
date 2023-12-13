@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@solid-primitives/scheduled": "1.1.0",
-    "@solidjs/meta": "^0.29.1",
+    "@solidjs/meta": "^0.29.2",
     "@solidjs/router": "^0.8.3",
     "nprogress": "^0.2.0",
     "solid-heroicons": "^3.2.4",
