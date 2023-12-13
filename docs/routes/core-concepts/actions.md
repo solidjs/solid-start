@@ -1,7 +1,7 @@
 ---
 section: core-concepts
 title: Actions
-order: 98
+order: 7
 ---
 
 # Actions

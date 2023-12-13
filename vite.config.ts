@@ -10,6 +10,11 @@ export default defineConfig({
   start: {
     appRoot: "./docs",
     extensions: ["mdx", "md"],
+    server: {
+      prerender: {
+        crawlLinks: true
+      }
+    }
   },
   plugins: [
     config("tailwind", {

@@ -1,7 +1,7 @@
 ---
 section: core-concepts
 title: Static Assets
-order: 5
+order: 3
 active: true
 ---
 
