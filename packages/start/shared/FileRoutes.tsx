@@ -10,6 +10,7 @@ export function createRoutes() {
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),
+      metadata: { ...(route.$$route ? route.$$route.require().route.metadata : {}), filesystem: true },
       component: lazyRoute(
         route.$component,
         import.meta.env.START_ISLANDS
@@ -26,5 +27,5 @@ export function createRoutes() {
 
 let routes;
 export const FileRoutes = () => {
-  return isServer ? (getRequestEvent() as PageEvent).routes : (routes || (routes = createRoutes()));
+  return isServer ? (getRequestEvent() as PageEvent).routes : routes || (routes = createRoutes());
 };

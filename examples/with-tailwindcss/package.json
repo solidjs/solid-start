@@ -7,7 +7,7 @@
     "start": "node ./.output/server/index.mjs"
   },
   "dependencies": {
-    "@solidjs/router": "^0.10.2",
+    "@solidjs/router": "^0.10.3",
     "@solidjs/start": "^0.4.0-alpha.6",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.26",
