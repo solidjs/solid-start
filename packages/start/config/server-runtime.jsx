@@ -69,7 +69,7 @@ async function fetchServerFunction(base, id, args) {
   const instance = `server-fn:${INSTANCE++}`;
   const response = await (args.length === 1 && args[0] instanceof FormData
     ? createRequest(base, id, instance, args[0])
-    : createRequest(base, id, instance, JSON.stringify(await toJSONAsync(args)), "application/json"));
+    : createRequest(base, id, instance, JSON.stringify(await Promise.resolve(toJSONAsync(args))), "application/json"));
 
   if (response.headers.get("Location")) throw response;
   if (response.headers.get("X-Revalidate")) {
