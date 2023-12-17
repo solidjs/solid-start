@@ -21,7 +21,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   let assets = [];
   Promise.resolve().then(async () => {
     let current = context.routes;
-    if (context.routerMatches[0]) {
+    if (context.routerMatches && context.routerMatches[0]) {
       for (let i = 0; i < context.routerMatches[0].length; i++) {
         const match = context.routerMatches[0][i];
         if (match.metadata && match.metadata.filesystem) {
@@ -41,7 +41,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
     );
   });
 
-  useAssets(() => assets.map(m => renderAsset(m)));
+  useAssets(() => assets.length ? assets.map(m => renderAsset(m)) : undefined);
 
   return (
     <NoHydration>
