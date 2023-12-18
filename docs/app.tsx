@@ -74,13 +74,15 @@ function Header() {
   return (
     <header class="relative z-10 col-span-3 col-start-1 row-start-1 flex px-8 py-2 shadow-md md:z-50">
       <div class="flex w-full justify-between">
-        <div class="flex space-x-3">
-          <img src="/logo.svg" class="h-9 w-9" />
-          <div class="mt-2 hidden text-xl uppercase md:block">
-            <span>Solid</span>
-            <span class="text-solid-medium ml-1 font-semibold">Start</span>
+        <a href="/">
+          <div class="flex space-x-3">
+            <img src="/logo.svg" class="h-9 w-9" />
+            <div class="mt-2 hidden text-xl uppercase md:block">
+              <span>Solid</span>
+              <span class="text-solid-medium ml-1 font-semibold">Start</span>
+            </div>
           </div>
-        </div>
+        </a>
         <div class="flex space-x-5">
           <div class="flex items-center">
             <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">

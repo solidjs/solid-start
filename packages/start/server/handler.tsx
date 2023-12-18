@@ -66,7 +66,10 @@ export function createHandler(
         if (context.response && context.response.headers.get("Location")) {
           return sendRedirect(event, context.response.headers.get("Location"));
         }
-        return { pipeTo: stream.pipeTo };
+        // fix cloudflare streaming
+        const { writable, readable } = new TransformStream();
+        stream.pipeTo(writable);
+        return readable;
       });
     }
   });

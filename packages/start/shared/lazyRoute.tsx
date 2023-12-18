@@ -47,9 +47,10 @@ export default function lazyRoute(
 			const mod = await component.import();
 			const Component = mod[exported];
 			let assets = await clientManifest.inputs?.[component.src].assets();
+			const styles = assets.filter((asset) => asset.tag === "style" || asset.attrs.rel === "stylesheet");
 			const Comp = (props) => {
 				return [
-					...assets.map((asset) => renderAsset(asset)),
+					...styles.map((asset) => renderAsset(asset)),
 					createComponent(Component, props),
 				];
 			};

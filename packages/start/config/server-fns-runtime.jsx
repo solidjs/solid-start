@@ -10,7 +10,9 @@ export function createServerReference(fn, id, name) {
       }
     },
     apply(target, thisArg, args) {
-      const evt = cloneEvent(getRequestEvent());
+      const ogEvt = getRequestEvent();
+      if (!ogEvt) throw new Error("Cannot call server function outside of a request");
+      const evt = cloneEvent(ogEvt);
       evt.serverOnly = true;
       return provideRequestEvent(evt, () => {
         return fn.apply(thisArg, args);

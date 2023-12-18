@@ -18,7 +18,7 @@
   "dependencies": {
     "@auth/core": "^0.5.1",
     "@solid-auth/base": "^2.0.3",
-    "@solidjs/meta": "^0.29.1",
+    "@solidjs/meta": "^0.29.2",
     "@solidjs/router": "^0.8.3",
     "solid-js": "^1.8.6",
     "solid-start": "^0.3.10"

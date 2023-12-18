@@ -3,6 +3,7 @@ import { HTTPMethod } from "vinxi/server";
 
 interface Route {
   path: string;
+  id: string;
   type: "api" | "page";
   children?: Route[];
 }
@@ -29,7 +30,7 @@ declare module "vinxi/routes" {
 }
 
 export const pageRoutes = defineRoutes((fileRoutes as unknown as Route[]).filter(o => o.type === "page"));
-export const apiRoutes = defineAPIRoutes((fileRoutes as unknown as Route[]).filter(o => o.type === "api"));
+const apiRoutes = defineAPIRoutes((fileRoutes as unknown as Route[]).filter(o => o.type === "api"));
 
 export function matchAPIRoute(path: string, method: HTTPMethod) {
   const segments = path.split("/").filter(Boolean);
@@ -76,20 +77,17 @@ export function matchAPIRoute(path: string, method: HTTPMethod) {
 function defineRoutes(fileRoutes: Route[]) {
   function processRoute(routes: Route[], route: Route, id: string, full: string) {
     const parentRoute = Object.values(routes).find(o => {
-      // if (o.id.endsWith("/index")) {
-      // 	return false;
-      // }
-      return id.startsWith(o.path + "/");
+      return id.startsWith(o.id + "/");
     });
 
     if (!parentRoute) {
-      routes.push({ ...route, path: id });
+      routes.push({ ...route, id, path: id.replace(/\/\([^)/]+\)/g, "") });
       return routes;
     }
     processRoute(
       parentRoute.children || (parentRoute.children = []),
       route,
-      id.slice(parentRoute.path.length),
+      id.slice(parentRoute.id.length),
       full
     );
 
@@ -101,7 +99,7 @@ function defineRoutes(fileRoutes: Route[]) {
     .reduce((prevRoutes, route) => {
       return processRoute(prevRoutes, route, route.path, route.path);
     }, []);
-};
+}
 
 function defineAPIRoutes(routes: Route[]) {
   return routes

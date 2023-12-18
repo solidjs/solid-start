@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "@mdx-js/mdx": "^2.3.0",
-    "@solidjs/router": "^0.10.1",
-    "@solidjs/start": "^0.4.0-alpha.4",
+    "@solidjs/router": "^0.10.4",
+    "@solidjs/start": "^0.4.0-alpha.8",
     "@vinxi/plugin-mdx": "^3.6.5",
     "solid-js": "^1.8.7",
-    "vinxi": "0.0.48",
+    "vinxi": "0.0.52",
     "solid-mdx": "^0.0.7"
   },
   "engines": {

@@ -19,6 +19,8 @@ dist
 .output
 .vercel
 .netlify
+.vinxi
+.nitro
 netlify
 
 # Environment

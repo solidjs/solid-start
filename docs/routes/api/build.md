@@ -1,19 +1,19 @@
 ---
 section: api
-title: build
+title: vinxi build
 order: 2
 subsection: CLI
 active: true
 ---
 
-# solid-start build
+# vinxi build
 
-##### `solid-start build` bundles your server and client using [Vinxi](https://vinxi.vercel.app/).
+##### `vinxi build` bundles your server and client using [Vinxi](https://vinxi.vercel.app/).
 
 <div class="text-lg">
 
 ```bash
-solid-start build
+vinxi build
 ```
 
 </div>
@@ -23,13 +23,13 @@ solid-start build
 ### Build for production
 
 ```bash
-solid-start build
+vinxi build
 ```
 
 ### Specify a `vite.config` file
 
 ```bash
-solid-start build --config project/vite.config.ts --root project
+vinxi build --config project/vite.config.ts --root project
 ```
 
 ## Reference

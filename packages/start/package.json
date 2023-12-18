@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "0.4.0-alpha.4",
+  "version": "0.4.0-alpha.8",
   "type": "module",
   "author": "Ryan Carniato",
   "publishConfig": {
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.7",
-    "vinxi": "0.0.48"
+    "vinxi": "0.0.52"
   },
   "dependencies": {
     "@vinxi/plugin-directives": "0.0.44",

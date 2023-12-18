@@ -1,7 +1,7 @@
 ---
 section: core-concepts
 title: CSS and Styling
-order: 7
+order: 4
 active: true
 ---
 
