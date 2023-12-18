@@ -47,7 +47,7 @@ export function defineConfig(baseConfig = {}) {
   });
   let server = start.server;
   if (!start.ssr) {
-    server = { ...server, prerender: { routes: ["/"] }  };
+    server = { ...server, prerender: { routes: ["/"] } };
   }
 
   return createApp({
@@ -90,13 +90,15 @@ export function defineConfig(baseConfig = {}) {
                   ? {
                       "@solidjs/start/server": "@solidjs/start/server/spa"
                     }
-                  : {})
+                  : {}),
+                ...userConfig.resolve?.alias
               }
             },
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(true),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+              ...userConfig.define
             }
           })
         ]
@@ -134,13 +136,15 @@ export function defineConfig(baseConfig = {}) {
                   ? {
                       "@solidjs/start/client": "@solidjs/start/client/spa"
                     }
-                  : {})
+                  : {}),
+                ...userConfig.resolve?.alias
               }
             },
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(false),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+              ...userConfig.define
             }
           })
         ],
@@ -163,13 +167,15 @@ export function defineConfig(baseConfig = {}) {
                   ? {
                       "@solidjs/start/server": "@solidjs/start/server/spa"
                     }
-                  : {})
+                  : {}),
+                ...userConfig.resolve?.alias
               }
             },
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(true),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+              ...userConfig.define
             }
           })
         ],
