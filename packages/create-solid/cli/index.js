@@ -240,8 +240,8 @@ async function main() {
 
       if (src.includes("vite.config") && !code.includes("ssr: false") && !ssr) {
         code = code
-          .replace(`solid({`, `solid({ ssr: false, `)
-          .replace(`solid()`, `solid({ ssr: false })`);
+          .replace(`start: {`, `start: { ssr: false, `)
+          .replace(`defineConfig({})`, `defineConfig({ start: { ssr: false } })`);
       }
 
       if (src.endsWith(".ts") || src.endsWith(".tsx")) {
