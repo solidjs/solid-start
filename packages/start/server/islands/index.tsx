@@ -71,6 +71,7 @@ export function createIslandReference<T extends Component<any>>(
       const prevCount = sharedConfig.context.count;
 
       sharedConfig.context.id = target;
+      sharedConfig.context.count = 0;
 
       const result = (
         <Hydration>
