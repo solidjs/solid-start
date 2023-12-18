@@ -46,6 +46,7 @@ export function createHandler(
         }
 
         // render stream
+        const doAsync = import.meta.env.START_SSR === "async";
         const context = await createPageEvent(event);
         let cloned = { ...options };
         if (cloned.onCompleteAll) {
@@ -66,6 +67,7 @@ export function createHandler(
         if (context.response && context.response.headers.get("Location")) {
           return sendRedirect(event, context.response.headers.get("Location"));
         }
+        if (doAsync) return stream;
         // fix cloudflare streaming
         const { writable, readable } = new TransformStream();
         stream.pipeTo(writable);
