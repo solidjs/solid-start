@@ -1,19 +1,19 @@
 ---
 section: api
-title: dev
+title: vinxi dev
 order: 1
 subsection: CLI
 active: true
 ---
 
-# solid-start dev
+# vinxi dev
 
-##### `solid-start dev` starts a development server backed by [Vinxi](https://vinxi.vercel.app/).
+##### `vinxi dev` starts a development server backed by [Vinxi](https://vinxi.vercel.app/).
 
 <div class="text-lg">
 
 ```bash
-solid-start dev
+vinxi dev
 ```
 
 </div>
@@ -23,13 +23,13 @@ solid-start dev
 ### Specify a port
 
 ```bash
-solid-start dev --port 3000
+vinxi dev --port 3000
 ```
 
 ### Specify a `vite.config` file
 
 ```bash
-solid-start dev --config project/vite.config.ts --root project
+vinxi dev --config project/vite.config.ts --root project
 ```
 
 ## Reference

@@ -1,37 +1,37 @@
 ---
 section: api
-title: start
+title: vinxi start
 order: 2
 subsection: CLI
 active: true
 ---
 
-# solid-start start
+# vinxi start
 
-##### `solid-start start` starts the production build with a local version of adapter.
+##### `vinxi start` starts the production build with a local version of adapter.
 
 <div class="text-lg">
 
 ```bash
-solid-start start
+vinxi start
 ```
 
 </div>
 
 ## Usage
 
-Remember to run `solid-start build` before running `solid-start start`.
+Remember to run `vinxi build` before running `vinxi start`.
 
 ### Specify a port
 
 ```bash
-solid-start start --port 3000
+vinxi start --port 3000
 ```
 
 ### Specify a `vite.config` file
 
 ```bash
-solid-start start --config project/vite.config.ts --root project
+vinxi start --config project/vite.config.ts --root project
 ```
 
 ## Reference
