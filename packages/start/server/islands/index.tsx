@@ -1,5 +1,5 @@
 import { Component, ComponentProps, lazy, sharedConfig } from "solid-js";
-import { getRequestEvent, Hydration, NoHydration } from "solid-js/web";
+import { Hydration, NoHydration, getRequestEvent } from "solid-js/web";
 // import { IslandManifest } from "./types";
 import { splitProps } from "./utils";
 
@@ -7,8 +7,9 @@ declare module "solid-js" {
   namespace JSX {
     interface IntrinsicElements {
       "solid-island": {
-        "data-props": string;
         "data-id": string;
+        "data-props": string;
+        "data-path": string;
         "data-when": "idle" | "load";
         children: JSX.Element;
       };
@@ -23,8 +24,8 @@ export function createIslandReference<T extends Component<any>>(
   Comp:
     | T
     | (() => Promise<{
-        default: T;
-      }>),
+      default: T;
+    }>),
   id: string,
   name: string
 ): T {
@@ -43,11 +44,14 @@ export function createIslandReference<T extends Component<any>>(
     );
   }
 
-  return ((compProps: ComponentProps<T>) => {
+  return ((props: ComponentProps<T>) => {
     if (import.meta.env.SSR) {
+      // @ts-expect-error
+      if (!sharedConfig.context?.noHydrate) {
+        return <Component {...props} />;
+      }
       const context = getRequestEvent();
-      const [, props] = splitProps(compProps, ["children"] as any);
-      const [, spreadProps] = splitProps(compProps, [] as any);
+      const [main, rest] = splitProps(props, ["children"] as any);
 
       let fpath: string;
       let styles: string[] = [];
@@ -62,41 +66,34 @@ export function createIslandReference<T extends Component<any>>(
       fpath = id + "#" + name;
       // }
 
-      const serialize = (props: ComponentProps<T>) => {
-        let offset = 0;
-        let el = JSON.stringify(props, (key, value) => {
-          if (value && value.t) {
-            offset++;
-            return undefined;
-          }
-          return value;
-        });
+      const target = sharedConfig.context.nextRoot();
+      const prevID = sharedConfig.context.id;
+      const prevCount = sharedConfig.context.count;
 
-        return {
-          "data-props": el,
-          "data-offset": offset
-        };
-      };
+      sharedConfig.context.id = target;
 
-      // @ts-expect-error
-      if (!sharedConfig.context?.noHydrate) {
-        return <Component {...compProps} />;
-      }
-
-      return (
+      const result = (
         <Hydration>
           <solid-island
-            data-id={fpath!}
+            data-id={target}
+            data-path={fpath!}
             data-when={(props as any)["client:idle"] ? "idle" : "load"}
             data-css={JSON.stringify(styles)}
-            {...serialize(props)}
           >
-            <IslandComponent {...spreadProps} />
+            <IslandComponent {...rest}>
+              {/* TODO */}
+            </IslandComponent>
           </solid-island>
         </Hydration>
       );
-    } else {
-      return <Component {...compProps} />;
+
+      sharedConfig.context.id = prevID;
+      sharedConfig.context.count = prevCount;
+
+      sharedConfig.context.serialize(target, rest);
+
+      return result;
     }
+    return <Component {...props} />;
   }) as T;
 }
