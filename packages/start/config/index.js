@@ -43,6 +43,7 @@ export function defineConfig(baseConfig = {}) {
     appRoot: "./src",
     ssr: true,
     islands: false,
+    solid: {}
   });
   let server = start.server;
   if (!start.ssr) {
@@ -79,7 +80,7 @@ export function defineConfig(baseConfig = {}) {
             runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url)))
           }),
           start.islands ? serverComponents.server() : null,
-          solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
+          solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-server", {
             resolve: {
               alias: {
@@ -118,7 +119,7 @@ export function defineConfig(baseConfig = {}) {
             runtime: normalize(fileURLToPath(new URL("./server-runtime.jsx", import.meta.url)))
           }),
           start.islands ? serverComponents.client() : null,
-          solid({ ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
+          solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-client", {
             resolve: {
               alias: {
@@ -152,7 +153,7 @@ export function defineConfig(baseConfig = {}) {
         plugins: () => [
           config("user", userConfig),
           ...plugins,
-          solid({ ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
+          solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-server", {
             resolve: {
               alias: {
