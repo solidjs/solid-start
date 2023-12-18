@@ -2,7 +2,6 @@ import type { JSX } from "solid-js";
 import { children, ComponentProps } from "solid-js";
 import { escape, insert, NoHydration, spread, ssrElement } from "solid-js/web";
 import Links from "./Links";
-import Meta from "./Meta";
 import Scripts from "./Scripts";
 
 export function Html(props: ComponentProps<"html">) {
@@ -28,7 +27,6 @@ export function Head(props: ComponentProps<"head">) {
       () => (
         <>
           {escape(props.children as string)}
-          <Meta />
           <Links />
         </>
       ),

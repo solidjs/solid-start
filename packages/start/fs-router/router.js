@@ -8,7 +8,7 @@ import fs from "fs";
 import path, { join } from "path";
 import { toPath } from "./path-utils.js";
 
-const log = debug("solid-start");
+const log = debug("start:fs-router:router");
 
 // Available HTTP methods / verbs for api routes
 // `delete` is a reserved word in JS, so we use `del` instead
@@ -135,15 +135,21 @@ export class Router {
   processFile(path) {
     // if its a route data function
     if (path.match(this.pageDataRegex)) {
+      log("processFile: pageDataRegex matched", { path });
       let id = this.getRouteId(path.replace(this.pageDataRegex, ""));
       this.setRouteData(id, path);
       return;
     }
 
-    // if its a possible page due to its extension
+    // if it's a possible page due to its extension
     if (this.isRoute(path)) {
-      log("processing", path);
+      log("processFile: isRoute() matched", { path });
       let routeConfig = this.createRouteConfig(path);
+
+      // renamed index should have a trailing slash like index files
+      if (!routeConfig.path.endsWith("/") && /\/\([^)/]+\)$/.test(routeConfig.id)) {
+        routeConfig.path += "/";
+      }
 
       if (this.routes[routeConfig.id]) {
         // get old config, we want to compare the oldConfig with the new one to

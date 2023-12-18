@@ -160,8 +160,8 @@ function solidStartConfig(options) {
   };
 }
 /**
- * @returns {import('node_modules/vite').Plugin}
- * @param {{ delay?: number; babel?: any }} options
+ * @returns {import('vite').Plugin}
+ * @param {{ delay?: number } & Partial<import("vite-plugin-solid").Options>} options
  */
 function solidStartFileSystemRouter(options) {
   /** @type {import('./plugin').ViteConfig} */
@@ -238,7 +238,7 @@ function solidStartFileSystemRouter(options) {
         vite.httpServer.once("listening", async () => {
           setTimeout(() => {
             if (vite.resolvedUrls) {
-              const url = vite.resolvedUrls.local[0];
+              const url = vite.resolvedUrls.local[0] ?? vite.resolvedUrls.network[0];
               // eslint-disable-next-line no-console
               printUrls(config.solidOptions.router, url.substring(0, url.length - 1));
             }
@@ -260,7 +260,6 @@ function solidStartFileSystemRouter(options) {
         /** @type {string} */ id,
         /** @type {any} */ fn
       ) => {
-        // @ts-ignore
         let plugin = solid({
           ...(options ?? {}),
           ssr: process.env.START_SPA_CLIENT === "true" ? false : true,
@@ -599,7 +598,7 @@ function expand(target, source = {}, parse = v => v) {
 
           // Avoid recursion
           if (parents.includes(key)) {
-            consola.warn(
+            console.warn(
               `Please avoid recursive environment variables ( loop: ${parents.join(
                 " > "
               )} > ${key} )`
@@ -633,14 +632,27 @@ const findAny = (path, name, exts = [".js", ".ts", ".jsx", ".tsx", ".mjs", ".mts
   return null;
 };
 
+const findAdapter = () => {
+  if (process.env.START_ADAPTER) {
+    return process.env.START_ADAPTER;
+  }
+
+  // https://bun.sh/guides/util/detect-bun
+  if (process.versions.bun) {
+    return "solid-start-bun";
+  }
+
+  return "solid-start-node";
+}
+
 /**
  * @param {import('./plugin').Options} options
- * @returns {import('node_modules/vite').PluginOption[]}
+ * @returns {import('vite').PluginOption[]}
  */
 export default function solidStart(options) {
   options = Object.assign(
     {
-      adapter: process.env.START_ADAPTER ? process.env.START_ADAPTER : "solid-start-node",
+      adapter: findAdapter(),
       appRoot: "src",
       routesDir: "routes",
       ssr:
@@ -667,7 +679,7 @@ export default function solidStart(options) {
 
   return [
     solidStartConfig(options),
-    solidStartFileSystemRouter({ delay: 500 }),
+    solidStartFileSystemRouter({ delay: 500, typescript: options.typescript, solid: options.solid }),
     !options.ssr && solidStartCsrDev(options),
     options.inspect ? inspect({ outDir: join(".solid", "inspect") }) : undefined,
     options.experimental.islands ? islands() : undefined,

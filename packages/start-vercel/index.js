@@ -211,7 +211,7 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
             entrypoint: relative(fileURLToPath(renderBaseUrl), fileURLToPath(renderFuncEntrypoint))
           }
         : {
-            runtime: "nodejs16.x",
+            runtime: "nodejs18.x",
             handler: relative(fileURLToPath(renderBaseUrl), fileURLToPath(renderFuncEntrypoint)),
             launcherType: "Nodejs"
           };
@@ -290,7 +290,7 @@ export default function ({ edge, prerender, includes, excludes } = {}) {
               entrypoint: relative(fileURLToPath(apiBaseUrl), fileURLToPath(apiFuncEntrypoint))
             }
           : {
-              runtime: "nodejs16.x",
+              runtime: "nodejs18.x",
               handler: relative(fileURLToPath(apiBaseUrl), fileURLToPath(apiFuncEntrypoint)),
               launcherType: "Nodejs"
             };

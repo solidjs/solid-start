@@ -1,3 +1,5 @@
+import { Server } from "http";
+
 export type ManifestEntry = {
   type: string;
   href: string;
@@ -72,12 +74,15 @@ declare global {
   }
 }
 
+export interface LocalsExt {}
+
 export interface FetchEvent {
   request: Request;
+  httpServer?: Server;
   env: Env;
   fetch(url: string, init?: RequestInit): Promise<Response>;
   clientAddress: string;
-  locals: Record<string, unknown>;
+  locals: Record<string, unknown> & LocalsExt;
 }
 
 export interface ServerFunctionEvent extends FetchEvent {
