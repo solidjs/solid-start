@@ -26,7 +26,8 @@ const packageNames = await Promise.all(packages.map(async packagePath => {
 }));
 
 const targets = await glob("examples/*/package.json");
-const solidJsOnlyTargets = ["package.json", "packages/start/package.json", "test/template/package.json"];
+const solidJsOnlyTargets = ["package.json", "packages/start/package.json"];
+// const solidJsOnlyTargets = ["package.json", "packages/start/package.json", "test/template/package.json"];
 targets.push(...solidJsOnlyTargets);
 
 await Promise.all(targets.map(async packagePath => {

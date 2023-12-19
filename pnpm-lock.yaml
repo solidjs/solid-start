@@ -100,7 +100,7 @@ importers:
   examples/bare:
     dependencies:
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.7
@@ -118,7 +118,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.7
@@ -136,7 +136,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.7
@@ -151,7 +151,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.7
@@ -166,7 +166,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.7
@@ -184,7 +184,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.7
@@ -209,7 +209,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       '@vinxi/plugin-mdx':
         specifier: ^3.6.5
@@ -233,7 +233,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       prisma:
         specifier: ^5.7.0
@@ -258,7 +258,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.7
@@ -279,7 +279,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       autoprefixer:
         specifier: ^10.4.14
@@ -309,7 +309,7 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5(solid-js@1.8.7)
       '@solidjs/start':
-        specifier: ^0.4.0-alpha.8
+        specifier: ^0.4.0-alpha.9
         version: link:../../packages/start
       '@trpc/client':
         specifier: ^10.44.1
