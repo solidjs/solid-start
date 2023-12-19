@@ -1,0 +1,71 @@
+---
+section: api
+title: vite.config.ts
+order: 8
+subsection: Entrypoints
+active: true
+---
+
+# vite.config.ts
+
+##### `vite.config.ts` is where you configure your application.
+
+<div class="text-lg">
+
+```tsx
+import { defineConfig } from "@solidjs/start/config";
+
+export default defineConfig({
+  start: {
+    server: {
+      preset: "netlify"
+    }
+  }
+});
+```
+
+</div>
+
+<table-of-contents></table-of-contents>
+
+## Usage
+
+### Configuring your application
+
+SolidStart is built with [Vite](https://vitejs.dev) and [Nitro](https://nitro.unjs.io). It is little more than a collection of Vite plugins that enable all the functionality that we see here. This is an incredibly powerful approach as we get to leverage Vite's whole ecosystem of plugins to enhance our applications.
+
+The core configuration used by SolidStart is found at `@solidjs/start/config`. SolidStart uses Nitro which can run on a number of platforms.
+
+- Node
+- Static hosting
+- Netlify Functions & Edge
+- Vercel Functions & Edge
+- AWS Lambda & Lambda@Edge
+- Cloudflare Workers & Pages
+- Deno Deploy
+
+The simplest usage is passing no arguments, which defaults to the Node preset. Some presets may be autodetected by the provider. Otherwise they must added to the configuration via the `start.server.preset` option. For example, this uses Netlify Edge:
+
+```tsx
+import { defineConfig } from "@solidjs/start/config";
+
+export default defineConfig({
+  start: {
+    server: {
+      preset: "netlify_edge"
+    }
+  }
+});
+```
+
+## Reference
+
+### `@solidjs/start/config`
+
+The vite options are same as the default with exception of the `start` property exposes the following options:
+
+- `server` (_object_): Nitro server config options
+- `appRoot` (_string_, default `"./src"`): sets the root of the application code.
+- `routesDir` (_string_, default `"./routes"`): the path to where the routes are located.
+- `ssr` (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode.
+- `islands` (_boolean_, default `false`): _experimental_ toggles on "islands" mode.

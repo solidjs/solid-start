@@ -19,6 +19,8 @@ dist
 .output
 .vercel
 .netlify
+.vinxi
+.nitro
 netlify
 
 # Environment
@@ -100,7 +102,7 @@ async function main() {
     directory: args.example_dir ? args.example_dir : "examples",
     repository: args.repo ? args.repo.split("/")[1] : "solid-start",
     user: args.repo ? args.repo.split("/")[0] : "solidjs",
-    ref: args.branch ? args.branch : "main"
+    ref: args.branch ? args.branch : "vinxi"
   };
 
   let templates = {};
@@ -238,8 +240,8 @@ async function main() {
 
       if (src.includes("vite.config") && !code.includes("ssr: false") && !ssr) {
         code = code
-          .replace(`solid({`, `solid({ ssr: false, `)
-          .replace(`solid()`, `solid({ ssr: false })`);
+          .replace(`start: {`, `start: { ssr: false, `)
+          .replace(`defineConfig({})`, `defineConfig({ start: { ssr: false } })`);
       }
 
       if (src.endsWith(".ts") || src.endsWith(".tsx")) {
@@ -282,13 +284,9 @@ async function main() {
       .replace(/"(.+)": "workspace:.+"/g, (_m, name) => `"${name}": "next"`)
   ); // TODO ^${versions[name]}
 
-  if (!ts_response) {
-    delete pkg_json.dependencies["@types/cookie"];
-    delete pkg_json.dependencies["@types/debug"];
-    delete pkg_json.devDependencies["@types/babel__core"];
+  if (!ts_response && pkg_json.devDependencies) {
     delete pkg_json.devDependencies["@types/node"];
     delete pkg_json.devDependencies["typescript"];
-    delete pkg_json.devDependencies["@types/wait-on"];
   }
 
   fs.writeFileSync(pkg_file, JSON.stringify(pkg_json, null, 2));

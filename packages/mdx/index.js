@@ -6,7 +6,8 @@ import rehypeSlug from "rehype-slug";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkShikiTwoslash from "remark-shiki-twoslash";
 import { visit } from "unist-util-visit";
-
+import pkg from "@vinxi/plugin-mdx";
+const { default: mdx } = pkg;
 import { name as isValidIdentifierName } from "estree-util-is-identifier-name";
 import { valueToEstree } from "estree-util-value-to-estree";
 import { parse as parseYaml } from "yaml";
@@ -77,7 +78,7 @@ function jsToTreeNode(jsString, acornOpts) {
   };
 }
 
-export default async function () {
+export function docsMdx() {
   const cache = new Map();
   const headingsCache = new Map();
   const frontMatterCache = new Map();
@@ -176,8 +177,9 @@ export default async function () {
       );
     };
   }
+
   let plugin = {
-    ...(await import("@mdx-js/rollup")).default({
+    ...mdx.withImports({})({
       jsx: true,
       jsxImportSource: "solid-js",
       providerImportSource: "solid-mdx",
@@ -212,77 +214,116 @@ export default async function () {
     enforce: "pre"
   };
   return [
-    {
-      ...plugin,
-      async transform(code, id) {
-        if (id.endsWith(".mdx") || id.endsWith(".md")) {
-          if (cache.has(code)) {
-            return cache.get(code);
-          }
+    // {
+    //   ...plugin,
+    //   async transform(code, url) {
+    //     const [id, query] = url.split("?");
+    //     console.log(id);
+    //     if (id.endsWith(".mdx") || id.endsWith(".md")) {
+    //       if (cache.has(code)) {
+    //         return cache.get(code);
+    //       }
 
-          let result = await plugin.transform?.call(this, code, id);
-          cache.set(code, result);
+    //       let result = await plugin.transform?.call(this, code, id);
+    //       cache.set(code, result);
 
-          return result;
-        }
-      }
-    },
+    //       console.log(result);
 
-    {
-      ...plugin,
-      name: "mdx-meta",
-      async transform(code, id) {
-        if (id.endsWith(".mdx?meta") || id.endsWith(".md?meta")) {
-          id = id.replace(/\?meta$/, "");
-
-          function getCode() {
-            return `
-              export function getHeadings() { return ${JSON.stringify(
-                headingsCache.get(id),
-                null,
-                2
-              )}
-
+    //       return result;
+    //     }
+    //   }
+    // },
+    mdx.withImports({})({
+      jsx: true,
+      jsxImportSource: "solid-js",
+      providerImportSource: "solid-mdx",
+      rehypePlugins: [rehypeSlug, rehypeCollectHeadings, [rehypeRaw, { passThrough: nodeTypes }]],
+      remarkPlugins: [
+        remarkFrontmatter,
+        remarkMdxFrontmatter,
+        [
+          remarkShikiTwoslash.default,
+          {
+            disableImplicitReactImport: true,
+            includeJSDocInHover: true,
+            // theme: "css-variables",
+            themes: ["github-dark", "github-light"],
+            defaultCompilerOptions: {
+              allowSyntheticDefaultImports: true,
+              esModuleInterop: true,
+              target: "ESNext",
+              module: "esnext",
+              lib: ["lib.dom.d.ts", "lib.es2015.d.ts"],
+              jsxImportSource: "solid-js",
+              jsx: "preserve",
+              types: ["solid-start/env"],
+              paths: {
+                "~/*": ["./src/*"]
               }
-              export function getFrontMatter() {
-                return ${JSON.stringify(frontMatterCache.get(id), null, 2)}
-              }`;
+            }
           }
+        ]
+      ]
+    })
+    // {
+    //   ...plugin,
+    //   name: "mdx-meta",
+    //   async transform(code, id) {
+    //     if (id.endsWith(".mdx?meta") || id.endsWith(".md?meta")) {
+    //       id = id.replace(/\?meta$/, "");
 
-          if (cache.has(code)) {
-            return { code: getCode() };
-          }
+    //       function getCode() {
+    //         return `
+    //           export function getHeadings() { return ${JSON.stringify(
+    //             headingsCache.get(id),
+    //             null,
+    //             2
+    //           )}
 
-          let result = await plugin.transform?.call(this, code, id);
+    //           }
+    //           export function getFrontMatter() {
+    //             return ${JSON.stringify(frontMatterCache.get(id), null, 2)}
+    //           }`;
+    //       }
 
-          cache.set(code, result);
+    //       if (cache.has(code)) {
+    //         return { code: getCode() };
+    //       }
 
-          return {
-            code: getCode()
-          };
-        }
-      }
-    },
+    //       let result = await plugin.transform?.call(this, code, id);
 
-    {
-      name: "twoslash-fix-lsp-linebreaks",
-      transform: (code, id) => {
-        if (
-          id.endsWith(".md") ||
-          id.endsWith(".mdx") ||
-          id.endsWith(".mdx?meta") ||
-          id.endsWith(".md?meta")
-        ) {
-          return {
-            code: code
-              .replace(/lsp="([^"]*)"/g, (match, p1) => {
-                return `lsp={\`${p1.replaceAll("`", `\\\``)}\`}`;
-              })
-              .replace(/{"\\n"}/g, "")
-          };
-        }
-      },
-      enforce: "pre"
-    }
+    //       cache.set(code, result);
+
+    //       return {
+    //         code: getCode()
+    //       };
+    //     }
+    //   }
+    // },
+
+    // {
+    //   name: "twoslash-fix-lsp-linebreaks",
+    //   transform: (code, id) => {
+    //     if (
+    //       id.endsWith(".md") ||
+    //       id.endsWith(".mdx") ||
+    //       id.endsWith(".mdx?meta") ||
+    //       id.endsWith(".md?meta")
+    //     ) {
+    //       return {
+    //         code: code
+    //           .replace(/lsp="([^"]*)"/g, (match, p1) => {
+    //             return `lsp={\`${p1.replaceAll("`", `\\\``)}\`}`;
+    //           })
+    //           .replace(/{"\\n"}/g, "")
+    //       };
+    //     }
+    //   },
+    //   enforce: "pre"
+    // }
   ];
 }
+
+// export function docsMdx() {
+//   return mdx();
+// }

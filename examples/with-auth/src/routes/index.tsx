@@ -1,32 +1,21 @@
-import { useRouteData } from "solid-start";
-import { createServerAction$, createServerData$, redirect } from "solid-start/server";
-import { getUser, logout } from "~/db/session";
+import { createAsync, type RouteDefinition } from "@solidjs/router";
+import { getUser, logout } from "~/api";
 
-export function routeData() {
-  return createServerData$(async (_, { request }) => {
-    const user = await getUser(request);
-
-    if (!user) {
-      throw redirect("/login");
-    }
-
-    return user;
-  });
-}
+export const route = {
+  load: () => getUser()
+} satisfies RouteDefinition;
 
 export default function Home() {
-  const user = useRouteData<typeof routeData>();
-  const [, { Form }] = createServerAction$((f: FormData, { request }) => logout(request));
-
+  const user = createAsync(getUser, { deferStream: true });
   return (
     <main class="w-full p-4 space-y-2">
-      <h1 class="font-bold text-3xl">Hello {user()?.username}</h1>
+      <h2 class="font-bold text-3xl">Hello {user()?.username}</h2>
       <h3 class="font-bold text-xl">Message board</h3>
-      <Form>
+      <form action={logout} method="post">
         <button name="logout" type="submit">
           Logout
         </button>
-      </Form>
+      </form>
     </main>
   );
 }

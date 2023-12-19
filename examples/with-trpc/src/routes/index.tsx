@@ -1,9 +1,10 @@
-import { Title } from "solid-start";
+import { Title } from "@solidjs/meta";
+import { createAsync } from "@solidjs/router";
 import Counter from "~/components/Counter";
-import { api } from "~/utils/api";
+import { api } from "~/lib/api";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery(() => "World");
+  const hello = createAsync(() => api.example.hello.query("world"));
   return (
     <main>
       <Title>Hello World</Title>
@@ -17,7 +18,7 @@ export default function Home() {
         to learn how to build SolidStart apps.
       </p>
       <pre>
-        <code>{JSON.stringify(hello.data, null, 2)}</code>
+        <code>{JSON.stringify(hello(), null, 2)}</code>
       </pre>
     </main>
   );

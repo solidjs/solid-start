@@ -1,22 +1,15 @@
-import { Component, createResource, Show } from "solid-js";
-import { RouteDataArgs, useRouteData } from "solid-start";
-import fetchAPI from "~/lib/api";
+import { createAsync, type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
+import { Show } from "solid-js";
+import { getUser } from "~/lib/api";
 
-interface IUser {
-  error: string;
-  id: string;
-  created: string;
-  karma: number;
-  about: string;
-}
+export const route = {
+  load({ params }) {
+    void getUser(params.id);
+  }
+} satisfies RouteDefinition;
 
-export const routeData = (props: RouteDataArgs) => {
-  const [user] = createResource<IUser, string>(() => `user/${props.params.id}`, fetchAPI);
-  return user;
-};
-
-const User: Component = () => {
-  const user = useRouteData<typeof routeData>();
+export default function User(props: RouteSectionProps) {
+  const user = createAsync(() => getUser(props.params.id));
   return (
     <div class="user-view">
       <Show when={user()}>
@@ -42,5 +35,3 @@ const User: Component = () => {
     </div>
   );
 };
-
-export default User;

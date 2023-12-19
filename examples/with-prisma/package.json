@@ -1,23 +1,21 @@
 {
   "name": "example-with-prisma",
-  "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start start"
-  },
   "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "node ./.output/server/index.mjs"
+  },
   "devDependencies": {
-    "solid-start-node": "^0.3.10",
-    "typescript": "^4.9.5",
-    "vite": "^4.4.9"
+    "@types/node": "^20.10.1"
   },
   "dependencies": {
-    "@prisma/client": "^4.16.2",
-    "@solidjs/meta": "^0.29.1",
-    "@solidjs/router": "^0.8.3",
-    "prisma": "^4.16.2",
-    "solid-js": "^1.8.5",
-    "solid-start": "^0.3.10"
+    "@prisma/client": "^5.7.0",
+    "@solidjs/router": "^0.10.5",
+    "@solidjs/start": "^0.4.0-alpha.11",
+    "prisma": "^5.7.0",
+    "solid-js": "^1.8.7",
+    "vinxi": "0.0.52"
   },
   "engines": {
     "node": ">=18"

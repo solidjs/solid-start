@@ -1,0 +1,19 @@
+{
+  "name": "example-basic",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "node ./.output/server/index.mjs"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.29.2",
+    "@solidjs/router": "^0.10.5",
+    "@solidjs/start": "^0.4.0-alpha.11",
+    "solid-js": "^1.8.7",
+    "vinxi": "0.0.52"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

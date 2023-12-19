@@ -1,25 +1,16 @@
 {
   "name": "example-hackernews",
-  "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start start"
-  },
   "type": "module",
-  "main": "./dist/index.js",
-  "devDependencies": {
-    "@types/babel__core": "^7.20.1",
-    "@types/node": "^18.17.5",
-    "esbuild": "^0.14.54",
-    "solid-start-node": "^0.3.10",
-    "typescript": "^4.9.5",
-    "vite": "^4.4.9"
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "node ./.output/server/index.mjs"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.29.1",
-    "@solidjs/router": "^0.8.3",
-    "solid-js": "^1.8.5",
-    "solid-start": "^0.3.10"
+    "@solidjs/router": "^0.10.5",
+    "@solidjs/start": "^0.4.0-alpha.11",
+    "solid-js": "^1.8.7",
+    "vinxi": "0.0.52"
   },
   "engines": {
     "node": ">=18"

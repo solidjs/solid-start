@@ -1,0 +1,61 @@
+---
+section: advanced
+title: Middleware
+order: 8
+---
+
+# Middleware
+
+Middlewares may be included by passing file you specify in your start config.
+
+```js
+import { defineConfig } from "@solidjs/start/config";
+
+export default defineConfig({
+  start: {
+    middleware: "./src/middleware.ts"
+  }
+});
+```
+
+Inside the middleware file, you can export a `createMiddleware` function.
+
+```tsx
+import { appendCorsHeaders, createMiddleware } from "@solidjs/start/server";
+
+export default createMiddleware({
+  onRequest: [
+    event => {
+      console.log("GLOBAL", event.request.url);
+    },
+    event => {
+      appendCorsHeaders(event, {});
+    }
+  ]
+});
+```
+
+Middleware supports 2 lifecycles: `onRequest` and `onBeforeResponse`. If you return a value from middleware it will respond with that, otherwise it will run the next one in the chain.
+
+## Protected Routes
+
+Let's see how can we use a middleware to create a Protected route:
+
+```tsx
+import { sendRedirect, createMiddleware } from "@solidjs/start/server";
+const protectedPaths = ["/protected"]; // add any route you wish in here
+
+export default createMiddleware({
+  onRequest: [
+    event => {
+      if (protectedPaths.includes(new URL(event.request.url).pathname)) {
+        const user = await getUser(event.request);
+        if (!user) {
+          return sendRedirect(event, "/"); // a page for a non logged in user
+        }
+        event.locals.user = user; // put the user on the locals object
+      }
+    };
+  }
+);
+```

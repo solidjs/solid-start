@@ -1,23 +1,16 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "target": "ESNext",
-    "allowJs": true,
-    "noEmit": true,
-    "checkJs": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "jsxImportSource": "solid-js",
-    "jsx": "preserve",
-    "types": ["./env"],
-    "strict": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "paths": {
-      "vite": ["./node_modules/vite"]
-    },
-    "baseUrl": "./"
-  },
-  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./**/*.jsx"],
-  "exclude": ["node_modules", "**/node_modules/*"]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"allowJs": true,
+		"checkJs": true,
+		"noEmit": true,
+		"types": ["vinxi/client"],
+		"isolatedModules": true
+	}
 }

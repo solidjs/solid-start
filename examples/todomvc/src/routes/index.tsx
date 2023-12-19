@@ -1,8 +1,22 @@
-import { createMemo, createSignal, For, Show } from "solid-js";
-import { A, useLocation, useRouteData } from "solid-start";
-import { createServerAction$, createServerData$, createServerMultiAction$, redirect } from "solid-start/server";
+import {
+  action,
+  cache,
+  createAsync,
+  useSubmission,
+  useSubmissions,
+  type RouteSectionProps
+} from "@solidjs/router";
+import { For, Show, createMemo, createSignal } from "solid-js";
 import { CompleteIcon, IncompleteIcon } from "~/components/icons";
-import db from "~/db";
+import {
+  addTodoFn,
+  clearCompletedFn,
+  editTodoFn,
+  getTodosFn,
+  removeTodoFn,
+  toggleAllFn,
+  toggleTodoFn
+} from "~/lib/api";
 import { Todo } from "~/types";
 
 declare module "solid-js" {
@@ -13,17 +27,21 @@ declare module "solid-js" {
   }
 }
 const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
+const getTodos = cache(getTodosFn, "todos");
+const addTodo = action(addTodoFn, "addTodo");
+const removeTodo = action(removeTodoFn, "removeTodo");
+const toggleAll = action(toggleAllFn, "toggleAll");
+const clearCompleted = action(clearCompletedFn, "clearCompleted");
+const editTodo = action(editTodoFn, "editTodo");
+const toggleTodo = action(toggleTodoFn, "toggleTodo");
 
-export const routeData = () => createServerData$(db.getTodos, { initialValue: [] });
+export default function TodoApp(props: RouteSectionProps) {
+  const todos = createAsync(getTodos, { initialValue: [], deferStream: true });
+  const location = props.location;
 
-const TodoApp = () => {
-  const todos = useRouteData<typeof routeData>();
-  const location = useLocation();
-
-  const [addingTodo, addTodo] = createServerMultiAction$(addTodoFn);
-  const [removingTodo, removeTodo] = createServerMultiAction$(removeTodoFn);
-  const [togglingAll, toggleAll] = createServerAction$(toggleAllFn);
-  const [, clearCompleted] = createServerAction$(clearCompletedFn);
+  const addingTodo = useSubmissions(addTodo);
+  const removingTodo = useSubmissions(removeTodo);
+  const togglingAll = useSubmission(toggleAll);
 
   const [editingTodoId, setEditingId] = createSignal();
   const setEditing = ({ id, pending }: { id?: number; pending?: () => boolean }) => {
@@ -32,9 +50,9 @@ const TodoApp = () => {
   const remainingCount = createMemo(
     () =>
       todos().length +
-      addingTodo.pending.length -
+      addingTodo.length -
       todos().filter(todo => todo.completed).length -
-      removingTodo.pending.length
+      removingTodo.length
   );
   const filterList = (todos: Todo[]) => {
     if (location.query.show === "active") return todos.filter(todo => !todo.completed);
@@ -47,10 +65,14 @@ const TodoApp = () => {
     <section class="todoapp">
       <header class="header">
         <h1>todos</h1>
-        <addTodo.Form onSubmit={e => {
-          if (!inputRef.value.trim()) e.preventDefault();
-          setTimeout(() => (inputRef.value = ""));
-        }}>
+        <form
+          action={addTodo}
+          method="post"
+          onSubmit={e => {
+            if (!inputRef.value.trim()) e.preventDefault();
+            setTimeout(() => (inputRef.value = ""));
+          }}
+        >
           <input
             name="title"
             class="new-todo"
@@ -58,34 +80,32 @@ const TodoApp = () => {
             ref={inputRef}
             autofocus
           />
-        </addTodo.Form>
+        </form>
       </header>
 
       <section class="main">
         <Show when={todos().length > 0}>
-          <toggleAll.Form>
-            <input name="completed" type="hidden" value={String(!remainingCount())} />
+          <form action={toggleAll.with(!remainingCount())} method="post">
             <button class={`toggle-all ${!remainingCount() ? "checked" : ""}`} type="submit">
               ❯
             </button>
-          </toggleAll.Form>
+          </form>
         </Show>
         <ul class="todo-list">
           <For each={filterList(todos())}>
             {todo => {
-              const [togglingTodo, toggleTodo] = createServerAction$(toggleTodoFn);
-              const [editingTodo, editTodo] = createServerAction$(editTodoFn);
-              const title = () =>
-                editingTodo.pending ? (editingTodo.input.get("title") as string) : todo.title;
+              const togglingTodo = useSubmission(toggleTodo, input => input[0] == todo.id);
+              const editingTodo = useSubmission(editTodo, input => input[0] == todo.id);
+              const title = () => (editingTodo.pending ? editingTodo.input[0] : todo.title);
               const pending = () =>
                 togglingAll.pending || togglingTodo.pending || editingTodo.pending;
               const completed = () =>
                 togglingAll.pending
-                  ? !togglingAll.input.get("completed")
+                  ? !togglingAll.input[0]
                   : togglingTodo.pending
-                  ? !togglingTodo.input.get("completed")
+                  ? !togglingTodo.input[0]
                   : todo.completed;
-              const removing = () => removingTodo.some(data => +data.input.get("id") === todo.id);
+              const removing = () => removingTodo.some(data => data.input[0] === todo.id);
               return (
                 <Show when={!removing()}>
                   <li
@@ -96,34 +116,38 @@ const TodoApp = () => {
                       pending: pending()
                     }}
                   >
-                    <div class="view">
-                      <toggleTodo.Form>
-                        <input type="hidden" name="id" value={todo.id} />
-                        <button type="submit" class="toggle" disabled={pending()}>
-                          {completed() ? <CompleteIcon /> : <IncompleteIcon />}
-                        </button>
-                      </toggleTodo.Form>
+                    <form class="view" method="post">
+                      <button
+                        formAction={toggleTodo.with(todo.id)}
+                        class="toggle"
+                        disabled={pending()}
+                      >
+                        {completed() ? <CompleteIcon /> : <IncompleteIcon />}
+                      </button>
                       <label onDblClick={[setEditing, { id: todo.id, pending }]}>{title()}</label>
-                      <removeTodo.Form>
-                        <input type="hidden" name="id" value={todo.id} />
-                        <button type="submit" class="destroy" />
-                      </removeTodo.Form>
-                    </div>
+                      <button formAction={removeTodo.with(todo.id)} class="destroy" />
+                    </form>
                     <Show when={editingTodoId() === todo.id}>
-                      <editTodo.Form onSubmit={() => setEditing({})}>
-                        <input type="hidden" name="id" value={todo.id} />
+                      <form
+                        action={editTodo.with(todo.id)}
+                        method="post"
+                        onSubmit={e => {
+                          e.preventDefault();
+                          setTimeout(() => setEditing({}));
+                        }}
+                      >
                         <input
                           name="title"
                           class="edit"
                           value={todo.title}
                           onBlur={e => {
                             if (todo.title !== e.currentTarget.value) {
-                              e.currentTarget.form.requestSubmit();
-                            } else setEditing({});
+                              e.currentTarget.form!.requestSubmit();
+                            } else setTimeout(() => setEditing({}));
                           }}
                           use:setFocus
                         />
-                      </editTodo.Form>
+                      </form>
                     </Show>
                   </li>
                 </Show>
@@ -134,7 +158,7 @@ const TodoApp = () => {
             {sub => (
               <li class="todo pending">
                 <div class="view">
-                  <label>{sub.input.get("title") as string}</label>
+                  <label>{String(sub.input[0].get("title"))}</label>
                   <button disabled class="destroy" />
                 </div>
               </li>
@@ -143,62 +167,41 @@ const TodoApp = () => {
         </ul>
       </section>
 
-      <Show when={todos().length || addingTodo.pending.length}>
+      <Show when={todos().length || addingTodo.length}>
         <footer class="footer">
           <span class="todo-count">
             <strong>{remainingCount()}</strong> {remainingCount() === 1 ? " item " : " items "} left
           </span>
           <ul class="filters">
             <li>
-              <A href="?show=all" classList={{ selected: !location.query.show || location.query.show === "all" }}>
+              <a
+                href="?show=all"
+                classList={{ selected: !location.query.show || location.query.show === "all" }}
+              >
                 All
-              </A>
+              </a>
             </li>
             <li>
-              <A href="?show=active" classList={{ selected: location.query.show === "active" }}>
+              <a href="?show=active" classList={{ selected: location.query.show === "active" }}>
                 Active
-              </A>
+              </a>
             </li>
             <li>
-              <A href="?show=completed" classList={{ selected: location.query.show === "completed" }}>
+              <a
+                href="?show=completed"
+                classList={{ selected: location.query.show === "completed" }}
+              >
                 Completed
-              </A>
+              </a>
             </li>
           </ul>
           <Show when={remainingCount() !== todos.length}>
-            <clearCompleted.Form>
+            <form action={clearCompleted} method="post">
               <button class="clear-completed">Clear completed</button>
-            </clearCompleted.Form>
+            </form>
           </Show>
         </footer>
       </Show>
     </section>
   );
-};
-
-async function addTodoFn(form: FormData) {
-  await db.addTodo(form.get("title") as string);
-  return redirect("/");
 }
-async function removeTodoFn(form: FormData) {
-  await db.removeTodo(Number(form.get("id")));
-  return redirect("/");
-}
-async function toggleAllFn(form: FormData) {
-  await db.toggleAll(form.get("completed") === "true");
-  return redirect("/");
-}
-async function clearCompletedFn(form: FormData) {
-  await db.clearCompleted();
-  return redirect("/");
-}
-async function toggleTodoFn(form: FormData) {
-  await db.toggleTodo(Number(form.get("id")));
-  return redirect("/");
-}
-async function editTodoFn(form: FormData) {
-  await db.editTodo(Number(form.get("id")), String(form.get("title")));
-  return redirect("/");
-}
-
-export default TodoApp;
