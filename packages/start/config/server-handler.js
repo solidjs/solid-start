@@ -91,7 +91,20 @@ async function handleServerFunction(event) {
   ) {
     parsed.push(await readFormData(event));
   } else {
-    parsed = fromJSON(await readBody(event));
+    parsed = fromJSON(await readBody(event), {
+      plugins: [
+        CustomEventPlugin,
+        DOMExceptionPlugin,
+        EventPlugin,
+        FormDataPlugin,
+        HeadersPlugin,
+        ReadableStreamPlugin,
+        RequestPlugin,
+        ResponsePlugin,
+        URLSearchParamsPlugin,
+        URLPlugin,
+      ],
+    });
   }
   try {
     const result = await provideRequestEvent(getFetchEvent(event), () => action(...parsed));
