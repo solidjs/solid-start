@@ -2,12 +2,12 @@ import { InlineConfig } from "vite";
 
 type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
     start?: {
-        ssr?: boolean,
+        ssr?: boolean | "async",
         extensions?: string[],
         server?: any,
         appRoot?: string,
-        middleware?: string
-        islands?: boolean
+        middleware?: string,
+        //islands?: boolean TODO: Get PROD bugs working probably missing release
     }
 }
 
