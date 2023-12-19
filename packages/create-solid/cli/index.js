@@ -284,13 +284,9 @@ async function main() {
       .replace(/"(.+)": "workspace:.+"/g, (_m, name) => `"${name}": "next"`)
   ); // TODO ^${versions[name]}
 
-  if (!ts_response) {
-    delete pkg_json.dependencies["@types/cookie"];
-    delete pkg_json.dependencies["@types/debug"];
-    delete pkg_json.devDependencies["@types/babel__core"];
+  if (!ts_response && pkg_json.devDependencies) {
     delete pkg_json.devDependencies["@types/node"];
     delete pkg_json.devDependencies["typescript"];
-    delete pkg_json.devDependencies["@types/wait-on"];
   }
 
   fs.writeFileSync(pkg_file, JSON.stringify(pkg_json, null, 2));
