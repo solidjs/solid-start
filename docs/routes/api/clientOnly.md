@@ -12,7 +12,7 @@ Wrap Components that are only to be rendered in the Client. Helpful for componen
 
 <div class="text-lg">
 
-```tsx twoslash
+```tsx
 import { clientOnly } from "@solidjs/start"
 
 const ClientOnlyComp = clientOnly(() => import("../ClientOnlyComp"));
@@ -42,7 +42,7 @@ export default function ClientOnlyComponent() {
 
 And then import dynamically using `clientOnly`.
 
-```tsx twoslash
+```tsx
 import { clientOnly } from "@solidjs/start"
 
 const ClientOnlyComp = clientOnly(() => import("../ClientOnlyComp"));
