@@ -1,6 +1,7 @@
 import { serverFunctions } from "@vinxi/server-functions/plugin";
 import { serverTransform } from "@vinxi/server-functions/server";
 import defu from "defu";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createApp, resolve } from "vinxi";
@@ -49,6 +50,10 @@ export function defineConfig(baseConfig = {}) {
   if (!start.ssr) {
     server = { ...server, prerender: { routes: ["/"] } };
   }
+  let entryExtension = ".tsx"
+  if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) {
+    entryExtension = ".jsx"
+  }
 
   return createApp({
     server: {
@@ -68,7 +73,7 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "ssr",
         mode: "handler",
-        handler: `${start.appRoot}/entry-server.tsx`,
+        handler: `${start.appRoot}/entry-server${entryExtension}`,
         middleware: start.middleware,
         routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         extensions,
@@ -84,7 +89,7 @@ export function defineConfig(baseConfig = {}) {
           config("app-server", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                 "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
@@ -106,7 +111,7 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "client",
         mode: "build",
-        handler: `${start.appRoot}/entry-client.tsx`,
+        handler: `${start.appRoot}/entry-client${entryExtension}`,
         ...(start.islands
           ? {}
           : {
@@ -125,7 +130,7 @@ export function defineConfig(baseConfig = {}) {
           config("app-client", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                 "~": join(process.cwd(), start.appRoot),
                 ...(start.islands
                   ? {
@@ -161,7 +166,7 @@ export function defineConfig(baseConfig = {}) {
           config("app-server", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                 "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
