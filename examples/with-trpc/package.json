@@ -12,7 +12,7 @@
     "@trpc/server": "^10.44.1",
     "@solidjs/meta": "^0.29.2",
     "@solidjs/router": "^0.10.5",
-    "@solidjs/start": "^0.4.0-alpha.10",
+    "@solidjs/start": "^0.4.0-alpha.11",
     "solid-js": "^1.8.7",
     "valibot": "^0.23.0",
     "vinxi": "0.0.52"
