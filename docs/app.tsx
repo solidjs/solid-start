@@ -192,7 +192,7 @@ function Nav() {
                                 inactiveClass="text-gray-500"
                                 href={href}
                               >
-                                <span class="ml-4 block break-words pb-2 text-sm hover:text-gray-500 dark:hover:text-gray-300">
+                                <span class="ml-4 block break-words pb-2 text-sm hover:text-slate-700 dark:hover:text-gray-300 hover:underline">
                                   {title}
                                 </span>
                               </A>
