@@ -57,6 +57,19 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     }
   }
 }
+const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
+function createHTTPHandlers(src, exports) {
+  const handlers = {};
+  for (const exp of exports) {
+    if (HTTP_METHODS.includes(exp.n)) {
+      handlers[`$${exp.n}`] = {
+        src: src,
+        pick: [exp.n]
+      };
+    }
+  }
+  return handlers;
+}
 export class SolidStartServerFileRouter extends BaseFileSystemRouter {
   toPath(src) {
     const routePath = cleanPath(src, this.config)
@@ -110,37 +123,10 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
         path,
         filePath: src
       };
-    } else if (
-      exports.find(
-        exp => exp.n === "GET" || exp.n === "POST" || exp.n === "PUT" || exp.n === "DELETE"
-      )
-    ) {
+    } else if (exports.find(exp => HTTP_METHODS.includes(exp.n))) {
       return {
         type: "api",
-        $GET: exports.find(exp => exp.n === "GET")
-          ? {
-              src: src,
-              pick: ["GET"]
-            }
-          : undefined,
-        $POST: exports.find(exp => exp.n === "POST")
-          ? {
-              src: src,
-              pick: ["POST"]
-            }
-          : undefined,
-        $PUT: exports.find(exp => exp.n === "PUT")
-          ? {
-              src: src,
-              pick: ["PUT"]
-            }
-          : undefined,
-        $DELETE: exports.find(exp => exp.n === "DELETE")
-          ? {
-              src: src,
-              pick: ["DELETE"]
-            }
-          : undefined,
+        ...createHTTPHandlers(src, exports),
         path,
         filePath: src
       };
