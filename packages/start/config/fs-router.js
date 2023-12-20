@@ -129,6 +129,18 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
               pick: ["POST"]
             }
           : undefined,
+        $PUT: exports.find(exp => exp.n === "PUT")
+          ? {
+              src: src,
+              pick: ["PUT"]
+            }
+          : undefined,
+        $DELETE: exports.find(exp => exp.n === "DELETE")
+          ? {
+              src: src,
+              pick: ["DELETE"]
+            }
+          : undefined,
         path,
         filePath: src
       };
