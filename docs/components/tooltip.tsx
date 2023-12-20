@@ -1,21 +1,22 @@
 import { createEffect } from "solid-js";
-import { isServer } from "solid-js/web";
+
 let tippy;
-if (!isServer) {
-  import("tippy.js").then(mod => tippy = mod);
+
+function applyTippy(id) {
+  tippy.default(`[data-template="${id}"]`, {
+    content() {
+      const template = document.getElementById(id);
+      return template.innerHTML;
+    },
+    allowHTML: true
+  });
 }
 
 export default function Tooltip(props) {
-  createEffect(() => {
-    if (!isServer) {
-      tippy.default(`[data-template="${props.id}"]`, {
-        content() {
-          const template = document.getElementById(props.id);
-          return template.innerHTML;
-        },
-        allowHTML: true
-      });
-    }
+  createEffect(async () => {
+    const id = props.id;
+    tippy || (tippy = await import("tippy.js"));
+    applyTippy(id);
   });
   return (
     <span class={`data-lsp`} data-template={props.id}>

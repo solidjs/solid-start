@@ -58,6 +58,30 @@ export default defineConfig({
 });
 ```
 
+#### Special Note
+
+SolidStart uses Async Local Storage. Not all non-node platforms support it out of the box. Netlify, Vercel, and Deno should just work. But for Cloudflare you will need specific config:
+
+```js
+import { defineConfig } from "@solidjs/start/config";
+
+export default defineConfig({
+  start: {
+    server: {
+      preset: "cloudflare_module",
+      rollupConfig: {
+        external: ["__STATIC_CONTENT_MANIFEST", "node:async_hooks"]
+      }
+    }
+  }
+});
+```
+
+And enable node compat in your wrangler.toml.
+```
+compatibility_flags = [ "nodejs_compat" ]
+```
+
 ## Reference
 
 ### `@solidjs/start/config`

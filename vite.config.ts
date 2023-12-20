@@ -11,7 +11,7 @@ export default defineConfig({
     appRoot: "./docs",
     extensions: ["mdx", "md"],
     server: {
-      preset: "cloudflare",
+      preset: "cloudflare_module",
       rollupConfig: {
         external: ["__STATIC_CONTENT_MANIFEST", "node:async_hooks"]
       },
