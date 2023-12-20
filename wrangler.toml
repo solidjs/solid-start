@@ -1,10 +1,15 @@
 name = "solid-start"
-compatibility_date = "2022-08-05"
+compatibility_date = "2022-09-10"
 account_id = "fa2a5e3787deead800c822a0e1171763"
 zone_id = "9258b29d3b22bdba0666469e82d18225"
-main = "./dist/server.js"
+main = "./.output/server/index.mjs"
 type = "javascript"
 route = "start.solidjs.com/*"
+compatibility_flags = [ "nodejs_compat" ]
+
+rules = [
+  { type = "ESModule", globs = ["**/*.js", "**/*.mjs"]},
+]
 
 [site]
-bucket = "./dist/public"
+bucket = ".output/public"

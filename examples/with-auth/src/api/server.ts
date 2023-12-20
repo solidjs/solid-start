@@ -66,11 +66,12 @@ export async function getUser() {
   const userId = session.data.userId;
   if (userId === undefined) throw redirect("/login");
 
+  let user;
   try {
-    const user = await db.user.findUnique({ where: { id: userId } });
-    if (!user) throw redirect("/login");
-    return { id: user.id, username: user.username };
+    user = await db.user.findUnique({ where: { id: userId } });
   } catch {
-    throw logout();
+    logout();
   }
+  if (!user) return logout();
+  return { id: user.id, username: user.username };
 }

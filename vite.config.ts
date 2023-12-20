@@ -11,6 +11,10 @@ export default defineConfig({
     appRoot: "./docs",
     extensions: ["mdx", "md"],
     server: {
+      preset: "cloudflare_module",
+      rollupConfig: {
+        external: ["__STATIC_CONTENT_MANIFEST", "node:async_hooks"]
+      },
       prerender: {
         crawlLinks: true
       }

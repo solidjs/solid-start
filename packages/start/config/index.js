@@ -1,6 +1,7 @@
 import { serverFunctions } from "@vinxi/server-functions/plugin";
 import { serverTransform } from "@vinxi/server-functions/server";
 import defu from "defu";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createApp, resolve } from "vinxi";
@@ -47,7 +48,11 @@ export function defineConfig(baseConfig = {}) {
   });
   let server = start.server;
   if (!start.ssr) {
-    server = { ...server, prerender: { routes: ["/"] }  };
+    server = { ...server, prerender: { routes: ["/"] } };
+  }
+  let entryExtension = ".tsx"
+  if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) {
+    entryExtension = ".jsx"
   }
 
   return createApp({
@@ -68,7 +73,7 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "ssr",
         mode: "handler",
-        handler: `${start.appRoot}/entry-server.tsx`,
+        handler: `${start.appRoot}/entry-server${entryExtension}`,
         middleware: start.middleware,
         routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         extensions,
@@ -84,19 +89,21 @@ export function defineConfig(baseConfig = {}) {
           config("app-server", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                 "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
                       "@solidjs/start/server": "@solidjs/start/server/spa"
                     }
-                  : {})
+                  : {}),
+                ...userConfig.resolve?.alias
               }
             },
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(true),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+              ...userConfig.define
             }
           })
         ]
@@ -104,7 +111,7 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "client",
         mode: "build",
-        handler: `${start.appRoot}/entry-client.tsx`,
+        handler: `${start.appRoot}/entry-client${entryExtension}`,
         ...(start.islands
           ? {}
           : {
@@ -123,7 +130,7 @@ export function defineConfig(baseConfig = {}) {
           config("app-client", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                 "~": join(process.cwd(), start.appRoot),
                 ...(start.islands
                   ? {
@@ -134,13 +141,15 @@ export function defineConfig(baseConfig = {}) {
                   ? {
                       "@solidjs/start/client": "@solidjs/start/client/spa"
                     }
-                  : {})
+                  : {}),
+                ...userConfig.resolve?.alias
               }
             },
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(false),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+              ...userConfig.define
             }
           })
         ],
@@ -157,19 +166,21 @@ export function defineConfig(baseConfig = {}) {
           config("app-server", {
             resolve: {
               alias: {
-                "#start/app": join(process.cwd(), start.appRoot, "app.tsx"),
+                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                 "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
                       "@solidjs/start/server": "@solidjs/start/server/spa"
                     }
-                  : {})
+                  : {}),
+                ...userConfig.resolve?.alias
               }
             },
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(true),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+              ...userConfig.define
             }
           })
         ],

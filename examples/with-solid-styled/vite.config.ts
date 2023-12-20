@@ -1,4 +1,5 @@
 import { defineConfig } from "@solidjs/start/config";
+import type { PluginOption } from "vite";
 import solidStyled from 'vite-plugin-solid-styled';
 
 export default defineConfig({
@@ -8,6 +9,6 @@ export default defineConfig({
         include: 'src/**/*.tsx',
         exclude: 'node_modules/**/*.{ts,js}',
       }
-    }),
+    }) as PluginOption,
   ]
 });
