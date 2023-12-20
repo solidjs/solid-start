@@ -73,6 +73,23 @@ pre {
   color: #777 !important;
 }
 
+.code-container {
+  padding: 6px 2px;
+}
+
+.prose h2 {
+  margin-top: 115px;
+  font-size: 1.7rem;
+  letter-spacing: 0.1px;
+  padding-bottom: 22px;
+}
+
+.prose h1 {
+  font-size: 1.8rem;
+  letter-spacing: 0.1px;
+  padding-bottom: 22px;
+}
+
 .dark .prose h2 code {
   color: #aaa !important;
 }
@@ -164,6 +181,12 @@ pre {
   background: linear-gradient(to right, rgba(255, 255, 255, 1), 92%, rgba(255, 255, 255, 0));
 }
 */
+
+div + pre[filename] {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: 0;
+}
 
 /* Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
