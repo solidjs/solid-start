@@ -1,5 +1,17 @@
 /// <reference types="vinxi/types/server" />
 import { crossSerializeStream, fromJSON } from "seroval";
+import {
+  CustomEventPlugin,
+  DOMExceptionPlugin,
+  EventPlugin,
+  FormDataPlugin,
+  HeadersPlugin,
+  ReadableStreamPlugin,
+  RequestPlugin,
+  ResponsePlugin,
+  URLPlugin,
+  URLSearchParamsPlugin,
+} from 'seroval-plugins/web';
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
 import {
@@ -17,6 +29,18 @@ function serializeToStream(id, value) {
     start(controller) {
       crossSerializeStream(value, {
         scopeId: id,
+        plugins: [
+          CustomEventPlugin,
+          DOMExceptionPlugin,
+          EventPlugin,
+          FormDataPlugin,
+          HeadersPlugin,
+          ReadableStreamPlugin,
+          RequestPlugin,
+          ResponsePlugin,
+          URLSearchParamsPlugin,
+          URLPlugin,
+        ],
         onSerialize(data, initial) {
           const result = initial ? `($R["${id}"]=[],${data})` : data;
           controller.enqueue(new TextEncoder().encode(`${result};\n`));
@@ -67,7 +91,20 @@ async function handleServerFunction(event) {
   ) {
     parsed.push(await readFormData(event));
   } else {
-    parsed = fromJSON(await readBody(event));
+    parsed = fromJSON(await readBody(event), {
+      plugins: [
+        CustomEventPlugin,
+        DOMExceptionPlugin,
+        EventPlugin,
+        FormDataPlugin,
+        HeadersPlugin,
+        ReadableStreamPlugin,
+        RequestPlugin,
+        ResponsePlugin,
+        URLSearchParamsPlugin,
+        URLPlugin,
+      ],
+    });
   }
   try {
     const result = await provideRequestEvent(getFetchEvent(event), () => action(...parsed));

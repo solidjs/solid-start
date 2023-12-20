@@ -1,4 +1,16 @@
 import { deserialize, toJSONAsync } from "seroval";
+import {
+  CustomEventPlugin,
+  DOMExceptionPlugin,
+  EventPlugin,
+  FormDataPlugin,
+  HeadersPlugin,
+  ReadableStreamPlugin,
+  RequestPlugin,
+  ResponsePlugin,
+  URLPlugin,
+  URLSearchParamsPlugin,
+} from 'seroval-plugins/web';
 import { createIslandReference } from "../server/islands";
 
 async function deserializeStream(id, response) {
@@ -41,7 +53,7 @@ async function deserializeStream(id, response) {
 
   pop().then(
     () => {
-      delete self.$R[id];
+      delete $R[id];
     },
     () => {
       // no-op
@@ -69,7 +81,20 @@ async function fetchServerFunction(base, id, args) {
   const instance = `server-fn:${INSTANCE++}`;
   const response = await (args.length === 1 && args[0] instanceof FormData
     ? createRequest(base, id, instance, args[0])
-    : createRequest(base, id, instance, JSON.stringify(await Promise.resolve(toJSONAsync(args))), "application/json"));
+    : createRequest(base, id, instance, JSON.stringify(await Promise.resolve(toJSONAsync(args, {
+      plugins: [
+        CustomEventPlugin,
+        DOMExceptionPlugin,
+        EventPlugin,
+        FormDataPlugin,
+        HeadersPlugin,
+        ReadableStreamPlugin,
+        RequestPlugin,
+        ResponsePlugin,
+        URLSearchParamsPlugin,
+        URLPlugin,
+      ],
+    }))), "application/json"));
 
   if (response.headers.get("Location")) throw response;
   if (response.headers.get("X-Revalidate")) {

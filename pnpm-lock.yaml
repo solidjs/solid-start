@@ -441,8 +441,11 @@ importers:
         specifier: ^6.1.2
         version: 6.1.2
       seroval:
-        specifier: ^0.14.1
-        version: 0.14.1
+        specifier: ^1.0.0
+        version: 1.0.0
+      seroval-plugins:
+        specifier: ^1.0.1
+        version: 1.0.1(seroval@1.0.0)
       vite-plugin-inspect:
         specifier: ^0.7.33
         version: 0.7.33(rollup@3.28.1)(vite@4.5.0)
@@ -6369,14 +6372,23 @@ packages:
     dependencies:
       randombytes: 2.1.0
 
-  /seroval@0.14.1:
-    resolution: {integrity: sha512-ZlC9y1KVDhZFdEHLYZup1RjKDutyX1tt3ffOauqRbRURa2vRr2NU/bHuVEuNEqR3zE2uCU3WM6LqH6Oinc3tWg==}
+  /seroval-plugins@1.0.1(seroval@1.0.0):
+    resolution: {integrity: sha512-NXeb6S2jh+sxFI8NMBpzyVWItblit9/j7B1q+vfxUccj0ycbqu4h3hzrrmb7GSy7b6WqTmo0apGBsLH5ei/VUg==}
     engines: {node: '>=10'}
+    peerDependencies:
+      seroval: '>=0.15'
+    dependencies:
+      seroval: 1.0.0
     dev: false
 
   /seroval@0.15.1:
     resolution: {integrity: sha512-OPVtf0qmeC7RW+ScVX+7aOS+xoIM7pWcZ0jOWg2aTZigCydgRB04adfteBRbecZnnrO1WuGQ+C3tLeBBzX2zSQ==}
     engines: {node: '>=10'}
+
+  /seroval@1.0.0:
+    resolution: {integrity: sha512-HA2BtUaLO6Gqpc1uc//v08DqvWKfGrD7wpsJSw+qkgBubJbYuKBVE2i2v09k5kwM6wA7R/dN37LCg+t48sBpCg==}
+    engines: {node: '>=10'}
+    dev: false
 
   /serve-placeholder@2.0.1:
     resolution: {integrity: sha512-rUzLlXk4uPFnbEaIz3SW8VISTxMuONas88nYWjAWaM2W9VDbt9tyFOr3lq8RhVOFrT3XISoBw8vni5una8qMnQ==}
