@@ -173,7 +173,7 @@ function Nav() {
       <For each={data()}>
         {r => (
           <ul class="first:pt-10-">
-            <span class="mb-3.5 pt-8 pb-3.5 flex w-full flex-wrap content-center justify-between space-x-2 border-b border-gray-200 p-2 py-2 text-left text-xl transition hover:text-gray-400 dark:border-gray-500 dark:text-white">
+            <span class="mb-3.5 pt-8 pb-3.5 flex w-full flex-wrap content-center justify-between space-x-2 border-b border-gray-200 p-2 py-2 text-left text-xl transition dark:border-gray-500 dark:text-white">
               {r.title}
             </span>
             <Show
@@ -219,7 +219,7 @@ function Nav() {
                 {({ title, path, href, frontMatter }) => (
                   <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                     <A activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
-                      <span class="text-md block break-words py-1 font-medium pl-1.5 hover:text-gray-400 dark:text-gray-300 dark:hover:text-gray-400">
+                      <span class="text-md block break-words py-1 font-medium pl-1.5 hover:text-slate-700 hover:underline dark:text-gray-300 dark:hover:text-slate-400">
                         {title}
                       </span>
                     </A>
