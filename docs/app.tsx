@@ -62,7 +62,7 @@ function SocialIcon(props) {
     <li class="mx-2">
       <a href={props.href} rel="noopener" target="_blank">
         <span class="sr-only">{props.alt}</span>
-        <svg viewBox="0 0 24 24" class="h-8 opacity-60 transition hover:opacity-50">
+        <svg viewBox="0 0 24 24" class="h-6 opacity-60 transition hover:opacity-80 opacity-40">
           <path fill="currentColor" d={props.icon} />
         </svg>
       </a>
@@ -72,23 +72,23 @@ function SocialIcon(props) {
 
 function Header() {
   return (
-    <header class="relative z-10 col-span-3 col-start-1 row-start-1 flex px-8 py-2 shadow-md md:z-50">
+    <header class="relative z-10 col-span-3 col-start-1 row-start-1 flex px-8 py-2 shadow-md shadow-gray-100 md:z-50">
       <div class="flex w-full justify-between">
         <a href="/">
           <div class="flex space-x-3">
-            <img src="/logo.svg" class="h-9 w-9" />
-            <div class="mt-2 hidden text-xl uppercase md:block">
-              <span>Solid</span>
-              <span class="text-solid-medium ml-1 font-semibold">Start</span>
+            <img src="/logo.svg" class="h-9 w-9 scale-[0.94] translate-y-[2px] translate-x-[4px]" />
+            <div class="mt-2 hidden text-xl uppercase md:block -translate-y-[1px]">
+              <span class="tracking-wide">Solid</span>
+              <span class="text-solid-medium ml-1.5 font-semibold tracking-wide">Start</span>
             </div>
           </div>
         </a>
         <div class="flex space-x-5">
           <div class="flex items-center">
-            <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5">
+            <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5 hover:text-sky-700">
               solidjs.com
               <svg
-                class="z-50 -mt-1 h-5 opacity-30 ltr:ml-1 rtl:mr-1"
+                class="z-50 -mt-1 h-5 opacity-30 ltr:ml-1 rtl:mr-1 scale-75"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -102,7 +102,7 @@ function Header() {
               </svg>
             </a>
           </div>
-          <ul class="flex">
+          <ul class="flex items-center">
             <For each={socials} children={social => <SocialIcon {...social} />} />
           </ul>
         </div>
@@ -172,8 +172,8 @@ function Nav() {
       <div id="docsearch" />
       <For each={data()}>
         {r => (
-          <ul>
-            <span class="mb-8 flex w-full flex-wrap content-center justify-between space-x-2 border-b border-gray-200 p-2 py-2 text-left text-xl transition hover:text-gray-400 dark:border-gray-500 dark:text-white">
+          <ul class="first:pt-10-">
+            <span class="mb-3.5 pt-8 pb-3.5 flex w-full flex-wrap content-center justify-between space-x-2 border-b border-gray-200 p-2 py-2 text-left text-xl transition dark:border-gray-500 dark:text-white">
               {r.title}
             </span>
             <Show
@@ -183,7 +183,7 @@ function Nav() {
                   <For each={[...r.subsection.values()]}>
                     {s => (
                       <ul class="ml-2 mt-4">
-                        <div class="text-md mb-3 font-bold text-gray-500">{s}</div>
+                        <div class="text-md mb-3 font-semibold text-gray-500 pt-1">{s}</div>
                         <For each={r.filter(i => i.subsection === s)}>
                           {({ title, path, href, frontMatter }) => (
                             <li class="ml-2">
@@ -192,7 +192,7 @@ function Nav() {
                                 inactiveClass="text-gray-500"
                                 href={href}
                               >
-                                <span class="ml-4 block break-words pb-2 text-sm hover:text-gray-500 dark:hover:text-gray-300">
+                                <span class="ml-4 block break-words pb-2 text-sm hover:text-slate-700 dark:hover:text-gray-300 hover:underline">
                                   {title}
                                 </span>
                               </A>
@@ -215,11 +215,11 @@ function Nav() {
                 </>
               }
             >
-              <For each={r}>
+              <For each={r.filter(i => !i.href.includes('index') )}>
                 {({ title, path, href, frontMatter }) => (
                   <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                     <A activeClass="text-primary" inactiveClass="text-gray-500" href={href}>
-                      <span class="text-md block break-words py-1 font-semibold hover:text-gray-400 dark:text-gray-300 dark:hover:text-gray-400">
+                      <span class="text-md block break-words py-1 font-medium pl-1.5 hover:text-slate-700 hover:underline dark:text-gray-300 dark:hover:text-slate-400">
                         {title}
                       </span>
                     </A>
@@ -261,7 +261,7 @@ export default function Root() {
           <div class="col-start-2 row-start-2 h-full overflow-auto">
             <div class="container h-full px-8 py-8">
               <Suspense>
-                <main class="prose prose-md w-full max-w-none pb-10 pt-0 lg:px-10">
+                <main class="prose prose-md w-full max-w-[69ch] pb-10 pt-0 lg:px-10 mx-auto">
                   <MDXProvider
                     components={{
                       ...components,
