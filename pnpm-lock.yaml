@@ -15,6 +15,9 @@ importers:
       '@cloudflare/kv-asset-handler':
         specifier: ^0.2.0
         version: 0.2.0
+      '@decs/typeschema':
+        specifier: ^0.12.1
+        version: 0.12.1(valibot@0.24.1)(vite@4.4.9)
       '@rollup/plugin-commonjs':
         specifier: ^24.1.0
         version: 24.1.0(rollup@3.28.1)
@@ -87,15 +90,15 @@ importers:
       typescript:
         specifier: 4.7.4
         version: 4.7.4
+      valibot:
+        specifier: 0.24.1
+        version: 0.24.1
       vinxi:
         specifier: 0.0.52
         version: 0.0.52(@types/node@20.10.1)(debug@4.3.4)(rollup@3.28.1)
       vite:
         specifier: ^4.4.6
         version: 4.4.9
-      zod:
-        specifier: ^3.21.4
-        version: 3.22.1
 
   examples/bare:
     dependencies:
@@ -301,7 +304,7 @@ importers:
     dependencies:
       '@decs/typeschema':
         specifier: ^0.12.1
-        version: 0.12.1(valibot@0.23.0)(vite@4.5.0)(zod@3.22.1)
+        version: 0.12.1(valibot@0.23.0)(vite@4.5.0)
       '@solidjs/meta':
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.7)
@@ -997,7 +1000,7 @@ packages:
     dependencies:
       mime: 3.0.0
 
-  /@decs/typeschema@0.12.1(valibot@0.23.0)(vite@4.5.0)(zod@3.22.1):
+  /@decs/typeschema@0.12.1(valibot@0.23.0)(vite@4.5.0):
     resolution: {integrity: sha512-PhoCbaJ6T+9EfvUkemgYVnNfLmLoP2+Aa5yvQ3sIzH4fmIgDEFPGSRPuaTO04c99sqLeKuhHEY+WLzNubGABOA==}
     peerDependencies:
       '@deepkit/type': ^1.0.1-alpha.97
@@ -1052,8 +1055,64 @@ packages:
     dependencies:
       valibot: 0.23.0
       vite: 4.5.0(@types/node@20.10.1)
-      zod: 3.22.1
     dev: false
+
+  /@decs/typeschema@0.12.1(valibot@0.24.1)(vite@4.4.9):
+    resolution: {integrity: sha512-PhoCbaJ6T+9EfvUkemgYVnNfLmLoP2+Aa5yvQ3sIzH4fmIgDEFPGSRPuaTO04c99sqLeKuhHEY+WLzNubGABOA==}
+    peerDependencies:
+      '@deepkit/type': ^1.0.1-alpha.97
+      '@effect/data': ^0.18.6
+      '@effect/schema': ^0.36.5
+      '@sinclair/typebox': ^0.31.15
+      ajv: ^8.12.0
+      arktype: ^1.0.21-alpha
+      fp-ts: ^2.16.1
+      io-ts: ^2.2.20
+      joi: ^17.10.2
+      ow: ^0.28.2
+      runtypes: ^6.7.0
+      superstruct: ^1.0.3
+      valibot: ^0.17.0
+      vite: ^4.4.10
+      yup: ^1.2.0
+      zod: ^3.22.2
+    peerDependenciesMeta:
+      '@deepkit/type':
+        optional: true
+      '@effect/data':
+        optional: true
+      '@effect/schema':
+        optional: true
+      '@sinclair/typebox':
+        optional: true
+      ajv:
+        optional: true
+      arktype:
+        optional: true
+      fp-ts:
+        optional: true
+      io-ts:
+        optional: true
+      joi:
+        optional: true
+      ow:
+        optional: true
+      runtypes:
+        optional: true
+      superstruct:
+        optional: true
+      valibot:
+        optional: true
+      vite:
+        optional: true
+      yup:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      valibot: 0.24.1
+      vite: 4.4.9
+    dev: true
 
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
@@ -7252,6 +7311,10 @@ packages:
     resolution: {integrity: sha512-3draqnQrhygou2FUtVSfdzgCE4icqj6d4+Qg5ercN9WI/JI4hEMqvX2yQXyq7btlaobCGRgZAWMr7kWr3Dtxkw==}
     dev: false
 
+  /valibot@0.24.1:
+    resolution: {integrity: sha512-Toclbuy20XsECZiueh2dkQ63he2AGaBIj/FJRDAFti2kueFldm9bjJzSYvPaL5CE1HXDMRhq7olak8at7xCz5A==}
+    dev: true
+
   /validate-html-nesting@1.2.2:
     resolution: {integrity: sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==}
     dev: false
@@ -7668,9 +7731,6 @@ packages:
       archiver-utils: 4.0.1
       compress-commons: 5.0.1
       readable-stream: 3.6.2
-
-  /zod@3.22.1:
-    resolution: {integrity: sha512-+qUhAMl414+Elh+fRNtpU+byrwjDFOS1N7NioLY+tSlcADTx4TkCUua/hxJvxwDXcV4397/nZ420jy4n4+3WUg==}
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}

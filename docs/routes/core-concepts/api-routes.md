@@ -82,46 +82,24 @@ export async function GET({ params }: APIEvent) {
 
 As HTTP is a stateless protocol, for awesome dynamic experiences, you want to know the state of the session on the client. For example, you want to know who the user is. The secure way of doing this is to use HTTP-only cookies.
 
-You can store session data in them and they are persisted by the browser that your user is using. We expose the `Request` object which represents the user's request. The cookies can be accessed by parsing the `Cookie` header.
+You can store session data in them and they are persisted by the browser that your user is using. We expose the `Request` object which represents the user's request. The cookies can be accessed by parsing the `Cookie` header. We re-export H3's helpers from `@solidjs/start/server` to make that a bit easier.
 
 Let's look at an example of how to use the cookie to identify the user:
 
-```tsx twoslash filename="routes/api/[house]/admin.ts"
-// @filename: hogwarts.ts
-export default {
-  getStudents(house: string, year: string) {
-    return [
-      { name: "Harry Potter", house, year },
-      { name: "Hermione Granger", house, year },
-      { name: "Ron Weasley", house, year },
-    ];
-  },
-  getHouseMaster(house: string) {
-    return {
-      name: "Severus Snape",
-      house,
-      id: "5"
-    };
-  },
-};
-
-// @filename: index.ts
-const parseCookie = (t: string) => ({} as Record<string, any>)
-// ---cut---
-import { type APIEvent  } from "@solidjs/start/server";
+```tsx filename="routes/api/[house]/admin.ts"
+import { getCookie, type APIEvent  } from "@solidjs/start/server";
 import hogwarts from "./hogwarts";
 
-export async function GET({ request, params }: APIEvent) {
-  const cookie = parseCookie(request.headers.get("Cookie") ?? "");
-  const userId = cookie['userId'];
+export async function GET(event: APIEvent) {
+  const userId = getCookie(event, "userId");
   if (!userId) {
     return new Response("Not logged in", { status: 401 });
   }
-  const houseMaster = await hogwarts.getHouseMaster(params.house);
+  const houseMaster = await hogwarts.getHouseMaster(event.params.house);
   if (houseMaster.id !== userId) {
     return new Response("Not authorized", { status: 403 });
   }
-  return await hogwarts.getStudents(params.house, params.year)
+  return await hogwarts.getStudents(event.params.house, event.params.year)
 }
 ```
 
@@ -188,12 +166,13 @@ Let's see how to expose a [tRPC][trpc] server route. First you write your router
 
 ```tsx filename="lib/router.ts"
 import { initTRPC } from '@trpc/server';
-import { z } from 'zod';
+import { wrap } from "@decs/typeschema";
+import { string } from "valibot";
 
 const t = initTRPC.create();
 
 export const appRouter = t.router({
-  hello: t.procedure.input(z.string().nullish()).query(({ input }) => {
+  hello: t.procedure.input(wrap(string())).query(({ input }) => {
     return `hello ${input ?? 'world'}`;
   }),
 });

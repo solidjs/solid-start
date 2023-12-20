@@ -26,6 +26,7 @@
     "bump": "node scripts/bump.js"
   },
   "devDependencies": {
+    "@decs/typeschema": "^0.12.1",
     "@cloudflare/kv-asset-handler": "^0.2.0",
     "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-json": "^6.0.0",
@@ -53,7 +54,7 @@
     "typescript": "4.7.4",
     "vinxi": "0.0.52",
     "vite": "^4.4.6",
-    "zod": "^3.21.4"
+    "valibot": "0.24.1"
   },
   "dependencies": {
     "cross-env": "^7.0.3"
