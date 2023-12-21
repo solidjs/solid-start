@@ -10,11 +10,15 @@ export function StartServer(props) {
     <NoHydration>
       {docType as unknown as any}
       <props.document
-        assets={<>{context.assets.map(m => renderAsset(m))}</>}
+        assets={
+          <>
+            <script>$R = [];</script>
+            {context.assets.map(m => renderAsset(m))}
+          </>
+        }
         scripts={
           <>
             <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-            <script>$R = [];</script>
             <script
               type="module"
               src={
