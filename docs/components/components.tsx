@@ -1,7 +1,7 @@
 import { Title as MetaTitle } from "@solidjs/meta";
+import { A } from "@solidjs/router";
 import { createUniqueId, mergeProps, Show } from "solid-js";
 import "tippy.js/dist/tippy.css";
-import A from "./A";
 import Tooltip from "./tooltip";
 
 export const components = {

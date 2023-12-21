@@ -8,7 +8,7 @@ type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
         server?: AppOptions['server'],
         appRoot?: string,
         middleware?: string,
-        //islands?: boolean TODO: Get PROD bugs working probably missing release
+        islands?: boolean
     }
 }
 

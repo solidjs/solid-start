@@ -35,7 +35,9 @@ export async function createPageEvent(ctx: FetchEvent) {
     assets: [
       ...(await clientManifest.inputs[clientManifest.handler].assets()),
       ...(import.meta.env.START_ISLANDS
-        ? await serverManifest.inputs[serverManifest.handler].assets()
+        ? (await serverManifest.inputs[serverManifest.handler].assets()).filter(
+            s => (s as any).attrs.rel !== "modulepreload"
+          )
         : [])
     ],
     initialSubmission: initFromFlash(ctx),

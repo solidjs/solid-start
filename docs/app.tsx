@@ -169,7 +169,7 @@ function Nav() {
 
   return (
     <nav class="fixed left-0 top-[52px] z-20 col-start-1 row-start-2 h-full min-w-[300px] -translate-x-full space-y-4 overflow-auto bg-slate-100 px-8 pb-20 pt-8 duration-300 ease-in-out peer-checked:translate-x-0 md:relative md:left-auto md:top-auto md:translate-x-0 md:pb-8">
-      <div id="docsearch" />
+      <div id="docsearch" style="height: 30px" />
       <For each={data()}>
         {r => (
           <ul class="first:pt-10-">
