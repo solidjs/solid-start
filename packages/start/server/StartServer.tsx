@@ -26,7 +26,8 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         const match = context.routerMatches[0][i];
         if (match.metadata && match.metadata.filesystem) {
           const segment = current.find(r => r.path === match.path);
-          const part = import.meta.env.MANIFEST["client"].inputs[segment["$component"].src];
+          const part = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]
+            .inputs[segment["$component"].src];
           const asset = await part.assets();
           assets.push.apply(assets, asset);
           current = segment.children;
@@ -34,14 +35,15 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
       }
     }
     // dedupe assets
-    assets = [...new Map(assets.map(item => [item.attrs.key, item])).values()].filter(
-      asset =>
-        asset.attrs.rel === "modulepreload" &&
-        !context.assets.find(a => a.attrs.key === asset.attrs.key)
+    assets = [...new Map(assets.map(item => [item.attrs.key, item])).values()].filter(asset =>
+      import.meta.env.START_ISLANDS
+        ? false
+        : asset.attrs.rel === "modulepreload" &&
+          !context.assets.find(a => a.attrs.key === asset.attrs.key)
     );
   });
 
-  useAssets(() => assets.length ? assets.map(m => renderAsset(m)) : undefined);
+  useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
 
   return (
     <NoHydration>
