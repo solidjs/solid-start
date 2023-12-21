@@ -28,7 +28,7 @@ const logHello = async (message: string) => {
 
 ### Basic usage
 
-To create a function that only runs on the server, insert `"use server" directive at the top of the function`.
+To create a function that only runs on the server, insert `"use server"` directive at the top of the function.
 
 ```tsx twoslash {4-6}
 const logHello = async (message: string) => {
