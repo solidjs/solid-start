@@ -36,7 +36,7 @@ export async function createPageEvent(ctx: FetchEvent) {
       ...(await clientManifest.inputs[clientManifest.handler].assets()),
       ...(import.meta.env.START_ISLANDS
         ? (await serverManifest.inputs[serverManifest.handler].assets()).filter(
-            s => s.attrs.rel !== "modulepreload"
+            s => (s as any).attrs.rel !== "modulepreload"
           )
         : [])
     ],

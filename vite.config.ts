@@ -10,6 +10,7 @@ export default defineConfig({
   start: {
     appRoot: "./docs",
     extensions: ["mdx", "md"],
+    islands: true,
     server: {
       preset: "cloudflare_module",
       rollupConfig: {
