@@ -36,7 +36,7 @@ export function matchAPIRoute(path: string, method: HTTPMethod) {
   const segments = path.split("/").filter(Boolean);
 
   routeLoop: for (const route of apiRoutes) {
-    const matchSegments = route.matchSegments;
+    const matchSegments = route.matchSegments.filter(isNotGroupSegmentFilter);
 
     if (
       segments.length < matchSegments.length ||
@@ -175,4 +175,8 @@ function routeToMatchRoute(route: Route): MatchRoute {
     matchSegments,
     wildcard
   };
+}
+
+function isNotGroupSegmentFilter(routeMatchSegment) {
+  return !routeMatchSegment.match(/^\(.+\)$/);
 }
