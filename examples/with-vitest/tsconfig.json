@@ -13,7 +13,7 @@
 		"types": ["vinxi/client", "vitest/globals"],
 		"isolatedModules": true,
 		"paths": {
-      "~/*": ["./src/*", "./setupVitest.ts"]
+      "~/*": ["./src/*"]
     }
 	}
 }

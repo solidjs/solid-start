@@ -10,7 +10,7 @@ export default defineConfig({
     },
     environment: "jsdom",
     globals: true,
-    setupFiles: ['node_modules/@testing-library/jest-dom/vitest'],
+    setupFiles: ['./setupVitest.ts'],
     transformMode: { web: [/\.[jt]sx?$/] },
   },
   resolve: {
