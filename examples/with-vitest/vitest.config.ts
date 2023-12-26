@@ -5,13 +5,16 @@ export default defineConfig({
   plugins: [solid()],
   test: {
     deps: {
-      registerNodeLoader: true,
-      inline: [/solid-js/],
+      optimizer: {
+        web: {
+          enabled: true
+        }
+      }
     },
     environment: "jsdom",
     globals: true,
     setupFiles: ['./setupVitest.ts'],
-    transformMode: { web: [/\.[jt]sx?$/] },
+    testTransformMode: { web: ["/\.[jt]sx?$/"] },
   },
   resolve: {
     conditions: ["development", "browser"],
