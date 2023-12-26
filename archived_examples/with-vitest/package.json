@@ -15,7 +15,6 @@
     "@solidjs/router": "^0.8.3",
     "@solidjs/testing-library": "^0.5.2",
     "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/user-event": "^5.17.0",
     "@types/testing-library__jest-dom": "^5.14.9",
     "@vitest/coverage-c8": "^0.26.3",
     "@vitest/ui": "^0.26.3",
