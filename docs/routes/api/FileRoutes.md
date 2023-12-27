@@ -8,7 +8,7 @@ active: true
 
 # FileRoutes
 
-##### `FileRoutes` is a component that renders a [`Route`][route] for each file in the `routes` directory.
+`FileRoutes` is a component that renders a [`Route`][route] for each file in the `routes` directory.
 
 <div class="text-lg">
 
