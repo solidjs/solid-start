@@ -210,5 +210,4 @@ export default function UsersLayout(props: RouteSectionProps) {
 ```
 
 [api-routes]: /core-concepts/api-routes
-[components]: /advanced/components
 [fileroutes]: /api/FileRoutes
