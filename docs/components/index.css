@@ -73,6 +73,7 @@ pre {
 
 .code-container {
   padding: 6px 2px;
+  width: fit-content;
 }
 
 .prose p {
