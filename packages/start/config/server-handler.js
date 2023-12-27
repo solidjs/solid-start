@@ -42,7 +42,7 @@ function serializeToStream(id, value) {
           URLPlugin
         ],
         onSerialize(data, initial) {
-          const result = initial ? `($R["${id}"]=[],${data})` : data;
+          const result = initial ? `((self.$R=self.$R||{})["${id}"]=[],${data})` : data;
           controller.enqueue(new TextEncoder().encode(`${result};\n`));
         },
         onDone() {

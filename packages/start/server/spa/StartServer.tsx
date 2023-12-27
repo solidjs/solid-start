@@ -12,7 +12,6 @@ export function StartServer(props) {
       <props.document
         assets={
           <>
-            <script>$R = [];</script>
             {context.assets.map(m => renderAsset(m))}
           </>
         }
