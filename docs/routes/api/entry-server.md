@@ -46,6 +46,7 @@ export default createHandler(() => (
 This file does one thing. It starts your SolidStart application on the server. It does so by passing in our `<StartServer>` to a "render" function. `<StartServer>` takes a document component which will serve as the static document for your application.
 
 ## Reference
+
 ### `createHandler(renderFn, options)`
 
 This calls the underlying Solid render function, and passes the options to it.

@@ -78,6 +78,7 @@ export default defineConfig({
 ```
 
 And enable node compat in your wrangler.toml.
+
 ```
 compatibility_flags = [ "nodejs_compat" ]
 ```
