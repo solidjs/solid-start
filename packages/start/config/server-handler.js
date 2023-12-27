@@ -93,8 +93,6 @@ async function handleServerFunction(event) {
     // parsed.push(await readFormData(event));
 
     const request = new Request(getRequestURL(event), {
-      // @ts-ignore Undici option
-      duplex: "half",
       method: event.method,
       headers: event.headers,
       body: await readRawBody(event)
