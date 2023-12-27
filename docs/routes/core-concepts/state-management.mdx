@@ -28,10 +28,10 @@ When you need to access the `localStorage` API, you can either use a `createEffe
 
 ```tsx twoslash {14} filename="components/ThemePicker.tsx"
 // ---cut---
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal } from "solid-js";
 
-const LIGHT = 'light';
-const DARK = 'dark';
+const LIGHT = "light";
+const DARK = "dark";
 
 export function ButtonThemeCacher() {
   const [theme, setTheme] = createSignal(LIGHT);
@@ -41,7 +41,7 @@ export function ButtonThemeCacher() {
   }
 
   createEffect(() => {
-    localStorage.setItem('theme', theme());
+    localStorage.setItem("theme", theme());
   });
 
   return (

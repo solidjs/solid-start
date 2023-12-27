@@ -14,7 +14,7 @@ active: true
 
 ```tsx twoslash
 import { FileRoutes } from "@solidjs/start";
-<FileRoutes />
+<FileRoutes />;
 ```
 
 </div>

@@ -85,7 +85,11 @@ function Header() {
         </a>
         <div class="flex space-x-5">
           <div class="flex items-center">
-            <a href="https://www.solidjs.com" target="_blank" class="flex items-center space-x-5 hover:text-sky-700">
+            <a
+              href="https://www.solidjs.com"
+              target="_blank"
+              class="flex items-center space-x-5 hover:text-sky-700"
+            >
               solidjs.com
               <svg
                 class="z-50 -mt-1 h-5 opacity-30 ltr:ml-1 rtl:mr-1 scale-75"
@@ -215,7 +219,7 @@ function Nav() {
                 </>
               }
             >
-              <For each={r.filter(i => !i.href.includes('index') )}>
+              <For each={r.filter(i => !i.href.includes("index"))}>
                 {({ title, path, href, frontMatter }) => (
                   <li class="ml-2" classList={{ "text-slate-300": !frontMatter.active }}>
                     <A activeClass="text-primary" inactiveClass="text-gray-500" href={href}>

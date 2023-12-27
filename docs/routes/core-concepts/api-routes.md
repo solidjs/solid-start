@@ -61,9 +61,9 @@ export default {
     return [
       { name: "Harry Potter", house, year },
       { name: "Hermione Granger", house, year },
-      { name: "Ron Weasley", house, year },
+      { name: "Ron Weasley", house, year }
     ];
-  },
+  }
 };
 
 // @filename: index.ts
@@ -87,7 +87,7 @@ You can store session data in them and they are persisted by the browser that yo
 Let's look at an example of how to use the cookie to identify the user:
 
 ```tsx filename="routes/api/[house]/admin.ts"
-import { getCookie, type APIEvent  } from "@solidjs/start/server";
+import { getCookie, type APIEvent } from "@solidjs/start/server";
 import hogwarts from "./hogwarts";
 
 export async function GET(event: APIEvent) {
@@ -99,7 +99,7 @@ export async function GET(event: APIEvent) {
   if (houseMaster.id !== userId) {
     return new Response("Not authorized", { status: 403 });
   }
-  return await hogwarts.getStudents(event.params.house, event.params.year)
+  return await hogwarts.getStudents(event.params.house, event.params.year);
 }
 ```
 
@@ -132,24 +132,23 @@ const schema = buildSchema(`
 
 // Define GraphQL Resolvers
 const rootValue = {
-    hello: () => {
-        return {
-            message: "Hello World"
-          }
+  hello: () => {
+    return {
+      message: "Hello World"
+    };
   },
   goodbye: () => {
-      return "Goodbye"
+    return "Goodbye";
   }
 };
 
 // request handler
 const handler = async (event: APIEvent) => {
-
   // get request body
-  const body = await new Response(event.request.body).json()
+  const body = await new Response(event.request.body).json();
 
   // pass query and save results
-  const result = await graphql({rootValue, schema, source: body.query})
+  const result = await graphql({ rootValue, schema, source: body.query });
 
   // send query result
   return result;
@@ -165,7 +164,7 @@ export const POST = handler;
 Let's see how to expose a [tRPC][trpc] server route. First you write your router, put it in a separate file so that you can export the type for your client.
 
 ```tsx filename="lib/router.ts"
-import { initTRPC } from '@trpc/server';
+import { initTRPC } from "@trpc/server";
 import { wrap } from "@decs/typeschema";
 import { string } from "valibot";
 
@@ -173,8 +172,8 @@ const t = initTRPC.create();
 
 export const appRouter = t.router({
   hello: t.procedure.input(wrap(string())).query(({ input }) => {
-    return `hello ${input ?? 'world'}`;
-  }),
+    return `hello ${input ?? "world"}`;
+  })
 });
 
 export type AppRouter = typeof appRouter;
@@ -183,15 +182,11 @@ export type AppRouter = typeof appRouter;
 Here is a simple client that you can use to fetch data from your [tRPC][trpc] server.
 
 ```tsx filename="lib/trpc.ts"
-import {
-  createTRPCProxyClient,
-  httpBatchLink,
-  loggerLink,
-} from '@trpc/client';
+import { createTRPCProxyClient, httpBatchLink, loggerLink } from "@trpc/client";
 import type { AppRouter } from "./router";
 
 export const client = createTRPCProxyClient<AppRouter>({
-  links: [loggerLink(), httpBatchLink({ url: "http://localhost:3000/api/trpc" })],
+  links: [loggerLink(), httpBatchLink({ url: "http://localhost:3000/api/trpc" })]
 });
 ```
 
@@ -199,15 +194,15 @@ Finally, you can use the `fetch` adapter to write an API route that acts as the 
 
 ```tsx filename="routes/api/trpc/[trpc].ts"
 import { type APIEvent } from "solid-start/api";
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "~/lib/router";
 
 const handler = (event: APIEvent) =>
   fetchRequestHandler({
-    endpoint: '/api/trpc',
+    endpoint: "/api/trpc",
     req: event.request,
     router: appRouter,
-    createContext: () => ({}),
+    createContext: () => ({})
   });
 
 export const GET = handler;

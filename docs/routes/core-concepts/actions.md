@@ -119,6 +119,7 @@ Sometimes we need to make sure our action _only_ runs on the server. This is use
 - Or even connecting directly to a database. (Take caution, opinions on if this is a good idea are mixed. You should consider separating your backend and frontend).
 
 To do this, put a `"use server";` directive in your action function:
+
 ```tsx twoslash
 import { action, redirect } from "@solidjs/router";
 
@@ -139,4 +140,4 @@ export function MyComponent() {
     </form>
   );
 }
-
+```
