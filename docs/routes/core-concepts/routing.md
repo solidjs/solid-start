@@ -65,12 +65,13 @@ Under the hood, SolidStart traverses your `routes` directory, collects all the r
 `<FileRoutes>` returns the routing config object so you can use it with the router of your choice. In this example we use `@solidjs/router`.
 
 ```tsx twoslash {7-9} filename="app.tsx"
+import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start";
 
 export default function App() {
   return (
-    <Router>
+    <Router root={props => <Suspense>{props.children}</Suspense>}>
       <FileRoutes />
     </Router>
   );
