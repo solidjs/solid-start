@@ -30,7 +30,7 @@ To create a new route/page in your application, just create a new file in the `r
 
 - `hogwarts.com/blog` ➜ `/routes/blog.tsx`
 - `hogwarts.com/contact` ➜ `/routes/contact.tsx`
-- `hogwarts.com/directions ` ➜ `/routes/directions.tsx`
+- `hogwarts.com/directions` ➜ `/routes/directions.tsx`
 
 To create new pages after a given route segment, simply create a directory with the name of the preceding route segment, and create new files in that directory.
 
