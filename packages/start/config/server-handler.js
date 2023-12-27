@@ -1,5 +1,5 @@
 /// <reference types="vinxi/types/server" />
-import { crossSerializeStream, fromJSON } from "seroval";
+import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
 import {
   CustomEventPlugin,
   DOMExceptionPlugin,
@@ -42,7 +42,7 @@ function serializeToStream(id, value) {
           URLPlugin,
         ],
         onSerialize(data, initial) {
-          const result = initial ? `((self.$R=self.$R||{})["${id}"]=[],${data})` : data;
+          const result = initial ? `(${getCrossReferenceHeader(id)},${data})` : data;
           controller.enqueue(new TextEncoder().encode(`${result};\n`));
         },
         onDone() {
