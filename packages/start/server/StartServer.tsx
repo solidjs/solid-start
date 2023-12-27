@@ -52,7 +52,6 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         assets={
           <>
             <HydrationScript />
-            <script>$R = [];</script>
             {context.assets.map(m => renderAsset(m))}
           </>
         }
