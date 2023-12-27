@@ -29,13 +29,14 @@ The `<FileRoutes>` component collects routes from the file-system in the `/route
 
 Since `FileRoutes` returns a route configuration, it must be placed directly inside a `<Routes>`, usually the one in your `root.tsx` file.
 
-```tsx twoslash {8-10} filename="app.tsx"
+```tsx twoslash {7-9} filename="app.tsx"
+import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start";
 
 export default function App() {
   return (
-    <Router>
+    <Router root={props => <Suspense>{props.children}</Suspense>}>
       <FileRoutes />
     </Router>
   );
