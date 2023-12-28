@@ -144,6 +144,7 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
   }
 
   function pushError(error: unknown) {
+    console.error(error);
     setErrors((current) => [error, ...current]);
   }
 

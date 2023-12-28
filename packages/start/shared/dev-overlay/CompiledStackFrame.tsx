@@ -27,11 +27,11 @@ export function CompiledStackFrame(
       </Show>
       <div>
         {props.fileName && (
-          <a href={props.fileName}>
+          <span>
             {props.fileName}
             {props.lineNumber && `:${props.lineNumber}`}
             {props.columnNumber && `:${props.columnNumber}`}
-          </a>
+          </span>
         )}
         <Show when={props.lineNumber} keyed={true}>
           {lineNumber => (

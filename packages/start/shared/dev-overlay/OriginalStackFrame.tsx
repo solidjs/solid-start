@@ -30,18 +30,7 @@ export function OriginalStackFrame(
         </span>
       </Show>
       <div>
-        <Show
-          when={filePath().startsWith('.')}
-          fallback={
-            <a
-              href={`vscode://file/${filePath()}`}
-            >
-              {filePath()}
-            </a>
-          }
-        >
-          <span>{filePath()}</span>
-        </Show>
+        <span>{filePath()}</span>
         <Show when={props.lineNumber} keyed={true}>
           {lineNumber => (
             <CodeView

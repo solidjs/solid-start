@@ -732,3 +732,11 @@ video {
 .dev-overlay-code-view {
   overflow: auto;
 }
+
+.dev-overlay-code-view>.shiki {
+  float: left;
+  min-width: 100%;
+  overflow-x: auto;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
