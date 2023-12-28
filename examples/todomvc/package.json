@@ -4,14 +4,14 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "node ./.output/server/index.mjs"
+    "start": "vinxi start"
   },
   "dependencies": {
     "@solidjs/router": "^0.10.5",
     "@solidjs/start": "^0.4.2",
     "solid-js": "^1.8.7",
     "unstorage": "1.10.1",
-    "vinxi": "0.0.55"
+    "vinxi": "0.0.58"
   },
   "engines": {
     "node": ">=18"
