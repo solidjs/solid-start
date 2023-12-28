@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "node ./.output/server/index.mjs"
+    "start": "vinxi start"
   },
   "dependencies": {
     "@decs/typeschema": "^0.12.1",
@@ -15,7 +15,7 @@
     "@solidjs/start": "^0.4.2",
     "solid-js": "^1.8.7",
     "valibot": "^0.23.0",
-    "vinxi": "0.0.54"
+    "vinxi": "0.0.58"
   },
   "engines": {
     "node": ">=18"
