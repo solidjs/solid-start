@@ -44,4 +44,3 @@ In this example, regardless of whether we are rendering this on the server or in
 ### Serialization
 
 Server functions allow the serialization of many different data types in the response. The full list is available [here](https://github.com/lxsmnsyc/seroval/blob/main/docs/compatibility.md#supported-types).
-

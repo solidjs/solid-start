@@ -40,7 +40,6 @@ export async function getUser(request: Request) {
 Typically, we will have saved the `userId` in the session. If we don't find it, that means that this was not an authenticated request. Our `getUser` function returns a `null` when it doesn't find a user. If we find a `userId`, we can use that to get the user from the database:
 
 ```tsx filename="/lib/session.ts"
-
 import { getRequestEvent } from "solid-js/web";
 import { useSession } from "@solidjs/start/server";
 
@@ -49,7 +48,7 @@ export async function getUser(): Promise<User | null> {
   const session = await useSession(event, {
     password: process.env.SESSION_SECRET
   });
-  const userId = session.data.userId
+  const userId = session.data.userId;
   if (!userId) return null;
   return await hogwarts.getUser(userId);
 }
@@ -71,19 +70,20 @@ const getStudents = cache(async (house: string) => {
 
 // page component
 export default function Students() {
-  const students = createAsync(getStudents)
+  const students = createAsync(getStudents);
 }
 ```
 
 We can log in or logout in a similar manner.
+
 ```tsx filename="/routes/session.server.ts"
 import { redirect } from "@solidjs/router";
 import { useSession } from "@solidjs/start/server";
 import { getRequestEvent } from "solid-js/web";
 
 type UserSession = {
-  userId?: number
-}
+  userId?: number;
+};
 
 function getSession() {
   return useSession(getRequestEvent()!, {

@@ -1,34 +1,34 @@
 @font-face {
-  font-family: 'Gordita';
-  src: url('./fonts/Gordita/Gordita-Regular.eot?#iefix') format('embedded-opentype'),
-    url('./fonts/Gordita/Gordita-Regular.woff') format('woff'),
-    url('./fonts/Gordita/Gordita-Regular.ttf') format('truetype');
+  font-family: "Gordita";
+  src: url("./fonts/Gordita/Gordita-Regular.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/Gordita/Gordita-Regular.woff") format("woff"),
+    url("./fonts/Gordita/Gordita-Regular.ttf") format("truetype");
   font-style: normal;
   font-display: fallback;
 }
 @font-face {
-  font-family: 'Gordita';
-  src: url('./fonts/Gordita/Gordita-Thin.eot?#iefix') format('embedded-opentype'),
-    url('./fonts/Gordita/Gordita-Thin.woff') format('woff'),
-    url('./fonts/Gordita/Gordita-Thin.ttf') format('truetype');
+  font-family: "Gordita";
+  src: url("./fonts/Gordita/Gordita-Thin.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/Gordita/Gordita-Thin.woff") format("woff"),
+    url("./fonts/Gordita/Gordita-Thin.ttf") format("truetype");
   font-weight: 100;
   font-style: normal;
   font-display: fallback;
 }
 @font-face {
-  font-family: 'Gordita';
-  src: url('./fonts/Gordita/Gordita-Medium.eot?#iefix') format('embedded-opentype'),
-    url('./fonts/Gordita/Gordita-Medium.woff') format('woff'),
-    url('./fonts/Gordita/Gordita-Medium.ttf') format('truetype');
+  font-family: "Gordita";
+  src: url("./fonts/Gordita/Gordita-Medium.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/Gordita/Gordita-Medium.woff") format("woff"),
+    url("./fonts/Gordita/Gordita-Medium.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: fallback;
 }
 @font-face {
-  font-family: 'Gordita';
-  src: url('./fonts/Gordita/Gordita-Bold.eot?#iefix') format('embedded-opentype'),
-    url('./fonts/Gordita/Gordita-Bold.woff') format('woff'),
-    url('./fonts/Gordita/Gordita-Bold.ttf') format('truetype');
+  font-family: "Gordita";
+  src: url("./fonts/Gordita/Gordita-Bold.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/Gordita/Gordita-Bold.woff") format("woff"),
+    url("./fonts/Gordita/Gordita-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: fallback;
@@ -37,8 +37,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
 
 html {
   @apply font-display;
@@ -75,6 +73,7 @@ pre {
 
 .code-container {
   padding: 6px 2px;
+  width: fit-content;
 }
 
 .prose p {
@@ -96,7 +95,7 @@ pre {
 
 .prose h3 {
   font-size: 1.4rem;
-  margin-top: 50px
+  margin-top: 50px;
 }
 
 .dark .prose h2 code {
@@ -153,7 +152,7 @@ pre {
   border-style: solid;
   transition: all 250ms;
   border-width: 0.15em 0.15em 0 0;
-  content: '';
+  content: "";
   display: inline-block;
   height: 0.5em;
   width: 0.5em;
@@ -231,7 +230,7 @@ div + pre[filename] {
     opacity: 0;
   }
   [data-tooltip]::before {
-    content: '';
+    content: "";
     border: 5px solid transparent;
     z-index: 10;
   }
@@ -261,23 +260,23 @@ div + pre[filename] {
   }
 
   [data-tooltip]:not([flow])::before,
-  [data-tooltip][flow^='up']::before {
+  [data-tooltip][flow^="up"]::before {
     bottom: calc(100% + 5px);
     border-bottom-width: 0;
     border-top-color: #333;
   }
   .dark [data-tooltip]:not([flow])::before,
-  .dark [data-tooltip][flow^='up']::before {
+  .dark [data-tooltip][flow^="up"]::before {
     border-top-color: #dcdcdc;
   }
   [data-tooltip]:not([flow])::after,
-  [data-tooltip][flow^='up']::after {
+  [data-tooltip][flow^="up"]::after {
     bottom: calc(100% + 10px);
   }
   [data-tooltip]:not([flow])::before,
   [data-tooltip]:not([flow])::after,
-  [data-tooltip][flow^='up']::before,
-  [data-tooltip][flow^='up']::after {
+  [data-tooltip][flow^="up"]::before,
+  [data-tooltip][flow^="up"]::after {
     left: 50%;
     transform: translate(-50%, -0.25em);
   }
@@ -291,8 +290,8 @@ div + pre[filename] {
 
   [data-tooltip]:not([flow]):hover::before,
   [data-tooltip]:not([flow]):hover::after,
-  [data-tooltip][flow^='up']:hover::before,
-  [data-tooltip][flow^='up']:hover::after {
+  [data-tooltip][flow^="up"]:hover::before,
+  [data-tooltip][flow^="up"]:hover::after {
     animation: move-down 200ms ease-out forwards;
   }
 }
@@ -361,12 +360,9 @@ h4 {
   scroll-margin-top: 2em;
 }
 
-
-
 .bad .line.highlight {
   @apply bg-red-800 bg-opacity-20;
 }
-
 
 .good .line.highlight {
   @apply bg-green-800 bg-opacity-20;
@@ -377,7 +373,7 @@ h4 {
 }
 
 .line {
-  @apply px-3
+  @apply px-3;
 }
 
 .prose {
@@ -393,5 +389,5 @@ h4 {
 }
 
 .DocSearch-Button {
-  @apply bg-white ml-0 rounded-md w-full
+  @apply bg-white ml-0 rounded-md w-full;
 }

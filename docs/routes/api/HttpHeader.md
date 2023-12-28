@@ -15,7 +15,7 @@ active: true
 ```tsx twoslash
 import { HttpHeader } from "@solidjs/start";
 // ---cut---
-<HttpHeader name="x-robots-tog" value="noindex" />
+<HttpHeader name="x-robots-tog" value="noindex" />;
 ```
 
 </div>
@@ -53,7 +53,7 @@ Import from `"@solidjs/start"` and use it anywhere in your component tree. It wi
 import { HttpHeader } from "@solidjs/start";
 
 function Component() {
-  return <HttpHeader name="my-header" value="header-value" />
+  return <HttpHeader name="my-header" value="header-value" />;
 }
 ```
 
