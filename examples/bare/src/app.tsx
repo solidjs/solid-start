@@ -1,9 +1,14 @@
 // @refresh reload
-import { createSignal } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 import "./app.css";
 
 export default function App() {
   const [count, setCount] = createSignal(0);
+
+  onMount(() => {
+    throw new Error('wtf');
+  });
+
   return (
     <main>
       <h1>Hello world!</h1>

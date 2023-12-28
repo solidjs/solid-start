@@ -443,12 +443,24 @@ importers:
       defu:
         specifier: ^6.1.2
         version: 6.1.2
+      error-stack-parser:
+        specifier: ^2.1.4
+        version: 2.1.4
       seroval:
         specifier: ^1.0.0
         version: 1.0.0
       seroval-plugins:
         specifier: ^1.0.1
         version: 1.0.1(seroval@1.0.0)
+      shikiji:
+        specifier: ^0.9.12
+        version: 0.9.12
+      source-map-js:
+        specifier: ^1.0.2
+        version: 1.0.2
+      terracotta:
+        specifier: ^1.0.3
+        version: 1.0.3(seroval@1.0.0)(solid-js@1.8.7)
       vite-plugin-inspect:
         specifier: ^0.7.33
         version: 0.7.33(rollup@3.28.1)(vite@4.5.0)
@@ -3576,6 +3588,12 @@ packages:
   /error-stack-parser-es@0.1.1:
     resolution: {integrity: sha512-g/9rfnvnagiNf+DRMHEVGuGuIBlCIMDFoTA616HaP2l9PlCjGjVhD98PNbVSJvmK4TttqT5mV5tInMhoFgi+aA==}
 
+  /error-stack-parser@2.1.4:
+    resolution: {integrity: sha512-Sk5V6wVazPhq5MhpO+AUxJn5x7XSXGl1R93Vn7i+zS15KDVxQijejNCrz8340/2bgLBjR9GtEG8ZVKONDjcqGQ==}
+    dependencies:
+      stackframe: 1.3.4
+    dev: false
+
   /es-module-lexer@1.3.0:
     resolution: {integrity: sha512-vZK7T0N2CBmBOixhmjdqx2gWVbFZ4DXZ/NyRMZVlJXPa7CyFS+/a4QQsDGDQy9ZfEzxFuNEsMLeQJnKP2p5/JA==}
 
@@ -6497,6 +6515,16 @@ packages:
       vscode-textmate: 5.2.0
     dev: false
 
+  /shikiji-core@0.9.12:
+    resolution: {integrity: sha512-AYsAtsbZuq0FPT3mdskNMa+yxD5VwXrFC2sH7R2ELmncVGNYvSzR6Zlfq8iEzINq7/kKL5prtt81UFzFWTTbxQ==}
+    dev: false
+
+  /shikiji@0.9.12:
+    resolution: {integrity: sha512-jYbulSGcPKYKu2uFZOSg4lgrF7s9s8/ITFzRvczE6633wypMjnnTcRnG/mCFe6v1Dbov7bRCMsXVINBUD2FV9w==}
+    dependencies:
+      shikiji-core: 0.9.12
+    dev: false
+
   /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
 
@@ -6587,6 +6615,20 @@ packages:
       - supports-color
     dev: false
 
+  /solid-use@0.7.2(seroval@1.0.0)(solid-js@1.8.7):
+    resolution: {integrity: sha512-ZJbTj55W4VF2NSg86+PFioWOAI7STrZ6+38vuEWl6IB4ZBm7Q1U/Mncf+T/zc9e1xUk+4/FfFfM9ZaroycNKNw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      seroval: '>=0.9.0'
+      solid-js: ^1.7
+    peerDependenciesMeta:
+      seroval:
+        optional: true
+    dependencies:
+      seroval: 1.0.0
+      solid-js: 1.8.7
+    dev: false
+
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -6636,6 +6678,10 @@ packages:
   /stable@0.1.8:
     resolution: {integrity: sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==}
     deprecated: 'Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated. See the compatibility table on MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#browser_compatibility'
+    dev: false
+
+  /stackframe@1.3.4:
+    resolution: {integrity: sha512-oeVtt7eWQS+Na6F//S4kJ2K2VbRlS9D43mAlMyVpVWovy9o+jfgH8O9agzANzaiLjclA0oYzUXEM4PurhSUChw==}
     dev: false
 
   /standard-as-callback@2.1.0:
@@ -6815,6 +6861,18 @@ packages:
       minizlib: 2.1.2
       mkdirp: 1.0.4
       yallist: 4.0.0
+
+  /terracotta@1.0.3(seroval@1.0.0)(solid-js@1.8.7):
+    resolution: {integrity: sha512-KSRN3rACpUrWJCWoWLFnD97JKJ0e8ijYGdfxU/IWMZVGtbCf28MluYqLPxj8V60wcMCqH8TFh/KXBjkiyJhS4A==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      solid-js: ^1.8
+    dependencies:
+      solid-js: 1.8.7
+      solid-use: 0.7.2(seroval@1.0.0)(solid-js@1.8.7)
+    transitivePeerDependencies:
+      - seroval
+    dev: false
 
   /terser@5.19.0:
     resolution: {integrity: sha512-JpcpGOQLOXm2jsomozdMDpd5f8ZHh1rR48OFgWUH3QsyZcfPgv2qDCYbcDEAYNd4OZRj2bWYKpwdll/udZCk/Q==}

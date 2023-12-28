@@ -49,8 +49,12 @@
     "@vinxi/server-components": "0.0.50",
     "@vinxi/server-functions": "0.0.51",
     "defu": "^6.1.2",
+    "error-stack-parser": "^2.1.4",
     "seroval": "^1.0.0",
     "seroval-plugins": "^1.0.1",
+    "shikiji": "^0.9.12",
+    "source-map-js": "^1.0.2",
+    "terracotta": "^1.0.3",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.8.0"
   }
