@@ -563,13 +563,12 @@ video {
   flex-direction: column;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  max-width: 768px;
-  gap: 0.5rem;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   background-color: rgb(249 250 251);
-  padding: 1rem;
+  padding: 1.5rem;
   z-index: 10;
+  gap: 1rem;
 }
 
 .dev-overlay-navbar {
@@ -660,76 +659,96 @@ video {
 .dev-overlay-content {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 1rem;
 }
 
 .dev-overlay-error-info {
-  padding-top: 0.25rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  --tw-text-opacity: 1;
-  color: rgb(239 68 68 / var(--tw-text-opacity))
-}
-
-.dev-overlay-error-info>span {
-  font-weight: 600;
-}
-
-.dev-overlay-stack-frames {
   display: flex;
   flex-direction: column;
 }
 
-.dev-overlay-stack-frame-fallback {
-  background-color: black;
-  width: 768px;
-  height: 128px;
+.dev-overlay-error-info-name {
+  font-weight: 700;
+}
+
+.dev-overlay-error-info-message {
+  padding-top: 0.25rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+  font-weight: 700;
+}
+
+.dev-overlay-stack-frames-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.dev-overlay-stack-frames {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
 }
 
 .dev-overlay-stack-frame {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
+  cursor: default;
+  user-select: none;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.dev-overlay-stack-frame[tc-active],
+.dev-overlay-stack-frame[tc-selected],
+.dev-overlay-stack-frame:focus {
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(30 58 138 / var(--tw-text-opacity));
+}
+
+.dev-overlay-stack-frame-function {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: 700;
+}
+
+.dev-overlay-stack-frame-file {
   white-space: nowrap;
+  font-size: 0.75rem;
+  /* 12px */
+  line-height: 1rem;
+  /* 16px */
 }
 
-.dev-overlay-stack-frame>span>span {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-  font-weight: 600;
+.dev-overlay-stack-frames-code {
+  flex: 1 1 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.dev-overlay-stack-frame>div> :not([hidden])~ :not([hidden]) {
-  --tw-divide-y-reverse: 0;
-  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
-  border-bottom-width: calc(1px * var(--tw-divide-y-reverse))
-}
-
-.dev-overlay-stack-frame>div> :not([hidden])~ :not([hidden]) {
-  --tw-divide-opacity: 1;
-  border-color: rgb(249 250 251 / var(--tw-divide-opacity))
-}
-
-.dev-overlay-stack-frame>div {
+.dev-overlay-stack-frames-code-container {
   overflow: hidden;
   border-radius: 0.5rem;
   --tw-bg-opacity: 1;
   background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
 
-.dev-overlay-stack-frame>div>span,
-.dev-overlay-stack-frame>div>a {
-  margin: 0.25rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  --tw-text-opacity: 1;
-
-  color: rgb(249 250 251 / var(--tw-text-opacity));
-}
-
 .dev-overlay-code-view {
+  padding: 1rem;
   overflow: auto;
 }
 

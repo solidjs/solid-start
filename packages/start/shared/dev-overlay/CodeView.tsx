@@ -19,23 +19,26 @@ export interface CodeViewProps {
   line: number;
 }
 
+const RANGE = 10;
+
 export function CodeView(props: CodeViewProps): JSX.Element | null {
+  console.log('CodeView', props);
   const lines = () =>
     props.content.split('\n').map((item, index) => ({
       index: index + 1,
       line: item,
     }));
 
-  const minLine = () => Math.max(props.line - 5, 0);
-  const maxLine = () => Math.min(props.line + 4, lines().length - 1);
+  const minLine = () => Math.max(props.line - (1 + RANGE), 0);
+  const maxLine = () => Math.min(props.line + RANGE, lines().length - 1);
 
   let ref: HTMLDivElement | undefined;
 
   const [data] = createResource(() => (
     lines()
-  .slice(minLine(), maxLine())
-  .map(item => item.line)
-  .join('\n')
+    .slice(minLine(), maxLine())
+    .map(item => item.line)
+    .join('\n')
   ) ,async (value) => {
     const highlighter = await loadHighlighter();
     const lang = props.fileName
@@ -59,7 +62,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
 
       for (let i = 0, len = lines.length; i < len; i++) {
         const el = lines[i];
-        if (i === 4) {
+        if ((props.line - minLine() - 1) === i) {
           el.innerHTML = `<mark style="background-color:#aaaaaa80">${el.innerHTML}</mark>`;
         }
       }
