@@ -51,16 +51,16 @@ export function defineConfig(baseConfig = {}) {
   if (!start.ssr) {
     server = { ...server, prerender: { routes: ["/"] } };
   }
-  console.log("start", start)
-  let entryExtension = ".tsx"
+  console.log("start", start);
+  let entryExtension = ".tsx";
   if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) {
-    entryExtension = ".jsx"
+    entryExtension = ".jsx";
   }
 
   return createApp({
     server: {
       compressPublicAssets: {
-        brotli: true
+        brotli: process.versions.bun ? false : true
       },
       ...server
     },

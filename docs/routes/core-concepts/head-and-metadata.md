@@ -18,7 +18,6 @@ The common elements used in the `head` are:
 - [`link`][nativelink]: Adds assets like stylesheets or scripts for the browser to load for the page.
 - [`style`][nativestyle]: Adds inline styles to the page.
 
-
 ### Inside a Route component
 
 These tags will be applied for that specific route only and are removed from `document.head` once a user navigates away from the page. You can use `routeData` here to create titles and SEO metadata that is specific to the dynamic parts of the route.
@@ -73,7 +72,7 @@ You can use resources to create titles that are specific to the dynamic parts of
 ```tsx {0,5} twoslash
 let fetchUser = (id: string) => ({ name: "Harry Potter" });
 // ---cut---
-import { Title, } from "@solidjs/meta";
+import { Title } from "@solidjs/meta";
 import { RouteSectionProps } from "@solidjs/router";
 import { createResource, Show } from "solid-js";
 
