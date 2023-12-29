@@ -28,7 +28,7 @@ const logHello = async (message: string) => {
 
 ### Basic usage
 
-To create a function that only runs on the server, pass a function as a parameter to `server$`.
+To create a function that only runs on the server, insert `"use server"` directive at the top of the function.
 
 ```tsx twoslash {4-6}
 const logHello = async (message: string) => {
@@ -44,4 +44,3 @@ In this example, regardless of whether we are rendering this on the server or in
 ### Serialization
 
 Server functions allow the serialization of many different data types in the response. The full list is available [here](https://github.com/lxsmnsyc/seroval/blob/main/docs/compatibility.md#supported-types).
-
