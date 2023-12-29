@@ -10,8 +10,8 @@ import {
   RequestPlugin,
   ResponsePlugin,
   URLPlugin,
-  URLSearchParamsPlugin,
-} from 'seroval-plugins/web';
+  URLSearchParamsPlugin
+} from "seroval-plugins/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
 import {
@@ -19,7 +19,7 @@ import {
   getHeader,
   getRequestURL,
   readBody,
-  readFormData,
+  readRawBody,
   setHeader
 } from "vinxi/server";
 import { getFetchEvent } from "../server/middleware";
@@ -39,7 +39,7 @@ function serializeToStream(id, value) {
           RequestPlugin,
           ResponsePlugin,
           URLSearchParamsPlugin,
-          URLPlugin,
+          URLPlugin
         ],
         onSerialize(data, initial) {
           const result = initial ? `(${getCrossReferenceHeader(id)},${data})` : data;
@@ -89,7 +89,15 @@ async function handleServerFunction(event) {
     contentType.startsWith("multipart/form-data") ||
     contentType.startsWith("application/x-www-form-urlencoded")
   ) {
-    parsed.push(await readFormData(event));
+    // Temporary workaround until https://github.com/unjs/nitro/issues/1721 is resolved
+    // parsed.push(await readFormData(event));
+
+    const request = new Request(getRequestURL(event), {
+      method: event.method,
+      headers: event.headers,
+      body: await readRawBody(event)
+    });
+    parsed.push(await request.formData());
   } else {
     parsed = fromJSON(await readBody(event), {
       plugins: [
@@ -102,8 +110,8 @@ async function handleServerFunction(event) {
         RequestPlugin,
         ResponsePlugin,
         URLSearchParamsPlugin,
-        URLPlugin,
-      ],
+        URLPlugin
+      ]
     });
   }
   try {
@@ -117,12 +125,16 @@ async function handleServerFunction(event) {
         status: 302,
         headers: {
           Location: refererUrl.toString(),
-          ...(result ? { "Set-Cookie": `flash=${JSON.stringify({
-            url: url.pathname + encodeURIComponent(url.search),
-            result: isError ? result.message : result,
-            error: isError,
-            input: [...parsed.slice(0, -1), [...parsed[parsed.length-1].entries()]]
-          })}; Secure; HttpOnly;`} : {})
+          ...(result
+            ? {
+                "Set-Cookie": `flash=${JSON.stringify({
+                  url: url.pathname + encodeURIComponent(url.search),
+                  result: isError ? result.message : result,
+                  error: isError,
+                  input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
+                })}; Secure; HttpOnly;`
+              }
+            : {})
         }
       });
     }
