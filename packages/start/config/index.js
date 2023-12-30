@@ -57,6 +57,19 @@ export function defineConfig(baseConfig = {}) {
     entryExtension = ".jsx";
   }
 
+  const { clientPlugins, serverPlugins, serverFunctionsPlugins } =
+    typeof plugins === 'object' && !Array.isArray(plugins)
+      ? {
+          clientPlugins: plugins.client,
+          serverPlugins: plugins.server,
+          serverFunctionsPlugins: plugins.serverFunctions
+        }
+      : {
+          clientPlugins: plugins,
+          serverPlugins: plugins,
+          serverFunctionsPlugins: plugins
+        }
+
   return createApp({
     server: {
       compressPublicAssets: {
@@ -82,7 +95,7 @@ export function defineConfig(baseConfig = {}) {
         target: "server",
         plugins: async () => [
           config("user", userConfig),
-          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
+          ...(typeof serverPlugins === "function" ? [...(await serverPlugins())] : serverPlugins),
 
           serverTransform({
             runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url)))
@@ -124,7 +137,7 @@ export function defineConfig(baseConfig = {}) {
         target: "browser",
         plugins: async () => [
           config("user", userConfig),
-          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
+          ...(typeof clientPlugins === "function" ? [...(await clientPlugins())] : clientPlugins),
           serverFunctions.client({
             runtime: normalize(fileURLToPath(new URL("./server-runtime.jsx", import.meta.url)))
           }),
@@ -164,7 +177,9 @@ export function defineConfig(baseConfig = {}) {
         // routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: async () => [
           config("user", userConfig),
-          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
+          ...(typeof serverFunctionsPlugins === "function"
+            ? [...(await serverFunctionsPlugins())]
+            : serverFunctionsPlugins),
 
           solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-server", {

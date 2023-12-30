@@ -9,7 +9,14 @@ type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
         appRoot?: string,
         middleware?: string,
         islands?: boolean
+    },
+    plugins?: Plugins | {
+        client?: Plugins,
+        server?: Plugins,
+        serverFunctions?: Plugins
     }
 }
+
+type Plugins = InlineConfig["plugins"] | (() => Promise<InlineConfig["plugins"]> | InlineConfig["plugins"])
 
 export declare function defineConfig(baseConfig?: SolidStartInlineConfig)
