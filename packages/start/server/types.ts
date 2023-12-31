@@ -50,6 +50,10 @@ export interface APIHandler {
   (event: APIEvent): Promise<any>;
 }
 
+export interface ServerFunctionMeta {
+  id: string;
+}
+
 declare module "solid-js/web" {
   interface RequestEvent extends FetchEvent {
     serverOnly?: boolean;
