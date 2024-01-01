@@ -68,7 +68,7 @@ export function MyComponent() {
   const myEcho = useAction(echo);
   const echoing = useSubmission(echo);
   echo("Hello from solid!");
-  setTimeout(() => echo("This is a second submission!"), 1500);
+  setTimeout(() => myEcho("This is a second submission!"), 1500);
   return <p>{echoing.result}</p>;
 }
 ```
