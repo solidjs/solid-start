@@ -22,7 +22,7 @@ function ErrorMessage(props: { error: any }) {
       <HttpStatusCode code={500} />
       <div
         style={{
-          'background-color': 'rgba(252,165,165)',
+          'background-color': 'rgb(252,165,165)',
           color: 'rgb(153,27,27)',
           'border-radius': '5px',
           overflow: 'scroll',
@@ -37,7 +37,7 @@ function ErrorMessage(props: { error: any }) {
           id="reset-errors"
           onClick={resetErrorBoundaries}
           style={{
-            color: 'rgba(252,165,165)',
+            color: 'rgb(252,165,165)',
             'background-color': 'rgb(153,27,27)',
             'border-radius': '5px',
             padding: '4px 8px',
