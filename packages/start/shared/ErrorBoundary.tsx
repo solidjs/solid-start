@@ -4,7 +4,7 @@ import {
   ParentProps,
   resetErrorBoundaries
 } from "solid-js";
-import { HttpStatusCode } from "./HttpStatusCode"
+import { HttpStatusCode } from "./HttpStatusCode";
 
 export function ErrorBoundary(props: ParentProps) {
   return (
@@ -37,8 +37,8 @@ function ErrorMessage(props: { error: any }) {
           id="reset-errors"
           onClick={resetErrorBoundaries}
           style={{
-            color: 'rgba(252, 165, 165)',
-            'background-color': 'rgb(153, 27, 27)',
+            color: 'rgba(252,165,165)',
+            'background-color': 'rgb(153,27,27)',
             'border-radius': '5px',
             padding: '4px 8px',
             'margin-top': '8px',
