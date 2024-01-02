@@ -67,7 +67,7 @@ const echo = action(async (message: string) => {
 export function MyComponent() {
   const myEcho = useAction(echo);
   const echoing = useSubmission(echo);
-  echo("Hello from solid!");
+  myEcho("Hello from solid!");
   setTimeout(() => myEcho("This is a second submission!"), 1500);
   return <p>{echoing.result}</p>;
 }
