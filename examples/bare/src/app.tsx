@@ -6,8 +6,8 @@ export default function App() {
   const [count, setCount] = createSignal(0);
 
   onMount(() => {
+    throw new Error('This is an example')
   })
-  throw new Error('This is an example')
 
   return (
     <main>
