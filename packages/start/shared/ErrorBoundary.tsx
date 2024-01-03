@@ -1,9 +1,10 @@
 import {
   createEffect,
   ErrorBoundary as ErrorBoundaryBase,
-  ParentProps,
+  type ParentProps,
   resetErrorBoundaries
 } from "solid-js";
+
 import { HttpStatusCode } from "./HttpStatusCode";
 
 export function ErrorBoundary(props: ParentProps) {
@@ -22,12 +23,12 @@ function ErrorMessage(props: { error: any }) {
       <HttpStatusCode code={500} />
       <div
         style={
-          'background-color:#fca5a5;' +
-          'color:#991b1b;' +
-          'border-radius:5px;' +
-          'overflow:scroll;' +
-          'padding:16px;' +
-          'margin-bottom:8px'
+          "background-color:#fca5a5;" +
+          "color:#991b1b;" +
+          "border-radius:5px;" +
+          "overflow:scroll;" +
+          "padding:16px;" +
+          "margin-bottom:8px"
         }
       >
         <p style="font-weight:bold" id="error-message">
@@ -37,11 +38,11 @@ function ErrorMessage(props: { error: any }) {
           id="reset-errors"
           onClick={resetErrorBoundaries}
           style={
-            'color:#fca5a5;' +
-            'background-color:#991b1b;' +
-            'border-radius:5px;' +
-            'padding:4px 8px;' +
-            'margin-top:8px'
+            "color:#fca5a5;" +
+            "background-color:#991b1b;" +
+            "border-radius:5px;" +
+            "padding:4px 8px;" +
+            "margin-top:8px"
           }
         >
           Clear errors and retry
