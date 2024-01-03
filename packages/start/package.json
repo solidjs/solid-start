@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.7",
-    "vinxi": "0.0.59"
+    "vinxi": "0.0.62"
   },
   "dependencies": {
     "@vinxi/plugin-directives": "^0.0.58",
