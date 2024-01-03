@@ -217,14 +217,12 @@
   overflow-x: auto;
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.shiki {
   counter-reset: step;
   counter-increment: step calc(var(--dev-overlay-code-view-start, 1) - 1);
+  background-color: transparent !important;
 }
 
-.shiki .line::before {
+.dev-overlay-code-view>.shiki .line::before {
   content: counter(step);
   counter-increment: step;
   width: 1rem;

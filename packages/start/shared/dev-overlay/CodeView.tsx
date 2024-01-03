@@ -65,8 +65,6 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
           el.innerHTML = `<mark style="background-color:#aaaaaa80">${el.innerHTML}</mark>`;
         }
       }
-
-      ref.firstChild.style.backgroundColor = "transparent";
     }
   });
 
