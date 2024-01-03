@@ -141,6 +141,8 @@
   margin-block: 0;
   list-style-type: none;
   padding-inline: 0;
+  max-height: 16rem;
+  overflow-y: auto;
 }
 
 .dev-overlay-stack-frame {
