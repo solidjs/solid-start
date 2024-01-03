@@ -143,6 +143,7 @@
   padding-inline: 0;
   max-height: 16rem;
   overflow-y: auto;
+  border-radius: 0.5rem;
 }
 
 .dev-overlay-stack-frame {
@@ -160,6 +161,7 @@
   padding-right: 1rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
+  outline: none;
 }
 
 .dev-overlay-stack-frame[tc-active],
