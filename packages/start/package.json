@@ -50,6 +50,7 @@
     "@vinxi/server-functions": "^0.0.56",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
+    "html-to-image": "^1.11.11",
     "seroval": "^1.0.2",
     "seroval-plugins": "^1.0.2",
     "shikiji": "^0.9.12",

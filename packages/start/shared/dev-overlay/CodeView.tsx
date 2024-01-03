@@ -22,7 +22,6 @@ export interface CodeViewProps {
 const RANGE = 10;
 
 export function CodeView(props: CodeViewProps): JSX.Element | null {
-  console.log('CodeView', props);
   const lines = () =>
     props.content.split('\n').map((item, index) => ({
       index: index + 1,
@@ -71,5 +70,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
     }
   });
 
-  return <div ref={ref} class="dev-overlay-code-view" />;
+  return <div ref={ref} class="dev-overlay-code-view" style={{
+    '--dev-overlay-code-view-start': minLine() + 1,
+  }} />;
 }
