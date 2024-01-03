@@ -432,14 +432,14 @@ importers:
   packages/start:
     dependencies:
       '@vinxi/plugin-directives':
-        specifier: ^0.0.55
-        version: 0.0.55(vinxi@0.0.59)
+        specifier: ^0.0.58
+        version: 0.0.58(vinxi@0.0.59)
       '@vinxi/server-components':
-        specifier: ^0.0.55
-        version: 0.0.55(vinxi@0.0.59)
+        specifier: ^0.0.58
+        version: 0.0.58(vinxi@0.0.59)
       '@vinxi/server-functions':
-        specifier: ^0.0.56
-        version: 0.0.56(vinxi@0.0.59)
+        specifier: ^0.0.59
+        version: 0.0.59(vinxi@0.0.59)
       defu:
         specifier: ^6.1.2
         version: 6.1.2
@@ -462,8 +462,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       terracotta:
-        specifier: ^1.0.3
-        version: 1.0.3(seroval@1.0.2)(solid-js@1.8.7)
+        specifier: ^1.0.4
+        version: 1.0.4(seroval@1.0.2)(solid-js@1.8.7)
       vite-plugin-inspect:
         specifier: ^0.7.33
         version: 0.7.33(rollup@3.28.1)(vite@4.5.0)
@@ -2580,10 +2580,10 @@ packages:
       untun: 0.1.2
       uqr: 0.1.2
 
-  /@vinxi/plugin-directives@0.0.55(vinxi@0.0.59):
-    resolution: {integrity: sha512-12Yp90eeENPedbm80++KZw2epz3IaZxF+eJKHq4VuL9vze1eR3sPLmdhUl+H4de2ud0BqpRR3bMg9ApzPmmnnw==}
+  /@vinxi/plugin-directives@0.0.58(vinxi@0.0.59):
+    resolution: {integrity: sha512-VDkePzbUbpJ2YXDWJ7zMrlfJAnpTTiw9FPHAwlv95mbNXr8eO/kz5PxaS7Z/oILjktup9B0cl4vH/5H7POkYZA==}
     peerDependencies:
-      vinxi: ^0.0.59
+      vinxi: ^0.0.62
     dependencies:
       '@babel/parser': 7.23.5
       acorn: 8.11.2
@@ -2608,12 +2608,12 @@ packages:
       resolve: 1.22.8
       unified: 9.2.2
 
-  /@vinxi/server-components@0.0.55(vinxi@0.0.59):
-    resolution: {integrity: sha512-APlTlAcoBG2004XvtscByXA383ucaV3XXOOTkI886qDErSSYv1VSCZaiYIeTWcQcmW/NbGj8mUQB+T4hwBP7ww==}
+  /@vinxi/server-components@0.0.58(vinxi@0.0.59):
+    resolution: {integrity: sha512-EkeF3OQXnwXPA11txkshXw6GaUJMLxuV8eVUmk34O6OeCd6jfXjerLPk7sxHTDQgkByz4OATjdidOaIgG3tytw==}
     peerDependencies:
-      vinxi: ^0.0.59
+      vinxi: ^0.0.62
     dependencies:
-      '@vinxi/plugin-directives': 0.0.55(vinxi@0.0.59)
+      '@vinxi/plugin-directives': 0.0.58(vinxi@0.0.59)
       acorn: 8.11.2
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.10(acorn@8.11.2)
@@ -2623,12 +2623,12 @@ packages:
       vinxi: 0.0.59(@types/node@20.10.1)(debug@4.3.4)(rollup@3.28.1)
     dev: false
 
-  /@vinxi/server-functions@0.0.56(vinxi@0.0.59):
-    resolution: {integrity: sha512-1upUWgGV74JhXDFplEpgA4R5nZgjDSzD5/DhyVL43aTHPG1oI02MYwRrZpSAy508o8agV41r6ceEhjvWcvxa/w==}
+  /@vinxi/server-functions@0.0.59(vinxi@0.0.59):
+    resolution: {integrity: sha512-riQ3b+Lai5V1NCpruFz0RO13bpOM+pZpCKmhl3A5ii9S+jPwrdIQZp1RkFdhqRlxJ+q7oFuCoa+UmtHepgfVKA==}
     peerDependencies:
-      vinxi: ^0.0.59
+      vinxi: ^0.0.62
     dependencies:
-      '@vinxi/plugin-directives': 0.0.55(vinxi@0.0.59)
+      '@vinxi/plugin-directives': 0.0.58(vinxi@0.0.59)
       acorn: 8.11.2
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.10(acorn@8.11.2)
@@ -6869,8 +6869,8 @@ packages:
       mkdirp: 1.0.4
       yallist: 4.0.0
 
-  /terracotta@1.0.3(seroval@1.0.2)(solid-js@1.8.7):
-    resolution: {integrity: sha512-KSRN3rACpUrWJCWoWLFnD97JKJ0e8ijYGdfxU/IWMZVGtbCf28MluYqLPxj8V60wcMCqH8TFh/KXBjkiyJhS4A==}
+  /terracotta@1.0.4(seroval@1.0.2)(solid-js@1.8.7):
+    resolution: {integrity: sha512-tMy152HBz6NehMYR63Phv9Zr+axhoKbHIuejurRa220J8zVKJ/L9hyjsiEC7WzjTdjherWe8g/ECYb3+jG/bBA==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.8

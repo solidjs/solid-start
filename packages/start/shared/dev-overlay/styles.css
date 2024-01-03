@@ -123,8 +123,7 @@
   padding-top: 0.25rem;
   font-size: 1.5rem;
   line-height: 2rem;
-  --tw-text-opacity: 1;
-  color: rgb(239 68 68 / var(--tw-text-opacity));
+  color: rgb(239 68 68);
   font-weight: 700;
 }
 
@@ -188,9 +187,12 @@
   justify-content: center;
 }
 
-.dev-overlay-stack-frames-fallback {
-  width: 100%;
-  min-height: 256px;
+.dev-overlay-stack-frames-code-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(249 250 251);
+  min-height: 16rem;
 }
 
 .dev-overlay-stack-frames-code-container {

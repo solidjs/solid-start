@@ -52,6 +52,12 @@ function getFilePath(source: StackFrameSource) {
   return `${getFileName(source.source)}${line}${column}`;
 }
 
+function CodeFallback(): JSX.Element {
+  return <div class="dev-overlay-stack-frames-code-fallback">
+    <span>Source not available.</span>
+  </div>;
+}
+
 function StackFramesContent(props: StackFramesContentProps) {
   const stackframes = ErrorStackParser.parse(props.error);
 
@@ -65,8 +71,8 @@ function StackFramesContent(props: StackFramesContentProps) {
               {(() => {
                 const data = createStackFrame(selectedFrame(), () => props.isCompiled);
                 return (
-                  <Suspense fallback={<div class="dev-overlay-stack-frames-code-fallback" />}>
-                    <Show when={data()} keyed fallback={<div class="dev-overlay-stack-frames-code-fallback" />}>
+                  <Suspense fallback={<CodeFallback />}>
+                    <Show when={data()} keyed fallback={<CodeFallback />}>
                       {(source) => (
                         <CodeView fileName={source.source} line={source.line} content={source.content} />
                       )}

@@ -45,9 +45,9 @@
     "vinxi": "0.0.59"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.0.55",
-    "@vinxi/server-components": "^0.0.55",
-    "@vinxi/server-functions": "^0.0.56",
+    "@vinxi/plugin-directives": "^0.0.58",
+    "@vinxi/server-components": "^0.0.58",
+    "@vinxi/server-functions": "^0.0.59",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
@@ -55,7 +55,7 @@
     "seroval-plugins": "^1.0.2",
     "shikiji": "^0.9.12",
     "source-map-js": "^1.0.2",
-    "terracotta": "^1.0.3",
+    "terracotta": "^1.0.4",
     "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.8.0"
   }

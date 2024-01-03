@@ -26,6 +26,9 @@ export function createStackFrame(
         return null;
       }
       const response = await fetch(source.fileName);
+      if (!response.ok) {
+        return null;
+      }
       const content = await response.text();
       const sourceMap = await getSourceMap(source.fileName, content);
       if (!source.isCompiled && sourceMap && source.line && source.column) {

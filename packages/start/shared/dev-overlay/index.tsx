@@ -1,4 +1,5 @@
 import { ErrorBoundary, Show, createEffect, createSignal, onCleanup, resetErrorBoundaries, type JSX } from "solid-js";
+import { HttpStatusCode } from "../HttpStatusCode";
 import clientOnly from "../clientOnly";
 
 
@@ -37,11 +38,12 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
     <>
       <ErrorBoundary fallback={error => {
         pushError(error);
-        return null;
+        return <HttpStatusCode code={500} />;
       }}>
         {props.children}
       </ErrorBoundary>
       <Show when={errors().length}>
+        <HttpStatusCode code={500} />
         <DevOverlayDialog errors={errors()} resetError={resetError} />
       </Show>
     </>
