@@ -39,3 +39,5 @@ jobs:
           TARGET: cloudflare_module
 
       - run: npx wrangler deploy
+        env:
+          WRANGLER_LOG: debug
