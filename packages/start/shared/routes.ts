@@ -36,7 +36,7 @@ export function matchAPIRoute(path: string, method: HTTPMethod) {
   const segments = path.split("/").filter(Boolean);
 
   routeLoop: for (const route of apiRoutes) {
-    const matchSegments = route.matchSegments.filter(isNotGroupSegmentFilter);
+    const matchSegments = route.matchSegments;
 
     if (
       segments.length < matchSegments.length ||
@@ -138,7 +138,6 @@ function expandOptionals(pattern: string): string[] {
 
 function routeToMatchRoute(route: Route): MatchRoute {
   const segments = route.path.split("/").filter(Boolean);
-
   const params: { type: "*" | ":"; name: string; index: number }[] = [];
   const matchSegments: (string | null)[] = [];
   let score = 0;
@@ -164,7 +163,9 @@ function routeToMatchRoute(route: Route): MatchRoute {
       wildcard = true;
     } else {
       score += 4;
-      matchSegments.push(segment);
+      if (!segment.match(/^\(.+\)$/)) {
+        matchSegments.push(segment);
+      }
     }
   }
 
@@ -175,8 +176,4 @@ function routeToMatchRoute(route: Route): MatchRoute {
     matchSegments,
     wildcard
   };
-}
-
-function isNotGroupSegmentFilter(routeMatchSegment) {
-  return !routeMatchSegment.match(/^\(.+\)$/);
 }
