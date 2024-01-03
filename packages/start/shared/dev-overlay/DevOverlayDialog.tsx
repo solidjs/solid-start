@@ -66,7 +66,6 @@ function StackFramesContent(props: StackFramesContentProps) {
   return (
       <div class="dev-overlay-stack-frames-content">
         <div class="dev-overlay-stack-frames-code">
-          <div class="dev-overlay-stack-frames-code-container">
             <ErrorBoundary fallback={null}>
               {(() => {
                 const data = createStackFrame(selectedFrame(), () => props.isCompiled);
@@ -74,14 +73,18 @@ function StackFramesContent(props: StackFramesContentProps) {
                   <Suspense fallback={<CodeFallback />}>
                     <Show when={data()} keyed fallback={<CodeFallback />}>
                       {(source) => (
-                        <CodeView fileName={source.source} line={source.line} content={source.content} />
+                        <>
+                          <span class="dev-overlay-stack-frames-code-source">{source.source}</span>
+                          <div class="dev-overlay-stack-frames-code-container">
+                            <CodeView fileName={source.source} line={source.line} content={source.content} />
+                          </div>
+                        </>
                       )}
                     </Show>
                   </Suspense>
                 );
               })()}
             </ErrorBoundary>
-          </div>
         </div>
         <Select<ErrorStackParser.StackFrame>
           class="dev-overlay-stack-frames"

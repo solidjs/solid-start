@@ -183,10 +183,15 @@
 }
 
 .dev-overlay-stack-frames-code {
+  padding: 0.5rem 1rem;
+  gap: 0.25rem;
   flex: 1 1 0%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 0.5rem;
+  background-color: rgb(17 24 39);
 }
 
 .dev-overlay-stack-frames-code-fallback {
@@ -195,19 +200,28 @@
   justify-content: center;
   color: rgb(249 250 251);
   min-height: 16rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.dev-overlay-stack-frames-code-source {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: rgb(249 250 251);
 }
 
 .dev-overlay-stack-frames-code-container {
   width: 100%;
   overflow: hidden;
-  border-radius: 0.5rem;
-  background-color: rgb(17 24 39);
   min-width: 100%;
   min-height: 16rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: rgb(249 250 251);
 }
 
 .dev-overlay-code-view {
-  padding: 0.5rem 1rem;
   overflow: auto;
   min-width: 100%;
   min-height: 16rem;
