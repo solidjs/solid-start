@@ -38,4 +38,4 @@ jobs:
         env:
           TARGET: cloudflare_module
 
-      - run: npx wrangler publish
+      - run: npx wrangler deploy
