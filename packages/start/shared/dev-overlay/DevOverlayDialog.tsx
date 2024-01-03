@@ -1,7 +1,7 @@
 import ErrorStackParser from 'error-stack-parser';
 import * as htmlToImage from 'html-to-image';
 import type { JSX } from 'solid-js';
-import { For, Show, Suspense, createMemo, createSignal } from 'solid-js';
+import { ErrorBoundary, For, Show, Suspense, createMemo, createSignal } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from 'terracotta';
 import { CodeView } from './CodeView';
@@ -58,47 +58,64 @@ function StackFramesContent(props: StackFramesContentProps) {
   const [selectedFrame, setSelectedFrame] = createSignal(stackframes[0]);
 
   return (
-    <div class="dev-overlay-stack-frames-content">
-      <div class="dev-overlay-stack-frames-code">
-        <div class="dev-overlay-stack-frames-code-container">
-          {(() => {
-            const data = createStackFrame(selectedFrame(), () => props.isCompiled);
-            return (
-              <Suspense fallback={<div class="dev-overlay-stack-frames-code-fallback" />}>
-                <Show when={data()} keyed fallback={<div class="dev-overlay-stack-frames-code-fallback" />}>
-                  {(source) => (
-                    <CodeView fileName={source.source} line={source.line} content={source.content} />
-                  )}
-                </Show>
-              </Suspense>
-            );
-          })()}
+      <div class="dev-overlay-stack-frames-content">
+        <div class="dev-overlay-stack-frames-code">
+          <div class="dev-overlay-stack-frames-code-container">
+            <ErrorBoundary fallback={null}>
+              {(() => {
+                const data = createStackFrame(selectedFrame(), () => props.isCompiled);
+                return (
+                  <Suspense fallback={<div class="dev-overlay-stack-frames-code-fallback" />}>
+                    <Show when={data()} keyed fallback={<div class="dev-overlay-stack-frames-code-fallback" />}>
+                      {(source) => (
+                        <CodeView fileName={source.source} line={source.line} content={source.content} />
+                      )}
+                    </Show>
+                  </Suspense>
+                );
+              })()}
+            </ErrorBoundary>
+          </div>
         </div>
+        <Select<ErrorStackParser.StackFrame>
+          class="dev-overlay-stack-frames"
+          value={selectedFrame()}
+          onChange={setSelectedFrame}
+        >
+          <For each={stackframes}>
+            {(current) => (
+            <ErrorBoundary fallback={(
+              <div class="dev-overlay-stack-frame">
+                <span class="dev-overlay-stack-frame-function">{current.functionName ?? '<anonymous>'}</span>
+                <span class="dev-overlay-stack-frame-file">{getFilePath({
+                  source: current.getFileName(),
+                  content: '',
+                  line: current.getLineNumber(),
+                  column: current.getColumnNumber(),
+                  name: current.getFunctionName(),
+                })}</span>
+              </div>
+            )}>
+              {(() => {
+                const data = createStackFrame(current, () => props.isCompiled);
+                return (
+                  <Suspense>
+                    <Show when={data()} keyed>
+                      {(source) => (
+                        <SelectOption class="dev-overlay-stack-frame" value={current}>
+                          <span class="dev-overlay-stack-frame-function">{source.name ?? '<anonymous>'}</span>
+                          <span class="dev-overlay-stack-frame-file">{getFilePath(source)}</span>
+                        </SelectOption>
+                      )}
+                    </Show>
+                  </Suspense>
+                );
+              })()}
+            </ErrorBoundary>
+            )}
+          </For>
+        </Select>
       </div>
-      <Select<ErrorStackParser.StackFrame>
-        class="dev-overlay-stack-frames"
-        value={selectedFrame()}
-        onChange={setSelectedFrame}
-      >
-        <For each={stackframes}>
-          {(current) => {
-            const data = createStackFrame(current, () => props.isCompiled);
-            return (
-              <Suspense>
-                <Show when={data()} keyed>
-                  {(source) => (
-                    <SelectOption class="dev-overlay-stack-frame" value={current}>
-                      <span class="dev-overlay-stack-frame-function">{source.name ?? '<anonymous>'}</span>
-                      <span class="dev-overlay-stack-frame-file">{getFilePath(source)}</span>
-                    </SelectOption>
-                  )}
-                </Show>
-              </Suspense>
-            );
-          }}
-        </For>
-      </Select>
-    </div>
   );
 }
 
