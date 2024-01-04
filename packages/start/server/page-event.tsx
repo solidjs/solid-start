@@ -76,5 +76,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     $islands: new Set<string>()
   });
 
+  console.log(pageEvent.assets);
+
   return pageEvent;
 }
