@@ -34,8 +34,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.3(solid-js@1.8.8)
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: workspace:*
         version: link:packages/start
@@ -124,8 +124,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.8)
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -142,8 +142,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.8)
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -157,8 +157,8 @@ importers:
   examples/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -172,8 +172,8 @@ importers:
   examples/todomvc:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -190,8 +190,8 @@ importers:
   examples/with-auth:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -215,8 +215,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -228,7 +228,7 @@ importers:
         version: 1.8.8
       solid-mdx:
         specifier: ^0.0.7
-        version: 0.0.7(solid-js@1.8.8)(vite@4.4.9)
+        version: 0.0.7(solid-js@1.8.8)(vite@4.5.0)
       vinxi:
         specifier: 0.1.1
         version: 0.1.1(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
@@ -239,8 +239,8 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0(prisma@5.7.0)
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -264,8 +264,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.8)
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -280,13 +280,13 @@ importers:
         version: 0.1.1(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
-        version: 0.8.3(rollup@3.28.1)(solid-styled@0.8.2)(vite@4.4.9)
+        version: 0.8.3(rollup@3.28.1)(solid-styled@0.8.2)(vite@4.5.0)
 
   examples/with-tailwindcss:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -315,8 +315,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.8)
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
@@ -342,14 +342,14 @@ importers:
         specifier: ^0.29.3
         version: 0.29.3(solid-js@1.8.8)
       '@solidjs/router':
-        specifier: ^0.10.5
-        version: 0.10.5(solid-js@1.8.8)
+        specifier: ^0.10.6
+        version: 0.10.6(solid-js@1.8.8)
       '@solidjs/start':
         specifier: ^0.4.2
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.5
-        version: 0.8.5(@solidjs/router@0.10.5)(solid-js@1.8.8)
+        version: 0.8.5(@solidjs/router@0.10.6)(solid-js@1.8.8)
       '@testing-library/jest-dom':
         specifier: ^6.1.5
         version: 6.1.5(vitest@1.1.0)
@@ -369,8 +369,8 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       vinxi:
-        specifier: 0.0.54
-        version: 0.0.54(debug@4.3.4)(rollup@3.28.1)
+        specifier: ^0.1.1
+        version: 0.1.1(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite:
         specifier: ^4.4.9
         version: 4.4.9
@@ -469,7 +469,7 @@ importers:
         version: 3.1.3(typescript@5.3.3)
       solid-mdx:
         specifier: ^0.0.7
-        version: 0.0.7(solid-js@1.8.8)(vite@4.4.9)
+        version: 0.0.7(solid-js@1.8.8)(vite@4.5.0)
       unified:
         specifier: ^10.1.2
         version: 10.1.2
@@ -517,10 +517,10 @@ importers:
         version: 1.0.4(seroval@1.0.2)(solid-js@1.8.8)
       vite-plugin-inspect:
         specifier: ^0.7.33
-        version: 0.7.33(rollup@3.28.1)(vite@4.4.9)
+        version: 0.7.33(rollup@3.28.1)(vite@4.5.0)
       vite-plugin-solid:
         specifier: ^2.8.0
-        version: 2.8.0(solid-js@1.8.8)(vite@4.4.9)
+        version: 2.8.0(solid-js@1.8.8)(vite@4.5.0)
     devDependencies:
       solid-js:
         specifier: ^1.8.8
@@ -2142,6 +2142,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -2653,8 +2654,8 @@ packages:
     dependencies:
       solid-js: 1.8.8
 
-  /@solidjs/router@0.10.5(solid-js@1.8.8):
-    resolution: {integrity: sha512-gxDeiyc97j8/UqzuuasZsQYA7jpmlwjkfpcay11Q2xfzoKR50eBM1AaxAPtf0MlBAdPsdPV3h/k8t5/XQCuebA==}
+  /@solidjs/router@0.10.6(solid-js@1.8.8):
+    resolution: {integrity: sha512-PiJO/wsAh0+0mmAIw/+gGgZa0xeMzKGrITWvBfNQ0wiAwNzOF/T0Bm10uhyaWdxPu9td0xK2LuMnC//4CXqnyA==}
     peerDependencies:
       solid-js: ^1.8.6
     dependencies:
@@ -2667,14 +2668,14 @@ packages:
     dependencies:
       solid-js: 1.8.8
 
-  /@solidjs/testing-library@0.8.5(@solidjs/router@0.10.5)(solid-js@1.8.8):
+  /@solidjs/testing-library@0.8.5(@solidjs/router@0.10.6)(solid-js@1.8.8):
     resolution: {integrity: sha512-L9TowCoqdRQGB8ikODh9uHXrYTjCUZseVUG0tIVa836//qeSqXP4m0BKG66v9Zp1y1wRxok5qUW97GwrtEBMcw==}
     engines: {node: '>= 14'}
     peerDependencies:
       '@solidjs/router': '>=0.6.0'
       solid-js: '>=1.0.0'
     dependencies:
-      '@solidjs/router': 0.10.5(solid-js@1.8.8)
+      '@solidjs/router': 0.10.6(solid-js@1.8.8)
       '@testing-library/dom': 9.3.3
       solid-js: 1.8.8
     dev: true
@@ -2950,21 +2951,6 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
-
-  /@vinxi/devtools@0.0.5(rollup@3.28.1)(vite@4.5.0):
-    resolution: {integrity: sha512-Zn4utX8Z6CYA4GZ2EvO7NKgpTYCHg5VOUKKTtlErbmTDzcxOYEpVtCs20GVo08LT0KMsugsLjs6hKcwblCQnvw==}
-    dependencies:
-      birpc: 0.2.14
-      vite-plugin-inspect: 0.7.42(rollup@3.28.1)(vite@4.5.0)
-      ws: 8.16.0
-    transitivePeerDependencies:
-      - '@nuxt/kit'
-      - bufferutil
-      - rollup
-      - supports-color
-      - utf-8-validate
-      - vite
-    dev: true
 
   /@vinxi/devtools@0.1.1(@babel/core@7.23.7)(preact@10.19.3)(rollup@3.28.1)(vite@4.5.0):
     resolution: {integrity: sha512-/A7X1hoNBsgC2n7nKOWbIa4cTt9dJq9nehyLGdNxgjEcGzbsaJrofUDrFLt+0YJlyb7OOhFEPYHRCat3tsrytw==}
@@ -6301,6 +6287,9 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+
   /nitropack@2.8.1:
     resolution: {integrity: sha512-pODv2kEEzZSDQR+1UMXbGyNgMedUDq/qUomtiAnQKQvLy52VGlecXO1xDfH3i0kP1yKEcKTnWsx1TAF5gHM7xQ==}
     engines: {node: ^16.11.0 || >=17.0.0}
@@ -7730,6 +7719,17 @@ packages:
     dependencies:
       solid-js: 1.8.8
       vite: 4.4.9
+    dev: true
+
+  /solid-mdx@0.0.7(solid-js@1.8.8)(vite@4.5.0):
+    resolution: {integrity: sha512-dYKGOu5ZiaX3sfEMZYtfyXm30u33kF+T/pr67CMeyHzENDkWD3st4XEJ12Akp0J0PG9jzyHe5sAAKEXSnEcDEw==}
+    peerDependencies:
+      solid-js: ^1.2.6
+      vite: '*'
+    dependencies:
+      solid-js: 1.8.8
+      vite: 4.5.0(@types/node@20.10.1)
+    dev: false
 
   /solid-refresh@0.5.3(solid-js@1.8.8):
     resolution: {integrity: sha512-Otg5it5sjOdZbQZJnvo99TEBAr6J7PQ5AubZLNU6szZzg3RQQ5MX04oteBIIGDs0y2Qv8aXKm9e44V8z+UnFdw==}
@@ -8655,82 +8655,6 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.0.54(debug@4.3.4)(rollup@3.28.1):
-    resolution: {integrity: sha512-tSWW/NxwcGtLGi9i7r+++PUlgas5hWtHwakbvmCe6di5PlRxGZD5XrZ8xCoCgExj1VAyuRdoWCpI5WIbQZ6erA==}
-    hasBin: true
-    dependencies:
-      '@babel/core': 7.23.7
-      '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.23.7)
-      '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.23.7)
-      '@types/micromatch': 4.0.6
-      '@types/serve-static': 1.15.5
-      '@types/ws': 8.5.10
-      '@vinxi/devtools': 0.0.5(rollup@3.28.1)(vite@4.5.0)
-      '@vinxi/listhen': 1.5.5
-      boxen: 7.1.1
-      c12: 1.6.1
-      chokidar: 3.5.3
-      citty: 0.1.5
-      consola: 3.2.3
-      defu: 6.1.2
-      dts-buddy: 0.2.5
-      es-module-lexer: 1.4.1
-      esbuild: 0.18.20
-      fast-glob: 3.3.2
-      get-port: 6.1.2
-      get-port-please: 3.1.1
-      h3: 1.9.0
-      hookable: 5.5.3
-      http-proxy: 1.18.1(debug@4.3.4)
-      micromatch: 4.0.5
-      mri: 1.2.0
-      nitropack: 2.8.1
-      node-fetch-native: 1.6.1
-      path-to-regexp: 6.2.1
-      pathe: 1.1.1
-      perfect-debounce: 1.0.0
-      radix3: 1.1.0
-      resolve: 1.22.8
-      rollup-plugin-visualizer: 5.12.0(rollup@3.28.1)
-      serve-placeholder: 2.0.1
-      serve-static: 1.15.0
-      ufo: 1.3.2
-      unenv: 1.9.0
-      unimport: 3.7.1(rollup@3.28.1)
-      unstorage: 1.10.1
-      vite: 4.5.0(@types/node@20.10.1)
-      ws: 8.16.0
-      zod: 3.22.4
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@netlify/blobs'
-      - '@nuxt/kit'
-      - '@planetscale/database'
-      - '@types/node'
-      - '@upstash/redis'
-      - '@vercel/kv'
-      - bufferutil
-      - debug
-      - encoding
-      - idb-keyval
-      - less
-      - lightningcss
-      - rollup
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - utf-8-validate
-      - xml2js
-    dev: true
-
   /vinxi@0.1.1(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
     resolution: {integrity: sha512-4egpAxqukve31zR485WhuKsFdbSBnSyJkuRxq+A4OzSoJ5Z/nTQNQ1YeooVY8Rs6lFkbczUjhq1YLQP7/+X1Dg==}
     hasBin: true
@@ -8828,7 +8752,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-inspect@0.7.33(rollup@3.28.1)(vite@4.4.9):
+  /vite-plugin-inspect@0.7.33(rollup@3.28.1)(vite@4.5.0):
     resolution: {integrity: sha512-cQRLQKa/+Ua++5hN0IZfqNn1JYXBg2eCQOSUatPTwhXMO7nwfSvhhSc45E1nXfBBEhzLLOxgr1OdbDu55PiDDA==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -8841,7 +8765,7 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       sirv: 2.0.4
-      vite: 4.4.9
+      vite: 4.5.0(@types/node@20.10.1)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -8870,7 +8794,7 @@ packages:
       - rollup
       - supports-color
 
-  /vite-plugin-solid-styled@0.8.3(rollup@3.28.1)(solid-styled@0.8.2)(vite@4.4.9):
+  /vite-plugin-solid-styled@0.8.3(rollup@3.28.1)(solid-styled@0.8.2)(vite@4.5.0):
     resolution: {integrity: sha512-o0jPwkOWM9NB4P8XKLOD1r6u3A5UEymt2u3rsxUpqSsiBPtJkDPifhOGzVx4estScvMa5e8lO4job66IpG+VhQ==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -8880,7 +8804,7 @@ packages:
       '@babel/core': 7.22.9
       '@rollup/pluginutils': 5.1.0(rollup@3.28.1)
       solid-styled: 0.8.2(@babel/core@7.22.9)(solid-js@1.8.8)
-      vite: 4.4.9
+      vite: 4.5.0(@types/node@20.10.1)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -8903,6 +8827,7 @@ packages:
       vitefu: 0.2.5(vite@4.4.9)
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   /vite-plugin-solid@2.8.0(solid-js@1.8.8)(vite@4.5.0):
     resolution: {integrity: sha512-n5FAm7ZmTl94VWUoiJCgG7bouF2NlC9CA1wY/qbVnkFbYDWk++bFWyNoU48aLJ+lMtzNeYzJypJXOHzFKxL9xA==}
@@ -8955,6 +8880,7 @@ packages:
       rollup: 3.28.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
 
   /vite@4.5.0(@types/node@20.10.1):
     resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
@@ -9035,6 +8961,7 @@ packages:
         optional: true
     dependencies:
       vite: 4.4.9
+    dev: true
 
   /vitefu@0.2.5(vite@4.5.0):
     resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}

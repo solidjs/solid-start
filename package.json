@@ -32,7 +32,7 @@
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@solidjs/meta": "^0.29.0",
-    "@solidjs/router": "^0.10.5",
+    "@solidjs/router": "^0.10.6",
     "@solidjs/start": "workspace:*",
     "@tailwindcss/typography": "^0.5.9",
     "@trpc/client": "^9.27.4",
