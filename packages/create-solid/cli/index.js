@@ -207,7 +207,7 @@ async function main() {
   const gitignore_contents = gitIgnore;
   const gitignore = parser.compile(gitignore_contents);
 
-  const files = glob("**/*", { cwd: templateDir }).filter(gitignore.accepts);
+  const files = glob("**/*", { cwd: templateDir, dot: true }).filter(gitignore.accepts);
 
   let indexHTML = undefined;
   files.forEach(file => {
