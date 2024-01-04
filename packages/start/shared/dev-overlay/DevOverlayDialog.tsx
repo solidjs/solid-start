@@ -4,10 +4,11 @@ import type { JSX } from 'solid-js';
 import { ErrorBoundary, For, Show, Suspense, createMemo, createSignal } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from 'terracotta';
+import info from '../../package.json';
 import { CodeView } from './CodeView';
 import { StackFrameSource, createStackFrame } from './createStackFrame';
 import download from './download';
-import { ArrowLeftIcon, ArrowRightIcon, CameraIcon, DiscordIcon, GithubIcon, RefreshIcon, ViewCompiledIcon, ViewOriginalIcon } from './icons';
+import { ArrowLeftIcon, ArrowRightIcon, CameraIcon, DiscordIcon, GithubIcon, RefreshIcon, SolidStartIcon, ViewCompiledIcon, ViewOriginalIcon } from './icons';
 import './styles.css';
 
 export function classNames(...classes: (string | boolean | undefined)[]): string {
@@ -217,16 +218,24 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
           <DialogOverlay class="dev-overlay-background"/>
           <DialogPanel ref={setPanel} class="dev-overlay-panel">
             <div class="dev-overlay-navbar">
-              <div class="dev-overlay-pagination">
-                <button class="dev-overlay-button" onClick={goPrev} type="button">
-                  <ArrowLeftIcon title="Go Previous" />
-                </button>
-                <button class="dev-overlay-button" onClick={goNext} type="button">
-                  <ArrowRightIcon title="Go Next" />
-                </button>
-              </div>
-              <div class="dev-overlay-page-counter">
-                {`${truncated()} of ${props.errors.length}`}
+              <div class="dev-overlay-navbar-left">
+                <div class="dev-overlay-pagination">
+                  <button class="dev-overlay-button" onClick={goPrev} type="button">
+                    <ArrowLeftIcon title="Go Previous" />
+                  </button>
+                  <div class="dev-overlay-page-counter">
+                    {`${truncated()} of ${props.errors.length}`}
+                  </div>
+                  <button class="dev-overlay-button" onClick={goNext} type="button">
+                    <ArrowRightIcon title="Go Next" />
+                  </button>
+                </div>
+                <div class="dev-overlay-version">
+                  <div>
+                    <SolidStartIcon title="Solid Start Version" />
+                  </div>
+                  <span>{info.version}</span>
+                </div>
               </div>
               <div class="dev-overlay-controls">
                 <button class="dev-overlay-button" onClick={redirectToGithub} type="button">
