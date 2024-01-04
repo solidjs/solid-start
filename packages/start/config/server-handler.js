@@ -12,6 +12,8 @@ import {
   URLPlugin,
   URLSearchParamsPlugin
 } from "seroval-plugins/web";
+import { sharedConfig } from "solid-js";
+/* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
 import {
@@ -115,7 +117,12 @@ async function handleServerFunction(event) {
     });
   }
   try {
-    const result = await provideRequestEvent(getFetchEvent(event), () => action(...parsed));
+    const evt = getFetchEvent(event);
+    const result = await provideRequestEvent(evt, () => {
+      /* @ts-ignore */
+      sharedConfig.context = { event: evt };
+      return action(...parsed);
+    });
 
     // handle no JS success case
     if (!instance) {

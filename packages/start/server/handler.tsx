@@ -1,3 +1,4 @@
+import { sharedConfig } from "solid-js";
 import { renderToStream } from "solid-js/web";
 /* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
@@ -42,6 +43,7 @@ export function createHandler(
           const mod = await match.handler.import();
           const fn = mod[event.request.method];
           (event as APIEvent).params = match.params;
+          sharedConfig.context = { event } as any;
           return await fn(event);
         }
 
@@ -63,7 +65,10 @@ export function createHandler(
             og(options);
           };
         } else cloned.onCompleteShell = handleShellCompleteRedirect(context, e);
-        const stream = renderToStream(() => fn(context), cloned);
+        const stream = renderToStream(() => {
+          (sharedConfig.context as any).event = context;
+          return fn(context)
+        }, cloned);
         if (context.response && context.response.headers.get("Location")) {
           return sendRedirect(event, context.response.headers.get("Location"));
         }
