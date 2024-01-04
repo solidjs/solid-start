@@ -3,7 +3,13 @@ import { clientOnly } from "@solidjs/start";
 import Counter from "~/components/Counter";
 const BreaksOnServer = clientOnly(() => import("~/components/BreaksOnServer"));
 
+async function hello(name: string) {
+  "use server";
+  return "hello " + name;
+}
+
 export default function Home() {
+  hello("John").then(console.log);
   return (
     <main>
       <Title>Hello World</Title>

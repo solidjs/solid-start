@@ -104,7 +104,15 @@ async function fetchServerFunction(base, id, args) {
     }
     throw response;
   }
-  const result = deserializeStream(instance, response);
+  const contentType = response.headers.get("Content-Type");
+  let result;
+  if (contentType && contentType.startsWith("text/plain")) {
+    result = await response.text();
+  } else if(contentType && contentType.startsWith("application/json")) {
+    result = await response.json();
+  } else {
+    result = deserializeStream(instance, response);
+  }
   if (response.ok) {
     return result;
   }

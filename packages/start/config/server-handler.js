@@ -145,7 +145,7 @@ async function handleServerFunction(event) {
         }
       });
     }
-
+    if (typeof result === "string") return new Response(result);
     setHeader(event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
@@ -157,12 +157,7 @@ async function handleServerFunction(event) {
         }
       });
     }
-    return new Response(serializeToStream(instance, x), {
-      status: 500,
-      headers: {
-        "Content-Type": "text/javascript"
-      }
-    });
+    return x;
   }
 }
 
