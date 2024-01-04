@@ -38,20 +38,18 @@ function solidStartServerFsRouter(config) {
 }
 
 export function defineConfig(baseConfig = {}) {
-  let { plugins = [], start = {}, base, ...userConfig } = baseConfig;
+  let { plugins = [], start = {}, ...userConfig } = baseConfig;
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
     appRoot: "./src",
     ssr: true,
     islands: false,
-    server: { base },
     solid: {}
   });
   let server = start.server;
   if (!start.ssr) {
     server = { ...server, prerender: { routes: ["/"] } };
   }
-  console.log("start", start);
   let entryExtension = ".tsx";
   if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) {
     entryExtension = ".jsx";
