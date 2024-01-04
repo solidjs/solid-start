@@ -47,15 +47,17 @@ const protectedPaths = ["/protected"]; // add any route you wish in here
 
 export default createMiddleware({
   onRequest: [
-    event => {
-      if (protectedPaths.includes(new URL(event.request.url).pathname)) {
+    async (event) => {
+      const { pathname } = new URL(event.request.url);
+      const isProtected = protectedPaths.some((protectedPath) => pathname.startsWith(protectedPath));
+      if (isProtected) {
         const user = await getUser(event.request);
         if (!user) {
           return sendRedirect(event, "/"); // a page for a non logged in user
         }
         event.locals.user = user; // put the user on the locals object
       }
-    };
-  }
-);
+    },
+  ],
+});
 ```

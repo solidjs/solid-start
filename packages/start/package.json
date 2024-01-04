@@ -42,12 +42,12 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.7",
-    "vinxi": "0.0.64"
+    "vinxi": "0.1.1"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.0.60",
-    "@vinxi/server-components": "^0.0.60",
-    "@vinxi/server-functions": "^0.0.61",
+    "@vinxi/plugin-directives": "^0.1.0",
+    "@vinxi/server-components": "^0.1.0",
+    "@vinxi/server-functions": "^0.1.0",
     "defu": "^6.1.2",
     "seroval": "^1.0.2",
     "seroval-plugins": "^1.0.2",

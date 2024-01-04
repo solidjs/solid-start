@@ -138,7 +138,6 @@ function expandOptionals(pattern: string): string[] {
 
 function routeToMatchRoute(route: Route): MatchRoute {
   const segments = route.path.split("/").filter(Boolean);
-
   const params: { type: "*" | ":"; name: string; index: number }[] = [];
   const matchSegments: (string | null)[] = [];
   let score = 0;
@@ -164,7 +163,9 @@ function routeToMatchRoute(route: Route): MatchRoute {
       wildcard = true;
     } else {
       score += 4;
-      matchSegments.push(segment);
+      if (!segment.match(/^\(.+\)$/)) {
+        matchSegments.push(segment);
+      }
     }
   }
 
