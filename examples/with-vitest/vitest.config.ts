@@ -1,17 +1,20 @@
-import solid from "solid-start/vite";
+import solid from "vite-plugin-solid";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [solid()],
   test: {
     deps: {
-      registerNodeLoader: true,
-      inline: [/solid-js/],
+      optimizer: {
+        web: {
+          enabled: true
+        }
+      }
     },
     environment: "jsdom",
     globals: true,
-    setupFiles: ['node_modules/@testing-library/jest-dom/extend-expect', './setupVitest.js'],
-    transformMode: { web: [/\.[jt]sx?$/] },
+    setupFiles: ['./setupVitest.ts'],
+    testTransformMode: { web: ["/\.[jt]sx?$/"] },
   },
   resolve: {
     conditions: ["development", "browser"],
