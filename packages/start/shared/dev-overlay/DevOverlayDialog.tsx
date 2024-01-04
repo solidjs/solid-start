@@ -219,23 +219,25 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
           <DialogPanel ref={setPanel} class="dev-overlay-panel">
             <div class="dev-overlay-navbar">
               <div class="dev-overlay-navbar-left">
-                <div class="dev-overlay-pagination">
-                  <button class="dev-overlay-button" onClick={goPrev} type="button">
-                    <ArrowLeftIcon title="Go Previous" />
-                  </button>
-                  <div class="dev-overlay-page-counter">
-                    {`${truncated()} of ${props.errors.length}`}
-                  </div>
-                  <button class="dev-overlay-button" onClick={goNext} type="button">
-                    <ArrowRightIcon title="Go Next" />
-                  </button>
-                </div>
                 <div class="dev-overlay-version">
                   <div>
                     <SolidStartIcon title="Solid Start Version" />
                   </div>
-                  <span>{info.version}</span>
+                  <span>{info.version as string}</span>
                 </div>
+                <Show when={props.errors.length > 1}>
+                  <div class="dev-overlay-pagination">
+                    <button class="dev-overlay-button" onClick={goPrev} type="button">
+                      <ArrowLeftIcon title="Go Previous" />
+                    </button>
+                    <div class="dev-overlay-page-counter">
+                      {`${truncated()} of ${props.errors.length}`}
+                    </div>
+                    <button class="dev-overlay-button" onClick={goNext} type="button">
+                      <ArrowRightIcon title="Go Next" />
+                    </button>
+                  </div>
+                </Show>
               </div>
               <div class="dev-overlay-controls">
                 <button class="dev-overlay-button" onClick={redirectToGithub} type="button">
