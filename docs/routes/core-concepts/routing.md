@@ -30,7 +30,7 @@ To create a new route/page in your application, just create a new file in the `r
 
 - `hogwarts.com/blog` ➜ `/routes/blog.tsx`
 - `hogwarts.com/contact` ➜ `/routes/contact.tsx`
-- `hogwarts.com/directions ` ➜ `/routes/directions.tsx`
+- `hogwarts.com/directions` ➜ `/routes/directions.tsx`
 
 To create new pages after a given route segment, simply create a directory with the name of the preceding route segment, and create new files in that directory.
 
@@ -65,12 +65,13 @@ Under the hood, SolidStart traverses your `routes` directory, collects all the r
 `<FileRoutes>` returns the routing config object so you can use it with the router of your choice. In this example we use `@solidjs/router`.
 
 ```tsx twoslash {7-9} filename="app.tsx"
+import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start";
 
 export default function App() {
   return (
-    <Router>
+    <Router root={props => <Suspense>{props.children}</Suspense>}>
       <FileRoutes />
     </Router>
   );
@@ -209,5 +210,4 @@ export default function UsersLayout(props: RouteSectionProps) {
 ```
 
 [api-routes]: /core-concepts/api-routes
-[components]: /advanced/components
 [fileroutes]: /api/FileRoutes

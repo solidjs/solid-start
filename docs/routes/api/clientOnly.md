@@ -13,12 +13,12 @@ Wrap Components that are only to be rendered in the Client. Helpful for componen
 <div class="text-lg">
 
 ```tsx
-import { clientOnly } from "@solidjs/start"
+import { clientOnly } from "@solidjs/start";
 
 const ClientOnlyComp = clientOnly(() => import("../ClientOnlyComp"));
 
 function IsomorphicComp() {
-  return <ClientOnlyComp />
+  return <ClientOnlyComp />;
 }
 ```
 
@@ -36,18 +36,18 @@ You may have a component that has some sort of client based side effect like wri
 const location = window.document.location;
 
 export default function ClientOnlyComponent() {
-  return <div>{location.href}</div>
+  return <div>{location.href}</div>;
 }
 ```
 
 And then import dynamically using `clientOnly`.
 
 ```tsx
-import { clientOnly } from "@solidjs/start"
+import { clientOnly } from "@solidjs/start";
 
 const ClientOnlyComp = clientOnly(() => import("../ClientOnlyComp"));
 
 function IsomorphicComp() {
-  return <ClientOnlyComp />
+  return <ClientOnlyComp />;
 }
 ```

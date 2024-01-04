@@ -51,16 +51,16 @@ export function defineConfig(baseConfig = {}) {
   if (!start.ssr) {
     server = { ...server, prerender: { routes: ["/"] } };
   }
-  console.log("start", start)
-  let entryExtension = ".tsx"
+  console.log("start", start);
+  let entryExtension = ".tsx";
   if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) {
-    entryExtension = ".jsx"
+    entryExtension = ".jsx";
   }
 
   return createApp({
     server: {
       compressPublicAssets: {
-        brotli: true
+        brotli: process.versions.bun ? false : true
       },
       ...server
     },
@@ -80,9 +80,10 @@ export function defineConfig(baseConfig = {}) {
         routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         extensions,
         target: "server",
-        plugins: () => [
+        plugins: async () => [
           config("user", userConfig),
-          ...plugins,
+          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
+
           serverTransform({
             runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url)))
           }),
@@ -121,9 +122,9 @@ export function defineConfig(baseConfig = {}) {
             }),
         extensions,
         target: "browser",
-        plugins: () => [
+        plugins: async () => [
           config("user", userConfig),
-          ...plugins,
+          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
           serverFunctions.client({
             runtime: normalize(fileURLToPath(new URL("./server-runtime.jsx", import.meta.url)))
           }),
@@ -161,9 +162,10 @@ export function defineConfig(baseConfig = {}) {
         handler: normalize(fileURLToPath(new URL("./server-handler.js", import.meta.url))),
         runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url))),
         // routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
-        plugins: () => [
+        plugins: async () => [
           config("user", userConfig),
-          ...plugins,
+          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
+
           solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-server", {
             resolve: {

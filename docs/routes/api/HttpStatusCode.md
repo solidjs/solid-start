@@ -55,7 +55,7 @@ Keep in mind, when streaming responses (`renderStream`), the HTTP Status can onl
 
 ```tsx twoslash {8,18-23} filename="routes/[house].tsx"
 import { Show, ErrorBoundary } from "solid-js";
-import { cache, createAsync } from "@solidjs/router"
+import { cache, createAsync } from "@solidjs/router";
 import { HttpStatusCode } from "@solidjs/start";
 
 const getHouse = cache(async (house: string) => {
@@ -66,7 +66,7 @@ const getHouse = cache(async (house: string) => {
 }, "house");
 
 export default function House(props: { name: string }) {
-  const house = createAsync(() => getHouse(props.name), { deferStream: true })
+  const house = createAsync(() => getHouse(props.name), { deferStream: true });
   return (
     <ErrorBoundary
       fallback={e => (

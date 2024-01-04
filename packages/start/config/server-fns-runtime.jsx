@@ -1,6 +1,6 @@
 import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { cloneEvent } from "../server";
+import { cloneEvent } from "../server/middleware";
 
 export function createServerReference(fn, id, name) {
   return new Proxy(fn, {
