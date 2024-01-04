@@ -35,5 +35,9 @@ jobs:
 
       - name: Build docs
         run: pnpm run docs:build
+        env:
+          TARGET: cloudflare_module
 
-      - run: npx wrangler publish
+      - run: npx wrangler deploy
+        env:
+          WRANGLER_LOG: debug
