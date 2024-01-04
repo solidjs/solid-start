@@ -1,13 +1,20 @@
-import { ErrorBoundary, Show, createEffect, createSignal, onCleanup, resetErrorBoundaries, type JSX } from "solid-js";
+import {
+  ErrorBoundary,
+  Show,
+  createEffect,
+  createSignal,
+  onCleanup,
+  resetErrorBoundaries,
+  type JSX
+} from "solid-js";
 import { HttpStatusCode } from "../HttpStatusCode";
 import clientOnly from "../clientOnly";
-
 
 export interface DevOverlayProps {
   children?: JSX.Element;
 }
 
-const DevOverlayDialog = clientOnly(() => import('./DevOverlayDialog'));
+const DevOverlayDialog = /* #__PURE__ */ clientOnly(() => import("./DevOverlayDialog"));
 
 export function DevOverlay(props: DevOverlayProps): JSX.Element {
   const [errors, setErrors] = createSignal<unknown[]>([]);
@@ -19,7 +26,7 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
 
   function pushError(error: unknown) {
     console.error(error);
-    setErrors((current) => [error, ...current]);
+    setErrors(current => [error, ...current]);
   }
 
   createEffect(() => {
@@ -27,19 +34,21 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
       pushError(error.error);
     };
 
-    window.addEventListener('error', onErrorEvent);
+    window.addEventListener("error", onErrorEvent);
 
     onCleanup(() => {
-      window.removeEventListener('error', onErrorEvent);
+      window.removeEventListener("error", onErrorEvent);
     });
   });
 
   return (
     <>
-      <ErrorBoundary fallback={error => {
-        pushError(error);
-        return <HttpStatusCode code={500} />;
-      }}>
+      <ErrorBoundary
+        fallback={error => {
+          pushError(error);
+          return <HttpStatusCode code={500} />;
+        }}
+      >
         {props.children}
       </ErrorBoundary>
       <Show when={errors().length}>
