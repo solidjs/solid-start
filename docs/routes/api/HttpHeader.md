@@ -15,7 +15,7 @@ active: true
 ```tsx twoslash
 import { HttpHeader } from "@solidjs/start";
 // ---cut---
-<HttpHeader name="x-robots-tog" value="noindex" />;
+<HttpHeader name="x-robots-tag" value="noindex" />;
 ```
 
 </div>

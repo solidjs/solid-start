@@ -38,6 +38,7 @@
     "@trpc/client": "^9.27.4",
     "@trpc/server": "^9.27.4",
     "@vinxi/plugin-mdx": "^3.6.7",
+    "citty": "^0.1.5",
     "coveralls": "^3.1.1",
     "debug": "^4.3.4",
     "fast-glob": "^3.3.0",
