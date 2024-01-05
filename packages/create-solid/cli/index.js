@@ -22,6 +22,7 @@ dist
 .vinxi
 .nitro
 netlify
+.vinxi
 
 # Environment
 .env
