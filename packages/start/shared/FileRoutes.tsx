@@ -2,7 +2,7 @@
 import { getRequestEvent, isServer } from "solid-js/web";
 import lazyRoute from "./lazyRoute";
 
-import { PageEvent } from "../server";
+import type { PageEvent } from "../server/types";
 import { pageRoutes as routeConfigs } from "./routes";
 
 export function createRoutes() {
@@ -10,7 +10,10 @@ export function createRoutes() {
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),
-      metadata: { ...(route.$$route ? route.$$route.require().route.metadata : {}), filesystem: true },
+      metadata: {
+        ...(route.$$route ? route.$$route.require().route.metadata : {}),
+        filesystem: true
+      },
       component: lazyRoute(
         route.$component,
         import.meta.env.START_ISLANDS
