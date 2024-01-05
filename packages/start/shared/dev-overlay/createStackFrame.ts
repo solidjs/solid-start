@@ -1,4 +1,4 @@
-import { Resource, createResource } from "solid-js";
+import { Accessor, createMemo, createResource } from "solid-js";
 import getSourceMap from "./get-source-map";
 
 export interface StackFrameSource {
@@ -12,10 +12,9 @@ export interface StackFrameSource {
 export function createStackFrame(
   stackframe: StackFrame,
   isCompiled: () => boolean,
-): Resource<StackFrameSource> {
+): Accessor<StackFrameSource> {
   const [data] = createResource(
     () => ({
-      isCompiled: isCompiled(),
       fileName: stackframe.fileName,
       line: stackframe.lineNumber,
       column: stackframe.columnNumber,
@@ -31,27 +30,42 @@ export function createStackFrame(
       }
       const content = await response.text();
       const sourceMap = await getSourceMap(source.fileName, content);
-      if (!source.isCompiled && sourceMap && source.line && source.column) {
-        const result = sourceMap.originalPositionFor({
-          line: source.line,
-          column: source.column,
-        });
-
-        return {
-          ...result,
-          content: sourceMap.sourceContentFor(result.source),
-        };
-      }
-
       return {
-        source: source.fileName,
-        line: source.line,
-        column: source.column,
-        name: source.functionName,
+        source,
         content,
+        sourceMap,
       };
     },
   );
 
-  return data;
+  const info = createMemo<StackFrameSource>(() => {
+    const current = data();
+    if (!current) {
+      return undefined;
+    }
+    const { source, content, sourceMap } = current;
+
+    
+    if (!isCompiled() && source.line && source.column) {
+      const result = sourceMap.originalPositionFor({
+        line: source.line,
+        column: source.column,
+      });
+
+      return {
+        ...result,
+        content: sourceMap.sourceContentFor(result.source),
+      };
+    }
+
+    return {
+      source: source.fileName,
+      line: source.line,
+      column: source.column,
+      name: source.functionName,
+      content,
+    };
+  });
+
+  return info;
 }

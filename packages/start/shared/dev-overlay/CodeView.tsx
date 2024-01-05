@@ -3,19 +3,25 @@ import { getHighlighterCore } from 'shikiji/core';
 import { getWasmInlined } from 'shikiji/wasm';
 import { createEffect, createResource, type JSX } from 'solid-js';
 
+import langJS from 'shikiji/langs/javascript.mjs';
+import langJSX from 'shikiji/langs/jsx.mjs';
+import langTSX from 'shikiji/langs/tsx.mjs';
+import langTS from 'shikiji/langs/typescript.mjs';
+import darkPlus from 'shikiji/themes/dark-plus.mjs';
+
 let HIGHLIGHTER: Highlighter;
 
 async function loadHighlighter() {
   if (!HIGHLIGHTER) {
     HIGHLIGHTER = await getHighlighterCore({
       themes: [
-        import('shikiji/themes/dark-plus.mjs'),
+        darkPlus,
       ],
       langs: [
-        import('shikiji/langs/javascript.mjs'),
-        import('shikiji/langs/jsx.mjs'),
-        import('shikiji/langs/typescript.mjs'),
-        import('shikiji/langs/tsx.mjs'),
+        langJS,
+        langJSX,
+        langTS,
+        langTSX,
       ],
       loadWasm: getWasmInlined,
     });
@@ -55,7 +61,6 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       .split('.')
       .pop()
       ?.trim() as BuiltinLanguage;
-    await highlighter.loadLanguage(lang);
     return highlighter.codeToHtml(value, {
       theme: 'dark-plus',
       lang,
