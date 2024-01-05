@@ -18,10 +18,6 @@ import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
 import {
   eventHandler,
-  getHeader,
-  getRequestURL,
-  readBody,
-  readRawBody,
   setHeader
 } from "vinxi/server";
 import { getFetchEvent } from "../server/middleware";
@@ -60,12 +56,14 @@ function serializeToStream(id, value) {
   });
 }
 
-async function handleServerFunction(event) {
-  invariant(event.method === "POST", `Invalid method ${event.method}. Expected POST.`);
+async function handleServerFunction(h3Event) {
+  invariant(h3Event.method === "POST", `Invalid method ${h3Event.method}. Expected POST.`);
+  const event = getFetchEvent(h3Event);
+  const request = event.request;
 
-  const serverReference = getHeader(event, "x-server-id");
-  const instance = getHeader(event, "x-server-instance");
-  const url = getRequestURL(event);
+  const serverReference = request.headers.get("x-server-id");
+  const instance = request.headers.get("x-server-instance");
+  const url = new URL(request.url);
   let filepath, name;
   if (serverReference) {
     invariant(typeof serverReference === "string", "Invalid server function");
@@ -86,22 +84,14 @@ async function handleServerFunction(event) {
     const args = url.searchParams.get("args");
     if (args) JSON.parse(args).forEach(arg => parsed.push(arg));
   }
-  const contentType = getHeader(event, "content-type");
+  const contentType = request.headers.get("content-type");
   if (
     contentType.startsWith("multipart/form-data") ||
     contentType.startsWith("application/x-www-form-urlencoded")
   ) {
-    // Temporary workaround until https://github.com/unjs/nitro/issues/1721 is resolved
-    // parsed.push(await readFormData(event));
-
-    const request = new Request(getRequestURL(event), {
-      method: event.method,
-      headers: event.headers,
-      body: await readRawBody(event)
-    });
     parsed.push(await request.formData());
   } else {
-    parsed = fromJSON(await readBody(event), {
+    parsed = fromJSON(await request.json(), {
       plugins: [
         CustomEventPlugin,
         DOMExceptionPlugin,
@@ -117,17 +107,16 @@ async function handleServerFunction(event) {
     });
   }
   try {
-    const evt = getFetchEvent(event);
-    const result = await provideRequestEvent(evt, () => {
+    const result = await provideRequestEvent(event, () => {
       /* @ts-ignore */
-      sharedConfig.context = { event: evt };
+      sharedConfig.context = { event };
       return action(...parsed);
     });
 
     // handle no JS success case
     if (!instance) {
       const isError = result instanceof Error;
-      const refererUrl = new URL(getHeader(event, "referer"));
+      const refererUrl = new URL(request.headers.get("referer"));
       return new Response(null, {
         status: 302,
         headers: {
@@ -146,7 +135,7 @@ async function handleServerFunction(event) {
       });
     }
     if (typeof result === "string") return new Response(result);
-    setHeader(event, "content-type", "text/javascript");
+    setHeader(h3Event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
     if (x instanceof Response && x.status === 302) {
