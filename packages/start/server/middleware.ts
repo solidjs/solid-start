@@ -1,10 +1,11 @@
 import {
-  defineMiddleware,
   EventHandlerRequest,
-  getRequestIP,
   H3Event,
-  sendWebResponse,
-  toWebRequest
+  defineMiddleware,
+  getRequestIP,
+  getRequestURL,
+  getRequestWebStream,
+  sendWebResponse
 } from "vinxi/server";
 import { FetchEvent } from "./types";
 
@@ -20,7 +21,13 @@ const eventTraps = {
 export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
   return new Proxy(
     {
-      request: toWebRequest(event),
+      request: new Request(getRequestURL(event), {
+        // @ts-ignore Undici option
+        duplex: "half",
+        method: event.method,
+        headers: event.headers,
+        get body() { return getRequestWebStream(event) },
+      }),
       clientAddress: getRequestIP(event),
       locals: {},
       // @ts-ignore
