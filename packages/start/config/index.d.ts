@@ -1,5 +1,7 @@
 import { AppOptions } from "vinxi";
 import { InlineConfig } from "vite";
+import type { Options } from "vite-plugin-solid";
+
 
 type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
     start?: {
@@ -9,6 +11,7 @@ type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
          * async: ssr is in async mode
          */
         ssr?: boolean | "async",
+        solid: Options,
         extensions?: string[],
         server?: AppOptions['server'],
         appRoot?: string,
