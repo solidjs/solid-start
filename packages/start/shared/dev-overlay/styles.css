@@ -27,6 +27,8 @@
   margin-bottom: 2rem;
   z-index: 10;
   gap: 0.5rem;
+  color: rgb(17 24 39);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .dev-overlay-navbar {
@@ -87,7 +89,6 @@
 }
 
 .dev-overlay-page-counter {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 600;
@@ -120,7 +121,6 @@
   border-radius: 9999px;
   background-color: rgb(249 250 251);
   padding: 0.25rem 0.5rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 600;
@@ -146,7 +146,6 @@
 }
 
 .dev-overlay-error-info {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -208,7 +207,6 @@
 }
 
 .dev-overlay-stack-frame-function {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-weight: 700;
 }
 
@@ -245,7 +243,6 @@
 .dev-overlay-stack-frames-code-source {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   color: rgb(249 250 251);
 }
 
