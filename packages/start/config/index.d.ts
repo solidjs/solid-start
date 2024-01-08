@@ -11,7 +11,7 @@ type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
          * async: ssr is in async mode
          */
         ssr?: boolean | "async",
-        solid: Options,
+        solid?: Options,
         extensions?: string[],
         server?: AppOptions['server'],
         appRoot?: string,
