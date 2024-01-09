@@ -15,24 +15,38 @@ import type { DocumentComponentProps } from "./types";
 
 const docType = ssr("<!DOCTYPE html>");
 
+function matchRoute(matches, routes, matched = []) {
+  for (let i = 0; i < routes.length; i++) {
+    const segment = routes[i];
+    if (segment.path !== matches[0].path) continue;
+    let next = [...matched, segment];
+    if (segment.children) {
+      next = matchRoute(matches.slice(1), segment.children, next);
+      if (!next) continue;
+    }
+    return next;
+  }
+}
+
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as any;
 
   let assets = [];
   Promise.resolve().then(async () => {
-    let current = context.routes;
     if (context.routerMatches && context.routerMatches[0]) {
-      for (let i = 0; i < context.routerMatches[0].length; i++) {
-        const match = context.routerMatches[0][i];
-        if (match.metadata && match.metadata.filesystem) {
-          const segment = current.find(r => r.path === match.path);
+      const matches = [...context.routerMatches[0]];
+      while (matches.length && (!matches[0].metadata || !matches[0].metadata.filesystem))
+        matches.shift();
+      const matched = matchRoute(matches, context.routes);
+      if (matched) {
+        for (let i = 0; i < matched.length; i++) {
+          const segment = matched[i];
           const part = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]
             .inputs[segment["$component"].src];
           const asset = await part.assets();
           assets.push.apply(assets, asset);
-          current = segment.children;
         }
-      }
+      } else console.warn("No route matched for preload js assets");
     }
     // dedupe assets
     assets = [...new Map(assets.map(item => [item.attrs.key, item])).values()].filter(asset =>
