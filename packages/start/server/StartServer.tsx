@@ -21,7 +21,9 @@ function matchRoute(matches, routes, matched = []) {
     if (segment.path !== matches[0].path) continue;
     let next = [...matched, segment];
     if (segment.children) {
-      next = matchRoute(matches.slice(1), segment.children, next);
+      const nextMatches = matches.slice(1);
+      if (nextMatches.length === 0) continue;
+      next = matchRoute(nextMatches, segment.children, next);
       if (!next) continue;
     }
     return next;
@@ -37,7 +39,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
       const matches = [...context.routerMatches[0]];
       while (matches.length && (!matches[0].metadata || !matches[0].metadata.filesystem))
         matches.shift();
-      const matched = matchRoute(matches, context.routes);
+      const matched = matches.length && matchRoute(matches, context.routes);
       if (matched) {
         for (let i = 0; i < matched.length; i++) {
           const segment = matched[i];
@@ -46,7 +48,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           const asset = await part.assets();
           assets.push.apply(assets, asset);
         }
-      } else console.warn("No route matched for preload js assets");
+      } else console.warn("No route matched for preloading js assets");
     }
     // dedupe assets
     assets = [...new Map(assets.map(item => [item.attrs.key, item])).values()].filter(asset =>
