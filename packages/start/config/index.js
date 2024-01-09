@@ -170,7 +170,7 @@ export function defineConfig(baseConfig = {}) {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(false),
               "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-              "import.meta.env.SERVER_BASE_URL": JSON.stringify(server.baseURL),
+              "import.meta.env.SERVER_BASE_URL": JSON.stringify(server?.baseURL ?? ""),
               ...userConfig.define
             }
           })
