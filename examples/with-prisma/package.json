@@ -12,9 +12,9 @@
   "dependencies": {
     "@prisma/client": "^5.7.0",
     "@solidjs/router": "^0.10.7",
-    "@solidjs/start": "^0.4.5",
+    "@solidjs/start": "^0.4.6",
     "prisma": "^5.7.0",
-    "solid-js": "^1.8.9",
+    "solid-js": "^1.8.10",
     "vinxi": "0.1.1"
   },
   "engines": {
