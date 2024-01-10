@@ -13,7 +13,8 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { createHandler, StartServer } from "@solidjs/start/server";
+import { createHandler } from "@solidjs/start/entry";
+import { StartServer } from "@solidjs/start/server";
 
 export default createHandler(() => (
   <StartServer
