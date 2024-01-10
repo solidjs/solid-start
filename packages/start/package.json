@@ -20,17 +20,21 @@
   "exports": {
     ".": "./shared/index.tsx",
     "./config": "./config/index.js",
+    "./entry": "./entry/index.ts",
+    "./entry/spa": "./entry/spa/index.ts",
     "./server": "./server/index.tsx",
     "./server/spa": "./server/spa/index.tsx",
     "./client": "./client/index.tsx",
     "./client/islands": "./client/islands.tsx",
-    "./middleware": "./server/middleware.ts",
     "./client/spa": "./client/spa/index.tsx"
   },
   "typesVersions": {
     "*": {
       ".": [
         "./shared/index.tsx"
+      ],
+      "./entry": [
+        "./entry/index.ts"
       ],
       "./server": [
         "./server/index.tsx"

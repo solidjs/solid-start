@@ -104,7 +104,8 @@ export function defineConfig(baseConfig = {}) {
                 "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
-                      "@solidjs/start/server": "@solidjs/start/server/spa"
+                      "@solidjs/start/server": "@solidjs/start/server/spa",
+                      "@solidjs/start/entry": "@solidjs/start/entry/spa"
                     }
                   : {}),
                 ...userConfig.resolve?.alias

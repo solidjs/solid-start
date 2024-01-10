@@ -12,12 +12,12 @@ import {
   setHeader,
   setResponseStatus
 } from "vinxi/server";
+import { getFetchEvent } from "../server/middleware";
+import { createPageEvent } from "../server/page-event";
+import { APIEvent, FetchEvent, PageEvent } from "../server/types";
 import { matchAPIRoute } from "../shared/routes";
-import { getFetchEvent } from "./middleware";
-import { createPageEvent } from "./page-event";
-import { APIEvent, FetchEvent, PageEvent } from "./types";
 
-export function createHandler(
+export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
   options: {
     nonce?: string;
@@ -96,4 +96,11 @@ function handleStreamCompleteRedirect(context: PageEvent) {
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location="${to}"</script>`);
   };
+}
+
+export function createHandler(
+  fn: (context: PageEvent) => unknown,
+  options: Parameters<typeof createBaseHandler>[1] = {}
+) {
+  return createBaseHandler(fn, { ...options, createPageEvent });
 }

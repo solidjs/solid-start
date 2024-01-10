@@ -1,5 +1,6 @@
-import { StartServer, createHandler } from "@solidjs/start/server";
-import { defineRequestMiddleware, defineResponseMiddleware } from "vinxi/server";
+import { createHandler } from "@solidjs/start/entry";
+import { StartServer, defineRequestMiddleware, defineResponseMiddleware } from "@solidjs/start/server";
+
 
 export default createHandler(
   () => (
