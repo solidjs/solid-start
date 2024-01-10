@@ -10,7 +10,7 @@
     "@types/node": "^20.10.1"
   },
   "dependencies": {
-    "@solidjs/router": "^0.10.7",
+    "@solidjs/router": "^0.10.8",
     "@solidjs/start": "^0.4.6",
     "solid-js": "^1.8.10",
     "unstorage": "1.10.1",

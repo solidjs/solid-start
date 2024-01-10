@@ -7,7 +7,7 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/router": "^0.10.7",
+    "@solidjs/router": "^0.10.8",
     "@solidjs/start": "^0.4.6",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.26",
