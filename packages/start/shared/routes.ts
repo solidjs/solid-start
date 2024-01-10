@@ -33,7 +33,7 @@ export const pageRoutes = defineRoutes((fileRoutes as unknown as Route[]).filter
 const apiRoutes = defineAPIRoutes((fileRoutes as unknown as Route[]).filter(o => o.type === "api"));
 
 export function matchAPIRoute(path: string, method: HTTPMethod) {
-  const segments = path.split("/").filter(Boolean);
+  const segments = path.replace(import.meta.env.SERVER_BASE_URL, "").split("/").filter(Boolean);
 
   routeLoop: for (const route of apiRoutes) {
     const matchSegments = route.matchSegments;
