@@ -18,7 +18,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
       .split('/')
       .map(s => {
         if (s.startsWith(':') || s.startsWith('*')) {
-          return s.charAt(0) + encodeURIComponent(s.slice(1));
+          return s;
         }
         return encodeURIComponent(s);
       })
@@ -96,7 +96,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
       .split('/')
       .map(s => {
         if (s.startsWith(':') || s.startsWith('*')) {
-          return s.charAt(0) + encodeURIComponent(s.slice(1));
+          return s;
         }
         return encodeURIComponent(s);
       })
