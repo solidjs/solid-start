@@ -9,7 +9,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.29.2",
     "@solidjs/router": "^0.10.8",
-    "@solidjs/start": "^0.4.7",
+    "@solidjs/start": "^0.4.8",
     "solid-js": "^1.8.10",
     "vinxi": "0.1.1"
   },
