@@ -14,7 +14,15 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
           return `:${m.slice(1, -1)}?`;
         }
         return `:${m}`;
-      });
+      })
+      .split('/')
+      .map(s => {
+        if (s.startsWith(':') || s.startsWith('*')) {
+          return s.charAt(0) + encodeURIComponent(s.slice(1));
+        }
+        return encodeURIComponent(s);
+      })
+      .join('/');
 
     return routePath?.length > 0 ? `/${routePath}` : "/";
   }
@@ -84,7 +92,15 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
           return `:${m.slice(1, -1)}?`;
         }
         return `:${m}`;
-      });
+      })
+      .split('/')
+      .map(s => {
+        if (s.startsWith(':') || s.startsWith('*')) {
+          return s.charAt(0) + encodeURIComponent(s.slice(1));
+        }
+        return encodeURIComponent(s);
+      })
+      .join('/');
 
     return routePath?.length > 0 ? `/${routePath}` : "/";
   }
