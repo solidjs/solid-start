@@ -12,6 +12,7 @@
   "files": [
     "client",
     "config",
+    "entry",
     "server",
     "shared",
     "*.d.ts"
