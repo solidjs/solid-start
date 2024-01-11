@@ -33,11 +33,12 @@ async function deserializeStream(id, response) {
     }
   }
 
-  const result = await reader.read();
-  if (result.done) {
-    throw new Error("Unexpected end of body");
+  let serialized = ""
+  while (true) {
+    const line = await reader.read();
+    if (line.done) break;
+    serialized += new TextDecoder().decode(line.value);
   }
-  const serialized = new TextDecoder().decode(result.value);
   let pending = true;
   let revived;
   const splits = serialized.split("\n");
@@ -108,7 +109,7 @@ async function fetchServerFunction(base, id, args) {
   let result;
   if (contentType && contentType.startsWith("text/plain")) {
     result = await response.text();
-  } else if(contentType && contentType.startsWith("application/json")) {
+  } else if (contentType && contentType.startsWith("application/json")) {
     result = await response.json();
   } else {
     result = deserializeStream(instance, response);
