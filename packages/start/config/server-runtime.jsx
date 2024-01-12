@@ -17,41 +17,50 @@ class ChunkReader {
   constructor(stream) {
     this.reader = stream.getReader();
     this.buffer = '';
+    this.done = false;
+  }
+
+  async readChunk() {
+    if (this.done) {
+      return;
+    }
+    // if there's no chunk, read again
+    const chunk = await this.reader.read();
+    if (!chunk.done) {
+      // repopulate the buffer
+      this.buffer += new TextDecoder().decode(chunk.value);
+    } else {
+      this.done = true;
+    }
+  }
+
+  async nextValue() {
+    if (this.buffer === '') {
+      if (this.done) {
+        return {
+          done: true,
+          value: undefined,
+        };
+      }
+      await this.readChunk();
+    }
+    const [first, ...rest] = this.buffer.split('\n');
+    const result = {
+      done: false,
+      value: deserialize(first),
+    };
+    // if it succeeds, remove the first valid chunk
+    // from the buffer
+    this.buffer = rest.join('\n');
+    return result;
   }
 
   async next() {
-    const [first, ...rest] = this.buffer.split('\n');
-    // Check if there's a chunk
-    if (first === '') {
-      // if there's no chunk, read again
-      const chunk = await this.reader.read();
-      if (chunk.done) {
-        return { done: true, value: undefined };
-      }
-      // repopulate the buffer
-      this.buffer += new TextDecoder().decode(chunk.value);
-      // retry deserialization
+    try {
+      return await this.nextValue();
+    } catch (error) {
+      await this.readChunk();
       return await this.next();
-    } else {
-      // Check if the chunk is a valid chunk
-      try {
-        const result = {
-          done: false,
-          value: deserialize(first),
-        };
-        // if it succeeds, remove the first valid chunk
-        // from the buffer
-        this.buffer = rest.join('');
-        return result;
-      } catch (error) {
-        // otherwise, retry again with a new chunk
-        const chunk = await this.reader.read();
-        if (chunk.done) {
-          return null;
-        }
-        this.buffer += new TextDecoder().decode(chunk.value);
-        return await this.next();
-      }
     }
   }
 
