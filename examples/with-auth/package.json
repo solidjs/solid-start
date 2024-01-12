@@ -10,11 +10,11 @@
     "@types/node": "^20.10.1"
   },
   "dependencies": {
-    "@solidjs/router": "^0.10.8",
-    "@solidjs/start": "^0.4.8",
-    "solid-js": "^1.8.10",
+    "@solidjs/router": "^0.10.9",
+    "@solidjs/start": "^0.4.9",
+    "solid-js": "^1.8.11",
     "unstorage": "1.10.1",
-    "vinxi": "0.1.1"
+    "vinxi": "^0.1.2"
   },
   "engines": {
     "node": ">=18"
