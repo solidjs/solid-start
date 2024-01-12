@@ -21,9 +21,6 @@ class ChunkReader {
   }
 
   async readChunk() {
-    if (this.done) {
-      return;
-    }
     // if there's no chunk, read again
     const chunk = await this.reader.read();
     if (!chunk.done) {
@@ -35,16 +32,21 @@ class ChunkReader {
   }
 
   async nextValue() {
+    // Check if the buffer is empty
     if (this.buffer === '') {
+      // if we are already one...
       if (this.done) {
         return {
           done: true,
           value: undefined,
         };
       }
+      // Otherwise, read a new chunk
       await this.readChunk();
     }
+    // Get the first valid seroval chunk
     const [first, ...rest] = this.buffer.split('\n');
+    // Deserialize the seroval chunk
     const result = {
       done: false,
       value: deserialize(first),
@@ -57,9 +59,20 @@ class ChunkReader {
 
   async next() {
     try {
+      // Attempt to read a valid seroval chunk
       return await this.nextValue();
     } catch (error) {
+      // If it happens that there's an error again
+      // and we are done reading the buffer
+      // then the whole stream is invalid.
+      if (this.done) {
+        throw new Error('Malformed server function stream.');
+      }
+      // Since it's invalid (some syntax-related issue)
+      // we read a new chunk, and hope there's a valid
+      // seroval chunk there
       await this.readChunk();
+      // Retry again
       return await this.next();
     }
   }
