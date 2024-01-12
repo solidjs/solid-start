@@ -13,55 +13,80 @@ import {
 } from 'seroval-plugins/web';
 import { createIslandReference } from "../server/islands";
 
+class ChunkReader {
+  constructor(stream) {
+    this.reader = stream.getReader();
+    this.buffer = '';
+  }
+
+  async next() {
+    const [first, ...rest] = this.buffer.split('\n');
+    // Check if there's a chunk
+    if (first === '') {
+      // if there's no chunk, read again
+      const chunk = await this.reader.read();
+      console.log(chunk);
+      if (chunk.done) {
+        return { done: true, value: undefined };
+      }
+      // repopulate the buffer
+      this.buffer += new TextDecoder().decode(chunk.value);
+      // retry deserialization
+      return await this.next();
+    } else {
+      // Check if the chunk is a valid chunk
+      try {
+        const result = {
+          done: false,
+          value: deserialize(first),
+        };
+        // if it succeeds, remove the first valid chunk
+        // from the buffer
+        this.buffer = rest.join('');
+        return result;
+      } catch (error) {
+        // otherwise, retry again with a new chunk
+        const chunk = await this.reader.read();
+        console.log(chunk);
+        if (chunk.done) {
+          return null;
+        }
+        this.buffer += new TextDecoder().decode(chunk.value);
+        return await this.next();
+      }
+    }
+  }
+
+  async drain() {
+    while (true) {
+      const result = await this.next();
+      if (result.done) {
+        break;
+      }
+    }
+  }
+}
+
 async function deserializeStream(id, response) {
   if (!response.body) {
     throw new Error("missing body");
   }
-  const reader = response.body.getReader();
+  const reader = new ChunkReader(response.body);
 
-  async function pop() {
-    const result = await reader.read();
-    if (!result.done) {
-      const serialized = new TextDecoder().decode(result.value);
-      const splits = serialized.split("\n");
-      for (const split of splits) {
-        if (split !== "") {
-          deserialize(split);
-        }
+  const result = await reader.next();
+
+  if (!result.done) {
+    reader.drain().then(
+      () => {
+        delete $R[id];
+      },
+      () => {
+        // no-op
       }
-      await pop();
-    }
+    );
   }
 
-  let serialized = ""
-  while (true) {
-    const line = await reader.read();
-    if (line.done) break;
-    serialized += new TextDecoder().decode(line.value);
-  }
-  let pending = true;
-  let revived;
-  const splits = serialized.split("\n");
-  for (const split of splits) {
-    if (split !== "") {
-      const current = deserialize(split);
-      if (pending) {
-        revived = current;
-        pending = false;
-      }
-    }
-  }
-
-  pop().then(
-    () => {
-      delete $R[id];
-    },
-    () => {
-      // no-op
-    }
-  );
-
-  return revived;
+  return result.value;
 }
 
 let INSTANCE = 0;
