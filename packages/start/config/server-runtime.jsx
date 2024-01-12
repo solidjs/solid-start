@@ -25,7 +25,6 @@ class ChunkReader {
     if (first === '') {
       // if there's no chunk, read again
       const chunk = await this.reader.read();
-      console.log(chunk);
       if (chunk.done) {
         return { done: true, value: undefined };
       }
@@ -47,7 +46,6 @@ class ChunkReader {
       } catch (error) {
         // otherwise, retry again with a new chunk
         const chunk = await this.reader.read();
-        console.log(chunk);
         if (chunk.done) {
           return null;
         }
