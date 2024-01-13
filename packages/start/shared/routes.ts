@@ -161,11 +161,9 @@ function routeToMatchRoute(route: Route): MatchRoute {
         index
       });
       wildcard = true;
-    } else {
+    } else if (!segment.match(/^\(.+\)$/)) {
       score += 4;
-      if (!segment.match(/^\(.+\)$/)) {
-        matchSegments.push(segment);
-      }
+      matchSegments.push(segment);
     }
   }
 
