@@ -162,6 +162,8 @@ function routeToMatchRoute(route: Route): MatchRoute {
       });
       wildcard = true;
     } else if (!segment.match(/^\(.+\)$/)) {
+      score -= 1;
+    } else {
       score += 4;
       matchSegments.push(segment);
     }
