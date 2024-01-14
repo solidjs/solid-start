@@ -1,7 +1,8 @@
 import type { BuiltinLanguage, Highlighter } from 'shikiji';
-import { getHighlighterCore } from 'shikiji/core';
-import { getWasmInlined } from 'shikiji/wasm';
+import { getHighlighterCore, loadWasm } from 'shikiji/core';
 import { createEffect, createResource, type JSX } from 'solid-js';
+
+import url from 'shikiji/onig.wasm?url';
 
 import langJS from 'shikiji/langs/javascript.mjs';
 import langJSX from 'shikiji/langs/jsx.mjs';
@@ -13,6 +14,7 @@ let HIGHLIGHTER: Highlighter;
 
 async function loadHighlighter() {
   if (!HIGHLIGHTER) {
+    await loadWasm(await fetch(url))
     HIGHLIGHTER = await getHighlighterCore({
       themes: [
         darkPlus,
@@ -23,7 +25,6 @@ async function loadHighlighter() {
         langTS,
         langTSX,
       ],
-      loadWasm: getWasmInlined,
     });
   }
   return HIGHLIGHTER;
