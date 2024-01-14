@@ -1,11 +1,11 @@
 import {
-  EventHandlerRequest,
-  H3Event,
   defineMiddleware,
+  EventHandlerRequest,
   getRequestIP,
   getRequestURL,
-  getRequestWebStream,
-  sendWebResponse
+  H3Event,
+  sendWebResponse,
+  toWebRequest
 } from "vinxi/server";
 import { FetchEvent } from "./types";
 
@@ -17,39 +17,6 @@ const eventTraps = {
     return target[prop] ?? target[h3EventSymbol][prop];
   }
 };
-
-function toWebRequest(/** @type {H3Event} */ event) {
-  /**
-   * @type {ReadableStream | undefined}
-   */
-  let readableStream;
-
-  const url = getRequestURL(event);
-  const base = {
-    // @ts-ignore Undici option
-    duplex: "half",
-    method: event.method,
-    headers: event.headers
-  };
-
-  if (event.node.req.body instanceof ArrayBuffer) {
-    return new Request(url, {
-      ...base,
-      body: event.node.req.body
-    });
-  }
-
-  return new Request(getRequestURL(event), {
-    ...base,
-    get body() {
-      if (readableStream) {
-        return readableStream;
-      }
-      readableStream = getRequestWebStream(event);
-      return readableStream;
-    }
-  });
-}
 
 export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
   event.web ||
