@@ -46,7 +46,6 @@ function toWebRequest(/** @type {H3Event} */ event) {
         return readableStream;
       }
       readableStream = getRequestWebStream(event);
-      console.log(readableStream);
       return readableStream;
     }
   });
