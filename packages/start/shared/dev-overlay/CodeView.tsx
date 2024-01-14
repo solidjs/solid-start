@@ -78,7 +78,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       for (let i = 0, len = lines.length; i < len; i++) {
         const el = lines[i];
         if ((props.line - minLine() - 1) === i) {
-          el.innerHTML = `<mark style="background-color:#aaaaaa80">${el.innerHTML}</mark>`;
+          el.classList.add('dev-overlay-error-line');
         }
       }
     }
