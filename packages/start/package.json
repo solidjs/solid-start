@@ -47,12 +47,12 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.11",
-    "vinxi": "^0.1.2"
+    "vinxi": "^0.1.4"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.1.0",
-    "@vinxi/server-components": "^0.1.0",
-    "@vinxi/server-functions": "^0.1.0",
+    "@vinxi/plugin-directives": "^0.1.2",
+    "@vinxi/server-components": "^0.1.2",
+    "@vinxi/server-functions": "^0.1.2",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
