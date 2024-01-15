@@ -282,3 +282,7 @@
   text-align: right;
   color: rgba(115, 138, 148, .4)
 }
+
+.dev-overlay-error-line {
+  background-color: rgba(239, 68, 68, .4);
+}
