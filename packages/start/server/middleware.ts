@@ -1,8 +1,6 @@
 import {
   defineMiddleware,
-  EventHandlerRequest,
   getRequestIP,
-  getRequestURL,
   H3Event,
   sendWebResponse,
   toWebRequest
@@ -18,15 +16,11 @@ const eventTraps = {
   }
 };
 
-export function createFetchEvent(event: H3Event<EventHandlerRequest>): FetchEvent {
-  event.web ||
-    (event.web = {
-      url: getRequestURL(event),
-      request: toWebRequest(event)
-    });
+export function createFetchEvent(event: H3Event): FetchEvent {
+  const request = toWebRequest(event);
   return new Proxy(
     {
-      request: event.web.request,
+      request: request,
       clientAddress: getRequestIP(event),
       locals: {},
       // @ts-ignore
