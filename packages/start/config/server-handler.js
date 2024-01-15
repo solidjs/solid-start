@@ -22,6 +22,13 @@ import {
 } from "vinxi/server";
 import { getFetchEvent } from "../server/middleware";
 
+function createChunk(data) {
+  const bytes = data.length;
+  const baseHex = bytes.toString(16);
+  const totalHex = '00000000'.substring(0, 8 - baseHex.length) + baseHex; // 32-bit
+  return new TextEncoder().encode(`;0x${totalHex};${data}`);
+}
+
 function serializeToStream(id, value) {
   return new ReadableStream({
     start(controller) {
@@ -40,15 +47,12 @@ function serializeToStream(id, value) {
           URLPlugin
         ],
         onSerialize(data, initial) {
-          const result = initial ? `(${getCrossReferenceHeader(id)},${data})` : data;
-          controller.enqueue(new TextEncoder().encode(`${result};\n`));
+          controller.enqueue(createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data));
         },
         onDone() {
-          // controller.enqueue(`delete $R["${id}"];\n`);
           controller.close();
         },
         onError(error) {
-          // controller.enqueue(`delete $R["${id}"];\n`);
           controller.error(error);
         }
       });
