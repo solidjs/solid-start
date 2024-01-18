@@ -67,9 +67,9 @@ Run `pnpm install` to install all the dependencies for the packages and examples
 <details>
 <summary><h4>Monorepo & <code>project.json</code> <code>"workspace"</code> support</h4></summary>
 
-If you are using SolidStart within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for yarn), you must include `solid-start` within the optional `"nohoist"` (for Yarn v2 or higher, see further down for instructions) workspaces property.
+If you are using SolidStart within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)) with hoisted dependencies (the default for Yarn), you must include `solid-start` within the optional `"nohoist"` (for Yarn v2 or higher, see further down for instructions) workspaces property.
 
-- _In the following, "workspace root" refers to the root of your repository while "project root" refers to the root of a child package within your repository_
+- _In the following, "workspace root" refers to the root of your repository while "project root" refers to the root of a child package within your repository._
 
 For example, if specifying `"nohoist"` options from the workspace root (i.e. for all packages):
 
