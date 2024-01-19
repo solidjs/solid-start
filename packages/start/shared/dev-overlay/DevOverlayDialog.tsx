@@ -190,7 +190,7 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
     if (current) {
       htmlToImage.toPng(current, {
         style: {
-          transform: 'scale(1)',
+          transform: 'scale(0.75)',
         },
       }).then((url) => {
         download(url, 'start-screenshot.png');
