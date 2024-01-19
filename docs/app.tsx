@@ -59,10 +59,10 @@ const socials = [
 
 function SocialIcon(props) {
   return (
-    <li class="mx-2">
+    <li class="mx-1.5">
       <a href={props.href} rel="noopener" target="_blank">
         <span class="sr-only">{props.alt}</span>
-        <svg viewBox="0 0 24 24" class="h-6 opacity-60 transition hover:opacity-80 opacity-40">
+        <svg viewBox="0 0 24 24" class="h-6 transition hover:opacity-80 opacity-40">
           <path fill="currentColor" d={props.icon} />
         </svg>
       </a>
@@ -75,7 +75,7 @@ function Header() {
     <header class="relative z-10 col-span-3 col-start-1 row-start-1 flex px-8 py-2 shadow-md shadow-gray-100 md:z-50">
       <div class="flex w-full justify-between">
         <a href="/">
-          <div class="flex space-x-3">
+          <div class="flex space-x-3 translate-y-[-2px]">
             <img src="/logo.svg" class="h-9 w-9 scale-[0.94] translate-y-[2px] translate-x-[4px]" />
             <div class="mt-2 hidden text-xl uppercase md:block -translate-y-[1px]">
               <span class="tracking-wide">Solid</span>
@@ -252,7 +252,7 @@ export default function Root() {
           <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />
 
           <label
-            class="bg-solid-medium reveal-delay fixed right-3 top-20 cursor-pointer rounded-lg text-white opacity-0 transition duration-500 peer-checked:rotate-90 md:hidden"
+            class="bg-solid-medium reveal-delay fixed right-10 top-[86px] cursor-pointer rounded-lg text-white opacity-0 transition ease-out duration-300 peer-checked:rotate-90 md:hidden"
             for="sidebar-toggle"
           >
             <svg class="h-7 w-7" viewBox="0 0 24 24" style="fill: none; stroke: currentcolor;">
