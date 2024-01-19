@@ -9,6 +9,13 @@ export interface StackFrameSource {
   column: number;
 }
 
+function getActualFileSource(path: string): string {
+  if (path.startsWith('file://')) {
+    return '/_build/@fs' + path.substring('file://'.length);
+  }
+  return path;
+}
+
 export function createStackFrame(
   stackframe: StackFrame,
   isCompiled: () => boolean,
@@ -24,7 +31,7 @@ export function createStackFrame(
       if (!source.fileName) {
         return null;
       }
-      const response = await fetch(source.fileName);
+      const response = await fetch(getActualFileSource(source.fileName));
       if (!response.ok) {
         return null;
       }
@@ -51,6 +58,7 @@ export function createStackFrame(
         line: source.line,
         column: source.column,
       });
+      console.log('sourcemap', result);
 
       return {
         ...result,
