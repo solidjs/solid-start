@@ -26,6 +26,7 @@
     "bump": "node scripts/bump.js"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.25.2",
     "@cloudflare/kv-asset-handler": "^0.2.0",
     "@decs/typeschema": "^0.12.1",
     "@rollup/plugin-commonjs": "^24.1.0",
