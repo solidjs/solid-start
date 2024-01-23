@@ -45,7 +45,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     components: {
       status: props => {
         setResponseStatus(ctx, props.code, props.text);
-        return () => setResponseStatus(ctx, 200);
+        return () => !ctx.handled && setResponseStatus(ctx, 200);
       },
       header: props => {
         if (props.append) {
@@ -55,18 +55,13 @@ export async function createPageEvent(ctx: FetchEvent) {
         }
 
         return () => {
-          const value = getResponseHeader(ctx, props.name);
-
-          // Todo: review this logic still the same in H3
-          // H3 supports arrays so its possible there is no need to split..
-          // typeof check here is to guard but ultimately may be unneeded
-          if (value && typeof value === "string") {
-            const values = value.split(", ");
-            const index = values.indexOf(props.value);
-            index !== -1 && values.splice(index, 1);
-            if (values.length) setResponseHeader(ctx, props.name, values.join(", "));
-            else removeResponseHeader(ctx, props.name);
-          }
+          if (ctx.handled) return;
+          let values = getResponseHeader(ctx, props.name);
+          if (!Array.isArray(values)) values = [values as string];
+          const index = values.indexOf(props.value);
+          index !== -1 && values.splice(index, 1);
+          if (values.length) setResponseHeader(ctx, props.name, values);
+          else removeResponseHeader(ctx, props.name);
         };
       }
     },
