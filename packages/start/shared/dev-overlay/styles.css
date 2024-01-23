@@ -25,10 +25,14 @@
   width: 75vw;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  z-index: 10;
   gap: 0.5rem;
   color: rgb(17 24 39);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.dev-overlay-panel-container {
+  margin: 2rem;
+  z-index: 10;
 }
 
 .dev-overlay-navbar {

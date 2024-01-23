@@ -59,6 +59,7 @@ In many cases, after submitting data the server sends some data back as well. Us
 
 ```tsx twoslash
 import { action, useAction, useSubmission } from "@solidjs/router";
+
 const echo = action(async (message: string) => {
   await new Promise((resolve, reject) => setTimeout(resolve, 1000));
   return message;
@@ -120,7 +121,7 @@ Sometimes we need to make sure our action _only_ runs on the server. This is use
 
 To do this, put a `"use server";` directive in your action function:
 
-```tsx twoslash
+```tsx twoslash {4}
 import { action, redirect } from "@solidjs/router";
 
 const isAdmin = action(async (formData: FormData) => {

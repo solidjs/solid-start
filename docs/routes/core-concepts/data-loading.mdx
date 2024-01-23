@@ -7,16 +7,17 @@ active: true
 
 # Data loading
 
-What's a modern app without some data to power it. SolidStart aims to make it easy to load data from your data sources. It will help you keep your UI updated with your data. For most of your data requirements, you will likely be using the route to decide what data to load.
+What's a modern app without some data to power it? SolidStart aims to make it easy to load data from your data sources. It will help you keep your UI updated with your data. For most of your data requirements, you will likely be using the route to decide what data to load.
 
-The URL is the primary way of navigating around your app. SolidStart already has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts.
+The URL is the primary way of navigating around your app. SolidStart has nested routing to help structure your app's UI in a hierarchical way, so that you can share layouts.
 
 Solid has a [`createResource`][createResource] primitive that takes an async function and returns a [signal][signal] from it. It's a great starting place for your data needs. It integrates with [`Suspense`][Suspense] and [`ErrorBoundary`][ErrorBoundary] to help you manage your lifecycle. Let's take a look at how we can use this to load data from a third party API for our app.
 
-```tsx twoslash
+```tsx twoslash {6-9}
 import { For, createResource } from "solid-js";
 
 type Student = { name: string; house: string };
+
 export default function Page() {
   const [students] = createResource(async () => {
     const response = await fetch("https://hogwarts.deno.dev/students");
@@ -31,7 +32,7 @@ However, fetching inside your components can cause unnecessary waterfalls especi
 
 Libraries like Tanstack Query enable this but for the example below we will be using the data in APIs in `@solidjs/router`.
 
-```tsx twoslash filename="/routes/students.tsx"
+```tsx twoslash filename="/routes/students.tsx" {6, 9, 12}
 import { For } from "solid-js";
 import { createAsync, cache } from "@solidjs/router";
 
@@ -66,7 +67,7 @@ The primary advantage of being a full-stack Javascript framework is that its eas
 
 It could be database access, or internal APIs, etc. It could sit within your functions where you need to use your server. We use `"use server";` for this. It's a special comment that tells the bundler to create an RPC and not include the code in the client bundle .
 
-```tsx twoslash filename="/routes/students.tsx"
+```tsx twoslash filename="/routes/students.tsx" {7}
 const hogwarts = {
   students: {
     list() {

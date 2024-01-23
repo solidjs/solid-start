@@ -30,7 +30,7 @@ const logHello = async (message: string) => {
 
 To create a function that only runs on the server, insert `"use server"` directive at the top of the function.
 
-```tsx twoslash {4-6}
+```tsx twoslash {2}
 const logHello = async (message: string) => {
   "use server";
   console.log(message);

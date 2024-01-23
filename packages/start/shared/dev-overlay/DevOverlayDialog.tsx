@@ -190,7 +190,7 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
     if (current) {
       htmlToImage.toPng(current, {
         style: {
-          transform: 'scale(1)',
+          transform: 'scale(0.75)',
         },
       }).then((url) => {
         download(url, 'start-screenshot.png');
@@ -216,59 +216,61 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
       <Dialog class="dev-overlay" isOpen>
         <div>
           <DialogOverlay class="dev-overlay-background"/>
-          <DialogPanel ref={setPanel} class="dev-overlay-panel">
-            <div class="dev-overlay-navbar">
-              <div class="dev-overlay-navbar-left">
-                <div class="dev-overlay-version">
-                  <div>
-                    <SolidStartIcon title="Solid Start Version" />
-                  </div>
-                  <span>{info.version as string}</span>
-                </div>
-                <Show when={props.errors.length > 1}>
-                  <div class="dev-overlay-pagination">
-                    <button class="dev-overlay-button" onClick={goPrev} type="button">
-                      <ArrowLeftIcon title="Go Previous" />
-                    </button>
-                    <div class="dev-overlay-page-counter">
-                      {`${truncated()} of ${props.errors.length}`}
+          <DialogPanel ref={setPanel} class="dev-overlay-panel-container">
+            <div class="dev-overlay-panel">
+              <div class="dev-overlay-navbar">
+                <div class="dev-overlay-navbar-left">
+                  <div class="dev-overlay-version">
+                    <div>
+                      <SolidStartIcon title="Solid Start Version" />
                     </div>
-                    <button class="dev-overlay-button" onClick={goNext} type="button">
-                      <ArrowRightIcon title="Go Next" />
-                    </button>
+                    <span>{info.version as string}</span>
                   </div>
-                </Show>
-              </div>
-              <div class="dev-overlay-controls">
-                <button class="dev-overlay-button" onClick={redirectToGithub} type="button">
-                  <GithubIcon title="Create an issue thread on Github" />
-                </button>
-                <button class="dev-overlay-button" onClick={redirectToDiscord} type="button">
-                  <DiscordIcon title="Join our Discord Channel" />
-                </button>
-                <button class="dev-overlay-button" onClick={downloadScreenshot} type="button">
-                  <CameraIcon title="Capture Error Overlay" />
-                </button>
-                <button class="dev-overlay-button" onClick={toggleIsCompiled} type="button">
-                  <Show when={isCompiled()} fallback={(
-                    <ViewOriginalIcon title="View Original Source" />
-                  )}>
-                    <ViewCompiledIcon title="View Compiled Source" />
+                  <Show when={props.errors.length > 1}>
+                    <div class="dev-overlay-pagination">
+                      <button class="dev-overlay-button" onClick={goPrev} type="button">
+                        <ArrowLeftIcon title="Go Previous" />
+                      </button>
+                      <div class="dev-overlay-page-counter">
+                        {`${truncated()} of ${props.errors.length}`}
+                      </div>
+                      <button class="dev-overlay-button" onClick={goNext} type="button">
+                        <ArrowRightIcon title="Go Next" />
+                      </button>
+                    </div>
                   </Show>
-                </button>
-                <button class="dev-overlay-button" onClick={props.resetError} type="button">
-                  <RefreshIcon title="Reset Error" />
-                </button>
-              </div>
-            </div>
-            <Show when={props.errors[truncated() - 1]} keyed>
-              {(current) => (
-                <div class="dev-overlay-content">
-                  <ErrorInfo error={current} />
-                  <StackFrames error={current} isCompiled={isCompiled()} />
                 </div>
-              )}
-            </Show>
+                <div class="dev-overlay-controls">
+                  <button class="dev-overlay-button" onClick={redirectToGithub} type="button">
+                    <GithubIcon title="Create an issue thread on Github" />
+                  </button>
+                  <button class="dev-overlay-button" onClick={redirectToDiscord} type="button">
+                    <DiscordIcon title="Join our Discord Channel" />
+                  </button>
+                  <button class="dev-overlay-button" onClick={downloadScreenshot} type="button">
+                    <CameraIcon title="Capture Error Overlay" />
+                  </button>
+                  <button class="dev-overlay-button" onClick={toggleIsCompiled} type="button">
+                    <Show when={isCompiled()} fallback={(
+                      <ViewOriginalIcon title="View Original Source" />
+                    )}>
+                      <ViewCompiledIcon title="View Compiled Source" />
+                    </Show>
+                  </button>
+                  <button class="dev-overlay-button" onClick={props.resetError} type="button">
+                    <RefreshIcon title="Reset Error" />
+                  </button>
+                </div>
+              </div>
+              <Show when={props.errors[truncated() - 1]} keyed>
+                {(current) => (
+                  <div class="dev-overlay-content">
+                    <ErrorInfo error={current} />
+                    <StackFrames error={current} isCompiled={isCompiled()} />
+                  </div>
+                )}
+              </Show>
+            </div>
           </DialogPanel>
         </div>
       </Dialog>

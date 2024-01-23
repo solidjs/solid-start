@@ -53,7 +53,7 @@ You can throw errors from inside these fetchers. These will be caught by the nea
 
 Keep in mind, when streaming responses (`renderStream`), the HTTP Status can only be included if added before the stream first flushed. Be sure to add `deferStream` to any resources calls that need to be loaded before responding.
 
-```tsx twoslash {8,18-23} filename="routes/[house].tsx"
+```tsx twoslash {7,17-19, 15, 23} filename="routes/[house].tsx"
 import { Show, ErrorBoundary } from "solid-js";
 import { cache, createAsync } from "@solidjs/router";
 import { HttpStatusCode } from "@solidjs/start";
