@@ -23,7 +23,7 @@
     "typescript": "^5.3.3",
     "vinxi": "^0.1.4",
     "vite": "^4.4.9",
-    "vite-plugin-solid": "^2.8.3",
+    "vite-plugin-solid": "^2.9.1",
     "vitest": "^1.2.1"
   }
 }
