@@ -92,9 +92,18 @@ async function handleServerFunction(h3Event) {
       contentType.startsWith("multipart/form-data") ||
       contentType.startsWith("application/x-www-form-urlencoded")
     ) {
-      parsed.push(await request.formData());
+      // workaround for https://github.com/unjs/nitro/issues/1721
+      // (issue only in edge runtimes)
+      parsed.push(await new Request(request, { ...request, body: event.node.req.body }).formData());
+      // what should work when #1721 is fixed 
+      // parsed.push(await request.formData);
     } else {
-      parsed = fromJSON(await request.json(), {
+      // workaround for https://github.com/unjs/nitro/issues/1721
+      // (issue only in edge runtimes)
+      const tmpReq = new Request(request, { ...request, body: event.node.req.body })
+      // what should work when #1721 is fixed
+      // just use request.json() here
+      parsed = fromJSON(await tmpReq.json(), {
         plugins: [
           CustomEventPlugin,
           DOMExceptionPlugin,
