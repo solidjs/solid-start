@@ -111,11 +111,32 @@ async function handleServerFunction(h3Event) {
     }
   }
   try {
-    const result = await provideRequestEvent(event, () => {
+    let result = await provideRequestEvent(event, () => {
       /* @ts-ignore */
       sharedConfig.context = { event };
       return action(...parsed);
     });
+
+    // handle responses
+    if (result instanceof Response) {
+      if (result.status === 302) {
+        return new Response(null, {
+          status: instance ? 204 : 302,
+          headers: {
+            Location: result.headers.get("Location")
+          }
+        });
+      }
+      // forward headers
+      if (result.headers) {
+        for (const [key, value] of result.headers.entries()) {
+          setHeader(h3Event, key, value);
+        }
+      }
+      if (result.customBody) {
+        result = await result.customBody();
+      } else if (result.body == undefined) result = undefined;
+    }
 
     // handle no JS success case
     if (!instance) {
@@ -142,13 +163,24 @@ async function handleServerFunction(h3Event) {
     setHeader(h3Event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
-    if (x instanceof Response && x.status === 302) {
-      return new Response(null, {
-        status: instance ? 204 : 302,
-        headers: {
-          Location: x.headers.get("Location")
+    if (x instanceof Response) {
+      if (x.status === 302) {
+        return new Response(null, {
+          status: instance ? 204 : 302,
+          headers: {
+            Location: x.headers.get("Location")
+          }
+        });
+      }
+      // forward headers
+      if (x.headers) {
+        for (const [key, value] of x.headers.entries()) {
+          setHeader(h3Event, key, value);
         }
-      });
+      }
+      if (x.customBody) {
+        x = await x.customBody();
+      } else if (x.body == undefined) x = undefined;
     }
     return x;
   }

@@ -120,9 +120,8 @@ function createRequest(base, id, instance, body, contentType) {
 async function fetchServerFunction(base, id, method, args) {
   const instance = `server-fn:${INSTANCE++}`;
   const response = await (method === "GET"
-    ? fetch(base + `/?args=${JSON.stringify(args)}`, {
+    ? fetch(base + (args.length ? `&args=${JSON.stringify(args)}` : ""), {
         headers: {
-          "x-server-id": id,
           "x-server-instance": instance
         }
       })
@@ -184,7 +183,7 @@ export function createServerReference(fn, id, name) {
         return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
       }
       if (prop === "GET") {
-        return (...args) => fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, "GET", args);
+        return (...args) => fetchServerFunction(`${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`, `${id}#${name}`, "GET", args);
       }
     },
     apply(target, thisArg, args) {

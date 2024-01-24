@@ -37,8 +37,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.3(solid-js@1.8.12)
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: workspace:*
         version: link:packages/start
@@ -104,7 +104,7 @@ importers:
         version: 0.24.1
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite:
         specifier: ^4.4.6
         version: 4.4.9
@@ -119,7 +119,7 @@ importers:
         version: 1.8.12
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/basic:
     dependencies:
@@ -127,8 +127,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.12)
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -137,7 +137,7 @@ importers:
         version: 1.8.12
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/experiments:
     dependencies:
@@ -145,8 +145,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.12)
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -155,13 +155,13 @@ importers:
         version: 1.8.12
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -170,13 +170,13 @@ importers:
         version: 1.8.12
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/todomvc:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -188,13 +188,13 @@ importers:
         version: 1.10.1
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-auth:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -206,7 +206,7 @@ importers:
         version: 1.10.1
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
     devDependencies:
       '@types/node':
         specifier: ^20.10.1
@@ -218,8 +218,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -234,7 +234,7 @@ importers:
         version: 0.0.7(solid-js@1.8.12)(vite@4.5.0)
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-prisma:
     dependencies:
@@ -242,8 +242,8 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0(prisma@5.7.0)
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -255,7 +255,7 @@ importers:
         version: 1.8.12
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
     devDependencies:
       '@types/node':
         specifier: ^20.10.1
@@ -267,8 +267,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.12)
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -280,7 +280,7 @@ importers:
         version: 0.8.2(@babel/core@7.22.9)(solid-js@1.8.12)
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.28.1)(solid-styled@0.8.2)(vite@4.5.0)
@@ -288,8 +288,8 @@ importers:
   examples/with-tailwindcss:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -307,7 +307,7 @@ importers:
         version: 3.3.3
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-trpc:
     dependencies:
@@ -318,8 +318,8 @@ importers:
         specifier: ^0.29.2
         version: 0.29.3(solid-js@1.8.12)
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
@@ -337,7 +337,7 @@ importers:
         version: 0.23.0
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-vitest:
     devDependencies:
@@ -345,14 +345,14 @@ importers:
         specifier: ^0.29.3
         version: 0.29.3(solid-js@1.8.12)
       '@solidjs/router':
-        specifier: ^0.10.9
-        version: 0.10.9(solid-js@1.8.12)
+        specifier: ^0.10.10
+        version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.5
-        version: 0.8.5(@solidjs/router@0.10.9)(solid-js@1.8.12)
+        version: 0.8.5(@solidjs/router@0.10.10)(solid-js@1.8.12)
       '@testing-library/jest-dom':
         specifier: ^6.1.5
         version: 6.1.5(vitest@1.2.1)
@@ -373,13 +373,13 @@ importers:
         version: 5.3.3
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite:
         specifier: ^4.4.9
         version: 4.4.9
       vite-plugin-solid:
-        specifier: ^2.9.0
-        version: 2.9.0(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.4.9)
+        specifier: ^2.9.1
+        version: 2.9.1(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.4.9)
       vitest:
         specifier: ^1.2.1
         version: 1.2.1(@vitest/ui@1.1.0)(jsdom@24.0.0)
@@ -522,15 +522,15 @@ importers:
         specifier: ^0.7.33
         version: 0.7.33(rollup@3.28.1)(vite@4.5.0)
       vite-plugin-solid:
-        specifier: ^2.9.0
-        version: 2.9.0(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.5.0)
+        specifier: ^2.9.1
+        version: 2.9.1(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.5.0)
     devDependencies:
       solid-js:
         specifier: ^1.8.11
         version: 1.8.12
       vinxi:
         specifier: ^0.1.4
-        version: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        version: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
 packages:
 
@@ -2798,8 +2798,8 @@ packages:
     dependencies:
       solid-js: 1.8.12
 
-  /@solidjs/router@0.10.9(solid-js@1.8.12):
-    resolution: {integrity: sha512-TmipgAI2cU7A94fBO1MOEx7j9OYoKtddoOonSFb2221w5I1xxdjLk9W4CZDdyOVdO5z80f70KGJvNq83WFX/Qg==}
+  /@solidjs/router@0.10.10(solid-js@1.8.12):
+    resolution: {integrity: sha512-nGl7gMgsojuaupI5MAK2cFtkndmWWSAPhill/8La3IjujY3vMBamcQFymBsA2ejzxEYJjkOlEQHYgp2jNFkwuQ==}
     peerDependencies:
       solid-js: ^1.8.6
     dependencies:
@@ -2812,14 +2812,14 @@ packages:
     dependencies:
       solid-js: 1.8.12
 
-  /@solidjs/testing-library@0.8.5(@solidjs/router@0.10.9)(solid-js@1.8.12):
+  /@solidjs/testing-library@0.8.5(@solidjs/router@0.10.10)(solid-js@1.8.12):
     resolution: {integrity: sha512-L9TowCoqdRQGB8ikODh9uHXrYTjCUZseVUG0tIVa836//qeSqXP4m0BKG66v9Zp1y1wRxok5qUW97GwrtEBMcw==}
     engines: {node: '>= 14'}
     peerDependencies:
       '@solidjs/router': '>=0.6.0'
       solid-js: '>=1.0.0'
     dependencies:
-      '@solidjs/router': 0.10.9(solid-js@1.8.12)
+      '@solidjs/router': 0.10.10(solid-js@1.8.12)
       '@testing-library/dom': 9.3.4
       solid-js: 1.8.12
     dev: true
@@ -3125,7 +3125,7 @@ packages:
       birpc: 0.2.14
       solid-js: 1.8.12
       vite-plugin-inspect: 0.7.42(rollup@3.28.1)(vite@4.5.0)
-      vite-plugin-solid: 2.9.0(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.5.0)
+      vite-plugin-solid: 2.9.1(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.5.0)
       ws: 8.16.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -3174,7 +3174,7 @@ packages:
       magicast: 0.2.11
       recast: 0.23.4
       tslib: 2.6.2
-      vinxi: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+      vinxi: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
     dev: false
 
   /@vinxi/plugin-mdx@3.6.7(@mdx-js/mdx@2.3.0):
@@ -3200,7 +3200,7 @@ packages:
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+      vinxi: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
     dev: false
 
   /@vinxi/server-functions@0.1.2(vinxi@0.1.4):
@@ -3215,7 +3215,7 @@ packages:
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+      vinxi: 0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
     dev: false
 
   /@vitest/expect@1.2.1:
@@ -9633,7 +9633,87 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.1.4(@testing-library/jest-dom@6.1.5)(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
+  /vinxi@0.1.4(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
+    resolution: {integrity: sha512-zzruTAdUijdOH60+oU/DwZV+4QALAMErPLtqKZfsz3XKTw5xjOyKnFlwJuppniR71+UQzR+qJHI5/M38V8XYbg==}
+    hasBin: true
+    dependencies:
+      '@babel/core': 7.23.7
+      '@babel/plugin-syntax-jsx': 7.23.3(@babel/core@7.23.7)
+      '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.23.7)
+      '@types/micromatch': 4.0.6
+      '@types/serve-static': 1.15.5
+      '@types/ws': 8.5.10
+      '@vinxi/devtools': 0.1.1(@babel/core@7.23.7)(@testing-library/jest-dom@6.1.5)(preact@10.19.3)(rollup@3.28.1)(vite@4.5.0)
+      '@vinxi/listhen': 1.5.5
+      boxen: 7.1.1
+      c12: 1.6.1
+      chokidar: 3.5.3
+      citty: 0.1.5
+      consola: 3.2.3
+      defu: 6.1.4
+      dts-buddy: 0.2.5
+      es-module-lexer: 1.4.1
+      esbuild: 0.18.20
+      fast-glob: 3.3.2
+      get-port: 6.1.2
+      get-port-please: 3.1.1
+      h3: 1.9.0
+      hookable: 5.5.3
+      http-proxy: 1.18.1(debug@4.3.4)
+      iron-webcrypto: 1.0.0
+      micromatch: 4.0.5
+      mri: 1.2.0
+      nitropack: 2.8.1
+      node-fetch-native: 1.6.1
+      path-to-regexp: 6.2.1
+      pathe: 1.1.1
+      perfect-debounce: 1.0.0
+      radix3: 1.1.0
+      resolve: 1.22.8
+      rollup-plugin-visualizer: 5.12.0(rollup@3.28.1)
+      serve-placeholder: 2.0.1
+      serve-static: 1.15.0
+      ufo: 1.3.2
+      uncrypto: 0.1.3
+      unenv: 1.9.0
+      unimport: 3.7.1(rollup@3.28.1)
+      unstorage: 1.10.1
+      vite: 4.5.0(@types/node@20.10.1)
+      ws: 8.16.0
+      zod: 3.22.4
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@netlify/blobs'
+      - '@nuxt/kit'
+      - '@planetscale/database'
+      - '@testing-library/jest-dom'
+      - '@types/node'
+      - '@upstash/redis'
+      - '@vercel/kv'
+      - bufferutil
+      - debug
+      - encoding
+      - idb-keyval
+      - less
+      - lightningcss
+      - preact
+      - rollup
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - utf-8-validate
+      - xml2js
+    dev: true
+
+  /vinxi@0.1.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
     resolution: {integrity: sha512-zzruTAdUijdOH60+oU/DwZV+4QALAMErPLtqKZfsz3XKTw5xjOyKnFlwJuppniR71+UQzR+qJHI5/M38V8XYbg==}
     hasBin: true
     dependencies:
@@ -9790,12 +9870,15 @@ packages:
       - supports-color
     dev: false
 
-  /vite-plugin-solid@2.9.0(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.4.9):
-    resolution: {integrity: sha512-WinqEFB80AwsN7AZdpOxBryyUcXuEkUHerfz/jLS0Iv58BebmK83KYHVnImt+cLkgbt9YWSEZPps8IDeW9Issg==}
+  /vite-plugin-solid@2.9.1(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.4.9):
+    resolution: {integrity: sha512-RC4hj+lbvljw57BbMGDApvEOPEh14lwrr/GeXRLNQLcR1qnOdzOwwTSFy13Gj/6FNIZpBEl0bWPU+VYFawrqUw==}
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
       solid-js: ^1.7.2
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
+    peerDependenciesMeta:
+      '@testing-library/jest-dom':
+        optional: true
     dependencies:
       '@babel/core': 7.23.7
       '@testing-library/jest-dom': 6.1.5(vitest@1.2.1)
@@ -9810,12 +9893,15 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-solid@2.9.0(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.5.0):
-    resolution: {integrity: sha512-WinqEFB80AwsN7AZdpOxBryyUcXuEkUHerfz/jLS0Iv58BebmK83KYHVnImt+cLkgbt9YWSEZPps8IDeW9Issg==}
+  /vite-plugin-solid@2.9.1(@testing-library/jest-dom@6.1.5)(solid-js@1.8.12)(vite@4.5.0):
+    resolution: {integrity: sha512-RC4hj+lbvljw57BbMGDApvEOPEh14lwrr/GeXRLNQLcR1qnOdzOwwTSFy13Gj/6FNIZpBEl0bWPU+VYFawrqUw==}
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
       solid-js: ^1.7.2
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
+    peerDependenciesMeta:
+      '@testing-library/jest-dom':
+        optional: true
     dependencies:
       '@babel/core': 7.23.7
       '@testing-library/jest-dom': 6.1.5(vitest@1.2.1)

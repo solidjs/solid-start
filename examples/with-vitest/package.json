@@ -12,7 +12,7 @@
   "type": "module",
   "devDependencies": {
     "@solidjs/meta": "^0.29.3",
-    "@solidjs/router": "^0.10.9",
+    "@solidjs/router": "^0.10.10",
     "@solidjs/start": "^0.4.10",
     "@solidjs/testing-library": "^0.8.5",
     "@testing-library/jest-dom": "^6.1.5",
