@@ -9,14 +9,14 @@ import {
   RequestPlugin,
   ResponsePlugin,
   URLPlugin,
-  URLSearchParamsPlugin,
-} from 'seroval-plugins/web';
+  URLSearchParamsPlugin
+} from "seroval-plugins/web";
 import { createIslandReference } from "../server/islands";
 
 class SerovalChunkReader {
   constructor(stream) {
     this.reader = stream.getReader();
-    this.buffer = '';
+    this.buffer = "";
     this.done = false;
   }
 
@@ -33,12 +33,12 @@ class SerovalChunkReader {
 
   async next() {
     // Check if the buffer is empty
-    if (this.buffer === '') {
+    if (this.buffer === "") {
       // if we are already done...
       if (this.done) {
         return {
           done: true,
-          value: undefined,
+          value: undefined
         };
       }
       // Otherwise, read a new chunk
@@ -55,7 +55,7 @@ class SerovalChunkReader {
       // If it's not enough, and the reader is done
       // then the chunk is invalid.
       if (this.done) {
-        throw new Error('Malformed server function stream.')
+        throw new Error("Malformed server function stream.");
       }
       // Otherwise, we read more chunks
       await this.readChunk();
@@ -67,7 +67,7 @@ class SerovalChunkReader {
     // Deserialize the chunk
     return {
       done: false,
-      value: deserialize(partial),
+      value: deserialize(partial)
     };
   }
 
@@ -117,31 +117,48 @@ function createRequest(base, id, instance, body, contentType) {
   });
 }
 
-async function fetchServerFunction(base, id, args) {
+async function fetchServerFunction(base, id, method, args) {
   const instance = `server-fn:${INSTANCE++}`;
-  const response = await (args.length === 1 && args[0] instanceof FormData
+  const response = await (method === "GET"
+    ? fetch(base + `/?args=${JSON.stringify(args)}`, {
+        headers: {
+          "x-server-id": id,
+          "x-server-instance": instance
+        }
+      })
+    : args.length === 1 && args[0] instanceof FormData
     ? createRequest(base, id, instance, args[0])
-    : createRequest(base, id, instance, JSON.stringify(await Promise.resolve(toJSONAsync(args, {
-      plugins: [
-        CustomEventPlugin,
-        DOMExceptionPlugin,
-        EventPlugin,
-        FormDataPlugin,
-        HeadersPlugin,
-        ReadableStreamPlugin,
-        RequestPlugin,
-        ResponsePlugin,
-        URLSearchParamsPlugin,
-        URLPlugin,
-      ],
-    }))), "application/json"));
+    : createRequest(
+        base,
+        id,
+        instance,
+        JSON.stringify(
+          await Promise.resolve(
+            toJSONAsync(args, {
+              plugins: [
+                CustomEventPlugin,
+                DOMExceptionPlugin,
+                EventPlugin,
+                FormDataPlugin,
+                HeadersPlugin,
+                ReadableStreamPlugin,
+                RequestPlugin,
+                ResponsePlugin,
+                URLSearchParamsPlugin,
+                URLPlugin
+              ]
+            })
+          )
+        ),
+        "application/json"
+      ));
 
   if (response.headers.get("Location")) throw response;
   if (response.headers.get("X-Revalidate")) {
     /* ts-ignore-next-line */
     response.customBody = () => {
       return deserializeStream(instance, response);
-    }
+    };
     throw response;
   }
   const contentType = response.headers.get("Content-Type");
@@ -166,9 +183,12 @@ export function createServerReference(fn, id, name) {
       if (prop === "url") {
         return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
       }
+      if (prop === "GET") {
+        return (...args) => fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, "GET", args);
+      }
     },
     apply(target, thisArg, args) {
-      return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, args);
+      return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, "POST", args);
     }
   });
 }
