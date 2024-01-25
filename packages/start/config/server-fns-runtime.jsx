@@ -3,6 +3,7 @@ import { provideRequestEvent } from "solid-js/web/storage";
 import { cloneEvent } from "../server/middleware";
 
 export function createServerReference(fn, id, name) {
+  if (typeof fn !== "function") throw new Error("Export from a 'use server' module must be a function");
   const baseURL = import.meta.env.SERVER_BASE_URL;
   return new Proxy(fn, {
     get(target, prop, receiver) {
