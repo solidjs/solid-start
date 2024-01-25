@@ -4,16 +4,16 @@ import { clientOnly, GET } from "@solidjs/start";
 import Counter from "~/components/Counter";
 const BreaksOnServer = clientOnly(() => import("~/components/BreaksOnServer"));
 
-async function hello(name: string) {
+const hello = GET(async (name: string) => {
   "use server";
   return json(
     { hello: new Promise<string>(r => setTimeout(() => r(name), 1000)) },
     { headers: { "cache-control": "max-age=60" } }
   );
-}
+});
 
 export default function Home() {
-  GET(hello, "John").then(async v => {
+  hello("John").then(async v => {
     console.log(v);
     console.log(await v.hello);
   });

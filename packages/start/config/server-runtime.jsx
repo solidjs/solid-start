@@ -177,6 +177,7 @@ async function fetchServerFunction(base, id, method, args) {
 
 export function createServerReference(fn, id, name) {
   const baseURL = import.meta.env.SERVER_BASE_URL;
+  if (typeof fn !== "function") throw new Error("Export from a 'use server' module must be a function");
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
