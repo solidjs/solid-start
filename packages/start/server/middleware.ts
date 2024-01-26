@@ -53,7 +53,7 @@ type RequestMiddleware = (event: FetchEvent) => Response | Promise<Response> | v
 
 type ResponseMiddleware = (
   event: FetchEvent,
-  response: Response
+  response: { body: any }
 ) => Response | Promise<Response> | void | Promise<void>;
 
 function wrapRequestMiddleware(onRequest: RequestMiddleware) {
