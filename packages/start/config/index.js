@@ -73,6 +73,9 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "ssr",
         mode: "handler",
+        link: {
+          client: "client"
+        },
         handler: `${start.appRoot}/entry-server${entryExtension}`,
         middleware: start.middleware,
         routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
@@ -85,10 +88,10 @@ export function defineConfig(baseConfig = {}) {
               ...(userConfig.optimizeDeps || {}),
               include: [
                 ...(userConfig.optimizeDeps?.include || []),
-                '@solidjs/start > source-map-js',
-                '@solidjs/start > error-stack-parser',
-              ],
-            },
+                "@solidjs/start > source-map-js",
+                "@solidjs/start > error-stack-parser"
+              ]
+            }
           }),
           ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
 
@@ -138,10 +141,10 @@ export function defineConfig(baseConfig = {}) {
               ...(userConfig.optimizeDeps || {}),
               include: [
                 ...(userConfig.optimizeDeps?.include || []),
-                '@solidjs/start > source-map-js',
-                '@solidjs/start > error-stack-parser',
-              ],
-            },
+                "@solidjs/start > source-map-js",
+                "@solidjs/start > error-stack-parser"
+              ]
+            }
           }),
           ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
           serverFunctions.client({
@@ -189,10 +192,10 @@ export function defineConfig(baseConfig = {}) {
               ...(userConfig.optimizeDeps || {}),
               include: [
                 ...(userConfig.optimizeDeps?.include || []),
-                '@solidjs/start > source-map-js',
-                '@solidjs/start > error-stack-parser',
-              ],
-            },
+                "@solidjs/start > source-map-js",
+                "@solidjs/start > error-stack-parser"
+              ]
+            }
           }),
           ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
 
