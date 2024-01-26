@@ -12,7 +12,7 @@
   "dependencies": {
     "@solidjs/router": "^0.10.10",
     "@solidjs/start": "^0.4.10",
-    "solid-js": "^1.8.11",
+    "solid-js": "^1.8.12",
     "unstorage": "1.10.1",
     "vinxi": "^0.1.6"
   },
