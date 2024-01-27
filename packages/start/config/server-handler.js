@@ -16,16 +16,13 @@ import { sharedConfig } from "solid-js";
 /* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
-import {
-  eventHandler,
-  setHeader
-} from "vinxi/server";
+import { eventHandler, setHeader } from "vinxi/server";
 import { getFetchEvent } from "../server/middleware";
 
 function createChunk(data) {
   const bytes = data.length;
   const baseHex = bytes.toString(16);
-  const totalHex = '00000000'.substring(0, 8 - baseHex.length) + baseHex; // 32-bit
+  const totalHex = "00000000".substring(0, 8 - baseHex.length) + baseHex; // 32-bit
   return new TextEncoder().encode(`;0x${totalHex};${data}`);
 }
 
@@ -47,7 +44,9 @@ function serializeToStream(id, value) {
           URLPlugin
         ],
         onSerialize(data, initial) {
-          controller.enqueue(createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data));
+          controller.enqueue(
+            createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data)
+          );
         },
         onDone() {
           controller.close();
@@ -61,7 +60,6 @@ function serializeToStream(id, value) {
 }
 
 async function handleServerFunction(h3Event) {
-  invariant(h3Event.method === "POST", `Invalid method ${h3Event.method}. Expected POST.`);
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
@@ -84,38 +82,70 @@ async function handleServerFunction(h3Event) {
   let parsed = [];
 
   // grab bound arguments from url when no JS
-  if (!instance) {
+  if (!instance || h3Event.method === "GET") {
     const args = url.searchParams.get("args");
     if (args) JSON.parse(args).forEach(arg => parsed.push(arg));
   }
-  const contentType = request.headers.get("content-type");
-  if (
-    contentType.startsWith("multipart/form-data") ||
-    contentType.startsWith("application/x-www-form-urlencoded")
-  ) {
-    parsed.push(await request.formData());
-  } else {
-    parsed = fromJSON(await request.json(), {
-      plugins: [
-        CustomEventPlugin,
-        DOMExceptionPlugin,
-        EventPlugin,
-        FormDataPlugin,
-        HeadersPlugin,
-        ReadableStreamPlugin,
-        RequestPlugin,
-        ResponsePlugin,
-        URLSearchParamsPlugin,
-        URLPlugin
-      ]
-    });
+  if (h3Event.method === "POST") {
+    const contentType = request.headers.get("content-type");
+    if (
+      contentType.startsWith("multipart/form-data") ||
+      contentType.startsWith("application/x-www-form-urlencoded")
+    ) {
+      // workaround for https://github.com/unjs/nitro/issues/1721
+      // (issue only in edge runtimes)
+      parsed.push(await new Request(request, { ...request, body: event.node.req.body }).formData());
+      // what should work when #1721 is fixed 
+      // parsed.push(await request.formData);
+    } else {
+      // workaround for https://github.com/unjs/nitro/issues/1721
+      // (issue only in edge runtimes)
+      const tmpReq = new Request(request, { ...request, body: event.node.req.body })
+      // what should work when #1721 is fixed
+      // just use request.json() here
+      parsed = fromJSON(await tmpReq.json(), {
+        plugins: [
+          CustomEventPlugin,
+          DOMExceptionPlugin,
+          EventPlugin,
+          FormDataPlugin,
+          HeadersPlugin,
+          ReadableStreamPlugin,
+          RequestPlugin,
+          ResponsePlugin,
+          URLSearchParamsPlugin,
+          URLPlugin
+        ]
+      });
+    }
   }
   try {
-    const result = await provideRequestEvent(event, () => {
+    let result = await provideRequestEvent(event, () => {
       /* @ts-ignore */
       sharedConfig.context = { event };
       return action(...parsed);
     });
+
+    // handle responses
+    if (result instanceof Response) {
+      if (result.status === 302) {
+        return new Response(null, {
+          status: instance ? 204 : 302,
+          headers: {
+            Location: result.headers.get("Location")
+          }
+        });
+      }
+      // forward headers
+      if (result.headers) {
+        for (const [key, value] of result.headers.entries()) {
+          setHeader(h3Event, key, value);
+        }
+      }
+      if (result.customBody) {
+        result = await result.customBody();
+      } else if (result.body == undefined) result = undefined;
+    }
 
     // handle no JS success case
     if (!instance) {
@@ -142,13 +172,24 @@ async function handleServerFunction(h3Event) {
     setHeader(h3Event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
-    if (x instanceof Response && x.status === 302) {
-      return new Response(null, {
-        status: instance ? 204 : 302,
-        headers: {
-          Location: x.headers.get("Location")
+    if (x instanceof Response) {
+      if (x.status === 302) {
+        return new Response(null, {
+          status: instance ? 204 : 302,
+          headers: {
+            Location: x.headers.get("Location")
+          }
+        });
+      }
+      // forward headers
+      if (x.headers) {
+        for (const [key, value] of x.headers.entries()) {
+          setHeader(h3Event, key, value);
         }
-      });
+      }
+      if (x.customBody) {
+        x = await x.customBody();
+      } else if (x.body == undefined) x = undefined;
     }
     return x;
   }

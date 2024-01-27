@@ -11,11 +11,11 @@
     "@trpc/client": "^10.44.1",
     "@trpc/server": "^10.44.1",
     "@solidjs/meta": "^0.29.2",
-    "@solidjs/router": "^0.10.9",
+    "@solidjs/router": "^0.10.10",
     "@solidjs/start": "^0.4.10",
-    "solid-js": "^1.8.11",
+    "solid-js": "^1.8.12",
     "valibot": "^0.23.0",
-    "vinxi": "^0.1.4"
+    "vinxi": "^0.1.6"
   },
   "engines": {
     "node": ">=18"

@@ -1,15 +1,22 @@
 import { Title } from "@solidjs/meta";
-import { clientOnly } from "@solidjs/start";
+import { json } from "@solidjs/router";
+import { clientOnly, GET } from "@solidjs/start";
 import Counter from "~/components/Counter";
 const BreaksOnServer = clientOnly(() => import("~/components/BreaksOnServer"));
 
-async function hello(name: string) {
+const hello = GET(async (name: string) => {
   "use server";
-  return "hello " + name;
-}
+  return json(
+    { hello: new Promise<string>(r => setTimeout(() => r(name), 1000)) },
+    { headers: { "cache-control": "max-age=60" } }
+  );
+});
 
 export default function Home() {
-  hello("John").then(console.log);
+  hello("John").then(async v => {
+    console.log(v);
+    console.log(await v.hello);
+  });
   return (
     <main>
       <Title>Hello World</Title>
