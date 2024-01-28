@@ -19,7 +19,7 @@
     "@testing-library/user-event": "^14.5.1",
     "@vitest/ui": "^1.1.0",
     "jsdom": "^24.0.0",
-    "solid-js": "^1.8.11",
+    "solid-js": "^1.8.12",
     "typescript": "^5.3.3",
     "vinxi": "^0.1.9",
     "vite": "^4.4.9",
