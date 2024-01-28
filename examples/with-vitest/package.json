@@ -21,7 +21,7 @@
     "jsdom": "^24.0.0",
     "solid-js": "^1.8.12",
     "typescript": "^5.3.3",
-    "vinxi": "^0.1.9",
+    "vinxi": "^0.1.10",
     "vite": "^4.4.9",
     "vite-plugin-solid": "^2.9.1",
     "vitest": "^1.2.1"

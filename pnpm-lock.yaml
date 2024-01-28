@@ -52,8 +52,8 @@ importers:
         specifier: ^9.27.4
         version: 9.27.4
       '@vinxi/plugin-mdx':
-        specifier: ^3.6.7
-        version: 3.6.7(@mdx-js/mdx@2.3.0)
+        specifier: ^3.7.1
+        version: 3.7.1(@mdx-js/mdx@2.3.0)
       citty:
         specifier: ^0.1.5
         version: 0.1.5
@@ -103,8 +103,8 @@ importers:
         specifier: 0.24.1
         version: 0.24.1
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite:
         specifier: ^4.4.6
         version: 4.4.9
@@ -113,13 +113,13 @@ importers:
     dependencies:
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       solid-js:
         specifier: ^1.8.12
         version: 1.8.12
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/basic:
     dependencies:
@@ -131,13 +131,13 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       solid-js:
         specifier: ^1.8.12
         version: 1.8.12
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/experiments:
     dependencies:
@@ -149,13 +149,13 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       solid-js:
         specifier: ^1.8.12
         version: 1.8.12
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/hackernews:
     dependencies:
@@ -164,13 +164,13 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       solid-js:
         specifier: ^1.8.12
         version: 1.8.12
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/todomvc:
     dependencies:
@@ -179,7 +179,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       solid-js:
         specifier: ^1.8.12
         version: 1.8.12
@@ -187,8 +187,8 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-auth:
     dependencies:
@@ -197,7 +197,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       solid-js:
         specifier: ^1.8.12
         version: 1.8.12
@@ -205,8 +205,8 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
     devDependencies:
       '@types/node':
         specifier: ^20.10.1
@@ -222,7 +222,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       '@vinxi/plugin-mdx':
         specifier: ^3.6.7
         version: 3.6.7(@mdx-js/mdx@2.3.0)
@@ -233,8 +233,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.8.12)(vite@4.5.0)
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-prisma:
     dependencies:
@@ -246,7 +246,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       prisma:
         specifier: ^5.7.0
         version: 5.7.0
@@ -254,8 +254,8 @@ importers:
         specifier: ^1.8.12
         version: 1.8.12
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
     devDependencies:
       '@types/node':
         specifier: ^20.10.1
@@ -271,7 +271,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       solid-js:
         specifier: ^1.8.12
         version: 1.8.12
@@ -279,8 +279,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(@babel/core@7.22.9)(solid-js@1.8.12)
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(rollup@3.28.1)(solid-styled@0.8.2)(vite@4.5.0)
@@ -292,7 +292,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.26)
@@ -306,8 +306,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-trpc:
     dependencies:
@@ -322,7 +322,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0)
+        version: 0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0)
       '@trpc/client':
         specifier: ^10.44.1
         version: 10.44.1(@trpc/server@10.44.1)
@@ -336,8 +336,8 @@ importers:
         specifier: ^0.23.0
         version: 0.23.0
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   examples/with-vitest:
     devDependencies:
@@ -349,7 +349,7 @@ importers:
         version: 0.10.10(solid-js@1.8.12)
       '@solidjs/start':
         specifier: ^0.4.10
-        version: 0.4.11(@testing-library/jest-dom@6.1.5)(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.4.9)
+        version: 0.4.11(@testing-library/jest-dom@6.1.5)(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.4.9)
       '@solidjs/testing-library':
         specifier: ^0.8.5
         version: 0.8.5(@solidjs/router@0.10.10)(solid-js@1.8.12)
@@ -372,8 +372,8 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
       vite:
         specifier: ^4.4.9
         version: 4.4.9
@@ -487,13 +487,13 @@ importers:
     dependencies:
       '@vinxi/plugin-directives':
         specifier: ^0.1.3
-        version: 0.1.3(vinxi@0.1.9)
+        version: 0.1.3(vinxi@0.1.10)
       '@vinxi/server-components':
         specifier: ^0.1.3
-        version: 0.1.3(vinxi@0.1.9)
+        version: 0.1.3(vinxi@0.1.10)
       '@vinxi/server-functions':
         specifier: ^0.1.4
-        version: 0.1.4(vinxi@0.1.9)
+        version: 0.1.4(vinxi@0.1.10)
       defu:
         specifier: ^6.1.2
         version: 6.1.2
@@ -529,8 +529,8 @@ importers:
         specifier: ^1.8.12
         version: 1.8.12
       vinxi:
-        specifier: ^0.1.9
-        version: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+        specifier: ^0.1.10
+        version: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
 packages:
 
@@ -2812,12 +2812,12 @@ packages:
     dependencies:
       solid-js: 1.8.12
 
-  /@solidjs/start@0.4.11(@testing-library/jest-dom@6.1.5)(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.4.9):
+  /@solidjs/start@0.4.11(@testing-library/jest-dom@6.1.5)(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.4.9):
     resolution: {integrity: sha512-UdOiUwwM2C0nf7EzCyWT+Jx2UZWSzwir0+JMtazGWSgft1k1qF81UroAR6PzcrC/TyhvW+XVz73dMAP310oSVA==}
     dependencies:
-      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.9)
-      '@vinxi/server-components': 0.1.3(vinxi@0.1.9)
-      '@vinxi/server-functions': 0.1.4(vinxi@0.1.9)
+      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.10)
+      '@vinxi/server-components': 0.1.3(vinxi@0.1.10)
+      '@vinxi/server-functions': 0.1.4(vinxi@0.1.10)
       defu: 6.1.4
       error-stack-parser: 2.1.4
       html-to-image: 1.11.11
@@ -2838,12 +2838,12 @@ packages:
       - vite
     dev: true
 
-  /@solidjs/start@0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.9)(vite@4.5.0):
+  /@solidjs/start@0.4.11(rollup@3.28.1)(solid-js@1.8.12)(vinxi@0.1.10)(vite@4.5.0):
     resolution: {integrity: sha512-UdOiUwwM2C0nf7EzCyWT+Jx2UZWSzwir0+JMtazGWSgft1k1qF81UroAR6PzcrC/TyhvW+XVz73dMAP310oSVA==}
     dependencies:
-      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.9)
-      '@vinxi/server-components': 0.1.3(vinxi@0.1.9)
-      '@vinxi/server-functions': 0.1.4(vinxi@0.1.9)
+      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.10)
+      '@vinxi/server-components': 0.1.3(vinxi@0.1.10)
+      '@vinxi/server-functions': 0.1.4(vinxi@0.1.10)
       defu: 6.1.4
       error-stack-parser: 2.1.4
       html-to-image: 1.11.11
@@ -3212,7 +3212,7 @@ packages:
       untun: 0.1.3
       uqr: 0.1.2
 
-  /@vinxi/plugin-directives@0.1.3(vinxi@0.1.9):
+  /@vinxi/plugin-directives@0.1.3(vinxi@0.1.10):
     resolution: {integrity: sha512-gXCvemIQIxEjUlJRUyQUAoL9lT6iY39uEZXCFzONYRIelnI2PJ1DyAz44ieCdOdAVCWBYKwyYVG5jZRYaV26pQ==}
     peerDependencies:
       vinxi: ^0.1.5
@@ -3226,7 +3226,7 @@ packages:
       magicast: 0.2.11
       recast: 0.23.4
       tslib: 2.6.2
-      vinxi: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+      vinxi: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   /@vinxi/plugin-mdx@3.6.7(@mdx-js/mdx@2.3.0):
     resolution: {integrity: sha512-zm1nEtyFlJvVYicZw9mHtQdsJJFdbcd2/4svFXBz56C9KiLae0ZwVQkeyy49UCghByy6Hc54wEA5uOSo+fCroQ==}
@@ -3238,34 +3238,48 @@ packages:
       esbuild: 0.18.7
       resolve: 1.22.8
       unified: 9.2.2
+    dev: false
 
-  /@vinxi/server-components@0.1.3(vinxi@0.1.9):
+  /@vinxi/plugin-mdx@3.7.1(@mdx-js/mdx@2.3.0):
+    resolution: {integrity: sha512-kbMD64f1pTdk5ix6kU6VkSGVc5rrtePYHXsS/yWZymjst2hDDOypCF7B6J8WjqbpDToacz8u7rkFxV0YTuKatA==}
+    peerDependencies:
+      '@mdx-js/mdx': <3
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      '@mdx-js/mdx': 2.3.0
+      esbuild: 0.18.7
+      resolve: 1.22.8
+      unified: 9.2.2
+      vfile: 5.3.7
+    dev: true
+
+  /@vinxi/server-components@0.1.3(vinxi@0.1.10):
     resolution: {integrity: sha512-QcvNeu0y1SZewg5QzK/zRdho8gJz99MlMLfda1aWIfYFHWWaOr7zMFbXsZh0Qcs7PYx0gHvqUXNLUmUW3/2XWg==}
     peerDependencies:
       vinxi: ^0.1.5
     dependencies:
-      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.9)
+      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.10)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+      vinxi: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
-  /@vinxi/server-functions@0.1.4(vinxi@0.1.9):
+  /@vinxi/server-functions@0.1.4(vinxi@0.1.10):
     resolution: {integrity: sha512-ZysR6zlcZ4xYBKUm6Q/oNhjjwUZXaLFLbXwIy9Q2SgcXJ74cUWQ0/EDz/WePhHgQ32NMiv2fPURBvN+XDzBO8g==}
     peerDependencies:
       vinxi: ^0.1.9
     dependencies:
-      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.9)
+      '@vinxi/plugin-directives': 0.1.3(vinxi@0.1.10)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
+      vinxi: 0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1)
 
   /@vitest/expect@1.2.1:
     resolution: {integrity: sha512-/bqGXcHfyKgFWYwIgFr1QYDaR9e64pRKxgBNWNXPefPFRhgm+K3+a/dS0cUGEreWngets3dlr8w8SBRw2fCfFQ==}
@@ -9729,8 +9743,8 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.1.9(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
-    resolution: {integrity: sha512-Dlvq5UFC/6VlqVsgVmBKWPvIOLpUANMepCQiKx9+kqm9co7wQ3PLfflSTSi72yAX+wSHwjOCOnfD2+Cmav5DBw==}
+  /vinxi@0.1.10(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
+    resolution: {integrity: sha512-MndPaR3fUx6FERfB2adWVkTw7qTAhSStM+A2KaqU2qUGMEk51krkKB28ouf+iG6IJGoAtuE+fANUs0hqOLMk2A==}
     hasBin: true
     dependencies:
       '@babel/core': 7.23.7
@@ -9810,8 +9824,8 @@ packages:
       - xml2js
     dev: true
 
-  /vinxi@0.1.9(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
-    resolution: {integrity: sha512-Dlvq5UFC/6VlqVsgVmBKWPvIOLpUANMepCQiKx9+kqm9co7wQ3PLfflSTSi72yAX+wSHwjOCOnfD2+Cmav5DBw==}
+  /vinxi@0.1.10(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)(rollup@3.28.1):
+    resolution: {integrity: sha512-MndPaR3fUx6FERfB2adWVkTw7qTAhSStM+A2KaqU2qUGMEk51krkKB28ouf+iG6IJGoAtuE+fANUs0hqOLMk2A==}
     hasBin: true
     dependencies:
       '@babel/core': 7.23.7
