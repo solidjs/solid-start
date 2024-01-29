@@ -28,7 +28,7 @@ Let's use this `useSession` to get the session data for the request:
 
 ```tsx filename="/lib/session.ts"
 import { getRequestEvent } from "solid-js/web";
-import { useSession } from "@solidjs/start/server";
+import { useSession } from "vinxi/server";
 export async function getUser(request: Request) {
   const event = getRequestEvent();
   const session = await useSession(event, {
@@ -41,7 +41,7 @@ Typically, we will have saved the `userId` in the session. If we don't find it, 
 
 ```tsx filename="/lib/session.ts"
 import { getRequestEvent } from "solid-js/web";
-import { useSession } from "@solidjs/start/server";
+import { useSession } from "vinxi/server";
 
 export async function getUser(): Promise<User | null> {
   const event = getRequestEvent();
@@ -78,7 +78,7 @@ We can log in or logout in a similar manner.
 
 ```tsx filename="/routes/session.server.ts"
 import { redirect } from "@solidjs/router";
-import { useSession } from "@solidjs/start/server";
+import { useSession } from "vinxi/server";
 import { getRequestEvent } from "solid-js/web";
 
 type UserSession = {

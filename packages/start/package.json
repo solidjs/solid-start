@@ -12,7 +12,6 @@
   "files": [
     "client",
     "config",
-    "entry",
     "server",
     "shared",
     "*.d.ts"
@@ -21,8 +20,6 @@
   "exports": {
     ".": "./shared/index.tsx",
     "./config": "./config/index.js",
-    "./entry": "./entry/index.ts",
-    "./entry/spa": "./entry/spa/index.ts",
     "./server": "./server/index.tsx",
     "./server/spa": "./server/spa/index.tsx",
     "./client": "./client/index.tsx",

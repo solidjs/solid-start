@@ -1,5 +1,4 @@
-import { createHandler } from "@solidjs/start/entry";
-import { StartServer, type DocumentComponentProps } from "@solidjs/start/server";
+import { StartServer, createHandler, type DocumentComponentProps } from "@solidjs/start/server";
 
 function Document({ assets, children, scripts }: DocumentComponentProps) {
   return (

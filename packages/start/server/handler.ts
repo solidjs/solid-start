@@ -12,10 +12,10 @@ import {
   setHeader,
   setResponseStatus
 } from "vinxi/server";
-import { getFetchEvent } from "../server/middleware";
-import { createPageEvent } from "../server/page-event";
-import { APIEvent, FetchEvent, PageEvent } from "../server/types";
 import { matchAPIRoute } from "../shared/routes";
+import { getFetchEvent } from "./middleware";
+import { createPageEvent } from "./page-event";
+import { APIEvent, FetchEvent, PageEvent } from "./types";
 
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
