@@ -65,14 +65,14 @@ export function defineConfig(baseConfig = {}) {
     routers: [
       {
         name: "public",
-        mode: "static",
+        type: "static",
         dir: "./public",
         base: "/"
       },
 
       {
         name: "ssr",
-        mode: "handler",
+        type: "http",
         link: {
           client: start.islands ? undefined : "client"
         },
@@ -125,7 +125,7 @@ export function defineConfig(baseConfig = {}) {
       },
       {
         name: "client",
-        mode: "build",
+        type: "client",
         handler: `${start.appRoot}/entry-client${entryExtension}`,
         ...(start.islands
           ? {}
