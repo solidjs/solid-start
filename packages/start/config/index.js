@@ -44,7 +44,12 @@ export function defineConfig(baseConfig = {}) {
     appRoot: "./src",
     ssr: true,
     islands: false,
-    solid: {}
+    solid: {},
+    server: {
+      experimental: {
+        asyncContext: true
+      }
+    }
   });
   let server = start.server;
   if (!start.ssr) {

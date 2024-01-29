@@ -1,7 +1,6 @@
 "use server";
 import { redirect } from "@solidjs/router";
-import { useSession } from "@solidjs/start/server";
-import { getRequestEvent } from "solid-js/web";
+import { useSession } from "vinxi/server";
 import { db } from "./db";
 
 function validateUsername(username: unknown) {
@@ -31,7 +30,7 @@ async function register(username: string, password: string) {
 }
 
 function getSession() {
-  return useSession(getRequestEvent()!, {
+  return useSession({
     password: process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace"
   });
 }
