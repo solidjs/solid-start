@@ -74,7 +74,7 @@ export function defineConfig(baseConfig = {}) {
         name: "ssr",
         mode: "handler",
         link: {
-          client: "client"
+          client: start.islands ? undefined : "client"
         },
         handler: `${start.appRoot}/entry-server${entryExtension}`,
         middleware: start.middleware,
