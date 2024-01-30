@@ -43,11 +43,15 @@ export function getFetchEvent(h3Event: H3Event): FetchEvent {
 export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
 /** This composes an array of Exchanges into a single ExchangeIO function */
 
-type RequestMiddleware = (event: FetchEvent) => Response | Promise<Response> | void | Promise<void>;
+export type RequestMiddleware = (event: FetchEvent) => Response | Promise<Response> | void | Promise<void>;
 
-type ResponseMiddleware = (
+// copy-pasted from h3/dist/index.d.ts
+type EventHandlerResponse<T = any> = T | Promise<T>;
+type ResponseMiddlewareResponseParam = { body?: Awaited<EventHandlerResponse> };
+
+export type ResponseMiddleware = (
   event: FetchEvent,
-  response: { body: any }
+  response: ResponseMiddlewareResponseParam
 ) => Response | Promise<Response> | void | Promise<void>;
 
 function wrapRequestMiddleware(onRequest: RequestMiddleware) {
@@ -63,7 +67,7 @@ function wrapRequestMiddleware(onRequest: RequestMiddleware) {
 }
 
 function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware) {
-  return async (h3Event: H3Event, response: Response) => {
+  return async (h3Event: H3Event, response: ResponseMiddlewareResponseParam) => {
     const fetchEvent = getFetchEvent(h3Event);
     const mwResponse = await onBeforeResponse(fetchEvent, response);
     if (!mwResponse) {
