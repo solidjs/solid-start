@@ -57,19 +57,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     }
   }
 }
-const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
-function createHTTPHandlers(src, exports) {
-  const handlers = {};
-  for (const exp of exports) {
-    if (HTTP_METHODS.includes(exp.n)) {
-      handlers[`$${exp.n}`] = {
-        src: src,
-        pick: [exp.n]
-      };
-    }
-  }
-  return handlers;
-}
+
 export class SolidStartServerFileRouter extends BaseFileSystemRouter {
   toPath(src) {
     const routePath = cleanPath(src, this.config)
@@ -123,7 +111,47 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
         path,
         filePath: src
       };
-    } else if (exports.find(exp => HTTP_METHODS.includes(exp.n))) {
+    }
+  }
+}
+
+const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
+function createHTTPHandlers(src, exports) {
+  const handlers = {};
+  for (const exp of exports) {
+    if (HTTP_METHODS.includes(exp.n)) {
+      handlers[`$${exp.n}`] = {
+        src: src,
+        pick: [exp.n]
+      };
+    }
+  }
+  return handlers;
+}
+
+export class SolidStartAPIFileRouter extends BaseFileSystemRouter {
+  toPath(src) {
+    const routePath = cleanPath(src, this.config)
+      // remove the initial slash
+      .slice(1)
+      .replace(/index$/, "")
+      .replace(/\[([^\/]+)\]/g, (_, m) => {
+        if (m.length > 3 && m.startsWith("...")) {
+          return `*${m.slice(3)}`;
+        }
+        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
+          return `:${m.slice(1, -1)}?`;
+        }
+        return `:${m}`;
+      });
+
+    return routePath?.length > 0 ? `/${routePath}` : "/";
+  }
+
+  toRoute(src) {
+    let path = this.toPath(src);
+    const [_, exports] = analyzeModule(src);
+    if (exports.find(exp => HTTP_METHODS.includes(exp.n))) {
       return {
         type: "api",
         ...createHTTPHandlers(src, exports),
