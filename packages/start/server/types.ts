@@ -16,8 +16,14 @@ export type ContextMatches = {
   params: unknown;
 };
 
+export interface ResponseInit {
+  status?: number;
+  statusText?: string;
+  headers: Headers;
+}
 export interface FetchEvent {
   request: Request;
+  response: ResponseInit;
   clientAddress: string;
   locals: Record<string, unknown>;
   nativeEvent: H3Event<EventHandlerRequest>;
@@ -31,7 +37,6 @@ export interface PageEvent extends FetchEvent {
   // $type: typeof FETCH_EVENT;
   $islands: Set<string>;
   // mutation: boolean;
-  response?: Response;
 }
 
 export interface APIEvent extends FetchEvent {

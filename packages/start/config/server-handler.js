@@ -17,7 +17,7 @@ import { sharedConfig } from "solid-js";
 import { provideRequestEvent } from "solid-js/web/storage";
 import invariant from "vinxi/lib/invariant";
 import { eventHandler, setHeader } from "vinxi/server";
-import { getFetchEvent } from "../server/middleware";
+import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
 
 function createChunk(data) {
   const bytes = data.length;
@@ -137,11 +137,7 @@ async function handleServerFunction(h3Event) {
         });
       }
       // forward headers
-      if (result.headers) {
-        for (const [key, value] of result.headers.entries()) {
-          setHeader(h3Event, key, value);
-        }
-      }
+      if (result.headers) mergeResponseHeaders(h3Event, result.headers);
       if (result.customBody) {
         result = await result.customBody();
       } else if (result.body == undefined) result = undefined;
@@ -182,11 +178,7 @@ async function handleServerFunction(h3Event) {
         });
       }
       // forward headers
-      if (x.headers) {
-        for (const [key, value] of x.headers.entries()) {
-          setHeader(h3Event, key, value);
-        }
-      }
+      if (x.headers) mergeResponseHeaders(h3Event, x.headers);
       if (x.customBody) {
         x = await x.customBody();
       } else if (x.body == undefined) x = undefined;
