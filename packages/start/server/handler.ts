@@ -13,8 +13,8 @@ import {
   setResponseStatus
 } from "vinxi/server";
 import { matchAPIRoute } from "../shared/routes";
-import { getFetchEvent } from "./middleware";
-import { createPageEvent } from "./page-event";
+import { getFetchEvent } from "./fetchEvent";
+import { createPageEvent } from "./pageEvent";
 import { APIEvent, FetchEvent, PageEvent } from "./types";
 
 export function createBaseHandler(

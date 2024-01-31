@@ -45,7 +45,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     components: {
       status: props => {
         setResponseStatus(ctx, props.code, props.text);
-        return () => !ctx.handled && setResponseStatus(ctx, 200);
+        return () => !ctx.nativeEvent.handled && setResponseStatus(ctx, 200);
       },
       header: props => {
         if (props.append) {
@@ -55,7 +55,7 @@ export async function createPageEvent(ctx: FetchEvent) {
         }
 
         return () => {
-          if (ctx.handled) return;
+          if (ctx.nativeEvent.handled) return;
           let values = getResponseHeader(ctx, props.name);
           if (!Array.isArray(values)) values = [values as string];
           const index = values.indexOf(props.value);
