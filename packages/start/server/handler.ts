@@ -1,5 +1,5 @@
 import { sharedConfig } from "solid-js";
-import { renderToStream } from "solid-js/web";
+import { renderToStream, renderToString } from "solid-js/web";
 /* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
@@ -33,11 +33,21 @@ export function createBaseHandler(
     onBeforeResponse: options.onBeforeResponse,
     handler: (e: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
       const event = getFetchEvent(e);
+      const mode = import.meta.env.START_SSR;
 
       return provideRequestEvent(event, async () => {
-        // render stream
-        const doAsync = import.meta.env.START_SSR === "async";
+        // render
         const context = await createPageEvent(event);
+        if (mode === "sync") {
+          const html = renderToString(() => {
+            (sharedConfig.context as any).event = context;
+            return fn(context);
+          }, options);
+          if (context.response && context.response.headers.get("Location")) {
+            return sendRedirect(event, context.response.headers.get("Location"));
+          }
+          return html;
+        }
         let cloned = { ...options };
         if (cloned.onCompleteAll) {
           const og = cloned.onCompleteAll;
@@ -60,7 +70,7 @@ export function createBaseHandler(
         if (context.response && context.response.headers.get("Location")) {
           return sendRedirect(event, context.response.headers.get("Location"));
         }
-        if (doAsync) return stream;
+        if (mode === "async") return stream;
         // fix cloudflare streaming
         const { writable, readable } = new TransformStream();
         stream.pipeTo(writable);

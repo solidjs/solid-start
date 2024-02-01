@@ -9,8 +9,9 @@ type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
          * true: streaming mode
          * false: csr only
          * async: ssr is in async mode
+         * sync: ssr is in sync mode
          */
-        ssr?: boolean | "async",
+        ssr?: boolean | "async" | "sync",
         solid?: Options,
         extensions?: string[],
         server?: AppOptions['server'],
