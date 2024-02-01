@@ -35,7 +35,9 @@ export async function createPageEvent(ctx: FetchEvent) {
           )
         : [])
     ],
-    initialSubmission: initFromFlash(ctx),
+    router: {
+      submission: initFromFlash(ctx)
+    },
     routes: createRoutes(),
     // prevUrl: prevPath || "",
     // mutation: mutation,

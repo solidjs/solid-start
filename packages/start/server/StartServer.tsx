@@ -35,8 +35,8 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
 
   let assets = [];
   Promise.resolve().then(async () => {
-    if (context.routerMatches && context.routerMatches[0]) {
-      const matches = [...context.routerMatches[0]];
+    if (context.router && context.router.matches) {
+      const matches = [...context.router.matches];
       while (matches.length && (!matches[0].metadata || !matches[0].metadata.filesystem))
         matches.shift();
       const matched = matches.length && matchRoute(matches, context.routes);
