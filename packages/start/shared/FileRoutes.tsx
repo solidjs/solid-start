@@ -10,8 +10,8 @@ export function createRoutes() {
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),
-      metadata: {
-        ...(route.$$route ? route.$$route.require().route.metadata : {}),
+      info: {
+        ...(route.$$route ? route.$$route.require().route.info : {}),
         filesystem: true
       },
       component: lazyRoute(
