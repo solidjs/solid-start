@@ -6,16 +6,14 @@ import {
   EventHandlerObject,
   EventHandlerRequest,
   H3Event,
-  HTTPMethod,
   eventHandler,
   sendRedirect,
   setHeader,
   setResponseStatus
 } from "vinxi/server";
-import { matchAPIRoute } from "../shared/routes";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
-import { APIEvent, FetchEvent, PageEvent } from "./types";
+import { FetchEvent, PageEvent } from "./types";
 
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
@@ -37,16 +35,6 @@ export function createBaseHandler(
       const event = getFetchEvent(e);
 
       return provideRequestEvent(event, async () => {
-        // api
-        const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method as HTTPMethod)
-        if (match) {
-          const mod = await match.handler.import();
-          const fn = mod[event.request.method];
-          (event as APIEvent).params = match.params;
-          sharedConfig.context = { event } as any;
-          return await fn(event);
-        }
-
         // render stream
         const doAsync = import.meta.env.START_SSR === "async";
         const context = await createPageEvent(event);

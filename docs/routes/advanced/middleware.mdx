@@ -21,15 +21,12 @@ export default defineConfig({
 Inside the middleware file, you can export a `createMiddleware` function.
 
 ```tsx
-import { appendCorsHeaders, createMiddleware } from "@solidjs/start/server";
+import { createMiddleware } from "@solidjs/start/middleware";
 
 export default createMiddleware({
   onRequest: [
     event => {
       console.log("GLOBAL", event.request.url);
-    },
-    event => {
-      appendCorsHeaders(event, {});
     }
   ]
 });

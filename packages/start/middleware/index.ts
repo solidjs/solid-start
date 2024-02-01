@@ -3,8 +3,8 @@ import {
   defineMiddleware,
   sendWebResponse
 } from "vinxi/server";
-import { getFetchEvent } from "./fetchEvent";
-import type { FetchEvent } from "./types";
+import { getFetchEvent } from "../server/fetchEvent";
+import type { FetchEvent } from "../server/types";
 
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
 

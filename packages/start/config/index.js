@@ -91,7 +91,7 @@ export function defineConfig(baseConfig = {}) {
         type: "http",
         target: "server",
         base: "/api",
-        handler: normalize(fileURLToPath(new URL("./api-handler.js", import.meta.url))),
+        handler: normalize(fileURLToPath(new URL("./api-handler.ts", import.meta.url))),
         routes: solidStartAPIFileRouter({ dir: `${start.appRoot}/api` }),
         middleware: start.middleware
       },
@@ -121,7 +121,7 @@ export function defineConfig(baseConfig = {}) {
           ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
 
           serverTransform({
-            runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url)))
+            runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url)))
           }),
           start.islands ? serverComponents.server() : null,
           solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
@@ -173,7 +173,7 @@ export function defineConfig(baseConfig = {}) {
           }),
           ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
           serverFunctions.client({
-            runtime: normalize(fileURLToPath(new URL("./server-runtime.jsx", import.meta.url)))
+            runtime: normalize(fileURLToPath(new URL("./server-runtime.ts", import.meta.url)))
           }),
           start.islands ? serverComponents.client() : null,
           solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
@@ -207,8 +207,8 @@ export function defineConfig(baseConfig = {}) {
         base: "/_build"
       },
       serverFunctions.router({
-        handler: normalize(fileURLToPath(new URL("./server-handler.js", import.meta.url))),
-        runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.jsx", import.meta.url))),
+        handler: normalize(fileURLToPath(new URL("./server-handler.ts", import.meta.url))),
+        runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url))),
         // routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: async () => [
           config("user", {

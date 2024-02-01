@@ -12,6 +12,7 @@
   "files": [
     "client",
     "config",
+    "middleware",
     "server",
     "shared",
     "*.d.ts"
@@ -20,6 +21,7 @@
   "exports": {
     ".": "./shared/index.tsx",
     "./config": "./config/index.js",
+    "./middleware": "./middleware/index.ts",
     "./server": "./server/index.tsx",
     "./server/spa": "./server/spa/index.tsx",
     "./client": "./client/index.tsx",
@@ -31,8 +33,8 @@
       ".": [
         "./shared/index.tsx"
       ],
-      "./entry": [
-        "./entry/index.ts"
+      "./middleware": [
+        "./middleware/index.ts"
       ],
       "./server": [
         "./server/index.tsx"

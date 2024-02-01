@@ -1,4 +1,4 @@
-import { createMiddleware } from "@solidjs/start/server";
+import { createMiddleware } from "@solidjs/start/middleware";
 
 export default createMiddleware({
   onRequest: [
