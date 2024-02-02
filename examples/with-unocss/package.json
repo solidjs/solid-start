@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "example-with-unocss",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
