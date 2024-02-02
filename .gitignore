@@ -6,7 +6,6 @@ types/
 .output
 .vinxi
 
-packages/create-solid/bin
 *.log
 
 playground
