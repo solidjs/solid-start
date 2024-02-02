@@ -1,5 +1,11 @@
 import { StartServer, createHandler } from "@solidjs/start/server";
 
+declare module "@solidjs/start/server" {
+  interface RequestEventLocals {
+    n: number;
+    s: string;
+  }
+}
 
 export default createHandler(
   () => (

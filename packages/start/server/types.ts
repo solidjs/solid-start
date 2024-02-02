@@ -16,18 +16,21 @@ export type ContextMatches = {
   params: unknown;
 };
 
-export interface ResponseInit {
+export interface ResponseStub {
   status?: number;
   statusText?: string;
   headers: Headers;
 }
 export interface FetchEvent {
   request: Request;
-  response: ResponseInit;
+  response: ResponseStub;
   clientAddress: string;
-  locals: Record<string, unknown>;
+  locals: RequestEventLocals;
   nativeEvent: H3Event<EventHandlerRequest>;
   [HTTPEventSymbol]: H3Event<EventHandlerRequest>;
+}
+export interface RequestEventLocals {
+  [key: string | symbol]: any;
 }
 export interface PageEvent extends FetchEvent {
   manifest: any;

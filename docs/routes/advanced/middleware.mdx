@@ -33,28 +33,3 @@ export default createMiddleware({
 ```
 
 Middleware supports 2 lifecycles: `onRequest` and `onBeforeResponse`. If you return a value from middleware it will respond with that, otherwise it will run the next one in the chain.
-
-## Protected Routes
-
-Let's see how can we use a middleware to create a Protected route:
-
-```tsx
-import { sendRedirect, createMiddleware } from "@solidjs/start/server";
-const protectedPaths = ["/protected"]; // add any route you wish in here
-
-export default createMiddleware({
-  onRequest: [
-    async (event) => {
-      const { pathname } = new URL(event.request.url);
-      const isProtected = protectedPaths.some((protectedPath) => pathname.startsWith(protectedPath));
-      if (isProtected) {
-        const user = await getUser(event.request);
-        if (!user) {
-          return sendRedirect(event, "/"); // a page for a non logged in user
-        }
-        event.locals.user = user; // put the user on the locals object
-      }
-    },
-  ],
-});
-```

@@ -13,7 +13,7 @@ import {
   setResponseStatus,
   toWebRequest
 } from "vinxi/server";
-import type { FetchEvent, ResponseInit } from "./types";
+import type { FetchEvent, ResponseStub } from "./types";
 
 const fetchEventSymbol = Symbol("fetchEvent");
 
@@ -21,7 +21,7 @@ export function createFetchEvent(event: H3Event): FetchEvent {
   const request = toWebRequest(event);
   return {
     request: request,
-    response: createResponseInit(event),
+    response: createResponseStub(event),
     clientAddress: getRequestIP(event),
     locals: {},
     nativeEvent: event,
@@ -96,7 +96,7 @@ class HeaderProxy {
   }
 }
 
-function createResponseInit(event: H3Event): ResponseInit {
+function createResponseStub(event: H3Event): ResponseStub {
   return {
     get status() {
       return getResponseStatus(event);
