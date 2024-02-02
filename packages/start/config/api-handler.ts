@@ -11,14 +11,18 @@ export default eventHandler(h3Event => {
   const event = getFetchEvent(h3Event);
   if (event) {
     return provideRequestEvent(event, async () => {
-      const match = matchAPIRoute(new URL(event.request.url).pathname.replace("/api", ""), event.request.method);
+      const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
       if (match) {
         const mod = await match.handler.import();
         const fn = mod[event.request.method];
         (event as APIEvent).params = match.params;
         // @ts-ignore
         sharedConfig.context = { event };
-        return fn(event);
+        const res = fn(event);
+        if (res === undefined && event.request.method !== "GET") {
+          return new Response(null, { status: 204 });
+        }
+        return res;
       }
     });
   }
@@ -44,6 +48,7 @@ type MatchRoute = Route & {
 
 const apiRoutes = defineAPIRoutes((fileRoutes as unknown as Route[]).filter(o => o.type === "api"));
 
+// TODO Simplify this mess:
 function matchAPIRoute(path: string, method: string) {
   const segments = path.replace(import.meta.env.SERVER_BASE_URL, "").split("/").filter(Boolean);
 

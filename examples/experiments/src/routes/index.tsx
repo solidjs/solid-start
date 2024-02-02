@@ -17,6 +17,7 @@ export default function Home() {
     console.log(v);
     console.log(await v.hello);
   });
+  fetch(`http://localhost:3000/${import.meta.env.SERVER_BASE_URL}/unknown`, { headers: { Accept: "application/json" } }).then(async res => console.log(await res.json()))
   return (
     <main>
       <Title>Hello World</Title>

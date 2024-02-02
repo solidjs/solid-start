@@ -19,11 +19,13 @@ While we think that using `Server Functions` is the best way to write server-sid
 
 SolidStart makes it easy to write routes for these use cases.
 
+> **Note:** API routes are always prioritized over page route alternatives. If you want to have them overlap at the same path remember to use `Accept` headers. Returning without a response in `GET` route will fallback to page route handling.
+
 ## Writing an API Route
 
 API routes are just like any other route and follow the same filename conventions as [UI Routes][routing]. The only difference is in what you should export from the file. API Routes do not export a default Solid component.
 
-Instead, they export functions that are named after the HTTP method that they handle. For example, a `GET` request would be handled by the exported `GET` function. If a handler is not defined for a given HTTP method, SolidStart will return a `405 Method Not Allowed` response.
+Instead, they export functions that are named after the HTTP method that they handle. For example, a `GET` request would be handled by the exported `GET` function.
 
 ```tsx twoslash filename="routes/api/students.ts"
 // handles HTTP GET requests to /api/students

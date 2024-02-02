@@ -18,7 +18,7 @@ function solidStartClientFsRouter(config) {
     new SolidStartClientFileRouter(
       {
         dir: resolve.absolute(config.dir, router.root),
-        extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"]
+        extensions: config.extensions ?? DEFAULT_EXTENSIONS
       },
       router,
       app
@@ -30,7 +30,7 @@ function solidStartServerFsRouter(config) {
     new SolidStartServerFileRouter(
       {
         dir: resolve.absolute(config.dir, router.root),
-        extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"]
+        extensions: config.extensions ?? DEFAULT_EXTENSIONS
       },
       router,
       app
@@ -42,7 +42,7 @@ function solidStartAPIFileRouter(config) {
     new SolidStartAPIFileRouter(
       {
         dir: resolve.absolute(config.dir, router.root),
-        extensions: config.extensions ?? ["js", "ts"]
+        extensions: config.extensions ?? DEFAULT_EXTENSIONS
       },
       router,
       app
@@ -90,9 +90,9 @@ export function defineConfig(baseConfig = {}) {
         name: "api",
         type: "http",
         target: "server",
-        base: "/api",
+        base: "/",
         handler: normalize(fileURLToPath(new URL("./api-handler.ts", import.meta.url))),
-        routes: solidStartAPIFileRouter({ dir: `${start.appRoot}/api` }),
+        routes: solidStartAPIFileRouter({ dir: `${start.appRoot}/routes` }),
         middleware: start.middleware
       },
       {
