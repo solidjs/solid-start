@@ -1,4 +1,5 @@
 import { getRequestEvent } from "solid-js/web";
+//@ts-ignore
 import { provideRequestEvent } from "solid-js/web/storage";
 import { cloneEvent } from "../server/fetchEvent";
 

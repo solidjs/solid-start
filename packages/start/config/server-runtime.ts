@@ -14,6 +14,9 @@ import {
 import { createIslandReference } from "../server/islands";
 
 class SerovalChunkReader {
+  reader: ReadableStreamDefaultReader<Uint8Array>;
+  buffer: string;
+  done: boolean;
   constructor(stream) {
     this.reader = stream.getReader();
     this.buffer = "";
@@ -92,6 +95,7 @@ async function deserializeStream(id, response) {
   if (!result.done) {
     reader.drain().then(
       () => {
+        // @ts-ignore
         delete $R[id];
       },
       () => {
@@ -105,7 +109,7 @@ async function deserializeStream(id, response) {
 
 let INSTANCE = 0;
 
-function createRequest(base, id, instance, body, contentType) {
+function createRequest(base: string, id: string, instance: string, body: any, contentType?: string) {
   return fetch(base, {
     method: "POST",
     headers: {
@@ -154,7 +158,7 @@ async function fetchServerFunction(base, id, method, args) {
 
   if (response.headers.get("Location")) throw response;
   if (response.headers.get("X-Revalidate")) {
-    /* ts-ignore-next-line */
+    /* @ts-ignore-next-line */
     response.customBody = () => {
       return deserializeStream(instance, response);
     };
