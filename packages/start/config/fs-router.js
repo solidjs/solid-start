@@ -136,11 +136,8 @@ export class SolidStartAPIFileRouter extends BaseFileSystemRouter {
       .slice(1)
       .replace(/index$/, "")
       .replace(/\[([^\/]+)\]/g, (_, m) => {
-        if (m.length > 3 && m.startsWith("...")) {
-          return `*${m.slice(3)}`;
-        }
-        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-          return `:${m.slice(1, -1)}?`;
+        if (m.length > 2 && m.startsWith("...")) {
+          return `**${m.length > 3 ? ":" + m.slice(3) : ""}`;
         }
         return `:${m}`;
       });
