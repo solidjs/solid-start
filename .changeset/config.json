@@ -7,5 +7,19 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "example-bare",
+    "example-basic",
+    "example-experiments",
+    "example-hackernews",
+    "example-todomvc",
+    "example-with-auth",
+    "example-with-mdx",
+    "example-with-prisma",
+    "example-with-solid-styled",
+    "example-with-tailwindcss",
+    "example-with-trpc",
+    "example-with-unocss",
+    "example-with-vitest"
+  ]
 }
