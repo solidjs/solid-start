@@ -11,21 +11,21 @@ import { APIEvent } from "../server/types";
 
 export default eventHandler(h3Event => {
   const event = getFetchEvent(h3Event);
-  if (event) {
+  const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
+  if (match) {
     return provideRequestEvent(event, async () => {
-      const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
-      if (match) {
-        const mod = await match.handler.import();
-        const fn = mod[event.request.method];
-        (event as APIEvent).params = match.params;
-        // @ts-ignore
-        sharedConfig.context = { event };
-        const res = fn(event);
-        if (res === undefined && event.request.method !== "GET") {
-          return new Response(null, { status: 204 });
-        }
-        return res;
+      const mod = await match.handler.import();
+      const fn = mod[event.request.method];
+      (event as APIEvent).params = match.params;
+      // @ts-ignore
+      sharedConfig.context = { event };
+      const res = await fn(event);
+      if (res === undefined && event.request.method !== "GET") {
+        throw new Error(
+          `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
+        );
       }
+      return res;
     });
   }
 });
