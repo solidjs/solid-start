@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "0.4.11",
+  "version": "0.5.0",
   "type": "module",
   "author": "Ryan Carniato",
   "publishConfig": {
