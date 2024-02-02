@@ -1,6 +1,11 @@
-import { createHandler } from "@solidjs/start/entry";
-import { StartServer, defineRequestMiddleware, defineResponseMiddleware } from "@solidjs/start/server";
+import { StartServer, createHandler } from "@solidjs/start/server";
 
+declare module "@solidjs/start/server" {
+  interface RequestEventLocals {
+    n: number;
+    s: string;
+  }
+}
 
 export default createHandler(
   () => (
@@ -20,19 +25,5 @@ export default createHandler(
         </html>
       )}
     />
-  ),
-  {
-    onRequest: [
-      defineRequestMiddleware(event => {
-        const id = Math.random().toString();
-        console.time(`request ${id} ${event.path}`);
-        (event as any).id = id;
-      })
-    ],
-    onBeforeResponse: [
-      defineResponseMiddleware((event) => {
-        console.timeEnd(`request ${(event as any).id} ${event.path}`);
-      })
-    ]
-  }
+  )
 );

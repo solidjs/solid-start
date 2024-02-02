@@ -4,7 +4,9 @@ import { getRequestEvent, isServer } from "solid-js/web";
 export function HttpStatusCode(props: { code: number, text?: string }) {
   if (isServer) {
     const event = getRequestEvent();
-    if (event) onCleanup((event as any).components.status(props));
+    event.response.status = props.code;
+    event.response.statusText = props.text;
+    onCleanup(() => !event.nativeEvent.handled && (event.response.status = 200));
   }
   return null;
 }

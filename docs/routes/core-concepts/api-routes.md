@@ -19,11 +19,13 @@ While we think that using `Server Functions` is the best way to write server-sid
 
 SolidStart makes it easy to write routes for these use cases.
 
+> **Note:** API routes are always prioritized over page route alternatives. If you want to have them overlap at the same path remember to use `Accept` headers. Returning without a response in `GET` route will fallback to page route handling.
+
 ## Writing an API Route
 
 API routes are just like any other route and follow the same filename conventions as [UI Routes][routing]. The only difference is in what you should export from the file. API Routes do not export a default Solid component.
 
-Instead, they export functions that are named after the HTTP method that they handle. For example, a `GET` request would be handled by the exported `GET` function. If a handler is not defined for a given HTTP method, SolidStart will return a `405 Method Not Allowed` response.
+Instead, they export functions that are named after the HTTP method that they handle. For example, a `GET` request would be handled by the exported `GET` function.
 
 ```tsx twoslash filename="routes/api/students.ts"
 // handles HTTP GET requests to /api/students
@@ -68,7 +70,7 @@ export default {
 
 // @filename: index.ts
 // ---cut---
-import { type APIEvent } from "@solidjs/start/server";
+import type { APIEvent } from "@solidjs/start/server";
 import hogwarts from "./hogwarts";
 
 export async function GET({ params }: APIEvent) {
@@ -82,12 +84,13 @@ export async function GET({ params }: APIEvent) {
 
 As HTTP is a stateless protocol, for awesome dynamic experiences, you want to know the state of the session on the client. For example, you want to know who the user is. The secure way of doing this is to use HTTP-only cookies.
 
-You can store session data in them and they are persisted by the browser that your user is using. We expose the `Request` object which represents the user's request. The cookies can be accessed by parsing the `Cookie` header. We re-export H3's helpers from `@solidjs/start/server` to make that a bit easier.
+You can store session data in them and they are persisted by the browser that your user is using. We expose the `Request` object which represents the user's request. The cookies can be accessed by parsing the `Cookie` header. We can access helpers from `vinxi/server` to make that a bit easier.
 
 Let's look at an example of how to use the cookie to identify the user:
 
 ```tsx filename="routes/api/[house]/admin.ts"
-import { getCookie, type APIEvent } from "@solidjs/start/server";
+import type { APIEvent } from "@solidjs/start/server";
+import { getCookie } from "vinxi/server";
 import hogwarts from "./hogwarts";
 
 export async function GET(event: APIEvent) {
@@ -116,7 +119,7 @@ SolidStart makes it easy to implement a GraphQL API. The `graphql` function take
 
 ```ts twoslash filename="routes/graphql.ts"
 import { buildSchema, graphql } from "graphql";
-import { type APIEvent } from "@solidjs/start/server";
+import type { APIEvent } from "@solidjs/start/server";
 
 // Define GraphQL Schema
 const schema = buildSchema(`

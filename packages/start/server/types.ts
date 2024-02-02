@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js";
-import type { EventHandlerRequest, H3Event } from "vinxi/server";
+import { HTTPEventSymbol, type EventHandlerRequest, type H3Event } from "vinxi/server";
 
 // export const FETCH_EVENT = "$FETCH";
 
@@ -16,10 +16,21 @@ export type ContextMatches = {
   params: unknown;
 };
 
-export interface FetchEvent extends H3Event<EventHandlerRequest> {
+export interface ResponseStub {
+  status?: number;
+  statusText?: string;
+  headers: Headers;
+}
+export interface FetchEvent {
   request: Request;
+  response: ResponseStub;
   clientAddress: string;
-  locals: Record<string, unknown>;
+  locals: RequestEventLocals;
+  nativeEvent: H3Event<EventHandlerRequest>;
+  [HTTPEventSymbol]: H3Event<EventHandlerRequest>;
+}
+export interface RequestEventLocals {
+  [key: string | symbol]: any;
 }
 export interface PageEvent extends FetchEvent {
   manifest: any;
@@ -29,7 +40,6 @@ export interface PageEvent extends FetchEvent {
   // $type: typeof FETCH_EVENT;
   $islands: Set<string>;
   // mutation: boolean;
-  response?: Response;
 }
 
 export interface APIEvent extends FetchEvent {

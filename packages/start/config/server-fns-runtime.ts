@@ -1,6 +1,7 @@
 import { getRequestEvent } from "solid-js/web";
+//@ts-ignore
 import { provideRequestEvent } from "solid-js/web/storage";
-import { cloneEvent } from "../server/middleware";
+import { cloneEvent } from "../server/fetchEvent";
 
 export function createServerReference(fn, id, name) {
   if (typeof fn !== "function") throw new Error("Export from a 'use server' module must be a function");

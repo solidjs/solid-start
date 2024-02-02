@@ -1,4 +1,4 @@
-export * from "vinxi/server";
 export { StartServer } from "./StartServer";
-export * from "./middleware";
+export { createHandler } from "./handler";
 export * from "./types";
+

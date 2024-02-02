@@ -1,5 +1,5 @@
-import { createBaseHandler } from "..";
-import { FetchEvent, PageEvent } from "../../server/types";
+import { createBaseHandler } from "../handler";
+import { FetchEvent, PageEvent } from "../types";
 
 export function createHandler(
   fn: (context: PageEvent) => unknown,

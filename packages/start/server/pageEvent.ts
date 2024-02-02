@@ -1,11 +1,6 @@
 import {
-  appendResponseHeader,
   getCookie,
-  getResponseHeader,
-  removeResponseHeader,
-  setCookie,
-  setResponseHeader,
-  setResponseStatus
+  setCookie
 } from "vinxi/server";
 import { createRoutes } from "../shared/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
@@ -27,7 +22,7 @@ function initFromFlash(ctx: FetchEvent) {
 export async function createPageEvent(ctx: FetchEvent) {
   const clientManifest = import.meta.env.MANIFEST["client"];
   const serverManifest = import.meta.env.MANIFEST["ssr"];
-  setResponseHeader(ctx, "Content-Type", "text/html");
+  ctx.response.headers.set("Cache-Control", "no-cache");
   // const prevPath = ctx.request.headers.get("x-solid-referrer");
   // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = Object.assign(ctx, {
@@ -40,31 +35,10 @@ export async function createPageEvent(ctx: FetchEvent) {
           )
         : [])
     ],
-    initialSubmission: initFromFlash(ctx),
-    routes: createRoutes(),
-    components: {
-      status: props => {
-        setResponseStatus(ctx, props.code, props.text);
-        return () => !ctx.handled && setResponseStatus(ctx, 200);
-      },
-      header: props => {
-        if (props.append) {
-          appendResponseHeader(ctx, props.name, props.value);
-        } else {
-          setResponseHeader(ctx, props.name, props.value);
-        }
-
-        return () => {
-          if (ctx.handled) return;
-          let values = getResponseHeader(ctx, props.name);
-          if (!Array.isArray(values)) values = [values as string];
-          const index = values.indexOf(props.value);
-          index !== -1 && values.splice(index, 1);
-          if (values.length) setResponseHeader(ctx, props.name, values);
-          else removeResponseHeader(ctx, props.name);
-        };
-      }
+    router: {
+      submission: initFromFlash(ctx)
     },
+    routes: createRoutes(),
     // prevUrl: prevPath || "",
     // mutation: mutation,
     // $type: FETCH_EVENT,

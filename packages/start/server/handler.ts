@@ -1,21 +1,19 @@
 import { sharedConfig } from "solid-js";
-import { renderToStream } from "solid-js/web";
+import { renderToStream, renderToString } from "solid-js/web";
 /* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
   EventHandlerObject,
   EventHandlerRequest,
   H3Event,
-  HTTPMethod,
   eventHandler,
   sendRedirect,
   setHeader,
   setResponseStatus
 } from "vinxi/server";
-import { getFetchEvent } from "../server/middleware";
-import { createPageEvent } from "../server/page-event";
-import { APIEvent, FetchEvent, PageEvent } from "../server/types";
-import { matchAPIRoute } from "../shared/routes";
+import { getFetchEvent } from "./fetchEvent";
+import { createPageEvent } from "./pageEvent";
+import { FetchEvent, PageEvent } from "./types";
 
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
@@ -35,21 +33,21 @@ export function createBaseHandler(
     onBeforeResponse: options.onBeforeResponse,
     handler: (e: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
       const event = getFetchEvent(e);
+      const mode = import.meta.env.START_SSR;
 
       return provideRequestEvent(event, async () => {
-        // api
-        const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method as HTTPMethod)
-        if (match) {
-          const mod = await match.handler.import();
-          const fn = mod[event.request.method];
-          (event as APIEvent).params = match.params;
-          sharedConfig.context = { event } as any;
-          return await fn(event);
-        }
-
-        // render stream
-        const doAsync = import.meta.env.START_SSR === "async";
+        // render
         const context = await createPageEvent(event);
+        if (mode === "sync") {
+          const html = renderToString(() => {
+            (sharedConfig.context as any).event = context;
+            return fn(context);
+          }, options);
+          if (context.response && context.response.headers.get("Location")) {
+            return sendRedirect(event, context.response.headers.get("Location"));
+          }
+          return html;
+        }
         let cloned = { ...options };
         if (cloned.onCompleteAll) {
           const og = cloned.onCompleteAll;
@@ -72,7 +70,7 @@ export function createBaseHandler(
         if (context.response && context.response.headers.get("Location")) {
           return sendRedirect(event, context.response.headers.get("Location"));
         }
-        if (doAsync) return stream;
+        if (mode === "async") return stream;
         // fix cloudflare streaming
         const { writable, readable } = new TransformStream();
         stream.pipeTo(writable);

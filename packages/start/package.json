@@ -12,7 +12,7 @@
   "files": [
     "client",
     "config",
-    "entry",
+    "middleware",
     "server",
     "shared",
     "*.d.ts"
@@ -21,8 +21,7 @@
   "exports": {
     ".": "./shared/index.tsx",
     "./config": "./config/index.js",
-    "./entry": "./entry/index.ts",
-    "./entry/spa": "./entry/spa/index.ts",
+    "./middleware": "./middleware/index.ts",
     "./server": "./server/index.tsx",
     "./server/spa": "./server/spa/index.tsx",
     "./client": "./client/index.tsx",
@@ -34,8 +33,8 @@
       ".": [
         "./shared/index.tsx"
       ],
-      "./entry": [
-        "./entry/index.ts"
+      "./middleware": [
+        "./middleware/index.ts"
       ],
       "./server": [
         "./server/index.tsx"
@@ -47,15 +46,16 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.12",
-    "vinxi": "^0.1.10"
+    "vinxi": "^0.2.1"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.1.3",
-    "@vinxi/server-components": "^0.1.3",
-    "@vinxi/server-functions": "^0.1.4",
+    "@vinxi/plugin-directives": "^0.2.0",
+    "@vinxi/server-components": "^0.2.0",
+    "@vinxi/server-functions": "^0.2.1",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
+    "radix3": "^1.1.0",
     "seroval": "^1.0.2",
     "seroval-plugins": "^1.0.2",
     "shikiji": "^0.9.12",
