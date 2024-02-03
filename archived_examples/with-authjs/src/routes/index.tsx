@@ -1,19 +1,20 @@
-import { getSession } from "@solid-auth/base";
-import { signIn } from "@solid-auth/base/client";
-import { createSignal, onCleanup, Show } from "solid-js";
-import { Navigate, useRouteData } from "solid-start";
-import { createServerData$ } from "solid-start/server";
+import { getSession } from "@solid-mediakit/auth";
+import { signIn } from "@solid-mediakit/auth/client";
+import { Navigate, createAsync } from "@solidjs/router";
+import { Show, createSignal, onCleanup } from "solid-js";
+import { getRequestEvent } from "solid-js/web";
 import { authOptions } from "~/server/auth";
 
-export const routeData = () => {
-  return createServerData$(async (_, event) => {
-    const session = await getSession(event.request, authOptions);
-    return { session: session };
-  });
-};
 
 export default function Home() {
-  const session = useRouteData<typeof routeData>();
+  const session = createAsync(async () => {
+    "use server";
+    const event = getRequestEvent();
+    const session = await getSession(event!.request, authOptions);
+    return session;
+  });
+
+
   const [redirectIn, setRedirectIn] = createSignal(3);
 
   const int = setInterval(() => {
@@ -26,7 +27,7 @@ export default function Home() {
     <main>
       <h1>Home</h1>
       <Show
-        when={session()?.session}
+        when={session()}
         fallback={
           <>
             <span>You are not signed in.</span>
