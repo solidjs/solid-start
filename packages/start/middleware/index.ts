@@ -1,8 +1,8 @@
 import {
-  H3Event,
-  defineMiddleware,
-  sendWebResponse
-} from "vinxi/server";
+    H3Event,
+    defineMiddleware,
+    sendWebResponse
+} from "vinxi/http";
 import { getFetchEvent } from "../server/fetchEvent";
 import type { FetchEvent } from "../server/types";
 

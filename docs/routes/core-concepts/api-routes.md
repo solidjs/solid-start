@@ -84,13 +84,13 @@ export async function GET({ params }: APIEvent) {
 
 As HTTP is a stateless protocol, for awesome dynamic experiences, you want to know the state of the session on the client. For example, you want to know who the user is. The secure way of doing this is to use HTTP-only cookies.
 
-You can store session data in them and they are persisted by the browser that your user is using. We expose the `Request` object which represents the user's request. The cookies can be accessed by parsing the `Cookie` header. We can access helpers from `vinxi/server` to make that a bit easier.
+You can store session data in them and they are persisted by the browser that your user is using. We expose the `Request` object which represents the user's request. The cookies can be accessed by parsing the `Cookie` header. We can access helpers from `vinxi/http` to make that a bit easier.
 
 Let's look at an example of how to use the cookie to identify the user:
 
 ```tsx filename="routes/api/[house]/admin.ts"
 import type { APIEvent } from "@solidjs/start/server";
-import { getCookie } from "vinxi/server";
+import { getCookie } from "vinxi/http";
 import hogwarts from "./hogwarts";
 
 export async function GET(event: APIEvent) {

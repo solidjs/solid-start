@@ -27,7 +27,7 @@ The session cookie can be used to get the session data about the request. How th
 Let's use this `useSession` to get the session data for the request:
 
 ```tsx filename="/lib/session.ts"
-import { useSession } from "vinxi/server";
+import { useSession } from "vinxi/http";
 export async function getUser(request: Request) {
   const session = await useSession({
     password: process.env.SESSION_SECRET
@@ -38,7 +38,7 @@ export async function getUser(request: Request) {
 Typically, we will have saved the `userId` in the session. If we don't find it, that means that this was not an authenticated request. Our `getUser` function returns a `null` when it doesn't find a user. If we find a `userId`, we can use that to get the user from the database:
 
 ```tsx filename="/lib/session.ts"
-import { useSession } from "vinxi/server";
+import { useSession } from "vinxi/http";
 
 export async function getUser(): Promise<User | null> {
   const session = await useSession({
@@ -74,7 +74,7 @@ We can log in or logout in a similar manner.
 
 ```tsx filename="/routes/session.server.ts"
 import { redirect } from "@solidjs/router";
-import { useSession } from "vinxi/server";
+import { useSession } from "vinxi/http";
 
 type UserSession = {
   userId?: number;

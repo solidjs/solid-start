@@ -3,14 +3,14 @@ import { renderToStream, renderToString } from "solid-js/web";
 /* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-  EventHandlerObject,
-  EventHandlerRequest,
-  H3Event,
-  eventHandler,
-  sendRedirect,
-  setHeader,
-  setResponseStatus
-} from "vinxi/server";
+    EventHandlerObject,
+    EventHandlerRequest,
+    H3Event,
+    eventHandler,
+    sendRedirect,
+    setHeader,
+    setResponseStatus
+} from "vinxi/http";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
 import { FetchEvent, PageEvent } from "./types";

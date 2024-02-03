@@ -1,7 +1,7 @@
 import {
-  getCookie,
-  setCookie
-} from "vinxi/server";
+    getCookie,
+    setCookie
+} from "vinxi/http";
 import { createRoutes } from "../shared/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
 

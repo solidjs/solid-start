@@ -1,22 +1,22 @@
 /// <reference types="vinxi/types/server" />
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
 import {
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLPlugin,
-  URLSearchParamsPlugin
+    CustomEventPlugin,
+    DOMExceptionPlugin,
+    EventPlugin,
+    FormDataPlugin,
+    HeadersPlugin,
+    ReadableStreamPlugin,
+    RequestPlugin,
+    ResponsePlugin,
+    URLPlugin,
+    URLSearchParamsPlugin
 } from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
 /* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
+import { eventHandler, setHeader } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
-import { eventHandler, setHeader } from "vinxi/server";
 import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
 
 function createChunk(data) {

@@ -5,7 +5,7 @@ import fileRoutes from "vinxi/routes";
 
 // @ts-ignore
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler } from "vinxi/server";
+import { eventHandler } from "vinxi/http";
 import { getFetchEvent } from "../server/fetchEvent";
 import { APIEvent } from "../server/types";
 

@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js";
-import { HTTPEventSymbol, type EventHandlerRequest, type H3Event } from "vinxi/server";
+import { HTTPEventSymbol, type EventHandlerRequest, type H3Event } from "vinxi/http";
 
 // export const FETCH_EVENT = "$FETCH";
 

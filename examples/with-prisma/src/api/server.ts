@@ -1,6 +1,6 @@
 "use server";
 import { redirect } from "@solidjs/router";
-import { useSession } from "vinxi/server";
+import { useSession } from "vinxi/http";
 import { db } from "./db";
 
 function validateUsername(username: unknown) {
