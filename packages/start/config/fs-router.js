@@ -24,7 +24,6 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
-        type: "page",
         $component: {
           src: src,
           pick: ["$css"]
@@ -40,64 +39,6 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     const hasRouteConfig = exports.find(e => e.n === "route");
     if (hasDefault) {
       return {
-        type: "page",
-        $component: {
-          src: src,
-          pick: ["default", "$css"]
-        },
-        $$route: hasRouteConfig
-          ? {
-              src: src,
-              pick: ["route"]
-            }
-          : undefined,
-        path,
-        filePath: src
-      };
-    }
-  }
-}
-
-export class SolidStartServerFileRouter extends BaseFileSystemRouter {
-  toPath(src) {
-    const routePath = cleanPath(src, this.config)
-      // remove the initial slash
-      .slice(1)
-      .replace(/index$/, "")
-      .replace(/\[([^\/]+)\]/g, (_, m) => {
-        if (m.length > 3 && m.startsWith("...")) {
-          return `*${m.slice(3)}`;
-        }
-        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-          return `:${m.slice(1, -1)}?`;
-        }
-        return `:${m}`;
-      });
-
-    return routePath?.length > 0 ? `/${routePath}` : "/";
-  }
-
-  toRoute(src) {
-    let path = this.toPath(src);
-
-    if (src.endsWith(".md") || src.endsWith(".mdx")) {
-      return {
-        type: "page",
-        $component: {
-          src: src,
-          pick: ["$css"]
-        },
-        $$route: undefined,
-        path,
-        filePath: src
-      };
-    }
-
-    const [_, exports] = analyzeModule(src);
-    const hasRouteConfig = exports.find(e => e.n === "route");
-    if (exports.find(exp => exp.n === "default")) {
-      return {
-        type: "page",
         $component: {
           src: src,
           pick: ["default", "$css"]
@@ -129,15 +70,18 @@ function createHTTPHandlers(src, exports) {
   return handlers;
 }
 
-export class SolidStartAPIFileRouter extends BaseFileSystemRouter {
+export class SolidStartServerFileRouter extends BaseFileSystemRouter {
   toPath(src) {
     const routePath = cleanPath(src, this.config)
       // remove the initial slash
       .slice(1)
       .replace(/index$/, "")
       .replace(/\[([^\/]+)\]/g, (_, m) => {
-        if (m.length > 2 && m.startsWith("...")) {
-          return `**${m.length > 3 ? ":" + m.slice(3) : ""}`;
+        if (m.length > 3 && m.startsWith("...")) {
+          return `*${m.slice(3)}`;
+        }
+        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
+          return `:${m.slice(1, -1)}?`;
         }
         return `:${m}`;
       });
@@ -147,10 +91,36 @@ export class SolidStartAPIFileRouter extends BaseFileSystemRouter {
 
   toRoute(src) {
     let path = this.toPath(src);
-    const [_, exports] = analyzeModule(src);
-    if (exports.find(exp => HTTP_METHODS.includes(exp.n))) {
+    if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
-        type: "api",
+        $component: {
+          src: src,
+          pick: ["$css"]
+        },
+        $$route: undefined,
+        path,
+        filePath: src
+      };
+    }
+
+    const [_, exports] = analyzeModule(src);
+    const hasRouteConfig = exports.find(e => e.n === "route");
+    const hasDefault = exports.find(e => e.n === "default");
+    const hasAPIRoutes = exports.find(exp => HTTP_METHODS.includes(exp.n));
+    if (hasDefault || hasAPIRoutes) {
+      return {
+        $component: hasDefault
+          ? {
+              src: src,
+              pick: ["default", "$css"]
+            }
+          : undefined,
+        $$route: hasRouteConfig
+          ? {
+              src: src,
+              pick: ["route"]
+            }
+          : undefined,
         ...createHTTPHandlers(src, exports),
         path,
         filePath: src

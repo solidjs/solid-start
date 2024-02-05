@@ -8,7 +8,10 @@ import { createApp, resolve } from "vinxi";
 import { normalize } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
-import { SolidStartAPIFileRouter, SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
+import {
+  SolidStartClientFileRouter,
+  SolidStartServerFileRouter
+} from "./fs-router.js";
 import { serverComponents } from "./server-components.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
@@ -28,18 +31,6 @@ function solidStartClientFsRouter(config) {
 function solidStartServerFsRouter(config) {
   return (router, app) =>
     new SolidStartServerFileRouter(
-      {
-        dir: resolve.absolute(config.dir, router.root),
-        extensions: config.extensions ?? DEFAULT_EXTENSIONS
-      },
-      router,
-      app
-    );
-}
-
-function solidStartAPIFileRouter(config) {
-  return (router, app) =>
-    new SolidStartAPIFileRouter(
       {
         dir: resolve.absolute(config.dir, router.root),
         extensions: config.extensions ?? DEFAULT_EXTENSIONS
@@ -85,15 +76,6 @@ export function defineConfig(baseConfig = {}) {
         type: "static",
         dir: "./public",
         base: "/"
-      },
-      {
-        name: "api",
-        type: "http",
-        target: "server",
-        base: "/",
-        handler: normalize(fileURLToPath(new URL("./api-handler.ts", import.meta.url))),
-        routes: solidStartAPIFileRouter({ dir: `${start.appRoot}/routes` }),
-        middleware: start.middleware
       },
       {
         name: "ssr",

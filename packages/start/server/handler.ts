@@ -3,17 +3,18 @@ import { renderToStream, renderToString } from "solid-js/web";
 /* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-    EventHandlerObject,
-    EventHandlerRequest,
-    H3Event,
-    eventHandler,
-    sendRedirect,
-    setHeader,
-    setResponseStatus
+  EventHandlerObject,
+  EventHandlerRequest,
+  H3Event,
+  eventHandler,
+  sendRedirect,
+  setHeader,
+  setResponseStatus
 } from "vinxi/http";
+import { matchAPIRoute } from "../shared/routes";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
-import { FetchEvent, PageEvent } from "./types";
+import type { APIEvent, FetchEvent, PageEvent } from "./types";
 
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
@@ -36,6 +37,23 @@ export function createBaseHandler(
       const mode = import.meta.env.START_SSR;
 
       return provideRequestEvent(event, async () => {
+        // api
+        const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
+        if (match) {
+          const mod = await match.handler.import();
+          const fn = mod[event.request.method];
+          (event as APIEvent).params = match.params;
+          // @ts-ignore
+          sharedConfig.context = { event };
+          const res = await fn(event);
+          if (res !== undefined) return res;
+          if (event.request.method !== "GET") {
+            throw new Error(
+              `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
+            );
+          }
+        }
+
         // render
         const context = await createPageEvent(event);
         if (mode === "sync") {
@@ -65,7 +83,7 @@ export function createBaseHandler(
         } else cloned.onCompleteShell = handleShellCompleteRedirect(context, e);
         const stream = renderToStream(() => {
           (sharedConfig.context as any).event = context;
-          return fn(context)
+          return fn(context);
         }, cloned);
         if (context.response && context.response.headers.get("Location")) {
           return sendRedirect(event, context.response.headers.get("Location"));
@@ -86,7 +104,7 @@ function handleShellCompleteRedirect(context: PageEvent, e: H3Event<EventHandler
       setResponseStatus(e, 302);
       setHeader(e, "Location", context.response.headers.get("Location"));
     }
-  }
+  };
 }
 
 function handleStreamCompleteRedirect(context: PageEvent) {
