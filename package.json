@@ -42,7 +42,7 @@
     "fast-glob": "^3.3.0",
     "graphql": "^16.7.1",
     "rimraf": "^3.0.2",
-    "solid-js": "^1.8.12",
+    "solid-js": "^1.8.13",
     "solid-mdx": "^0.0.7",
     "solid-start-mdx": "workspace:*",
     "tailwindcss": "^3.4.1",

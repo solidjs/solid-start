@@ -1,6 +1,5 @@
 import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
-/* @ts-ignore */
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
   EventHandlerObject,

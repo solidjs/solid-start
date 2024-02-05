@@ -1,17 +1,17 @@
 import {
-    H3Event,
-    HTTPEventSymbol,
-    appendResponseHeader,
-    getRequestIP,
-    getResponseHeader,
-    getResponseHeaders,
-    getResponseStatus,
-    getResponseStatusText,
-    removeResponseHeader,
-    setHeader,
-    setResponseHeader,
-    setResponseStatus,
-    toWebRequest
+  H3Event,
+  HTTPEventSymbol,
+  appendResponseHeader,
+  getRequestIP,
+  getResponseHeader,
+  getResponseHeaders,
+  getResponseStatus,
+  getResponseStatusText,
+  removeResponseHeader,
+  setHeader,
+  setResponseHeader,
+  setResponseStatus,
+  toWebRequest
 } from "vinxi/http";
 import type { FetchEvent, ResponseStub } from "./types";
 
@@ -40,7 +40,6 @@ export function getFetchEvent(h3Event: H3Event): FetchEvent {
   if (!h3Event[fetchEventSymbol]) {
     const fetchEvent = createFetchEvent(h3Event);
     h3Event[fetchEventSymbol] = fetchEvent;
-    // @ts-ignore
   }
 
   return h3Event[fetchEventSymbol];
