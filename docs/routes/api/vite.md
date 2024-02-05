@@ -90,7 +90,7 @@ compatibility_flags = [ "nodejs_compat" ]
 The vite options are same as the default with exception of the `start` property exposes the following options:
 
 - `server` (_object_): Nitro server config options
-- `appRoot` (_string_, default `"./src"`): sets the root of the application code.
-- `routesDir` (_string_, default `"./routes"`): the path to where the routes are located.
-- `ssr` (_boolean_, default `true`): toggles between client rendering and server rendering (ssr) mode.
+- `appRoot` (_string_, default `"./src"`): Sets the root of the application code.
+- `routesDir` (_string_, default `"./routes"`): The path to where the routes are located.
+- `ssr` (_boolean_ | "sync" | "async", default `true`): Providing a boolean value will toggle between client rendering and [streaming](https://docs.solidjs.com/references/concepts/ssr/streaming) server rendering (ssr) mode,  while "sync" and "async" will render using Solid's [renderToString](https://docs.solidjs.com/references/concepts/ssr/simple-client-fetching-ssr) and [renderToStringAsync](https://docs.solidjs.com/references/concepts/ssr/async-ssr) respectively.
 - `islands` (_boolean_, default `false`): _experimental_ toggles on "islands" mode.
