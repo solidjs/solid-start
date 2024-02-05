@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 0.5.1
+
+### Patch Changes
+
+- a57b340f: update references to vinxi/http
+- 733400fb: pull API routes back in
+- 158f1090: fix storage import, update solid-js
+- 11beebd6: fix unocss example
+- 7dc792ca: fix tailwind typings
+
 ## 0.5.0
 
 ### Minor Changes
