@@ -26,13 +26,13 @@ import { Redirect } from "@solidjs/start";
 
 ### Using permanent redirects
 
-`Redirect` defaults to a temporary redirect (HTTP status code 307), but can be made permanent, sending a 308 status instead:
-
 ```tsx twoslash
 import { Redirect } from "@solidjs/start";
 // ---cut---
 <Redirect to="/some-other-page" permanent />;
 ```
+
+`Redirect` defaults to a temporary redirect (HTTP status code 307), but can be made permanent, sending a 308 status instead.
 
 ### Redirecting to start page on 404
 
