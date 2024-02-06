@@ -31,5 +31,17 @@ import { Redirect } from "@solidjs/start";
 ```tsx twoslash
 import { Redirect } from "@solidjs/start";
 // ---cut---
-<Redirect to="/" permanent />;
+<Redirect to="/some-other-page" permanent />;
 ```
+
+### Redirecting to start page on 404
+
+```tsx twoslash filename="routes/*404.tsx"
+import { Redirect } from "@solidjs/start";
+
+export default function NotFound() {
+  return <Redirect to="/" />;
+}
+```
+
+A custom 404 page may not be necessary for every website, in that case a simple redirect to the start page can implemented using `Redirect`.
