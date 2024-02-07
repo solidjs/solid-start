@@ -1,21 +1,14 @@
-"use server";
+import { action, cache } from "@solidjs/router";
+import type { Todo } from "~/types";
+import { storage } from "./db";
 
-import { createStorage } from "unstorage";
-import fsLiteDriver from "unstorage/drivers/fs-lite";
-import { Todo } from "~/types";
-
-// this uses file system driver for unstorage that works only on node.js
-// swap with the key value of your choice in your deployed environment
-const storage = createStorage({
-  driver: fsLiteDriver({
-    base: "./.data"
-  })
-});
-
-export async function getTodosFn() {
+export const getTodos = cache(async () => {
+  "use server";
   return ((await storage.getItem("todos:data")) as Todo[]) || [];
-}
-export async function addTodoFn(formData: FormData) {
+}, "todos");
+
+export const addTodo = action(async (formData: FormData) => {
+  "use server";
   const title = formData.get("title") as string;
   let [{ value: todos }, { value: index }] = await storage.getItems([
     "todos:data",
@@ -32,15 +25,19 @@ export async function addTodoFn(formData: FormData) {
     ]),
     storage.setItem("todos:counter", (index as number) + 1)
   ]);
-}
-export async function removeTodoFn(id: number) {
+});
+
+export const removeTodo = action(async (id: number) => {
+  "use server";
   const todos = (await storage.getItem("todos:data")) as Todo[];
   await storage.setItem(
     "todos:data",
     todos.filter(todo => todo.id !== id)
   );
-}
-export async function toggleTodoFn(id: number) {
+});
+
+export const toggleTodo = action(async (id: number) => {
+  "use server";
   const todos = (await storage.getItem("todos:data")) as Todo[];
   await storage.setItem(
     "todos:data",
@@ -51,8 +48,10 @@ export async function toggleTodoFn(id: number) {
       return todo;
     })
   );
-}
-export async function editTodoFn(id: number, formData: FormData) {
+});
+
+export const editTodo = action(async (id: number, formData: FormData) => {
+  "use server";
   const title = String(formData.get("title"));
   const todos = (await storage.getItem("todos:data")) as Todo[];
   await storage.setItem(
@@ -64,18 +63,22 @@ export async function editTodoFn(id: number, formData: FormData) {
       return todo;
     })
   );
-}
-export async function clearCompletedFn() {
-  const todos = (await storage.getItem("todos:data")) as Todo[];
-  await storage.setItem(
-    "todos:data",
-    todos.filter(todo => !todo.completed)
-  );
-}
-export async function toggleAllFn(completed: boolean) {
+});
+
+export const toggleAll = action(async (completed: boolean) => {
+  "use server";
   const todos = (await storage.getItem("todos:data")) as Todo[];
   await storage.setItem(
     "todos:data",
     todos.map(todo => ({ ...todo, completed }))
   );
-}
+});
+
+export const clearCompleted = action(async () => {
+  "use server";
+  const todos = (await storage.getItem("todos:data")) as Todo[];
+  await storage.setItem(
+    "todos:data",
+    todos.filter(todo => !todo.completed)
+  );
+});
