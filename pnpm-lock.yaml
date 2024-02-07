@@ -97,7 +97,7 @@ importers:
   examples/bare:
     dependencies:
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.14
@@ -115,7 +115,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.14
@@ -133,7 +133,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.14
@@ -148,11 +148,38 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.14
         version: 1.8.14
+      vinxi:
+        specifier: ^0.2.1
+        version: 0.2.1(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+
+  examples/notes:
+    dependencies:
+      '@solidjs/router':
+        specifier: ^0.11.5
+        version: 0.11.5(solid-js@1.8.14)
+      '@solidjs/start':
+        specifier: ^0.5.2
+        version: link:../../packages/start
+      '@types/marked':
+        specifier: ^4.3.1
+        version: 4.3.1
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
+      marked:
+        specifier: ^4.3.0
+        version: 4.3.0
+      solid-js:
+        specifier: ^1.8.14
+        version: 1.8.14
+      unstorage:
+        specifier: 1.10.1
+        version: 1.10.1
       vinxi:
         specifier: ^0.2.1
         version: 0.2.1(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
@@ -163,7 +190,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.14
@@ -181,7 +208,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.14
@@ -206,7 +233,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       '@vinxi/plugin-mdx':
         specifier: ^3.6.7
@@ -230,7 +257,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       prisma:
         specifier: ^5.7.0
@@ -255,7 +282,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.14
@@ -276,7 +303,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       autoprefixer:
         specifier: ^10.4.14
@@ -306,7 +333,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       '@trpc/client':
         specifier: ^10.44.1
@@ -330,7 +357,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       '@unocss/reset':
         specifier: ^0.58.3
@@ -354,7 +381,7 @@ importers:
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.14)
       '@solidjs/start':
-        specifier: ^0.5.1
+        specifier: ^0.5.2
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.5
@@ -2818,6 +2845,10 @@ packages:
       ci-info: 3.9.0
     dev: true
 
+  /@types/marked@4.3.1:
+    resolution: {integrity: sha512-vSSbKZFbNktrQ15v7o1EaH78EbWV+sPQbPjHG+Cp8CaNcPFUEfjZ0Iml/V0bFDwsTlYe8o6XC5Hfdp91cqPV2g==}
+    dev: false
+
   /@types/mdast@3.0.12:
     resolution: {integrity: sha512-DT+iNIRNX884cx0/Q1ja7NyUPpZuv0KPyL5rGNxm1WC1OtHstl7n4Jb7nk+xacNShQMbczJjt8uFzznpp6kYBg==}
     dependencies:
@@ -3133,7 +3164,7 @@ packages:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
       '@rollup/pluginutils': 4.2.1
-      acorn: 8.10.0
+      acorn: 8.11.3
       async-sema: 3.1.1
       bindings: 1.5.0
       estree-walker: 2.0.2
@@ -4244,6 +4275,13 @@ packages:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
 
+  /date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.23.9
+    dev: false
+
   /debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -4368,6 +4406,7 @@ packages:
 
   /defu@6.1.2:
     resolution: {integrity: sha512-+uO4+qr7msjNNWKYPHqN/3+Dx3NFkmIzayk2L1MyZQlvgZb/J1A0fo410dpKrN2SnqFjt8n4JL8fDJE0wIgjFQ==}
+    dev: false
 
   /defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
@@ -5287,7 +5326,7 @@ packages:
     dependencies:
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.3.0
+      fast-glob: 3.3.2
       ignore: 5.3.1
       merge2: 1.4.1
       slash: 3.0.0
@@ -6321,6 +6360,12 @@ packages:
     resolution: {integrity: sha512-WWC0ZuMzCyDHYCasEGs4IPvLyTGftYwh6wIEOULOF0HXcqZlhwRzrK0w2VUlxWA98xnvb/jszw4ZSkJ6ADpM6Q==}
     engines: {node: '>=0.10.0'}
 
+  /marked@4.3.0:
+    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
+    engines: {node: '>= 12'}
+    hasBin: true
+    dev: false
+
   /mdast-util-definitions@5.1.2:
     resolution: {integrity: sha512-8SVPMuHqlPME/z3gqVwWY4zVXn8lqKv/pAhC57FuJ40ImXyBpmO5ukh98zB2v7Blql2FiHjHv9LVztSIqjY+MA==}
     dependencies:
@@ -6770,7 +6815,7 @@ packages:
     engines: {node: '>=16.13'}
     hasBin: true
     dependencies:
-      acorn: 8.10.0
+      acorn: 8.11.3
       acorn-walk: 8.3.2
       capnp-ts: 0.7.0
       exit-hook: 2.2.1
@@ -7897,7 +7942,7 @@ packages:
   /rc9@2.1.1:
     resolution: {integrity: sha512-lNeOl38Ws0eNxpO3+wD1I9rkHGQyj1NU1jlzv4go2CtEnEQEUfqnIvZG7W+bC/aXdJ27n5x/yUjb6RoT9tko+Q==}
     dependencies:
-      defu: 6.1.2
+      defu: 6.1.4
       destr: 2.0.2
       flat: 5.0.2
 
@@ -8367,7 +8412,7 @@ packages:
   /serve-placeholder@2.0.1:
     resolution: {integrity: sha512-rUzLlXk4uPFnbEaIz3SW8VISTxMuONas88nYWjAWaM2W9VDbt9tyFOr3lq8RhVOFrT3XISoBw8vni5una8qMnQ==}
     dependencies:
-      defu: 6.1.2
+      defu: 6.1.4
 
   /serve-static@1.15.0:
     resolution: {integrity: sha512-XGuRDNjXUijsUL0vl6nSD7cwURuzEgglbOaFuZM9g3kwDXOWVTck0jLzjPzGD+TazWbboZYu52/9/XPdUgne9g==}
@@ -8975,7 +9020,7 @@ packages:
     hasBin: true
     dependencies:
       '@jridgewell/source-map': 0.3.5
-      acorn: 8.10.0
+      acorn: 8.11.3
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -9287,7 +9332,7 @@ packages:
     resolution: {integrity: sha512-bV/nqePAKv71v3HdVUn6UefbsDKQWRX+bJIkiSm0+twIds6WiD2bJLWWT3i214+J/B4edufZpG2w7Y63Vbwxow==}
     dependencies:
       '@antfu/utils': 0.7.7
-      defu: 6.1.2
+      defu: 6.1.4
       jiti: 1.21.0
       mlly: 1.5.0
     dev: false
