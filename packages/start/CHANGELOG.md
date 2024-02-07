@@ -1,5 +1,14 @@
 # @solidjs/start
 
+## 0.5.2
+
+### Patch Changes
+
+- ebe9d0fb: fix up response iterables
+- 4d66b4de: Fixed an issue with TypeScript based projects throwing client side errors regarding a type input in the `ErrorBoundary`.wq
+- 20697edd: initial support for single flight mutations
+- ae6dc628: update Solid to 1.8.14 to fix storage import
+
 ## 0.5.1
 
 ### Patch Changes
