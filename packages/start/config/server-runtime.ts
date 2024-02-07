@@ -109,33 +109,32 @@ async function deserializeStream(id, response) {
 
 let INSTANCE = 0;
 
-function createRequest(base: string, id: string, instance: string, body: any, contentType?: string) {
+function createRequest(base: string, id: string, instance: string, options: RequestInit) {
   return fetch(base, {
     method: "POST",
+    ...options,
     headers: {
-      "x-server-id": id,
-      "x-server-instance": instance,
-      ...(contentType ? { "Content-Type": contentType } : {})
-    },
-    body
+      ...options.headers,
+      "X-Server-Id": id,
+      "X-Server-Instance": instance
+    }
   });
 }
 
-async function fetchServerFunction(base, id, method, args) {
+async function fetchServerFunction(
+  base: string,
+  id: string,
+  options: Omit<RequestInit, "body">,
+  args: any[]
+) {
   const instance = `server-fn:${INSTANCE++}`;
-  const response = await (method === "GET"
-    ? fetch(base + (args.length ? `&args=${JSON.stringify(args)}` : ""), {
-        headers: {
-          "x-server-instance": instance
-        }
-      })
+  const response = await (args.length === 0
+    ? createRequest(base, id, instance, options)
     : args.length === 1 && args[0] instanceof FormData
-    ? createRequest(base, id, instance, args[0])
-    : createRequest(
-        base,
-        id,
-        instance,
-        JSON.stringify(
+    ? createRequest(base, id, instance, { ...options, body: args[0] })
+    : createRequest(base, id, instance, {
+        ...options,
+        body: JSON.stringify(
           await Promise.resolve(
             toJSONAsync(args, {
               plugins: [
@@ -153,17 +152,23 @@ async function fetchServerFunction(base, id, method, args) {
             })
           )
         ),
-        "application/json"
-      ));
+        headers: { ...options.headers, "Content-Type": "application/json" }
+      }));
 
-  if (response.headers.get("Location")) throw response;
-  if (response.headers.get("X-Revalidate")) {
-    /* @ts-ignore-next-line */
-    response.customBody = () => {
-      return deserializeStream(instance, response);
-    };
-    throw response;
+  if (
+    response.headers.get("Location") ||
+    response.headers.get("X-Revalidate") ||
+    response.headers.get("X-Single-Flight")
+  ) {
+    if (response.body) {
+      /* @ts-ignore-next-line */
+      response.customBody = () => {
+        return deserializeStream(instance, response);
+      };
+    }
+    return response;
   }
+
   const contentType = response.headers.get("Content-Type");
   let result;
   if (contentType && contentType.startsWith("text/plain")) {
@@ -184,14 +189,31 @@ export function createServerReference(fn, id, name) {
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        return `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
       }
       if (prop === "GET") {
-        return (...args) => fetchServerFunction(`${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`, `${id}#${name}`, "GET", args);
+        return receiver.withOptions({ method: "GET" });
+      }
+      if (prop === "withOptions") {
+        return (options: RequestInit) => {
+          const fn = (...args) => {
+            const encodeArgs = options.method && options.method.toUpperCase() === "GET";
+            return fetchServerFunction(
+              encodeArgs
+                ? receiver.url + (args.length ? `&args=${JSON.stringify(args)}` : "")
+                : `${baseURL}/_server`,
+              `${id}#${name}`,
+              options,
+              encodeArgs ? [] : args
+            );
+          };
+          fn.url = receiver.url;
+          return fn;
+        };
       }
     },
     apply(target, thisArg, args) {
-      return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, "POST", args);
+      return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, {}, args);
     }
   });
 }

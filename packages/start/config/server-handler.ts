@@ -1,5 +1,6 @@
 /// <reference types="vinxi/types/server" />
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
+// @ts-ignore
 import {
   CustomEventPlugin,
   DOMExceptionPlugin,
@@ -13,10 +14,15 @@ import {
   URLSearchParamsPlugin
 } from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
+import { renderToStringAsync } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler, setHeader } from "vinxi/http";
+import { eventHandler, setHeader, setResponseStatus } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
-import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
+import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
+import { createPageEvent } from "../server/pageEvent";
+// @ts-ignore
+import App from "#start/app";
+import { FetchEvent, PageEvent } from "../server";
 
 function createChunk(data) {
   const bytes = data.length;
@@ -62,8 +68,9 @@ async function handleServerFunction(h3Event) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
-  const serverReference = request.headers.get("x-server-id");
-  const instance = request.headers.get("x-server-instance");
+  const serverReference = request.headers.get("X-Server-Id");
+  const instance = request.headers.get("X-Server-Instance");
+  const singleFlight = request.headers.has("X-Single-Flight");
   const url = new URL(request.url);
   let filepath, name;
   if (serverReference) {
@@ -75,7 +82,7 @@ async function handleServerFunction(h3Event) {
     if (!filepath || !name) throw new Error("Invalid request");
   }
 
-  const action = (
+  const serverFunction = (
     await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[filepath].import()
   )[name];
   let parsed = [];
@@ -93,13 +100,15 @@ async function handleServerFunction(h3Event) {
     ) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
-      parsed.push(await new Request(request, { ...request, body: h3Event.node.req.body }).formData());
-      // what should work when #1721 is fixed 
+      parsed.push(
+        await new Request(request, { ...request, body: h3Event.node.req.body }).formData()
+      );
+      // what should work when #1721 is fixed
       // parsed.push(await request.formData);
     } else {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
-      const tmpReq = new Request(request, { ...request, body: h3Event.node.req.body })
+      const tmpReq = new Request(request, { ...request, body: h3Event.node.req.body });
       // what should work when #1721 is fixed
       // just use request.json() here
       parsed = fromJSON(await tmpReq.json(), {
@@ -119,27 +128,23 @@ async function handleServerFunction(h3Event) {
     }
   }
   try {
-    let result = await provideRequestEvent(event, () => {
+    let result = await provideRequestEvent(event, async () => {
       /* @ts-ignore */
       sharedConfig.context = { event };
-      return action(...parsed);
+      return serverFunction(...parsed);
     });
 
+    if (singleFlight && instance) {
+      result = await handleSingleFlight(event, result);
+    }
+
     // handle responses
-    if (result instanceof Response) {
-      if (result.status === 302) {
-        return new Response(null, {
-          status: instance ? 204 : 302,
-          headers: {
-            Location: result.headers.get("Location")
-          }
-        });
-      }
+    if (result instanceof Response && instance) {
       // forward headers
       if (result.headers) mergeResponseHeaders(h3Event, result.headers);
       if ((result as any).customBody) {
         result = await (result as any).customBody();
-      } else if (result.body == undefined) result = undefined;
+      } else if (result.body == undefined) result = null;
     }
 
     // handle no JS success case
@@ -163,27 +168,58 @@ async function handleServerFunction(h3Event) {
         }
       });
     }
-    if (typeof result === "string") return new Response(result);
+    if (!result || typeof result === "string") return result || null;
     setHeader(h3Event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
     if (x instanceof Response) {
-      if (x.status === 302) {
-        return new Response(null, {
-          status: instance ? 204 : 302,
-          headers: {
-            Location: x.headers.get("Location")
-          }
-        });
-      }
+      if (x.status === 302 && !instance) setResponseStatus(h3Event, 302);
       // forward headers
       if (x.headers) mergeResponseHeaders(h3Event, x.headers);
       if ((x as any).customBody) {
         x = await (x as any).customBody();
-      } else if (x.body == undefined) x = undefined;
+      } else if (x.body == undefined) x = null;
     }
     return x;
   }
+}
+
+async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
+  let revalidate;
+  let url = new URL(sourceEvent.request.headers.get("referer")).toString()
+  if (result instanceof Response) {
+    if (result.headers.has("X-Revalidate")) revalidate = result.headers.get("X-Revalidate").split(",");
+    if (result.headers.has("Location")) url = result.headers.get("Location");
+  }
+  const event = cloneEvent(sourceEvent) as PageEvent;
+  event.request = new Request(url);
+  return await provideRequestEvent(event, async () => {
+    await createPageEvent(event);
+    /* @ts-ignore */
+    sharedConfig.context = { event };
+    /* @ts-ignore */
+    event.router.dataOnly = revalidate || true;
+    /* @ts-ignore */
+    event.router.previousUrl = sourceEvent.request.headers.get("referer");
+    renderToStringAsync(App);
+    /* @ts-ignore */
+    const body = event.router.data;
+    if (body) {
+      let containsKey = false;
+      for (const key in body) {
+        if (body[key] === undefined) delete body[key];
+        else containsKey = true;
+      }
+      if (!containsKey) return result;
+      if (!(result instanceof Response)) {
+        body["_$value"] = result;
+        result = new Response(null, { status: 200 });
+      }
+      result.customBody = () => body;
+      result.headers.set("X-Single-Flight", "true");
+      return result;
+    }
+  });
 }
 
 export default eventHandler(handleServerFunction);

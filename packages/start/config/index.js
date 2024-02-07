@@ -191,7 +191,7 @@ export function defineConfig(baseConfig = {}) {
       serverFunctions.router({
         handler: normalize(fileURLToPath(new URL("./server-handler.ts", import.meta.url))),
         runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url))),
-        // routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
+        routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: async () => [
           config("user", {
             ...userConfig,

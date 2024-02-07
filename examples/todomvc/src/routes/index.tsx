@@ -35,6 +35,12 @@ const clearCompleted = action(clearCompletedFn, "clearCompleted");
 const editTodo = action(editTodoFn, "editTodo");
 const toggleTodo = action(toggleTodoFn, "toggleTodo");
 
+export const route = {
+  load() {
+    getTodos();
+  }
+}
+
 export default function TodoApp(props: RouteSectionProps) {
   const todos = createAsync(getTodos, { initialValue: [], deferStream: true });
   const location = props.location;
@@ -103,7 +109,7 @@ export default function TodoApp(props: RouteSectionProps) {
                 togglingAll.pending
                   ? !togglingAll.input[0]
                   : togglingTodo.pending
-                  ? !togglingTodo.input[0]
+                  ? !todo.completed
                   : todo.completed;
               const removing = () => removingTodo.some(data => data.input[0] === todo.id);
               return (

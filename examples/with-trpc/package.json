@@ -11,7 +11,7 @@
     "@trpc/client": "^10.44.1",
     "@trpc/server": "^10.44.1",
     "@solidjs/meta": "^0.29.2",
-    "@solidjs/router": "^0.11.2",
+    "@solidjs/router": "^0.11.4",
     "@solidjs/start": "^0.5.1",
     "solid-js": "^1.8.14",
     "valibot": "^0.23.0",
