@@ -74,21 +74,21 @@ class HeaderProxy {
     return Array.isArray(cookies) ? cookies : [cookies];
   }
   forEach(fn: (value: string, key: string, object: Headers) => void) {
-    return this.entries().forEach(([key, value]) => fn(value, key, this));
+    return Object.entries<string | string[]>(getResponseHeaders(this.event)).forEach(([key, value]) => fn(Array.isArray(value) ? value.join(", ") : value, key, this));
   }
   entries() {
-    return getResponseHeaders(this.event).map(([key, value]) => [
+    return Object.entries<string | string[]>(getResponseHeaders(this.event)).map(([key, value]) => [
       key,
       Array.isArray(value) ? value.join(", ") : value
-    ]);
+    ] as [string, string])[Symbol.iterator]();
   }
   keys() {
-    return getResponseHeaders(this.event).map(([key]) => key);
+    return Object.keys(getResponseHeaders(this.event))[Symbol.iterator]();
   }
   values() {
-    return getResponseHeaders(this.event).map(([key, value]) =>
+    return Object.values<string | string[]>(getResponseHeaders(this.event)).map((value) =>
       Array.isArray(value) ? value.join(", ") : value
-    );
+    )[Symbol.iterator]();
   }
   [Symbol.iterator]() {
     return this.entries()[Symbol.iterator]();
