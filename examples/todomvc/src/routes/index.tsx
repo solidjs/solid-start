@@ -1,4 +1,5 @@
 import {
+  RouteDefinition,
   action,
   cache,
   createAsync,
@@ -28,18 +29,18 @@ declare module "solid-js" {
 }
 const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
 const getTodos = cache(getTodosFn, "todos");
-const addTodo = action(addTodoFn, "addTodo");
-const removeTodo = action(removeTodoFn, "removeTodo");
-const toggleAll = action(toggleAllFn, "toggleAll");
-const clearCompleted = action(clearCompletedFn, "clearCompleted");
-const editTodo = action(editTodoFn, "editTodo");
-const toggleTodo = action(toggleTodoFn, "toggleTodo");
+const addTodo = action(addTodoFn);
+const removeTodo = action(removeTodoFn);
+const toggleAll = action(toggleAllFn);
+const clearCompleted = action(clearCompletedFn);
+const editTodo = action(editTodoFn);
+const toggleTodo = action(toggleTodoFn);
 
 export const route = {
   load() {
     getTodos();
   }
-}
+} satisfies RouteDefinition;
 
 export default function TodoApp(props: RouteSectionProps) {
   const todos = createAsync(getTodos, { initialValue: [], deferStream: true });

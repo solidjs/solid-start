@@ -186,9 +186,10 @@ async function handleServerFunction(h3Event) {
 
 async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
   let revalidate;
-  let url = new URL(sourceEvent.request.headers.get("referer")).toString()
+  let url = new URL(sourceEvent.request.headers.get("referer")).toString();
   if (result instanceof Response) {
-    if (result.headers.has("X-Revalidate")) revalidate = result.headers.get("X-Revalidate").split(",");
+    if (result.headers.has("X-Revalidate"))
+      revalidate = result.headers.get("X-Revalidate").split(",");
     if (result.headers.has("Location")) url = result.headers.get("Location");
   }
   const event = cloneEvent(sourceEvent) as PageEvent;
