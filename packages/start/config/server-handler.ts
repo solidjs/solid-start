@@ -193,7 +193,7 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
     if (result.headers.has("Location"))
       url = new URL(
         result.headers.get("Location"),
-        new URL(sourceEvent.request.url).origin
+        new URL(sourceEvent.request.url).origin + import.meta.env.SERVER_BASE_URL
       ).toString();
   }
   const event = cloneEvent(sourceEvent) as PageEvent;
