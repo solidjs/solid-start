@@ -1,13 +1,12 @@
-import { createAsync } from "@solidjs/router";
-import { For, Show, Suspense } from "solid-js";
+import { For, Show } from "solid-js";
 import { getNotes } from "~/lib/api";
+import { createAsyncStore } from "~/lib/util";
 import SidebarNote from "./SidebarNote";
 
 export default function NoteList(props: { searchText: string }) {
-  const notes = createAsync(getNotes, { deferStream: true });
+  const notes = createAsyncStore(() => getNotes(props.searchText));
 
   return (
-    <Suspense fallback={<div>Loading Notes...</div>}>
       <Show
         when={notes()?.length}
         fallback={
@@ -28,6 +27,5 @@ export default function NoteList(props: { searchText: string }) {
           </For>
         </ul>
       </Show>
-    </Suspense>
   );
 }

@@ -4,30 +4,34 @@ import { marked } from "marked";
 import { storage } from "./db";
 import type { Note } from "./types";
 
-export const getNotes = cache(async () => {
+export const getNotes = cache(async (searchText?: string) => {
   "use server";
-  return (((await storage.getItem("notes:data")) as Note[]) || []).map(note => {
-    const updatedAt = new Date(note.updatedAt);
-    return {
-      ...note,
-      updatedAt: isToday(updatedAt) ? format(updatedAt, "h:mm bb") : format(updatedAt, "M/d/yy")
-    };
-  });
+  return (((await storage.getItem("notes:data")) as Note[]) || [])
+    .filter(note => !searchText || note.title.toLowerCase().includes(searchText.toLowerCase()))
+    .map(note => {
+      const updatedAt = new Date(note.updatedAt);
+      return {
+        ...note,
+        updatedAt: isToday(updatedAt) ? format(updatedAt, "h:mm bb") : format(updatedAt, "M/d/yy")
+      };
+    });
 }, "notes");
 
 export const getNote = cache(async (id: number) => {
   "use server";
   return (((await storage.getItem("notes:data")) as Note[]) || []).find(note => note.id === id);
-}, "note")
+}, "note");
 
 export const getNotePreview = cache(async (id: number) => {
   "use server";
-  const note = (((await storage.getItem("notes:data")) as Note[]) || []).find(note => note.id === id);
+  const note = (((await storage.getItem("notes:data")) as Note[]) || []).find(
+    note => note.id === id
+  );
   if (!note) return;
   note.body = marked(note.body);
-  note.updatedAt = format(new Date(note.updatedAt), "d MMM yyyy 'at' h:mm bb")
+  note.updatedAt = format(new Date(note.updatedAt), "d MMM yyyy 'at' h:mm bb");
   return note;
-}, "note-preview")
+}, "note-preview");
 
 export const saveNote = action(async (id: number | undefined, formData: FormData) => {
   "use server";
@@ -51,10 +55,13 @@ export const saveNote = action(async (id: number | undefined, formData: FormData
     ]);
     return redirect(`/notes/${index}`);
   }
-  await storage.setItem("notes:data", notes.map(note => {
-    if (note.id !== id) return note;
-    return { id, title, body, updatedAt: new Date().toISOString() };
-  }));
+  await storage.setItem(
+    "notes:data",
+    notes.map(note => {
+      if (note.id !== id) return note;
+      return { id, title, body, updatedAt: new Date().toISOString() };
+    })
+  );
   return redirect(`/notes/${id}`);
 });
 
@@ -66,4 +73,3 @@ export const deleteNote = action(async (id: number) => {
     notes.filter(note => note.id !== id)
   );
 });
-
