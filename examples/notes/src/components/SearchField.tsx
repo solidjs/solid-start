@@ -1,4 +1,3 @@
-import { useSearchParams } from "@solidjs/router";
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -6,7 +5,7 @@ import { useSearchParams } from "@solidjs/router";
  * LICENSE file in the root directory of this source tree.
  *
  */
-
+import { useSearchParams } from "@solidjs/router";
 import { useTransition } from "solid-js";
 
 export default function SearchField() {
