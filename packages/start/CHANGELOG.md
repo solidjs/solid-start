@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.5.4
+
+### Patch Changes
+
+- 0b7eceeb: fix prerender/content-type, stupid copy-paste
+
 ## 0.5.3
 
 ### Patch Changes
