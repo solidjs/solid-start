@@ -1,6 +1,6 @@
 import {
-    getCookie,
-    setCookie
+  getCookie,
+  setCookie
 } from "vinxi/http";
 import { createRoutes } from "../shared/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
@@ -22,7 +22,7 @@ function initFromFlash(ctx: FetchEvent) {
 export async function createPageEvent(ctx: FetchEvent) {
   const clientManifest = import.meta.env.MANIFEST["client"];
   const serverManifest = import.meta.env.MANIFEST["ssr"];
-  ctx.response.headers.set("Cache-Control", "no-cache");
+  ctx.response.headers.set("Content-Type", "text/html");
   // const prevPath = ctx.request.headers.get("x-solid-referrer");
   // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = Object.assign(ctx, {
