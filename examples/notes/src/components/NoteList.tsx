@@ -1,6 +1,6 @@
+import { createAsyncStore } from "@solidjs/router";
 import { For, Show } from "solid-js";
 import { getNotes } from "~/lib/api";
-import { createAsyncStore } from "~/lib/util";
 import SidebarNote from "./SidebarNote";
 
 export default function NoteList(props: { searchText: string }) {

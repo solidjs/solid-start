@@ -66,7 +66,7 @@ const getStudents = cache(async (house: string) => {
 
 // page component
 export default function Students() {
-  const students = createAsync(getStudents);
+  const students = createAsync(() => getStudents());
 }
 ```
 
