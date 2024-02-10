@@ -48,7 +48,7 @@ export const route = {
 };
 
 export default function Page() {
-  const students = createAsync(getStudents);
+  const students = createAsync(() => getStudents());
 
   return <ul>{students() && students()!.map(student => <li>{student.name}</li>)}</ul>;
 }
@@ -91,7 +91,7 @@ export const route = {
 };
 
 export default function Page() {
-  const students = createAsync(getStudents);
+  const students = createAsync(() => getStudents());
 
   return <ul>{students() && students()!.map(student => <li>{student.name}</li>)}</ul>;
 }

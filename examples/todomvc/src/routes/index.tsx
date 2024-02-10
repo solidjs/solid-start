@@ -1,6 +1,6 @@
 import {
   RouteDefinition,
-  createAsync,
+  createAsyncStore,
   useSubmission,
   useSubmissions,
   type RouteSectionProps
@@ -34,7 +34,7 @@ export const route = {
 } satisfies RouteDefinition;
 
 export default function TodoApp(props: RouteSectionProps) {
-  const todos = createAsync(getTodos, { initialValue: [], deferStream: true });
+  const todos = createAsyncStore(() => getTodos(), { initialValue: [], deferStream: true });
   const location = props.location;
 
   const addingTodo = useSubmissions(addTodo);
