@@ -1,5 +1,5 @@
 {
-  "name": "example-bare",
+  "name": "example-notes",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
@@ -7,8 +7,13 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/start": "^0.5.4",
+    "@solidjs/router": "^0.12.0",
+    "@solidjs/start": "^0.5.2",
+    "@types/marked": "^4.3.1",
+    "date-fns": "^2.30.0",
     "solid-js": "^1.8.14",
+    "marked": "^4.3.0",
+    "unstorage": "1.10.1",
     "vinxi": "^0.2.1"
   },
   "engines": {

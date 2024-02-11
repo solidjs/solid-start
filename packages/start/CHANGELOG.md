@@ -1,5 +1,18 @@
 # @solidjs/start
 
+## 0.5.4
+
+### Patch Changes
+
+- 0b7eceeb: fix prerender/content-type, stupid copy-paste
+
+## 0.5.3
+
+### Patch Changes
+
+- 4c32e85a: add base url to single flight redirect
+- d8bcc5c5: add notes demo, fix redirects in single flight
+
 ## 0.5.2
 
 ### Patch Changes

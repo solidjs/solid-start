@@ -1,8 +1,6 @@
 import {
   RouteDefinition,
-  action,
-  cache,
-  createAsync,
+  createAsyncStore,
   useSubmission,
   useSubmissions,
   type RouteSectionProps
@@ -10,13 +8,13 @@ import {
 import { For, Show, createMemo, createSignal } from "solid-js";
 import { CompleteIcon, IncompleteIcon } from "~/components/icons";
 import {
-  addTodoFn,
-  clearCompletedFn,
-  editTodoFn,
-  getTodosFn,
-  removeTodoFn,
-  toggleAllFn,
-  toggleTodoFn
+  addTodo,
+  clearCompleted,
+  editTodo,
+  getTodos,
+  removeTodo,
+  toggleAll,
+  toggleTodo
 } from "~/lib/api";
 import { Todo } from "~/types";
 
@@ -28,13 +26,6 @@ declare module "solid-js" {
   }
 }
 const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
-const getTodos = cache(getTodosFn, "todos");
-const addTodo = action(addTodoFn);
-const removeTodo = action(removeTodoFn);
-const toggleAll = action(toggleAllFn);
-const clearCompleted = action(clearCompletedFn);
-const editTodo = action(editTodoFn);
-const toggleTodo = action(toggleTodoFn);
 
 export const route = {
   load() {
@@ -43,7 +34,7 @@ export const route = {
 } satisfies RouteDefinition;
 
 export default function TodoApp(props: RouteSectionProps) {
-  const todos = createAsync(getTodos, { initialValue: [], deferStream: true });
+  const todos = createAsyncStore(() => getTodos(), { initialValue: [], deferStream: true });
   const location = props.location;
 
   const addingTodo = useSubmissions(addTodo);
@@ -92,7 +83,7 @@ export default function TodoApp(props: RouteSectionProps) {
 
       <section class="main">
         <Show when={todos().length > 0}>
-          <form action={toggleAll.with(!remainingCount())} method="post">
+          <form action={toggleAll.with(!!remainingCount())} method="post">
             <button class={`toggle-all ${!remainingCount() ? "checked" : ""}`} type="submit">
               ❯
             </button>
@@ -202,7 +193,7 @@ export default function TodoApp(props: RouteSectionProps) {
               </a>
             </li>
           </ul>
-          <Show when={remainingCount() !== todos.length}>
+          <Show when={remainingCount() !== todos().length}>
             <form action={clearCompleted} method="post">
               <button class="clear-completed">Clear completed</button>
             </form>
