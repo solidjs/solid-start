@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 0.5.5
+
+### Patch Changes
+
+- f787f2b6: update router
+- 77e57b2a: Fix #1299, Fix dev overlay logs
+- 2cd7a3b3: Fixes incorrect, missing `type` import declarations.
+- 2c193283: fix singleflight mutations in non-ALS envs
+- 38ba8de8: fix singleflight eating response bodies
+
 ## 0.5.4
 
 ### Patch Changes
