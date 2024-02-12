@@ -200,12 +200,20 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
   return await provideRequestEvent(event, async () => {
     await createPageEvent(event);
     /* @ts-ignore */
-    sharedConfig.context = { event };
-    /* @ts-ignore */
     event.router.dataOnly = revalidate || true;
     /* @ts-ignore */
     event.router.previousUrl = sourceEvent.request.headers.get("referer");
-    renderToStringAsync(App);
+    (async () => {
+      try {
+        await renderToStringAsync(() => {
+          /* @ts-ignore */
+          sharedConfig.context = { event };
+          App();
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    })();
     /* @ts-ignore */
     const body = event.router.data;
     if (body) {
