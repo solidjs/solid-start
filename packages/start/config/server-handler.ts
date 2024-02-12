@@ -168,7 +168,6 @@ async function handleServerFunction(h3Event) {
         }
       });
     }
-    if (!result || typeof result === "string") return result || null;
     setHeader(h3Event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
