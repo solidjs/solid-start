@@ -216,21 +216,20 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
     })();
     /* @ts-ignore */
     const body = event.router.data;
-    if (body) {
-      let containsKey = false;
-      for (const key in body) {
-        if (body[key] === undefined) delete body[key];
-        else containsKey = true;
-      }
-      if (!containsKey) return result;
-      if (!(result instanceof Response)) {
-        body["_$value"] = result;
-        result = new Response(null, { status: 200 });
-      }
-      result.customBody = () => body;
-      result.headers.set("X-Single-Flight", "true");
-      return result;
+    if (!body) return result;
+    let containsKey = false;
+    for (const key in body) {
+      if (body[key] === undefined) delete body[key];
+      else containsKey = true;
     }
+    if (!containsKey) return result;
+    if (!(result instanceof Response)) {
+      body["_$value"] = result;
+      result = new Response(null, { status: 200 });
+    }
+    result.customBody = () => body;
+    result.headers.set("X-Single-Flight", "true");
+    return result;
   });
 }
 
