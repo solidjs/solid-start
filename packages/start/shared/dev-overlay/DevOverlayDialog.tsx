@@ -6,7 +6,7 @@ import { Portal } from 'solid-js/web';
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from 'terracotta';
 import info from '../../package.json';
 import { CodeView } from './CodeView';
-import { StackFrameSource, createStackFrame } from './createStackFrame';
+import { type StackFrameSource, createStackFrame } from './createStackFrame';
 import download from './download';
 import { ArrowLeftIcon, ArrowRightIcon, CameraIcon, DiscordIcon, GithubIcon, RefreshIcon, SolidStartIcon, ViewCompiledIcon, ViewOriginalIcon } from './icons';
 import './styles.css';
