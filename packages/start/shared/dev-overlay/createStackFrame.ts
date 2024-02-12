@@ -1,4 +1,4 @@
-import { Accessor, createMemo, createResource } from "solid-js";
+import { type Accessor, createMemo, createResource } from "solid-js";
 import getSourceMap from "./get-source-map";
 
 export interface StackFrameSource {
