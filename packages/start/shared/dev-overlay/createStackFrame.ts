@@ -53,12 +53,11 @@ export function createStackFrame(
     const { source, content, sourceMap } = current;
 
     
-    if (!isCompiled() && source.line && source.column) {
+    if (!isCompiled() && source.line && source.column && sourceMap) {
       const result = sourceMap.originalPositionFor({
         line: source.line,
         column: source.column,
       });
-      console.log('sourcemap', result);
 
       return {
         ...result,
