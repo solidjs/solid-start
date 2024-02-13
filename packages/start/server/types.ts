@@ -1,13 +1,26 @@
 import type { JSX } from "solid-js";
-import { HTTPEventSymbol, type EventHandlerRequest, type H3Event } from "vinxi/http";
+import { RequestEvent } from "solid-js/web";
+import { H3Event, HTTPEventSymbol } from "vinxi/http";
 
 // export const FETCH_EVENT = "$FETCH";
 
 export type DocumentComponentProps = {
   assets: JSX.Element;
   scripts: JSX.Element;
-  children: JSX.Element;
-}
+  children?: JSX.Element;
+};
+
+export type Asset = {
+  tag: "style";
+  attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
+  children?: JSX.Element;
+} | {
+  tag: "script";
+  attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
+} | {
+  tag: "link";
+  attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
+};
 
 export type ContextMatches = {
   originalPath: string;
@@ -24,15 +37,15 @@ export interface ResponseStub {
 export interface FetchEvent {
   request: Request;
   response: ResponseStub;
-  clientAddress: string;
+  clientAddress?: string;
   locals: RequestEventLocals;
-  nativeEvent: H3Event<EventHandlerRequest>;
-  [HTTPEventSymbol]: H3Event<EventHandlerRequest>;
+  nativeEvent: H3Event;
+  [HTTPEventSymbol]: H3Event;
 }
 export interface RequestEventLocals {
   [key: string | symbol]: any;
 }
-export interface PageEvent extends FetchEvent {
+export interface PageEvent extends RequestEvent {
   manifest: any;
   assets: any;
   routes: any[];

@@ -6,7 +6,7 @@ import { Portal } from 'solid-js/web';
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from 'terracotta';
 import info from '../../package.json';
 import { CodeView } from './CodeView';
-import { type StackFrameSource, createStackFrame } from './createStackFrame';
+import { createStackFrame, type StackFrameSource } from './createStackFrame';
 import download from './download';
 import { ArrowLeftIcon, ArrowRightIcon, CameraIcon, DiscordIcon, GithubIcon, RefreshIcon, SolidStartIcon, ViewCompiledIcon, ViewOriginalIcon } from './icons';
 import './styles.css';
@@ -21,7 +21,7 @@ interface ErrorInfoProps {
 
 function ErrorInfo(props: ErrorInfoProps): JSX.Element {
   return (
-    <Show when={props.error instanceof Error && props.error} keyed fallback={<span>{props.error.toString()}</span>}>
+    <Show when={props.error instanceof Error && props.error} keyed fallback={<span>{(props.error as Error).toString()}</span>}>
       {(current) => (
         <span class="dev-overlay-error-info">
           <span class="dev-overlay-error-info-name">{current.name}</span>
@@ -41,7 +41,7 @@ function getFileName(source: string): string {
   try {
     const path = source.startsWith('/') ? new URL(source, 'file://') : new URL(source);
     const paths = path.pathname.split('/');
-    return paths[paths.length - 1];
+    return paths[paths.length - 1]!;
   } catch (error) {
     return getFileName(`/${source}`);
   }
@@ -62,7 +62,7 @@ function CodeFallback(): JSX.Element {
 function StackFramesContent(props: StackFramesContentProps) {
   const stackframes = ErrorStackParser.parse(props.error);
 
-  const [selectedFrame, setSelectedFrame] = createSignal(stackframes[0]);
+  const [selectedFrame, setSelectedFrame] = createSignal(stackframes[0]!);
 
   return (
       <div class="dev-overlay-stack-frames-content">
@@ -98,10 +98,10 @@ function StackFramesContent(props: StackFramesContentProps) {
               <div class="dev-overlay-stack-frame">
                 <span class="dev-overlay-stack-frame-function">{current.functionName ?? '<anonymous>'}</span>
                 <span class="dev-overlay-stack-frame-file">{getFilePath({
-                  source: current.getFileName(),
+                  source: current.getFileName()!,
                   content: '',
-                  line: current.getLineNumber(),
-                  column: current.getColumnNumber(),
+                  line: current.getLineNumber()!,
+                  column: current.getColumnNumber()!,
                   name: current.getFunctionName(),
                 })}</span>
               </div>
@@ -204,11 +204,11 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
     url.searchParams.append('labels', 'needs+triage');
     url.searchParams.append('template', 'bug.yml');
     url.searchParams.append('title', `[Bug?]:` + props.errors[truncated() - 1].toString());
-    window.open(url, '_blank').focus();
+    window.open(url, '_blank')!.focus();
   }
 
   function redirectToDiscord() {
-    window.open(DISCORD_INVITE, '_blank').focus();
+    window.open(DISCORD_INVITE, '_blank')!.focus();
   }
 
   return (

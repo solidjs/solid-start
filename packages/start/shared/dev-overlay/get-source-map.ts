@@ -11,7 +11,7 @@ export default async function getSourceMap(
   const lines = content.split('\n');
   let sourceMapUrl: string | undefined;
   for (let i = lines.length - 1; i >= 0 && !sourceMapUrl; i--) {
-    const result = lines[i].match(SOURCEMAP_REGEX);
+    const result = lines[i]!.match(SOURCEMAP_REGEX);
     if (result) {
       sourceMapUrl = result[1];
     }

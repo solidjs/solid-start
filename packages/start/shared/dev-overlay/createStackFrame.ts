@@ -1,4 +1,4 @@
-import { type Accessor, createMemo, createResource } from "solid-js";
+import { createMemo, createResource, type Accessor } from "solid-js";
 import getSourceMap from "./get-source-map";
 
 export interface StackFrameSource {
@@ -19,7 +19,7 @@ function getActualFileSource(path: string): string {
 export function createStackFrame(
   stackframe: StackFrame,
   isCompiled: () => boolean,
-): Accessor<StackFrameSource> {
+) {
   const [data] = createResource(
     () => ({
       fileName: stackframe.fileName,
@@ -45,14 +45,13 @@ export function createStackFrame(
     },
   );
 
-  const info = createMemo<StackFrameSource>(() => {
+  const info = createMemo(() => {
     const current = data();
     if (!current) {
       return undefined;
     }
     const { source, content, sourceMap } = current;
 
-    
     if (!isCompiled() && source.line && source.column && sourceMap) {
       const result = sourceMap.originalPositionFor({
         line: source.line,
@@ -62,7 +61,7 @@ export function createStackFrame(
       return {
         ...result,
         content: sourceMap.sourceContentFor(result.source),
-      };
+      } as StackFrameSource;
     }
 
     return {
@@ -71,8 +70,8 @@ export function createStackFrame(
       column: source.column,
       name: source.functionName,
       content,
-    };
+    } as StackFrameSource;
   });
 
-  return info;
+  return info as Accessor<StackFrameSource>;
 }

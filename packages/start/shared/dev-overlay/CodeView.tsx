@@ -58,7 +58,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
   ) ,async (value) => {
     const highlighter = await loadHighlighter();
     const lang = props.fileName
-      .split(/[#?]/)[0]
+      .split(/[#?]/)[0]!
       .split('.')
       .pop()
       ?.trim() as BuiltinLanguage;
@@ -76,7 +76,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       const lines = ref.querySelectorAll('span[class="line"]');
 
       for (let i = 0, len = lines.length; i < len; i++) {
-        const el = lines[i];
+        const el = lines[i] as HTMLElement;
         if ((props.line - minLine() - 1) === i) {
           el.classList.add('dev-overlay-error-line');
         }

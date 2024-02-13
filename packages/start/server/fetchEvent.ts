@@ -1,5 +1,6 @@
 import {
   H3Event,
+  HTTPEvent,
   HTTPEventSymbol,
   appendResponseHeader,
   getRequestIP,
@@ -37,15 +38,15 @@ export function cloneEvent<T extends FetchEvent>(fetchEvent: T): T {
 }
 
 export function getFetchEvent(h3Event: H3Event): FetchEvent {
-  if (!h3Event[fetchEventSymbol]) {
+  if (!(h3Event as any)[fetchEventSymbol]) {
     const fetchEvent = createFetchEvent(h3Event);
-    h3Event[fetchEventSymbol] = fetchEvent;
+    (h3Event as any)[fetchEventSymbol] = fetchEvent;
   }
 
-  return h3Event[fetchEventSymbol];
+  return (h3Event as any)[fetchEventSymbol];
 }
 
-export function mergeResponseHeaders(h3Event, headers) {
+export function mergeResponseHeaders(h3Event: HTTPEvent, headers: Headers) {
   for (const [key, value] of headers.entries()) {
     setHeader(h3Event, key, value);
   }

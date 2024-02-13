@@ -6,6 +6,11 @@ interface Route {
   id: string;
   children?: Route[];
   $component?: any;
+  $GET?: any;
+  $POST?: any;
+  $PUT?: any;
+  $PATCH?: any;
+  $DELETE?: any;
 }
 
 declare module "vinxi/routes" {
@@ -43,7 +48,7 @@ function defineRoutes(fileRoutes: Route[]) {
 
   return fileRoutes
     .sort((a, b) => a.path.length - b.path.length)
-    .reduce((prevRoutes, route) => {
+    .reduce((prevRoutes: Route[], route) => {
       return processRoute(prevRoutes, route, route.path, route.path);
     }, []);
 }
@@ -73,7 +78,7 @@ const router = createRouter({
     }
     if (memo[path]) {
       throw new Error(
-        `Duplicate API routes for "${path}" found at "${memo[path].route.path}" and "${route.path}"`
+        `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${route.path}"`
       );
     }
     memo[path] = { route };
