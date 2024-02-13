@@ -3,6 +3,8 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "node",
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"jsx": "preserve",

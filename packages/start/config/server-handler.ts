@@ -31,7 +31,7 @@ function createChunk(data) {
   return new TextEncoder().encode(`;0x${totalHex};${data}`);
 }
 
-function serializeToStream(id, value) {
+function serializeToStream(id: string, value) {
   return new ReadableStream({
     start(controller) {
       crossSerializeStream(value, {
@@ -95,8 +95,8 @@ async function handleServerFunction(h3Event) {
   if (h3Event.method === "POST") {
     const contentType = request.headers.get("content-type");
     if (
-      contentType.startsWith("multipart/form-data") ||
-      contentType.startsWith("application/x-www-form-urlencoded")
+      contentType?.startsWith("multipart/form-data") ||
+      contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
