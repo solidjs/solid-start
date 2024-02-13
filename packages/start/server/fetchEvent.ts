@@ -45,14 +45,14 @@ export function getFetchEvent(h3Event: H3Event): FetchEvent {
   return h3Event[fetchEventSymbol];
 }
 
-export function mergeResponseHeaders(h3Event, headers) {
+export function mergeResponseHeaders(h3Event: H3Event, headers: Headers) {
   for (const [key, value] of headers.entries()) {
     setHeader(h3Event, key, value);
   }
 }
 
 class HeaderProxy {
-  constructor(private event: H3Event) {}
+  constructor(private event: H3Event) { }
   get(key: string) {
     const h = getResponseHeader(this.event, key);
     return Array.isArray(h) ? h.join(", ") : h;

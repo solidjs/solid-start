@@ -20,7 +20,7 @@
   "types": "./shared/index.tsx",
   "exports": {
     ".": "./shared/index.tsx",
-    "./config": "./config/index.js",
+    "./config": "./config/index.ts",
     "./middleware": "./middleware/index.ts",
     "./server": "./server/index.tsx",
     "./server/spa": "./server/spa/index.tsx",

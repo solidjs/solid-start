@@ -1,7 +1,7 @@
 import { analyzeModule, BaseFileSystemRouter, cleanPath } from "vinxi/fs-router";
 
 export class SolidStartClientFileRouter extends BaseFileSystemRouter {
-  toPath(src) {
+  toPath(src: string) {
     const routePath = cleanPath(src, this.config)
       // remove the initial slash
       .slice(1)
@@ -19,7 +19,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     return routePath?.length > 0 ? `/${routePath}` : "/";
   }
 
-  toRoute(src) {
+  toRoute(src: string) {
     let path = this.toPath(src);
 
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
@@ -45,9 +45,9 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
         },
         $$route: hasRouteConfig
           ? {
-              src: src,
-              pick: ["route"]
-            }
+            src: src,
+            pick: ["route"]
+          }
           : undefined,
         path,
         filePath: src
@@ -57,8 +57,8 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 }
 
 const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
-function createHTTPHandlers(src, exports) {
-  const handlers = {};
+function createHTTPHandlers(src: string, exports: ReturnType<typeof analyzeModule>[1]) {
+  const handlers: Record<`$${string}`, { src: string, pick: string[] }> = {};
   for (const exp of exports) {
     if (HTTP_METHODS.includes(exp.n)) {
       handlers[`$${exp.n}`] = {
@@ -71,7 +71,7 @@ function createHTTPHandlers(src, exports) {
 }
 
 export class SolidStartServerFileRouter extends BaseFileSystemRouter {
-  toPath(src) {
+  toPath(src: string) {
     const routePath = cleanPath(src, this.config)
       // remove the initial slash
       .slice(1)
@@ -89,7 +89,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
     return routePath?.length > 0 ? `/${routePath}` : "/";
   }
 
-  toRoute(src) {
+  toRoute(src: string) {
     let path = this.toPath(src);
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
@@ -111,15 +111,15 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
       return {
         $component: hasDefault
           ? {
-              src: src,
-              pick: ["default", "$css"]
-            }
+            src: src,
+            pick: ["default", "$css"]
+          }
           : undefined,
         $$route: hasRouteConfig
           ? {
-              src: src,
-              pick: ["route"]
-            }
+            src: src,
+            pick: ["route"]
+          }
           : undefined,
         ...createHTTPHandlers(src, exports),
         path,

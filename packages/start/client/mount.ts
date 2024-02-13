@@ -1,7 +1,8 @@
+import { type JSX } from "solid-js";
 import { createStore } from "solid-js/store";
-import { createComponent, getHydrationKey, getOwner, hydrate } from "solid-js/web";
+import { createComponent, getHydrationKey, getOwner, hydrate, type MountableElement } from "solid-js/web";
 
-export function mount(fn, el) {
+export function mount(fn: () => JSX.Element, el: MountableElement) {
   if (import.meta.env.START_ISLANDS) {
     const map = new WeakMap();
     async function mountIsland(el: HTMLElement) {

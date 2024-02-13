@@ -4,20 +4,40 @@ import defu from "defu";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createApp, resolve } from "vinxi";
+import { createApp, resolve, type AppOptions } from "vinxi";
 import { normalize } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
+import type { InlineConfig } from "vite";
+import type { Options } from "vite-plugin-solid";
 import solid from "vite-plugin-solid";
 import {
   SolidStartClientFileRouter,
   SolidStartServerFileRouter
-} from "./fs-router.js";
+} from "./fs-router";
 import { serverComponents } from "./server-components.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
-function solidStartClientFsRouter(config) {
-  return (router, app) =>
+export type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
+  start?: {
+    /**
+     * true: streaming mode
+     * false: csr only
+     * async: ssr is in async mode
+     * sync: ssr is in sync mode
+     */
+    ssr?: boolean | "async" | "sync",
+    solid?: Options,
+    extensions?: string[],
+    server?: AppOptions['server'],
+    appRoot?: string,
+    middleware?: string,
+    islands?: boolean
+  }
+}
+
+function solidStartClientFsRouter(config: { dir: string, extensions: string[] }) {
+  return (router: { root: string; }, app: AppOptions) =>
     new SolidStartClientFileRouter(
       {
         dir: resolve.absolute(config.dir, router.root),
@@ -28,8 +48,8 @@ function solidStartClientFsRouter(config) {
     );
 }
 
-function solidStartServerFsRouter(config) {
-  return (router, app) =>
+function solidStartServerFsRouter(config: { dir: string, extensions: string[] }) {
+  return (router: { root: string; }, app: AppOptions) =>
     new SolidStartServerFileRouter(
       {
         dir: resolve.absolute(config.dir, router.root),
@@ -40,7 +60,7 @@ function solidStartServerFsRouter(config) {
     );
 }
 
-export function defineConfig(baseConfig = {}) {
+export function defineConfig(baseConfig: SolidStartInlineConfig = {}) {
   let { plugins = [], start = {}, ...userConfig } = baseConfig;
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
@@ -114,8 +134,8 @@ export function defineConfig(baseConfig = {}) {
                 "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
-                      "@solidjs/start/server": "@solidjs/start/server/spa"
-                    }
+                    "@solidjs/start/server": "@solidjs/start/server/spa"
+                  }
                   : {}),
                 ...userConfig.resolve?.alias
               }
@@ -136,8 +156,8 @@ export function defineConfig(baseConfig = {}) {
         ...(start.islands
           ? {}
           : {
-              routes: solidStartClientFsRouter({ dir: `${start.appRoot}/routes`, extensions })
-            }),
+            routes: solidStartClientFsRouter({ dir: `${start.appRoot}/routes`, extensions })
+          }),
         extensions,
         target: "browser",
         plugins: async () => [
@@ -165,13 +185,13 @@ export function defineConfig(baseConfig = {}) {
                 "~": join(process.cwd(), start.appRoot),
                 ...(start.islands
                   ? {
-                      "@solidjs/start/client": "@solidjs/start/client/islands"
-                    }
+                    "@solidjs/start/client": "@solidjs/start/client/islands"
+                  }
                   : {}),
                 ...(!start.ssr
                   ? {
-                      "@solidjs/start/client": "@solidjs/start/client/spa"
-                    }
+                    "@solidjs/start/client": "@solidjs/start/client/spa"
+                  }
                   : {}),
                 ...userConfig.resolve?.alias
               }
@@ -213,8 +233,8 @@ export function defineConfig(baseConfig = {}) {
                 "~": join(process.cwd(), start.appRoot),
                 ...(!start.ssr
                   ? {
-                      "@solidjs/start/server": "@solidjs/start/server/spa"
-                    }
+                    "@solidjs/start/server": "@solidjs/start/server/spa"
+                  }
                   : {}),
                 ...userConfig.resolve?.alias
               }
