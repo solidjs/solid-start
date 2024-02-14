@@ -4,7 +4,7 @@ import { marked } from "marked";
 import { storage } from "./db";
 import type { Note } from "./types";
 
-export const getNotes = cache(async (searchText?: string) => {
+export const getNotes = cache(async (searchText: string) => {
   "use server";
   return (((await storage.getItem("notes:data")) as Note[]) || [])
     .filter(note => !searchText || note.title.toLowerCase().includes(searchText.toLowerCase()))

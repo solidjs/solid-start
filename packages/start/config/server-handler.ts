@@ -14,7 +14,7 @@ import {
   URLSearchParamsPlugin
 } from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
-import { renderToStringAsync } from "solid-js/web";
+import { renderToStream } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import { eventHandler, setHeader, setResponseStatus, type H3Event } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
@@ -205,9 +205,9 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
     event.router.previousUrl = sourceEvent.request.headers.get("referer");
     (async () => {
       try {
-        await renderToStringAsync(() => {
+        await renderToStream(() => {
           /* @ts-ignore */
-          sharedConfig.context = { event };
+          sharedConfig.context.event = event;
           App();
         });
       } catch (e) {
