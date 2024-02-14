@@ -1,5 +1,14 @@
 # @solidjs/start
 
+## 0.5.6
+
+### Patch Changes
+
+- dafdd97a: fix typescript
+- b422f708: Fix: calling server functions without arguments, TS strict
+- f73de3a6: fix: server functions router should put user plugins before server plugin
+- 28691fc3: fix up single flight mutation
+
 ## 0.5.5
 
 ### Patch Changes
