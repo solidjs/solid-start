@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.5.7
+
+### Patch Changes
+
+- 59e8533a: lock vite-plugin-solid into 2.9.x
+
 ## 0.5.6
 
 ### Patch Changes
