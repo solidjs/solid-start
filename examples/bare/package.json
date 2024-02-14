@@ -9,7 +9,7 @@
   "dependencies": {
     "@solidjs/start": "^0.5.9",
     "solid-js": "^1.8.15",
-    "vinxi": "^0.2.1"
+    "vinxi": "^0.3.3"
   },
   "engines": {
     "node": ">=18"
