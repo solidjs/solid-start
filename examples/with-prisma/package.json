@@ -14,7 +14,7 @@
     "@solidjs/router": "^0.12.0",
     "@solidjs/start": "^0.5.7",
     "prisma": "^5.7.0",
-    "solid-js": "^1.8.14",
+    "solid-js": "^1.8.15",
     "vinxi": "^0.2.1"
   },
   "engines": {
