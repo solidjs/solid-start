@@ -8,20 +8,19 @@ import {
   getResponseHeaders,
   getResponseStatus,
   getResponseStatusText,
+  getWebRequest,
   removeResponseHeader,
   setHeader,
   setResponseHeader,
   setResponseStatus,
-  toWebRequest
 } from "vinxi/http";
 import type { FetchEvent, ResponseStub } from "./types";
 
 const fetchEventSymbol = Symbol("fetchEvent");
 
 export function createFetchEvent(event: H3Event): FetchEvent {
-  const request = toWebRequest(event);
   return {
-    request: request,
+    request: getWebRequest(event),
     response: createResponseStub(event),
     clientAddress: getRequestIP(event),
     locals: {},
