@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.5.9
+
+### Patch Changes
+
+- 15f497da: fix empty post bodies in server functions
+
 ## 0.5.8
 
 ### Patch Changes
