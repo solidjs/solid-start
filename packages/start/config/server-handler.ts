@@ -105,7 +105,7 @@ async function handleServerFunction(h3Event: H3Event) {
       );
       // what should work when #1721 is fixed
       // parsed.push(await request.formData);
-    } else {
+    } else if (contentType?.startsWith("application/json")) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
       const tmpReq = new Request(request, { ...request, body: (h3Event.node.req as any).body });
