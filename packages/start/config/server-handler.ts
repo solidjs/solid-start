@@ -14,7 +14,7 @@ import {
   URLSearchParamsPlugin
 } from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
-import { renderToStream } from "solid-js/web";
+import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import { eventHandler, setHeader, setResponseStatus, type H3Event } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
@@ -176,7 +176,7 @@ async function handleServerFunction(h3Event: H3Event) {
       // forward headers
       if (x.headers) mergeResponseHeaders(h3Event, x.headers);
       if ((x as any).customBody) {
-        x = await (x as any).customBody();
+        x = (x as any).customBody();
       } else if (x.body == undefined) x = null;
     }
     return x;
@@ -203,17 +203,16 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
     event.router.dataOnly = revalidate || true;
     /* @ts-ignore */
     event.router.previousUrl = sourceEvent.request.headers.get("referer");
-    (async () => {
-      try {
-        await renderToStream(() => {
-          /* @ts-ignore */
-          sharedConfig.context.event = event;
-          App();
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    })();
+    try {
+      renderToString(() => {
+        /* @ts-ignore */
+        sharedConfig.context.event = event;
+        App();
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
     /* @ts-ignore */
     const body = event.router.data;
     if (!body) return result;
@@ -226,6 +225,8 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
     if (!(result instanceof Response)) {
       body["_$value"] = result;
       result = new Response(null, { status: 200 });
+    } else if ((result as any).customBody) {
+      body["_$value"] = (result as any).customBody();
     }
     result.customBody = () => body;
     result.headers.set("X-Single-Flight", "true");
