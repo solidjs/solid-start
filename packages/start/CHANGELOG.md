@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.5.8
+
+### Patch Changes
+
+- df779e9d: fix json returns from actions
+
 ## 0.5.7
 
 ### Patch Changes
