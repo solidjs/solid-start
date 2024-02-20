@@ -7,14 +7,14 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@decs/typeschema": "^0.12.1",
+    "@decs/typeschema": "^0.12.2",
     "@trpc/client": "^10.44.1",
     "@trpc/server": "^10.44.1",
     "@solidjs/meta": "^0.29.2",
     "@solidjs/router": "^0.12.4",
     "@solidjs/start": "^0.5.9",
     "solid-js": "^1.8.15",
-    "valibot": "^0.23.0",
+    "valibot": "^0.26.0",
     "vinxi": "^0.3.3"
   },
   "engines": {
