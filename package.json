@@ -30,7 +30,7 @@
     "@cloudflare/kv-asset-handler": "^0.2.0",
     "@decs/typeschema": "^0.12.1",
     "@solidjs/meta": "^0.29.0",
-    "@solidjs/router": "^0.12.3",
+    "@solidjs/router": "^0.12.4",
     "@solidjs/start": "workspace:*",
     "@tailwindcss/typography": "^0.5.9",
     "@trpc/client": "^9.27.4",
