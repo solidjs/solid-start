@@ -33,7 +33,7 @@ export default function App() {
             </section>
             <nav>
               <Suspense fallback="Loading Notes..">
-                <NoteList searchText={props.location.query.searchText} />
+                <NoteList searchText={props.location.query.searchText || ""} />
               </Suspense>
             </nav>
           </section>
@@ -42,7 +42,7 @@ export default function App() {
           </section>
         </div>
       )}
-      rootLoad={({ location }) => getNotes(location.query.searchText)}
+      rootLoad={({ location }) => getNotes(location.query.searchText || "")}
     >
       <FileRoutes />
     </Router>

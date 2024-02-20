@@ -1,18 +1,20 @@
 // @ts-ignore
+import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
 import { renderAsset } from "../renderAsset";
+import type { DocumentComponentProps, PageEvent } from "../types";
 
 const docType = ssr("<!DOCTYPE html>");
 
-export function StartServer(props) {
-  const context = getRequestEvent() as any;
+export function StartServer(props: { document: Component<DocumentComponentProps> }) {
+  const context = getRequestEvent() as PageEvent;
   return (
     <NoHydration>
       {docType as unknown as any}
       <props.document
         assets={
           <>
-            {context.assets.map(m => renderAsset(m))}
+            {context.assets.map((m: any) => renderAsset(m))}
           </>
         }
         scripts={
@@ -21,9 +23,9 @@ export function StartServer(props) {
             <script
               type="module"
               src={
-                import.meta.env.MANIFEST["client"].inputs[
-                  import.meta.env.MANIFEST["client"].handler
-                ].output.path
+                import.meta.env.MANIFEST["client"]!.inputs[
+                  import.meta.env.MANIFEST["client"]!.handler
+                ]!.output.path
               }
             />
           </>

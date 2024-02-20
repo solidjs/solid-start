@@ -1,10 +1,11 @@
 /// <reference types="vinxi/types/client" />
-import { createComponent, lazy, onCleanup } from "solid-js";
-import { appendStyles, cleanupStyles, updateStyles, preloadStyles } from "vinxi/css";
+import { createComponent, lazy, onCleanup, type Component, type JSX } from "solid-js";
+import { appendStyles, cleanupStyles, preloadStyles, updateStyles } from "vinxi/css";
 
 import { renderAsset } from "../server/renderAsset";
+import { Asset } from "../server/types";
 
-export default function lazyRoute(component, clientManifest, serverManifest, exported = "default") {
+export default function lazyRoute<T>(component: any, clientManifest: any, serverManifest: any, exported = "default") {
   return lazy(async () => {
     if (import.meta.env.DEV) {
       let manifest = import.meta.env.SSR ? serverManifest : clientManifest;
@@ -13,7 +14,7 @@ export default function lazyRoute(component, clientManifest, serverManifest, exp
       if (!mod[exported]) console.error(`Module ${component.src} does not export ${exported}`);
       const Component = mod[exported];
       let assets = await clientManifest.inputs?.[component.src].assets();
-      const styles = assets.filter(asset => asset.tag === "style");
+      const styles = assets.filter((asset: Asset) => asset.tag === "style");
 
       if (typeof window !== "undefined" && import.meta.hot) {
         import.meta.hot.on("css-update", data => {
@@ -21,7 +22,7 @@ export default function lazyRoute(component, clientManifest, serverManifest, exp
         });
       }
 
-      const Comp = props => {
+      const Comp: Component<T> = props => {
         if (typeof window !== "undefined") {
           appendStyles(styles);
         }
@@ -32,7 +33,7 @@ export default function lazyRoute(component, clientManifest, serverManifest, exp
             cleanupStyles(styles);
           }
         });
-        return [...assets.map(asset => renderAsset(asset)), createComponent(Component, props)];
+        return [...assets.map((asset: Asset) => renderAsset(asset)), createComponent(Component, props)];
       };
       return { default: Comp };
     } else {
@@ -40,13 +41,13 @@ export default function lazyRoute(component, clientManifest, serverManifest, exp
       const Component = mod[exported];
       let assets = await clientManifest.inputs?.[component.src].assets();
       const styles = assets.filter(
-        asset => asset.tag === "style" || asset.attrs.rel === "stylesheet"
+        (asset: Asset) => asset.tag === "style" || (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "stylesheet"
       );
       if (typeof window !== "undefined") {
         preloadStyles(styles);
       }
-      const Comp = props => {
-        return [...styles.map(asset => renderAsset(asset)), createComponent(Component, props)];
+      const Comp: Component<T> = props => {
+        return [...styles.map((asset: Asset) => renderAsset(asset)), createComponent(Component, props)];
       };
       return { default: Comp };
     }

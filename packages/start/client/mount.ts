@@ -1,7 +1,8 @@
+import type { JSX } from "solid-js";
 import { createStore } from "solid-js/store";
-import { createComponent, getHydrationKey, getOwner, hydrate } from "solid-js/web";
+import { createComponent, getHydrationKey, getOwner, hydrate, type MountableElement } from "solid-js/web";
 
-export function mount(fn, el) {
+export function mount(fn: () => JSX.Element, el: MountableElement) {
   if (import.meta.env.START_ISLANDS) {
     const map = new WeakMap();
     async function mountIsland(el: HTMLElement) {
@@ -19,11 +20,11 @@ export function mount(fn, el) {
 
       let mod = await import(
         /* @vite-ignore */
-        import.meta.env.MANIFEST["client"].chunks[el.dataset.id.split("#")[0]].output.path
+        import.meta.env.MANIFEST["client"]!.chunks[el.dataset.id!.split("#")[0] as string]!.output.path
       );
       if (!mod || !el.dataset.hk) return;
 
-      let Component = mod[el.dataset.id.split("#")[1]];
+      let Component = mod[el.dataset.id!.split("#")[1] as string];
       let hk = el.dataset.hk;
       // _$DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
 
@@ -68,7 +69,7 @@ export function mount(fn, el) {
       Promise.all(
         [...assets].map(
           asset =>
-            import(/* @vite-ignore */import.meta.env.MANIFEST["client"].chunks[asset.split("#")[0]].output.path)
+            import(/* @vite-ignore */import.meta.env.MANIFEST["client"]!.chunks[asset.split("#")[0] as string]!.output.path)
         )
       )
         .then(() => {

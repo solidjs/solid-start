@@ -1,5 +1,5 @@
 import { serverFunctions } from "@vinxi/server-functions/plugin";
-import { serverTransform } from "@vinxi/server-functions/server";
+import { server as serverFunctionServer, serverTransform } from "@vinxi/server-functions/server";
 import defu from "defu";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
@@ -8,10 +8,7 @@ import { createApp, resolve } from "vinxi";
 import { normalize } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
-import {
-  SolidStartClientFileRouter,
-  SolidStartServerFileRouter
-} from "./fs-router.js";
+import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { serverComponents } from "./server-components.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
@@ -120,6 +117,7 @@ export function defineConfig(baseConfig = {}) {
                 ...userConfig.resolve?.alias
               }
             },
+            cacheDir: "node_modules/.vinxi/server",
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(true),
@@ -176,6 +174,7 @@ export function defineConfig(baseConfig = {}) {
                 ...userConfig.resolve?.alias
               }
             },
+            cacheDir: "node_modules/.vinxi/client",
             define: {
               "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
               "import.meta.env.SSR": JSON.stringify(false),
@@ -187,9 +186,13 @@ export function defineConfig(baseConfig = {}) {
         ],
         base: "/_build"
       },
-      serverFunctions.router({
+
+      {
+        name: "server-fns",
+        type: "http",
+        base: "/_server",
         handler: normalize(fileURLToPath(new URL("./server-handler.ts", import.meta.url))),
-        runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url))),
+        target: "server",
         routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: async () => [
           config("user", {
@@ -201,10 +204,13 @@ export function defineConfig(baseConfig = {}) {
                 "@solidjs/start > source-map-js",
                 "@solidjs/start > error-stack-parser"
               ]
-            }
+            },
+            cacheDir: "node_modules/.vinxi/server-fns"
           }),
           ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
-
+          serverFunctionServer({
+            runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url)))
+          }),
           solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
           config("app-server", {
             resolve: {
@@ -228,7 +234,7 @@ export function defineConfig(baseConfig = {}) {
           })
         ],
         middleware: start.middleware
-      })
+      }
     ]
   });
 }

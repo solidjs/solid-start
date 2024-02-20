@@ -2,11 +2,12 @@
 import { getRequestEvent, isServer } from "solid-js/web";
 import lazyRoute from "./lazyRoute";
 
+import type { Route } from "vinxi/fs-router";
 import type { PageEvent } from "../server/types";
 import { pageRoutes as routeConfigs } from "./routes";
 
 export function createRoutes() {
-  function createRoute(route) {
+  function createRoute(route: Route) {
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),
@@ -28,7 +29,7 @@ export function createRoutes() {
   return routes;
 }
 
-let routes;
+let routes: any[];
 export const FileRoutes = () => {
   return isServer ? (getRequestEvent() as PageEvent).routes : routes || (routes = createRoutes());
 };

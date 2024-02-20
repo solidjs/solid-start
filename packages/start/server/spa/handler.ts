@@ -9,10 +9,10 @@ export function createHandler(
 }
 
 export async function createPageEvent(ctx: FetchEvent) {
-  const clientManifest = import.meta.env.MANIFEST["client"];
+  const clientManifest = import.meta.env.MANIFEST["client"]!;
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: await clientManifest.json(),
-    assets: [...(await clientManifest.inputs[clientManifest.handler].assets())],
+    assets: [...(await clientManifest.inputs[clientManifest.handler]!.assets())],
     routes: [],
     // prevUrl: "",
     // mutation: false,

@@ -31,7 +31,7 @@ export function createBaseHandler(
   return eventHandler({
     onRequest: options.onRequest,
     onBeforeResponse: options.onBeforeResponse,
-    handler: (e: H3Event<EventHandlerRequest> & { startEvent: FetchEvent }) => {
+    handler: (e: H3Event<EventHandlerRequest>) => {
       const event = getFetchEvent(e);
       const mode = import.meta.env.START_SSR;
 
@@ -41,7 +41,7 @@ export function createBaseHandler(
         if (match) {
           const mod = await match.handler.import();
           const fn = mod[event.request.method];
-          (event as APIEvent).params = match.params;
+          (event as APIEvent).params = match.params || {};
           // @ts-ignore
           sharedConfig.context = { event };
           const res = await fn(event);
@@ -61,7 +61,7 @@ export function createBaseHandler(
             return fn(context);
           }, options);
           if (context.response && context.response.headers.get("Location")) {
-            return sendRedirect(event, context.response.headers.get("Location"));
+            return sendRedirect(event, context.response.headers.get("Location")!);
           }
           return html;
         }
@@ -85,7 +85,7 @@ export function createBaseHandler(
           return fn(context);
         }, cloned);
         if (context.response && context.response.headers.get("Location")) {
-          return sendRedirect(event, context.response.headers.get("Location"));
+          return sendRedirect(event, context.response.headers.get("Location")!);
         }
         if (mode === "async") return stream;
         // fix cloudflare streaming
@@ -101,7 +101,7 @@ function handleShellCompleteRedirect(context: PageEvent, e: H3Event<EventHandler
   return () => {
     if (context.response && context.response.headers.get("Location")) {
       setResponseStatus(e, 302);
-      setHeader(e, "Location", context.response.headers.get("Location"));
+      setHeader(e, "Location", context.response.headers.get("Location")!);
     }
   };
 }

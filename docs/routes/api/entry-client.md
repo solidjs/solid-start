@@ -15,7 +15,7 @@ active: true
 ```tsx twoslash
 import { mount, StartClient } from "@solidjs/start/client";
 
-mount(() => <StartClient />, document);
+mount(() => <StartClient />, document.getElementById("app")!);
 ```
 
 </div>
@@ -39,7 +39,7 @@ Method that either calls `render` or `hydrate` depending on the configuration.
 ```tsx twoslash
 import { mount, StartClient } from "@solidjs/start/client";
 
-mount(() => <StartClient />, document.getElementById("app"));
+mount(() => <StartClient />, document.getElementById("app")!);
 ```
 
 #### Parameters

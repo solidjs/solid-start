@@ -11,13 +11,14 @@ import {
   URLPlugin,
   URLSearchParamsPlugin
 } from "seroval-plugins/web";
+import { type Component } from "solid-js";
 import { createIslandReference } from "../server/islands";
 
 class SerovalChunkReader {
   reader: ReadableStreamDefaultReader<Uint8Array>;
   buffer: string;
   done: boolean;
-  constructor(stream) {
+  constructor(stream: ReadableStream<Uint8Array>) {
     this.reader = stream.getReader();
     this.buffer = "";
     this.done = false;
@@ -34,7 +35,7 @@ class SerovalChunkReader {
     }
   }
 
-  async next() {
+  async next(): Promise<any> {
     // Check if the buffer is empty
     if (this.buffer === "") {
       // if we are already done...
@@ -84,7 +85,7 @@ class SerovalChunkReader {
   }
 }
 
-async function deserializeStream(id, response) {
+async function deserializeStream(id: string, response: Response) {
   if (!response.body) {
     throw new Error("missing body");
   }
@@ -184,7 +185,7 @@ async function fetchServerFunction(
   throw result;
 }
 
-export function createServerReference(fn, id, name) {
+export function createServerReference(fn: Function, id: string, name: string) {
   const baseURL = import.meta.env.SERVER_BASE_URL;
   return new Proxy(fn, {
     get(target, prop, receiver) {
@@ -196,7 +197,7 @@ export function createServerReference(fn, id, name) {
       }
       if (prop === "withOptions") {
         return (options: RequestInit) => {
-          const fn = (...args) => {
+          const fn = (...args: any[]) => {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
             return fetchServerFunction(
               encodeArgs
@@ -218,7 +219,7 @@ export function createServerReference(fn, id, name) {
   });
 }
 
-export function createClientReference(Component, id, name) {
+export function createClientReference(Component: Component<any>, id: string, name: string) {
   if (typeof Component === "function") {
     return createIslandReference(Component, id, name);
   }

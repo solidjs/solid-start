@@ -1,5 +1,42 @@
 # @solidjs/start
 
+## 0.5.9
+
+### Patch Changes
+
+- 15f497da: fix empty post bodies in server functions
+
+## 0.5.8
+
+### Patch Changes
+
+- df779e9d: fix json returns from actions
+
+## 0.5.7
+
+### Patch Changes
+
+- 59e8533a: lock vite-plugin-solid into 2.9.x
+
+## 0.5.6
+
+### Patch Changes
+
+- dafdd97a: fix typescript
+- b422f708: Fix: calling server functions without arguments, TS strict
+- f73de3a6: fix: server functions router should put user plugins before server plugin
+- 28691fc3: fix up single flight mutation
+
+## 0.5.5
+
+### Patch Changes
+
+- f787f2b6: update router
+- 77e57b2a: Fix #1299, Fix dev overlay logs
+- 2cd7a3b3: Fixes incorrect, missing `type` import declarations.
+- 2c193283: fix singleflight mutations in non-ALS envs
+- 38ba8de8: fix singleflight eating response bodies
+
 ## 0.5.4
 
 ### Patch Changes
