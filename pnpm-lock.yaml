@@ -163,7 +163,7 @@ importers:
         specifier: ^0.12.4
         version: 0.12.4(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.5.2
+        specifier: ^0.5.9
         version: link:../../packages/start
       '@types/marked':
         specifier: ^4.3.1
