@@ -33,13 +33,13 @@
       ".": [
         "./shared/index.tsx"
       ],
-      "./middleware": [
+      "middleware": [
         "./middleware/index.ts"
       ],
-      "./server": [
+      "server": [
         "./server/index.tsx"
       ],
-      "./client": [
+      "client": [
         "./client/index.tsx"
       ]
     }
