@@ -32,6 +32,8 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
 
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
+  // @ts-ignore
+  const nonce = context.nonce;
 
   let assets: Asset[] = [];
   Promise.resolve().then(async () => {
@@ -39,15 +41,14 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
     if (context.router && context.router.matches) {
       // @ts-ignore
       const matches = [...context.router.matches];
-      while (matches.length && (!matches[0].info || !matches[0].info.filesystem))
-        matches.shift();
+      while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
       const matched = matches.length && matchRoute(matches, context.routes);
       if (matched) {
         for (let i = 0; i < matched.length; i++) {
           const segment = matched[i];
           const part = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
             .inputs[segment["$component"].src]!;
-          const asset = await part.assets() as any;
+          const asset = (await part.assets()) as any;
           assets.push.apply(assets, asset);
         }
       } else console.warn("No route matched for preloading js assets");
@@ -74,18 +75,37 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           </>
         }
         scripts={
-          <>
-            <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-            <script
-              type="module"
-              async
-              src={
-                import.meta.env.MANIFEST["client"]!.inputs[
-                  import.meta.env.MANIFEST["client"]!.handler
-                ]!.output.path
-              }
-            />
-          </>
+          nonce ? (
+            <>
+              <script
+                nonce={nonce}
+                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
+              />
+              <script
+                type="module"
+                nonce={nonce}
+                async
+                src={
+                  import.meta.env.MANIFEST["client"]!.inputs[
+                    import.meta.env.MANIFEST["client"]!.handler
+                  ]!.output.path
+                }
+              />
+            </>
+          ) : (
+            <>
+              <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
+              <script
+                type="module"
+                async
+                src={
+                  import.meta.env.MANIFEST["client"]!.inputs[
+                    import.meta.env.MANIFEST["client"]!.handler
+                  ]!.output.path
+                }
+              />
+            </>
+          )
         }
       >
         {!import.meta.env.START_ISLANDS ? (

@@ -22,4 +22,4 @@ type SolidStartInlineConfig = Omit<InlineConfig, "router" | "plugins"> & {
     }
 }
 
-export declare function defineConfig(baseConfig?: SolidStartInlineConfig)
+export declare function defineConfig(baseConfig?: SolidStartInlineConfig): any
