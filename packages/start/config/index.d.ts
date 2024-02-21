@@ -3,7 +3,8 @@ import { InlineConfig } from "vite";
 import type { Options } from "vite-plugin-solid";
 
 
-type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
+type SolidStartInlineConfig = Omit<InlineConfig, "router" | "plugins"> & {
+    plugins?: InlineConfig['plugins'] | (() => InlineConfig['plugins']),
     start?: {
         /**
          * true: streaming mode
