@@ -45,7 +45,7 @@ export const saveNote = action(async (id: number | undefined, formData: FormData
   notes = notes || [];
   index = index || 0;
 
-  if (id === undefined) {
+  if (id == undefined) {
     await Promise.all([
       storage.setItem("notes:data", [
         ...notes,
