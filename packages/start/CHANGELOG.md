@@ -1,5 +1,13 @@
 # @solidjs/start
 
+## 0.5.10
+
+### Patch Changes
+
+- 2c503fd0: fix #1342 unintended early return in router < 12.4
+- 688a643b: fix: resolve the import path correctly (@solidjs/start/server vs @solidjs/start/./server)
+- 35dd4297: fix nojs return responses, fix throw single flight
+
 ## 0.5.9
 
 ### Patch Changes
