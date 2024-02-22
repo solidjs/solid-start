@@ -150,11 +150,17 @@ async function handleServerFunction(h3Event: H3Event) {
     // handle no JS success case
     if (!instance) {
       const isError = result instanceof Error;
-      const refererUrl = new URL(request.headers.get("referer")!);
+      let redirectUrl = new URL(request.headers.get("referer")!).toString();
+      if (result instanceof Response && result.headers.has("Location")) {
+        redirectUrl = new URL(
+          result.headers.get("Location")!,
+          new URL(request.url).origin + import.meta.env.SERVER_BASE_URL
+        ).toString();
+      }
       return new Response(null, {
         status: 302,
         headers: {
-          Location: refererUrl.toString(),
+          Location: redirectUrl,
           ...(result
             ? {
                 "Set-Cookie": `flash=${JSON.stringify({
@@ -172,18 +178,25 @@ async function handleServerFunction(h3Event: H3Event) {
     return serializeToStream(instance, result);
   } catch (x) {
     if (x instanceof Response) {
-      if (x.status === 302 && !instance) setResponseStatus(h3Event, 302);
+      if (singleFlight && instance) {
+        x = await handleSingleFlight(event, x);
+      }
+      if ((x as any).status === 302 && !instance) setResponseStatus(h3Event, 302);
       // forward headers
-      if (x.headers) mergeResponseHeaders(h3Event, x.headers);
+      if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
       if ((x as any).customBody) {
         x = (x as any).customBody();
-      } else if (x.body == undefined) x = null;
+      } else if ((x as any).body == undefined) x = null;
+      if (instance) {
+        setHeader(h3Event, "content-type", "text/javascript");
+        return serializeToStream(instance, x);
+      }
     }
     return x;
   }
 }
 
-async function handleSingleFlight(sourceEvent: FetchEvent, result: any) {
+async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
   let revalidate: string[];
   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
   if (result instanceof Response) {
