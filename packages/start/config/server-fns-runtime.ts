@@ -8,7 +8,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
       }
       if (prop === "GET") return receiver;
     },

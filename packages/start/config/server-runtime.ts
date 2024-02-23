@@ -190,25 +190,26 @@ export function createServerReference(fn: Function, id: string, name: string) {
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
       }
       if (prop === "GET") {
         return receiver.withOptions({ method: "GET" });
       }
       if (prop === "withOptions") {
+        const url = `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`
         return (options: RequestInit) => {
           const fn = (...args: any[]) => {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
             return fetchServerFunction(
               encodeArgs
-                ? receiver.url + (args.length ? `&args=${JSON.stringify(args)}` : "")
+                ? url + (args.length ? `&args=${JSON.stringify(args)}` : "")
                 : `${baseURL}/_server`,
               `${id}#${name}`,
               options,
               encodeArgs ? [] : args
             );
           };
-          fn.url = receiver.url;
+          fn.url = url;
           return fn;
         };
       }
