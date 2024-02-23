@@ -26,10 +26,10 @@ vinxi build
 vinxi build
 ```
 
-### Specify a `vite.config` file
+### Specify a `app.config` file
 
 ```bash
-vinxi build --config project/vite.config.ts --root project
+vinxi build --config project/app.config.ts --root project
 ```
 
 ## Reference

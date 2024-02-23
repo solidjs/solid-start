@@ -8,7 +8,7 @@ active: true
 
 # vinxi start
 
-##### `vinxi start` starts the production build with a local version of adapter.
+##### `vinxi start` starts the production build with a local version of preset.
 
 <div class="text-lg">
 
@@ -28,10 +28,10 @@ Remember to run `vinxi build` before running `vinxi start`.
 vinxi start --port 3000
 ```
 
-### Specify a `vite.config` file
+### Specify a `app.config` file
 
 ```bash
-vinxi start --config project/vite.config.ts --root project
+vinxi start --config project/app.config.ts --root project
 ```
 
 ## Reference
