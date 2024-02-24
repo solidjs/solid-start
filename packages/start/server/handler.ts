@@ -12,24 +12,16 @@ import {
 import { matchAPIRoute } from "../shared/routes";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
-import type { APIEvent, FetchEvent, PageEvent } from "./types";
-
-type HandlerOptions = {
-  nonce?: string;
-  renderId?: string;
-  onCompleteAll?: (options: { write: (v: any) => void }) => void;
-  onCompleteShell?: (options: { write: (v: any) => void }) => void;
-};
+import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types";
 
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
   createPageEvent: (event: FetchEvent) => Promise<PageEvent>,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions) = {}
+  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
 ) {
   return eventHandler({
     handler: (e: H3Event<EventHandlerRequest>) => {
       const event = getFetchEvent(e);
-      const mode = import.meta.env.START_SSR;
 
       return provideRequestEvent(event, async () => {
         // api
@@ -51,10 +43,11 @@ export function createBaseHandler(
 
         // render
         const context = await createPageEvent(event);
-        if (typeof options === "function") options = options(context);
+        if (typeof options === "function") options = await options(context);
+        const mode = options.mode || "stream";
         // @ts-ignore
         if (options.nonce) context.nonce = options.nonce;
-        if (mode === "sync") {
+        if (mode === "sync" || !import.meta.env.START_SSR) {
           const html = renderToString(() => {
             (sharedConfig.context as any).event = context;
             return fn(context);
@@ -114,7 +107,7 @@ function handleStreamCompleteRedirect(context: PageEvent) {
 
 export function createHandler(
   fn: (context: PageEvent) => unknown,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions) = {}
+  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>)
 ) {
   return createBaseHandler(fn, createPageEvent, options);
 }
