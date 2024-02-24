@@ -86,7 +86,9 @@ export function defineConfig(baseConfig = {}) {
         extensions,
         target: "server",
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ router: "server" }) : vite;
+          const userConfig = typeof vite === "function" ? await vite({ router: "server" }) : { ...vite };
+          const plugins = userConfig.plugins || [];
+          delete userConfig.plugins;
           return [
             config("user", {
               ...userConfig,
@@ -99,7 +101,7 @@ export function defineConfig(baseConfig = {}) {
                 ]
               }
             }),
-            ...(userConfig.plugins || []),
+            ...plugins,
             serverTransform({
               runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url)))
             }),
@@ -142,7 +144,9 @@ export function defineConfig(baseConfig = {}) {
         extensions,
         target: "browser",
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ router: "client" }) : vite;
+          const userConfig = typeof vite === "function" ? await vite({ router: "client" }) : { ...vite };
+          const plugins = userConfig.plugins || [];
+          delete userConfig.plugins;
           return [
             config("user", {
               ...userConfig,
@@ -155,7 +159,7 @@ export function defineConfig(baseConfig = {}) {
                 ]
               }
             }),
-            ...(userConfig.plugins || []),
+            ...plugins,
             serverFunctions.client({
               runtime: normalize(fileURLToPath(new URL("./server-runtime.ts", import.meta.url)))
             }),
@@ -201,7 +205,9 @@ export function defineConfig(baseConfig = {}) {
         target: "server",
         routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ router: "server-function" }) : vite;
+          const userConfig = typeof vite === "function" ? await vite({ router: "server-function" }) : { ...vite };
+          const plugins = userConfig.plugins || [];
+          delete userConfig.plugins;
           return [
             config("user", {
               ...userConfig,
@@ -215,7 +221,7 @@ export function defineConfig(baseConfig = {}) {
               },
               cacheDir: "node_modules/.vinxi/server-fns"
             }),
-            ...(userConfig.plugins || []),
+            ...plugins,
             serverFunctionServer({
               runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url)))
             }),
