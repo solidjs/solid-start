@@ -43,6 +43,7 @@ export function defineConfig(baseConfig = {}) {
   start = defu(start, {
     appRoot: "./src",
     ssr: true,
+    devOverlay: true,
     islands: false,
     solid: {},
     server: {
@@ -125,6 +126,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 ...userConfig.define
               }
             })
@@ -188,6 +190,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
                 "import.meta.env.SSR": JSON.stringify(false),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.SERVER_BASE_URL": JSON.stringify(server?.baseURL ?? ""),
                 ...userConfig.define
               }
@@ -243,6 +246,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 ...userConfig.define
               }
             })

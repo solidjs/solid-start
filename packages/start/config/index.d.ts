@@ -10,6 +10,7 @@ type SolidStartInlineConfig = {
   appRoot?: string;
   middleware?: string;
   islands?: boolean;
+  devOverlay?:  boolean;
   vite?:
     | CustomizableConfig
     | ((options: { router: "server" | "client" | "server-function" }) => CustomizableConfig);
