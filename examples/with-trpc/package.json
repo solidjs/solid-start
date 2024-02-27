@@ -15,7 +15,7 @@
     "@solidjs/start": "^0.5.10",
     "solid-js": "^1.8.15",
     "valibot": "^0.26.0",
-    "vinxi": "^0.3.3"
+    "vinxi": "^0.3.4"
   },
   "engines": {
     "node": ">=18"

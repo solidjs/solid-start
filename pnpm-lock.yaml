@@ -88,8 +88,8 @@ importers:
         specifier: 0.26.0
         version: 0.26.0
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
       vite:
         specifier: ^5.1.1
         version: 5.1.1(@types/node@20.10.1)
@@ -103,8 +103,8 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/basic:
     dependencies:
@@ -121,8 +121,8 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/experiments:
     dependencies:
@@ -139,8 +139,8 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/hackernews:
     dependencies:
@@ -154,8 +154,8 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/notes:
     dependencies:
@@ -181,8 +181,8 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/todomvc:
     dependencies:
@@ -199,8 +199,8 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-auth:
     dependencies:
@@ -217,8 +217,8 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
     devDependencies:
       '@types/node':
         specifier: ^20.10.1
@@ -236,7 +236,7 @@ importers:
         specifier: ^0.5.10
         version: link:../../packages/start
       '@vinxi/plugin-mdx':
-        specifier: ^3.6.7
+        specifier: ^3.7.1
         version: 3.7.1(@mdx-js/mdx@2.3.0)
       solid-js:
         specifier: ^1.8.15
@@ -245,8 +245,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.8.15)(vite@5.1.1)
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-prisma:
     dependencies:
@@ -266,8 +266,8 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
     devDependencies:
       '@types/node':
         specifier: ^20.10.1
@@ -291,8 +291,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(@babel/core@7.23.9)(solid-js@1.8.15)
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(solid-styled@0.8.2)(vite@4.5.0)
@@ -318,8 +318,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-trpc:
     dependencies:
@@ -348,8 +348,8 @@ importers:
         specifier: ^0.26.0
         version: 0.26.0
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-unocss:
     dependencies:
@@ -369,8 +369,8 @@ importers:
         specifier: ^0.58.3
         version: 0.58.3(postcss@8.4.35)(vite@5.1.1)
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-vitest:
     devDependencies:
@@ -405,8 +405,8 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)
       vite:
         specifier: ^5.1.1
         version: 5.1.1(@types/node@20.10.1)
@@ -475,13 +475,13 @@ importers:
     dependencies:
       '@vinxi/plugin-directives':
         specifier: ^0.3.0
-        version: 0.3.0(vinxi@0.3.3)
+        version: 0.3.0(vinxi@0.3.4)
       '@vinxi/server-components':
         specifier: ^0.3.0
-        version: 0.3.0(vinxi@0.3.3)
+        version: 0.3.0(vinxi@0.3.4)
       '@vinxi/server-functions':
         specifier: ^0.3.0
-        version: 0.3.0(vinxi@0.3.3)
+        version: 0.3.0(vinxi@0.3.4)
       defu:
         specifier: ^6.1.2
         version: 6.1.2
@@ -520,8 +520,8 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+        specifier: ^0.3.4
+        version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
 packages:
 
@@ -3174,7 +3174,7 @@ packages:
       untun: 0.1.3
       uqr: 0.1.2
 
-  /@vinxi/plugin-directives@0.3.0(vinxi@0.3.3):
+  /@vinxi/plugin-directives@0.3.0(vinxi@0.3.4):
     resolution: {integrity: sha512-diwK2D6mZGffF5z+CgG7DcRnpKrOgqyv8SfxdbOTLGQcxtrQ9IpuHfX+mbOttaIJFvoZ3pHGUKe7Gfgd0BuQ1A==}
     peerDependencies:
       vinxi: ^0.3.0
@@ -3188,7 +3188,7 @@ packages:
       magicast: 0.2.11
       recast: 0.23.4
       tslib: 2.6.2
-      vinxi: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+      vinxi: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
     dev: false
 
   /@vinxi/plugin-mdx@3.7.1(@mdx-js/mdx@2.3.0):
@@ -3203,34 +3203,34 @@ packages:
       unified: 9.2.2
       vfile: 5.3.7
 
-  /@vinxi/server-components@0.3.0(vinxi@0.3.3):
+  /@vinxi/server-components@0.3.0(vinxi@0.3.4):
     resolution: {integrity: sha512-S10O0ZKu8skBfL6BmUzIgiwD1HclKtUfXc7G0jmJAJ4qsvfBbUBwfT9Su7ppsuAjl96i7V1ipt5En4CidSpPlQ==}
     peerDependencies:
       vinxi: ^0.3.0
     dependencies:
-      '@vinxi/plugin-directives': 0.3.0(vinxi@0.3.3)
+      '@vinxi/plugin-directives': 0.3.0(vinxi@0.3.4)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+      vinxi: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
     dev: false
 
-  /@vinxi/server-functions@0.3.0(vinxi@0.3.3):
+  /@vinxi/server-functions@0.3.0(vinxi@0.3.4):
     resolution: {integrity: sha512-WuYiXUyaxEzsXE2A5lrABHWap68jIynR/5tQTTdxcAPEkxUTchSBrakiXusUy1yU4BchqCwMGwwuoGb9qL54CQ==}
     peerDependencies:
       vinxi: ^0.3.0
     dependencies:
-      '@vinxi/plugin-directives': 0.3.0(vinxi@0.3.3)
+      '@vinxi/plugin-directives': 0.3.0(vinxi@0.3.4)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.4
-      vinxi: 0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
+      vinxi: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
     dev: false
 
   /@vitest/expect@1.2.1:
@@ -4536,7 +4536,7 @@ packages:
     dev: true
 
   /ee-first@1.1.1:
-    resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
+    resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
 
   /electron-to-chromium@1.4.656:
     resolution: {integrity: sha512-9AQB5eFTHyR3Gvt2t/NwR0le2jBSUNwCnMbUCejFWHD+so4tH40/dRLgoE+jxlPeWS43XJewyvCv+I8LPMl49Q==}
@@ -9718,8 +9718,8 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.3.3(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3):
-    resolution: {integrity: sha512-0KYGeNowy9SU7K2F7DTI7H4aGAelKLHzzxthf6fdd6cmokFhHM8xZ+fooTTciplbSMccW2adtsrg9Ia61jaPDg==}
+  /vinxi@0.3.4(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3):
+    resolution: {integrity: sha512-WAQbutVIX9zE2U5jraq+uvW2ytzb59HtX+/KVKqZSgjfQQpCHyi3XNxRkf46WTM5gASDEDFaG0l5ZHunmf7/cw==}
     hasBin: true
     dependencies:
       '@babel/core': 7.23.9
@@ -9800,8 +9800,8 @@ packages:
       - xml2js
     dev: true
 
-  /vinxi@0.3.3(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3):
-    resolution: {integrity: sha512-0KYGeNowy9SU7K2F7DTI7H4aGAelKLHzzxthf6fdd6cmokFhHM8xZ+fooTTciplbSMccW2adtsrg9Ia61jaPDg==}
+  /vinxi@0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3):
+    resolution: {integrity: sha512-WAQbutVIX9zE2U5jraq+uvW2ytzb59HtX+/KVKqZSgjfQQpCHyi3XNxRkf46WTM5gASDEDFaG0l5ZHunmf7/cw==}
     hasBin: true
     dependencies:
       '@babel/core': 7.23.9
