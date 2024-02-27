@@ -26,10 +26,10 @@ vinxi dev
 vinxi dev --port 3000
 ```
 
-### Specify a `vite.config` file
+### Specify a `app.config` file
 
 ```bash
-vinxi dev --config project/vite.config.ts --root project
+vinxi dev --config project/app.config.ts --root project
 ```
 
 ## Reference

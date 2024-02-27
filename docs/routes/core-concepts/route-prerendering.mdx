@@ -13,11 +13,9 @@ pre-rendered to the `routes` option.
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  start: {
-    server: {
-      prerender: {
-        routes: ["/", "/about"]
-      }
+  server: {
+    prerender: {
+      routes: ["/", "/about"]
     }
   }
 });
@@ -29,11 +27,9 @@ But what if we want to pre-render all of our pages?
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  start: {
-    server: {
-      prerender: {
-        crawlLinks: true
-      }
+  server: {
+    prerender: {
+      crawlLinks: true
     }
   }
 });

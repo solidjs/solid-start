@@ -10,9 +10,9 @@
     "@mdx-js/mdx": "^2.3.0",
     "@solidjs/router": "^0.12.4",
     "@solidjs/start": "^0.5.10",
-    "@vinxi/plugin-mdx": "^3.6.7",
+    "@vinxi/plugin-mdx": "^3.7.1",
     "solid-js": "^1.8.15",
-    "vinxi": "^0.2.1",
+    "vinxi": "^0.3.4",
     "solid-mdx": "^0.0.7"
   },
   "engines": {

@@ -2,7 +2,6 @@ import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-  EventHandlerObject,
   EventHandlerRequest,
   H3Event,
   eventHandler,
@@ -13,27 +12,16 @@ import {
 import { matchAPIRoute } from "../shared/routes";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
-import type { APIEvent, FetchEvent, PageEvent } from "./types";
+import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types";
 
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
-  options: {
-    nonce?: string;
-    renderId?: string;
-    timeoutMs?: number;
-    onCompleteAll?: (options: { write: (v: any) => void }) => void;
-    onCompleteShell?: (options: { write: (v: any) => void }) => void;
-    createPageEvent?: (event: FetchEvent) => Promise<PageEvent>;
-    onRequest?: EventHandlerObject["onRequest"];
-    onBeforeResponse?: EventHandlerObject["onBeforeResponse"];
-  } = {}
+  createPageEvent: (event: FetchEvent) => Promise<PageEvent>,
+  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
 ) {
   return eventHandler({
-    onRequest: options.onRequest,
-    onBeforeResponse: options.onBeforeResponse,
     handler: (e: H3Event<EventHandlerRequest>) => {
       const event = getFetchEvent(e);
-      const mode = import.meta.env.START_SSR;
 
       return provideRequestEvent(event, async () => {
         // api
@@ -55,7 +43,11 @@ export function createBaseHandler(
 
         // render
         const context = await createPageEvent(event);
-        if (mode === "sync") {
+        if (typeof options === "function") options = await options(context);
+        const mode = options.mode || "stream";
+        // @ts-ignore
+        if (options.nonce) context.nonce = options.nonce;
+        if (mode === "sync" || !import.meta.env.START_SSR) {
           const html = renderToString(() => {
             (sharedConfig.context as any).event = context;
             return fn(context);
@@ -115,7 +107,7 @@ function handleStreamCompleteRedirect(context: PageEvent) {
 
 export function createHandler(
   fn: (context: PageEvent) => unknown,
-  options: Parameters<typeof createBaseHandler>[1] = {}
+  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>)
 ) {
-  return createBaseHandler(fn, { ...options, createPageEvent });
+  return createBaseHandler(fn, createPageEvent, options);
 }

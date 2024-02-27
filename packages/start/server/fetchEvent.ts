@@ -1,6 +1,5 @@
 import {
   H3Event,
-  HTTPEvent,
   HTTPEventSymbol,
   appendResponseHeader,
   getRequestIP,
@@ -45,7 +44,7 @@ export function getFetchEvent(h3Event: H3Event): FetchEvent {
   return (h3Event as any)[fetchEventSymbol];
 }
 
-export function mergeResponseHeaders(h3Event: HTTPEvent, headers: Headers) {
+export function mergeResponseHeaders(h3Event: H3Event, headers: Headers) {
   for (const [key, value] of headers.entries()) {
     setHeader(h3Event, key, value);
   }

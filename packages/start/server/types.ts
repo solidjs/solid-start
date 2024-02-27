@@ -22,6 +22,14 @@ export type Asset = {
   attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
 };
 
+export type HandlerOptions = {
+  mode?: "sync" | "async" | "stream";
+  nonce?: string;
+  renderId?: string;
+  onCompleteAll?: (options: { write: (v: any) => void }) => void;
+  onCompleteShell?: (options: { write: (v: any) => void }) => void;
+};
+
 export type ContextMatches = {
   originalPath: string;
   pattern: string;
