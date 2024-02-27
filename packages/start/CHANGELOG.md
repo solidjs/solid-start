@@ -1,5 +1,20 @@
 # @solidjs/start
 
+## 0.6.0
+
+### Minor Changes
+
+- dbc0c685: Update to vinxi 0.3.3 (thus also Vite 4 -> 5)
+- d1a4ec95: move server rendering options to handler
+- 3bcfaf16: vite.config -> app.config
+
+### Patch Changes
+
+- eca781a7: configurable dev overlay
+- 03a8d1f8: update vinxi, fix prerendering
+- 44aa4c05: handler options as function, forward nonce to main scripts
+- 516df5da: fix nojs flash update auth/prisma examples
+
 ## 0.5.10
 
 ### Patch Changes
