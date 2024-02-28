@@ -1,3 +1,4 @@
+// @refresh reload
 import { StartServer, createHandler } from "@solidjs/start/server";
 
 declare module "@solidjs/start/server" {

@@ -1,3 +1,4 @@
+// @refresh skip
 // @ts-ignore
 import App from "#start/app";
 import type { JSX } from "solid-js";

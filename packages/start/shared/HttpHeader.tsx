@@ -1,9 +1,16 @@
+// @refresh skip
 import { onCleanup } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 import type { PageEvent } from "../server/types";
 
-export function HttpHeader(props: { name: string; value: string; append?: boolean }) {
-  if (isServer) {
+export interface HttpHeaderProps {
+  name: string;
+  value: string;
+  append?: boolean;
+}
+
+export const HttpHeader = isServer
+  ? (props: HttpHeaderProps) => {
     const event = getRequestEvent() as PageEvent;
 
     if (props.append) event.response.headers.append(props.name, props.value);
@@ -23,7 +30,6 @@ export function HttpHeader(props: { name: string; value: string; append?: boolea
       if (values.length) event.response.headers.set(props.name, values.join(","));
       else event.response.headers.delete(props.name);
     });
+    return null;
   }
-
-  return null;
-}
+  : (_props: HttpHeaderProps) => null;

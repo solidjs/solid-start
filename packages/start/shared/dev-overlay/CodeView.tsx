@@ -1,3 +1,4 @@
+// @refresh skip
 import type { BuiltinLanguage, Highlighter } from 'shikiji';
 import { getHighlighterCore, loadWasm } from 'shikiji/core';
 import { createEffect, createResource, type JSX } from 'solid-js';

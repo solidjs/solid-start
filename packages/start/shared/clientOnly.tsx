@@ -1,3 +1,4 @@
+// @refresh skip
 import type { Component, ComponentProps, JSX } from "solid-js";
 import { createMemo, createSignal, onMount, sharedConfig, splitProps, untrack } from "solid-js";
 import { isServer } from "solid-js/web";

@@ -1,3 +1,4 @@
+// @refresh skip
 // @ts-ignore
 import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";

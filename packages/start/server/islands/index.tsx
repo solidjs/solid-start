@@ -1,5 +1,6 @@
-import { type Component, type ComponentProps, lazy, sharedConfig } from "solid-js";
-import { getRequestEvent, Hydration, NoHydration } from "solid-js/web";
+// @refresh skip
+import { lazy, sharedConfig, type Component, type ComponentProps } from "solid-js";
+import { Hydration, NoHydration, getRequestEvent } from "solid-js/web";
 // import { IslandManifest } from "./types";
 import { splitProps } from "./utils";
 

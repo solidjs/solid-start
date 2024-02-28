@@ -1,3 +1,5 @@
+// @refresh skip
+// TODO rename to utils.ts?
 // @ts-nocheck
 import { $PROXY } from "solid-js";
 
