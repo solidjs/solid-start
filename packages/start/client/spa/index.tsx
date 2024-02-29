@@ -1,3 +1,4 @@
+// @refresh skip
 import type { JSX } from "solid-js";
 import { render, type MountableElement } from "solid-js/web";
 import "vinxi/client";

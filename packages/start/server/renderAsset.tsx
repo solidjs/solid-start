@@ -1,3 +1,5 @@
+// @refresh skip
+// TODO rename to renderAsset.ts?
 import type { JSX } from "solid-js";
 import type { Asset } from "./types";
 

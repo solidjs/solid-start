@@ -1,3 +1,4 @@
+// @refresh skip
 import ErrorStackParser from 'error-stack-parser';
 import * as htmlToImage from 'html-to-image';
 import type { JSX } from 'solid-js';
