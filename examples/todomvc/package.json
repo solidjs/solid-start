@@ -11,7 +11,7 @@
     "@solidjs/start": "^0.6.0",
     "solid-js": "^1.8.15",
     "unstorage": "1.10.1",
-    "vinxi": "^0.3.4"
+    "vinxi": "0.3.4"
   },
   "engines": {
     "node": ">=18"

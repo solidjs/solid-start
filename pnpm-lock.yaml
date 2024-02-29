@@ -88,7 +88,7 @@ importers:
         specifier: 0.26.0
         version: 0.26.0
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
       vite:
         specifier: ^5.1.1
@@ -103,7 +103,7 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/basic:
@@ -121,7 +121,7 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/experiments:
@@ -139,7 +139,7 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/hackernews:
@@ -154,7 +154,7 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/notes:
@@ -181,7 +181,7 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/todomvc:
@@ -199,7 +199,7 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-auth:
@@ -217,7 +217,7 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
     devDependencies:
       '@types/node':
@@ -245,7 +245,7 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.8.15)(vite@5.1.1)
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-prisma:
@@ -266,7 +266,7 @@ importers:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
     devDependencies:
       '@types/node':
@@ -291,7 +291,7 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(@babel/core@7.23.9)(solid-js@1.8.15)
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
@@ -318,7 +318,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-trpc:
@@ -348,7 +348,7 @@ importers:
         specifier: ^0.26.0
         version: 0.26.0
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-unocss:
@@ -369,7 +369,7 @@ importers:
         specifier: ^0.58.3
         version: 0.58.3(postcss@8.4.35)(vite@5.1.1)
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@types/node@20.10.1)(debug@4.3.4)(preact@10.19.3)
 
   examples/with-vitest:
@@ -405,7 +405,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       vinxi:
-        specifier: ^0.3.4
+        specifier: 0.3.4
         version: 0.3.4(@testing-library/jest-dom@6.1.5)(debug@4.3.4)(preact@10.19.3)
       vite:
         specifier: ^5.1.1
