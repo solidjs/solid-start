@@ -4,14 +4,15 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "version": "vinxi version"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.2",
     "@solidjs/router": "^0.12.4",
     "@solidjs/start": "^0.6.0",
     "solid-js": "^1.8.15",
-    "vinxi": "^0.3.6"
+    "vinxi": "^0.3.9"
   },
   "engines": {
     "node": ">=18"
