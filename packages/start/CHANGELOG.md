@@ -1,5 +1,13 @@
 # @solidjs/start
 
+## 0.6.1
+
+### Patch Changes
+
+- 29e4ec60: Fix refresh pragma
+- cbcdde3c: update ts, fix #1346 flash types
+- bb6d61ac: Update package.json to include license
+
 ## 0.6.0
 
 ### Minor Changes

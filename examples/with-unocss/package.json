@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.12.5",
-    "@solidjs/start": "^0.6.0",
+    "@solidjs/start": "^0.6.1",
     "@unocss/reset": "^0.58.3",
     "solid-js": "^1.8.15",
     "unocss": "^0.58.3",
