@@ -51,8 +51,8 @@
   },
   "dependencies": {
     "@vinxi/plugin-directives": "^0.3.0",
-    "@vinxi/server-components": "^0.3.0",
-    "@vinxi/server-functions": "^0.3.0",
+    "@vinxi/server-components": "^0.3.2",
+    "@vinxi/server-functions": "^0.3.1",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
