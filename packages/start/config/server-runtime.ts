@@ -170,19 +170,11 @@ async function fetchServerFunction(
     return response;
   }
 
-  const contentType = response.headers.get("Content-Type");
-  let result;
-  if (contentType && contentType.startsWith("text/plain")) {
-    result = await response.text();
-  } else if (contentType && contentType.startsWith("application/json")) {
-    result = await response.json();
-  } else {
-    result = deserializeStream(instance, response);
+  const result = await deserializeStream(instance, response);
+  if (response.headers.has("X-Error")) {
+    throw result;
   }
-  if (response.ok) {
-    return result;
-  }
-  throw result;
+  return result;
 }
 
 export function createServerReference(fn: Function, id: string, name: string) {

@@ -142,6 +142,8 @@ async function handleServerFunction(h3Event: H3Event) {
     if (result instanceof Response && instance) {
       // forward headers
       if (result.headers) mergeResponseHeaders(h3Event, result.headers);
+      // forward non-redirect statuses
+      if (result.status && (result.status < 300 || result.status >= 400)) setResponseStatus(h3Event, result.status);
       if ((result as any).customBody) {
         result = await (result as any).customBody();
       } else if (result.body == undefined) result = null;
@@ -181,16 +183,20 @@ async function handleServerFunction(h3Event: H3Event) {
       if (singleFlight && instance) {
         x = await handleSingleFlight(event, x);
       }
-      if ((x as any).status === 302 && !instance) setResponseStatus(h3Event, 302);
       // forward headers
       if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
+      // forward non-redirect statuses
+      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400)) setResponseStatus(h3Event, (x as any).status);
       if ((x as any).customBody) {
         x = (x as any).customBody();
       } else if ((x as any).body == undefined) x = null;
-      if (instance) {
-        setHeader(h3Event, "content-type", "text/javascript");
-        return serializeToStream(instance, x);
-      }
+    } else {
+      const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
+      setHeader(h3Event, "X-Error", error);
+    }
+    if (instance) {
+      setHeader(h3Event, "content-type", "text/javascript");
+      return serializeToStream(instance, x);
     }
     return x;
   }
