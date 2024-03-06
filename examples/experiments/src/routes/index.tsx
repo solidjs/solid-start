@@ -15,6 +15,12 @@ const hello = GET(async (name: string) => {
   );
 });
 
+export const route = {
+  load() {
+    hello("John");
+  }
+}
+
 export default function Home() {
   hello("John").then(async v => {
     console.log(v);

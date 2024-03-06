@@ -30,6 +30,6 @@ export function createRoutes() {
 }
 
 let routes: any[];
-export const FileRoutes = isServer 
+export const FileRoutes = isServer
   ? () => (getRequestEvent() as PageEvent).routes
   : () => routes || (routes = createRoutes());

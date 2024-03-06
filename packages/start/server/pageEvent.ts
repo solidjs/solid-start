@@ -2,7 +2,7 @@ import {
   getCookie,
   setCookie
 } from "vinxi/http";
-import { createRoutes } from "../shared/FileRoutes";
+import { createRoutes } from "../router/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
 
 function initFromFlash(ctx: FetchEvent) {

@@ -67,7 +67,7 @@ Under the hood, SolidStart traverses your `routes` directory, collects all the r
 ```tsx twoslash {7-9} filename="app.tsx"
 import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 
 export default function App() {
   return (

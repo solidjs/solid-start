@@ -1,5 +1,3 @@
-// @refresh skip
-// TODO rename to lazyRoute.ts?
 /// <reference types="vinxi/types/client" />
 import { createComponent, lazy, onCleanup, type Component, type JSX } from "solid-js";
 import { appendStyles, cleanupStyles, preloadStyles, updateStyles } from "vinxi/css";

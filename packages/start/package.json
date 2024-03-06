@@ -14,34 +14,39 @@
     "client",
     "config",
     "middleware",
+    "router",
     "server",
     "shared",
     "*.d.ts"
   ],
-  "types": "./shared/index.tsx",
+  "types": "./shared/index.ts",
   "exports": {
-    ".": "./shared/index.tsx",
+    ".": "./shared/index.ts",
     "./config": "./config/index.js",
     "./middleware": "./middleware/index.ts",
-    "./server": "./server/index.tsx",
-    "./server/spa": "./server/spa/index.tsx",
-    "./client": "./client/index.tsx",
-    "./client/islands": "./client/islands.tsx",
-    "./client/spa": "./client/spa/index.tsx"
+    "./router": "./router/index.ts",
+    "./server": "./server/index.ts",
+    "./server/spa": "./server/spa/index.ts",
+    "./client": "./client/index.ts",
+    "./client/islands": "./client/islands.ts",
+    "./client/spa": "./client/spa/index.ts"
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./shared/index.tsx"
+        "./shared/index.ts"
       ],
       "middleware": [
         "./middleware/index.ts"
       ],
+      "router": [
+        "./router/index.ts"
+      ],
       "server": [
-        "./server/index.tsx"
+        "./server/index.ts"
       ],
       "client": [
-        "./client/index.tsx"
+        "./client/index.ts"
       ]
     }
   },

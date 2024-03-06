@@ -9,7 +9,7 @@ import {
   setHeader,
   setResponseStatus
 } from "vinxi/http";
-import { matchAPIRoute } from "../shared/routes";
+import { matchAPIRoute } from "../router/routes";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types";

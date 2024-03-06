@@ -13,7 +13,7 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 <FileRoutes />;
 ```
 
@@ -32,7 +32,7 @@ Since `FileRoutes` returns a route configuration, it must be placed directly ins
 ```tsx twoslash {7-9} filename="app.tsx"
 import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 
 export default function App() {
   return (
