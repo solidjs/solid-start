@@ -131,6 +131,9 @@ async function handleServerFunction(h3Event: H3Event) {
     let result = await provideRequestEvent(event, async () => {
       /* @ts-ignore */
       sharedConfig.context = { event };
+      event.locals.serverFunctionMeta = {
+        id: filepath + "#" + name,
+      };
       return serverFunction(...parsed);
     });
 
