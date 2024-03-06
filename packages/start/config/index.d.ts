@@ -8,12 +8,15 @@ type SolidStartInlineConfig = {
   extensions?: string[];
   server?: AppOptions["server"];
   appRoot?: string;
+  routeDir?: string;
   middleware?: string;
-  islands?: boolean;
   devOverlay?:  boolean;
+  experimental?: {
+    islands?: boolean;
+  }
   vite?:
     | CustomizableConfig
-    | ((options: { router: "server" | "client" | "server-function" }) => CustomizableConfig);
+    | ((options: { environment: "server" | "client" | "server-function" }) => CustomizableConfig);
 };
 
 export declare function defineConfig(baseConfig?: SolidStartInlineConfig): any;

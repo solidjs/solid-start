@@ -51,16 +51,16 @@ export default defineConfig({
 });
 ```
 
-The `vite` option can also be a function which can be customized for each Vinxi Router. In SolidStart we use 3, `server` for SSR, `client` for the browser, and `server-function` for server functions.
+The `vite` option can also be a function which can be customized for each Vinxi environment. In SolidStart we use 3, `server` for SSR, `client` for the browser, and `server-function` for server functions.
 
 ```tsx
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  vite({ router }) {
-    if (router === "server") {
-    } else if (router === "client") {
-    } else if (router === "server-function") {
+  vite({ enviroment }) {
+    if (enviroment === "server") {
+    } else if (enviroment === "client") {
+    } else if (enviroment === "server-function") {
     }
     return { plugins: [] };
   }
@@ -122,4 +122,4 @@ The vite options are same as the default with exception of the `start` property 
 - `appRoot` (_string_, default `"./src"`): Sets the root of the application code.
 - `routesDir` (_string_, default `"./routes"`): The path to where the routes are located.
 - `ssr` (_boolean_ | "sync" | "async", default `true`): Providing a boolean value will toggle between client rendering and [streaming](https://docs.solidjs.com/references/concepts/ssr/streaming) server rendering (ssr) mode, while "sync" and "async" will render using Solid's [renderToString](https://docs.solidjs.com/references/concepts/ssr/simple-client-fetching-ssr) and [renderToStringAsync](https://docs.solidjs.com/references/concepts/ssr/async-ssr) respectively.
-- `islands` (_boolean_, default `false`): _experimental_ toggles on "islands" mode.
+- `experimental.islands` (_boolean_, default `false`): _experimental_ toggles on "islands" mode.
