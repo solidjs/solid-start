@@ -72,7 +72,7 @@ async function handleServerFunction(h3Event: H3Event) {
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
   const url = new URL(request.url);
-  let filepath, name;
+  let filepath: string | undefined | null, name: string | undefined | null;
   if (serverReference) {
     invariant(typeof serverReference === "string", "Invalid server function");
     [filepath, name] = serverReference.split("#");
