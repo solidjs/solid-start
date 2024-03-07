@@ -8,9 +8,11 @@
     "access": "public"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
+    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck",
+    "build": " node build && pnpm tsc"
   },
   "files": [
+    "dist",
     "client",
     "config",
     "middleware",
@@ -18,34 +20,35 @@
     "shared",
     "*.d.ts"
   ],
-  "types": "./shared/index.tsx",
+  "types": "./dist/shared/index.d.ts",
   "exports": {
-    ".": "./shared/index.tsx",
-    "./config": "./config/index.js",
-    "./middleware": "./middleware/index.ts",
-    "./server": "./server/index.tsx",
-    "./server/spa": "./server/spa/index.tsx",
-    "./client": "./client/index.tsx",
-    "./client/islands": "./client/islands.tsx",
-    "./client/spa": "./client/spa/index.tsx"
+    ".": "./dist/shared/index.jsx",
+    "./config": "./dist/config/index.js",
+    "./middleware": "./dist/middleware/index.js",
+    "./server": "./dist/server/index.jsx",
+    "./server/spa": "./dist/server/spa/index.jsx",
+    "./client": "./dist/client/index.jsx",
+    "./client/islands": "./dist/client/islands.jsx",
+    "./client/spa": "./dist/client/spa/index.jsx"
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./shared/index.tsx"
+        "./dist/shared/index.d.ts"
       ],
       "middleware": [
-        "./middleware/index.ts"
+        "./dist/middleware/index.d.ts"
       ],
       "server": [
-        "./server/index.tsx"
+        "./dist/server/index.d.ts"
       ],
       "client": [
-        "./client/index.tsx"
+        "./dist/client/index.d.ts"
       ]
     }
   },
   "devDependencies": {
+    "gulp": "^4.0.2",
     "solid-js": "^1.8.15",
     "vinxi": "^0.3.9"
   },
@@ -55,6 +58,7 @@
     "@vinxi/server-functions": "^0.3.1",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
+    "glob": "^10.3.10",
     "html-to-image": "^1.11.11",
     "radix3": "^1.1.0",
     "seroval": "^1.0.2",
