@@ -6,12 +6,12 @@ import { createRoutes } from "../router/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
 
 function initFromFlash(ctx: FetchEvent) {
-  const flash = getCookie(ctx, "flash");
+  const flash = getCookie(ctx.nativeEvent, "flash");
   if (!flash) return;
   let param = JSON.parse(flash);
   if (!param || !param.result) return;
   const input = [...param.input.slice(0, -1), new Map(param.input[param.input.length - 1])];
-  setCookie(ctx, "flash", "", { maxAge: 0 });
+  setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
   return {
     input,
     url: param.url,

@@ -54,7 +54,7 @@ class HeaderProxy {
   constructor(private event: H3Event) {}
   get(key: string) {
     const h = getResponseHeader(this.event, key);
-    return Array.isArray(h) ? h.join(", ") : h;
+    return Array.isArray(h) ? h.join(", ") : h as string || null;
   }
   has(key: string) {
     return this.get(key) !== undefined;
@@ -70,13 +70,13 @@ class HeaderProxy {
   }
   getSetCookie() {
     const cookies = getResponseHeader(this.event, "Set-Cookie");
-    return Array.isArray(cookies) ? cookies : [cookies];
+    return Array.isArray(cookies) ? cookies : [cookies as string];
   }
   forEach(fn: (value: string, key: string, object: Headers) => void) {
-    return Object.entries<string | string[]>(getResponseHeaders(this.event)).forEach(([key, value]) => fn(Array.isArray(value) ? value.join(", ") : value, key, this));
+    return Object.entries(getResponseHeaders(this.event)).forEach(([key, value]) => fn(Array.isArray(value) ? value.join(", ") : value as string, key, this));
   }
   entries() {
-    return Object.entries<string | string[]>(getResponseHeaders(this.event)).map(([key, value]) => [
+    return Object.entries(getResponseHeaders(this.event)).map(([key, value]) => [
       key,
       Array.isArray(value) ? value.join(", ") : value
     ] as [string, string])[Symbol.iterator]();
@@ -85,8 +85,8 @@ class HeaderProxy {
     return Object.keys(getResponseHeaders(this.event))[Symbol.iterator]();
   }
   values() {
-    return Object.values<string | string[]>(getResponseHeaders(this.event)).map((value) =>
-      Array.isArray(value) ? value.join(", ") : value
+    return Object.values(getResponseHeaders(this.event)).map((value) =>
+      Array.isArray(value) ? value.join(", ") : value as string
     )[Symbol.iterator]();
   }
   [Symbol.iterator]() {

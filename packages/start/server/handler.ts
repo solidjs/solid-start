@@ -53,7 +53,7 @@ export function createBaseHandler(
             return fn(context);
           }, options);
           if (context.response && context.response.headers.get("Location")) {
-            return sendRedirect(event, context.response.headers.get("Location")!);
+            return sendRedirect(event.nativeEvent, context.response.headers.get("Location")!);
           }
           return html;
         }
@@ -77,7 +77,7 @@ export function createBaseHandler(
           return fn(context);
         }, cloned);
         if (context.response && context.response.headers.get("Location")) {
-          return sendRedirect(event, context.response.headers.get("Location")!);
+          return sendRedirect(event.nativeEvent, context.response.headers.get("Location")!);
         }
         if (mode === "async") return stream;
         // fix cloudflare streaming
