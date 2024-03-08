@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.7.1
+
+### Patch Changes
+
+- 1891af96: fix #1370 cannot resolve #start/app
+
 ## 0.7.0
 
 ### Minor Changes
