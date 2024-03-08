@@ -51,16 +51,16 @@ export default defineConfig({
 });
 ```
 
-The `vite` option can also be a function which can be customized for each Vinxi environment. In SolidStart we use 3, `server` for SSR, `client` for the browser, and `server-function` for server functions.
+The `vite` option can also be a function which can be customized for each Vinxi router. In SolidStart we use 3, `server` for SSR, `client` for the browser, and `server-function` for server functions.
 
 ```tsx
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  vite({ enviroment }) {
-    if (enviroment === "server") {
-    } else if (enviroment === "client") {
-    } else if (enviroment === "server-function") {
+  vite({ router }) {
+    if (router === "server") {
+    } else if (router === "client") {
+    } else if (router === "server-function") {
     }
     return { plugins: [] };
   }

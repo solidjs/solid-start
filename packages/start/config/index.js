@@ -91,7 +91,7 @@ export function defineConfig(baseConfig = {}) {
         extensions,
         target: "server",
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ environment: "server" }) : { ...vite };
+          const userConfig = typeof vite === "function" ? await vite({ router: "server" }) : { ...vite };
           const plugins = userConfig.plugins || [];
           delete userConfig.plugins;
           return [
@@ -150,7 +150,7 @@ export function defineConfig(baseConfig = {}) {
         extensions,
         target: "browser",
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ environment: "client" }) : { ...vite };
+          const userConfig = typeof vite === "function" ? await vite({ router: "client" }) : { ...vite };
           const plugins = userConfig.plugins || [];
           delete userConfig.plugins;
           return [
@@ -212,7 +212,7 @@ export function defineConfig(baseConfig = {}) {
         target: "server",
         routes: solidStartServerFsRouter({ dir: routeDir, extensions }),
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ environment: "server-function" }) : { ...vite };
+          const userConfig = typeof vite === "function" ? await vite({ router: "server-function" }) : { ...vite };
           const plugins = userConfig.plugins || [];
           delete userConfig.plugins;
           return [

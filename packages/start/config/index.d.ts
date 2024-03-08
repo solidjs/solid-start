@@ -1,6 +1,12 @@
 import type { AppOptions } from "vinxi";
 import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
+import { InlineConfig } from "vite";
 import type { Options } from "vite-plugin-solid";
+
+// atleast until we sort which server options are good to use
+type ViteCustomizableConfig = CustomizableConfig & {
+  server?: InlineConfig["server"];
+}
 
 type SolidStartInlineConfig = {
   ssr?: boolean;
@@ -15,8 +21,8 @@ type SolidStartInlineConfig = {
     islands?: boolean;
   }
   vite?:
-    | CustomizableConfig
-    | ((options: { environment: "server" | "client" | "server-function" }) => CustomizableConfig);
+    | ViteCustomizableConfig
+    | ((options: { router: "server" | "client" | "server-function" }) => ViteCustomizableConfig);
 };
 
 export declare function defineConfig(baseConfig?: SolidStartInlineConfig): any;
