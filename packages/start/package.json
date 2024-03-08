@@ -25,11 +25,11 @@
     "./config": "./config/index.js",
     "./middleware": "./middleware/index.ts",
     "./router": "./router/index.ts",
-    "./server": "./server/index.ts",
-    "./server/spa": "./server/spa/index.ts",
-    "./client": "./client/index.ts",
+    "./server": "./server/index.tsx",
+    "./server/spa": "./server/spa/index.tsx",
+    "./client": "./client/index.tsx",
     "./client/islands": "./client/islands.ts",
-    "./client/spa": "./client/spa/index.ts"
+    "./client/spa": "./client/spa/index.tsx"
   },
   "typesVersions": {
     "*": {
@@ -43,10 +43,10 @@
         "./router/index.ts"
       ],
       "server": [
-        "./server/index.ts"
+        "./server/index.tsx"
       ],
       "client": [
-        "./client/index.ts"
+        "./client/index.tsx"
       ]
     }
   },
