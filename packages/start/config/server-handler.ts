@@ -21,7 +21,6 @@ import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
 import { createPageEvent } from "../server/pageEvent";
 // @ts-ignore
-import App from "#start/app";
 import { FetchEvent, PageEvent } from "../server";
 
 function createChunk(data: string) {
@@ -205,6 +204,7 @@ async function handleServerFunction(h3Event: H3Event) {
   }
 }
 
+let App: any;
 async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
   let revalidate: string[];
   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
@@ -221,6 +221,8 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
   event.request = new Request(url);
   return await provideRequestEvent(event, async () => {
     await createPageEvent(event);
+    /* @ts-ignore */
+    App || (App = (await import("#start/app")).default);
     /* @ts-ignore */
     event.router.dataOnly = revalidate || true;
     /* @ts-ignore */
