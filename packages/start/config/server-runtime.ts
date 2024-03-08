@@ -170,7 +170,15 @@ async function fetchServerFunction(
     return response;
   }
 
-  const result = await deserializeStream(instance, response);
+  const contentType = response.headers.get("Content-Type");
+  let result;
+  if (contentType && contentType.startsWith("text/plain")) {
+    result = await response.text();
+  } else if (contentType && contentType.startsWith("application/json")) {
+    result = await response.json();
+  } else {
+    result = await deserializeStream(instance, response);
+  }
   if (response.headers.has("X-Error")) {
     throw result;
   }
