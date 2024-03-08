@@ -20,6 +20,7 @@
     "example-with-tailwindcss",
     "example-with-trpc",
     "example-with-unocss",
-    "example-with-vitest"
+    "example-with-vitest",
+    "solid-start-mdx"
   ]
 }
