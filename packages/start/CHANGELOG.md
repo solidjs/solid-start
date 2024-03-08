@@ -1,5 +1,26 @@
 # @solidjs/start
 
+## 0.7.0
+
+### Minor Changes
+
+- e33d506e: fix FS router circular dep by moving import
+- 7b1c82be: add `.` notation to escape layouts in FS routes
+- 28357e62: update config to anticipate Vite updates, clearer experimental features, routesDir
+- d491fa8f: remove support for event symbol autoforwarding
+- 113c5d53: add serverFunctionMeta
+- b9b6eed8: transparent errors and support http status forwarding in server fns
+
+### Patch Changes
+
+- 30862af6: fix types for latest updates
+- 32fc1f39: Fix dev overlay's CodeView not working with `mjs` or `cjs` files
+- 29ffd16b: don't import app on server for SSR false when SingleFlight false
+- 476b8ecf: add back different content type parsing in case middleware etc..
+- ea53d37a: update Vinxi and Solid Router
+- b19ff69f: revert vite alignment until we know more, add server option to types
+- 256488b2: fix #1366 islands mode reference
+
 ## 0.6.1
 
 ### Patch Changes
