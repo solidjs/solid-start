@@ -47,7 +47,7 @@ pnpm install
 pnpm dev
 
 # or with Bun
-bunx create-solid@latest
+bunx create solid@latest
 bun install
 bun run dev
 ```
