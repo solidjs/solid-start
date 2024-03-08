@@ -47,7 +47,7 @@ export default function App() {
 
 Be careful before you decide to remove the `FileRoutes` component from your `app.tsx` file. If you do, you will need to manually add all of your routes to the `<Routes>` component.
 
-You will still lose out on some optimizations that are enabled by file-system routing. While we will caution you however, always be free to explore what you can do.
+You will still lose out on some optimizations that are enabled by file-system routing like preloaded script tags. While we will caution you however, always be free to explore what you can do.
 
 </aside>
 
