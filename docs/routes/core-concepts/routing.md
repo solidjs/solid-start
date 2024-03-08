@@ -159,6 +159,33 @@ export default function UsersLayout(props: RouteSectionProps) {
 }
 ```
 
+### Escaping Nested Routes
+
+Sometimes you may have the same path but you don't want them to share the same layout. For example, your user listing page might not share a layout with the user details page. In that case you can:
+
+```tsx {1}
+|-- routes/
+    |-- users.tsx
+    |-- users.tsx/
+        |-- index.tsx
+        |-- projects.tsx
+    |-- users.[id].tsx
+```
+
+And it can also have its own nested layouts
+
+```tsx {1}
+|-- routes/
+    |-- users.tsx
+    |-- users.[id].tsx
+    |-- users.tsx/
+        |-- index.tsx
+        |-- projects.tsx
+    |-- users.[id].tsx
+        |-- index.tsx
+        |-- settings.tsx
+```
+
 ## Route Groups
 
 With file system routing, folders map directly to URL Paths. However, there might be times when you want to create folders for the sake of organization without affecting the URL structure. This can be done by using a Route Group. In SolidStart, Route Groups are defined using parenthesis surrounding the folder name `(example)`.
