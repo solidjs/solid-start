@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
 import { RequestEvent } from "solid-js/web";
-import { H3Event, HTTPEventSymbol } from "vinxi/http";
+import { HTTPEvent } from "vinxi/http";
 
 // export const FETCH_EVENT = "$FETCH";
 
@@ -47,8 +47,7 @@ export interface FetchEvent {
   response: ResponseStub;
   clientAddress?: string;
   locals: RequestEventLocals;
-  nativeEvent: H3Event;
-  [HTTPEventSymbol]: H3Event;
+  nativeEvent: HTTPEvent;
 }
 export interface RequestEventLocals {
   [key: string | symbol]: any;

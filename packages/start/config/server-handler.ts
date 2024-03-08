@@ -16,7 +16,7 @@ import {
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler, setHeader, setResponseStatus, type H3Event } from "vinxi/http";
+import { eventHandler, setHeader, setResponseStatus, type HTTPEvent } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
 import { createPageEvent } from "../server/pageEvent";
@@ -63,7 +63,7 @@ function serializeToStream(id: string, value: any) {
   });
 }
 
-async function handleServerFunction(h3Event: H3Event) {
+async function handleServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 

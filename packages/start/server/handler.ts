@@ -2,12 +2,11 @@ import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-  EventHandlerRequest,
-  H3Event,
   eventHandler,
   sendRedirect,
   setHeader,
-  setResponseStatus
+  setResponseStatus,
+  type HTTPEvent
 } from "vinxi/http";
 import { matchAPIRoute } from "../router/routes";
 import { getFetchEvent } from "./fetchEvent";
@@ -20,7 +19,7 @@ export function createBaseHandler(
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
 ) {
   return eventHandler({
-    handler: (e: H3Event<EventHandlerRequest>) => {
+    handler: (e: HTTPEvent) => {
       const event = getFetchEvent(e);
 
       return provideRequestEvent(event, async () => {
@@ -53,7 +52,7 @@ export function createBaseHandler(
             return fn(context);
           }, options);
           if (context.response && context.response.headers.get("Location")) {
-            return sendRedirect(event.nativeEvent, context.response.headers.get("Location")!);
+            return sendRedirect(e, context.response.headers.get("Location")!);
           }
           return html;
         }
@@ -77,7 +76,7 @@ export function createBaseHandler(
           return fn(context);
         }, cloned);
         if (context.response && context.response.headers.get("Location")) {
-          return sendRedirect(event.nativeEvent, context.response.headers.get("Location")!);
+          return sendRedirect(e, context.response.headers.get("Location")!);
         }
         if (mode === "async") return stream;
         // fix cloudflare streaming
@@ -89,7 +88,7 @@ export function createBaseHandler(
   });
 }
 
-function handleShellCompleteRedirect(context: PageEvent, e: H3Event<EventHandlerRequest>) {
+function handleShellCompleteRedirect(context: PageEvent, e: HTTPEvent) {
   return () => {
     if (context.response && context.response.headers.get("Location")) {
       setResponseStatus(e, 302);
