@@ -58,11 +58,15 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
     .join('\n')
   ) ,async (value) => {
     const highlighter = await loadHighlighter();
-    const lang = props.fileName
+    const fileExtension = props.fileName
       .split(/[#?]/)[0]!
       .split('.')
       .pop()
-      ?.trim() as BuiltinLanguage;
+      ?.trim();
+    let lang = fileExtension as BuiltinLanguage;
+    if (fileExtension === 'mjs' || fileExtension === 'cjs') {
+      lang = 'js';
+    }
     return highlighter.codeToHtml(value, {
       theme: 'dark-plus',
       lang,
