@@ -42,7 +42,7 @@
         "./dist/middleware/index.d.ts"
       ],
       "router": [
-        "./router/index.ts"
+        "./dist/router/index.ts"
       ],
       "server": [
         "./dist/server/index.d.ts"
