@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "0.6.1",
+  "version": "0.7.1",
   "type": "module",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -16,19 +16,21 @@
     "client",
     "config",
     "middleware",
+    "router",
     "server",
     "shared",
     "*.d.ts"
   ],
   "types": "./dist/shared/index.d.ts",
   "exports": {
-    ".": "./dist/shared/index.jsx",
+    ".": "./dist/shared/index.js",
     "./config": "./dist/config/index.js",
     "./middleware": "./dist/middleware/index.js",
+    "./router": "./dist/router/index.js",
     "./server": "./dist/server/index.jsx",
     "./server/spa": "./dist/server/spa/index.jsx",
     "./client": "./dist/client/index.jsx",
-    "./client/islands": "./dist/client/islands.jsx",
+    "./client/islands": "./dist/client/islands.js",
     "./client/spa": "./dist/client/spa/index.jsx"
   },
   "typesVersions": {
@@ -38,6 +40,9 @@
       ],
       "middleware": [
         "./dist/middleware/index.d.ts"
+      ],
+      "router": [
+        "./router/index.ts"
       ],
       "server": [
         "./dist/server/index.d.ts"
@@ -49,12 +54,12 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.15",
-    "vinxi": "^0.3.9"
+    "vinxi": "^0.3.10"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.3.0",
-    "@vinxi/server-components": "^0.3.2",
-    "@vinxi/server-functions": "^0.3.1",
+    "@vinxi/plugin-directives": "^0.3.1",
+    "@vinxi/server-components": "^0.3.3",
+    "@vinxi/server-functions": "^0.3.2",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "glob": "^10.3.10",

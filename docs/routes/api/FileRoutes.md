@@ -13,7 +13,7 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 <FileRoutes />;
 ```
 
@@ -32,7 +32,7 @@ Since `FileRoutes` returns a route configuration, it must be placed directly ins
 ```tsx twoslash {7-9} filename="app.tsx"
 import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 
 export default function App() {
   return (
@@ -47,7 +47,7 @@ export default function App() {
 
 Be careful before you decide to remove the `FileRoutes` component from your `app.tsx` file. If you do, you will need to manually add all of your routes to the `<Routes>` component.
 
-You will still lose out on some optimizations that are enabled by file-system routing. While we will caution you however, always be free to explore what you can do.
+You will still lose out on some optimizations that are enabled by file-system routing like preloaded script tags. While we will caution you however, always be free to explore what you can do.
 
 </aside>
 

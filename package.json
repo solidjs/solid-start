@@ -30,7 +30,7 @@
     "@cloudflare/kv-asset-handler": "^0.2.0",
     "@decs/typeschema": "^0.12.2",
     "@solidjs/meta": "^0.29.0",
-    "@solidjs/router": "^0.12.5",
+    "@solidjs/router": "^0.13.0",
     "@solidjs/start": "workspace:*",
     "@tailwindcss/typography": "^0.5.9",
     "@trpc/client": "^9.27.4",
@@ -50,7 +50,7 @@
     "turbo": "^1.10.7",
     "typescript": "5.3.3",
     "valibot": "0.26.0",
-    "vinxi": "^0.3.9",
+    "vinxi": "^0.3.10",
     "vite": "^5.1.1"
   },
   "dependencies": {

@@ -94,7 +94,7 @@ import { getCookie } from "vinxi/http";
 import hogwarts from "./hogwarts";
 
 export async function GET(event: APIEvent) {
-  const userId = getCookie(event, "userId");
+  const userId = getCookie("userId");
   if (!userId) {
     return new Response("Not logged in", { status: 401 });
   }

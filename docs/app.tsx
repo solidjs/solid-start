@@ -1,7 +1,7 @@
 // @refresh reload
 import { MetaProvider, Title } from "@solidjs/meta";
 import { A, Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 import { createMemo, For, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import "./components/index.css";

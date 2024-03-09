@@ -8,7 +8,7 @@ order: 7
 
 One question you will likely have when developing any sort of app is "how do I communicate new information to my server?". The user did something. What next? Solid Router's answer to this is _actions_.
 
-Actions give you the ability to specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. Actions are isomorphic and generally represent a `POST` request.
+Actions give you the ability to specify an async action processing function and gives you elegant tools to help you easily manage and track submissions. Actions are isomorphic and represent a `POST` request.
 
 Actions are isomorphic. This means that a submission can be handled on the server _or_ the client, whichever is optimal. They represent the server component of an [HTML form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form), and even help you use HTML forms to submit data.
 
@@ -142,3 +142,9 @@ export function MyComponent() {
   );
 }
 ```
+
+## Error Handling
+
+We strongly recommend with actions to "return" errors rather than throwing them. This can help with typing of submissions you'd use with `useSubmission`. This is important especially for handling progressive enhancement where no JS is present in the client so that we can use the error declaratively to render the updated page on the server.
+
+Additionally when using Server Actions it is good practice to try to handle errors on the server so that you can sanitize error messages.

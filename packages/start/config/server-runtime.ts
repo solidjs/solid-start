@@ -177,12 +177,12 @@ async function fetchServerFunction(
   } else if (contentType && contentType.startsWith("application/json")) {
     result = await response.json();
   } else {
-    result = deserializeStream(instance, response);
+    result = await deserializeStream(instance, response);
   }
-  if (response.ok) {
-    return result;
+  if (response.headers.has("X-Error")) {
+    throw result;
   }
-  throw result;
+  return result;
 }
 
 export function createServerReference(fn: Function, id: string, name: string) {

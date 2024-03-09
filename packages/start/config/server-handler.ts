@@ -16,12 +16,11 @@ import {
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler, setHeader, setResponseStatus, type H3Event } from "vinxi/http";
+import { eventHandler, setHeader, setResponseStatus, type HTTPEvent } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
 import { createPageEvent } from "../server/pageEvent";
 // @ts-ignore
-import App from "#start/app";
 import { FetchEvent, PageEvent } from "../server";
 
 function createChunk(data: string) {
@@ -64,7 +63,7 @@ function serializeToStream(id: string, value: any) {
   });
 }
 
-async function handleServerFunction(h3Event: H3Event) {
+async function handleServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
@@ -72,7 +71,7 @@ async function handleServerFunction(h3Event: H3Event) {
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
   const url = new URL(request.url);
-  let filepath, name;
+  let filepath: string | undefined | null, name: string | undefined | null;
   if (serverReference) {
     invariant(typeof serverReference === "string", "Invalid server function");
     [filepath, name] = serverReference.split("#");
@@ -131,6 +130,9 @@ async function handleServerFunction(h3Event: H3Event) {
     let result = await provideRequestEvent(event, async () => {
       /* @ts-ignore */
       sharedConfig.context = { event };
+      event.locals.serverFunctionMeta = {
+        id: filepath + "#" + name,
+      };
       return serverFunction(...parsed);
     });
 
@@ -142,6 +144,8 @@ async function handleServerFunction(h3Event: H3Event) {
     if (result instanceof Response && instance) {
       // forward headers
       if (result.headers) mergeResponseHeaders(h3Event, result.headers);
+      // forward non-redirect statuses
+      if (result.status && (result.status < 300 || result.status >= 400)) setResponseStatus(h3Event, result.status);
       if ((result as any).customBody) {
         result = await (result as any).customBody();
       } else if (result.body == undefined) result = null;
@@ -181,21 +185,26 @@ async function handleServerFunction(h3Event: H3Event) {
       if (singleFlight && instance) {
         x = await handleSingleFlight(event, x);
       }
-      if ((x as any).status === 302 && !instance) setResponseStatus(h3Event, 302);
       // forward headers
       if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
+      // forward non-redirect statuses
+      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400)) setResponseStatus(h3Event, (x as any).status);
       if ((x as any).customBody) {
         x = (x as any).customBody();
       } else if ((x as any).body == undefined) x = null;
-      if (instance) {
-        setHeader(h3Event, "content-type", "text/javascript");
-        return serializeToStream(instance, x);
-      }
+    } else {
+      const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
+      setHeader(h3Event, "X-Error", error);
+    }
+    if (instance) {
+      setHeader(h3Event, "content-type", "text/javascript");
+      return serializeToStream(instance, x);
     }
     return x;
   }
 }
 
+let App: any;
 async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
   let revalidate: string[];
   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
@@ -212,6 +221,8 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
   event.request = new Request(url);
   return await provideRequestEvent(event, async () => {
     await createPageEvent(event);
+    /* @ts-ignore */
+    App || (App = (await import("#start/app")).default);
     /* @ts-ignore */
     event.router.dataOnly = revalidate || true;
     /* @ts-ignore */

@@ -1,7 +1,7 @@
 import {
-    H3Event,
-    defineMiddleware,
-    sendWebResponse
+  HTTPEvent,
+  defineMiddleware,
+  sendWebResponse
 } from "vinxi/http";
 import { getFetchEvent } from "../server/fetchEvent";
 import type { FetchEvent } from "../server/types";
@@ -23,7 +23,7 @@ export type ResponseMiddleware = (
 ) => Response | Promise<Response> | void | Promise<void>;
 
 function wrapRequestMiddleware(onRequest: RequestMiddleware) {
-  return async (h3Event: H3Event) => {
+  return async (h3Event: HTTPEvent) => {
     const fetchEvent = getFetchEvent(h3Event);
     const response = await onRequest(fetchEvent);
     if (!response) {
@@ -35,7 +35,7 @@ function wrapRequestMiddleware(onRequest: RequestMiddleware) {
 }
 
 function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware) {
-  return async (h3Event: H3Event, response: ResponseMiddlewareResponseParam) => {
+  return async (h3Event: HTTPEvent, response: ResponseMiddlewareResponseParam) => {
     const fetchEvent = getFetchEvent(h3Event);
     const mwResponse = await onBeforeResponse(fetchEvent, response);
     if (!mwResponse) {

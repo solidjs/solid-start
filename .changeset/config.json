@@ -13,6 +13,7 @@
     "example-experiments",
     "example-hackernews",
     "example-todomvc",
+    "example-notes",
     "example-with-auth",
     "example-with-mdx",
     "example-with-prisma",
@@ -20,6 +21,7 @@
     "example-with-tailwindcss",
     "example-with-trpc",
     "example-with-unocss",
-    "example-with-vitest"
+    "example-with-vitest",
+    "solid-start-mdx"
   ]
 }

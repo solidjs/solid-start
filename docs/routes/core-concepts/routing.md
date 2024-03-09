@@ -67,7 +67,7 @@ Under the hood, SolidStart traverses your `routes` directory, collects all the r
 ```tsx twoslash {7-9} filename="app.tsx"
 import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 
 export default function App() {
   return (
@@ -157,6 +157,33 @@ export default function UsersLayout(props: RouteSectionProps) {
     </div>
   );
 }
+```
+
+### Escaping Nested Routes
+
+Sometimes you may have the same path but you don't want them to share the same layout. For example, your user listing page might not share a layout with the user details page. In that case you can:
+
+```tsx {1}
+|-- routes/
+    |-- users.tsx
+    |-- users.tsx/
+        |-- index.tsx
+        |-- projects.tsx
+    |-- users.[id].tsx
+```
+
+And it can also have its own nested layouts
+
+```tsx {1}
+|-- routes/
+    |-- users.tsx
+    |-- users.[id].tsx
+    |-- users.tsx/
+        |-- index.tsx
+        |-- projects.tsx
+    |-- users.[id].tsx
+        |-- index.tsx
+        |-- settings.tsx
 ```
 
 ## Route Groups

@@ -1,6 +1,5 @@
 import {
   H3Event,
-  HTTPEventSymbol,
   appendResponseHeader,
   getRequestIP,
   getResponseHeader,
@@ -11,7 +10,7 @@ import {
   removeResponseHeader,
   setHeader,
   setResponseHeader,
-  setResponseStatus,
+  setResponseStatus
 } from "vinxi/http";
 import type { FetchEvent, ResponseStub } from "./types";
 
@@ -23,15 +22,13 @@ export function createFetchEvent(event: H3Event): FetchEvent {
     response: createResponseStub(event),
     clientAddress: getRequestIP(event),
     locals: {},
-    nativeEvent: event,
-    [HTTPEventSymbol]: event
+    nativeEvent: event
   };
 }
 
 export function cloneEvent<T extends FetchEvent>(fetchEvent: T): T {
   return {
-    ...fetchEvent,
-    [HTTPEventSymbol]: fetchEvent[HTTPEventSymbol]
+    ...fetchEvent
   };
 }
 
@@ -54,7 +51,7 @@ class HeaderProxy {
   constructor(private event: H3Event) {}
   get(key: string) {
     const h = getResponseHeader(this.event, key);
-    return Array.isArray(h) ? h.join(", ") : h;
+    return Array.isArray(h) ? h.join(", ") : (h as string) || null;
   }
   has(key: string) {
     return this.get(key) !== undefined;
@@ -70,24 +67,27 @@ class HeaderProxy {
   }
   getSetCookie() {
     const cookies = getResponseHeader(this.event, "Set-Cookie");
-    return Array.isArray(cookies) ? cookies : [cookies];
+    return Array.isArray(cookies) ? cookies : [cookies as string];
   }
   forEach(fn: (value: string, key: string, object: Headers) => void) {
-    return Object.entries<string | string[]>(getResponseHeaders(this.event)).forEach(([key, value]) => fn(Array.isArray(value) ? value.join(", ") : value, key, this));
+    return Object.entries(getResponseHeaders(this.event)).forEach(([key, value]) =>
+      fn(Array.isArray(value) ? value.join(", ") : (value as string), key, this)
+    );
   }
   entries() {
-    return Object.entries<string | string[]>(getResponseHeaders(this.event)).map(([key, value]) => [
-      key,
-      Array.isArray(value) ? value.join(", ") : value
-    ] as [string, string])[Symbol.iterator]();
+    return Object.entries(getResponseHeaders(this.event))
+      .map(
+        ([key, value]) => [key, Array.isArray(value) ? value.join(", ") : value] as [string, string]
+      )
+      [Symbol.iterator]();
   }
   keys() {
     return Object.keys(getResponseHeaders(this.event))[Symbol.iterator]();
   }
   values() {
-    return Object.values<string | string[]>(getResponseHeaders(this.event)).map((value) =>
-      Array.isArray(value) ? value.join(", ") : value
-    )[Symbol.iterator]();
+    return Object.values(getResponseHeaders(this.event))
+      .map(value => (Array.isArray(value) ? value.join(", ") : (value as string)))
+      [Symbol.iterator]();
   }
   [Symbol.iterator]() {
     return this.entries()[Symbol.iterator]();
