@@ -1,6 +1,8 @@
 import {glob} from "glob";
-import {copyFile, mkdir} from "node:fs/promises"
+import {copyFile, mkdir, rmdir} from "node:fs/promises"
 import { join, dirname } from "node:path";
+
+await rmdir("dist", { recursive: true });
 
 const SOURCE_FOLDERS = ["client", "config", "middleware", "server", "shared", "router"]
 
