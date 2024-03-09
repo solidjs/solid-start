@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 0.7.3
+
+### Patch Changes
+
+- 61381f1f: fix: remove dev overlay in prod
+- 6c3eff5e: fix #1375 extensions for unprocess .js entries
+
 ## 0.7.2
 
 ### Patch Changes
