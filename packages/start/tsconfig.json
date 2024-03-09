@@ -15,5 +15,6 @@
 		"isolatedModules": true,
 		"outDir": "dist",
 		"declaration": true,
+		"skipLibCheck": true
 	}
 }
