@@ -20,7 +20,7 @@ function client() {
 }
 
 function server() {
-  const runtime = normalize(fileURLToPath(new URL("./server-runtime.ts", import.meta.url)));
+  const runtime = normalize(fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url)));
   // export function serverComponents({
   // 	resolve = {
   // 		conditions: ["react-server"],

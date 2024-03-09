@@ -108,7 +108,7 @@ export function defineConfig(baseConfig = {}) {
             }),
             ...plugins,
             serverTransform({
-              runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url)))
+              runtime: normalize(fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url)))
             }),
             start.experimental.islands ? serverComponents.server() : null,
             solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
@@ -167,7 +167,7 @@ export function defineConfig(baseConfig = {}) {
             }),
             ...plugins,
             serverFunctions.client({
-              runtime: normalize(fileURLToPath(new URL("./server-runtime.ts", import.meta.url)))
+              runtime: normalize(fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url)))
             }),
             start.experimental.islands ? serverComponents.client() : null,
             solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
@@ -207,7 +207,7 @@ export function defineConfig(baseConfig = {}) {
         name: "server-fns",
         type: "http",
         base: "/_server",
-        handler: normalize(fileURLToPath(new URL("./server-handler.ts", import.meta.url))),
+        handler: normalize(fileURLToPath(new URL("../dist/runtime/server-handler.js", import.meta.url))),
         middleware: start.middleware,
         target: "server",
         routes: solidStartServerFsRouter({ dir: routeDir, extensions }),
@@ -230,7 +230,7 @@ export function defineConfig(baseConfig = {}) {
             }),
             ...plugins,
             serverFunctionServer({
-              runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url)))
+              runtime: normalize(fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url)))
             }),
             solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
             config("app-server", {

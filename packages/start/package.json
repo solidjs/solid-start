@@ -8,41 +8,37 @@
     "access": "public"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit --checkJs false",
-    "build": "node build && pnpm tsc --checkJs false"
+    "typecheck": "tsc --noEmit",
+    "build": "node build && pnpm tsc"
   },
   "files": [
-    "dist",
-    "client",
     "config",
-    "middleware",
-    "router",
-    "server",
-    "shared",
-    "*.d.ts"
+    "dist",
+    "env.d.ts"
   ],
-  "types": "./dist/shared/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/shared/index.js",
-    "./config": "./dist/config/index.js",
+    ".": "./dist/index.jsx",
+    "./config": "./config/index.js",
     "./middleware": "./dist/middleware/index.js",
-    "./router": "./dist/router/index.js",
+    "./router": "./dist/router/index.jsx",
     "./server": "./dist/server/index.jsx",
     "./server/spa": "./dist/server/spa/index.jsx",
     "./client": "./dist/client/index.jsx",
-    "./client/islands": "./dist/client/islands.js",
+    "./client/islands": "./dist/client/islands.jsx",
     "./client/spa": "./dist/client/spa/index.jsx"
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./dist/shared/index.d.ts"
+        "./dist/index.d.ts"
       ],
+      "env": ["./env.d.ts"],
       "middleware": [
         "./dist/middleware/index.d.ts"
       ],
       "router": [
-        "./dist/router/index.ts"
+        "./dist/router/index.d.ts"
       ],
       "server": [
         "./dist/server/index.d.ts"

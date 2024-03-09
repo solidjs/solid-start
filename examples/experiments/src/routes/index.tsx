@@ -7,8 +7,8 @@ const BreaksOnServer = clientOnly(() => import("~/components/BreaksOnServer"));
 
 const hello = GET(async (name: string) => {
   "use server";
-  const meta = getServerFunctionMeta();
-  console.log("ID", meta?.id);
+  const { id } = getServerFunctionMeta()!;
+  console.log("ID", id);
   return json(
     { hello: new Promise<string>(r => setTimeout(() => r(name), 1000)) },
     { headers: { "cache-control": "max-age=60" } }
@@ -20,7 +20,9 @@ export default function Home() {
     console.log(v);
     console.log(await v.hello);
   });
-  fetch(`http://localhost:3000/${import.meta.env.SERVER_BASE_URL}/unknown`, { headers: { Accept: "application/json" } }).then(async res => console.log(await res.json()))
+  fetch(`http://localhost:3000/${import.meta.env.SERVER_BASE_URL}/unknown`, {
+    headers: { Accept: "application/json" }
+  }).then(async res => console.log(await res.json()));
   return (
     <main>
       <Title>Hello World</Title>

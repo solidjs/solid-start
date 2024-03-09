@@ -1,14 +1,14 @@
-import {glob} from "glob";
-import {copyFile, mkdir, rmdir} from "node:fs/promises"
-import { join, dirname } from "node:path";
+import { glob } from "glob";
+import { copyFile, mkdir, rmdir } from "node:fs/promises";
+import { dirname, join } from "node:path";
 
-await rmdir("dist", { recursive: true });
+try {
+  await rmdir("dist", { recursive: true });
+} catch {}
 
-const SOURCE_FOLDERS = ["client", "config", "middleware", "server", "shared", "router"]
-
-const assets = [...await glob(`./{${SOURCE_FOLDERS.join(",")}}/**/*.css`), "./package.json"]
+const assets = await glob(`**/*.css`, { cwd: join(process.cwd(), "src") })
 
 await Promise.all(assets.map(async a => {
 	await mkdir(join("dist", dirname(a)), { recursive: true })
-	await copyFile(a, `dist/${a}`);
+	await copyFile(join("src", a), join("dist", a));
 }))

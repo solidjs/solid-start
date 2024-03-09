@@ -12,7 +12,7 @@ import {
   URLSearchParamsPlugin
 } from "seroval-plugins/web";
 import { type Component } from "solid-js";
-import { createIslandReference } from "../server/islands";
+import { createIslandReference } from "../server/islands/index";
 
 class SerovalChunkReader {
   reader: ReadableStreamDefaultReader<Uint8Array>;

@@ -5,7 +5,7 @@ import type { JSX } from 'solid-js';
 import { ErrorBoundary, For, Show, Suspense, createMemo, createSignal } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from 'terracotta';
-import info from '../../package.json';
+import info from '../../../package.json';
 import { CodeView } from './CodeView';
 import { createStackFrame, type StackFrameSource } from './createStackFrame';
 import download from './download';

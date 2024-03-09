@@ -10,11 +10,11 @@
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"allowJs": true,
-		"checkJs": true,
 		"types": ["vinxi/client"],
 		"isolatedModules": true,
-		"outDir": "dist",
+		"outDir": "./dist",
 		"declaration": true,
 		"skipLibCheck": true
-	}
+	},
+	"include": ["./src", "./env.d.ts"],
 }

@@ -3,12 +3,12 @@
 import App from "#start/app";
 import type { Component, JSX } from "solid-js";
 import {
-  Hydration,
-  HydrationScript,
-  NoHydration,
-  getRequestEvent,
-  ssr,
-  useAssets
+    Hydration,
+    HydrationScript,
+    NoHydration,
+    getRequestEvent,
+    ssr,
+    useAssets
 } from "solid-js/web";
 import { ErrorBoundary } from "../shared/ErrorBoundary";
 import { renderAsset } from "./renderAsset";

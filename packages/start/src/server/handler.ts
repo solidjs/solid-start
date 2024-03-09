@@ -2,11 +2,11 @@ import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-  eventHandler,
-  sendRedirect,
-  setHeader,
-  setResponseStatus,
-  type HTTPEvent
+    eventHandler,
+    sendRedirect,
+    setHeader,
+    setResponseStatus,
+    type HTTPEvent
 } from "vinxi/http";
 import { matchAPIRoute } from "../router/routes";
 import { getFetchEvent } from "./fetchEvent";

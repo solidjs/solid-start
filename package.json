@@ -18,6 +18,7 @@
     "docs:build": "vinxi build",
     "docs:start": "node ./.output/server/index.mjs",
     "clean:test": "rimraf .tmp",
+    "build": "pnpm --filter @solidjs/start build",
     "build:all": "pnpm run -r --if-present build",
     "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
