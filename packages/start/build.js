@@ -1,9 +1,9 @@
 import { glob } from "glob";
-import { copyFile, mkdir, rmdir } from "node:fs/promises";
+import { copyFile, mkdir, rm } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 try {
-  await rmdir("dist", { recursive: true });
+  await rm("dist", { recursive: true });
 } catch {}
 
 const assets = await glob(`**/*.css`, { cwd: join(process.cwd(), "src") })
