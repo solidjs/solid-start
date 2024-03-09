@@ -15,7 +15,12 @@ export interface DevOverlayProps {
   children?: JSX.Element;
 }
 
-const DevOverlayDialog = /* #__PURE__ */ clientOnly(() => import("./DevOverlayDialog"));
+const DevOverlayDialog =
+  /* #__PURE__ */ process.env.NODE_ENV === "production"
+    ? () => {
+        return <></>;
+      }
+    : /* #__PURE__ */ clientOnly(() => import("./DevOverlayDialog"));
 
 export function DevOverlay(props: DevOverlayProps): JSX.Element {
   const [errors, setErrors] = createSignal<unknown[]>([]);
