@@ -10,7 +10,7 @@
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"allowJs": true,
-		"types": ["vinxi/client"],
+		"types": ["vinxi/client", "vite/client"],
 		"isolatedModules": true,
 		"outDir": "./dist",
 		"declaration": true,
