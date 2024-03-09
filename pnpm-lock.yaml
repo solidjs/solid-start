@@ -32,7 +32,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: workspace:*
-        version: link:packages/start/dist
+        version: link:packages/start
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.4.1)
@@ -98,7 +98,7 @@ importers:
     dependencies:
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
@@ -116,7 +116,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
@@ -134,7 +134,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
@@ -149,7 +149,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
@@ -164,7 +164,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       '@types/marked':
         specifier: ^4.3.1
         version: 4.3.1
@@ -191,7 +191,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
@@ -209,7 +209,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
@@ -234,7 +234,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       '@vinxi/plugin-mdx':
         specifier: ^3.7.1
         version: 3.7.1(@mdx-js/mdx@2.3.0)
@@ -258,7 +258,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       prisma:
         specifier: ^5.7.0
         version: 5.7.0
@@ -283,7 +283,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
@@ -304,7 +304,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.26)
@@ -334,7 +334,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       '@trpc/client':
         specifier: ^10.44.1
         version: 10.44.1(@trpc/server@10.44.1)
@@ -358,7 +358,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       '@unocss/reset':
         specifier: ^0.58.3
         version: 0.58.3
@@ -382,7 +382,7 @@ importers:
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
         specifier: ^0.7.1
-        version: link:../../packages/start/dist
+        version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.5
         version: 0.8.5(@solidjs/router@0.13.0)(solid-js@1.8.15)
@@ -512,61 +512,6 @@ importers:
       terracotta:
         specifier: ^1.0.4
         version: 1.0.4(seroval@1.0.2)(solid-js@1.8.15)
-      vite-plugin-inspect:
-        specifier: ^0.7.33
-        version: 0.7.33(vite@4.5.0)
-      vite-plugin-solid:
-        specifier: ~2.9.1
-        version: 2.9.1(solid-js@1.8.15)(vite@4.5.0)
-    devDependencies:
-      solid-js:
-        specifier: ^1.8.15
-        version: 1.8.15
-      vinxi:
-        specifier: ^0.3.10
-        version: 0.3.10(@types/node@20.10.1)(debug@4.3.4)
-
-  packages/start/dist:
-    dependencies:
-      '@vinxi/plugin-directives':
-        specifier: ^0.3.1
-        version: 0.3.1(vinxi@0.3.10)
-      '@vinxi/server-components':
-        specifier: ^0.3.3
-        version: 0.3.3(vinxi@0.3.10)
-      '@vinxi/server-functions':
-        specifier: ^0.3.2
-        version: 0.3.2(vinxi@0.3.10)
-      defu:
-        specifier: ^6.1.2
-        version: 6.1.4
-      error-stack-parser:
-        specifier: ^2.1.4
-        version: 2.1.4
-      glob:
-        specifier: ^10.3.10
-        version: 10.3.10
-      html-to-image:
-        specifier: ^1.11.11
-        version: 1.11.11
-      radix3:
-        specifier: ^1.1.0
-        version: 1.1.0
-      seroval:
-        specifier: ^1.0.2
-        version: 1.0.4
-      seroval-plugins:
-        specifier: ^1.0.2
-        version: 1.0.4(seroval@1.0.4)
-      shikiji:
-        specifier: ^0.9.12
-        version: 0.9.12
-      source-map-js:
-        specifier: ^1.0.2
-        version: 1.0.2
-      terracotta:
-        specifier: ^1.0.4
-        version: 1.0.4(seroval@1.0.4)(solid-js@1.8.15)
       vite-plugin-inspect:
         specifier: ^0.7.33
         version: 0.7.33(vite@4.5.0)
@@ -9149,20 +9094,6 @@ packages:
       solid-js: 1.8.15
     dev: false
 
-  /solid-use@0.7.2(seroval@1.0.4)(solid-js@1.8.15):
-    resolution: {integrity: sha512-ZJbTj55W4VF2NSg86+PFioWOAI7STrZ6+38vuEWl6IB4ZBm7Q1U/Mncf+T/zc9e1xUk+4/FfFfM9ZaroycNKNw==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      seroval: '>=0.9.0'
-      solid-js: ^1.7
-    peerDependenciesMeta:
-      seroval:
-        optional: true
-    dependencies:
-      seroval: 1.0.4
-      solid-js: 1.8.15
-    dev: false
-
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -9552,18 +9483,6 @@ packages:
     dependencies:
       solid-js: 1.8.15
       solid-use: 0.7.2(seroval@1.0.2)(solid-js@1.8.15)
-    transitivePeerDependencies:
-      - seroval
-    dev: false
-
-  /terracotta@1.0.4(seroval@1.0.4)(solid-js@1.8.15):
-    resolution: {integrity: sha512-tMy152HBz6NehMYR63Phv9Zr+axhoKbHIuejurRa220J8zVKJ/L9hyjsiEC7WzjTdjherWe8g/ECYb3+jG/bBA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-js: ^1.8
-    dependencies:
-      solid-js: 1.8.15
-      solid-use: 0.7.2(seroval@1.0.4)(solid-js@1.8.15)
     transitivePeerDependencies:
       - seroval
     dev: false

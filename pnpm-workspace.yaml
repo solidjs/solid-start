@@ -1,6 +1,7 @@
 packages:
   # all packages in subdirs of packages/ and examples/
   - "packages/**"
+  - "!packages/**/dist"
   - "examples/**"
   - "docs/**"
   - "!**/.tmp/**"
