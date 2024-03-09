@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 0.7.2
+
+### Patch Changes
+
+- 480802f7: change to ts build
+- 090df26b: fix import.meta.env resolution
+
 ## 0.7.1
 
 ### Patch Changes
