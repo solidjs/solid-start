@@ -488,6 +488,9 @@ importers:
       error-stack-parser:
         specifier: ^2.1.4
         version: 2.1.4
+      glob:
+        specifier: ^10.3.10
+        version: 10.3.10
       html-to-image:
         specifier: ^1.11.11
         version: 1.11.11
