@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.7.4
+
+### Patch Changes
+
+- 67a469f8: keep all entries as jsx to ensure treated as src
+
 ## 0.7.3
 
 ### Patch Changes
