@@ -20,7 +20,7 @@
   "exports": {
     ".": "./dist/index.jsx",
     "./config": "./config/index.js",
-    "./middleware": "./dist/middleware/index.js",
+    "./middleware": "./dist/middleware/index.jsx",
     "./router": "./dist/router/index.jsx",
     "./server": "./dist/server/index.jsx",
     "./server/spa": "./dist/server/spa/index.jsx",
