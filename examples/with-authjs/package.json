@@ -7,7 +7,6 @@
   },
   "type": "module",
   "devDependencies": {
-    "@types/babel__core": "7.20.5",
     "@types/node": "^20.11.25",
     "esbuild": "^0.20.1",
     "next-auth": "^4.24.7",

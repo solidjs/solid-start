@@ -249,11 +249,8 @@ importers:
         version: 1.8.15
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)
     devDependencies:
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
       '@types/node':
         specifier: ^20.11.25
         version: 20.11.25
@@ -3118,7 +3115,7 @@ packages:
       solid-js: 1.8.15
       typescript: 5.4.2
       unplugin: 1.6.0
-      vinxi: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
+      vinxi: 0.3.10(@types/node@20.11.25)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -5621,6 +5618,16 @@ packages:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
 
+  /follow-redirects@1.15.5:
+    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
   /follow-redirects@1.15.5(debug@4.3.4):
     resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
     engines: {node: '>=4.0'}
@@ -6152,6 +6159,17 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /http-proxy@1.18.1:
+    resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      eventemitter3: 4.0.7
+      follow-redirects: 1.15.5
+      requires-port: 1.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /http-proxy@1.18.1(debug@4.3.4):
     resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
@@ -10573,7 +10591,7 @@ packages:
       - xml2js
     dev: false
 
-  /vinxi@0.3.10(@types/node@20.11.25)(debug@4.3.4):
+  /vinxi@0.3.10(@types/node@20.11.25):
     resolution: {integrity: sha512-jy7YoztZSujECNsnpf5b4laUGVT5Xd8CSl/gbDiG4zF6toIDi5zquMzIPPD51e46xtNX3hVT/TRsZ8x3pWDfcA==}
     hasBin: true
     dependencies:
@@ -10595,7 +10613,7 @@ packages:
       get-port-please: 3.1.2
       h3: 1.11.1
       hookable: 5.5.3
-      http-proxy: 1.18.1(debug@4.3.4)
+      http-proxy: 1.18.1
       micromatch: 4.0.5
       nitropack: 2.9.1
       node-fetch-native: 1.6.2
