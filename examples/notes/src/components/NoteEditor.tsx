@@ -38,6 +38,8 @@ export default function NoteEditor(props: {
           id="note-title-input"
           type="text"
           name="title"
+          placeholder="Title"
+          required={true}
           value={title()}
           onInput={e => {
             setTitle(e.currentTarget.value);
