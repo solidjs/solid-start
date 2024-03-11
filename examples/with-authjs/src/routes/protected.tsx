@@ -1,24 +1,16 @@
-import { getSession } from "@solid-auth/base";
-import { signOut } from "@solid-auth/base/client";
+import { createSession, signOut } from "@solid-mediakit/auth/client";
 import { Show, type VoidComponent } from "solid-js";
-import { useRouteData } from "solid-start";
-import { createServerData$, redirect } from "solid-start/server";
-import { authOptions } from "~/server/auth";
 
-export const routeData = () => {
-  return createServerData$(async (_, event) => {
-    const session = await getSession(event.request, authOptions);
-    if (!session) {
-      throw redirect("/");
-    }
-    return session;
-  });
-};
 
 const Protected: VoidComponent = () => {
-  const session = useRouteData<typeof routeData>();
+  const session = createSession();
+
+
+  
   return (
-    <Show when={session()} keyed>
+    <Show when={session()} fallback={
+      <p>Only shown for logged in users</p>
+    } keyed>
       {us => (
         <main>
           <h1>Protected</h1>
