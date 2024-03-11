@@ -1,19 +1,10 @@
-import { getSession } from "@solid-mediakit/auth";
-import { signIn } from "@solid-mediakit/auth/client";
-import { Navigate, createAsync } from "@solidjs/router";
+import { createSession, signIn } from "@solid-mediakit/auth/client";
+import { Navigate } from "@solidjs/router";
 import { Show, createSignal, onCleanup } from "solid-js";
-import { getRequestEvent } from "solid-js/web";
-import { authOptions } from "~/server/auth";
 
 
 export default function Home() {
-  const session = createAsync(async () => {
-    "use server";
-    const event = getRequestEvent();
-    const session = await getSession(event!.request, authOptions);
-    return session;
-  });
-
+  const session = createSession();
 
   const [redirectIn, setRedirectIn] = createSignal(3);
 

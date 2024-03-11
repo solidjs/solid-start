@@ -1,26 +1,16 @@
-import { getSession } from "@solid-mediakit/auth";
-import { signOut } from "@solid-mediakit/auth/client";
-import { createAsync, redirect } from "@solidjs/router";
+import { createSession, signOut } from "@solid-mediakit/auth/client";
 import { Show, type VoidComponent } from "solid-js";
-import { getRequestEvent } from "solid-js/web";
-import { authOptions } from "~/server/auth";
 
 
 const Protected: VoidComponent = () => {
-  const session = createAsync(async () => {
-    "use server";
-    const event = getRequestEvent();
-    const session = await getSession(event!.request, authOptions);
-    if (!session) {
-      throw redirect("/");
-    }
-    return session;
-  });
+  const session = createSession();
 
 
   
   return (
-    <Show when={session()} keyed>
+    <Show when={session()} fallback={
+      <p>Only shown for logged in users</p>
+    } keyed>
       {us => (
         <main>
           <h1>Protected</h1>
