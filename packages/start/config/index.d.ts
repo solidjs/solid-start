@@ -1,4 +1,4 @@
-import type { AppOptions } from "vinxi";
+import type { AppOptions, createApp } from "vinxi";
 import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
 import { InlineConfig } from "vite";
 import type { Options } from "vite-plugin-solid";
@@ -25,4 +25,4 @@ type SolidStartInlineConfig = {
     | ((options: { router: "server" | "client" | "server-function" }) => ViteCustomizableConfig);
 };
 
-export declare function defineConfig(baseConfig?: SolidStartInlineConfig): any;
+export declare function defineConfig(baseConfig?: SolidStartInlineConfig): ReturnType<typeof createApp>;
