@@ -21,6 +21,7 @@
     ".": "./dist/index.jsx",
     "./config": "./config/index.js",
     "./middleware": "./dist/middleware/index.jsx",
+    "./websocket": "./dist/websocket/index.jsx",
     "./router": "./dist/router/index.jsx",
     "./server": "./dist/server/index.jsx",
     "./server/spa": "./dist/server/spa/index.jsx",
@@ -35,6 +36,9 @@
       ],
       "middleware": [
         "./dist/middleware/index.d.ts"
+      ],
+      "websocket": [
+        "./dist/websocket/index.d.ts"
       ],
       "router": [
         "./dist/router/index.d.ts"

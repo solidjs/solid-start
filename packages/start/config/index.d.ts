@@ -16,6 +16,7 @@ type SolidStartInlineConfig = {
   appRoot?: string;
   routeDir?: string;
   middleware?: string;
+  websocket?: string;
   devOverlay?:  boolean;
   experimental?: {
     islands?: boolean;
