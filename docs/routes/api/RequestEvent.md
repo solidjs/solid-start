@@ -47,7 +47,7 @@ if (event) {
 
 ### Returning a Response vs updating the Response on the event
 
-The even is considered global and lasts the life of the request. Therefore whether you are calling a server function on the server during SSR or via an RPC call setting values on `event.response` will reflect on that request.
+The event is considered global and lasts the life of the request. Therefore whether you are calling a server function on the server during SSR or via an RPC call setting values on `event.response` will reflect on that request.
 
 Whereas the returned response will only impact the response when it is an RPC call. This is important because some headers you might want to set you may not want to set for the whole page and only for the specific request.
 
