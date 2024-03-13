@@ -50,6 +50,9 @@ export function defineConfig(baseConfig = {}) {
     },
     solid: {},
     server: {
+      routeRules: {
+        "/_build/assets/**": { headers: { "cache-control": "public, immutable, max-age=31536000" } }
+      },
       experimental: {
         asyncContext: true
       }
@@ -91,7 +94,8 @@ export function defineConfig(baseConfig = {}) {
         extensions,
         target: "server",
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ router: "server" }) : { ...vite };
+          const userConfig =
+            typeof vite === "function" ? await vite({ router: "server" }) : { ...vite };
           const plugins = userConfig.plugins || [];
           delete userConfig.plugins;
           return [
@@ -108,7 +112,9 @@ export function defineConfig(baseConfig = {}) {
             }),
             ...plugins,
             serverTransform({
-              runtime: normalize(fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url)))
+              runtime: normalize(
+                fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
+              )
             }),
             start.experimental.islands ? serverComponents.server() : null,
             solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
@@ -150,7 +156,8 @@ export function defineConfig(baseConfig = {}) {
         extensions,
         target: "browser",
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ router: "client" }) : { ...vite };
+          const userConfig =
+            typeof vite === "function" ? await vite({ router: "client" }) : { ...vite };
           const plugins = userConfig.plugins || [];
           delete userConfig.plugins;
           return [
@@ -167,7 +174,9 @@ export function defineConfig(baseConfig = {}) {
             }),
             ...plugins,
             serverFunctions.client({
-              runtime: normalize(fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url)))
+              runtime: normalize(
+                fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url))
+              )
             }),
             start.experimental.islands ? serverComponents.client() : null,
             solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
@@ -207,12 +216,15 @@ export function defineConfig(baseConfig = {}) {
         name: "server-fns",
         type: "http",
         base: "/_server",
-        handler: normalize(fileURLToPath(new URL("../dist/runtime/server-handler.js", import.meta.url))),
+        handler: normalize(
+          fileURLToPath(new URL("../dist/runtime/server-handler.js", import.meta.url))
+        ),
         middleware: start.middleware,
         target: "server",
         routes: solidStartServerFsRouter({ dir: routeDir, extensions }),
         plugins: async () => {
-          const userConfig = typeof vite === "function" ? await vite({ router: "server-function" }) : { ...vite };
+          const userConfig =
+            typeof vite === "function" ? await vite({ router: "server-function" }) : { ...vite };
           const plugins = userConfig.plugins || [];
           delete userConfig.plugins;
           return [
@@ -230,7 +242,9 @@ export function defineConfig(baseConfig = {}) {
             }),
             ...plugins,
             serverFunctionServer({
-              runtime: normalize(fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url)))
+              runtime: normalize(
+                fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
+              )
             }),
             solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
             config("app-server", {
