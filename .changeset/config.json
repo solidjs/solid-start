@@ -15,6 +15,7 @@
     "example-todomvc",
     "example-notes",
     "example-with-auth",
+    "example-with-authjs",
     "example-with-mdx",
     "example-with-prisma",
     "example-with-solid-styled",
