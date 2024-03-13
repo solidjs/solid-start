@@ -89,7 +89,7 @@ importers:
         version: 0.26.0
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
       vite:
         specifier: ^5.1.1
         version: 5.1.1
@@ -97,14 +97,14 @@ importers:
   examples/bare:
     dependencies:
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/basic:
     dependencies:
@@ -115,14 +115,14 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/experiments:
     dependencies:
@@ -133,14 +133,14 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/hackernews:
     dependencies:
@@ -148,14 +148,14 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/notes:
     dependencies:
@@ -163,7 +163,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       '@types/marked':
         specifier: ^4.3.1
@@ -182,7 +182,7 @@ importers:
         version: 1.10.1
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/todomvc:
     dependencies:
@@ -190,7 +190,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
@@ -200,7 +200,7 @@ importers:
         version: 1.10.1
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/with-auth:
     dependencies:
@@ -208,7 +208,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
@@ -242,14 +242,14 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
         version: 1.8.15
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(@types/node@20.11.25)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.11.25
@@ -279,7 +279,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       '@vinxi/plugin-mdx':
         specifier: ^3.7.1
@@ -292,7 +292,7 @@ importers:
         version: 0.0.7(solid-js@1.8.15)(vite@5.1.6)
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/with-prisma:
     dependencies:
@@ -303,7 +303,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       prisma:
         specifier: ^5.7.0
@@ -328,7 +328,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.15
@@ -338,7 +338,7 @@ importers:
         version: 0.8.2(@babel/core@7.24.0)(solid-js@1.8.15)
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
       vite-plugin-solid-styled:
         specifier: ^0.8.3
         version: 0.8.3(solid-styled@0.8.2)(vite@4.5.0)
@@ -349,7 +349,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       autoprefixer:
         specifier: ^10.4.14
@@ -365,7 +365,7 @@ importers:
         version: 3.3.3
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/with-trpc:
     dependencies:
@@ -379,7 +379,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       '@trpc/client':
         specifier: ^10.44.1
@@ -395,7 +395,7 @@ importers:
         version: 0.26.0
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/with-unocss:
     dependencies:
@@ -403,7 +403,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       '@unocss/reset':
         specifier: ^0.58.3
@@ -416,7 +416,7 @@ importers:
         version: 0.58.3(postcss@8.4.35)(vite@5.1.6)
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
   examples/with-vitest:
     devDependencies:
@@ -427,7 +427,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(solid-js@1.8.15)
       '@solidjs/start':
-        specifier: ^0.7.4
+        specifier: ^0.7.5
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.5
@@ -452,7 +452,7 @@ importers:
         version: 5.3.3
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
       vite:
         specifier: ^5.1.1
         version: 5.1.1
@@ -573,7 +573,7 @@ importers:
         version: 5.4.2
       vinxi:
         specifier: ^0.3.10
-        version: 0.3.10(debug@4.3.4)
+        version: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
 
 packages:
 
@@ -3115,7 +3115,7 @@ packages:
       solid-js: 1.8.15
       typescript: 5.4.2
       unplugin: 1.6.0
-      vinxi: 0.3.10(@types/node@20.11.25)
+      vinxi: 0.3.10(@types/node@20.11.25)(debug@4.3.4)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -5618,16 +5618,6 @@ packages:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
 
-  /follow-redirects@1.15.5:
-    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dev: false
-
   /follow-redirects@1.15.5(debug@4.3.4):
     resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
     engines: {node: '>=4.0'}
@@ -6159,17 +6149,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /http-proxy@1.18.1:
-    resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
-    engines: {node: '>=8.0.0'}
-    dependencies:
-      eventemitter3: 4.0.7
-      follow-redirects: 1.15.5
-      requires-port: 1.0.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
 
   /http-proxy@1.18.1(debug@4.3.4):
     resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
@@ -10527,9 +10506,9 @@ packages:
     resolution: {integrity: sha512-jy7YoztZSujECNsnpf5b4laUGVT5Xd8CSl/gbDiG4zF6toIDi5zquMzIPPD51e46xtNX3hVT/TRsZ8x3pWDfcA==}
     hasBin: true
     dependencies:
-      '@babel/core': 7.24.0
-      '@babel/plugin-syntax-jsx': 7.23.3(@babel/core@7.24.0)
-      '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.24.0)
+      '@babel/core': 7.23.9
+      '@babel/plugin-syntax-jsx': 7.23.3(@babel/core@7.23.9)
+      '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.23.9)
       '@types/micromatch': 4.0.6
       '@vinxi/listhen': 1.5.6
       boxen: 7.1.1
@@ -10559,7 +10538,7 @@ packages:
       unctx: 2.3.1
       unenv: 1.9.0
       unstorage: 1.10.1
-      vite: 5.1.6(@types/node@20.10.1)
+      vite: 5.1.4(@types/node@20.10.1)
       zod: 3.22.4
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -10591,13 +10570,13 @@ packages:
       - xml2js
     dev: false
 
-  /vinxi@0.3.10(@types/node@20.11.25):
+  /vinxi@0.3.10(@types/node@20.11.25)(debug@4.3.4):
     resolution: {integrity: sha512-jy7YoztZSujECNsnpf5b4laUGVT5Xd8CSl/gbDiG4zF6toIDi5zquMzIPPD51e46xtNX3hVT/TRsZ8x3pWDfcA==}
     hasBin: true
     dependencies:
-      '@babel/core': 7.24.0
-      '@babel/plugin-syntax-jsx': 7.23.3(@babel/core@7.24.0)
-      '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.24.0)
+      '@babel/core': 7.23.9
+      '@babel/plugin-syntax-jsx': 7.23.3(@babel/core@7.23.9)
+      '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.23.9)
       '@types/micromatch': 4.0.6
       '@vinxi/listhen': 1.5.6
       boxen: 7.1.1
@@ -10613,7 +10592,7 @@ packages:
       get-port-please: 3.1.2
       h3: 1.11.1
       hookable: 5.5.3
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(debug@4.3.4)
       micromatch: 4.0.5
       nitropack: 2.9.1
       node-fetch-native: 1.6.2
@@ -10627,7 +10606,7 @@ packages:
       unctx: 2.3.1
       unenv: 1.9.0
       unstorage: 1.10.1
-      vite: 5.1.6(@types/node@20.11.25)
+      vite: 5.1.4(@types/node@20.11.25)
       zod: 3.22.4
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -10657,7 +10636,6 @@ packages:
       - terser
       - uWebSockets.js
       - xml2js
-    dev: false
 
   /vinxi@0.3.10(debug@4.3.4):
     resolution: {integrity: sha512-jy7YoztZSujECNsnpf5b4laUGVT5Xd8CSl/gbDiG4zF6toIDi5zquMzIPPD51e46xtNX3hVT/TRsZ8x3pWDfcA==}
@@ -10695,7 +10673,7 @@ packages:
       unctx: 2.3.1
       unenv: 1.9.0
       unstorage: 1.10.1
-      vite: 5.1.4
+      vite: 5.1.4(@types/node@20.11.25)
       zod: 3.22.4
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -10725,6 +10703,7 @@ packages:
       - terser
       - uWebSockets.js
       - xml2js
+    dev: false
 
   /vite-node@1.2.1:
     resolution: {integrity: sha512-fNzHmQUSOY+y30naohBvSW7pPn/xn3Ib/uqm+5wAJQJiqQsU0NBR78XdRJb04l4bOFKjpTWld0XAfkKlrDbySg==}
@@ -10896,42 +10875,8 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vite@5.1.4:
+  /vite@5.1.4(@types/node@20.10.1):
     resolution: {integrity: sha512-n+MPqzq+d9nMVTKyewqw6kSt+R3CkvF9QAKY8obiQn8g1fwTscKxyfaYnC632HtBXAQGc1Yjomphwn1dtwGAHg==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.19.12
-      postcss: 8.4.35
-      rollup: 4.12.0
-    optionalDependencies:
-      fsevents: 2.3.3
-
-  /vite@5.1.6(@types/node@20.10.1):
-    resolution: {integrity: sha512-yYIAZs9nVfRJ/AiOLCA91zzhjsHUgMjB+EigzFb6W2XTLO8JixBCKCjvhKZaye+NKYHCrkv3Oh50dH9EdLU2RA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -10965,6 +10910,41 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: false
+
+  /vite@5.1.4(@types/node@20.11.25):
+    resolution: {integrity: sha512-n+MPqzq+d9nMVTKyewqw6kSt+R3CkvF9QAKY8obiQn8g1fwTscKxyfaYnC632HtBXAQGc1Yjomphwn1dtwGAHg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || >=20.0.0
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 20.11.25
+      esbuild: 0.19.12
+      postcss: 8.4.35
+      rollup: 4.12.0
+    optionalDependencies:
+      fsevents: 2.3.3
 
   /vite@5.1.6(@types/node@20.11.25):
     resolution: {integrity: sha512-yYIAZs9nVfRJ/AiOLCA91zzhjsHUgMjB+EigzFb6W2XTLO8JixBCKCjvhKZaye+NKYHCrkv3Oh50dH9EdLU2RA==}

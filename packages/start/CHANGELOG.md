@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 0.7.5
+
+### Patch Changes
+
+- 13c35307: defineConfig return type
+- 70140c24: default to cache static assets
+
 ## 0.7.4
 
 ### Patch Changes

@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.13.0",
-    "@solidjs/start": "^0.7.4",
+    "@solidjs/start": "^0.7.5",
     "@types/marked": "^4.3.1",
     "date-fns": "^2.30.0",
     "solid-js": "^1.8.15",
