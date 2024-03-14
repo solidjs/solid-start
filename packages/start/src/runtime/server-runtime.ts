@@ -122,6 +122,19 @@ function createRequest(base: string, id: string, instance: string, options: Requ
   });
 }
 
+const plugins = [
+  CustomEventPlugin,
+  DOMExceptionPlugin,
+  EventPlugin,
+  FormDataPlugin,
+  HeadersPlugin,
+  ReadableStreamPlugin,
+  RequestPlugin,
+  ResponsePlugin,
+  URLSearchParamsPlugin,
+  URLPlugin
+];
+
 async function fetchServerFunction(
   base: string,
   id: string,
@@ -137,20 +150,7 @@ async function fetchServerFunction(
         ...options,
         body: JSON.stringify(
           await Promise.resolve(
-            toJSONAsync(args, {
-              plugins: [
-                CustomEventPlugin,
-                DOMExceptionPlugin,
-                EventPlugin,
-                FormDataPlugin,
-                HeadersPlugin,
-                ReadableStreamPlugin,
-                RequestPlugin,
-                ResponsePlugin,
-                URLSearchParamsPlugin,
-                URLPlugin
-              ]
-            })
+            toJSONAsync(args, { plugins })
           )
         ),
         headers: { ...options.headers, "Content-Type": "application/json" }
@@ -198,11 +198,12 @@ export function createServerReference(fn: Function, id: string, name: string) {
       if (prop === "withOptions") {
         const url = `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`
         return (options: RequestInit) => {
-          const fn = (...args: any[]) => {
+          const fn = async (...args: any[]) => {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
             return fetchServerFunction(
               encodeArgs
-                ? url + (args.length ? `&args=${JSON.stringify(args)}` : "")
+                ? url + (args.length ? `&args=${JSON.stringify(await Promise.resolve(
+                  toJSONAsync(args, { plugins })))}` : "")
                 : `${baseURL}/_server`,
               `${id}#${name}`,
               options,
