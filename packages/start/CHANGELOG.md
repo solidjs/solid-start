@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.7.6
+
+### Patch Changes
+
+- fca4cec5: proper serialization of GET server function input
+
 ## 0.7.5
 
 ### Patch Changes
