@@ -161,29 +161,29 @@ export default function UsersLayout(props: RouteSectionProps) {
 
 ### Escaping Nested Routes
 
-Sometimes you may have the same path but you don't want them to share the same layout. For example, your user listing page might not share a layout with the user details page. In that case you can:
+Sometimes you may have the same path but you don't want them to share the same layout. For example, your user listing page might not share a layout with the user details page. In that case you can apply a name between `(` `)` that does not become part of the path:
 
-```tsx {1}
+```
 |-- routes/
     |-- users.tsx
-    |-- users.tsx/
+    |-- users/
         |-- index.tsx
         |-- projects.tsx
-    |-- users.[id].tsx
+    |-- users(details)/
+        |-- [id].tsx
 ```
 
 And it can also have its own nested layouts
 
-```tsx {1}
+```
 |-- routes/
     |-- users.tsx
-    |-- users.[id].tsx
-    |-- users.tsx/
+    |-- users(details).tsx
+    |-- users/
         |-- index.tsx
         |-- projects.tsx
-    |-- users.[id].tsx
-        |-- index.tsx
-        |-- settings.tsx
+    |-- users(details)/
+        |-- [id].tsx
 ```
 
 ## Route Groups

@@ -33,7 +33,7 @@ function defineRoutes(fileRoutes: Route[]) {
     });
 
     if (!parentRoute) {
-      routes.push({ ...route, id, path: id.replace(/\/\([^)/]+\)/g, "").replace(/\./g, "/") });
+      routes.push({ ...route, id, path: id.replace(/\/?\([^)/]+\)/g, "") });
       return routes;
     }
     processRoute(
