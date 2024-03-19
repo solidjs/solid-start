@@ -89,7 +89,26 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   // grab bound arguments from url when no JS
   if (!instance || h3Event.method === "GET") {
     const args = url.searchParams.get("args");
-    if (args) JSON.parse(args).forEach((arg: any) => parsed.push(arg));
+    if (args) {
+      const json = JSON.parse(args);
+      (json.t
+        ? (fromJSON(json, {
+            plugins: [
+              CustomEventPlugin,
+              DOMExceptionPlugin,
+              EventPlugin,
+              FormDataPlugin,
+              HeadersPlugin,
+              ReadableStreamPlugin,
+              RequestPlugin,
+              ResponsePlugin,
+              URLSearchParamsPlugin,
+              URLPlugin
+            ]
+          }) as any)
+        : json
+      ).forEach((arg: any) => parsed.push(arg));
+    }
   }
   if (h3Event.method === "POST") {
     const contentType = request.headers.get("content-type");
@@ -131,7 +150,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       /* @ts-ignore */
       sharedConfig.context = { event };
       event.locals.serverFunctionMeta = {
-        id: filepath + "#" + name,
+        id: filepath + "#" + name
       };
       return serverFunction(...parsed);
     });
@@ -145,7 +164,8 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // forward headers
       if (result.headers) mergeResponseHeaders(h3Event, result.headers);
       // forward non-redirect statuses
-      if (result.status && (result.status < 300 || result.status >= 400)) setResponseStatus(h3Event, result.status);
+      if (result.status && (result.status < 300 || result.status >= 400))
+        setResponseStatus(h3Event, result.status);
       if ((result as any).customBody) {
         result = await (result as any).customBody();
       } else if (result.body == undefined) result = null;
@@ -188,7 +208,8 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // forward headers
       if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
       // forward non-redirect statuses
-      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400)) setResponseStatus(h3Event, (x as any).status);
+      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400))
+        setResponseStatus(h3Event, (x as any).status);
       if ((x as any).customBody) {
         x = (x as any).customBody();
       } else if ((x as any).body == undefined) x = null;
