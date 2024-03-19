@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 0.7.7
+
+### Patch Changes
+
+- a0b3027e: fix parsing of new GET encoding on server
+
 ## 0.7.6
 
 ### Patch Changes
