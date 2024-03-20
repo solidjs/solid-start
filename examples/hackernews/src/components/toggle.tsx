@@ -1,5 +1,3 @@
-"use client";
-
 import { createSignal } from "solid-js";
 
 export default function Toggle(props: { children: any }) {
