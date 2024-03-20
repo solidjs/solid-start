@@ -1,5 +1,7 @@
 # start-cloudflare-pages
 
+## This package is deprecated see [@solidjs/start](https://www.npmjs.com/package/@solidjs/start)
+
 Adapter for Solid apps that work on Cloudflare Pages Functions.
 
 ## Get Started

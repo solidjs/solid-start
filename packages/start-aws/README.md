@@ -1,5 +1,7 @@
 # start-aws
 
+## This package is deprecated see [@solidjs/start](https://www.npmjs.com/package/@solidjs/start)
+
 Adapter for Solid apps that work on AWS Lambda and AWS Lambda@Edge.
 
 This is very experimental; the adapter API isn't at all fleshed out, and things will definitely change.

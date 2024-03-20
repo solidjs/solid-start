@@ -1,5 +1,7 @@
 # start-netlify
 
+## This package is deprecated see [@solidjs/start](https://www.npmjs.com/package/@solidjs/start)
+
 Adapter for Solid apps that work on in a Netlify function.
 
 This is very experimental; the adapter API isn't at all fleshed out, and things will definitely change.

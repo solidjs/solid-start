@@ -1,6 +1,6 @@
 {
   "name": "solid-start-aws",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "main": "./index.mjs",
   "type": "module",
   "solid": {
