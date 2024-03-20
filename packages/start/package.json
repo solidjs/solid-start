@@ -4,6 +4,13 @@
   "type": "module",
   "author": "Ryan Carniato",
   "license": "MIT",
+  "homepage": "https://start.solidjs.com/",
+  "bugs": "https://github.com/solidjs/solid-start/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solidjs/solid-start.git",
+    "directory": "packages/start"
+  },
   "publishConfig": {
     "access": "public"
   },
