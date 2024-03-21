@@ -1,5 +1,19 @@
 # @solidjs/start
 
+## 1.0.0-rc.0
+
+### Major Changes
+
+- 212d5927: update to major
+
+### Minor Changes
+
+- 597e99ca: replace "." with "()" for nested route escaping
+
+### Patch Changes
+
+- 44dfb5af: Export types properly
+
 ## 0.7.7
 
 ### Patch Changes
