@@ -202,8 +202,8 @@ export function createServerReference(fn: Function, id: string, name: string) {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
             return fetchServerFunction(
               encodeArgs
-                ? url + (args.length ? `&args=${JSON.stringify(await Promise.resolve(
-                  toJSONAsync(args, { plugins })))}` : "")
+                ? url + (args.length ? `&args=${encodeURIComponent(JSON.stringify(await Promise.resolve(
+                  toJSONAsync(args, { plugins }))))}` : "")
                 : `${baseURL}/_server`,
               `${id}#${name}`,
               options,
