@@ -13,9 +13,6 @@
   "scripts": {
     "clean": "pnpm run clean:root",
     "clean:root": "rimraf node_modules",
-    "docs:dev": "vinxi dev",
-    "docs:build": "vinxi build",
-    "docs:start": "node ./.output/server/index.mjs",
     "clean:test": "rimraf .tmp",
     "build": "pnpm --filter @solidjs/start build",
     "build:all": "pnpm run build && pnpm --filter './examples/*' --if-present build",
