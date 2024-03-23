@@ -27,7 +27,7 @@ import { FileRoutes } from "@solidjs/start/router";
 
 The `<FileRoutes>` component collects routes from the file-system in the `/routes` folder to be inserted into a parent `<Router>` component.
 
-Since `FileRoutes` returns a route configuration, it must be placed directly inside a `<Router>`, usually the one in your `root.tsx` file.
+Since `FileRoutes` returns a route configuration, it must be placed directly inside a `<Router>`, usually the one in your `app.tsx` file.
 
 ```tsx twoslash {7-9} filename="app.tsx"
 import { Suspense } from "solid-js";
