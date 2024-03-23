@@ -246,7 +246,7 @@ export default function Root() {
     <Router
       root={props => (
         <MetaProvider>
-          <Title>SolidStart (Beta)</Title>
+          <Title>SolidStart (Release Candidate)</Title>
           <Header />
 
           <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />
