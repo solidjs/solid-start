@@ -58,7 +58,7 @@ export default function Index() {
 
 In this example, visiting `hogwarts.com/` will render a `<div>` with the text "Welcome to Hogwarts!" inside it.
 
-Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the [`<FileRoutes />`][fileroutes] component. The [`<FileRoutes />`][fileroutes] component only includes your UI routes, and not your API routes. You can use it instead of manually entering all your `Route`s inside the `<Routes />` component in `app.tsx`. Let the compiler do the boring work!
+Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the [`<FileRoutes />`][fileroutes] component. The [`<FileRoutes />`][fileroutes] component only includes your UI routes, and not your API routes. You can use it instead of manually entering all your `Route`s inside the `<Router />` component in `app.tsx`. Let the compiler do the boring work!
 
 `<FileRoutes>` returns the routing config object so you can use it with the router of your choice. In this example we use `@solidjs/router`.
 
