@@ -57,7 +57,7 @@ export default function Page() {
 Caveats:
 
 1. The `load` function is only called once per route, the first time the user comes to that route. After that, the fine-grained resources that remain alive synchronize with state/url changes to refetch data when needed. If you need to refresh the data, you can use the `refetch` function that is returned by [`createResource`][createresource].
-2. The `load` function is called before the route is rendered. It doesn't share the same `context` as the route. The context tree that is exposed to the `load` function is anything above the `Routes` component.
+2. The `load` function is called before the route is rendered. It doesn't share the same `context` as the route. The context tree that is exposed to the `load` function is anything above the `Page` component.
 3. The `load` function will be called both on the server and the client. It's the resources that can avoid refetching if they had serialized their data in the server render.
 4. The server-side render will only wait for the resources to fetch and serialize if the resource signals are accessed under a `Suspense` boundary.
 
