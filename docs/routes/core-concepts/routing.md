@@ -9,9 +9,7 @@ active: true
 
 <table-of-contents></table-of-contents>
 
-Routing is possibly the most important concept to understand in SolidStart. Everything starts with your routes: the compiler, the initial request, and almost every user interaction afterward. In this section, you'll learn how to write basic routes, navigate between routes, and handle more complex/dynamic routing scenarios.
-
-There are two categories of routes:
+Understanding routing is an important starting point to SolidStart, as it serves as the foundation to your application. There are two categories of routes:
 
 - UI routes, which define the user interfaces in your app
 - [API routes][api-routes], which define data endpoints in your app
