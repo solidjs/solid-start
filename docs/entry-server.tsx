@@ -5,12 +5,12 @@ function Document({ assets, children, scripts }: DocumentComponentProps) {
     <html lang="en" class="h-full">
       <head>
         <meta charset="utf-8" />
-        <meta property="og:title" content="SolidStart Beta Documentation" />
-        <meta property="og:site_name" content="SolidStart Beta Documentation" />
+        <meta property="og:title" content="SolidStart Release Candidate Documentation" />
+        <meta property="og:site_name" content="SolidStart Release Candidate Documentation" />
         <meta property="og:url" content="https://start.solidjs.com" />
         <meta
           property="og:description"
-          content="Early release documentation and resources for SolidStart Beta"
+          content="Early release documentation and resources for SolidStart Release Candidate"
         />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://start.solidjs.com/og-share.png" />
@@ -19,7 +19,7 @@ function Document({ assets, children, scripts }: DocumentComponentProps) {
         <meta
           name="description"
           property="og:description"
-          content="Early release documentation and resources for SolidStart Beta"
+          content="Documentation and resources for SolidStart Release Candidate"
         />
         <meta name="author" content="@solid_js" />
         <link rel="icon" href="/favicon.ico" />

@@ -4,13 +4,13 @@
 
 # SolidStart
 
-### Start has just entered a new Beta Phase
+### SolidStart has just entered a new Release Candidate Phase
 
-v0.4.x marks a significant change in the project. Please check the updated docs and example projects to see how things have changed. A summary of the changes can be found in the [RFC](https://github.com/solidjs/@solidjs/start/discussions/1052).
+v0.4.x marked a significant change in the project. Please check the updated docs and example projects to see how things have changed. A summary of the changes can be found in the [RFC](https://github.com/solidjs/@solidjs/start/discussions/1052).
 
 ------------------------------------
 
-This is the home of the Solid app framework. This is still a **work in progress**. Many features are missing or incomplete. Experimental status does not even mean beta status. Patch releases will break everything.
+This is the home of the SolidStart, the Solid app framework.
 
 ## Features
 
