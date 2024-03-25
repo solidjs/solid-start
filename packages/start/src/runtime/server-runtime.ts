@@ -17,10 +17,12 @@ import { createIslandReference } from "../server/islands/index";
 class SerovalChunkReader {
   reader: ReadableStreamDefaultReader<Uint8Array>;
   buffer: string;
+  bufferSize: number;
   done: boolean;
   constructor(stream: ReadableStream<Uint8Array>) {
     this.reader = stream.getReader();
     this.buffer = "";
+    this.bufferSize = 0;
     this.done = false;
   }
 
@@ -30,6 +32,7 @@ class SerovalChunkReader {
     if (!chunk.done) {
       // repopulate the buffer
       this.buffer += new TextDecoder().decode(chunk.value);
+      this.bufferSize += chunk.value.length;
     } else {
       this.done = true;
     }
@@ -55,7 +58,7 @@ class SerovalChunkReader {
     // deserialize the data
     const bytes = Number.parseInt(this.buffer.substring(1, 11), 16); // ;0x00000000;
     // Check if the buffer has enough bytes to be parsed
-    while (bytes > this.buffer.length - 12) {
+    while (bytes > this.bufferSize - 12) {
       // If it's not enough, and the reader is done
       // then the chunk is invalid.
       if (this.done) {
