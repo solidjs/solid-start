@@ -54,7 +54,8 @@ export function defineConfig(baseConfig = {}) {
         "/_build/assets/**": { headers: { "cache-control": "public, immutable, max-age=31536000" } }
       },
       experimental: {
-        asyncContext: true
+        asyncContext: true,
+        websocket: Boolean(start.websocket)
       }
     }
   });
@@ -270,7 +271,63 @@ export function defineConfig(baseConfig = {}) {
             })
           ];
         }
-      }
+      },
+
+      ...(start.websocket
+        ? [
+            {
+              name: "websocket",
+              type: "http",
+              base: "/_ws",
+              handler: start.websocket,
+              middleware: start.middleware,
+              extensions,
+              target: "server",
+              plugins: async () => {
+                const userConfig = typeof vite === "function" ? await vite({ router: "server" }) : { ...vite };
+                const plugins = userConfig.plugins || [];
+                delete userConfig.plugins;
+                return [
+                  config("user", {
+                    ...userConfig,
+                    optimizeDeps: {
+                      ...(userConfig.optimizeDeps || {}),
+                      include: [
+                        ...(userConfig.optimizeDeps?.include || []),
+                        "@solidjs/start > source-map-js",
+                        "@solidjs/start > error-stack-parser"
+                      ]
+                    }
+                  }),
+                  ...plugins,
+                  solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
+                  config("app-server", {
+                    resolve: {
+                      alias: {
+                        "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
+                        "~": join(process.cwd(), start.appRoot),
+                        ...(!start.ssr
+                          ? {
+                              "@solidjs/start/server": "@solidjs/start/server/spa"
+                            }
+                          : {}),
+                        ...userConfig.resolve?.alias
+                      }
+                    },
+                    cacheDir: "node_modules/.vinxi/websocket",
+                    define: {
+                      "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
+                      "import.meta.env.SSR": JSON.stringify(true),
+                      "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                      "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                      ...userConfig.define
+                    }
+                  })
+                ];
+              }
+            }
+          ]
+        : [])
     ]
   });
 }
