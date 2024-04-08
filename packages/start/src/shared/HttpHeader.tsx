@@ -17,7 +17,7 @@ export const HttpHeader = isServer
     else event.response.headers.set(props.name, props.value);
 
     onCleanup(() => {
-      if (event.nativeEvent.handled) return;
+      if (event.nativeEvent.handled || event.complete) return;
       const value = event.response.headers.get(props.name);
       if (!value) return;
       if (!value.includes(", ")) {

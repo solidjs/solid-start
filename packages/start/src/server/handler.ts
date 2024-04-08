@@ -2,11 +2,11 @@ import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-    eventHandler,
-    sendRedirect,
-    setHeader,
-    setResponseStatus,
-    type HTTPEvent
+  eventHandler,
+  sendRedirect,
+  setHeader,
+  setResponseStatus,
+  type HTTPEvent
 } from "vinxi/http";
 import { matchAPIRoute } from "../router/routes";
 import { getFetchEvent } from "./fetchEvent";
@@ -51,6 +51,7 @@ export function createBaseHandler(
             (sharedConfig.context as any).event = context;
             return fn(context);
           }, options);
+          context.complete = true;
           if (context.response && context.response.headers.get("Location")) {
             return sendRedirect(e, context.response.headers.get("Location")!);
           }
@@ -99,6 +100,7 @@ function handleShellCompleteRedirect(context: PageEvent, e: HTTPEvent) {
 
 function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
+    context.complete = true;
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location="${to}"</script>`);
   };

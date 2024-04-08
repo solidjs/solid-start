@@ -59,6 +59,7 @@ export interface PageEvent extends RequestEvent {
   // prevUrl: string | null;
   // $type: typeof FETCH_EVENT;
   $islands: Set<string>;
+  complete: boolean;
   // mutation: boolean;
 }
 
