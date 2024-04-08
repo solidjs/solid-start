@@ -24,10 +24,16 @@ import { createPageEvent } from "../server/pageEvent";
 import { FetchEvent, PageEvent } from "../server";
 
 function createChunk(data: string) {
-  const bytes = data.length;
+  const encodeData = new TextEncoder().encode(data);
+  const bytes = encodeData.length;
   const baseHex = bytes.toString(16);
   const totalHex = "00000000".substring(0, 8 - baseHex.length) + baseHex; // 32-bit
-  return new TextEncoder().encode(`;0x${totalHex};${data}`);
+  const head = new TextEncoder().encode(`;0x${totalHex};`);
+
+  const chunk = new Uint8Array(12 + bytes);
+  chunk.set(head);
+  chunk.set(encodeData, 12);
+  return chunk;
 }
 
 function serializeToStream(id: string, value: any) {
