@@ -8,11 +8,14 @@ active: true
 # What is SolidStart?
 
 <aside title="Beware of dragons" type="warning">
-  We are very excited about SolidStart, but it is currently in beta. There will very likely be <b>bugs and
-  missing documentation</b>. Come at it with a growth attitude, have fun, and don't use it yet for
+  We are very excited about SolidStart, but it is currently in a release candidate stage. There will very likely be <b>bugs and missing documentation</b>. Come at it with a growth attitude, have fun, and don't use it yet for
   anything critical. If all this darkness doesn't faze you, press onward, and consider joining the
   <a href="https://discord.com/invite/solidjs" target="_blank">Discord</a> to ask questions. We would love to meet you.
 </aside>
+
+
+<a href="https://docs.solidjs.com/solid-start">A new documentation for SolidStart is underway here.</a>
+
 
 Web applications often comprise many components: databases, servers, front-ends, bundlers, data fetching/mutations, caching, and infrastructure. Orchestrating these components is challenging and often requires a large amount of shared state and redundant logic across the application stack.
 
@@ -41,14 +44,14 @@ SolidStart touts the following feature set:
 - **Isomorphic, nested routing.** You write the same routes regardless of whether the page is rendered on the client or server. Route nesting provides parent-child relationships that simplify application logic.
 - **Multiple rendering modes.** SolidStart can be used to create CSR, SSR, streaming SSR, or SSG applications.
 - **Command Line Interface (CLI) and templates.** Get up and running quickly with starters.
-- **Deployment adapters.** SolidStart provides adapters to support deployment to your favorite platform&mdash;Netlify, Vercel, AWS, and Cloudflare, to name a few.
+- **Deployment presets.** SolidStart provides presets to support deployment to your favorite platform&mdash;Netlify, Vercel, AWS, and Cloudflare, to name a few.
 
 ## Prerequisites
 
 We recommend that you know HTML, CSS, and JavaScript before digging in to SolidStart. Since SolidStart is a SolidJS meta-framework, we also recommend you know SolidJS prior to digging in to these docs (or at least [take the SolidJS tutorial](https://www.solidjs.com/tutorial)).
 
-## SolidStart is in Beta!
+## SolidStart is in Release Candidate!
 
-We're very excited that you're checking out the SolidStart Beta release! Since SolidStart is in beta, you may find some bugs as you explore the framework. We would appreciate if you report these bugs to us using [GitHub Issues](https://github.com/solidjs/solid-start/issues).
+We're very excited that you're checking out the SolidStart Release Candidate! Since SolidStart is in release candidate, you may find some bugs as you explore the framework. We would appreciate if you report these bugs to us using [GitHub Issues](https://github.com/solidjs/solid-start/issues).
 
-Beta means that while we are happy with the current state of the APIs, we are still learning by working with all of you. There are still opportunities for improvement and some changes before we reach 1.0. Thank you all for your patience, and we hope you enjoy exploring what is possible with SolidStart.
+Release candidate means that while we are happy with the current state of the APIs, we are still learning by working with all of you. There are still opportunities for improvement and some changes before we reach 1.0. Thank you all for your patience, and we hope you enjoy exploring what is possible with SolidStart.

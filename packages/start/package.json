@@ -1,59 +1,71 @@
 {
   "name": "@solidjs/start",
-  "version": "0.5.4",
+  "version": "1.0.0-rc.0",
   "type": "module",
   "author": "Ryan Carniato",
+  "license": "MIT",
+  "homepage": "https://start.solidjs.com/",
+  "bugs": "https://github.com/solidjs/solid-start/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solidjs/solid-start.git",
+    "directory": "packages/start"
+  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit --checkJs false --skipLibCheck"
+    "typecheck": "tsc --noEmit",
+    "build": "node build && pnpm tsc"
   },
   "files": [
-    "client",
     "config",
-    "middleware",
-    "server",
-    "shared",
-    "*.d.ts"
+    "dist",
+    "env.d.ts"
   ],
-  "types": "./shared/index.tsx",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./shared/index.tsx",
+    ".": "./dist/index.jsx",
     "./config": "./config/index.js",
-    "./middleware": "./middleware/index.ts",
-    "./server": "./server/index.tsx",
-    "./server/spa": "./server/spa/index.tsx",
-    "./client": "./client/index.tsx",
-    "./client/islands": "./client/islands.tsx",
-    "./client/spa": "./client/spa/index.tsx"
+    "./middleware": "./dist/middleware/index.jsx",
+    "./router": "./dist/router/index.jsx",
+    "./server": "./dist/server/index.jsx",
+    "./server/spa": "./dist/server/spa/index.jsx",
+    "./client": "./dist/client/index.jsx",
+    "./client/islands": "./dist/client/islands.jsx",
+    "./client/spa": "./dist/client/spa/index.jsx"
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./shared/index.tsx"
+        "./dist/index.d.ts"
       ],
-      "./middleware": [
-        "./middleware/index.ts"
+      "middleware": [
+        "./dist/middleware/index.d.ts"
       ],
-      "./server": [
-        "./server/index.tsx"
+      "router": [
+        "./dist/router/index.d.ts"
       ],
-      "./client": [
-        "./client/index.tsx"
+      "server": [
+        "./dist/server/index.d.ts"
+      ],
+      "client": [
+        "./dist/client/index.d.ts"
       ]
     }
   },
   "devDependencies": {
-    "solid-js": "^1.8.14",
-    "vinxi": "^0.2.1"
+    "solid-js": "^1.8.16",
+    "vinxi": "^0.3.10",
+    "typescript": "^5.4.2"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.2.0",
-    "@vinxi/server-components": "^0.2.0",
-    "@vinxi/server-functions": "^0.2.1",
+    "@vinxi/plugin-directives": "^0.3.1",
+    "@vinxi/server-components": "^0.3.3",
+    "@vinxi/server-functions": "^0.3.2",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
+    "glob": "^10.3.10",
     "html-to-image": "^1.11.11",
     "radix3": "^1.1.0",
     "seroval": "^1.0.2",
@@ -62,6 +74,6 @@
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "vite-plugin-inspect": "^0.7.33",
-    "vite-plugin-solid": "^2.9.1"
+    "vite-plugin-solid": "~2.9.1"
   }
 }

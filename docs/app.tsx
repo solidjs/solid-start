@@ -1,7 +1,7 @@
 // @refresh reload
 import { MetaProvider, Title } from "@solidjs/meta";
 import { A, Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 import { createMemo, For, Show, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import "./components/index.css";
@@ -246,7 +246,7 @@ export default function Root() {
     <Router
       root={props => (
         <MetaProvider>
-          <Title>SolidStart (Beta)</Title>
+          <Title>SolidStart (Release Candidate)</Title>
           <Header />
 
           <input type="checkbox" class="peer hidden" name="sidebar-toggle" id="sidebar-toggle" />

@@ -1,9 +1,8 @@
 packages:
   # all packages in subdirs of packages/ and examples/
-  - 'packages/**'
-  - 'examples/**'
-  - 'docs/**'
-  - '!**/.tmp/**'
+  - "packages/*"
+  - "examples/*"
+  - "!**/.tmp/**"
 options:
   prefer-workspace-packages: true
   strict-peer-dependencies: false

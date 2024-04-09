@@ -9,9 +9,7 @@ active: true
 
 <table-of-contents></table-of-contents>
 
-Routing is possibly the most important concept to understand in SolidStart. Everything starts with your routes: the compiler, the initial request, and almost every user interaction afterward. In this section, you'll learn how to write basic routes, navigate between routes, and handle more complex/dynamic routing scenarios.
-
-There are two categories of routes:
+Understanding routing is an important starting point to SolidStart, as it serves as the foundation to your application. There are two categories of routes:
 
 - UI routes, which define the user interfaces in your app
 - [API routes][api-routes], which define data endpoints in your app
@@ -60,14 +58,14 @@ export default function Index() {
 
 In this example, visiting `hogwarts.com/` will render a `<div>` with the text "Welcome to Hogwarts!" inside it.
 
-Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the [`<FileRoutes />`][fileroutes] component. The [`<FileRoutes />`][fileroutes] component only includes your UI routes, and not your API routes. You can use it instead of manually entering all your `Route`s inside the `<Routes />` component in `app.tsx`. Let the compiler do the boring work!
+Under the hood, SolidStart traverses your `routes` directory, collects all the routes, and makes them accessible using the [`<FileRoutes />`][fileroutes] component. The [`<FileRoutes />`][fileroutes] component only includes your UI routes, and not your API routes. You can use it instead of manually entering all your `Route`s inside the `<Router />` component in `app.tsx`. Let the compiler do the boring work!
 
 `<FileRoutes>` returns the routing config object so you can use it with the router of your choice. In this example we use `@solidjs/router`.
 
 ```tsx twoslash {7-9} filename="app.tsx"
 import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 
 export default function App() {
   return (
@@ -157,6 +155,33 @@ export default function UsersLayout(props: RouteSectionProps) {
     </div>
   );
 }
+```
+
+### Escaping Nested Routes
+
+Sometimes you may have the same path but you don't want them to share the same layout. For example, your user listing page might not share a layout with the user details page. In that case you can apply a name between `(` `)` that does not become part of the path:
+
+```
+|-- routes/
+    |-- users.tsx
+    |-- users/
+        |-- index.tsx
+        |-- projects.tsx
+    |-- users(details)/
+        |-- [id].tsx
+```
+
+And it can also have its own nested layouts
+
+```
+|-- routes/
+    |-- users.tsx
+    |-- users(details).tsx
+    |-- users/
+        |-- index.tsx
+        |-- projects.tsx
+    |-- users(details)/
+        |-- [id].tsx
 ```
 
 ## Route Groups

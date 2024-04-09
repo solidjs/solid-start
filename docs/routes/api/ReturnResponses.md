@@ -2,19 +2,27 @@
 section: api
 title: Returning Responses
 order: 99
-subsection: Typescript
+subsection: Server
 active: true
 ---
 
 # Returning Responses
 
-In SolidStart it's possible to return a Response object from a server function. For Typescript ergonomics, when returning a response using `@solidjs/router`'s `redirect`, `reload`, or `json` helpers, they will not impact the return value of the server function. 
+In SolidStart it's possible to return a Response object from a server function. `@solidjs/router` knows how to handle certain responses with its `cache` and `action` APIs. For Typescript ergonomics, when returning a response using `@solidjs/router`'s `redirect`, `reload`, or `json` helpers, they will not impact the return value of the server function.
+
+You can always return or throw a response but we suggest that depending on the type of function to handle errors differently.
+
+<table>
+  <th><td>cache</td><td>action</td><th>
+  <tr><td>return</td><td>data, response</td><td>success message, error, response</td></tr>
+  <tr><td>throw</td><td>error, response</td><td>response</td></tr>
+</table>
 
 ## Examples
 
 In the following example, as far as Typescript is concerned, the `hello` function will return a value of type `Promise<{ hello: Promise<string> }>`
 
-```tsx twoslash 
+```tsx twoslash
 import { json } from "@solidjs/router";
 import { GET } from "@solidjs/start";
 
@@ -40,7 +48,7 @@ export async function getUser() {
 
   try {
     const user: User = await db.user.findUnique({ where: { id: userId } });
-    
+
     // throwing here could have been a bit awkward.
     if (!user) return redirect("/login");
     return user;

@@ -1,24 +1,28 @@
-import { AppOptions } from "vinxi";
+import type { AppOptions, createApp } from "vinxi";
+import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
 import { InlineConfig } from "vite";
 import type { Options } from "vite-plugin-solid";
 
-
-type SolidStartInlineConfig = Omit<InlineConfig, "router"> & {
-    start?: {
-        /**
-         * true: streaming mode
-         * false: csr only
-         * async: ssr is in async mode
-         * sync: ssr is in sync mode
-         */
-        ssr?: boolean | "async" | "sync",
-        solid?: Options,
-        extensions?: string[],
-        server?: AppOptions['server'],
-        appRoot?: string,
-        middleware?: string,
-        islands?: boolean
-    }
+// atleast until we sort which server options are good to use
+type ViteCustomizableConfig = CustomizableConfig & {
+  server?: InlineConfig["server"];
 }
 
-export declare function defineConfig(baseConfig?: SolidStartInlineConfig)
+type SolidStartInlineConfig = {
+  ssr?: boolean;
+  solid?: Options;
+  extensions?: string[];
+  server?: AppOptions["server"];
+  appRoot?: string;
+  routeDir?: string;
+  middleware?: string;
+  devOverlay?:  boolean;
+  experimental?: {
+    islands?: boolean;
+  }
+  vite?:
+    | ViteCustomizableConfig
+    | ((options: { router: "server" | "client" | "server-function" }) => ViteCustomizableConfig);
+};
+
+export declare function defineConfig(baseConfig?: SolidStartInlineConfig): ReturnType<typeof createApp>;

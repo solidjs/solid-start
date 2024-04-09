@@ -1,5 +1,5 @@
 import { serverFunctions } from "@vinxi/server-functions/plugin";
-import { serverTransform } from "@vinxi/server-functions/server";
+import { server as serverFunctionServer, serverTransform } from "@vinxi/server-functions/server";
 import defu from "defu";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
@@ -8,10 +8,7 @@ import { createApp, resolve } from "vinxi";
 import { normalize } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
-import {
-  SolidStartClientFileRouter,
-  SolidStartServerFileRouter
-} from "./fs-router.js";
+import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { serverComponents } from "./server-components.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
@@ -41,19 +38,27 @@ function solidStartServerFsRouter(config) {
 }
 
 export function defineConfig(baseConfig = {}) {
-  let { plugins = [], start = {}, ...userConfig } = baseConfig;
+  let { vite = {}, ...start } = baseConfig;
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
     appRoot: "./src",
+    routeDir: "./routes",
     ssr: true,
-    islands: false,
+    devOverlay: true,
+    experimental: {
+      islands: false
+    },
     solid: {},
     server: {
+      routeRules: {
+        "/_build/assets/**": { headers: { "cache-control": "public, immutable, max-age=31536000" } }
+      },
       experimental: {
         asyncContext: true
       }
     }
   });
+  const routeDir = join(start.appRoot, start.routeDir);
   let server = start.server;
   if (!start.ssr) {
     server = { ...server, prerender: { routes: ["/"] } };
@@ -74,161 +79,198 @@ export function defineConfig(baseConfig = {}) {
       {
         name: "public",
         type: "static",
-        dir: "./public",
-        base: "/"
+        base: "/",
+        dir: "./public"
       },
       {
         name: "ssr",
         type: "http",
         link: {
-          client: start.islands ? undefined : "client"
+          client: start.experimental.islands ? undefined : "client"
         },
         handler: `${start.appRoot}/entry-server${entryExtension}`,
         middleware: start.middleware,
-        routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
+        routes: solidStartServerFsRouter({ dir: routeDir, extensions }),
         extensions,
         target: "server",
-        plugins: async () => [
-          config("user", {
-            ...userConfig,
-            optimizeDeps: {
-              ...(userConfig.optimizeDeps || {}),
-              include: [
-                ...(userConfig.optimizeDeps?.include || []),
-                "@solidjs/start > source-map-js",
-                "@solidjs/start > error-stack-parser"
-              ]
-            }
-          }),
-          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
-
-          serverTransform({
-            runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url)))
-          }),
-          start.islands ? serverComponents.server() : null,
-          solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
-          config("app-server", {
-            resolve: {
-              alias: {
-                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
-                "~": join(process.cwd(), start.appRoot),
-                ...(!start.ssr
-                  ? {
-                      "@solidjs/start/server": "@solidjs/start/server/spa"
-                    }
-                  : {}),
-                ...userConfig.resolve?.alias
+        plugins: async () => {
+          const userConfig =
+            typeof vite === "function" ? await vite({ router: "server" }) : { ...vite };
+          const plugins = userConfig.plugins || [];
+          delete userConfig.plugins;
+          return [
+            config("user", {
+              ...userConfig,
+              optimizeDeps: {
+                ...(userConfig.optimizeDeps || {}),
+                include: [
+                  ...(userConfig.optimizeDeps?.include || []),
+                  "@solidjs/start > source-map-js",
+                  "@solidjs/start > error-stack-parser"
+                ]
               }
-            },
-            define: {
-              "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-              "import.meta.env.SSR": JSON.stringify(true),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-              ...userConfig.define
-            }
-          })
-        ]
+            }),
+            ...plugins,
+            serverTransform({
+              runtime: normalize(
+                fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
+              )
+            }),
+            start.experimental.islands ? serverComponents.server() : null,
+            solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
+            config("app-server", {
+              resolve: {
+                alias: {
+                  "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
+                  "~": join(process.cwd(), start.appRoot),
+                  ...(!start.ssr
+                    ? {
+                        "@solidjs/start/server": "@solidjs/start/server/spa"
+                      }
+                    : {}),
+                  ...userConfig.resolve?.alias
+                }
+              },
+              cacheDir: "node_modules/.vinxi/server",
+              define: {
+                "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
+                "import.meta.env.SSR": JSON.stringify(true),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                ...userConfig.define
+              }
+            })
+          ];
+        }
       },
       {
         name: "client",
         type: "client",
+        base: "/_build",
         handler: `${start.appRoot}/entry-client${entryExtension}`,
-        ...(start.islands
+        ...(start.experimental.islands
           ? {}
           : {
-              routes: solidStartClientFsRouter({ dir: `${start.appRoot}/routes`, extensions })
+              routes: solidStartClientFsRouter({ dir: routeDir, extensions })
             }),
         extensions,
         target: "browser",
-        plugins: async () => [
-          config("user", {
-            ...userConfig,
-            optimizeDeps: {
-              ...(userConfig.optimizeDeps || {}),
-              include: [
-                ...(userConfig.optimizeDeps?.include || []),
-                "@solidjs/start > source-map-js",
-                "@solidjs/start > error-stack-parser"
-              ]
-            }
-          }),
-          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
-          serverFunctions.client({
-            runtime: normalize(fileURLToPath(new URL("./server-runtime.ts", import.meta.url)))
-          }),
-          start.islands ? serverComponents.client() : null,
-          solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
-          config("app-client", {
-            resolve: {
-              alias: {
-                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
-                "~": join(process.cwd(), start.appRoot),
-                ...(start.islands
-                  ? {
-                      "@solidjs/start/client": "@solidjs/start/client/islands"
-                    }
-                  : {}),
-                ...(!start.ssr
-                  ? {
-                      "@solidjs/start/client": "@solidjs/start/client/spa"
-                    }
-                  : {}),
-                ...userConfig.resolve?.alias
+        plugins: async () => {
+          const userConfig =
+            typeof vite === "function" ? await vite({ router: "client" }) : { ...vite };
+          const plugins = userConfig.plugins || [];
+          delete userConfig.plugins;
+          return [
+            config("user", {
+              ...userConfig,
+              optimizeDeps: {
+                ...(userConfig.optimizeDeps || {}),
+                include: [
+                  ...(userConfig.optimizeDeps?.include || []),
+                  "@solidjs/start > source-map-js",
+                  "@solidjs/start > error-stack-parser"
+                ]
               }
-            },
-            define: {
-              "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-              "import.meta.env.SSR": JSON.stringify(false),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-              "import.meta.env.SERVER_BASE_URL": JSON.stringify(server?.baseURL ?? ""),
-              ...userConfig.define
-            }
-          })
-        ],
-        base: "/_build"
+            }),
+            ...plugins,
+            serverFunctions.client({
+              runtime: normalize(
+                fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url))
+              )
+            }),
+            start.experimental.islands ? serverComponents.client() : null,
+            solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
+            config("app-client", {
+              resolve: {
+                alias: {
+                  "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
+                  "~": join(process.cwd(), start.appRoot),
+                  ...(start.experimental.islands
+                    ? {
+                        "@solidjs/start/client": "@solidjs/start/client/islands"
+                      }
+                    : {}),
+                  ...(!start.ssr
+                    ? {
+                        "@solidjs/start/client": "@solidjs/start/client/spa"
+                      }
+                    : {}),
+                  ...userConfig.resolve?.alias
+                }
+              },
+              cacheDir: "node_modules/.vinxi/client",
+              define: {
+                "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
+                "import.meta.env.SSR": JSON.stringify(false),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                "import.meta.env.SERVER_BASE_URL": JSON.stringify(server?.baseURL ?? ""),
+                ...userConfig.define
+              }
+            })
+          ];
+        }
       },
-      serverFunctions.router({
-        handler: normalize(fileURLToPath(new URL("./server-handler.ts", import.meta.url))),
-        runtime: normalize(fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url))),
-        routes: solidStartServerFsRouter({ dir: `${start.appRoot}/routes`, extensions }),
-        plugins: async () => [
-          config("user", {
-            ...userConfig,
-            optimizeDeps: {
-              ...(userConfig.optimizeDeps || {}),
-              include: [
-                ...(userConfig.optimizeDeps?.include || []),
-                "@solidjs/start > source-map-js",
-                "@solidjs/start > error-stack-parser"
-              ]
-            }
-          }),
-          ...(typeof plugins === "function" ? [...(await plugins())] : plugins),
 
-          solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
-          config("app-server", {
-            resolve: {
-              alias: {
-                "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
-                "~": join(process.cwd(), start.appRoot),
-                ...(!start.ssr
-                  ? {
-                      "@solidjs/start/server": "@solidjs/start/server/spa"
-                    }
-                  : {}),
-                ...userConfig.resolve?.alias
+      {
+        name: "server-fns",
+        type: "http",
+        base: "/_server",
+        handler: normalize(
+          fileURLToPath(new URL("../dist/runtime/server-handler.js", import.meta.url))
+        ),
+        middleware: start.middleware,
+        target: "server",
+        routes: solidStartServerFsRouter({ dir: routeDir, extensions }),
+        plugins: async () => {
+          const userConfig =
+            typeof vite === "function" ? await vite({ router: "server-function" }) : { ...vite };
+          const plugins = userConfig.plugins || [];
+          delete userConfig.plugins;
+          return [
+            config("user", {
+              ...userConfig,
+              optimizeDeps: {
+                ...(userConfig.optimizeDeps || {}),
+                include: [
+                  ...(userConfig.optimizeDeps?.include || []),
+                  "@solidjs/start > source-map-js",
+                  "@solidjs/start > error-stack-parser"
+                ]
+              },
+              cacheDir: "node_modules/.vinxi/server-fns"
+            }),
+            ...plugins,
+            serverFunctionServer({
+              runtime: normalize(
+                fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
+              )
+            }),
+            solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
+            config("app-server", {
+              resolve: {
+                alias: {
+                  "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
+                  "~": join(process.cwd(), start.appRoot),
+                  ...(!start.ssr
+                    ? {
+                        "@solidjs/start/server": "@solidjs/start/server/spa"
+                      }
+                    : {}),
+                  ...userConfig.resolve?.alias
+                }
+              },
+              define: {
+                "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
+                "import.meta.env.SSR": JSON.stringify(true),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                ...userConfig.define
               }
-            },
-            define: {
-              "import.meta.env.START_ISLANDS": JSON.stringify(start.islands),
-              "import.meta.env.SSR": JSON.stringify(true),
-              "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-              ...userConfig.define
-            }
-          })
-        ],
-        middleware: start.middleware
-      })
+            })
+          ];
+        }
+      }
     ]
   });
 }

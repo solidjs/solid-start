@@ -13,7 +13,7 @@ active: true
 <div class="text-lg">
 
 ```tsx twoslash
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 <FileRoutes />;
 ```
 
@@ -23,16 +23,16 @@ import { FileRoutes } from "@solidjs/start";
 
 ## Usage
 
-### Using file-based routing to set up your `Routes`
+### Using file-based routing to set up your `Router`
 
-The `<FileRoutes>` component collects routes from the file-system in the `/routes` folder to be inserted into a parent `<Routes>` component.
+The `<FileRoutes>` component collects routes from the file-system in the `/routes` folder to be inserted into a parent `<Router>` component.
 
-Since `FileRoutes` returns a route configuration, it must be placed directly inside a `<Routes>`, usually the one in your `root.tsx` file.
+Since `FileRoutes` returns a route configuration, it must be placed directly inside a `<Router>`, usually the one in your `app.tsx` file.
 
 ```tsx twoslash {7-9} filename="app.tsx"
 import { Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start";
+import { FileRoutes } from "@solidjs/start/router";
 
 export default function App() {
   return (
@@ -45,9 +45,9 @@ export default function App() {
 
 <aside>
 
-Be careful before you decide to remove the `FileRoutes` component from your `app.tsx` file. If you do, you will need to manually add all of your routes to the `<Routes>` component.
+Be careful before you decide to remove the `FileRoutes` component from your `app.tsx` file. If you do, you will need to manually add all of your routes to the `<Router>` component.
 
-You will still lose out on some optimizations that are enabled by file-system routing. While we will caution you however, always be free to explore what you can do.
+You will still lose out on some optimizations that are enabled by file-system routing like preloaded script tags. While we will caution you however, always be free to explore what you can do.
 
 </aside>
 

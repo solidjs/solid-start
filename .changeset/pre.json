@@ -1,0 +1,13 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "solid-start-mdx": "0.4.11",
+    "@solidjs/start": "0.7.7"
+  },
+  "changesets": [
+    "brown-paws-fetch",
+    "cool-eagles-eat",
+    "nine-foxes-doubt"
+  ]
+}
