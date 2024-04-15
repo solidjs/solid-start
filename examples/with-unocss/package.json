@@ -9,10 +9,10 @@
   "dependencies": {
     "@solidjs/router": "^0.13.2",
     "@solidjs/start": "^1.0.0-rc.0",
-    "@unocss/reset": "^0.58.3",
+    "@unocss/reset": "^0.59.2",
     "solid-js": "^1.8.16",
-    "unocss": "^0.58.3",
-    "vinxi": "^0.3.10"
+    "unocss": "^0.59.2",
+    "vinxi": "^0.3.11"
   },
   "engines": {
     "node": ">=18"
