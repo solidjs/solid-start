@@ -62,7 +62,7 @@ const getStudents = cache(async (house: string) => {
   const user = await getUser();
   if (!user) throw redirect("/login");
   return hogwarts.getStudents(house, "*");
-});
+}, "students");
 
 // page component
 export default function Students() {
