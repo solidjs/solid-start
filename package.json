@@ -28,13 +28,10 @@
   "devDependencies": {
     "@changesets/cli": "^2.25.2",
     "@cloudflare/kv-asset-handler": "^0.2.0",
-    "@decs/typeschema": "^0.12.2",
     "@solidjs/meta": "^0.29.0",
     "@solidjs/router": "^0.13.2",
     "@solidjs/start": "workspace:*",
     "@tailwindcss/typography": "^0.5.9",
-    "@trpc/client": "^9.27.4",
-    "@trpc/server": "^9.27.4",
     "@vinxi/plugin-mdx": "^3.7.1",
     "citty": "^0.1.5",
     "coveralls": "^3.1.1",
@@ -49,7 +46,7 @@
     "tippy.js": "^6.3.7",
     "turbo": "^1.10.7",
     "typescript": "5.3.3",
-    "valibot": "0.26.0",
+    "valibot": "~0.29.0",
     "vinxi": "^0.3.10",
     "vite": "^5.1.1"
   },
