@@ -62,7 +62,7 @@ const getStudents = cache(async (house: string) => {
   const user = await getUser();
   if (!user) throw redirect("/login");
   return hogwarts.getStudents(house, "*");
-});
+}, "students");
 
 // page component
 export default function Students() {
@@ -81,7 +81,7 @@ type UserSession = {
 };
 
 function getSession() {
-  return useSession({
+  return useSession<UserSession>({
     password: process.env.SESSION_SECRET
   });
 }
@@ -94,7 +94,7 @@ export async function login(formData: FormData) {
     const session = await getSession();
     const user = await db.user.findUnique({ where: { username } });
     if (!user || password !== user.password) return new Error("Invalid login");
-    await session.update((d: UserSession) => (d.userId = user!.id));
+    await session.update((d) => (d.userId = user!.id));
   } catch (err) {
     return err as Error;
   }
@@ -103,7 +103,7 @@ export async function login(formData: FormData) {
 
 export async function logout() {
   const session = await getSession();
-  await session.update((d: UserSession) => (d.userId = undefined));
+  await session.update((d) => (d.userId = undefined));
   throw redirect("/login");
 }
 ```

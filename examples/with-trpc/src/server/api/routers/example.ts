@@ -1,4 +1,4 @@
-import { wrap } from "@decs/typeschema";
+import { wrap } from "@typeschema/valibot";
 import { string } from "valibot";
 import { createTRPCRouter, publicProcedure } from "../utils";
 
