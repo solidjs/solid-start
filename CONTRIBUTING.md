@@ -17,4 +17,4 @@
 
 ## Requirements
 
-1. Node.js: ^18.12.0
+1. Node.js: ^20
