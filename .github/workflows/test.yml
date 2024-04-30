@@ -50,11 +50,11 @@
 #     runs-on: ${{ matrix.os }}
 
 #     steps:
-#       - uses: actions/checkout@v2
+#       - uses: actions/checkout@v4
 
-#       - uses: pnpm/action-setup@v2.2.2
+#       - uses: pnpm/action-setup@v3
 #         with:
-#           version: 8
+#           version: 9
 
 #       - name: Use Node.js ${{ matrix.node-version }}
 #         uses: actions/setup-node@v3
@@ -78,7 +78,7 @@
 #           echo "::set-output name=version::${playwright_version}"
 
 #       - name: 🤖 Cache Playwright binaries
-#         uses: actions/cache@v3
+#         uses: actions/cache@v4
 #         id: playwright-cache
 #         with:
 #           path: ${{ matrix.playwright_binary_path }}
