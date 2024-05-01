@@ -8,7 +8,6 @@ import {
   getResponseStatusText,
   getWebRequest,
   removeResponseHeader,
-  setHeader,
   setResponseHeader,
   setResponseStatus
 } from "vinxi/http";
@@ -43,7 +42,7 @@ export function getFetchEvent(h3Event: H3Event): FetchEvent {
 
 export function mergeResponseHeaders(h3Event: H3Event, headers: Headers) {
   for (const [key, value] of headers.entries()) {
-    setHeader(h3Event, key, value);
+    appendResponseHeader(h3Event, key, value);
   }
 }
 

@@ -2,11 +2,11 @@ import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-    eventHandler,
-    sendRedirect,
-    setHeader,
-    setResponseStatus,
-    type HTTPEvent
+  eventHandler,
+  sendRedirect,
+  setHeader,
+  setResponseStatus,
+  type HTTPEvent
 } from "vinxi/http";
 import { matchAPIRoute } from "../router/routes";
 import { getFetchEvent } from "./fetchEvent";
@@ -42,39 +42,40 @@ export function createBaseHandler(
 
         // render
         const context = await createPageEvent(event);
-        if (typeof options === "function") options = await options(context);
-        const mode = options.mode || "stream";
+        const resolvedOptions =
+          typeof options == "function" ? await options(context) : { ...options };
+        const mode = resolvedOptions.mode || "stream";
         // @ts-ignore
-        if (options.nonce) context.nonce = options.nonce;
+        if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
         if (mode === "sync" || !import.meta.env.START_SSR) {
           const html = renderToString(() => {
             (sharedConfig.context as any).event = context;
             return fn(context);
-          }, options);
+          }, resolvedOptions);
+          context.complete = true;
           if (context.response && context.response.headers.get("Location")) {
             return sendRedirect(e, context.response.headers.get("Location")!);
           }
           return html;
         }
-        let cloned = { ...options };
-        if (cloned.onCompleteAll) {
-          const og = cloned.onCompleteAll;
-          cloned.onCompleteAll = options => {
+        if (resolvedOptions.onCompleteAll) {
+          const og = resolvedOptions.onCompleteAll;
+          resolvedOptions.onCompleteAll = options => {
             handleStreamCompleteRedirect(context)(options);
             og(options);
           };
-        } else cloned.onCompleteAll = handleStreamCompleteRedirect(context);
-        if (cloned.onCompleteShell) {
-          const og = cloned.onCompleteShell;
-          cloned.onCompleteShell = options => {
+        } else resolvedOptions.onCompleteAll = handleStreamCompleteRedirect(context);
+        if (resolvedOptions.onCompleteShell) {
+          const og = resolvedOptions.onCompleteShell;
+          resolvedOptions.onCompleteShell = options => {
             handleShellCompleteRedirect(context, e)();
             og(options);
           };
-        } else cloned.onCompleteShell = handleShellCompleteRedirect(context, e);
+        } else resolvedOptions.onCompleteShell = handleShellCompleteRedirect(context, e);
         const stream = renderToStream(() => {
           (sharedConfig.context as any).event = context;
           return fn(context);
-        }, cloned);
+        }, resolvedOptions);
         if (context.response && context.response.headers.get("Location")) {
           return sendRedirect(e, context.response.headers.get("Location")!);
         }
@@ -99,6 +100,7 @@ function handleShellCompleteRedirect(context: PageEvent, e: HTTPEvent) {
 
 function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
+    context.complete = true;
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location="${to}"</script>`);
   };

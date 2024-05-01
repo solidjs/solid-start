@@ -1,6 +1,6 @@
 import {
-    getCookie,
-    setCookie
+  getCookie,
+  setCookie
 } from "vinxi/http";
 import { createRoutes } from "../router/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
@@ -44,6 +44,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     // prevUrl: prevPath || "",
     // mutation: mutation,
     // $type: FETCH_EVENT,
+    complete: false,
     $islands: new Set<string>()
   });
 

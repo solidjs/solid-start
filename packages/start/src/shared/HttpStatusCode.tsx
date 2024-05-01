@@ -13,7 +13,7 @@ export const HttpStatusCode = isServer
     const event = getRequestEvent() as PageEvent;
     event.response.status = props.code;
     event.response.statusText = props.text;
-    onCleanup(() => !event.nativeEvent.handled && (event.response.status = 200));
+    onCleanup(() => !event.nativeEvent.handled && !event.complete && (event.response.status = 200));
     return null;
   }
   : (_props: HttpStatusCodeProps) => null;

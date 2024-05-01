@@ -13,6 +13,10 @@ active: true
   <a href="https://discord.com/invite/solidjs" target="_blank">Discord</a> to ask questions. We would love to meet you.
 </aside>
 
+
+<a href="https://docs.solidjs.com/solid-start">A new documentation for SolidStart is underway here.</a>
+
+
 Web applications often comprise many components: databases, servers, front-ends, bundlers, data fetching/mutations, caching, and infrastructure. Orchestrating these components is challenging and often requires a large amount of shared state and redundant logic across the application stack.
 
 Enter SolidStart: a meta-framework that provides the platform to put all of these pieces together in a one location.

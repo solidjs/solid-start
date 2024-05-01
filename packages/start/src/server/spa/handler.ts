@@ -14,6 +14,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     manifest: await clientManifest.json(),
     assets: [...(await clientManifest.inputs[clientManifest.handler]!.assets())],
     routes: [],
+    complete: false,
     // prevUrl: "",
     // mutation: false,
     // $type: FETCH_EVENT,
