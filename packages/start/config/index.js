@@ -133,6 +133,7 @@ export function defineConfig(baseConfig = {}) {
               },
               cacheDir: "node_modules/.vinxi/server",
               define: {
+                "import.meta.env.START_APP": JSON.stringify(`${start.appRoot}/app${entryExtension}`),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
@@ -200,6 +201,7 @@ export function defineConfig(baseConfig = {}) {
               },
               cacheDir: "node_modules/.vinxi/client",
               define: {
+                "import.meta.env.START_APP": JSON.stringify(`${start.appRoot}/app${entryExtension}`),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(false),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
@@ -261,6 +263,7 @@ export function defineConfig(baseConfig = {}) {
                 }
               },
               define: {
+                "import.meta.env.START_APP": JSON.stringify(`${start.appRoot}/app${entryExtension}`),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
