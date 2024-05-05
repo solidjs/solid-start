@@ -5,8 +5,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 declare namespace App {
-  // eslint-disable-next-line  @typescript-eslint/no-empty-interface
-  export interface RequestEventLocals { }
+  export interface RequestEventLocals {
+    [key: string | symbol]: any;
+  }
 }
 
 interface ImportMetaEnv extends Record<`VITE_${string}`, any>, SolidStartMetaEnv {
