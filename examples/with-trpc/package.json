@@ -9,7 +9,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.29.3",
     "@solidjs/router": "^0.13.3",
-    "@solidjs/start": "^1.0.0-rc.0",
+    "@solidjs/start": "^1.0.0-rc.1",
     "@trpc/client": "^10.45.2",
     "@trpc/server": "^10.45.2",
     "@typeschema/valibot": "^0.13.4",
