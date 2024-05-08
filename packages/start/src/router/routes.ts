@@ -55,7 +55,7 @@ function defineRoutes(fileRoutes: Route[]) {
 
 export function matchAPIRoute(path: string, method: string) {
   const match = router.lookup(path);
-  if (match) {
+  if (match && match.route) {
     const handler = match.route[`$${method}`];
     if (handler === undefined) return;
     return {
