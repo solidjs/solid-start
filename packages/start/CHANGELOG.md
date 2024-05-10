@@ -1,5 +1,20 @@
 # @solidjs/start
 
+## 1.0.0-rc.1
+
+### Patch Changes
+
+- 0402c9c4: Ensure `nonce` is passed to all assets when rendering from the server.
+- 3b2720e6: update example project with-trpc
+- c09d4bd8: Ensure args are encoded when fetching server function
+- 7ae05410: update deps
+- 8dff0063: fix #1463 - grouped api routes
+- 25169c16: fix #1441 - closure bug with render options
+- 8711ce03: fix #1415 - incorrectly skipping multi-headers
+- 79c17c96: fix type error for vinxi client in tsconfig
+- 7cb339fa: fix #1410 premature cleanup on mode async
+- 846f5fd7: fix: add app.tsx assets to page event in dev env
+
 ## 1.0.0-rc.0
 
 ### Major Changes

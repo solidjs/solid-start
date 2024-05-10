@@ -36,8 +36,9 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   // @ts-ignore
   const nonce = context.nonce;
 
-  let assets: Asset[] = [];
+  let assets: Asset[];
   Promise.resolve().then(async () => {
+    let assetPromises: Promise<Asset[]>[] = [];
     // @ts-ignore
     if (context.router && context.router.matches) {
       // @ts-ignore
@@ -49,17 +50,18 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           const segment = matched[i];
           const part = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
             .inputs[segment["$component"].src]!;
-          const asset = (await part.assets()) as any;
-          assets.push.apply(assets, asset);
+          assetPromises.push(part.assets() as any);
         }
-      } else console.warn("No route matched for preloading js assets");
+      } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
     }
-    // dedupe assets
-    assets = [...new Map(assets.map(item => [item.attrs.key, item])).values()].filter(asset =>
-      import.meta.env.START_ISLANDS
-        ? false
-        : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
-          !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+    assets = await Promise.all(assetPromises).then(a =>
+      // dedupe assets
+      [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
+        import.meta.env.START_ISLANDS
+          ? false
+          : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+            !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+      )
     );
   });
 
