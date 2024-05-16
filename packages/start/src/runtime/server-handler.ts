@@ -20,6 +20,7 @@ import { eventHandler, setHeader, setResponseStatus, type HTTPEvent } from "vinx
 import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
 import { createPageEvent } from "../server/pageEvent";
+import { getExpectedRedirectStatus } from "../server/handler";
 // @ts-ignore
 import { FetchEvent, PageEvent } from "../server";
 
@@ -181,14 +182,16 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     if (!instance) {
       const isError = result instanceof Error;
       let redirectUrl = new URL(request.headers.get("referer")!).toString();
+      let statusCode = 302;
       if (result instanceof Response && result.headers.has("Location")) {
         redirectUrl = new URL(
           result.headers.get("Location")!,
           new URL(request.url).origin + import.meta.env.SERVER_BASE_URL
         ).toString();
+        statusCode = getExpectedRedirectStatus(result);
       }
       return new Response(null, {
-        status: 302,
+        status: statusCode,
         headers: {
           Location: redirectUrl,
           ...(result
