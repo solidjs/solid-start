@@ -109,12 +109,13 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
     const hasAPIRoutes = exports.find(exp => HTTP_METHODS.includes(exp.n));
     if (hasDefault || hasAPIRoutes) {
       return {
-        $component: hasDefault
-          ? {
-              src: src,
-              pick: ["default", "$css"]
-            }
-          : undefined,
+        $component:
+          !this.config.dataOnly && hasDefault
+            ? {
+                src: src,
+                pick: ["default", "$css"]
+              }
+            : undefined,
         $$route: hasRouteConfig
           ? {
               src: src,
