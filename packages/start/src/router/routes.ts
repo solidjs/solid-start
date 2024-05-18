@@ -33,7 +33,16 @@ function defineRoutes(fileRoutes: Route[]) {
     });
 
     if (!parentRoute) {
-      routes.push({ ...route, id, path: id.replace(/\/\([^)/]+\)/g, "").replace(/\([^)/]+\)/g, "") });
+      routes.push({
+        ...route,
+        id,
+        path: id
+          // strip out escape group for escaping nested routes - e.g. foo(bar) -> foo
+          .replace(/\/\([^)/]+\)/g, "")
+          .replace(/\([^)/]+\)/g, "")
+          // replace . with / for flat routes - e.g. foo.bar -> foo/bar
+          .replace(/\./g, "/")
+      });
       return routes;
     }
     processRoute(
@@ -70,18 +79,24 @@ function containsHTTP(route: Route) {
 }
 
 const router = createRouter({
-  routes: (fileRoutes as unknown as Route[]).reduce((memo, route) => {
-    if (!containsHTTP(route)) return memo;
-    let path = route.path.replace(/\/\([^)/]+\)/g, "").replace(/\([^)/]+\)/g, "").replace(/\*([^/]*)/g, (_, m) => `**:${m}`);
-    if (/:[^/]*\?/g.test(path)) {
-      throw new Error(`Optional parameters are not supported in API routes: ${path}`);
-    }
-    if (memo[path]) {
-      throw new Error(
-        `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${route.path}"`
-      );
-    }
-    memo[path] = { route };
-    return memo;
-  }, {} as Record<string, { route: Route }>)
+  routes: (fileRoutes as unknown as Route[]).reduce(
+    (memo, route) => {
+      if (!containsHTTP(route)) return memo;
+      let path = route.path
+        .replace(/\/\([^)/]+\)/g, "")
+        .replace(/\([^)/]+\)/g, "")
+        .replace(/\*([^/]*)/g, (_, m) => `**:${m}`);
+      if (/:[^/]*\?/g.test(path)) {
+        throw new Error(`Optional parameters are not supported in API routes: ${path}`);
+      }
+      if (memo[path]) {
+        throw new Error(
+          `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${route.path}"`
+        );
+      }
+      memo[path] = { route };
+      return memo;
+    },
+    {} as Record<string, { route: Route }>
+  )
 });
