@@ -19,6 +19,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     return routePath?.length > 0 ? `/${routePath}` : "/";
   }
 
+  /** @param src {string} */
   toRoute(src) {
     let path = this.toPath(src);
 
@@ -37,22 +38,23 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     const [_, exports] = analyzeModule(src);
     const hasDefault = exports.find(e => e.n === "default");
     const hasRouteConfig = exports.find(e => e.n === "route");
-    if (hasDefault) {
-      return {
-        $component: {
-          src: src,
-          pick: ["default", "$css"]
-        },
-        $$route: hasRouteConfig
-          ? {
-              src: src,
-              pick: ["route"]
-            }
-          : undefined,
-        path,
-        filePath: src
-      };
-    }
+
+    return {
+      $component: hasDefault
+        ? {
+            src: src,
+            pick: ["default", "$css"]
+          }
+        : undefined,
+      $$route: hasRouteConfig
+        ? {
+            src: src,
+            pick: ["route"]
+          }
+        : undefined,
+      path,
+      filePath: src
+    };
   }
 }
 
