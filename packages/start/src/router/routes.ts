@@ -36,12 +36,7 @@ function defineRoutes(fileRoutes: Route[]) {
       const path = id
         // strip out escape group for escaping nested routes - e.g. foo(bar) -> foo
         .replace(/\/\([^)/]+\)/g, "")
-        .replace(/\([^)/]+\)/g, "")
-        // replace . with / for flat routes - e.g. foo.bar -> foo/bar
-        .replace(/\./g, "/")
-        // converts any splat route ... that got replaced back from ///
-        // this could be avoided with a lookbehind regex but safar has only supported them since mid 2023
-        .replace("///", "...");
+        .replace(/\([^)/]+\)/g, "");
 
       routes.push({ ...route, id, path });
       return routes;

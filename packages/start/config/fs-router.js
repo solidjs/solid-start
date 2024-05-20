@@ -1,22 +1,31 @@
 import { analyzeModule, BaseFileSystemRouter, cleanPath } from "vinxi/fs-router";
 
+function toPathBase(src, config) {
+  const routePath = cleanPath(src, config)
+    // remove the initial slash
+    .slice(1)
+    .replace(/index$/, "")
+    // replace . with / for flat routes - e.g. foo.bar -> foo/bar
+    .replace(/\./g, "/")
+    // converts any splat route ... that got replaced back from ///
+    // this could be avoided with a lookbehind regex but safar has only supported them since mid 2023
+    .replace(/\/\/\//g, "...")
+    .replace(/\[([^\/]+)\]/g, (_, m) => {
+      if (m.length > 3 && m.startsWith("...")) {
+        return `*${m.slice(3)}`;
+      }
+      if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
+        return `:${m.slice(1, -1)}?`;
+      }
+      return `:${m}`;
+    });
+
+  return routePath?.length > 0 ? `/${routePath}` : "/";
+}
+
 export class SolidStartClientFileRouter extends BaseFileSystemRouter {
   toPath(src) {
-    const routePath = cleanPath(src, this.config)
-      // remove the initial slash
-      .slice(1)
-      .replace(/index$/, "")
-      .replace(/\[([^\/]+)\]/g, (_, m) => {
-        if (m.length > 3 && m.startsWith("...")) {
-          return `*${m.slice(3)}`;
-        }
-        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-          return `:${m.slice(1, -1)}?`;
-        }
-        return `:${m}`;
-      });
-
-    return routePath?.length > 0 ? `/${routePath}` : "/";
+    return toPathBase(src, this.config);
   }
 
   toRoute(src) {
@@ -72,21 +81,7 @@ function createHTTPHandlers(src, exports) {
 
 export class SolidStartServerFileRouter extends BaseFileSystemRouter {
   toPath(src) {
-    const routePath = cleanPath(src, this.config)
-      // remove the initial slash
-      .slice(1)
-      .replace(/index$/, "")
-      .replace(/\[([^\/]+)\]/g, (_, m) => {
-        if (m.length > 3 && m.startsWith("...")) {
-          return `*${m.slice(3)}`;
-        }
-        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-          return `:${m.slice(1, -1)}?`;
-        }
-        return `:${m}`;
-      });
-
-    return routePath?.length > 0 ? `/${routePath}` : "/";
+    return toPathBase(src, this.config);
   }
 
   toRoute(src) {
