@@ -32,47 +32,42 @@ function defineRoutes(fileRoutes: Route[]) {
   console.log({ fileRoutes });
 
   function processRoute(routes: Route[], route: Route, id: string, full: string) {
-    const [siblingPath, slotPath] = id.split("/@", 2);
-
-    if (slotPath) {
-      const siblingRoute = routes.find(o => o.id === siblingPath);
-      console.log({ siblingPath, siblingRoute, slotPath });
-      if (!siblingRoute) return routes;
-
-      const [slotName] = slotPath.split("/", 1);
-      if (!slotName) return routes;
-
-      const slots = (siblingRoute.slots ??= {});
-
-      if (!slots[slotName]) {
-        slots[slotName] = {
-          ...route,
-          id: "",
-          path: ""
-        };
-      } else {
-        processRoute(
-          (slots[slotName]!.children ??= []),
-          route,
-          id.slice(siblingRoute.id.length + 2 + slotName.length),
-          full
-        );
-      }
-
-      return routes;
-    }
-
     const parentRoute = Object.values(routes).find(o => {
       return id.startsWith(o.id + "/");
     });
 
     if (parentRoute) {
-      processRoute(
-        parentRoute.children || (parentRoute.children = []),
-        route,
-        id.slice(parentRoute.id.length),
-        full
-      );
+      const slicedId = id.slice(parentRoute.id.length);
+
+      if (slicedId.startsWith("/@")) {
+        let slotRoute: any = parentRoute;
+        let nextId: any = slicedId;
+
+        // recursion is hard so while it is
+        while (nextId.startsWith("/@")) {
+          const slotName = /\/@([^/]+)/g.exec(nextId)![1]!;
+
+          const slots = (slotRoute.slots ??= {});
+
+          nextId = nextId.slice(slotName.length + 2);
+
+          if (!slots[slotName])
+            slots[slotName] = {
+              ...route,
+              path: "",
+              id: ""
+            };
+
+          slotRoute = slots[slotName]!;
+        }
+
+        // route is a slot layout and doesn't need to be processed further as it was inserted in the while loop
+        if (nextId === "") return routes;
+
+        processRoute((slotRoute.children ??= []), route, nextId, full);
+      } else {
+        processRoute((parentRoute.children ??= []), route, slicedId, full);
+      }
 
       return routes;
     }
