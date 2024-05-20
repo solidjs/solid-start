@@ -29,8 +29,6 @@ export const pageRoutes = defineRoutes(
 );
 
 function defineRoutes(fileRoutes: Route[]) {
-  console.log({ fileRoutes });
-
   function processRoute(routes: Route[], route: Route, id: string, full: string) {
     const parentRoute = Object.values(routes).find(o => {
       return id.startsWith(o.id + "/");
@@ -51,14 +49,14 @@ function defineRoutes(fileRoutes: Route[]) {
 
           nextId = nextId.slice(slotName.length + 2);
 
-          if (!slots[slotName])
-            slots[slotName] = {
-              ...route,
-              path: "",
-              id: ""
-            };
+          if (nextId === "") {
+            slots[slotName] = { ...route };
+            delete slots[slotName].path;
 
-          slotRoute = slots[slotName]!;
+            return routes;
+          } else {
+            slotRoute = slots[slotName] ??= {};
+          }
         }
 
         // route is a slot layout and doesn't need to be processed further as it was inserted in the while loop
