@@ -41,7 +41,7 @@ function defineRoutes(fileRoutes: Route[]) {
           .replace(/\/\([^)/]+\)/g, "")
           .replace(/\([^)/]+\)/g, "")
           // replace . with / for flat routes - e.g. foo.bar -> foo/bar
-          // lookahead for
+          // ensures that ... of splat routes is not replaced
           .replace(/(?<!\.)\.(?!\.)/g, "/")
       });
       return routes;
