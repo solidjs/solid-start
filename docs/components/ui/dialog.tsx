@@ -1,14 +1,23 @@
-import type { Component, ComponentProps } from "solid-js";
+import type { ComponentProps } from "solid-js";
 import { splitProps } from "solid-js";
 
-import { Dialog as DialogPrimitive } from "@kobalte/core";
+import {
+  Dialog as DialogPrimitive,
+  DialogContentProps,
+  DialogOverlayProps,
+  DialogPortalProps,
+  DialogTriggerProps,
+  DialogTitleProps,
+  DialogDescriptionProps
+} from "@kobalte/core/dialog";
 
 import { cn } from "~/lib/utils";
+import { OverrideComponentProps } from "@kobalte/utils";
 
-const Dialog = DialogPrimitive.Root;
+const Dialog = DialogPrimitive;
 
-const DialogTrigger: Component<DialogPrimitive.DialogTriggerProps> = (
-  props
+const DialogTrigger = (
+  props: OverrideComponentProps<"button", DialogTriggerProps>
 ) => {
   const [, rest] = splitProps(props, ["children"]);
   return (
@@ -18,7 +27,7 @@ const DialogTrigger: Component<DialogPrimitive.DialogTriggerProps> = (
   );
 };
 
-const DialogPortal: Component<DialogPrimitive.DialogPortalProps> = (props) => {
+const DialogPortal = (props: DialogPortalProps) => {
   const [, rest] = splitProps(props, ["children"]);
   return (
     <DialogPrimitive.Portal {...rest}>
@@ -29,8 +38,8 @@ const DialogPortal: Component<DialogPrimitive.DialogPortalProps> = (props) => {
   );
 };
 
-const DialogOverlay: Component<DialogPrimitive.DialogOverlayProps> = (
-  props
+const DialogOverlay = (
+  props: OverrideComponentProps<"div", DialogOverlayProps>
 ) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
@@ -44,8 +53,8 @@ const DialogOverlay: Component<DialogPrimitive.DialogOverlayProps> = (
   );
 };
 
-const DialogContent: Component<DialogPrimitive.DialogContentProps> = (
-  props
+const DialogContent = (
+  props: OverrideComponentProps<"div", DialogContentProps>
 ) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
@@ -80,7 +89,7 @@ const DialogContent: Component<DialogPrimitive.DialogContentProps> = (
   );
 };
 
-const DialogHeader: Component<ComponentProps<"div">> = (props) => {
+const DialogHeader = (props: ComponentProps<"div">) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <div
@@ -93,7 +102,7 @@ const DialogHeader: Component<ComponentProps<"div">> = (props) => {
   );
 };
 
-const DialogFooter: Component<ComponentProps<"div">> = (props) => {
+const DialogFooter = (props: ComponentProps<"div">) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <div
@@ -106,7 +115,7 @@ const DialogFooter: Component<ComponentProps<"div">> = (props) => {
   );
 };
 
-const DialogTitle: Component<DialogPrimitive.DialogTitleProps> = (props) => {
+const DialogTitle = (props: OverrideComponentProps<"h2", DialogTitleProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <DialogPrimitive.Title
@@ -119,8 +128,8 @@ const DialogTitle: Component<DialogPrimitive.DialogTitleProps> = (props) => {
   );
 };
 
-const DialogDescription: Component<DialogPrimitive.DialogDescriptionProps> = (
-  props
+const DialogDescription = (
+  props: OverrideComponentProps<"p", DialogDescriptionProps>
 ) => {
   const [, rest] = splitProps(props, ["class"]);
   return (

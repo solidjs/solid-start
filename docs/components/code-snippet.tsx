@@ -1,4 +1,4 @@
-import { Tabs } from "@kobalte/core";
+import { Tabs } from "@kobalte/core/tabs";
 import { cache, createAsync } from "@solidjs/router";
 import { Suspense } from "solid-js";
 // import { YarnIcon } from "./icons/yarn-icon";
@@ -21,7 +21,7 @@ export function CodeSnippet() {
   const npmVersion = createAsync(() => getSolidStartVersion());
   return (
     <aside class="pt-20 px-8 sm:px-4 md:px-0 md:max-w-96 max-w-screen mx-auto w-5/6">
-      <Tabs.Root defaultValue="pnpm">
+      <Tabs defaultValue="pnpm">
         <Tabs.List class="flex justify-between pb-10">
           <Tabs.Trigger
             value="pnpm"
@@ -84,7 +84,7 @@ export function CodeSnippet() {
             <span class="dark:text-cyan-200 text-cyan-600">yarn</span> create solid
           </pre>
         </Tabs.Content>
-      </Tabs.Root>
+      </Tabs>
       <Suspense>
         <small class="font-mono text-right pt-2 inline-block w-full dark:text-sky-400/60 text-sky-950">
           latest version: {npmVersion()}

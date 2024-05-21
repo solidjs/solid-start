@@ -1,5 +1,5 @@
 // @refresh reload
-import { ColorModeProvider, ColorModeScript, cookieStorageManagerSSR } from "@kobalte/core";
+import { ColorModeProvider, ColorModeScript, cookieStorageManagerSSR } from "@kobalte/core/color-mode";
 import { Meta, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";

@@ -1,19 +1,20 @@
 import type { Component, ComponentProps } from "solid-js"
 import { splitProps } from "solid-js"
 
-import { DropdownMenu as DropdownMenuPrimitive } from "@kobalte/core"
+import { DropdownMenu as DropdownMenuPrimitive, DropdownMenuRootProps, DropdownMenuContentProps, DropdownMenuItemProps, DropdownMenuSeparatorProps, DropdownMenuSubTriggerProps, DropdownMenuSubContentProps, DropdownMenuCheckboxItemProps, DropdownMenuGroupLabelProps, DropdownMenuRadioItemProps } from "@kobalte/core/dropdown-menu";
 
 import { cn } from "~/lib/utils"
+import { OverrideComponentProps } from "@kobalte/utils";
 
-const DropdownMenu: Component<DropdownMenuPrimitive.DropdownMenuRootProps> = (props) => {
-  return <DropdownMenuPrimitive.Root gutter={4} {...props} />
+const DropdownMenu: Component<DropdownMenuRootProps> = (props) => {
+  return <DropdownMenuPrimitive gutter={4} {...props} />
 }
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
 
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal
 
-const DropdownMenuContent: Component<DropdownMenuPrimitive.DropdownMenuContentProps> = (props) => {
+const DropdownMenuContent = (props: OverrideComponentProps<"div", DropdownMenuContentProps>) => {
   const [, rest] = splitProps(props, ["class"])
   return (
     <DropdownMenuPrimitive.Portal>
@@ -28,7 +29,7 @@ const DropdownMenuContent: Component<DropdownMenuPrimitive.DropdownMenuContentPr
   )
 }
 
-const DropdownMenuItem: Component<DropdownMenuPrimitive.DropdownMenuItemProps> = (props) => {
+const DropdownMenuItem = (props: OverrideComponentProps<"div", DropdownMenuItemProps>) => {
   const [, rest] = splitProps(props, ["class"])
   return (
     <DropdownMenuPrimitive.Item
@@ -41,12 +42,12 @@ const DropdownMenuItem: Component<DropdownMenuPrimitive.DropdownMenuItemProps> =
   )
 }
 
-const DropdownMenuShortcut: Component<ComponentProps<"span">> = (props) => {
+const DropdownMenuShortcut = (props: ComponentProps<"span">) => {
   const [, rest] = splitProps(props, ["class"])
   return <span class={cn("ml-auto text-xs tracking-widest opacity-60", props.class)} {...rest} />
 }
 
-const DropdownMenuLabel: Component<ComponentProps<"div"> & { inset?: boolean }> = (props) => {
+const DropdownMenuLabel = (props: ComponentProps<"div"> & { inset?: boolean }) => {
   const [, rest] = splitProps(props, ["class", "inset"])
   return (
     <div
@@ -56,8 +57,8 @@ const DropdownMenuLabel: Component<ComponentProps<"div"> & { inset?: boolean }> 
   )
 }
 
-const DropdownMenuSeparator: Component<DropdownMenuPrimitive.DropdownMenuSeparatorProps> = (
-  props
+const DropdownMenuSeparator = (
+  props: OverrideComponentProps<"hr", DropdownMenuSeparatorProps>
 ) => {
   const [, rest] = splitProps(props, ["class"])
   return (
@@ -70,8 +71,8 @@ const DropdownMenuSeparator: Component<DropdownMenuPrimitive.DropdownMenuSeparat
 
 const DropdownMenuSub = DropdownMenuPrimitive.Sub
 
-const DropdownMenuSubTrigger: Component<DropdownMenuPrimitive.DropdownMenuSubTriggerProps> = (
-  props
+const DropdownMenuSubTrigger = (
+  props: OverrideComponentProps<"div", DropdownMenuSubTriggerProps>
 ) => {
   const [, rest] = splitProps(props, ["class", "children"])
   return (
@@ -99,8 +100,8 @@ const DropdownMenuSubTrigger: Component<DropdownMenuPrimitive.DropdownMenuSubTri
   )
 }
 
-const DropdownMenuSubContent: Component<DropdownMenuPrimitive.DropdownMenuSubContentProps> = (
-  props
+const DropdownMenuSubContent = (
+  props: OverrideComponentProps<"div", DropdownMenuSubContentProps>
 ) => {
   const [, rest] = splitProps(props, ["class"])
   return (
@@ -114,8 +115,8 @@ const DropdownMenuSubContent: Component<DropdownMenuPrimitive.DropdownMenuSubCon
   )
 }
 
-const DropdownMenuCheckboxItem: Component<DropdownMenuPrimitive.DropdownMenuCheckboxItemProps> = (
-  props
+const DropdownMenuCheckboxItem = (
+  props: OverrideComponentProps<"div", DropdownMenuCheckboxItemProps>
 ) => {
   const [, rest] = splitProps(props, ["class", "children"])
   return (
@@ -149,8 +150,8 @@ const DropdownMenuCheckboxItem: Component<DropdownMenuPrimitive.DropdownMenuChec
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group
 
-const DropdownMenuGroupLabel: Component<DropdownMenuPrimitive.DropdownMenuGroupLabelProps> = (
-  props
+const DropdownMenuGroupLabel = (
+  props: OverrideComponentProps<"span", DropdownMenuGroupLabelProps>
 ) => {
   const [, rest] = splitProps(props, ["class"])
   return (
@@ -163,8 +164,8 @@ const DropdownMenuGroupLabel: Component<DropdownMenuPrimitive.DropdownMenuGroupL
 
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
 
-const DropdownMenuRadioItem: Component<DropdownMenuPrimitive.DropdownMenuRadioItemProps> = (
-  props
+const DropdownMenuRadioItem = (
+  props: OverrideComponentProps<"div", DropdownMenuRadioItemProps>
 ) => {
   const [, rest] = splitProps(props, ["class", "children"])
   return (
