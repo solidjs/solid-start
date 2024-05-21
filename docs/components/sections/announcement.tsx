@@ -6,9 +6,7 @@ export function Announcement() {
     <section class="max-w-5xl w-full mx-auto pt-12 relative group">
       <header>
         <SectionTitle stylesOverride="group-hover:shake-it">
-          Announcing{" "}
-          <span class="font-mono dark:text-sky-100/90 text-sky-950">v1</span>{" "}
-          Release
+          Announcing <span class="font-mono dark:text-sky-100/90 text-sky-950">v1</span> Release
         </SectionTitle>
       </header>
       <div
@@ -32,15 +30,11 @@ export function Announcement() {
         <li>
           <a
             class="group flex flex-col justify-center items-center gap-4 text-lg text-center  border-2 rounded-md py-4 px-2 dark:border-sky-950 border-sky-200 hover:border-sky-700 dark:hover:border-sky-200 z-10 relative"
-            href="https://dev.to/ryansolid"
+            href="https://www.solidjs.com/blog/solid-start-the-shape-frameworks-to-come"
             target="_blank"
           >
             <div class="h-[5rem] absolute -top-12 -right-5  lg:-top-1/2  lg:right-[unset]">
-              <img
-                class="h-full aspect-auto"
-                src="/ryan-carniato.webp"
-                role="presentation"
-              />
+              <img class="h-full aspect-auto" src="/ryan-carniato.webp" role="presentation" />
               <img
                 class="h-full aspect-auto absolute top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 src="/ryan-carniato-sunglasses.webp"
