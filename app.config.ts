@@ -4,8 +4,7 @@ import { config } from "vinxi/plugins/config";
 
 export default defineConfig({
   appRoot: "./docs",
-  extensions: ["mdx", "md"],
-  experimental: { islands: true },
+  // experimental: { islands: true },
   server: {
     preset: "cloudflare_module",
     rollupConfig: {
