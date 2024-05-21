@@ -2,11 +2,7 @@ import { JSX } from "solid-js";
 import { SolidIcon } from "../icons/solid-logo";
 
 function FooterSectionTitle(props: { children: JSX.Element }) {
-  return (
-    <strong class="text-neutral-600 dark:text-neutral-200/40">
-      {props.children}
-    </strong>
-  );
+  return <strong class="text-neutral-600 dark:text-neutral-200/40">{props.children}</strong>;
 }
 
 function FooterSectionLink(props: { href: string; children: JSX.Element }) {
@@ -31,9 +27,7 @@ export function Footer() {
             <SolidIcon class="grayscale hover:grayscale-0 hover:opacity-80 dark:opacity-40 transition-all duration-300 w-16" />
           </FooterSectionLink>
           <div>
-            <FooterSectionLink href="https://github.com/solidjs/solid-start/graphs/contributors">
-              by an amazing gang
-            </FooterSectionLink>
+            <FooterSectionLink href="https://github.com/solidjs/solid-start/graphs/contributors"></FooterSectionLink>
           </div>
         </div>
         <div>
@@ -45,8 +39,8 @@ export function Footer() {
               </FooterSectionLink>
             </li>
             <li>
-              <FooterSectionLink href="https://github.com/solidjs-community/mediakit">
-                MediaKit
+              <FooterSectionLink href="https://docs.solidjs.com/solid-start">
+                Documentation
               </FooterSectionLink>
             </li>
           </ul>
@@ -55,15 +49,11 @@ export function Footer() {
           <FooterSectionTitle>Socials</FooterSectionTitle>
           <ul class="flex flex-col gap-2 pt-4">
             <li>
-              <FooterSectionLink href="https://discord.gg/solidjs">
-                Discord
-              </FooterSectionLink>
+              <FooterSectionLink href="https://discord.gg/solidjs">Discord</FooterSectionLink>
             </li>
 
             <li>
-              <FooterSectionLink href="https://x.com/solid_js">
-                Twitter / 𝕏
-              </FooterSectionLink>
+              <FooterSectionLink href="https://x.com/solid_js">Twitter / 𝕏</FooterSectionLink>
             </li>
             <li>
               <FooterSectionLink href="https://opencollective.com/solid">

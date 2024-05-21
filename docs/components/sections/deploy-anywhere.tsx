@@ -54,13 +54,13 @@ export function DeployAnywhere() {
     <section class="max-w-5xl pt-12 w-full mx-auto relative">
       <header>
         <SectionTitle>Deploy Anywhere</SectionTitle>
-        <p class="pt-5 px-2 leading-relaxed max-w-[50ch] mx-auto text-center dark:font-thin text-lg">
-          On the shoulders of Open-Source. SolidStart can be deployed to every platform Nitro has a
+        <p class="pt-5 px-2 leading-relaxed max-w-[70ch] mx-auto text-center dark:font-thin text-lg">
+          On the shoulders of open-source. SolidStart can be deployed to every platform Nitro has a
           preset for.
         </p>
       </header>
       <div class="mx-auto w-fit pt-12">
-        <pre class="bg-gradient-to-tr dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100  p-4 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.10)] ring-1 ring-sky-950 relative rounded-md">
+        <pre class="bg-gradient-to-tr p-14 dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.10)] ring-1 ring-sky-950 relative rounded-md">
           <div
             id="upper-line"
             class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-blue-300/0 via-blue-300/70 to-blue-300/0 animate-bounce"
@@ -95,13 +95,12 @@ export function DeployAnywhere() {
           </code>
         </pre>
       </div>
-
-      <ul class="pt-16 grid grid-cols-2 place-items-center gap-6 md:grid-cols-3">
+      <ul class="pt-16 grid grid-cols-2  place-items-center gap-6 md:grid-cols-3">
         <Index each={PLATFORMS}>
           {platform => (
             <li>
               <a
-                class={`group w-36 h-36 grid gap-10 place-items-center border-2 rounded-md py-4 px-2 hover:border-sky-950 dark:border-sky-950 border-sky-200 dark:hover:border-sky-200 z-10 relative`}
+                class={`group w-44 h-44 grid gap-5 place-items-center border-2 rounded-md py-4 px-2 hover:border-sky-950 dark:border-sky-950 border-sky-200 dark:hover:border-sky-200 z-10 relative`}
                 href={platform().url}
                 target="_blank"
                 rel="noopener"

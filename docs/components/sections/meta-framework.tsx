@@ -1,5 +1,5 @@
-import { NesterBox, NestItem } from "../nested-grid";
 import { LegoSVG } from "~/components/icons/lego-icon";
+import { NesterBox, NestItem } from "../nested-grid";
 import { SectionTitle } from "../ui/section-title";
 
 export function MetaFramework() {
@@ -7,10 +7,9 @@ export function MetaFramework() {
     <section class="max-w-5xl w-full mx-auto pt-12 md:pt-28 group">
       <header>
         <SectionTitle>Composable Meta-framework</SectionTitle>
-        <p class="pt-5 px-2 leading-relaxed max-w-[50ch] mx-auto text-center dark:font-thin text-lg">
-          SolidStart integrates multiple separate packages to provide a complete
-          functionality. Each of these pieces can be replaced with your own
-          implementation.
+        <p class="pt-5 px-2 leading-relaxed max-w-[70ch] mx-auto text-center dark:font-thin text-lg">
+          SolidStart integrates multiple separate packages to provide a complete functionality. Each
+          of these pieces can be replaced with your own implementation.
         </p>
       </header>
       <div class="pt-12 lg:pt-0 grid grid-rows-[auto,auto] lg:grid-rows-1 lg:grid-cols-[auto,auto] place-items-center gap-0">
