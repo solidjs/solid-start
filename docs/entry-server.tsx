@@ -1,47 +1,42 @@
-import { StartServer, createHandler, type DocumentComponentProps } from "@solidjs/start/server";
+import { createHandler, StartServer } from "@solidjs/start/server";
 
-function Document({ assets, children, scripts }: DocumentComponentProps) {
+export default createHandler(() => {
   return (
-    <html lang="en" class="h-full">
-      <head>
-        <meta charset="utf-8" />
-        <meta property="og:title" content="SolidStart Release Candidate Documentation" />
-        <meta property="og:site_name" content="SolidStart Release Candidate Documentation" />
-        <meta property="og:url" content="https://start.solidjs.com" />
-        <meta
-          property="og:description"
-          content="Early release documentation and resources for SolidStart Release Candidate"
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://start.solidjs.com/og-share.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <meta
-          name="description"
-          property="og:description"
-          content="Documentation and resources for SolidStart Release Candidate"
-        />
-        <meta name="author" content="@solid_js" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
-        {assets}
-      </head>
-      <body id="app" class="h-full grid grid-cols-[auto,1fr,auto] grid-rows-[auto,1fr]">
-        {children}
-        {scripts}
-        <script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
-        <script>
-          {`docsearch({
-            appId: "VTVVKZ36GX",
-            apiKey: "f520312c8dccf1309453764ee2fed27e",
-            indexName: "solidjs",
-            container: "#docsearch",
-            debug: false
-          });`}
-        </script>
-      </body>
-    </html>
+    <StartServer
+      document={({ assets, children, scripts }) => (
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>SolidStart: Fine-Grained Reactivity goes fullstack</title>
+            <meta
+              property="og:title"
+              content="SolidStart: Fine-Grained Reactivity goes fullstack"
+            />
+            <meta name="keywords" content="SolidStart, Solid, SolidJS, Solid.js, JavaScript" />
+            <meta
+              name="description"
+              content="SolidStart is a JavaScript Framework designed to build SolidJS apps and deploy them to a variety of providers."
+            />
+            <meta
+              property="og:description"
+              content="SolidStart is a JavaScript Framework designed to build SolidJS apps and deploy them to a variety of providers."
+            />
+            <meta property="og:site_name" content="SolidStart" />
+            <meta property="og:type" content="website" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:site" content="@solid_js" />
+            <meta property="og:image" content="https://start.solidjs.com/start_og.png" />
+            <meta property="twitter:image" content="https://start.solidjs.com/start_og.png" />
+            <link rel="icon" href="/favicon.ico" />
+            {assets}
+          </head>
+          <body class="overflow-x-hidden max-w-screen">
+            <div id="app">{children}</div>
+            {scripts}
+          </body>
+        </html>
+      )}
+    />
   );
-}
-
-export default createHandler(() => <StartServer document={Document} />);
+});
