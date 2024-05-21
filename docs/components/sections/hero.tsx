@@ -9,12 +9,15 @@ export function Hero() {
   return (
     <header class="w-full mx-auto pb-24 md:px-10 bg-gradient-to-b from-transparent dark:to-[#081924] via-white dark:via-white/0 to-white">
       <div class="max-w-5xl mx-auto">
-        <SolidStartLogo class="drop-shadow-[10px_20px_35px_rgb(125,211,252,0.3)] w-1/2 mx-auto" />
-        <div class=" flex flex-col">
-          <strong class="dark:font-thin font-normal text-3xl block pt-8 text-center">
+        <SolidStartLogo class="drop-shadow-[10px_20px_35px_rgb(125,211,252,0.3)] w-[400px] mx-auto" />
+        <div class="flex flex-col">
+          <div class="text-center text-6xl font-semibold">
+            Solid<span class="text-[#017AD4]">Start</span>
+          </div>
+          <strong class="dark:font-thin font-normal text-3xl block pt-3 text-center">
             Fine-grained reactivity goes fullstack
           </strong>
-          <div class="pt-7 flex gap-4 justify-center">
+          <div class="pt-10 flex gap-4 justify-center">
             <a
               href="https://github.com/solidjs/solid-start"
               class={`border-none hover:shadow-[0_0_35px_rgb(125,211,252,0.3)] hover:bg-transparent ${buttonOutlineStyles}`}

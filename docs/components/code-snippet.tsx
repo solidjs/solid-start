@@ -19,7 +19,7 @@ export function CodeSnippet() {
   return (
     <aside class="pt-20 px-8 sm:px-4 md:px-0 md:max-w-96 max-w-screen mx-auto w-5/6">
       <Tabs defaultValue="pnpm">
-        <Tabs.List class="flex justify-between pb-10">
+        <Tabs.List class="flex justify-center space-x-4 pb-10">
           <Tabs.Trigger
             value="pnpm"
             class="scale-75 grayscale opacity-70 focus:grayscale-0 focus:opacity-100 hover:grayscale-0 hover:opacity-100 transition-all ease-in-out duration-500 data-[selected]:scale-100 data-[selected]:grayscale-0 data-[selected]:opacity-100"

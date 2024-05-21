@@ -30,7 +30,7 @@ export function MetaFramework() {
             </ul>
           </NestItem>
 
-          <NestItem title="Solid-Router" accent="pink">
+          <NestItem title="Solid Router" accent="pink">
             <p>Official client-side router.</p>
           </NestItem>
         </NesterBox>
