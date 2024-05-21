@@ -24,6 +24,7 @@ export function Announcement() {
             href="https://github.com/solidjs/solid-start"
             target="_blank"
           >
+            <span class="sr-only">GitHub</span>
             <GithubIcon class="absolute -top-12 -left-5 lg:-top-16 lg:left-[unset] h-[5rem]  group-hover:dark:bg-sky-950/95 dark:bg-transparent bg-white rounded-full text-sky-800 dark:text-white" />
             <span>Release notes</span>
           </a>
@@ -38,17 +39,18 @@ export function Announcement() {
               <img
                 class="h-full aspect-auto"
                 src="/ryan-carniato.webp"
-                alt="Picture of Ryan Carniato"
+                role="presentation"
               />
               <img
                 class="h-full aspect-auto absolute top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 src="/ryan-carniato-sunglasses.webp"
-                alt="Picture of Ryan Carniato"
+                role="presentation"
               />
             </div>
             <div>
-              <span class="block pt-2"> SolidStart 1.0:</span>
-              <span class="text-base"> The Shape of Frameworks to Come</span>
+              <span class="sr-only">Blog post</span>
+              <span class="block pt-2">SolidStart 1.0:</span>
+              <span class="text-base">The Shape of Frameworks to Come</span>
             </div>
           </a>
         </li>

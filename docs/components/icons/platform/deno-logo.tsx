@@ -1,6 +1,7 @@
 export function DenoLogo(props: { class: string }) {
   return (
     <svg
+      role="presentation"
       class={props.class}
       xmlns="http://www.w3.org/2000/svg"
       version="1.0"

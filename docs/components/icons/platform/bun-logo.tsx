@@ -1,6 +1,7 @@
 export function BunLogo(props: { class: string }) {
   return (
     <svg
+      role="presentation"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 80 70"
       class={props.class}

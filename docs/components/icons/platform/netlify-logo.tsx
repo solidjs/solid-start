@@ -1,6 +1,7 @@
 export function NetlifyLogo(props: { class: string }) {
   return (
     <svg
+      role="presentation"
       width="128"
       height="113"
       viewBox="0 0 128 113"

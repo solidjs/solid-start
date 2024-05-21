@@ -1,6 +1,7 @@
 export function GithubIcon(props: { class?: string }) {
   return (
     <svg
+      role="presentation"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 496 512"
       class={props.class || "w-6 h-6"}

@@ -23,6 +23,7 @@ export function Hero() {
               rel="noopener"
             >
               <GithubIcon />
+              <span class="sr-only">SolidStart GitHub repository</span>
             </a>
             <a
               class="hover:shadow-[0_0_35px_rgb(125,211,252,0.3)]  hover:bg-transparent dark:border-sky-800 hover:border-sky-800 dark:hover:border-transparent  flex items-center justify-center  border-2 border-transparent px-4 rounded-sm dark:bg-sky-800 bg-sky-200 transition-colors ease-in-out"

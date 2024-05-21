@@ -1,7 +1,7 @@
 export function DiscordIcon() {
   return (
     <svg
-      aria-hidden="true"
+      role="presentation"
       class="h-6 w-6 fill-slate-200 dark:fill-slate-200 dark:group-hover:fill-slate-300"
       xmlns="http://www.w3.org/2000/svg"
       width="16"

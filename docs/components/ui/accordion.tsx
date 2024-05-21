@@ -1,14 +1,14 @@
-import type { Component } from "solid-js";
 import { splitProps } from "solid-js";
 
-import { Accordion as AccordionPrimitive } from "@kobalte/core";
+import { AccordionContentProps, AccordionItemProps, Accordion as AccordionPrimitive, AccordionTriggerProps } from "@kobalte/core/accordion";
 
 import { cn } from "~/lib/utils";
+import { OverrideComponentProps } from "@kobalte/utils";
 
-const Accordion = AccordionPrimitive.Root;
+const Accordion = AccordionPrimitive;
 
-const AccordionItem: Component<AccordionPrimitive.AccordionItemProps> = (
-  props
+const AccordionItem = (
+  props: OverrideComponentProps<"div", AccordionItemProps>
 ) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
@@ -22,8 +22,8 @@ const AccordionItem: Component<AccordionPrimitive.AccordionItemProps> = (
   );
 };
 
-const AccordionTrigger: Component<AccordionPrimitive.AccordionTriggerProps> = (
-  props
+const AccordionTrigger = (
+  props: OverrideComponentProps<"button", AccordionTriggerProps>
 ) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
@@ -53,8 +53,8 @@ const AccordionTrigger: Component<AccordionPrimitive.AccordionTriggerProps> = (
   );
 };
 
-const AccordionContent: Component<AccordionPrimitive.AccordionContentProps> = (
-  props
+const AccordionContent = (
+  props: OverrideComponentProps<"div", AccordionContentProps>
 ) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (

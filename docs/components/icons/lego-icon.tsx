@@ -4,6 +4,7 @@ export function LegoSVG() {
 
   return (
     <svg
+      role="presentation"
       height="500"
       viewBox="0 0 200 500"
       fill="none"

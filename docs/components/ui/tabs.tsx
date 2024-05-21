@@ -1,13 +1,13 @@
-import type { Component } from "solid-js";
 import { splitProps } from "solid-js";
 
-import { Tabs as TabsPrimitive } from "@kobalte/core";
+import { TabsContentProps, TabsIndicatorProps, TabsListProps, Tabs as TabsPrimitive, TabsTriggerProps } from "@kobalte/core/tabs";
 
 import { cn } from "~/lib/utils";
+import { OverrideComponentProps } from "@kobalte/utils";
 
-const Tabs = TabsPrimitive.Root;
+const Tabs = TabsPrimitive;
 
-const TabsList: Component<TabsPrimitive.TabsListProps> = (props) => {
+const TabsList = (props: OverrideComponentProps<"div", TabsListProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <TabsPrimitive.List
@@ -20,7 +20,7 @@ const TabsList: Component<TabsPrimitive.TabsListProps> = (props) => {
   );
 };
 
-const TabsTrigger: Component<TabsPrimitive.TabsTriggerProps> = (props) => {
+const TabsTrigger = (props: OverrideComponentProps<"button", TabsTriggerProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <TabsPrimitive.Trigger
@@ -33,7 +33,7 @@ const TabsTrigger: Component<TabsPrimitive.TabsTriggerProps> = (props) => {
   );
 };
 
-const TabsContent: Component<TabsPrimitive.TabsContentProps> = (props) => {
+const TabsContent = (props: OverrideComponentProps<"div", TabsContentProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <TabsPrimitive.Content
@@ -46,7 +46,7 @@ const TabsContent: Component<TabsPrimitive.TabsContentProps> = (props) => {
   );
 };
 
-const TabsIndicator: Component<TabsPrimitive.TabsIndicatorProps> = (props) => {
+const TabsIndicator = (props: OverrideComponentProps<"div", TabsIndicatorProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <TabsPrimitive.Indicator
