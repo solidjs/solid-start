@@ -1,27 +1,23 @@
 import { Index } from "solid-js";
-import { SectionTitle } from "../ui/section-title";
-import { CloudflareLogo } from "../icons/platform/cloudflare-logo";
 import { AwsLogo } from "../icons/platform/aws-logo";
 import { AzureLogo } from "../icons/platform/azure-logo";
-import { DenoLogo } from "../icons/platform/deno-logo";
 import { BunLogo } from "../icons/platform/bun-logo";
-import { Vercel } from "../icons/platform/vercel-logo";
+import { CloudflareLogo } from "../icons/platform/cloudflare-logo";
+import { DenoLogo } from "../icons/platform/deno-logo";
 import { NetlifyLogo } from "../icons/platform/netlify-logo";
+import { Vercel } from "../icons/platform/vercel-logo";
+import { SectionTitle } from "../ui/section-title";
 
 const PLATFORMS = [
   {
     name: "Cloudflare",
     url: "https://www.cloudflare.com/",
-    icon: (
-      <CloudflareLogo class="grayscale group-hover:grayscale-0  w-full  aspect-auto" />
-    ),
+    icon: <CloudflareLogo class="grayscale group-hover:grayscale-0  w-full  aspect-auto" />
   },
   {
     name: "Netlify",
     url: "https://www.netlify.com/",
-    icon: (
-      <NetlifyLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
-    ),
+    icon: <NetlifyLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
   },
 
   {
@@ -29,36 +25,28 @@ const PLATFORMS = [
     url: "https://vercel.com/",
     icon: (
       <Vercel class="fill-neutral-500 dark:group-hover:fill-white group-hover:fill-black  w-full h-full aspect-auto " />
-    ),
+    )
   },
   {
     name: "Bun",
     url: "https://bun.sh/",
-    icon: (
-      <BunLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
-    ),
+    icon: <BunLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
   },
   {
     name: "Deno",
     url: "https://deno.land/",
-    icon: (
-      <DenoLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
-    ),
+    icon: <DenoLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
   },
   {
     name: "AWS",
     url: "https://aws.amazon.com/",
-    icon: (
-      <AwsLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
-    ),
+    icon: <AwsLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
   },
   {
     name: "Azure",
     url: "https://azure.microsoft.com/",
-    icon: (
-      <AzureLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
-    ),
-  },
+    icon: <AzureLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
+  }
 ];
 
 export function DeployAnywhere() {
@@ -67,8 +55,8 @@ export function DeployAnywhere() {
       <header>
         <SectionTitle>Deploy Anywhere</SectionTitle>
         <p class="pt-5 px-2 leading-relaxed max-w-[50ch] mx-auto text-center dark:font-thin text-lg">
-          On the shoulders of Open-Source. SolidStart can be deployed to every
-          platform Nitro has a preset for.
+          On the shoulders of Open-Source. SolidStart can be deployed to every platform Nitro has a
+          preset for.
         </p>
       </header>
       <div class="mx-auto w-fit pt-12">
@@ -82,9 +70,7 @@ export function DeployAnywhere() {
             class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
           ></div>
           <code>
-            <span class="dark:text-[#C792EA] text-purple-800">
-              export default
-            </span>{" "}
+            <span class="dark:text-[#C792EA] text-purple-800">export default</span>{" "}
             <span class="dark:text-[#82AAFF] text-sky-950">defineConfig</span>
             <span class="dark:text-[#89DDFF] text-pink-600">{`({`}</span>
             <br />
@@ -112,10 +98,10 @@ export function DeployAnywhere() {
 
       <ul class="pt-16 grid grid-cols-2 place-items-center gap-6 md:grid-cols-3">
         <Index each={PLATFORMS}>
-          {(platform) => (
+          {platform => (
             <li>
               <a
-                class={`group w-36 h-36 grid gap-10 place-items-center border-2 rounded-md py-4 px-2 hover:border-sky-950 border-sky-200 dark:hover:border-sky-200 z-10 relative`}
+                class={`group w-36 h-36 grid gap-10 place-items-center border-2 rounded-md py-4 px-2 hover:border-sky-950 dark:border-sky-950 border-sky-200 dark:hover:border-sky-200 z-10 relative`}
                 href={platform().url}
                 target="_blank"
                 rel="noopener"
