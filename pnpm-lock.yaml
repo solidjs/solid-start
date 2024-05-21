@@ -115,7 +115,7 @@ importers:
   examples/bare:
     dependencies:
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -127,13 +127,13 @@ importers:
   examples/basic:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.29.3
+        specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -145,13 +145,13 @@ importers:
   examples/experiments:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.29.3
+        specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -166,7 +166,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -181,7 +181,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       date-fns:
         specifier: ^3.6.0
@@ -205,7 +205,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -223,7 +223,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -251,13 +251,13 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.13.3)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.11)
       '@solidjs/meta':
-        specifier: ^0.29.3
+        specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -294,7 +294,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       '@vinxi/plugin-mdx':
         specifier: ^3.7.1
@@ -318,7 +318,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       prisma:
         specifier: ^5.12.1
@@ -337,13 +337,13 @@ importers:
   examples/with-solid-styled:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.29.3
+        specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.17
@@ -364,7 +364,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       autoprefixer:
         specifier: ^10.4.19
@@ -385,13 +385,13 @@ importers:
   examples/with-trpc:
     dependencies:
       '@solidjs/meta':
-        specifier: ^0.29.3
+        specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       '@trpc/client':
         specifier: ^10.45.2
@@ -418,7 +418,7 @@ importers:
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       '@unocss/reset':
         specifier: ^0.59.2
@@ -436,13 +436,13 @@ importers:
   examples/with-vitest:
     devDependencies:
       '@solidjs/meta':
-        specifier: ^0.29.3
+        specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
         specifier: ^0.13.3
         version: 0.13.3(solid-js@1.8.17)
       '@solidjs/start':
-        specifier: ^1.0.0-rc.1
+        specifier: ^1.0.0
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.7
