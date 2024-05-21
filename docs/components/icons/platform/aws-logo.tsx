@@ -4,7 +4,7 @@ export function AwsLogo(props: { class: string }) {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      viewBox="0 0 304 182"
+      viewBox="0 -100 304 282"
       class={props.class}
     >
       <g>
