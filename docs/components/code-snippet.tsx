@@ -1,11 +1,10 @@
 import { Tabs } from "@kobalte/core/tabs";
-import { cache, createAsync } from "@solidjs/router";
-import { Suspense } from "solid-js";
+import { Suspense, createResource } from "solid-js";
 // import { YarnIcon } from "./icons/yarn-icon";
 // import { NpmIcon } from "./icons/npm-icon";
 // import { PnpmIcon } from "./icons/pnpm-icon";
 
-const getSolidStartVersion = cache(async () => {
+const getSolidStartVersion = async () => {
   "use server";
 
   const response = await fetch(
@@ -15,10 +14,10 @@ const getSolidStartVersion = cache(async () => {
   const { version } = await response.json();
 
   return version;
-}, "npm-version");
+}
 
 export function CodeSnippet() {
-  const npmVersion = createAsync(() => getSolidStartVersion());
+  const [npmVersion] = createResource(() => getSolidStartVersion());
   return (
     <aside class="pt-20 px-8 sm:px-4 md:px-0 md:max-w-96 max-w-screen mx-auto w-5/6">
       <Tabs defaultValue="pnpm">
