@@ -8,6 +8,7 @@ export const SwatchIcon = (props: Props) => {
 
   return (
     <svg
+      role="presentation"
       class={props.class}
       fill="none"
       viewBox="0 0 24 24"

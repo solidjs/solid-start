@@ -42,7 +42,7 @@ export function CodeSnippet() {
             yarn
           </Tabs.Trigger>
         </Tabs.List>
-        <Tabs.Content value="pnpm" class="relative">
+        <Tabs.Content value="pnpm" class="relative" aria-label="Command to create project using pnpm">
           <div class="hidden dark:block absolute inset-0 bg-gradient-to-tr from-blue-300 via-blue-300/70 to-blue-300 opacity-10" />
           <div
             id="upper-line"
@@ -53,11 +53,10 @@ export function CodeSnippet() {
             class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
           ></div>
           <pre class="text-2xl md:text-3xl font-mono py-2 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.3)] flex justify-center">
-            <span class="dark:text-cyan-200 text-cyan-700">pnpm</span> create
-            solid
+            <span class="dark:text-cyan-200 text-cyan-700">pnpm</span> create solid
           </pre>
         </Tabs.Content>
-        <Tabs.Content value="npm" class="relative">
+        <Tabs.Content value="npm" class="relative" aria-label="Command to create project using npm">
           <div class="hidden dark:block absolute inset-0 bg-gradient-to-tr from-blue-300 via-blue-300/70 to-blue-300 opacity-10" />
           <div
             id="upper-line"
@@ -67,12 +66,11 @@ export function CodeSnippet() {
             id="bottom-line"
             class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
           ></div>
-          <pre class="text-2xl md:text-3xl font-mono py-2 px-5 flex justify-center dark:shadow-[0px_0px_35px_rgb(125,211,252,0.3)]">
-            <span class="dark:text-cyan-200 text-cyan-600">npm</span> create
-            solid
+          <pre class="text-2xl md:text-3xl font-mono py-2 px-5 flex justify-center dark:shadow-[0px_0px_35px_rgb(125,211,252,0.3)] select-text">
+            <span class="dark:text-cyan-200 text-cyan-600">npm</span> create solid
           </pre>
         </Tabs.Content>
-        <Tabs.Content value="yarn" class="relative">
+        <Tabs.Content value="yarn" class="relative" aria-label="Command to create project using yarn">
           <div class="hidden dark:block absolute inset-0 bg-gradient-to-tr from-blue-300 via-blue-300/70 to-blue-300 opacity-10" />
           <div
             id="upper-line"
@@ -83,8 +81,7 @@ export function CodeSnippet() {
             class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
           ></div>
           <pre class="text-2xl md:text-3xl font-mono py-2 px-5  flex justify-center dark:shadow-[0px_0px_35px_rgb(125,211,252,0.3)]">
-            <span class="dark:text-cyan-200 text-cyan-600">yarn</span> create
-            solid
+            <span class="dark:text-cyan-200 text-cyan-600">yarn</span> create solid
           </pre>
         </Tabs.Content>
       </Tabs.Root>

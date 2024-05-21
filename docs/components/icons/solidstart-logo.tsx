@@ -4,6 +4,7 @@ interface Props {
 export function SolidStartLogo(props: Props) {
   return (
     <svg
+      role="presentation"
       width="531"
       height="454"
       class={props.class}
