@@ -7,6 +7,11 @@ export default {
   presets: [solidUi],
   theme: {
     extend: {
+      fontFamily: {
+        sans: "var(--font-geist)",
+        display: ["var(--font-geist)", { fontFeatureSettings: '"ss01"' }],
+        mono: "var(--font-geist-mono)"
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

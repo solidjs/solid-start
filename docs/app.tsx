@@ -13,6 +13,7 @@ import { Hero } from "~/components/sections/hero";
 import { MetaFramework } from "~/components/sections/meta-framework";
 import { RockSolidDX } from "~/components/sections/rock-solid-dx";
 import { TopNav } from "~/components/sections/top-nav";
+import "./fonts.css";
 import "./root.css";
 
 function getServerCookies() {
