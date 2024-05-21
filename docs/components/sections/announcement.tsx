@@ -32,7 +32,7 @@ export function Announcement() {
         <li>
           <a
             class="group flex flex-col justify-center items-center gap-4 text-lg text-center  border-2 rounded-md py-4 px-2 dark:border-sky-950 border-sky-200 hover:border-sky-700 dark:hover:border-sky-200 z-10 relative"
-            href="https://dev.to/ryansolid"
+            href="solidjs.com/blog/solid-start-the-shape-frameworks-to-come"
             target="_blank"
           >
             <div class="h-[5rem] absolute -top-12 -right-5  lg:-top-1/2  lg:right-[unset]">
