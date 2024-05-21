@@ -60,7 +60,7 @@ export function DeployAnywhere() {
         </p>
       </header>
       <div class="mx-auto w-fit pt-12">
-        <pre class="bg-gradient-to-tr dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100  p-4 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.3)] relative rounded-lg">
+        <pre class="bg-gradient-to-tr dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100  p-4 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.10)] ring-1 ring-sky-950 relative rounded-md">
           <div
             id="upper-line"
             class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-blue-300/0 via-blue-300/70 to-blue-300/0 animate-bounce"
