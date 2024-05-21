@@ -27,6 +27,12 @@ export function CodeSnippet() {
             pnpm
           </Tabs.Trigger>
           <Tabs.Trigger
+            value="bun"
+            class="scale-75 grayscale opacity-70 focus:grayscale-0 focus:opacity-100 hover:grayscale-0 hover:opacity-100 transition-all ease-in-out duration-500 data-[selected]:scale-100 data-[selected]:grayscale-0 data-[selected]:opacity-100"
+          >
+            bun
+          </Tabs.Trigger>
+          <Tabs.Trigger
             value="npm"
             class="scale-75 grayscale opacity-70 focus:grayscale-0 focus:opacity-100 hover:grayscale-0 hover:opacity-100 transition-all ease-in-out duration-500 data-[selected]:scale-100 data-[selected]:grayscale-0 data-[selected]:opacity-100"
           >
@@ -40,6 +46,7 @@ export function CodeSnippet() {
           </Tabs.Trigger>
         </Tabs.List>
         <TabContent manager="pnpm" />
+        <TabContent manager="bun" />
         <TabContent manager="npm" />
         <TabContent manager="yarn" />
       </Tabs>
