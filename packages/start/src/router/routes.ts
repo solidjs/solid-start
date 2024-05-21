@@ -5,6 +5,7 @@ interface Route {
   path: string;
   id: string;
   children?: Route[];
+  page?: boolean;
   $component?: any;
   $GET?: any;
   $POST?: any;
@@ -23,7 +24,7 @@ declare module "vinxi/routes" {
 }
 
 export const pageRoutes = defineRoutes(
-  (fileRoutes as unknown as Route[]).filter(o => o.$component)
+  (fileRoutes as unknown as Route[]).filter(o => o.page)
 );
 
 function defineRoutes(fileRoutes: Route[]) {

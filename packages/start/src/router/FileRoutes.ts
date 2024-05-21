@@ -14,7 +14,7 @@ export function createRoutes() {
         ...(route.$$route ? route.$$route.require().route.info : {}),
         filesystem: true
       },
-      component: lazyRoute(
+      component: route.$component && lazyRoute(
         route.$component,
         import.meta.env.START_ISLANDS
           ? import.meta.env.MANIFEST["ssr"]
