@@ -12,9 +12,12 @@ export default function lazyRoute<T>(component: any, clientManifest: any, server
 
       // import() throws if a module doesn't exist, which includes any
       // modules loaded by the route itself, so it's important we catch here
-      const mod = await manifest.inputs[component.src].import().catch(() => ({}));
+      const mod = await manifest.inputs[component.src].import().catch(() => null);
+      // fallback to an empty component as any errors will surface in the vite overlay
+      if(!mod) return { default: () => [] };
+
       if (!mod[exported]) console.error(`Module ${component.src} does not export ${exported}`);
-      const Component = mod[exported] ?? (() => {}); // fallback to an empty component, import errors show up in the overlay
+      const Component = mod[exported]
       let assets = await clientManifest.inputs?.[component.src]?.assets();
       const styles = assets.filter((asset: Asset) => asset.tag === "style");
 
