@@ -36,7 +36,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   // @ts-ignore
   const nonce = context.nonce;
 
-  let assets: Asset[];
+  let assets: Asset[]  = [];
   Promise.resolve().then(async () => {
     let assetPromises: Promise<Asset[]>[] = [];
     // @ts-ignore
