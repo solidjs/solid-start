@@ -6,8 +6,7 @@
     "start": "vinxi start",
     "test": "vitest run",
     "test-watch": "vitest",
-    "test-ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "test-ui": "vitest --ui"
   },
   "type": "module",
   "devDependencies": {
@@ -17,7 +16,6 @@
     "@solidjs/testing-library": "^0.8.7",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/user-event": "^14.5.2",
-    "@vitest/coverage-v8": "^1.6.0",
     "@vitest/ui": "^1.5.0",
     "jsdom": "^24.0.0",
     "solid-js": "^1.8.17",
