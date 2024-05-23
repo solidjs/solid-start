@@ -6,8 +6,7 @@
     "start": "vinxi start",
     "test": "vitest run",
     "test-watch": "vitest",
-    "test-ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "test-ui": "vitest --ui"
   },
   "type": "module",
   "devDependencies": {
@@ -23,6 +22,7 @@
     "typescript": "^5.4.5",
     "vinxi": "^0.3.11",
     "vite": "^5.2.8",
+    "vite-plugin-solid": "^2.10.2",
     "vitest": "^1.5.0"
   }
 }
