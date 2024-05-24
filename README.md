@@ -43,7 +43,7 @@ pnpm dev
 # or with Bun
 bun create solid@latest
 bun install
-bun run dev
+bun dev
 ```
 
 ### Development
