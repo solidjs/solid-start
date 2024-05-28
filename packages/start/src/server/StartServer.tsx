@@ -74,59 +74,61 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   return (
     <NoHydration>
       {docType as unknown as any}
-      <props.document
-        assets={
-          <>
-            <HydrationScript />
-            {context.assets.map((m: any) => renderAsset(m, nonce))}
-          </>
-        }
-        scripts={
-          nonce ? (
+      <ErrorBoundary>
+        <props.document
+          assets={
             <>
-              <script
-                nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-              />
-              <script
-                type="module"
-                nonce={nonce}
-                async
-                src={
-                  import.meta.env.MANIFEST["client"]!.inputs[
-                    import.meta.env.MANIFEST["client"]!.handler
-                  ]!.output.path
-                }
-              />
+              <HydrationScript />
+              {context.assets.map((m: any) => renderAsset(m, nonce))}
             </>
+          }
+          scripts={
+            nonce ? (
+              <>
+                <script
+                  nonce={nonce}
+                  innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
+                />
+                <script
+                  type="module"
+                  nonce={nonce}
+                  async
+                  src={
+                    import.meta.env.MANIFEST["client"]!.inputs[
+                      import.meta.env.MANIFEST["client"]!.handler
+                    ]!.output.path
+                  }
+                />
+              </>
+            ) : (
+              <>
+                <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
+                <script
+                  type="module"
+                  async
+                  src={
+                    import.meta.env.MANIFEST["client"]!.inputs[
+                      import.meta.env.MANIFEST["client"]!.handler
+                    ]!.output.path
+                  }
+                />
+              </>
+            )
+          }
+        >
+          {!import.meta.env.START_ISLANDS ? (
+            <Hydration>
+              <ErrorBoundary>
+                <App />
+              </ErrorBoundary>
+            </Hydration>
           ) : (
-            <>
-              <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-              <script
-                type="module"
-                async
-                src={
-                  import.meta.env.MANIFEST["client"]!.inputs[
-                    import.meta.env.MANIFEST["client"]!.handler
-                  ]!.output.path
-                }
-              />
-            </>
-          )
-        }
-      >
-        {!import.meta.env.START_ISLANDS ? (
-          <Hydration>
             <ErrorBoundary>
               <App />
             </ErrorBoundary>
-          </Hydration>
-        ) : (
-          <ErrorBoundary>
-            <App />
-          </ErrorBoundary>
-        )}
-      </props.document>
+          )}
+        </props.document>
+      </ErrorBoundary>
     </NoHydration>
   );
 }
