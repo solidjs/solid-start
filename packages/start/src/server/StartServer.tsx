@@ -31,12 +31,16 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
   }
 }
 
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/server/start-server
+ */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
   // @ts-ignore
   const nonce = context.nonce;
 
-  let assets: Asset[]  = [];
+  let assets: Asset[] = [];
   Promise.resolve().then(async () => {
     let assetPromises: Promise<Asset[]>[] = [];
     // @ts-ignore

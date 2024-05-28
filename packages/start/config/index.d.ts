@@ -6,7 +6,7 @@ import type { Options } from "vite-plugin-solid";
 // atleast until we sort which server options are good to use
 type ViteCustomizableConfig = CustomizableConfig & {
   server?: InlineConfig["server"];
-}
+};
 
 type SolidStartInlineConfig = {
   ssr?: boolean;
@@ -16,13 +16,19 @@ type SolidStartInlineConfig = {
   appRoot?: string;
   routeDir?: string;
   middleware?: string;
-  devOverlay?:  boolean;
+  devOverlay?: boolean;
   experimental?: {
     islands?: boolean;
-  }
+  };
   vite?:
     | ViteCustomizableConfig
     | ((options: { router: "server" | "client" | "server-function" }) => ViteCustomizableConfig);
 };
 
-export declare function defineConfig(baseConfig?: SolidStartInlineConfig): ReturnType<typeof createApp>;
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/entrypoints/app-config
+ */
+export declare function defineConfig(
+  baseConfig?: SolidStartInlineConfig
+): ReturnType<typeof createApp>;
