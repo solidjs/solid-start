@@ -22,15 +22,15 @@ export function ThemeToggle() {
           <span class="sr-only">Toggle theme</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onSelect={() => setColorMode("light")}>
+        <DropdownMenuItem class="focus:text-slate-200" onSelect={() => setColorMode("light")}>
           <SunIcon class="mr-2 size-4 dark:text-slate-200 dark:group-hover:text-slate-300" />
           <span>Light</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => setColorMode("dark")}>
+        <DropdownMenuItem class="focus:text-slate-200" onSelect={() => setColorMode("dark")}>
           <MoonIcon class="mr-2 size-4" />
           <span>Dark</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => setColorMode("system")}>
+        <DropdownMenuItem class="focus:text-slate-200" onSelect={() => setColorMode("system")}>
           <MonitorIcon class="mr-2 size-4" />
           <span>System</span>
         </DropdownMenuItem>
