@@ -8,6 +8,10 @@ import { ErrorBoundary } from "../../shared/ErrorBoundary";
 
 const docType = ssr("<!DOCTYPE html>");
 
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/server/start-server
+ */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
   // @ts-ignore
