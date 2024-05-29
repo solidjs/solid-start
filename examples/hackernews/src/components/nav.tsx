@@ -4,7 +4,7 @@ function Nav() {
   return (
     <header class="header">
       <nav class="inner">
-        <A href="/">
+        <A href="/" end>
           <strong>HN</strong>
         </A>
         <A href="/new">
