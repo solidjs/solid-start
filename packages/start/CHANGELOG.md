@@ -1,5 +1,14 @@
 # @solidjs/start
 
+## 1.0.1
+
+### Patch Changes
+
+- ea64f7c: fix: add error boundary to catch invalid code within the document code
+- e0af541: fix up top level errorboundary
+- 3ec4138: Fix 'Failed to resolve import' crash during ssr
+- 2df3d8b: feat: log errors in production
+
 ## 1.0.0
 
 ### Major Changes
