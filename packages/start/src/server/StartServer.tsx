@@ -10,7 +10,7 @@ import {
   ssr,
   useAssets
 } from "solid-js/web";
-import { ErrorBoundary } from "../shared/ErrorBoundary";
+import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary";
 import { renderAsset } from "./renderAsset";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types";
 
@@ -74,7 +74,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   return (
     <NoHydration>
       {docType as unknown as any}
-      <ErrorBoundary>
+      <TopErrorBoundary>
         <props.document
           assets={
             <>
@@ -128,7 +128,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             </ErrorBoundary>
           )}
         </props.document>
-      </ErrorBoundary>
+      </TopErrorBoundary>
     </NoHydration>
   );
 }

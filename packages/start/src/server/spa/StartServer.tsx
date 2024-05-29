@@ -2,9 +2,9 @@
 // @ts-ignore
 import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
+import { TopErrorBoundary } from "../../shared/ErrorBoundary";
 import { renderAsset } from "../renderAsset";
 import type { DocumentComponentProps, PageEvent } from "../types";
-import { ErrorBoundary } from "../../shared/ErrorBoundary";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -19,7 +19,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   return (
     <NoHydration>
       {docType as unknown as any}
-      <ErrorBoundary>
+      <TopErrorBoundary>
         <props.document
           assets={<>{context.assets.map((m: any) => renderAsset(m))}</>}
           scripts={
@@ -53,7 +53,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             )
           }
         />
-      </ErrorBoundary>
+      </TopErrorBoundary>
     </NoHydration>
   );
 }
