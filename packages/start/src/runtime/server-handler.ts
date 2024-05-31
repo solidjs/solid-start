@@ -119,6 +119,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   }
   if (h3Event.method === "POST") {
     const contentType = request.headers.get("content-type");
+    const h3EventBody = h3Event.node.req as any;
+    const isH3EventBodyStreamLocked = h3EventBody instanceof ReadableStream && h3EventBody.locked;
+
     if (
       contentType?.startsWith("multipart/form-data") ||
       contentType?.startsWith("application/x-www-form-urlencoded")
@@ -126,14 +129,20 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
       parsed.push(
-        await new Request(request, { ...request, body: (h3Event.node.req as any).body }).formData()
+        await (
+          isH3EventBodyStreamLocked
+            ? request
+            : new Request(request, { ...request, body: h3EventBody })
+        ).formData()
       );
       // what should work when #1721 is fixed
       // parsed.push(await request.formData);
     } else if (contentType?.startsWith("application/json")) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
-      const tmpReq = new Request(request, { ...request, body: (h3Event.node.req as any).body });
+      const tmpReq = isH3EventBodyStreamLocked
+        ? request
+        : new Request(request, { ...request, body: h3EventBody });
       // what should work when #1721 is fixed
       // just use request.json() here
       parsed = fromJSON(await tmpReq.json(), {
