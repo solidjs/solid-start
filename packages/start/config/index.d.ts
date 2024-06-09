@@ -3,9 +3,14 @@ import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
 import { InlineConfig } from "vite";
 import type { Options } from "vite-plugin-solid";
 
-// atleast until we sort which server options are good to use
+// should probably be maintained by Vinxi
+type VinxiViteServerOptions = Omit<
+  InlineConfig["server"],
+  "port" | "strictPort" | "host" | "middlewareMode" | "open"
+>;
+
 type ViteCustomizableConfig = CustomizableConfig & {
-  server?: InlineConfig["server"];
+  server?: VinxiViteServerOptions;
 };
 
 type SolidStartInlineConfig = {
