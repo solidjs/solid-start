@@ -33,50 +33,50 @@ function defineRoutes(fileRoutes: Route[]) {
       return id.startsWith(o.id + "/");
     });
 
-    if (parentRoute) {
-      const slicedId = id.slice(parentRoute.id.length);
-
-      if (slicedId.startsWith("/@")) {
-        let slotRoute = parentRoute;
-        let nextId = slicedId;
-
-        // recursion is hard so while it is
-        while (nextId.startsWith("/@")) {
-          const slotName = /\/@([^/]+)/g.exec(nextId)![1]!;
-
-          const slots = (slotRoute.slots ??= {});
-
-          nextId = nextId.slice(slotName.length + 2);
-
-          if (nextId === "") {
-            slots[slotName] = { ...route };
-            delete slots[slotName].path;
-
-            return routes;
-          } else {
-            slotRoute = slots[slotName] ??= {};
-          }
-        }
-
-        // route is a slot layout and doesn't need to be processed further as it was inserted in the while loop
-        if (nextId === "") return routes;
-
-        processRoute((slotRoute.children ??= []), route, nextId, full);
-      } else {
-        processRoute((parentRoute.children ??= []), route, slicedId, full);
-      }
+    if (!parentRoute) {
+      routes.push({
+        ...route,
+        id,
+        path: id
+          // strip out escape group for escaping nested routes - e.g. foo(bar) -> foo
+          .replace(/\/\([^)/]+\)/g, "")
+          .replace(/\([^)/]+\)/g, "")
+      });
 
       return routes;
     }
 
-    routes.push({
-      ...route,
-      id,
-      path: id
-        // strip out escape group for escaping nested routes - e.g. foo(bar) -> foo
-        .replace(/\/\([^)/]+\)/g, "")
-        .replace(/\([^)/]+\)/g, "")
-    });
+    const slicedId = id.slice(parentRoute.id.length);
+
+    if (slicedId.startsWith("/@")) {
+      let slotRoute = parentRoute;
+      let nextId = slicedId;
+
+      // recursion is hard so while it is
+      while (nextId.startsWith("/@")) {
+        const slotName = /\/@([^/]+)/g.exec(nextId)![1]!;
+
+        const slots = (slotRoute.slots ??= {});
+
+        nextId = nextId.slice(slotName.length + 2);
+
+        if (nextId === "") {
+          slots[slotName] = { ...route };
+          delete slots[slotName].path;
+
+          return routes;
+        } else {
+          slotRoute = slots[slotName] ??= {};
+        }
+      }
+
+      // route is a slot layout and doesn't need to be processed further as it was inserted in the while loop
+      if (nextId === "") return routes;
+
+      processRoute((slotRoute.children ??= []), route, nextId, full);
+    } else {
+      processRoute((parentRoute.children ??= []), route, slicedId, full);
+    }
 
     return routes;
   }
