@@ -54,7 +54,7 @@ function defineRoutes(fileRoutes: Route[]) {
       let slotRoute = parentRoute;
       let idWithoutSlot = idWithoutParent;
 
-      // Drill down through nested slots
+      // Drill down through directly nested slots
       // Recursing would nest via 'children' but we want to nest via 'slots',
       // so this is handled as a special case
       while (idWithoutSlot.startsWith("/@")) {
@@ -76,6 +76,7 @@ function defineRoutes(fileRoutes: Route[]) {
         slotRoute = slots[slotName] ??= {} as any;
       }
 
+      // We only resume with children once all the directly nested slots are traversed
       processRoute((slotRoute.children ??= []), route, idWithoutSlot, full);
     }
     // Route just has a parent
