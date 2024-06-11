@@ -13,15 +13,15 @@ export function createRoutes() {
         ...(route.$$route ? route.$$route.require().route.info : {}),
         filesystem: true
       },
-      component: route.$component
-        ? lazyRoute(
-            route.$component,
-            import.meta.env.START_ISLANDS
-              ? import.meta.env.MANIFEST["ssr"]
-              : import.meta.env.MANIFEST["client"],
-            import.meta.env.MANIFEST["ssr"]
-          )
-        : undefined,
+      component:
+        route.$component &&
+        lazyRoute(
+          route.$component,
+          import.meta.env.START_ISLANDS
+            ? import.meta.env.MANIFEST["ssr"]
+            : import.meta.env.MANIFEST["client"],
+          import.meta.env.MANIFEST["ssr"]
+        ),
       children: route.children ? route.children.map(createRoute) : undefined,
       ...(route.slots && {
         slots: Object.entries<Route>(route.slots).reduce(
@@ -39,6 +39,11 @@ export function createRoutes() {
 }
 
 let routes: any[];
+
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/routing/file-routes
+ */
 export const FileRoutes = isServer
   ? () => (getRequestEvent() as PageEvent).routes
   : () => routes || (routes = createRoutes());

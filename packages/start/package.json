@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.1",
   "type": "module",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -33,7 +33,11 @@
     "./server/spa": "./dist/server/spa/index.jsx",
     "./client": "./dist/client/index.jsx",
     "./client/islands": "./dist/client/islands.jsx",
-    "./client/spa": "./dist/client/spa/index.jsx"
+    "./client/spa": "./dist/client/spa/index.jsx",
+    "./env": {
+      "types": "./env.d.ts",
+      "import": null
+    }
   },
   "typesVersions": {
     "*": {

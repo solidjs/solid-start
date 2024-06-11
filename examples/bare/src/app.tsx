@@ -7,7 +7,7 @@ export default function App() {
   return (
     <main>
       <h1>Hello world!</h1>
-      <button class="increment" onClick={() => setCount(count() + 1)}>
+      <button class="increment" onClick={() => setCount(count() + 1)} type="button">
         Clicks: {count()}
       </button>
       <p>

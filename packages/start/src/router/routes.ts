@@ -6,6 +6,7 @@ export interface Route {
   id: string;
   children?: Route[];
   slots?: Record<string, Route>;
+  page?: boolean;
   $component?: any;
   $$route?: any;
   $GET?: any;
@@ -24,9 +25,7 @@ declare module "vinxi/routes" {
   }
 }
 
-export const pageRoutes = defineRoutes(
-  (fileRoutes as unknown as Route[]).filter(o => o.$component)
-);
+export const pageRoutes = defineRoutes((fileRoutes as unknown as Route[]).filter(o => o.page));
 
 function defineRoutes(fileRoutes: Route[]) {
   function processRoute(routes: Route[], route: Route, id: string, full: string) {
@@ -38,8 +37,8 @@ function defineRoutes(fileRoutes: Route[]) {
       const slicedId = id.slice(parentRoute.id.length);
 
       if (slicedId.startsWith("/@")) {
-        let slotRoute: any = parentRoute;
-        let nextId: any = slicedId;
+        let slotRoute = parentRoute;
+        let nextId = slicedId;
 
         // recursion is hard so while it is
         while (nextId.startsWith("/@")) {
@@ -77,8 +76,6 @@ function defineRoutes(fileRoutes: Route[]) {
         // strip out escape group for escaping nested routes - e.g. foo(bar) -> foo
         .replace(/\/\([^)/]+\)/g, "")
         .replace(/\([^)/]+\)/g, "")
-        // replace . with / for flat routes - e.g. foo.bar -> foo/bar
-        .replace(/\./g, "/")
     });
 
     return routes;
