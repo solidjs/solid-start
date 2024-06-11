@@ -33,11 +33,6 @@ function defineRoutes(fileRoutes: Route[]) {
       return id.startsWith(o.id + "/");
     });
 
-    const path = id
-      // strip out escape group for escaping nested routes - e.g. foo(bar) -> foo
-      .replace(/\/\([^)/]+\)/g, "")
-      .replace(/\([^)/]+\)/g, "");
-
     // Route is a leaf segment
     if (!parentRoute) {
       routes.push({
@@ -52,35 +47,40 @@ function defineRoutes(fileRoutes: Route[]) {
       return routes;
     }
 
-    const slicedId = id.slice(parentRoute.id.length);
+    const idWithoutParent = id.slice(parentRoute.id.length);
 
     // Route belongs to a slot
-    if (slicedId.startsWith("/@")) {
+    if (idWithoutParent.startsWith("/@")) {
       let slotRoute = parentRoute;
-      let nextId = slicedId;
+      let idWithoutSlot = idWithoutParent;
 
-      while (nextId.startsWith("/@")) {
-        const slotName = /\/@([^/]+)/g.exec(nextId)![1]!;
+      // Drill down through nested slots
+      // Recursing would nest via 'children' but we want to nest via 'slots',
+      // so this is handled as a special case
+      while (idWithoutSlot.startsWith("/@")) {
+        const slotName = /\/@([^/]+)/g.exec(idWithoutSlot)![1]!;
 
         const slots = (slotRoute.slots ??= {});
 
-        nextId = nextId.slice(slotName.length + 2);
+        idWithoutSlot = idWithoutSlot.slice(slotName.length + 2);
 
-        if (nextId === "") {
-          slots[slotName] = { ...route };
+        // Route is a slot definition
+        if (idWithoutSlot === "") {
+          const slot = { ...route };
+          delete (slot as any).path;
+          slots[slotName] = slot;
 
           return routes;
         }
 
-        slotRoute = slots[slotName] ??= { id, path };
+        slotRoute = slots[slotName] ??= {} as any;
       }
 
-      // route is a slot layout and doesn't need to be processed further as it was inserted in the while loop
-      if (nextId === "") return routes;
-
-      processRoute((slotRoute.children ??= []), route, nextId, full);
-    } else {
-      processRoute((parentRoute.children ??= []), route, slicedId, full);
+      processRoute((slotRoute.children ??= []), route, idWithoutSlot, full);
+    }
+    // Route just has a parent
+    else {
+      processRoute((parentRoute.children ??= []), route, idWithoutParent, full);
     }
 
     return routes;
