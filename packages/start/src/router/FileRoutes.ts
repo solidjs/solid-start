@@ -5,7 +5,7 @@ import type { PageEvent } from "../server/types";
 import { Route, pageRoutes as routeConfigs } from "./routes";
 
 export function createRoutes() {
-  function createRoute(route: Route) {
+  function createRoute(route: Route): any {
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),

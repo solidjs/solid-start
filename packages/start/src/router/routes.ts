@@ -33,6 +33,12 @@ function defineRoutes(fileRoutes: Route[]) {
       return id.startsWith(o.id + "/");
     });
 
+    const path = id
+      // strip out escape group for escaping nested routes - e.g. foo(bar) -> foo
+      .replace(/\/\([^)/]+\)/g, "")
+      .replace(/\([^)/]+\)/g, "");
+
+    // Route is a leaf segment
     if (!parentRoute) {
       routes.push({
         ...route,
@@ -48,11 +54,11 @@ function defineRoutes(fileRoutes: Route[]) {
 
     const slicedId = id.slice(parentRoute.id.length);
 
+    // Route belongs to a slot
     if (slicedId.startsWith("/@")) {
       let slotRoute = parentRoute;
       let nextId = slicedId;
 
-      // recursion is hard so while it is
       while (nextId.startsWith("/@")) {
         const slotName = /\/@([^/]+)/g.exec(nextId)![1]!;
 
@@ -62,12 +68,11 @@ function defineRoutes(fileRoutes: Route[]) {
 
         if (nextId === "") {
           slots[slotName] = { ...route };
-          delete slots[slotName].path;
 
           return routes;
-        } else {
-          slotRoute = slots[slotName] ??= {};
         }
+
+        slotRoute = slots[slotName] ??= { id, path };
       }
 
       // route is a slot layout and doesn't need to be processed further as it was inserted in the while loop
