@@ -4,7 +4,9 @@ on:
   merge_group:
   pull_request:
     paths:
-      - 'docs/**'
+      - "docs/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
 
     branches:
       - main
