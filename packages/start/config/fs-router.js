@@ -24,6 +24,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
+        page: true,
         $component: {
           src: src,
           pick: ["$css"]
@@ -35,10 +36,11 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     }
 
     const [_, exports] = analyzeModule(src);
-    const hasDefault = exports.find(e => e.n === "default");
-    const hasRouteConfig = exports.find(e => e.n === "route");
+    const hasDefault = !!exports.find(e => e.n === "default");
+    const hasRouteConfig = !!exports.find(e => e.n === "route");
     if (hasDefault) {
       return {
+        page: true,
         $component: {
           src: src,
           pick: ["default", "$css"]
@@ -93,6 +95,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
     let path = this.toPath(src);
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
+        page: true,
         $component: {
           src: src,
           pick: ["$css"]
@@ -105,16 +108,18 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
 
     const [_, exports] = analyzeModule(src);
     const hasRouteConfig = exports.find(e => e.n === "route");
-    const hasDefault = exports.find(e => e.n === "default");
-    const hasAPIRoutes = exports.find(exp => HTTP_METHODS.includes(exp.n));
+    const hasDefault = !!exports.find(e => e.n === "default");
+    const hasAPIRoutes = !!exports.find(exp => HTTP_METHODS.includes(exp.n));
     if (hasDefault || hasAPIRoutes) {
       return {
-        $component: hasDefault
-          ? {
-              src: src,
-              pick: ["default", "$css"]
-            }
-          : undefined,
+        page: hasDefault,
+        $component:
+          !this.config.dataOnly && hasDefault
+            ? {
+                src: src,
+                pick: ["default", "$css"]
+              }
+            : undefined,
         $$route: hasRouteConfig
           ? {
               src: src,

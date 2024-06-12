@@ -17,7 +17,7 @@ const assetMap = {
   }
 };
 
-export function renderAsset(asset: Asset) {
+export function renderAsset(asset: Asset, nonce?: string) {
   let { tag, attrs: { key, ...attrs } = { key: undefined }, children } = asset as any;
-  return (assetMap as any)[tag]({ attrs, key, children });
+  return (assetMap as any)[tag]({ attrs: { ...attrs, nonce }, key, children });
 }

@@ -4,7 +4,9 @@ on:
   merge_group:
   pull_request:
     paths:
-      - 'docs/**'
+      - "docs/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
 
     branches:
       - main
@@ -19,20 +21,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
 
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build start
+        run: pnpm run build
 
       - name: Build docs
         run: pnpm run docs:build

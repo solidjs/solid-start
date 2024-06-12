@@ -11,7 +11,22 @@ import {
 import { matchAPIRoute } from "../router/routes";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
-import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types";
+import type { APIEvent, FetchEvent, HandlerOptions, PageEvent, ResponseStub } from "./types";
+
+// according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages
+const validRedirectStatuses = new Set([301, 302, 303, 307, 308]);
+
+/**
+ * Checks if user has set a redirect status in the response.
+ * If not, falls back to the 302 (temporary redirect)
+ */
+export function getExpectedRedirectStatus(response: ResponseStub): number {
+  if (response.status && validRedirectStatuses.has(response.status)) {
+    return response.status;
+  }
+
+  return 302;
+}
 
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
@@ -54,7 +69,8 @@ export function createBaseHandler(
           }, resolvedOptions);
           context.complete = true;
           if (context.response && context.response.headers.get("Location")) {
-            return sendRedirect(e, context.response.headers.get("Location")!);
+            const status = getExpectedRedirectStatus(context.response);
+            return sendRedirect(e, context.response.headers.get("Location")!, status);
           }
           return html;
         }
@@ -77,7 +93,8 @@ export function createBaseHandler(
           return fn(context);
         }, resolvedOptions);
         if (context.response && context.response.headers.get("Location")) {
-          return sendRedirect(e, context.response.headers.get("Location")!);
+          const status = getExpectedRedirectStatus(context.response);
+          return sendRedirect(e, context.response.headers.get("Location")!, status);
         }
         if (mode === "async") return stream;
         // fix cloudflare streaming
@@ -92,7 +109,8 @@ export function createBaseHandler(
 function handleShellCompleteRedirect(context: PageEvent, e: HTTPEvent) {
   return () => {
     if (context.response && context.response.headers.get("Location")) {
-      setResponseStatus(e, 302);
+      const status = getExpectedRedirectStatus(context.response);
+      setResponseStatus(e, status);
       setHeader(e, "Location", context.response.headers.get("Location")!);
     }
   };
@@ -106,6 +124,10 @@ function handleStreamCompleteRedirect(context: PageEvent) {
   };
 }
 
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/server/create-handler
+ */
 export function createHandler(
   fn: (context: PageEvent) => unknown,
   options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>)

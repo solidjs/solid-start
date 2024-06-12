@@ -1,5 +1,59 @@
 # @solidjs/start
 
+## 1.0.1
+
+### Patch Changes
+
+- ea64f7c: fix: add error boundary to catch invalid code within the document code
+- e0af541: fix up top level errorboundary
+- 3ec4138: Fix 'Failed to resolve import' crash during ssr
+- 2df3d8b: feat: log errors in production
+
+## 1.0.0
+
+### Major Changes
+
+- 212d592: update to major
+
+### Minor Changes
+
+- 597e99c: replace "." with "()" for nested route escaping
+
+### Patch Changes
+
+- 44dfb5a: Export types properly
+- 0499779: fix single flight in ssr false
+- 0402c9c: Ensure `nonce` is passed to all assets when rendering from the server.
+- 3b2720e: update example project with-trpc
+- c09d4bd: Ensure args are encoded when fetching server function
+- 486edc6: Respect custom status-codes on redirects
+- 7ae0541: update deps
+- 8dff006: fix #1463 - grouped api routes
+- 25169c1: fix #1441 - closure bug with render options
+- 6c30953: Only show preloading js asset warning in dev
+- 8711ce0: fix #1415 - incorrectly skipping multi-headers
+- 79c17c9: fix type error for vinxi client in tsconfig
+- 9348ace: Omit route components from non-SSR builds
+- 7cb339f: fix #1410 premature cleanup on mode async
+- 771aede: fix #1470 partial route-less paths messing with API
+- eb296f2: fix: use `moduleResolution: "bundler"` in examples
+- 846f5fd: fix: add app.tsx assets to page event in dev env
+
+## 1.0.0-rc.1
+
+### Patch Changes
+
+- 0402c9c4: Ensure `nonce` is passed to all assets when rendering from the server.
+- 3b2720e6: update example project with-trpc
+- c09d4bd8: Ensure args are encoded when fetching server function
+- 7ae05410: update deps
+- 8dff0063: fix #1463 - grouped api routes
+- 25169c16: fix #1441 - closure bug with render options
+- 8711ce03: fix #1415 - incorrectly skipping multi-headers
+- 79c17c96: fix type error for vinxi client in tsconfig
+- 7cb339fa: fix #1410 premature cleanup on mode async
+- 846f5fd7: fix: add app.tsx assets to page event in dev env
+
 ## 1.0.0-rc.0
 
 ### Major Changes

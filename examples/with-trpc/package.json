@@ -7,15 +7,15 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@decs/typeschema": "^0.12.2",
-    "@trpc/client": "^10.44.1",
-    "@trpc/server": "^10.44.1",
-    "@solidjs/meta": "^0.29.2",
-    "@solidjs/router": "^0.13.1",
-    "@solidjs/start": "^1.0.0-rc.0",
-    "solid-js": "^1.8.16",
-    "valibot": "^0.26.0",
-    "vinxi": "^0.3.10"
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.13.3",
+    "@solidjs/start": "^1.0.1",
+    "@trpc/client": "^10.45.2",
+    "@trpc/server": "^10.45.2",
+    "@typeschema/valibot": "^0.13.4",
+    "solid-js": "^1.8.17",
+    "valibot": "^0.29.0",
+    "vinxi": "^0.3.11"
   },
   "engines": {
     "node": ">=18"

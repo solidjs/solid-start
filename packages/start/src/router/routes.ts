@@ -5,6 +5,7 @@ interface Route {
   path: string;
   id: string;
   children?: Route[];
+  page?: boolean;
   $component?: any;
   $GET?: any;
   $POST?: any;
@@ -23,7 +24,7 @@ declare module "vinxi/routes" {
 }
 
 export const pageRoutes = defineRoutes(
-  (fileRoutes as unknown as Route[]).filter(o => o.$component)
+  (fileRoutes as unknown as Route[]).filter(o => o.page)
 );
 
 function defineRoutes(fileRoutes: Route[]) {
@@ -55,7 +56,7 @@ function defineRoutes(fileRoutes: Route[]) {
 
 export function matchAPIRoute(path: string, method: string) {
   const match = router.lookup(path);
-  if (match) {
+  if (match && match.route) {
     const handler = match.route[`$${method}`];
     if (handler === undefined) return;
     return {
@@ -72,7 +73,7 @@ function containsHTTP(route: Route) {
 const router = createRouter({
   routes: (fileRoutes as unknown as Route[]).reduce((memo, route) => {
     if (!containsHTTP(route)) return memo;
-    let path = route.path.replace(/\([^)/]+\)/g, "").replace(/\*([^/]*)/g, (_, m) => `**:${m}`);
+    let path = route.path.replace(/\/\([^)/]+\)/g, "").replace(/\([^)/]+\)/g, "").replace(/\*([^/]*)/g, (_, m) => `**:${m}`);
     if (/:[^/]*\?/g.test(path)) {
       throw new Error(`Optional parameters are not supported in API routes: ${path}`);
     }

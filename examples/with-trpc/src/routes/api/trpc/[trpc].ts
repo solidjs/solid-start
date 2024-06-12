@@ -11,7 +11,7 @@ const handler = (event: APIEvent) =>
     req: event.request,
     // the router for handling the requests
     router: appRouter,
-    // any arbitary data that should be available to all actions
+    // any arbitrary data that should be available to all actions
     createContext:  () => event
   });
 

@@ -3,14 +3,14 @@
 import App from "#start/app";
 import type { Component, JSX } from "solid-js";
 import {
-    Hydration,
-    HydrationScript,
-    NoHydration,
-    getRequestEvent,
-    ssr,
-    useAssets
+  Hydration,
+  HydrationScript,
+  NoHydration,
+  getRequestEvent,
+  ssr,
+  useAssets
 } from "solid-js/web";
-import { ErrorBoundary } from "../shared/ErrorBoundary";
+import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary";
 import { renderAsset } from "./renderAsset";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types";
 
@@ -31,6 +31,10 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
   }
 }
 
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/server/start-server
+ */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
   // @ts-ignore
@@ -38,6 +42,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
 
   let assets: Asset[] = [];
   Promise.resolve().then(async () => {
+    let assetPromises: Promise<Asset[]>[] = [];
     // @ts-ignore
     if (context.router && context.router.matches) {
       // @ts-ignore
@@ -49,17 +54,18 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           const segment = matched[i];
           const part = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
             .inputs[segment["$component"].src]!;
-          const asset = (await part.assets()) as any;
-          assets.push.apply(assets, asset);
+          assetPromises.push(part.assets() as any);
         }
-      } else console.warn("No route matched for preloading js assets");
+      } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
     }
-    // dedupe assets
-    assets = [...new Map(assets.map(item => [item.attrs.key, item])).values()].filter(asset =>
-      import.meta.env.START_ISLANDS
-        ? false
-        : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
-          !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+    assets = await Promise.all(assetPromises).then(a =>
+      // dedupe assets
+      [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
+        import.meta.env.START_ISLANDS
+          ? false
+          : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+            !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+      )
     );
   });
 
@@ -68,59 +74,61 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   return (
     <NoHydration>
       {docType as unknown as any}
-      <props.document
-        assets={
-          <>
-            <HydrationScript />
-            {context.assets.map((m: any) => renderAsset(m))}
-          </>
-        }
-        scripts={
-          nonce ? (
+      <TopErrorBoundary>
+        <props.document
+          assets={
             <>
-              <script
-                nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-              />
-              <script
-                type="module"
-                nonce={nonce}
-                async
-                src={
-                  import.meta.env.MANIFEST["client"]!.inputs[
-                    import.meta.env.MANIFEST["client"]!.handler
-                  ]!.output.path
-                }
-              />
+              <HydrationScript />
+              {context.assets.map((m: any) => renderAsset(m, nonce))}
             </>
+          }
+          scripts={
+            nonce ? (
+              <>
+                <script
+                  nonce={nonce}
+                  innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
+                />
+                <script
+                  type="module"
+                  nonce={nonce}
+                  async
+                  src={
+                    import.meta.env.MANIFEST["client"]!.inputs[
+                      import.meta.env.MANIFEST["client"]!.handler
+                    ]!.output.path
+                  }
+                />
+              </>
+            ) : (
+              <>
+                <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
+                <script
+                  type="module"
+                  async
+                  src={
+                    import.meta.env.MANIFEST["client"]!.inputs[
+                      import.meta.env.MANIFEST["client"]!.handler
+                    ]!.output.path
+                  }
+                />
+              </>
+            )
+          }
+        >
+          {!import.meta.env.START_ISLANDS ? (
+            <Hydration>
+              <ErrorBoundary>
+                <App />
+              </ErrorBoundary>
+            </Hydration>
           ) : (
-            <>
-              <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-              <script
-                type="module"
-                async
-                src={
-                  import.meta.env.MANIFEST["client"]!.inputs[
-                    import.meta.env.MANIFEST["client"]!.handler
-                  ]!.output.path
-                }
-              />
-            </>
-          )
-        }
-      >
-        {!import.meta.env.START_ISLANDS ? (
-          <Hydration>
             <ErrorBoundary>
               <App />
             </ErrorBoundary>
-          </Hydration>
-        ) : (
-          <ErrorBoundary>
-            <App />
-          </ErrorBoundary>
-        )}
-      </props.document>
+          )}
+        </props.document>
+      </TopErrorBoundary>
     </NoHydration>
   );
 }

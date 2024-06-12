@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.1",
   "type": "module",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -33,7 +33,11 @@
     "./server/spa": "./dist/server/spa/index.jsx",
     "./client": "./dist/client/index.jsx",
     "./client/islands": "./dist/client/islands.jsx",
-    "./client/spa": "./dist/client/spa/index.jsx"
+    "./client/spa": "./dist/client/spa/index.jsx",
+    "./env": {
+      "types": "./env.d.ts",
+      "import": null
+    }
   },
   "typesVersions": {
     "*": {
@@ -55,8 +59,8 @@
     }
   },
   "devDependencies": {
-    "solid-js": "^1.8.16",
-    "vinxi": "^0.3.10",
+    "solid-js": "^1.8.17",
+    "vinxi": "^0.3.11",
     "typescript": "^5.4.2"
   },
   "dependencies": {
@@ -74,6 +78,6 @@
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "vite-plugin-inspect": "^0.7.33",
-    "vite-plugin-solid": "~2.9.1"
+    "vite-plugin-solid": "^2.10.2"
   }
 }

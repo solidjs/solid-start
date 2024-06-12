@@ -30,7 +30,8 @@ function solidStartServerFsRouter(config) {
     new SolidStartServerFileRouter(
       {
         dir: resolve.absolute(config.dir, router.root),
-        extensions: config.extensions ?? DEFAULT_EXTENSIONS
+        extensions: config.extensions ?? DEFAULT_EXTENSIONS,
+        dataOnly: config.dataOnly
       },
       router,
       app
@@ -90,7 +91,7 @@ export function defineConfig(baseConfig = {}) {
         },
         handler: `${start.appRoot}/entry-server${entryExtension}`,
         middleware: start.middleware,
-        routes: solidStartServerFsRouter({ dir: routeDir, extensions }),
+        routes: solidStartServerFsRouter({ dir: routeDir, extensions, dataOnly: !start.ssr }),
         extensions,
         target: "server",
         plugins: async () => {
@@ -133,6 +134,9 @@ export function defineConfig(baseConfig = {}) {
               },
               cacheDir: "node_modules/.vinxi/server",
               define: {
+                "import.meta.env.START_APP": JSON.stringify(
+                  `${start.appRoot}/app${entryExtension}`
+                ),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
@@ -200,6 +204,9 @@ export function defineConfig(baseConfig = {}) {
               },
               cacheDir: "node_modules/.vinxi/client",
               define: {
+                "import.meta.env.START_APP": JSON.stringify(
+                  `${start.appRoot}/app${entryExtension}`
+                ),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(false),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
@@ -211,7 +218,6 @@ export function defineConfig(baseConfig = {}) {
           ];
         }
       },
-
       {
         name: "server-fns",
         type: "http",
@@ -221,7 +227,7 @@ export function defineConfig(baseConfig = {}) {
         ),
         middleware: start.middleware,
         target: "server",
-        routes: solidStartServerFsRouter({ dir: routeDir, extensions }),
+        routes: solidStartServerFsRouter({ dir: routeDir, extensions, dataOnly: !start.ssr }),
         plugins: async () => {
           const userConfig =
             typeof vite === "function" ? await vite({ router: "server-function" }) : { ...vite };
@@ -261,6 +267,9 @@ export function defineConfig(baseConfig = {}) {
                 }
               },
               define: {
+                "import.meta.env.START_APP": JSON.stringify(
+                  `${start.appRoot}/app${entryExtension}`
+                ),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
