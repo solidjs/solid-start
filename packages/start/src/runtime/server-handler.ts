@@ -19,8 +19,8 @@ import { provideRequestEvent } from "solid-js/web/storage";
 import { eventHandler, setHeader, setResponseStatus, type HTTPEvent } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
-import { createPageEvent } from "../server/pageEvent";
 import { getExpectedRedirectStatus } from "../server/handler";
+import { createPageEvent } from "../server/pageEvent";
 // @ts-ignore
 import { FetchEvent, PageEvent } from "../server";
 
@@ -100,19 +100,19 @@ async function handleServerFunction(h3Event: HTTPEvent) {
 			const json = JSON.parse(args);
 			(json.t
 				? (fromJSON(json, {
-						plugins: [
-							CustomEventPlugin,
-							DOMExceptionPlugin,
-							EventPlugin,
-							FormDataPlugin,
-							HeadersPlugin,
-							ReadableStreamPlugin,
-							RequestPlugin,
-							ResponsePlugin,
-							URLSearchParamsPlugin,
-							URLPlugin
-						]
-					}) as any)
+					plugins: [
+						CustomEventPlugin,
+						DOMExceptionPlugin,
+						EventPlugin,
+						FormDataPlugin,
+						HeadersPlugin,
+						ReadableStreamPlugin,
+						RequestPlugin,
+						ResponsePlugin,
+						URLSearchParamsPlugin,
+						URLPlugin
+					]
+				}) as any)
 				: json
 			).forEach((arg: any) => parsed.push(arg));
 		}
@@ -181,6 +181,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
 		// handle no JS success case
 		if (!instance) {
 			const isError = result instanceof Error;
+			if (result instanceof Response && request.headers.get("Accept")?.includes("image/*")) {
+				return result
+			};
 			let redirectUrl = new URL(request.headers.get("referer")!).toString();
 			let statusCode = 302;
 			if (result instanceof Response && result.headers.has("Location")) {
@@ -196,13 +199,13 @@ async function handleServerFunction(h3Event: HTTPEvent) {
 					Location: redirectUrl,
 					...(result
 						? {
-								"Set-Cookie": `flash=${JSON.stringify({
-									url: url.pathname + encodeURIComponent(url.search),
-									result: isError ? result.message : result,
-									error: isError,
-									input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-								})}; Secure; HttpOnly;`
-							}
+							"Set-Cookie": `flash=${JSON.stringify({
+								url: url.pathname + encodeURIComponent(url.search),
+								result: isError ? result.message : result,
+								error: isError,
+								input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
+							})}; Secure; HttpOnly;`
+						}
 						: {})
 				}
 			});
