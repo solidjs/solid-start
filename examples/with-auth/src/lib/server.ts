@@ -21,7 +21,9 @@ export async function login(username: string, password: string) {
 
 export async function logout() {
   const session = await getSession();
-  await session.update(d => (d.userId = undefined));
+  await session.update(d => {
+    d.userId = undefined;
+  });
 }
 
 export async function register(username: string, password: string) {
