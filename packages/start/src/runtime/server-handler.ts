@@ -181,9 +181,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
 		// handle no JS success case
 		if (!instance) {
 			const isError = result instanceof Error;
-			if (result instanceof Response && request.headers.get("Accept")?.includes("image/*")) {
-				return result
-			};
+			if (result instanceof Response && (new URL(request.url)).searchParams.get("raw") == "true") {
+				return result;
+			}
 			let redirectUrl = new URL(request.headers.get("referer")!).toString();
 			let statusCode = 302;
 			if (result instanceof Response && result.headers.has("Location")) {
