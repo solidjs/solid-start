@@ -16,7 +16,8 @@ function initFromFlash(ctx: FetchEvent) {
     input,
     url: param.url,
     pending: false,
-    result: param.error ? new Error(param.result) : param.result,
+    result: param.error ? undefined : param.result,
+    error: param.error ? new Error(param.result) : undefined,
   };
 }
 
