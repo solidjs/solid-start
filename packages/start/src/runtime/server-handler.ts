@@ -2,16 +2,16 @@
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
 // @ts-ignore
 import {
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLPlugin,
-  URLSearchParamsPlugin
+	CustomEventPlugin,
+	DOMExceptionPlugin,
+	EventPlugin,
+	FormDataPlugin,
+	HeadersPlugin,
+	ReadableStreamPlugin,
+	RequestPlugin,
+	ResponsePlugin,
+	URLPlugin,
+	URLSearchParamsPlugin
 } from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
@@ -167,15 +167,18 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     }
 
     // handle responses
-    if (result instanceof Response && instance) {
-      // forward headers
-      if (result.headers) mergeResponseHeaders(h3Event, result.headers);
-      // forward non-redirect statuses
-      if (result.status && (result.status < 300 || result.status >= 400))
-        setResponseStatus(h3Event, result.status);
-      if ((result as any).customBody) {
-        result = await (result as any).customBody();
-      } else if (result.body == undefined) result = null;
+    if (result instanceof Response) {
+      if (result.headers && result.headers.has("X-Content-Raw")) return result;
+      if (instance) {
+        // forward headers
+        if (result.headers) mergeResponseHeaders(h3Event, result.headers);
+        // forward non-redirect statuses
+        if (result.status && (result.status < 300 || result.status >= 400))
+          setResponseStatus(h3Event, result.status);
+        if ((result as any).customBody) {
+          result = await (result as any).customBody();
+        } else if (result.body == undefined) result = null;
+      }
     }
 
     // handle no JS success case
