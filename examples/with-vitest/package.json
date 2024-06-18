@@ -11,7 +11,7 @@
   "type": "module",
   "devDependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.13.3",
+    "@solidjs/router": "^0.13.6",
     "@solidjs/start": "^1.0.1",
     "@solidjs/testing-library": "^0.8.7",
     "@testing-library/jest-dom": "^6.4.2",
@@ -20,7 +20,7 @@
     "jsdom": "^24.0.0",
     "solid-js": "^1.8.17",
     "typescript": "^5.4.5",
-    "vinxi": "^0.3.11",
+    "vinxi": "^0.3.12",
     "vite": "^5.2.8",
     "vite-plugin-solid": "^2.10.2",
     "vitest": "^1.5.0"

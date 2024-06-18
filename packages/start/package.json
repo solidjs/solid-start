@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.17",
-    "vinxi": "^0.3.11",
+    "vinxi": "^0.3.12",
     "typescript": "^5.4.2"
   },
   "dependencies": {

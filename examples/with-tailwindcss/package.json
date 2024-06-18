@@ -7,13 +7,13 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/router": "^0.13.3",
+    "@solidjs/router": "^0.13.6",
     "@solidjs/start": "^1.0.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "solid-js": "^1.8.17",
     "tailwindcss": "^3.4.3",
-    "vinxi": "^0.3.11"
+    "vinxi": "^0.3.12"
   },
   "engines": {
     "node": ">=18"
