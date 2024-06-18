@@ -31,8 +31,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: workspace:*
         version: link:packages/start
@@ -106,8 +106,8 @@ importers:
         specifier: ~0.29.0
         version: 0.29.0
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
       vite:
         specifier: ^5.1.1
         version: 5.2.11(@types/node@20.12.12)
@@ -121,8 +121,8 @@ importers:
         specifier: ^1.8.17
         version: 1.8.17
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/basic:
     dependencies:
@@ -130,8 +130,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -139,8 +139,8 @@ importers:
         specifier: ^1.8.17
         version: 1.8.17
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/experiments:
     dependencies:
@@ -148,8 +148,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -157,14 +157,14 @@ importers:
         specifier: ^1.8.17
         version: 1.8.17
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -172,14 +172,14 @@ importers:
         specifier: ^1.8.17
         version: 1.8.17
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/notes:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -196,14 +196,14 @@ importers:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/todomvc:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -214,14 +214,14 @@ importers:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/with-auth:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -232,8 +232,8 @@ importers:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -249,13 +249,13 @@ importers:
         version: 7.24.4
       '@solid-mediakit/auth':
         specifier: ^2.0.11
-        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.13.3)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.11)
+        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.13.6)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12)
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -263,8 +263,8 @@ importers:
         specifier: ^1.8.17
         version: 1.8.17
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -288,8 +288,8 @@ importers:
   examples/with-drizzle:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.0
         version: link:../../packages/start
@@ -303,8 +303,8 @@ importers:
         specifier: ^1.8.17
         version: 1.8.17
       vinxi:
-        specifier: 0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(better-sqlite3@10.0.0)(debug@4.3.4)(drizzle-orm@0.30.10)
+        specifier: 0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(better-sqlite3@10.0.0)(debug@4.3.4)(drizzle-orm@0.30.10)
     devDependencies:
       '@types/better-sqlite3':
         specifier: ^7.6.10
@@ -322,8 +322,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -337,8 +337,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.8.17)(vite@5.2.11)
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/with-prisma:
     dependencies:
@@ -346,8 +346,8 @@ importers:
         specifier: ^5.12.1
         version: 5.14.0(prisma@5.14.0)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -358,8 +358,8 @@ importers:
         specifier: ^1.8.17
         version: 1.8.17
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -371,8 +371,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -383,8 +383,8 @@ importers:
         specifier: ^0.11.1
         version: 0.11.1(solid-js@1.8.17)
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
       vite-plugin-solid-styled:
         specifier: ^0.11.1
         version: 0.11.1(solid-styled@0.11.1)(vite@5.2.11)
@@ -392,8 +392,8 @@ importers:
   examples/with-tailwindcss:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -410,8 +410,8 @@ importers:
         specifier: ^3.4.3
         version: 3.4.3
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/with-trpc:
     dependencies:
@@ -419,8 +419,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -440,14 +440,14 @@ importers:
         specifier: ^0.29.0
         version: 0.29.0
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/with-unocss:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
@@ -461,8 +461,8 @@ importers:
         specifier: ^0.59.2
         version: 0.59.4(postcss@8.4.38)(vite@5.2.11)
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
   examples/with-vitest:
     devDependencies:
@@ -470,14 +470,14 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.3
-        version: 0.13.3(solid-js@1.8.17)
+        specifier: ^0.13.6
+        version: 0.13.6(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.1
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.7
-        version: 0.8.8(@solidjs/router@0.13.3)(solid-js@1.8.17)
+        version: 0.8.8(@solidjs/router@0.13.6)(solid-js@1.8.17)
       '@testing-library/jest-dom':
         specifier: ^6.4.2
         version: 6.4.5(vitest@1.6.0)
@@ -497,8 +497,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
       vite:
         specifier: ^5.2.8
         version: 5.2.11(@types/node@20.12.12)
@@ -567,13 +567,13 @@ importers:
     dependencies:
       '@vinxi/plugin-directives':
         specifier: ^0.3.1
-        version: 0.3.1(vinxi@0.3.11)
+        version: 0.3.1(vinxi@0.3.12)
       '@vinxi/server-components':
         specifier: ^0.3.3
-        version: 0.3.3(vinxi@0.3.11)
+        version: 0.3.3(vinxi@0.3.12)
       '@vinxi/server-functions':
         specifier: ^0.3.2
-        version: 0.3.2(vinxi@0.3.11)
+        version: 0.3.2(vinxi@0.3.12)
       defu:
         specifier: ^6.1.2
         version: 6.1.4
@@ -618,8 +618,8 @@ importers:
         specifier: ^5.4.2
         version: 5.4.5
       vinxi:
-        specifier: ^0.3.11
-        version: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.12
+        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
 
 packages:
 
@@ -1338,6 +1338,7 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/android-arm64@0.18.7:
@@ -1380,6 +1381,7 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/android-arm@0.18.7:
@@ -1422,6 +1424,7 @@ packages:
     cpu: [x64]
     os: [android]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/android-x64@0.18.7:
@@ -1464,6 +1467,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/darwin-arm64@0.18.7:
@@ -1506,6 +1510,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/darwin-x64@0.18.7:
@@ -1548,6 +1553,7 @@ packages:
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/freebsd-arm64@0.18.7:
@@ -1590,6 +1596,7 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/freebsd-x64@0.18.7:
@@ -1632,6 +1639,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-arm64@0.18.7:
@@ -1674,6 +1682,7 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-arm@0.18.7:
@@ -1716,6 +1725,7 @@ packages:
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-ia32@0.18.7:
@@ -1758,6 +1768,7 @@ packages:
     cpu: [loong64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-loong64@0.18.7:
@@ -1800,6 +1811,7 @@ packages:
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-mips64el@0.18.7:
@@ -1842,6 +1854,7 @@ packages:
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-ppc64@0.18.7:
@@ -1884,6 +1897,7 @@ packages:
     cpu: [riscv64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-riscv64@0.18.7:
@@ -1926,6 +1940,7 @@ packages:
     cpu: [s390x]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-s390x@0.18.7:
@@ -1968,6 +1983,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/linux-x64@0.18.7:
@@ -2010,6 +2026,7 @@ packages:
     cpu: [x64]
     os: [netbsd]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/netbsd-x64@0.18.7:
@@ -2052,6 +2069,7 @@ packages:
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/openbsd-x64@0.18.7:
@@ -2094,6 +2112,7 @@ packages:
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/sunos-x64@0.18.7:
@@ -2136,6 +2155,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/win32-arm64@0.18.7:
@@ -2178,6 +2198,7 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/win32-ia32@0.18.7:
@@ -2220,6 +2241,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@esbuild/win32-x64@0.18.7:
@@ -3124,7 +3146,7 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
-  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.13.3)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.11):
+  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.13.6)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12):
     resolution: {integrity: sha512-oo5BKqsWLbpK++R97mf9z5xc56zIO70hJQeOBRIsEVrZRa07GQEwzLJdmYZpbDzoHInjBtCjLAEp//PkY2LiJA==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -3138,12 +3160,12 @@ packages:
       '@auth/core': 0.29.0
       '@solid-mediakit/shared': 0.0.3
       '@solidjs/meta': 0.29.4(solid-js@1.8.17)
-      '@solidjs/router': 0.13.3(solid-js@1.8.17)
+      '@solidjs/router': 0.13.6(solid-js@1.8.17)
       '@solidjs/start': link:packages/start
       cookie: 0.6.0
       set-cookie-parser: 2.6.0
       solid-js: 1.8.17
-      vinxi: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -3262,14 +3284,14 @@ packages:
     dependencies:
       solid-js: 1.8.17
 
-  /@solidjs/router@0.13.3(solid-js@1.8.17):
-    resolution: {integrity: sha512-p8zznlvnN3KySMXqT8irhubgDNTETNa/guaGHU/cZl7kuiPO3PmkWNYfoNCygtEpoxLmLpf62/ZKeyhFdZexsw==}
+  /@solidjs/router@0.13.6(solid-js@1.8.17):
+    resolution: {integrity: sha512-CdpFsBYoiJ/FQ4wZIamj3KEFRkmrYu5sVXM6PouNkmSENta1YJamsm9wa/VjaPmkw2RsnDnO0UvZ705v6EgOXQ==}
     peerDependencies:
       solid-js: ^1.8.6
     dependencies:
       solid-js: 1.8.17
 
-  /@solidjs/testing-library@0.8.8(@solidjs/router@0.13.3)(solid-js@1.8.17):
+  /@solidjs/testing-library@0.8.8(@solidjs/router@0.13.6)(solid-js@1.8.17):
     resolution: {integrity: sha512-47J9Aw+iG45Fs5Kxu/IJmkaaucpF7qhDazW+iXeNssAYI0FH+4MeM/SfYRhPbIMH/hBpMh/XjbK1Wpyu9PcSwg==}
     engines: {node: '>= 14'}
     peerDependencies:
@@ -3279,7 +3301,7 @@ packages:
       '@solidjs/router':
         optional: true
     dependencies:
-      '@solidjs/router': 0.13.3(solid-js@1.8.17)
+      '@solidjs/router': 0.13.6(solid-js@1.8.17)
       '@testing-library/dom': 10.1.0
       solid-js: 1.8.17
     dev: true
@@ -3810,7 +3832,7 @@ packages:
     transitivePeerDependencies:
       - uWebSockets.js
 
-  /@vinxi/plugin-directives@0.3.1(vinxi@0.3.11):
+  /@vinxi/plugin-directives@0.3.1(vinxi@0.3.12):
     resolution: {integrity: sha512-4qz5WifjmJ864VS8Ik9nUG0wAkt/xIcxFpP29RXogGLgccRnceBpWQi+ghw5rm0F6LP/YMAhhO5iFORXclWd0Q==}
     peerDependencies:
       vinxi: ^0.3.10
@@ -3824,7 +3846,7 @@ packages:
       magicast: 0.2.11
       recast: 0.23.7
       tslib: 2.6.2
-      vinxi: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     dev: false
 
   /@vinxi/plugin-mdx@3.7.1(@mdx-js/mdx@2.3.0):
@@ -3839,34 +3861,34 @@ packages:
       unified: 9.2.2
       vfile: 5.3.7
 
-  /@vinxi/server-components@0.3.3(vinxi@0.3.11):
+  /@vinxi/server-components@0.3.3(vinxi@0.3.12):
     resolution: {integrity: sha512-xaW92nj9HUMLyswPcCmsIXOsS3TJll0m9u3WEjWjLrtZWheHggina6+kTCSeltp/Qe8WlUfNU5G02Xy8L4xQxA==}
     peerDependencies:
       vinxi: ^0.3.10
     dependencies:
-      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.11)
+      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.12)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.7
-      vinxi: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     dev: false
 
-  /@vinxi/server-functions@0.3.2(vinxi@0.3.11):
+  /@vinxi/server-functions@0.3.2(vinxi@0.3.12):
     resolution: {integrity: sha512-PoARb1X480UE9jysPqltpzginBftna34GmZ3HyvRT+pnPfsGcuHOzZe/a18V/K04qk2yMRd7eeW42JF5O+wunw==}
     peerDependencies:
       vinxi: ^0.3.10
     dependencies:
-      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.11)
+      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.12)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.7
-      vinxi: 0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     dev: false
 
   /@vitest/expect@1.6.0:
@@ -5469,6 +5491,7 @@ packages:
       '@esbuild/win32-arm64': 0.18.20
       '@esbuild/win32-ia32': 0.18.20
       '@esbuild/win32-x64': 0.18.20
+    dev: true
 
   /esbuild@0.18.7:
     resolution: {integrity: sha512-46V0EFvQ/urmruUCChD1e0SZJWM0Ulny5F+uf5QkBry97HfvgvZTnjpTrwmw0+CGRhqTh9zpFeB+W8WGIEXOAQ==}
@@ -10524,8 +10547,8 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(better-sqlite3@10.0.0)(debug@4.3.4)(drizzle-orm@0.30.10):
-    resolution: {integrity: sha512-ASEpiwldZIsViv2/ZlO6qnRhDAwxr92nKXxMOinA+5nCY7nlaKgekaLDjTyUmFzB8DSiXVZqmHnd6OZVkn4vzw==}
+  /vinxi@0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(better-sqlite3@10.0.0)(debug@4.3.4)(drizzle-orm@0.30.10):
+    resolution: {integrity: sha512-YU/Scild/Rdy6qwgdILYRlO99Wp8ti2CmlMlYioEg7lRtxAST5iCFjviDya+BYQDgc3Pugh4KzOypVwjZknF2A==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
@@ -10541,7 +10564,7 @@ packages:
       dax-sh: 0.39.2
       defu: 6.1.4
       es-module-lexer: 1.5.3
-      esbuild: 0.18.20
+      esbuild: 0.20.2
       fast-glob: 3.3.2
       get-port-please: 3.1.2
       h3: 1.11.1
@@ -10594,8 +10617,8 @@ packages:
       - xml2js
     dev: false
 
-  /vinxi@0.3.11(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4):
-    resolution: {integrity: sha512-ASEpiwldZIsViv2/ZlO6qnRhDAwxr92nKXxMOinA+5nCY7nlaKgekaLDjTyUmFzB8DSiXVZqmHnd6OZVkn4vzw==}
+  /vinxi@0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4):
+    resolution: {integrity: sha512-YU/Scild/Rdy6qwgdILYRlO99Wp8ti2CmlMlYioEg7lRtxAST5iCFjviDya+BYQDgc3Pugh4KzOypVwjZknF2A==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
@@ -10611,7 +10634,7 @@ packages:
       dax-sh: 0.39.2
       defu: 6.1.4
       es-module-lexer: 1.5.3
-      esbuild: 0.18.20
+      esbuild: 0.20.2
       fast-glob: 3.3.2
       get-port-please: 3.1.2
       h3: 1.11.1
