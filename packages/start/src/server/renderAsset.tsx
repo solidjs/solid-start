@@ -14,7 +14,10 @@ const assetMap = {
         {" "}
       </script>
     ) : null;
-  }
+  },
+  noscript: (props: { attrs: JSX.HTMLAttributes<HTMLElement>; children: JSX.Element }) => (
+    <noscript {...props.attrs}>{props.children}</noscript>
+  ),
 };
 
 export function renderAsset(asset: Asset, nonce?: string) {
