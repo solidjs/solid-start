@@ -1,0 +1,53 @@
+name: 📜 Docs
+
+on:
+  push:
+    branches:
+      - main
+  merge_group:
+  pull_request:
+    paths:
+      - "docs/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+jobs:
+  docs:
+    name: "📜 Docs"
+
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build start
+        run: pnpm run build
+
+      - name: Build docs
+        run: pnpm run docs:build
+        env:
+          TARGET: cloudflare_module
+
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npx wrangler deploy
+        env:
+          WRANGLER_LOG: debug

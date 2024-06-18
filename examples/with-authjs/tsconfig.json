@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
     "strict": true,

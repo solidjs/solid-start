@@ -10,7 +10,7 @@
     "types": ["@solidjs/start/env"],
     "baseUrl": "./",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./docs/*"]
     }
   }
 }

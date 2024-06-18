@@ -10,7 +10,7 @@ import {
   ssr,
   useAssets
 } from "solid-js/web";
-import { ErrorBoundary } from "../shared/ErrorBoundary";
+import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary";
 import { renderAsset } from "./renderAsset";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types";
 
@@ -31,12 +31,16 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
   }
 }
 
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/server/start-server
+ */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
   // @ts-ignore
   const nonce = context.nonce;
 
-  let assets: Asset[];
+  let assets: Asset[] = [];
   Promise.resolve().then(async () => {
     let assetPromises: Promise<Asset[]>[] = [];
     // @ts-ignore
@@ -70,59 +74,61 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   return (
     <NoHydration>
       {docType as unknown as any}
-      <props.document
-        assets={
-          <>
-            <HydrationScript />
-            {context.assets.map((m: any) => renderAsset(m, nonce))}
-          </>
-        }
-        scripts={
-          nonce ? (
+      <TopErrorBoundary>
+        <props.document
+          assets={
             <>
-              <script
-                nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-              />
-              <script
-                type="module"
-                nonce={nonce}
-                async
-                src={
-                  import.meta.env.MANIFEST["client"]!.inputs[
-                    import.meta.env.MANIFEST["client"]!.handler
-                  ]!.output.path
-                }
-              />
+              <HydrationScript />
+              {context.assets.map((m: any) => renderAsset(m, nonce))}
             </>
+          }
+          scripts={
+            nonce ? (
+              <>
+                <script
+                  nonce={nonce}
+                  innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
+                />
+                <script
+                  type="module"
+                  nonce={nonce}
+                  async
+                  src={
+                    import.meta.env.MANIFEST["client"]!.inputs[
+                      import.meta.env.MANIFEST["client"]!.handler
+                    ]!.output.path
+                  }
+                />
+              </>
+            ) : (
+              <>
+                <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
+                <script
+                  type="module"
+                  async
+                  src={
+                    import.meta.env.MANIFEST["client"]!.inputs[
+                      import.meta.env.MANIFEST["client"]!.handler
+                    ]!.output.path
+                  }
+                />
+              </>
+            )
+          }
+        >
+          {!import.meta.env.START_ISLANDS ? (
+            <Hydration>
+              <ErrorBoundary>
+                <App />
+              </ErrorBoundary>
+            </Hydration>
           ) : (
-            <>
-              <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-              <script
-                type="module"
-                async
-                src={
-                  import.meta.env.MANIFEST["client"]!.inputs[
-                    import.meta.env.MANIFEST["client"]!.handler
-                  ]!.output.path
-                }
-              />
-            </>
-          )
-        }
-      >
-        {!import.meta.env.START_ISLANDS ? (
-          <Hydration>
             <ErrorBoundary>
               <App />
             </ErrorBoundary>
-          </Hydration>
-        ) : (
-          <ErrorBoundary>
-            <App />
-          </ErrorBoundary>
-        )}
-      </props.document>
+          )}
+        </props.document>
+      </TopErrorBoundary>
     </NoHydration>
   );
 }

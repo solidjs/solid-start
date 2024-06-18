@@ -1,7 +1,17 @@
 import type { JSX } from "solid-js";
 import { createStore } from "solid-js/store";
-import { createComponent, getHydrationKey, getOwner, hydrate, type MountableElement } from "solid-js/web";
+import {
+  createComponent,
+  getHydrationKey,
+  getOwner,
+  hydrate,
+  type MountableElement
+} from "solid-js/web";
 
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/client/mount
+ */
 export function mount(fn: () => JSX.Element, el: MountableElement) {
   if (import.meta.env.START_ISLANDS) {
     const map = new WeakMap();
@@ -20,7 +30,8 @@ export function mount(fn: () => JSX.Element, el: MountableElement) {
 
       let mod = await import(
         /* @vite-ignore */
-        import.meta.env.MANIFEST["client"]!.chunks[el.dataset.id!.split("#")[0] as string]!.output.path
+        import.meta.env.MANIFEST["client"]!.chunks[el.dataset.id!.split("#")[0] as string]!.output
+          .path
       );
       if (!mod || !el.dataset.hk) return;
 
@@ -69,7 +80,11 @@ export function mount(fn: () => JSX.Element, el: MountableElement) {
       Promise.all(
         [...assets].map(
           asset =>
-            import(/* @vite-ignore */import.meta.env.MANIFEST["client"]!.chunks[asset.split("#")[0] as string]!.output.path)
+            import(
+              /* @vite-ignore */ import.meta.env.MANIFEST["client"]!.chunks[
+                asset.split("#")[0] as string
+              ]!.output.path
+            )
         )
       )
         .then(() => {

@@ -1,0 +1,25 @@
+{
+  "name": "example-with-drizzle",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/node": "^20.12.12",
+    "drizzle-kit": "^0.21.4"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.13.3",
+    "@solidjs/start": "^1.0.0",
+    "better-sqlite3": "^10.0.0",
+    "drizzle-orm": "^0.30.10",
+    "solid-js": "^1.8.17",
+    "vinxi": "0.3.11"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

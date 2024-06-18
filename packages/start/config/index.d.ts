@@ -3,10 +3,15 @@ import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
 import { InlineConfig } from "vite";
 import type { Options } from "vite-plugin-solid";
 
-// atleast until we sort which server options are good to use
+// should probably be maintained by Vinxi
+type VinxiViteServerOptions = Omit<
+  InlineConfig["server"],
+  "port" | "strictPort" | "host" | "middlewareMode" | "open"
+>;
+
 type ViteCustomizableConfig = CustomizableConfig & {
-  server?: InlineConfig["server"];
-}
+  server?: VinxiViteServerOptions;
+};
 
 type SolidStartInlineConfig = {
   ssr?: boolean;
@@ -16,13 +21,19 @@ type SolidStartInlineConfig = {
   appRoot?: string;
   routeDir?: string;
   middleware?: string;
-  devOverlay?:  boolean;
+  devOverlay?: boolean;
   experimental?: {
     islands?: boolean;
-  }
+  };
   vite?:
     | ViteCustomizableConfig
     | ((options: { router: "server" | "client" | "server-function" }) => ViteCustomizableConfig);
 };
 
-export declare function defineConfig(baseConfig?: SolidStartInlineConfig): ReturnType<typeof createApp>;
+/**
+ *
+ * Read more: https://docs.solidjs.com/solid-start/reference/entrypoints/app-config
+ */
+export declare function defineConfig(
+  baseConfig?: SolidStartInlineConfig
+): ReturnType<typeof createApp>;

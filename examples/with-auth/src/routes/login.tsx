@@ -1,6 +1,6 @@
 import {
-    useSubmission,
-    type RouteSectionProps
+  useSubmission,
+  type RouteSectionProps
 } from "@solidjs/router";
 import { Show } from "solid-js";
 import { loginOrRegister } from "~/lib";
