@@ -7,6 +7,9 @@ export default defineConfig({
   // experimental: { islands: true },
   server: {
     preset: "cloudflare_module",
+    alias: {
+      "_mime": "mime/index.js"
+    },
     rollupConfig: {
       external: ["__STATIC_CONTENT_MANIFEST", "node:async_hooks"]
     }
