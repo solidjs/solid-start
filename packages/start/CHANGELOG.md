@@ -1,5 +1,18 @@
 # @solidjs/start
 
+## 1.0.2
+
+### Patch Changes
+
+- 9da8b18: fix #1547 add noscript tags to asset rendering
+- d932ebd: Omit some keys from Vite server config
+- b02151f: Add new response type in middleware function
+- ae6ca2e: fix #1514 error header sanitization
+- a52cea5: Pass event to getResponseStatus in set statusCode
+- b47ab2c: Set X-Error for thrown Responses
+- bfdd099: better fix for #1552 error propagation with nojs
+- 23ee2de: fix #1550, add "X-Content-Raw" header
+
 ## 1.0.1
 
 ### Patch Changes

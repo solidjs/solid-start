@@ -2,16 +2,16 @@
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
 // @ts-ignore
 import {
-	CustomEventPlugin,
-	DOMExceptionPlugin,
-	EventPlugin,
-	FormDataPlugin,
-	HeadersPlugin,
-	ReadableStreamPlugin,
-	RequestPlugin,
-	ResponsePlugin,
-	URLPlugin,
-	URLSearchParamsPlugin
+  CustomEventPlugin,
+  DOMExceptionPlugin,
+  EventPlugin,
+  FormDataPlugin,
+  HeadersPlugin,
+  ReadableStreamPlugin,
+  RequestPlugin,
+  ResponsePlugin,
+  URLPlugin,
+  URLSearchParamsPlugin
 } from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
@@ -202,7 +202,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       setHeader(h3Event, "X-Error", "true");
     } else if (instance) {
       const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
-      setHeader(h3Event, "X-Error", error);
+      setHeader(h3Event, "X-Error", error.replace(/[\r\n]+/g, ""));
     } else {
       x = handleNoJS(x, request, parsed, true);
     }

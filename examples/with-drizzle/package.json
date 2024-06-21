@@ -12,12 +12,12 @@
     "drizzle-kit": "^0.21.4"
   },
   "dependencies": {
-    "@solidjs/router": "^0.13.3",
+    "@solidjs/router": "^0.13.6",
     "@solidjs/start": "^1.0.0",
     "better-sqlite3": "^10.0.0",
     "drizzle-orm": "^0.30.10",
     "solid-js": "^1.8.17",
-    "vinxi": "0.3.11"
+    "vinxi": "0.3.12"
   },
   "engines": {
     "node": ">=20"
