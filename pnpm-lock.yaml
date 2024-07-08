@@ -31,8 +31,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: workspace:*
         version: link:packages/start
@@ -130,8 +130,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -148,8 +148,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -163,8 +163,8 @@ importers:
   examples/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -178,8 +178,8 @@ importers:
   examples/notes:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -202,8 +202,8 @@ importers:
   examples/todomvc:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -220,8 +220,8 @@ importers:
   examples/with-auth:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -249,13 +249,13 @@ importers:
         version: 7.24.4
       '@solid-mediakit/auth':
         specifier: ^2.0.11
-        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.13.6)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12)
+        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12)
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -288,8 +288,8 @@ importers:
   examples/with-drizzle:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -322,8 +322,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -346,8 +346,8 @@ importers:
         specifier: ^5.12.1
         version: 5.14.0(prisma@5.14.0)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -371,8 +371,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -392,8 +392,8 @@ importers:
   examples/with-tailwindcss:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -419,8 +419,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -446,8 +446,8 @@ importers:
   examples/with-unocss:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -470,14 +470,14 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.17)
       '@solidjs/router':
-        specifier: ^0.13.6
-        version: 0.13.6(solid-js@1.8.17)
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.17)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.7
-        version: 0.8.8(@solidjs/router@0.13.6)(solid-js@1.8.17)
+        version: 0.8.8(@solidjs/router@0.14.1)(solid-js@1.8.17)
       '@testing-library/jest-dom':
         specifier: ^6.4.2
         version: 6.4.5(vitest@1.6.0)
@@ -3146,7 +3146,7 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
-  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.13.6)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12):
+  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12):
     resolution: {integrity: sha512-oo5BKqsWLbpK++R97mf9z5xc56zIO70hJQeOBRIsEVrZRa07GQEwzLJdmYZpbDzoHInjBtCjLAEp//PkY2LiJA==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -3160,7 +3160,7 @@ packages:
       '@auth/core': 0.29.0
       '@solid-mediakit/shared': 0.0.3
       '@solidjs/meta': 0.29.4(solid-js@1.8.17)
-      '@solidjs/router': 0.13.6(solid-js@1.8.17)
+      '@solidjs/router': 0.14.1(solid-js@1.8.17)
       '@solidjs/start': link:packages/start
       cookie: 0.6.0
       set-cookie-parser: 2.6.0
@@ -3284,14 +3284,14 @@ packages:
     dependencies:
       solid-js: 1.8.17
 
-  /@solidjs/router@0.13.6(solid-js@1.8.17):
-    resolution: {integrity: sha512-CdpFsBYoiJ/FQ4wZIamj3KEFRkmrYu5sVXM6PouNkmSENta1YJamsm9wa/VjaPmkw2RsnDnO0UvZ705v6EgOXQ==}
+  /@solidjs/router@0.14.1(solid-js@1.8.17):
+    resolution: {integrity: sha512-GumQ4jbt5xDngLypAndC4EjapY/3DP0G8Az4YWEVQHdCtjHwB8IOm32eEBxE9lKpOffbtXV0r/0X0mofHJ1m5w==}
     peerDependencies:
       solid-js: ^1.8.6
     dependencies:
       solid-js: 1.8.17
 
-  /@solidjs/testing-library@0.8.8(@solidjs/router@0.13.6)(solid-js@1.8.17):
+  /@solidjs/testing-library@0.8.8(@solidjs/router@0.14.1)(solid-js@1.8.17):
     resolution: {integrity: sha512-47J9Aw+iG45Fs5Kxu/IJmkaaucpF7qhDazW+iXeNssAYI0FH+4MeM/SfYRhPbIMH/hBpMh/XjbK1Wpyu9PcSwg==}
     engines: {node: '>= 14'}
     peerDependencies:
@@ -3301,7 +3301,7 @@ packages:
       '@solidjs/router':
         optional: true
     dependencies:
-      '@solidjs/router': 0.13.6(solid-js@1.8.17)
+      '@solidjs/router': 0.14.1(solid-js@1.8.17)
       '@testing-library/dom': 10.1.0
       solid-js: 1.8.17
     dev: true

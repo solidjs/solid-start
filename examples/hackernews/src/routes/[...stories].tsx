@@ -5,7 +5,7 @@ import { getStories } from "~/lib/api";
 import { StoryTypes } from "~/types";
 
 export const route = {
-  load({ location, params }) {
+  preload({ location, params }) {
     void getStories((params.stories as StoryTypes) || "top", +location.query.page || 1);
   }
 } satisfies RouteDefinition;

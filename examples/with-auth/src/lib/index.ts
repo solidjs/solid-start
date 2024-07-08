@@ -20,7 +20,7 @@ export const getUser = cache(async () => {
     return { id: user.id, username: user.username };
   } catch {
     await logoutSession();
-    throw redirect("/login");
+    redirect("/login");
   }
 }, "user");
 
