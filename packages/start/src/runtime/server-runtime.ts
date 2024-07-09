@@ -227,6 +227,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
           return fn;
         };
       }
+      return (target as any)[prop];
     },
     apply(target, thisArg, args) {
       return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, {}, args);

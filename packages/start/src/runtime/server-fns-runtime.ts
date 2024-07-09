@@ -11,6 +11,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
         return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
       }
       if (prop === "GET") return receiver;
+      return (target as any)[prop];
     },
     apply(target, thisArg, args) {
       const ogEvt = getRequestEvent();
