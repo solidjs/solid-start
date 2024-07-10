@@ -1,5 +1,14 @@
 # @solidjs/start
 
+## 1.0.3
+
+### Patch Changes
+
+- 1ec5e29: send URLSearchParams in server functions as urlencoded
+- e53f086: update deps
+- ac2d983: Safeguard of H3Event body stream locking in edge runtime
+- c966159: fix server function proxy passthrough
+
 ## 1.0.2
 
 ### Patch Changes
