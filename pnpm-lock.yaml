@@ -23,16 +23,16 @@ importers:
         version: 0.2.0
       '@kobalte/core':
         specifier: ^0.13.1
-        version: 0.13.1(solid-js@1.8.17)
+        version: 0.13.1(solid-js@1.8.18)
       '@kobalte/utils':
         specifier: ^0.9.0
-        version: 0.9.0(solid-js@1.8.17)
+        version: 0.9.0(solid-js@1.8.18)
       '@solidjs/meta':
         specifier: ^0.29.0
-        version: 0.29.4(solid-js@1.8.17)
+        version: 0.29.4(solid-js@1.8.18)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: workspace:*
         version: link:packages/start
@@ -73,17 +73,17 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       solid-mdx:
         specifier: ^0.0.7
-        version: 0.0.7(solid-js@1.8.17)(vite@5.2.11)
+        version: 0.0.7(solid-js@1.8.18)(vite@5.2.11)
       solid-start-mdx:
         specifier: workspace:*
         version: link:packages/mdx
       solid-transition-group:
         specifier: ^0.2.3
-        version: 0.2.3(solid-js@1.8.17)
+        version: 0.2.3(solid-js@1.8.18)
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
@@ -106,8 +106,8 @@ importers:
         specifier: ~0.29.0
         version: 0.29.0
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
       vite:
         specifier: ^5.1.1
         version: 5.2.11(@types/node@20.14.8)
@@ -118,68 +118,68 @@ importers:
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/basic:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.8.17)
+        version: 0.29.4(solid-js@1.8.18)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/experiments:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.8.17)
+        version: 0.29.4(solid-js@1.8.18)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/hackernews:
     dependencies:
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/notes:
     dependencies:
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -190,50 +190,50 @@ importers:
         specifier: ^12.0.1
         version: 12.0.2
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/todomvc:
     dependencies:
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-auth:
     dependencies:
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -249,22 +249,22 @@ importers:
         version: 7.24.4
       '@solid-mediakit/auth':
         specifier: ^2.0.11
-        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12)
+        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.18)(vinxi@0.3.14)
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.8.17)
+        version: 0.29.4(solid-js@1.8.18)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -289,7 +289,7 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -300,11 +300,11 @@ importers:
         specifier: ^0.31.2
         version: 0.31.2(@opentelemetry/api@1.8.0)(@types/better-sqlite3@7.6.10)(better-sqlite3@11.0.0)
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       vinxi:
-        specifier: 0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
     devDependencies:
       '@types/better-sqlite3':
         specifier: ^7.6.10
@@ -323,7 +323,7 @@ importers:
         version: 2.3.0
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -331,14 +331,14 @@ importers:
         specifier: ^3.7.1
         version: 3.7.1(@mdx-js/mdx@2.3.0)
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       solid-mdx:
         specifier: ^0.0.7
-        version: 0.0.7(solid-js@1.8.17)(vite@5.2.11)
+        version: 0.0.7(solid-js@1.8.18)(vite@5.2.11)
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-prisma:
     dependencies:
@@ -347,7 +347,7 @@ importers:
         version: 5.14.0(prisma@5.14.0)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -355,11 +355,11 @@ importers:
         specifier: ^5.12.1
         version: 5.14.0
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -369,22 +369,22 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.8.17)
+        version: 0.29.4(solid-js@1.8.18)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       solid-styled:
         specifier: ^0.11.1
-        version: 0.11.1(solid-js@1.8.17)
+        version: 0.11.1(solid-js@1.8.18)
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
       vite-plugin-solid-styled:
         specifier: ^0.11.1
         version: 0.11.1(solid-styled@0.11.1)(vite@5.2.11)
@@ -393,7 +393,7 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -404,23 +404,23 @@ importers:
         specifier: ^8.4.38
         version: 8.4.38
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       tailwindcss:
         specifier: ^3.4.3
         version: 3.4.3
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-trpc:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.8.17)
+        version: 0.29.4(solid-js@1.8.18)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -434,20 +434,20 @@ importers:
         specifier: ^0.13.4
         version: 0.13.4(valibot@0.29.0)
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       valibot:
         specifier: ^0.29.0
         version: 0.29.0
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-unocss:
     dependencies:
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
@@ -455,29 +455,29 @@ importers:
         specifier: ^0.59.2
         version: 0.59.4
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       unocss:
         specifier: ^0.59.2
         version: 0.59.4(postcss@8.4.38)(vite@5.2.11)
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-vitest:
     devDependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.8.17)
+        version: 0.29.4(solid-js@1.8.18)
       '@solidjs/router':
         specifier: ^0.14.1
-        version: 0.14.1(solid-js@1.8.17)
+        version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
         specifier: ^1.0.2
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.7
-        version: 0.8.8(@solidjs/router@0.14.1)(solid-js@1.8.17)
+        version: 0.8.8(@solidjs/router@0.14.1)(solid-js@1.8.18)
       '@testing-library/jest-dom':
         specifier: ^6.4.2
         version: 6.4.5(vitest@1.6.0)
@@ -491,20 +491,20 @@ importers:
         specifier: ^24.0.0
         version: 24.0.0
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
       vite:
         specifier: ^5.2.8
         version: 5.2.11(@types/node@20.14.8)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.5)(solid-js@1.8.17)(vite@5.2.11)
+        version: 2.10.2(@testing-library/jest-dom@6.4.5)(solid-js@1.8.18)(vite@5.2.11)
       vitest:
         specifier: ^1.5.0
         version: 1.6.0(@vitest/ui@1.6.0)(jsdom@24.0.0)
@@ -552,7 +552,7 @@ importers:
         version: 3.1.3(typescript@5.4.5)
       solid-mdx:
         specifier: ^0.0.7
-        version: 0.0.7(solid-js@1.8.17)(vite@5.2.11)
+        version: 0.0.7(solid-js@1.8.18)(vite@5.2.11)
       unified:
         specifier: ^10.1.2
         version: 10.1.2
@@ -567,13 +567,13 @@ importers:
     dependencies:
       '@vinxi/plugin-directives':
         specifier: ^0.3.1
-        version: 0.3.1(vinxi@0.3.12)
+        version: 0.3.1(vinxi@0.3.14)
       '@vinxi/server-components':
         specifier: ^0.3.3
-        version: 0.3.3(vinxi@0.3.12)
+        version: 0.3.3(vinxi@0.3.14)
       '@vinxi/server-functions':
-        specifier: ^0.3.2
-        version: 0.3.2(vinxi@0.3.12)
+        specifier: ^0.3.3
+        version: 0.3.3(vinxi@0.3.14)
       defu:
         specifier: ^6.1.2
         version: 6.1.4
@@ -603,23 +603,23 @@ importers:
         version: 1.2.0
       terracotta:
         specifier: ^1.0.4
-        version: 1.0.5(solid-js@1.8.17)
+        version: 1.0.5(solid-js@1.8.18)
       vite-plugin-inspect:
         specifier: ^0.7.33
         version: 0.7.42(vite@5.2.11)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.5)(solid-js@1.8.17)(vite@5.2.11)
+        version: 2.10.2(@testing-library/jest-dom@6.4.5)(solid-js@1.8.18)(vite@5.2.11)
     devDependencies:
       solid-js:
-        specifier: ^1.8.17
-        version: 1.8.17
+        specifier: ^1.8.18
+        version: 1.8.18
       typescript:
         specifier: ^5.4.2
         version: 5.4.5
       vinxi:
-        specifier: ^0.3.12
-        version: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.3.14
+        version: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
 packages:
 
@@ -1249,13 +1249,13 @@ packages:
     dev: false
     optional: true
 
-  /@corvu/utils@0.2.0(solid-js@1.8.17):
+  /@corvu/utils@0.2.0(solid-js@1.8.18):
     resolution: {integrity: sha512-cY0w+SotjOtBX+9oE90vis1Mu2spwGhtcAn4jmrl7JPqQrm68DH/0Rh3R52dN2MbgPVZL06N3mvys18myF5/0Q==}
     peerDependencies:
       solid-js: ^1.8
     dependencies:
       '@floating-ui/dom': 1.6.5
-      solid-js: 1.8.17
+      solid-js: 1.8.18
     dev: true
 
   /@cspotcode/source-map-support@0.8.1:
@@ -2378,7 +2378,7 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: false
 
-  /@kobalte/core@0.13.1(solid-js@1.8.17):
+  /@kobalte/core@0.13.1(solid-js@1.8.18):
     resolution: {integrity: sha512-ROFTM2EZhOS+PxCTD+a2LKvzi8ZA7uiDvAt9/rAHzlaAykJPWXCpRuB/PYKiA7iPssGU3Fno3GT5bgRoZAc3KQ==}
     peerDependencies:
       solid-js: ^1.8.15
@@ -2386,24 +2386,24 @@ packages:
       '@floating-ui/dom': 1.6.5
       '@internationalized/date': 3.5.4
       '@internationalized/number': 3.5.3
-      '@kobalte/utils': 0.9.0(solid-js@1.8.17)
-      solid-js: 1.8.17
-      solid-prevent-scroll: 0.1.7(solid-js@1.8.17)
+      '@kobalte/utils': 0.9.0(solid-js@1.8.18)
+      solid-js: 1.8.18
+      solid-prevent-scroll: 0.1.7(solid-js@1.8.18)
     dev: true
 
-  /@kobalte/utils@0.9.0(solid-js@1.8.17):
+  /@kobalte/utils@0.9.0(solid-js@1.8.18):
     resolution: {integrity: sha512-TYVCpQcpqo1+0HBn3NXoGEBzxd4tH6Um1oc07nrYw1V7Qq0qbMaYAOnfBc1qhlh7sGV4XZldmb0j13Of0FrZQg==}
     peerDependencies:
       solid-js: ^1.7.11
     dependencies:
-      '@solid-primitives/event-listener': 2.3.3(solid-js@1.8.17)
-      '@solid-primitives/keyed': 1.2.2(solid-js@1.8.17)
-      '@solid-primitives/map': 0.4.11(solid-js@1.8.17)
-      '@solid-primitives/media': 2.2.9(solid-js@1.8.17)
-      '@solid-primitives/props': 3.1.11(solid-js@1.8.17)
-      '@solid-primitives/refs': 1.0.8(solid-js@1.8.17)
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/event-listener': 2.3.3(solid-js@1.8.18)
+      '@solid-primitives/keyed': 1.2.2(solid-js@1.8.18)
+      '@solid-primitives/map': 0.4.11(solid-js@1.8.18)
+      '@solid-primitives/media': 2.2.9(solid-js@1.8.18)
+      '@solid-primitives/props': 3.1.11(solid-js@1.8.18)
+      '@solid-primitives/refs': 1.0.8(solid-js@1.8.18)
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
   /@manypkg/find-root@1.1.0:
@@ -3146,7 +3146,7 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
-  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.17)(vinxi@0.3.12):
+  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.18)(vinxi@0.3.14):
     resolution: {integrity: sha512-oo5BKqsWLbpK++R97mf9z5xc56zIO70hJQeOBRIsEVrZRa07GQEwzLJdmYZpbDzoHInjBtCjLAEp//PkY2LiJA==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -3159,13 +3159,13 @@ packages:
     dependencies:
       '@auth/core': 0.29.0
       '@solid-mediakit/shared': 0.0.3
-      '@solidjs/meta': 0.29.4(solid-js@1.8.17)
-      '@solidjs/router': 0.14.1(solid-js@1.8.17)
+      '@solidjs/meta': 0.29.4(solid-js@1.8.18)
+      '@solidjs/router': 0.14.1(solid-js@1.8.18)
       '@solidjs/start': link:packages/start
       cookie: 0.6.0
       set-cookie-parser: 2.6.0
-      solid-js: 1.8.17
-      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+      solid-js: 1.8.18
+      vinxi: 0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -3178,120 +3178,120 @@ packages:
       - supports-color
     dev: false
 
-  /@solid-primitives/event-listener@2.3.3(solid-js@1.8.17):
+  /@solid-primitives/event-listener@2.3.3(solid-js@1.8.18):
     resolution: {integrity: sha512-DAJbl+F0wrFW2xmcV8dKMBhk9QLVLuBSW+TR4JmIfTaObxd13PuL7nqaXnaYKDWOYa6otB00qcCUIGbuIhSUgQ==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/keyed@1.2.2(solid-js@1.8.17):
+  /@solid-primitives/keyed@1.2.2(solid-js@1.8.18):
     resolution: {integrity: sha512-oBziY40JK4XmJ57XGkFl8j0GtEarSu0hhjdkUQgqL/U0QQE3TZrRo9uhgH7I6VGJKBKG7SAraTPE6S5lVLM1ow==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      solid-js: 1.8.17
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/map@0.4.11(solid-js@1.8.17):
+  /@solid-primitives/map@0.4.11(solid-js@1.8.18):
     resolution: {integrity: sha512-OAD65RPxMDYv41oAvadPCqedZfDX92BbWLUC+Qwh9okVMDAF/5UM+t1916OAfGV01Cr30d/fxIT1x86P+gFgSQ==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/trigger': 1.0.11(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/trigger': 1.0.11(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/media@2.2.9(solid-js@1.8.17):
+  /@solid-primitives/media@2.2.9(solid-js@1.8.18):
     resolution: {integrity: sha512-QUmU62D4/d9YWx/4Dvr/UZasIkIpqNXz7wosA5GLmesRW9XlPa3G5M6uOmTw73SByHNTCw0D6x8bSdtvvLgzvQ==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/event-listener': 2.3.3(solid-js@1.8.17)
-      '@solid-primitives/rootless': 1.4.5(solid-js@1.8.17)
-      '@solid-primitives/static-store': 0.0.8(solid-js@1.8.17)
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/event-listener': 2.3.3(solid-js@1.8.18)
+      '@solid-primitives/rootless': 1.4.5(solid-js@1.8.18)
+      '@solid-primitives/static-store': 0.0.8(solid-js@1.8.18)
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/props@3.1.11(solid-js@1.8.17):
+  /@solid-primitives/props@3.1.11(solid-js@1.8.18):
     resolution: {integrity: sha512-jZAKWwvDRHjiydIumDgMj68qviIbowQ1ci7nkEAgzgvanNkhKSQV8iPgR2jMk1uv7S2ZqXYHslVQTgJel/TEyg==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/refs@1.0.8(solid-js@1.8.17):
+  /@solid-primitives/refs@1.0.8(solid-js@1.8.18):
     resolution: {integrity: sha512-+jIsWG8/nYvhaCoG2Vg6CJOLgTmPKFbaCrNQKWfChalgUf9WrVxWw0CdJb3yX15n5lUcQ0jBo6qYtuVVmBLpBw==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/rootless@1.4.5(solid-js@1.8.17):
+  /@solid-primitives/rootless@1.4.5(solid-js@1.8.18):
     resolution: {integrity: sha512-GFJE9GC3ojx0aUKqAUZmQPyU8fOVMtnVNrkdk2yS4kd17WqVSpXpoTmo9CnOwA+PG7FTzdIkogvfLQSLs4lrww==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/static-store@0.0.8(solid-js@1.8.17):
+  /@solid-primitives/static-store@0.0.8(solid-js@1.8.18):
     resolution: {integrity: sha512-ZecE4BqY0oBk0YG00nzaAWO5Mjcny8Fc06CdbXadH9T9lzq/9GefqcSe/5AtdXqjvY/DtJ5C6CkcjPZO0o/eqg==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/transition-group@1.0.5(solid-js@1.8.17):
+  /@solid-primitives/transition-group@1.0.5(solid-js@1.8.18):
     resolution: {integrity: sha512-G3FuqvL13kQ55WzWPX2ewiXdZ/1iboiX53195sq7bbkDbXqP6TYKiadwEdsaDogW5rPnPYAym3+xnsNplQJRKQ==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      solid-js: 1.8.17
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/trigger@1.0.11(solid-js@1.8.17):
+  /@solid-primitives/trigger@1.0.11(solid-js@1.8.18):
     resolution: {integrity: sha512-4oc8grBzBit7ByXgE1aZ0QXfhdlhXaiFjDKYsOhRyUJa8fN4hdr2IgsYqjmHwxyjK+Dm2OUwkCI1bGkaLgtgXg==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/utils': 6.2.3(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /@solid-primitives/utils@6.2.3(solid-js@1.8.17):
+  /@solid-primitives/utils@6.2.3(solid-js@1.8.18):
     resolution: {integrity: sha512-CqAwKb2T5Vi72+rhebSsqNZ9o67buYRdEJrIFzRXz3U59QqezuuxPsyzTSVCacwS5Pf109VRsgCJQoxKRoECZQ==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      solid-js: 1.8.17
+      solid-js: 1.8.18
     dev: true
 
-  /@solidjs/meta@0.29.4(solid-js@1.8.17):
+  /@solidjs/meta@0.29.4(solid-js@1.8.18):
     resolution: {integrity: sha512-zdIWBGpR9zGx1p1bzIPqF5Gs+Ks/BH8R6fWhmUa/dcK1L2rUC8BAcZJzNRYBQv74kScf1TSOs0EY//Vd/I0V8g==}
     peerDependencies:
       solid-js: '>=1.8.4'
     dependencies:
-      solid-js: 1.8.17
+      solid-js: 1.8.18
 
-  /@solidjs/router@0.14.1(solid-js@1.8.17):
+  /@solidjs/router@0.14.1(solid-js@1.8.18):
     resolution: {integrity: sha512-GumQ4jbt5xDngLypAndC4EjapY/3DP0G8Az4YWEVQHdCtjHwB8IOm32eEBxE9lKpOffbtXV0r/0X0mofHJ1m5w==}
     peerDependencies:
       solid-js: ^1.8.6
     dependencies:
-      solid-js: 1.8.17
+      solid-js: 1.8.18
 
-  /@solidjs/testing-library@0.8.8(@solidjs/router@0.14.1)(solid-js@1.8.17):
+  /@solidjs/testing-library@0.8.8(@solidjs/router@0.14.1)(solid-js@1.8.18):
     resolution: {integrity: sha512-47J9Aw+iG45Fs5Kxu/IJmkaaucpF7qhDazW+iXeNssAYI0FH+4MeM/SfYRhPbIMH/hBpMh/XjbK1Wpyu9PcSwg==}
     engines: {node: '>= 14'}
     peerDependencies:
@@ -3301,9 +3301,9 @@ packages:
       '@solidjs/router':
         optional: true
     dependencies:
-      '@solidjs/router': 0.14.1(solid-js@1.8.17)
+      '@solidjs/router': 0.14.1(solid-js@1.8.18)
       '@testing-library/dom': 10.1.0
-      solid-js: 1.8.17
+      solid-js: 1.8.18
     dev: true
 
   /@swc/counter@0.1.3:
@@ -3837,7 +3837,7 @@ packages:
     transitivePeerDependencies:
       - uWebSockets.js
 
-  /@vinxi/plugin-directives@0.3.1(vinxi@0.3.12):
+  /@vinxi/plugin-directives@0.3.1(vinxi@0.3.14):
     resolution: {integrity: sha512-4qz5WifjmJ864VS8Ik9nUG0wAkt/xIcxFpP29RXogGLgccRnceBpWQi+ghw5rm0F6LP/YMAhhO5iFORXclWd0Q==}
     peerDependencies:
       vinxi: ^0.3.10
@@ -3851,7 +3851,7 @@ packages:
       magicast: 0.2.11
       recast: 0.23.7
       tslib: 2.6.2
-      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(debug@4.3.4)
+      vinxi: 0.3.14(@opentelemetry/api@1.8.0)(debug@4.3.4)
     dev: false
 
   /@vinxi/plugin-mdx@3.7.1(@mdx-js/mdx@2.3.0):
@@ -3866,34 +3866,34 @@ packages:
       unified: 9.2.2
       vfile: 5.3.7
 
-  /@vinxi/server-components@0.3.3(vinxi@0.3.12):
+  /@vinxi/server-components@0.3.3(vinxi@0.3.14):
     resolution: {integrity: sha512-xaW92nj9HUMLyswPcCmsIXOsS3TJll0m9u3WEjWjLrtZWheHggina6+kTCSeltp/Qe8WlUfNU5G02Xy8L4xQxA==}
     peerDependencies:
       vinxi: ^0.3.10
     dependencies:
-      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.12)
+      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.14)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.7
-      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(debug@4.3.4)
+      vinxi: 0.3.14(@opentelemetry/api@1.8.0)(debug@4.3.4)
     dev: false
 
-  /@vinxi/server-functions@0.3.2(vinxi@0.3.12):
-    resolution: {integrity: sha512-PoARb1X480UE9jysPqltpzginBftna34GmZ3HyvRT+pnPfsGcuHOzZe/a18V/K04qk2yMRd7eeW42JF5O+wunw==}
+  /@vinxi/server-functions@0.3.3(vinxi@0.3.14):
+    resolution: {integrity: sha512-yUrHov1gc+NM/YCEOekM1DCdu2tNSH1/j0mZPyIOhPZH/yAZKWA+t3dP79Q3g4QLDHchf6xf8z9u1INEADTlXw==}
     peerDependencies:
-      vinxi: ^0.3.10
+      vinxi: ^0.3.12
     dependencies:
-      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.12)
+      '@vinxi/plugin-directives': 0.3.1(vinxi@0.3.14)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.7
-      vinxi: 0.3.12(@opentelemetry/api@1.8.0)(debug@4.3.4)
+      vinxi: 0.3.14(@opentelemetry/api@1.8.0)(debug@4.3.4)
     dev: false
 
   /@vitest/expect@1.6.0:
@@ -9199,32 +9199,32 @@ packages:
   /smob@1.5.0:
     resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
 
-  /solid-js@1.8.17:
-    resolution: {integrity: sha512-E0FkUgv9sG/gEBWkHr/2XkBluHb1fkrHywUgA6o6XolPDCJ4g1HaLmQufcBBhiF36ee40q+HpG/vCZu7fLpI3Q==}
+  /solid-js@1.8.18:
+    resolution: {integrity: sha512-cpkxDPvO/AuKBugVv6xKFd1C9VC0XZMu4VtF56IlHoux8HgyW44uqNSWbozMnVcpIzHIhS3vVXPAVZYM26jpWw==}
     dependencies:
       csstype: 3.1.3
       seroval: 1.0.7
       seroval-plugins: 1.0.7(seroval@1.0.7)
 
-  /solid-mdx@0.0.7(solid-js@1.8.17)(vite@5.2.11):
+  /solid-mdx@0.0.7(solid-js@1.8.18)(vite@5.2.11):
     resolution: {integrity: sha512-dYKGOu5ZiaX3sfEMZYtfyXm30u33kF+T/pr67CMeyHzENDkWD3st4XEJ12Akp0J0PG9jzyHe5sAAKEXSnEcDEw==}
     peerDependencies:
       solid-js: ^1.2.6
       vite: '*'
     dependencies:
-      solid-js: 1.8.17
+      solid-js: 1.8.18
       vite: 5.2.11(@types/node@20.14.8)
 
-  /solid-prevent-scroll@0.1.7(solid-js@1.8.17):
+  /solid-prevent-scroll@0.1.7(solid-js@1.8.18):
     resolution: {integrity: sha512-DLafct98/nCX9l54MQ+mPbUgmmskSvVr/qxtFEt89SpSvYQkjyX4uviy91TFmzslhSyiVNNBlChpVzRO8eAwzA==}
     peerDependencies:
       solid-js: ^1.8
     dependencies:
-      '@corvu/utils': 0.2.0(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@corvu/utils': 0.2.0(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /solid-refresh@0.6.3(solid-js@1.8.17):
+  /solid-refresh@0.6.3(solid-js@1.8.18):
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
     peerDependencies:
       solid-js: ^1.3
@@ -9232,9 +9232,9 @@ packages:
       '@babel/generator': 7.24.5
       '@babel/helper-module-imports': 7.24.3
       '@babel/types': 7.24.5
-      solid-js: 1.8.17
+      solid-js: 1.8.18
 
-  /solid-styled@0.11.1(solid-js@1.8.17):
+  /solid-styled@0.11.1(solid-js@1.8.18):
     resolution: {integrity: sha512-QZN9hj+lt3gai0HPqzN5kFTn3zHIlyKWXVcYJfiuPGgprRuEB3UvUNqNcOncknJrjHLdZAn/ItA01rs9sqh8hg==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -9247,29 +9247,29 @@ packages:
       browserslist: 4.23.0
       css-tree: 2.3.1
       lightningcss: 1.25.0
-      solid-js: 1.8.17
+      solid-js: 1.8.18
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /solid-transition-group@0.2.3(solid-js@1.8.17):
+  /solid-transition-group@0.2.3(solid-js@1.8.18):
     resolution: {integrity: sha512-iB72c9N5Kz9ykRqIXl0lQohOau4t0dhel9kjwFvx81UZJbVwaChMuBuyhiZmK24b8aKEK0w3uFM96ZxzcyZGdg==}
     engines: {node: '>=18.0.0', pnpm: '>=8.6.0'}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/refs': 1.0.8(solid-js@1.8.17)
-      '@solid-primitives/transition-group': 1.0.5(solid-js@1.8.17)
-      solid-js: 1.8.17
+      '@solid-primitives/refs': 1.0.8(solid-js@1.8.18)
+      '@solid-primitives/transition-group': 1.0.5(solid-js@1.8.18)
+      solid-js: 1.8.18
     dev: true
 
-  /solid-use@0.8.0(solid-js@1.8.17):
+  /solid-use@0.8.0(solid-js@1.8.18):
     resolution: {integrity: sha512-YX+XmcKLvSx3bwMimMhFy40ZkDnShnUcEw6cW6fSscwKEgl1TG3GlgAvkBmQ3AeWjvQSd8+HGTr82ImsrjkkqA==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.7
     dependencies:
-      solid-js: 1.8.17
+      solid-js: 1.8.18
     dev: false
 
   /source-map-js@1.2.0:
@@ -9648,14 +9648,14 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /terracotta@1.0.5(solid-js@1.8.17):
+  /terracotta@1.0.5(solid-js@1.8.18):
     resolution: {integrity: sha512-4jkpXGKemeWjsBGDoBK1tnovGfIEMM8+Fa99T0TD4VYUaZq6hXHEWMfHshxy1h+DzsanDAwSBIBM0NnOohzijw==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.8
     dependencies:
-      solid-js: 1.8.17
-      solid-use: 0.8.0(solid-js@1.8.17)
+      solid-js: 1.8.18
+      solid-use: 0.8.0(solid-js@1.8.18)
     dev: false
 
   /terser@5.31.0:
@@ -10175,7 +10175,7 @@ packages:
         optional: true
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.17.2)
-      solid-styled: 0.11.1(solid-js@1.8.17)
+      solid-styled: 0.11.1(solid-js@1.8.18)
       unplugin: 1.10.1
       vite: 5.2.11(@types/node@20.14.8)
     transitivePeerDependencies:
@@ -10381,8 +10381,8 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4):
-    resolution: {integrity: sha512-YU/Scild/Rdy6qwgdILYRlO99Wp8ti2CmlMlYioEg7lRtxAST5iCFjviDya+BYQDgc3Pugh4KzOypVwjZknF2A==}
+  /vinxi@0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4):
+    resolution: {integrity: sha512-z92mH3xmnnsodTAURFnfEg4FnCo95JnjjY08nyjl3Z69xVRtQ5V6ckfV9bMp/5G6yT52wnmoLXAfPRPF6vfG+A==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
@@ -10451,8 +10451,8 @@ packages:
       - xml2js
     dev: false
 
-  /vinxi@0.3.12(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2):
-    resolution: {integrity: sha512-YU/Scild/Rdy6qwgdILYRlO99Wp8ti2CmlMlYioEg7lRtxAST5iCFjviDya+BYQDgc3Pugh4KzOypVwjZknF2A==}
+  /vinxi@0.3.14(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2):
+    resolution: {integrity: sha512-z92mH3xmnnsodTAURFnfEg4FnCo95JnjjY08nyjl3Z69xVRtQ5V6ckfV9bMp/5G6yT52wnmoLXAfPRPF6vfG+A==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
@@ -10520,8 +10520,8 @@ packages:
       - uWebSockets.js
       - xml2js
 
-  /vinxi@0.3.12(@opentelemetry/api@1.8.0)(debug@4.3.4):
-    resolution: {integrity: sha512-YU/Scild/Rdy6qwgdILYRlO99Wp8ti2CmlMlYioEg7lRtxAST5iCFjviDya+BYQDgc3Pugh4KzOypVwjZknF2A==}
+  /vinxi@0.3.14(@opentelemetry/api@1.8.0)(debug@4.3.4):
+    resolution: {integrity: sha512-z92mH3xmnnsodTAURFnfEg4FnCo95JnjjY08nyjl3Z69xVRtQ5V6ckfV9bMp/5G6yT52wnmoLXAfPRPF6vfG+A==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
@@ -10641,14 +10641,14 @@ packages:
       solid-styled: '>=0.9'
       vite: ^3 || ^4 || ^5
     dependencies:
-      solid-styled: 0.11.1(solid-js@1.8.17)
+      solid-styled: 0.11.1(solid-js@1.8.18)
       unplugin-solid-styled: 0.11.1(solid-styled@0.11.1)(vite@5.2.11)
       vite: 5.2.11(@types/node@20.14.8)
     transitivePeerDependencies:
       - rollup
     dev: false
 
-  /vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.4.5)(solid-js@1.8.17)(vite@5.2.11):
+  /vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.4.5)(solid-js@1.8.18)(vite@5.2.11):
     resolution: {integrity: sha512-AOEtwMe2baBSXMXdo+BUwECC8IFHcKS6WQV/1NEd+Q7vHPap5fmIhLcAzr+DUJ04/KHx/1UBU0l1/GWP+rMAPQ==}
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
@@ -10663,8 +10663,8 @@ packages:
       '@types/babel__core': 7.20.5
       babel-preset-solid: 1.8.17(@babel/core@7.24.4)
       merge-anything: 5.1.7
-      solid-js: 1.8.17
-      solid-refresh: 0.6.3(solid-js@1.8.17)
+      solid-js: 1.8.18
+      solid-refresh: 0.6.3(solid-js@1.8.18)
       vite: 5.2.11(@types/node@20.14.8)
       vitefu: 0.2.5(vite@5.2.11)
     transitivePeerDependencies:

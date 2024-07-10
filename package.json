@@ -45,7 +45,7 @@
     "graphql": "^16.7.1",
     "postcss": "^8.4.38",
     "rimraf": "^3.0.2",
-    "solid-js": "^1.8.17",
+    "solid-js": "^1.8.18",
     "solid-mdx": "^0.0.7",
     "solid-start-mdx": "workspace:*",
     "solid-transition-group": "^0.2.3",
@@ -56,7 +56,7 @@
     "turbo": "^1.10.7",
     "typescript": "5.3.3",
     "valibot": "~0.29.0",
-    "vinxi": "^0.3.12",
+    "vinxi": "^0.3.14",
     "vite": "^5.1.1"
   },
   "dependencies": {
