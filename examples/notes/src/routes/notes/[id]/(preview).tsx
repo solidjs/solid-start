@@ -4,7 +4,7 @@ import EditButton from "~/components/EditButton";
 import { getNotePreview } from "~/lib/api";
 
 export const route = {
-  load({ params }) {
+  preload({ params }) {
     getNotePreview(+params.id);
   }
 } satisfies RouteDefinition;

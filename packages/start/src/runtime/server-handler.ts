@@ -19,8 +19,8 @@ import { provideRequestEvent } from "solid-js/web/storage";
 import { eventHandler, setHeader, setResponseStatus, type HTTPEvent } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
-import { createPageEvent } from "../server/pageEvent";
 import { getExpectedRedirectStatus } from "../server/handler";
+import { createPageEvent } from "../server/pageEvent";
 // @ts-ignore
 import { FetchEvent, PageEvent } from "../server";
 
@@ -176,46 +176,23 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     }
 
     // handle responses
-    if (result instanceof Response && instance) {
-      // forward headers
-      if (result.headers) mergeResponseHeaders(h3Event, result.headers);
-      // forward non-redirect statuses
-      if (result.status && (result.status < 300 || result.status >= 400))
-        setResponseStatus(h3Event, result.status);
-      if ((result as any).customBody) {
-        result = await (result as any).customBody();
-      } else if (result.body == undefined) result = null;
+    if (result instanceof Response) {
+      if (result.headers && result.headers.has("X-Content-Raw")) return result;
+      if (instance) {
+        // forward headers
+        if (result.headers) mergeResponseHeaders(h3Event, result.headers);
+        // forward non-redirect statuses
+        if (result.status && (result.status < 300 || result.status >= 400))
+          setResponseStatus(h3Event, result.status);
+        if ((result as any).customBody) {
+          result = await (result as any).customBody();
+        } else if (result.body == undefined) result = null;
+      }
     }
 
     // handle no JS success case
-    if (!instance) {
-      const isError = result instanceof Error;
-      let redirectUrl = new URL(request.headers.get("referer")!).toString();
-      let statusCode = 302;
-      if (result instanceof Response && result.headers.has("Location")) {
-        redirectUrl = new URL(
-          result.headers.get("Location")!,
-          new URL(request.url).origin + import.meta.env.SERVER_BASE_URL
-        ).toString();
-        statusCode = getExpectedRedirectStatus(result);
-      }
-      return new Response(null, {
-        status: statusCode,
-        headers: {
-          Location: redirectUrl,
-          ...(result
-            ? {
-                "Set-Cookie": `flash=${JSON.stringify({
-                  url: url.pathname + encodeURIComponent(url.search),
-                  result: isError ? result.message : result,
-                  error: isError,
-                  input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-                })}; Secure; HttpOnly;`
-              }
-            : {})
-        }
-      });
-    }
+    if (!instance) return handleNoJS(result, request, parsed);
+
     setHeader(h3Event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
@@ -231,9 +208,12 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       if ((x as any).customBody) {
         x = (x as any).customBody();
       } else if ((x as any).body == undefined) x = null;
-    } else {
+      setHeader(h3Event, "X-Error", "true");
+    } else if (instance) {
       const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
-      setHeader(h3Event, "X-Error", error);
+      setHeader(h3Event, "X-Error", error.replace(/[\r\n]+/g, ""));
+    } else {
+      x = handleNoJS(x, request, parsed, true);
     }
     if (instance) {
       setHeader(h3Event, "content-type", "text/javascript");
@@ -241,6 +221,37 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     }
     return x;
   }
+}
+
+function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
+  const url = new URL(request.url);
+  const isError = result instanceof Error;
+  let redirectUrl = new URL(request.headers.get("referer")!).toString();
+  let statusCode = 302;
+  if (result instanceof Response && result.headers.has("Location")) {
+    redirectUrl = new URL(
+      result.headers.get("Location")!,
+      url.origin + import.meta.env.SERVER_BASE_URL
+    ).toString();
+    statusCode = getExpectedRedirectStatus(result);
+  }
+  return new Response(null, {
+    status: statusCode,
+    headers: {
+      Location: redirectUrl,
+      ...(result
+        ? {
+            "Set-Cookie": `flash=${JSON.stringify({
+              url: url.pathname + encodeURIComponent(url.search),
+              result: isError ? result.message : result,
+              thrown: thrown,
+              error: isError,
+              input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
+            })}; Secure; HttpOnly;`
+          }
+        : {})
+    }
+  });
 }
 
 let App: any;

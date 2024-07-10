@@ -12,11 +12,13 @@ function initFromFlash(ctx: FetchEvent) {
   if (!param || !param.result) return;
   const input = [...param.input.slice(0, -1), new Map(param.input[param.input.length - 1])];
   setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
+  const result = param.error ? new Error(param.result) : param.result;
   return {
     input,
     url: param.url,
     pending: false,
-    result: param.error ? new Error(param.result) : param.result,
+    result: param.thrown ? undefined : result,
+    error: param.thrown ? result : undefined,
   };
 }
 

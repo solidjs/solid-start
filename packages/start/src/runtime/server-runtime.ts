@@ -151,13 +151,15 @@ async function fetchServerFunction(
     ? createRequest(base, id, instance, options)
     : args.length === 1 && args[0] instanceof FormData
     ? createRequest(base, id, instance, { ...options, body: args[0] })
+    : args.length === 1 && args[0] instanceof URLSearchParams
+    ? createRequest(base, id, instance, {
+        ...options,
+        body: args[0],
+        headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" }
+      })
     : createRequest(base, id, instance, {
         ...options,
-        body: JSON.stringify(
-          await Promise.resolve(
-            toJSONAsync(args, { plugins })
-          )
-        ),
+        body: JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
         headers: { ...options.headers, "Content-Type": "application/json" }
       }));
 
@@ -201,14 +203,20 @@ export function createServerReference(fn: Function, id: string, name: string) {
         return receiver.withOptions({ method: "GET" });
       }
       if (prop === "withOptions") {
-        const url = `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`
+        const url = `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(
+          name
+        )}`;
         return (options: RequestInit) => {
           const fn = async (...args: any[]) => {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
             return fetchServerFunction(
               encodeArgs
-                ? url + (args.length ? `&args=${encodeURIComponent(JSON.stringify(await Promise.resolve(
-                  toJSONAsync(args, { plugins }))))}` : "")
+                ? url +
+                    (args.length
+                      ? `&args=${encodeURIComponent(
+                          JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins })))
+                        )}`
+                      : "")
                 : `${baseURL}/_server`,
               `${id}#${name}`,
               options,
@@ -219,6 +227,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
           return fn;
         };
       }
+      return (target as any)[prop];
     },
     apply(target, thisArg, args) {
       return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, {}, args);

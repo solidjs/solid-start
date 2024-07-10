@@ -24,23 +24,14 @@ async function login(username: string, password: string) {
 }
 
 async function register(username: string, password: string) {
-  const existingUser = db
-    .select()
-    .from(Users)
-    .where(eq(Users.username, username))
-    .get();
+  const existingUser = db.select().from(Users).where(eq(Users.username, username)).get();
   if (existingUser) throw new Error("User already exists");
-  return db
-    .insert(Users)
-    .values({ username, password })
-    .returning()
-    .get();
+  return db.insert(Users).values({ username, password }).returning().get();
 }
 
 function getSession() {
   return useSession({
-    password:
-      process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace",
+    password: process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace"
   });
 }
 
@@ -56,7 +47,9 @@ export async function loginOrRegister(formData: FormData) {
       ? register(username, password)
       : login(username, password));
     const session = await getSession();
-    await session.update(d => (d.userId = user!.id));
+    await session.update(d => {
+      d.userId = user.id;
+    });
   } catch (err) {
     return err as Error;
   }
@@ -65,7 +58,7 @@ export async function loginOrRegister(formData: FormData) {
 
 export async function logout() {
   const session = await getSession();
-  await session.update((d) => (d.userId = undefined));
+  await session.update(d => (d.userId = undefined));
   throw redirect("/login");
 }
 

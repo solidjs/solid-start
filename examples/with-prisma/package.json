@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",
-    "@solidjs/router": "^0.13.3",
-    "@solidjs/start": "^1.0.1",
+    "@solidjs/router": "^0.14.1",
+    "@solidjs/start": "^1.0.2",
     "prisma": "^5.12.1",
-    "solid-js": "^1.8.17",
-    "vinxi": "^0.3.11"
+    "solid-js": "^1.8.18",
+    "vinxi": "^0.3.14"
   },
   "engines": {
     "node": ">=18"
