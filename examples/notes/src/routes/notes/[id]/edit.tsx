@@ -4,7 +4,7 @@ import NoteEditor from "~/components/NoteEditor";
 import { getNote } from "~/lib/api";
 
 export const route = {
-  load({ params }) {
+  preload({ params }) {
     getNote(+params.id);
   }
 } satisfies RouteDefinition;

@@ -119,6 +119,18 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   }
   if (h3Event.method === "POST") {
     const contentType = request.headers.get("content-type");
+
+    // Nodes native IncomingMessage doesn't have a body,
+    // But we need to access it for some reason (#1282)
+    type EdgeIncomingMessage = typeof h3Event.node.req & { body?: BodyInit };
+    const h3Request = h3Event.node.req as EdgeIncomingMessage | ReadableStream;
+
+    // This should never be the case in "proper" Nitro presets since node.req has to be IncomingMessage,
+    // But the new azure-functions preset for some reason uses a ReadableStream in node.req (#1521)
+    const isReadableStream = h3Request instanceof ReadableStream;
+    const isH3EventBodyStreamLocked = isReadableStream && h3Request.locked;
+    const requestBody = isReadableStream ? h3Request : h3Request.body;
+
     if (
       contentType?.startsWith("multipart/form-data") ||
       contentType?.startsWith("application/x-www-form-urlencoded")
@@ -126,14 +138,20 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
       parsed.push(
-        await new Request(request, { ...request, body: (h3Event.node.req as any).body }).formData()
+        await(
+          isH3EventBodyStreamLocked
+            ? request
+            : new Request(request, { ...request, body: requestBody })
+        ).formData()
       );
       // what should work when #1721 is fixed
       // parsed.push(await request.formData);
     } else if (contentType?.startsWith("application/json")) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
-      const tmpReq = new Request(request, { ...request, body: (h3Event.node.req as any).body });
+      const tmpReq = isH3EventBodyStreamLocked
+        ? request
+        : new Request(request, { ...request, body: requestBody });
       // what should work when #1721 is fixed
       // just use request.json() here
       parsed = fromJSON(await tmpReq.json(), {
