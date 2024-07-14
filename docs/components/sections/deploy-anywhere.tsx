@@ -6,6 +6,7 @@ import { CloudflareLogo } from "../icons/platform/cloudflare-logo";
 import { DenoLogo } from "../icons/platform/deno-logo";
 import { NetlifyLogo } from "../icons/platform/netlify-logo";
 import { Vercel } from "../icons/platform/vercel-logo";
+import { Zerops } from "../icons/platform/zerops-logo";
 import { SectionTitle } from "../ui/section-title";
 
 const PLATFORMS = [
@@ -46,6 +47,11 @@ const PLATFORMS = [
     name: "Azure",
     url: "https://azure.microsoft.com/",
     icon: <AzureLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
+  },
+  {
+    name: "Zerops",
+    url: "https://zerops.io/",
+    icon: <Zerops class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
   }
 ];
 
