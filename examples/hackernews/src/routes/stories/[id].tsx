@@ -4,7 +4,7 @@ import Comment from "~/components/comment";
 import { getStory } from "~/lib/api";
 
 export const route = {
-  load({ params }) {
+  preload({ params }) {
     void getStory(params.id);
   }
 } satisfies RouteDefinition;

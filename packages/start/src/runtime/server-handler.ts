@@ -19,8 +19,8 @@ import { provideRequestEvent } from "solid-js/web/storage";
 import { eventHandler, setHeader, setResponseStatus, type HTTPEvent } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
-import { createPageEvent } from "../server/pageEvent";
 import { getExpectedRedirectStatus } from "../server/handler";
+import { createPageEvent } from "../server/pageEvent";
 // @ts-ignore
 import { FetchEvent, PageEvent } from "../server";
 
@@ -119,6 +119,18 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   }
   if (h3Event.method === "POST") {
     const contentType = request.headers.get("content-type");
+
+    // Nodes native IncomingMessage doesn't have a body,
+    // But we need to access it for some reason (#1282)
+    type EdgeIncomingMessage = typeof h3Event.node.req & { body?: BodyInit };
+    const h3Request = h3Event.node.req as EdgeIncomingMessage | ReadableStream;
+
+    // This should never be the case in "proper" Nitro presets since node.req has to be IncomingMessage,
+    // But the new azure-functions preset for some reason uses a ReadableStream in node.req (#1521)
+    const isReadableStream = h3Request instanceof ReadableStream;
+    const isH3EventBodyStreamLocked = isReadableStream && h3Request.locked;
+    const requestBody = isReadableStream ? h3Request : h3Request.body;
+
     if (
       contentType?.startsWith("multipart/form-data") ||
       contentType?.startsWith("application/x-www-form-urlencoded")
@@ -126,14 +138,20 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
       parsed.push(
-        await new Request(request, { ...request, body: (h3Event.node.req as any).body }).formData()
+        await(
+          isH3EventBodyStreamLocked
+            ? request
+            : new Request(request, { ...request, body: requestBody })
+        ).formData()
       );
       // what should work when #1721 is fixed
       // parsed.push(await request.formData);
     } else if (contentType?.startsWith("application/json")) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
-      const tmpReq = new Request(request, { ...request, body: (h3Event.node.req as any).body });
+      const tmpReq = isH3EventBodyStreamLocked
+        ? request
+        : new Request(request, { ...request, body: requestBody });
       // what should work when #1721 is fixed
       // just use request.json() here
       parsed = fromJSON(await tmpReq.json(), {
@@ -167,46 +185,23 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     }
 
     // handle responses
-    if (result instanceof Response && instance) {
-      // forward headers
-      if (result.headers) mergeResponseHeaders(h3Event, result.headers);
-      // forward non-redirect statuses
-      if (result.status && (result.status < 300 || result.status >= 400))
-        setResponseStatus(h3Event, result.status);
-      if ((result as any).customBody) {
-        result = await (result as any).customBody();
-      } else if (result.body == undefined) result = null;
+    if (result instanceof Response) {
+      if (result.headers && result.headers.has("X-Content-Raw")) return result;
+      if (instance) {
+        // forward headers
+        if (result.headers) mergeResponseHeaders(h3Event, result.headers);
+        // forward non-redirect statuses
+        if (result.status && (result.status < 300 || result.status >= 400))
+          setResponseStatus(h3Event, result.status);
+        if ((result as any).customBody) {
+          result = await (result as any).customBody();
+        } else if (result.body == undefined) result = null;
+      }
     }
 
     // handle no JS success case
-    if (!instance) {
-      const isError = result instanceof Error;
-      let redirectUrl = new URL(request.headers.get("referer")!).toString();
-      let statusCode = 302;
-      if (result instanceof Response && result.headers.has("Location")) {
-        redirectUrl = new URL(
-          result.headers.get("Location")!,
-          new URL(request.url).origin + import.meta.env.SERVER_BASE_URL
-        ).toString();
-        statusCode = getExpectedRedirectStatus(result);
-      }
-      return new Response(null, {
-        status: statusCode,
-        headers: {
-          Location: redirectUrl,
-          ...(result
-            ? {
-                "Set-Cookie": `flash=${JSON.stringify({
-                  url: url.pathname + encodeURIComponent(url.search),
-                  result: isError ? result.message : result,
-                  error: isError,
-                  input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-                })}; Secure; HttpOnly;`
-              }
-            : {})
-        }
-      });
-    }
+    if (!instance) return handleNoJS(result, request, parsed);
+
     setHeader(h3Event, "content-type", "text/javascript");
     return serializeToStream(instance, result);
   } catch (x) {
@@ -222,9 +217,12 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       if ((x as any).customBody) {
         x = (x as any).customBody();
       } else if ((x as any).body == undefined) x = null;
-    } else {
+      setHeader(h3Event, "X-Error", "true");
+    } else if (instance) {
       const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
-      setHeader(h3Event, "X-Error", error);
+      setHeader(h3Event, "X-Error", error.replace(/[\r\n]+/g, ""));
+    } else {
+      x = handleNoJS(x, request, parsed, true);
     }
     if (instance) {
       setHeader(h3Event, "content-type", "text/javascript");
@@ -232,6 +230,37 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     }
     return x;
   }
+}
+
+function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
+  const url = new URL(request.url);
+  const isError = result instanceof Error;
+  let redirectUrl = new URL(request.headers.get("referer")!).toString();
+  let statusCode = 302;
+  if (result instanceof Response && result.headers.has("Location")) {
+    redirectUrl = new URL(
+      result.headers.get("Location")!,
+      url.origin + import.meta.env.SERVER_BASE_URL
+    ).toString();
+    statusCode = getExpectedRedirectStatus(result);
+  }
+  return new Response(null, {
+    status: statusCode,
+    headers: {
+      Location: redirectUrl,
+      ...(result
+        ? {
+            "Set-Cookie": `flash=${JSON.stringify({
+              url: url.pathname + encodeURIComponent(url.search),
+              result: isError ? result.message : result,
+              thrown: thrown,
+              error: isError,
+              input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
+            })}; Secure; HttpOnly;`
+          }
+        : {})
+    }
+  });
 }
 
 let App: any;

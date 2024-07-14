@@ -3,7 +3,7 @@ import { Show } from "solid-js";
 import { getUser } from "~/lib/api";
 
 export const route = {
-  load({ params }) {
+  preload({ params }) {
     void getUser(params.id);
   }
 } satisfies RouteDefinition;
