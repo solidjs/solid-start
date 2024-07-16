@@ -7,7 +7,7 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/start": "^1.0.4",
+    "@solidjs/start": "^1.0.5",
     "solid-js": "^1.8.18",
     "vinxi": "^0.4.0"
   },
