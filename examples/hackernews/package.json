@@ -10,7 +10,7 @@
     "@solidjs/router": "^0.14.1",
     "@solidjs/start": "^1.0.5",
     "solid-js": "^1.8.18",
-    "vinxi": "^0.4.0"
+    "vinxi": "^0.4.1"
   },
   "engines": {
     "node": ">=18"

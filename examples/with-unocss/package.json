@@ -12,7 +12,7 @@
     "@unocss/reset": "^0.59.2",
     "solid-js": "^1.8.18",
     "unocss": "^0.59.2",
-    "vinxi": "^0.4.0"
+    "vinxi": "^0.4.1"
   },
   "engines": {
     "node": ">=18"
