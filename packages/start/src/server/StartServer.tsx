@@ -50,10 +50,11 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
       while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
       const matched = matches.length && matchRoute(matches, context.routes);
       if (matched) {
+        const inputs = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
+        .inputs
         for (let i = 0; i < matched.length; i++) {
           const segment = matched[i];
-          const part = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
-            .inputs[segment["$component"].src]!;
+          const part = inputs[segment["$component"].src]!;
           assetPromises.push(part.assets() as any);
         }
       } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
