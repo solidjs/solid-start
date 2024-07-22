@@ -1,5 +1,17 @@
 # @solidjs/start
 
+## 1.0.6
+
+### Patch Changes
+
+- d86ab61: drastically improve asset resolution performance
+
+## 1.0.5
+
+### Patch Changes
+
+- c4054c0: fix route hmr: fix #1286, fix #1461, fix #1473
+
 ## 1.0.4
 
 ### Patch Changes

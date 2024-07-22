@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "type": "module",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -60,13 +60,13 @@
   },
   "devDependencies": {
     "solid-js": "^1.8.18",
-    "vinxi": "^0.3.14",
+    "vinxi": "^0.4.1",
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.3.1",
-    "@vinxi/server-components": "^0.3.3",
-    "@vinxi/server-functions": "^0.3.3",
+    "@vinxi/plugin-directives": "^0.4.1",
+    "@vinxi/server-components": "^0.4.1",
+    "@vinxi/server-functions": "^0.4.1",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "glob": "^10.3.10",
