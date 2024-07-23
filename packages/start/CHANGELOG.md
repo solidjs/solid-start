@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.0.6
+
+### Patch Changes
+
+- d86ab61: drastically improve asset resolution performance
+
 ## 1.0.5
 
 ### Patch Changes

@@ -106,8 +106,8 @@ importers:
         specifier: ~0.29.0
         version: 0.29.0
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
       vite:
         specifier: ^5.1.1
         version: 5.2.11(@types/node@20.14.8)
@@ -115,14 +115,14 @@ importers:
   examples/bare:
     dependencies:
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
         version: 1.8.18
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/basic:
     dependencies:
@@ -133,14 +133,14 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
         version: 1.8.18
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/experiments:
     dependencies:
@@ -151,14 +151,14 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
         version: 1.8.18
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/hackernews:
     dependencies:
@@ -166,14 +166,14 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
         version: 1.8.18
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/notes:
     dependencies:
@@ -181,7 +181,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       date-fns:
         specifier: ^3.6.0
@@ -196,8 +196,8 @@ importers:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/todomvc:
     dependencies:
@@ -205,7 +205,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
@@ -214,8 +214,8 @@ importers:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-auth:
     dependencies:
@@ -223,7 +223,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
@@ -232,8 +232,8 @@ importers:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.1)
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -249,7 +249,7 @@ importers:
         version: 7.24.4
       '@solid-mediakit/auth':
         specifier: ^2.0.11
-        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.18)(vinxi@0.4.0)
+        version: 2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.18)(vinxi@0.4.1)
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.8.18)
@@ -257,14 +257,14 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
         version: 1.8.18
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -303,8 +303,8 @@ importers:
         specifier: ^1.8.18
         version: 1.8.18
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
     devDependencies:
       '@types/better-sqlite3':
         specifier: ^7.6.10
@@ -325,7 +325,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       '@vinxi/plugin-mdx':
         specifier: ^3.7.1
@@ -337,8 +337,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.8.18)(vite@5.2.11)
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-prisma:
     dependencies:
@@ -349,7 +349,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       prisma:
         specifier: ^5.12.1
@@ -358,8 +358,8 @@ importers:
         specifier: ^1.8.18
         version: 1.8.18
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -374,7 +374,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       solid-js:
         specifier: ^1.8.18
@@ -383,8 +383,8 @@ importers:
         specifier: ^0.11.1
         version: 0.11.1(solid-js@1.8.18)
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
       vite-plugin-solid-styled:
         specifier: ^0.11.1
         version: 0.11.1(solid-styled@0.11.1)(vite@5.2.11)
@@ -395,7 +395,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       autoprefixer:
         specifier: ^10.4.19
@@ -410,8 +410,8 @@ importers:
         specifier: ^3.4.3
         version: 3.4.3
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-trpc:
     dependencies:
@@ -422,7 +422,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       '@trpc/client':
         specifier: ^10.45.2
@@ -440,8 +440,8 @@ importers:
         specifier: ^0.29.0
         version: 0.29.0
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-unocss:
     dependencies:
@@ -449,7 +449,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       '@unocss/reset':
         specifier: ^0.59.2
@@ -461,8 +461,8 @@ importers:
         specifier: ^0.59.2
         version: 0.59.4(postcss@8.4.38)(vite@5.2.11)
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
   examples/with-vitest:
     devDependencies:
@@ -473,7 +473,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(solid-js@1.8.18)
       '@solidjs/start':
-        specifier: ^1.0.4
+        specifier: ^1.0.6
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.7
@@ -497,8 +497,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
       vite:
         specifier: ^5.2.8
         version: 5.2.11(@types/node@20.14.8)
@@ -567,13 +567,13 @@ importers:
     dependencies:
       '@vinxi/plugin-directives':
         specifier: ^0.4.1
-        version: 0.4.1(vinxi@0.4.0)
+        version: 0.4.1(vinxi@0.4.1)
       '@vinxi/server-components':
         specifier: ^0.4.1
-        version: 0.4.1(vinxi@0.4.0)
+        version: 0.4.1(vinxi@0.4.1)
       '@vinxi/server-functions':
         specifier: ^0.4.1
-        version: 0.4.1(vinxi@0.4.0)
+        version: 0.4.1(vinxi@0.4.1)
       defu:
         specifier: ^6.1.2
         version: 6.1.4
@@ -618,8 +618,8 @@ importers:
         specifier: ^5.4.2
         version: 5.4.5
       vinxi:
-        specifier: ^0.4.0
-        version: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
+        specifier: ^0.4.1
+        version: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2)
 
 packages:
 
@@ -3146,7 +3146,7 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
-  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.18)(vinxi@0.4.0):
+  /@solid-mediakit/auth@2.0.11(@auth/core@0.29.0)(@solidjs/meta@0.29.4)(@solidjs/router@0.14.1)(@solidjs/start@packages+start)(solid-js@1.8.18)(vinxi@0.4.1):
     resolution: {integrity: sha512-oo5BKqsWLbpK++R97mf9z5xc56zIO70hJQeOBRIsEVrZRa07GQEwzLJdmYZpbDzoHInjBtCjLAEp//PkY2LiJA==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -3165,7 +3165,7 @@ packages:
       cookie: 0.6.0
       set-cookie-parser: 2.6.0
       solid-js: 1.8.18
-      vinxi: 0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
+      vinxi: 0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -3837,7 +3837,7 @@ packages:
     transitivePeerDependencies:
       - uWebSockets.js
 
-  /@vinxi/plugin-directives@0.4.1(vinxi@0.4.0):
+  /@vinxi/plugin-directives@0.4.1(vinxi@0.4.1):
     resolution: {integrity: sha512-NsHCDyqU00i4RKGBoNNcBuONEirg/XfGgPCLFK1CZw3AYBE19haFSgvuo21Bx+BFGcwdRU3BRtaBMvwjLrUCnw==}
     peerDependencies:
       vinxi: ^0.4.0
@@ -3851,7 +3851,7 @@ packages:
       magicast: 0.2.11
       recast: 0.23.7
       tslib: 2.6.2
-      vinxi: 0.4.0(@opentelemetry/api@1.8.0)(debug@4.3.4)
+      vinxi: 0.4.1(@opentelemetry/api@1.8.0)(debug@4.3.4)
     dev: false
 
   /@vinxi/plugin-mdx@3.7.1(@mdx-js/mdx@2.3.0):
@@ -3866,34 +3866,34 @@ packages:
       unified: 9.2.2
       vfile: 5.3.7
 
-  /@vinxi/server-components@0.4.1(vinxi@0.4.0):
+  /@vinxi/server-components@0.4.1(vinxi@0.4.1):
     resolution: {integrity: sha512-rMS+RCGr1tujO1xWgILMLpOWIyw2OwDO46EtkuhTfqaVgLLt/w7+hxzOnh4s3O9sXoKKuUswtj9/MpQQkFoMOQ==}
     peerDependencies:
       vinxi: ^0.4.0
     dependencies:
-      '@vinxi/plugin-directives': 0.4.1(vinxi@0.4.0)
+      '@vinxi/plugin-directives': 0.4.1(vinxi@0.4.1)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.7
-      vinxi: 0.4.0(@opentelemetry/api@1.8.0)(debug@4.3.4)
+      vinxi: 0.4.1(@opentelemetry/api@1.8.0)(debug@4.3.4)
     dev: false
 
-  /@vinxi/server-functions@0.4.1(vinxi@0.4.0):
+  /@vinxi/server-functions@0.4.1(vinxi@0.4.1):
     resolution: {integrity: sha512-dj5v9V+DurXK8w/nBDgJof+UsK3bkcgk6K/xBUg+WVmn7sUrLTurDTGRkCaknC6tQCyadNzj4FWGGc+qlrWf9g==}
     peerDependencies:
       vinxi: ^0.4.0
     dependencies:
-      '@vinxi/plugin-directives': 0.4.1(vinxi@0.4.0)
+      '@vinxi/plugin-directives': 0.4.1(vinxi@0.4.1)
       acorn: 8.11.3
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.11.3)
       astring: 1.8.6
       magicast: 0.2.11
       recast: 0.23.7
-      vinxi: 0.4.0(@opentelemetry/api@1.8.0)(debug@4.3.4)
+      vinxi: 0.4.1(@opentelemetry/api@1.8.0)(debug@4.3.4)
     dev: false
 
   /@vitest/expect@1.6.0:
@@ -10381,8 +10381,8 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vinxi@0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4):
-    resolution: {integrity: sha512-NobNjqYGmSABBsmbRo6zyZQfltfZKjPnCj+XLcf1vewBHwAzs5nS1KUWGtc4UeA18dVKtgNbqpUeSOckD0EoBQ==}
+  /vinxi@0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.12.12)(debug@4.3.4):
+    resolution: {integrity: sha512-WGEYqIuJ2/P3sBoSVKsGvp/UKpW4wVSaAFdA18gthyMCEExN6nVteoA+Rv1wQFLKXTVL9JRpeGJjcLzcRRgGCA==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
@@ -10451,8 +10451,8 @@ packages:
       - xml2js
     dev: false
 
-  /vinxi@0.4.0(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2):
-    resolution: {integrity: sha512-NobNjqYGmSABBsmbRo6zyZQfltfZKjPnCj+XLcf1vewBHwAzs5nS1KUWGtc4UeA18dVKtgNbqpUeSOckD0EoBQ==}
+  /vinxi@0.4.1(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(better-sqlite3@11.0.0)(debug@4.3.4)(drizzle-orm@0.31.2):
+    resolution: {integrity: sha512-WGEYqIuJ2/P3sBoSVKsGvp/UKpW4wVSaAFdA18gthyMCEExN6nVteoA+Rv1wQFLKXTVL9JRpeGJjcLzcRRgGCA==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
@@ -10520,8 +10520,8 @@ packages:
       - uWebSockets.js
       - xml2js
 
-  /vinxi@0.4.0(@opentelemetry/api@1.8.0)(debug@4.3.4):
-    resolution: {integrity: sha512-NobNjqYGmSABBsmbRo6zyZQfltfZKjPnCj+XLcf1vewBHwAzs5nS1KUWGtc4UeA18dVKtgNbqpUeSOckD0EoBQ==}
+  /vinxi@0.4.1(@opentelemetry/api@1.8.0)(debug@4.3.4):
+    resolution: {integrity: sha512-WGEYqIuJ2/P3sBoSVKsGvp/UKpW4wVSaAFdA18gthyMCEExN6nVteoA+Rv1wQFLKXTVL9JRpeGJjcLzcRRgGCA==}
     hasBin: true
     dependencies:
       '@babel/core': 7.24.4
