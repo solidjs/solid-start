@@ -10,7 +10,7 @@ export function Announcement() {
         </SectionTitle>
       </header>
       <div
-        class="relative w-full flex justify-center items-center opacity-25 top-24"
+        class="relative w-full overflow-x-clip flex justify-center items-center opacity-25 top-24"
         role="presentation"
       >
         <div class="sonar relative w-24 h-24 rounded-full -z-10" />
