@@ -9,6 +9,7 @@ export function SolidStartLogo(props: Props) {
       viewBox="0 0 500 500"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      role="presentation"
       class={props.class}
     >
       <path

@@ -14,7 +14,7 @@ export function Hero() {
           <div class="text-center text-6xl font-semibold">
             Solid<span class="text-[#017AD4]">Start</span>
           </div>
-          <strong class="dark:font-thin font-normal text-3xl block pt-3 text-center">
+          <strong class="dark:font-thin text-balance font-normal text-3xl block pt-3 text-center">
             Fine-grained reactivity goes fullstack
           </strong>
           <div class="pt-10 flex flex-col items-center sm:flex-row gap-4 justify-center px-6">
