@@ -60,7 +60,7 @@ export function DeployAnywhere() {
         </p>
       </header>
       <div class="mx-auto w-fit pt-12">
-        <pre class="bg-gradient-to-tr p-14 dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.10)] ring-1 ring-sky-950 relative rounded-md">
+        <pre class="bg-gradient-to-tr px-4 py-14 sm:p-14 dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.10)] ring-1 ring-sky-950 relative rounded-md">
           <div
             id="upper-line"
             class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-blue-300/0 via-blue-300/70 to-blue-300/0 animate-bounce"
@@ -95,12 +95,12 @@ export function DeployAnywhere() {
           </code>
         </pre>
       </div>
-      <ul class="pt-16 grid grid-cols-2  place-items-center gap-6 md:grid-cols-3">
+      <ul class="pt-16 grid grid-cols-2 place-items-center gap-4 sm:gap-6 md:grid-cols-3">
         <Index each={PLATFORMS}>
           {platform => (
             <li>
               <a
-                class={`group w-44 h-44 grid gap-5 place-items-center border-2 rounded-md py-4 px-2 hover:border-sky-950 dark:border-sky-950 border-sky-200 dark:hover:border-sky-200 z-10 relative`}
+                class={`group size-36 sm:size-44 grid gap-5 place-items-center border-2 rounded-md py-4 px-2 hover:border-sky-950 dark:border-sky-950 border-sky-200 dark:hover:border-sky-200 z-10 relative`}
                 href={platform().url}
                 target="_blank"
                 rel="noopener"

@@ -17,7 +17,7 @@ const getSolidStartVersion = async () => {
 export function CodeSnippet() {
   const [npmVersion] = createResource(() => getSolidStartVersion());
   return (
-    <aside class="pt-20 px-8 sm:px-4 md:px-0 md:max-w-96 max-w-screen mx-auto w-5/6">
+    <aside class="pt-20 px-4 sm:px-4 md:px-0 md:max-w-96 max-w-screen mx-auto w-5/6">
       <Tabs defaultValue="pnpm">
         <Tabs.List class="flex justify-center space-x-4 pb-10">
           <Tabs.Trigger
