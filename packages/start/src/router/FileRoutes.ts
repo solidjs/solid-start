@@ -1,12 +1,11 @@
 import { getRequestEvent, isServer } from "solid-js/web";
 import lazyRoute from "./lazyRoute";
 
-import type { Route } from "vinxi/fs-router";
 import type { PageEvent } from "../server/types";
-import { pageRoutes as routeConfigs } from "./routes";
+import { Route, pageRoutes as routeConfigs } from "./routes";
 
 export function createRoutes() {
-  function createRoute(route: Route) {
+  function createRoute(route: Route): any {
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),
@@ -23,7 +22,16 @@ export function createRoutes() {
             : import.meta.env.MANIFEST["client"],
           import.meta.env.MANIFEST["ssr"]
         ),
-      children: route.children ? route.children.map(createRoute) : undefined
+      children: route.children ? route.children.map(createRoute) : undefined,
+      ...(route.slots && {
+        slots: Object.entries<Route>(route.slots).reduce(
+          (acc, [slot, route]) => {
+            acc[slot] = createRoute(route);
+            return acc;
+          },
+          {} as Record<string, any>
+        )
+      })
     };
   }
   const routes = routeConfigs.map(createRoute);
