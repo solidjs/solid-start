@@ -6,7 +6,7 @@ export default createWebSocket({
     return {
       headers: {}
     }
-  }
+  },
 
   open(peer) {
     console.log(`[ws] open: ${peer}`);
