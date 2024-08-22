@@ -1,0 +1,8 @@
+.error-boundary {
+  font-size: 1.5em;
+  text-align: center;
+  position: fixed;
+  left: 0px;
+  bottom: 55%;
+  width: 100%;
+}
