@@ -28,7 +28,7 @@ declare module "solid-js" {
 const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
 
 export const route = {
-  load() {
+  preload() {
     getTodos();
   }
 } satisfies RouteDefinition;

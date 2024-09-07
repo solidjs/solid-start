@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.13.3",
-    "@solidjs/start": "^1.0.1",
-    "solid-js": "^1.8.17",
+    "@solidjs/router": "^0.14.1",
+    "@solidjs/start": "^1.0.6",
+    "solid-js": "^1.8.18",
     "solid-styled": "^0.11.1",
-    "vinxi": "^0.3.11",
+    "vinxi": "^0.4.1",
     "vite-plugin-solid-styled": "^0.11.1"
   },
   "engines": {

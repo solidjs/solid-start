@@ -252,6 +252,7 @@ export function defineConfig(baseConfig = {}) {
                 fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
               )
             }),
+            start.experimental.islands ? serverComponents.server() : null,
             solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
             config("app-server", {
               resolve: {

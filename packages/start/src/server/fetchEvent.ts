@@ -13,7 +13,7 @@ import {
 } from "vinxi/http";
 import type { FetchEvent, ResponseStub } from "./types";
 
-const fetchEventSymbol = Symbol("fetchEvent");
+const fetchEventContext = "solidFetchEvent";
 
 export function createFetchEvent(event: H3Event): FetchEvent {
 	return {
@@ -32,12 +32,12 @@ export function cloneEvent<T extends FetchEvent>(fetchEvent: T): T {
 }
 
 export function getFetchEvent(h3Event: H3Event): FetchEvent {
-	if (!(h3Event as any)[fetchEventSymbol]) {
+	if (!h3Event.context[fetchEventContext]) {
 		const fetchEvent = createFetchEvent(h3Event);
-		(h3Event as any)[fetchEventSymbol] = fetchEvent;
+		h3Event.context[fetchEventContext] = fetchEvent;
 	}
 
-	return (h3Event as any)[fetchEventSymbol];
+	return h3Event.context[fetchEventContext];
 }
 
 export function mergeResponseHeaders(h3Event: H3Event, headers: Headers) {
