@@ -16,7 +16,7 @@ export interface DevOverlayProps {
 }
 
 const DevOverlayDialog =
-  /* #__PURE__ */ process.env.NODE_ENV === "production"
+  /* #__PURE__ */ process.env.NODE_ENV === "production" && !import.meta.env.START_DEV_OVERLAY
     ? () => {
         return <></>;
       }
