@@ -77,7 +77,6 @@
     "shikiji": "^0.9.12",
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
-    "vite-plugin-inspect": "^0.7.33",
     "vite-plugin-solid": "^2.10.2"
   }
 }
