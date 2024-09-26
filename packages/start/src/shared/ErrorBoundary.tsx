@@ -1,5 +1,5 @@
 // @refresh skip
-import { ErrorBoundary as DefaultErrorBoundary, catchError, type ParentProps } from "solid-js";
+import { ErrorBoundary as DefaultErrorBoundary, catchError, type ParentProps, lazy } from "solid-js";
 import { isServer } from "solid-js/web";
 import { HttpStatusCode } from "./HttpStatusCode";
 const DevOverlay = lazy(() => import("./dev-overlay"));
