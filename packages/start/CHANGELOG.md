@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 1.0.7
+
+### Patch Changes
+
+- 592fef1: Removes unused `vite-plugin-inspect` dependency.
+- 65c8ac0: Fixed fetchEvent flakyness by storing the event in h3 context.
+- 894594c: fix dev overlay being pulled in even when not used
+- 7ae221b: encode api url components
+- d719c6c: Update env.d.ts
+
 ## 1.0.6
 
 ### Patch Changes
