@@ -59,14 +59,14 @@
     }
   },
   "devDependencies": {
-    "solid-js": "^1.8.18",
-    "vinxi": "^0.4.1",
+    "solid-js": "^1.9.1",
+    "vinxi": "^0.4.3",
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.4.1",
-    "@vinxi/server-components": "^0.4.1",
-    "@vinxi/server-functions": "^0.4.1",
+    "@vinxi/plugin-directives": "^0.4.3",
+    "@vinxi/server-components": "^0.4.3",
+    "@vinxi/server-functions": "^0.4.3",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "glob": "^10.3.10",
