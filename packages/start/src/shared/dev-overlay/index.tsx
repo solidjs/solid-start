@@ -22,7 +22,7 @@ const DevOverlayDialog =
       }
     : /* #__PURE__ */ clientOnly(() => import("./DevOverlayDialog"));
 
-export function DevOverlay(props: DevOverlayProps): JSX.Element {
+export default function DevOverlay(props: DevOverlayProps): JSX.Element {
   const [errors, setErrors] = createSignal<unknown[]>([]);
 
   function resetError() {
