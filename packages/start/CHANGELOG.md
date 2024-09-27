@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.0.8
+
+### Patch Changes
+
+- 292f1cd: fix #1638 - devOverlay causing hydration mismatch
+
 ## 1.0.7
 
 ### Patch Changes
