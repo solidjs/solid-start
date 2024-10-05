@@ -37,7 +37,7 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
 
   createEffect(() => {
     const onErrorEvent = (error: ErrorEvent) => {
-      pushError(error.error);
+      pushError(error.error ?? error);
     };
 
     window.addEventListener("error", onErrorEvent);
