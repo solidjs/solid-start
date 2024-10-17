@@ -4,12 +4,12 @@ import {
   Show,
   createEffect,
   createSignal,
+  lazy,
   onCleanup,
   resetErrorBoundaries,
   type JSX
 } from "solid-js";
 import { HttpStatusCode } from "../HttpStatusCode";
-import clientOnly from "../clientOnly";
 
 export interface DevOverlayProps {
   children?: JSX.Element;
@@ -20,7 +20,7 @@ const DevOverlayDialog =
     ? () => {
         return <></>;
       }
-    : /* #__PURE__ */ clientOnly(() => import("./DevOverlayDialog"));
+    : /* #__PURE__ */ lazy(() => import("./DevOverlayDialog"));
 
 export function DevOverlay(props: DevOverlayProps): JSX.Element {
   const [errors, setErrors] = createSignal<unknown[]>([]);
