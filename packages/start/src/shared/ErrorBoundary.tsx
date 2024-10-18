@@ -17,9 +17,7 @@ export const ErrorBoundary =
               console.error(error);
               return (
                 <>
-                  <span style="font-size:1.5em;text-align:center;position:fixed;left:0px;bottom:55%;width:100%;">
-                    {message}
-                  </span>
+                  <span class="error-boundary">{message}</span>
                   <HttpStatusCode code={500} />
                 </>
               );
@@ -41,9 +39,7 @@ export const TopErrorBoundary = (props: ParentProps) => {
   );
   return isError ? (
     <>
-      <span style="font-size:1.5em;text-align:center;position:fixed;left:0px;bottom:55%;width:100%;">
-        500 | Internal Server Error
-      </span>
+      <span class="error-boundary">500 | Internal Server Error</span>
       <HttpStatusCode code={500} />
     </>
   ) : (
