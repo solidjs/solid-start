@@ -13,8 +13,8 @@ interface ImportMetaEnv extends Record<`VITE_${string}`, any>, SolidStartMetaEnv
 }
 
 interface SolidStartMetaEnv {
-  START_SSR: string;
-  START_ISLANDS: string;
-  START_DEV_OVERLAY: string;
+  START_SSR: boolean;
+  START_ISLANDS: boolean;
+  START_DEV_OVERLAY: boolean;
   SERVER_BASE_URL: string;
 }

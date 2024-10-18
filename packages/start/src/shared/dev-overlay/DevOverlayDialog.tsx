@@ -21,15 +21,25 @@ interface ErrorInfoProps {
 }
 
 function ErrorInfo(props: ErrorInfoProps): JSX.Element {
+  const error = createMemo(() => {
+    const e = props.error;
+
+    if (e instanceof Error) {
+      return { name: e.name, message: e.message };
+    }
+
+    if (e instanceof ErrorEvent) {
+      return { message: e.message };
+    }
+
+    return { message: (e as Error).toString() };
+  });
+
   return (
-    <Show when={props.error instanceof Error && props.error} keyed fallback={<span>{(props.error as Error).toString()}</span>}>
-      {(current) => (
-        <span class="dev-overlay-error-info">
-          <span class="dev-overlay-error-info-name">{current.name}</span>
-          <span class="dev-overlay-error-info-message">{current.message}</span>
-        </span>
-      )}
-    </Show>
+    <span class="dev-overlay-error-info">
+      <span class="dev-overlay-error-info-name">{error().name}</span>
+      <span class="dev-overlay-error-info-message">{error().message}</span>
+    </span>
   );
 }
 
