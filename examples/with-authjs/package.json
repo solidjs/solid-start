@@ -19,10 +19,10 @@
     "@babel/core": "7.24.4",
     "@solid-mediakit/auth": "^2.0.11",
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.14.1",
-    "@solidjs/start": "^1.0.6",
-    "solid-js": "^1.8.18",
-    "vinxi": "^0.4.1"
+    "@solidjs/router": "^0.14.7",
+    "@solidjs/start": "^1.0.8",
+    "solid-js": "^1.9.1",
+    "vinxi": "^0.4.3"
   },
   "engines": {
     "node": ">=18"

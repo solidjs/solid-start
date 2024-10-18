@@ -2,4 +2,4 @@
 "@solidjs/start": patch
 ---
 
-encode api url components
+lazy load dev overlay

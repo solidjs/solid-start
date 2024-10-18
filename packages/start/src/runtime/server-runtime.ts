@@ -164,9 +164,9 @@ async function fetchServerFunction(
       }));
 
   if (
-    response.headers.get("Location") ||
-    response.headers.get("X-Revalidate") ||
-    response.headers.get("X-Single-Flight")
+    response.headers.has("Location") ||
+    response.headers.has("X-Revalidate") ||
+    response.headers.has("X-Single-Flight")
   ) {
     if (response.body) {
       /* @ts-ignore-next-line */
