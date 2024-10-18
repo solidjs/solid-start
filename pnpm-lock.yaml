@@ -60,9 +60,6 @@ importers:
       debug:
         specifier: ^4.3.4
         version: 4.3.4
-      fast-glob:
-        specifier: ^3.3.0
-        version: 3.3.2
       graphql:
         specifier: ^16.7.1
         version: 16.8.1
@@ -93,6 +90,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.3)
+      tinyglobby:
+        specifier: ^0.2.2
+        version: 0.2.2
       tippy.js:
         specifier: ^6.3.7
         version: 6.3.7
@@ -580,9 +580,6 @@ importers:
       error-stack-parser:
         specifier: ^2.1.4
         version: 2.1.4
-      glob:
-        specifier: ^10.3.10
-        version: 10.3.15
       html-to-image:
         specifier: ^1.11.11
         version: 1.11.11
@@ -622,6 +619,7 @@ packages:
 
   '@adobe/css-tools@4.3.3':
     resolution: {integrity: sha512-rE0Pygv0sEZ4vBWHlAgJLGDU7Pm8xoO6p3wsEceb7GYAjScrOHpEo8KK/eVkAcnSM+slAEtXjA2JpdjLp4fJQQ==}
+    dev: true
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -7382,6 +7380,7 @@ snapshots:
   '@jest/schemas@29.6.3':
     dependencies:
       '@sinclair/typebox': 0.27.8
+    dev: true
 
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:
@@ -8496,22 +8495,26 @@ snapshots:
       '@vitest/spy': 1.6.0
       '@vitest/utils': 1.6.0
       chai: 4.4.1
+    dev: true
 
   '@vitest/runner@1.6.0':
     dependencies:
       '@vitest/utils': 1.6.0
       p-limit: 5.0.0
       pathe: 1.1.2
+    dev: true
 
   '@vitest/snapshot@1.6.0':
     dependencies:
       magic-string: 0.30.10
       pathe: 1.1.2
       pretty-format: 29.7.0
+    dev: true
 
   '@vitest/spy@1.6.0':
     dependencies:
       tinyspy: 2.2.1
+    dev: true
 
   '@vitest/ui@1.6.0(vitest@1.6.0)':
     dependencies:
@@ -8530,6 +8533,7 @@ snapshots:
       estree-walker: 3.0.3
       loupe: 2.3.7
       pretty-format: 29.7.0
+    dev: true
 
   abbrev@1.1.1: {}
 
@@ -8568,6 +8572,7 @@ snapshots:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   ajv@6.12.6:
     dependencies:
@@ -8643,6 +8648,7 @@ snapshots:
   aria-query@5.3.0:
     dependencies:
       dequal: 2.0.3
+    dev: true
 
   array-buffer-byte-length@1.0.1:
     dependencies:
@@ -8891,6 +8897,7 @@ snapshots:
       loupe: 2.3.7
       pathval: 1.1.1
       type-detect: 4.0.8
+    dev: true
 
   chalk@2.4.2:
     dependencies:
@@ -8902,6 +8909,7 @@ snapshots:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+    dev: true
 
   chalk@4.1.2:
     dependencies:
@@ -8923,6 +8931,7 @@ snapshots:
   check-error@1.0.3:
     dependencies:
       get-func-name: 2.0.2
+    dev: true
 
   chokidar@3.6.0:
     dependencies:
@@ -8999,6 +9008,7 @@ snapshots:
   combined-stream@1.0.8:
     dependencies:
       delayed-stream: 1.0.0
+    dev: true
 
   comma-separated-tokens@2.0.3: {}
 
@@ -9085,6 +9095,7 @@ snapshots:
   cssstyle@4.0.1:
     dependencies:
       rrweb-cssom: 0.6.0
+    dev: true
 
   csstype@3.1.3: {}
 
@@ -9111,6 +9122,7 @@ snapshots:
     dependencies:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
+    dev: true
 
   data-view-buffer@1.0.1:
     dependencies:
@@ -9170,6 +9182,7 @@ snapshots:
   deep-eql@4.1.3:
     dependencies:
       type-detect: 4.0.8
+    dev: true
 
   deep-extend@0.6.0: {}
 
@@ -9704,6 +9717,7 @@ snapshots:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
+    dev: true
 
   format@0.2.2: {}
 
@@ -10029,6 +10043,7 @@ snapshots:
   html-encoding-sniffer@4.0.0:
     dependencies:
       whatwg-encoding: 3.1.1
+    dev: true
 
   html-entities@2.3.3: {}
 
@@ -10050,6 +10065,17 @@ snapshots:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /http-proxy@1.18.1:
+    resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      eventemitter3: 4.0.7
+      follow-redirects: 1.15.6
+      requires-port: 1.0.0
+    transitivePeerDependencies:
+      - debug
 
   http-proxy@1.18.1(debug@4.3.4):
     dependencies:
@@ -10080,6 +10106,7 @@ snapshots:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   httpxy@0.1.5: {}
 
@@ -10098,6 +10125,7 @@ snapshots:
   iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
+    dev: true
 
   ieee754@1.2.1: {}
 
@@ -10350,6 +10378,7 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    dev: true
 
   jsesc@2.5.2: {}
 
@@ -10513,6 +10542,7 @@ snapshots:
   loupe@2.3.7:
     dependencies:
       get-func-name: 2.0.2
+    dev: true
 
   lru-cache@10.2.2: {}
 
@@ -10913,6 +10943,7 @@ snapshots:
   mime-types@2.1.35:
     dependencies:
       mime-db: 1.52.0
+    dev: true
 
   mime@1.6.0: {}
 
@@ -11301,6 +11332,7 @@ snapshots:
   p-limit@5.0.0:
     dependencies:
       yocto-queue: 1.0.0
+    dev: true
 
   p-locate@4.1.0:
     dependencies:
@@ -11337,6 +11369,7 @@ snapshots:
   parse5@7.1.2:
     dependencies:
       entities: 4.5.0
+    dev: true
 
   parseurl@1.3.3: {}
 
@@ -11496,6 +11529,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.3.1
+    dev: true
 
   pretty-format@3.8.0: {}
 
@@ -11634,6 +11668,7 @@ snapshots:
     dependencies:
       indent-string: 4.0.0
       strip-indent: 3.0.0
+    dev: true
 
   redis-errors@1.2.0: {}
 
@@ -11849,6 +11884,7 @@ snapshots:
   saxes@6.0.0:
     dependencies:
       xmlchars: 2.2.0
+    dev: true
 
   scheduler@0.23.2:
     dependencies:
@@ -12199,6 +12235,7 @@ snapshots:
   strip-indent@3.0.0:
     dependencies:
       min-indent: 1.0.1
+    dev: true
 
   strip-json-comments@2.0.1: {}
 
@@ -12209,6 +12246,7 @@ snapshots:
   strip-literal@2.1.0:
     dependencies:
       js-tokens: 9.0.0
+    dev: true
 
   style-to-object@0.4.4:
     dependencies:
@@ -12238,6 +12276,7 @@ snapshots:
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
+    dev: true
 
   supports-color@9.4.0: {}
 
@@ -12375,12 +12414,14 @@ snapshots:
       punycode: 2.3.1
       universalify: 0.2.0
       url-parse: 1.5.10
+    dev: true
 
   tr46@0.0.3: {}
 
   tr46@5.0.0:
     dependencies:
       punycode: 2.3.1
+    dev: true
 
   trim-lines@3.0.1: {}
 
@@ -12720,6 +12761,7 @@ snapshots:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
+    dev: true
 
   urlpattern-polyfill@8.0.2: {}
 
@@ -12800,8 +12842,9 @@ snapshots:
       get-port-please: 3.1.2
       h3: 1.11.1
       hookable: 5.5.3
-      http-proxy: 1.18.1(debug@4.3.4)
+      http-proxy: 1.18.1
       micromatch: 4.0.5
+
       nitropack: 2.9.6(@opentelemetry/api@1.8.0)(better-sqlite3@11.0.0)(drizzle-orm@0.31.2(@opentelemetry/api@1.8.0)(@types/better-sqlite3@7.6.10)(better-sqlite3@11.0.0)(react@18.3.1))
       node-fetch-native: 1.6.4
       path-to-regexp: 6.2.2
@@ -12913,6 +12956,7 @@ snapshots:
       - terser
       - uWebSockets.js
       - xml2js
+    dev: false
 
   vinxi@0.4.3(@opentelemetry/api@1.8.0)(@types/node@20.14.8)(debug@4.3.4)(ioredis@5.4.1)(lightningcss@1.25.0)(terser@5.31.0):
     dependencies:
@@ -13015,6 +13059,7 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+    dev: true
 
   vite-plugin-inspect@0.7.42(rollup@4.17.2)(vite@5.2.11(@types/node@20.14.8)(lightningcss@1.25.0)(terser@5.31.0)):
     dependencies:
@@ -13053,6 +13098,63 @@ snapshots:
       '@testing-library/jest-dom': 6.4.5(vitest@1.6.0(@types/node@20.12.12)(@vitest/ui@1.6.0)(jsdom@24.0.0)(lightningcss@1.25.0)(terser@5.31.0))
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /vite-plugin-solid@2.10.2(solid-js@1.8.18)(vite@5.2.11):
+    resolution: {integrity: sha512-AOEtwMe2baBSXMXdo+BUwECC8IFHcKS6WQV/1NEd+Q7vHPap5fmIhLcAzr+DUJ04/KHx/1UBU0l1/GWP+rMAPQ==}
+    peerDependencies:
+      '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
+      solid-js: ^1.7.2
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0
+    peerDependenciesMeta:
+      '@testing-library/jest-dom':
+        optional: true
+    dependencies:
+      '@babel/core': 7.24.4
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 1.8.17(@babel/core@7.24.4)
+      merge-anything: 5.1.7
+      solid-js: 1.8.18
+      solid-refresh: 0.6.3(solid-js@1.8.18)
+      vite: 5.2.11
+      vitefu: 0.2.5(vite@5.2.11)
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /vite@5.2.11:
+    resolution: {integrity: sha512-HndV31LWW05i1BLPMUCE1B9E9GFbOu1MbenhS58FuK6owSO5qHm7GiCotrNY1YE5rMeQSFBGmT5ZaLEjFizgiQ==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || >=20.0.0
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      esbuild: 0.20.2
+      postcss: 8.4.38
+      rollup: 4.17.2
+    optionalDependencies:
+      fsevents: 2.3.3
 
   vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.4.5(vitest@1.6.0(@types/node@20.14.8)(@vitest/ui@1.6.0)(jsdom@24.0.0)(lightningcss@1.25.0)(terser@5.31.0)))(solid-js@1.9.1)(vite@5.2.11(@types/node@20.14.8)(lightningcss@1.25.0)(terser@5.31.0)):
     dependencies:
@@ -13169,6 +13271,7 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+    dev: true
 
   vscode-oniguruma@1.7.0: {}
 
@@ -13177,6 +13280,7 @@ snapshots:
   w3c-xmlserializer@5.0.0:
     dependencies:
       xml-name-validator: 5.0.0
+    dev: true
 
   wcwidth@1.0.1:
     dependencies:
@@ -13195,6 +13299,7 @@ snapshots:
   whatwg-encoding@3.1.1:
     dependencies:
       iconv-lite: 0.6.3
+    dev: true
 
   whatwg-mimetype@4.0.0: {}
 
@@ -13202,6 +13307,7 @@ snapshots:
     dependencies:
       tr46: 5.0.0
       webidl-conversions: 7.0.0
+    dev: true
 
   whatwg-url@5.0.0:
     dependencies:
@@ -13247,6 +13353,7 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
+    dev: true
 
   wide-align@1.1.5:
     dependencies:
