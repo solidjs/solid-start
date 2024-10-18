@@ -1,7 +1,7 @@
 import { exec, spawnSync } from "child_process";
 import { defineCommand, runMain } from "citty";
 import fs from "fs/promises";
-import glob from "tinyglobby";
+import { globSync } from "tinyglobby";
 import { promisify } from "util";
 
 const command = defineCommand({
@@ -34,8 +34,7 @@ const command = defineCommand({
     );
 
     await Promise.all(
-      glob
-        .globSync(["package.json", "packages/*/package.json", "examples/*/package.json"])
+      globSync(["package.json", "packages/*/package.json", "examples/*/package.json"])
         .map(async path => {
           const packageJson = JSON.parse(await fs.readFile(path));
           let deps = packages;
