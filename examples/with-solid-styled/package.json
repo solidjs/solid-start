@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.14.7",
+    "@solidjs/router": "^0.14.10",
     "@solidjs/start": "^1.0.8",
-    "solid-js": "^1.9.1",
+    "solid-js": "^1.9.2",
     "solid-styled": "^0.11.1",
     "vinxi": "^0.4.3",
     "vite-plugin-solid-styled": "^0.11.1"
