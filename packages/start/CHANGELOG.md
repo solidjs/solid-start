@@ -1,5 +1,14 @@
 # @solidjs/start
 
+## 1.0.9
+
+### Patch Changes
+
+- 00a4908: Show proper dev overlay for ErrorEvent with no error property.
+- 45171b2: chore: Replace `fast-glob` and `glob` with `tinyglobby`
+- 5ef4f75: lazy load dev overlay
+- bd8d7f5: fix passing empty revalidation header from actions
+
 ## 1.0.8
 
 ### Patch Changes
