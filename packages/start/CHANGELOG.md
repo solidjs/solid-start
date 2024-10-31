@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 1.0.10
+
+### Patch Changes
+
+- ec69889: fix #1649 append rather than override headers with flash message
+- aa30192: forward all request headers through single flight
+- 545a8ce: fix(start): enable HEAD requests to API HEAD/GET routes
+- 708a7a1: forward request cookies on single flight mutations
+- 715d563: fix #1645 flash encoding, and improve error handling
+
 ## 1.0.9
 
 ### Patch Changes
