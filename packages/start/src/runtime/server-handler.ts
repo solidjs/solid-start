@@ -276,9 +276,8 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
         new URL(sourceEvent.request.url).origin + import.meta.env.SERVER_BASE_URL
       ).toString();
   }
-  const cookies = sourceEvent.request.headers.get("cookie");
   const event = cloneEvent(sourceEvent) as PageEvent;
-  event.request = new Request(url, cookies ? { headers: { cookie: cookies } } : undefined);
+  event.request = new Request(url, { headers: sourceEvent.request.headers });
   return await provideRequestEvent(event, async () => {
     await createPageEvent(event);
     /* @ts-ignore */
