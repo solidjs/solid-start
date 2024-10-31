@@ -252,13 +252,13 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
   if (result) {
     headers.append(
       "Set-Cookie",
-      `flash=${JSON.stringify({
-        url: url.pathname + encodeURIComponent(url.search),
+      `flash=${encodeURIComponent(JSON.stringify({
+        url: url.pathname + url.search,
         result: isError ? result.message : result,
         thrown: thrown,
         error: isError,
         input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-      })}; Secure; HttpOnly;`
+      }))}; Secure; HttpOnly;`
     );
   }
   return new Response(null, {

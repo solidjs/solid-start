@@ -20,7 +20,7 @@ export const getUser = query(async () => {
     return { id: user.id, username: user.username };
   } catch {
     await logoutSession();
-    redirect("/login");
+    throw redirect("/login");
   }
 }, "user");
 
