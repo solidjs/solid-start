@@ -1,0 +1,39 @@
+name: ⚡️ Continuous Releases
+
+on:
+  push:
+    branches:
+      - main
+  merge_group:
+  pull_request:
+
+jobs:
+  cr:
+    name: "⚡️ Continuous Releases"
+
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build start
+        run: pnpm run build:all
+
+      - name: Release
+        run: pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact 

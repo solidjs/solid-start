@@ -7,12 +7,12 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/router": "^0.14.1",
-    "@solidjs/start": "^1.0.4",
+    "@solidjs/router": "^0.14.10",
+    "@solidjs/start": "^1.0.9",
     "@unocss/reset": "^0.59.2",
-    "solid-js": "^1.8.18",
+    "solid-js": "^1.9.2",
     "unocss": "^0.59.2",
-    "vinxi": "^0.3.14"
+    "vinxi": "^0.4.3"
   },
   "engines": {
     "node": ">=18"

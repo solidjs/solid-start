@@ -1,5 +1,42 @@
 # @solidjs/start
 
+## 1.0.9
+
+### Patch Changes
+
+- 00a4908: Show proper dev overlay for ErrorEvent with no error property.
+- 45171b2: chore: Replace `fast-glob` and `glob` with `tinyglobby`
+- 5ef4f75: lazy load dev overlay
+- bd8d7f5: fix passing empty revalidation header from actions
+
+## 1.0.8
+
+### Patch Changes
+
+- 292f1cd: fix #1638 - devOverlay causing hydration mismatch
+
+## 1.0.7
+
+### Patch Changes
+
+- 592fef1: Removes unused `vite-plugin-inspect` dependency.
+- 65c8ac0: Fixed fetchEvent flakyness by storing the event in h3 context.
+- 894594c: fix dev overlay being pulled in even when not used
+- 7ae221b: encode api url components
+- d719c6c: Update env.d.ts
+
+## 1.0.6
+
+### Patch Changes
+
+- d86ab61: drastically improve asset resolution performance
+
+## 1.0.5
+
+### Patch Changes
+
+- c4054c0: fix route hmr: fix #1286, fix #1461, fix #1473
+
 ## 1.0.4
 
 ### Patch Changes
