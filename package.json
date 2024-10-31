@@ -31,7 +31,7 @@
     "@kobalte/core": "^0.13.1",
     "@kobalte/utils": "^0.9.0",
     "@solidjs/meta": "^0.29.0",
-    "@solidjs/router": "^0.14.10",
+    "@solidjs/router": "^0.15.0",
     "@solidjs/start": "workspace:*",
     "@tailwindcss/typography": "^0.5.9",
     "@vinxi/plugin-mdx": "^3.7.1",

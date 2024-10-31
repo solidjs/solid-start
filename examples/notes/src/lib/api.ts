@@ -1,10 +1,10 @@
-import { action, cache, redirect } from "@solidjs/router";
+import { action, query, redirect } from "@solidjs/router";
 import { format, isToday } from "date-fns";
 import { marked } from "marked";
 import { storage } from "./db";
 import type { Note } from "./types";
 
-export const getNotes = cache(async (searchText: string) => {
+export const getNotes = query(async (searchText: string) => {
   "use server";
   return (((await storage.getItem("notes:data")) as Note[]) || [])
     .filter(note => !searchText || note.title.toLowerCase().includes(searchText.toLowerCase()))
@@ -17,12 +17,12 @@ export const getNotes = cache(async (searchText: string) => {
     });
 }, "notes");
 
-export const getNote = cache(async (id: number) => {
+export const getNote = query(async (id: number) => {
   "use server";
   return (((await storage.getItem("notes:data")) as Note[]) || []).find(note => note.id === id);
 }, "note");
 
-export const getNotePreview = cache(async (id: number) => {
+export const getNotePreview = query(async (id: number) => {
   "use server";
   const note = (((await storage.getItem("notes:data")) as Note[]) || []).find(
     note => note.id === id
