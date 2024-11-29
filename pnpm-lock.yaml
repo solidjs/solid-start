@@ -620,8 +620,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.10
       vite-plugin-solid:
-        specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^2.11.0
+        version: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
     devDependencies:
       solid-js:
         specifier: ^1.9.2
@@ -6680,6 +6680,16 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
+  vite-plugin-solid@2.11.0:
+    resolution: {integrity: sha512-G+NiwDj4EAeUE0wt3Ur9f+Lt9oMUuLd0FIxYuqwJSqRacKQRteCwUFzNy8zMEt88xWokngQhiFjfJMhjc1fDXw==}
+    peerDependencies:
+      '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
+      solid-js: ^1.7.2
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+    peerDependenciesMeta:
+      '@testing-library/jest-dom':
+        optional: true
+
   vite@5.4.10:
     resolution: {integrity: sha512-1hvaPshuPUtxeQ0hsVH3Mud0ZanOLwVTneA1EgbAM5LhaZEqyPWGRQ7BtaMvUrTDeEaC8pxtj6a6jku3x4z6SQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -6715,6 +6725,14 @@ packages:
     resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
+    peerDependenciesMeta:
+      vite:
+        optional: true
+
+  vitefu@1.0.4:
+    resolution: {integrity: sha512-y6zEE3PQf6uu/Mt6DTJ9ih+kyJLr4XcSgHR2zUkM8SWDhuixEJxfJ6CZGMHh1Ec3vPLoEA0IHU5oWzVqw8ulow==}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
     peerDependenciesMeta:
       vite:
         optional: true
@@ -7208,6 +7226,11 @@ snapshots:
   '@babel/plugin-syntax-jsx@7.24.1(@babel/core@7.24.4)':
     dependencies:
       '@babel/core': 7.24.4
+      '@babel/helper-plugin-utils': 7.24.5
+
+  '@babel/plugin-syntax-jsx@7.24.1(@babel/core@7.25.9)':
+    dependencies:
+      '@babel/core': 7.25.9
       '@babel/helper-plugin-utils': 7.24.5
 
   '@babel/plugin-syntax-jsx@7.25.9(@babel/core@7.25.9)':
@@ -9571,10 +9594,24 @@ snapshots:
       html-entities: 2.3.3
       validate-html-nesting: 1.2.2
 
+  babel-plugin-jsx-dom-expressions@0.37.20(@babel/core@7.25.9):
+    dependencies:
+      '@babel/core': 7.25.9
+      '@babel/helper-module-imports': 7.18.6
+      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.25.9)
+      '@babel/types': 7.24.5
+      html-entities: 2.3.3
+      validate-html-nesting: 1.2.2
+
   babel-preset-solid@1.8.17(@babel/core@7.24.4):
     dependencies:
       '@babel/core': 7.24.4
       babel-plugin-jsx-dom-expressions: 0.37.20(@babel/core@7.24.4)
+
+  babel-preset-solid@1.8.17(@babel/core@7.25.9):
+    dependencies:
+      '@babel/core': 7.25.9
+      babel-plugin-jsx-dom-expressions: 0.37.20(@babel/core@7.25.9)
 
   bail@1.0.5: {}
 
@@ -14076,6 +14113,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  vite-plugin-solid@2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)):
+    dependencies:
+      '@babel/core': 7.25.9
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 1.8.17(@babel/core@7.25.9)
+      merge-anything: 5.1.7
+      solid-js: 1.9.3
+      solid-refresh: 0.6.3(solid-js@1.9.3)
+      vite: 5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)
+      vitefu: 1.0.4(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+    optionalDependencies:
+      '@testing-library/jest-dom': 6.6.2
+    transitivePeerDependencies:
+      - supports-color
+
   vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0):
     dependencies:
       esbuild: 0.21.5
@@ -14103,6 +14155,10 @@ snapshots:
       vite: 5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)
 
   vitefu@0.2.5(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)):
+    optionalDependencies:
+      vite: 5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)
+
+  vitefu@1.0.4(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)):
     optionalDependencies:
       vite: 5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)
 
