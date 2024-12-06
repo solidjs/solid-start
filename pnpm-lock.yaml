@@ -34,8 +34,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: workspace:*
-        version: link:packages/start
+        specifier: ^1.0.10
+        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.15(tailwindcss@3.4.14)
@@ -76,8 +76,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-start-mdx:
-        specifier: workspace:*
-        version: link:packages/mdx
+        specifier: ^0.3.11
+        version: 0.3.11(rollup@4.24.2)(solid-js@1.9.3)(typescript@5.3.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-transition-group:
         specifier: ^0.2.3
         version: 0.2.3(solid-js@1.9.3)
@@ -1986,6 +1986,11 @@ packages:
 
   '@mdx-js/mdx@3.1.0':
     resolution: {integrity: sha512-/QxEhPAvGwbQmy1Px8F899L5Uc2KZ6JtXwlCgJmjSTBedwOZkByYcBG4GceIGPXRDsmfxhHazuS+hlOShRLeDw==}
+
+  '@mdx-js/rollup@2.3.0':
+    resolution: {integrity: sha512-wLvRfJS/M4UmdqTd+WoaySEE7q4BIejYf1xAHXYvtT1du/1Tl/z2450Gg2+Hu7fh05KwRRiehiTP9Yc/Dtn0fA==}
+    peerDependencies:
+      rollup: '>=2'
 
   '@netlify/functions@2.7.0':
     resolution: {integrity: sha512-4pXC/fuj3eGQ86wbgPiM4zY8+AsNrdz6vcv6FEdUJnZW+LqF8IWjQcY3S0d1hLeLKODYOqq4CkrzGyCpce63Nw==}
@@ -6021,6 +6026,9 @@ packages:
     peerDependencies:
       solid-js: ^1.3
 
+  solid-start-mdx@0.3.11:
+    resolution: {integrity: sha512-bLYZ3k/AgFHiRqA/VdCJiJOaR528aEuwU277bPlCUVhUCBo8qcjJQhUlc4QInnAZTGPR+/yOMHSTEjBKdIyCpw==}
+
   solid-styled@0.11.1:
     resolution: {integrity: sha512-QZN9hj+lt3gai0HPqzN5kFTn3zHIlyKWXVcYJfiuPGgprRuEB3UvUNqNcOncknJrjHLdZAn/ItA01rs9sqh8hg==}
     engines: {node: '>=12'}
@@ -8173,6 +8181,16 @@ snapshots:
       vfile: 6.0.3
     transitivePeerDependencies:
       - acorn
+      - supports-color
+
+  '@mdx-js/rollup@2.3.0(rollup@4.24.2)':
+    dependencies:
+      '@mdx-js/mdx': 2.3.0
+      '@rollup/pluginutils': 5.1.3(rollup@4.24.2)
+      rollup: 4.24.2
+      source-map: 0.7.4
+      vfile: 5.3.7
+    transitivePeerDependencies:
       - supports-color
 
   '@netlify/functions@2.7.0(@opentelemetry/api@1.9.0)':
@@ -12832,6 +12850,21 @@ snapshots:
       unified: 11.0.5
       vfile: 6.0.3
 
+  remark-shiki-twoslash@3.1.3(typescript@5.3.3):
+    dependencies:
+      '@types/unist': 2.0.10
+      '@typescript/twoslash': 3.1.0
+      '@typescript/vfs': 1.3.4
+      fenceparser: 1.1.1
+      regenerator-runtime: 0.13.11
+      shiki: 0.10.1
+      shiki-twoslash: 3.1.2(typescript@5.3.3)
+      tslib: 2.1.0
+      typescript: 5.3.3
+      unist-util-visit: 2.0.3
+    transitivePeerDependencies:
+      - supports-color
+
   remark-shiki-twoslash@3.1.3(typescript@5.6.3):
     dependencies:
       '@types/unist': 2.0.10
@@ -13055,6 +13088,16 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
+  shiki-twoslash@3.1.2(typescript@5.3.3):
+    dependencies:
+      '@typescript/twoslash': 3.1.0
+      '@typescript/vfs': 1.3.4
+      fenceparser: 1.1.1
+      shiki: 0.10.1
+      typescript: 5.3.3
+    transitivePeerDependencies:
+      - supports-color
+
   shiki-twoslash@3.1.2(typescript@5.6.3):
     dependencies:
       '@typescript/twoslash': 3.1.0
@@ -13138,6 +13181,33 @@ snapshots:
       '@babel/helper-module-imports': 7.24.3
       '@babel/types': 7.24.5
       solid-js: 1.9.3
+
+  solid-start-mdx@0.3.11(rollup@4.24.2)(solid-js@1.9.3)(typescript@5.3.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)):
+    dependencies:
+      '@mdx-js/mdx': 2.3.0
+      '@mdx-js/rollup': 2.3.0(rollup@4.24.2)
+      '@types/mdast': 3.0.15
+      acorn: 8.14.0
+      estree-util-is-identifier-name: 2.1.0
+      estree-util-value-to-estree: 1.3.0
+      github-slugger: 1.5.0
+      mdast: 3.0.0
+      mdast-util-mdx: 2.0.1
+      rehype-raw: 6.1.1
+      rehype-slug: 5.1.0
+      remark-frontmatter: 4.0.1
+      remark-mdx-frontmatter: 2.1.1
+      remark-shiki-twoslash: 3.1.3(typescript@5.3.3)
+      solid-mdx: 0.0.7(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+      unified: 10.1.2
+      unist-util-visit: 4.1.2
+      yaml: 2.6.0
+    transitivePeerDependencies:
+      - rollup
+      - solid-js
+      - supports-color
+      - typescript
+      - vite
 
   solid-styled@0.11.1(solid-js@1.9.3):
     dependencies:
