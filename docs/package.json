@@ -1,5 +1,6 @@
 {
   "name": "solid-start-docs",
+  "type": "module",
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
