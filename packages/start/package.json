@@ -63,9 +63,9 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.4.3",
-    "@vinxi/server-components": "^0.4.3",
-    "@vinxi/server-functions": "^0.4.3",
+    "@vinxi/plugin-directives": "0.4.3",
+    "@vinxi/server-components": "0.4.3",
+    "@vinxi/server-functions": "0.4.3",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
@@ -76,7 +76,7 @@
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
-    "vinxi": "^0.4.3",
+    "vinxi": "0.4.3",
     "vite-plugin-solid": "^2.11.0"
   }
 }
