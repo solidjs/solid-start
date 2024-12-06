@@ -64,9 +64,6 @@ importers:
         specifier: 3.22.1
         version: 3.22.1
     devDependencies:
-      '@changesets/cli':
-        specifier: ^2.25.2
-        version: 2.27.9
       '@cloudflare/kv-asset-handler':
         specifier: ^0.2.0
         version: 0.2.0

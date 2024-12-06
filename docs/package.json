@@ -6,7 +6,6 @@
     "start": "node ./.output/server/index.mjs"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.25.2",
     "@cloudflare/kv-asset-handler": "^0.2.0",
     "@kobalte/core": "^0.13.1",
     "@kobalte/utils": "^0.9.0",
