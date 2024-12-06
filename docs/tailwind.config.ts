@@ -3,7 +3,7 @@ import * as solidUi from "./ui.preset.js";
 
 export default {
   darkMode: ["class", '[data-kb-theme="dark"]'],
-  content: ["./docs/**/*.{html,js,jsx,md,mdx,ts,tsx}"],
+  content: ["./src/**/*.{html,js,jsx,md,mdx,ts,tsx}"],
   presets: [solidUi],
   theme: {
     extend: {
