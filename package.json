@@ -13,6 +13,7 @@
   "scripts": {
     "clean": "pnpm run clean:root",
     "clean:root": "rimraf node_modules",
+    "clean:all": "rimraf ./node_modules ./*/**/node_modules",
     "docs:dev": "vinxi dev",
     "docs:build": "vinxi build",
     "docs:start": "node ./.output/server/index.mjs",
