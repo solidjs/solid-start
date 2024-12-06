@@ -619,9 +619,6 @@ importers:
       tinyglobby:
         specifier: ^0.2.2
         version: 0.2.10
-      vinxi:
-        specifier: 0.4.3
-        version: 0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0)
       vite-plugin-solid:
         specifier: ^2.11.0
         version: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
@@ -632,6 +629,9 @@ importers:
       typescript:
         specifier: ^5.4.2
         version: 5.6.3
+      vinxi:
+        specifier: 0.4.3
+        version: 0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0)
 
 packages:
 
