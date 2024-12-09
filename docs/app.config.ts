@@ -3,7 +3,6 @@ import tailwindcss from "tailwindcss";
 import { config } from "vinxi/plugins/config";
 
 export default defineConfig({
-  appRoot: "./docs",
   // experimental: { islands: true },
   server: {
     preset: "cloudflare_module",
