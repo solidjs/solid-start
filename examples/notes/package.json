@@ -15,6 +15,9 @@
     "unstorage": "1.10.2",
     "vinxi": "^0.4.3"
   },
+  "overrides": {
+    "vite": "5.4.10"
+  },
   "engines": {
     "node": ">=18"
   }

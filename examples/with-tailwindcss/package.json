@@ -15,6 +15,9 @@
     "tailwindcss": "^3.4.3",
     "vinxi": "^0.4.3"
   },
+  "overrides": {
+    "vite": "5.4.10"
+  },
   "engines": {
     "node": ">=18"
   }

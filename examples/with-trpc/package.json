@@ -17,6 +17,9 @@
     "valibot": "^0.29.0",
     "vinxi": "^0.4.3"
   },
+  "overrides": {
+    "vite": "5.4.10"
+  },
   "engines": {
     "node": ">=18"
   }
