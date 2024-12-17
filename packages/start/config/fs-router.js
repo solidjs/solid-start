@@ -58,7 +58,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
   }
 }
 
-const HTTP_METHODS = ["HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"];
+const HTTP_METHODS = ["HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"];
 function createHTTPHandlers(src, exports) {
   const handlers = {};
   for (const exp of exports) {
