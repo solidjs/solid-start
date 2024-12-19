@@ -11,22 +11,31 @@
   },
   "private": true,
   "scripts": {
+    "bump": "node scripts/bump.js",
+
     "clean": "pnpm run clean:all",
-    "clean:all": "pnpm run clean:examples && pnpm run clean:packages && pnpm run clean:root",
-    "clean:root": "pnpx rimraf ./node_modules ./.vinxi/ ./.output/",
-    "clean:packages": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/.vinxi/ ./packages/*/.output/ ./packages/*/dist/",
-    "clean:examples": "pnpx rimraf ./examples/*/node_modules/ ./examples/*/.vinxi/ ./examples/*/.output/",
-    "clean:test": "pnpx rimraf .tmp",
+    "all:clean": "pnpm run examples:clean && pnpm run packages:clean && pnpm run clean:root",
+    "all:build": "pnpm run packages:build && examples:build",
+    
+    "root:clean": "pnpx rimraf ./node_modules ./.vinxi/ ./.output/",
+    
     "docs:dev": "vinxi dev",
     "docs:build": "vinxi build",
     "docs:start": "node ./.output/server/index.mjs",
-    "build": "pnpm --filter @solidjs/start build",
-    "build:all": "pnpm run build && pnpm --filter './examples/*' --if-present build",
+    
+    "examples:build": "pnpm --filter './examples/*' --if-present build",
+    "examples:clean": "pnpx rimraf ./examples/*/node_modules/ ./examples/*/.vinxi/ ./examples/*/.output/",
+    "examples:use-workspace-package": "node ./util/use-workspace-package-in-examples.js",
+    
+    "build": "pnpm run packages:build",
+    "packages:build": "pnpm --filter './packages/*' --if-present build",
+    "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
+    
     "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
+    "clean:test": "pnpx rimraf .tmp",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
-    "show:test-report": "pnpm --filter solid-start-tests show:test-report",
-    "bump": "node scripts/bump.js"
+    "show:test-report": "pnpm --filter solid-start-tests show:test-report"
   },
   "devDependencies": {
     "@changesets/cli": "^2.25.2",
