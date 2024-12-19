@@ -14,8 +14,8 @@
     "bump": "node scripts/bump.js",
 
     "clean": "pnpm run clean:all",
+    "all:build": "pnpm run packages:build && examples:build && docs:build",
     "all:clean": "pnpm run examples:clean && pnpm run packages:clean && pnpm run clean:root",
-    "all:build": "pnpm run packages:build && examples:build",
     
     "root:clean": "pnpx rimraf ./node_modules ./.vinxi/ ./.output/",
     
