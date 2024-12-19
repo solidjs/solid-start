@@ -5,7 +5,7 @@
 2. Install dependencies
    `pnpm install`
 3. Build dependencies
-   `pnpm run build:all`
+   `pnpm run all:build`
 4. Run an example
    `pnpm --filter example-hackernews run dev`
 5. Make changes and check if things work in examples
