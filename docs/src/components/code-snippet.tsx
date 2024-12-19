@@ -1,9 +1,6 @@
 import { Tabs } from "@kobalte/core/tabs";
 import { createResource, Suspense } from "solid-js";
-// import { YarnIcon } from "./icons/yarn-icon";
-// import { NpmIcon } from "./icons/npm-icon";
-// import { PnpmIcon } from "./icons/pnpm-icon";
-
+import { CopyToClipboard } from "./clipboard-button";
 const getSolidStartVersion = async () => {
   "use server";
 
@@ -66,7 +63,7 @@ export function CodeSnippet() {
   );
 }
 
-function TabContent(props: { manager: string, command: string }) {
+function TabContent(props: { manager: string; command: string }) {
   return (
     <Tabs.Content
       value={props.manager}
@@ -86,8 +83,14 @@ function TabContent(props: { manager: string, command: string }) {
           aria-hidden="true"
           class="hidden dark:block absolute inset-0 bg-gradient-to-tr from-blue-300 rounded-md via-blue-300/70 to-blue-300 opacity-5 pointer-events-none"
         />
-        <span class="dark:text-cyan-200 text-cyan-600">{props.manager}</span> {' '+props.command}
+        <span class="dark:text-cyan-200 text-cyan-600">{props.manager}</span> {" " + props.command}
       </pre>
+
+      <CopyToClipboard
+        class="absolute right-4 top-3"
+        manager={props.manager}
+        command={props.command}
+      />
     </Tabs.Content>
   );
 }
