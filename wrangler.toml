@@ -12,4 +12,4 @@ rules = [
 ]
 
 [site]
-bucket = ".output/public"
+bucket = "docs/.output/public"
