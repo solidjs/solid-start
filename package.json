@@ -12,8 +12,10 @@
   "private": true,
   "scripts": {
     "clean": "pnpm run clean:all",
-    "clean:root": "pnpx rimraf node_modules",
-    "clean:all": "pnpx rimraf ./*/*/node_modules/ ./*/*/.vinxi/ ./*/*/.output/ ./*/*/dist/ ./*/node_modules/ ./*/.vinxi/ ./*/.output/ ./node_modules/ ./.vinxi/ ./.output/",
+    "clean:all": "pnpm run clean:examples && pnpm run clean:packages && pnpm run clean:root",
+    "clean:root": "pnpx rimraf ./node_modules ./.vinxi/ ./.output/",
+    "clean:packages": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/.vinxi/ ./packages/*/.output/ ./packages/*/dist/",
+    "clean:examples": "pnpx rimraf ./examples/*/node_modules/ ./examples/*/.vinxi/ ./examples/*/.output/",
     "docs:dev": "vinxi dev",
     "docs:build": "vinxi build",
     "docs:start": "node ./.output/server/index.mjs",
