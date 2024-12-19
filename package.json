@@ -12,12 +12,12 @@
   "private": true,
   "scripts": {
     "clean": "pnpm run clean:all",
-    "clean:docs": "pnpx rimraf ./docs/node_modules ./docs/.vinxi/ ./docs/.output/",
     "clean:root": "rimraf node_modules",
     "clean:all": "rimraf ./node_modules ./*/**/node_modules",
     "docs:dev": "pnpm --filter solid-start-docs dev",
     "docs:build": "pnpm --filter solid-start-docs build",
     "docs:start": "pnpm --filter solid-start-docs start",
+    "docs:clean": "pnpx rimraf ./docs/node_modules ./docs/.vinxi/ ./docs/.output/",
     "clean:test": "rimraf .tmp",
     "build": "pnpm --filter @solidjs/start build",
     "build:all": "pnpm run build && pnpm --filter './examples/*' --if-present build",
