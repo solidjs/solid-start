@@ -28,7 +28,7 @@
     "examples:use-workspace-package": "node ./util/use-workspace-package-in-examples.js",
     
     "build": "pnpm run packages:build",
-    "packages:build": "pnpm --filter './packages/*' --if-present build",
+    "packages:build": "pnpm --filter @solidjs/start build",
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
     
     "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
