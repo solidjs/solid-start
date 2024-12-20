@@ -15,6 +15,9 @@
     "vinxi": "^0.4.3",
     "solid-mdx": "^0.0.7"
   },
+  "overrides": {
+    "vite": "5.4.10"
+  },
   "engines": {
     "node": ">=18"
   }
