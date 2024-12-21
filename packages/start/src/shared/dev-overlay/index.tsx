@@ -20,7 +20,7 @@ const DevOverlayDialog =
     ? () => {
         return <></>;
       }
-    : /* #__PURE__ */ clientOnly(() => import("./DevOverlayDialog"));
+    : /* #__PURE__ */ clientOnly(() => import("./DevOverlayDialog"), { lazy: true });
 
 export function DevOverlay(props: DevOverlayProps): JSX.Element {
   const [errors, setErrors] = createSignal<unknown[]>([]);
@@ -37,7 +37,7 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
 
   createEffect(() => {
     const onErrorEvent = (error: ErrorEvent) => {
-      pushError(error.error);
+      pushError(error.error ?? error);
     };
 
     window.addEventListener("error", onErrorEvent);

@@ -2,12 +2,13 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "strict": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
-    "strict": true,
+    "types": ["vite/client", "@solidjs/start/env"],
     "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"]

@@ -138,10 +138,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes)
       parsed.push(
-        await(
-          isH3EventBodyStreamLocked
-            ? request
-            : new Request(request, { ...request, body: requestBody })
+        await (isH3EventBodyStreamLocked
+          ? request
+          : new Request(request, { ...request, body: requestBody })
         ).formData()
       );
       // what should work when #1721 is fixed
@@ -235,31 +234,36 @@ async function handleServerFunction(h3Event: HTTPEvent) {
 function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
   const url = new URL(request.url);
   const isError = result instanceof Error;
-  let redirectUrl = new URL(request.headers.get("referer")!).toString();
   let statusCode = 302;
-  if (result instanceof Response && result.headers.has("Location")) {
-    redirectUrl = new URL(
-      result.headers.get("Location")!,
-      url.origin + import.meta.env.SERVER_BASE_URL
-    ).toString();
-    statusCode = getExpectedRedirectStatus(result);
+  let headers;
+  if (result instanceof Response) {
+    headers = new Headers(result.headers);
+    if (result.headers.has("Location")) {
+      headers.set(
+        `Location`,
+        new URL(
+          result.headers.get("Location")!,
+          url.origin + import.meta.env.SERVER_BASE_URL
+        ).toString()
+      );
+      statusCode = getExpectedRedirectStatus(result);
+    }
+  } else headers = new Headers({ Location: new URL(request.headers.get("referer")!).toString() });
+  if (result) {
+    headers.append(
+      "Set-Cookie",
+      `flash=${encodeURIComponent(JSON.stringify({
+        url: url.pathname + url.search,
+        result: isError ? result.message : result,
+        thrown: thrown,
+        error: isError,
+        input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
+      }))}; Secure; HttpOnly;`
+    );
   }
   return new Response(null, {
     status: statusCode,
-    headers: {
-      Location: redirectUrl,
-      ...(result
-        ? {
-            "Set-Cookie": `flash=${JSON.stringify({
-              url: url.pathname + encodeURIComponent(url.search),
-              result: isError ? result.message : result,
-              thrown: thrown,
-              error: isError,
-              input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-            })}; Secure; HttpOnly;`
-          }
-        : {})
-    }
+    headers
   });
 }
 
@@ -277,7 +281,7 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
       ).toString();
   }
   const event = cloneEvent(sourceEvent) as PageEvent;
-  event.request = new Request(url);
+  event.request = new Request(url, { headers: sourceEvent.request.headers });
   return await provideRequestEvent(event, async () => {
     await createPageEvent(event);
     /* @ts-ignore */
