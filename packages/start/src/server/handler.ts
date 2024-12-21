@@ -42,7 +42,7 @@ export function createBaseHandler(
         const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
         if (match) {
           const mod = await match.handler.import();
-          const fn = mod[event.request.method];
+          const fn = event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
           (event as APIEvent).params = match.params || {};
           // @ts-ignore
           sharedConfig.context = { event };

@@ -8,5 +8,15 @@ In order to run this example, you need to setup i.e. a Discord app in here: http
 
 Everything you need to build an [AuthJS](https://authjs.dev/) authenticated Solid project, powered by [`solid-start`](https://start.solidjs.com);
 
+This will start a production server on port `3000`.
 
-Note that Discord is just one of many auth providers supported by Auth.js.
+### Enviroment Variables
+
+- `DISCORD_ID`=
+- `DISCORD_SECRET`=
+- `AUTH_SECRET`=b198e07a64406260b98f06e21c457b84
+- `AUTH_TRUST_HOST`=true
+- `AUTH_URL`=http://localhost:3000
+- `VITE_AUTH_PATH`=/api/auth
+
+[Sponsor Create JD App](https://github.com/sponsors/OrJDev)

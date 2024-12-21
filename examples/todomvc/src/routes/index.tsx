@@ -165,7 +165,7 @@ export default function TodoApp(props: RouteSectionProps) {
         </ul>
       </section>
 
-      <Show when={todos().length || addingTodo.length}>
+      <Show when={todos().length + addingTodo.length - removingTodo.length}>
         <footer class="footer">
           <span class="todo-count">
             <strong>{remainingCount()}</strong> {remainingCount() === 1 ? " item " : " items "} left

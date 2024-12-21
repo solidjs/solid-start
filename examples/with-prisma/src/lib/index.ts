@@ -1,4 +1,4 @@
-import { action, cache, redirect } from "@solidjs/router";
+import { action, query, redirect } from "@solidjs/router";
 import { db } from "./db";
 import {
   getSession,
@@ -9,7 +9,7 @@ import {
   validateUsername
 } from "./server";
 
-export const getUser = cache(async () => {
+export const getUser = query(async () => {
   "use server";
   try {
     const session = await getSession();

@@ -5,7 +5,7 @@ import { appendStyles, cleanupStyles, preloadStyles, updateStyles } from "vinxi/
 import { renderAsset } from "../server/renderAsset";
 import { Asset } from "../server/types";
 
-export default function lazyRoute<T>(component: any, clientManifest: any, serverManifest: any, exported = "default") {
+export default function lazyRoute<T extends Record<string, any>>(component: any, clientManifest: any, serverManifest: any, exported = "default") {
   return lazy(async () => {
     if (import.meta.env.DEV) {
       let manifest = import.meta.env.SSR ? serverManifest : clientManifest;
