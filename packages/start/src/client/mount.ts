@@ -1,5 +1,4 @@
 import type { JSX } from "solid-js";
-import { createStore } from "solid-js/store";
 import {
   createComponent,
   getHydrationKey,
@@ -14,7 +13,6 @@ import {
  */
 export function mount(fn: () => JSX.Element, el: MountableElement) {
   if (import.meta.env.START_ISLANDS) {
-    const map = new WeakMap();
     async function mountIsland(el: HTMLElement) {
       if (el.dataset.css) {
         let css = JSON.parse(el.dataset.css);
@@ -39,7 +37,7 @@ export function mount(fn: () => JSX.Element, el: MountableElement) {
       let hk = el.dataset.hk;
       // _$DEBUG("hydrating island", el.dataset.island, hk.slice(0, hk.length - 1) + `1-`, el);
 
-      let props = createStore({
+      let props = {
         ...JSON.parse(el.dataset.props!),
         get children() {
           const p = el.getElementsByTagName("solid-children");
@@ -49,11 +47,9 @@ export function mount(fn: () => JSX.Element, el: MountableElement) {
           });
           return;
         }
-      });
+      };
 
-      map.set(el, props);
-
-      hydrate(() => createComponent(Component, props[0]), el, {
+      hydrate(() => createComponent(Component, props), el, {
         renderId: hk.slice(0, hk.length - 1) + `${1 + Number(el.dataset.offset)}-`,
         owner: lookupOwner(el)
       });
