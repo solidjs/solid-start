@@ -1,22 +1,22 @@
 // @refresh skip
-import type { BuiltinLanguage, Highlighter } from 'shikiji';
-import { getHighlighterCore, loadWasm } from 'shikiji/core';
+import { getSingletonHighlighter, type BuiltinLanguage, type Highlighter } from 'shiki';
+import { loadWasm } from 'shiki/engine/oniguruma';
 import { createEffect, createResource, type JSX } from 'solid-js';
 
-import url from 'shikiji/onig.wasm?url';
+import url from 'shiki/onig.wasm?url';
 
-import langJS from 'shikiji/langs/javascript.mjs';
-import langJSX from 'shikiji/langs/jsx.mjs';
-import langTSX from 'shikiji/langs/tsx.mjs';
-import langTS from 'shikiji/langs/typescript.mjs';
-import darkPlus from 'shikiji/themes/dark-plus.mjs';
+import langJS from 'shiki/langs/javascript.mjs';
+import langJSX from 'shiki/langs/jsx.mjs';
+import langTSX from 'shiki/langs/tsx.mjs';
+import langTS from 'shiki/langs/typescript.mjs';
+import darkPlus from 'shiki/themes/dark-plus.mjs';
 
 let HIGHLIGHTER: Highlighter;
 
 async function loadHighlighter() {
   if (!HIGHLIGHTER) {
     await loadWasm(await fetch(url))
-    HIGHLIGHTER = await getHighlighterCore({
+    HIGHLIGHTER = await getSingletonHighlighter({
       themes: [
         darkPlus,
       ],
