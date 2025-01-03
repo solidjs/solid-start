@@ -128,7 +128,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     // This should never be the case in "proper" Nitro presets since node.req has to be IncomingMessage,
     // But the new azure-functions preset for some reason uses a ReadableStream in node.req (#1521)
     const isReadableStream = h3Request instanceof ReadableStream;
-    const isH3EventBodyStreamLocked = isReadableStream && h3Request.locked;
+    const hasReadableStream = h3Request.body instanceof ReadableStream;
+    const isH3EventBodyStreamLocked =
+      (isReadableStream && h3Request.locked) || (hasReadableStream && h3Request.body.locked);
     const requestBody = isReadableStream ? h3Request : h3Request.body;
 
     if (
@@ -136,7 +138,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
       // workaround for https://github.com/unjs/nitro/issues/1721
-      // (issue only in edge runtimes)
+      // (issue only in edge runtimes and netlify preset)
       parsed.push(
         await (isH3EventBodyStreamLocked
           ? request
@@ -147,7 +149,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // parsed.push(await request.formData);
     } else if (contentType?.startsWith("application/json")) {
       // workaround for https://github.com/unjs/nitro/issues/1721
-      // (issue only in edge runtimes)
+      // (issue only in edge runtimes and netlify preset)
       const tmpReq = isH3EventBodyStreamLocked
         ? request
         : new Request(request, { ...request, body: requestBody });
