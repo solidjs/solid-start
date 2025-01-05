@@ -9,6 +9,12 @@ on:
     tags-ignore:
       - v*
 
+  pull_request:
+    branches:
+      - main
+      - dev
+      - release-*
+
 jobs:
   filter-changes:
     runs-on: ubuntu-latest
