@@ -42,9 +42,6 @@ importers:
       tippy.js:
         specifier: ^6.3.7
         version: 6.3.7
-      turbo:
-        specifier: ^1.10.7
-        version: 1.13.4
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -517,7 +514,7 @@ importers:
         version: 1.9.3
       unocss:
         specifier: ^0.65.1
-        version: 0.65.1(postcss@8.4.47)(rollup@4.24.2)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))
+        version: 0.65.1(postcss@8.4.49)(rollup@4.24.2)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))
       vinxi:
         specifier: ^0.4.3
         version: 0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0)
@@ -9447,13 +9444,13 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  '@unocss/postcss@0.65.1(postcss@8.4.47)':
+  '@unocss/postcss@0.65.1(postcss@8.4.49)':
     dependencies:
       '@unocss/config': 0.65.1
       '@unocss/core': 0.65.1
       '@unocss/rule-utils': 0.65.1
       css-tree: 3.1.0
-      postcss: 8.4.47
+      postcss: 8.4.49
       tinyglobby: 0.2.10
     transitivePeerDependencies:
       - supports-color
@@ -9779,7 +9776,7 @@ snapshots:
       '@vue/compiler-ssr': 3.5.13
       '@vue/shared': 3.5.13
       estree-walker: 2.0.2
-      magic-string: 0.30.12
+      magic-string: 0.30.15
       postcss: 8.4.49
       source-map-js: 1.2.1
 
@@ -14158,12 +14155,12 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unocss@0.65.1(postcss@8.4.47)(rollup@4.24.2)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3)):
+  unocss@0.65.1(postcss@8.4.49)(rollup@4.24.2)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3)):
     dependencies:
       '@unocss/astro': 0.65.1(rollup@4.24.2)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))
       '@unocss/cli': 0.65.1(rollup@4.24.2)
       '@unocss/core': 0.65.1
-      '@unocss/postcss': 0.65.1(postcss@8.4.47)
+      '@unocss/postcss': 0.65.1(postcss@8.4.49)
       '@unocss/preset-attributify': 0.65.1
       '@unocss/preset-icons': 0.65.1
       '@unocss/preset-mini': 0.65.1
