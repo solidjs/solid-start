@@ -128,9 +128,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     // This should never be the case in "proper" Nitro presets since node.req has to be IncomingMessage,
     // But the new azure-functions preset for some reason uses a ReadableStream in node.req (#1521)
     const isReadableStream = h3Request instanceof ReadableStream;
-    const hasReadableStream = h3Request.body instanceof ReadableStream;
+    const hasReadableStream = (h3Request as EdgeIncomingMessage).body instanceof ReadableStream;
     const isH3EventBodyStreamLocked =
-      (isReadableStream && h3Request.locked) || (hasReadableStream && h3Request.body.locked);
+      (isReadableStream && h3Request.locked) || (hasReadableStream && ((h3Request as EdgeIncomingMessage).body as ReadableStream).locked);
     const requestBody = isReadableStream ? h3Request : h3Request.body;
 
     if (
