@@ -23,6 +23,7 @@
     "example-with-trpc",
     "example-with-unocss",
     "example-with-vitest",
-    "solid-start-mdx"
+    "solid-start-mdx",
+    "solid-start-docs"
   ]
 }
