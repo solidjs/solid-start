@@ -149,8 +149,8 @@ importers:
   examples/bare:
     dependencies:
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-js:
         specifier: ^1.9.2
         version: 1.9.3
@@ -167,8 +167,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-js:
         specifier: ^1.9.2
         version: 1.9.3
@@ -185,8 +185,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-js:
         specifier: ^1.9.2
         version: 1.9.3
@@ -200,8 +200,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-js:
         specifier: ^1.9.2
         version: 1.9.3
@@ -215,8 +215,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -239,8 +239,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-js:
         specifier: ^1.9.2
         version: 1.9.3
@@ -257,8 +257,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
       solid-js:
         specifier: ^1.9.2
         version: 1.9.3
@@ -280,7 +280,7 @@ importers:
         version: 0.35.0
       '@solid-mediakit/auth':
         specifier: ^3.0.0
-        version: 3.0.0(@auth/core@0.35.0)(@solidjs/meta@0.29.4(solid-js@1.9.3))(@solidjs/router@0.14.10(solid-js@1.9.3))(@solidjs/start@1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)))(rollup@4.24.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
+        version: 3.0.0(@auth/core@0.35.0)(@solidjs/meta@0.29.4(solid-js@1.9.3))(@solidjs/router@0.14.10(solid-js@1.9.3))(@solidjs/start@1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)))(rollup@4.24.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@solid-mediakit/auth-plugin':
         specifier: ^1.1.4
         version: 1.1.4(rollup@4.24.2)
@@ -291,8 +291,8 @@ importers:
         specifier: ^0.14.7
         version: 0.14.10(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.20(postcss@8.4.47)
@@ -340,8 +340,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(better-sqlite3@11.5.0)(debug@4.3.7)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.21.1(prisma@5.21.1))(@types/better-sqlite3@7.6.11)(better-sqlite3@11.5.0)(prisma@5.21.1)(react@18.3.1))(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(better-sqlite3@11.5.0)(debug@4.3.7)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.21.1(prisma@5.21.1))(@types/better-sqlite3@7.6.11)(better-sqlite3@11.5.0)(prisma@5.21.1)(react@18.3.1))(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
       better-sqlite3:
         specifier: ^11.0.0
         version: 11.5.0
@@ -374,8 +374,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@vinxi/plugin-mdx':
         specifier: ^3.7.1
         version: 3.7.2(@mdx-js/mdx@2.3.0)
@@ -398,8 +398,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
       prisma:
         specifier: ^5.12.1
         version: 5.21.1
@@ -423,8 +423,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       solid-js:
         specifier: ^1.9.2
         version: 1.9.3
@@ -444,8 +444,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.20(postcss@8.4.47)
@@ -471,8 +471,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@trpc/client':
         specifier: ^10.45.2
         version: 10.45.2(@trpc/server@10.45.2)
@@ -498,8 +498,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@unocss/reset':
         specifier: ^0.65.1
         version: 0.65.1
@@ -522,8 +522,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: ^1.0.10
-        version: 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+        specifier: ^1.0.11
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@solidjs/testing-library':
         specifier: ^0.8.10
         version: 0.8.10(@solidjs/router@0.15.0(solid-js@1.9.3))(solid-js@1.9.3)
@@ -2684,8 +2684,8 @@ packages:
     peerDependencies:
       solid-js: ^1.8.6
 
-  '@solidjs/start@1.0.10':
-    resolution: {integrity: sha512-3yg4KraSxc4rXs9dy/3kkqjDhU0JCPsZFLmDl5n6hHRPwtLLac6WUhs2k5VxGzitHaaJM/ZQCfT7i544Mf+4tw==}
+  '@solidjs/start@1.0.11':
+    resolution: {integrity: sha512-ZkrHtwxnmaVGItah13BtmST6rh3PtATcj0RyXM19Shj6MK/cIpDBBsDTsgwqCbZoa/AT8/JLM5xUHFjQyBjRCA==}
 
   '@solidjs/testing-library@0.8.10':
     resolution: {integrity: sha512-qdeuIerwyq7oQTIrrKvV0aL9aFeuwTd86VYD3afdq5HYEwoox1OBTJy4y8A3TFZr8oAR0nujYgCzY/8wgHGfeQ==}
@@ -8465,13 +8465,13 @@ snapshots:
       - rollup
       - supports-color
 
-  '@solid-mediakit/auth@3.0.0(@auth/core@0.35.0)(@solidjs/meta@0.29.4(solid-js@1.9.3))(@solidjs/router@0.14.10(solid-js@1.9.3))(@solidjs/start@1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)))(rollup@4.24.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))':
+  '@solid-mediakit/auth@3.0.0(@auth/core@0.35.0)(@solidjs/meta@0.29.4(solid-js@1.9.3))(@solidjs/router@0.14.10(solid-js@1.9.3))(@solidjs/start@1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)))(rollup@4.24.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))':
     dependencies:
       '@auth/core': 0.35.0
       '@solid-mediakit/shared': 0.0.6(rollup@4.24.2)
       '@solidjs/meta': 0.29.4(solid-js@1.9.3)
       '@solidjs/router': 0.14.10(solid-js@1.9.3)
-      '@solidjs/start': 1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
+      '@solidjs/start': 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
       cookie: 0.6.0
       set-cookie-parser: 2.6.0
       solid-js: 1.9.3
@@ -8563,7 +8563,7 @@ snapshots:
     dependencies:
       solid-js: 1.9.3
 
-  '@solidjs/start@1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(better-sqlite3@11.5.0)(debug@4.3.7)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.21.1(prisma@5.21.1))(@types/better-sqlite3@7.6.11)(better-sqlite3@11.5.0)(prisma@5.21.1)(react@18.3.1))(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))':
+  '@solidjs/start@1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(better-sqlite3@11.5.0)(debug@4.3.7)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.21.1(prisma@5.21.1))(@types/better-sqlite3@7.6.11)(better-sqlite3@11.5.0)(prisma@5.21.1)(react@18.3.1))(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))':
     dependencies:
       '@vinxi/plugin-directives': 0.4.3(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(better-sqlite3@11.5.0)(debug@4.3.7)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.21.1(prisma@5.21.1))(@types/better-sqlite3@7.6.11)(better-sqlite3@11.5.0)(prisma@5.21.1)(react@18.3.1))(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@vinxi/server-components': 0.4.3(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(better-sqlite3@11.5.0)(debug@4.3.7)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.21.1(prisma@5.21.1))(@types/better-sqlite3@7.6.11)(better-sqlite3@11.5.0)(prisma@5.21.1)(react@18.3.1))(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
@@ -8578,7 +8578,7 @@ snapshots:
       source-map-js: 1.2.1
       terracotta: 1.0.6(solid-js@1.9.3)
       tinyglobby: 0.2.10
-      vite-plugin-solid: 2.10.2(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
+      vite-plugin-solid: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
     transitivePeerDependencies:
       - '@testing-library/jest-dom'
       - solid-js
@@ -8586,7 +8586,7 @@ snapshots:
       - vinxi
       - vite
 
-  '@solidjs/start@1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))':
+  '@solidjs/start@1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))':
     dependencies:
       '@vinxi/plugin-directives': 0.4.3(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@vinxi/server-components': 0.4.3(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@20.17.4)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
@@ -8601,7 +8601,7 @@ snapshots:
       source-map-js: 1.2.1
       terracotta: 1.0.6(solid-js@1.9.3)
       tinyglobby: 0.2.10
-      vite-plugin-solid: 2.10.2(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
+      vite-plugin-solid: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
     transitivePeerDependencies:
       - '@testing-library/jest-dom'
       - solid-js
@@ -8609,7 +8609,7 @@ snapshots:
       - vinxi
       - vite
 
-  '@solidjs/start@1.0.10(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))':
+  '@solidjs/start@1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))':
     dependencies:
       '@vinxi/plugin-directives': 0.4.3(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@vinxi/server-components': 0.4.3(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))
@@ -8624,7 +8624,7 @@ snapshots:
       source-map-js: 1.2.1
       terracotta: 1.0.6(solid-js@1.9.3)
       tinyglobby: 0.2.10
-      vite-plugin-solid: 2.10.2(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+      vite-plugin-solid: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
     transitivePeerDependencies:
       - '@testing-library/jest-dom'
       - solid-js
@@ -13355,21 +13355,6 @@ snapshots:
     transitivePeerDependencies:
       - rollup
 
-  vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)):
-    dependencies:
-      '@babel/core': 7.24.4
-      '@types/babel__core': 7.20.5
-      babel-preset-solid: 1.8.17(@babel/core@7.24.4)
-      merge-anything: 5.1.7
-      solid-js: 1.9.3
-      solid-refresh: 0.6.3(solid-js@1.9.3)
-      vite: 5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)
-      vitefu: 0.2.5(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
-    optionalDependencies:
-      '@testing-library/jest-dom': 6.6.2
-    transitivePeerDependencies:
-      - supports-color
-
   vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)):
     dependencies:
       '@babel/core': 7.24.4
@@ -13380,6 +13365,21 @@ snapshots:
       solid-refresh: 0.6.3(solid-js@1.9.3)
       vite: 5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)
       vitefu: 0.2.5(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
+    optionalDependencies:
+      '@testing-library/jest-dom': 6.6.2
+    transitivePeerDependencies:
+      - supports-color
+
+  vite-plugin-solid@2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)):
+    dependencies:
+      '@babel/core': 7.25.9
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 1.8.17(@babel/core@7.25.9)
+      merge-anything: 5.1.7
+      solid-js: 1.9.3
+      solid-refresh: 0.6.3(solid-js@1.9.3)
+      vite: 5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)
+      vitefu: 1.0.4(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0))
     optionalDependencies:
       '@testing-library/jest-dom': 6.6.2
     transitivePeerDependencies:
@@ -13422,13 +13422,13 @@ snapshots:
       lightningcss: 1.27.0
       terser: 5.36.0
 
-  vitefu@0.2.5(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)):
-    optionalDependencies:
-      vite: 5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)
-
   vitefu@0.2.5(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)):
     optionalDependencies:
       vite: 5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)
+
+  vitefu@1.0.4(vite@5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)):
+    optionalDependencies:
+      vite: 5.4.10(@types/node@20.17.4)(lightningcss@1.27.0)(terser@5.36.0)
 
   vitefu@1.0.4(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0)):
     optionalDependencies:
