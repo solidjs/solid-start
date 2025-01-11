@@ -60,8 +60,8 @@
   },
   "devDependencies": {
     "solid-js": "^1.9.2",
-    "vinxi": "^0.4.3",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "vinxi": "^0.4.3"
   },
   "dependencies": {
     "@vinxi/plugin-directives": "^0.4.3",
@@ -73,7 +73,7 @@
     "radix3": "^1.1.0",
     "seroval": "^1.0.2",
     "seroval-plugins": "^1.0.2",
-    "shikiji": "^0.9.12",
+    "shiki": "^1.26.1",
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
