@@ -11,8 +11,8 @@
   "type": "module",
   "devDependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.14.10",
-    "@solidjs/start": "^1.0.9",
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.0.11",
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/user-event": "^14.5.2",
@@ -24,5 +24,8 @@
     "vite": "^5.4.10",
     "vite-plugin-solid": "^2.10.2",
     "vitest": "^2.1.4"
+  },
+  "overrides": {
+    "vite": "5.4.10"
   }
 }

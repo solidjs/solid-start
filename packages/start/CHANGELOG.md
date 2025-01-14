@@ -1,5 +1,23 @@
 # @solidjs/start
 
+## 1.0.11
+
+### Patch Changes
+
+- 8e0c56c: forward set cookies through single-flight
+- 9536d74: update vite-plugin-solid of start
+- fa1128a: fix: handle request body streaming with latest netlify preset
+
+## 1.0.10
+
+### Patch Changes
+
+- ec69889: fix #1649 append rather than override headers with flash message
+- aa30192: forward all request headers through single flight
+- 545a8ce: fix(start): enable HEAD requests to API HEAD/GET routes
+- 708a7a1: forward request cookies on single flight mutations
+- 715d563: fix #1645 flash encoding, and improve error handling
+
 ## 1.0.9
 
 ### Patch Changes
