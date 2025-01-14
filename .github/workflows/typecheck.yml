@@ -8,19 +8,37 @@ on:
       - release-*
     tags-ignore:
       - v*
-    paths-ignore:
-      - "docs/**"
-      - "docs.root.tsx"
-      - "components/**"
-      - "**/README.md"
+
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
+    branches:
+      - main
+      - dev
+      - release-*
 
 jobs:
+  filter-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.changes.outputs.landing_page }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            landing_page:
+              - 'docs/**'
+              - "docs.root.tsx"
+              - "components/**"
+              - "**/README.md"
   typecheck:
     name: "👀 Typecheck"
+    needs: filter-changes
+    if: needs.filter-changes.outputs.should_skip != 'true'
 
     runs-on: ubuntu-latest
 

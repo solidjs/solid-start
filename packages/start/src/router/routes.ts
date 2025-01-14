@@ -7,6 +7,7 @@ interface Route {
   children?: Route[];
   page?: boolean;
   $component?: any;
+	$HEAD?: any;
   $GET?: any;
   $POST?: any;
   $PUT?: any;
@@ -57,7 +58,7 @@ function defineRoutes(fileRoutes: Route[]) {
 export function matchAPIRoute(path: string, method: string) {
   const match = router.lookup(path);
   if (match && match.route) {
-    const handler = match.route[`$${method}`];
+    const handler = method === "HEAD" ? match.route["$HEAD"] || match.route["$GET"] : match.route[`$${method}`];
     if (handler === undefined) return;
     return {
       handler,
@@ -67,7 +68,7 @@ export function matchAPIRoute(path: string, method: string) {
 }
 
 function containsHTTP(route: Route) {
-  return route["$GET"] || route["$POST"] || route["$PUT"] || route["$PATCH"] || route["$DELETE"];
+  return route["$HEAD"] || route["$GET"] || route["$POST"] || route["$PUT"] || route["$PATCH"] || route["$DELETE"];
 }
 
 const router = createRouter({

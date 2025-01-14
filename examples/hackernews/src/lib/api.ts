@@ -1,4 +1,4 @@
-import { cache } from "@solidjs/router";
+import { query } from "@solidjs/router";
 import { StoryDefinition, StoryTypes, UserDefinition } from "~/types";
 
 const story = (path: string) => `https://node-hnapi.herokuapp.com/${path}`;
@@ -34,17 +34,17 @@ const mapStories = {
   job: "jobs"
 } as const;
 
-export const getStories = cache(async (type: StoryTypes, page: number): Promise<StoryDefinition[]> => {
+export const getStories = query(async (type: StoryTypes, page: number): Promise<StoryDefinition[]> => {
   "use server";
   return fetchAPI(`${mapStories[type]}?page=${page}`);
 }, "stories");
 
-export const getStory = cache(async (id: string): Promise<StoryDefinition> => {
+export const getStory = query(async (id: string): Promise<StoryDefinition> => {
   "use server";
   return fetchAPI(`item/${id}`);
 }, "story");
 
-export const getUser = cache(async (id: string): Promise<UserDefinition> => {
+export const getUser = query(async (id: string): Promise<UserDefinition> => {
   "use server";
   return fetchAPI(`user/${id}`);
 }, "user");

@@ -1,8 +1,8 @@
-import { action, cache } from "@solidjs/router";
+import { action, query } from "@solidjs/router";
 import type { Todo } from "~/types";
 import { storage } from "./db";
 
-export const getTodos = cache(async () => {
+export const getTodos = query(async () => {
   "use server";
   return ((await storage.getItem("todos:data")) as Todo[]) || [];
 }, "todos");
