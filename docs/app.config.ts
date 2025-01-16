@@ -9,11 +9,13 @@ export default defineConfig({
     alias: {
       "_mime": "mime/index.js"
     },
-    rollupConfig: {
-      external: ["__STATIC_CONTENT_MANIFEST", "node:async_hooks"]
-    }
   },
   vite: {
+    build: {
+      rollupOptions: {
+        external: ["__STATIC_CONTENT_MANIFEST", "node:async_hooks"]
+      },
+    },
     plugins: [
       config("tailwind", {
         css: {
