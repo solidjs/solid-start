@@ -42,5 +42,9 @@
   "dependencies": {
     "cross-env": "^7.0.3",
     "wrangler": "3.22.1"
+  },
+  "engines": {
+    "pnpm": "^9.0.0",
+    "node": "^20.5.0"
   }
 }
