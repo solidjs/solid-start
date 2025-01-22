@@ -27,14 +27,19 @@ jobs:
         with:
           version: 9
 
-      - name: Debug test directory
+      # Debug steps to identify workspace issues
+      - name: Debug workspace
         run: |
-          echo "Test directory structure:"
+          echo "Current directory structure:"
+          ls -la
+          echo "Package.json contents:"
+          cat package.json
+          echo "pnpm workspace config:"
+          cat pnpm-workspace.yaml || echo "No workspace config found"
+          echo "Available packages:"
+          pnpm ls -r
           pwd
-          ls -la tests/
-          echo "Server function test directory:"
-          ls -la tests/server-function || echo "Directory not found"
-      
+
       - name: Install project dependencies
         run: pnpm i
 
