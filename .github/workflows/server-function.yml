@@ -40,7 +40,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
-          working-directory: tests/server-function
-          start: pnpm run dev
+          working-directory: .
+          start: pnpm --filter "server-function-test" dev
           browser: ${{ matrix.browser }}
       
