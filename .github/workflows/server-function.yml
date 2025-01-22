@@ -30,12 +30,7 @@ jobs:
       - name: Install project dependencies
         run: cd tests/server-function && pnpm --ignore-workspace install
 
-      - name: Install dependencies
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: tests/server-function
-          runTests: false
-
+      
       - name: Cypress test
         uses: cypress-io/github-action@v6
         with:
