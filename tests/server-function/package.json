@@ -1,5 +1,5 @@
 {
-  "name": "example-bare-TEST",
+  "name": "server-function-test",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
