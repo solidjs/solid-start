@@ -24,8 +24,6 @@
     "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
     "show:test-report": "pnpm --filter solid-start-tests show:test-report",
     "bump": "node scripts/bump.js"
   },
