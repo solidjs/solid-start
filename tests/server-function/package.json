@@ -28,5 +28,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "cypress-vite": "^1.6.0"
   }
 }

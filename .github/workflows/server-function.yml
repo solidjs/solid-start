@@ -28,14 +28,22 @@ jobs:
           version: 9
 
       - name: Install project dependencies
-        run: cd tests/server-function && pnpm --ignore-workspace install
+        run: pnpm i
 
-      
-      - name: Cypress test
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          working-directory: tests/server-function
-          start: pnpm run dev
-          browser: ${{ matrix.browser }}
+      - name: Test server-function
+        run: pnpm run test:server-function
+
+      # - name: Install dependencies
+      #   uses: cypress-io/github-action@v6
+      #   with:
+      #     working-directory: tests/server-function
+      #     runTests: false
+
+      # - name: Cypress test
+      #   uses: cypress-io/github-action@v6
+      #   with:
+      #     install: false
+      #     working-directory: tests/server-function
+      #     start: pnpm run cy:run
+      #     browser: ${{ matrix.browser }}
       
