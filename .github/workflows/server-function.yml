@@ -26,6 +26,19 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 9
+
+      # Debug steps to identify workspace issues
+      - name: Debug workspace
+        run: |
+          echo "Current directory structure:"
+          ls -la
+          echo "Package.json contents:"
+          cat package.json
+          echo "pnpm workspace config:"
+          cat pnpm-workspace.yaml || echo "No workspace config found"
+          echo "Available packages:"
+          pnpm ls -r
+
       - name: Install project dependencies
         run: pnpm i
 
