@@ -29,5 +29,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: cd tests/server-function && pnpm i && pnpm run dev
+          start: cd ./tests/server-function && pnpm i && pnpm run dev
           browser: ${{ matrix.browser }}
