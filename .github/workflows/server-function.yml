@@ -30,6 +30,7 @@ jobs:
       - name: Debug test directory
         run: |
           echo "Test directory structure:"
+          pwd
           ls -la tests/
           echo "Server function test directory:"
           ls -la tests/server-function || echo "Directory not found"
