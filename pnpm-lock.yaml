@@ -617,39 +617,6 @@ importers:
         specifier: ^0.4.3
         version: 0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0)
 
-  tests/server-function:
-    dependencies:
-      '@solidjs/start':
-        specifier: workspace:*
-        version: link:../../packages/start
-      '@solidjs/testing-library':
-        specifier: ^0.8.10
-        version: 0.8.10(@solidjs/router@0.15.0(solid-js@1.9.3))(solid-js@1.9.3)
-      '@testing-library/jest-dom':
-        specifier: ^6.6.2
-        version: 6.6.2
-      '@testing-library/user-event':
-        specifier: ^14.5.2
-        version: 14.5.2(@testing-library/dom@10.4.0)
-      '@vitest/ui':
-        specifier: ^2.1.4
-        version: 2.1.4(vitest@3.0.2)
-      jsdom:
-        specifier: ^25.0.1
-        version: 25.0.1
-      solid-js:
-        specifier: ^1.9.2
-        version: 1.9.3
-      vinxi:
-        specifier: ^0.4.3
-        version: 0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0)
-      vite-plugin-solid:
-        specifier: ^2.10.2
-        version: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
-      vitest:
-        specifier: ^3.0.0
-        version: 3.0.2(@types/node@22.8.1)(@vitest/ui@2.1.4)(jsdom@25.0.1)(lightningcss@1.27.0)(terser@5.36.0)
-
 packages:
 
   '@adobe/css-tools@4.4.0':
