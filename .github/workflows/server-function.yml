@@ -21,13 +21,16 @@ jobs:
         uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'  
+          node-version-file: '.nvmrc'
+
       - uses: pnpm/action-setup@v4
         with:
           version: 9
-      - run: pnpm i
+      - name: Install project dependencies
+        run: pnpm i
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: cd ./tests/server-function && pnpm i && pnpm run dev
+          start: cd ./tests/server-function && pnpm run dev
           browser: ${{ matrix.browser }}
