@@ -27,22 +27,20 @@ jobs:
         with:
           version: 9
 
-      # Debug steps to identify workspace issues
-      - name: Debug workspace
-        run: |
-          echo "Current directory structure:"
-          ls -la
-          echo "pnpm workspace config:"
-          cat pnpm-workspace.yaml || echo "No workspace config found"
-          echo "Available packages:"
-          pnpm ls -r
-          pwd
-
       - name: Install project dependencies
         run: pnpm i
 
-      - name: Cypress run
+      - name: Install dependencies
         uses: cypress-io/github-action@v6
         with:
-          start: pnpm --filter "server-function-test" dev
+          working-directory: .
+          runTests: false
+
+      - name: Cypress test
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          working-directory: tests/server-function
+          start: pnpm run dev
           browser: ${{ matrix.browser }}
+      
