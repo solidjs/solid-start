@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         uses: cypress-io/github-action@v6
         with:
-          working-directory: .
+          working-directory: tests/server-function
           runTests: false
 
       - name: Cypress test
