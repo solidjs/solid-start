@@ -12,8 +12,8 @@ jobs:
     name: "E2E tests using ${{ matrix.browser }}"
     strategy:
       fail-fast: false
-      # matrix:
-      #   browser: [chrome, firefox]
+      matrix:
+        browser: [chrome, firefox]
 
     runs-on: ubuntu-22.04
     steps:
@@ -33,23 +33,20 @@ jobs:
       - name: Install project dependencies
         run: pnpm run build
 
-      # - name: Install project dependencies
-      #   run: cd ./tests/server-function/ && pnpm i --ignore-workspace
+      # - name: Test server-function
+      #   run: cd ./tests/server-function/ && pnpm run test
 
-      - name: Test server-function
-        run: cd ./tests/server-function/ && pnpm run test
+      - name: Install dependencies
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: .
+          runTests: false
 
-      # - name: Install dependencies
-      #   uses: cypress-io/github-action@v6
-      #   with:
-      #     working-directory: tests/server-function
-      #     runTests: false
-
-      # - name: Cypress test
-      #   uses: cypress-io/github-action@v6
-      #   with:
-      #     install: false
-      #     working-directory: tests/server-function
-      #     start: pnpm run cy:run
-      #     browser: ${{ matrix.browser }}
+      - name: Cypress test
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          working-directory: tests/server-function
+          start: pnpm run dev
+          browser: ${{ matrix.browser }}
       
