@@ -31,7 +31,7 @@ jobs:
         run: pnpm i
 
       - name: Test server-function
-        run: pnpm --filter 'server-function-test' dev & pnpm run test:server-function
+        run: pnpm run test:server-function
 
       # - name: Install dependencies
       #   uses: cypress-io/github-action@v6
