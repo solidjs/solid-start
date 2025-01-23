@@ -5,11 +5,11 @@
     "dev": "vinxi dev --port 3456",
     "build": "vinxi build",
     "start": "vinxi start",
-    "test": "vitest run",
+    "vitest": "vitest run",
     "test-watch": "vitest",
     "test-ui": "vitest --ui",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "test": "pnpm run dev & cypress run"
   },
   "dependencies": {
     "@solidjs/start": "../../packages/start",

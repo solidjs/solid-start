@@ -28,10 +28,10 @@ jobs:
           version: 9
 
       - name: Install project dependencies
-        run: pnpm i
+        run: cd ./tests/server-function/ && pnpm i --ignore-workspace
 
       - name: Test server-function
-        run: pnpm run test:server-function
+        run: cd ./tests/server-function/ && pnpm run test
 
       # - name: Install dependencies
       #   uses: cypress-io/github-action@v6

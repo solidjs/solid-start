@@ -38,6 +38,10 @@ importers:
       vitest:
         specifier: ^3.0.0
         version: 3.0.3(@types/node@22.10.7)(@vitest/ui@2.1.8)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.37.0)
+    devDependencies:
+      cypress-vite:
+        specifier: ^1.6.0
+        version: 1.6.0(vite@6.0.11(@types/node@22.10.7)(jiti@2.4.2)(terser@5.37.0))
 
 packages:
 
@@ -1357,6 +1361,11 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  cypress-vite@1.6.0:
+    resolution: {integrity: sha512-6oZPDvHgLEZjuFgoejtRuyph369zbVn7fjh4hzhMar3XvKT5YhTEoA+KixksMuxNEaLn9uqA4HJVz6l7BybwBQ==}
+    peerDependencies:
+      vite: ^2.9.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
 
   data-urls@5.0.0:
     resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
@@ -4094,6 +4103,14 @@ snapshots:
       rrweb-cssom: 0.8.0
 
   csstype@3.1.3: {}
+
+  cypress-vite@1.6.0(vite@6.0.11(@types/node@22.10.7)(jiti@2.4.2)(terser@5.37.0)):
+    dependencies:
+      chokidar: 3.6.0
+      debug: 4.4.0(supports-color@9.4.0)
+      vite: 6.0.11(@types/node@22.10.7)(jiti@2.4.2)(terser@5.37.0)
+    transitivePeerDependencies:
+      - supports-color
 
   data-urls@5.0.0:
     dependencies:

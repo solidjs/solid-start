@@ -25,7 +25,6 @@
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
     "cy:open": "cypress open",
-    "test:server-function": "pnpm --filter 'server-function-test' dev & cypress run",
     "show:test-report": "pnpm --filter solid-start-tests show:test-report",
     "bump": "node scripts/bump.js"
   },
