@@ -30,6 +30,9 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "cypress-vite": "^1.6.0"
+    "cypress-vite": "^1.6.0",
+    "@cypress/code-coverage": "^3.13.10",
+    "cypress": "^14.0.0",
+    "cypress-plugin-tab": "^1.0.5"
   }
 }
