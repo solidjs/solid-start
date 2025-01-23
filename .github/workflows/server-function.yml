@@ -29,6 +29,9 @@ jobs:
 
       - name: Install project dependencies
         run: pnpm i
+      
+      - name: Install project dependencies
+        run: pnpm run build
 
       - name: Install project dependencies
         run: cd ./tests/server-function/ && pnpm i --ignore-workspace
