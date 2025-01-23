@@ -9,6 +9,7 @@
     "test-watch": "vitest",
     "test-ui": "vitest --ui",
     "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "test": "pnpm run dev & cypress run"
   },
   "dependencies": {
