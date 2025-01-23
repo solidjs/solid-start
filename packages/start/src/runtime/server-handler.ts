@@ -16,7 +16,7 @@ import {
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler, setHeader, setResponseStatus, type HTTPEvent } from "vinxi/http";
+import { eventHandler, parseCookies, setHeader, setResponseStatus, type HTTPEvent } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { cloneEvent, getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent";
 import { getExpectedRedirectStatus } from "../server/handler";
@@ -100,19 +100,19 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       const json = JSON.parse(args);
       (json.t
         ? (fromJSON(json, {
-            plugins: [
-              CustomEventPlugin,
-              DOMExceptionPlugin,
-              EventPlugin,
-              FormDataPlugin,
-              HeadersPlugin,
-              ReadableStreamPlugin,
-              RequestPlugin,
-              ResponsePlugin,
-              URLSearchParamsPlugin,
-              URLPlugin
-            ]
-          }) as any)
+          plugins: [
+            CustomEventPlugin,
+            DOMExceptionPlugin,
+            EventPlugin,
+            FormDataPlugin,
+            HeadersPlugin,
+            ReadableStreamPlugin,
+            RequestPlugin,
+            ResponsePlugin,
+            URLSearchParamsPlugin,
+            URLPlugin
+          ]
+        }) as any)
         : json
       ).forEach((arg: any) => parsed.push(arg));
     }
@@ -128,7 +128,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     // This should never be the case in "proper" Nitro presets since node.req has to be IncomingMessage,
     // But the new azure-functions preset for some reason uses a ReadableStream in node.req (#1521)
     const isReadableStream = h3Request instanceof ReadableStream;
-    const isH3EventBodyStreamLocked = isReadableStream && h3Request.locked;
+    const hasReadableStream = (h3Request as EdgeIncomingMessage).body instanceof ReadableStream;
+    const isH3EventBodyStreamLocked =
+      (isReadableStream && h3Request.locked) || (hasReadableStream && ((h3Request as EdgeIncomingMessage).body as ReadableStream).locked);
     const requestBody = isReadableStream ? h3Request : h3Request.body;
 
     if (
@@ -136,7 +138,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
       // workaround for https://github.com/unjs/nitro/issues/1721
-      // (issue only in edge runtimes)
+      // (issue only in edge runtimes and netlify preset)
       parsed.push(
         await (isH3EventBodyStreamLocked
           ? request
@@ -147,7 +149,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // parsed.push(await request.formData);
     } else if (contentType?.startsWith("application/json")) {
       // workaround for https://github.com/unjs/nitro/issues/1721
-      // (issue only in edge runtimes)
+      // (issue only in edge runtimes and netlify preset)
       const tmpReq = isH3EventBodyStreamLocked
         ? request
         : new Request(request, { ...request, body: requestBody });
@@ -268,6 +270,33 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
 }
 
 let App: any;
+function createSingleFlightHeaders(sourceEvent: FetchEvent) {
+  // cookie handling logic is pretty simplistic so this might be imperfect
+  // unclear if h3 internals are available on all platforms but we need a way to
+  // update request headers on the underlying H3 event.
+
+  const headers = new Headers(sourceEvent.request.headers);
+  const cookies = parseCookies(sourceEvent.nativeEvent);
+  const SetCookies = sourceEvent.response.headers.getSetCookie();
+  headers.delete("cookie");
+  let useH3Internals = false;
+  if (sourceEvent.nativeEvent.node?.req) {
+    useH3Internals = true;
+    sourceEvent.nativeEvent.node.req.headers.cookie = "";
+  }
+  SetCookies.forEach((cookie) => {
+    if (!cookie) return;
+    const keyValue = cookie.split(";")[0]!;
+    const [key, value] = keyValue.split("=");
+    key && value && (cookies[key] = value);
+  });
+  Object.entries(cookies).forEach(([key, value]) => {
+    headers.append("cookie", `${key}=${value}`);
+    useH3Internals && (sourceEvent.nativeEvent.node.req.headers.cookie += `${key}=${value};`);
+  })
+
+  return headers;
+}
 async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
   let revalidate: string[];
   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
@@ -281,7 +310,7 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
       ).toString();
   }
   const event = cloneEvent(sourceEvent) as PageEvent;
-  event.request = new Request(url, { headers: sourceEvent.request.headers });
+  event.request = new Request(url, { headers: createSingleFlightHeaders(sourceEvent) });
   return await provideRequestEvent(event, async () => {
     await createPageEvent(event);
     /* @ts-ignore */

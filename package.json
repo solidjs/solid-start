@@ -32,17 +32,20 @@
     "@cloudflare/kv-asset-handler": "^0.2.0",
     "citty": "^0.1.5",
     "coveralls": "^3.1.1",
+    "cypress": "^14.0.0",
     "debug": "^4.3.4",
-    "graphql": "^16.7.1",
     "rimraf": "^3.0.2",
     "tinyglobby": "^0.2.2",
     "tippy.js": "^6.3.7",
-    "turbo": "^1.10.7",
-    "typescript": "5.3.3",
+    "typescript": "catalog:",
     "valibot": "~0.29.0"
   },
   "dependencies": {
     "cross-env": "^7.0.3",
     "wrangler": "3.22.1"
+  },
+  "engines": {
+    "pnpm": "^9.0.0",
+    "node": "^20.5.0"
   }
 }

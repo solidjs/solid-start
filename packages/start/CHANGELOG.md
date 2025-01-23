@@ -1,5 +1,13 @@
 # @solidjs/start
 
+## 1.0.11
+
+### Patch Changes
+
+- 8e0c56c: forward set cookies through single-flight
+- 9536d74: update vite-plugin-solid of start
+- fa1128a: fix: handle request body streaming with latest netlify preset
+
 ## 1.0.10
 
 ### Patch Changes
