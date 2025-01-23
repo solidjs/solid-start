@@ -19,13 +19,13 @@
     "@testing-library/user-event": "^14.5.2",
     "@vitest/ui": "^2.1.4",
     "jsdom": "^25.0.1",
-    "solid-js": "^1.9.2",
-    "vinxi": "^0.4.3",
-    "vite-plugin-solid": "^2.10.2",
+    "solid-js": "catalog:",
+    "vinxi": "catalog:",
+    "vite-plugin-solid": "catalog:",
     "vitest": "^3.0.0"
   },
   "overrides": {
-    "vite": "5.4.10"
+    "vite": "catalog:"
   },
   "engines": {
     "node": ">=18"
