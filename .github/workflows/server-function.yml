@@ -33,9 +33,6 @@ jobs:
       - name: Install project dependencies
         run: pnpm run build
 
-      # - name: Test server-function
-      #   run: cd ./tests/server-function/ && pnpm run test
-
       - name: Install dependencies
         uses: cypress-io/github-action@v6
         with:

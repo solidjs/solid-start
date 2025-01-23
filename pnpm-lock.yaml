@@ -21,21 +21,12 @@ importers:
       '@cloudflare/kv-asset-handler':
         specifier: ^0.2.0
         version: 0.2.0
-      '@cypress/code-coverage':
-        specifier: ^3.13.10
-        version: 3.13.10(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1))(cypress@14.0.0)(webpack@5.97.1)
       citty:
         specifier: ^0.1.5
         version: 0.1.6
       coveralls:
         specifier: ^3.1.1
         version: 3.1.1
-      cypress:
-        specifier: ^14.0.0
-        version: 14.0.0
-      cypress-plugin-tab:
-        specifier: ^1.0.5
-        version: 1.0.5
       debug:
         specifier: ^4.3.4
         version: 4.3.7
