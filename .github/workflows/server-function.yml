@@ -44,6 +44,6 @@ jobs:
         with:
           install: false
           working-directory: tests/server-function
-          start: pnpm run dev
+          start: pnpm run build && pnpm run start
           browser: ${{ matrix.browser }}
       

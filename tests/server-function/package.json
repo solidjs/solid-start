@@ -2,7 +2,7 @@
   "name": "server-function-test",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev --port 3456",
+    "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start",
     "vitest": "vitest run",
