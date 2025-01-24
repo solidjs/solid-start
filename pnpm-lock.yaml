@@ -86,8 +86,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
       '@solidjs/start':
-        specifier: workspace:*
-        version: link:../packages/start
+        specifier: latest
+        version: 1.0.11(@testing-library/jest-dom@6.6.2)(solid-js@1.9.3)(vinxi@0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.8.1)(debug@4.3.7)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.36.0))(vite@5.4.10(@types/node@22.8.1)(lightningcss@1.27.0)(terser@5.36.0))
       '@tailwindcss/typography':
         specifier: ^0.5.9
         version: 0.5.15(tailwindcss@3.4.14)
@@ -667,7 +667,7 @@ importers:
     devDependencies:
       '@cypress/code-coverage':
         specifier: ^3.13.10
-        version: 3.13.10(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1(esbuild@0.17.19)))(cypress@14.0.0)(webpack@5.97.1(esbuild@0.17.19))
+        version: 3.13.10(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1))(cypress@14.0.0)(webpack@5.97.1)
       '@types/lodash':
         specifier: ^4.17.14
         version: 4.17.14
@@ -9077,12 +9077,12 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@cypress/code-coverage@3.13.10(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1(esbuild@0.17.19)))(cypress@14.0.0)(webpack@5.97.1(esbuild@0.17.19))':
+  '@cypress/code-coverage@3.13.10(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1))(cypress@14.0.0)(webpack@5.97.1)':
     dependencies:
       '@babel/core': 7.25.9
       '@babel/preset-env': 7.26.0(@babel/core@7.25.9)
-      '@cypress/webpack-preprocessor': 6.0.2(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1(esbuild@0.17.19)))(webpack@5.97.1(esbuild@0.17.19))
-      babel-loader: 9.2.1(@babel/core@7.25.9)(webpack@5.97.1(esbuild@0.17.19))
+      '@cypress/webpack-preprocessor': 6.0.2(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1))(webpack@5.97.1)
+      babel-loader: 9.2.1(@babel/core@7.25.9)(webpack@5.97.1)
       chalk: 4.1.2
       cypress: 14.0.0
       dayjs: 1.11.13
@@ -9092,7 +9092,7 @@ snapshots:
       istanbul-lib-coverage: 3.2.2
       js-yaml: 4.1.0
       nyc: 15.1.0
-      webpack: 5.97.1(esbuild@0.17.19)
+      webpack: 5.97.1
     transitivePeerDependencies:
       - supports-color
 
@@ -9117,15 +9117,15 @@ snapshots:
       tunnel-agent: 0.6.0
       uuid: 8.3.2
 
-  '@cypress/webpack-preprocessor@6.0.2(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1(esbuild@0.17.19)))(webpack@5.97.1(esbuild@0.17.19))':
+  '@cypress/webpack-preprocessor@6.0.2(@babel/core@7.25.9)(@babel/preset-env@7.26.0(@babel/core@7.25.9))(babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1))(webpack@5.97.1)':
     dependencies:
       '@babel/core': 7.25.9
       '@babel/preset-env': 7.26.0(@babel/core@7.25.9)
-      babel-loader: 9.2.1(@babel/core@7.25.9)(webpack@5.97.1(esbuild@0.17.19))
+      babel-loader: 9.2.1(@babel/core@7.25.9)(webpack@5.97.1)
       bluebird: 3.7.1
       debug: 4.4.0(supports-color@8.1.1)
       lodash: 4.17.21
-      webpack: 5.97.1(esbuild@0.17.19)
+      webpack: 5.97.1
     transitivePeerDependencies:
       - supports-color
 
@@ -11420,12 +11420,12 @@ snapshots:
 
   b4a@1.6.6: {}
 
-  babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1(esbuild@0.17.19)):
+  babel-loader@9.2.1(@babel/core@7.25.9)(webpack@5.97.1):
     dependencies:
       '@babel/core': 7.25.9
       find-cache-dir: 4.0.0
       schema-utils: 4.3.0
-      webpack: 5.97.1(esbuild@0.17.19)
+      webpack: 5.97.1
 
   babel-plugin-jsx-dom-expressions@0.37.20(@babel/core@7.24.4):
     dependencies:
@@ -15352,16 +15352,14 @@ snapshots:
       solid-js: 1.9.4
       solid-use: 0.9.0(solid-js@1.9.4)
 
-  terser-webpack-plugin@5.3.11(esbuild@0.17.19)(webpack@5.97.1(esbuild@0.17.19)):
+  terser-webpack-plugin@5.3.11(webpack@5.97.1):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.36.0
-      webpack: 5.97.1(esbuild@0.17.19)
-    optionalDependencies:
-      esbuild: 0.17.19
+      webpack: 5.97.1
 
   terser@5.36.0:
     dependencies:
@@ -16238,7 +16236,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.1: {}
 
-  webpack@5.97.1(esbuild@0.17.19):
+  webpack@5.97.1:
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.6
@@ -16260,7 +16258,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.11(esbuild@0.17.19)(webpack@5.97.1(esbuild@0.17.19))
+      terser-webpack-plugin: 5.3.11(webpack@5.97.1)
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:

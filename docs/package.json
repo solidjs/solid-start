@@ -13,7 +13,7 @@
     "@kobalte/utils": "^0.9.0",
     "@solidjs/meta": "^0.29.0",
     "@solidjs/router": "^0.15.0",
-    "@solidjs/start": "workspace:*",
+    "@solidjs/start": "latest",
     "@tailwindcss/typography": "^0.5.9",
     "autoprefixer": "^10.4.19",
     "citty": "^0.1.5",
