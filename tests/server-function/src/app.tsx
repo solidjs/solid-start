@@ -1,25 +1,24 @@
-import { createEffect, createSignal } from "solid-js";
-import { isServer } from "solid-js/web";
+import { MetaProvider, Title } from "@solidjs/meta";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
+import { Suspense } from "solid-js";
 import "./app.css";
 
-function useServer() {
-  "use server";
-  return isServer;
-}
 export default function App() {
-  const [output, setOutput] = createSignal<{ client?: boolean; serverFn?: boolean }>({});
-
-  setOutput(prev => ({ ...prev, client: isServer }));
-
-  createEffect(async () => {
-    const restult = await useServer();
-    setOutput(prev => ({ ...prev, serverFn: restult }));
-  });
-
   return (
-    <main>
-      <h1>Hello world!</h1>
-      <span id="server-fn-test">{JSON.stringify(output())}</span>
-    </main>
+    <Router
+      root={props => (
+        <MetaProvider>
+          <Title>SolidStart - Basic</Title>
+          <a href="/">Client</a>
+          <a href="/is-server">isserver</a>
+          <a href="/node-builtin">node builtin</a>
+          <a href="/npm-module">npm module (lodash)</a>
+          <Suspense>{props.children}</Suspense>
+        </MetaProvider>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }
