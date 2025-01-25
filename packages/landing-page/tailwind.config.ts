@@ -1,5 +1,5 @@
 import { Config } from "tailwindcss";
-import * as solidUi from "./ui.preset.js";
+import * as solidUi from "./ui.preset";
 
 export default {
   darkMode: ["class", '[data-kb-theme="dark"]'],
