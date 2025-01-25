@@ -3,7 +3,6 @@ packages:
   - "packages/*"
   - "examples/*"
   - "tests/*"
-  - "docs"
   - "!**/.tmp/**"
 catalog:
   vite: ^5.4.10
