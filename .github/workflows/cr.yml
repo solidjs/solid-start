@@ -21,7 +21,8 @@ jobs:
 
       - uses: pnpm/action-setup@v3
         with:
-          version: 9
+          # https://github.com/pnpm/pnpm/issues/8953
+          version: 9.15.3
 
       - name: Use Node.js 20
         uses: actions/setup-node@v4
@@ -36,4 +37,4 @@ jobs:
         run: pnpm run build:all
 
       - name: Release
-        run: pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact 
+        run: pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact

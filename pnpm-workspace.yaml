@@ -12,7 +12,3 @@ catalog:
   "vite-plugin-solid": ^2.10.2
   "@solidjs/router": 0.15.3
   "solid-js": 1.9.4
-
-options:
-  prefer-workspace-packages: true
-  strict-peer-dependencies: false
