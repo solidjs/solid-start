@@ -1,7 +1,7 @@
 name: Bug report 🐛
-description: Create a bug report for Solid Start.
-labels: ['bug', 'needs triage']
-title: '[Bug?]: '
+description: Create a bug report for SolidStart.
+labels: ["bug", "needs triage"]
+title: "[Bug?]: "
 body:
   - type: markdown
     attributes:
@@ -59,9 +59,10 @@ body:
           OS: Linux 5.10 Debian GNU/Linux 9 (stretch)
           CPU: (8) arm64
         Binaries:
-          Node: 14.17.0 - /usr/local/bin/node
-          Yarn: 1.22.5 - /usr/local/bin/yarn
-          npm: 6.14.13 - /usr/local/bin/npm
+          Node: 20.0.0 - /usr/local/bin/node
+          Yarn: 3.0.0 - /usr/local/bin/yarn
+          npm: 9.8.0 - /usr/local/bin/npm
+          pnpm: 9.0.0 - /usr/local/bin/pnpm
         npmPackages:
-          solid-start: 1.0.0 => 1.0.0
+          @solidjs/start: 1.0.0 => 1.0.0
       render: shell
