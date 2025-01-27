@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ryansolid/solid-start"
+    "url": "https://github.com/solidjs/solid-start"
   },
   "private": true,
   "scripts": {
