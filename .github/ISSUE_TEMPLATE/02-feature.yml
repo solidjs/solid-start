@@ -1,14 +1,8 @@
 name: Feature request 💄
-description: Suggest a new idea for Solid Start.
-labels: ['enhancement', 'needs triage']
-title: '[Feature?]: '
+description: Suggest a new idea for SolidStart.
+labels: ["enhancement", "needs triage"]
+title: "[Feature?]: "
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Please provide a searchable summary of the issue in the title above ⬆️.
-
-        Thanks for contributing by creating an issue! ❤️
   - type: checkboxes
     attributes:
       label: Duplicates
@@ -16,6 +10,7 @@ body:
       options:
         - label: I have searched the existing issues
           required: true
+
   - type: checkboxes
     attributes:
       label: Latest version
@@ -23,14 +18,24 @@ body:
       options:
         - label: I have tested the latest version
           required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Please provide a searchable summary of the issue in the title above ⬆️.
+
+        Thanks for contributing by creating an issue! ❤️
+
   - type: textarea
     attributes:
       label: Summary 💡
       description: Describe how it should work.
+
   - type: textarea
     attributes:
       label: Examples 🌈
       description: Provide a link to the Solid Start specification, other implementations, or screenshots of the expected behavior.
+
   - type: textarea
     attributes:
       label: Motivation 🔦
