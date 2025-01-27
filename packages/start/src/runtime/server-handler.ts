@@ -93,7 +93,13 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   const serverFnInfo = serverFnManifest[functionId];
   let fnModule: undefined | { [key: string]: any };
 
+  
   if (process.env.NODE_ENV === "development") {
+    // In dev, we use Vinxi to get the "server" server-side router
+    // Then we use that router's devServer.ssrLoadModule to get the serverFn
+
+    // This code comes from:
+    // https://github.com/TanStack/router/blob/266f5cc863cd1a99809d1af2669e58b6b6db9a67/packages/start-server-functions-handler/src/index.tsx#L83-L87
     fnModule = await (globalThis as any).app
       .getRouter("server-fns")
       .internals.devServer.ssrLoadModule(serverFnInfo.extractedFilename);
