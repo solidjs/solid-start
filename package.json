@@ -13,14 +13,14 @@
   "scripts": {
     "bump": "node scripts/bump.js",
     "build": "pnpm run packages:build",
-    "build:all": "pnpm run packages:build && pnpm run examples:build && pnpm run docs:build",
+    "build:all": "pnpm run packages:build && pnpm run examples:build && pnpm run lp:build",
     "clean": "pnpm run clean:all",
     "clean:all": "pnpm run examples:clean && pnpm run packages:clean && pnpm run clean:root",
     "clean:root": "pnpx rimraf ./node_modules ./.vinxi/ ./.output/",
-    "docs:dev": "pnpm --filter solid-start-docs dev",
-    "docs:build": "pnpm --filter solid-start-docs build",
-    "docs:start": "pnpm --filter solid-start-docs start",
-    "docs:clean": "pnpx rimraf ./docs/node_modules ./docs/.vinxi/ ./docs/.output/",
+    "lp:dev": "pnpm --filter landing-page dev",
+    "lp:build": "pnpm --filter landing-page build",
+    "lp:start": "pnpm --filter landing-page start",
+    "lp:clean": "pnpx rimraf ./packages/landing-page/node_modules ./packages/landing-page/.vinxi/ ./packages/landing-page/.output/",
     "examples:build": "pnpm --filter './examples/*' --if-present build",
     "examples:clean": "pnpx rimraf ./examples/*/node_modules/ ./examples/*/.vinxi/ ./examples/*/.output/",
     "examples:use-workspace-package": "node ./util/use-workspace-package-in-examples.js",
@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.25.2",
-    "@cloudflare/kv-asset-handler": "^0.2.0",
     "citty": "^0.1.5",
     "coveralls": "^3.1.1",
     "cypress": "^14.0.0",
@@ -44,10 +43,7 @@
     "typescript": "catalog:",
     "valibot": "~0.29.0"
   },
-  "dependencies": {
-    "cross-env": "^7.0.3",
-    "wrangler": "3.22.1"
-  },
+  "dependencies": {},
   "engines": {
     "pnpm": "^9.0.0",
     "node": "^20.5.0"
