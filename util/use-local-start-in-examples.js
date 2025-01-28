@@ -1,6 +1,6 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -12,23 +12,23 @@ const examples = readdirSync(examplesDir)
   .filter(file => statSync(join(examplesDir, file)).isDirectory());
 
 // Process each example's package.json
-examples.forEach(example => {
+for (const example of examples) {
   const packagePath = join(examplesDir, example, 'package.json');
   
   if (existsSync(packagePath)) {
     const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
     
-    if (packageJson.dependencies && packageJson.dependencies['@solidjs/start']) {
-      packageJson.dependencies['@solidjs/start'] = 'workspace:*';
+    if (packageJson.dependencies?.['@solidjs/start']) {
+      packageJson.dependencies['@solidjs/start'] = 'file:../../packages/start';
       
       writeFileSync(
         packagePath, 
-        JSON.stringify(packageJson, null, 2) + '\n',
+        `${JSON.stringify(packageJson, null, 2)}\n`,
         'utf8'
       );
       
       console.log(`Updated ${packagePath}`);
     }
   }
-});
+}
 
