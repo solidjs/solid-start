@@ -10,10 +10,15 @@ export default function App() {
       root={props => (
         <MetaProvider>
           <Title>SolidStart - Basic</Title>
-          <a href="/">Client</a>
-          <a href="/is-server">isserver</a>
-          <a href="/node-builtin">node builtin</a>
-          <a href="/npm-module">npm module (lodash)</a>
+          <ul>
+          <li><a href="/">Client</a></li>
+          <li><a href="/is-server-nested">isserver (nested)</a></li>
+          <li><a href="/is-server-toplevel">isserver (toplevel)</a></li>
+          <li><a href="/node-builtin-nested">node builtin (nested)</a></li>
+          <li><a href="/node-builtin-toplevel">node builtin (toplevel)</a></li>
+          <li><a href="/npm-module-nested">npm module (lodash) (nested)</a></li>
+          <li><a href="/npm-module-toplevel">npm module (lodash) (toplevel)</a></li>
+          </ul>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
       )}
