@@ -1,6 +1,4 @@
-import _ from "lodash";
-import { join } from 'path';
-import { createEffect, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 import { isServer } from "solid-js/web";
 
 export default function App() {

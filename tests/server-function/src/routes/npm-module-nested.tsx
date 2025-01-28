@@ -1,7 +1,5 @@
 import _ from "lodash";
-import { join } from 'path';
 import { createEffect, createSignal } from "solid-js";
-import { isServer } from "solid-js/web";
 
 function serverFnWithNpmModule() {
   "use server";

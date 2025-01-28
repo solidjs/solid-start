@@ -1,13 +1,5 @@
-import _ from "lodash";
-import { join } from 'path';
 import { createEffect, createSignal } from "solid-js";
-import { isServer } from "solid-js/web";
-
-function serverFnWithIsServer() {
-  "use server";
-
-  return isServer;
-}
+import { serverFnWithIsServer } from "~/functions/use-is-server";
 
 export default function App() {
   const [output, setOutput] = createSignal<{  serverFnWithIsServer?: boolean }>({});

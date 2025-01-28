@@ -1,18 +1,9 @@
-import _ from "lodash";
-import { join } from 'path';
+
 import { createEffect, createSignal } from "solid-js";
-import { isServer } from "solid-js/web";
-
-function serverFnWithNodeBuiltin() {
-  "use server";
-
-  return join('can','externalize');
-}
+import { serverFnWithNodeBuiltin } from "~/functions/use-node-builtin";
 
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithNodeBuiltin?: string }>({});
-
- 
 
   createEffect(async () => {
     const restult = await serverFnWithNodeBuiltin();
