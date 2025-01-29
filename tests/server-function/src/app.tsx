@@ -1,25 +1,29 @@
-import { createEffect, createSignal } from "solid-js";
-import { isServer } from "solid-js/web";
+import { MetaProvider, Title } from "@solidjs/meta";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
+import { Suspense } from "solid-js";
 import "./app.css";
 
-function useServer() {
-  "use server";
-  return isServer;
-}
 export default function App() {
-  const [output, setOutput] = createSignal<{ client?: boolean; serverFn?: boolean }>({});
-
-  setOutput(prev => ({ ...prev, client: isServer }));
-
-  createEffect(async () => {
-    const restult = await useServer();
-    setOutput(prev => ({ ...prev, serverFn: restult }));
-  });
-
   return (
-    <main>
-      <h1>Hello world!</h1>
-      <span id="server-fn-test">{JSON.stringify(output())}</span>
-    </main>
+    <Router
+      root={props => (
+        <MetaProvider>
+          <Title>SolidStart - Basic</Title>
+          <ul>
+          <li><a href="/">Client</a></li>
+          <li><a href="/is-server-nested">isserver (nested)</a></li>
+          <li><a href="/is-server-toplevel">isserver (toplevel)</a></li>
+          <li><a href="/node-builtin-nested">node builtin (nested)</a></li>
+          <li><a href="/node-builtin-toplevel">node builtin (toplevel)</a></li>
+          <li><a href="/npm-module-nested">npm module (lodash) (nested)</a></li>
+          <li><a href="/npm-module-toplevel">npm module (lodash) (toplevel)</a></li>
+          </ul>
+          <Suspense>{props.children}</Suspense>
+        </MetaProvider>
+      )}
+    >
+      <FileRoutes />
+    </Router>
   );
 }

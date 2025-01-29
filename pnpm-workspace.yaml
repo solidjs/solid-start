@@ -3,16 +3,12 @@ packages:
   - "packages/*"
   - "examples/*"
   - "tests/*"
-  - "docs"
   - "!**/.tmp/**"
 catalog:
   vite: ^5.4.10
   typescript: ^5.7.0
   vinxi: ^0.4.3
   "vite-plugin-solid": ^2.10.2
-  "@solidjs/router": 0.15.3
-  "solid-js": 1.9.4
-
-options:
-  prefer-workspace-packages: true
-  strict-peer-dependencies: false
+  "@solidjs/router": ^0.15.3
+  "@solidjs/meta": ^0.29.4
+  "solid-js": ^1.9.4

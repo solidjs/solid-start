@@ -23,6 +23,8 @@ import { getExpectedRedirectStatus } from "../server/handler";
 import { createPageEvent } from "../server/pageEvent";
 // @ts-ignore
 import { FetchEvent, PageEvent } from "../server";
+// @ts-ignore
+import serverFnManifest from "solidstart:server-fn-manifest";
 
 function createChunk(data: string) {
   const encodeData = new TextEncoder().encode(data);
@@ -78,19 +80,34 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
   const url = new URL(request.url);
-  let filepath: string | undefined | null, name: string | undefined | null;
+  let functionId: string | undefined | null, name: string | undefined | null;
   if (serverReference) {
     invariant(typeof serverReference === "string", "Invalid server function");
-    [filepath, name] = serverReference.split("#");
+    [functionId, name] = serverReference.split("#");
   } else {
-    filepath = url.searchParams.get("id");
+    functionId = url.searchParams.get("id");
     name = url.searchParams.get("name");
-    if (!filepath || !name) throw new Error("Invalid request");
+    if (!functionId || !name) throw new Error("Invalid request");
   }
 
-  const serverFunction = (
-    await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME]!.chunks[filepath!]!.import()
-  )[name!];
+  const serverFnInfo = serverFnManifest[functionId];
+  let fnModule: undefined | { [key: string]: any };
+
+  
+  if (process.env.NODE_ENV === "development") {
+    // In dev, we use Vinxi to get the "server" server-side router
+    // Then we use that router's devServer.ssrLoadModule to get the serverFn
+
+    // This code comes from:
+    // https://github.com/TanStack/router/blob/266f5cc863cd1a99809d1af2669e58b6b6db9a67/packages/start-server-functions-handler/src/index.tsx#L83-L87
+    fnModule = await (globalThis as any).app
+      .getRouter("server-fns")
+      .internals.devServer.ssrLoadModule(serverFnInfo.extractedFilename);
+  } else {
+    fnModule = await serverFnInfo.importer();
+  }
+  const serverFunction = fnModule![serverFnInfo.functionName];
+
   let parsed: any[] = [];
 
   // grab bound arguments from url when no JS
@@ -176,7 +193,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       /* @ts-ignore */
       sharedConfig.context = { event };
       event.locals.serverFunctionMeta = {
-        id: filepath + "#" + name
+        id: functionId + "#" + name
       };
       return serverFunction(...parsed);
     });
