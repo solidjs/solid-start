@@ -38,7 +38,7 @@ function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware) {
     const fetchEvent = getFetchEvent(h3Event);
     const mwResponse = await onBeforeResponse(fetchEvent, response);
     if (mwResponse) {
-      response.body = mwResponse;
+      await sendWebResponse(h3Event, mwResponse);
     }
   };
 }
