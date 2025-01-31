@@ -28,3 +28,29 @@ npm run dev -- --open
 Solid apps are built with _presets_, which optimise your project for deployment to different environments.
 
 By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different preset, add it to the `devDependencies` in `package.json` and specify in your `app.config.js`.
+
+## Tailwind CSS bug
+
+This branch reproduces a bug that causes the css output of Tailwind CSS classes that contain the `&` character to transform it into `&amp;`, which breaks it. For example, a class using a "dark theme" variant like this:
+
+```css
+.dark\:bg-red-500 {
+  &:where(.dark, .dark *) {
+    background-color: var(--color-red-500);
+  }
+}
+```
+
+This is actually outputted like this:
+
+```css
+.dark\:bg-red-500 {
+  &amp;:where(.dark, .dark *) {
+    background-color: var(--color-red-500);
+  }
+}
+```
+
+The effect is that the browser cannot parse the contents of the selector, so that class doesn't work and the color is not applied.
+
+See `examples/with-tailwindcss/src/routes/index.tsx` for a live repro.

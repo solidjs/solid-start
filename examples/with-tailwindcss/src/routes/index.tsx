@@ -20,6 +20,12 @@ export default function Home() {
           About Page
         </A>{" "}
       </p>
+      <div>
+        <p class="font-bold text-white my-10">tailwindcss bug repro</p>
+        <p class="bg-white text-red-500 dark:bg-red-500 dark:text-white font-bold w-full h-20 flex justify-center items-center">
+          this background should be red
+        </p>
+      </div>
     </main>
   );
 }
