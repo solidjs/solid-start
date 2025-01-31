@@ -1,5 +1,6 @@
 {
   "name": "server-function-test",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
@@ -25,7 +26,7 @@
     "solid-js": "^1.9.4",
     "vinxi": "^0.5.3",
     "vite-plugin-solid": "^2.11.1",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.4"
   },
   "engines": {
     "node": ">=18"
@@ -33,8 +34,10 @@
   "devDependencies": {
     "@cypress/code-coverage": "^3.13.10",
     "@types/lodash": "^4.17.14",
+    "@vitest/browser": "^3.0.4",
     "cypress": "^14.0.0",
     "cypress-plugin-tab": "^1.0.5",
-    "cypress-vite": "^1.6.0"
+    "cypress-vite": "^1.6.0",
+    "playwright": "^1.50.1"
   }
 }

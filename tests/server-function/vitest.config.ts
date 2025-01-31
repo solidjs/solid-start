@@ -3,19 +3,19 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [solid()],
-  
   test: {
-environment: "node",   
-    browser: {
+    mockReset: true,
+    environment: "node"
 
-      provider: "playwright",
-
-      enabled: true,
-      // at least one instance is required
-      instances: [
-        { browser: 'chromium' },
-      ],
-    }
+    // at least one instance is required
+    // browser: {
+    //   provider: "playwright",
+    //   enabled: true,
+    //   instances: [
+    //     {
+    //       browser: "chromium"
+    //     }
+    //   ]
+    // }
   }
-  
 });

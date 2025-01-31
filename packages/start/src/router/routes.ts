@@ -7,7 +7,7 @@ interface Route {
   children?: Route[];
   page?: boolean;
   $component?: any;
-	$HEAD?: any;
+  $HEAD?: any;
   $GET?: any;
   $POST?: any;
   $PUT?: any;
@@ -24,9 +24,7 @@ declare module "vinxi/routes" {
   }
 }
 
-export const pageRoutes = defineRoutes(
-  (fileRoutes as unknown as Route[]).filter(o => o.page)
-);
+export const pageRoutes = defineRoutes((fileRoutes as unknown as Route[]).filter(o => o.page));
 
 function defineRoutes(fileRoutes: Route[]) {
   function processRoute(routes: Route[], route: Route, id: string, full: string) {
@@ -35,7 +33,11 @@ function defineRoutes(fileRoutes: Route[]) {
     });
 
     if (!parentRoute) {
-      routes.push({ ...route, id, path: id.replace(/\/\([^)/]+\)/g, "").replace(/\([^)/]+\)/g, "") });
+      routes.push({
+        ...route,
+        id,
+        path: id.replace(/\/\([^)/]+\)/g, "").replace(/\([^)/]+\)/g, "")
+      });
       return routes;
     }
     processRoute(
@@ -58,7 +60,8 @@ function defineRoutes(fileRoutes: Route[]) {
 export function matchAPIRoute(path: string, method: string) {
   const match = router.lookup(path);
   if (match && match.route) {
-    const handler = method === "HEAD" ? match.route["$HEAD"] || match.route["$GET"] : match.route[`$${method}`];
+    const handler =
+      method === "HEAD" ? match.route["$HEAD"] || match.route["$GET"] : match.route[`$${method}`];
     if (handler === undefined) return;
     return {
       handler,
@@ -68,19 +71,34 @@ export function matchAPIRoute(path: string, method: string) {
 }
 
 function containsHTTP(route: Route) {
-  return route["$HEAD"] || route["$GET"] || route["$POST"] || route["$PUT"] || route["$PATCH"] || route["$DELETE"];
+  return (
+    route["$HEAD"] ||
+    route["$GET"] ||
+    route["$POST"] ||
+    route["$PUT"] ||
+    route["$PATCH"] ||
+    route["$DELETE"]
+  );
 }
 
 const router = createRouter({
   routes: (fileRoutes as unknown as Route[]).reduce((memo, route) => {
     if (!containsHTTP(route)) return memo;
-    let path = route.path.replace(/\/\([^)/]+\)/g, "").replace(/\([^)/]+\)/g, "").replace(/\*([^/]*)/g, (_, m) => `**:${m}`).split('/').map(s => (s.startsWith(':') || s.startsWith('*')) ? s : encodeURIComponent(s)).join('/');
+    let path = route.path
+      .replace(/\/\([^)/]+\)/g, "")
+      .replace(/\([^)/]+\)/g, "")
+      .replace(/\*([^/]*)/g, (_, m) => `**:${m}`)
+      .split("/")
+      .map(s => (s.startsWith(":") || s.startsWith("*") ? s : encodeURIComponent(s)))
+      .join("/");
     if (/:[^/]*\?/g.test(path)) {
       throw new Error(`Optional parameters are not supported in API routes: ${path}`);
     }
     if (memo[path]) {
       throw new Error(
-        `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${route.path}"`
+        `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${
+          route.path
+        }"`
       );
     }
     memo[path] = { route };
