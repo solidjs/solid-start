@@ -357,6 +357,9 @@ importers:
       solid-js:
         specifier: ^1.9.2
         version: 1.9.4
+      tailwindcss:
+        specifier: ^4.0.1
+        version: 4.0.1
       vinxi:
         specifier: ^0.4.3
         version: 0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.10.10)(ioredis@5.4.1)(lightningcss@1.29.1)(terser@5.37.0)
@@ -6836,6 +6839,9 @@ packages:
     resolution: {integrity: sha512-w33E2aCvSDP0tW9RZuNXadXlkHXqFzSkQew/aIa2i/Sj8fThxwovwlXHSPXTbAHwEIhBFXAedUhP2tueAKP8Og==}
     engines: {node: '>=14.0.0'}
     hasBin: true
+
+  tailwindcss@4.0.1:
+    resolution: {integrity: sha512-UK5Biiit/e+r3i0O223bisoS5+y7ZT1PM8Ojn0MxRHzXN1VPZ2KY6Lo6fhu1dOfCfyUAlK7Lt6wSxowRabATBw==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -14632,6 +14638,8 @@ snapshots:
       sucrase: 3.35.0
     transitivePeerDependencies:
       - ts-node
+
+  tailwindcss@4.0.1: {}
 
   tapable@2.2.1: {}
 

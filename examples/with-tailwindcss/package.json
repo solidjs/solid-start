@@ -11,6 +11,7 @@
     "@solidjs/start": "^1.0.11",
     "@tailwindcss/vite": "0.0.0-insiders.7f1d097",
     "solid-js": "^1.9.2",
+    "tailwindcss": "^4.0.1",
     "vinxi": "^0.4.3"
   },
   "overrides": {
