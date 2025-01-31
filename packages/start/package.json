@@ -64,9 +64,10 @@
     "vinxi": "catalog:"
   },
   "dependencies": {
+    "@solidjs/start": "^1.0.11",
+    "@tanstack/server-functions-plugin": "^1.97.19",
     "@vinxi/plugin-directives": "^0.4.3",
     "@vinxi/server-components": "^0.4.3",
-    "@tanstack/server-functions-plugin": "^1.97.2",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
