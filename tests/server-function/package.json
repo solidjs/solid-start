@@ -27,9 +27,6 @@
     "vite-plugin-solid": "^2.11.1",
     "vitest": "^3.0.0"
   },
-  "overrides": {
-    "vite": "^5.4.10"
-  },
   "engines": {
     "node": ">=18"
   },
