@@ -25,8 +25,8 @@ catalogs:
       specifier: ^5.4.10
       version: 5.4.14
     vite-plugin-solid:
-      specifier: ^2.10.2
-      version: 2.11.0
+      specifier: ^2.11.1
+      version: 2.11.1
 
 importers:
 
@@ -458,8 +458,8 @@ importers:
         specifier: ^5.4.10
         version: 5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0)
       vite-plugin-solid:
-        specifier: ^2.10.2
-        version: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0))
+        specifier: ^2.11.1
+        version: 2.11.1(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0))
       vitest:
         specifier: ^3.0.2
         version: 3.0.2(@types/node@22.10.10)(@vitest/ui@2.1.4)(jsdom@25.0.1)(lightningcss@1.27.0)(terser@5.37.0)
@@ -570,8 +570,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.10
       vite-plugin-solid:
-        specifier: ^2.11.0
-        version: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0))
+        specifier: 'catalog:'
+        version: 2.11.1(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0))
     devDependencies:
       solid-js:
         specifier: 'catalog:'
@@ -620,7 +620,7 @@ importers:
         version: 0.4.3(@opentelemetry/api@1.9.0)(@types/node@22.10.10)(ioredis@5.4.1)(lightningcss@1.27.0)(terser@5.37.0)
       vite-plugin-solid:
         specifier: 'catalog:'
-        version: 2.11.0(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0))
+        version: 2.11.1(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0))
       vitest:
         specifier: ^3.0.0
         version: 3.0.2(@types/node@22.10.10)(@vitest/ui@2.1.4)(jsdom@25.0.1)(lightningcss@1.27.0)(terser@5.37.0)
@@ -7188,6 +7188,16 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
+  vite-plugin-solid@2.11.1:
+    resolution: {integrity: sha512-X9vbbK6AOOA6yxSsNl1VTuUq5y4BG9AR6Z5F/J1ZC2VO7ll8DlSCbOL+RcZXlRbxn0ptE6OI5832nGQhq4yXKQ==}
+    peerDependencies:
+      '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
+      solid-js: ^1.7.2
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+    peerDependenciesMeta:
+      '@testing-library/jest-dom':
+        optional: true
+
   vite@5.4.14:
     resolution: {integrity: sha512-EK5cY7Q1D8JNhSaPKVK4pwBFvaTmZxEnoKXLG/U9gmdDcihQGNzFlgIvaxezFR4glP1LsuiedwMBqCXH3wZccA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -10808,6 +10818,15 @@ snapshots:
       html-entities: 2.3.3
       validate-html-nesting: 1.2.2
 
+  babel-plugin-jsx-dom-expressions@0.37.20(@babel/core@7.26.7):
+    dependencies:
+      '@babel/core': 7.26.7
+      '@babel/helper-module-imports': 7.18.6
+      '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.7)
+      '@babel/types': 7.26.7
+      html-entities: 2.3.3
+      validate-html-nesting: 1.2.2
+
   babel-plugin-polyfill-corejs2@0.4.12(@babel/core@7.26.7):
     dependencies:
       '@babel/compat-data': 7.26.5
@@ -10836,6 +10855,11 @@ snapshots:
     dependencies:
       '@babel/core': 7.25.9
       babel-plugin-jsx-dom-expressions: 0.37.20(@babel/core@7.25.9)
+
+  babel-preset-solid@1.8.17(@babel/core@7.26.7):
+    dependencies:
+      '@babel/core': 7.26.7
+      babel-plugin-jsx-dom-expressions: 0.37.20(@babel/core@7.26.7)
 
   bail@1.0.5: {}
 
@@ -15129,6 +15153,21 @@ snapshots:
       '@babel/core': 7.25.9
       '@types/babel__core': 7.20.5
       babel-preset-solid: 1.8.17(@babel/core@7.25.9)
+      merge-anything: 5.1.7
+      solid-js: 1.9.4
+      solid-refresh: 0.6.3(solid-js@1.9.4)
+      vite: 5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0)
+      vitefu: 1.0.4(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0))
+    optionalDependencies:
+      '@testing-library/jest-dom': 6.6.2
+    transitivePeerDependencies:
+      - supports-color
+
+  vite-plugin-solid@2.11.1(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.27.0)(terser@5.37.0)):
+    dependencies:
+      '@babel/core': 7.26.7
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 1.8.17(@babel/core@7.26.7)
       merge-anything: 5.1.7
       solid-js: 1.9.4
       solid-refresh: 0.6.3(solid-js@1.9.4)
