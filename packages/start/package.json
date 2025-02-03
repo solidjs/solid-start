@@ -64,8 +64,8 @@
     "vinxi": "catalog:"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "^0.4.3",
-    "@vinxi/server-components": "^0.4.3",
+    "@vinxi/plugin-directives": "^0.5.0",
+    "@vinxi/server-components": "^0.5.0",
     "@tanstack/server-functions-plugin": "^1.97.2",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
@@ -78,5 +78,8 @@
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
     "vite-plugin-solid": "catalog:"
+  },
+  "peerDependencies": {
+    "vinxi": "catalog:"
   }
 }
