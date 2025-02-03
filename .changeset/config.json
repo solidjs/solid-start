@@ -23,6 +23,7 @@
     "example-with-trpc",
     "example-with-unocss",
     "example-with-vitest",
-    "solid-start-docs"
+    "landing-page",
+    "server-function-test"
   ]
 }
