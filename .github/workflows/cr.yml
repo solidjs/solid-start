@@ -34,7 +34,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build start
-        run: pnpm run build:all
+        run: pnpm run packages:build
 
       - name: Release
         run: pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact
