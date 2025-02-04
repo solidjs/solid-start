@@ -59,9 +59,8 @@
     }
   },
   "devDependencies": {
-    "solid-js": "catalog:",
-    "typescript": "catalog:",
-    "vinxi": "catalog:"
+    "solid-js": "^1.9.4",
+    "vinxi": "^0.4.3"
   },
   "dependencies": {
     "@vinxi/plugin-directives": "^0.4.3",
@@ -77,6 +76,6 @@
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
-    "vite-plugin-solid": "catalog:"
+    "vite-plugin-solid": "^2.11.1"
   }
 }
