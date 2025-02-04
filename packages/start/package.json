@@ -77,9 +77,9 @@
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
-    "vite-plugin-solid": "catalog:"
+    "vite-plugin-solid": "^2.11.1"
   },
   "peerDependencies": {
-    "vinxi": "catalog:"
+    "vinxi": "0.5.1"
   }
 }
