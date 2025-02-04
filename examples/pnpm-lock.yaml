@@ -6,6 +6,8 @@ settings:
 
 importers:
 
+  .: {}
+
   bare:
     dependencies:
       '@solidjs/start':

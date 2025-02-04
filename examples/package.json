@@ -1,0 +1,10 @@
+{
+  "name": "solid-start-examples",
+  "description": "Examples for SolidStart",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter './*' --if-present build",
+    "clean": "pnpx rimraf ./*/node_modules/ ./*/.vinxi/ ./*/.output/",
+    "use-workspace-package": "node ./use-workspace-package-in-examples.js"
+  }
+}
