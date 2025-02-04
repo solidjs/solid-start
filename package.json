@@ -33,7 +33,6 @@
     "show:test-report": "pnpm --filter solid-start-tests show:test-report"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.25.2",
     "citty": "^0.1.5",
     "cypress": "^14.0.0",
     "tinyglobby": "^0.2.2",
