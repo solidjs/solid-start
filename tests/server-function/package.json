@@ -24,7 +24,7 @@
     "lodash": "^4.17.21",
     "solid-js": "catalog:",
     "vinxi": "catalog:",
-    "vite-plugin-solid": "catalog:",
+    "vite-plugin-solid": "^2.11.1",
     "vitest": "^3.0.0"
   },
   "engines": {

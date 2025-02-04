@@ -24,9 +24,6 @@ catalogs:
     vite:
       specifier: ^6.0.0
       version: 6.0.11
-    vite-plugin-solid:
-      specifier: ^2.11.1
-      version: 2.11.1
 
 importers:
 
@@ -619,7 +616,7 @@ importers:
         specifier: 'catalog:'
         version: 0.5.1(@types/node@22.10.10)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.1)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.6.0)
       vite-plugin-solid:
-        specifier: 'catalog:'
+        specifier: ^2.11.1
         version: 2.11.1(@testing-library/jest-dom@6.6.2)(solid-js@1.9.4)(vite@6.0.11(@types/node@22.10.10)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.37.0)(tsx@4.19.2)(yaml@2.6.0))
       vitest:
         specifier: ^3.0.0
