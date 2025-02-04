@@ -19,6 +19,7 @@ jobs:
     steps:
       - uses: mtfoley/pr-compliance-action@main
         with:
+          body-fail: false
           body-auto-close: false
           ignore-authors: |-
             allcontributors
