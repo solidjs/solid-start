@@ -19,6 +19,8 @@ jobs:
     steps:
       - uses: mtfoley/pr-compliance-action@main
         with:
+          body-fail: false
+          body-regex: '[\s\S]*' # Accept any body including newlines
           body-auto-close: false
           ignore-authors: |-
             allcontributors
