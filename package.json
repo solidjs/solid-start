@@ -23,7 +23,7 @@
     "lp:clean": "pnpx rimraf ./packages/landing-page/node_modules ./packages/landing-page/.vinxi/ ./packages/landing-page/.output/",
     "examples:build": "pnpm --filter './examples/*' --if-present build",
     "examples:clean": "pnpx rimraf ./examples/*/node_modules/ ./examples/*/.vinxi/ ./examples/*/.output/",
-    "examples:use-local-start": "node ./util/use-local-start-in-examples.js",
+    "examples:use-workspace-package": "node ./util/use-workspace-package-in-examples.js",
     "packages:build": "pnpm --filter @solidjs/start build",
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
     "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
