@@ -77,5 +77,8 @@
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
     "vite-plugin-solid": "^2.11.1"
+  },
+  "peerDependencies": {
+    "vinxi": "^0.5.1"
   }
 }
