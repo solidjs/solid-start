@@ -30,6 +30,7 @@
     "clean:test": "pnpx rimraf .tmp",
     "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
     "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
+    "release": "pnpm build && changeset publish && pnpm i",
     "show:test-report": "pnpm --filter solid-start-tests show:test-report"
   },
   "devDependencies": {
