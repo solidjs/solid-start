@@ -13,9 +13,9 @@
   "scripts": {
     "bump": "node scripts/bump.js",
     "build": "pnpm run packages:build",
-    "build:all": "pnpm run packages:build && pnpm run examples:build && pnpm run lp:build",
+    "build:all": "pnpm run packages:build && pnpm run lp:build",
     "clean": "pnpm run clean:all",
-    "clean:all": "pnpm run examples:clean && pnpm run packages:clean && pnpm run clean:root",
+    "clean:all": "pnpm run packages:clean && pnpm run clean:root",
     "clean:root": "pnpx rimraf ./node_modules ./.vinxi/ ./.output/",
     "lp:dev": "pnpm --filter landing-page dev",
     "lp:build": "pnpm --filter landing-page build",
