@@ -18,17 +18,18 @@
     "tailwindcss-animate": "^1.0.7",
     "tinyglobby": "^0.2.2",
     "tippy.js": "^6.3.7",
-    "typescript": "catalog:",
-    "vinxi": "catalog:",
-    "vite": "catalog:"
+    "vinxi": "^0.4.3"
+  },
+  "overrides": {
+    "vite": "^5.4.10"
   },
   "dependencies": {
-    "@solidjs/meta": "catalog:",
-    "@solidjs/router": "catalog:",
-    "@solidjs/start": "latest",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.3",
+    "@solidjs/start": "^1.0.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "solid-js": "catalog:",
+    "solid-js": "^1.9.4",
     "solid-transition-group": "^0.2.3"
   }
 }
