@@ -1,8 +1,6 @@
 packages:
   # all packages in subdirs of packages/ and examples/
   - "packages/*"
-  - "examples/*"
-  - "tests/*"
   - "!**/.tmp/**"
 catalog:
   vite: ^5.4.10

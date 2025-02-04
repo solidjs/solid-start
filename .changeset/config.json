@@ -7,23 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "example-bare",
-    "example-basic",
-    "example-experiments",
-    "example-hackernews",
-    "example-todomvc",
-    "example-notes",
-    "example-with-auth",
-    "example-with-authjs",
-    "example-with-mdx",
-    "example-with-prisma",
-    "example-with-solid-styled",
-    "example-with-tailwindcss",
-    "example-with-trpc",
-    "example-with-unocss",
-    "example-with-vitest",
-    "landing-page",
-    "server-function-test"
-  ]
+  "ignore": ["landing-page", "server-function-test"]
 }
