@@ -7,6 +7,10 @@ describe("server-function", () => {
     cy.visit("/is-server-nested");
     cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
   })
+  it("should have an id of type string in the server function meta - nested", () => {
+    cy.visit("/server-function-meta-nested");
+    cy.get("#server-fn-test").contains('{"serverFnWithMeta":"string"}');
+  })
   it("should externalize node builtin in server function - nested", () => {
     cy.visit("/node-builtin-nested");
     cy.get("#server-fn-test").contains('{"serverFnWithNodeBuiltin":"can/externalize"}');
@@ -19,6 +23,10 @@ describe("server-function", () => {
   it("should have isServer true in the server function - toplevel", () => {
     cy.visit("/is-server-toplevel");
     cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
+  })
+  it("should have an id of type string in the server function meta - toplevel", () => {
+    cy.visit("/server-function-meta");
+    cy.get("#server-fn-test").contains('{"serverFnWithMeta":"string"}');
   })
   it("should externalize node builtin in server function - toplevel", () => {
     cy.visit("/node-builtin-toplevel");
