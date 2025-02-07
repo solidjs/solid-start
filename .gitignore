@@ -26,6 +26,7 @@ node_modules
 
 .tmp
 test/playwright-report
+tests/server-function/cypress/screenshots
 
 # Temp
 gitignore
