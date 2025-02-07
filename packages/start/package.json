@@ -65,7 +65,6 @@
   "dependencies": {
     "@vinxi/plugin-directives": "^0.5.0",
     "@vinxi/server-components": "^0.5.0",
-    "@solidjs/start": "^1.0.11",
     "@tanstack/server-functions-plugin": "^1.97.19",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
