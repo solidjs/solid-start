@@ -362,8 +362,8 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4(vite@5.4.14(@types/node@22.10.10)(lightningcss@1.29.1)(terser@5.37.0))
       tailwindcss:
-        specifier: ^4.0.1
-        version: 4.0.1
+        specifier: ^4.0.4
+        version: 4.0.4
 
   examples/with-trpc:
     dependencies:
@@ -6837,9 +6837,6 @@ packages:
     resolution: {integrity: sha512-w33E2aCvSDP0tW9RZuNXadXlkHXqFzSkQew/aIa2i/Sj8fThxwovwlXHSPXTbAHwEIhBFXAedUhP2tueAKP8Og==}
     engines: {node: '>=14.0.0'}
     hasBin: true
-
-  tailwindcss@4.0.1:
-    resolution: {integrity: sha512-UK5Biiit/e+r3i0O223bisoS5+y7ZT1PM8Ojn0MxRHzXN1VPZ2KY6Lo6fhu1dOfCfyUAlK7Lt6wSxowRabATBw==}
 
   tailwindcss@4.0.4:
     resolution: {integrity: sha512-/ezDLEkOLf1lXkr9F2iI5BHJbexJpty5zkV2B8bGHCqAdbc9vk85Jgdkq+ZOvNkNPa3yAaqJ8DjRt584Bc84kw==}
@@ -14637,8 +14634,6 @@ snapshots:
       sucrase: 3.35.0
     transitivePeerDependencies:
       - ts-node
-
-  tailwindcss@4.0.1: {}
 
   tailwindcss@4.0.4: {}
 
