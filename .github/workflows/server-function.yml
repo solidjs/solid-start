@@ -25,7 +25,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           # https://github.com/pnpm/pnpm/issues/8953
-          version: 9.15.3
+          version: 10.2.1
 
       - name: Install project dependencies
         run: pnpm i

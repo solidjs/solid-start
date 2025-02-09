@@ -39,7 +39,5 @@
     "typescript": "^5.7.0"
   },
   "dependencies": {},
-  "engines": {
-    "pnpm": "^9.0.0"
-  }
+  "packageManager": "pnpm@10.2.1"
 }

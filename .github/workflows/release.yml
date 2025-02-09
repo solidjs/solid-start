@@ -18,7 +18,7 @@ jobs:
       - uses: pnpm/action-setup@v3
         with:
           # https://github.com/pnpm/pnpm/issues/8953
-          version: 9.15.3
+          version: 10.2.1
 
       - name: Use Node.js from nvmrc
         uses: actions/setup-node@v4
