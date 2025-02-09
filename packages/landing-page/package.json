@@ -18,7 +18,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tinyglobby": "^0.2.2",
     "tippy.js": "^6.3.7",
-    "vinxi": "^0.5.2"
+    "vinxi": "^0.5.3"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
