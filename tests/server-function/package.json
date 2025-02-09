@@ -23,7 +23,7 @@
     "jsdom": "^25.0.1",
     "lodash": "^4.17.21",
     "solid-js": "^1.9.4",
-    "vinxi": "^0.5.2",
+    "vinxi": "^0.5.3",
     "vite-plugin-solid": "^2.11.1",
     "vitest": "^3.0.0"
   },
