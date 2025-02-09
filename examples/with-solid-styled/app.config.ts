@@ -1,11 +1,11 @@
 import { defineConfig } from "@solidjs/start/config";
 import type { PluginOption } from "vite";
-import solidStyled from "vite-plugin-solid-styled";
+import solidStyled from "unplugin-solid-styled";
 
 export default defineConfig({
   vite: {
     plugins: [
-      solidStyled({
+      solidStyled.vite({
         filter: {
           include: "src/**/*.tsx",
           exclude: "node_modules/**/*.{ts,js}"

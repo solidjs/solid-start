@@ -3,9 +3,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
 
-import { useAssets } from "solid-js/web";
-
-import { StyleRegistry, css, renderSheets, type StyleData } from "solid-styled";
+import { StyleRegistry, css } from "solid-styled";
 
 function GlobalStyles() {
   css`
@@ -56,14 +54,11 @@ function GlobalStyles() {
 }
 
 export default function App() {
-  const sheets: StyleData[] = [];
-  useAssets(() => renderSheets(sheets));
-
   return (
     <Router
-      root={props => (
+      root={(props) => (
         <MetaProvider>
-          <StyleRegistry styles={sheets}>
+          <StyleRegistry auto>
             <GlobalStyles />
             <a href="/">Index</a>
             <a href="/about">About</a>
