@@ -291,14 +291,14 @@ importers:
         specifier: ^1.9.2
         version: 1.9.4
       solid-styled:
-        specifier: ^0.11.1
-        version: 0.11.1(solid-js@1.9.4)
+        specifier: ^0.12.0
+        version: 0.12.0(solid-js@1.9.4)
+      unplugin-solid-styled:
+        specifier: ^0.12.0
+        version: 0.12.0(rollup@4.34.2)(solid-styled@0.12.0(solid-js@1.9.4))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
       vinxi:
         specifier: ^0.4.3
         version: 0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3)
-      vite-plugin-solid-styled:
-        specifier: ^0.11.1
-        version: 0.11.1(rollup@4.34.2)(solid-styled@0.11.1(solid-js@1.9.4))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
 
   with-tailwindcss:
     dependencies:
@@ -2842,10 +2842,6 @@ packages:
   crossws@0.3.3:
     resolution: {integrity: sha512-/71DJT3xJlqSnBr83uGJesmVHSzZEvgxHt/fIKxBAAngqMHmnBWQNxCphVxxJ2XL3xleu5+hJD6IQ3TglBedcw==}
 
-  css-tree@2.3.1:
-    resolution: {integrity: sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==}
-    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
-
   css-tree@3.1.0:
     resolution: {integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
@@ -3966,9 +3962,6 @@ packages:
   mdast-util-to-string@3.2.0:
     resolution: {integrity: sha512-V4Zn/ncyN1QNSqSBxTrMOLpjr+IKdHl2v3KVLoWmDPscP4r9GcCi71gjgvUV1SFSKh92AjAG4peFuBl2/YgCJg==}
 
-  mdn-data@2.0.30:
-    resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
-
   mdn-data@2.12.2:
     resolution: {integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA==}
 
@@ -4750,8 +4743,8 @@ packages:
     peerDependencies:
       solid-js: ^1.3
 
-  solid-styled@0.11.1:
-    resolution: {integrity: sha512-QZN9hj+lt3gai0HPqzN5kFTn3zHIlyKWXVcYJfiuPGgprRuEB3UvUNqNcOncknJrjHLdZAn/ItA01rs9sqh8hg==}
+  solid-styled@0.12.0:
+    resolution: {integrity: sha512-eoQlDScKmd1xCSf/3Lhz44kScI2lnumwa0YLCkrMbJmm3gZbHALK/0B4ZBD148VjUyjzs3r0cDfZ3QLcyeWT1A==}
     engines: {node: '>=12'}
     peerDependencies:
       solid-js: ^1
@@ -5112,12 +5105,12 @@ packages:
       vite:
         optional: true
 
-  unplugin-solid-styled@0.11.1:
-    resolution: {integrity: sha512-UrDGYSoo9WM1ITo2sz3ktX9RURRNVN5ewy+P7snIGECZE0n6ebrmdPwCFI3imXzZrCMlp/yZgFCrFOvsz8ms/Q==}
+  unplugin-solid-styled@0.12.0:
+    resolution: {integrity: sha512-CRUMVL+Jjh5/aBCQU7IvA9e6MYWJJzbcmca2VRgY5XY9XTjk1shVSgRwAeEHXr7mTekQz6zuwd4fjE8YxB9o+Q==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-styled: '>=0.9'
-      vite: ^3 || ^4 || ^5
+      vite: '>=3'
     peerDependenciesMeta:
       vite:
         optional: true
@@ -5296,13 +5289,6 @@ packages:
     resolution: {integrity: sha512-02JEJl7SbtwSDJdYS537nU6l+ktdvcREfLksk/NDAqtdKWGqHl+joXzEubHROmS3E6pip+Xgu2tFezMu75jH7A==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
-
-  vite-plugin-solid-styled@0.11.1:
-    resolution: {integrity: sha512-aqCCcaGo0EOVVt8JTmSgxBtYDMSDY/bti1WmNBZ6zDRkiN4oqfCQyqq9v+1XtYMhulldsufS3H9h3RXWmkvG4A==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-styled: '>=0.9'
-      vite: ^3 || ^4 || ^5
 
   vite-plugin-solid@2.11.1:
     resolution: {integrity: sha512-X9vbbK6AOOA6yxSsNl1VTuUq5y4BG9AR6Z5F/J1ZC2VO7ll8DlSCbOL+RcZXlRbxn0ptE6OI5832nGQhq4yXKQ==}
@@ -7742,11 +7728,6 @@ snapshots:
     dependencies:
       uncrypto: 0.1.3
 
-  css-tree@2.3.1:
-    dependencies:
-      mdn-data: 2.0.30
-      source-map-js: 1.2.1
-
   css-tree@3.1.0:
     dependencies:
       mdn-data: 2.12.2
@@ -8975,8 +8956,6 @@ snapshots:
     dependencies:
       '@types/mdast': 3.0.15
 
-  mdn-data@2.0.30: {}
-
   mdn-data@2.12.2: {}
 
   merge-anything@5.1.7:
@@ -9948,14 +9927,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  solid-styled@0.11.1(solid-js@1.9.4):
+  solid-styled@0.12.0(solid-js@1.9.4):
     dependencies:
       '@babel/core': 7.26.7
       '@babel/traverse': 7.26.7
       '@babel/types': 7.26.7
       '@types/css-tree': 2.3.10
       browserslist: 4.24.4
-      css-tree: 2.3.1
+      css-tree: 3.1.0
       lightningcss: 1.29.1
       solid-js: 1.9.4
     transitivePeerDependencies:
@@ -10387,11 +10366,11 @@ snapshots:
       - supports-color
       - vue
 
-  unplugin-solid-styled@0.11.1(rollup@4.34.2)(solid-styled@0.11.1(solid-js@1.9.4))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)):
+  unplugin-solid-styled@0.12.0(rollup@4.34.2)(solid-styled@0.12.0(solid-js@1.9.4))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)):
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.34.2)
-      solid-styled: 0.11.1(solid-js@1.9.4)
-      unplugin: 1.16.1
+      solid-styled: 0.12.0(solid-js@1.9.4)
+      unplugin: 2.1.2
     optionalDependencies:
       vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
     transitivePeerDependencies:
@@ -10610,14 +10589,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-
-  vite-plugin-solid-styled@0.11.1(rollup@4.34.2)(solid-styled@0.11.1(solid-js@1.9.4))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)):
-    dependencies:
-      solid-styled: 0.11.1(solid-js@1.9.4)
-      unplugin-solid-styled: 0.11.1(rollup@4.34.2)(solid-styled@0.11.1(solid-js@1.9.4))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
-      vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
-    transitivePeerDependencies:
-      - rollup
 
   vite-plugin-solid@2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)):
     dependencies:
