@@ -17,15 +17,14 @@
     "vite": "^5.1.6"
   },
   "dependencies": {
-    "@solidjs/router": "^0.14.7",
+    "@solidjs/router": "^0.15.1",
     "@solidjs/start": "^1.0.11",
     "solid-js": "^1.9.2",
     "vinxi": "^0.4.3",
     "@solidjs/meta": "^0.29.4",
     "zod": "^3.22.4",
-    "@auth/core": "0.35.0",
-    "@solid-mediakit/auth": "^3.0.0",
-    "@solid-mediakit/auth-plugin": "^1.1.4",
+    "@auth/core": "0.37.0",
+    "@solid-mediakit/auth": "^3.1.2",
     "postcss": "^8.4.40",
     "autoprefixer": "^10.4.19",
     "tailwindcss": "^3.4.7"
