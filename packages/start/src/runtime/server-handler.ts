@@ -87,12 +87,13 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   } else {
     functionId = url.searchParams.get("id");
     name = url.searchParams.get("name");
-    if (!functionId || !name) throw new Error("Invalid request");
+    if (!functionId || !name) return new Response("Server function not found", { status: 404 });
   }
 
   const serverFnInfo = serverFnManifest[functionId];
   let fnModule: undefined | { [key: string]: any };
 
+  if (!serverFnInfo) return new Response("Server function not found", { status: 404 });
   
   if (process.env.NODE_ENV === "development") {
     // In dev, we use Vinxi to get the "server" server-side router
