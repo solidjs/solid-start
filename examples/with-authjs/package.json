@@ -13,14 +13,13 @@
     "@typescript-eslint/parser": "^7.6.0",
     "eslint": "^8.56.0",
     "eslint-plugin-solid": "^0.14.3",
-    "typescript": "^5.6.2",
-    "vite": "^5.1.6"
+    "typescript": "^5.6.2"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.1",
-    "@solidjs/start": "^1.0.11",
+    "@solidjs/start": "^1.1.0",
     "solid-js": "^1.9.2",
-    "vinxi": "^0.4.3",
+    "vinxi": "^0.5.3",
     "@solidjs/meta": "^0.29.4",
     "zod": "^3.22.4",
     "@auth/core": "0.37.0",
@@ -28,9 +27,6 @@
     "postcss": "^8.4.40",
     "autoprefixer": "^10.4.19",
     "tailwindcss": "^3.4.7"
-  },
-  "overrides": {
-    "vite": "5.4.10"
   },
   "engines": {
     "node": ">=22"

@@ -142,7 +142,7 @@ importers:
         version: 0.37.0
       '@solid-mediakit/auth':
         specifier: ^3.1.2
-        version: 3.1.2(@auth/core@0.37.0)(@solidjs/meta@0.29.4(solid-js@1.9.4))(@solidjs/router@0.15.3(solid-js@1.9.4))(@solidjs/start@1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)))(rollup@4.34.2)(solid-js@1.9.4)(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))
+        version: 3.1.2(g6ycmgrhaw6arz7xc75qft7ope)
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.4)
@@ -150,8 +150,8 @@ importers:
         specifier: ^0.15.1
         version: 0.15.3(solid-js@1.9.4)
       '@solidjs/start':
-        specifier: ^1.0.11
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
+        specifier: ^1.1.0
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.20(postcss@8.5.1)
@@ -165,8 +165,8 @@ importers:
         specifier: ^3.4.7
         version: 3.4.17
       vinxi:
-        specifier: ^0.4.3
-        version: 0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3)
+        specifier: ^0.5.3
+        version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
       zod:
         specifier: ^3.22.4
         version: 3.24.1
@@ -189,9 +189,6 @@ importers:
       typescript:
         specifier: ^5.6.2
         version: 5.7.3
-      vite:
-        specifier: ^5.1.6
-        version: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
 
   with-drizzle:
     dependencies:
@@ -2899,14 +2896,6 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
-  crossws@0.2.4:
-    resolution: {integrity: sha512-DAxroI2uSOgUKLz00NX6A8U/8EE3SZHmIND+10jkVSaypvyt57J5JEOxAQOL6lQxyzi/wZbTIwssU1uy69h5Vg==}
-    peerDependencies:
-      uWebSockets.js: '*'
-    peerDependenciesMeta:
-      uWebSockets.js:
-        optional: true
-
   crossws@0.3.3:
     resolution: {integrity: sha512-/71DJT3xJlqSnBr83uGJesmVHSzZEvgxHt/fIKxBAAngqMHmnBWQNxCphVxxJ2XL3xleu5+hJD6IQ3TglBedcw==}
 
@@ -3557,9 +3546,6 @@ packages:
   gzip-size@7.0.0:
     resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  h3@1.11.1:
-    resolution: {integrity: sha512-AbaH6IDnZN6nmbnJOH72y3c5Wwh9P97soSVdGSBbcDACRdkC0FEWf25pzx4f/NuOCK6quHmW18yF2Wx+G4Zi1A==}
 
   h3@1.13.0:
     resolution: {integrity: sha512-vFEAu/yf8UMUcB4s43OaDaigcqpQd14yanmOsn+NcRX3/guSKncyE2rOYhq8RIchgJrPSs/QiIddnTTR1ddiAg==}
@@ -5432,10 +5418,6 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vinxi@0.4.3:
-    resolution: {integrity: sha512-RgJz7RWftML5h/qfPsp3QKVc2FSlvV4+HevpE0yEY2j+PS/I2ULjoSsZDXaR8Ks2WYuFFDzQr8yrox7v8aqkng==}
-    hasBin: true
-
   vinxi@0.5.3:
     resolution: {integrity: sha512-4sL2SMrRzdzClapP44oXdGjCE1oq7/DagsbjY5A09EibmoIO4LP8ScRVdh03lfXxKRk7nCWK7n7dqKvm+fp/9w==}
     hasBin: true
@@ -6842,17 +6824,17 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@solid-mediakit/auth@3.1.2(@auth/core@0.37.0)(@solidjs/meta@0.29.4(solid-js@1.9.4))(@solidjs/router@0.15.3(solid-js@1.9.4))(@solidjs/start@1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)))(rollup@4.34.2)(solid-js@1.9.4)(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))':
+  '@solid-mediakit/auth@3.1.2(g6ycmgrhaw6arz7xc75qft7ope)':
     dependencies:
       '@auth/core': 0.37.0
       '@solid-mediakit/shared': 0.0.6(rollup@4.34.2)
       '@solidjs/meta': 0.29.4(solid-js@1.9.4)
       '@solidjs/router': 0.15.3(solid-js@1.9.4)
-      '@solidjs/start': 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
+      '@solidjs/start': 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       cookie: 0.6.0
       set-cookie-parser: 2.7.1
       solid-js: 1.9.4
-      vinxi: 0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3)
+      vinxi: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -6872,30 +6854,6 @@ snapshots:
   '@solidjs/router@0.15.3(solid-js@1.9.4)':
     dependencies:
       solid-js: 1.9.4
-
-  '@solidjs/start@1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))':
-    dependencies:
-      '@tanstack/server-functions-plugin': 1.99.5
-      '@vinxi/plugin-directives': 0.5.0(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))
-      '@vinxi/server-components': 0.5.0(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))
-      defu: 6.1.4
-      error-stack-parser: 2.1.4
-      html-to-image: 1.11.11
-      radix3: 1.1.2
-      seroval: 1.2.1
-      seroval-plugins: 1.2.1(seroval@1.2.1)
-      shiki: 1.29.2
-      source-map-js: 1.2.1
-      terracotta: 1.0.6(solid-js@1.9.4)
-      tinyglobby: 0.2.10
-      vinxi: 0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3)
-      vite-plugin-solid: 2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
-    transitivePeerDependencies:
-      - '@testing-library/jest-dom'
-      - babel-plugin-macros
-      - solid-js
-      - supports-color
-      - vite
 
   '@solidjs/start@1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))':
     dependencies:
@@ -7502,19 +7460,6 @@ snapshots:
       untun: 0.1.3
       uqr: 0.1.2
 
-  '@vinxi/plugin-directives@0.5.0(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))':
-    dependencies:
-      '@babel/parser': 7.26.7
-      acorn: 8.14.0
-      acorn-jsx: 5.3.2(acorn@8.14.0)
-      acorn-loose: 8.4.0
-      acorn-typescript: 1.4.13(acorn@8.14.0)
-      astring: 1.9.0
-      magicast: 0.2.11
-      recast: 0.23.9
-      tslib: 2.8.1
-      vinxi: 0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3)
-
   '@vinxi/plugin-directives@0.5.0(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))':
     dependencies:
       '@babel/parser': 7.26.7
@@ -7536,17 +7481,6 @@ snapshots:
       resolve: 1.22.10
       unified: 9.2.2
       vfile: 5.3.7
-
-  '@vinxi/server-components@0.5.0(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))':
-    dependencies:
-      '@vinxi/plugin-directives': 0.5.0(vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3))
-      acorn: 8.14.0
-      acorn-loose: 8.4.0
-      acorn-typescript: 1.4.13(acorn@8.14.0)
-      astring: 1.9.0
-      magicast: 0.2.11
-      recast: 0.23.9
-      vinxi: 0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3)
 
   '@vinxi/server-components@0.5.0(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))':
     dependencies:
@@ -8049,8 +7983,6 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  crossws@0.2.4: {}
 
   crossws@0.3.3:
     dependencies:
@@ -8730,21 +8662,6 @@ snapshots:
   gzip-size@7.0.0:
     dependencies:
       duplexer: 0.1.2
-
-  h3@1.11.1:
-    dependencies:
-      cookie-es: 1.2.2
-      crossws: 0.2.4
-      defu: 6.1.4
-      destr: 2.0.3
-      iron-webcrypto: 1.2.1
-      ohash: 1.1.4
-      radix3: 1.1.2
-      ufo: 1.5.4
-      uncrypto: 0.1.3
-      unenv: 1.10.0
-    transitivePeerDependencies:
-      - uWebSockets.js
 
   h3@1.13.0:
     dependencies:
@@ -10957,82 +10874,6 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
-
-  vinxi@0.4.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(lightningcss@1.29.1)(terser@5.37.0)(typescript@5.7.3):
-    dependencies:
-      '@babel/core': 7.26.7
-      '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.7)
-      '@babel/plugin-syntax-typescript': 7.25.9(@babel/core@7.26.7)
-      '@types/micromatch': 4.0.9
-      '@vinxi/listhen': 1.5.6
-      boxen: 7.1.1
-      chokidar: 3.6.0
-      citty: 0.1.6
-      consola: 3.4.0
-      crossws: 0.2.4
-      dax-sh: 0.39.2
-      defu: 6.1.4
-      es-module-lexer: 1.6.0
-      esbuild: 0.20.2
-      fast-glob: 3.3.3
-      get-port-please: 3.1.2
-      h3: 1.11.1
-      hookable: 5.5.3
-      http-proxy: 1.18.1
-      micromatch: 4.0.8
-      nitropack: 2.10.4(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(typescript@5.7.3)
-      node-fetch-native: 1.6.6
-      path-to-regexp: 6.3.0
-      pathe: 1.1.2
-      radix3: 1.1.2
-      resolve: 1.22.10
-      serve-placeholder: 2.0.2
-      serve-static: 1.16.2
-      ufo: 1.5.4
-      unctx: 2.4.1
-      unenv: 1.10.0
-      unstorage: 1.10.2(ioredis@5.4.2)
-      vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
-      zod: 3.24.1
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@deno/kv'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@netlify/blobs'
-      - '@planetscale/database'
-      - '@types/node'
-      - '@upstash/redis'
-      - '@vercel/blob'
-      - '@vercel/kv'
-      - aws4fetch
-      - better-sqlite3
-      - debug
-      - drizzle-orm
-      - encoding
-      - idb-keyval
-      - ioredis
-      - less
-      - lightningcss
-      - mysql2
-      - rolldown
-      - sass
-      - sass-embedded
-      - sqlite3
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - typescript
-      - uWebSockets.js
-      - uploadthing
-      - xml2js
 
   vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0):
     dependencies:
