@@ -9,11 +9,11 @@
   "dependencies": {
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "^1.0.11",
-    "@tailwindcss/postcss": "^4.0.5",
     "solid-js": "^1.9.2",
     "vinxi": "^0.4.3"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.5",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.5.1",
     "tailwindcss": "^4.0.5"
