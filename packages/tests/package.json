@@ -29,7 +29,7 @@
     "vitest": "3.0.5"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.13.10",
