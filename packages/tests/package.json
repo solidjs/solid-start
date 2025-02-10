@@ -1,16 +1,17 @@
 {
-  "name": "server-function-test",
+  "name": "tests",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start",
-    "vitest": "vitest run",
-    "test-watch": "vitest",
-    "test-ui": "vitest --ui",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "test": "pnpm run dev & cypress run"
+    "unit:ci": "vitest run",
+    "unit": "vitest",
+    "unit:ui": "vitest --ui",
+    "e2e:open": "cypress open",
+    "e2e:run": "cypress run",
+    "e2e": "pnpm run dev & cypress run"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
@@ -25,7 +26,7 @@
     "solid-js": "^1.9.4",
     "vinxi": "^0.5.3",
     "vite-plugin-solid": "^2.11.1",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.4"
   },
   "engines": {
     "node": ">=18"
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@cypress/code-coverage": "^3.13.10",
     "@types/lodash": "^4.17.14",
+    "@vitest/browser": "^3.0.4",
     "cypress": "^14.0.0",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-vite": "^1.6.0"
