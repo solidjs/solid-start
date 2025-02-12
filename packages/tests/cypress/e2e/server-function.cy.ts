@@ -7,6 +7,10 @@ describe("server-function", () => {
     cy.visit("/is-server-nested");
     cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
   });
+  it("should have isServer true in the server function - const", () => {
+    cy.visit("/is-server-const");
+    cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
+  });
   it("should have an id of type string in the server function meta - nested", () => {
     cy.visit("/server-function-meta-nested");
     cy.get("#server-fn-test").contains('{"serverFnWithMeta":"string"}');
