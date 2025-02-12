@@ -1,4 +1,5 @@
-name: Issue Close Require
+# CronJob
+name: ⏱️ Issue Close Require
 
 on:
   schedule:
