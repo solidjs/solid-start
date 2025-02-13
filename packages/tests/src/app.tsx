@@ -18,6 +18,9 @@ export default function App() {
               <a href="/is-server-nested">isserver (nested)</a>
             </li>
             <li>
+              <a href="/is-server-const">isserver (const)</a>
+            </li>
+            <li>
               <a href="/is-server-toplevel">isserver (toplevel)</a>
             </li>
             <li>
