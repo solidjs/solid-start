@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.1.1
+
+### Patch Changes
+
+- efd762e: Bump tanstack server functions plugin
+
 ## 1.1.0
 
 ### Minor Changes
