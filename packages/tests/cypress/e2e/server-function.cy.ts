@@ -44,4 +44,8 @@ describe("server-function", () => {
       .its("status")
       .should("eq", 404);
   });
+  it("should build when anon default export and server functions", () => {
+    cy.visit("is-server-with-anon-default-export");
+    cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
+  });
 });

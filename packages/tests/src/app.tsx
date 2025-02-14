@@ -38,6 +38,9 @@ export default function App() {
             <li>
               <a href="/treeshaking/side-effects">treeshaking (w/ side-effects)</a>
             </li>
+            <li>
+              <a href="/is-server-with-anon-default-export">is server with anon default export</a>
+            </li>
           </ul>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
