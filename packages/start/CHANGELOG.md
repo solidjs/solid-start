@@ -1,5 +1,13 @@
 # @solidjs/start
 
+## 1.1.1
+
+### Patch Changes
+
+- efd762e: Bump tanstack server functions plugin
+  This fixes `export const` in top-level `"use server"` files.
+  The bundler warning for top-level `"use server"` is still there, but still code-removal works.
+
 ## 1.1.0
 
 ### Minor Changes
