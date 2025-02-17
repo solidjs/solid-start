@@ -11,7 +11,14 @@ import {
 import { matchAPIRoute } from "../router/routes";
 import { getFetchEvent } from "./fetchEvent";
 import { createPageEvent } from "./pageEvent";
-import type { APIEvent, FetchEvent, HandlerOptions, PageEvent, ResponseStub } from "./types";
+import type {
+  APIEvent,
+  FetchEvent,
+  HandlerOptions,
+  HttpHandlerOptions,
+  PageEvent,
+  ResponseStub
+} from "./types";
 
 // according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages
 const validRedirectStatuses = new Set([301, 302, 303, 307, 308]);
@@ -28,11 +35,20 @@ export function getExpectedRedirectStatus(response: ResponseStub): number {
   return 302;
 }
 
+async function defaultHandlerTransform(event: APIEvent, handler: (event: APIEvent) => unknown) {
+  return await handler(event);
+}
+
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
   createPageEvent: (event: FetchEvent) => Promise<PageEvent>,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
+  pageHandlerOptions:
+    | HandlerOptions
+    | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
+  httpHandlerOptions: HttpHandlerOptions = {}
 ) {
+  const transformHandler = httpHandlerOptions.transformHandler ?? defaultHandlerTransform;
+
   return eventHandler({
     handler: (e: HTTPEvent) => {
       const event = getFetchEvent(e);
@@ -42,11 +58,12 @@ export function createBaseHandler(
         const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
         if (match) {
           const mod = await match.handler.import();
-          const fn = event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
+          const fn =
+            event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
           (event as APIEvent).params = match.params || {};
           // @ts-ignore
           sharedConfig.context = { event };
-          const res = await fn(event);
+          const res = await transformHandler(event as APIEvent, fn);
           if (res !== undefined) return res;
           if (event.request.method !== "GET") {
             throw new Error(
@@ -58,7 +75,9 @@ export function createBaseHandler(
         // render
         const context = await createPageEvent(event);
         const resolvedOptions =
-          typeof options == "function" ? await options(context) : { ...options };
+          typeof pageHandlerOptions == "function"
+            ? await pageHandlerOptions(context)
+            : { ...pageHandlerOptions };
         const mode = resolvedOptions.mode || "stream";
         // @ts-ignore
         if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
@@ -127,7 +146,7 @@ function handleStreamCompleteRedirect(context: PageEvent) {
 /**
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/create-handler
- */
+ */ 
 export function createHandler(
   fn: (context: PageEvent) => unknown,
   options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>)

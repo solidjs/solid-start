@@ -30,6 +30,10 @@ export type HandlerOptions = {
   onCompleteShell?: (options: { write: (v: any) => void }) => void;
 };
 
+export type HttpHandlerOptions = {
+  transformHandler?: (event: APIEvent, handler: (event: APIEvent) => unknown) => unknown,
+}
+
 export type ContextMatches = {
   originalPath: string;
   pattern: string;
