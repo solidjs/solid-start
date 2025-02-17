@@ -146,10 +146,11 @@ function handleStreamCompleteRedirect(context: PageEvent) {
 /**
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/create-handler
- */ 
+ */
 export function createHandler(
   fn: (context: PageEvent) => unknown,
-  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>)
+  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>),
+  httpOptions?: HttpHandlerOptions
 ) {
-  return createBaseHandler(fn, createPageEvent, options);
+  return createBaseHandler(fn, createPageEvent, options, httpOptions);
 }
