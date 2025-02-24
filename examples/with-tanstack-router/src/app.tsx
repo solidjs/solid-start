@@ -4,6 +4,7 @@ import { routeTree } from "./routeTree.gen";
 import "./app.css";
 
 const router = createRouter({
+  defaultErrorComponent: (err) => <div>{err.error.stack}</div>,
   routeTree,
   defaultPreload: "intent",
   defaultStaleTime: 5000,
