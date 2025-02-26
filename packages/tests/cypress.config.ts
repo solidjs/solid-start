@@ -15,7 +15,7 @@ export default defineConfig({
       // require("@cypress/code-coverage/task")(on, config);
       return config;
     },
-    baseUrl: "http://localhost:3000",
+    baseUrl: "http://127.0.0.1:3000",
     retries: {
       runMode: 2,
       openMode: 0,
