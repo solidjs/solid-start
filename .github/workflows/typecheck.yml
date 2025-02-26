@@ -46,14 +46,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v3
-        with:
-          # https://github.com/pnpm/pnpm/issues/8953
-          version: 9.15.3
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: ".nvmrc"
+          registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
 
       - name: Install dependencies
