@@ -150,13 +150,3 @@ export const signOutAction = action(async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 }, "signOutAction");
-
-/**
- * Create a brower-based client and get the user.
- * Suitable for conditional rendering based on user authentication.
- */
-export const getUser = query(async () => {
-  "use client";
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-}, "user");

@@ -9,7 +9,7 @@ export const route = {
 export default function ResetPassword() {
     const [searchParams] = useSearchParams<Message>();
     return (
-        <main class="text-center mx-auto text-gray-700 p-4">
+        <main class="text-center mx-auto text-gray-700 dark:text-gray-500 p-4">
             <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Reset Password</h1>
             <form action={resetPasswordAction} class="flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6 min-w-64 max-w-64 mx-auto" method="post">
                 <div>
@@ -36,7 +36,7 @@ export default function ResetPassword() {
                         placeholder="Confirm password"
                         required
                     />
-                    <button formAction={resetPasswordAction} type="submit">
+                    <button class="p-2  border border-gray-300 hover:bg-white/10" formAction={resetPasswordAction} type="submit">
                         Reset password
                     </button>
                     <FormMessage success={searchParams.success} error={searchParams.error} message={searchParams.message} />

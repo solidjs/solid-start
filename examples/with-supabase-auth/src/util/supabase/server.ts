@@ -9,10 +9,12 @@ export const createServerClient = (event: RequestEvent) => {
     {
       cookies: {
         getAll() {
+          // @ts-expect-error - `nativeEvent` is not defined in the type, but does exist.
           return Object.entries(parseCookies(event.nativeEvent)).map(([name, value]) => ({ name, value }));
         },
         setAll(cookiesToSet: { name: string, value: string }[]) {
           cookiesToSet.forEach(({ name, value }: { name: string, value: string }) => {
+            // @ts-expect-error - `nativeEvent` is not defined in the type, but does exist.
             setCookie(event.nativeEvent, name, value)
           });
         },

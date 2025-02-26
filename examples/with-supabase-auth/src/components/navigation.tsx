@@ -23,8 +23,6 @@ export function Navigation() {
         <li class={`border-b-2 ${active("/protected")} mx-1.5 sm:mx-6`}>
           <A href="/protected">Protected</A>
         </li>
-
-
         {session() ?
           <li class={`border-b-2 ${active("nonsense-route")} mx-1.5 sm:mx-6`}>
             <button onClick={() => signOut()}>Sign Out</button>

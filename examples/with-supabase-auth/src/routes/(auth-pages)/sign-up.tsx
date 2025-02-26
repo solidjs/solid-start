@@ -12,7 +12,7 @@ export default function Signup() {
     //     );
     // }
     return (
-        <main class="text-center mx-auto text-gray-700 p-4">
+        <main class="text-center mx-auto text-gray-700 dark:text-gray-500 p-4">
             <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Sign Up</h1>
             <form action={signUpAction} class="flex flex-col min-w-64 max-w-64 mx-auto" method="post">
                 <p class="text-sm text text-foreground">
@@ -33,7 +33,7 @@ export default function Signup() {
                         minLength={6}
                         required
                     />
-                    <button type="submit" formAction={signUpAction}>
+                    <button class="p-2  border border-gray-300 hover:bg-white/10" type="submit" formAction={signUpAction}>
                         Sign up
                     </button>
                     <FormMessage success={searchParams.success} error={searchParams.error} message={searchParams.message} />
