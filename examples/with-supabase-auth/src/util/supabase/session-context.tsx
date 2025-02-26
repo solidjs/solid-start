@@ -9,12 +9,10 @@ export function SupabaseSessionProvider(props: ParentProps) {
 
     createEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
-            console.log("Session from getSession", session)
             setSession(session)
         })
 
         supabase.auth.onAuthStateChange((_event, session) => {
-            console.log("Session from onAuthStateChange", session)
             setSession(session)
         })
     })

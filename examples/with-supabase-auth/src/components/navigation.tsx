@@ -1,5 +1,5 @@
 import { A, useAction, useLocation } from "@solidjs/router";
-import { signOutAction } from "~/util/supabase/client";
+import { signOutAction } from "~/util/supabase/actions";
 import { useSupabaseSession } from "~/util/supabase/session-context";
 
 export function Navigation() {
@@ -23,18 +23,21 @@ export function Navigation() {
         <li class={`border-b-2 ${active("/protected")} mx-1.5 sm:mx-6`}>
           <A href="/protected">Protected</A>
         </li>
-        <li class={`border-b-2 ${active("/sign-up")} mx-1.5 sm:mx-6`}>
-          <A href="/sign-up">Sign Up</A>
-        </li>
-        <li class={`border-b-2 ${active("/sign-in")} mx-1.5 sm:mx-6`}>
-          <A href="/sign-in">Sign In</A>
-        </li>
-        <li class={`border-b-2 ${active("nonsense-route")} mx-1.5 sm:mx-6`}>
-          <button onClick={() => signOut()}>Sign Out</button>
-        </li>
-        <li class={`border-b-2 ${active("nonsense-route")} mx-1.5 sm:mx-6`}>
-          {session() ? 'Logged In' : 'Not Logged In'}
-        </li>
+
+
+        {session() ?
+          <li class={`border-b-2 ${active("nonsense-route")} mx-1.5 sm:mx-6`}>
+            <button onClick={() => signOut()}>Sign Out</button>
+          </li> :
+          <>
+            <li class={`border-b-2 ${active("/sign-up")} mx-1.5 sm:mx-6`}>
+              <A href="/sign-up">Sign Up</A>
+            </li>
+            <li class={`border-b-2 ${active("/sign-in")} mx-1.5 sm:mx-6`}>
+              <A href="/sign-in">Sign In</A>
+            </li>
+          </>
+        }
       </ul>
     </nav>
   );

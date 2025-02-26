@@ -1,6 +1,5 @@
 import { action, CustomResponse, query, redirect } from "@solidjs/router";
-import { getRequestEvent } from "solid-js/web";
-import { createServerClient } from "~/util/supabase/server";
+import { supabase } from "~/util/supabase/client";
 
 /**
  * Redirects to a specified path with a message as a query parameter.
@@ -19,9 +18,7 @@ function encodedRedirect(
  * Suitable for protecting routes that require authentication.
  */
 export const getProtectedUser = query(async () => {
-  "use server";
-  const event = getRequestEvent()!
-  const supabase = createServerClient(event);
+  "use client";
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) throw new Error(error.message);
@@ -34,12 +31,10 @@ export const getProtectedUser = query(async () => {
 }, "protectedUser");
 
 export const signUpAction = action(async (formData: FormData) => {
-  "use server";
+  "use client";
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
-  const event = getRequestEvent()!
-  const supabase = createServerClient(event);
-  const origin = event.request.headers.get("origin");
+  const origin = window.location.origin;
 
   if (!email || !password) {
     return new Error("Email and password are required");
@@ -65,11 +60,9 @@ export const signUpAction = action(async (formData: FormData) => {
 }, "signUpAction");
 
 export const signInAction = action(async (formData: FormData) => {
-  "use server";
+  "use client";
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const event = getRequestEvent()!
-  const supabase = createServerClient(event);
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -84,11 +77,9 @@ export const signInAction = action(async (formData: FormData) => {
 }, "signInAction");
 
 export const forgotPasswordAction = action(async (formData: FormData) => {
-  "use server";
+  "use client";
   const email = formData.get("email")?.toString();
-  const event = getRequestEvent()!
-  const supabase = createServerClient(event);
-  const origin = event.request.headers.get("origin");
+  const origin = window.location.origin;
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
   if (!email) {
@@ -119,7 +110,7 @@ export const forgotPasswordAction = action(async (formData: FormData) => {
 }, "forgotPasswordAction");
 
 export const resetPasswordAction = action(async (formData: FormData) => {
-  "use server";
+  "use client";
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
 
@@ -139,8 +130,6 @@ export const resetPasswordAction = action(async (formData: FormData) => {
     );
   }
 
-  const event = getRequestEvent()!
-  const supabase = createServerClient(event);
   const { error } = await supabase.auth.updateUser({
     password: password,
   });
@@ -156,3 +145,18 @@ export const resetPasswordAction = action(async (formData: FormData) => {
   return encodedRedirect("success", "/protected", "Password updated");
 }, "resetPasswordAction");
 
+export const signOutAction = action(async () => {
+  "use client";
+  await supabase.auth.signOut();
+  return redirect("/sign-in");
+}, "signOutAction");
+
+/**
+ * Create a brower-based client and get the user.
+ * Suitable for conditional rendering based on user authentication.
+ */
+export const getUser = query(async () => {
+  "use client";
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
+}, "user");
