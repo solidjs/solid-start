@@ -7,6 +7,8 @@ export const createClient = () =>
     import.meta.env.VITE_SUPABASE_ANON_KEY!,
   );
 
+export const supabase = createClient();
+
 export const signOutAction = action(async () => {
   "use client";
   const supabase = createClient();

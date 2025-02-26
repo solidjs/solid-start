@@ -1,15 +1,10 @@
 import { A, useAction, useLocation } from "@solidjs/router";
-import { createResource, Suspense } from "solid-js";
-import { createClient, signOutAction } from "~/util/supabase/client";
+import { signOutAction } from "~/util/supabase/client";
+import { useSupabaseSession } from "~/util/supabase/session-context";
 
 export function Navigation() {
   const location = useLocation();
-  const [user] = createResource(async () => {
-    "use client";
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
-  });
+  const session = useSupabaseSession();
 
   const signOut = useAction(signOutAction);
 
@@ -34,13 +29,12 @@ export function Navigation() {
         <li class={`border-b-2 ${active("/sign-in")} mx-1.5 sm:mx-6`}>
           <A href="/sign-in">Sign In</A>
         </li>
-        <Suspense fallback={<li>Loading...</li>}>
-          {user() ? (
-            <li class={`border-b-2 ${active("nonsense-route")} mx-1.5 sm:mx-6`}>
-              <button onClick={() => signOut()}>Sign Out</button>
-            </li>
-          ) : null}
-        </Suspense>
+        <li class={`border-b-2 ${active("nonsense-route")} mx-1.5 sm:mx-6`}>
+          <button onClick={() => signOut()}>Sign Out</button>
+        </li>
+        <li class={`border-b-2 ${active("nonsense-route")} mx-1.5 sm:mx-6`}>
+          {session() ? 'Logged In' : 'Not Logged In'}
+        </li>
       </ul>
     </nav>
   );
