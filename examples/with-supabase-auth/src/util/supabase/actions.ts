@@ -18,7 +18,7 @@ function encodedRedirect(
  * Suitable for protecting routes that require authentication.
  */
 export const getProtectedUser = query(async () => {
-  "use client";
+
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) throw new Error(error.message);
@@ -31,7 +31,7 @@ export const getProtectedUser = query(async () => {
 }, "protectedUser");
 
 export const signUpAction = action(async (formData: FormData) => {
-  "use client";
+
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
   const origin = window.location.origin;
@@ -60,7 +60,7 @@ export const signUpAction = action(async (formData: FormData) => {
 }, "signUpAction");
 
 export const signInAction = action(async (formData: FormData) => {
-  "use client";
+
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -77,7 +77,7 @@ export const signInAction = action(async (formData: FormData) => {
 }, "signInAction");
 
 export const forgotPasswordAction = action(async (formData: FormData) => {
-  "use client";
+
   const email = formData.get("email")?.toString();
   const origin = window.location.origin;
   const callbackUrl = formData.get("callbackUrl")?.toString();
@@ -110,7 +110,7 @@ export const forgotPasswordAction = action(async (formData: FormData) => {
 }, "forgotPasswordAction");
 
 export const resetPasswordAction = action(async (formData: FormData) => {
-  "use client";
+
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
 
@@ -146,7 +146,7 @@ export const resetPasswordAction = action(async (formData: FormData) => {
 }, "resetPasswordAction");
 
 export const signOutAction = action(async () => {
-  "use client";
+
   await supabase.auth.signOut();
   return redirect("/sign-in");
 }, "signOutAction");
