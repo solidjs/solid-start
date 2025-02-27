@@ -1,17 +1,5 @@
-import { action, CustomResponse, query, redirect } from "@solidjs/router";
+import { action, query, redirect } from "@solidjs/router";
 import { supabase } from "~/util/supabase/client";
-
-/**
- * Redirects to a specified path with a message as a query parameter.
- * Used by the auth actions to redirect with a message, consumed in 'form-message.tsx'.
- */
-function encodedRedirect(
-  type: "error" | "success" | "message",
-  path: string,
-  message: string,
-): CustomResponse<never> {
-  return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
-}
 
 /**
  * Get the user and redirect to the login page if the user is not found.
@@ -49,13 +37,9 @@ export const signUpAction = action(async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect("error", "/sign-up", error.message);
+    return new Error(error.message);
   } else {
-    return encodedRedirect(
-      "success",
-      "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
-    );
+    return "Thanks for signing up! Please check your email for a verification link."
   }
 }, "signUpAction");
 
@@ -70,20 +54,19 @@ export const signInAction = action(async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect("error", "/sign-in", error.message);
+    return new Error(error.message);
   }
 
   return redirect("/protected");
 }, "signInAction");
 
 export const forgotPasswordAction = action(async (formData: FormData) => {
-
   const email = formData.get("email")?.toString();
   const origin = window.location.origin;
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
   if (!email) {
-    return encodedRedirect("error", "/forgot-password", "Email is required");
+    return new Error("Email is required");
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -91,22 +74,14 @@ export const forgotPasswordAction = action(async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect(
-      "error",
-      "/forgot-password",
-      "Could not reset password",
-    );
+    return new Error("Could not reset password.")
   }
 
   if (callbackUrl) {
     return redirect(callbackUrl);
   }
 
-  return encodedRedirect(
-    "success",
-    "/forgot-password",
-    "Check your email for a link to reset your password.",
-  );
+  return "Check your email for a link to reset your password.";
 }, "forgotPasswordAction");
 
 export const resetPasswordAction = action(async (formData: FormData) => {
@@ -115,19 +90,11 @@ export const resetPasswordAction = action(async (formData: FormData) => {
   const confirmPassword = formData.get("confirmPassword") as string;
 
   if (!password || !confirmPassword) {
-    return encodedRedirect(
-      "error",
-      "/reset-password",
-      "Password and confirm password are required",
-    );
+    return new Error("Password and confirm password are required");
   }
 
   if (password !== confirmPassword) {
-    return encodedRedirect(
-      "error",
-      "/reset-password",
-      "Passwords do not match",
-    );
+    return new Error("Passwords do not match");
   }
 
   const { error } = await supabase.auth.updateUser({
@@ -135,18 +102,13 @@ export const resetPasswordAction = action(async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect(
-      "error",
-      "/reset-password",
-      "Password update failed",
-    );
+    return new Error(error.message);
   }
 
-  return encodedRedirect("success", "/protected", "Password updated");
+  return redirect("/protected");
 }, "resetPasswordAction");
 
 export const signOutAction = action(async () => {
-
   await supabase.auth.signOut();
   return redirect("/sign-in");
 }, "signOutAction");

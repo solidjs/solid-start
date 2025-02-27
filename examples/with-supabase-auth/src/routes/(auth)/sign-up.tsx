@@ -1,16 +1,9 @@
-import { A, useSearchParams } from "@solidjs/router";
-import { FormMessage, Message } from "~/components/form-message";
+import { A, useSubmission } from "@solidjs/router";
+import { Show } from "solid-js";
 import { signUpAction } from "~/util/supabase/actions";
 
 export default function Signup() {
-    const [searchParams] = useSearchParams<Message>();
-    // if (searchParams && "message" in searchParams) {
-    //     return (
-    //         <div class="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
-    //             <FormMessage message={searchParams} />
-    //         </div>
-    //     );
-    // }
+    const signUp = useSubmission(signUpAction);
     return (
         <main class="text-center mx-auto text-gray-700 dark:text-gray-500 p-4">
             <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Sign Up</h1>
@@ -36,7 +29,14 @@ export default function Signup() {
                     <button class="p-2  border border-gray-300 hover:bg-white/10" type="submit" formAction={signUpAction}>
                         Sign up
                     </button>
-                    <FormMessage success={searchParams.success} error={searchParams.error} message={searchParams.message} />
+                    <Show when={signUp.result}>
+                        {result => {
+                            const submission = result();
+                            return typeof submission === 'string' ?
+                                <p class="w-full border p-2 mt-2 rounded-md border-green-600 text-green-600">{submission}</p> :
+                                <p class="w-full border p-2 mt-2 rounded-md border-red-600 text-red-600">{submission.message}</p>
+                        }}
+                    </Show>
                 </div>
             </form>
         </main>

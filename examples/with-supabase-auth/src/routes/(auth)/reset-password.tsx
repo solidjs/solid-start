@@ -1,5 +1,5 @@
-import { type RouteDefinition, useSearchParams } from "@solidjs/router";
-import { FormMessage, Message } from "~/components/form-message";
+import { type RouteDefinition, useSubmission } from "@solidjs/router";
+import { Show } from "solid-js";
 import { getProtectedUser, resetPasswordAction } from "~/util/supabase/actions";
 
 export const route = {
@@ -7,7 +7,7 @@ export const route = {
 } satisfies RouteDefinition;
 
 export default function ResetPassword() {
-    const [searchParams] = useSearchParams<Message>();
+    const resetPassword = useSubmission(resetPasswordAction);
     return (
         <main class="text-center mx-auto text-gray-700 dark:text-gray-500 p-4">
             <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Reset Password</h1>
@@ -39,7 +39,9 @@ export default function ResetPassword() {
                     <button class="p-2  border border-gray-300 hover:bg-white/10" formAction={resetPasswordAction} type="submit">
                         Reset password
                     </button>
-                    <FormMessage success={searchParams.success} error={searchParams.error} message={searchParams.message} />
+                    <Show when={resetPassword.result}>
+                        {result => <p class="w-full border p-2 mt-2 rounded-md border-red-600 text-red-600">{result().message}</p>}
+                    </Show>
                 </div>
             </form>
         </main>
