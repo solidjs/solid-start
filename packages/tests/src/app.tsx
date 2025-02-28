@@ -12,7 +12,10 @@ export default function App() {
           <Title>SolidStart - Basic</Title>
           <ul>
             <li>
-              <a href="/">Client</a>
+              <a href="/">Basic</a>
+            </li>
+            <li>
+              <a href="/client-only">Client-Only</a>
             </li>
             <li>
               <a href="/is-server-nested">isserver (nested)</a>

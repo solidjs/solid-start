@@ -12,10 +12,10 @@ importers:
     dependencies:
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -24,34 +24,16 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.9.4)
+        version: 0.29.4(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
-      vinxi:
-        specifier: ^0.5.3
-        version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
-
-  basic-tanstack-router:
-    dependencies:
-      '@solidjs/start':
-        specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
-      '@tanstack/router-plugin':
-        specifier: ^1.108.0
-        version: 1.109.0(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
-      '@tanstack/solid-router':
-        specifier: ^1.108.0
-        version: 1.108.0(solid-js@1.9.4)
-      solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -60,16 +42,16 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.9.4)
+        version: 0.29.4(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -78,13 +60,13 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -93,10 +75,10 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -104,8 +86,8 @@ importers:
         specifier: ^12.0.1
         version: 12.0.2
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.2)
@@ -117,13 +99,13 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.2)
@@ -135,13 +117,13 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.4.2)
@@ -160,16 +142,16 @@ importers:
         version: 0.37.0
       '@solid-mediakit/auth':
         specifier: ^3.1.2
-        version: 3.1.2(g6ycmgrhaw6arz7xc75qft7ope)
+        version: 3.1.2(qfqc2m2jriwu4g6gmlnbujbge4)
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.9.4)
+        version: 0.29.4(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.1
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.20(postcss@8.5.1)
@@ -177,8 +159,8 @@ importers:
         specifier: ^8.4.40
         version: 8.5.1
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       tailwindcss:
         specifier: ^3.4.7
         version: 3.4.17
@@ -212,10 +194,10 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       better-sqlite3:
         specifier: ^11.0.0
         version: 11.8.1
@@ -223,8 +205,8 @@ importers:
         specifier: ^0.31.2
         version: 0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -246,19 +228,19 @@ importers:
         version: 2.3.0
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       '@vinxi/plugin-mdx':
         specifier: ^3.7.1
         version: 3.7.2(@mdx-js/mdx@2.3.0)
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       solid-mdx:
         specifier: ^0.0.7
-        version: 0.0.7(solid-js@1.9.4)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 0.0.7(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -270,16 +252,16 @@ importers:
         version: 5.22.0(prisma@5.22.0)
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       prisma:
         specifier: ^5.12.1
         version: 5.22.0
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -292,22 +274,22 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.9.4)
+        version: 0.29.4(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       solid-styled:
         specifier: ^0.12.0
-        version: 0.12.0(solid-js@1.9.4)
+        version: 0.12.0(solid-js@1.9.5)
       unplugin-solid-styled:
         specifier: ^0.12.0
-        version: 0.12.0(rollup@4.34.2)(solid-styled@0.12.0(solid-js@1.9.4))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 0.12.0(rollup@4.34.2)(solid-styled@0.12.0(solid-js@1.9.5))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -316,41 +298,53 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
     devDependencies:
-      '@tailwindcss/postcss':
-        specifier: ^4.0.5
-        version: 4.0.5
-      autoprefixer:
-        specifier: ^10.4.19
-        version: 10.4.20(postcss@8.5.1)
-      postcss:
-        specifier: ^8.5.1
-        version: 8.5.1
+      '@tailwindcss/vite':
+        specifier: ^4.0.7
+        version: 4.0.7(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       tailwindcss:
-        specifier: ^4.0.5
-        version: 4.0.5
+        specifier: ^4.0.7
+        version: 4.0.7
+
+  with-tanstack-router:
+    dependencies:
+      '@solidjs/start':
+        specifier: ^1.1.0
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+      '@tanstack/router-plugin':
+        specifier: ^1.108.0
+        version: 1.109.0(vite-plugin-solid@2.11.6(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+      '@tanstack/solid-router':
+        specifier: ^1.108.0
+        version: 1.108.0(solid-js@1.9.5)
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.5
+      vinxi:
+        specifier: ^0.5.3
+        version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
 
   with-trpc:
     dependencies:
       '@solidjs/meta':
         specifier: ^0.29.4
-        version: 0.29.4(solid-js@1.9.4)
+        version: 0.29.4(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       '@trpc/client':
         specifier: ^10.45.2
         version: 10.45.2(@trpc/server@10.45.2)
@@ -361,8 +355,8 @@ importers:
         specifier: ^0.13.4
         version: 0.13.5(valibot@0.29.0)
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       valibot:
         specifier: ^0.29.0
         version: 0.29.0
@@ -374,16 +368,16 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.4)
+        version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       '@unocss/reset':
         specifier: ^0.65.1
         version: 0.65.4
       solid-js:
-        specifier: ^1.9.2
-        version: 1.9.4
+        specifier: ^1.9.5
+        version: 1.9.5
       unocss:
         specifier: ^0.65.1
         version: 0.65.4(postcss@8.5.1)(rollup@4.34.2)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3))
@@ -401,7 +395,7 @@ importers:
         version: 0.15.3(solid-js@1.9.4)
       '@solidjs/start':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
+        version: 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       '@solidjs/testing-library':
         specifier: ^0.8.10
         version: 0.8.10(@solidjs/router@0.15.3(solid-js@1.9.4))(solid-js@1.9.4)
@@ -426,15 +420,12 @@ importers:
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
-      vite:
-        specifier: ^5.4.10
-        version: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
       vite-plugin-solid:
-        specifier: ^2.11.1
-        version: 2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
+        specifier: ^2.11.6
+        version: 2.11.6(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       vitest:
         specifier: 3.0.5
-        version: 3.0.5(@types/debug@4.1.12)(@types/node@20.17.17)(@vitest/ui@3.0.5)(jsdom@25.0.1)(lightningcss@1.29.1)(terser@5.37.0)
+        version: 3.0.5(@types/debug@4.1.12)(@types/node@20.17.17)(@vitest/ui@3.0.5)(jiti@2.4.2)(jsdom@25.0.1)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
 
 packages:
 
@@ -657,12 +648,6 @@ packages:
     cpu: [ppc64]
     os: [aix]
 
-  '@esbuild/aix-ppc64@0.21.5':
-    resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
-    engines: {node: '>=12'}
-    cpu: [ppc64]
-    os: [aix]
-
   '@esbuild/aix-ppc64@0.23.1':
     resolution: {integrity: sha512-6VhYk1diRqrhBAqpJEdjASR/+WVRtfjpqKuNw11cLiaWpAT/Uu+nokB+UJnevzy/P9C/ty6AOe0dwueMrGh/iQ==}
     engines: {node: '>=18'}
@@ -695,12 +680,6 @@ packages:
 
   '@esbuild/android-arm64@0.20.2':
     resolution: {integrity: sha512-mRzjLacRtl/tWU0SvD8lUEwb61yP9cqQo6noDZP/O8VkwafSYwZ4yWy24kan8jE/IMERpYncRt2dw438LP3Xmg==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [android]
-
-  '@esbuild/android-arm64@0.21.5':
-    resolution: {integrity: sha512-c0uX9VAUBQ7dTDCjq+wdyGLowMdtR/GoC2U5IYk/7D1H1JYC0qseD7+11iMP2mRLN9RcCMRcjC4YMclCzGwS/A==}
     engines: {node: '>=12'}
     cpu: [arm64]
     os: [android]
@@ -741,12 +720,6 @@ packages:
     cpu: [arm]
     os: [android]
 
-  '@esbuild/android-arm@0.21.5':
-    resolution: {integrity: sha512-vCPvzSjpPHEi1siZdlvAlsPxXl7WbOVUBBAowWug4rJHb68Ox8KualB+1ocNvT5fjv6wpkX6o/iEpbDrf68zcg==}
-    engines: {node: '>=12'}
-    cpu: [arm]
-    os: [android]
-
   '@esbuild/android-arm@0.23.1':
     resolution: {integrity: sha512-uz6/tEy2IFm9RYOyvKl88zdzZfwEfKZmnX9Cj1BHjeSGNuGLuMD1kR8y5bteYmwqKm1tj8m4cb/aKEorr6fHWQ==}
     engines: {node: '>=18'}
@@ -779,12 +752,6 @@ packages:
 
   '@esbuild/android-x64@0.20.2':
     resolution: {integrity: sha512-btzExgV+/lMGDDa194CcUQm53ncxzeBrWJcncOBxuC6ndBkKxnHdFJn86mCIgTELsooUmwUm9FkhSp5HYu00Rg==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [android]
-
-  '@esbuild/android-x64@0.21.5':
-    resolution: {integrity: sha512-D7aPRUUNHRBwHxzxRvp856rjUHRFW1SdQATKXH2hqA0kAZb1hKmi02OpYRacl0TxIGz/ZmXWlbZgjwWYaCakTA==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [android]
@@ -825,12 +792,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@esbuild/darwin-arm64@0.21.5':
-    resolution: {integrity: sha512-DwqXqZyuk5AiWWf3UfLiRDJ5EDd49zg6O9wclZ7kUMv2WRFr4HKjXp/5t8JZ11QbQfUS6/cRCKGwYhtNAY88kQ==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [darwin]
-
   '@esbuild/darwin-arm64@0.23.1':
     resolution: {integrity: sha512-YsS2e3Wtgnw7Wq53XXBLcV6JhRsEq8hkfg91ESVadIrzr9wO6jJDMZnCQbHm1Guc5t/CdDiFSSfWP58FNuvT3Q==}
     engines: {node: '>=18'}
@@ -863,12 +824,6 @@ packages:
 
   '@esbuild/darwin-x64@0.20.2':
     resolution: {integrity: sha512-tBcXp9KNphnNH0dfhv8KYkZhjc+H3XBkF5DKtswJblV7KlT9EI2+jeA8DgBjp908WEuYll6pF+UStUCfEpdysA==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [darwin]
-
-  '@esbuild/darwin-x64@0.21.5':
-    resolution: {integrity: sha512-se/JjF8NlmKVG4kNIuyWMV/22ZaerB+qaSi5MdrXtd6R08kvs2qCN4C09miupktDitvh8jRFflwGFBQcxZRjbw==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [darwin]
@@ -909,12 +864,6 @@ packages:
     cpu: [arm64]
     os: [freebsd]
 
-  '@esbuild/freebsd-arm64@0.21.5':
-    resolution: {integrity: sha512-5JcRxxRDUJLX8JXp/wcBCy3pENnCgBR9bN6JsY4OmhfUtIHe3ZW0mawA7+RDAcMLrMIZaf03NlQiX9DGyB8h4g==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [freebsd]
-
   '@esbuild/freebsd-arm64@0.23.1':
     resolution: {integrity: sha512-h1k6yS8/pN/NHlMl5+v4XPfikhJulk4G+tKGFIOwURBSFzE8bixw1ebjluLOjfwtLqY0kewfjLSrO6tN2MgIhA==}
     engines: {node: '>=18'}
@@ -947,12 +896,6 @@ packages:
 
   '@esbuild/freebsd-x64@0.20.2':
     resolution: {integrity: sha512-d+DipyvHRuqEeM5zDivKV1KuXn9WeRX6vqSqIDgwIfPQtwMP4jaDsQsDncjTDDsExT4lR/91OLjRo8bmC1e+Cw==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [freebsd]
-
-  '@esbuild/freebsd-x64@0.21.5':
-    resolution: {integrity: sha512-J95kNBj1zkbMXtHVH29bBriQygMXqoVQOQYA+ISs0/2l3T9/kj42ow2mpqerRBxDJnmkUDCaQT/dfNXWX/ZZCQ==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [freebsd]
@@ -993,12 +936,6 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@esbuild/linux-arm64@0.21.5':
-    resolution: {integrity: sha512-ibKvmyYzKsBeX8d8I7MH/TMfWDXBF3db4qM6sy+7re0YXya+K1cem3on9XgdT2EQGMu4hQyZhan7TeQ8XkGp4Q==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [linux]
-
   '@esbuild/linux-arm64@0.23.1':
     resolution: {integrity: sha512-/93bf2yxencYDnItMYV/v116zff6UyTjo4EtEQjUBeGiVpMmffDNUyD9UN2zV+V3LRV3/on4xdZ26NKzn6754g==}
     engines: {node: '>=18'}
@@ -1031,12 +968,6 @@ packages:
 
   '@esbuild/linux-arm@0.20.2':
     resolution: {integrity: sha512-VhLPeR8HTMPccbuWWcEUD1Az68TqaTYyj6nfE4QByZIQEQVWBB8vup8PpR7y1QHL3CpcF6xd5WVBU/+SBEvGTg==}
-    engines: {node: '>=12'}
-    cpu: [arm]
-    os: [linux]
-
-  '@esbuild/linux-arm@0.21.5':
-    resolution: {integrity: sha512-bPb5AHZtbeNGjCKVZ9UGqGwo8EUu4cLq68E95A53KlxAPRmUyYv2D6F0uUI65XisGOL1hBP5mTronbgo+0bFcA==}
     engines: {node: '>=12'}
     cpu: [arm]
     os: [linux]
@@ -1077,12 +1008,6 @@ packages:
     cpu: [ia32]
     os: [linux]
 
-  '@esbuild/linux-ia32@0.21.5':
-    resolution: {integrity: sha512-YvjXDqLRqPDl2dvRODYmmhz4rPeVKYvppfGYKSNGdyZkA01046pLWyRKKI3ax8fbJoK5QbxblURkwK/MWY18Tg==}
-    engines: {node: '>=12'}
-    cpu: [ia32]
-    os: [linux]
-
   '@esbuild/linux-ia32@0.23.1':
     resolution: {integrity: sha512-VTN4EuOHwXEkXzX5nTvVY4s7E/Krz7COC8xkftbbKRYAl96vPiUssGkeMELQMOnLOJ8k3BY1+ZY52tttZnHcXQ==}
     engines: {node: '>=18'}
@@ -1115,12 +1040,6 @@ packages:
 
   '@esbuild/linux-loong64@0.20.2':
     resolution: {integrity: sha512-PR7sp6R/UC4CFVomVINKJ80pMFlfDfMQMYynX7t1tNTeivQ6XdX5r2XovMmha/VjR1YN/HgHWsVcTRIMkymrgQ==}
-    engines: {node: '>=12'}
-    cpu: [loong64]
-    os: [linux]
-
-  '@esbuild/linux-loong64@0.21.5':
-    resolution: {integrity: sha512-uHf1BmMG8qEvzdrzAqg2SIG/02+4/DHB6a9Kbya0XDvwDEKCoC8ZRWI5JJvNdUjtciBGFQ5PuBlpEOXQj+JQSg==}
     engines: {node: '>=12'}
     cpu: [loong64]
     os: [linux]
@@ -1161,12 +1080,6 @@ packages:
     cpu: [mips64el]
     os: [linux]
 
-  '@esbuild/linux-mips64el@0.21.5':
-    resolution: {integrity: sha512-IajOmO+KJK23bj52dFSNCMsz1QP1DqM6cwLUv3W1QwyxkyIWecfafnI555fvSGqEKwjMXVLokcV5ygHW5b3Jbg==}
-    engines: {node: '>=12'}
-    cpu: [mips64el]
-    os: [linux]
-
   '@esbuild/linux-mips64el@0.23.1':
     resolution: {integrity: sha512-nrFzzMQ7W4WRLNUOU5dlWAqa6yVeI0P78WKGUo7lg2HShq/yx+UYkeNSE0SSfSure0SqgnsxPvmAUu/vu0E+3Q==}
     engines: {node: '>=18'}
@@ -1199,12 +1112,6 @@ packages:
 
   '@esbuild/linux-ppc64@0.20.2':
     resolution: {integrity: sha512-rD3KsaDprDcfajSKdn25ooz5J5/fWBylaaXkuotBDGnMnDP1Uv5DLAN/45qfnf3JDYyJv/ytGHQaziHUdyzaAg==}
-    engines: {node: '>=12'}
-    cpu: [ppc64]
-    os: [linux]
-
-  '@esbuild/linux-ppc64@0.21.5':
-    resolution: {integrity: sha512-1hHV/Z4OEfMwpLO8rp7CvlhBDnjsC3CttJXIhBi+5Aj5r+MBvy4egg7wCbe//hSsT+RvDAG7s81tAvpL2XAE4w==}
     engines: {node: '>=12'}
     cpu: [ppc64]
     os: [linux]
@@ -1245,12 +1152,6 @@ packages:
     cpu: [riscv64]
     os: [linux]
 
-  '@esbuild/linux-riscv64@0.21.5':
-    resolution: {integrity: sha512-2HdXDMd9GMgTGrPWnJzP2ALSokE/0O5HhTUvWIbD3YdjME8JwvSCnNGBnTThKGEB91OZhzrJ4qIIxk/SBmyDDA==}
-    engines: {node: '>=12'}
-    cpu: [riscv64]
-    os: [linux]
-
   '@esbuild/linux-riscv64@0.23.1':
     resolution: {integrity: sha512-5AV4Pzp80fhHL83JM6LoA6pTQVWgB1HovMBsLQ9OZWLDqVY8MVobBXNSmAJi//Csh6tcY7e7Lny2Hg1tElMjIA==}
     engines: {node: '>=18'}
@@ -1287,12 +1188,6 @@ packages:
     cpu: [s390x]
     os: [linux]
 
-  '@esbuild/linux-s390x@0.21.5':
-    resolution: {integrity: sha512-zus5sxzqBJD3eXxwvjN1yQkRepANgxE9lgOW2qLnmr8ikMTphkjgXu1HR01K4FJg8h1kEEDAqDcZQtbrRnB41A==}
-    engines: {node: '>=12'}
-    cpu: [s390x]
-    os: [linux]
-
   '@esbuild/linux-s390x@0.23.1':
     resolution: {integrity: sha512-9ygs73tuFCe6f6m/Tb+9LtYxWR4c9yg7zjt2cYkjDbDpV/xVn+68cQxMXCjUpYwEkze2RcU/rMnfIXNRFmSoDw==}
     engines: {node: '>=18'}
@@ -1325,12 +1220,6 @@ packages:
 
   '@esbuild/linux-x64@0.20.2':
     resolution: {integrity: sha512-1MdwI6OOTsfQfek8sLwgyjOXAu+wKhLEoaOLTjbijk6E2WONYpH9ZU2mNtR+lZ2B4uwr+usqGuVfFT9tMtGvGw==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [linux]
-
-  '@esbuild/linux-x64@0.21.5':
-    resolution: {integrity: sha512-1rYdTpyv03iycF1+BhzrzQJCdOuAOtaqHTWJZCWvijKD2N5Xu0TtVC8/+1faWqcP9iBCWOmjmhoH94dH82BxPQ==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [linux]
@@ -1373,12 +1262,6 @@ packages:
 
   '@esbuild/netbsd-x64@0.20.2':
     resolution: {integrity: sha512-K8/DhBxcVQkzYc43yJXDSyjlFeHQJBiowJ0uVL6Tor3jGQfSGHNNJcWxNbOI8v5k82prYqzPuwkzHt3J1T1iZQ==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [netbsd]
-
-  '@esbuild/netbsd-x64@0.21.5':
-    resolution: {integrity: sha512-Woi2MXzXjMULccIwMnLciyZH4nCIMpWQAs049KEeMvOcNADVxo0UBIQPfSmxB3CWKedngg7sWZdLvLczpe0tLg==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [netbsd]
@@ -1431,12 +1314,6 @@ packages:
     cpu: [x64]
     os: [openbsd]
 
-  '@esbuild/openbsd-x64@0.21.5':
-    resolution: {integrity: sha512-HLNNw99xsvx12lFBUwoT8EVCsSvRNDVxNpjZ7bPn947b8gJPzeHWyNVhFsaerc0n3TsbOINvRP2byTZ5LKezow==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [openbsd]
-
   '@esbuild/openbsd-x64@0.23.1':
     resolution: {integrity: sha512-aY2gMmKmPhxfU+0EdnN+XNtGbjfQgwZj43k8G3fyrDM/UdZww6xrWxmDkuz2eCZchqVeABjV5BpildOrUbBTqA==}
     engines: {node: '>=18'}
@@ -1469,12 +1346,6 @@ packages:
 
   '@esbuild/sunos-x64@0.20.2':
     resolution: {integrity: sha512-2UyFtRC6cXLyejf/YEld4Hajo7UHILetzE1vsRcGL3earZEW77JxrFjH4Ez2qaTiEfMgAXxfAZCm1fvM/G/o8w==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [sunos]
-
-  '@esbuild/sunos-x64@0.21.5':
-    resolution: {integrity: sha512-6+gjmFpfy0BHU5Tpptkuh8+uw3mnrvgs+dSPQXQOv3ekbordwnzTVEb4qnIvQcYXq6gzkyTnoZ9dZG+D4garKg==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [sunos]
@@ -1515,12 +1386,6 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@esbuild/win32-arm64@0.21.5':
-    resolution: {integrity: sha512-Z0gOTd75VvXqyq7nsl93zwahcTROgqvuAcYDUr+vOv8uHhNSKROyU961kgtCD1e95IqPKSQKH7tBTslnS3tA8A==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [win32]
-
   '@esbuild/win32-arm64@0.23.1':
     resolution: {integrity: sha512-4O+gPR5rEBe2FpKOVyiJ7wNDPA8nGzDuJ6gN4okSA1gEOYZ67N8JPk58tkWtdtPeLz7lBnY6I5L3jdsr3S+A6A==}
     engines: {node: '>=18'}
@@ -1557,12 +1422,6 @@ packages:
     cpu: [ia32]
     os: [win32]
 
-  '@esbuild/win32-ia32@0.21.5':
-    resolution: {integrity: sha512-SWXFF1CL2RVNMaVs+BBClwtfZSvDgtL//G/smwAc5oVK/UPu2Gu9tIaRgFmYFFKrmg3SyAjSrElf0TiJ1v8fYA==}
-    engines: {node: '>=12'}
-    cpu: [ia32]
-    os: [win32]
-
   '@esbuild/win32-ia32@0.23.1':
     resolution: {integrity: sha512-BcaL0Vn6QwCwre3Y717nVHZbAa4UBEigzFm6VdsVdT/MbZ38xoj1X9HPkZhbmaBGUD1W8vxAfffbDe8bA6AKnQ==}
     engines: {node: '>=18'}
@@ -1595,12 +1454,6 @@ packages:
 
   '@esbuild/win32-x64@0.20.2':
     resolution: {integrity: sha512-N49X4lJX27+l9jbLKSqZ6bKNjzQvHaT8IIFUy+YIqmXQdjYCToGWwOItDrfby14c78aDd5NHQl29xingXfCdLQ==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [win32]
-
-  '@esbuild/win32-x64@0.21.5':
-    resolution: {integrity: sha512-tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw==}
     engines: {node: '>=12'}
     cpu: [x64]
     os: [win32]
@@ -2175,81 +2028,83 @@ packages:
       '@solidjs/router':
         optional: true
 
-  '@tailwindcss/node@4.0.5':
-    resolution: {integrity: sha512-ffTz4DX1cgr4XPuqjhm32YV6Lyx58R1CxAAnSFTamg6wXwfk3oWdb6exgAbGesPzvUgicTO0gwUdQGSsg4nNog==}
+  '@tailwindcss/node@4.0.7':
+    resolution: {integrity: sha512-dkFXufkbRB2mu3FPsW5xLAUWJyexpJA+/VtQj18k3SUiJVLdpgzBd1v1gRRcIpEJj7K5KpxBKfOXlZxT3ZZRuA==}
 
-  '@tailwindcss/oxide-android-arm64@4.0.5':
-    resolution: {integrity: sha512-kK/ik8aIAKWDIEYDZGUCJcnU1qU5sPoMBlVzPvtsUqiV6cSHcnVRUdkcLwKqTeUowzZtjjRiamELLd9Gb0x5BQ==}
+  '@tailwindcss/oxide-android-arm64@4.0.7':
+    resolution: {integrity: sha512-5iQXXcAeOHBZy8ASfHFm1k0O/9wR2E3tKh6+P+ilZZbQiMgu+qrnfpBWYPc3FPuQdWiWb73069WT5D+CAfx/tg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [android]
 
-  '@tailwindcss/oxide-darwin-arm64@4.0.5':
-    resolution: {integrity: sha512-vkbXFv0FfAEbrSa5NBjFEE+xi06ha7mxuxjY8LRn7d7/tBGrAZOEJnnsEbB6M1+x2pGRTjjei0XyTIXdVCglJA==}
+  '@tailwindcss/oxide-darwin-arm64@4.0.7':
+    resolution: {integrity: sha512-7yGZtEc5IgVYylqK/2B0yVqoofk4UAbkn1ygNpIJZyrOhbymsfr8uUFCueTu2fUxmAYIfMZ8waWo2dLg/NgLgg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@tailwindcss/oxide-darwin-x64@4.0.5':
-    resolution: {integrity: sha512-PedA64rHBXEa4e6abBWE4Yj4gHulfPb5T+rBNnX+WGkjjge5Txa2oS99TLmJ5BPDkXXqz/Ba7oweWIDDG7i5NQ==}
+  '@tailwindcss/oxide-darwin-x64@4.0.7':
+    resolution: {integrity: sha512-tPQDV20fBjb26yWbPqT1ZSoDChomMCiXTKn4jupMSoMCFyU7+OJvIY1ryjqBuY622dEBJ8LnCDDWsnj1lX9nNQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@tailwindcss/oxide-freebsd-x64@4.0.5':
-    resolution: {integrity: sha512-silz3nuZdEYDfic3v/ooVUQChj9hbxDSee43GCQNwr/iD9L4K/JsZtoNqr0w69pUkvWcKINOGOG0r7WqUqkAeg==}
+  '@tailwindcss/oxide-freebsd-x64@4.0.7':
+    resolution: {integrity: sha512-sZqJpTyTZiknU9LLHuByg5GKTW+u3FqM7q7myequAXxKOpAFiOfXpY710FuMY+gjzSapyRbDXJlsTQtCyiTo5w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [freebsd]
 
-  '@tailwindcss/oxide-linux-arm-gnueabihf@4.0.5':
-    resolution: {integrity: sha512-ElneG75XS64B9I2G83A/Hc7EtNVOD5xahs7avq0aeW7mEX6CtMc8m8RCXMn3jGhz8enFE52l6QU0wO7iVkEtXQ==}
+  '@tailwindcss/oxide-linux-arm-gnueabihf@4.0.7':
+    resolution: {integrity: sha512-PBgvULgeSswjd8cbZ91gdIcIDMdc3TUHV5XemEpxlqt9M8KoydJzkuB/Dt910jYdofOIaTWRL6adG9nJICvU4A==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
 
-  '@tailwindcss/oxide-linux-arm64-gnu@4.0.5':
-    resolution: {integrity: sha512-8yoXpWTeIFaByUaKy2qRAppznLVaDHP9xYCAbS3FG7+uUwHi8CHE4TcomM7eyamo0U7dbUIDgKMGoAX5s2iVrA==}
+  '@tailwindcss/oxide-linux-arm64-gnu@4.0.7':
+    resolution: {integrity: sha512-By/a2yeh+e9b+C67F88ndSwVJl2A3tcUDb29FbedDi+DZ4Mr07Oqw9Y1DrDrtHIDhIZ3bmmiL1dkH2YxrtV+zw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@tailwindcss/oxide-linux-arm64-musl@4.0.5':
-    resolution: {integrity: sha512-BDlVSiiJ08GRz9KKnXgaPFs2fkukPF3pym6uK3oWEKW45jKlVGgybLqulcV5nLEqREOuyq4Rn4vnZss4/bbQ/g==}
+  '@tailwindcss/oxide-linux-arm64-musl@4.0.7':
+    resolution: {integrity: sha512-WHYs3cpPEJb/ccyT20NOzopYQkl7JKncNBUbb77YFlwlXMVJLLV3nrXQKhr7DmZxz2ZXqjyUwsj2rdzd9stYdw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@tailwindcss/oxide-linux-x64-gnu@4.0.5':
-    resolution: {integrity: sha512-DYgieNDRkTy69bWPgdsc47nAXa74P63P/RetUwYM9vYj5USyOfHCEcqIthkCuYw3dXKBhjgwe697TmL2g2jpAw==}
+  '@tailwindcss/oxide-linux-x64-gnu@4.0.7':
+    resolution: {integrity: sha512-7bP1UyuX9kFxbOwkeIJhBZNevKYPXB6xZI37v09fqi6rqRJR8elybwjMUHm54GVP+UTtJ14ueB1K54Dy1tIO6w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@tailwindcss/oxide-linux-x64-musl@4.0.5':
-    resolution: {integrity: sha512-z2RzUvOQl0ZqrZqmCFP53tJbBXQ3UmLD/E6J7+q0e+4VaFnXCcIYTfQbHgI8f3fash+q6gK80Ko/ywEQ+bvv6Q==}
+  '@tailwindcss/oxide-linux-x64-musl@4.0.7':
+    resolution: {integrity: sha512-gBQIV8nL/LuhARNGeroqzXymMzzW5wQzqlteVqOVoqwEfpHOP3GMird5pGFbnpY+NP0fOlsZGrxxOPQ4W/84bQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@tailwindcss/oxide-win32-arm64-msvc@4.0.5':
-    resolution: {integrity: sha512-ho1dJ4o5Q8nAOxdMkbfBu5aSqI+/bzQ0jEeHcXaEdEJzf2fSWs3HY7bIKtE6vQS8c4SmSBvls7IhGPuJxNg+2Q==}
+  '@tailwindcss/oxide-win32-arm64-msvc@4.0.7':
+    resolution: {integrity: sha512-aH530NFfx0kpQpvYMfWoeG03zGnRCMVlQG8do/5XeahYydz+6SIBxA1tl/cyITSJyWZHyVt6GVNkXeAD30v0Xg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@tailwindcss/oxide-win32-x64-msvc@4.0.5':
-    resolution: {integrity: sha512-yjw6JhtyDXr+G0aZrj3L3NlEV7CobSqOdPyfo6G3d91WEZ5b8PyGm86IAreX08Jp9DChGXEd53gWysVpWCTs+w==}
+  '@tailwindcss/oxide-win32-x64-msvc@4.0.7':
+    resolution: {integrity: sha512-8Cva6bbJN7ZJx320k7vxGGdU0ewmpfS5A4PudyzUuofdi8MgeINuiiWiPQ0VZCda/GX88K6qp+6UpDZNVr8HMQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
 
-  '@tailwindcss/oxide@4.0.5':
-    resolution: {integrity: sha512-iWGyOCu0TuzvCBisWbGv2K9+7QCfE0ztgtrZOvb9iF7V7ChVkD15Obe3HevZrhjngAc34jDA+OMSuSvkrpTy4A==}
+  '@tailwindcss/oxide@4.0.7':
+    resolution: {integrity: sha512-yr6w5YMgjy+B+zkJiJtIYGXW+HNYOPfRPtSs+aqLnKwdEzNrGv4ZuJh9hYJ3mcA+HMq/K1rtFV+KsEr65S558g==}
     engines: {node: '>= 10'}
 
-  '@tailwindcss/postcss@4.0.5':
-    resolution: {integrity: sha512-U7IPb+KMASETtUvISwePM+1h+jLQspXf2ncfX/LmP/4AaH7b7DJQhqXzDCaJQd/MIh54dRUO93i9q4+Xm7dlVg==}
+  '@tailwindcss/vite@4.0.7':
+    resolution: {integrity: sha512-GYx5sxArfIMtdZCsxfya3S/efMmf4RvfqdiLUozkhmSFBNUFnYVodatpoO/en4/BsOIGvq/RB6HwcTLn9prFnQ==}
+    peerDependencies:
+      vite: ^5.2.0 || ^6
 
   '@tanstack/directive-functions-plugin@1.99.5':
     resolution: {integrity: sha512-+1e6iOVipOqzA8f/dDU/cnb1WtaxS7h5CgGNYn3PaXU6Iw+wR0HXj7jqjfOUL6y9a3utnA1rLtpivCS2icADsw==}
@@ -3435,11 +3290,6 @@ packages:
 
   esbuild@0.20.2:
     resolution: {integrity: sha512-WdOOppmUNU+IbZ0PaDiTst80zjnrOkyJNHoKupIcVyU8Lvla3Ugx94VzkQ32Ijqd7UhHJy75gNWDMUekcrSJ6g==}
-    engines: {node: '>=12'}
-    hasBin: true
-
-  esbuild@0.21.5:
-    resolution: {integrity: sha512-mg3OPMV4hXywwpoDxu3Qda5xCKQi+vCTZq8S9J/EpkhB2HzKXq4SNFZE3+NK93JYxc8VMSep+lOUSC/RVKaBqw==}
     engines: {node: '>=12'}
     hasBin: true
 
@@ -5045,6 +4895,9 @@ packages:
   solid-js@1.9.4:
     resolution: {integrity: sha512-ipQl8FJ31bFUoBNScDQTG3BjN6+9Rg+Q+f10bUbnO6EOTTf5NGerJeHc7wyu5I4RMHEl/WwZwUmy/PTRgxxZ8g==}
 
+  solid-js@1.9.5:
+    resolution: {integrity: sha512-ogI3DaFcyn6UhYhrgcyRAMbu/buBJitYQASZz5WzfQVPP10RD2AbCoRZ517psnezrasyCbWzIxZ6kVqet768xw==}
+
   solid-mdx@0.0.7:
     resolution: {integrity: sha512-dYKGOu5ZiaX3sfEMZYtfyXm30u33kF+T/pr67CMeyHzENDkWD3st4XEJ12Akp0J0PG9jzyHe5sAAKEXSnEcDEw==}
     peerDependencies:
@@ -5184,8 +5037,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  tailwindcss@4.0.5:
-    resolution: {integrity: sha512-DZZIKX3tA23LGTjHdnwlJOTxfICD1cPeykLLsYF1RQBI9QsCR3i0szohJfJDVjr6aNRAIio5WVO7FGB77fRHwg==}
+  tailwindcss@4.0.7:
+    resolution: {integrity: sha512-yH5bPPyapavo7L+547h3c4jcBXcrKwybQRjwdEIVAd9iXRvy/3T1CC6XSQEgZtRySjKfqvo3Cc0ZF1DTheuIdA==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -5640,35 +5493,14 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
-  vite@5.4.14:
-    resolution: {integrity: sha512-EK5cY7Q1D8JNhSaPKVK4pwBFvaTmZxEnoKXLG/U9gmdDcihQGNzFlgIvaxezFR4glP1LsuiedwMBqCXH3wZccA==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
+  vite-plugin-solid@2.11.6:
+    resolution: {integrity: sha512-Sl5CTqJTGyEeOsmdH6BOgalIZlwH3t4/y0RQuFLMGnvWMBvxb4+lq7x3BSiAw6etf0QexfNJW7HSOO/Qf7pigg==}
     peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      sass-embedded: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
+      '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
+      solid-js: ^1.7.2
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
     peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
+      '@testing-library/jest-dom':
         optional: true
 
   vite@6.1.0:
@@ -6199,9 +6031,6 @@ snapshots:
   '@esbuild/aix-ppc64@0.20.2':
     optional: true
 
-  '@esbuild/aix-ppc64@0.21.5':
-    optional: true
-
   '@esbuild/aix-ppc64@0.23.1':
     optional: true
 
@@ -6218,9 +6047,6 @@ snapshots:
     optional: true
 
   '@esbuild/android-arm64@0.20.2':
-    optional: true
-
-  '@esbuild/android-arm64@0.21.5':
     optional: true
 
   '@esbuild/android-arm64@0.23.1':
@@ -6241,9 +6067,6 @@ snapshots:
   '@esbuild/android-arm@0.20.2':
     optional: true
 
-  '@esbuild/android-arm@0.21.5':
-    optional: true
-
   '@esbuild/android-arm@0.23.1':
     optional: true
 
@@ -6260,9 +6083,6 @@ snapshots:
     optional: true
 
   '@esbuild/android-x64@0.20.2':
-    optional: true
-
-  '@esbuild/android-x64@0.21.5':
     optional: true
 
   '@esbuild/android-x64@0.23.1':
@@ -6283,9 +6103,6 @@ snapshots:
   '@esbuild/darwin-arm64@0.20.2':
     optional: true
 
-  '@esbuild/darwin-arm64@0.21.5':
-    optional: true
-
   '@esbuild/darwin-arm64@0.23.1':
     optional: true
 
@@ -6302,9 +6119,6 @@ snapshots:
     optional: true
 
   '@esbuild/darwin-x64@0.20.2':
-    optional: true
-
-  '@esbuild/darwin-x64@0.21.5':
     optional: true
 
   '@esbuild/darwin-x64@0.23.1':
@@ -6325,9 +6139,6 @@ snapshots:
   '@esbuild/freebsd-arm64@0.20.2':
     optional: true
 
-  '@esbuild/freebsd-arm64@0.21.5':
-    optional: true
-
   '@esbuild/freebsd-arm64@0.23.1':
     optional: true
 
@@ -6344,9 +6155,6 @@ snapshots:
     optional: true
 
   '@esbuild/freebsd-x64@0.20.2':
-    optional: true
-
-  '@esbuild/freebsd-x64@0.21.5':
     optional: true
 
   '@esbuild/freebsd-x64@0.23.1':
@@ -6367,9 +6175,6 @@ snapshots:
   '@esbuild/linux-arm64@0.20.2':
     optional: true
 
-  '@esbuild/linux-arm64@0.21.5':
-    optional: true
-
   '@esbuild/linux-arm64@0.23.1':
     optional: true
 
@@ -6386,9 +6191,6 @@ snapshots:
     optional: true
 
   '@esbuild/linux-arm@0.20.2':
-    optional: true
-
-  '@esbuild/linux-arm@0.21.5':
     optional: true
 
   '@esbuild/linux-arm@0.23.1':
@@ -6409,9 +6211,6 @@ snapshots:
   '@esbuild/linux-ia32@0.20.2':
     optional: true
 
-  '@esbuild/linux-ia32@0.21.5':
-    optional: true
-
   '@esbuild/linux-ia32@0.23.1':
     optional: true
 
@@ -6428,9 +6227,6 @@ snapshots:
     optional: true
 
   '@esbuild/linux-loong64@0.20.2':
-    optional: true
-
-  '@esbuild/linux-loong64@0.21.5':
     optional: true
 
   '@esbuild/linux-loong64@0.23.1':
@@ -6451,9 +6247,6 @@ snapshots:
   '@esbuild/linux-mips64el@0.20.2':
     optional: true
 
-  '@esbuild/linux-mips64el@0.21.5':
-    optional: true
-
   '@esbuild/linux-mips64el@0.23.1':
     optional: true
 
@@ -6470,9 +6263,6 @@ snapshots:
     optional: true
 
   '@esbuild/linux-ppc64@0.20.2':
-    optional: true
-
-  '@esbuild/linux-ppc64@0.21.5':
     optional: true
 
   '@esbuild/linux-ppc64@0.23.1':
@@ -6493,9 +6283,6 @@ snapshots:
   '@esbuild/linux-riscv64@0.20.2':
     optional: true
 
-  '@esbuild/linux-riscv64@0.21.5':
-    optional: true
-
   '@esbuild/linux-riscv64@0.23.1':
     optional: true
 
@@ -6514,9 +6301,6 @@ snapshots:
   '@esbuild/linux-s390x@0.20.2':
     optional: true
 
-  '@esbuild/linux-s390x@0.21.5':
-    optional: true
-
   '@esbuild/linux-s390x@0.23.1':
     optional: true
 
@@ -6533,9 +6317,6 @@ snapshots:
     optional: true
 
   '@esbuild/linux-x64@0.20.2':
-    optional: true
-
-  '@esbuild/linux-x64@0.21.5':
     optional: true
 
   '@esbuild/linux-x64@0.23.1':
@@ -6557,9 +6338,6 @@ snapshots:
     optional: true
 
   '@esbuild/netbsd-x64@0.20.2':
-    optional: true
-
-  '@esbuild/netbsd-x64@0.21.5':
     optional: true
 
   '@esbuild/netbsd-x64@0.23.1':
@@ -6586,9 +6364,6 @@ snapshots:
   '@esbuild/openbsd-x64@0.20.2':
     optional: true
 
-  '@esbuild/openbsd-x64@0.21.5':
-    optional: true
-
   '@esbuild/openbsd-x64@0.23.1':
     optional: true
 
@@ -6605,9 +6380,6 @@ snapshots:
     optional: true
 
   '@esbuild/sunos-x64@0.20.2':
-    optional: true
-
-  '@esbuild/sunos-x64@0.21.5':
     optional: true
 
   '@esbuild/sunos-x64@0.23.1':
@@ -6628,9 +6400,6 @@ snapshots:
   '@esbuild/win32-arm64@0.20.2':
     optional: true
 
-  '@esbuild/win32-arm64@0.21.5':
-    optional: true
-
   '@esbuild/win32-arm64@0.23.1':
     optional: true
 
@@ -6649,9 +6418,6 @@ snapshots:
   '@esbuild/win32-ia32@0.20.2':
     optional: true
 
-  '@esbuild/win32-ia32@0.21.5':
-    optional: true
-
   '@esbuild/win32-ia32@0.23.1':
     optional: true
 
@@ -6668,9 +6434,6 @@ snapshots:
     optional: true
 
   '@esbuild/win32-x64@0.20.2':
-    optional: true
-
-  '@esbuild/win32-x64@0.21.5':
     optional: true
 
   '@esbuild/win32-x64@0.23.1':
@@ -7108,52 +6871,52 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@solid-devtools/debugger@0.26.0(solid-js@1.9.4)':
+  '@solid-devtools/debugger@0.26.0(solid-js@1.9.5)':
     dependencies:
       '@nothing-but/utils': 0.17.0
-      '@solid-devtools/shared': 0.19.0(solid-js@1.9.4)
-      '@solid-primitives/bounds': 0.0.122(solid-js@1.9.4)
-      '@solid-primitives/cursor': 0.0.115(solid-js@1.9.4)
-      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.4)
-      '@solid-primitives/keyboard': 1.3.0(solid-js@1.9.4)
-      '@solid-primitives/platform': 0.1.2(solid-js@1.9.4)
-      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/scheduled': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/static-store': 0.0.8(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-devtools/shared': 0.19.0(solid-js@1.9.5)
+      '@solid-primitives/bounds': 0.0.122(solid-js@1.9.5)
+      '@solid-primitives/cursor': 0.0.115(solid-js@1.9.5)
+      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.5)
+      '@solid-primitives/keyboard': 1.3.0(solid-js@1.9.5)
+      '@solid-primitives/platform': 0.1.2(solid-js@1.9.5)
+      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/scheduled': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/static-store': 0.0.8(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-devtools/logger@0.9.7(solid-js@1.9.4)':
+  '@solid-devtools/logger@0.9.7(solid-js@1.9.5)':
     dependencies:
       '@nothing-but/utils': 0.17.0
-      '@solid-devtools/debugger': 0.26.0(solid-js@1.9.4)
-      '@solid-devtools/shared': 0.19.0(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-devtools/debugger': 0.26.0(solid-js@1.9.5)
+      '@solid-devtools/shared': 0.19.0(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-devtools/shared@0.19.0(solid-js@1.9.4)':
+  '@solid-devtools/shared@0.19.0(solid-js@1.9.5)':
     dependencies:
       '@nothing-but/utils': 0.17.0
-      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.4)
-      '@solid-primitives/media': 2.3.0(solid-js@1.9.4)
-      '@solid-primitives/refs': 1.1.0(solid-js@1.9.4)
-      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/scheduled': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/static-store': 0.0.8(solid-js@1.9.4)
-      '@solid-primitives/styles': 0.0.114(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.5)
+      '@solid-primitives/media': 2.3.0(solid-js@1.9.5)
+      '@solid-primitives/refs': 1.1.0(solid-js@1.9.5)
+      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/scheduled': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/static-store': 0.0.8(solid-js@1.9.5)
+      '@solid-primitives/styles': 0.0.114(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-mediakit/auth@3.1.2(g6ycmgrhaw6arz7xc75qft7ope)':
+  '@solid-mediakit/auth@3.1.2(qfqc2m2jriwu4g6gmlnbujbge4)':
     dependencies:
       '@auth/core': 0.37.0
       '@solid-mediakit/shared': 0.0.6(rollup@4.34.2)
-      '@solidjs/meta': 0.29.4(solid-js@1.9.4)
-      '@solidjs/router': 0.15.3(solid-js@1.9.4)
-      '@solidjs/start': 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+      '@solidjs/meta': 0.29.4(solid-js@1.9.5)
+      '@solidjs/router': 0.15.3(solid-js@1.9.5)
+      '@solidjs/start': 1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       cookie: 0.6.0
       set-cookie-parser: 2.7.1
-      solid-js: 1.9.4
+      solid-js: 1.9.5
       vinxi: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
     transitivePeerDependencies:
       - rollup
@@ -7167,116 +6930,100 @@ snapshots:
       - rollup
       - supports-color
 
-  '@solid-primitives/bounds@0.0.122(solid-js@1.9.4)':
+  '@solid-primitives/bounds@0.0.122(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.4)
-      '@solid-primitives/resize-observer': 2.1.0(solid-js@1.9.4)
-      '@solid-primitives/static-store': 0.0.8(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.5)
+      '@solid-primitives/resize-observer': 2.1.0(solid-js@1.9.5)
+      '@solid-primitives/static-store': 0.0.8(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/cursor@0.0.115(solid-js@1.9.4)':
+  '@solid-primitives/cursor@0.0.115(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/event-listener@2.4.0(solid-js@1.9.4)':
+  '@solid-primitives/event-listener@2.4.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/keyboard@1.3.0(solid-js@1.9.4)':
+  '@solid-primitives/keyboard@1.3.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.4)
-      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.5)
+      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/media@2.3.0(solid-js@1.9.4)':
+  '@solid-primitives/media@2.3.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.4)
-      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/static-store': 0.1.0(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.5)
+      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/static-store': 0.1.0(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/platform@0.1.2(solid-js@1.9.4)':
+  '@solid-primitives/platform@0.1.2(solid-js@1.9.5)':
     dependencies:
-      solid-js: 1.9.4
+      solid-js: 1.9.5
 
-  '@solid-primitives/refs@1.1.0(solid-js@1.9.4)':
+  '@solid-primitives/refs@1.1.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/resize-observer@2.1.0(solid-js@1.9.4)':
+  '@solid-primitives/resize-observer@2.1.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.4)
-      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/static-store': 0.1.0(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/event-listener': 2.4.0(solid-js@1.9.5)
+      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/static-store': 0.1.0(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/rootless@1.5.0(solid-js@1.9.4)':
+  '@solid-primitives/rootless@1.5.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/scheduled@1.5.0(solid-js@1.9.4)':
+  '@solid-primitives/scheduled@1.5.0(solid-js@1.9.5)':
     dependencies:
-      solid-js: 1.9.4
+      solid-js: 1.9.5
 
-  '@solid-primitives/static-store@0.0.8(solid-js@1.9.4)':
+  '@solid-primitives/static-store@0.0.8(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/static-store@0.1.0(solid-js@1.9.4)':
+  '@solid-primitives/static-store@0.1.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/styles@0.0.114(solid-js@1.9.4)':
+  '@solid-primitives/styles@0.0.114(solid-js@1.9.5)':
     dependencies:
-      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.4)
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
+      '@solid-primitives/rootless': 1.5.0(solid-js@1.9.5)
+      '@solid-primitives/utils': 6.3.0(solid-js@1.9.5)
+      solid-js: 1.9.5
 
-  '@solid-primitives/utils@6.3.0(solid-js@1.9.4)':
+  '@solid-primitives/utils@6.3.0(solid-js@1.9.5)':
     dependencies:
-      solid-js: 1.9.4
+      solid-js: 1.9.5
 
   '@solidjs/meta@0.29.4(solid-js@1.9.4)':
     dependencies:
       solid-js: 1.9.4
 
+  '@solidjs/meta@0.29.4(solid-js@1.9.5)':
+    dependencies:
+      solid-js: 1.9.5
+
   '@solidjs/router@0.15.3(solid-js@1.9.4)':
     dependencies:
       solid-js: 1.9.4
 
-  '@solidjs/start@1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))':
+  '@solidjs/router@0.15.3(solid-js@1.9.5)':
     dependencies:
-      '@tanstack/server-functions-plugin': 1.99.5
-      '@vinxi/plugin-directives': 0.5.0(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))
-      '@vinxi/server-components': 0.5.0(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))
-      defu: 6.1.4
-      error-stack-parser: 2.1.4
-      html-to-image: 1.11.11
-      radix3: 1.1.2
-      seroval: 1.2.1
-      seroval-plugins: 1.2.1(seroval@1.2.1)
-      shiki: 1.29.2
-      source-map-js: 1.2.1
-      terracotta: 1.0.6(solid-js@1.9.4)
-      tinyglobby: 0.2.10
-      vinxi: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
-      vite-plugin-solid: 2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
-    transitivePeerDependencies:
-      - '@testing-library/jest-dom'
-      - babel-plugin-macros
-      - solid-js
-      - supports-color
-      - vite
+      solid-js: 1.9.5
 
   '@solidjs/start@1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))':
     dependencies:
@@ -7302,6 +7049,30 @@ snapshots:
       - supports-color
       - vite
 
+  '@solidjs/start@1.1.0(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))':
+    dependencies:
+      '@tanstack/server-functions-plugin': 1.99.5
+      '@vinxi/plugin-directives': 0.5.0(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))
+      '@vinxi/server-components': 0.5.0(vinxi@0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0))
+      defu: 6.1.4
+      error-stack-parser: 2.1.4
+      html-to-image: 1.11.11
+      radix3: 1.1.2
+      seroval: 1.2.1
+      seroval-plugins: 1.2.1(seroval@1.2.1)
+      shiki: 1.29.2
+      source-map-js: 1.2.1
+      terracotta: 1.0.6(solid-js@1.9.5)
+      tinyglobby: 0.2.10
+      vinxi: 0.5.3(@types/node@20.17.17)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.4.2)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+      vite-plugin-solid: 2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+    transitivePeerDependencies:
+      - '@testing-library/jest-dom'
+      - babel-plugin-macros
+      - solid-js
+      - supports-color
+      - vite
+
   '@solidjs/testing-library@0.8.10(@solidjs/router@0.15.3(solid-js@1.9.4))(solid-js@1.9.4)':
     dependencies:
       '@testing-library/dom': 10.4.0
@@ -7309,67 +7080,66 @@ snapshots:
     optionalDependencies:
       '@solidjs/router': 0.15.3(solid-js@1.9.4)
 
-  '@tailwindcss/node@4.0.5':
+  '@tailwindcss/node@4.0.7':
     dependencies:
       enhanced-resolve: 5.18.1
       jiti: 2.4.2
-      tailwindcss: 4.0.5
+      tailwindcss: 4.0.7
 
-  '@tailwindcss/oxide-android-arm64@4.0.5':
+  '@tailwindcss/oxide-android-arm64@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-darwin-arm64@4.0.5':
+  '@tailwindcss/oxide-darwin-arm64@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-darwin-x64@4.0.5':
+  '@tailwindcss/oxide-darwin-x64@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-freebsd-x64@4.0.5':
+  '@tailwindcss/oxide-freebsd-x64@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-linux-arm-gnueabihf@4.0.5':
+  '@tailwindcss/oxide-linux-arm-gnueabihf@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-linux-arm64-gnu@4.0.5':
+  '@tailwindcss/oxide-linux-arm64-gnu@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-linux-arm64-musl@4.0.5':
+  '@tailwindcss/oxide-linux-arm64-musl@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-linux-x64-gnu@4.0.5':
+  '@tailwindcss/oxide-linux-x64-gnu@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-linux-x64-musl@4.0.5':
+  '@tailwindcss/oxide-linux-x64-musl@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-win32-arm64-msvc@4.0.5':
+  '@tailwindcss/oxide-win32-arm64-msvc@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide-win32-x64-msvc@4.0.5':
+  '@tailwindcss/oxide-win32-x64-msvc@4.0.7':
     optional: true
 
-  '@tailwindcss/oxide@4.0.5':
+  '@tailwindcss/oxide@4.0.7':
     optionalDependencies:
-      '@tailwindcss/oxide-android-arm64': 4.0.5
-      '@tailwindcss/oxide-darwin-arm64': 4.0.5
-      '@tailwindcss/oxide-darwin-x64': 4.0.5
-      '@tailwindcss/oxide-freebsd-x64': 4.0.5
-      '@tailwindcss/oxide-linux-arm-gnueabihf': 4.0.5
-      '@tailwindcss/oxide-linux-arm64-gnu': 4.0.5
-      '@tailwindcss/oxide-linux-arm64-musl': 4.0.5
-      '@tailwindcss/oxide-linux-x64-gnu': 4.0.5
-      '@tailwindcss/oxide-linux-x64-musl': 4.0.5
-      '@tailwindcss/oxide-win32-arm64-msvc': 4.0.5
-      '@tailwindcss/oxide-win32-x64-msvc': 4.0.5
+      '@tailwindcss/oxide-android-arm64': 4.0.7
+      '@tailwindcss/oxide-darwin-arm64': 4.0.7
+      '@tailwindcss/oxide-darwin-x64': 4.0.7
+      '@tailwindcss/oxide-freebsd-x64': 4.0.7
+      '@tailwindcss/oxide-linux-arm-gnueabihf': 4.0.7
+      '@tailwindcss/oxide-linux-arm64-gnu': 4.0.7
+      '@tailwindcss/oxide-linux-arm64-musl': 4.0.7
+      '@tailwindcss/oxide-linux-x64-gnu': 4.0.7
+      '@tailwindcss/oxide-linux-x64-musl': 4.0.7
+      '@tailwindcss/oxide-win32-arm64-msvc': 4.0.7
+      '@tailwindcss/oxide-win32-x64-msvc': 4.0.7
 
-  '@tailwindcss/postcss@4.0.5':
+  '@tailwindcss/vite@4.0.7(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))':
     dependencies:
-      '@alloc/quick-lru': 5.2.0
-      '@tailwindcss/node': 4.0.5
-      '@tailwindcss/oxide': 4.0.5
+      '@tailwindcss/node': 4.0.7
+      '@tailwindcss/oxide': 4.0.7
       lightningcss: 1.29.1
-      postcss: 8.5.1
-      tailwindcss: 4.0.5
+      tailwindcss: 4.0.7
+      vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
 
   '@tanstack/directive-functions-plugin@1.99.5':
     dependencies:
@@ -7406,7 +7176,7 @@ snapshots:
       tsx: 4.19.2
       zod: 3.24.1
 
-  '@tanstack/router-plugin@1.109.0(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))':
+  '@tanstack/router-plugin@1.109.0(vite-plugin-solid@2.11.6(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))':
     dependencies:
       '@babel/core': 7.26.9
       '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.9)
@@ -7426,6 +7196,7 @@ snapshots:
       zod: 3.24.1
     optionalDependencies:
       vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      vite-plugin-solid: 2.11.6(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -7464,22 +7235,22 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  '@tanstack/solid-router@1.108.0(solid-js@1.9.4)':
+  '@tanstack/solid-router@1.108.0(solid-js@1.9.5)':
     dependencies:
-      '@solid-devtools/logger': 0.9.7(solid-js@1.9.4)
-      '@solid-primitives/refs': 1.1.0(solid-js@1.9.4)
+      '@solid-devtools/logger': 0.9.7(solid-js@1.9.5)
+      '@solid-primitives/refs': 1.1.0(solid-js@1.9.5)
       '@tanstack/history': 1.99.13
       '@tanstack/router-core': 1.108.0
-      '@tanstack/solid-store': 0.7.0(solid-js@1.9.4)
+      '@tanstack/solid-store': 0.7.0(solid-js@1.9.5)
       jsesc: 3.1.0
-      solid-js: 1.9.4
+      solid-js: 1.9.5
       tiny-invariant: 1.3.3
       tiny-warning: 1.0.3
 
-  '@tanstack/solid-store@0.7.0(solid-js@1.9.4)':
+  '@tanstack/solid-store@0.7.0(solid-js@1.9.5)':
     dependencies:
       '@tanstack/store': 0.7.0
-      solid-js: 1.9.4
+      solid-js: 1.9.5
 
   '@tanstack/store@0.7.0': {}
 
@@ -7964,13 +7735,13 @@ snapshots:
       chai: 5.1.2
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.0.5(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))':
+  '@vitest/mocker@3.0.5(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))':
     dependencies:
       '@vitest/spy': 3.0.5
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
+      vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
 
   '@vitest/pretty-format@3.0.5':
     dependencies:
@@ -8000,7 +7771,7 @@ snapshots:
       sirv: 3.0.0
       tinyglobby: 0.2.10
       tinyrainbow: 2.0.0
-      vitest: 3.0.5(@types/debug@4.1.12)(@types/node@20.17.17)(@vitest/ui@3.0.5)(jsdom@25.0.1)(lightningcss@1.29.1)(terser@5.37.0)
+      vitest: 3.0.5(@types/debug@4.1.12)(@types/node@20.17.17)(@vitest/ui@3.0.5)(jiti@2.4.2)(jsdom@25.0.1)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
 
   '@vitest/utils@3.0.5':
     dependencies:
@@ -8010,7 +7781,7 @@ snapshots:
 
   '@vue/compiler-core@3.5.13':
     dependencies:
-      '@babel/parser': 7.26.7
+      '@babel/parser': 7.26.9
       '@vue/shared': 3.5.13
       entities: 4.5.0
       estree-walker: 2.0.2
@@ -8023,7 +7794,7 @@ snapshots:
 
   '@vue/compiler-sfc@3.5.13':
     dependencies:
-      '@babel/parser': 7.26.7
+      '@babel/parser': 7.26.9
       '@vue/compiler-core': 3.5.13
       '@vue/compiler-dom': 3.5.13
       '@vue/compiler-ssr': 3.5.13
@@ -8199,10 +7970,25 @@ snapshots:
       parse5: 7.2.1
       validate-html-nesting: 1.2.2
 
+  babel-plugin-jsx-dom-expressions@0.39.6(@babel/core@7.26.9):
+    dependencies:
+      '@babel/core': 7.26.9
+      '@babel/helper-module-imports': 7.18.6
+      '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.9)
+      '@babel/types': 7.26.7
+      html-entities: 2.3.3
+      parse5: 7.2.1
+      validate-html-nesting: 1.2.2
+
   babel-preset-solid@1.9.3(@babel/core@7.26.7):
     dependencies:
       '@babel/core': 7.26.7
       babel-plugin-jsx-dom-expressions: 0.39.6(@babel/core@7.26.7)
+
+  babel-preset-solid@1.9.3(@babel/core@7.26.9):
+    dependencies:
+      '@babel/core': 7.26.9
+      babel-plugin-jsx-dom-expressions: 0.39.6(@babel/core@7.26.9)
 
   bail@1.0.5: {}
 
@@ -8723,32 +8509,6 @@ snapshots:
       '@esbuild/win32-arm64': 0.20.2
       '@esbuild/win32-ia32': 0.20.2
       '@esbuild/win32-x64': 0.20.2
-
-  esbuild@0.21.5:
-    optionalDependencies:
-      '@esbuild/aix-ppc64': 0.21.5
-      '@esbuild/android-arm': 0.21.5
-      '@esbuild/android-arm64': 0.21.5
-      '@esbuild/android-x64': 0.21.5
-      '@esbuild/darwin-arm64': 0.21.5
-      '@esbuild/darwin-x64': 0.21.5
-      '@esbuild/freebsd-arm64': 0.21.5
-      '@esbuild/freebsd-x64': 0.21.5
-      '@esbuild/linux-arm': 0.21.5
-      '@esbuild/linux-arm64': 0.21.5
-      '@esbuild/linux-ia32': 0.21.5
-      '@esbuild/linux-loong64': 0.21.5
-      '@esbuild/linux-mips64el': 0.21.5
-      '@esbuild/linux-ppc64': 0.21.5
-      '@esbuild/linux-riscv64': 0.21.5
-      '@esbuild/linux-s390x': 0.21.5
-      '@esbuild/linux-x64': 0.21.5
-      '@esbuild/netbsd-x64': 0.21.5
-      '@esbuild/openbsd-x64': 0.21.5
-      '@esbuild/sunos-x64': 0.21.5
-      '@esbuild/win32-arm64': 0.21.5
-      '@esbuild/win32-ia32': 0.21.5
-      '@esbuild/win32-x64': 0.21.5
 
   esbuild@0.23.1:
     optionalDependencies:
@@ -10723,9 +10483,15 @@ snapshots:
       seroval: 1.2.1
       seroval-plugins: 1.2.1(seroval@1.2.1)
 
-  solid-mdx@0.0.7(solid-js@1.9.4)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
+  solid-js@1.9.5:
     dependencies:
-      solid-js: 1.9.4
+      csstype: 3.1.3
+      seroval: 1.2.1
+      seroval-plugins: 1.2.1(seroval@1.2.1)
+
+  solid-mdx@0.0.7(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
+    dependencies:
+      solid-js: 1.9.5
       vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
 
   solid-refresh@0.6.3(solid-js@1.9.4):
@@ -10737,7 +10503,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  solid-styled@0.12.0(solid-js@1.9.4):
+  solid-refresh@0.6.3(solid-js@1.9.5):
+    dependencies:
+      '@babel/generator': 7.26.5
+      '@babel/helper-module-imports': 7.25.9
+      '@babel/types': 7.26.7
+      solid-js: 1.9.5
+    transitivePeerDependencies:
+      - supports-color
+
+  solid-styled@0.12.0(solid-js@1.9.5):
     dependencies:
       '@babel/core': 7.26.7
       '@babel/traverse': 7.26.7
@@ -10746,13 +10521,17 @@ snapshots:
       browserslist: 4.24.4
       css-tree: 3.1.0
       lightningcss: 1.29.1
-      solid-js: 1.9.4
+      solid-js: 1.9.5
     transitivePeerDependencies:
       - supports-color
 
   solid-use@0.9.0(solid-js@1.9.4):
     dependencies:
       solid-js: 1.9.4
+
+  solid-use@0.9.0(solid-js@1.9.5):
+    dependencies:
+      solid-js: 1.9.5
 
   source-map-js@1.2.1: {}
 
@@ -10888,7 +10667,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  tailwindcss@4.0.5: {}
+  tailwindcss@4.0.7: {}
 
   tapable@2.2.1: {}
 
@@ -10935,6 +10714,11 @@ snapshots:
     dependencies:
       solid-js: 1.9.4
       solid-use: 0.9.0(solid-js@1.9.4)
+
+  terracotta@1.0.6(solid-js@1.9.5):
+    dependencies:
+      solid-js: 1.9.5
+      solid-use: 0.9.0(solid-js@1.9.5)
 
   terser@5.37.0:
     dependencies:
@@ -11203,10 +10987,10 @@ snapshots:
       - supports-color
       - vue
 
-  unplugin-solid-styled@0.12.0(rollup@4.34.2)(solid-styled@0.12.0(solid-js@1.9.4))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
+  unplugin-solid-styled@0.12.0(rollup@4.34.2)(solid-styled@0.12.0(solid-js@1.9.5))(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.34.2)
-      solid-styled: 0.12.0(solid-js@1.9.4)
+      solid-styled: 0.12.0(solid-js@1.9.5)
       unplugin: 2.1.2
     optionalDependencies:
       vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
@@ -11422,15 +11206,16 @@ snapshots:
       - xml2js
       - yaml
 
-  vite-node@3.0.5(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0):
+  vite-node@3.0.5(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0(supports-color@9.4.0)
       es-module-lexer: 1.6.0
       pathe: 2.0.2
-      vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
+      vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
     transitivePeerDependencies:
       - '@types/node'
+      - jiti
       - less
       - lightningcss
       - sass
@@ -11439,21 +11224,8 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-
-  vite-plugin-solid@2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)):
-    dependencies:
-      '@babel/core': 7.26.7
-      '@types/babel__core': 7.20.5
-      babel-preset-solid: 1.9.3(@babel/core@7.26.7)
-      merge-anything: 5.1.7
-      solid-js: 1.9.4
-      solid-refresh: 0.6.3(solid-js@1.9.4)
-      vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
-      vitefu: 1.0.5(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
-    optionalDependencies:
-      '@testing-library/jest-dom': 6.6.3
-    transitivePeerDependencies:
-      - supports-color
+      - tsx
+      - yaml
 
   vite-plugin-solid@2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
     dependencies:
@@ -11470,16 +11242,51 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0):
+  vite-plugin-solid@2.11.1(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
     dependencies:
-      esbuild: 0.21.5
-      postcss: 8.5.1
-      rollup: 4.34.2
+      '@babel/core': 7.26.7
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 1.9.3(@babel/core@7.26.7)
+      merge-anything: 5.1.7
+      solid-js: 1.9.5
+      solid-refresh: 0.6.3(solid-js@1.9.5)
+      vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      vitefu: 1.0.5(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
     optionalDependencies:
-      '@types/node': 20.17.17
-      fsevents: 2.3.3
-      lightningcss: 1.29.1
-      terser: 5.37.0
+      '@testing-library/jest-dom': 6.6.3
+    transitivePeerDependencies:
+      - supports-color
+
+  vite-plugin-solid@2.11.6(@testing-library/jest-dom@6.6.3)(solid-js@1.9.4)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
+    dependencies:
+      '@babel/core': 7.26.9
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 1.9.3(@babel/core@7.26.9)
+      merge-anything: 5.1.7
+      solid-js: 1.9.4
+      solid-refresh: 0.6.3(solid-js@1.9.4)
+      vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      vitefu: 1.0.5(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+    optionalDependencies:
+      '@testing-library/jest-dom': 6.6.3
+    transitivePeerDependencies:
+      - supports-color
+
+  vite-plugin-solid@2.11.6(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
+    dependencies:
+      '@babel/core': 7.26.9
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 1.9.3(@babel/core@7.26.9)
+      merge-anything: 5.1.7
+      solid-js: 1.9.5
+      solid-refresh: 0.6.3(solid-js@1.9.5)
+      vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      vitefu: 1.0.5(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
+    optionalDependencies:
+      '@testing-library/jest-dom': 6.6.3
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
 
   vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0):
     dependencies:
@@ -11495,18 +11302,14 @@ snapshots:
       tsx: 4.19.2
       yaml: 2.7.0
 
-  vitefu@1.0.5(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)):
-    optionalDependencies:
-      vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
-
   vitefu@1.0.5(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)):
     optionalDependencies:
       vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
 
-  vitest@3.0.5(@types/debug@4.1.12)(@types/node@20.17.17)(@vitest/ui@3.0.5)(jsdom@25.0.1)(lightningcss@1.29.1)(terser@5.37.0):
+  vitest@3.0.5(@types/debug@4.1.12)(@types/node@20.17.17)(@vitest/ui@3.0.5)(jiti@2.4.2)(jsdom@25.0.1)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0):
     dependencies:
       '@vitest/expect': 3.0.5
-      '@vitest/mocker': 3.0.5(vite@5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0))
+      '@vitest/mocker': 3.0.5(vite@6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       '@vitest/pretty-format': 3.0.5
       '@vitest/runner': 3.0.5
       '@vitest/snapshot': 3.0.5
@@ -11522,8 +11325,8 @@ snapshots:
       tinyexec: 0.3.2
       tinypool: 1.0.2
       tinyrainbow: 2.0.0
-      vite: 5.4.14(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
-      vite-node: 3.0.5(@types/node@20.17.17)(lightningcss@1.29.1)(terser@5.37.0)
+      vite: 6.1.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      vite-node: 3.0.5(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/debug': 4.1.12
@@ -11531,6 +11334,7 @@ snapshots:
       '@vitest/ui': 3.0.5(vitest@3.0.5)
       jsdom: 25.0.1
     transitivePeerDependencies:
+      - jiti
       - less
       - lightningcss
       - msw
@@ -11540,6 +11344,8 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
   vue-flow-layout@0.1.1(vue@3.5.13(typescript@5.7.3)):
     dependencies:
