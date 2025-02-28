@@ -36,7 +36,7 @@ export default function Login() {
             placeholder="Your password"
             required
           />
-          <button class="p-2  border border-gray-300 hover:bg-white/10" formAction={signInAction}>
+          <button class="p-2 border border-gray-300 hover:bg-white/10" formAction={signInAction}>
             Sign in
           </button>
           <Show when={signIn.result}>

@@ -29,7 +29,7 @@ export default function ForgotPassword() {
             required
           />
           <button
-            class="p-2  border border-gray-300 hover:bg-white/10"
+            class="p-2 border border-gray-300 hover:bg-white/10"
             type="submit"
             formAction={forgotPasswordAction}
           >
