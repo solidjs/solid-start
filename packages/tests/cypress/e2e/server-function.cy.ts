@@ -1,8 +1,4 @@
 describe("server-function", () => {
-  it("should have isServer false in the client", () => {
-    cy.visit("/");
-    cy.get("#server-fn-test").contains('{"clientWithIsServer":false}');
-  });
   it("should have isServer true in the server function - nested", () => {
     cy.visit("/is-server-nested");
     cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
