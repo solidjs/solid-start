@@ -10,13 +10,17 @@ on:
 jobs:
   tests:
     name: "🧪 Tests"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v4
+
+      - name: Use Node.js from nvmrc
+        uses: actions/setup-node@v4
         with:
-          # https://github.com/pnpm/pnpm/issues/8953
-          version: 9.15.3
+          node-version-file: ".nvmrc"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
 
       - name: Install project dependencies
         run: pnpm i
@@ -36,18 +40,22 @@ jobs:
           working-directory: .
           runTests: false
 
-      - name: E2E Firefox
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          working-directory: packages/tests
-          start: pnpm start
-          browser: firefox
-
       - name: E2E Chromium
         uses: cypress-io/github-action@v6
         with:
           install: false
           working-directory: packages/tests
-          start: pnpm start
+          start: pnpm start --host 127.0.0.1 --port 3000
+          wait-on: 'http://127.0.0.1:3000'
           browser: chromium
+
+      - name: E2E Firefox
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          working-directory: packages/tests
+          start: pnpm start --host 127.0.0.1 --port 3000
+          wait-on: 'http://127.0.0.1:3000'
+          browser: firefox
+
+
