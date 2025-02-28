@@ -194,18 +194,23 @@ async function fetchServerFunction(
 
 export function createServerReference(fn: Function, id: string, name: string) {
   const baseURL = import.meta.env.SERVER_BASE_URL;
+  // @tanstack/server-functions-plugin contructs the id from the filename + function name eg src_lib_api_ts--getStory_query
+  // So we extract the name by splitting on --
+  // This feels flaky and we should rather try and get the function name directly from the plugin
+  // but this requires a change in the plugin
+  const functionName = id.split("--").pop() || id;
+  const functionPath = `${baseURL}/_server/${encodeURIComponent(functionName)}/`;
+
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        return `${functionPath}?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
       }
       if (prop === "GET") {
         return receiver.withOptions({ method: "GET" });
       }
       if (prop === "withOptions") {
-        const url = `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(
-          name
-        )}`;
+        const url = `${functionPath}?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
         return (options: RequestInit) => {
           const fn = async (...args: any[]) => {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
@@ -217,7 +222,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
                           JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins })))
                         )}`
                       : "")
-                : `${baseURL}/_server`,
+                : functionPath,
               `${id}#${name}`,
               options,
               encodeArgs ? [] : args
@@ -230,7 +235,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
       return (target as any)[prop];
     },
     apply(target, thisArg, args) {
-      return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, {}, args);
+      return fetchServerFunction(functionPath, `${id}#${name}`, {}, args);
     }
   });
 }
