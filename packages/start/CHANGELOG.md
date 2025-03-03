@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 1.1.2
+
+### Patch Changes
+
+- 0c9bc47: Fix issue with anonymous default exports
+- 26e97be: Fix ssr for tanstack router
+
 ## 1.1.1
 
 ### Patch Changes

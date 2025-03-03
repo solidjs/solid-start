@@ -7,4 +7,4 @@ export function mount(fn: () => JSX.Element, el: MountableElement) {
   render(fn, el);
 }
 
-export { StartClient } from "../StartClient";
+export { StartClient, StartClientTanstack } from "../StartClient";

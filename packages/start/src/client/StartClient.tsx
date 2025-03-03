@@ -24,3 +24,13 @@ export function StartClient() {
     </Dummy>
   );
 }
+
+export function StartClientTanstack() {
+  return (
+    <Dummy>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </Dummy>
+  );
+}

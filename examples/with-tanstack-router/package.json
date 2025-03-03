@@ -8,9 +8,9 @@
     "version": "vinxi version"
   },
   "dependencies": {
-    "@tanstack/solid-router": "^1.108.0",
-    "@tanstack/router-plugin": "^1.108.0",
-    "@solidjs/start": "^1.1.0",
+    "@tanstack/solid-router": "^1.112.2",
+    "@tanstack/router-plugin": "^1.112.0",
+    "@solidjs/start": "^1.1.2",
     "solid-js": "^1.9.5",
     "vinxi": "^0.5.3"
   },
