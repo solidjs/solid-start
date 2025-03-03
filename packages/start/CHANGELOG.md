@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - 0c9bc47: Fix issue with anonymous default exports
-- 26e97be: get ssr working for tanstack router example
+- 26e97be: Fix ssr for tanstack router
 
 ## 1.1.1
 
