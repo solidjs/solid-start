@@ -35,5 +35,6 @@ export default createHandler(
       )}
     />
   ),
+  undefined,
   routerLoad
 );

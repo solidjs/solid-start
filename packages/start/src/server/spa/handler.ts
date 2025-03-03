@@ -7,10 +7,10 @@ import { FetchEvent, HandlerOptions, PageEvent } from "../types";
  */
 export function createHandler(
   fn: (context: PageEvent) => unknown,
-  routerLoad?: (event: FetchEvent) => Promise<void>,
-  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions)
+  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions),
+  routerLoad?: (event: FetchEvent) => Promise<void>
 ) {
-  return createBaseHandler(fn, createPageEvent, routerLoad, options);
+  return createBaseHandler(fn, createPageEvent, options, routerLoad);
 }
 
 export async function createPageEvent(ctx: FetchEvent) {

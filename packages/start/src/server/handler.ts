@@ -31,8 +31,8 @@ export function getExpectedRedirectStatus(response: ResponseStub): number {
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
   createPageEvent: (event: FetchEvent) => Promise<PageEvent>,
-  routerLoad?: (event: FetchEvent) => Promise<void>,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
+  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
+  routerLoad?: (event: FetchEvent) => Promise<void>
 ) {
   return eventHandler({
     handler: (e: HTTPEvent) => {
@@ -137,8 +137,8 @@ function handleStreamCompleteRedirect(context: PageEvent) {
  */
 export function createHandler(
   fn: (context: PageEvent) => unknown,
-  routerLoad?: (event: FetchEvent) => Promise<void>,
-  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>)
+  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>),
+  routerLoad?: (event: FetchEvent) => Promise<void>
 ) {
-  return createBaseHandler(fn, createPageEvent, routerLoad, options);
+  return createBaseHandler(fn, createPageEvent, options, routerLoad);
 }
