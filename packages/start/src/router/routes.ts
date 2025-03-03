@@ -36,7 +36,7 @@ function defineRoutes(fileRoutes: Route[]) {
       routes.push({
         ...route,
         id,
-        path: id.replace(/\/\([^)/]+\)/g, "").replace(/\([^)/]+\)/g, "")
+        path: id.replace(/\([^)/]+\)/g, "").replace(/\/+/g, "/")
       });
       return routes;
     }
@@ -85,8 +85,8 @@ const router = createRouter({
   routes: (fileRoutes as unknown as Route[]).reduce((memo, route) => {
     if (!containsHTTP(route)) return memo;
     let path = route.path
-      .replace(/\/\([^)/]+\)/g, "")
       .replace(/\([^)/]+\)/g, "")
+      .replace(/\/+/g, "/")
       .replace(/\*([^/]*)/g, (_, m) => `**:${m}`)
       .split("/")
       .map(s => (s.startsWith(":") || s.startsWith("*") ? s : encodeURIComponent(s)))
