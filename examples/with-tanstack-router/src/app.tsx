@@ -1,22 +1,7 @@
-import { RouterProvider, createRouter } from "@tanstack/solid-router";
-import { routeTree } from "./routeTree.gen";
+import { router } from "./router";
+import { RouterProvider } from "@tanstack/solid-router";
 
 import "./app.css";
-
-const router = createRouter({
-  defaultErrorComponent: (err) => <div>{err.error.stack}</div>,
-  routeTree,
-  defaultPreload: "intent",
-  defaultStaleTime: 5000,
-  scrollRestoration: true
-});
-
-// Register things for typesafety
-declare module "@tanstack/solid-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
 
 export default function App() {
   return <RouterProvider router={router} />;

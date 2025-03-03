@@ -31,6 +31,7 @@ export function getExpectedRedirectStatus(response: ResponseStub): number {
 export function createBaseHandler(
   fn: (context: PageEvent) => unknown,
   createPageEvent: (event: FetchEvent) => Promise<PageEvent>,
+  routerLoad?: (event: FetchEvent) => Promise<void>,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
 ) {
   return eventHandler({
@@ -38,11 +39,16 @@ export function createBaseHandler(
       const event = getFetchEvent(e);
 
       return provideRequestEvent(event, async () => {
+        if (routerLoad) {
+          await routerLoad(event);
+        }
+
         // api
         const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
         if (match) {
           const mod = await match.handler.import();
-          const fn = event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
+          const fn =
+            event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
           (event as APIEvent).params = match.params || {};
           // @ts-ignore
           sharedConfig.context = { event };
@@ -62,6 +68,7 @@ export function createBaseHandler(
         const mode = resolvedOptions.mode || "stream";
         // @ts-ignore
         if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
+
         if (mode === "sync" || !import.meta.env.START_SSR) {
           const html = renderToString(() => {
             (sharedConfig.context as any).event = context;
@@ -130,7 +137,8 @@ function handleStreamCompleteRedirect(context: PageEvent) {
  */
 export function createHandler(
   fn: (context: PageEvent) => unknown,
+  routerLoad?: (event: FetchEvent) => Promise<void>,
   options?: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>)
 ) {
-  return createBaseHandler(fn, createPageEvent, options);
+  return createBaseHandler(fn, createPageEvent, routerLoad, options);
 }
