@@ -1,0 +1,42 @@
+{
+  "name": "example-with-better-auth-drizzle-zero",
+  "type": "module",
+  "scripts": {
+    "dev:ui": "vinxi dev",
+    "dev:zero-cache": "zero-cache-dev -p ./src/lib/zero-schema.ts",
+    "dev:db-up": "docker compose -f ./docker/docker-compose.yml --env-file .env up",
+    "dev:db-down": "docker compose -f ./docker/docker-compose.yml --env-file .env down",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "generate:auth-schema": "npx @better-auth/cli generate --output ./src/db/auth-schema.ts",
+    "generate:migration": "npx drizzle-kit generate"
+  },
+  "dependencies": {
+    "@rocicorp/zero": "^0.16.2025022800",
+    "@solid-primitives/storage": "^4.3.1",
+    "@solidjs/router": "^0.15.3",
+    "@solidjs/start": "^1.1.2",
+    "better-auth": "^1.2.2",
+    "drizzle-orm": "^0.40.0",
+    "drizzle-zero": "^0.5.1",
+    "pg": "^8.13.3",
+    "solid-js": "^1.9.5",
+    "vinxi": "^0.5.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.9",
+    "drizzle-kit": "^0.30.5",
+    "tailwindcss": "^4.0.9"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "trustedDependencies": [
+    "@rocicorp/zero-sqlite3"
+  ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@rocicorp/zero-sqlite3"
+    ]
+  }
+}
