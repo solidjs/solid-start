@@ -1,6 +1,6 @@
 # SolidStart
 
-Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
+Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com) and [SolidBase](https://solidbase.kobalte.dev/);
 
 ## Creating a project
 
