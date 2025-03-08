@@ -1,4 +1,5 @@
 import { Link, Outlet, createRootRoute } from "@tanstack/solid-router";
+import { TanStackRouterDevtoolsInProd } from "@tanstack/solid-router-devtools";
 import { Suspense } from "solid-js";
 
 export const Route = createRootRoute({
@@ -12,6 +13,7 @@ function RootComponent() {
       <Link to="/about">About</Link>
       <Suspense>
         <Outlet />
+        <TanStackRouterDevtoolsInProd />
       </Suspense>
     </>
   );
