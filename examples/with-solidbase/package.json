@@ -1,0 +1,26 @@
+{
+  "name": "example-with-solidbase",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "version": "vinxi version"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.5",
+    "@fontsource-variable/jetbrains-mono": "^5.2.5",
+    "@fontsource-variable/lexend": "^5.2.5",
+    "@iconify-json/ri": "^1.2.5",
+    "@kobalte/solidbase": "^0.0.21",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.1.0",
+    "solid-js": "^1.9.5",
+    "solid-mdx": "^0.0.7",
+    "vinxi": "^0.5.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
