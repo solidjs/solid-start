@@ -4,7 +4,7 @@ import { clientOnly } from "@solidjs/start";
 import { Suspense } from "solid-js";
 
 
-const ClientOnlyComp = clientOnly(() => import("../components/Devtools"));
+const Devtools = clientOnly(() => import("../components/Devtools"));
 
 export const Route = createRootRoute({
   component: RootComponent
@@ -17,7 +17,7 @@ function RootComponent() {
       <Link to="/about">About</Link>
       <Suspense>
         <Outlet />
-        <ClientOnlyComp />
+        <Devtools />
       </Suspense>
     </>
   );
