@@ -40,8 +40,8 @@
   },
   "dependencies": {},
   "engines": {
-    "pnpm": "^9.15.0",
+    "pnpm": "^10.6.1",
     "node": ">=22"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@10.6.1"
 }
