@@ -12,7 +12,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.2.5",
     "@fontsource-variable/lexend": "^5.2.5",
     "@iconify-json/ri": "^1.2.5",
-    "@kobalte/solidbase": "^0.0.21",
+    "@kobalte/solidbase": "^0.0.22",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "^1.1.0",
