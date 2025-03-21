@@ -84,7 +84,6 @@ async function handleServerFunction(h3Event: HTTPEvent) {
 
   const serverReference = request.headers.get("X-Server-Id");
   const instance = request.headers.get("X-Server-Instance");
-  const singleFlight = request.headers.has("X-Single-Flight");
   const url = new URL(request.url);
   let functionId: string | undefined | null, name: string | undefined | null;
   if (serverReference) {
@@ -215,7 +214,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       return serverFunction(...parsed);
     });
 
-    if (singleFlight && instance) {
+    if (request.headers.has("X-Single-Flight") && instance) {
       result = await handleSingleFlight(event, result);
     }
 
@@ -241,7 +240,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     return serializeToStream(instance, result);
   } catch (x) {
     if (x instanceof Response) {
-      if (singleFlight && instance) {
+      if (request.headers.has("X-Single-Flight") && instance) {
         x = await handleSingleFlight(event, x);
       }
       // forward headers
