@@ -328,7 +328,7 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
       delete cookies[name];
       return;
     }
-    if (expires != null && expires.getTime() < Date.now()) {
+    if (expires != null && expires.getTime() <= Date.now()) {
       delete cookies[name];
       return;
     }
