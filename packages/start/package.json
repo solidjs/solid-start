@@ -16,7 +16,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "node build && pnpm tsc"
+    "build": "node build && pnpm tsc && node rewrite-extensions"
   },
   "files": [
     "config",
@@ -59,6 +59,8 @@
     }
   },
   "devDependencies": {
+    "exsolve": "^1.0.4",
+    "magicast": "^0.3.5",
     "solid-js": "^1.9.5",
     "vinxi": "^0.5.3"
   },

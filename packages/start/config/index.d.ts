@@ -1,11 +1,11 @@
 import type { AppOptions, createApp } from "vinxi";
 import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
-import { InlineConfig } from "vite";
+import { ServerOptions } from "vite";
 import type { Options } from "vite-plugin-solid";
 
 // should probably be maintained by Vinxi
 type VinxiViteServerOptions = Omit<
-  InlineConfig["server"],
+  ServerOptions,
   "port" | "strictPort" | "host" | "middlewareMode" | "open"
 >;
 
