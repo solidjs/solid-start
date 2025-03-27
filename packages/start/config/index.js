@@ -37,6 +37,23 @@ function solidStartServerFsRouter(config) {
     );
 }
 
+/**
+ * @param {string} filepath
+ * @returns {string}
+ */
+function convertToRelativePath(filepath) {
+  const arr = filepath.split("/src/");
+  return arr[1] ? `~/${arr[1]}` : filepath;
+}
+
+/** encode string, here to base64
+ * @param {string} str
+ * @returns {string}
+ */
+function encodeString(str) {
+  return btoa(encodeURIComponent(str));
+}
+
 const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
   // This is the ID that will be available to look up and import
   // our server function manifest and resolve its module
@@ -47,7 +64,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
-      `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${() => {}}, '${encodeString(opts.functionId)}', '${encodeString(convertToRelativePath(opts.extractedFilename))}')`
   },
   ssr: {
     getRuntimeCode: () =>
@@ -55,7 +72,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${opts.fn}, '${encodeString(opts.functionId)}', '${encodeString(convertToRelativePath(opts.extractedFilename))}')`
   },
   server: {
     getRuntimeCode: () =>
@@ -63,7 +80,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${opts.fn}, '${encodeString(opts.functionId)}', '${encodeString(convertToRelativePath(opts.extractedFilename))}')`
   }
 });
 

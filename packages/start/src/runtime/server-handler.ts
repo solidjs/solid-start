@@ -78,6 +78,11 @@ function serializeToStream(id: string, value: any) {
   });
 }
 
+/** decode string, here to base64 */
+function decodeString(str?: string) {
+  return str ? decodeURIComponent(atob(str)) : str;
+}
+
 async function handleServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
@@ -100,7 +105,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
         : new Response(null, { status: 404 });
     }
   }
-
+  functionId = decodeString(functionId);
   const serverFnInfo = serverFnManifest[functionId];
   let fnModule: undefined | { [key: string]: any };
 
