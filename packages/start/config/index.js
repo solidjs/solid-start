@@ -1,5 +1,6 @@
 import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
 import defu from "defu";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,6 +38,23 @@ function solidStartServerFsRouter(config) {
     );
 }
 
+/**
+ * @param {string} filepath
+ * @returns {string}
+ */
+function convertToRelativePath(filepath) {
+  const arr = filepath.split("/src/");
+  return arr[1] ? `~/${arr[1]}` : filepath;
+}
+
+/** encode string, here to sha256 hash
+ * @param {string} str
+ * @returns {string}
+ */
+function encodeString(str) {
+  return createHash("sha256").update(str).digest("hex");
+}
+
 const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
   // This is the ID that will be available to look up and import
   // our server function manifest and resolve its module
@@ -47,7 +65,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
-      `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${() => {}}, '${encodeString(opts.functionId)}', '${encodeURIComponent(convertToRelativePath(opts.extractedFilename))}')`
   },
   ssr: {
     getRuntimeCode: () =>
@@ -55,7 +73,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${opts.fn}, '${encodeString(opts.functionId)}', '${encodeURIComponent(convertToRelativePath(opts.extractedFilename))}')`
   },
   server: {
     getRuntimeCode: () =>
@@ -63,7 +81,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${opts.fn}, '${encodeString(opts.functionId)}', '${encodeURIComponent(convertToRelativePath(opts.extractedFilename))}')`
   }
 });
 
