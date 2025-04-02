@@ -1,5 +1,4 @@
 /// <reference types="vinxi/types/server" />
-import { createHash } from "node:crypto";
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
 // @ts-ignore
 import {
@@ -79,38 +78,6 @@ function serializeToStream(id: string, value: any) {
   });
 }
 
-/** encode string, Need to be consistent with `packages/start/config/index.js`  */
-function encodeString(str: string) {
-  return createHash("sha256").update(str).digest("hex");
-}
-
-function hashObjectKey(objectValue: Record<string, any>) {
-  return Object.fromEntries(
-    Object.entries(objectValue).flatMap(([key, value]) => [
-      [key, value],
-      [encodeString(key), value]
-    ])
-  );
-}
-
-/**
- * Creates a hashed version of server function manifest with different behavior based on environment
- * 
- * In development: Uses a Proxy to dynamically access both original and hashed keys
- * In production: Directly returns an object with both original and hashed keys
- */
-const hashServerFnManifest = process.env.NODE_ENV === "development"
-  ? new Proxy(serverFnManifest, {  // Development environment uses Proxy
-      get(target, key) {
-        // If key not found in original manifest and key is string, try hashed version
-        if (!target[key] && typeof key === 'string') {
-          return hashObjectKey(target)[key];
-        }
-        return target[key];   
-      },
-    })
-  : hashObjectKey(serverFnManifest);   
-
 async function handleServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
@@ -133,7 +100,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
         : new Response(null, { status: 404 });
     }
   }
-  const serverFnInfo = hashServerFnManifest[functionId];
+  const serverFnInfo = serverFnManifest[functionId];
   let fnModule: undefined | { [key: string]: any };
 
   if (!serverFnInfo) {
