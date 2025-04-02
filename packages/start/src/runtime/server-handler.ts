@@ -100,6 +100,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
         : new Response(null, { status: 404 });
     }
   }
+  
   const serverFnInfo = serverFnManifest[functionId];
   let fnModule: undefined | { [key: string]: any };
 
