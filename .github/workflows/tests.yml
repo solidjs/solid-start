@@ -25,6 +25,9 @@ jobs:
       - name: Install project dependencies
         run: pnpm i
 
+      - name: Install Cypress binary
+        run: pnpm exec cypress install
+
       - name: Build SolidStart
         run: pnpm --filter @solidjs/start build
 
@@ -34,27 +37,21 @@ jobs:
       - name: Run unit tests
         run: pnpm --filter tests unit:ci
 
-      - name: Install Cypress dependencies
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: .
-          runTests: false
-
       - name: E2E Chromium
         uses: cypress-io/github-action@v6
         with:
+          project: ./packages/tests
           install: false
-          working-directory: packages/tests
-          start: pnpm start --host 127.0.0.1 --port 3000
+          start: pnpm --filter tests start --host 127.0.0.1 --port 3000
           wait-on: 'http://127.0.0.1:3000'
           browser: chromium
 
       - name: E2E Firefox
         uses: cypress-io/github-action@v6
         with:
+          project: ./packages/tests
           install: false
-          working-directory: packages/tests
-          start: pnpm start --host 127.0.0.1 --port 3000
+          start: pnpm --filter tests start --host 127.0.0.1 --port 3000
           wait-on: 'http://127.0.0.1:3000'
           browser: firefox
 
