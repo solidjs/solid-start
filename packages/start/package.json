@@ -63,7 +63,7 @@
     "vinxi": "^0.5.3"
   },
   "dependencies": {
-    "@tanstack/server-functions-plugin": "https://pkg.pr.new/TanStack/router/@tanstack/server-functions-plugin@4080",
+    "@tanstack/server-functions-plugin": "^1.105.2",
     "@vinxi/plugin-directives": "^0.5.0",
     "@vinxi/server-components": "^0.5.0",
     "defu": "^6.1.2",
