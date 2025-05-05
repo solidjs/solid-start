@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "allowJs": true,
+    "isolatedModules": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "skipLibCheck": true,
+    "types": ["vite/client"]
+  },
+  "include": ["./src", "./src/env.d.ts", "./src/internal.d.ts"]
+}

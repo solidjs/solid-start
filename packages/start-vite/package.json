@@ -1,0 +1,53 @@
+{
+  "name": "@solidjs/start-vite",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "exports": {
+    "./config": {
+      "default": "./dist/config/index.js",
+      "types": "./dist/config/index.d.ts"
+    },
+    "./server": {
+      "default": "./dist/server/index.jsx",
+      "types": "./dist/server/index.d.ts"
+    },
+    "./client": {
+      "default": "./dist/client/index.jsx",
+      "types": "./dist/server/index.d.ts"
+    },
+    "./router": {
+      "default": "./dist/router.js",
+      "types": "./dist/router.d.ts"
+    }
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/start": "^1.1.0",
+    "@tanstack/server-functions-plugin": "^1.115.0",
+    "@types/micromatch": "^4.0.9",
+    "defu": "^6.1.4",
+    "error-stack-parser": "^2.1.4",
+    "es-module-lexer": "^1.7.0",
+    "esbuild": "^0.25.3",
+    "fast-glob": "^3.3.3",
+    "h3": "^1.15.2",
+    "html-to-image": "^1.11.13",
+    "micromatch": "^4.0.8",
+    "nitropack": "^2.11.10",
+    "path-to-regexp": "^8.2.0",
+    "radix3": "^1.1.2",
+    "seroval": "^1.2.1",
+    "seroval-plugins": "^1.2.1",
+    "shiki": "^1.26.1",
+    "solid-js": "^1.9.5",
+    "source-map-js": "^1.2.1",
+    "terracotta": "^1.0.6",
+    "vite": "6.1.4",
+    "vite-plugin-solid": "^2.11.6"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
