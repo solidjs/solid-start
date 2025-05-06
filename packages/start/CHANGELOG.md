@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.1.4
+
+### Patch Changes
+
+- 68f9dfb: Add back support for generators in server functions
+
 ## 1.1.3
 
 ### Patch Changes
