@@ -16,10 +16,7 @@ interface Route {
   $DELETE?: any;
 }
 
-export const pageRoutes = defineRoutes(
-  [] /*fileRoutes as unknown as Route[]*/
-    .filter(o => o.page)
-);
+export const pageRoutes = defineRoutes((fileRoutes as unknown as Route[]).filter(o => o.page));
 
 function defineRoutes(fileRoutes: Route[]) {
   function processRoute(routes: Route[], route: Route, id: string, full: string) {

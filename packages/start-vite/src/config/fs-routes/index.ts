@@ -6,7 +6,7 @@ import { manifest } from "./manifest.js";
 
 export const moduleId = "solid-start:routes";
 
-type RouterBuilder = (config: ResolvedConfig) => BaseFileSystemRouter;
+export type RouterBuilder = (config: ResolvedConfig) => BaseFileSystemRouter;
 
 export function fsRoutes({
   routers,
@@ -15,12 +15,14 @@ export function fsRoutes({
   routers: Record<"client" | "server", RouterBuilder>;
   handlers: Record<"client" | "server", string>;
 }): Array<PluginOption> {
+  (globalThis as any).ROUTERS = {};
+
   return [
     manifest(handlers),
     {
       name: "solid-start-fs-routes",
       enforce: "pre",
-      resolveId(id) {
+      resolveId(id, importer) {
         if (id === moduleId) return id;
       },
       async load(id) {
@@ -33,6 +35,8 @@ export function fsRoutes({
         const router = routers[this.environment.name as keyof typeof routers](
           this.environment.config
         );
+
+        (globalThis as any).ROUTERS[this.environment.name] = router;
 
         const routes = await router.getRoutes();
 

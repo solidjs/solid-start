@@ -106,7 +106,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             ) : (
               <>
                 <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-                {/* <script
+                <script
                   type="module"
                   async
                   src={
@@ -114,7 +114,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
                       import.meta.env.MANIFEST["client"]!.handler
                     ]!.output.path
                   }
-                /> */}
+                />
               </>
             )
           }

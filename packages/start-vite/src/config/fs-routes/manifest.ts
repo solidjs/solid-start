@@ -73,7 +73,6 @@ export function manifest(handlers: Record<"client" | "server", string>): Array<P
                   {},
                   {
                     get(target, chunk: string) {
-                      console.log({ chunk });
                       // invariant(typeof chunk === "string", "Chunk expected");
                       const absolutePath = isAbsolute(chunk) ? chunk : join(root, chunk);
                       // invariant(router.type != "static", "No manifest for static router");
@@ -87,7 +86,6 @@ export function manifest(handlers: Record<"client" | "server", string>): Array<P
                       } else {
                         return {
                           import() {
-                            console.log({ absolutePath });
                             return viteServer?.ssrLoadModule(absolutePath);
                           },
                           output: {
@@ -229,7 +227,6 @@ export function manifest(handlers: Record<"client" | "server", string>): Array<P
                       } else {
                         return {
                           import() {
-                            console.log({ absolutePath });
                             return viteServer.ssrLoadModule(/* @vite-ignore */ join(absolutePath));
                           },
                           async assets() {

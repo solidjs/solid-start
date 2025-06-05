@@ -1,4 +1,4 @@
-import { promises as fsp } from "node:fs";
+import { promises as fsp, readFileSync } from "node:fs";
 import path, { dirname } from "node:path";
 import { build, copyPublicAssets, createNitro, Nitro, prepare, type NitroConfig } from "nitropack";
 import {
@@ -12,13 +12,16 @@ import {
 import { resolve } from "node:path";
 import { createEvent, getHeader, H3Event, sendWebResponse } from "h3";
 
+import { RouterBuilder } from "./fs-routes/index.js";
+
 export const clientDistDir = "node_modules/.solid-start/client-dist";
 export const serverDistDir = "node_modules/.solid-start/server-dist";
 export const ssrEntryFile = "ssr.mjs";
 
 export function nitroPlugin(
   options: { root: string },
-  getSsrBundle: () => Rollup.OutputBundle
+  getSsrBundle: () => Rollup.OutputBundle,
+  handlers: { client: string; server: string }
 ): Array<PluginOption> {
   return [
     {
@@ -34,6 +37,7 @@ export function nitroPlugin(
               if (!serverEnv) throw new Error("Server environment not found");
               if (!isRunnableDevEnvironment(serverEnv))
                 throw new Error("Server environment is not runnable");
+
               const serverEntry: { default: (e: H3Event) => Promise<any> } =
                 await serverEnv.runner.import("./src/entry-server.tsx");
               const resp = await serverEntry.default(event);
@@ -130,13 +134,8 @@ export function nitroPlugin(
               const clientEnv = builder.environments["client"];
               const serverEnv = builder.environments["server"];
 
-              if (!clientEnv) {
-                throw new Error("Client environment not found");
-              }
-
-              if (!serverEnv) {
-                throw new Error("SSR environment not found");
-              }
+              if (!clientEnv) throw new Error("Client environment not found");
+              if (!serverEnv) throw new Error("SSR environment not found");
 
               await builder.build(clientEnv);
               await builder.build(serverEnv);
@@ -155,6 +154,17 @@ export function nitroPlugin(
                 renderer: ssrEntryFile,
                 rollupConfig: {
                   plugins: [virtualBundlePlugin(getSsrBundle()) as any]
+                },
+                plugins: ["$solid-start:prod-app"],
+                virtual: {
+                  "$solid-start:prod-app": () => {
+                    return `
+                    const buildManifest = { client: ${readFileSync(path.resolve(options.root, clientDistDir, ".vite", "manifest.json"), "utf-8")} };
+
+                    export default function plugin() {
+                      globalThis.app = { buildManifest, handlers: ${JSON.stringify(handlers)} };
+                    }`;
+                  }
                 }
               };
 

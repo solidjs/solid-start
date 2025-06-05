@@ -12,7 +12,6 @@ export default function lazyRoute<T extends Record<string, any>>(
   return lazy(async () => {
     if (import.meta.env.DEV) {
       let manifest = import.meta.env.SSR ? serverManifest : clientManifest;
-      console.log({ component });
 
       // import() throws if a module doesn't exist, which includes any
       // modules loaded by the route itself, so it's important we catch here
@@ -50,7 +49,6 @@ export default function lazyRoute<T extends Record<string, any>>(
       return { default: Comp };
     } else {
       const mod = await component.import();
-      console.log(mod);
       const Component = mod[exported];
       let assets = await clientManifest.inputs?.[component.src].assets();
       const styles = assets.filter(

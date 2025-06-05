@@ -1,11 +1,10 @@
 import { getRequestEvent, isServer } from "solid-js/web";
-import lazyRoute from "./server/lazyRoute.js";
+import lazyRoute from "./server/lazyRoute.jsx";
 import type { PageEvent } from "./server/types.js";
 import { pageRoutes as routeConfigs } from "./server/routes.js";
 
 export function createRoutes() {
   function createRoute(route: any) {
-    console.log({ route });
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),

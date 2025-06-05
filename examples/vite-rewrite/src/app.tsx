@@ -1,14 +1,18 @@
-import { createSignal } from "solid-js";
-import "./app.css";
 import { MetaProvider } from "@solidjs/meta";
 import { FileRoutes } from "@solidjs/start-vite/router";
+import { Router } from "@solidjs/router";
+import { Suspense } from "solid-js";
+
+import "./app.css";
 
 export default function App() {
-  const [count, setCount] = createSignal(0);
-
   return (
-    <MetaProvider>
-      <FileRoutes />
-    </MetaProvider>
+    <Suspense>
+      <MetaProvider>
+        <Router>
+          <FileRoutes />
+        </Router>
+      </MetaProvider>
+    </Suspense>
   );
 }

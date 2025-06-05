@@ -11,6 +11,7 @@
     },
     "./server": {
       "default": "./dist/server/index.jsx",
+      "solid": "./dist/server/index.jsx",
       "types": "./dist/server/index.d.ts"
     },
     "./client": {
@@ -18,13 +19,12 @@
       "types": "./dist/server/index.d.ts"
     },
     "./router": {
-      "default": "./dist/router.js",
+      "default": "./dist/router.jsx",
       "types": "./dist/router.d.ts"
     }
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/start": "^1.1.0",
     "@tanstack/server-functions-plugin": "^1.115.0",
     "@types/micromatch": "^4.0.9",
     "defu": "^6.1.4",
@@ -44,7 +44,7 @@
     "solid-js": "^1.9.5",
     "source-map-js": "^1.2.1",
     "terracotta": "^1.0.6",
-    "vite": "6.1.4",
+    "vite": "6.3.4",
     "vite-plugin-solid": "^2.11.6"
   },
   "engines": {

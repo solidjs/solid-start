@@ -1,22 +1,18 @@
 import { eventHandler, H3Event } from "h3";
 import { provideRequestEvent } from "solid-js/web/storage";
+import type { JSX } from "solid-js";
+import { renderToString, renderToStringAsync } from "solid-js/web";
 
+import { sharedConfig } from "solid-js";
+import { createRoutes } from "../router.js";
 // import { handleServerFunction } from "./server-functions-handler";
 import { getFetchEvent } from "./fetchEvent.js";
 import { matchAPIRoute } from "./routes.js";
 import { FetchEvent, PageEvent } from "./types.js";
-import { JSX } from "solid-js/h/jsx-runtime";
-import { createRoutes } from "../router.js";
-import { renderToString } from "solid-js/web";
-import { sharedConfig } from "solid-js";
-
+import { createProdManifest } from "./prodManifest.js";
 export { StartServer } from "./StartServer.jsx";
 
 const SERVER_FN_BASE = "/_server";
-
-if (import.meta.env.PROD) {
-  (globalThis as any).MANIFEST = {};
-}
 
 async function createPageEvent(ctx: FetchEvent) {
   const clientManifest = import.meta.env.MANIFEST["client"]!;
@@ -52,6 +48,8 @@ async function createPageEvent(ctx: FetchEvent) {
 }
 
 export function createHandler(fn: (context: PageEvent) => JSX.Element) {
+  if (import.meta.env.PROD) createProdManifest();
+
   return eventHandler(async (e: H3Event) => {
     const fetchEvent = getFetchEvent(e);
 
@@ -66,7 +64,7 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
       if (match) return;
 
       const context = await createPageEvent(fetchEvent);
-      const html = renderToString(() => {
+      const html = await renderToStringAsync(() => {
         (sharedConfig.context as any).event = context;
         return fn(context);
       });

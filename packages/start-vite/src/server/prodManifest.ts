@@ -1,19 +1,22 @@
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
-export function createProdManifest(app) {
+export function createProdManifest() {
+  const app = (globalThis as any).app;
+
+  console.log({ app });
+
   const manifest = new Proxy(
     {},
     {
       get(target, routerName) {
         // invariant(typeof routerName === "string", "Bundler name expected");
-        const router = app.getRouter(routerName);
-        const bundlerManifest = app.config.buildManifest[routerName];
-        console.log(bundlerManifest);
+        console.log({ buildManifest: app.buildManifest });
+        const bundlerManifest = app.buildManifest[routerName];
 
         // invariant(router.type !== "static", "manifest not available for static router");
         return {
-          handler: router.handler,
+          handler: app.handlers[routerName],
           async assets() {
             const assets: Record<string, string[]> = {};
             assets[router.handler] = await this.inputs[router.handler].assets();
@@ -73,7 +76,7 @@ export function createProdManifest(app) {
               get(target, input) {
                 // invariant(typeof input === "string", "Input expected");
                 const id = input;
-                if (router.target === "server") {
+                if (routerName === "server") {
                   // const id = input === router.handler ? virtualId(handlerModule(router)) : input;
                   return {
                     assets() {
@@ -88,11 +91,8 @@ export function createProdManifest(app) {
                       path: join(router.outDir, router.base /* , bundlerManifest[id].file */)
                     }
                   };
-                } else if (router.target === "browser") {
-                  const id = input;
-                  // input === router.handler && !input?.endsWith(".html")
-                  //   ? virtualId(handlerModule(router))
-                  //   : input;
+                } else if (routerName === "client") {
+                  const id = input.replace("./", "");
                   return {
                     import() {
                       return import(
@@ -112,11 +112,7 @@ export function createProdManifest(app) {
                       // );
                     },
                     output: {
-                      path: join(
-                        app.config.server.baseURL ?? "",
-                        router.base,
-                        bundlerManifest[id].file
-                      )
+                      path: join("", bundlerManifest[id].file)
                     }
                   };
                 }
@@ -128,8 +124,10 @@ export function createProdManifest(app) {
     }
   );
 
-  return manifest;
+  (globalThis as any).MANIFEST = manifest;
 }
+
+createProdManifest();
 
 export function virtualId(moduleName: string) {
   return `virtual:${moduleName}`;

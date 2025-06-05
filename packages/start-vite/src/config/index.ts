@@ -8,7 +8,7 @@ import { existsSync } from "node:fs";
 
 import { fsRoutes } from "./fs-routes/index.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
-import { clientDistDir, nitroPlugin, ssrEntryFile } from "./nitroPlugin.js";
+import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile } from "./nitroPlugin.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -83,6 +83,28 @@ function solidStartVitePlugin(): Array<PluginOption> {
   let entryExtension = ".tsx";
   if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) entryExtension = ".jsx";
 
+  const handlers = {
+    client: `${start.appRoot}/entry-client${entryExtension}`,
+    server: `${start.appRoot}/entry-server${entryExtension}`
+  };
+
+  const routers = {
+    handlers,
+    routers: {
+      client: config =>
+        new SolidStartClientFileRouter({
+          dir: absolute(routeDir, config.root),
+          extensions
+        }),
+      server: config =>
+        new SolidStartServerFileRouter({
+          dir: absolute(routeDir, config.root),
+          extensions,
+          dataOnly: !start.ssr
+        })
+    }
+  };
+
   return [
     {
       name: "solid-start-vite-config-client",
@@ -116,10 +138,12 @@ function solidStartVitePlugin(): Array<PluginOption> {
                 ssr: true,
                 // we don't write to the file system as the below 'capture-output' plugin will
                 // capture the output and write it to the virtual file system
-                write: false,
+                write: true,
+                manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
                   output: {
+                    dir: path.resolve(process.cwd(), serverDistDir),
                     entryFileNames: ssrEntryFile
                   },
                   plugins: [
@@ -128,7 +152,6 @@ function solidStartVitePlugin(): Array<PluginOption> {
                       generateBundle(options, bundle) {
                         // TODO can this hook be called more than once?
                         ssrBundle = bundle;
-                        console.log(ssrBundle);
                       }
                     }
                   ] as Array<PluginOption>
@@ -159,29 +182,9 @@ function solidStartVitePlugin(): Array<PluginOption> {
         return SolidStartServerFnsPlugin.client;
       }
     },
-    fsRoutes({
-      handlers: {
-        client: `${start.appRoot}/entry-client${entryExtension}`,
-        server: `${start.appRoot}/entry-server${entryExtension}`
-      },
-      routers: {
-        client: config =>
-          new SolidStartClientFileRouter({
-            dir: absolute(routeDir, config.root),
-            extensions
-          }),
-        server: config =>
-          new SolidStartServerFileRouter({
-            dir: absolute(routeDir, config.root),
-            extensions,
-            dataOnly: !start.ssr
-          })
-      }
-    }),
-    solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) }),
-    nitroPlugin({ root: process.cwd() }, () => {
-      return ssrBundle;
-    })
+    fsRoutes(routers),
+    nitroPlugin({ root: process.cwd() }, () => ssrBundle, handlers),
+    solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) })
   ];
 }
 
