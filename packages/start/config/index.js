@@ -1,6 +1,7 @@
 import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
 import defu from "defu";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
+import { rm } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createApp, resolve } from "vinxi";
@@ -85,6 +86,39 @@ export function defineConfig(baseConfig = {}) {
       },
       experimental: {
         asyncContext: true
+      },
+      //remove this hook when this is fixed in vinxi
+      hooks: {
+        compiled: async nitro => {
+          const app = globalThis.app;
+          for (const router of app.config.routers.filter(
+            r => r.type === "http" && r.target === "server"
+          )) {
+            const routerDir = join(nitro.options.output.publicDir, router.base);
+            const assetsDir = join(routerDir, "assets");
+            if (!existsSync(assetsDir)) {
+              continue;
+            }
+
+            let hasFilesDeleted = false;
+            const assetFiles = readdirSync(assetsDir);
+            for (const assetName of assetFiles) {
+              if (
+                assetName.endsWith(".js") ||
+                assetName.endsWith(".cjs") ||
+                assetName.endsWith(".mjs") ||
+                assetName.includes(".js.") ||
+                assetName.includes(".cjs.") ||
+                assetName.includes(".mjs.")
+              ) {
+                if (!hasFilesDeleted) {
+                  hasFilesDeleted = true;
+                }
+                await rm(join(assetsDir, assetName));
+              }
+            }
+          }
+        }
       }
     }
   });

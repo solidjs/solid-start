@@ -10,7 +10,7 @@
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "^1.1.0",
     "date-fns": "^3.6.0",
-    "solid-js": "^1.9.5",
+    "solid-js": "^1.9.7",
     "marked": "^12.0.1",
     "unstorage": "1.10.2",
     "vinxi": "^0.5.3"
