@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.1.5
+
+### Patch Changes
+
+- 2bae61e: fix infinite loop on unexpected response from server function (issue #1898)
+
 ## 1.1.4
 
 ### Patch Changes
