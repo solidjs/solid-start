@@ -12,7 +12,7 @@
     "@solidjs/start": "^1.1.0",
     "solid-js": "^1.9.5",
     "solid-styled": "^0.12.0",
-    "vinxi": "^0.5.3",
+    "vinxi": "^0.5.7",
     "unplugin-solid-styled": "^0.12.0"
   },
   "engines": {

@@ -17,7 +17,7 @@
     "better-sqlite3": "^11.0.0",
     "drizzle-orm": "^0.31.2",
     "solid-js": "^1.9.5",
-    "vinxi": "^0.5.3"
+    "vinxi": "^0.5.7"
   },
   "engines": {
     "node": ">=20"
