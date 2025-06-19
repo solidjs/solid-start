@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 1.1.5
+
+### Patch Changes
+
+- 2bae61e: fix infinite loop on unexpected response from server function (issue #1898)
+- bb5eaef: bump vinxi to latest AND pin @tanstack/server-functions-plugin to 1.121.21
+
 ## 1.1.4
 
 ### Patch Changes
