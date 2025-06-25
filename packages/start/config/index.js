@@ -99,12 +99,6 @@ export function defineConfig(baseConfig = {}) {
   }
 
   return createApp({
-    server: {
-      compressPublicAssets: {
-        brotli: process.versions.bun ? false : true
-      },
-      ...server
-    },
     routers: [
       {
         name: "public",
