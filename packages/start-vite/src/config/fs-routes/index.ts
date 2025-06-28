@@ -22,7 +22,7 @@ export function fsRoutes({
     {
       name: "solid-start-fs-routes",
       enforce: "pre",
-      resolveId(id, importer) {
+      resolveId(id) {
         if (id === moduleId) return id;
       },
       async load(id) {
@@ -72,7 +72,7 @@ export function fsRoutes({
                   : `_$(() => { const id = '${relative(
                       root,
                       buildId
-                    )}'; return import(/* @vite-ignore */ import.meta.env.MANIFEST['${
+                    )}'; return import(/* @vite-ignore */ globalThis.MANIFEST['${
                       this.environment.name
                     }'].inputs[id].output.path) })$_`
             };

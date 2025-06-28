@@ -1,7 +1,7 @@
 // @refresh skip
 // @ts-ignore
 import App from "#start/app";
-import type { Component, JSX } from "solid-js";
+import type { Component } from "solid-js";
 import {
   Hydration,
   HydrationScript,
@@ -14,6 +14,7 @@ import {
 import { renderAsset } from "./renderAsset.jsx";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
+import { manifest } from "solid-start:server-manifest";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -42,35 +43,35 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   const nonce = context.nonce;
 
   let assets: Asset[] = [];
-  Promise.resolve().then(async () => {
-    let assetPromises: Promise<Asset[]>[] = [];
-    // @ts-ignore
-    if (context.router && context.router.matches) {
-      // @ts-ignore
-      const matches = [...context.router.matches];
-      while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
-      const matched = matches.length && matchRoute(matches, context.routes);
-      if (matched) {
-        const inputs = import.meta.env.MANIFEST[
-          import.meta.env.START_ISLANDS ? "server" : "client"
-        ]!.inputs;
-        for (let i = 0; i < matched.length; i++) {
-          const segment = matched[i];
-          const part = inputs[segment["$component"].src]!;
-          assetPromises.push(part.assets() as any);
-        }
-      } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
-    }
-    assets = await Promise.all(assetPromises).then(a =>
-      // dedupe assets
-      [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
-        import.meta.env.START_ISLANDS
-          ? false
-          : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
-            !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
-      )
-    );
-  });
+  // Promise.resolve().then(async () => {
+  //   let assetPromises: Promise<Asset[]>[] = [];
+  //   // @ts-ignore
+  //   if (context.router && context.router.matches) {
+  //     // @ts-ignore
+  //     const matches = [...context.router.matches];
+  //     while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
+  //     const matched = matches.length && matchRoute(matches, context.routes);
+  //     if (matched) {
+  //       const inputs = import.meta.env.MANIFEST[
+  //         import.meta.env.START_ISLANDS ? "server" : "client"
+  //       ]!.inputs;
+  //       for (let i = 0; i < matched.length; i++) {
+  //         const segment = matched[i];
+  //         const part = inputs[segment["$component"].src]!;
+  //         assetPromises.push(part.assets() as any);
+  //       }
+  //     } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
+  //   }
+  //   assets = await Promise.all(assetPromises).then(a =>
+  //     // dedupe assets
+  //     [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
+  //       import.meta.env.START_ISLANDS
+  //         ? false
+  //         : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+  //           !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+  //     )
+  //   );
+  // });
 
   useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
 
@@ -82,7 +83,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           assets={
             <>
               <HydrationScript />
-              {context.assets.map((m: any) => renderAsset(m, nonce))}
+              {/* {context.assets.map((m: any) => renderAsset(m, nonce))} */}
             </>
           }
           scripts={
@@ -92,29 +93,12 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
                   nonce={nonce}
                   innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
                 />
-                {/* <script
-                  type="module"
-                  nonce={nonce}
-                  async
-                  src={
-                    import.meta.env.MANIFEST["client"]!.inputs[
-                      import.meta.env.MANIFEST["client"]!.handler
-                    ]!.output.path
-                  }
-                /> */}
+                <script type="module" nonce={nonce} async src={manifest.clientEntry} />
               </>
             ) : (
               <>
                 <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-                <script
-                  type="module"
-                  async
-                  src={
-                    import.meta.env.MANIFEST["client"]!.inputs[
-                      import.meta.env.MANIFEST["client"]!.handler
-                    ]!.output.path
-                  }
-                />
+                <script type="module" async src={manifest.clientEntry} />
               </>
             )
           }

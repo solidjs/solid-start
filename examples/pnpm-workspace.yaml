@@ -1,5 +1,5 @@
 packages:
-  - ./*
+  - ./vite-rewrite
 
 patchedDependencies:
   vite-plugin-solid: patches/vite-plugin-solid.patch

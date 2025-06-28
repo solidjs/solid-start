@@ -6,3 +6,8 @@ declare module "h3" {
     viteDevServer?: ViteDevServer;
   }
 }
+
+import type { Rollup } from "vite";
+declare global {
+  var START_CLIENT_BUNDLE: Rollup.OutputBundle;
+}

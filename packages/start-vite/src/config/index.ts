@@ -1,5 +1,5 @@
 import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
-import { PluginOption, Rollup } from "vite";
+import { normalizePath, PluginOption, Rollup } from "vite";
 import solid, { Options as SolidOptions } from "vite-plugin-solid";
 import { defu } from "defu";
 import path, { isAbsolute, join, normalize } from "node:path";
@@ -51,6 +51,13 @@ const absolute = (path: string, root: string) =>
 
 // this needs to live outside of the TanStackStartVitePlugin since it will be invoked multiple times by vite
 let ssrBundle: Rollup.OutputBundle;
+
+const VIRTUAL_MODULES = {
+  serverManifest: "solid-start:server-manifest",
+  clientProdManifest: "solid-start:client-prod-manifest"
+} as const;
+
+export const CLIENT_BASE_PATH = "_build";
 
 function solidStartVitePlugin(): Array<PluginOption> {
   const start = defu(
@@ -108,6 +115,7 @@ function solidStartVitePlugin(): Array<PluginOption> {
   return [
     {
       name: "solid-start-vite-config-client",
+      enforce: "pre",
       configEnvironment(name) {
         return {
           define: {
@@ -125,9 +133,9 @@ function solidStartVitePlugin(): Array<PluginOption> {
                 manifest: true,
                 rollupOptions: {
                   input: {
-                    main: "~/entry-client.tsx"
+                    client: handlers.client
                   },
-                  output: { dir: path.resolve(process.cwd(), clientDistDir) },
+                  output: { dir: path.resolve(process.cwd(), clientDistDir, CLIENT_BASE_PATH) },
                   external: ["node:fs", "node:path", "node:os", "node:crypto"]
                 }
               }
@@ -183,7 +191,60 @@ function solidStartVitePlugin(): Array<PluginOption> {
       }
     },
     fsRoutes(routers),
+    {
+      name: "solid-start:manifest-plugin",
+      enforce: "pre",
+      resolveId(id) {
+        if (id === VIRTUAL_MODULES.serverManifest) return `\0${VIRTUAL_MODULES.serverManifest}`;
+        if (id === VIRTUAL_MODULES.clientProdManifest)
+          return `\0${VIRTUAL_MODULES.clientProdManifest}`;
+      },
+      async load(id) {
+        if (id === `\0${VIRTUAL_MODULES.serverManifest}`) {
+          if (this.environment.config.command === "serve") {
+            return `export const manifest = { clientEntry: '${normalizePath(
+              path.join("/@fs", path.resolve(process.cwd(), handlers.client))
+            )}', routes: {} }`;
+          }
+
+          const entry = Object.values(globalThis.START_CLIENT_BUNDLE).find(
+            v => "isEntry" in v && v.isEntry
+          );
+          if (!entry) throw new Error("No client entry found");
+
+          const clientManifest: Record<string, { file: string }> = JSON.parse(
+            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source
+          );
+
+          const routes = Object.entries(clientManifest).reduce(
+            (acc, [id, entry]) => {
+              acc[id] = { output: `/${CLIENT_BASE_PATH}/${entry.file}` };
+              return acc;
+            },
+            {} as Record<string, { output: string }>
+          );
+
+          return `
+          import routes from 'solid-start:routes';
+          export const manifest = { clientEntry: '/${CLIENT_BASE_PATH}/${entry.fileName}', routes: ${JSON.stringify(routes)} };
+          `;
+        } else if (id === `\0${VIRTUAL_MODULES.clientProdManifest}`) {
+          return `
+const manifest = window.clientProdManifest;
+if(!manifest) throw new Error("No client manifest found, it was supposed to be rendered on the server!");
+export default manifest;
+`;
+        }
+      }
+    },
     nitroPlugin({ root: process.cwd() }, () => ssrBundle, handlers),
+    {
+      name: "solid-start:capture-client-bundle",
+      enforce: "post",
+      generateBundle(_options, bundle) {
+        globalThis.START_CLIENT_BUNDLE = bundle;
+      }
+    },
     solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) })
   ];
 }

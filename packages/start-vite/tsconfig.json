@@ -16,5 +16,5 @@
     "skipLibCheck": true,
     "types": ["vite/client"]
   },
-  "include": ["./src", "./src/env.d.ts", "./src/internal.d.ts"]
+  "include": ["./src", "./src/env.d.ts"]
 }

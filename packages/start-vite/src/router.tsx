@@ -15,11 +15,11 @@ export function createRoutes() {
       component:
         route.$component &&
         lazyRoute(
-          route.$component,
-          import.meta.env.START_ISLANDS
-            ? import.meta.env.MANIFEST["server"]
-            : import.meta.env.MANIFEST["client"],
-          import.meta.env.MANIFEST["server"]
+          route.$component
+          // import.meta.env.START_ISLANDS
+          //   ? import.meta.env.MANIFEST["server"]
+          //   : import.meta.env.MANIFEST["client"],
+          // import.meta.env.MANIFEST["server"]
         ),
       children: route.children ? route.children.map(createRoute) : undefined
     };

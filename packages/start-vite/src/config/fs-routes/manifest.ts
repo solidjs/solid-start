@@ -19,7 +19,7 @@ export function manifest(handlers: Record<"client" | "server", string>): Array<P
 
               // let base = join(app.config.server.baseURL ?? "", router.base);
 
-              // if (target === "client") {
+              // if (name === "client") {
               //   return {
               //     json() {
               //       return {};
@@ -230,7 +230,6 @@ export function manifest(handlers: Record<"client" | "server", string>): Array<P
                             return viteServer.ssrLoadModule(/* @vite-ignore */ join(absolutePath));
                           },
                           async assets() {
-                            console.log("SERVER ASSETS");
                             return [];
                             // return [
                             //   ...(viteServer

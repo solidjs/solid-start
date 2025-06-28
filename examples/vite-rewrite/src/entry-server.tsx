@@ -1,11 +1,6 @@
 // @refresh reload
 import { createHandler, StartServer } from "@solidjs/start-vite/server";
 
-// function bruh() {
-//   "use server";
-//   console.log("bruh");
-// }
-
 export default createHandler(() => (
   <StartServer
     document={({ assets, children, scripts }) => {
