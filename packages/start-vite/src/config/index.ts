@@ -9,6 +9,7 @@ import { existsSync } from "node:fs";
 import { fsRoutes } from "./fs-routes/index.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile } from "./nitroPlugin.js";
+import { StartServerManifest } from "solid-start:server-manifest";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -23,7 +24,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
   client: {
     getRuntimeCode: () =>
       `import { createServerReference } from "${normalize(
-        fileURLToPath(new URL("./server-runtime.ts", import.meta.url))
+        fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
       `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
@@ -31,7 +32,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
   ssr: {
     getRuntimeCode: () =>
       `import { createServerReference } from '${normalize(
-        fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url))
+        fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
       `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
@@ -39,7 +40,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
   server: {
     getRuntimeCode: () =>
       `import { createServerReference } from '${normalize(
-        fileURLToPath(new URL("./server-fns-runtime.ts", import.meta.url))
+        fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
       `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
@@ -59,30 +60,28 @@ const VIRTUAL_MODULES = {
 
 export const CLIENT_BASE_PATH = "_build";
 
-function solidStartVitePlugin(): Array<PluginOption> {
-  const start = defu(
-    { extensions: [] },
-    {
-      appRoot: "./src",
-      routeDir: "./routes",
-      ssr: true,
-      devOverlay: true,
-      experimental: {
-        islands: false
-      },
-      solid: {},
-      server: {
-        routeRules: {
-          "/_build/assets/**": {
-            headers: { "cache-control": "public, immutable, max-age=31536000" }
-          }
-        },
-        experimental: {
-          asyncContext: true
+function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
+  const start = defu(options, {
+    appRoot: "./src",
+    routeDir: "./routes",
+    ssr: true,
+    devOverlay: true,
+    experimental: {
+      islands: false
+    },
+    solid: {},
+    server: {
+      routeRules: {
+        "/_build/assets/**": {
+          headers: { "cache-control": "public, immutable, max-age=31536000" }
         }
+      },
+      experimental: {
+        asyncContext: true
       }
-    }
-  );
+    },
+    extensions: []
+  });
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
 
   const routeDir = join(start.appRoot, start.routeDir);
@@ -224,15 +223,16 @@ function solidStartVitePlugin(): Array<PluginOption> {
             {} as Record<string, { output: string }>
           );
 
-          return `
-          import routes from 'solid-start:routes';
-          export const manifest = { clientEntry: '/${CLIENT_BASE_PATH}/${entry.fileName}', routes: ${JSON.stringify(routes)} };
-          `;
+          const manifest: StartServerManifest = {
+            clientEntry: `/${CLIENT_BASE_PATH}/${entry.fileName}`,
+            routes
+          };
+
+          return `export const manifest = ${JSON.stringify(manifest)};`;
         } else if (id === `\0${VIRTUAL_MODULES.clientProdManifest}`) {
           return `
-const manifest = window.clientProdManifest;
-if(!manifest) throw new Error("No client manifest found, it was supposed to be rendered on the server!");
-export default manifest;
+if(!window.manifest) throw new Error("No client manifest found");
+export default window.manifest;
 `;
         }
       }

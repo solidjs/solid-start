@@ -41,9 +41,7 @@ export function fsRoutes({
         const routes = await router.getRoutes();
 
         let routesCode = JSON.stringify(routes ?? [], (k, v) => {
-          if (v === undefined) {
-            return undefined;
-          }
+          if (v === undefined) return undefined;
 
           if (k.startsWith("$$")) {
             const buildId = `${v.src}?${v.pick.map((p: any) => `pick=${p}`).join("&")}`;
@@ -58,23 +56,18 @@ export function fsRoutes({
             return {
               require: `_$() => ({ ${Object.entries(refs)
                 .map(([pick, namedImport]) => `'${pick}': ${namedImport}`)
-                .join(", ")} })$_`,
-              src: isBuild ? relative(root, buildId) : buildId
+                .join(", ")} })$_`
+              // src: isBuild ? relative(root, buildId) : buildId
             };
           } else if (k.startsWith("$")) {
             const buildId = `${v.src}?${v.pick.map((p: any) => `pick=${p}`).join("&")}`;
             return {
-              src: isBuild ? relative(root, buildId) : buildId,
+              // src: isBuild ? undefined : relative(root, buildId),
               build: isBuild ? `_$() => import(/* @vite-ignore */ '${buildId}')$_` : undefined,
               import:
                 this.environment.name === "server"
                   ? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
-                  : `_$(() => { const id = '${relative(
-                      root,
-                      buildId
-                    )}'; return import(/* @vite-ignore */ globalThis.MANIFEST['${
-                      this.environment.name
-                    }'].inputs[id].output.path) })$_`
+                  : `_$(() => clientManifestImport('${relative(root, buildId)}'))$_`
             };
           }
           return v;
@@ -84,6 +77,14 @@ export function fsRoutes({
 
         const code = `
 ${js.getImportStatements()}
+${
+  this.environment.name === "server"
+    ? ""
+    : `
+function clientManifestImport(id) {
+  return import(/* @vite-ignore */ globalThis.MANIFEST.inputs[id].output.path)
+}`
+}
 export default ${routesCode}`;
         return code;
       }

@@ -1,4 +1,4 @@
-import { eventHandler, H3Event } from "h3";
+import { eventHandler, getResponseHeaders, H3Event, sendStream, sendWebResponse } from "h3";
 import { provideRequestEvent } from "solid-js/web/storage";
 import type { JSX } from "solid-js";
 import { renderToStringAsync } from "solid-js/web";
@@ -12,6 +12,8 @@ import { FetchEvent, PageEvent } from "./types.js";
 // import { createProdManifest } from "./prodManifest.js";
 export { StartServer } from "./StartServer.jsx";
 import { createRoutes } from "../router.jsx";
+import { join } from "pathe";
+import { handleServerFunction } from "./server-functions-handler.js";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -58,8 +60,18 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
       const url = new URL(fetchEvent.request.url);
       const pathname = url.pathname;
 
-      // const serverFunctionTest = path.join("/", SERVER_FN_BASE, "/");
-      // if (pathname.startsWith(serverFunctionTest)) return await handleServerFunction(e);
+      const serverFunctionTest = join("/", SERVER_FN_BASE);
+      if (pathname.startsWith(serverFunctionTest)) {
+        const serverFnResponse = await handleServerFunction(e);
+
+        console.log({ serverFnResponse });
+
+        if (serverFnResponse instanceof Response) return serverFnResponse;
+
+        const resp = new Response(serverFnResponse, { headers: getResponseHeaders(e) });
+
+        return resp;
+      }
 
       const match = matchAPIRoute(pathname, fetchEvent.request.method);
       if (match) return;

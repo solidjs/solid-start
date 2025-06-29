@@ -66,7 +66,6 @@ export function createBaseHandler(
         const resolvedOptions =
           typeof options == "function" ? await options(context) : { ...options };
         const mode = resolvedOptions.mode || "stream";
-        // @ts-ignore
         if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
 
         if (mode === "sync" || !import.meta.env.START_SSR) {

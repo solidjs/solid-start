@@ -15,7 +15,16 @@ import {
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { eventHandler, parseCookies, setHeader, setResponseStatus, H3Event } from "h3";
+import {
+  eventHandler,
+  parseCookies,
+  setHeader,
+  setResponseStatus,
+  H3Event,
+  getHeader,
+  setResponseHeader,
+  getResponseHeader
+} from "h3";
 // @ts-ignore
 import serverFnManifest from "solidstart:server-fn-manifest";
 import { isRunnableDevEnvironment } from "vite";
@@ -207,6 +216,8 @@ export async function handleServerFunction(h3Event: H3Event) {
       return serverFunction(...parsed);
     });
 
+    console.log({ result });
+
     // if (singleFlight && instance) {
     //   result = await handleSingleFlight(event, result);
     // }
@@ -229,7 +240,14 @@ export async function handleServerFunction(h3Event: H3Event) {
     // handle no JS success case
     if (!instance) return handleNoJS(result, request, parsed);
 
-    setHeader(h3Event, "content-type", "text/javascript");
+    setResponseHeader(h3Event, "content-type", "text/javascript");
+
+    console.log({
+      instance,
+      result,
+      b: getResponseHeader(h3Event, "content-type")
+    });
+
     return serializeToStream(instance, result);
   } catch (x) {
     if (x instanceof Response) {

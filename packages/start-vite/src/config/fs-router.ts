@@ -36,8 +36,8 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
           pick: ["$css"]
         },
         $$route: undefined,
-        path,
-        filePath: src
+        path
+        // filePath: src
       };
     }
 
@@ -57,8 +57,8 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
               pick: ["route"]
             }
           : undefined,
-        path,
-        filePath: src
+        path
+        // filePath: src
       };
     }
   }
@@ -120,8 +120,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
           pick: ["$css"]
         },
         $$route: undefined,
-        path,
-        filePath: src
+        path
       };
     }
 
@@ -146,8 +145,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
             }
           : undefined,
         ...createHTTPHandlers(src, exports),
-        path,
-        filePath: src
+        path
       };
     }
   }

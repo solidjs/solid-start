@@ -1,9 +1,10 @@
 declare module "solid-start:server-manifest" {
-  interface Manifest {
+  interface StartServerManifest {
     clientEntry: string;
+    routes: Record<string, { output: string }>;
   }
 
-  export const manifest: Manifest;
+  export const manifest: StartServerManifest;
 }
 
 declare module "solid-start:client-prod-manifest" {

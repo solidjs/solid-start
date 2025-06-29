@@ -192,7 +192,7 @@ async function fetchServerFunction(
 }
 
 export function createServerReference(fn: Function, id: string, name: string) {
-  const baseURL = import.meta.env.SERVER_BASE_URL;
+  const baseURL = import.meta.env.SERVER_BASE_URL ?? "";
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
@@ -202,7 +202,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
         return receiver.withOptions({ method: "GET" });
       }
       if (prop === "withOptions") {
-        const url = `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(
+        const url = `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(
           name
         )}`;
         return (options: RequestInit) => {

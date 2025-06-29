@@ -1,5 +1,6 @@
 packages:
   - ./vite-rewrite
+  - ./todomvc
 
 patchedDependencies:
   vite-plugin-solid: patches/vite-plugin-solid.patch

@@ -14,7 +14,7 @@ export { pathToRegexp };
 export const glob = (path: string) => fg.sync(path, { absolute: true });
 
 export type FileSystemRouterConfig = { dir: string; extensions: string[] };
-type Route = { path: string } & any;
+type Route = { path: string } & Record<string, any>;
 
 export function cleanPath(src: string, config: FileSystemRouterConfig) {
   return src
@@ -72,12 +72,10 @@ export class BaseFileSystemRouter extends EventTarget {
     throw new Error("Not implemented");
   }
 
-  toRoute(src: string): Route | null {
+  toRoute(src: string): Route | undefined {
     let path = this.toPath(src);
 
-    if (path === undefined) {
-      return null;
-    }
+    if (path === undefined) return;
 
     const [_, exports] = analyzeModule(src);
 
@@ -90,8 +88,8 @@ export class BaseFileSystemRouter extends EventTarget {
         src: src,
         pick: ["default", "$css"]
       },
-      path,
-      filePath: src
+      path
+      // filePath: src
     };
   }
 
@@ -109,10 +107,10 @@ export class BaseFileSystemRouter extends EventTarget {
     src = normalize(src);
     if (this.isRoute(src)) {
       try {
-        const route = await this.toRoute(src);
+        const route = this.toRoute(src);
         if (route) {
           this._addRoute(route);
-          this.reload(route);
+          this.reload(route.path);
         }
       } catch (e) {
         console.error(e);
@@ -135,10 +133,10 @@ export class BaseFileSystemRouter extends EventTarget {
     src = normalize(src);
     if (this.isRoute(src)) {
       try {
-        const route = await this.toRoute(src);
+        const route = this.toRoute(src);
         if (route) {
           this._addRoute(route);
-          this.reload(route);
+          this.reload(route.path);
         }
       } catch (e) {
         console.error(e);

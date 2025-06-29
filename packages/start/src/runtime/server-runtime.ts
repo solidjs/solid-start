@@ -150,18 +150,18 @@ async function fetchServerFunction(
   const response = await (args.length === 0
     ? createRequest(base, id, instance, options)
     : args.length === 1 && args[0] instanceof FormData
-    ? createRequest(base, id, instance, { ...options, body: args[0] })
-    : args.length === 1 && args[0] instanceof URLSearchParams
-    ? createRequest(base, id, instance, {
-        ...options,
-        body: args[0],
-        headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" }
-      })
-    : createRequest(base, id, instance, {
-        ...options,
-        body: JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
-        headers: { ...options.headers, "Content-Type": "application/json" }
-      }));
+      ? createRequest(base, id, instance, { ...options, body: args[0] })
+      : args.length === 1 && args[0] instanceof URLSearchParams
+        ? createRequest(base, id, instance, {
+            ...options,
+            body: args[0],
+            headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" }
+          })
+        : createRequest(base, id, instance, {
+            ...options,
+            body: JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
+            headers: { ...options.headers, "Content-Type": "application/json" }
+          }));
 
   if (
     response.headers.has("Location") ||
@@ -203,7 +203,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
         return receiver.withOptions({ method: "GET" });
       }
       if (prop === "withOptions") {
-        const url = `${baseURL}/_server/?id=${encodeURIComponent(id)}&name=${encodeURIComponent(
+        const url = `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(
           name
         )}`;
         return (options: RequestInit) => {

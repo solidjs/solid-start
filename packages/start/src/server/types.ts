@@ -10,17 +10,20 @@ export type DocumentComponentProps = {
   children?: JSX.Element;
 };
 
-export type Asset = {
-  tag: "style";
-  attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
-  children?: JSX.Element;
-} | {
-  tag: "script";
-  attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
-} | {
-  tag: "link";
-  attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
-};
+export type Asset =
+  | {
+      tag: "style";
+      attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
+      children?: JSX.Element;
+    }
+  | {
+      tag: "script";
+      attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
+    }
+  | {
+      tag: "link";
+      attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
+    };
 
 export type HandlerOptions = {
   mode?: "sync" | "async" | "stream";
@@ -59,6 +62,7 @@ export interface PageEvent extends RequestEvent {
   // $type: typeof FETCH_EVENT;
   $islands: Set<string>;
   complete: boolean;
+  nonce?: string;
   // mutation: boolean;
 }
 

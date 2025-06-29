@@ -1,5 +1,5 @@
 import { promises as fsp } from "node:fs";
-import path, { dirname } from "node:path";
+import path, { dirname, join } from "node:path";
 import { build, copyPublicAssets, createNitro, Nitro, prepare, type NitroConfig } from "nitropack";
 import {
   Connect,
@@ -10,7 +10,7 @@ import {
   ViteDevServer
 } from "vite";
 import { resolve } from "node:path";
-import { createEvent, getHeader, H3Event, sendWebResponse } from "h3";
+import { createEvent, getHeader, H3Event, sendWebResponse, setHeader, setHeaders } from "h3";
 
 export const clientDistDir = "node_modules/.solid-start/client-dist";
 export const serverDistDir = "node_modules/.solid-start/server-dist";
@@ -39,10 +39,15 @@ export function nitroPlugin(
               const serverEntry: { default: (e: H3Event) => Promise<any> } =
                 await serverEnv.runner.import("./src/entry-server.tsx");
               const resp = await serverEntry.default(event);
+              // console.log({ resp });
               if (resp instanceof Response) {
                 if (resp.headers.get("content-type") === "text/html") {
                   const html = await viteDevServer.transformIndexHtml(resp.url, await resp.text());
                   sendWebResponse(event, new Response(html, resp));
+                } else {
+                  console.log({ event, resp });
+                  setHeader(event, "content-type", resp.headers.get("content-type") ?? "");
+                  sendWebResponse(event, resp);
                 }
               }
             } catch (e) {
@@ -153,17 +158,6 @@ export function nitroPlugin(
                 rollupConfig: {
                   plugins: [virtualBundlePlugin(getSsrBundle()) as any]
                 }
-                // plugins: ["$solid-start:prod-app"],
-                // virtual: {
-                //   "$solid-start:prod-app": () => {
-                //     return `
-                //     const buildManifest = { client: ${readFileSync(path.resolve(options.root, clientDistDir, ".vite", "manifest.json"), "utf-8")} };
-
-                //     export default function plugin() {
-                //       globalThis.app = { buildManifest, handlers: ${JSON.stringify(handlers)} };
-                //     }`;
-                //   }
-                // }
               };
 
               const nitro = await createNitro(nitroConfig);

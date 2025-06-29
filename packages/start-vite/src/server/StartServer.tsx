@@ -87,20 +87,13 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             </>
           }
           scripts={
-            nonce ? (
-              <>
-                <script
-                  nonce={nonce}
-                  innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-                />
-                <script type="module" nonce={nonce} async src={manifest.clientEntry} />
-              </>
-            ) : (
-              <>
-                <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-                <script type="module" async src={manifest.clientEntry} />
-              </>
-            )
+            <>
+              <script
+                nonce={nonce}
+                innerHTML={`window.manifest = ${JSON.stringify(manifest.routes)}`}
+              />
+              <script type="module" nonce={nonce} async src={manifest.clientEntry} />
+            </>
           }
         >
           {!import.meta.env.START_ISLANDS ? (
