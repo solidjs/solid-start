@@ -201,9 +201,13 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
       async load(id) {
         if (id === `\0${VIRTUAL_MODULES.serverManifest}`) {
           if (this.environment.config.command === "serve") {
-            return `export const manifest = { clientEntry: '${normalizePath(
-              path.join("/@fs", path.resolve(process.cwd(), handlers.client))
-            )}', routes: {} }`;
+            const manifest: StartServerManifest = {
+              clientEntryId: normalizePath(handlers.client),
+              clientViteManifest: {},
+              routes: {}
+            };
+
+            return `export const manifest = ${JSON.stringify(manifest)}`;
           }
 
           const entry = Object.values(globalThis.START_CLIENT_BUNDLE).find(
@@ -224,7 +228,9 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
           );
 
           const manifest: StartServerManifest = {
-            clientEntry: `/${CLIENT_BASE_PATH}/${entry.fileName}`,
+            clientEntryId: normalizePath(handlers.client),
+            // clientEntry: `/${CLIENT_BASE_PATH}/${entry.fileName}`,
+            clientViteManifest: clientManifest,
             routes
           };
 

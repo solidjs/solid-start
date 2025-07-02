@@ -15,6 +15,7 @@ import { renderAsset } from "./renderAsset.jsx";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
 import { manifest } from "solid-start:server-manifest";
+import { getClientEntryPath, getManifestEntryCssTags } from "./server-manifest.js";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -33,6 +34,8 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
   }
 }
 
+console.log(manifest.clientViteManifest);
+
 /**
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/start-server
@@ -43,37 +46,39 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   const nonce = context.nonce;
 
   let assets: Asset[] = [];
-  // Promise.resolve().then(async () => {
-  //   let assetPromises: Promise<Asset[]>[] = [];
-  //   // @ts-ignore
-  //   if (context.router && context.router.matches) {
-  //     // @ts-ignore
-  //     const matches = [...context.router.matches];
-  //     while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
-  //     const matched = matches.length && matchRoute(matches, context.routes);
-  //     if (matched) {
-  //       const inputs = import.meta.env.MANIFEST[
-  //         import.meta.env.START_ISLANDS ? "server" : "client"
-  //       ]!.inputs;
-  //       for (let i = 0; i < matched.length; i++) {
-  //         const segment = matched[i];
-  //         const part = inputs[segment["$component"].src]!;
-  //         assetPromises.push(part.assets() as any);
-  //       }
-  //     } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
-  //   }
-  //   assets = await Promise.all(assetPromises).then(a =>
-  //     // dedupe assets
-  //     [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
-  //       import.meta.env.START_ISLANDS
-  //         ? false
-  //         : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
-  //           !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
-  //     )
-  //   );
-  // });
+  Promise.resolve().then(async () => {
+    let assetPromises: Promise<Asset[]>[] = [];
+    // @ts-ignore
+    if (context.router && context.router.matches) {
+      //     // @ts-ignore
+      const matches = [...context.router.matches];
+      while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
+      const matched = matches.length && matchRoute(matches, context.routes);
+      if (matched) {
+        // const inputs = import.meta.env.MANIFEST[
+        //   import.meta.env.START_ISLANDS ? "server" : "client"
+        // ]!.inputs;
+        for (let i = 0; i < matched.length; i++) {
+          const segment = matched[i];
+          const assets = getManifestEntryCssTags(segment["$component"].src);
+          console.log({ id: segment["$component"].src, assets });
+          // const part = inputs[segment["$component"].src]!;
+          // assetPromises.push(part.assets() as any);
+        }
+      } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
+    }
+    //   assets = await Promise.all(assetPromises).then(a =>
+    //     // dedupe assets
+    //     [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
+    //       import.meta.env.START_ISLANDS
+    //         ? false
+    //         : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+    //           !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+    //     )
+    // );
+  });
 
-  useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
+  // useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
 
   return (
     <NoHydration>
@@ -83,7 +88,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           assets={
             <>
               <HydrationScript />
-              {/* {context.assets.map((m: any) => renderAsset(m, nonce))} */}
+              {context.assets.map((m: any) => renderAsset(m, nonce))}
             </>
           }
           scripts={
@@ -92,7 +97,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
                 nonce={nonce}
                 innerHTML={`window.manifest = ${JSON.stringify(manifest.routes)}`}
               />
-              <script type="module" nonce={nonce} async src={manifest.clientEntry} />
+              <script type="module" nonce={nonce} async src={getClientEntryPath()} />
             </>
           }
         >

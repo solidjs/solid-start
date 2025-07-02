@@ -1,6 +1,7 @@
 declare module "solid-start:server-manifest" {
   interface StartServerManifest {
-    clientEntry: string;
+    clientEntryId: string;
+    clientViteManifest: Record<string, any>;
     routes: Record<string, { output: string }>;
   }
 

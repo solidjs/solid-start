@@ -3,6 +3,7 @@ import { provideRequestEvent } from "solid-js/web/storage";
 import type { JSX } from "solid-js";
 import { renderToStringAsync } from "solid-js/web";
 import { manifest } from "solid-start:server-manifest";
+import { join } from "pathe";
 
 import { sharedConfig } from "solid-js";
 // import { handleServerFunction } from "./server-functions-handler";
@@ -12,8 +13,8 @@ import { FetchEvent, PageEvent } from "./types.js";
 // import { createProdManifest } from "./prodManifest.js";
 export { StartServer } from "./StartServer.jsx";
 import { createRoutes } from "../router.jsx";
-import { join } from "pathe";
 import { handleServerFunction } from "./server-functions-handler.js";
+import { getClientEntryCssTags } from "./server-manifest.js";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -25,17 +26,18 @@ async function createPageEvent(ctx: FetchEvent) {
   // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: manifest.routes,
-    //   assets: [
-    //     // ...(await clientManifest.inputs[clientManifest.handler]!.assets())
-    //     // ...(import.meta.env.DEV
-    //     //   ? await clientManifest.inputs[import.meta.env.START_APP]!.assets()
-    //     //   : []),
-    //     // ...(import.meta.env.START_ISLANDS
-    //     //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
-    //     //       s => (s as any).attrs.rel !== "modulepreload"
-    //     //     )
-    //     //   : [])
-    //   ],
+    assets: [
+      ...(await getClientEntryCssTags())
+      // not needed anymore?
+      // ...(import.meta.env.DEV
+      //   ? await clientManifest.inputs[import.meta.env.START_APP]!.assets()
+      //   : []),
+      // ...(import.meta.env.START_ISLANDS
+      //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
+      //       s => (s as any).attrs.rel !== "modulepreload"
+      //     )
+      //   : [])
+    ],
     //   router: {
     //     // submission: initFromFlash(ctx) as any
     //   },

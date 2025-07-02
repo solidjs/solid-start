@@ -62,7 +62,7 @@ export function fsRoutes({
           } else if (k.startsWith("$")) {
             const buildId = `${v.src}?${v.pick.map((p: any) => `pick=${p}`).join("&")}`;
             return {
-              // src: isBuild ? undefined : relative(root, buildId),
+              src: relative(root, buildId),
               build: isBuild ? `_$() => import(/* @vite-ignore */ '${buildId}')$_` : undefined,
               import:
                 this.environment.name === "server"
