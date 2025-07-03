@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.1.6
+
+### Patch Changes
+
+- ca310ec: respondWith and node.res.end behaves correctly
+
 ## 1.1.5
 
 ### Patch Changes
