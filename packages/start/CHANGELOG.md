@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- ca310ec: now using respondWith or node.res.end will behave correctly
+- ca310ec: respondWith or node.res.end will behave correctly
 
 ## 1.1.5
 
