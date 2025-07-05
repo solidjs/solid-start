@@ -52,7 +52,7 @@ export function CodeSnippet() {
         <TabContent manager="bun" command="create solid" />
         <TabContent manager="npm" command="create solid" />
         <TabContent manager="yarn" command="create solid" />
-        <TabContent manager="deno" command="run -A npm:create-solid" />
+        <TabContent manager="deno" command="init --npm solid" />
       </Tabs>
       <Suspense>
         <small class="font-mono text-right pt-2 inline-block w-full dark:text-sky-400/60 text-sky-950">
