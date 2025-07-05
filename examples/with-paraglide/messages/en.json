@@ -1,0 +1,18 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "menu_home": "Home",
+  "menu_about": "About",
+  "hello_world": "Hello World!",
+  "error_404": "Page Not Found",
+  "visit": "Visit",
+  "learn_solidstart": "to learn how to build SolidStart apps.",
+  "example_message": "User: {username}",
+  "example_name": "Hi, {firstname} {lastname}",
+  "about_content": "This is a demonstration of SolidStart with Paraglide JS for internationalization. It showcases how to build multilingual applications with automatic routing and message management.",
+  "features_title": "Features",
+  "feature_auto_detection": "Automatic language detection",
+  "feature_url_routing": "URL-based language routing",
+  "feature_type_safe": "Type-safe message system",
+  "feature_fast_lightweight": "Fast and lightweight",
+  "feature_seo_friendly": "SSR and SEO-friendly with proper lang attributes"
+}
