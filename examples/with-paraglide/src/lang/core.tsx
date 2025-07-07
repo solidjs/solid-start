@@ -2,6 +2,10 @@
 // TYPES AND INTERFACES
 // ============================================
 
+import { A, AnchorProps, useLocation, useNavigate, useParams } from '@solidjs/router';
+// @ts-expect-error - Bug of SolidStart
+import { PageEvent } from '@solidjs/start/dist/server';
+
 import {
   Accessor,
   Component,
@@ -11,11 +15,9 @@ import {
   ParentProps,
   useContext,
 } from 'solid-js';
+
 import { m } from '~/paraglide/messages.js';
 import { baseLocale, locales } from '~/paraglide/runtime';
-import { A, AnchorProps, useLocation, useNavigate, useParams } from '@solidjs/router';
-// @ts-ignore
-import { PageEvent } from "@solidjs/start/dist/server";
 
 // Exported Types
 export type AvailableLanguage = (typeof locales)[number];
@@ -49,7 +51,8 @@ export interface LangContextValue {
 // ============================================
 
 const AVAILABLE_LANGUAGES = new Set(locales as unknown as string[]);
-const STATIC_ASSET_REGEX = /\.(?:css|js|map|json|ico|svg|png|jpg|jpeg|gif|webp|woff|woff2|ttf|eot)$/i;
+const STATIC_ASSET_REGEX =
+  /\.(?:css|js|map|json|ico|svg|png|jpg|jpeg|gif|webp|woff|woff2|ttf|eot)$/i;
 const EXTERNAL_URL_REGEX = /^https?:\/\//;
 
 // ============================================
@@ -106,7 +109,7 @@ function parsePathname(pathname: string): ParsedPath {
 }
 
 function buildPath(parts: string[], preserveTrailingSlash: boolean, originalPath: string): string {
-  if (!parts.length) return '/';
+  if (parts.length === 0) return '/';
 
   let newPath = `/${parts.join('/')}`;
 
@@ -154,12 +157,7 @@ export function addLanguageToPath(
   }
 
   // Add language preserving format
-  let newPath: string;
-  if (path === '/' && preserveRootSlash) {
-    newPath = `/${lang}/`;
-  } else {
-    newPath = `/${lang}${path}`;
-  }
+  const newPath = path === '/' && preserveRootSlash ? `/${lang}/` : `/${lang}${path}`;
 
   return newPath + queryAndHash;
 }
@@ -190,7 +188,9 @@ export function langServerMiddleware(event: PageEvent): AvailableLanguage {
 // ============================================
 // PROVIDER COMPONENT
 // ============================================
-
+/**
+ * @returns JSX.Element
+ */
 export const LangProvider: Component<ParentProps> = (props) => {
   const params = useParams();
   const navigate = useNavigate();
@@ -199,7 +199,9 @@ export const LangProvider: Component<ParentProps> = (props) => {
   // Get current locale from URL params
   const locale = createMemo(() => {
     const langParam = params.lang;
-    return (langParam && isAvailableLanguage(langParam) ? langParam : baseLocale) as AvailableLanguage;
+    return (
+      langParam && isAvailableLanguage(langParam) ? langParam : baseLocale
+    ) as AvailableLanguage;
   });
 
   // Handle client-side language detection and redirection
@@ -214,7 +216,10 @@ export const LangProvider: Component<ParentProps> = (props) => {
   };
 
   // Create localized messages with caching
-  const messageCache = new Map<string, Map<MessageKey, Function>>();
+  const messageCache = new Map<
+    string,
+    Map<MessageKey, (input: object, options: object) => string>
+  >();
 
   const messages = createMemo(() => {
     const currentLocale = locale();
@@ -224,22 +229,26 @@ export const LangProvider: Component<ParentProps> = (props) => {
       messageCache.set(currentLocale, new Map());
     }
 
-    const localeCache = messageCache.get(currentLocale)!;
-    const localizedMessages = {} as Record<MessageKey, Function>;
+    const localeCache = messageCache.get(currentLocale) as Map<
+      MessageKey,
+      (input: object, options: object) => string
+    >;
+    const localizedMessages = {} as Partial<
+      Record<MessageKey, (input: object, options: object) => string>
+    >;
 
     // Wrap each message function with the current locale
     for (const key in m) {
       const messageKey = key as MessageKey;
 
       if (localeCache.has(messageKey)) {
-        localizedMessages[messageKey] = localeCache.get(messageKey)!;
+        localizedMessages[messageKey] = localeCache.get(messageKey);
       } else {
         const originalFn = m[messageKey];
 
         // Create wrapped function that injects locale
-        const wrappedFn = (inputArgs: {}, options: {}) => {
-          // @ts-ignore - ignored to pass signature correctly
-          return originalFn(inputArgs, { locale: currentLocale, ...options });
+        const wrappedFn = (input: object, options: object) => {
+          return originalFn(input, { locale: currentLocale, ...options });
         };
 
         localeCache.set(messageKey, wrappedFn);
@@ -264,7 +273,7 @@ export const LangProvider: Component<ParentProps> = (props) => {
 
   // Initialize client language on mount
   createEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (globalThis.window != undefined) {
       initializeClientLanguage();
     }
   });
@@ -276,11 +285,7 @@ export const LangProvider: Component<ParentProps> = (props) => {
     setLocale,
   };
 
-  return (
-    <LangContext.Provider value={contextValue}>
-      {props.children}
-    </LangContext.Provider>
-  );
+  return <LangContext.Provider value={contextValue}>{props.children}</LangContext.Provider>;
 };
 
 // ============================================
@@ -298,7 +303,9 @@ export function useLang(): LangContextValue {
 // ============================================
 // COMPONENTS
 // ============================================
-
+/**
+ * @returns JSX.Element
+ */
 export const LangLink: Component<AnchorProps> = (props) => {
   const { locale } = useLang();
   // Destructure props to separate href from other props
