@@ -14,6 +14,7 @@ type ViteCustomizableConfig = CustomizableConfig & {
 };
 
 type SolidStartInlineConfig = {
+  publicDir?: string;
   ssr?: boolean;
   solid?: Options;
   extensions?: string[];

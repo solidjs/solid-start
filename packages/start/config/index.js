@@ -71,6 +71,7 @@ export function defineConfig(baseConfig = {}) {
   let { vite = {}, ...start } = baseConfig;
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   start = defu(start, {
+    publicDir: "./public",
     appRoot: "./src",
     routeDir: "./routes",
     ssr: true,
@@ -110,7 +111,7 @@ export function defineConfig(baseConfig = {}) {
         name: "public",
         type: "static",
         base: "/",
-        dir: "./public"
+        dir: start.publicDir
       },
       {
         name: "ssr",
