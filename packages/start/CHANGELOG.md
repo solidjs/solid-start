@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- f593ade: revert #1912
+- f593ade: revert [#1912](https://github.com/solidjs/solid-start/pull/1912)
 
 ## 1.1.6
 
