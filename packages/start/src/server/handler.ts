@@ -59,7 +59,6 @@ export function createBaseHandler(
               `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
             );
           }
-          return;
         }
 
         // render
