@@ -50,6 +50,12 @@ export default function App() {
             <li>
               <a href="/generator-server-function">generator server function</a>
             </li>
+            <li>
+              <a href="/not-found">Not Found</a>
+            </li>
+            <li>
+              <a href="/text-plain-response">Text Plain Response</a>
+            </li>
           </ul>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
