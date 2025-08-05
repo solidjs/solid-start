@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.2.0
+
+### Minor Changes
+
+- b454563: adds the option to change the public directory to something other than the default "public"
+
 ## 1.1.7
 
 ### Patch Changes
