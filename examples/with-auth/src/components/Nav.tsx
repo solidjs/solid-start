@@ -4,7 +4,7 @@ import { useSession } from "~/lib/Context";
 
 export default function Nav() {
   const { signedIn, signOut } = useSession();
-  const isHome = useMatch(() => "/index");
+  const isHome = useMatch(() => "/");
   const isAbout = useMatch(() => "/about");
 
   return (
