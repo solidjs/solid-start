@@ -1,38 +1,28 @@
 import { createStorage } from "unstorage";
 import fsLiteDriver from "unstorage/drivers/fs-lite";
 
-type User = {
+interface User {
   id: number;
-  username: string;
-  password: string;
-};
+  email: string;
+  password?: string;
+}
 
-const storage = createStorage({
-  driver: fsLiteDriver({
-    base: "./.data"
-  })
-});
-storage.setItem("users:data", [{ id: 0, username: "kody", password: "twixrox" }]);
-storage.setItem("users:counter", 1);
+const storage = createStorage({ driver: fsLiteDriver({ base: "./.data" }) });
 
-export const db = {
-  user: {
-    async create({ data }: { data: { username: string; password: string } }) {
-      const [{ value: users }, { value: index }] = await storage.getItems(["users:data", "users:counter"]);
-      const user = { ...data, id: index as number };
-      await Promise.all([
-        storage.setItem("users:data", [...(users as User[]), user]),
-        storage.setItem("users:counter", index as number + 1)
-      ]);
-      return user;
-    },
-    async findUnique({ where: { username = undefined, id = undefined } }: { where: { username?: string; id?: number } }) {
-      const users = await storage.getItem("users:data") as User[];
-      if (id !== undefined) {
-        return users.find(user => user.id === id);
-      } else {
-        return users.find(user => user.username === username);
-      }
-    }
-  }
-};
+export async function createUser(data: Pick<User, "email" | "password">) {
+  const users = (await storage.getItem<User[]>("users:data")) ?? [];
+  const counter = (await storage.getItem<number>("users:counter")) ?? 1;
+  const user: User = { id: counter, ...data };
+  await Promise.all([
+    storage.setItem("users:data", [...users, user]),
+    storage.setItem("users:counter", counter + 1)
+  ]);
+  return user;
+}
+
+export async function findUser({ email, id }: { email?: string; id?: number }) {
+  const users = (await storage.getItem<User[]>("users:data")) ?? [];
+  if (id) return users.find(u => u.id === id);
+  if (email) return users.find(u => u.email === email);
+  return undefined;
+}
