@@ -1,9 +1,9 @@
 export function Component() {
-  return <>hello</>;
+  return <>(´｡• ᵕ •｡`) ♡</>;
 }
 
 export function Component2() {
-  return <>hello</>;
+  return <>♡(˃͈ દ ˂͈ ༶ )</>;
 }
 
 export default function () {
