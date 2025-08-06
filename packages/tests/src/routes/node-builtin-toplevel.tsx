@@ -6,8 +6,8 @@ export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithNodeBuiltin?: string }>({});
 
   createEffect(async () => {
-    const restult = await serverFnWithNodeBuiltin();
-    setOutput(prev => ({ ...prev, serverFnWithNodeBuiltin: restult }));
+    const result = await serverFnWithNodeBuiltin();
+    setOutput(prev => ({ ...prev, serverFnWithNodeBuiltin: result }));
   });
 
   return (
