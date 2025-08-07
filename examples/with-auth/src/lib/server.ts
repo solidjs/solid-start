@@ -1,41 +1,38 @@
 import { useSession } from "vinxi/http";
-import { db } from "./db";
+import { redirect } from "@solidjs/router";
+import { createUser, findUser } from "./db";
 
-export function validateUsername(username: unknown) {
-  if (typeof username !== "string" || username.length < 3) {
-    return `Usernames must be at least 3 characters long`;
-  }
+export interface Session {
+  id: number;
+  email: string;
 }
 
-export function validatePassword(password: unknown) {
-  if (typeof password !== "string" || password.length < 6) {
-    return `Passwords must be at least 6 characters long`;
-  }
-}
+export const getSession = () =>
+  useSession<Session>({
+    password: process.env.SESSION_SECRET!
+  });
 
-export async function login(username: string, password: string) {
-  const user = await db.user.findUnique({ where: { username } });
-  if (!user || password !== user.password) throw new Error("Invalid login");
-  return user;
-}
-
-export async function logout() {
+export const createSession = async (user: Session, redirectTo?: string) => {
+  const validDest = redirectTo?.[0] === "/" && redirectTo[1] !== "/";
   const session = await getSession();
-  await session.update(d => {
-    d.userId = undefined;
-  });
-}
+  await session.update(user);
+  return redirect(validDest ? redirectTo : "/");
+};
 
-export async function register(username: string, password: string) {
-  const existingUser = await db.user.findUnique({ where: { username } });
-  if (existingUser) throw new Error("User already exists");
-  return db.user.create({
-    data: { username: username, password }
-  });
-}
+export const oauthSignIn = async (email: string, redirectTo?: string) => {
+  let user = await findUser({ email });
+  if (!user) user = await createUser({ email });
+  return createSession(user, redirectTo);
+};
 
-export function getSession() {
-  return useSession({
-    password: process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace"
-  });
-}
+export const passwordSignIn = async (email: string, password: string) => {
+  let user = await findUser({ email });
+  if (!user) {
+    user = await createUser({ email, password });
+  } else if (!user.password) {
+    throw new Error("Account exists via OAuth. Sign in with your OAuth provider");
+  } else if (user.password !== password) {
+    throw new Error("Invalid email or password");
+  }
+  return createSession(user);
+};
