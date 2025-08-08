@@ -1,14 +1,20 @@
-export function Component() {
+export function TextRenderTestComponent() {
   return <>(´｡• ᵕ •｡`) ♡</>;
 }
 
-export function Component2() {
-  return <>♡(˃͈ દ ˂͈ ༶ )</>;
+export function VariableImportTestComponent() {
+  return <>{testObjectExport.stringValue}</>;
 }
 
+export const testStringExport = "♡(˃͈ દ ˂͈ ༶ )";
+
+export const testObjectExport = {
+  stringValue: testStringExport,
+};
+
 export default function () {
-  return <div>
-    <Component/>
-    <Component2/>
-  </div>;
+  return <>
+    <TextRenderTestComponent/>
+    <VariableImportTestComponent/>
+  </>;
 }
