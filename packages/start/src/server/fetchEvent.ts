@@ -5,6 +5,7 @@ import {
   getResponseStatus,
   getResponseStatusText,
   getWebRequest,
+  removeResponseHeader,
   setResponseHeader,
   setResponseStatus
 } from "vinxi/http";
@@ -50,10 +51,17 @@ function createHeadersProxy(event: H3Event) {
     origSet(name, value);
     setResponseHeader(event, name, value);
   };
+
   const origAppend = headers.append.bind(headers);
   headers.append = (name, value) => {
     origAppend(name, value);
     appendResponseHeader(event, name, value);
+  };
+
+  const origDelete = headers.delete.bind(headers);
+  headers.delete = name => {
+    origDelete(name);
+    removeResponseHeader(event, name);
   };
 
   return headers;
