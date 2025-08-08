@@ -2,6 +2,7 @@ import {
   H3Event,
   appendResponseHeader,
   getRequestIP,
+  getResponseHeaders,
   getResponseStatus,
   getResponseStatusText,
   getWebRequest,
@@ -43,8 +44,10 @@ export function mergeResponseHeaders(h3Event: H3Event, headers: Headers) {
     appendResponseHeader(h3Event, key, value);
   }
 }
+
 function createHeadersProxy(event: H3Event) {
-  const headers = new Headers();
+  // @ts-expect-error will be coerced into correct format
+  const headers = new Headers(getResponseHeaders());
 
   const origSet = headers.set.bind(headers);
   headers.set = (name, value) => {
