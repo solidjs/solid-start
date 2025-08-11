@@ -1,12 +1,12 @@
 [![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
 
 [![Version](https://img.shields.io/npm/v/@solidjs/start.svg?style=for-the-badge&color=blue)](https://www.npmjs.com/package/@solidjs/start)
-[![Downloads](https://img.shields.io/npm/dm/@solidjs/start.svg?style=for-the-badge&color=blue)](https://www.npmjs.com/package/@solidjs/start)
-[![Stars](https://img.shields.io/github/stars/solidjs/solid-start?style=for-the-badge&color=blue)](https://github.com/solidjs/solid-start)
-[![Discord](https://img.shields.io/discord/722131463138705510?style=for-the-badge&color=blue)](https://discord.com/invite/solidjs)
-[![Reddit](https://img.shields.io/reddit/subreddit-subscribers/solidjs?style=for-the-badge&color=blue)](https://www.reddit.com/r/solidjs/)
+[![Downloads](https://img.shields.io/npm/dm/@solidjs/start.svg?style=for-the-badge&color=green)](https://www.npmjs.com/package/@solidjs/start)
+[![Stars](https://img.shields.io/github/stars/solidjs/solid-start?style=for-the-badge&color=yellow)](https://github.com/solidjs/solid-start)
+[![Discord](https://img.shields.io/discord/722131463138705510?style=for-the-badge&color=5865F2)](https://discord.com/invite/solidjs)
+[![Reddit](https://img.shields.io/reddit/subreddit-subscribers/solidjs?style=for-the-badge&color=FF4500)](https://www.reddit.com/r/solidjs/)
 
-SolidStart brings fine-grained reactivity fullstack with full flexibility. Built with features like unified rendering and isomorphic code execution, SolidStart enables you to create highly performant and scalable web applications. Explore the official [documentation](https://docs.solidjs.com/solid-start) for detailed guides and examples.
+**SolidStart** brings fine-grained reactivity fullstack with full flexibility. Built with features like unified rendering and isomorphic code execution, SolidStart enables you to create highly performant and scalable web applications. Explore the official [documentation](https://docs.solidjs.com/solid-start) for detailed guides and examples.
 
 ## Core Features
 
@@ -62,7 +62,7 @@ npm run dev # or pnpm dev or bun dev
 
 Learn more about routing in the [documentation](https://docs.solidjs.com/solid-start/building-your-application/routing).
 
-## Configuration
+## Adapters
 
 Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlify, Cloudflare, and others:
 
@@ -75,7 +75,7 @@ export default defineConfig({
 });
 ```
 
-Presets also support runtimes like Node.js, Bun or Deno. For example, the `node-server` preset enables hosting on your server. Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config).
+Presets also include runtimes like Node.js, Bun or Deno. For example, the `node-server` preset enables hosting on your server. Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config).
 
 ## Building for Production
 
