@@ -11,7 +11,7 @@
 ## Core Features
 
 - **All Rendering Modes**:
-  - Server-Side Rendering (SSR) with synchronous, asynchronous, and streaming options
+  - Server-Side Rendering (SSR) with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler).
   - Client-Side Rendering (CSR)
   - Static Site Generation (SSG)
 - **TypeScript**: Full integration for robust, type-safe development
@@ -30,8 +30,10 @@ Create a template project with your preferred package manager:
 ```bash
 # using npm
 npm create solid@latest -- --solidstart
+
 # using pnpm
 pnpm create solid@latest --solidstart
+
 # using bun
 bun create solid@latest --solidstart
 ```
@@ -70,7 +72,7 @@ Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlif
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  ssr: true, // Set to false for client-side rendering
+  ssr: true, // false for client-side rendering
   server: { preset: "vercel" },
 });
 ```
