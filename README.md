@@ -28,12 +28,12 @@ SolidStart brings fine-grained reactivity fullstack with full flexibility. Built
 Create a template project with your preferred package manager:
 
 ```bash
-# With npm
-npm create solid
-# With pnpm
-pnpm create solid --solidstart
-# With bun
-bun create solid
+# using npm
+npm create solid@latest -- --solidstart
+# using pnpm
+pnpm create solid@latest --solidstart
+# using bun
+bun create solid@latest --solidstart
 ```
 
 1. Follow the CLI prompts to set up your project.
