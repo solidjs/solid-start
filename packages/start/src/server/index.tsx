@@ -41,12 +41,12 @@ async function createPageEvent(ctx: FetchEvent) {
     //   router: {
     //     // submission: initFromFlash(ctx) as any
     //   },
-    routes: createRoutes()
+    routes: createRoutes(),
     //   // prevUrl: prevPath || "",
     //   // mutation: mutation,
     //   // $type: FETCH_EVENT,
-    //   complete: false,
-    //   $islands: new Set<string>()
+    complete: false,
+    $islands: new Set<string>()
   });
 
   return pageEvent;
@@ -70,7 +70,9 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
 
         if (serverFnResponse instanceof Response) return serverFnResponse;
 
-        const resp = new Response(serverFnResponse, { headers: getResponseHeaders(e) });
+        const resp = new Response(serverFnResponse as any, {
+          headers: getResponseHeaders(e) as any
+        });
 
         return resp;
       }

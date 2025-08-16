@@ -1,7 +1,5 @@
+import path from "node:path";
 import { manifest } from "solid-start:server-manifest";
-import path, { isAbsolute, join, normalize } from "node:path";
-import { fileURLToPath } from "node:url";
-import { existsSync } from "node:fs";
 import { normalizePath } from "vite";
 
 export const CLIENT_BASE_PATH = "_build";

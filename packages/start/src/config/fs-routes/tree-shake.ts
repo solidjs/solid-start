@@ -2,11 +2,16 @@
 // https://github.com/vercel/next.js/blob/canary/packages/next/build/babel/plugins/next-ssg-transform.ts
 // This is adapted to work with routeData functions. It can be run in two modes, one which preserves the routeData and the Component in the same file, and one which creates a
 
+import type { NodePath, PluginObj, PluginPass } from "@babel/core";
+import type * as Babel from '@babel/core';
+import { Binding } from "@babel/traverse";
 import { basename } from "pathe";
-import { Plugin, ViteDevServer } from "vite";
+import type { Plugin, ResolvedConfig, ViteDevServer } from "vite";
 
-function treeShakeTransform({ types: t }) {
-  function getIdentifier(path) {
+type State = Omit<PluginPass, "opts"> & { opts: { pick: string[] }, refs: Set<any>, done: boolean }
+
+function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
+  function getIdentifier(path: any) {
     const parentPath = path.parentPath;
     if (parentPath.type === "VariableDeclarator") {
       const pp = parentPath;
@@ -24,9 +29,9 @@ function treeShakeTransform({ types: t }) {
     return path.node.id && path.node.id.type === "Identifier" ? path.get("id") : null;
   }
 
-  function isIdentifierReferenced(ident) {
-    const b = ident.scope.getBinding(ident.node.name);
-    if (b && b.referenced) {
+  function isIdentifierReferenced(ident: any) {
+    const b: Binding | undefined = ident.scope.getBinding(ident.node.name);
+    if (b?.referenced) {
       if (b.path.type === "FunctionDeclaration") {
         return !b.constantViolations
           .concat(b.referencePaths)
@@ -36,13 +41,13 @@ function treeShakeTransform({ types: t }) {
     }
     return false;
   }
-  function markFunction(path, state) {
+  function markFunction(path: any, state: any) {
     const ident = getIdentifier(path);
     if (ident && ident.node && isIdentifierReferenced(ident)) {
       state.refs.add(ident);
     }
   }
-  function markImport(path, state) {
+  function markImport(path: any, state: any) {
     const local = path.get("local");
     if (isIdentifierReferenced(local)) {
       state.refs.add(local);
@@ -57,7 +62,7 @@ function treeShakeTransform({ types: t }) {
           state.done = false;
           path.traverse(
             {
-              VariableDeclarator(variablePath, variableState) {
+              VariableDeclarator(variablePath, variableState: any) {
                 if (variablePath.node.id.type === "Identifier") {
                   const local = variablePath.get("id");
                   if (isIdentifierReferenced(local)) {
@@ -65,7 +70,7 @@ function treeShakeTransform({ types: t }) {
                   }
                 } else if (variablePath.node.id.type === "ObjectPattern") {
                   const pattern = variablePath.get("id");
-                  const properties = pattern.get("properties");
+                  const properties = pattern.get("properties") as Array<NodePath>;
                   properties.forEach(p => {
                     const local = p.get(
                       p.node.type === "ObjectProperty"
@@ -73,8 +78,8 @@ function treeShakeTransform({ types: t }) {
                         : p.node.type === "RestElement"
                           ? "argument"
                           : (function () {
-                              throw new Error("invariant");
-                            })()
+                            throw new Error("invariant");
+                          })()
                     );
                     if (isIdentifierReferenced(local)) {
                       variableState.refs.add(local);
@@ -82,9 +87,9 @@ function treeShakeTransform({ types: t }) {
                   });
                 } else if (variablePath.node.id.type === "ArrayPattern") {
                   const pattern = variablePath.get("id");
-                  const elements = pattern.get("elements");
+                  const elements = pattern.get("elements") as Array<NodePath>;
                   elements.forEach(e => {
-                    let local;
+                    let local: NodePath<any>;
                     if (e.node && e.node.type === "Identifier") {
                       local = e;
                     } else if (e.node && e.node.type === "RestElement") {
@@ -131,14 +136,14 @@ function treeShakeTransform({ types: t }) {
                 }
                 switch (decl.node.type) {
                   case "FunctionDeclaration": {
-                    const name = decl.node.id.name;
-                    if (state.opts.pick && !state.opts.pick.includes(name)) {
+                    const name = decl.node.id?.name;
+                    if (name && state.opts.pick && !state.opts.pick.includes(name)) {
                       exportNamedPath.remove();
                     }
                     break;
                   }
                   case "VariableDeclaration": {
-                    const inner = decl.get("declarations");
+                    const inner = decl.get("declarations") as Array<NodePath<any>>;
                     inner.forEach(d => {
                       if (d.node.id.type !== "Identifier") {
                         return;
@@ -175,8 +180,8 @@ function treeShakeTransform({ types: t }) {
           );
 
           const refs = state.refs;
-          let count;
-          function sweepFunction(sweepPath) {
+          let count = 0;
+          const sweepFunction = (sweepPath: any) => {
             const ident = getIdentifier(sweepPath);
             if (ident && ident.node && refs.has(ident) && !isIdentifierReferenced(ident)) {
               ++count;
@@ -190,7 +195,7 @@ function treeShakeTransform({ types: t }) {
               }
             }
           }
-          function sweepImport(sweepPath) {
+          function sweepImport(sweepPath: any) {
             const local = sweepPath.get("local");
             if (refs.has(local) && !isIdentifierReferenced(local)) {
               ++count;
@@ -222,8 +227,8 @@ function treeShakeTransform({ types: t }) {
                         : p.node.type === "RestElement"
                           ? "argument"
                           : (function () {
-                              throw new Error("invariant");
-                            })()
+                            throw new Error("invariant");
+                          })()
                     );
                     if (refs.has(local) && !isIdentifierReferenced(local)) {
                       ++count;
@@ -238,7 +243,7 @@ function treeShakeTransform({ types: t }) {
                   const beforeCount = count;
                   const elements = pattern.get("elements");
                   elements.forEach(e => {
-                    let local;
+                    let local: NodePath<any> | undefined;
                     if (e.node && e.node.type === "Identifier") {
                       local = e;
                     } else if (e.node && e.node.type === "RestElement") {
@@ -271,8 +276,7 @@ function treeShakeTransform({ types: t }) {
 }
 
 export function treeShake(): Plugin {
-  /** @type {import('../vite-dev.d.ts').ViteConfig} */
-  let config;
+  let config: ResolvedConfig;
   let cache: Record<string, any> = {};
   let server: ViteDevServer;
 
@@ -348,7 +352,7 @@ export function treeShake(): Plugin {
       if (!ext) return;
       if (query.has("pick") && ["js", "jsx", "ts", "tsx"].includes(ext)) {
         const transformed = await transform(id, code);
-        if (!transformed) return;
+        if (!transformed?.code) return;
 
         cache[path] ??= {};
         cache[path][id] = transformed.code;

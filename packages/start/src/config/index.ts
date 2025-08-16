@@ -95,23 +95,6 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
     server: `${start.appRoot}/entry-server${entryExtension}`
   };
 
-  const routers = {
-    handlers,
-    routers: {
-      client: config =>
-        new SolidStartClientFileRouter({
-          dir: absolute(routeDir, config.root),
-          extensions
-        }),
-      server: config =>
-        new SolidStartServerFileRouter({
-          dir: absolute(routeDir, config.root),
-          extensions,
-          dataOnly: !start.ssr
-        })
-    }
-  };
-
   return [
     {
       name: "solid-start-vite-config-client",
@@ -190,7 +173,22 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
         return SolidStartServerFnsPlugin.client;
       }
     },
-    fsRoutes(routers),
+    fsRoutes({
+      handlers,
+      routers: {
+        client: config =>
+          new SolidStartClientFileRouter({
+            dir: absolute(routeDir, config.root),
+            extensions
+          }),
+        server: config =>
+          new SolidStartServerFileRouter({
+            dir: absolute(routeDir, config.root),
+            extensions,
+            dataOnly: !start.ssr
+          })
+      }
+    }),
     {
       name: "solid-start:manifest-plugin",
       enforce: "pre",

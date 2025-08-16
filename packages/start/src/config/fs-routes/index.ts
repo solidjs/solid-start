@@ -1,20 +1,21 @@
-import { PluginOption, ResolvedConfig } from "vite";
 import { relative } from "node:path";
-
-import { BaseFileSystemRouter } from "./router.js";
+import type { PluginOption, ResolvedConfig } from "vite";
 import { manifest } from "./manifest.js";
+import type { BaseFileSystemRouter } from "./router.js";
 
 export const moduleId = "solid-start:routes";
 
 export type RouterBuilder = (config: ResolvedConfig) => BaseFileSystemRouter;
 
+export interface FsRoutesArgs {
+  routers: Record<"client" | "server", RouterBuilder>;
+  handlers: Record<"client" | "server", string>;
+}
+
 export function fsRoutes({
   routers,
   handlers
-}: {
-  routers: Record<"client" | "server", RouterBuilder>;
-  handlers: Record<"client" | "server", string>;
-}): Array<PluginOption> {
+}: FsRoutesArgs): Array<PluginOption> {
   (globalThis as any).ROUTERS = {};
 
   return [

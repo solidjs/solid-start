@@ -12,18 +12,18 @@ export type DocumentComponentProps = {
 
 export type Asset =
   | {
-      tag: "style";
-      attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
-      children?: JSX.Element;
-    }
+    tag: "style";
+    attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
+    children?: JSX.Element;
+  }
   | {
-      tag: "script";
-      attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
-    }
+    tag: "script";
+    attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
+  }
   | {
-      tag: "link";
-      attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
-    };
+    tag: "link";
+    attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
+  };
 
 export type HandlerOptions = {
   mode?: "sync" | "async" | "stream";

@@ -147,7 +147,9 @@ export async function handleServerFunction(h3Event: H3Event) {
           ]
         }) as any)
         : json
-      ).forEach((arg: any) => parsed.push(arg));
+      ).forEach((arg: any) => {
+        parsed.push(arg)
+      });
     }
   }
   if (h3Event.method === "POST") {
@@ -261,7 +263,7 @@ export async function handleServerFunction(h3Event: H3Event) {
         setResponseStatus(h3Event, (x as any).status);
       if ((x as any).customBody) {
         x = (x as any).customBody();
-      } else if ((x as any).body == undefined) x = null;
+      } else if ((x as any).body === undefined) x = null;
       setHeader(h3Event, "X-Error", "true");
     } else if (instance) {
       const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
@@ -281,7 +283,7 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
   const url = new URL(request.url);
   const isError = result instanceof Error;
   let statusCode = 302;
-  let headers;
+  let headers: Headers;
   if (result instanceof Response) {
     headers = new Headers(result.headers);
     if (result.headers.has("Location")) {
