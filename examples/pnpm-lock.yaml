@@ -13,20 +13,80 @@ importers:
 
   .: {}
 
-  hackernews:
+  vite-rewrite:
     dependencies:
+      '@solidjs/meta':
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@1.9.5)
       '@solidjs/router':
-        specifier: ^0.15.0
+        specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.5)
-      '@solidjs/start-vite':
-        specifier: file:../../packages/start-vite
-        version: file:../packages/start-vite(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      '@solidjs/start':
+        specifier: file:../../packages/start
+        version: file:../packages/start(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      '@tanstack/server-functions-plugin':
+        specifier: ^1.115.0
+        version: 1.115.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      '@types/micromatch':
+        specifier: ^4.0.9
+        version: 4.0.9
+      defu:
+        specifier: ^6.1.4
+        version: 6.1.4
+      error-stack-parser:
+        specifier: ^2.1.4
+        version: 2.1.4
+      es-module-lexer:
+        specifier: ^1.7.0
+        version: 1.7.0
+      esbuild:
+        specifier: ^0.25.3
+        version: 0.25.3
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
+      h3:
+        specifier: ^1.15.2
+        version: 1.15.2
+      html-to-image:
+        specifier: ^1.11.13
+        version: 1.11.13
+      micromatch:
+        specifier: ^4.0.8
+        version: 4.0.8
+      nitropack:
+        specifier: ^2.11.10
+        version: 2.11.10(@netlify/blobs@8.2.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))
+      path-to-regexp:
+        specifier: ^8.2.0
+        version: 8.2.0
+      radix3:
+        specifier: ^1.1.2
+        version: 1.1.2
+      seroval:
+        specifier: ^1.2.1
+        version: 1.3.2
+      seroval-plugins:
+        specifier: ^1.2.1
+        version: 1.2.1(seroval@1.3.2)
+      shiki:
+        specifier: '1'
+        version: 1.29.2
       solid-js:
         specifier: ^1.9.5
         version: 1.9.5
+      source-map-js:
+        specifier: ^1.2.1
+        version: 1.2.1
+      terracotta:
+        specifier: ^1.0.6
+        version: 1.0.6(solid-js@1.9.5)
       vite:
         specifier: 6.3.5
         version: 6.3.5(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      vite-plugin-solid:
+        specifier: ^2.11.6
+        version: 2.11.6(patch_hash=a4f09ac704b133f7d1fef9ec6c9e378192d47de5da5fef4f4430e58df13c399a)(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.3.5(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
 
 packages:
 
@@ -1154,8 +1214,8 @@ packages:
     peerDependencies:
       solid-js: ^1.8.6
 
-  '@solidjs/start-vite@file:../packages/start-vite':
-    resolution: {directory: ../packages/start-vite, type: directory}
+  '@solidjs/start@file:../packages/start':
+    resolution: {directory: ../packages/start, type: directory}
     engines: {node: '>=22'}
 
   '@speed-highlight/core@1.2.7':
@@ -1186,8 +1246,8 @@ packages:
   '@types/babel__template@7.4.4':
     resolution: {integrity: sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==}
 
-  '@types/babel__traverse@7.20.6':
-    resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==}
+  '@types/babel__traverse@7.28.0':
+    resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
 
   '@types/better-sqlite3@7.6.12':
     resolution: {integrity: sha512-fnQmj8lELIj7BSrZQAdBMHEHX8OZLYIHXqAKT1O7tDfLxaINzf00PMjw22r3N/xXh0w/sGHlO6SVaCQ2mj78lg==}
@@ -3144,8 +3204,8 @@ packages:
     peerDependencies:
       seroval: ^1.0
 
-  seroval@1.2.1:
-    resolution: {integrity: sha512-yBxFFs3zmkvKNmR0pFSU//rIsYjuX418TnlDmc2weaq5XFDqDIV/NOMPBoLrbxjLH42p4UzRuXHryXh9dYcKcw==}
+  seroval@1.3.2:
+    resolution: {integrity: sha512-RbcPH1n5cfwKrru7v7+zrZvjLurgHhGyso3HTyGtRivGWgYjbOmGuivCQaORNELjNONoK35nj28EoWul9sb1zQ==}
     engines: {node: '>=10'}
 
   serve-placeholder@2.0.2:
@@ -4685,11 +4745,13 @@ snapshots:
     dependencies:
       solid-js: 1.9.5
 
-  '@solidjs/start-vite@file:../packages/start-vite(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)':
+  '@solidjs/start@file:../packages/start(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)':
     dependencies:
       '@babel/core': 7.28.3
+      '@babel/traverse': 7.28.3
       '@solidjs/meta': 0.29.4(solid-js@1.9.5)
       '@tanstack/server-functions-plugin': 1.115.0(@types/node@20.17.17)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
+      '@types/babel__traverse': 7.28.0
       '@types/micromatch': 4.0.9
       defu: 6.1.4
       error-stack-parser: 2.1.4
@@ -4703,8 +4765,8 @@ snapshots:
       path-to-regexp: 8.2.0
       pathe: 2.0.3
       radix3: 1.1.2
-      seroval: 1.2.1
-      seroval-plugins: 1.2.1(seroval@1.2.1)
+      seroval: 1.3.2
+      seroval-plugins: 1.2.1(seroval@1.3.2)
       shiki: 1.29.2
       solid-js: 1.9.5
       source-map-js: 1.2.1
@@ -4835,7 +4897,7 @@ snapshots:
       '@babel/types': 7.28.2
       '@types/babel__generator': 7.6.8
       '@types/babel__template': 7.4.4
-      '@types/babel__traverse': 7.20.6
+      '@types/babel__traverse': 7.28.0
 
   '@types/babel__generator@7.6.8':
     dependencies:
@@ -4846,7 +4908,7 @@ snapshots:
       '@babel/parser': 7.28.3
       '@babel/types': 7.28.2
 
-  '@types/babel__traverse@7.20.6':
+  '@types/babel__traverse@7.28.0':
     dependencies:
       '@babel/types': 7.28.2
 
@@ -6912,11 +6974,11 @@ snapshots:
     dependencies:
       randombytes: 2.1.0
 
-  seroval-plugins@1.2.1(seroval@1.2.1):
+  seroval-plugins@1.2.1(seroval@1.3.2):
     dependencies:
-      seroval: 1.2.1
+      seroval: 1.3.2
 
-  seroval@1.2.1: {}
+  seroval@1.3.2: {}
 
   serve-placeholder@2.0.2:
     dependencies:
@@ -7007,8 +7069,8 @@ snapshots:
   solid-js@1.9.5:
     dependencies:
       csstype: 3.1.3
-      seroval: 1.2.1
-      seroval-plugins: 1.2.1(seroval@1.2.1)
+      seroval: 1.3.2
+      seroval-plugins: 1.2.1(seroval@1.3.2)
 
   solid-refresh@0.6.3(solid-js@1.9.5):
     dependencies:

@@ -1,6 +1,6 @@
 packages:
-  - ./hackernews
-  # - ./vite-rewrite
+  # - ./hackernews
+  - ./vite-rewrite
   # - ./todomvc
 
 patchedDependencies:

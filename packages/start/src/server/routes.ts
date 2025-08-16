@@ -1,6 +1,7 @@
 import { createRouter } from "radix3";
 // @ts-expect-error
 import fileRoutes from "solid-start:routes";
+import { FetchEvent } from "./types";
 
 interface Route {
   path: string;
@@ -65,8 +66,7 @@ const router = createRouter({
       }
       if (memo[path]) {
         throw new Error(
-          `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${
-            route.path
+          `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${route.path
           }"`
         );
       }
@@ -88,7 +88,12 @@ function containsHTTP(route: Route) {
   );
 }
 
-export function matchAPIRoute(path: string, method: string) {
+export function matchAPIRoute(path: string, method: string): {
+  params?: Record<string, any>,
+  handler: {
+    import: () => Promise<Record<string, (e: FetchEvent) => Promise<any>>>
+  }
+} | undefined {
   const match = router.lookup(path);
   if (match && match.route) {
     const handler =

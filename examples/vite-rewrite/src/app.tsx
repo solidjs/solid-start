@@ -1,5 +1,5 @@
 import { MetaProvider } from "@solidjs/meta";
-import { FileRoutes } from "@solidjs/start-vite/router";
+import { FileRoutes } from "@solidjs/start/router";
 import { Router } from "@solidjs/router";
 import { Suspense } from "solid-js";
 

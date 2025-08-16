@@ -1,7 +1,7 @@
 import { eventHandler, getResponseHeaders, H3Event, sendStream, sendWebResponse } from "h3";
 import { provideRequestEvent } from "solid-js/web/storage";
 import type { JSX } from "solid-js";
-import { renderToStringAsync } from "solid-js/web";
+import { renderToString, renderToStringAsync } from "solid-js/web";
 import { manifest } from "solid-start:server-manifest";
 import { join } from "pathe";
 
@@ -17,6 +17,18 @@ import { handleServerFunction } from "./server-functions-handler.js";
 import { getClientEntryCssTags } from "./server-manifest.js";
 
 const SERVER_FN_BASE = "/_server";
+
+/**
+ * Checks if user has set a redirect status in the response.
+ * If not, falls back to the 302 (temporary redirect)
+ */
+// export function getExpectedRedirectStatus(response: ResponseStub): number {
+//   if (response.status && validRedirectStatuses.has(response.status)) {
+//     return response.status;
+//   }
+
+//   return 302;
+// }
 
 async function createPageEvent(ctx: FetchEvent) {
   // const clientManifest = import.meta.env.MANIFEST["client"]!;
@@ -56,17 +68,15 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
   // if (import.meta.env.PROD) createProdManifest();
 
   return eventHandler(async (e: H3Event) => {
-    const fetchEvent = getFetchEvent(e);
+    const event = getFetchEvent(e);
 
-    return await provideRequestEvent(fetchEvent, async () => {
-      const url = new URL(fetchEvent.request.url);
+    return await provideRequestEvent(event, async () => {
+      const url = new URL(event.request.url);
       const pathname = url.pathname;
 
       const serverFunctionTest = join("/", SERVER_FN_BASE);
       if (pathname.startsWith(serverFunctionTest)) {
         const serverFnResponse = await handleServerFunction(e);
-
-        // console.log({ serverFnResponse });
 
         if (serverFnResponse instanceof Response) return serverFnResponse;
 
@@ -77,10 +87,36 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
         return resp;
       }
 
-      const match = matchAPIRoute(pathname, fetchEvent.request.method);
-      if (match) return;
+      const match = matchAPIRoute(pathname, event.request.method);
+      if (match) {
+        const mod = await match.handler.import();
+        const fn =
+          event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
+        sharedConfig.context = { event };
+        const res = await fn!(event);
+        if (res !== undefined) return res;
+        if (event.request.method !== "GET") {
+          throw new Error(
+            `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
+          );
+        }
+      }
 
-      const context = await createPageEvent(fetchEvent);
+      const context = await createPageEvent(event);
+
+      if (!import.meta.env.START_SSR) {
+        const html = renderToString(() => {
+          (sharedConfig.context as any).event = context;
+          return fn(context);
+        });
+        context.complete = true;
+
+        // insert redirect handling here
+
+        console.log({ html });
+        return new Response(html, { headers: { "content-type": "text/html" } });
+      }
+
       const html = await renderToStringAsync(() => {
         (sharedConfig.context as any).event = context;
         return fn(context);

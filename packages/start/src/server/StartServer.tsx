@@ -46,37 +46,41 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   const nonce = context.nonce;
 
   let assets: Asset[] = [];
-  Promise.resolve().then(async () => {
-    let assetPromises: Promise<Asset[]>[] = [];
-    // @ts-ignore
-    if (context.router && context.router.matches) {
+  Promise.resolve()
+    .then(async () => {
+      let assetPromises: Promise<Asset[]>[] = [];
       // @ts-ignore
-      const matches = [...context.router.matches];
-      while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
-      const matched = matches.length && matchRoute(matches, context.routes);
-      if (matched) {
-        // const inputs = import.meta.env.MANIFEST[
-        //   import.meta.env.START_ISLANDS ? "server" : "client"
-        // ]!.inputs;
-        for (let i = 0; i < matched.length; i++) {
-          const segment = matched[i];
-          const assets = getManifestEntryCssTags(segment["$component"].src);
-          // console.log({ id: segment["$component"].src, assets });
-          // const part = inputs[segment["$component"].src]!;
-          // assetPromises.push(part.assets() as any);
-        }
-      } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
-    }
-    //   assets = await Promise.all(assetPromises).then(a =>
-    //     // dedupe assets
-    //     [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
-    //       import.meta.env.START_ISLANDS
-    //         ? false
-    //         : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
-    //           !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
-    //     )
-    // );
-  });
+      if (context.router && context.router.matches) {
+        // @ts-ignore
+        const matches = [...context.router.matches];
+        while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
+        const matched = matches.length && matchRoute(matches, context.routes);
+        // console.log({ router: context.router });
+        if (matched) {
+          // const inputs = import.meta.env.MANIFEST[
+          //   import.meta.env.START_ISLANDS ? "server" : "client"
+          // ]!.inputs;
+          for (let i = 0; i < matched.length; i++) {
+            const segment = matched[i];
+            // console.log(segment["$component"]);
+            const assets = getManifestEntryCssTags(segment["$component"].src);
+            // console.log({ id: segment["$component"].src, assets });
+            // const part = inputs[segment["$component"].src]!;
+            // assetPromises.push(part.assets() as any);
+          }
+        } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
+      }
+      //   assets = await Promise.all(assetPromises).then(a =>
+      //     // dedupe assets
+      //     [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
+      //       import.meta.env.START_ISLANDS
+      //         ? false
+      //         : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+      //           !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+      //     )
+      // );
+    })
+    .catch(console.error);
 
   // useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
 

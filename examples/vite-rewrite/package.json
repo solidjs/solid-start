@@ -9,7 +9,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
-    "@solidjs/start-vite": "file:../../packages/start-vite",
+    "@solidjs/start": "file:../../packages/start",
     "@tanstack/server-functions-plugin": "^1.115.0",
     "@types/micromatch": "^4.0.9",
     "defu": "^6.1.4",

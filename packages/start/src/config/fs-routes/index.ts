@@ -82,7 +82,6 @@ ${this.environment.name === "server"
             ? ""
             : `
 function clientManifestImport(id) {
-  console.log("client manifest import", {id});
   return import(/* @vite-ignore */ globalThis.MANIFEST.inputs[id].output.path)
 }`
           }

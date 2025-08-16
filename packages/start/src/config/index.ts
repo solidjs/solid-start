@@ -163,7 +163,8 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
             }
           },
           define: {
-            "import.meta.env.MANIFEST": `globalThis.MANIFEST`
+            "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
+            "import.meta.env.START_SSR": JSON.stringify(start.ssr)
           }
         };
       }
@@ -254,14 +255,7 @@ export default window.manifest;
         globalThis.START_CLIENT_BUNDLE = bundle;
       }
     },
-    {
-      name: "solid-start:solid",
-      applyToEnvironment(env) {
-        if (env.name === "server") return solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) });
-        return solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) });
-      }
-    }
-
+    solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) })
   ];
 }
 
