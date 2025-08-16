@@ -9,7 +9,7 @@ import { sharedConfig } from "solid-js";
 // import { handleServerFunction } from "./server-functions-handler";
 import { getFetchEvent } from "./fetchEvent.js";
 import { matchAPIRoute } from "./routes.js";
-import { FetchEvent, PageEvent } from "./types.js";
+import { APIEvent, FetchEvent, PageEvent } from "./types.js";
 // import { createProdManifest } from "./prodManifest.js";
 export { StartServer } from "./StartServer.jsx";
 import { createRoutes } from "../router.jsx";
@@ -92,6 +92,7 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
         const mod = await match.handler.import();
         const fn =
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
+        (event as APIEvent).params = match.params || {};
         // @ts-ignore
         sharedConfig.context = { event };
         const res = await fn!(event);
