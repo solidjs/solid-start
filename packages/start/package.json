@@ -1,5 +1,6 @@
 {
   "name": "@solidjs/start",
+  "version": "2.0.0-devinxi.0",
   "type": "module",
   "scripts": {
     "build": "tsc"
