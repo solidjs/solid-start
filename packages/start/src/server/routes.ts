@@ -1,7 +1,8 @@
 import { createRouter } from "radix3";
 // @ts-expect-error
 import fileRoutes from "solid-start:routes";
-import { FetchEvent } from "./types";
+
+import { FetchEvent } from "./types.js";
 
 interface Route {
   path: string;
