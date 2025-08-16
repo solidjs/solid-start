@@ -5,17 +5,20 @@ import { defu } from "defu";
 import path, { isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
+import { StartServerManifest } from "solid-start:server-manifest";
 
 import { fsRoutes } from "./fs-routes/index.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile } from "./nitroPlugin.js";
-import { StartServerManifest } from "solid-start:server-manifest";
 import { treeShake } from "./fs-routes/tree-shake.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
 export interface SolidStartOptions {
   solid?: Partial<SolidOptions>;
+  ssr?: boolean,
+  routeDir?: string,
+  extensions?: string[],
 }
 
 const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
@@ -251,7 +254,14 @@ export default window.manifest;
         globalThis.START_CLIENT_BUNDLE = bundle;
       }
     },
-    solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) })
+    {
+      name: "solid-start:solid",
+      applyToEnvironment(env) {
+        if (env.name === "server") return solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) });
+        return solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) });
+      }
+    }
+
   ];
 }
 
