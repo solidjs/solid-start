@@ -10,7 +10,6 @@ import { StartServerManifest } from "solid-start:server-manifest";
 import { fsRoutes } from "./fs-routes/index.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile } from "./nitroPlugin.js";
-import { treeShake } from "./fs-routes/tree-shake.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -109,8 +108,9 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
           }
         };
       },
-      config() {
+      config(_, env) {
         return {
+          base: env.command === "build" ? `/${CLIENT_BASE_PATH}` : undefined,
           environments: {
             client: {
               consumer: "client",
@@ -169,14 +169,6 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
         };
       }
     },
-    {
-      name: "solid-start-server-fns",
-      enforce: "pre",
-      applyToEnvironment(env) {
-        if (env.name === "server") return SolidStartServerFnsPlugin.server;
-        return SolidStartServerFnsPlugin.client;
-      }
-    },
     fsRoutes({
       handlers,
       routers: {
@@ -193,6 +185,16 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
           })
       }
     }),
+    // Must be placed after fsRoutes, as treeShake will remove the
+    // server fn exports added in by this plugin
+    {
+      name: "solid-start-server-fns",
+      enforce: "pre",
+      applyToEnvironment(env) {
+        if (env.name === "server") return SolidStartServerFnsPlugin.server;
+        return SolidStartServerFnsPlugin.client;
+      },
+    },
     {
       name: "solid-start:manifest-plugin",
       enforce: "pre",
@@ -246,7 +248,6 @@ export default window.manifest;
         }
       }
     },
-    treeShake(),
     nitroPlugin({ root: process.cwd() }, () => ssrBundle, handlers),
     {
       name: "solid-start:capture-client-bundle",

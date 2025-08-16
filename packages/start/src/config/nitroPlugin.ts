@@ -39,13 +39,11 @@ export function nitroPlugin(
               const serverEntry: { default: (e: H3Event) => Promise<any> } =
                 await serverEnv.runner.import("./src/entry-server.tsx");
               const resp = await serverEntry.default(event);
-              // console.log({ resp });
               if (resp instanceof Response) {
                 if (resp.headers.get("content-type") === "text/html") {
                   const html = await viteDevServer.transformIndexHtml(resp.url, await resp.text());
                   sendWebResponse(event, new Response(html, resp));
                 } else {
-                  // console.log({ event, resp });
                   setHeader(event, "content-type", resp.headers.get("content-type") ?? "");
                   sendWebResponse(event, resp);
                 }

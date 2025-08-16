@@ -1,7 +1,7 @@
 packages:
-  # - ./hackernews
+  - ./hackernews
   - ./vite-rewrite
-  # - ./todomvc
+  - ./todomvc
 
 patchedDependencies:
   vite-plugin-solid: patches/vite-plugin-solid.patch

@@ -2,6 +2,7 @@ import { relative } from "node:path";
 import type { PluginOption, ResolvedConfig } from "vite";
 import { manifest } from "./manifest.js";
 import type { BaseFileSystemRouter } from "./router.js";
+import { treeShake } from "./tree-shake.js";
 
 export const moduleId = "solid-start:routes";
 
@@ -88,7 +89,8 @@ function clientManifestImport(id) {
 export default ${routesCode}`;
         return code;
       }
-    }
+    },
+    treeShake()
   ];
 }
 

@@ -115,7 +115,6 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
 
         // insert redirect handling here
 
-        console.log({ html });
         return new Response(html, { headers: { "content-type": "text/html" } });
       }
 

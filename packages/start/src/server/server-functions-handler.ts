@@ -218,8 +218,6 @@ export async function handleServerFunction(h3Event: H3Event) {
       return serverFunction(...parsed);
     });
 
-    // console.log({ result });
-
     // if (singleFlight && instance) {
     //   result = await handleSingleFlight(event, result);
     // }
@@ -243,12 +241,6 @@ export async function handleServerFunction(h3Event: H3Event) {
     if (!instance) return handleNoJS(result, request, parsed);
 
     setResponseHeader(h3Event, "content-type", "text/javascript");
-
-    // console.log({
-    //   instance,
-    //   result,
-    //   b: getResponseHeader(h3Event, "content-type")
-    // });
 
     return serializeToStream(instance, result);
   } catch (x) {
