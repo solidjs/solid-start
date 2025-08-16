@@ -6,18 +6,22 @@ import path, { isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
 import { StartServerManifest } from "solid-start:server-manifest";
+import { type NitroConfig } from "nitropack";
 
 import { fsRoutes } from "./fs-routes/index.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
-import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile } from "./nitroPlugin.js";
+import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile, UserNitroConfig } from "./nitroPlugin.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
+
+export type { UserNitroConfig } from "./nitroPlugin.js"
 
 export interface SolidStartOptions {
   solid?: Partial<SolidOptions>;
   ssr?: boolean,
   routeDir?: string,
   extensions?: string[],
+  server?: UserNitroConfig
 }
 
 const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
@@ -248,7 +252,7 @@ export default window.manifest;
         }
       }
     },
-    nitroPlugin({ root: process.cwd() }, () => ssrBundle, handlers),
+    nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server),
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",

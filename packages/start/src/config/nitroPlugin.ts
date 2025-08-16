@@ -16,10 +16,13 @@ export const clientDistDir = "node_modules/.solid-start/client-dist";
 export const serverDistDir = "node_modules/.solid-start/server-dist";
 export const ssrEntryFile = "ssr.mjs";
 
+export type UserNitroConfig = Omit<NitroConfig, "dev" | "publicAssets" | "renderer" | "rollupConfig">;
+
 export function nitroPlugin(
   options: { root: string },
   getSsrBundle: () => Rollup.OutputBundle,
-  handlers: { client: string; server: string }
+  nitroConfig?: UserNitroConfig
+  // handlers: { client: string; server: string }
 ): Array<PluginOption> {
   return [
     {
@@ -141,24 +144,23 @@ export function nitroPlugin(
               await builder.build(clientEnv);
               await builder.build(serverEnv);
 
-              const nitroConfig: NitroConfig = {
-                dev: false,
-                // TODO do we need this? should this be made configurable?
+              const resolvedNitroConfig: NitroConfig = {
                 compatibilityDate: "2024-11-19",
                 logLevel: 3,
                 preset: "node-server",
-                publicAssets: [{ dir: path.resolve(options.root, clientDistDir) }],
                 typescript: {
                   generateTsConfig: false
                 },
-                prerender: undefined,
+                ...nitroConfig,
+                dev: false,
+                publicAssets: [{ dir: path.resolve(options.root, clientDistDir) }],
                 renderer: ssrEntryFile,
                 rollupConfig: {
                   plugins: [virtualBundlePlugin(getSsrBundle()) as any]
-                }
+                },
               };
 
-              const nitro = await createNitro(nitroConfig);
+              const nitro = await createNitro(resolvedNitroConfig);
 
               await buildNitroEnvironment(nitro, () => build(nitro));
             }
