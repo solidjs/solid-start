@@ -103,7 +103,7 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
 
   return [
     {
-      name: "solid-start-vite-config-client",
+      name: "solid-start:vite-config",
       enforce: "pre",
       configEnvironment(name) {
         return {

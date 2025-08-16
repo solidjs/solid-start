@@ -1,7 +1,7 @@
 import { eventHandler, getResponseHeaders, H3Event, sendStream, sendWebResponse } from "h3";
 import { provideRequestEvent } from "solid-js/web/storage";
 import type { JSX } from "solid-js";
-import { renderToString, renderToStringAsync } from "solid-js/web";
+import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
 import { manifest } from "solid-start:server-manifest";
 import { join } from "pathe";
 
@@ -9,7 +9,7 @@ import { sharedConfig } from "solid-js";
 // import { handleServerFunction } from "./server-functions-handler";
 import { getFetchEvent } from "./fetchEvent.js";
 import { matchAPIRoute } from "./routes.js";
-import { APIEvent, FetchEvent, PageEvent } from "./types.js";
+import { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
 // import { createProdManifest } from "./prodManifest.js";
 export { StartServer } from "./StartServer.jsx";
 import { createRoutes } from "../router.jsx";
@@ -64,10 +64,11 @@ async function createPageEvent(ctx: FetchEvent) {
   return pageEvent;
 }
 
-export function createHandler(fn: (context: PageEvent) => JSX.Element) {
-  // if (import.meta.env.PROD) createProdManifest();
-
-  return eventHandler(async (e: H3Event) => {
+export function createHandler(
+  fn: (context: PageEvent) => JSX.Element,
+  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
+) {
+  return eventHandler<H3Event, Response>(async (e: H3Event) => {
     const event = getFetchEvent(e);
 
     return await provideRequestEvent(event, async () => {
@@ -106,7 +107,12 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
 
       const context = await createPageEvent(event);
 
-      if (!import.meta.env.START_SSR) {
+      const resolvedOptions =
+        typeof options === "function" ? await options(context) : { ...options };
+      const mode = resolvedOptions.mode || "stream";
+      if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
+
+      if (mode === "sync" || !import.meta.env.START_SSR) {
         const html = renderToString(() => {
           (sharedConfig.context as any).event = context;
           return fn(context);
@@ -118,12 +124,18 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
         return new Response(html, { headers: { "content-type": "text/html" } });
       }
 
-      const html = await renderToStringAsync(() => {
+      const stream = renderToStream(() => {
         (sharedConfig.context as any).event = context;
         return fn(context);
-      });
+      }, resolvedOptions);
 
-      return new Response(html, { headers: { "content-type": "text/html" } });
+      // insert redirect handling here
+      if (mode === "async") throw new Error("Async not implemented yet");
+
+      // fix cloudflare streaming
+      const { writable, readable } = new TransformStream();
+      stream.pipeTo(writable);
+      return new Response(readable, { headers: { "content-type": "text/html" } });
     });
   });
 }

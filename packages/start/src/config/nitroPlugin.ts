@@ -39,18 +39,17 @@ export function nitroPlugin(
               if (!isRunnableDevEnvironment(serverEnv))
                 throw new Error("Server environment is not runnable");
 
-              const serverEntry: { default: (e: H3Event) => Promise<any> } =
+              const serverEntry: { default: (e: H3Event) => Promise<Response> } =
                 await serverEnv.runner.import("./src/entry-server.tsx");
               const resp = await serverEntry.default(event);
-              if (resp instanceof Response) {
-                if (resp.headers.get("content-type") === "text/html") {
-                  const html = await viteDevServer.transformIndexHtml(resp.url, await resp.text());
-                  sendWebResponse(event, new Response(html, resp));
-                } else {
-                  setHeader(event, "content-type", resp.headers.get("content-type") ?? "");
-                  sendWebResponse(event, resp);
-                }
+              if (resp.headers.get("content-type") === "text/html") {
+                const html = await viteDevServer.transformIndexHtml(resp.url, await resp.text());
+                sendWebResponse(event, new Response(html, resp));
+              } else {
+                setHeader(event, "content-type", resp.headers.get("content-type") ?? "");
+                sendWebResponse(event, resp);
               }
+
             } catch (e) {
               console.error(e);
               viteDevServer.ssrFixStacktrace(e as Error);
