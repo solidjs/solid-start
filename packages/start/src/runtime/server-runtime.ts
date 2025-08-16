@@ -58,6 +58,10 @@ class SerovalChunkReader {
     // deserialize the data
     const head = new TextDecoder().decode(this.buffer.subarray(1, 11));
     const bytes = Number.parseInt(head, 16); // ;0x00000000;
+    if (Number.isNaN(bytes)) {
+      throw new Error(`Malformed server function stream header: ${head}`);
+    }
+
     // Check if the buffer has enough bytes to be parsed
     while (bytes > this.buffer.length - 12) {
       // If it's not enough, and the reader is done

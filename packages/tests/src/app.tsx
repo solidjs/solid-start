@@ -47,6 +47,9 @@ export default function App() {
             <li>
               <a href="/is-server-with-anon-default-export">is server with anon default export</a>
             </li>
+            <li>
+              <a href="/generator-server-function">generator server function</a>
+            </li>
           </ul>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
