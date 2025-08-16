@@ -6,6 +6,10 @@
     "build": "tsc"
   },
   "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
     "./config": {
       "default": "./dist/config/index.js",
       "types": "./dist/config/index.d.ts"
