@@ -7,6 +7,7 @@ import { createApp, resolve } from "vinxi";
 import { normalize } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
+import { cleanGlobalDeclarations } from "./clean-global-declarations.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { serverComponents } from "./server-components.js";
 
@@ -206,6 +207,7 @@ export function defineConfig(baseConfig = {}) {
             SolidStartServerFnsPlugin.client,
             start.experimental.islands ? serverComponents.client() : null,
             solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
+            cleanGlobalDeclarations(),
             config("app-client", {
               resolve: {
                 alias: {
