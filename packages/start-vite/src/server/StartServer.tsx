@@ -34,7 +34,7 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
   }
 }
 
-console.log(manifest.clientViteManifest);
+// console.log(manifest.clientViteManifest);
 
 /**
  *
@@ -50,7 +50,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
     let assetPromises: Promise<Asset[]>[] = [];
     // @ts-ignore
     if (context.router && context.router.matches) {
-      //     // @ts-ignore
+      // @ts-ignore
       const matches = [...context.router.matches];
       while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
       const matched = matches.length && matchRoute(matches, context.routes);
@@ -61,7 +61,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         for (let i = 0; i < matched.length; i++) {
           const segment = matched[i];
           const assets = getManifestEntryCssTags(segment["$component"].src);
-          console.log({ id: segment["$component"].src, assets });
+          // console.log({ id: segment["$component"].src, assets });
           // const part = inputs[segment["$component"].src]!;
           // assetPromises.push(part.assets() as any);
         }

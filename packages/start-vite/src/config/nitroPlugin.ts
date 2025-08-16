@@ -45,7 +45,7 @@ export function nitroPlugin(
                   const html = await viteDevServer.transformIndexHtml(resp.url, await resp.text());
                   sendWebResponse(event, new Response(html, resp));
                 } else {
-                  console.log({ event, resp });
+                  // console.log({ event, resp });
                   setHeader(event, "content-type", resp.headers.get("content-type") ?? "");
                   sendWebResponse(event, resp);
                 }
@@ -88,8 +88,8 @@ export function nitroPlugin(
                     <script type="module">
                       import { ErrorOverlay } from '/@vite/client'
                       document.body.appendChild(new ErrorOverlay(${JSON.stringify(
-                        prepareError(req, e)
-                      ).replace(/</g, "\\u003c")}))
+                    prepareError(req, e)
+                  ).replace(/</g, "\\u003c")}))
                     </script>
                   </head>
                   <body>
@@ -268,9 +268,8 @@ function removeHtmlMiddlewares(server: ViteDevServer) {
 function prepareError(req: Connect.IncomingMessage, error: unknown) {
   const e = error as Error;
   return {
-    message: `An error occured while server rendering ${req.url}:\n\n\t${
-      typeof e === "string" ? e : e.message
-    } `,
+    message: `An error occured while server rendering ${req.url}:\n\n\t${typeof e === "string" ? e : e.message
+      } `,
     stack: typeof e === "string" ? "" : e.stack
   };
 }

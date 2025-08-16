@@ -66,7 +66,7 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
       if (pathname.startsWith(serverFunctionTest)) {
         const serverFnResponse = await handleServerFunction(e);
 
-        console.log({ serverFnResponse });
+        // console.log({ serverFnResponse });
 
         if (serverFnResponse instanceof Response) return serverFnResponse;
 

@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "@babel/core": "^7.28.0",
     "@solidjs/meta": "^0.29.4",
     "@tanstack/server-functions-plugin": "^1.115.0",
     "@types/micromatch": "^4.0.9",
@@ -50,5 +51,8 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5"
   }
 }

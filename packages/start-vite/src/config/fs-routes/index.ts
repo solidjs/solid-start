@@ -77,14 +77,14 @@ export function fsRoutes({
 
         const code = `
 ${js.getImportStatements()}
-${
-  this.environment.name === "server"
-    ? ""
-    : `
+${this.environment.name === "server"
+            ? ""
+            : `
 function clientManifestImport(id) {
+  console.log("client manifest import", {id});
   return import(/* @vite-ignore */ globalThis.MANIFEST.inputs[id].output.path)
 }`
-}
+          }
 export default ${routesCode}`;
         return code;
       }
@@ -127,8 +127,8 @@ function jsCode() {
 
     return Object.keys(id).length > 0
       ? `{ ${Object.keys(id)
-          .map(k => `${k} as ${id[k]}`)
-          .join(", ")} }`
+        .map(k => `${k} as ${id[k]}`)
+        .join(", ")} }`
       : "";
   };
 
@@ -136,10 +136,9 @@ function jsCode() {
     return `${[...imports.keys()]
       .map(
         i =>
-          `import ${
-            imports.get(i).default
-              ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
-              : ""
+          `import ${imports.get(i).default
+            ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
+            : ""
           } ${getNamedExport(i)} from '${i}';`
       )
       .join("\n")}`;

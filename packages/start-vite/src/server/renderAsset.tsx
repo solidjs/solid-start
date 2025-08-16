@@ -23,7 +23,7 @@ const assetMap = {
 };
 
 export function renderAsset(asset: Asset, nonce?: string) {
-  console.log({ asset });
+  // console.log({ asset });
   let { tag, attrs: { key, ...attrs } = { key: undefined }, children } = asset as any;
   return (assetMap as any)[tag]({ attrs: { ...attrs, nonce }, key, children });
 }

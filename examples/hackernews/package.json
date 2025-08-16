@@ -2,15 +2,14 @@
   "name": "example-hackernews",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vite dev",
+    "build": "vite build"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.0",
-    "@solidjs/start": "^1.1.0",
+    "@solidjs/start-vite": "file:../../packages/start-vite",
     "solid-js": "^1.9.5",
-    "vinxi": "^0.5.3"
+    "vite": "6.3.5"
   },
   "engines": {
     "node": ">=22"

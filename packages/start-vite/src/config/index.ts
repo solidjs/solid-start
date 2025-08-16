@@ -10,6 +10,7 @@ import { fsRoutes } from "./fs-routes/index.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile } from "./nitroPlugin.js";
 import { StartServerManifest } from "solid-start:server-manifest";
+import { treeShake } from "./fs-routes/tree-shake.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -27,7 +28,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
-      `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`
   },
   ssr: {
     getRuntimeCode: () =>
@@ -243,6 +244,7 @@ export default window.manifest;
         }
       }
     },
+    treeShake(),
     nitroPlugin({ root: process.cwd() }, () => ssrBundle, handlers),
     {
       name: "solid-start:capture-client-bundle",
