@@ -92,6 +92,7 @@ export function createHandler(fn: (context: PageEvent) => JSX.Element) {
         const mod = await match.handler.import();
         const fn =
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
+        // @ts-ignore
         sharedConfig.context = { event };
         const res = await fn!(event);
         if (res !== undefined) return res;
