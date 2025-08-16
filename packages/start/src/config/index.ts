@@ -119,6 +119,7 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
             client: {
               consumer: "client",
               build: {
+                copyPublicDir: false,
                 write: true,
                 manifest: true,
                 rollupOptions: {
