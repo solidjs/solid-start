@@ -1,5 +1,5 @@
 import { createMemo, createResource, type Accessor } from "solid-js";
-import getSourceMap from "./get-source-map";
+import getSourceMap from "./get-source-map.js";
 
 export interface StackFrameSource {
   content: string;
@@ -10,22 +10,19 @@ export interface StackFrameSource {
 }
 
 function getActualFileSource(path: string): string {
-  if (path.startsWith('file://')) {
-    return '/_build/@fs' + path.substring('file://'.length);
+  if (path.startsWith("file://")) {
+    return "/_build/@fs" + path.substring("file://".length);
   }
   return path;
 }
 
-export function createStackFrame(
-  stackframe: StackFrame,
-  isCompiled: () => boolean,
-) {
+export function createStackFrame(stackframe: StackFrame, isCompiled: () => boolean) {
   const [data] = createResource(
     () => ({
       fileName: stackframe.fileName,
       line: stackframe.lineNumber,
       column: stackframe.columnNumber,
-      functionName: stackframe.functionName,
+      functionName: stackframe.functionName
     }),
     async source => {
       if (!source.fileName) {
@@ -40,9 +37,9 @@ export function createStackFrame(
       return {
         source,
         content,
-        sourceMap,
+        sourceMap
       };
-    },
+    }
   );
 
   const info = createMemo(() => {
@@ -55,12 +52,12 @@ export function createStackFrame(
     if (!isCompiled() && source.line && source.column && sourceMap) {
       const result = sourceMap.originalPositionFor({
         line: source.line,
-        column: source.column,
+        column: source.column
       });
 
       return {
         ...result,
-        content: sourceMap.sourceContentFor(result.source),
+        content: sourceMap.sourceContentFor(result.source)
       } as StackFrameSource;
     }
 
@@ -69,7 +66,7 @@ export function createStackFrame(
       line: source.line,
       column: source.column,
       name: source.functionName,
-      content,
+      content
     } as StackFrameSource;
   });
 

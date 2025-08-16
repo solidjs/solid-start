@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "allowSyntheticDefaultImports": true,
@@ -10,11 +10,11 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "allowJs": true,
-    "types": ["vinxi/types/client"],
     "isolatedModules": true,
     "outDir": "./dist",
     "declaration": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["vite/client"]
   },
-  "include": ["./src", "./env.d.ts"]
+  "include": ["./src", "./src/env.d.ts"]
 }

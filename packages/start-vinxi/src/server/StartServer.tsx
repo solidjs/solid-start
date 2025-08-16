@@ -1,7 +1,7 @@
 // @refresh skip
 // @ts-ignore
 import App from "#start/app";
-import type { Component } from "solid-js";
+import type { Component, JSX } from "solid-js";
 import {
   Hydration,
   HydrationScript,
@@ -10,12 +10,9 @@ import {
   ssr,
   useAssets
 } from "solid-js/web";
-// import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary";
-import { renderAsset } from "./renderAsset.jsx";
-import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
-import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
-import { manifest } from "solid-start:server-manifest";
-import { getClientEntryPath, getManifestEntryCssTags } from "./server-manifest.js";
+import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary";
+import { renderAsset } from "./renderAsset";
+import type { Asset, DocumentComponentProps, PageEvent } from "./types";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -34,15 +31,12 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
   }
 }
 
-// console.log(manifest.clientViteManifest);
-
 /**
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/start-server
  */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
-  // @ts-ignore
   const nonce = context.nonce;
 
   let assets: Asset[] = [];
@@ -55,30 +49,27 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
       while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
       const matched = matches.length && matchRoute(matches, context.routes);
       if (matched) {
-        // const inputs = import.meta.env.MANIFEST[
-        //   import.meta.env.START_ISLANDS ? "server" : "client"
-        // ]!.inputs;
+        const inputs = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
+          .inputs;
         for (let i = 0; i < matched.length; i++) {
           const segment = matched[i];
-          const assets = getManifestEntryCssTags(segment["$component"].src);
-          // console.log({ id: segment["$component"].src, assets });
-          // const part = inputs[segment["$component"].src]!;
-          // assetPromises.push(part.assets() as any);
+          const part = inputs[segment["$component"].src]!;
+          assetPromises.push(part.assets() as any);
         }
       } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
     }
-    //   assets = await Promise.all(assetPromises).then(a =>
-    //     // dedupe assets
-    //     [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
-    //       import.meta.env.START_ISLANDS
-    //         ? false
-    //         : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
-    //           !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
-    //     )
-    // );
+    assets = await Promise.all(assetPromises).then(a =>
+      // dedupe assets
+      [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
+        import.meta.env.START_ISLANDS
+          ? false
+          : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+            !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+      )
+    );
   });
 
-  // useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
+  useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
 
   return (
     <NoHydration>
@@ -95,9 +86,18 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             <>
               <script
                 nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(manifest.routes)}`}
+                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
               />
-              <script type="module" nonce={nonce} async src={getClientEntryPath()} />
+              <script
+                type="module"
+                nonce={nonce}
+                async
+                src={
+                  import.meta.env.MANIFEST["client"]!.inputs[
+                    import.meta.env.MANIFEST["client"]!.handler
+                  ]!.output.path
+                }
+              />
             </>
           }
         >

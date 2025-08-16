@@ -1,10 +1,9 @@
 // @refresh skip
 // @ts-ignore
-import "./client-manifest.js";
 import App from "#start/app";
 import type { JSX } from "solid-js";
-import { ErrorBoundary } from "../shared/ErrorBoundary.jsx";
-// import "./mount";
+import { ErrorBoundary } from "../shared/ErrorBoundary";
+import "./mount";
 
 function Dummy(props: { children: JSX.Element }) {
   return props.children;
@@ -22,6 +21,16 @@ export function StartClient() {
           <App />
         </ErrorBoundary>
       </Dummy>
+    </Dummy>
+  );
+}
+
+export function StartClientTanstack() {
+  return (
+    <Dummy>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </Dummy>
   );
 }

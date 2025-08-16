@@ -1,0 +1,85 @@
+{
+  "name": "@solidjs/start-vinxi",
+  "version": "1.1.7",
+  "type": "module",
+  "author": "Ryan Carniato",
+  "license": "MIT",
+  "homepage": "https://start.solidjs.com/",
+  "bugs": "https://github.com/solidjs/solid-start/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solidjs/solid-start.git",
+    "directory": "packages/start"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node build && pnpm tsc"
+  },
+  "files": [
+    "config",
+    "dist",
+    "env.d.ts"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.jsx",
+    "./config": "./config/index.js",
+    "./middleware": "./dist/middleware/index.jsx",
+    "./router": "./dist/router/index.jsx",
+    "./server": "./dist/server/index.jsx",
+    "./server/spa": "./dist/server/spa/index.jsx",
+    "./client": "./dist/client/index.jsx",
+    "./client/islands": "./dist/client/islands.jsx",
+    "./client/spa": "./dist/client/spa/index.jsx",
+    "./env": {
+      "types": "./env.d.ts",
+      "import": null
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "middleware": [
+        "./dist/middleware/index.d.ts"
+      ],
+      "router": [
+        "./dist/router/index.d.ts"
+      ],
+      "server": [
+        "./dist/server/index.d.ts"
+      ],
+      "client": [
+        "./dist/client/index.d.ts"
+      ]
+    }
+  },
+  "devDependencies": {
+    "solid-js": "^1.9.5",
+    "vinxi": "^0.5.7"
+  },
+  "dependencies": {
+    "@tanstack/server-functions-plugin": "1.121.21",
+    "@vinxi/plugin-directives": "^0.5.0",
+    "@vinxi/server-components": "^0.5.0",
+    "defu": "^6.1.2",
+    "error-stack-parser": "^2.1.4",
+    "html-to-image": "^1.11.11",
+    "radix3": "^1.1.0",
+    "seroval": "^1.0.2",
+    "seroval-plugins": "^1.0.2",
+    "shiki": "^1.26.1",
+    "source-map-js": "^1.0.2",
+    "terracotta": "^1.0.4",
+    "tinyglobby": "^0.2.2",
+    "vite": "6",
+    "vite-plugin-solid": "^2.11.1"
+  },
+  "peerDependencies": {
+    "vinxi": "^0.5.7"
+  }
+}
