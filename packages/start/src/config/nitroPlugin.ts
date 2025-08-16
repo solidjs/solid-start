@@ -1,6 +1,6 @@
 import { promises as fsp } from "node:fs";
 import path, { dirname, join } from "node:path";
-import { build, copyPublicAssets, createNitro, Nitro, prepare, type NitroConfig } from "nitropack";
+import { build, copyPublicAssets, createNitro, Nitro, prepare, prerender, type NitroConfig } from "nitropack";
 import {
   Connect,
   EnvironmentOptions,
@@ -174,6 +174,7 @@ export function nitroPlugin(
 export async function buildNitroEnvironment(nitro: Nitro, build: () => Promise<any>) {
   await prepare(nitro);
   await copyPublicAssets(nitro);
+  await prerender(nitro);
   await build();
 
   const publicDir = nitro.options.output.publicDir;
