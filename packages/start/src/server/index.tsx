@@ -68,7 +68,7 @@ export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
 ) {
-  return eventHandler<H3Event, Response>(async (e: H3Event) => {
+  return eventHandler(async (e: H3Event) => {
     const event = getFetchEvent(e);
 
     return await provideRequestEvent(event, async () => {
@@ -121,7 +121,7 @@ export function createHandler(
 
         // insert redirect handling here
 
-        return new Response(html, { headers: { "content-type": "text/html" } });
+        return html;
       }
 
       const stream = renderToStream(() => {
@@ -130,12 +130,13 @@ export function createHandler(
       }, resolvedOptions);
 
       // insert redirect handling here
-      if (mode === "async") throw new Error("Async not implemented yet");
+
+      if (mode === "async") return stream as unknown as Promise<string>; // stream has a hidden 'then' method
 
       // fix cloudflare streaming
       const { writable, readable } = new TransformStream();
       stream.pipeTo(writable);
-      return new Response(readable, { headers: { "content-type": "text/html" } });
+      return readable;
     });
   });
 }

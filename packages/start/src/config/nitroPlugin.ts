@@ -10,7 +10,7 @@ import {
   ViteDevServer
 } from "vite";
 import { resolve } from "node:path";
-import { createEvent, getHeader, H3Event, sendWebResponse, setHeader, setHeaders } from "h3";
+import { createEvent, getHeader, H3Event, sendStream, sendWebResponse, setHeader, setHeaders } from "h3";
 
 export const clientDistDir = "node_modules/.solid-start/client-dist";
 export const serverDistDir = "node_modules/.solid-start/server-dist";
@@ -42,14 +42,15 @@ export function nitroPlugin(
               const serverEntry: { default: (e: H3Event) => Promise<Response> } =
                 await serverEnv.runner.import("./src/entry-server.tsx");
               const resp = await serverEntry.default(event);
-              if (resp.headers.get("content-type") === "text/html") {
-                const html = await viteDevServer.transformIndexHtml(resp.url, await resp.text());
-                sendWebResponse(event, new Response(html, resp));
-              } else {
-                setHeader(event, "content-type", resp.headers.get("content-type") ?? "");
-                sendWebResponse(event, resp);
-              }
 
+              if (typeof resp === "string") {
+                const html = await viteDevServer.transformIndexHtml(event.path, resp);
+                sendWebResponse(event, new Response(html, { headers: { "content-type": "text/html" } }));
+              }
+              else if (typeof resp === "object" && "pipeTo" in resp)
+                sendStream(event, resp as unknown as ReadableStream);
+              else if (resp instanceof Response)
+                sendWebResponse(event, resp);
             } catch (e) {
               console.error(e);
               viteDevServer.ssrFixStacktrace(e as Error);
