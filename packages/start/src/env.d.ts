@@ -11,7 +11,7 @@ declare namespace App {
 }
 
 declare module "solidstart:server-fn-manifest" {
-  const a: Record<string, any>;
+  const a: Record<string, { importer(): Promise<Record<string, any>>, functionName: string }>;
 
   export default a;
 }

@@ -111,11 +111,9 @@ export function createHandler(
 
         if (serverFnResponse instanceof Response) return serverFnResponse;
 
-        const resp = new Response(serverFnResponse as any, {
+        return new Response(serverFnResponse as any, {
           headers: getResponseHeaders(e) as any
         });
-
-        return resp;
       }
 
       const match = matchAPIRoute(pathname, event.request.method);

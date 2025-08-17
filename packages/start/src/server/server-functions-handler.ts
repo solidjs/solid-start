@@ -103,7 +103,6 @@ export async function handleServerFunction(h3Event: H3Event) {
   }
 
   const serverFnInfo = serverFnManifest[functionId!];
-  let fnModule: undefined | { [key: string]: any };
 
   if (!serverFnInfo) {
     return process.env.NODE_ENV === "development"
@@ -111,19 +110,7 @@ export async function handleServerFunction(h3Event: H3Event) {
       : new Response(null, { status: 404 });
   }
 
-  if (process.env.NODE_ENV === "development") {
-    const { viteDevServer } = h3Event.context;
-    if (!viteDevServer) throw new Error("viteDevServer not found");
-
-    const serverEnv = viteDevServer.environments.server;
-    if (!serverEnv) throw new Error(`'server' vite dev environment not found`);
-    if (!isRunnableDevEnvironment(serverEnv))
-      throw new Error(`'server' vite dev environment not runnable`);
-
-    fnModule = await serverEnv.runner.import(serverFnInfo.extractedFilename);
-  } else {
-    fnModule = await serverFnInfo.importer();
-  }
+  const fnModule: undefined | { [key: string]: any } = await serverFnInfo.importer();
   const serverFunction = fnModule![serverFnInfo.functionName];
 
   let parsed: any[] = [];
