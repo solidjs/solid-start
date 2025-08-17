@@ -1,4 +1,12 @@
-import { eventHandler, getResponseHeaders, H3Event, sendStream, sendWebResponse } from "h3";
+import {
+  eventHandler,
+  getCookie,
+  getResponseHeaders,
+  H3Event,
+  sendStream,
+  sendWebResponse,
+  setCookie
+} from "h3";
 import { provideRequestEvent } from "solid-js/web/storage";
 import type { JSX } from "solid-js";
 import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
@@ -30,7 +38,29 @@ const SERVER_FN_BASE = "/_server";
 //   return 302;
 // }
 
-async function createPageEvent(ctx: FetchEvent) {
+function initFromFlash(ctx: FetchEvent) {
+  const flash = getCookie(ctx.nativeEvent, "flash");
+  if (!flash) return;
+  try {
+    let param = JSON.parse(flash);
+    if (!param || !param.result) return;
+    const input = [...param.input.slice(0, -1), new Map(param.input[param.input.length - 1])];
+    const result = param.error ? new Error(param.result) : param.result;
+    return {
+      input,
+      url: param.url,
+      pending: false,
+      result: param.thrown ? undefined : result,
+      error: param.thrown ? result : undefined
+    };
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
+  }
+}
+
+export async function createPageEvent(ctx: FetchEvent) {
   // const clientManifest = import.meta.env.MANIFEST["client"]!;
   // const serverManifest = import.meta.env.MANIFEST["server"]!;
   // ctx.response.headers.set("Content-Type", "text/html");
@@ -39,7 +69,7 @@ async function createPageEvent(ctx: FetchEvent) {
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: manifest.routes,
     assets: [
-      ...(await getClientEntryCssTags())
+      ...getClientEntryCssTags()
       // not needed anymore?
       // ...(import.meta.env.DEV
       //   ? await clientManifest.inputs[import.meta.env.START_APP]!.assets()
@@ -50,9 +80,9 @@ async function createPageEvent(ctx: FetchEvent) {
       //     )
       //   : [])
     ],
-    //   router: {
-    //     // submission: initFromFlash(ctx) as any
-    //   },
+    router: {
+      submission: initFromFlash(ctx) as any
+    },
     routes: createRoutes(),
     //   // prevUrl: prevPath || "",
     //   // mutation: mutation,

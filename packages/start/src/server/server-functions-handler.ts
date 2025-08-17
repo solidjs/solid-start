@@ -30,6 +30,8 @@ import serverFnManifest from "solidstart:server-fn-manifest";
 import { isRunnableDevEnvironment } from "vite";
 import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.js";
 import { getExpectedRedirectStatus } from "./util.js";
+import { FetchEvent, PageEvent } from "./types.js";
+import { createPageEvent } from "./index.jsx";
 
 function createChunk(data: string) {
   const encodeData = new TextEncoder().encode(data);
@@ -218,9 +220,9 @@ export async function handleServerFunction(h3Event: H3Event) {
       return serverFunction(...parsed);
     });
 
-    // if (singleFlight && instance) {
-    //   result = await handleSingleFlight(event, result);
-    // }
+    if (singleFlight && instance) {
+      result = await handleSingleFlight(event, result);
+    }
 
     // handle responses
     if (result instanceof Response) {
@@ -245,9 +247,9 @@ export async function handleServerFunction(h3Event: H3Event) {
     return serializeToStream(instance, result);
   } catch (x) {
     if (x instanceof Response) {
-      // if (singleFlight && instance) {
-      //   x = await handleSingleFlight(event, x);
-      // }
+      if (singleFlight && instance) {
+        x = await handleSingleFlight(event, x);
+      }
       // forward headers
       if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
       // forward non-redirect statuses
@@ -309,83 +311,83 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
   });
 }
 
-// let App: any;
-// function createSingleFlightHeaders(sourceEvent: FetchEvent) {
-//   // cookie handling logic is pretty simplistic so this might be imperfect
-//   // unclear if h3 internals are available on all platforms but we need a way to
-//   // update request headers on the underlying H3 event.
+let App: any;
+function createSingleFlightHeaders(sourceEvent: FetchEvent) {
+  // cookie handling logic is pretty simplistic so this might be imperfect
+  // unclear if h3 internals are available on all platforms but we need a way to
+  // update request headers on the underlying H3 event.
 
-//   const headers = new Headers(sourceEvent.request.headers);
-//   const cookies = parseCookies(sourceEvent.nativeEvent);
-//   const SetCookies = sourceEvent.response.headers.getSetCookie();
-//   headers.delete("cookie");
-//   let useH3Internals = false;
-//   if (sourceEvent.nativeEvent.node?.req) {
-//     useH3Internals = true;
-//     sourceEvent.nativeEvent.node.req.headers.cookie = "";
-//   }
-//   SetCookies.forEach(cookie => {
-//     if (!cookie) return;
-//     const keyValue = cookie.split(";")[0]!;
-//     const [key, value] = keyValue.split("=");
-//     key && value && (cookies[key] = value);
-//   });
-//   Object.entries(cookies).forEach(([key, value]) => {
-//     headers.append("cookie", `${key}=${value}`);
-//     useH3Internals && (sourceEvent.nativeEvent.node.req.headers.cookie += `${key}=${value};`);
-//   });
+  const headers = new Headers(sourceEvent.request.headers);
+  const cookies = parseCookies(sourceEvent.nativeEvent);
+  const SetCookies = sourceEvent.response.headers.getSetCookie();
+  headers.delete("cookie");
+  let useH3Internals = false;
+  if (sourceEvent.nativeEvent.node?.req) {
+    useH3Internals = true;
+    sourceEvent.nativeEvent.node.req.headers.cookie = "";
+  }
+  SetCookies.forEach(cookie => {
+    if (!cookie) return;
+    const keyValue = cookie.split(";")[0]!;
+    const [key, value] = keyValue.split("=");
+    key && value && (cookies[key] = value);
+  });
+  Object.entries(cookies).forEach(([key, value]) => {
+    headers.append("cookie", `${key}=${value}`);
+    useH3Internals && (sourceEvent.nativeEvent.node.req.headers.cookie += `${key}=${value};`);
+  });
 
-//   return headers;
-// }
-// async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
-//   let revalidate: string[];
-//   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
-//   if (result instanceof Response) {
-//     if (result.headers.has("X-Revalidate"))
-//       revalidate = result.headers.get("X-Revalidate")!.split(",");
-//     if (result.headers.has("Location"))
-//       url = new URL(
-//         result.headers.get("Location")!,
-//         new URL(sourceEvent.request.url).origin + import.meta.env.SERVER_BASE_URL
-//       ).toString();
-//   }
-//   const event = { ...sourceEvent } as PageEvent;
-//   event.request = new Request(url, { headers: createSingleFlightHeaders(sourceEvent) });
-//   return await provideRequestEvent(event, async () => {
-//     await createPageEvent(event);
-//     /* @ts-ignore */
-//     App || (App = (await import("#start/app")).default);
-//     /* @ts-ignore */
-//     event.router.dataOnly = revalidate || true;
-//     /* @ts-ignore */
-//     event.router.previousUrl = sourceEvent.request.headers.get("referer");
-//     try {
-//       renderToString(() => {
-//         /* @ts-ignore */
-//         sharedConfig.context.event = event;
-//         App();
-//       });
-//     } catch (e) {
-//       console.log(e);
-//     }
+  return headers;
+}
+async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
+  let revalidate: string[];
+  let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
+  if (result instanceof Response) {
+    if (result.headers.has("X-Revalidate"))
+      revalidate = result.headers.get("X-Revalidate")!.split(",");
+    if (result.headers.has("Location"))
+      url = new URL(
+        result.headers.get("Location")!,
+        new URL(sourceEvent.request.url).origin + import.meta.env.SERVER_BASE_URL
+      ).toString();
+  }
+  const event = { ...sourceEvent } as PageEvent;
+  event.request = new Request(url, { headers: createSingleFlightHeaders(sourceEvent) });
+  return await provideRequestEvent(event, async () => {
+    await createPageEvent(event);
+    /* @ts-ignore */
+    App || (App = (await import("#start/app")).default);
+    /* @ts-ignore */
+    event.router.dataOnly = revalidate || true;
+    /* @ts-ignore */
+    event.router.previousUrl = sourceEvent.request.headers.get("referer");
+    try {
+      renderToString(() => {
+        /* @ts-ignore */
+        sharedConfig.context.event = event;
+        App();
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
-//     /* @ts-ignore */
-//     const body = event.router.data;
-//     if (!body) return result;
-//     let containsKey = false;
-//     for (const key in body) {
-//       if (body[key] === undefined) delete body[key];
-//       else containsKey = true;
-//     }
-//     if (!containsKey) return result;
-//     if (!(result instanceof Response)) {
-//       body["_$value"] = result;
-//       result = new Response(null, { status: 200 });
-//     } else if ((result as any).customBody) {
-//       body["_$value"] = (result as any).customBody();
-//     }
-//     result.customBody = () => body;
-//     result.headers.set("X-Single-Flight", "true");
-//     return result;
-//   });
-// }
+    /* @ts-ignore */
+    const body = event.router.data;
+    if (!body) return result;
+    let containsKey = false;
+    for (const key in body) {
+      if (body[key] === undefined) delete body[key];
+      else containsKey = true;
+    }
+    if (!containsKey) return result;
+    if (!(result instanceof Response)) {
+      body["_$value"] = result;
+      result = new Response(null, { status: 200 });
+    } else if ((result as any).customBody) {
+      body["_$value"] = (result as any).customBody();
+    }
+    result.customBody = () => body;
+    result.headers.set("X-Single-Flight", "true");
+    return result;
+  });
+}
