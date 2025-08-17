@@ -225,7 +225,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
             const manifest: StartServerManifest = {
               clientEntryId: normalizePath(handlers.client),
               clientViteManifest: {},
-              routes: {}
+              clientAssetManifest: {}
             };
 
             return `export const manifest = ${JSON.stringify(manifest)}`;
@@ -236,20 +236,41 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           );
           if (!entry) throw new Error("No client entry found");
 
-          const clientManifest: Record<string, { file: string }> = JSON.parse(
+          const clientManifest: Record<string, Record<string, any>> = JSON.parse(
             (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source
           );
 
-          const routes = Object.entries(clientManifest).reduce((acc, [id, entry]) => {
-            acc[id] = { output: `/${CLIENT_BASE_PATH}/${entry.file}` };
+          const clientAssetManifest = Object.entries(clientManifest).reduce((acc, [id, entry]) => {
+            const assets = [
+              ...(entry.assets?.filter(Boolean) || []),
+              ...(entry.css?.filter(Boolean) || [])
+            ]
+              .filter(
+                (asset) =>
+                  asset.endsWith(".css") ||
+                  asset.endsWith(".js") ||
+                  asset.endsWith(".mjs"),
+              )
+              .map((asset) => ({
+                tag: "link",
+                attrs: {
+                  href: join("/", CLIENT_BASE_PATH, asset),
+                  key: join("/", CLIENT_BASE_PATH, asset),
+                  ...(asset.endsWith(".css")
+                    ? { rel: "stylesheet", fetchPriority: "high" }
+                    : { rel: "modulepreload" }),
+                },
+              } satisfies ManifestAsset));
+            ;
+
+            acc[id] = { output: `/${CLIENT_BASE_PATH}/${entry.file}`, assets };
             return acc;
-          }, {} as Record<string, { output: string }>);
+          }, {} as ClientManifest);
 
           const manifest: StartServerManifest = {
             clientEntryId: normalizePath(handlers.client),
-            // clientEntry: `/${CLIENT_BASE_PATH}/${entry.fileName}`,
             clientViteManifest: clientManifest,
-            routes
+            clientAssetManifest
           };
 
           return `export const manifest = ${JSON.stringify(manifest)};`;

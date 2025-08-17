@@ -67,7 +67,7 @@ export async function createPageEvent(ctx: FetchEvent) {
   // const prevPath = ctx.request.headers.get("x-solid-referrer");
   // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: manifest.routes,
+    manifest: manifest.clientAssetManifest,
     assets: [
       ...getClientEntryCssTags()
       // not needed anymore?

@@ -99,7 +99,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             <>
               <script
                 nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(manifest.routes)}`}
+                innerHTML={`window.manifest = ${JSON.stringify(manifest.clientAssetManifest)}`}
               />
               <script type="module" nonce={nonce} async src={getClientEntryPath()} />
             </>
