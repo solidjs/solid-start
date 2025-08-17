@@ -9,7 +9,7 @@
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "file:../../packages/start",
     "solid-js": "^1.9.5",
-    "vite": "6.3.5"
+    "vite": "7.1.2"
   },
   "engines": {
     "node": ">=22"

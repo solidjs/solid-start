@@ -11,7 +11,7 @@
     "@solidjs/start": "file:../../packages/start",
     "solid-js": "^1.9.5",
     "unstorage": "1.10.2",
-    "vite": "6.3.5"
+    "vite": "7.1.2"
   },
   "engines": {
     "node": ">=22"
