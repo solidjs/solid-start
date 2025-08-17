@@ -39,7 +39,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
-      `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`
   },
   ssr: {
     getRuntimeCode: () =>
@@ -72,8 +72,8 @@ const VIRTUAL_MODULES = {
 
 export const CLIENT_BASE_PATH = "_build";
 
-function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
-  const start = defu(options, {
+function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> {
+  const start = defu(options ?? {}, {
     appRoot: "./src",
     routeDir: "./routes",
     ssr: true,
@@ -172,14 +172,10 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
               "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
-                    "@solidjs/start/server": "@solidjs/start/server/spa"
-                  }
+                  "@solidjs/start/server": "@solidjs/start/server/spa",
+                  "@solidjs/start/client": "@solidjs/start/client/spa"
+                }
                 : {}),
-              ...(!start.ssr
-                ? {
-                    "@solidjs/start/client": "@solidjs/start/client/spa"
-                  }
-                : {})
             }
           },
           define: {
@@ -273,7 +269,7 @@ export default window.manifest;
         globalThis.START_CLIENT_BUNDLE = bundle;
       }
     },
-    solid({ ...start.solid, ssr: true, extensions: extensions.map(ext => `.${ext}`) })
+    solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) })
   ];
 }
 
