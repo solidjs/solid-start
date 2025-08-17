@@ -63,7 +63,7 @@
     "vinxi": "^0.5.7"
   },
   "dependencies": {
-    "@tanstack/server-functions-plugin": "1.121.21",
+    "@tanstack/server-functions-plugin": "1.131.2",
     "@vinxi/plugin-directives": "^0.5.0",
     "@vinxi/server-components": "^0.5.0",
     "defu": "^6.1.2",

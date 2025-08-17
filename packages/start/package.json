@@ -34,7 +34,7 @@
     "@babel/core": "^7.28.3",
     "@babel/traverse": "^7.28.3",
     "@solidjs/meta": "^0.29.4",
-    "@tanstack/server-functions-plugin": "^1.115.0",
+    "@tanstack/server-functions-plugin": "^1.131.2",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.9",
     "defu": "^6.1.4",
