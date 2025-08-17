@@ -1,27 +1,32 @@
 import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
-import { normalizePath, PluginOption, Rollup } from "vite";
-import solid, { Options as SolidOptions } from "vite-plugin-solid";
 import { defu } from "defu";
+import { existsSync } from "node:fs";
 import path, { isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { existsSync } from "node:fs";
 import { StartServerManifest } from "solid-start:server-manifest";
-import { type NitroConfig } from "nitropack";
+import { normalizePath, PluginOption, Rollup } from "vite";
+import solid, { Options as SolidOptions } from "vite-plugin-solid";
 
-import { fsRoutes } from "./fs-routes/index.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
-import { clientDistDir, nitroPlugin, serverDistDir, ssrEntryFile, UserNitroConfig } from "./nitroPlugin.js";
+import { fsRoutes } from "./fs-routes/index.js";
+import {
+  clientDistDir,
+  nitroPlugin,
+  serverDistDir,
+  ssrEntryFile,
+  UserNitroConfig
+} from "./nitroPlugin.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
-export type { UserNitroConfig } from "./nitroPlugin.js"
+export type { UserNitroConfig } from "./nitroPlugin.js";
 
 export interface SolidStartOptions {
   solid?: Partial<SolidOptions>;
-  ssr?: boolean,
-  routeDir?: string,
-  extensions?: string[],
-  server?: UserNitroConfig
+  ssr?: boolean;
+  routeDir?: string;
+  extensions?: string[];
+  server?: UserNitroConfig;
 }
 
 const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
@@ -34,7 +39,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
-      `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
   },
   ssr: {
     getRuntimeCode: () =>
@@ -164,7 +169,17 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
           resolve: {
             alias: {
               "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
-              "~": join(process.cwd(), start.appRoot)
+              "~": join(process.cwd(), start.appRoot),
+              ...(!start.ssr
+                ? {
+                    "@solidjs/start/server": "@solidjs/start/server/spa"
+                  }
+                : {}),
+              ...(!start.ssr
+                ? {
+                    "@solidjs/start/client": "@solidjs/start/client/spa"
+                  }
+                : {})
             }
           },
           define: {
@@ -198,7 +213,7 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
       applyToEnvironment(env) {
         if (env.name === "server") return SolidStartServerFnsPlugin.server;
         return SolidStartServerFnsPlugin.client;
-      },
+      }
     },
     {
       name: "solid-start:manifest-plugin",
@@ -229,13 +244,10 @@ function solidStartVitePlugin(options: SolidStartOptions): Array<PluginOption> {
             (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source
           );
 
-          const routes = Object.entries(clientManifest).reduce(
-            (acc, [id, entry]) => {
-              acc[id] = { output: `/${CLIENT_BASE_PATH}/${entry.file}` };
-              return acc;
-            },
-            {} as Record<string, { output: string }>
-          );
+          const routes = Object.entries(clientManifest).reduce((acc, [id, entry]) => {
+            acc[id] = { output: `/${CLIENT_BASE_PATH}/${entry.file}` };
+            return acc;
+          }, {} as Record<string, { output: string }>);
 
           const manifest: StartServerManifest = {
             clientEntryId: normalizePath(handlers.client),
