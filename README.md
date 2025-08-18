@@ -11,9 +11,9 @@
 ## Core Features
 
 - **All Rendering Modes**:
-  - Server-Side Rendering (SSR) with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler).
-  - Client-Side Rendering (CSR)
-  - Static Site Generation (SSG)
+  - Server-Side Rendering (_SSR_) with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler)
+  - Client-Side Rendering (_CSR_)
+  - Static Site Generation (_SSG_)
 - **TypeScript**: Full integration for robust, type-safe development
 - **File-Based Routing**: Intuitive routing based on your project’s file structure
 - **API Routes**: Dedicated server-side endpoints for seamless API development
@@ -30,10 +30,14 @@ Create a template project with your preferred package manager:
 ```bash
 # using npm
 npm create solid@latest -- --solidstart
+```
 
+```bash
 # using pnpm
 pnpm create solid@latest --solidstart
+```
 
+```bash
 # using bun
 bun create solid@latest --solidstart
 ```
@@ -72,7 +76,7 @@ Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlif
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  ssr: true, // false for client-side rendering
+  ssr: true, // false for client-side rendering only
   server: { preset: "vercel" },
 });
 ```
@@ -87,11 +91,7 @@ Generate production-ready bundles:
 npm run build # or pnpm build or bun build
 ```
 
-The output is saved to the `dist/` directory. Then, start the server:
-
-```bash
-npm start # or pnpm start or bun start
-```
+After the build completes, you’ll be guided through deployment for your specific preset.
 
 ## Contributing
 
