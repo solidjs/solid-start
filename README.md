@@ -7,6 +7,7 @@
 [![Reddit](https://img.shields.io/reddit/subreddit-subscribers/solidjs?style=for-the-badge&color=FF4500)](https://www.reddit.com/r/solidjs/)
 
 **SolidStart** brings fine-grained reactivity fullstack with full flexibility. Built with features like unified rendering and isomorphic code execution, SolidStart enables you to create highly performant and scalable web applications.
+
 Explore the official [documentation](https://docs.solidjs.com/solid-start) for detailed guides and examples.
 
 ## Core Features
@@ -26,7 +27,7 @@ Explore the official [documentation](https://docs.solidjs.com/solid-start) for d
 
 ### Installation
 
-Create a template project with your preferred package manager.
+Create a template project with your preferred package manager
 
 ```bash
 # using npm
@@ -43,15 +44,15 @@ pnpm create solid@latest --solidstart
 bun create solid@latest --solidstart
 ```
 
-1. Follow the CLI prompts to set up your project.
-2. Navigate to your project directory and install the dependencies.
+1. Follow the CLI prompts to set up your project
+2. Navigate to your project directory and install the dependencies
 
 ```bash
 cd <project-name>
 npm install # or pnpm install or bun install
 ```
 
-3. Start the development server.
+3. Start the development server
 
 ```bash
 npm run dev # or pnpm dev or bun dev
@@ -71,7 +72,7 @@ Learn more about routing in the [documentation](https://docs.solidjs.com/solid-s
 
 ## Adapters
 
-Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlify, Cloudflare, and others.
+Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlify, Cloudflare, and others
 
 ```ts
 import { defineConfig } from "@solidjs/start/config";
