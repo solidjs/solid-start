@@ -86,7 +86,7 @@ export default ${routesCode}`;
       }
     },
     treeShake(),
-    fileSystemWatcher()
+    fileSystemWatcher(routers)
   ];
 }
 

@@ -6,7 +6,7 @@ import type {
   PluginOption,
   ViteDevServer
 } from "vite";
-import { moduleId } from "./index.js";
+import { moduleId, RouterBuilder } from "./index.js";
 
 interface CompiledRouter {
   removeRoute(path: string): void;
@@ -40,12 +40,10 @@ function createRoutesReloader(
         if (mod) {
           const seen = new Set<EnvironmentModuleNode>();
           serverEnv.moduleGraph.invalidateModule(mod, seen);
-          // For server environment, we don't use server.reloadModule as it's for client
-          // The runner.import will automatically get fresh modules on next request
         }
       }
     } else {
-      // Handle client environment HMR reload (existing behavior)
+      // Handle client environment HMR reload
       const { moduleGraph }: { moduleGraph: ModuleGraph } = server;
       const mod: ModuleNode | undefined = moduleGraph.getModuleById(moduleId);
       if (mod) {
@@ -61,35 +59,20 @@ function createRoutesReloader(
   }
 }
 
-export const fileSystemWatcher = (): PluginOption => {
-  let closeClient: (() => void) | undefined;
-  let closeServer: (() => void) | undefined;
-
+export const fileSystemWatcher = (
+  routers: Record<"client" | "server", RouterBuilder>
+): PluginOption => {
   const plugin: PluginOption = {
     name: "fs-watcher",
     apply: "serve",
     async configureServer(server: ViteDevServer) {
-      const router = (globalThis as any).ROUTERS["server"](server.config);
-      (globalThis as any).ROUTERS["server"] = router;
+      Object.keys(routers).forEach(environment => {
+        const router = routers[environment as keyof typeof routers](server.config);
+        (globalThis as any).ROUTERS[environment] = router;
 
-      const routerClient = (globalThis as any).ROUTERS["client"](server.config);
-      (globalThis as any).ROUTERS["client"] = routerClient;
-
-      // Setup client environment watcher (existing behavior)
-      if (routerClient) {
-        setupWatcher(server.watcher, routerClient);
-        closeClient = createRoutesReloader(server, routerClient, "client");
-      }
-
-      // Setup server environment watcher (new functionality)
-      if (router) {
         setupWatcher(server.watcher, router);
-        closeServer = createRoutesReloader(server, router, "server");
-      }
-    },
-    closeBundle() {
-      closeClient?.();
-      closeServer?.();
+        createRoutesReloader(server, router, environment as keyof typeof routers);
+      });
     }
   };
   return plugin;
