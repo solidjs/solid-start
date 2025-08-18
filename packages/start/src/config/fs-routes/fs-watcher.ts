@@ -1,4 +1,11 @@
-import type { FSWatcher, ModuleGraph, ModuleNode, PluginOption, ViteDevServer } from "vite";
+import type {
+  EnvironmentModuleNode,
+  FSWatcher,
+  ModuleGraph,
+  ModuleNode,
+  PluginOption,
+  ViteDevServer
+} from "vite";
 import { moduleId } from "./index.js";
 
 interface CompiledRouter {
@@ -15,18 +22,39 @@ function setupWatcher(watcher: FSWatcher, routes: CompiledRouter): void {
   watcher.on("change", path => routes.updateRoute(path));
 }
 
-function createRoutesReloader(server: ViteDevServer, routes: CompiledRouter): () => void {
+function createRoutesReloader(
+  server: ViteDevServer,
+  routes: CompiledRouter,
+  environment: "client" | "server"
+): () => void {
   routes.addEventListener("reload", handleRoutesReload);
   return () => routes.removeEventListener("reload", handleRoutesReload);
 
   function handleRoutesReload(): void {
-    const { moduleGraph }: { moduleGraph: ModuleGraph } = server;
-    const mod: ModuleNode | undefined = moduleGraph.getModuleById(moduleId);
-    if (mod) {
-      const seen = new Set<ModuleNode>();
-      moduleGraph.invalidateModule(mod, seen);
-      server.reloadModule(mod);
+    if (environment === "server") {
+      // Handle server environment HMR reload
+      const serverEnv = server.environments.server;
+      if (serverEnv && serverEnv.moduleGraph) {
+        const mod: EnvironmentModuleNode | undefined =
+          serverEnv.moduleGraph.getModuleById(moduleId);
+        if (mod) {
+          const seen = new Set<EnvironmentModuleNode>();
+          serverEnv.moduleGraph.invalidateModule(mod, seen);
+          // For server environment, we don't use server.reloadModule as it's for client
+          // The runner.import will automatically get fresh modules on next request
+        }
+      }
+    } else {
+      // Handle client environment HMR reload (existing behavior)
+      const { moduleGraph }: { moduleGraph: ModuleGraph } = server;
+      const mod: ModuleNode | undefined = moduleGraph.getModuleById(moduleId);
+      if (mod) {
+        const seen = new Set<ModuleNode>();
+        moduleGraph.invalidateModule(mod, seen);
+        server.reloadModule(mod);
+      }
     }
+
     if (!server.config.server.hmr) {
       server.ws.send({ type: "full-reload" });
     }
@@ -34,7 +62,8 @@ function createRoutesReloader(server: ViteDevServer, routes: CompiledRouter): ()
 }
 
 export const fileSystemWatcher = (): PluginOption => {
-  let close: (() => void) | undefined;
+  let closeClient: (() => void) | undefined;
+  let closeServer: (() => void) | undefined;
 
   const plugin: PluginOption = {
     name: "fs-watcher",
@@ -46,13 +75,21 @@ export const fileSystemWatcher = (): PluginOption => {
       const routerClient = (globalThis as any).ROUTERS["client"](server.config);
       (globalThis as any).ROUTERS["client"] = routerClient;
 
+      // Setup client environment watcher (existing behavior)
+      if (routerClient) {
+        setupWatcher(server.watcher, routerClient);
+        closeClient = createRoutesReloader(server, routerClient, "client");
+      }
+
+      // Setup server environment watcher (new functionality)
       if (router) {
         setupWatcher(server.watcher, router);
-        close = createRoutesReloader(server, router);
+        closeServer = createRoutesReloader(server, router, "server");
       }
     },
     closeBundle() {
-      close?.();
+      closeClient?.();
+      closeServer?.();
     }
   };
   return plugin;
