@@ -1,5 +1,6 @@
 import { relative } from "node:path";
 import type { PluginOption, ResolvedConfig } from "vite";
+import { fileSystemWatcher } from "./fs-watcher.js";
 import { manifest } from "./manifest.js";
 import type { BaseFileSystemRouter } from "./router.js";
 import { treeShake } from "./tree-shake.js";
@@ -13,11 +14,8 @@ export interface FsRoutesArgs {
   handlers: Record<"client" | "server", string>;
 }
 
-export function fsRoutes({
-  routers,
-  handlers
-}: FsRoutesArgs): Array<PluginOption> {
-  (globalThis as any).ROUTERS = {};
+export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOption> {
+  (globalThis as any).ROUTERS = routers;
 
   return [
     manifest(handlers),
@@ -34,11 +32,7 @@ export function fsRoutes({
         if (id !== moduleId) return;
         const js = jsCode();
 
-        const router = routers[this.environment.name as keyof typeof routers](
-          this.environment.config
-        );
-
-        (globalThis as any).ROUTERS[this.environment.name] = router;
+        const router = (globalThis as any).ROUTERS[this.environment.name];
 
         const routes = await router.getRoutes();
 
@@ -79,18 +73,20 @@ export function fsRoutes({
 
         const code = `
 ${js.getImportStatements()}
-${this.environment.name === "server"
-            ? ""
-            : `
+${
+  this.environment.name === "server"
+    ? ""
+    : `
 function clientManifestImport(id) {
   return import(/* @vite-ignore */ globalThis.MANIFEST.inputs[id].output.path)
 }`
-          }
+}
 export default ${routesCode}`;
         return code;
       }
     },
-    treeShake()
+    treeShake(),
+    fileSystemWatcher()
   ];
 }
 
@@ -129,8 +125,8 @@ function jsCode() {
 
     return Object.keys(id).length > 0
       ? `{ ${Object.keys(id)
-        .map(k => `${k} as ${id[k]}`)
-        .join(", ")} }`
+          .map(k => `${k} as ${id[k]}`)
+          .join(", ")} }`
       : "";
   };
 
@@ -138,9 +134,10 @@ function jsCode() {
     return `${[...imports.keys()]
       .map(
         i =>
-          `import ${imports.get(i).default
-            ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
-            : ""
+          `import ${
+            imports.get(i).default
+              ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
+              : ""
           } ${getNamedExport(i)} from '${i}';`
       )
       .join("\n")}`;
