@@ -14,7 +14,7 @@
     "@typeschema/valibot": "^0.13.4",
     "solid-js": "^1.9.5",
     "valibot": "^0.29.0",
-    "vinxi": "^0.5.7"
+    "vite": "^7.1.2"
   },
   "engines": {
     "node": ">=22"
