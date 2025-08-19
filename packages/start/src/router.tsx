@@ -1,4 +1,6 @@
 import { getRequestEvent, isServer } from "solid-js/web";
+import { getManifest } from "solid-start:get-manifest";
+
 import lazyRoute from "./server/lazyRoute.jsx";
 import type { PageEvent } from "./server/types.js";
 import { pageRoutes as routeConfigs } from "./server/routes.js";
@@ -14,13 +16,7 @@ export function createRoutes() {
       },
       component:
         route.$component &&
-        lazyRoute(
-          route.$component
-          // import.meta.env.START_ISLANDS
-          //   ? import.meta.env.MANIFEST["server"]
-          //   : import.meta.env.MANIFEST["client"],
-          // import.meta.env.MANIFEST["server"]
-        ),
+        lazyRoute(route.$component, getManifest(import.meta.env.START_ISLANDS), getManifest(true)),
       children: route.children ? route.children.map(createRoute) : undefined
     };
   }

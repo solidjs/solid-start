@@ -1,8 +1,9 @@
 import { relative } from "node:path";
 import type { PluginOption, ResolvedConfig } from "vite";
-import { manifest } from "./manifest.js";
 import type { BaseFileSystemRouter } from "./router.js";
 import { treeShake } from "./tree-shake.js";
+
+const getClientManifestPath = new URL("../../server/manifest/client-manifest.js", import.meta.url).pathname;
 
 export const moduleId = "solid-start:routes";
 
@@ -20,7 +21,6 @@ export function fsRoutes({
   (globalThis as any).ROUTERS = {};
 
   return [
-    manifest(handlers),
     {
       name: "solid-start-fs-routes",
       enforce: "pre",
@@ -82,8 +82,9 @@ ${js.getImportStatements()}
 ${this.environment.name === "server"
             ? ""
             : `
+import { getClientManifest } from "${getClientManifestPath}"
 function clientManifestImport(id) {
-  return import(/* @vite-ignore */ globalThis.MANIFEST.inputs[id].output.path)
+  return getClientManifest().import(id)
 }`
           }
 export default ${routesCode}`;

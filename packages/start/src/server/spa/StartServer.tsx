@@ -29,14 +29,14 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
               <>
                 <script
                   nonce={nonce}
-                  innerHTML={`window.manifest = ${JSON.stringify(manifest.clientAssetManifest)}`}
+                  innerHTML={`window.manifest = ${JSON.stringify(manifest.clientManifestData)}`}
                 />
                 <script type="module" nonce={nonce} async src={getClientEntryPath()} />
               </>
             ) : (
               <>
                 <script
-                  innerHTML={`window.manifest = ${JSON.stringify(manifest.clientAssetManifest)}`}
+                  innerHTML={`window.manifest = ${JSON.stringify(manifest.clientManifestData)}`}
                 />
                 <script type="module" nonce={nonce} async src={getClientEntryPath()} />
               </>

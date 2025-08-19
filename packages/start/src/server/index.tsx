@@ -1,25 +1,18 @@
-import {
-  eventHandler,
-  getCookie,
-  getResponseHeaders,
-  H3Event,
-  sendStream,
-  sendWebResponse,
-  setCookie
-} from "h3";
-import { provideRequestEvent } from "solid-js/web/storage";
-import type { JSX } from "solid-js";
-import { renderToStream, renderToString, renderToStringAsync } from "solid-js/web";
-import { manifest } from "solid-start:server-manifest";
+import { getSsrManifest } from "solid-start:get-ssr-manifest";
+import { eventHandler, getCookie, getResponseHeaders, type H3Event, setCookie } from "h3";
 import { join } from "pathe";
-
+import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
+import { renderToStream, renderToString } from "solid-js/web";
+import { provideRequestEvent } from "solid-js/web/storage";
 // import { handleServerFunction } from "./server-functions-handler";
 import { getFetchEvent } from "./fetchEvent.js";
 import { matchAPIRoute } from "./routes.js";
-import { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
+import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
+
 // import { createProdManifest } from "./prodManifest.js";
 export { StartServer } from "./StartServer.jsx";
+
 import { createRoutes } from "../router.jsx";
 import { handleServerFunction } from "./server-functions-handler.js";
 import { getClientEntryCssTags } from "./server-manifest.js";
@@ -42,7 +35,7 @@ function initFromFlash(ctx: FetchEvent) {
   const flash = getCookie(ctx.nativeEvent, "flash");
   if (!flash) return;
   try {
-    let param = JSON.parse(flash);
+    const param = JSON.parse(flash);
     if (!param || !param.result) return;
     const input = [...param.input.slice(0, -1), new Map(param.input[param.input.length - 1])];
     const result = param.error ? new Error(param.result) : param.result;
@@ -67,9 +60,9 @@ export async function createPageEvent(ctx: FetchEvent) {
   // const prevPath = ctx.request.headers.get("x-solid-referrer");
   // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
   const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: manifest.clientAssetManifest,
+    manifest: getSsrManifest(false),
     assets: [
-      ...getClientEntryCssTags()
+      ...(await getClientEntryCssTags())
       // not needed anymore?
       // ...(import.meta.env.DEV
       //   ? await clientManifest.inputs[import.meta.env.START_APP]!.assets()
@@ -122,7 +115,7 @@ export function createHandler(
         const fn =
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
         (event as APIEvent).params = match.params || {};
-        // @ts-ignore
+        // @ts-expect-error
         sharedConfig.context = { event };
         const res = await fn!(event);
         if (res !== undefined) return res;
