@@ -1,5 +1,7 @@
 import { relative } from "node:path";
 import type { PluginOption, ResolvedConfig } from "vite";
+
+import { fileSystemWatcher } from "./fs-watcher.js";
 import type { BaseFileSystemRouter } from "./router.js";
 import { treeShake } from "./tree-shake.js";
 
@@ -14,11 +16,8 @@ export interface FsRoutesArgs {
   handlers: Record<"client" | "server", string>;
 }
 
-export function fsRoutes({
-  routers,
-  handlers
-}: FsRoutesArgs): Array<PluginOption> {
-  (globalThis as any).ROUTERS = {};
+export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOption> {
+  (globalThis as any).ROUTERS = routers;
 
   return [
     {
@@ -34,11 +33,7 @@ export function fsRoutes({
         if (id !== moduleId) return;
         const js = jsCode();
 
-        const router = routers[this.environment.name as keyof typeof routers](
-          this.environment.config
-        );
-
-        (globalThis as any).ROUTERS[this.environment.name] = router;
+        const router = (globalThis as any).ROUTERS[this.environment.name];
 
         const routes = await router.getRoutes();
 
@@ -91,7 +86,8 @@ export default ${routesCode}`;
         return code;
       }
     },
-    treeShake()
+    treeShake(),
+    fileSystemWatcher(routers)
   ];
 }
 
