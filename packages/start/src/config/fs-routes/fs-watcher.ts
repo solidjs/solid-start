@@ -64,12 +64,9 @@ export const fileSystemWatcher = (
 ): PluginOption => {
   const plugin: PluginOption = {
     name: "fs-watcher",
-    apply: "serve",
     async configureServer(server: ViteDevServer) {
       Object.keys(routers).forEach(environment => {
-        const router = routers[environment as keyof typeof routers](server.config);
-        (globalThis as any).ROUTERS[environment] = router;
-
+        const router = (globalThis as any).ROUTERS[environment];
         setupWatcher(server.watcher, router);
         createRoutesReloader(server, router, environment as keyof typeof routers);
       });
