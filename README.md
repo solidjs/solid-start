@@ -6,14 +6,16 @@
 [![Discord](https://img.shields.io/discord/722131463138705510?style=for-the-badge&color=5865F2)](https://discord.com/invite/solidjs)
 [![Reddit](https://img.shields.io/reddit/subreddit-subscribers/solidjs?style=for-the-badge&color=FF4500)](https://www.reddit.com/r/solidjs/)
 
-**SolidStart** brings fine-grained reactivity fullstack with full flexibility. Built with features like unified rendering and isomorphic code execution, SolidStart enables you to create highly performant and scalable web applications. Explore the official [documentation](https://docs.solidjs.com/solid-start) for detailed guides and examples.
+**SolidStart** brings fine-grained reactivity fullstack with full flexibility. Built with features like unified rendering and isomorphic code execution, SolidStart enables you to create highly performant and scalable web applications.
+
+Explore the official [documentation](https://docs.solidjs.com/solid-start) for detailed guides and examples.
 
 ## Core Features
 
 - **All Rendering Modes**:
-  - Server-Side Rendering (SSR) with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler).
-  - Client-Side Rendering (CSR)
-  - Static Site Generation (SSG)
+  - Server-Side Rendering _(SSR)_ with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler)
+  - Client-Side Rendering _(CSR)_
+  - Static Site Generation _(SSG)_
 - **TypeScript**: Full integration for robust, type-safe development
 - **File-Based Routing**: Intuitive routing based on your project’s file structure
 - **API Routes**: Dedicated server-side endpoints for seamless API development
@@ -25,28 +27,32 @@
 
 ### Installation
 
-Create a template project with your preferred package manager:
+Create a template project with your preferred package manager
 
 ```bash
 # using npm
 npm create solid@latest -- --solidstart
+```
 
+```bash
 # using pnpm
 pnpm create solid@latest --solidstart
+```
 
+```bash
 # using bun
 bun create solid@latest --solidstart
 ```
 
-1. Follow the CLI prompts to set up your project.
-2. Navigate to your project directory and install dependencies:
+1. Follow the CLI prompts to set up your project
+2. Navigate to your project directory and install the dependencies
 
 ```bash
 cd <project-name>
 npm install # or pnpm install or bun install
 ```
 
-3. Start the development server:
+3. Start the development server
 
 ```bash
 npm run dev # or pnpm dev or bun dev
@@ -66,32 +72,29 @@ Learn more about routing in the [documentation](https://docs.solidjs.com/solid-s
 
 ## Adapters
 
-Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlify, Cloudflare, and others:
+Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlify, Cloudflare, and others
 
 ```ts
 import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
-  ssr: true, // false for client-side rendering
+  ssr: true, // false for client-side rendering only
   server: { preset: "vercel" },
 });
 ```
 
-Presets also include runtimes like Node.js, Bun or Deno. For example, the `node-server` preset enables hosting on your server. Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config).
+Presets also include runtimes like Node.js, Bun or Deno. For example, the `node-server` preset enables hosting on your server.
+Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config).
 
 ## Building for Production
 
-Generate production-ready bundles:
+Generate production-ready bundles
 
 ```bash
 npm run build # or pnpm build or bun build
 ```
 
-The output is saved to the `dist/` directory. Then, start the server:
-
-```bash
-npm start # or pnpm start or bun start
-```
+After the build completes, you’ll be guided through deployment for your specific preset.
 
 ## Contributing
 
