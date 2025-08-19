@@ -1,7 +1,7 @@
 "use server";
 import { redirect } from "@solidjs/router";
+import { useSession } from "@solidjs/start/server";
 import { eq } from "drizzle-orm";
-import { useSession } from "h3";
 import { Users } from "../../drizzle/schema";
 import { db } from "./db";
 

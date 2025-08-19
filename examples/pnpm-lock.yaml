@@ -215,9 +215,6 @@ importers:
       drizzle-orm:
         specifier: ^0.31.2
         version: 0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)
-      h3:
-        specifier: ^1.15.4
-        version: 1.15.4
       solid-js:
         specifier: ^1.9.5
         version: 1.9.9
@@ -413,9 +410,9 @@ importers:
       valibot:
         specifier: ^0.29.0
         version: 0.29.0
-      vinxi:
-        specifier: ^0.5.7
-        version: 0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
+      vite:
+        specifier: ^7.1.2
+        version: 7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
 
   with-unocss:
     dependencies:
@@ -9752,7 +9749,7 @@ snapshots:
       consola: 3.4.2
       defu: 6.1.4
       get-port-please: 3.1.2
-      h3: 1.15.3
+      h3: 1.15.4
       http-shutdown: 1.2.2
       jiti: 1.21.7
       mlly: 1.7.4
@@ -11313,11 +11310,11 @@ snapshots:
   h3@1.15.3:
     dependencies:
       cookie-es: 1.2.2
-      crossws: 0.3.4
+      crossws: 0.3.5
       defu: 6.1.4
       destr: 2.0.5
       iron-webcrypto: 1.2.1
-      node-mock-http: 1.0.0
+      node-mock-http: 1.0.2
       radix3: 1.1.2
       ufo: 1.6.1
       uncrypto: 0.1.3
@@ -11954,7 +11951,7 @@ snapshots:
       crossws: 0.3.4
       defu: 6.1.4
       get-port-please: 3.1.2
-      h3: 1.15.3
+      h3: 1.15.4
       http-shutdown: 1.2.2
       jiti: 2.4.2
       mlly: 1.7.4
@@ -14645,7 +14642,7 @@ snapshots:
       anymatch: 3.1.3
       chokidar: 3.6.0
       destr: 2.0.5
-      h3: 1.15.3
+      h3: 1.15.4
       listhen: 1.9.0
       lru-cache: 10.4.3
       mri: 1.2.0
@@ -14660,7 +14657,7 @@ snapshots:
       anymatch: 3.1.3
       chokidar: 4.0.3
       destr: 2.0.5
-      h3: 1.15.3
+      h3: 1.15.4
       lru-cache: 10.4.3
       node-fetch-native: 1.6.6
       ofetch: 1.4.1
@@ -14779,7 +14776,7 @@ snapshots:
       chokidar: 4.0.3
       citty: 0.1.6
       consola: 3.4.2
-      crossws: 0.3.4
+      crossws: 0.3.5
       dax-sh: 0.43.2
       defu: 6.1.4
       es-module-lexer: 1.7.0
@@ -14857,7 +14854,7 @@ snapshots:
       chokidar: 4.0.3
       citty: 0.1.6
       consola: 3.4.2
-      crossws: 0.3.4
+      crossws: 0.3.5
       dax-sh: 0.43.2
       defu: 6.1.4
       es-module-lexer: 1.7.0

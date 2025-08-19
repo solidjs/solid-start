@@ -15,7 +15,6 @@
     "@solidjs/start": "file:../../packages/start",
     "better-sqlite3": "^11.0.0",
     "drizzle-orm": "^0.31.2",
-    "h3": "^1.15.4",
     "solid-js": "^1.9.5",
     "vite": "7.1.2"
   },

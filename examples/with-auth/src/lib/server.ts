@@ -1,5 +1,5 @@
 import { redirect } from "@solidjs/router";
-import { useSession } from "h3";
+import { useSession } from "@solidjs/start/server";
 import { createUser, findUser } from "./db";
 
 export interface Session {
