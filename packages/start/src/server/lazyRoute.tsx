@@ -1,13 +1,11 @@
-import { createComponent, lazy, onCleanup, type Component, type JSX } from "solid-js";
-import { manifest } from "solid-start:server-manifest";
+import { type Component, createComponent, lazy, onCleanup } from "solid-js";
 
 import { renderAsset } from "./renderAsset.jsx";
-import { Asset } from "./types.js";
 
 export default function lazyRoute<T extends Record<string, any>>(
-  component: { src: string; import(): Promise<Record<string, Component>> }
-  // clientManifest: any,
-  // serverManifest: any,
+  component: { src: string; import(): Promise<Record<string, Component>> },
+  clientManifest: StartManifest,
+  serverManifest: StartManifest
 ) {
   return lazy(async () => {
     const componentModule = await component.import().catch(() => null);
@@ -22,30 +20,30 @@ export default function lazyRoute<T extends Record<string, any>>(
     }
 
     if (import.meta.env.DEV) {
-      // let manifest = import.meta.env.SSR ? serverManifest : clientManifest;
+      const manifest = import.meta.env.SSR ? serverManifest : clientManifest;
 
-      // let assets = await clientManifest.inputs?.[component.src]?.assets();
-      // const styles = assets.filter((asset: Asset) => asset.tag === "style");
+      const assets = await manifest.getAssets(component.src);
+      const styles = assets.filter((asset: any) => asset.tag === "style");
 
-      // if (typeof window !== "undefined" && import.meta.hot) {
-      //   import.meta.hot.on("css-update", data => {
-      //     updateStyles(styles, data);
-      //   });
-      // }
+      if (import.meta.env.SSR && import.meta.hot)
+        import.meta.hot.on("css-update", data => {
+          updateStyles(styles, data);
+        });
 
       const Comp: Component<T> = props => {
-        // if (typeof window !== "undefined") {
-        //   appendStyles(styles);
-        // }
+        if (typeof window !== "undefined") {
+          appendStyles(styles);
+        }
 
-        // onCleanup(() => {
-        //   if (typeof window !== "undefined") {
-        //     // remove style tags added by vite when a CSS file is imported
-        //     cleanupStyles(styles);
-        //   }
-        // });
+        onCleanup(() => {
+          if (typeof window !== "undefined") {
+            // remove style tags added by vite when a CSS file is imported
+            cleanupStyles(styles);
+          }
+        });
+
         return [
-          // ...assets.map((asset: Asset) => renderAsset(asset)),
+          ...assets.map((asset: any) => renderAsset(asset)),
           createComponent(Component, props)
         ];
       };
@@ -67,6 +65,56 @@ export default function lazyRoute<T extends Record<string, any>>(
         ];
       };
       return { default: Comp };
+    }
+  });
+}
+
+function appendStyles(styles: Array<any>) {
+  styles.forEach(style => {
+    let element = document.head.querySelector(
+      `style[data-vite-dev-id="${style.attrs["data-vite-dev-id"]}"]`
+    );
+    if (!element) {
+      element = document.createElement("style");
+      element.setAttribute("data-vite-dev-id", style.attrs["data-vite-dev-id"]);
+      element.innerHTML = style.children;
+      element.setAttribute("data-vite-ref", "0");
+      document.head.appendChild(element);
+    }
+
+    element.setAttribute("data-vite-ref", `${Number(element.getAttribute("data-vite-ref")) + 1}`);
+  });
+}
+
+function updateStyles(styles: Array<any>, data: any) {
+  const styleAsset = styles.find(s => s.attrs["data-vite-dev-id"] === data.file);
+  if (styleAsset) {
+    styleAsset.children = data.contents;
+  }
+}
+
+function cleanupStyles(styles: Array<any>) {
+  styles.forEach(style => {
+    const element = document.head.querySelector(
+      `style[data-vite-dev-id="${style.attrs["data-vite-dev-id"]}"]`
+    );
+
+    if (!element) {
+      return;
+    }
+
+    if (Number(element.getAttribute("data-vite-ref")) === 1) {
+      element.remove();
+    } else {
+      element.setAttribute("data-vite-ref", `${Number(element.getAttribute("data-vite-ref")) - 1}`);
+    }
+  });
+}
+
+if (!import.meta.env.SSR && import.meta.hot) {
+  import.meta.hot.on("css-update", data => {
+    for (const el of document.querySelectorAll(`style[data-vite-dev-id="${data.file}"]`)) {
+      el.innerHTML = data.contents;
     }
   });
 }

@@ -1,9 +1,11 @@
 import { relative } from "node:path";
 import type { PluginOption, ResolvedConfig } from "vite";
+
 import { fileSystemWatcher } from "./fs-watcher.js";
-import { manifest } from "./manifest.js";
 import type { BaseFileSystemRouter } from "./router.js";
 import { treeShake } from "./tree-shake.js";
+
+const getClientManifestPath = new URL("../../server/manifest/client-manifest.js", import.meta.url).pathname;
 
 export const moduleId = "solid-start:routes";
 
@@ -18,7 +20,6 @@ export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOptio
   (globalThis as any).ROUTERS = routers;
 
   return [
-    manifest(handlers),
     {
       name: "solid-start-fs-routes",
       enforce: "pre",
@@ -73,14 +74,14 @@ export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOptio
 
         const code = `
 ${js.getImportStatements()}
-${
-  this.environment.name === "server"
-    ? ""
-    : `
+${this.environment.name === "server"
+            ? ""
+            : `
+import { getClientManifest } from "${getClientManifestPath}"
 function clientManifestImport(id) {
-  return import(/* @vite-ignore */ globalThis.MANIFEST.inputs[id].output.path)
+  return getClientManifest().import(id)
 }`
-}
+          }
 export default ${routesCode}`;
         return code;
       }
@@ -125,8 +126,8 @@ function jsCode() {
 
     return Object.keys(id).length > 0
       ? `{ ${Object.keys(id)
-          .map(k => `${k} as ${id[k]}`)
-          .join(", ")} }`
+        .map(k => `${k} as ${id[k]}`)
+        .join(", ")} }`
       : "";
   };
 
@@ -134,10 +135,9 @@ function jsCode() {
     return `${[...imports.keys()]
       .map(
         i =>
-          `import ${
-            imports.get(i).default
-              ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
-              : ""
+          `import ${imports.get(i).default
+            ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
+            : ""
           } ${getNamedExport(i)} from '${i}';`
       )
       .join("\n")}`;

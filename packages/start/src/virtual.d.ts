@@ -15,15 +15,29 @@ type ClientManifest = Record<string, {
 declare module "solid-start:server-manifest" {
   interface StartServerManifest {
     clientEntryId: string;
-    clientViteManifest: Record<string, { css?: Array<string>, file?: string, [key: string]: unknown }>;
-    clientAssetManifest: ClientManifest;
+    clientViteManifest: Record<string, { css?: Array<string>, file: string, [key: string]: unknown }>;
+    clientManifestData: ClientManifest;
   }
 
   export const manifest: StartServerManifest;
 }
 
-declare module "solid-start:client-prod-manifest" {
-  export default {} as ClientManifest;
+
+interface StartManifest {
+  import(id: string): Promise<any>;
+  getAssets(id: string): Promise<any[]>;
+}
+
+declare module "solid-start:get-ssr-manifest" {
+  export const getSsrManifest: (ssr: boolean) => StartManifest;
+}
+
+declare module "solid-start:get-client-manifest" {
+  export const getClientManifest: () => StartManifest;
+}
+
+declare module "solid-start:get-manifest" {
+  export const getManifest: (ssr: boolean) => StartManifest;
 }
 
 declare module "#start/app" {

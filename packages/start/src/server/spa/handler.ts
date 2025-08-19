@@ -18,7 +18,7 @@ export function createHandler(
 export async function createPageEvent(ctx: FetchEvent) {
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: {},
-    assets: [...getClientEntryCssTags()],
+    assets: [...(await getClientEntryCssTags())],
     routes: [],
     complete: false,
     $islands: new Set<string>(),
