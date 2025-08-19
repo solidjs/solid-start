@@ -1,9 +1,8 @@
 {
   "name": "example-with-authjs",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start",
+    "dev": "vite dev",
+    "build": "vite build",
     "lint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\""
   },
   "type": "module",
@@ -17,16 +16,16 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.15.1",
-    "@solidjs/start": "^1.1.0",
+    "@solidjs/start": "file:../../packages/start",
     "solid-js": "^1.9.5",
-    "vinxi": "^0.5.7",
     "@solidjs/meta": "^0.29.4",
     "zod": "^3.22.4",
     "@auth/core": "0.38.0",
     "@solid-mediakit/auth": "^3.1.3",
     "postcss": "^8.4.40",
     "autoprefixer": "^10.4.19",
-    "tailwindcss": "^3.4.7"
+    "tailwindcss": "^3.4.7",
+    "vite": "7.1.2"
   },
   "engines": {
     "node": ">=22"

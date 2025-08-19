@@ -1,9 +1,9 @@
 "use server";
 import { redirect } from "@solidjs/router";
-import { useSession } from "vinxi/http";
 import { eq } from "drizzle-orm";
-import { db } from "./db";
+import { useSession } from "h3";
 import { Users } from "../../drizzle/schema";
+import { db } from "./db";
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {

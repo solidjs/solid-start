@@ -1,5 +1,5 @@
-import { useSession } from "vinxi/http";
 import { redirect } from "@solidjs/router";
+import { useSession } from "h3";
 import { createUser, findUser } from "./db";
 
 export interface Session {

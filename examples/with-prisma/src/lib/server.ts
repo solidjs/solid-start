@@ -1,4 +1,4 @@
-import { useSession } from "vinxi/http";
+import { useSession } from "h3";
 import { db } from "./db";
 
 export function validateUsername(username: unknown) {

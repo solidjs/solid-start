@@ -2,17 +2,16 @@
   "name": "example-with-auth",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vite dev",
+    "build": "vite build"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "^1.1.7",
+    "@solidjs/start": "file:../../packages/start",
     "solid-js": "^1.9.7",
     "start-oauth": "^1.2.4",
     "unstorage": "1.16.1",
-    "vinxi": "^0.5.8"
+    "vite": "7.1.2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",

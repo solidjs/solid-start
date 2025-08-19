@@ -2,9 +2,8 @@
   "name": "example-with-drizzle",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vite dev",
+    "build": "vite build"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.10",
@@ -13,11 +12,12 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.15.0",
-    "@solidjs/start": "^1.1.0",
+    "@solidjs/start": "file:../../packages/start",
     "better-sqlite3": "^11.0.0",
     "drizzle-orm": "^0.31.2",
+    "h3": "^1.15.4",
     "solid-js": "^1.9.5",
-    "vinxi": "^0.5.7"
+    "vite": "7.1.2"
   },
   "engines": {
     "node": ">=20"
