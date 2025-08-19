@@ -1,5 +1,3 @@
-import type { APIEvent } from "@solidjs/start/server";
-
-export const GET = (event: APIEvent) => {
-  return new Response("Text Plain Response");
-};
+export function GET(e: { nativeEvent: { respondWith: (arg0: Response) => void; }; }) {
+  e.nativeEvent.respondWith(new Response("test"));
+}
