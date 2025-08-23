@@ -28,7 +28,8 @@
       "types": "./dist/router.d.ts"
     },
     "./server/spa": "./dist/server/spa/index.jsx",
-    "./client/spa": "./dist/client/spa/index.jsx"
+    "./client/spa": "./dist/client/spa/index.jsx",
+    "./middleware": "./dist/middleware/index.jsx"
   },
   "dependencies": {
     "@babel/core": "^7.28.3",

@@ -1,26 +1,23 @@
+import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
+import { defu } from "defu";
 import { existsSync } from "node:fs";
 import path, { isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { StartServerManifest } from "solid-start:server-manifest";
-import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
-import { defu } from "defu";
-import { normalizePath, type ViteDevServer, type PluginOption, type Rollup } from "vite";
+import { normalizePath, type PluginOption, type Rollup, type ViteDevServer } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
-import {
-  SolidStartClientFileRouter,
-  SolidStartServerFileRouter,
-} from "./fs-router.js";
+import { isCssModulesFile } from "../server/collect-styles.js";
+import { getSsrDevManifest } from "../server/manifest/dev-server-manifest.js";
+import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { fsRoutes } from "./fs-routes/index.js";
 import {
   clientDistDir,
   nitroPlugin,
   serverDistDir,
   ssrEntryFile,
-  type UserNitroConfig,
+  type UserNitroConfig
 } from "./nitroPlugin.js";
-import { isCssModulesFile } from "../server/collect-styles.js";
-import { getSsrDevManifest } from "../server/manifest/dev-server-manifest.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -32,6 +29,7 @@ export interface SolidStartOptions {
   routeDir?: string;
   extensions?: string[];
   server?: UserNitroConfig;
+  middleware?: string;
 }
 
 const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
@@ -41,31 +39,27 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
   client: {
     getRuntimeCode: () =>
       `import { createServerReference } from "${normalize(
-        fileURLToPath(new URL("../server/server-runtime.js", import.meta.url)),
+        fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
       )}"`,
-    replacer: (opts) =>
-      `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`,
+    replacer: opts =>
+      `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
   },
   ssr: {
     getRuntimeCode: () =>
       `import { createServerReference } from '${normalize(
-        fileURLToPath(
-          new URL("../server/server-fns-runtime.js", import.meta.url),
-        ),
+        fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
       )}'`,
-    replacer: (opts) =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
+    replacer: opts =>
+      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
   },
   server: {
     getRuntimeCode: () =>
       `import { createServerReference } from '${normalize(
-        fileURLToPath(
-          new URL("../server/server-fns-runtime.js", import.meta.url),
-        ),
+        fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
       )}'`,
-    replacer: (opts) =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
-  },
+    replacer: opts =>
+      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
+  }
 });
 
 const absolute = (path: string, root: string) =>
@@ -78,46 +72,43 @@ const VIRTUAL_MODULES = {
   serverManifest: "solid-start:server-manifest",
   getClientManifest: "solid-start:get-client-manifest",
   getSsrManifest: "solid-start:get-ssr-manifest",
-  getManifest: "solid-start:get-manifest",
+  getManifest: "solid-start:get-manifest"
 } as const;
 
 export const CLIENT_BASE_PATH = "_build";
 
-function solidStartVitePlugin(
-  options?: SolidStartOptions,
-): Array<PluginOption> {
+function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
     appRoot: "./src",
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
     experimental: {
-      islands: false,
+      islands: false
     },
     solid: {},
     server: {
       routeRules: {
         "/_build/assets/**": {
-          headers: { "cache-control": "public, immutable, max-age=31536000" },
-        },
+          headers: { "cache-control": "public, immutable, max-age=31536000" }
+        }
       },
       experimental: {
-        asyncContext: true,
-      },
+        asyncContext: true
+      }
     },
-    extensions: [],
+    extensions: []
   });
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
 
   const routeDir = join(start.appRoot, start.routeDir);
 
   let entryExtension = ".tsx";
-  if (existsSync(join(process.cwd(), start.appRoot, "app.jsx")))
-    entryExtension = ".jsx";
+  if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) entryExtension = ".jsx";
 
   const handlers = {
     client: `${start.appRoot}/entry-client${entryExtension}`,
-    server: `${start.appRoot}/entry-server${entryExtension}`,
+    server: `${start.appRoot}/entry-server${entryExtension}`
   };
 
   // console.log(new URL('../server/manifest/ssr-manifest.js', import.meta.url).pathname)
@@ -129,8 +120,8 @@ function solidStartVitePlugin(
       configEnvironment(name) {
         return {
           define: {
-            "import.meta.env.SSR": JSON.stringify(name === "server"),
-          },
+            "import.meta.env.SSR": JSON.stringify(name === "server")
+          }
         };
       },
       config(_, env) {
@@ -145,18 +136,14 @@ function solidStartVitePlugin(
                 manifest: true,
                 rollupOptions: {
                   input: {
-                    client: handlers.client,
+                    client: handlers.client
                   },
                   output: {
-                    dir: path.resolve(
-                      process.cwd(),
-                      clientDistDir,
-                      CLIENT_BASE_PATH,
-                    ),
+                    dir: path.resolve(process.cwd(), clientDistDir, CLIENT_BASE_PATH)
                   },
-                  external: ["node:fs", "node:path", "node:os", "node:crypto"],
-                },
-              },
+                  external: ["node:fs", "node:path", "node:os", "node:crypto"]
+                }
+              }
             },
             server: {
               consumer: "server",
@@ -170,7 +157,7 @@ function solidStartVitePlugin(
                 rollupOptions: {
                   output: {
                     dir: path.resolve(process.cwd(), serverDistDir),
-                    entryFileNames: ssrEntryFile,
+                    entryFileNames: ssrEntryFile
                   },
                   plugins: [
                     {
@@ -178,55 +165,51 @@ function solidStartVitePlugin(
                       generateBundle(options, bundle) {
                         // TODO can this hook be called more than once?
                         ssrBundle = bundle;
-                      },
-                    },
-                  ] as Array<PluginOption>,
+                      }
+                    }
+                  ] as Array<PluginOption>
                 },
                 commonjsOptions: {
-                  include: [/node_modules/],
-                },
-              },
-            },
+                  include: [/node_modules/]
+                }
+              }
+            }
           },
           resolve: {
             alias: {
-              "#start/app": join(
-                process.cwd(),
-                start.appRoot,
-                `app${entryExtension}`,
-              ),
+              "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
               "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
-                  "@solidjs/start/server": "@solidjs/start/server/spa",
-                  "@solidjs/start/client": "@solidjs/start/client/spa",
-                }
-                : {}),
-            },
+                    "@solidjs/start/server": "@solidjs/start/server/spa",
+                    "@solidjs/start/client": "@solidjs/start/client/spa"
+                  }
+                : {})
+            }
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
-            "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-          },
+            "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+          }
         };
-      },
+      }
     },
     css(),
     fsRoutes({
       handlers,
       routers: {
-        client: (config) =>
+        client: config =>
           new SolidStartClientFileRouter({
             dir: absolute(routeDir, config.root),
-            extensions,
+            extensions
           }),
-        server: (config) =>
+        server: config =>
           new SolidStartServerFileRouter({
             dir: absolute(routeDir, config.root),
             extensions,
-            dataOnly: !start.ssr,
-          }),
-      },
+            dataOnly: !start.ssr
+          })
+      }
     }),
     // Must be placed after fsRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
@@ -236,22 +219,21 @@ function solidStartVitePlugin(
       applyToEnvironment(env) {
         if (env.name === "server") return SolidStartServerFnsPlugin.server;
         return SolidStartServerFnsPlugin.client;
-      },
+      }
     },
     {
       name: "solid-start:manifest-plugin",
       enforce: "pre",
       resolveId(id) {
-        if (id === VIRTUAL_MODULES.serverManifest)
-          return `\0${VIRTUAL_MODULES.serverManifest}`;
+        if (id === VIRTUAL_MODULES.serverManifest) return `\0${VIRTUAL_MODULES.serverManifest}`;
         if (id === VIRTUAL_MODULES.getClientManifest)
-          return new URL('../server/manifest/client-manifest.js', import.meta.url).pathname
+          return new URL("../server/manifest/client-manifest.js", import.meta.url).pathname;
         if (id === VIRTUAL_MODULES.getSsrManifest)
-          return new URL('../server/manifest/ssr-manifest.js', import.meta.url).pathname;
+          return new URL("../server/manifest/ssr-manifest.js", import.meta.url).pathname;
         if (id === VIRTUAL_MODULES.getManifest)
           return this.environment.config.consumer === "server"
-            ? new URL('../server/manifest/ssr-manifest.js', import.meta.url).pathname
-            : new URL('../server/manifest/client-manifest.js', import.meta.url).pathname
+            ? new URL("../server/manifest/ssr-manifest.js", import.meta.url).pathname
+            : new URL("../server/manifest/client-manifest.js", import.meta.url).pathname;
       },
       async load(id) {
         if (id === `\0${VIRTUAL_MODULES.serverManifest}`) {
@@ -259,64 +241,54 @@ function solidStartVitePlugin(
             const manifest: StartServerManifest = {
               clientEntryId: normalizePath(handlers.client),
               clientViteManifest: {},
-              clientManifestData: {},
+              clientManifestData: {}
             };
 
             return `export const manifest = ${JSON.stringify(manifest)}`;
           }
 
           const entry = Object.values(globalThis.START_CLIENT_BUNDLE).find(
-            (v) => "isEntry" in v && v.isEntry,
+            v => "isEntry" in v && v.isEntry
           );
           if (!entry) throw new Error("No client entry found");
 
-          const clientManifest: Record<
-            string,
-            Record<string, any>
-          > = JSON.parse(
-            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any)
-              .source,
+          const clientManifest: Record<string, Record<string, any>> = JSON.parse(
+            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source
           );
 
-          const clientAssetManifest = Object.entries(clientManifest).reduce(
-            (acc, [id, entry]) => {
-              const assets = [
-                ...(entry.assets?.filter(Boolean) || []),
-                ...(entry.css?.filter(Boolean) || []),
-              ]
-                .filter(
-                  (asset) =>
-                    asset.endsWith(".css") ||
-                    asset.endsWith(".js") ||
-                    asset.endsWith(".mjs"),
-                )
-                .map(
-                  (asset) =>
-                    ({
-                      tag: "link",
-                      attrs: {
-                        href: join("/", CLIENT_BASE_PATH, asset),
-                        key: join("/", CLIENT_BASE_PATH, asset),
-                        ...(asset.endsWith(".css")
-                          ? { rel: "stylesheet", fetchPriority: "high" }
-                          : { rel: "modulepreload" }),
-                      },
-                    }) satisfies ManifestAsset,
-                );
+          const clientAssetManifest = Object.entries(clientManifest).reduce((acc, [id, entry]) => {
+            const assets = [
+              ...(entry.assets?.filter(Boolean) || []),
+              ...(entry.css?.filter(Boolean) || [])
+            ]
+              .filter(
+                asset => asset.endsWith(".css") || asset.endsWith(".js") || asset.endsWith(".mjs")
+              )
+              .map(
+                asset =>
+                  ({
+                    tag: "link",
+                    attrs: {
+                      href: join("/", CLIENT_BASE_PATH, asset),
+                      key: join("/", CLIENT_BASE_PATH, asset),
+                      ...(asset.endsWith(".css")
+                        ? { rel: "stylesheet", fetchPriority: "high" }
+                        : { rel: "modulepreload" })
+                    }
+                  } satisfies ManifestAsset)
+              );
 
-              acc[id] = {
-                output: `/${CLIENT_BASE_PATH}/${entry.file}`,
-                assets,
-              };
-              return acc;
-            },
-            {} as ClientManifest,
-          );
+            acc[id] = {
+              output: `/${CLIENT_BASE_PATH}/${entry.file}`,
+              assets
+            };
+            return acc;
+          }, {} as ClientManifest);
 
           const manifest: StartServerManifest = {
             clientEntryId: normalizePath(handlers.client),
             clientViteManifest: clientManifest as any,
-            clientManifestData: clientAssetManifest,
+            clientManifestData: clientAssetManifest
           };
 
           return `export const manifest = ${JSON.stringify(manifest)};`;
@@ -330,25 +302,25 @@ function solidStartVitePlugin(
               throw new Error("Missing id to get assets.");
             }
             return `export default ${JSON.stringify(
-              await getSsrDevManifest(true, handlers.client).getAssets(id),
+              await getSsrDevManifest(true, handlers.client).getAssets(id)
             )}`;
           }
         }
-      },
+      }
     },
-    nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server),
+    nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server, start.middleware),
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
       generateBundle(_options, bundle) {
         globalThis.START_CLIENT_BUNDLE = bundle;
-      },
+      }
     },
     solid({
       ...start.solid,
       ssr: start.ssr,
-      extensions: extensions.map((ext) => `.${ext}`),
-    }),
+      extensions: extensions.map(ext => `.${ext}`)
+    })
   ];
 }
 
@@ -377,8 +349,8 @@ function css(): PluginOption {
           event: "css-update",
           data: {
             file,
-            contents: resp.code,
-          },
+            contents: resp.code
+          }
         });
       }
     },
@@ -386,6 +358,6 @@ function css(): PluginOption {
       if (isCssModulesFile(id)) {
         cssModules[id] = code;
       }
-    },
-  }
+    }
+  };
 }
