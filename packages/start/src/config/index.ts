@@ -120,8 +120,6 @@ function solidStartVitePlugin(
     server: `${start.appRoot}/entry-server${entryExtension}`,
   };
 
-  // console.log(new URL('../server/manifest/ssr-manifest.js', import.meta.url).pathname)
-
   return [
     {
       name: "solid-start:vite-config",

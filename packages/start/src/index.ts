@@ -16,4 +16,4 @@ export { default as clientOnly } from "./shared/clientOnly.js";
 export { HttpStatusCode } from "./shared/HttpStatusCode.js";
 
 export { GET } from "./shared/GET.js";
-export { getServerFunctionMeta } from "./shared/serverFunction";
+export { getServerFunctionMeta } from "./shared/serverFunction.js";
