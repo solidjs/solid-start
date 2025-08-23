@@ -9,7 +9,7 @@
   "dependencies": {
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "file:../../packages/start",
-    "solid-js": "^1.9.5",
+    "solid-js": "^1.9.9",
     "unstorage": "1.10.2",
     "vite": "7.1.2"
   },

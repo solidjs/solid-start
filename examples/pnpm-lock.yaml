@@ -32,13 +32,13 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: ^0.15.0
-        version: 0.15.3(solid-js@1.9.5)
+        version: 0.15.3(solid-js@1.9.9)
       '@solidjs/start':
         specifier: file:../../packages/start
         version: file:../packages/start(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@24.3.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
       solid-js:
-        specifier: ^1.9.5
-        version: 1.9.5
+        specifier: ^1.9.9
+        version: 1.9.9
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.6.1)
@@ -3459,9 +3459,6 @@ packages:
   smob@1.5.0:
     resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
 
-  solid-js@1.9.5:
-    resolution: {integrity: sha512-ogI3DaFcyn6UhYhrgcyRAMbu/buBJitYQASZz5WzfQVPP10RD2AbCoRZ517psnezrasyCbWzIxZ6kVqet768xw==}
-
   solid-js@1.9.9:
     resolution: {integrity: sha512-A0ZBPJQldAeGCTW0YRYJmt7RCeh5rbFfPZ2aOttgYnctHE7HgKeHCBB/PVc2P7eOfmNXqMFFFoYYdm3S4dcbkA==}
 
@@ -5072,10 +5069,6 @@ snapshots:
   '@solidjs/meta@0.29.4(solid-js@1.9.9)':
     dependencies:
       solid-js: 1.9.9
-
-  '@solidjs/router@0.15.3(solid-js@1.9.5)':
-    dependencies:
-      solid-js: 1.9.5
 
   '@solidjs/router@0.15.3(solid-js@1.9.9)':
     dependencies:
@@ -7467,12 +7460,6 @@ snapshots:
   slash@5.1.0: {}
 
   smob@1.5.0: {}
-
-  solid-js@1.9.5:
-    dependencies:
-      csstype: 3.1.3
-      seroval: 1.3.2
-      seroval-plugins: 1.2.1(seroval@1.3.2)
 
   solid-js@1.9.9:
     dependencies:
