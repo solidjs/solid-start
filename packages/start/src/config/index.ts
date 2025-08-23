@@ -42,7 +42,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
-      `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`
+      `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`
   },
   ssr: {
     getRuntimeCode: () =>
@@ -72,7 +72,8 @@ const VIRTUAL_MODULES = {
   serverManifest: "solid-start:server-manifest",
   getClientManifest: "solid-start:get-client-manifest",
   getSsrManifest: "solid-start:get-ssr-manifest",
-  getManifest: "solid-start:get-manifest"
+  getManifest: "solid-start:get-manifest",
+  middleware: "solid-start:middleware"
 } as const;
 
 export const CLIENT_BASE_PATH = "_build";
@@ -179,9 +180,9 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
               "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
-                    "@solidjs/start/server": "@solidjs/start/server/spa",
-                    "@solidjs/start/client": "@solidjs/start/client/spa"
-                  }
+                  "@solidjs/start/server": "@solidjs/start/server/spa",
+                  "@solidjs/start/client": "@solidjs/start/client/spa"
+                }
                 : {})
             }
           },
@@ -222,7 +223,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
     {
       name: "solid-start:manifest-plugin",
       enforce: "pre",
-      resolveId(id) {
+      async resolveId(id) {
         if (id === VIRTUAL_MODULES.serverManifest) return `\0${VIRTUAL_MODULES.serverManifest}`;
         if (id === VIRTUAL_MODULES.getClientManifest)
           return new URL("../server/manifest/client-manifest.js", import.meta.url).pathname;
@@ -232,6 +233,11 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           return this.environment.config.consumer === "server"
             ? new URL("../server/manifest/ssr-manifest.js", import.meta.url).pathname
             : new URL("../server/manifest/client-manifest.js", import.meta.url).pathname;
+        if (id === VIRTUAL_MODULES.middleware) {
+          if (start.middleware) return await this.resolve(start.middleware);
+
+          return `\0${VIRTUAL_MODULES.middleware}`;
+        }
       },
       async load(id) {
         if (id === `\0${VIRTUAL_MODULES.serverManifest}`) {
@@ -264,16 +270,16 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
               )
               .map(
                 asset =>
-                  ({
-                    tag: "link",
-                    attrs: {
-                      href: join("/", CLIENT_BASE_PATH, asset),
-                      key: join("/", CLIENT_BASE_PATH, asset),
-                      ...(asset.endsWith(".css")
-                        ? { rel: "stylesheet", fetchPriority: "high" }
-                        : { rel: "modulepreload" })
-                    }
-                  } satisfies ManifestAsset)
+                ({
+                  tag: "link",
+                  attrs: {
+                    href: join("/", CLIENT_BASE_PATH, asset),
+                    key: join("/", CLIENT_BASE_PATH, asset),
+                    ...(asset.endsWith(".css")
+                      ? { rel: "stylesheet", fetchPriority: "high" }
+                      : { rel: "modulepreload" })
+                  }
+                } satisfies ManifestAsset)
               );
 
             acc[id] = {
@@ -303,7 +309,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
               await getSsrDevManifest(true, handlers.client).getAssets(id)
             )}`;
           }
-        }
+        } else if (id === VIRTUAL_MODULES.middleware) return "export default {};"
       }
     },
     nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server, start.middleware),
