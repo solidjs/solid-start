@@ -1,8 +1,9 @@
 import type { JSX } from "solid-js";
+import { getSsrManifest } from "solid-start:get-ssr-manifest";
 
-import { createHandler as createBaseHandler } from "../index";
-import { getClientEntryCssTags } from "../server-manifest";
-import type { FetchEvent, HandlerOptions, PageEvent } from "../types";
+import { createBaseHandler } from "../handler.js";
+import { getClientEntryCssTags } from "../server-manifest.js";
+import type { FetchEvent, HandlerOptions, PageEvent } from "../types.js";
 
 /**
  *
@@ -12,13 +13,13 @@ export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options?: HandlerOptions | ((context: PageEvent) => HandlerOptions),
 ) {
-  return createBaseHandler(fn, options);
+  return createBaseHandler(createPageEvent, fn, options);
 }
 
-export async function createPageEvent(ctx: FetchEvent) {
+async function createPageEvent(ctx: FetchEvent) {
   const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: {},
-    assets: [...(await getClientEntryCssTags())],
+    manifest: getSsrManifest(false),
+    assets: await getClientEntryCssTags(),
     routes: [],
     complete: false,
     $islands: new Set<string>(),

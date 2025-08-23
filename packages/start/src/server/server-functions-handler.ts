@@ -16,22 +16,17 @@ import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import {
-  eventHandler,
   parseCookies,
   setHeader,
   setResponseStatus,
-  H3Event,
-  getHeader,
-  setResponseHeader,
-  getResponseHeader
+  H3Event, setResponseHeader
 } from "h3";
-// @ts-ignore
 import serverFnManifest from "solidstart:server-fn-manifest";
-import { isRunnableDevEnvironment } from "vite";
+
 import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.js";
 import { getExpectedRedirectStatus } from "./util.js";
 import { FetchEvent, PageEvent } from "./types.js";
-import { createPageEvent } from "./index.jsx";
+import { createPageEvent } from "./handler.js";
 
 function createChunk(data: string) {
   const encodeData = new TextEncoder().encode(data);

@@ -195,7 +195,6 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
     },
     css(),
     fsRoutes({
-      handlers,
       routers: {
         client: config =>
           new SolidStartClientFileRouter({
@@ -309,10 +308,10 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
               await getSsrDevManifest(true, handlers.client).getAssets(id)
             )}`;
           }
-        } else if (id === VIRTUAL_MODULES.middleware) return "export default {};"
+        } else if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};"
       }
     },
-    nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server, start.middleware),
+    nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server),
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
@@ -322,7 +321,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
     },
     solid({
       ...start.solid,
-      ssr: start.ssr,
+      ssr: true,
       extensions: extensions.map(ext => `.${ext}`)
     })
   ];

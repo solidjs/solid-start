@@ -1,6 +1,6 @@
-import { type Component, createComponent, lazy, onCleanup } from "solid-js";
+import { type Component, createComponent, JSX, lazy, onCleanup } from "solid-js";
 
-import { renderAsset } from "./renderAsset.jsx";
+import { Asset, renderAsset } from "./renderAsset.jsx";
 
 export default function lazyRoute<T extends Record<string, any>>(
   component: { src: string; import(): Promise<Record<string, Component>> },
@@ -43,24 +43,24 @@ export default function lazyRoute<T extends Record<string, any>>(
         });
 
         return [
-          ...assets.map((asset: any) => renderAsset(asset)),
+          ...assets.map((asset: Asset) => renderAsset(asset)),
           createComponent(Component, props)
         ];
       };
       return { default: Comp };
     } else {
-      // let assets = await clientManifest.inputs?.[component.src].assets();
-      // const styles = assets.filter(
-      //   (asset: Asset) =>
-      //     asset.tag === "style" ||
-      //     (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "stylesheet"
-      // );
-      // if (typeof window !== "undefined") {
-      //   preloadStyles(styles);
-      // }
+      const assets = await clientManifest.getAssets(component.src);
+      const styles = assets.filter(
+        asset =>
+          asset.tag === "style" ||
+          (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "stylesheet"
+      );
+      if (typeof window !== "undefined") {
+        preloadStyles(styles);
+      }
       const Comp: Component<T> = props => {
         return [
-          // ...styles.map((asset: Asset) => renderAsset(asset)),
+          ...styles.map((asset: Asset) => renderAsset(asset)),
           createComponent(Component, props)
         ];
       };
@@ -115,6 +115,24 @@ if (!import.meta.env.SSR && import.meta.hot) {
   import.meta.hot.on("css-update", data => {
     for (const el of document.querySelectorAll(`style[data-vite-dev-id="${data.file}"]`)) {
       el.innerHTML = data.contents;
+    }
+  });
+}
+
+export function preloadStyles(styles: Array<any>) {
+  styles.forEach(style => {
+    if (!style.attrs.href) {
+      return;
+    }
+
+    let element = document.head.querySelector(`link[href="${style.attrs.href}"]`);
+    if (!element) {
+      // create a link preload element for the css file so it starts loading but doesnt get attached
+      element = document.createElement("link");
+      element.setAttribute("rel", "preload");
+      element.setAttribute("as", "style");
+      element.setAttribute("href", style.attrs.href);
+      document.head.appendChild(element);
     }
   });
 }

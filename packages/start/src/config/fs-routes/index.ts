@@ -5,18 +5,15 @@ import { fileSystemWatcher } from "./fs-watcher.js";
 import type { BaseFileSystemRouter } from "./router.js";
 import { treeShake } from "./tree-shake.js";
 
-const getClientManifestPath = new URL("../../server/manifest/client-manifest.js", import.meta.url).pathname;
-
 export const moduleId = "solid-start:routes";
 
 export type RouterBuilder = (config: ResolvedConfig) => BaseFileSystemRouter;
 
 export interface FsRoutesArgs {
   routers: Record<"client" | "server", RouterBuilder>;
-  handlers: Record<"client" | "server", string>;
 }
 
-export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOption> {
+export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
   (globalThis as any).ROUTERS = {};
 
   return [
@@ -85,7 +82,7 @@ ${js.getImportStatements()}
 ${this.environment.name === "server"
             ? ""
             : `
-import { getClientManifest } from "${getClientManifestPath}"
+import { getClientManifest } from "solid-start:get-client-manifest";
 function clientManifestImport(id) {
   return getClientManifest().import(id)
 }`

@@ -43,8 +43,6 @@ export function nitroPlugin(
   options: { root: string },
   getSsrBundle: () => Rollup.OutputBundle,
   nitroConfig?: UserNitroConfig,
-  middleware?: string
-  // handlers: { client: string; server: string }
 ): Array<PluginOption> {
   return [
     {

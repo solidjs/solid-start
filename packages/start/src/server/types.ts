@@ -55,8 +55,8 @@ export interface FetchEvent {
 }
 
 export interface PageEvent extends RequestEvent {
-  manifest: any;
-  assets: any;
+  manifest?: any;
+  assets: any[];
   routes: any[];
   // prevUrl: string | null;
   // $type: typeof FETCH_EVENT;
