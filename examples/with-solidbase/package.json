@@ -2,17 +2,19 @@
   "name": "example-with-solidbase",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build"
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "version": "vinxi version"
   },
   "dependencies": {
     "@iconify-json/ri": "^1.2.5",
     "@kobalte/solidbase": "^0.2.11",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "file:../../packages/start",
+    "@solidjs/start": "^1.1.0",
     "solid-js": "^1.9.5",
-    "vite": "^7"
+    "vinxi": "^0.5.6"
   },
   "engines": {
     "node": ">=22"

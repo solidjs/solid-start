@@ -312,7 +312,7 @@ importers:
         version: 1.2.5
       '@kobalte/solidbase':
         specifier: ^0.2.11
-        version: 0.2.17(1ae0207aceaf5c6be1956b68e15e94c0)
+        version: 0.2.17(cba454652e802e30b99200e63bc672ff)
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.9)
@@ -320,14 +320,14 @@ importers:
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.9)
       '@solidjs/start':
-        specifier: file:../../packages/start
-        version: file:../packages/start(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@24.3.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
+        specifier: ^1.1.0
+        version: 1.1.7(@testing-library/jest-dom@6.6.3)(solid-js@1.9.9)(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
       solid-js:
         specifier: ^1.9.5
         version: 1.9.9
-      vite:
-        specifier: ^7
-        version: 7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
+      vinxi:
+        specifier: ^0.5.6
+        version: 0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
 
   with-strict-csp:
     dependencies:
@@ -588,6 +588,10 @@ packages:
         optional: true
       nodemailer:
         optional: true
+
+  '@babel/code-frame@7.26.2':
+    resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -2215,6 +2219,11 @@ packages:
     peerDependencies:
       solid-js: ^1.8.6
 
+  '@solidjs/start@1.1.7':
+    resolution: {integrity: sha512-30nUFzCpCVH7ORtHlO4ZE+VLG3g3EP+x+ceLLJBFRXIVuFQ1p203xZvVCXWqUPydtK78O5w3nIkWA/tLtF0Ybg==}
+    peerDependencies:
+      vinxi: ^0.5.7
+
   '@solidjs/start@file:../packages/start':
     resolution: {directory: ../packages/start, type: directory}
     engines: {node: '>=22'}
@@ -2325,6 +2334,12 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7
 
+  '@tanstack/directive-functions-plugin@1.121.21':
+    resolution: {integrity: sha512-B9z/HbF7gJBaRHieyX7f2uQ4LpLLAVAEutBZipH6w+CYD6RHRJvSVPzECGHF7icFhNWTiJQL2QR6K07s59yzEw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      vite: '>=6.0.0'
+
   '@tanstack/directive-functions-plugin@1.131.2':
     resolution: {integrity: sha512-5Pz6aVPS0BW+0bLvMzWsoajfjI6ZeWqkbVBaQfIbSTm4DOBO05JuQ/pb7W7m3GbCb5TK1a/SKDhuTX6Ag5I7UQ==}
     engines: {node: '>=12'}
@@ -2378,6 +2393,10 @@ packages:
 
   '@tanstack/router-utils@1.131.2':
     resolution: {integrity: sha512-sr3x0d2sx9YIJoVth0QnfEcAcl+39sQYaNQxThtHmRpyeFYNyM2TTH+Ud3TNEnI3bbzmLYEUD+7YqB987GzhDA==}
+    engines: {node: '>=12'}
+
+  '@tanstack/server-functions-plugin@1.121.21':
+    resolution: {integrity: sha512-a05fzK+jBGacsSAc1vE8an7lpBh4H0PyIEcivtEyHLomgSeElAJxm9E2It/0nYRZ5Lh23m0okbhzJNaYWZpAOg==}
     engines: {node: '>=12'}
 
   '@tanstack/server-functions-plugin@1.131.2':
@@ -2751,10 +2770,20 @@ packages:
     resolution: {integrity: sha512-WSN1z931BtasZJlgPp704zJFnQFRg7yzSjkm3MzAWQYe4uXFXlFr1hc5Ac2zae5/HDOz5x1/zDM5Cb54vTCnWw==}
     hasBin: true
 
+  '@vinxi/plugin-directives@0.5.1':
+    resolution: {integrity: sha512-pH/KIVBvBt7z7cXrUH/9uaqcdxjegFC7+zvkZkdOyWzs+kQD5KPf3cl8kC+5ayzXHT+OMlhGhyitytqN3cGmHg==}
+    peerDependencies:
+      vinxi: ^0.5.5
+
   '@vinxi/plugin-mdx@3.7.2':
     resolution: {integrity: sha512-OKXagCMa9P/FD50gGZlczbvNqeM/z7AVf5ppO84BFtP/y01NRHy00LYYe4zbtsyqdbjK78pG2iWOQ8PZwie0jQ==}
     peerDependencies:
       '@mdx-js/mdx': <3
+
+  '@vinxi/server-components@0.5.1':
+    resolution: {integrity: sha512-0BsG95qac3dkhfdRZxqzqYWJE4NvPL7ILlV43B6K6ho1etXWB2e5b0IxsUAUbyqpqiXM7mSRivojuXjb2G4OsQ==}
+    peerDependencies:
+      vinxi: ^0.5.5
 
   '@vitest/expect@3.0.5':
     resolution: {integrity: sha512-nNIOqupgZ4v5jWuQx2DSlHLEs7Q4Oh/7AYwNyE+k0UQzG7tSmjPXShUikn1mpNGzYEN2jJbTvLejwShMitovBA==}
@@ -2862,6 +2891,15 @@ packages:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
+
+  acorn-loose@8.5.2:
+    resolution: {integrity: sha512-PPvV6g8UGMGgjrMu+n/f9E/tCSkNQ2Y97eFvuVdJfG11+xdIeDcLyNdC8SHcrHbRqkfwLASdplyR6B6sKM1U4A==}
+    engines: {node: '>=0.4.0'}
+
+  acorn-typescript@1.4.13:
+    resolution: {integrity: sha512-xsc9Xv0xlVfwp2o7sQ+GCQ1PgbkdcpWdTzrwXxO3xDMTAywVS3oXVOcOHuRjAPkS4P9b+yc/qNF15460v+jp4Q==}
+    peerDependencies:
+      acorn: '>=8.9.0'
 
   acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
@@ -4854,6 +4892,9 @@ packages:
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
+
+  magicast@0.2.11:
+    resolution: {integrity: sha512-6saXbRDA1HMkqbsvHOU6HBjCVgZT460qheRkLhJQHWAbhXoWESI3Kn/dGGXyKs15FFKR85jsUqFx2sMK0wy/5g==}
 
   magicast@0.3.5:
     resolution: {integrity: sha512-L0WhttDl+2BOsybvEOLK7fW3UA0OQ0IQ2d6Zl2x/a6vVRs3bAY0ECOSHHeL5jD+SbOpOCUEi0y1DgHEn9Qn1AQ==}
@@ -7308,6 +7349,12 @@ snapshots:
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
 
+  '@babel/code-frame@7.26.2':
+    dependencies:
+      '@babel/helper-validator-identifier': 7.27.1
+      js-tokens: 4.0.0
+      picocolors: 1.1.1
+
   '@babel/code-frame@7.27.1':
     dependencies:
       '@babel/helper-validator-identifier': 7.27.1
@@ -8137,7 +8184,7 @@ snapshots:
       solid-presence: 0.1.8(solid-js@1.9.9)
       solid-prevent-scroll: 0.1.10(solid-js@1.9.9)
 
-  '@kobalte/solidbase@0.2.17(1ae0207aceaf5c6be1956b68e15e94c0)':
+  '@kobalte/solidbase@0.2.17(cba454652e802e30b99200e63bc672ff)':
     dependencies:
       '@alloc/quick-lru': 5.2.0
       '@bprogress/core': 1.3.4
@@ -8151,7 +8198,7 @@ snapshots:
       '@fontsource-variable/jetbrains-mono': 5.2.6
       '@fontsource-variable/lexend': 5.2.9
       '@kobalte/core': 0.13.11(solid-js@1.9.9)
-      '@mdx-js/mdx': 3.1.0(acorn@8.14.1)
+      '@mdx-js/mdx': 3.1.0(acorn@8.15.0)
       '@solid-primitives/clipboard': 1.6.2(solid-js@1.9.9)
       '@solid-primitives/context': 0.2.3(solid-js@1.9.9)
       '@solid-primitives/event-listener': 2.4.3(solid-js@1.9.9)
@@ -8162,7 +8209,7 @@ snapshots:
       '@solid-primitives/storage': 4.3.3(solid-js@1.9.9)
       '@solidjs/meta': 0.29.4(solid-js@1.9.9)
       '@solidjs/router': 0.15.3(solid-js@1.9.9)
-      '@solidjs/start': file:../packages/start(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@24.3.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
+      '@solidjs/start': 1.1.7(@testing-library/jest-dom@6.6.3)(solid-js@1.9.9)(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
       cross-spawn: 7.0.6
       esast-util-from-js: 2.0.1
       estree-util-value-to-estree: 3.4.0
@@ -8275,7 +8322,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mdx-js/mdx@3.1.0(acorn@8.14.1)':
+  '@mdx-js/mdx@3.1.0(acorn@8.15.0)':
     dependencies:
       '@types/estree': 1.0.8
       '@types/estree-jsx': 1.0.5
@@ -8289,7 +8336,7 @@ snapshots:
       hast-util-to-jsx-runtime: 2.3.6
       markdown-extensions: 2.0.0
       recma-build-jsx: 1.0.0
-      recma-jsx: 1.0.1(acorn@8.14.1)
+      recma-jsx: 1.0.1(acorn@8.15.0)
       recma-stringify: 1.0.0
       rehype-recma: 1.0.0
       remark-mdx: 3.1.0
@@ -8857,6 +8904,29 @@ snapshots:
     dependencies:
       solid-js: 1.9.9
 
+  '@solidjs/start@1.1.7(@testing-library/jest-dom@6.6.3)(solid-js@1.9.9)(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))':
+    dependencies:
+      '@tanstack/server-functions-plugin': 1.121.21(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
+      '@vinxi/plugin-directives': 0.5.1(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
+      '@vinxi/server-components': 0.5.1(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
+      defu: 6.1.4
+      error-stack-parser: 2.1.4
+      html-to-image: 1.11.13
+      radix3: 1.1.2
+      seroval: 1.3.2
+      seroval-plugins: 1.3.2(seroval@1.3.2)
+      shiki: 1.29.2
+      source-map-js: 1.2.1
+      terracotta: 1.0.6(solid-js@1.9.9)
+      tinyglobby: 0.2.14
+      vinxi: 0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
+      vite-plugin-solid: 2.11.6(patch_hash=a4f09ac704b133f7d1fef9ec6c9e378192d47de5da5fef4f4430e58df13c399a)(@testing-library/jest-dom@6.6.3)(solid-js@1.9.9)(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
+    transitivePeerDependencies:
+      - '@testing-library/jest-dom'
+      - solid-js
+      - supports-color
+      - vite
+
   '@solidjs/start@file:../packages/start(@netlify/blobs@8.2.0)(@testing-library/jest-dom@6.6.3)(@types/node@20.17.17)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)':
     dependencies:
       '@babel/core': 7.28.3
@@ -9077,6 +9147,19 @@ snapshots:
       tailwindcss: 4.1.12
       vite: 7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
 
+  '@tanstack/directive-functions-plugin@1.121.21(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))':
+    dependencies:
+      '@babel/code-frame': 7.26.2
+      '@babel/core': 7.28.3
+      '@babel/traverse': 7.28.3
+      '@babel/types': 7.28.2
+      '@tanstack/router-utils': 1.131.2
+      babel-dead-code-elimination: 1.0.10
+      tiny-invariant: 1.3.3
+      vite: 7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
+    transitivePeerDependencies:
+      - supports-color
+
   '@tanstack/directive-functions-plugin@1.131.2(vite@7.1.2(@types/node@20.17.17)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))':
     dependencies:
       '@babel/code-frame': 7.27.1
@@ -9170,6 +9253,22 @@ snapshots:
       diff: 8.0.2
     transitivePeerDependencies:
       - supports-color
+
+  '@tanstack/server-functions-plugin@1.121.21(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))':
+    dependencies:
+      '@babel/code-frame': 7.26.2
+      '@babel/core': 7.28.3
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.3)
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.3)
+      '@babel/template': 7.27.2
+      '@babel/traverse': 7.28.3
+      '@babel/types': 7.28.2
+      '@tanstack/directive-functions-plugin': 1.121.21(vite@7.1.2(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
+      babel-dead-code-elimination: 1.0.10
+      tiny-invariant: 1.3.3
+    transitivePeerDependencies:
+      - supports-color
+      - vite
 
   '@tanstack/server-functions-plugin@1.131.2(vite@7.1.2(@types/node@20.17.17)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))':
     dependencies:
@@ -9746,6 +9845,19 @@ snapshots:
       untun: 0.1.3
       uqr: 0.1.2
 
+  '@vinxi/plugin-directives@0.5.1(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))':
+    dependencies:
+      '@babel/parser': 7.28.3
+      acorn: 8.15.0
+      acorn-jsx: 5.3.2(acorn@8.15.0)
+      acorn-loose: 8.5.2
+      acorn-typescript: 1.4.13(acorn@8.15.0)
+      astring: 1.9.0
+      magicast: 0.2.11
+      recast: 0.23.11
+      tslib: 2.8.1
+      vinxi: 0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
+
   '@vinxi/plugin-mdx@3.7.2(@mdx-js/mdx@2.3.0)':
     dependencies:
       '@alloc/quick-lru': 5.2.0
@@ -9754,6 +9866,17 @@ snapshots:
       resolve: 1.22.10
       unified: 9.2.2
       vfile: 5.3.7
+
+  '@vinxi/server-components@0.5.1(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))':
+    dependencies:
+      '@vinxi/plugin-directives': 0.5.1(vinxi@0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1))
+      acorn: 8.15.0
+      acorn-loose: 8.5.2
+      acorn-typescript: 1.4.13(acorn@8.15.0)
+      astring: 1.9.0
+      magicast: 0.2.11
+      recast: 0.23.11
+      vinxi: 0.5.8(@netlify/blobs@8.2.0)(@types/node@24.3.0)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(drizzle-orm@0.31.4(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.37.0)(tsx@4.19.2)(yaml@2.8.1)
 
   '@vitest/expect@3.0.5':
     dependencies:
@@ -9907,6 +10030,18 @@ snapshots:
   acorn-jsx@5.3.2(acorn@8.14.1):
     dependencies:
       acorn: 8.14.1
+
+  acorn-jsx@5.3.2(acorn@8.15.0):
+    dependencies:
+      acorn: 8.15.0
+
+  acorn-loose@8.5.2:
+    dependencies:
+      acorn: 8.15.0
+
+  acorn-typescript@1.4.13(acorn@8.15.0):
+    dependencies:
+      acorn: 8.15.0
 
   acorn@8.14.1: {}
 
@@ -12013,6 +12148,12 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
 
+  magicast@0.2.11:
+    dependencies:
+      '@babel/parser': 7.28.3
+      '@babel/types': 7.28.2
+      recast: 0.23.11
+
   magicast@0.3.5:
     dependencies:
       '@babel/parser': 7.28.3
@@ -13517,10 +13658,10 @@ snapshots:
       estree-util-build-jsx: 3.0.1
       vfile: 6.0.3
 
-  recma-jsx@1.0.1(acorn@8.14.1):
+  recma-jsx@1.0.1(acorn@8.15.0):
     dependencies:
-      acorn: 8.14.1
-      acorn-jsx: 5.3.2(acorn@8.14.1)
+      acorn: 8.15.0
+      acorn-jsx: 5.3.2(acorn@8.15.0)
       estree-util-to-js: 2.0.0
       recma-parse: 1.0.0
       recma-stringify: 1.0.0
