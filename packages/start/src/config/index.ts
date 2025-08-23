@@ -21,6 +21,7 @@ import {
 } from "./nitroPlugin.js";
 import { isCssModulesFile } from "../server/collect-styles.js";
 import { getSsrDevManifest } from "../server/manifest/dev-server-manifest.js";
+import { loadEnvPlugin } from "../server/loadEnvPlugin.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -336,6 +337,7 @@ function solidStartVitePlugin(
         }
       },
     },
+    loadEnvPlugin({ root: process.cwd() }),
     nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server),
     {
       name: "solid-start:capture-client-bundle",
