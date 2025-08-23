@@ -2,6 +2,23 @@ packages:
   - ./hackernews
   - ./vite-rewrite
   - ./todomvc
+  - ./basic
+  - ./experiments
+  - ./notes
+  - ./bare
+  - ./with-auth
+  - ./with-authjs
+  - ./with-drizzle
+  - ./with-mdx
+  - ./with-prisma
+  - ./with-solid-styled
+  - ./with-solidbase
+  - ./with-strict-csp
+  - ./with-tailwindcss
+  - ./with-tanstack-router
+  - ./with-trpc
+  - ./with-unocss
+  - ./with-vitest
 
 patchedDependencies:
   vite-plugin-solid: patches/vite-plugin-solid.patch

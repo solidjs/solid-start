@@ -6,7 +6,9 @@ import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 // import { handleServerFunction } from "./server-functions-handler";
+import { createRoutes } from "../router.jsx";
 import { getFetchEvent } from "./fetchEvent.js";
+import { eventHandler } from "./h3.js";
 import { matchAPIRoute } from "./routes.js";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
 
