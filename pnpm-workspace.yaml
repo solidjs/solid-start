@@ -3,3 +3,6 @@ packages:
   - "packages/*"
   - "tests/*"
   - "!**/.tmp/**"
+
+patchedDependencies:
+  vite-plugin-solid: patches/vite-plugin-solid.patch

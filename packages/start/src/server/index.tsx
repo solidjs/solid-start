@@ -1,24 +1,21 @@
-import { getSsrManifest } from "solid-start:get-ssr-manifest";
 import { eventHandler, getCookie, getResponseHeaders, type H3Event, setCookie } from "h3";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-// import { handleServerFunction } from "./server-functions-handler";
+import { getSsrManifest } from "solid-start:get-ssr-manifest";
+
 import { createRoutes } from "../router.jsx";
 import { getFetchEvent } from "./fetchEvent.js";
-import { eventHandler } from "./h3.js";
 import { matchAPIRoute } from "./routes.js";
-import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
-
-// import { createProdManifest } from "./prodManifest.js";
-export { getServerFunctionMeta } from "../shared/serverFunction";
-export { StartServer } from "./StartServer.jsx";
-
-import { createRoutes } from "../router.jsx";
 import { handleServerFunction } from "./server-functions-handler.js";
 import { getClientEntryCssTags } from "./server-manifest.js";
+import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
+
+export { getServerFunctionMeta } from "../shared/serverFunction";
+export { StartServer } from "./StartServer.jsx";
+export * from "./h3";
 
 const SERVER_FN_BASE = "/_server";
 

@@ -27,13 +27,11 @@ export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOptio
         if (id === moduleId) return id;
       },
       configResolved(config) {
-        console.log({ routers })
         Object.keys(routers).forEach((environment) => {
           const router = routers[environment as keyof typeof routers](
             config,
           );
           (globalThis as any).ROUTERS[environment] = router;
-          console.log("set router", environment, router);
         })
       },
       async load(id) {
@@ -44,7 +42,6 @@ export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOptio
         const js = jsCode();
 
         const router = (globalThis as any).ROUTERS[this.environment.name];
-        console.log({ router })
 
         const routes = await router.getRoutes();
 

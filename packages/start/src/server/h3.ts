@@ -68,18 +68,16 @@ import {
   useSession as _useSession,
   writeEarlyHints as _writeEarlyHints
 } from "h3";
-import { AsyncLocalStorage } from "node:async_hooks";
 
 import type {
   Encoding,
-  EventHandler,
   HTTPHeaderName,
   InferEventInput,
   _RequestMiddleware,
   _ResponseMiddleware
 } from "h3";
+import { getRequestEvent } from "solid-js/web";
 
-const eventStorage = new AsyncLocalStorage();
 
 function _setContext(event: H3Event, key: string, value: any) {
   event.context[key] = value;
@@ -218,30 +216,8 @@ export {
   type _ResponseMiddleware
 } from "h3";
 
-export function defineEventHandler(handler: EventHandler) {
-  return _defineEventHandler(event => {
-    return runWithEvent(event, () => handler(event));
-  });
-}
-
-export function eventHandler(handler: EventHandler) {
-  return _eventHandler(event => {
-    return runWithEvent(event, () => handler(event));
-  });
-}
-
-export async function runWithEvent<T>(event: H3Event, fn: () => T | Promise<T>): Promise<T> {
-  return eventStorage.run(event, fn);
-}
-
-export function getEvent() {
-  const event = eventStorage.getStore() as H3Event | undefined;
-  if (!event) {
-    throw new Error(
-      `No HTTPEvent found in AsyncLocalStorage. Make sure you are using the function within the server runtime.`
-    );
-  }
-  return event;
+function getEvent() {
+  return getRequestEvent()!.nativeEvent
 }
 
 export const HTTPEventSymbol = Symbol("$HTTPEvent");

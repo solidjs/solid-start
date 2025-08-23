@@ -1,5 +1,4 @@
 // @refresh skip
-// @ts-ignore
 import App from "#start/app";
 import type { Component, JSX } from "solid-js";
 import {
@@ -17,7 +16,6 @@ import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
 import { renderAsset } from "./renderAsset.jsx";
 import { getClientEntryPath } from "./server-manifest.js";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
-import { getSsrProdManifest } from "./manifest/prod-server-manifest.js";
 
 const docType = ssr("<!DOCTYPE html>");
 

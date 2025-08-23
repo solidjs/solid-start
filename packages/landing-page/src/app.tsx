@@ -5,7 +5,7 @@ import {
   cookieStorageManagerSSR
 } from "@kobalte/core/color-mode";
 import { isServer } from "solid-js/web";
-import { getCookie } from "vinxi/http";
+import { getCookie } from "@solidjs/start/server";
 import { Announcement } from "~/components/sections/announcement";
 import { DeployAnywhere } from "~/components/sections/deploy-anywhere";
 import { Footer } from "~/components/sections/footer";

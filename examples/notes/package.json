@@ -9,10 +9,10 @@
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "file:../../packages/start",
     "date-fns": "^3.6.0",
-    "solid-js": "^1.9.5",
     "marked": "^12.0.1",
+    "solid-js": "^1.9.5",
     "unstorage": "1.10.2",
-    "vite": "7.1.2"
+    "vite": "7.1.3"
   },
   "engines": {
     "node": ">=22"

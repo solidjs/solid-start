@@ -6,12 +6,12 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@solidjs/start": "file:../../packages/start",
+    "@tanstack/router-plugin": "^1.112.0",
     "@tanstack/solid-router": "^1.114.1",
     "@tanstack/solid-router-devtools": "^1.114.1",
-    "@tanstack/router-plugin": "^1.112.0",
-    "@solidjs/start": "file:../../packages/start",
     "solid-js": "^1.9.5",
-    "vite": "^7"
+    "vite": "^7.1.3"
   },
   "engines": {
     "node": ">=22"
