@@ -13,6 +13,7 @@ import { matchAPIRoute } from "./routes.js";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
 
 // import { createProdManifest } from "./prodManifest.js";
+export { getServerFunctionMeta } from "../shared/serverFunction";
 export { StartServer } from "./StartServer.jsx";
 
 import { createRoutes } from "../router.jsx";
