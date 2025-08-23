@@ -1,8 +1,11 @@
 import { relative } from "node:path";
 import type { PluginOption, ResolvedConfig } from "vite";
-import { manifest } from "./manifest.js";
+
+import { fileSystemWatcher } from "./fs-watcher.js";
 import type { BaseFileSystemRouter } from "./router.js";
 import { treeShake } from "./tree-shake.js";
+
+const getClientManifestPath = new URL("../../server/manifest/client-manifest.js", import.meta.url).pathname;
 
 export const moduleId = "solid-start:routes";
 
@@ -13,19 +16,25 @@ export interface FsRoutesArgs {
   handlers: Record<"client" | "server", string>;
 }
 
-export function fsRoutes({
-  routers,
-  handlers
-}: FsRoutesArgs): Array<PluginOption> {
+export function fsRoutes({ routers, handlers }: FsRoutesArgs): Array<PluginOption> {
   (globalThis as any).ROUTERS = {};
 
   return [
-    manifest(handlers),
     {
       name: "solid-start-fs-routes",
       enforce: "pre",
       resolveId(id) {
         if (id === moduleId) return id;
+      },
+      configResolved(config) {
+        console.log({ routers })
+        Object.keys(routers).forEach((environment) => {
+          const router = routers[environment as keyof typeof routers](
+            config,
+          );
+          (globalThis as any).ROUTERS[environment] = router;
+          console.log("set router", environment, router);
+        })
       },
       async load(id) {
         const root = this.environment.config.root;
@@ -34,11 +43,8 @@ export function fsRoutes({
         if (id !== moduleId) return;
         const js = jsCode();
 
-        const router = routers[this.environment.name as keyof typeof routers](
-          this.environment.config
-        );
-
-        (globalThis as any).ROUTERS[this.environment.name] = router;
+        const router = (globalThis as any).ROUTERS[this.environment.name];
+        console.log({ router })
 
         const routes = await router.getRoutes();
 
@@ -82,15 +88,17 @@ ${js.getImportStatements()}
 ${this.environment.name === "server"
             ? ""
             : `
+import { getClientManifest } from "${getClientManifestPath}"
 function clientManifestImport(id) {
-  return import(/* @vite-ignore */ globalThis.MANIFEST.inputs[id].output.path)
+  return getClientManifest().import(id)
 }`
           }
 export default ${routesCode}`;
         return code;
       }
     },
-    treeShake()
+    treeShake(),
+    fileSystemWatcher(routers)
   ];
 }
 

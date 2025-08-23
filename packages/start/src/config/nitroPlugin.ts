@@ -28,6 +28,7 @@ export function nitroPlugin(
     {
       name: "solid-start-nitro-dev-server",
       configureServer(viteDevServer) {
+        (globalThis as any).VITE_DEV_SERVER = viteDevServer;
         return async () => {
           removeHtmlMiddlewares(viteDevServer);
 

@@ -1,6 +1,7 @@
 import path from "node:path";
 import { manifest } from "solid-start:server-manifest";
 import { normalizePath } from "vite";
+import { getManifestEntryCssTags } from "./collect-styles";
 
 export const CLIENT_BASE_PATH = "_build";
 
@@ -16,18 +17,4 @@ export function getClientEntryPath() {
 
 export function getClientEntryCssTags() {
   return getManifestEntryCssTags(manifest.clientEntryId);
-}
-
-export function getManifestEntryCssTags(id: string) {
-  if (import.meta.env.DEV) return [];
-
-  const entry = manifest.clientViteManifest[id];
-  if (!entry) throw new Error(`No entry '${id}' found in vite manifest`);
-
-  return (
-    entry.css?.map(css => ({
-      tag: "link",
-      attrs: { href: `/${CLIENT_BASE_PATH}/${css}`, rel: "stylesheet" }
-    })) ?? []
-  );
 }
