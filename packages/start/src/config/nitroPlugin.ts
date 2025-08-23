@@ -1,6 +1,26 @@
+import {
+  _RequestMiddleware,
+  _ResponseMiddleware,
+  createApp,
+  createEvent,
+  EventHandler,
+  eventHandler,
+  EventHandlerObject,
+  getHeader,
+  H3Event,
+  sendWebResponse
+} from "h3";
+import {
+  build,
+  copyPublicAssets,
+  createNitro,
+  Nitro,
+  prepare,
+  prerender,
+  type NitroConfig
+} from "nitropack";
 import { promises as fsp } from "node:fs";
-import path, { dirname, join } from "node:path";
-import { build, copyPublicAssets, createNitro, Nitro, prepare, prerender, type NitroConfig } from "nitropack";
+import path, { dirname, resolve } from "node:path";
 import {
   Connect,
   EnvironmentOptions,
@@ -9,19 +29,21 @@ import {
   Rollup,
   ViteDevServer
 } from "vite";
-import { resolve } from "node:path";
-import { createApp, createEvent, eventHandler, getHeader, H3Event, sendStream, sendWebResponse, setHeader, setHeaders } from "h3";
 
 export const clientDistDir = "node_modules/.solid-start/client-dist";
 export const serverDistDir = "node_modules/.solid-start/server-dist";
 export const ssrEntryFile = "ssr.mjs";
 
-export type UserNitroConfig = Omit<NitroConfig, "dev" | "publicAssets" | "renderer" | "rollupConfig">;
+export type UserNitroConfig = Omit<
+  NitroConfig,
+  "dev" | "publicAssets" | "renderer" | "rollupConfig"
+>;
 
 export function nitroPlugin(
   options: { root: string },
   getSsrBundle: () => Rollup.OutputBundle,
-  nitroConfig?: UserNitroConfig
+  nitroConfig?: UserNitroConfig,
+  middleware?: string
   // handlers: { client: string; server: string }
 ): Array<PluginOption> {
   return [
@@ -32,84 +54,86 @@ export function nitroPlugin(
         return async () => {
           removeHtmlMiddlewares(viteDevServer);
 
-          const h3App = createApp();
-
           const serverEnv = viteDevServer.environments.server;
 
           if (!serverEnv) throw new Error("Server environment not found");
           if (!isRunnableDevEnvironment(serverEnv))
             throw new Error("Server environment is not runnable");
 
-          h3App.use(eventHandler(async (event) => {
-            try {
-              const serverEntry: {
-                default: (e: H3Event) => Promise<Response>;
-              } = await serverEnv.runner.import(
-                "./src/entry-server.tsx",
-              );
+          const h3App = createApp();
 
-              return await serverEntry.default(event);
-            } catch (e) {
-              console.error(e);
-              viteDevServer.ssrFixStacktrace(e as Error);
-              if (
-                getHeader(event, "content-type")?.includes(
-                  "application/json",
-                )
-              ) {
+          h3App.use(
+            eventHandler(async (event) => {
+              const serverEntry: {
+                default: EventHandler;
+              } = await serverEnv.runner.import("./src/entry-server.tsx");
+
+              return await serverEntry.default(event).catch((e: unknown) => {
+                console.error(e);
+                viteDevServer.ssrFixStacktrace(e as Error);
+                if (
+                  getHeader(event, "content-type")?.includes(
+                    "application/json",
+                  )
+                ) {
+                  return sendWebResponse(
+                    event,
+                    new Response(
+                      JSON.stringify(
+                        {
+                          status: 500,
+                          error: "Internal Server Error",
+                          message:
+                            "An unexpected error occurred. Please try again later.",
+                          timestamp: new Date().toISOString(),
+                        },
+                        null,
+                        2,
+                      ),
+                      {
+                        status: 500,
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                      },
+                    ),
+                  );
+                }
                 return sendWebResponse(
                   event,
                   new Response(
-                    JSON.stringify(
-                      {
-                        status: 500,
-                        error: "Internal Server Error",
-                        message:
-                          "An unexpected error occurred. Please try again later.",
-                        timestamp: new Date().toISOString(),
-                      },
-                      null,
-                      2,
-                    ),
+                    `
+                                          <!DOCTYPE html>
+                                          <html lang="en">
+                                            <head>
+                                              <meta charset="UTF-8" />
+                                              <title>Error</title>
+                                              <script type="module">
+                                                import { ErrorOverlay } from '/@vite/client'
+                                                document.body.appendChild(new ErrorOverlay(${JSON.stringify(
+                      prepareError(
+                        event.node.req,
+                        e,
+                      ),
+                    ).replace(/</g, "\\u003c")}))
+                                              </script>
+                                            </head>
+                                            <body>
+                                            </body>
+                                          </html>
+                                        `,
                     {
                       status: 500,
                       headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type": "text/html",
                       },
                     },
                   ),
                 );
-              }
-              return sendWebResponse(
-                event,
-                new Response(
-                  `
-                <!DOCTYPE html>
-                <html lang="en">
-                  <head>
-                    <meta charset="UTF-8" />
-                    <title>Error</title>
-                    <script type="module">
-                      import { ErrorOverlay } from '/@vite/client'
-                      document.body.appendChild(new ErrorOverlay(${JSON.stringify(
-                    prepareError(event.node.req, e),
-                  ).replace(/</g, "\\u003c")}))
-                    </script>
-                  </head>
-                  <body>
-                  </body>
-                </html>
-              `,
-                  {
-                    status: 500,
-                    headers: {
-                      "Content-Type": "text/html",
-                    },
-                  },
-                ),
-              );
+              })
             }
-          }))
+            ),
+          );
 
           viteDevServer.middlewares.use(async (req, res) => {
             const event = createEvent(req, res);
@@ -166,7 +190,7 @@ export function nitroPlugin(
                 renderer: ssrEntryFile,
                 rollupConfig: {
                   plugins: [virtualBundlePlugin(getSsrBundle()) as any]
-                },
+                }
               };
 
               const nitro = await createNitro(resolvedNitroConfig);

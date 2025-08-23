@@ -43,3 +43,11 @@ declare module "solid-start:get-manifest" {
 declare module "#start/app" {
   export default App as import("solid-js").Component;
 }
+
+declare module "solid-start:middleware" {
+  type MaybeArray<T> = T | Array<T>;
+  export default Middleware as {
+    onRequest?: MaybeArray<import("h3")._RequestMiddleware>;
+    onBeforeResponse?: MaybeArray<import("h3")._ResponseMiddleware>;
+  };
+}
