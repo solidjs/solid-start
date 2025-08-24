@@ -3,7 +3,7 @@ import type { ViteDevServer } from "vite";
 
 import { findStylesInModuleGraph } from "../collect-styles.js";
 
-export function getSsrDevManifest(ssr: boolean, clientEntryId: string): StartManifest {
+export function getSsrDevManifest(target: "client" | "server") {
   const vite: ViteDevServer = (globalThis as any).VITE_DEV_SERVER;
 
   return {
@@ -12,7 +12,7 @@ export function getSsrDevManifest(ssr: boolean, clientEntryId: string): StartMan
       return vite.ssrLoadModule(join(absolutePath));
     },
     async getAssets(id: string) {
-      const styles = await findStylesInModuleGraph(vite, id, ssr);
+      const styles = await findStylesInModuleGraph(vite, id, target === "server");
 
       return Object.entries(styles).map(([key, value]) => ({
         tag: "style",
@@ -25,10 +25,6 @@ export function getSsrDevManifest(ssr: boolean, clientEntryId: string): StartMan
         children: value,
       }));
     },
-    // handler() {
-    //   if (ssr) throw new Error("Not implemented");
-    //   return normalizePath(path.join("/@fs", path.resolve(process.cwd(), clientEntryId)));
-    // }
   } satisfies StartManifest;
 }
 

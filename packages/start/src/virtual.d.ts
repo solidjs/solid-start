@@ -16,7 +16,6 @@ declare module "solid-start:server-manifest" {
   interface StartServerManifest {
     clientEntryId: string;
     clientViteManifest: Record<string, { css?: Array<string>, file: string, [key: string]: unknown }>;
-    clientManifestData: ClientManifest;
   }
 
   export const manifest: StartServerManifest;

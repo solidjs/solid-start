@@ -4,7 +4,6 @@ import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { getSsrManifest } from "solid-start:get-ssr-manifest";
 import middleware from "solid-start:middleware";
 
 import { createRoutes } from "../router.jsx";
@@ -13,6 +12,7 @@ import { matchAPIRoute } from "./routes.js";
 import { handleServerFunction } from "./server-functions-handler.js";
 import { getClientEntryCssTags } from "./server-manifest.js";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
+import { getSsrManifest } from "./manifest/ssr-manifest.js";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -106,8 +106,9 @@ export async function createPageEvent(ctx: FetchEvent) {
   ctx.response.headers.set("Content-Type", "text/html");
   // const prevPath = ctx.request.headers.get("x-solid-referrer");
   // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
+  const manifest = getSsrManifest('client');
   const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: getSsrManifest(false),
+    manifest: 'json' in manifest ? await manifest.json() : {},
     assets: [
       ...(await getClientEntryCssTags())
       // ...(import.meta.env.START_ISLANDS
