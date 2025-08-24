@@ -77,14 +77,21 @@ export function createBaseHandler(
           return html;
         }
 
-        const stream = renderToStream(() => {
+        const _stream = renderToStream(() => {
           (sharedConfig.context as any).event = context;
           return fn(context);
         }, resolvedOptions);
+        const stream = _stream as typeof _stream & Promise<string> // stream has a hidden 'then' method
+
+        if (event.request.headers.get("x-nitro-prerender")) {
+          const _html = await stream;
+          const html = _html.replaceAll(/data-hk=(\d+)(?=\s|>)/g, 'data-hk="$1"');
+          return html
+        }
 
         // insert redirect handling here
 
-        if (mode === "async") return stream as unknown as Promise<string>; // stream has a hidden 'then' method
+        if (mode === "async") return stream
 
         const { writable, readable } = new TransformStream();
         stream.pipeTo(writable);
