@@ -1,33 +1,28 @@
+import { promises as fsp } from "node:fs";
+import path, { dirname, resolve } from "node:path";
 import {
-  _RequestMiddleware,
-  _ResponseMiddleware,
   createApp,
   createEvent,
-  EventHandler,
+  type EventHandler,
   eventHandler,
-  EventHandlerObject,
   getHeader,
-  H3Event,
-  sendWebResponse
 } from "h3";
 import {
   build,
   copyPublicAssets,
   createNitro,
-  Nitro,
+  type Nitro,
+  type NitroConfig,
   prepare,
   prerender,
-  type NitroConfig
 } from "nitropack";
-import { promises as fsp } from "node:fs";
-import path, { dirname, resolve } from "node:path";
 import {
-  Connect,
-  EnvironmentOptions,
+  type Connect,
+  type EnvironmentOptions,
   isRunnableDevEnvironment,
-  PluginOption,
-  Rollup,
-  ViteDevServer
+  type PluginOption,
+  type Rollup,
+  type ViteDevServer,
 } from "vite";
 
 export const clientDistDir = "node_modules/.solid-start/client-dist";
@@ -69,38 +64,33 @@ export function nitroPlugin(
               return await serverEntry.default(event).catch((e: unknown) => {
                 console.error(e);
                 viteDevServer.ssrFixStacktrace(e as Error);
+
                 if (
-                  getHeader(event, "content-type")?.includes(
-                    "application/json",
-                  )
+                  getHeader(event, "content-type")?.includes("application/json")
                 ) {
-                  return sendWebResponse(
-                    event,
-                    new Response(
-                      JSON.stringify(
-                        {
-                          status: 500,
-                          error: "Internal Server Error",
-                          message:
-                            "An unexpected error occurred. Please try again later.",
-                          timestamp: new Date().toISOString(),
-                        },
-                        null,
-                        2,
-                      ),
+                  return new Response(
+                    JSON.stringify(
                       {
                         status: 500,
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
+                        error: "Internal Server Error",
+                        message:
+                          "An unexpected error occurred. Please try again later.",
+                        timestamp: new Date().toISOString(),
                       },
+                      null,
+                      2,
                     ),
+                    {
+                      status: 500,
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    },
                   );
                 }
-                return sendWebResponse(
-                  event,
-                  new Response(
-                    `
+
+                return new Response(
+                  `
                                           <!DOCTYPE html>
                                           <html lang="en">
                                             <head>
@@ -109,28 +99,26 @@ export function nitroPlugin(
                                               <script type="module">
                                                 import { ErrorOverlay } from '/@vite/client'
                                                 document.body.appendChild(new ErrorOverlay(${JSON.stringify(
-                      prepareError(
-                        event.node.req,
-                        e,
-                      ),
-                    ).replace(/</g, "\\u003c")}))
+                    prepareError(
+                      event.node.req,
+                      e,
+                    ),
+                  ).replace(/</g, "\\u003c")}))
                                               </script>
                                             </head>
                                             <body>
                                             </body>
                                           </html>
                                         `,
-                    {
-                      status: 500,
-                      headers: {
-                        "Content-Type": "text/html",
-                      },
+                  {
+                    status: 500,
+                    headers: {
+                      "Content-Type": "text/html",
                     },
-                  ),
+                  },
                 );
-              })
-            }
-            ),
+              });
+            }),
           );
 
           viteDevServer.middlewares.use(async (req, res) => {
@@ -139,7 +127,7 @@ export function nitroPlugin(
             await h3App.handler(event);
           });
         };
-      }
+      },
     },
     {
       name: "solid-start-vite-plugin-nitro",
@@ -148,14 +136,14 @@ export function nitroPlugin(
           return {
             build: {
               commonjsOptions: {
-                include: []
+                include: [],
               },
               ssr: true,
               sourcemap: true,
               rollupOptions: {
-                input: "~/entry-server.tsx"
-              }
-            }
+                input: "~/entry-server.tsx",
+              },
+            },
           } satisfies EnvironmentOptions;
         }
 
@@ -181,29 +169,34 @@ export function nitroPlugin(
                 preset: "node-server",
                 typescript: {
                   generateTsConfig: false,
-                  generateRuntimeConfigTypes: false
+                  generateRuntimeConfigTypes: false,
                 },
                 ...nitroConfig,
                 dev: false,
-                publicAssets: [{ dir: path.resolve(options.root, clientDistDir) }],
+                publicAssets: [
+                  { dir: path.resolve(options.root, clientDistDir) },
+                ],
                 renderer: ssrEntryFile,
                 rollupConfig: {
-                  plugins: [virtualBundlePlugin(getSsrBundle()) as any]
-                }
+                  plugins: [virtualBundlePlugin(getSsrBundle()) as any],
+                },
               };
 
               const nitro = await createNitro(resolvedNitroConfig);
 
               await buildNitroEnvironment(nitro, () => build(nitro));
-            }
-          }
+            },
+          },
         };
-      }
-    }
+      },
+    },
   ];
 }
 
-export async function buildNitroEnvironment(nitro: Nitro, build: () => Promise<any>) {
+export async function buildNitroEnvironment(
+  nitro: Nitro,
+  build: () => Promise<any>,
+) {
   await prepare(nitro);
   await copyPublicAssets(nitro);
   await prerender(nitro);
@@ -233,7 +226,7 @@ function virtualBundlePlugin(ssrBundle: Rollup.OutputBundle): PluginOption {
     if (content.type === "chunk") {
       const virtualModule: VirtualModule = {
         code: content.code,
-        map: null
+        map: null,
       };
       const maybeMap = ssrBundle[`${fileName}.map`];
       if (maybeMap && maybeMap.type === "asset") {
@@ -265,7 +258,7 @@ function virtualBundlePlugin(ssrBundle: Rollup.OutputBundle): PluginOption {
         return null;
       }
       return m;
-    }
+    },
   };
 }
 
@@ -278,13 +271,13 @@ function removeHtmlMiddlewares(server: ViteDevServer) {
   const html_middlewares = [
     "viteIndexHtmlMiddleware",
     "vite404Middleware",
-    "viteSpaFallbackMiddleware"
+    "viteSpaFallbackMiddleware",
   ];
   for (let i = server.middlewares.stack.length - 1; i > 0; i--) {
     if (
       html_middlewares.includes(
         // @ts-expect-error
-        server.middlewares.stack[i].handle.name
+        server.middlewares.stack[i].handle.name,
       )
     ) {
       server.middlewares.stack.splice(i, 1);
@@ -303,6 +296,6 @@ function prepareError(req: Connect.IncomingMessage, error: unknown) {
   return {
     message: `An error occured while server rendering ${req.url}:\n\n\t${typeof e === "string" ? e : e.message
       } `,
-    stack: typeof e === "string" ? "" : e.stack
+    stack: typeof e === "string" ? "" : e.stack,
   };
 }
