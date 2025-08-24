@@ -209,7 +209,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-            "import.meta.env.START_CLIENT_ENTRY": `${normalizePath(handlers.client)}`
+            "import.meta.env.START_CLIENT_ENTRY": `"${normalizePath(handlers.client)}"`
           }
         };
       }
