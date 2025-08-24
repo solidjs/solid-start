@@ -7,14 +7,12 @@ import { treeShake } from "./tree-shake.js";
 
 export const moduleId = "solid-start:routes";
 
-export type RouterBuilder = (config: ResolvedConfig) => BaseFileSystemRouter;
-
 export interface FsRoutesArgs {
-  routers: Record<"client" | "server", RouterBuilder>;
+  routers: Record<"client" | "server", BaseFileSystemRouter>;
 }
 
 export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
-  (globalThis as any).ROUTERS = {};
+  (globalThis as any).ROUTERS = routers;
 
   return [
     {
@@ -22,14 +20,6 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
       enforce: "pre",
       resolveId(id) {
         if (id === moduleId) return id;
-      },
-      configResolved(config) {
-        Object.keys(routers).forEach((environment) => {
-          const router = routers[environment as keyof typeof routers](
-            config,
-          );
-          (globalThis as any).ROUTERS[environment] = router;
-        })
       },
       async load(id) {
         const root = this.environment.config.root;

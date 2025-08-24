@@ -6,7 +6,8 @@ import type {
   PluginOption,
   ViteDevServer
 } from "vite";
-import { moduleId, RouterBuilder } from "./index.js";
+import { moduleId } from "./index.js";
+import { BaseFileSystemRouter } from "./router.js";
 
 interface CompiledRouter {
   removeRoute(path: string): void;
@@ -60,7 +61,7 @@ function createRoutesReloader(
 }
 
 export const fileSystemWatcher = (
-  routers: Record<"client" | "server", RouterBuilder>
+  routers: Record<"client" | "server", BaseFileSystemRouter>
 ): PluginOption => {
   const plugin: PluginOption = {
     name: "fs-watcher",

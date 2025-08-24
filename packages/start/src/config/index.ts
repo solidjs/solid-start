@@ -18,6 +18,7 @@ import {
   ssrEntryFile,
   type UserNitroConfig
 } from "./nitroPlugin.js";
+import { BaseFileSystemRouter } from "./fs-routes/router.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -112,6 +113,8 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
     server: `${start.appRoot}/entry-server${entryExtension}`
   };
 
+  const root = process.cwd();
+
   return [
     {
       name: "solid-start:vite-config",
@@ -123,7 +126,24 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           }
         };
       },
-      config(_, env) {
+      async config(_, env) {
+        let clientInput = [handlers.client];
+
+        if (env.command === "build") {
+          const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client
+          for (const route of await clientRouter.getRoutes()) {
+            for (const [key, value] of Object.entries(route)) {
+              if (value && key.startsWith("$") && !key.startsWith("$$")) {
+                function toRouteId(route: any) {
+                  return `${route.src}?${route.pick.map((p: string) => `pick=${p}`).join("&")}`;
+                }
+
+                clientInput.push(toRouteId(value));
+              }
+            }
+          }
+        }
+
         return {
           base: env.command === "build" ? `/${CLIENT_BASE_PATH}` : undefined,
           environments: {
@@ -134,13 +154,13 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
                 write: true,
                 manifest: true,
                 rollupOptions: {
-                  input: {
-                    client: handlers.client
-                  },
+                  input: clientInput,
                   output: {
                     dir: path.resolve(process.cwd(), clientDistDir, CLIENT_BASE_PATH)
                   },
-                  external: ["node:fs", "node:path", "node:os", "node:crypto"]
+                  external: ["node:fs", "node:path", "node:os", "node:crypto"],
+                  treeshake: true,
+                  preserveEntrySignatures: "exports-only",
                 }
               }
             },
@@ -196,14 +216,14 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
     css(),
     fsRoutes({
       routers: {
-        client: config =>
+        client:
           new SolidStartClientFileRouter({
-            dir: absolute(routeDir, config.root),
+            dir: absolute(routeDir, root),
             extensions
           }),
-        server: config =>
+        server:
           new SolidStartServerFileRouter({
-            dir: absolute(routeDir, config.root),
+            dir: absolute(routeDir, root),
             extensions,
             dataOnly: !start.ssr
           })
