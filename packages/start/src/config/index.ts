@@ -1,11 +1,12 @@
 import { existsSync } from "node:fs";
 import path, { isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
+import { TanStackServerFnPluginEnv } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
 import { normalizePath, type PluginOption, type Rollup, type ViteDevServer } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
+import { CLIENT_BASE_PATH, DEFAULT_EXTENSIONS, VIRTUAL_MODULES } from "../constants.js";
 import { isCssModulesFile } from "../server/collect-styles.js";
 import { getSsrDevManifest } from "../server/manifest/dev-ssr-manifest.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
@@ -18,9 +19,6 @@ import {
   ssrEntryFile,
   type UserNitroConfig
 } from "./nitroPlugin.js";
-import { CLIENT_BASE_PATH } from "../constants.js";
-
-const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
 export type { UserNitroConfig } from "./nitroPlugin.js";
 
@@ -33,48 +31,11 @@ export interface SolidStartOptions {
   middleware?: string;
 }
 
-const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
-  // This is the ID that will be available to look up and import
-  // our server function manifest and resolve its module
-  manifestVirtualImportId: "solidstart:server-fn-manifest",
-  client: {
-    getRuntimeCode: () =>
-      `import { createServerReference } from "${normalize(
-        fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
-      )}"`,
-    replacer: opts =>
-      `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`
-  },
-  ssr: {
-    getRuntimeCode: () =>
-      `import { createServerReference } from '${normalize(
-        fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
-      )}'`,
-    replacer: opts =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
-  },
-  server: {
-    getRuntimeCode: () =>
-      `import { createServerReference } from '${normalize(
-        fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
-      )}'`,
-    replacer: opts =>
-      `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
-  }
-});
-
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
 
 // this needs to live outside of the TanStackStartVitePlugin since it will be invoked multiple times by vite
 let ssrBundle: Rollup.OutputBundle;
-
-const VIRTUAL_MODULES = {
-  clientViteManifest: "solid-start:client-vite-manifest",
-  getClientManifest: "solid-start:get-client-manifest",
-  getManifest: "solid-start:get-manifest",
-  middleware: "solid-start:middleware"
-} as const;
 
 function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
@@ -227,14 +188,27 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
     }),
     // Must be placed after fsRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
-    {
-      name: "solid-start:server-fns",
-      enforce: "pre",
-      applyToEnvironment(env) {
-        if (env.name === "server") return SolidStartServerFnsPlugin.server;
-        return SolidStartServerFnsPlugin.client;
+    TanStackServerFnPluginEnv({
+      // This is the ID that will be available to look up and import
+      // our server function manifest and resolve its module
+      manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
+      client: {
+        getRuntimeCode: () =>
+          `import { createServerReference } from "${normalize(
+            fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
+          )}"`,
+        replacer: opts =>
+          `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`
+      },
+      server: {
+        getRuntimeCode: () =>
+          `import { createServerReference } from '${normalize(
+            fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
+          )}'`,
+        replacer: opts =>
+          `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
       }
-    },
+    }),
     {
       name: "solid-start:manifest-plugin",
       enforce: "pre",
