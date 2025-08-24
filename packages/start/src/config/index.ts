@@ -208,7 +208,8 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
-            "import.meta.env.START_SSR": JSON.stringify(start.ssr)
+            "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+            "import.meta.env.START_CLIENT_ENTRY": `${normalizePath(handlers.client)}`
           }
         };
       }
@@ -262,7 +263,6 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
         if (id === `\0${VIRTUAL_MODULES.serverManifest}`) {
           if (this.environment.config.command === "serve") {
             const manifest: StartServerManifest = {
-              clientEntryId: normalizePath(handlers.client),
               clientViteManifest: {},
             };
 
@@ -279,7 +279,6 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           );
 
           const manifest: StartServerManifest = {
-            clientEntryId: normalizePath(handlers.client),
             clientViteManifest: clientManifest as any,
           };
 

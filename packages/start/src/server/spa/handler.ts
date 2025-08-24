@@ -1,9 +1,8 @@
 import type { JSX } from "solid-js";
-import { getSsrManifest } from "solid-start:get-ssr-manifest";
 
 import { createBaseHandler } from "../handler.js";
-import { getClientEntryCssTags } from "../server-manifest.js";
 import type { FetchEvent, HandlerOptions, PageEvent } from "../types.js";
+import { getSsrManifest } from "../manifest/ssr-manifest.js";
 
 /**
  *
@@ -17,9 +16,10 @@ export function createHandler(
 }
 
 async function createPageEvent(ctx: FetchEvent) {
+  const manifest = getSsrManifest('client');
   const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: getSsrManifest(false),
-    assets: await getClientEntryCssTags(),
+    manifest: 'json' in manifest ? await manifest.json() : {},
+    assets: await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY),
     routes: [],
     complete: false,
     $islands: new Set<string>(),

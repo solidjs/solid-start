@@ -7,14 +7,14 @@ export const CLIENT_BASE_PATH = "_build";
 
 export function getClientEntryPath() {
   if (import.meta.env.DEV)
-    return normalizePath(path.join("/@fs", path.resolve(process.cwd(), manifest.clientEntryId)));
+    return normalizePath(path.join("/@fs", path.resolve(process.cwd(), import.meta.env.START_CLIENT_ENTRY)));
 
-  const viteManifestEntry = manifest.clientViteManifest[manifest.clientEntryId];
+  const viteManifestEntry = manifest.clientViteManifest[import.meta.env.START_CLIENT_ENTRY];
   if (!viteManifestEntry) throw new Error("No entry found in vite manifest");
 
   return `/${CLIENT_BASE_PATH}/${viteManifestEntry.file}`;
 }
 
 export function getClientEntryCssTags() {
-  return getManifestEntryCssTags(manifest.clientEntryId);
+  return getManifestEntryCssTags(import.meta.env.START_CLIENT_ENTRY);
 }

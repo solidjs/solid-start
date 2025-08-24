@@ -14,7 +14,6 @@ type ClientManifest = Record<string, {
 
 declare module "solid-start:server-manifest" {
   interface StartServerManifest {
-    clientEntryId: string;
     clientViteManifest: Record<string, { css?: Array<string>, file: string, [key: string]: unknown }>;
   }
 
@@ -28,7 +27,7 @@ interface StartManifest {
 }
 
 declare module "solid-start:get-ssr-manifest" {
-  export const getSsrManifest: (ssr: boolean) => StartManifest;
+  export const getSsrManifest: (target: "client" | "server") => StartManifest;
 }
 
 declare module "solid-start:get-client-manifest" {
