@@ -68,18 +68,14 @@ export function nitroPlugin(
                 if (
                   getHeader(event, "content-type")?.includes("application/json")
                 ) {
-                  return new Response(
-                    JSON.stringify(
-                      {
-                        status: 500,
-                        error: "Internal Server Error",
-                        message:
-                          "An unexpected error occurred. Please try again later.",
-                        timestamp: new Date().toISOString(),
-                      },
-                      null,
-                      2,
-                    ),
+                  return Response.json(
+                    {
+                      status: 500,
+                      error: "Internal Server Error",
+                      message:
+                        "An unexpected error occurred. Please try again later.",
+                      timestamp: new Date().toISOString(),
+                    },
                     {
                       status: 500,
                       headers: {
@@ -91,25 +87,25 @@ export function nitroPlugin(
 
                 return new Response(
                   `
-                                          <!DOCTYPE html>
-                                          <html lang="en">
-                                            <head>
-                                              <meta charset="UTF-8" />
-                                              <title>Error</title>
-                                              <script type="module">
-                                                import { ErrorOverlay } from '/@vite/client'
-                                                document.body.appendChild(new ErrorOverlay(${JSON.stringify(
+                    <!DOCTYPE html>
+                    <html lang="en">
+                      <head>
+                        <meta charset="UTF-8" />
+                        <title>Error</title>
+                        <script type="module">
+                          import { ErrorOverlay } from '/@vite/client'
+                          document.body.appendChild(new ErrorOverlay(${JSON.stringify(
                     prepareError(
                       event.node.req,
                       e,
                     ),
                   ).replace(/</g, "\\u003c")}))
-                                              </script>
-                                            </head>
-                                            <body>
-                                            </body>
-                                          </html>
-                                        `,
+                        </script>
+                      </head>
+                      <body>
+                      </body>
+                    </html>
+                  `,
                   {
                     status: 500,
                     headers: {
