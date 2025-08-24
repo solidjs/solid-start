@@ -25,6 +25,9 @@ async function getViteModuleNode(vite: ViteDevServer, file: string, ssr = false)
     node = vite.moduleGraph.getModuleById(nodePath);
   }
 
+  if (nodePath.includes('node_modules')) {
+    return;
+  }
 
   try {
     if (!node?.transformResult && !ssr) {
