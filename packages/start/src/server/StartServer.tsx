@@ -1,5 +1,4 @@
 // @refresh skip
-// @ts-ignore
 import App from "#start/app";
 import type { Component, JSX } from "solid-js";
 import {
@@ -10,9 +9,11 @@ import {
   ssr,
   useAssets
 } from "solid-js/web";
-import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary";
-import { renderAsset } from "./renderAsset";
-import type { Asset, DocumentComponentProps, PageEvent } from "./types";
+
+import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
+import { renderAsset } from "./renderAsset.jsx";
+import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
+import { getSsrManifest } from "./manifest/ssr-manifest.js";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -41,34 +42,35 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   const nonce = context.nonce;
 
   let assets: Asset[] = [];
-  Promise.resolve().then(async () => {
-    let assetPromises: Promise<Asset[]>[] = [];
-    // @ts-ignore
-    if (context.router && context.router.matches) {
+  Promise.resolve()
+    .then(async () => {
+      const manifest = getSsrManifest(import.meta.env.START_ISLANDS);
+
+      let assetPromises: Promise<Asset[]>[] = [];
       // @ts-ignore
-      const matches = [...context.router.matches];
-      while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
-      const matched = matches.length && matchRoute(matches, context.routes);
-      if (matched) {
-        const inputs = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
-        .inputs
-        for (let i = 0; i < matched.length; i++) {
-          const segment = matched[i];
-          const part = inputs[segment["$component"].src]!;
-          assetPromises.push(part.assets() as any);
-        }
-      } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
-    }
-    assets = await Promise.all(assetPromises).then(a =>
-      // dedupe assets
-      [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
-        import.meta.env.START_ISLANDS
-          ? false
-          : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
-            !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
-      )
-    );
-  });
+      if (context.router && context.router.matches) {
+        // @ts-ignore
+        const matches = [...context.router.matches];
+        while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
+        const matched = matches.length && matchRoute(matches, context.routes);
+        if (matched) {
+          for (let i = 0; i < matched.length; i++) {
+            const segment = matched[i];
+            assetPromises.push(manifest.getAssets(segment["$component"].src));
+          }
+        } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
+      }
+      assets = await Promise.all(assetPromises).then(a =>
+        // dedupe assets
+        [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
+          import.meta.env.START_ISLANDS
+            ? false
+            : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+              !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
+        )
+      );
+    })
+    .catch(console.error);
 
   useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
 
@@ -84,37 +86,18 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             </>
           }
           scripts={
-            nonce ? (
-              <>
-                <script
-                  nonce={nonce}
-                  innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-                />
-                <script
-                  type="module"
-                  nonce={nonce}
-                  async
-                  src={
-                    import.meta.env.MANIFEST["client"]!.inputs[
-                      import.meta.env.MANIFEST["client"]!.handler
-                    ]!.output.path
-                  }
-                />
-              </>
-            ) : (
-              <>
-                <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-                <script
-                  type="module"
-                  async
-                  src={
-                    import.meta.env.MANIFEST["client"]!.inputs[
-                      import.meta.env.MANIFEST["client"]!.handler
-                    ]!.output.path
-                  }
-                />
-              </>
-            )
+            <>
+              <script
+                nonce={nonce}
+                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
+              />
+              <script
+                type="module"
+                nonce={nonce}
+                async
+                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
+              />
+            </>
           }
         >
           {!import.meta.env.START_ISLANDS ? (

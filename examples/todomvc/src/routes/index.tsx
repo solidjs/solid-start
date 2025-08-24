@@ -76,6 +76,7 @@ export default function TodoApp(props: RouteSectionProps) {
             class="new-todo"
             placeholder="What needs to be done?"
             ref={inputRef}
+            onInput={e => console.log({ e })}
             autofocus
           />
         </form>
@@ -101,8 +102,8 @@ export default function TodoApp(props: RouteSectionProps) {
                 togglingAll.pending
                   ? !togglingAll.input[0]
                   : togglingTodo.pending
-                  ? !todo.completed
-                  : todo.completed;
+                    ? !todo.completed
+                    : todo.completed;
               const removing = () => removingTodo.some(data => data.input[0] === todo.id);
               return (
                 <Show when={!removing()}>

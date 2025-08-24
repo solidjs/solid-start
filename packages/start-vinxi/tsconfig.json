@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "allowJs": true,
+    "types": ["vinxi/types/client"],
+    "isolatedModules": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "skipLibCheck": true
+  },
+  "include": ["./src", "./env.d.ts"]
+}
