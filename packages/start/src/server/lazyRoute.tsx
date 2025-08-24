@@ -1,6 +1,6 @@
-import { type Component, createComponent, JSX, lazy, onCleanup } from "solid-js";
+import { type Component, createComponent, type JSX, lazy, onCleanup } from "solid-js";
 
-import { Asset, renderAsset } from "./renderAsset.jsx";
+import { type Asset, renderAsset } from "./renderAsset.jsx";
 
 export default function lazyRoute<T extends Record<string, any>>(
   component: { src: string; import(): Promise<Record<string, Component>> },

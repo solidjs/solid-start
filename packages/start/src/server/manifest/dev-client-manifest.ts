@@ -14,5 +14,5 @@ export function getClientDevManifest() {
 
       return (await import(/* @vite-ignore */ assetsPath)).default;
     },
-  } satisfies StartManifest;
+  } satisfies StartManifest & { import(id: string): Promise<any> };
 }

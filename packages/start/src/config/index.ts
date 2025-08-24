@@ -1,16 +1,16 @@
-import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
-import { defu } from "defu";
 import { existsSync } from "node:fs";
 import path, { isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { StartServerManifest } from "solid-start:server-manifest";
+import { createTanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
+import { defu } from "defu";
 import { normalizePath, type PluginOption, type Rollup, type ViteDevServer } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
 import { isCssModulesFile } from "../server/collect-styles.js";
-import { getSsrDevManifest } from "../server/manifest/dev-server-manifest.js";
+import { getSsrDevManifest } from "../server/manifest/dev-ssr-manifest.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { fsRoutes } from "./fs-routes/index.js";
+import type { BaseFileSystemRouter } from "./fs-routes/router.js";
 import {
   clientDistDir,
   nitroPlugin,
@@ -18,7 +18,7 @@ import {
   ssrEntryFile,
   type UserNitroConfig
 } from "./nitroPlugin.js";
-import { BaseFileSystemRouter } from "./fs-routes/router.js";
+import { CLIENT_BASE_PATH } from "../constants.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 
@@ -70,14 +70,11 @@ const absolute = (path: string, root: string) =>
 let ssrBundle: Rollup.OutputBundle;
 
 const VIRTUAL_MODULES = {
-  serverManifest: "solid-start:server-manifest",
+  clientViteManifest: "solid-start:client-vite-manifest",
   getClientManifest: "solid-start:get-client-manifest",
-  getSsrManifest: "solid-start:get-ssr-manifest",
   getManifest: "solid-start:get-manifest",
   middleware: "solid-start:middleware"
 } as const;
-
-export const CLIENT_BASE_PATH = "_build";
 
 function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
@@ -127,7 +124,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
         };
       },
       async config(_, env) {
-        let clientInput = [handlers.client];
+        const clientInput = [handlers.client];
 
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client
@@ -168,8 +165,6 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
               consumer: "server",
               build: {
                 ssr: true,
-                // we don't write to the file system as the below 'capture-output' plugin will
-                // capture the output and write it to the virtual file system
                 write: true,
                 manifest: true,
                 copyPublicDir: false,
@@ -244,15 +239,14 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
       name: "solid-start:manifest-plugin",
       enforce: "pre",
       async resolveId(id) {
-        if (id === VIRTUAL_MODULES.serverManifest) return `\0${VIRTUAL_MODULES.serverManifest}`;
+        if (id === VIRTUAL_MODULES.clientViteManifest) return `\0${VIRTUAL_MODULES.clientViteManifest}`;
         if (id === VIRTUAL_MODULES.getClientManifest)
           return new URL("../server/manifest/client-manifest.js", import.meta.url).pathname;
-        if (id === VIRTUAL_MODULES.getSsrManifest)
-          return new URL("../server/manifest/ssr-manifest.js", import.meta.url).pathname;
-        if (id === VIRTUAL_MODULES.getManifest)
-          return this.environment.config.consumer === "server"
-            ? new URL("../server/manifest/ssr-manifest.js", import.meta.url).pathname
-            : new URL("../server/manifest/client-manifest.js", import.meta.url).pathname;
+        if (id === VIRTUAL_MODULES.getManifest) {
+          return this.environment.config.consumer === "client" ?
+            new URL("../server/manifest/client-manifest.js", import.meta.url).pathname :
+            new URL("../server/manifest/ssr-manifest.js", import.meta.url).pathname;
+        }
         if (id === VIRTUAL_MODULES.middleware) {
           if (start.middleware) return await this.resolve(start.middleware);
 
@@ -260,30 +254,26 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
         }
       },
       async load(id) {
-        if (id === `\0${VIRTUAL_MODULES.serverManifest}`) {
-          if (this.environment.config.command === "serve") {
-            const manifest: StartServerManifest = {
-              clientViteManifest: {},
-            };
+        if (id === `\0${VIRTUAL_MODULES.clientViteManifest}`) {
+          let clientViteManifest: Record<string, Record<string, any>>;
 
-            return `export const manifest = ${JSON.stringify(manifest)}`;
+          if (this.environment.config.command === "serve") {
+            clientViteManifest = {};
+          } else {
+            const entry = Object.values(globalThis.START_CLIENT_BUNDLE).find(
+              v => "isEntry" in v && v.isEntry
+            );
+            if (!entry) throw new Error("No client entry found");
+
+            clientViteManifest = JSON.parse(
+              (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source
+            );
           }
 
-          const entry = Object.values(globalThis.START_CLIENT_BUNDLE).find(
-            v => "isEntry" in v && v.isEntry
-          );
-          if (!entry) throw new Error("No client entry found");
-
-          const clientManifest: Record<string, Record<string, any>> = JSON.parse(
-            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source
-          );
-
-          const manifest: StartServerManifest = {
-            clientViteManifest: clientManifest as any,
-          };
-
-          return `export const manifest = ${JSON.stringify(manifest)};`;
-        } else if (id.startsWith("/@manifest")) {
+          return `export const clientViteManifest = ${JSON.stringify(clientViteManifest)};`;
+        }
+        else if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};"
+        else if (id.startsWith("/@manifest")) {
           const [path, query] = id.split("?");
           const params = new URLSearchParams(query);
           if (!path || !query) return;
@@ -296,7 +286,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
               await getSsrDevManifest("server").getAssets(id)
             )}`;
           }
-        } else if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};"
+        }
       }
     },
     nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server),

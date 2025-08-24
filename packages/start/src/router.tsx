@@ -1,9 +1,9 @@
-import { getRequestEvent, isServer } from "solid-js/web";
 import { getManifest } from "solid-start:get-manifest";
+import { getRequestEvent, isServer } from "solid-js/web";
 
 import lazyRoute from "./server/lazyRoute.jsx";
-import type { PageEvent } from "./server/types.js";
 import { pageRoutes as routeConfigs } from "./server/routes.js";
+import type { PageEvent } from "./server/types.js";
 
 export function createRoutes() {
   function createRoute(route: any) {
@@ -16,7 +16,11 @@ export function createRoutes() {
       },
       component:
         route.$component &&
-        lazyRoute(route.$component, getManifest(import.meta.env.START_ISLANDS), getManifest(true)),
+        lazyRoute(
+          route.$component,
+          getManifest(import.meta.env.START_ISLANDS ? "server" : "client"),
+          getManifest("server")
+        ),
       children: route.children ? route.children.map(createRoute) : undefined
     };
   }

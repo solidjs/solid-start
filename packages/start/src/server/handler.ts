@@ -10,7 +10,6 @@ import { createRoutes } from "../router.jsx";
 import { getFetchEvent } from "./fetchEvent.js";
 import { matchAPIRoute } from "./routes.js";
 import { handleServerFunction } from "./server-functions-handler.js";
-import { getClientEntryCssTags } from "./server-manifest.js";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
 import { getSsrManifest } from "./manifest/ssr-manifest.js";
 

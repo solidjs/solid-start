@@ -1,8 +1,7 @@
 import path from "node:path";
 import { join, resolve } from "pathe";
 import type { ModuleNode, ViteDevServer } from "vite";
-
-import { CLIENT_BASE_PATH } from "../config/index.js";
+import { CLIENT_BASE_PATH } from "../constants";
 
 async function getViteModuleNode(vite: ViteDevServer, file: string, ssr = false) {
   let nodePath = file;
@@ -161,35 +160,4 @@ export async function findStylesInModuleGraph(vite: ViteDevServer, id: string, s
   }
 
   return styles
-}
-
-export async function getManifestEntryCssTags(id: string) {
-  if (import.meta.env.DEV) {
-    const styles = await findStylesInModuleGraph((globalThis as any).VITE_DEV_SERVER, id, false);
-
-    return Object.entries(
-      styles
-    ).map(([key, value]) => ({
-      tag: "style",
-      attrs: {
-        type: "text/css",
-        key,
-        "data-vite-dev-id": key,
-        "data-vite-ref": "0",
-      },
-      children: value,
-    }))
-  } else {
-    const { manifest } = await import("solid-start:server-manifest");
-
-    const entry = manifest.clientViteManifest[id];
-    if (!entry) throw new Error(`No entry '${id}' found in vite manifest`);
-
-    return (
-      entry.css?.map(css => ({
-        tag: "link",
-        attrs: { href: `/${"_build"}/${css}`, rel: "stylesheet" }
-      })) ?? []
-    );
-  }
 }

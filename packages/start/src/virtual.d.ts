@@ -1,33 +1,9 @@
-type LinkAssetAttrs = { href: string, key: string } & (
-  { rel: "stylesheet", fetchPriority?: string }
-  | { rel: "modulepreload" });
-
-type ManifestAsset = {
-  tag: "link",
-  attrs: LinkAssetAttrs
+declare module "solid-start:client-vite-manifest" {
+  export const clientViteManifest: Record<string, { css?: Array<string>, file: string, [key: string]: unknown }>;
 }
-
-type ClientManifest = Record<string, {
-  output: string,
-  assets?: Array<ManifestAsset>
-}>;
-
-declare module "solid-start:server-manifest" {
-  interface StartServerManifest {
-    clientViteManifest: Record<string, { css?: Array<string>, file: string, [key: string]: unknown }>;
-  }
-
-  export const manifest: StartServerManifest;
-}
-
 
 interface StartManifest {
-  import(id: string): Promise<any>;
-  getAssets(id: string): Promise<any[]>;
-}
-
-declare module "solid-start:get-ssr-manifest" {
-  export const getSsrManifest: (target: "client" | "server") => StartManifest;
+  getAssets(id: string): Promise<import("./server/renderAsset").Asset[]>;
 }
 
 declare module "solid-start:get-client-manifest" {
@@ -35,7 +11,7 @@ declare module "solid-start:get-client-manifest" {
 }
 
 declare module "solid-start:get-manifest" {
-  export const getManifest: (ssr: boolean) => StartManifest;
+  export const getManifest: (target: "client" | "server") => StartManifest;
 }
 
 declare module "#start/app" {

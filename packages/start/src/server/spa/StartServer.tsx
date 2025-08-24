@@ -2,11 +2,11 @@
 // @ts-ignore
 import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
-import { manifest } from "solid-start:server-manifest";
+
 import { TopErrorBoundary } from "../../shared/ErrorBoundary";
 import { renderAsset } from "../renderAsset";
-import { getClientEntryPath } from "../server-manifest";
 import type { DocumentComponentProps, PageEvent } from "../types";
+import { getSsrManifest } from "../manifest/ssr-manifest";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -25,20 +25,16 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         <props.document
           assets={<>{context.assets.map((m: any) => renderAsset(m))}</>}
           scripts={
-            nonce ? (
-              <>
-                <script
-                  nonce={nonce}
-                  innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-                />
-                <script type="module" nonce={nonce} async src={getClientEntryPath()} />
-              </>
-            ) : (
-              <>
-                <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-                <script type="module" nonce={nonce} async src={getClientEntryPath()} />
-              </>
-            )
+            <>
+              <script
+                nonce={nonce}
+                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
+              />
+              <script
+                type="module"
+                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
+              />
+            </>
           }
         />
       </TopErrorBoundary>

@@ -12,5 +12,5 @@ export function getClientProdManifest() {
       // @ts-ignore
       return window.manifest
     },
-  } satisfies StartManifest & { json(): Promise<Record<string, any>> }
+  } satisfies StartManifest & { json(): Promise<Record<string, any>>, import(id: string): Promise<any>; }
 }

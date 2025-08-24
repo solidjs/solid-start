@@ -180,7 +180,8 @@ export function nitroPlugin(
                 logLevel: 3,
                 preset: "node-server",
                 typescript: {
-                  generateTsConfig: false
+                  generateTsConfig: false,
+                  generateRuntimeConfigTypes: false
                 },
                 ...nitroConfig,
                 dev: false,

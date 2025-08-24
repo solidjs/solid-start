@@ -9,13 +9,11 @@ import {
   ssr,
   useAssets
 } from "solid-js/web";
-import { getManifest } from "solid-start:get-manifest";
-import { manifest } from "solid-start:server-manifest";
 
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
 import { renderAsset } from "./renderAsset.jsx";
-import { getClientEntryPath } from "./server-manifest.js";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
+import { getSsrManifest } from "./manifest/ssr-manifest.js";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -46,7 +44,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
   let assets: Asset[] = [];
   Promise.resolve()
     .then(async () => {
-      const manifest = getManifest(import.meta.env.START_ISLANDS);
+      const manifest = getSsrManifest(import.meta.env.START_ISLANDS);
 
       let assetPromises: Promise<Asset[]>[] = [];
       // @ts-ignore
@@ -93,7 +91,12 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
                 nonce={nonce}
                 innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
               />
-              <script type="module" nonce={nonce} async src={getClientEntryPath()} />
+              <script
+                type="module"
+                nonce={nonce}
+                async
+                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
+              />
             </>
           }
         >

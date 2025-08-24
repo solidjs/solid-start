@@ -1,5 +1,5 @@
-import { isAbsolute, join } from "pathe";
-import type { ViteDevServer } from "vite";
+import { join, resolve } from "pathe";
+import { normalizePath, type ViteDevServer } from "vite";
 
 import { findStylesInModuleGraph } from "../collect-styles.js";
 
@@ -7,10 +7,7 @@ export function getSsrDevManifest(target: "client" | "server") {
   const vite: ViteDevServer = (globalThis as any).VITE_DEV_SERVER;
 
   return {
-    import(id: string) {
-      const absolutePath = isAbsolute(id) ? id : join(process.cwd(), id);
-      return vite.ssrLoadModule(join(absolutePath));
-    },
+    path: (id: string) => normalizePath(join("/@fs", resolve(process.cwd(), id))),
     async getAssets(id: string) {
       const styles = await findStylesInModuleGraph(vite, id, target === "server");
 
@@ -25,7 +22,11 @@ export function getSsrDevManifest(target: "client" | "server") {
         children: value,
       }));
     },
-  } satisfies StartManifest;
+  } satisfies StartManifest & {
+    path(
+      id: string,
+    ): string
+  }
 }
 
 export { getSsrDevManifest as getSsrManifest }
