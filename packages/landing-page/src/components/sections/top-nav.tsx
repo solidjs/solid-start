@@ -9,7 +9,6 @@ export function TopNav() {
           <DiscordIcon />
           <span class="sr-only">Invitation to SolidJS discord server</span>
         </a>
-        {/* <SolidStartLogo class="w-10 h-10 grayscale" /> */}
         <ThemeToggle />
       </div>
     </nav>

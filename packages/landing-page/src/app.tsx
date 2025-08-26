@@ -6,12 +6,12 @@ import {
 } from "@kobalte/core/color-mode";
 import { isServer } from "solid-js/web";
 import { getCookie } from "vinxi/http";
-import { Announcement } from "~/components/sections/announcement";
 import { DeployAnywhere } from "~/components/sections/deploy-anywhere";
 import { Footer } from "~/components/sections/footer";
 import { Hero } from "~/components/sections/hero";
 import { MetaFramework } from "~/components/sections/meta-framework";
 import { RockSolidDX } from "~/components/sections/rock-solid-dx";
+import { SponsoredBy } from "~/components/sections/sponsored-by";
 import { TopNav } from "~/components/sections/top-nav";
 import "./fonts.css";
 import "./root.css";
@@ -33,10 +33,10 @@ export default function App() {
           <TopNav />
           <Hero />
           <article class="w-full flex flex-col bg-white dark:bg-gradient-to-b dark:from-[#081924] from-white dark:via-[#081924] via-white dark:to-sky-950 to-sky-300">
-            <Announcement />
             <MetaFramework />
             <RockSolidDX />
             <DeployAnywhere />
+            <SponsoredBy />
           </article>
           <Footer />
         </main>
