@@ -23,6 +23,31 @@ npm run dev
 npm run dev -- --open
 ```
 
+## Env Vars
+
+Rename the example file and add your Discord OAuth credentials:
+
+```bash
+# rename example environment file
+cp .env.example .env
+```
+
+Edit `.env` with your values:
+
+```dotenv
+DISCORD_ID=your-discord-client-id
+DISCORD_SECRET=your-discord-client-secret
+```
+
+1. Create an application at [https://discord.com/developers/applications](https://discord.com/developers/applications) to obtain your client ID and secret.
+2. In the app's **OAuth2 → Redirects** settings, add:
+
+   ```text
+   http://localhost:3000/api/oauth/discord
+   ```
+
+For more details on the [start-oauth](https://github.com/thomasbuilds/start-oauth) integration, see the repository.
+
 ## Building
 
 Solid apps are built with _presets_, which optimise your project for deployment to different environments.

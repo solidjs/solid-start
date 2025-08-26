@@ -1,5 +1,30 @@
 # @solidjs/start
 
+## 1.1.7
+
+### Patch Changes
+
+- f593ade: revert [#1912](https://github.com/solidjs/solid-start/pull/1912)
+
+## 1.1.6
+
+### Patch Changes
+
+- ca310ec: respondWith and node.res.end behaves correctly
+
+## 1.1.5
+
+### Patch Changes
+
+- 2bae61e: fix infinite loop on unexpected response from server function (issue #1898)
+- bb5eaef: bump vinxi to latest AND pin @tanstack/server-functions-plugin to 1.121.21
+
+## 1.1.4
+
+### Patch Changes
+
+- [#1888](https://github.com/solidjs/solid-start/pull/1888): Add back support for generators in server functions
+
 ## 1.1.3
 
 ### Patch Changes

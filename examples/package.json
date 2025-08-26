@@ -6,5 +6,6 @@
     "build": "pnpm --filter './*' --if-present build",
     "clean": "pnpx rimraf ./*/node_modules/ ./*/.vinxi/ ./*/.output/",
     "use-workspace-package": "node ./use-workspace-package-in-examples.js"
-  }
+  },
+  "packageManager": "pnpm@10.8.1"
 }

@@ -1,53 +1,37 @@
 import { action, query, redirect } from "@solidjs/router";
-import { db } from "./db";
-import {
-  getSession,
-  login,
-  logout as logoutSession,
-  register,
-  validatePassword,
-  validateUsername
-} from "./server";
+import { getSession, passwordSignIn } from "./server";
 
-export const getUser = query(async () => {
+// Define which routes require authentication
+const PROTECTED_ROUTES = ["/"];
+
+const isProtectedRoute = (path: string) =>
+  PROTECTED_ROUTES.some(route =>
+    route.endsWith("/*")
+      ? path.startsWith(route.slice(0, -2))
+      : path === route || path.startsWith(route + "/")
+  );
+
+export const querySession = query(async (path: string) => {
   "use server";
-  try {
-    const session = await getSession();
-    const userId = session.data.userId;
-    if (userId === undefined) throw new Error("User not found");
-    const user = await db.user.findUnique({ where: { id: userId } });
-    if (!user) throw new Error("User not found");
-    return { id: user.id, username: user.username };
-  } catch {
-    await logoutSession();
-    throw redirect("/login");
-  }
-}, "user");
+  const { data } = await getSession();
+  if (path === "/login" && data.id) return redirect("/");
+  if (data.id) return data;
+  if (isProtectedRoute(path)) throw redirect(`/login?redirect=${path}`);
+  return null;
+}, "session");
 
-export const loginOrRegister = action(async (formData: FormData) => {
+export const passwdSignIn = action(async (formData: FormData) => {
   "use server";
-  const username = String(formData.get("username"));
-  const password = String(formData.get("password"));
-  const loginType = String(formData.get("loginType"));
-  let error = validateUsername(username) || validatePassword(password);
-  if (error) return new Error(error);
-
-  try {
-    const user = await (loginType !== "login"
-      ? register(username, password)
-      : login(username, password));
-    const session = await getSession();
-    await session.update(d => {
-      d.userId = user.id;
-    });
-  } catch (err) {
-    return err as Error;
-  }
-  return redirect("/");
+  const email = formData.get("email");
+  const password = formData.get("password");
+  if (typeof email !== "string" || typeof password !== "string")
+    return new Error("Email and password are required");
+  return await passwordSignIn(email.trim().toLowerCase(), password);
 });
 
 export const logout = action(async () => {
   "use server";
-  await logoutSession();
-  return redirect("/login");
+  const session = await getSession();
+  await session.update({ id: undefined });
+  throw redirect("/login", { revalidate: "session" });
 });

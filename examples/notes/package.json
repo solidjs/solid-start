@@ -13,7 +13,7 @@
     "solid-js": "^1.9.5",
     "marked": "^12.0.1",
     "unstorage": "1.10.2",
-    "vinxi": "^0.5.3"
+    "vinxi": "^0.5.7"
   },
   "engines": {
     "node": ">=22"
