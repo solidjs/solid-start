@@ -1,8 +1,8 @@
-import { existsSync } from "node:fs";
-import path, { isAbsolute, join, normalize } from "node:path";
-import { fileURLToPath } from "node:url";
 import { TanStackServerFnPluginEnv } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
+import { globSync } from "node:fs";
+import path, { extname, isAbsolute, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
 import { normalizePath, type PluginOption, type Rollup, type ViteDevServer } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
@@ -63,15 +63,17 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
 
   const routeDir = join(start.appRoot, start.routeDir);
 
-  let entryExtension = ".tsx";
-  if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) entryExtension = ".jsx";
+  const root = process.cwd();
+  const appEntryPath = globSync(join(root, start.appRoot, "app.{j,t}sx"))[0];
+  if (!appEntryPath) {
+    throw new Error(`Could not find an app jsx/tsx entry in ${start.appRoot}.`);
+  }
+  const entryExtension = extname(appEntryPath);
 
   const handlers = {
     client: `${start.appRoot}/entry-client${entryExtension}`,
     server: `${start.appRoot}/entry-server${entryExtension}`
   };
-
-  const root = process.cwd();
 
   return [
     {
@@ -152,7 +154,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           },
           resolve: {
             alias: {
-              "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
+              "#start/app": appEntryPath,
               "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
@@ -165,6 +167,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+            "import.meta.env.START_APP_ENTRY": `"${normalizePath(appEntryPath)}"`,
             "import.meta.env.START_CLIENT_ENTRY": `"${normalizePath(handlers.client)}"`
           }
         };

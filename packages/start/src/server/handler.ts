@@ -109,7 +109,8 @@ export async function createPageEvent(ctx: FetchEvent) {
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: 'json' in manifest ? await manifest.json() : {},
     assets: [
-      ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY))
+      ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
+      ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
       // ...(import.meta.env.START_ISLANDS
       //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
       //       s => (s as any).attrs.rel !== "modulepreload"
