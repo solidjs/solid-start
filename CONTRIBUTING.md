@@ -1,104 +1,144 @@
 # Contributing
 
-- **Node.js**: Version 22 or higher
-- Use a Node.js version manager compatible with `.node-version` ([asdf-vm](https://asdf-vm.com) is a great option for macOS/Linux users)
-- Use pnpm package manager
+Thank you for your interest in contributing to **SolidStart**! We welcome contributions including bug fixes, feature enhancements, documentation improvements, and more.
+
+## Prerequisites
+
+- **Node.js**: Use the version specified in `.nvmrc`, install [nvm](https://github.com/nvm-sh/nvm) to manage Node versions easily
+- **Pnpm**: Install globally via `npm install -g pnpm`
+- **Git**: Ensure Git is installed for cloning and managing the repository
 
 ## Setup
 
-```bash
-# Clone the SolidStart repository
-git clone https://github.com/solidjs/solid-start.git
-```
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/solidjs/solid-start.git
+   cd solid-start
+   ```
+
+2. Enable the correct pnpm version specified in package.json
+
+   ```bash
+   corepack enable
+   ```
+
+3. Install dependencies
+
+   ```bash
+   pnpm install
+   ```
+
+4. Build all packages and the landing page
+   ```bash
+   pnpm run build:all
+   ```
+
+If you encounter issues (e.g. missing `node_modules`), clean the workspace
 
 ```bash
-# Install pnpm as the package manager
-npm install -g pnpm
+pnpm run clean:all
 ```
 
-```bash
-# Install all monorepo dependencies
-pnpm install
-```
+Then reinstall dependencies and rebuild.
 
-```bash
-# Build dependencies
-pnpm run build:all
-```
+## Monorepo Structure
 
-## Testing Changes
+SolidStart is a pnpm-based monorepo with nested workspaces. Key directories include
 
-1. Modify the codebase as needed.
-2. Run an example project to verify your changes work as expected:
+- **`packages/start`**: The core `@solidjs/start` package.
+- **`packages/landing-page`**: The official landing page.
+- **`examples/`**: Example projects for testing (a nested workspace; see details below).
+- **`packages/tests`**: Unit and end-to-end (E2E) tests using Vitest and Cypress.
 
-```bash
-# Run an example (e.g. hackernews)
-pnpm --filter example-hackernews run dev
-```
+Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific packages.  
+The `examples/` directory is a separate workspace with its own `pnpm-workspace.yaml` and `pnpm-lock.yaml`.
 
-3. Run tests
+## Developing and Testing Changes
 
-```bash
-# Setup Playwright
-pnpm run install:playwright
-```
+1. Make your changes in the relevant package (e.g. `packages/start`)
 
-```bash
-# Run all tests
-pnpm run test:all
-```
+2. Rebuild affected packages
 
-```bash
-# Show test report
-pnpm run show:test-report
-```
+   ```bash
+   pnpm run packages:build
+   ```
 
-## Monorepo Configuration
+   For a full rebuild: `pnpm run build:all`
 
-If you are using SolidStart within a monorepo that takes advantage of the `package.json` `"workspaces"` property (e.g. [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces)) with hoisted dependencies (the default for Yarn), you must include `@solidjs/start` within the optional `"nohoist"` (for Yarn v1) or configure hoisting limits (for Yarn v2 or higher) to ensure dependencies are correctly placed.
+3. Test your changes
 
-- _In the following, "workspace root" refers to the root of your repository, while "project root" refers to the root of a child package within your repository._
+   - For examples
+     ```bash
+     cd examples
+     pnpm install
+     pnpm --filter example-hackernews run dev # Runs the HackerNews example
+     ```
+   - For the landing page (from the root directory)
+     ```bash
+     pnpm run lp:dev
+     ```
 
-### Yarn v1 (nohoist)
+4. Clean builds if needed
+   ```bash
+   pnpm run packages:clean # Cleans packages' node_modules and dist folders
+   pnpm run lp:clean # Cleans the landing page
+   pnpm run clean:root # Cleans root-level caches
+   ```
 
-For example, if specifying `"nohoist"` options from the workspace root (i.e., for all packages):
+## Running Tests
+
+Tests are located in `packages/tests`, using Vitest for unit tests and Cypress for E2E tests.
+
+1. Install the Cypress binary (required only once)
+
+   ```bash
+   pnpm --filter tests exec cypress install
+   ```
+
+2. For unit tests that check build artifacts, build the test app first
+
+   ```bash
+   pnpm --filter tests run build
+   ```
+
+3. Run unit tests
+
+   ```bash
+   pnpm --filter tests run unit
+   ```
+
+   - CI mode (run once): `pnpm --filter tests run unit:ci`
+   - UI mode: `pnpm --filter tests run unit:ui`
+
+4. Run E2E tests
+
+   ```bash
+   pnpm --filter tests run e2e:run
+   ```
+
+   - Interactive mode: `pnpm --filter tests run e2e:open`
+   - With dev server: `pnpm --filter tests run e2e`
+
+5. Clean test artifacts
+   ```bash
+   pnpm run clean:test
+   ```
+
+## Using SolidStart in Your Own Monorepo
+
+When integrating `@solidjs/start` into your own monorepo (e.g. using Yarn workspaces), configure dependency hoisting to ensure proper resolution. This helps runtime components (e.g. `client/index.tsx`) resolve correctly in generated files like `index.html`.
+
+### Yarn v2+
+
+In the project root's `package.json`
 
 ```jsonc
-// in workspace root
-{
-  "workspaces": {
-    "packages": [
-      /* ... */
-    ],
-    "nohoist": ["**/@solidjs/start"]
-  }
-}
-```
-
-If specifying `"nohoist"` options for a specific package using `@solidjs/start`:
-
-```jsonc
-// in project root of a workspace child
-{
-  "workspaces": {
-    "nohoist": ["@solidjs/start"]
-  }
-}
-```
-
-Regardless of where you specify the `nohoist` option, you also need to include `@solidjs/start` as a `devDependency` in the child `package.json`.
-
-The reason why this is necessary is because `@solidjs/start` creates an `index.html` file within your project which expects to load a script located in `/node_modules/@solidjs/start/runtime/entry.jsx` (where `/` is the path of your project root). By default, if you hoist the `@solidjs/start` dependency into the workspace root, then that script will not be available within the package's `node_modules` folder.
-
-### Yarn v2 or Higher
-
-The `nohoist` option is no longer available in Yarn v2+. In this case, we can use the `installConfig` property in the `package.json` (either workspace package or a specific project package) to make sure our dependencies are not hoisted:
-
-```jsonc
-// in project root of a workspace child
 {
   "installConfig": {
     "hoistingLimits": "dependencies"
   }
 }
 ```
+
+For pnpm monorepos, define workspaces in `pnpm-workspace.yaml`. If you encounter resolution issues (e.g. missing modules like `h3` from Vinxi), add `shamefully-hoist=true` to your `.npmrc` file. Test for duplicates and adjust configurations as necessary.
