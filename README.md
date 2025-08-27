@@ -31,21 +31,21 @@ Explore the official [documentation](https://docs.solidjs.com/solid-start) for d
 
 ### Installation
 
-Create a template project with your preferred package manager
+Create a SolidStart template project with your preferred package manager
 
 ```bash
 # using npm
-npm create solid -- --s
+npm create solid@latest -- -s
 ```
 
 ```bash
 # using pnpm
-pnpm create solid --s
+pnpm create solid@latest -s
 ```
 
 ```bash
 # using bun
-bun create solid --s
+bun create solid@latest -s
 ```
 
 ### Project Structure
@@ -73,8 +73,7 @@ export default defineConfig({
 });
 ```
 
-Presets also include runtimes like Node.js, Bun or Deno. For example, a preset like `node-server` enables hosting on your server.
-
+Presets also include runtimes like Node.js, Bun or Deno. For example, a preset like `node-server` enables hosting on your server.  
 Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config)
 
 ## Building
