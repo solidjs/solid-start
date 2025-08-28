@@ -37,6 +37,9 @@ jobs:
       - name: Run unit tests
         run: pnpm --filter tests unit:ci
 
+      - name: Run start unit tests
+        run: pnpm --filter @solidjs/start test:ci
+
       - name: E2E Chromium
         uses: cypress-io/github-action@v6
         with:
