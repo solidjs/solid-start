@@ -1,3 +1,4 @@
+// @ts-ignore - seroval exports issue with NodeNext
 import { deserialize, toJSONAsync } from "seroval";
 import {
   CustomEventPlugin,

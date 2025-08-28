@@ -1,5 +1,5 @@
 import { getRequestEvent } from "solid-js/web";
-import type { ServerFunctionMeta } from "../server/types";
+import type { ServerFunctionMeta } from "../server/types.js";
 
 /**
  *

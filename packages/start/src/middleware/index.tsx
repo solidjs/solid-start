@@ -1,7 +1,7 @@
 // @refresh skip
-import { getFetchEvent } from "../server/fetchEvent";
-import { H3Event as HTTPEvent, defineMiddleware, sendWebResponse } from "../server/h3";
-import type { FetchEvent } from "../server/types";
+import { getFetchEvent } from "../server/fetchEvent.js";
+import { H3Event as HTTPEvent, defineMiddleware, sendWebResponse } from "../server/h3.js";
+import type { FetchEvent } from "../server/types.js";
 
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
 
