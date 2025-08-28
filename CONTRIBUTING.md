@@ -4,7 +4,7 @@ Thank you for your interest in contributing to **SolidStart**! We welcome contri
 
 ## Prerequisites
 
-- **Node.js**: Use the version specified in `.nvmrc`, install [nvm](https://github.com/nvm-sh/nvm) to manage Node versions easily
+- **Node.js**: Use the version specified in `.nvmrc`, to manage multiple versions across your system, we recommend a version manager such as [fnm](https://github.com/Schniz/fnm), or another of your preference.
 - **Pnpm**: Install globally via `npm install -g pnpm`
 - **Git**: Ensure Git is installed for cloning and managing the repository
 
