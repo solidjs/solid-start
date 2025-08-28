@@ -48,4 +48,8 @@ describe("server-function", () => {
     cy.visit("is-server-with-anon-default-export");
     cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
   });
+  it("should build with generator as server function", () => {
+    cy.visit("/generator-server-function");
+    cy.get("#server-fn-test").contains('¡Hola, Mundo!');
+  });
 });
