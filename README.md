@@ -45,7 +45,7 @@ pnpm create solid@latest -s
 
 ```bash
 # using bun
-bun create solid@latest -s
+bun create solid@latest --s
 ```
 
 ### Project Structure
