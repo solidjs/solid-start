@@ -48,6 +48,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
     },
     solid: {},
     server: {
+      ...options?.server,
       routeRules: {
         "/_build/assets/**": {
           headers: { "cache-control": "public, immutable, max-age=31536000" }
@@ -168,7 +169,9 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
             "import.meta.env.START_APP_ENTRY": `"${normalizePath(appEntryPath)}"`,
-            "import.meta.env.START_CLIENT_ENTRY": `"${normalizePath(handlers.client)}"`
+            "import.meta.env.START_CLIENT_ENTRY": `"${normalizePath(handlers.client)}"`,
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify(start.server.baseURL ?? ""),
+            "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
           }
         };
       }
@@ -266,7 +269,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
         }
       }
     },
-    nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server),
+    nitroPlugin({ root: process.cwd() }, () => ssrBundle, start.server as UserNitroConfig),
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
