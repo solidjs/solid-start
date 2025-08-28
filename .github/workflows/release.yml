@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - v1.x
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -27,13 +28,19 @@ jobs:
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile
 
+      - name: Setup changeset config for v1.x branch
+        if: github.ref_name == 'v1.x'
+        run: |
+          cp .changeset/config-v1.json .changeset/config.json
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
           publish: pnpm run release
-          title: "chore: release"
-          commit: "chore: release"
+          title: "${{ github.ref_name == 'v1.x' && 'chore: release v1.x' || 'chore: release' }}"
+          commit: "${{ github.ref_name == 'v1.x' && 'chore: release v1.x' || 'chore: release' }}"
+          setupGitUser: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
