@@ -16,7 +16,9 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "node build && pnpm tsc"
+    "build": "node build && pnpm tsc",
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "files": [
     "config",
@@ -60,7 +62,8 @@
   },
   "devDependencies": {
     "solid-js": "^1.9.5",
-    "vinxi": "^0.5.7"
+    "vinxi": "^0.5.7",
+    "vitest": "3.0.5"
   },
   "dependencies": {
     "@tanstack/server-functions-plugin": "1.121.21",
