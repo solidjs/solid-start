@@ -2,7 +2,7 @@ import { eventHandler, getCookie, getResponseHeaders, type H3Event, setCookie } 
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
-import { renderToStream, renderToString } from "solid-js/web";
+import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import middleware from "solid-start:middleware";
 
@@ -20,78 +20,77 @@ export function createBaseHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
 ) {
-  return eventHandler({
+  const handler = eventHandler({
     ...middleware,
     handler: async (e: H3Event) => {
-      const event = getFetchEvent(e);
+      const event = getRequestEvent()!;
+      const url = new URL(event.request.url);
+      const pathname = url.pathname;
 
-      return await provideRequestEvent(event, async () => {
-        const url = new URL(event.request.url);
-        const pathname = url.pathname;
+      const serverFunctionTest = join("/", SERVER_FN_BASE);
+      if (pathname.startsWith(serverFunctionTest)) {
+        const serverFnResponse = await handleServerFunction(e);
 
-        const serverFunctionTest = join("/", SERVER_FN_BASE);
-        if (pathname.startsWith(serverFunctionTest)) {
-          const serverFnResponse = await handleServerFunction(e);
+        if (serverFnResponse instanceof Response) return serverFnResponse;
 
-          if (serverFnResponse instanceof Response) return serverFnResponse;
+        return new Response(serverFnResponse as any, {
+          headers: getResponseHeaders(e) as any
+        });
+      }
 
-          return new Response(serverFnResponse as any, {
-            headers: getResponseHeaders(e) as any
-          });
+      const match = matchAPIRoute(pathname, event.request.method);
+      if (match) {
+        const mod = await match.handler.import();
+        const fn =
+          event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
+        (event as APIEvent).params = match.params || {};
+        // @ts-expect-error
+        sharedConfig.context = { event };
+        const res = await fn!(event);
+        if (res !== undefined) return res;
+        if (event.request.method !== "GET") {
+          throw new Error(
+            `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
+          );
         }
+      }
 
-        const match = matchAPIRoute(pathname, event.request.method);
-        if (match) {
-          const mod = await match.handler.import();
-          const fn =
-            event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
-          (event as APIEvent).params = match.params || {};
-          // @ts-expect-error
-          sharedConfig.context = { event };
-          const res = await fn!(event);
-          if (res !== undefined) return res;
-          if (event.request.method !== "GET") {
-            throw new Error(
-              `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
-            );
-          }
-        }
+      const context = await createPageEvent(event);
 
-        const context = await createPageEvent(event);
+      const resolvedOptions =
+        typeof options === "function" ? await options(context) : { ...options };
+      const mode = resolvedOptions.mode || "stream";
+      if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
 
-        const resolvedOptions =
-          typeof options === "function" ? await options(context) : { ...options };
-        const mode = resolvedOptions.mode || "stream";
-        if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
-
-        if (mode === "sync" || !import.meta.env.START_SSR) {
-          const html = renderToString(() => {
-            (sharedConfig.context as any).event = context;
-            return fn(context);
-          });
-          context.complete = true;
-
-          // insert redirect handling here
-
-          return html;
-        }
-
-        const _stream = renderToStream(() => {
+      if (mode === "sync" || !import.meta.env.START_SSR) {
+        const html = renderToString(() => {
           (sharedConfig.context as any).event = context;
           return fn(context);
-        }, resolvedOptions);
-        const stream = _stream as typeof _stream & Promise<string> // stream has a hidden 'then' method
+        });
+        context.complete = true;
 
         // insert redirect handling here
 
-        if (mode === "async") return stream
+        return html;
+      }
 
-        const { writable, readable } = new TransformStream();
-        stream.pipeTo(writable);
-        return readable;
-      });
+      const _stream = renderToStream(() => {
+        (sharedConfig.context as any).event = context;
+        return fn(context);
+      }, resolvedOptions);
+      const stream = _stream as typeof _stream & Promise<string> // stream has a hidden 'then' method
+
+      // insert redirect handling here
+
+      if (mode === "async") return stream
+
+      const { writable, readable } = new TransformStream();
+      stream.pipeTo(writable);
+      return readable;
     }
   });
+
+  return eventHandler((e: H3Event) => provideRequestEvent(getFetchEvent(e), () => handler(e)));
 }
 
 export function createHandler(
