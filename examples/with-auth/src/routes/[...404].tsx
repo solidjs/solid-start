@@ -1,25 +1,17 @@
-import { A } from "@solidjs/router";
+import { Title } from "@solidjs/meta";
 
 export default function NotFound() {
   return (
-    <main class="text-center mx-auto text-gray-700 p-4">
-      <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Not Found</h1>
-      <p class="mt-8">
-        Visit{" "}
-        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
-          solidjs.com
-        </a>{" "}
-        to learn how to build Solid apps.
-      </p>
-      <p class="my-4">
-        <A href="/" class="text-sky-600 hover:underline">
-          Home
-        </A>
-        {" - "}
-        <A href="/about" class="text-sky-600 hover:underline">
-          About Page
-        </A>
-      </p>
+    <main class="text-center">
+      <Title>Page Not Found</Title>
+      <h1>Not Found</h1>
+      Sorry, the page you’re looking for doesn't exist
+      <a
+        href="/"
+        class="px-4 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+      >
+        Go Home
+      </a>
     </main>
   );
 }
