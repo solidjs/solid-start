@@ -170,6 +170,9 @@ importers:
       vite-plugin-solid:
         specifier: ^2.11.6
         version: 2.11.6(patch_hash=a4f09ac704b133f7d1fef9ec6c9e378192d47de5da5fef4f4430e58df13c399a)(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.3(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.19.2)(yaml@2.6.0))
+      vitest:
+        specifier: 3.0.5
+        version: 3.0.5(@types/debug@4.1.12)(@types/node@24.3.0)(@vitest/browser@3.0.5)(@vitest/ui@3.0.5)(jiti@2.4.2)(jsdom@25.0.1)(lightningcss@1.27.0)(msw@2.7.0(@types/node@24.3.0)(typescript@5.7.3))(terser@5.43.1)(tsx@4.19.2)(yaml@2.6.0)
     devDependencies:
       '@types/babel__core':
         specifier: ^7.20.5
@@ -9952,7 +9955,7 @@ snapshots:
   cypress-vite@1.6.0(vite@7.1.3(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.19.2)(yaml@2.6.0)):
     dependencies:
       chokidar: 3.6.0
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.1
       vite: 7.1.3(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.19.2)(yaml@2.6.0)
     transitivePeerDependencies:
       - supports-color
@@ -11096,7 +11099,7 @@ snapshots:
 
   istanbul-lib-source-maps@4.0.1:
     dependencies:
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.1
       istanbul-lib-coverage: 3.2.2
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -13378,7 +13381,7 @@ snapshots:
   vite-node@3.0.5(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.19.2)(yaml@2.6.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.1
       es-module-lexer: 1.7.0
       pathe: 2.0.3
       vite: 6.3.5(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.43.1)(tsx@4.19.2)(yaml@2.6.0)
@@ -13459,11 +13462,11 @@ snapshots:
       '@vitest/spy': 3.0.5
       '@vitest/utils': 3.0.5
       chai: 5.1.2
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.1
       expect-type: 1.1.0
       magic-string: 0.30.17
       pathe: 2.0.3
-      std-env: 3.8.0
+      std-env: 3.9.0
       tinybench: 2.9.0
       tinyexec: 0.3.2
       tinypool: 1.0.2

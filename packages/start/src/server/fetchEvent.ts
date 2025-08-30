@@ -65,7 +65,7 @@ class HeaderProxy {
     return Array.isArray(h) ? h.join(", ") : (h as string) || null;
   }
   has(key: string) {
-    return this.get(key) !== undefined;
+    return this.get(key) !== null;
   }
   set(key: string, value: string) {
     return setResponseHeader(this.event, key, value);
