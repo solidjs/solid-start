@@ -2,7 +2,7 @@ import { Title } from "@solidjs/meta";
 import { json } from "@solidjs/router";
 import { clientOnly, GET } from "@solidjs/start";
 import { getServerFunctionMeta } from "@solidjs/start/server";
-import { getRequestEvent } from "solid-js/web";
+import { getRequestEvent, isServer } from "solid-js/web";
 import Counter from "~/components/Counter";
 const BreaksOnServer = clientOnly(() => import("~/components/BreaksOnServer"));
 
@@ -22,7 +22,8 @@ export default function Home() {
     console.log(v);
     console.log(await v.hello);
   });
-  fetch(`http://localhost:3000/${import.meta.env.SERVER_BASE_URL}/unknown`, {
+  const port = isServer ? new URL(getRequestEvent()!.request.url).port: location.port;
+  fetch(`http://localhost:${port}/${import.meta.env.SERVER_BASE_URL}/unknown`, {
     headers: { Accept: "application/json" }
   }).then(async res => console.log(await res.json()));
   return (

@@ -1,10 +1,6 @@
 // @refresh skip
-import {
-  HTTPEvent,
-  defineMiddleware,
-  sendWebResponse
-} from "vinxi/http";
 import { getFetchEvent } from "../server/fetchEvent";
+import { H3Event as HTTPEvent, defineMiddleware, sendWebResponse } from "../server/h3";
 import type { FetchEvent } from "../server/types";
 
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
@@ -12,7 +8,9 @@ import type { FetchEvent } from "../server/types";
 export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
 /** This composes an array of Exchanges into a single ExchangeIO function */
 
-export type RequestMiddleware = (event: FetchEvent) => Response | Promise<Response> | void | Promise<void> | Promise<void | Response>;
+export type RequestMiddleware = (
+  event: FetchEvent
+) => Response | Promise<Response> | void | Promise<void> | Promise<void | Response>;
 
 // copy-pasted from h3/dist/index.d.ts
 type EventHandlerResponse<T = any> = T | Promise<T>;

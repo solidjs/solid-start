@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
 import { RequestEvent } from "solid-js/web";
-import { HTTPEvent } from "vinxi/http";
+import { H3Event } from "h3";
 
 // export const FETCH_EVENT = "$FETCH";
 
@@ -10,17 +10,20 @@ export type DocumentComponentProps = {
   children?: JSX.Element;
 };
 
-export type Asset = {
-  tag: "style";
-  attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
-  children?: JSX.Element;
-} | {
-  tag: "script";
-  attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
-} | {
-  tag: "link";
-  attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
-};
+export type Asset =
+  | {
+    tag: "style";
+    attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
+    children?: JSX.Element;
+  }
+  | {
+    tag: "script";
+    attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
+  }
+  | {
+    tag: "link";
+    attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
+  };
 
 export type HandlerOptions = {
   mode?: "sync" | "async" | "stream";
@@ -48,17 +51,18 @@ export interface FetchEvent {
   response: ResponseStub;
   clientAddress?: string;
   locals: App.RequestEventLocals;
-  nativeEvent: HTTPEvent;
+  nativeEvent: H3Event;
 }
 
 export interface PageEvent extends RequestEvent {
-  manifest: any;
-  assets: any;
+  manifest?: any;
+  assets: any[];
   routes: any[];
   // prevUrl: string | null;
   // $type: typeof FETCH_EVENT;
   $islands: Set<string>;
   complete: boolean;
+  nonce?: string;
   // mutation: boolean;
 }
 
