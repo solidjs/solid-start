@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 describe("Make sure treeshaking works", () => {
   it("should not have any unused code in the client-bundle", async () => {
-    const buildDir = path.resolve(process.cwd(), ".vinxi/build/client/_build/assets");
+    const buildDir = path.resolve(process.cwd(), ".output/public/_build/assets");
     const files = await readdir(buildDir);
     const targetFile = files.find(
       file => file.startsWith("(no-side-effects)-") && file.endsWith(".js")
