@@ -12,7 +12,7 @@ export function getSsrDevManifest(target: "client" | "server") {
       const styles = await findStylesInModuleGraph(vite, id, target === "server");
 
       return Object.entries(styles).map(([key, value]) => ({
-        tag: "style",
+        tag: "style" as const,
         attrs: {
           type: "text/css",
           key,

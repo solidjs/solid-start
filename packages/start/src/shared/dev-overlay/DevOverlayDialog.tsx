@@ -4,6 +4,7 @@ import * as htmlToImage from "html-to-image";
 import type { JSX } from "solid-js";
 import { ErrorBoundary, For, Show, Suspense, createMemo, createSignal } from "solid-js";
 import { Portal } from "solid-js/web";
+// @ts-ignore - terracotta module resolution issue with NodeNext
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from "terracotta";
 import info from "../../../package.json";
 import { CodeView } from "./CodeView.jsx";

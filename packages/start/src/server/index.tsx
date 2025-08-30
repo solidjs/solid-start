@@ -1,8 +1,8 @@
 export { getServerFunctionMeta } from "../shared/serverFunction.js";
 export { StartServer } from "./StartServer.jsx";
-export { createHandler } from "./handler";
+export { createHandler } from "./handler.js";
 
-export * from "./h3";
+export * from "./h3.js";
 
 /**
  * Checks if user has set a redirect status in the response.

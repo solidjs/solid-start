@@ -1,3 +1,4 @@
+// @ts-ignore - seroval exports issue with NodeNext
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
 // @ts-ignore
 import {
@@ -58,7 +59,7 @@ function serializeToStream(id: string, value: any) {
           URLSearchParamsPlugin,
           URLPlugin
         ],
-        onSerialize(data, initial) {
+        onSerialize(data: string, initial: boolean) {
           controller.enqueue(
             createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data)
           );
@@ -66,7 +67,7 @@ function serializeToStream(id: string, value: any) {
         onDone() {
           controller.close();
         },
-        onError(error) {
+        onError(error: any) {
           controller.error(error);
         }
       });
