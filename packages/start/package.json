@@ -24,7 +24,7 @@
     },
     "./client": {
       "default": "./dist/client/index.jsx",
-      "types": "./dist/server/index.d.ts"
+      "types": "./dist/client/index.d.ts"
     },
     "./router": {
       "default": "./dist/router.jsx",
