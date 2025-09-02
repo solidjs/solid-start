@@ -1,7 +1,6 @@
 import path from "node:path";
 import { join, resolve } from "pathe";
 import type { ModuleNode, ViteDevServer } from "vite";
-import { CLIENT_BASE_PATH } from "../constants";
 
 async function getViteModuleNode(vite: ViteDevServer, file: string, ssr = false) {
   let nodePath = file;
