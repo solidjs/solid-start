@@ -1,9 +1,7 @@
 // @refresh skip
-// @ts-ignore
 import App from "#start/app";
 import type { JSX } from "solid-js";
-import { ErrorBoundary } from "../shared/ErrorBoundary";
-import "./mount";
+import { ErrorBoundary } from "../shared/ErrorBoundary.jsx";
 
 function Dummy(props: { children: JSX.Element }) {
   return props.children;

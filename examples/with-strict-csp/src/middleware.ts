@@ -20,12 +20,11 @@ export default createMiddleware({
     //    For more details, see: https://vite.dev/config/build-options.html#build-assetsinlinelimit
     const csp = `
       default-src 'self';
-      script-src ${
-        isProd
-          ? // Note: The `https:` and `'unsafe-inline'` directives do not reduce the effectiveness of the CSP.
-            // They are only fallbacks for older browsers that don't support `'strict-dynamic'`.
-            `'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval' https: 'unsafe-inline'`
-          : "'self' 'unsafe-inline' 'unsafe-eval' https: http:"
+      script-src ${isProd
+        ? // Note: The `https:` and `'unsafe-inline'` directives do not reduce the effectiveness of the CSP.
+        // They are only fallbacks for older browsers that don't support `'strict-dynamic'`.
+        `'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval' https: 'unsafe-inline'`
+        : "'self' 'unsafe-inline' 'unsafe-eval' https: http:"
       };
       style-src ${isProd ? `'nonce-${nonce}'` : "'self' 'unsafe-inline'"};
       img-src 'self' data:;

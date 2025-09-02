@@ -1,11 +1,17 @@
-// @refresh skip
-export { createHandler } from "./handler";
-export { StartServer } from "./StartServer";
-export type {
-  APIEvent,
-  APIHandler, Asset, ContextMatches, DocumentComponentProps, FetchEvent, HandlerOptions, PageEvent, ResponseStub, ServerFunctionMeta
-} from "./types";
-import { getServerFunctionMeta as getServerFunctionMeta_ } from "../shared/serverFunction";
+export { getServerFunctionMeta } from "../shared/serverFunction.js";
+export { StartServer } from "./StartServer.jsx";
+export { createHandler } from "./handler.js";
 
-/** @deprecated */
-export const getServerFunctionMeta = getServerFunctionMeta_;
+export * from "./h3.js";
+
+/**
+ * Checks if user has set a redirect status in the response.
+ * If not, falls back to the 302 (temporary redirect)
+ */
+// export function getExpectedRedirectStatus(response: ResponseStub): number {
+//   if (response.status && validRedirectStatuses.has(response.status)) {
+//     return response.status;
+//   }
+
+//   return 302;
+// }
