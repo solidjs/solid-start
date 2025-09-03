@@ -33,25 +33,33 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
 
 /**
  *
+ *@info flattens, deduplicate by item.attrs.key and returns array of unique items respecting order of initial param.
+ */
+function dedupeAssets(assets: Asset[][]): Asset[] {
+  return [...new Map(assets.flat().map(item => [item.attrs.key, item])).values()];
+}
+
+/**
+ *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/start-server
  */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
-  const context = getRequestEvent() as PageEvent;
-  // @ts-ignore
+  const context = getRequestEvent() as PageEvent & { nonce?: string };
+
   const nonce = context.nonce;
 
   let assets: Asset[] = [];
   Promise.resolve().then(async () => {
     let assetPromises: Promise<Asset[]>[] = [];
-    // @ts-ignore
+    // @ts-expect-error - context.router is not typed
     if (context.router && context.router.matches) {
-      // @ts-ignore
+      // @ts-expect-error - context.router is not typed
       const matches = [...context.router.matches];
       while (matches.length && (!matches[0].info || !matches[0].info.filesystem)) matches.shift();
       const matched = matches.length && matchRoute(matches, context.routes);
       if (matched) {
         const inputs = import.meta.env.MANIFEST[import.meta.env.START_ISLANDS ? "ssr" : "client"]!
-        .inputs
+          .inputs;
         for (let i = 0; i < matched.length; i++) {
           const segment = matched[i];
           const part = inputs[segment["$component"].src]!;
@@ -59,15 +67,27 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         }
       } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
     }
-    assets = await Promise.all(assetPromises).then(a =>
-      // dedupe assets
-      [...new Map(a.flat().map(item => [item.attrs.key, item])).values()].filter(asset =>
-        import.meta.env.START_ISLANDS
-          ? false
-          : (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "modulepreload" &&
+    assets = await Promise.all(assetPromises).then(assetList => {
+      if (import.meta.env.START_ISLANDS) {
+        return [];
+      } else {
+        return dedupeAssets(assetList).filter(asset => {
+          const assetAttrs = asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>;
+
+          /**
+           * @info besides `modulepreload` we also want `stylesheet` to be preloaded during SSR.
+           * this will prevent FOUC on the client for non-global CSS.
+           */
+          const isPreloadOrStylesheet =
+            assetAttrs.rel === "modulepreload" || assetAttrs.rel === "stylesheet";
+
+          return (
+            isPreloadOrStylesheet &&
             !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
-      )
-    );
+          );
+        });
+      }
+    });
   });
 
   useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
