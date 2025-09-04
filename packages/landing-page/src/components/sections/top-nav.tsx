@@ -1,5 +1,4 @@
 import { DiscordIcon } from "../icons/discord-icon";
-import { ThemeToggle } from "../theme-toggle";
 
 export function TopNav() {
   return (
@@ -9,7 +8,7 @@ export function TopNav() {
           <DiscordIcon />
           <span class="sr-only">Invitation to SolidJS discord server</span>
         </a>
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
       </div>
     </nav>
   );
