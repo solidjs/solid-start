@@ -1,7 +1,7 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { join } from "pathe";
 import { Manifest } from "vite";
-import type { Asset } from "../renderAsset.tsx";
+import type { Asset } from "../assets/render.tsx";
 
 // Only reads from client manifest atm, might need server support for islands
 export function getSsrProdManifest() {
@@ -61,7 +61,7 @@ function createHtmlTagsForAssets(assets: string[]) {
 				href: '/' + asset,
 				key: asset,
 				...(asset.endsWith(".css")
-					? { rel: "stylesheet", fetchPriority: "high" }
+					? { rel: "stylesheet" }
 					: { rel: "modulepreload" }),
 			},
 		}));

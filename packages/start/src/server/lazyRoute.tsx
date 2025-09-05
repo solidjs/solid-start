@@ -1,5 +1,5 @@
 import { type Component, createComponent, type JSX, lazy, onCleanup } from "solid-js";
-
+import { useAssets } from "../shared/assets.ts";
 import { type Asset, renderAsset } from "./renderAsset.tsx";
 
 export default function lazyRoute<T extends Record<string, any>>(
@@ -59,8 +59,9 @@ export default function lazyRoute<T extends Record<string, any>>(
         preloadStyles(styles);
       }
       const Comp: Component<T> = props => {
+        useAssets(styles);
+
         return [
-          ...styles.map((asset: Asset) => renderAsset(asset)),
           createComponent(Component, props)
         ];
       };
