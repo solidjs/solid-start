@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 1.2.0
+
+### Minor Changes
+
+- b454563: adds the option to change the public directory to something other than the default "public"
+
+### Patch Changes
+
+- 7282ef4: fix: check for `null` instad of `undefined` in `HeaderProxy`
+
 ## 1.1.7
 
 ### Patch Changes
