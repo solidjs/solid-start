@@ -33,5 +33,5 @@ export const logout = action(async () => {
   "use server";
   const session = await getSession();
   await session.update({ id: undefined });
-  return redirect("/login", { revalidate: "session" });
+  throw redirect("/login", { revalidate: "session" });
 });
