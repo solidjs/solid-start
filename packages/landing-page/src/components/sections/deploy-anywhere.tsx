@@ -54,7 +54,7 @@ export function DeployAnywhere() {
     <section class="max-w-5xl pt-12 w-full mx-auto relative">
       <header>
         <SectionTitle>Deploy Anywhere</SectionTitle>
-        <p class="pt-5 px-2 leading-relaxed max-w-[70ch] mx-auto text-center dark:font-thin text-lg">
+        <p class="w-full sm:w-3/5 pt-5 px-2 leading-relaxed max-w-[70ch] mx-auto text-center dark:font-thin text-lg transition-all ease-in-out">
           On the shoulders of open-source. SolidStart can be deployed to every platform Nitro has a
           preset for.
         </p>

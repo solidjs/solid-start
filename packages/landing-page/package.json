@@ -4,19 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "vinxi dev",
-    "build": "vinxi build",
+    "build": "pnpm --filter @solidjs/start build && vinxi build",
     "start": "vinxi start"
   },
   "devDependencies": {
-    "@kobalte/core": "^0.13.1",
+    "@kobalte/core": "^0.13.11",
     "@kobalte/utils": "^0.9.0",
     "@tailwindcss/typography": "^0.5.16",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.5.1",
-    "tailwind-merge": "^2.6.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
-    "tinyglobby": "^0.2.2",
+    "tinyglobby": "^0.2.14",
     "tippy.js": "^6.3.7",
     "vinxi": "^0.5.3"
   },
@@ -26,7 +26,8 @@
     "@solidjs/start": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "solid-js": "^1.9.4",
-    "solid-transition-group": "^0.2.3"
+    "solid-js": "^1.9.9",
+    "solid-motionone": "^1.0.4",
+    "solid-transition-group": "^0.3.0"
   }
 }

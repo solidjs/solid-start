@@ -7,7 +7,7 @@ export function MetaFramework() {
     <section class="max-w-5xl w-full mx-auto pt-12 md:pt-28 group">
       <header>
         <SectionTitle>Composable Meta-framework</SectionTitle>
-        <p class="pt-5 px-2 leading-relaxed max-w-[70ch] mx-auto text-center dark:font-thin text-lg">
+        <p class="pt-5 px-2 leading-relaxed max-w-[70ch] mx-auto text-center dark:font-thin text-lg w-full md:w-3/5">
           SolidStart integrates multiple separate packages to provide a complete functionality. Each
           of these pieces can be replaced with your own implementation.
         </p>
