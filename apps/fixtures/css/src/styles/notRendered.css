@@ -1,0 +1,3 @@
+.notRendered {
+  background-color: var(--color-error);
+}
