@@ -151,6 +151,10 @@ export async function findStylesInModuleGraph(vite: ViteDevServer, id: string, s
   for (const dep of dependencies) {
     if (isCssFile(dep.url)) {
       let depURL = dep.url;
+      if (depURL.endsWith("?url")) {
+        continue;
+      }
+
       if (!isCssUrlWithoutSideEffects(depURL)) {
         depURL = injectQuery(dep.url, "inline");
       }
