@@ -1,5 +1,6 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { join } from "pathe";
+import { Manifest } from "vite";
 import type { Asset } from "../renderAsset.tsx";
 
 // Only reads from client manifest atm, might need server support for islands
@@ -70,7 +71,7 @@ const entryId = import.meta.env.START_CLIENT_ENTRY.slice(2);
 let entryImports: string[] | undefined = undefined;
 
 function findAssetsInViteManifest(
-	manifest: any,
+	manifest: Manifest,
 	id: string,
 	assetMap = new Map(),
 	stack: string[] = [],
@@ -99,10 +100,7 @@ function findAssetsInViteManifest(
 	// Chunks (e.g. routes) that import something from entry, should not render entry css redundantly
 	const excludeEntryImports = id !== entryId;
 
-	const assets = [
-		...(chunk.assets?.filter(Boolean) || []),
-		...(chunk.css?.filter(Boolean) || []),
-	];
+	const assets = chunk.css?.filter(Boolean) || [];
 	if (chunk.imports) {
 		stack.push(id);
 		for (let i = 0, l = chunk.imports.length; i < l; i++) {
