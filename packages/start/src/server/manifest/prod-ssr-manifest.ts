@@ -1,7 +1,8 @@
-import { clientViteManifest } from "solid-start:client-vite-manifest"
 import { join } from "pathe";
-import type { Asset } from "../renderAsset.jsx";
+import { clientViteManifest } from "solid-start:client-vite-manifest";
+import { Manifest } from "vite";
 import { CLIENT_BASE_PATH } from "../../constants.js";
+import type { Asset } from "../renderAsset.jsx";
 
 // Only reads from client manifest atm, might need server support for islands
 export function getSsrProdManifest() {
@@ -57,7 +58,7 @@ function createHtmlTagsForAssets(assets: string[]) {
     }));
 }
 
-function findAssetsInViteManifest(manifest: any, id: string, assetMap = new Map(), stack: string[] = []) {
+function findAssetsInViteManifest(manifest: Manifest, id: string, assetMap = new Map(), stack: string[] = []) {
   if (stack.includes(id)) {
     return [];
   }
@@ -72,13 +73,14 @@ function findAssetsInViteManifest(manifest: any, id: string, assetMap = new Map(
   }
 
   const assets = [
-    ...(chunk.assets?.filter(Boolean) || []),
+    // TODO: Needs a better way to detect ?url
+    ...(chunk.assets?.filter(a => !a.endsWith('.css')) || []),
     ...(chunk.css?.filter(Boolean) || [])
   ];
   if (chunk.imports) {
     stack.push(id);
     for (let i = 0, l = chunk.imports.length; i < l; i++) {
-      assets.push(...findAssetsInViteManifest(manifest, chunk.imports[i], assetMap, stack));
+      assets.push(...findAssetsInViteManifest(manifest, chunk.imports[i]!, assetMap, stack));
     }
     stack.pop();
   }
