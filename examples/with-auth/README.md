@@ -1,55 +1,41 @@
-# SolidStart
+# SolidStart Template
 
-Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
+The **with-auth** example demonstrates native, context-based authentication featuring OAuth and email-password login.
 
-## Creating a project
+## Installation
 
-```bash
-# create a new project in the current directory
-npm init solid@latest
-
-# create a new project in my-app
-npm init solid@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Generate the **with-auth** template using your preferred package manager
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# using npm
+npm create solid@latest -- -s -t with-auth
 ```
-
-## Env Vars
-
-Rename the example file and add your Discord OAuth credentials:
 
 ```bash
-# rename example environment file
-cp .env.example .env
+# using pnpm
+pnpm create solid@latest -s -t with-auth
 ```
 
-Edit `.env` with your values:
-
-```dotenv
-DISCORD_ID=your-discord-client-id
-DISCORD_SECRET=your-discord-client-secret
+```bash
+# using bun
+bun create solid@latest --s --t with-auth
 ```
 
-1. Create an application at [https://discord.com/developers/applications](https://discord.com/developers/applications) to obtain your client ID and secret.
-2. In the app's **OAuth2 → Redirects** settings, add:
+## Configuration
 
-   ```text
-   http://localhost:3000/api/oauth/discord
+1. Rename `.env.example` to `.env`
+
+2. For Discord OAuth2 to work, update `.env` with your credentials:
+
+   ```dotenv
+   DISCORD_ID=your-discord-client-id
+   DISCORD_SECRET=your-discord-client-secret
    ```
 
-For more details on the [start-oauth](https://github.com/thomasbuilds/start-oauth) integration, see the repository.
+   - Create a Discord application at [discord.com/developers/applications](https://discord.com/developers/applications) to get your Client ID and Secret.
+   - In the app's **OAuth2 → URL Generator** or **Redirects** section, add the following redirect URI:
+     ```
+     http://localhost:3000/api/oauth/discord
+     ```
 
-## Building
-
-Solid apps are built with _presets_, which optimise your project for deployment to different environments.
-
-By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different preset, add it to the `devDependencies` in `package.json` and specify in your `app.config.js`.
+3. To configure additional providers, refer to the [start-oauth](https://github.com/thomasbuilds/start-oauth#README) documentation

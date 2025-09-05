@@ -1,37 +1,50 @@
 import { useMatch } from "@solidjs/router";
 import { Show } from "solid-js";
-import { useSession } from "~/lib/Context";
+import { useAuth } from "~/components/Context";
 
 export default function Nav() {
-  const { signedIn, signOut } = useSession();
+  const { signedIn, logout } = useAuth();
   const isHome = useMatch(() => "/");
   const isAbout = useMatch(() => "/about");
 
   return (
-    <nav class="fixed top-0 left-0 w-full bg-sky-800 shadow-md z-50">
-      <ul class="container mx-auto flex items-center p-3">
-        <li
-          class={`mx-2 sm:mx-6 border-b-2 text-white ${
-            isHome() ? "border-sky-400" : "border-transparent hover:border-sky-500"
-          }`}
-        >
-          <a href="/">Home</a>
-        </li>
-        <li
-          class={`mx-2 sm:mx-6 border-b-2 text-white ${
-            isAbout() ? "border-sky-400 " : "border-transparent hover:border-sky-500"
-          }`}
-        >
-          <a href="/about">About</a>
-        </li>
-        <li class="ml-auto px-2 sm:px-6 text-white">
-          <Show when={signedIn()} fallback={<a href="/login">Login</a>}>
-            <button onclick={signOut} class="cursor-pointer">
-              Logout
-            </button>
-          </Show>
-        </li>
-      </ul>
+    <nav class="fixed top-0 left-0 w-full bg-sky-800 shadow-sm z-50 flex items-center justify-between py-3 px-4 font-medium text-sm">
+      <a
+        href="/"
+        class={`px-3 py-2 text-sky-100 uppercase transition-colors duration-200 border-b-2 ${
+          isHome() ? "border-sky-300 text-white" : "border-transparent hover:text-white"
+        }`}
+      >
+        Home
+      </a>
+      <a
+        href="/about"
+        class={`px-3 py-2 text-sky-100 uppercase transition-colors duration-200 border-b-2 ${
+          isAbout() ? "border-sky-300 text-white" : "border-transparent hover:text-white"
+        }`}
+      >
+        About
+      </a>
+      <Show
+        when={signedIn()}
+        fallback={
+          <a
+            href="/login"
+            class="ml-auto px-4 py-2 text-sky-100 bg-sky-700 border border-sky-600 rounded-md hover:bg-sky-600 hover:text-white focus:outline-none transition-colors duration-200"
+          >
+            Login
+          </a>
+        }
+      >
+        <form action={logout} method="post" class="ml-auto">
+          <button
+            type="submit"
+            class="px-4 py-2 text-sky-100 bg-sky-700 border border-sky-600 rounded-md hover:bg-sky-600 hover:text-white focus:outline-none transition-colors duration-200"
+          >
+            Sign Out
+          </button>
+        </form>
+      </Show>
     </nav>
   );
 }
