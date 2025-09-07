@@ -1,5 +1,5 @@
 /// <reference types="vinxi/types/server" />
-import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
+import { crossSerializeStream, Feature, fromJSON, getCrossReferenceHeader } from "seroval";
 // @ts-ignore
 import {
   CustomEventPlugin,
@@ -62,6 +62,7 @@ function serializeToStream(id: string, value: any) {
           URLSearchParamsPlugin,
           URLPlugin
         ],
+        disabledFeatures: import.meta.env.PROD ? Feature.ErrorPrototypeStack : undefined,
         onSerialize(data, initial) {
           controller.enqueue(
             createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data)
