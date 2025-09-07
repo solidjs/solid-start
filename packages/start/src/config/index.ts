@@ -170,7 +170,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
             "import.meta.env.START_APP_ENTRY": `"${normalizePath(appEntryPath)}"`,
             "import.meta.env.START_CLIENT_ENTRY": `"${normalizePath(handlers.client)}"`,
-            "import.meta.env.SERVER_BASE_URL": JSON.stringify(start.server.baseURL ?? ""),
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify((start.server as any).baseURL ?? ""),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
           }
         };

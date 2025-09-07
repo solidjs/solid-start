@@ -1,6 +1,6 @@
 import { H3Event } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createFetchEvent, getFetchEvent, mergeResponseHeaders } from "./fetchEvent";
+import { createFetchEvent, getFetchEvent, mergeResponseHeaders } from "./fetchEvent.js";
 
 vi.mock('h3', () => ({
   toWebRequest: vi.fn(),
