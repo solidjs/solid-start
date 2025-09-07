@@ -9,30 +9,42 @@
     "test:ci": "vitest run"
   },
   "exports": {
-    ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./config": {
-      "default": "./dist/config/index.js",
-      "types": "./dist/config/index.d.ts"
-    },
-    "./server": {
-      "default": "./dist/server/index.jsx",
-      "solid": "./dist/server/index.jsx",
-      "types": "./dist/server/index.d.ts"
-    },
-    "./client": {
-      "default": "./dist/client/index.jsx",
-      "types": "./dist/client/index.d.ts"
-    },
-    "./router": {
-      "default": "./dist/router.jsx",
-      "types": "./dist/router.d.ts"
-    },
-    "./server/spa": "./dist/server/spa/index.jsx",
-    "./client/spa": "./dist/client/spa/index.jsx",
-    "./middleware": "./dist/middleware/index.jsx"
+    ".": "./src/index.ts",
+    "./config": "./src/config/index.ts",
+    "./server": "./src/server/index.tsx",
+    "./client": "./src/client/index.tsx",
+    "./router": "./src/router.tsx",
+    "./server/spa": "./src/server/spa/index.tsx",
+    "./client/spa": "./src/client/spa/index.tsx",
+    "./middleware": "./src/middleware/index.tsx"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./config": {
+        "default": "./dist/config/index.js",
+        "types": "./dist/config/index.d.ts"
+      },
+      "./server": {
+        "solid": "./dist/server/index.jsx",
+        "types": "./dist/server/index.d.ts",
+        "default": "./dist/server/index.jsx"
+      },
+      "./client": {
+        "types": "./dist/client/index.d.ts",
+        "default": "./dist/client/index.jsx"
+      },
+      "./router": {
+        "types": "./dist/router.d.ts",
+        "default": "./dist/router.jsx"
+      },
+      "./server/spa": "./dist/server/spa/index.jsx",
+      "./client/spa": "./dist/client/spa/index.jsx",
+      "./middleware": "./dist/middleware/index.jsx"
+    }
   },
   "dependencies": {
     "@babel/core": "^7.28.3",
@@ -59,7 +71,7 @@
     "solid-js": "^1.9.9",
     "source-map-js": "^1.2.1",
     "terracotta": "^1.0.6",
-    "vite": "7.1.3",
+    "vite": "7.1.4",
     "vite-plugin-solid": "^2.11.6",
     "vitest": "3.0.5"
   },

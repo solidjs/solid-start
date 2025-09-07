@@ -1,7 +1,7 @@
-import { solidStart } from "@solidjs/start/config";
 import { defineConfig } from "vite";
 /* @ts-ignore */
 import pkg from "@vinxi/plugin-mdx";
+import { solidStart } from "../../packages/start/src/config";
 
 const { default: mdx } = pkg;
 export default defineConfig({
