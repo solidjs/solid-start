@@ -24,6 +24,7 @@ import {
   type Rollup,
   type ViteDevServer,
 } from "vite";
+import { VITE_ENVIRONMENTS } from "../constants.js";
 
 export const clientDistDir = "node_modules/.solid-start/client-dist";
 export const serverDistDir = "node_modules/.solid-start/server-dist";
@@ -47,7 +48,7 @@ export function nitroPlugin(
         return async () => {
           removeHtmlMiddlewares(viteDevServer);
 
-          const serverEnv = viteDevServer.environments.server;
+          const serverEnv = viteDevServer.environments[VITE_ENVIRONMENTS.server];
 
           if (!serverEnv) throw new Error("Server environment not found");
           if (!isRunnableDevEnvironment(serverEnv))

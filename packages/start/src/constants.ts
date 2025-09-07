@@ -9,3 +9,8 @@ export const VIRTUAL_MODULES = {
   middleware: "solid-start:middleware",
   serverFnManifest: "solidstart:server-fn-manifest"
 } as const;
+
+export const VITE_ENVIRONMENTS = {
+  client: "client",
+  server: "ssr"
+}

@@ -26,13 +26,13 @@ function setupWatcher(watcher: FSWatcher, routes: CompiledRouter): void {
 function createRoutesReloader(
   server: ViteDevServer,
   routes: CompiledRouter,
-  environment: "client" | "server"
+  environment: "client" | "ssr"
 ): () => void {
   routes.addEventListener("reload", handleRoutesReload);
   return () => routes.removeEventListener("reload", handleRoutesReload);
 
   function handleRoutesReload(): void {
-    if (environment === "server") {
+    if (environment === "ssr") {
       // Handle server environment HMR reload
       const serverEnv = server.environments.server;
       if (serverEnv && serverEnv.moduleGraph) {
@@ -61,7 +61,7 @@ function createRoutesReloader(
 }
 
 export const fileSystemWatcher = (
-  routers: Record<"client" | "server", BaseFileSystemRouter>
+  routers: Record<"client" | "ssr", BaseFileSystemRouter>
 ): PluginOption => {
   const plugin: PluginOption = {
     name: "fs-watcher",

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { normalizePath, type PluginOption, type Rollup, type ViteDevServer } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
-import { CLIENT_BASE_PATH, DEFAULT_EXTENSIONS, VIRTUAL_MODULES } from "../constants.js";
+import { CLIENT_BASE_PATH, DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "../constants.js";
 import { isCssModulesFile } from "../server/collect-styles.js";
 import { getSsrDevManifest } from "../server/manifest/dev-ssr-manifest.js";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
@@ -108,7 +108,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
         return {
           base: env.command === "build" ? `/${CLIENT_BASE_PATH}` : undefined,
           environments: {
-            client: {
+            [VITE_ENVIRONMENTS.client]: {
               consumer: "client",
               build: {
                 copyPublicDir: false,
@@ -125,7 +125,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
                 }
               }
             },
-            server: {
+            [VITE_ENVIRONMENTS.server]: {
               consumer: "server",
               build: {
                 ssr: true,
@@ -184,7 +184,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
             dir: absolute(routeDir, root),
             extensions
           }),
-        server:
+        ssr:
           new SolidStartServerFileRouter({
             dir: absolute(routeDir, root),
             extensions,
@@ -199,6 +199,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
       // our server function manifest and resolve its module
       manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
       client: {
+        envName: VITE_ENVIRONMENTS.client,
         getRuntimeCode: () =>
           `import { createServerReference } from "${normalize(
             fileURLToPath(new URL("../server/server-runtime.js", import.meta.url))
@@ -207,6 +208,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
           `createServerReference(${() => { }}, '${opts.functionId}', '${opts.extractedFilename}')`
       },
       server: {
+        envName: VITE_ENVIRONMENTS.server,
         getRuntimeCode: () =>
           `import { createServerReference } from '${normalize(
             fileURLToPath(new URL("../server/server-fns-runtime.js", import.meta.url))
@@ -221,11 +223,11 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
       async resolveId(id) {
         if (id === VIRTUAL_MODULES.clientViteManifest) return `\0${VIRTUAL_MODULES.clientViteManifest}`;
         if (id === VIRTUAL_MODULES.getClientManifest)
-          return new URL("../server/manifest/client-manifest.js", import.meta.url).pathname;
+          return this.resolve(new URL("../server/manifest/client-manifest", import.meta.url).pathname);
         if (id === VIRTUAL_MODULES.getManifest) {
           return this.environment.config.consumer === "client" ?
-            new URL("../server/manifest/client-manifest.js", import.meta.url).pathname :
-            new URL("../server/manifest/ssr-manifest.js", import.meta.url).pathname;
+            this.resolve(new URL("../server/manifest/client-manifest", import.meta.url).pathname) :
+            this.resolve(new URL("../server/manifest/ssr-manifest", import.meta.url).pathname);
         }
         if (id === VIRTUAL_MODULES.middleware) {
           if (start.middleware) return await this.resolve(start.middleware);

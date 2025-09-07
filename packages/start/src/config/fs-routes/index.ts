@@ -8,7 +8,7 @@ import { treeShake } from "./tree-shake.js";
 export const moduleId = "solid-start:routes";
 
 export interface FsRoutesArgs {
-  routers: Record<"client" | "server", BaseFileSystemRouter>;
+  routers: Record<"client" | "ssr", BaseFileSystemRouter>;
 }
 
 export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
