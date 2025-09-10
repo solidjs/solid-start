@@ -50,6 +50,9 @@ export default function App() {
             <li>
               <a href="/generator-server-function">generator server function</a>
             </li>
+            <li>
+              <a href="/referencing-multiple-export-named-functions-in-the-same-file">referencing multiple export named functions in the same file</a>
+            </li>
           </ul>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>

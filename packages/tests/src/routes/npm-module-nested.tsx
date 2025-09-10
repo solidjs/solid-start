@@ -11,8 +11,8 @@ export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithNpmModule?: number[] }>({});
 
   createEffect(async () => {
-    const restult = await serverFnWithNpmModule();
-    setOutput(prev => ({ ...prev, serverFnWithNpmModule: restult }));
+    const result = await serverFnWithNpmModule();
+    setOutput(prev => ({ ...prev, serverFnWithNpmModule: result }));
   });
 
   return (
