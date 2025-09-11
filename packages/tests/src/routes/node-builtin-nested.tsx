@@ -13,8 +13,8 @@ export default function App() {
  
 
   createEffect(async () => {
-    const restult = await serverFnWithNodeBuiltin();
-    setOutput(prev => ({ ...prev, serverFnWithNodeBuiltin: restult }));
+    const result = await serverFnWithNodeBuiltin();
+    setOutput(prev => ({ ...prev, serverFnWithNodeBuiltin: result }));
   });
 
   return (

@@ -12,8 +12,8 @@ export default function App() {
 
 
   createEffect(async () => {
-    const restult = await serverFnWithIsServer();
-    setOutput(prev => ({ ...prev, serverFnWithIsServer: restult }));
+    const result = await serverFnWithIsServer();
+    setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
   });
 
 
