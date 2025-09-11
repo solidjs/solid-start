@@ -1,5 +1,19 @@
 # @solidjs/start
 
+## 1.2.0
+
+### Minor Changes
+
+- b454563: adds the option to change the public directory to something other than the default "public"
+
+### Patch Changes
+
+- 7282ef4: fix: check for `null` instad of `undefined` in `HeaderProxy`
+- 12f3a3d: Handle multiple exports from the same file in fs-router
+- 222c8fc: Enhance route matching to return `isPage` flag and add tests for plain text API response and Missing page handling that has both api/file routes.
+- f674717: delete expired cookies in Single-Flight requests
+- 12f3a3d: Add a test route for multiple exports handling and correct variable typos
+
 ## 1.1.7
 
 ### Patch Changes
