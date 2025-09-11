@@ -27,6 +27,10 @@ jobs:
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile
 
+      - name: Rewrite exports
+        working-directory: packages/start
+        run: echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1

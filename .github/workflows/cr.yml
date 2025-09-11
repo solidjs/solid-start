@@ -34,5 +34,9 @@ jobs:
       - name: Build start
         run: pnpm run packages:build
 
+      - name: Rewrite exports
+        working-directory: packages/start
+        run: echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
+
       - name: Release
         run: pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact

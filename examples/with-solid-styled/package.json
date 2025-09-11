@@ -12,7 +12,7 @@
     "solid-js": "^1.9.5",
     "solid-styled": "^0.12.0",
     "unplugin-solid-styled": "^0.12.0",
-    "vite": "^7.1.3"
+    "vite": "^7.1.4"
   },
   "engines": {
     "node": ">=22"
