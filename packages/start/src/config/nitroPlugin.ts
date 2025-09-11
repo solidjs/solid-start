@@ -1,5 +1,3 @@
-import { promises as fsp } from "node:fs";
-import path, { dirname, resolve } from "node:path";
 import {
   createApp,
   createEvent,
@@ -16,6 +14,8 @@ import {
   prepare,
   prerender,
 } from "nitropack";
+import { promises as fsp } from "node:fs";
+import path, { dirname, resolve } from "node:path";
 import {
   type Connect,
   type EnvironmentOptions,
@@ -129,7 +129,7 @@ export function nitroPlugin(
     {
       name: "solid-start-vite-plugin-nitro",
       configEnvironment(name) {
-        if (name === "server") {
+        if (name === VITE_ENVIRONMENTS.server) {
           return {
             build: {
               commonjsOptions: {
@@ -151,8 +151,8 @@ export function nitroPlugin(
           builder: {
             sharedPlugins: true,
             async buildApp(builder) {
-              const clientEnv = builder.environments["client"];
-              const serverEnv = builder.environments["server"];
+              const clientEnv = builder.environments[VITE_ENVIRONMENTS.client];
+              const serverEnv = builder.environments[VITE_ENVIRONMENTS.server];
 
               if (!clientEnv) throw new Error("Client environment not found");
               if (!serverEnv) throw new Error("SSR environment not found");

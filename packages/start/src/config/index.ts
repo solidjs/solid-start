@@ -83,7 +83,7 @@ function solidStartVitePlugin(options?: SolidStartOptions): Array<PluginOption> 
       configEnvironment(name) {
         return {
           define: {
-            "import.meta.env.SSR": JSON.stringify(name === "server")
+            "import.meta.env.SSR": JSON.stringify(name === VITE_ENVIRONMENTS.server)
           }
         };
       },
