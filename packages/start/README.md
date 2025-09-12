@@ -1,6 +1,6 @@
-[![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
-
 <div align="center">
+
+[![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
 
 [![Version](https://img.shields.io/npm/v/@solidjs/start.svg?style=for-the-badge&color=blue&logo=npm)](https://npmjs.com/package/@solidjs/start)
 [![Downloads](https://img.shields.io/npm/dm/@solidjs/start.svg?style=for-the-badge&color=green&logo=npm)](https://npmjs.com/package/@solidjs/start)
