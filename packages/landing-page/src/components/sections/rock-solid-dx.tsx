@@ -30,7 +30,7 @@ export function RockSolidDX() {
         </BentoItem>
         <BentoItem accent="emerald" title="Server Actions">
           <p>
-            Form actions running on the server with code co-location and all the bells, whisltles,
+            Form actions running on the server with code co-location and all the bells, whistles,
             and whimsy you need.
           </p>
         </BentoItem>
