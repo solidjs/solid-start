@@ -1,66 +1,101 @@
 import { createRenderEffect, createResource, onCleanup, sharedConfig } from "solid-js";
-import { isServer, useAssets } from "solid-js/web";
+import { getRequestEvent, isServer, useAssets } from "solid-js/web";
 import { renderAsset, type Asset } from "../server/renderAsset.jsx";
 
-const instances: Record<string, { uses: number; el: HTMLElement }> = {};
-export const mountAssets = (assets: Asset[]) => {
+const CANCEL_EVENT = "cancel";
+const EVENT_REGISTRY = Symbol("assetRegistry");
+const NOOP = () => "";
+
+type AssetEntity = { key: string; consumers: number; el?: HTMLElement; ssrIdx?: number };
+type Registry = Record<string, AssetEntity>;
+type AttrKeys = keyof Asset["attrs"];
+
+const globalRegistry: Registry = {};
+
+const getEntity = (registry: Registry, asset: Asset) => {
+  let key = asset.tag;
+  for (const k of Object.keys(asset.attrs)) {
+    if (k === "key") continue;
+    key += `[${k}='${asset.attrs[k as keyof Asset["attrs"]]}']`;
+  }
+
+  const entity = (registry[key] ??= {
+    key,
+    consumers: 0,
+    el: isServer ? undefined : (document.querySelector("head " + key) as HTMLElement)
+  });
+
+  return entity;
+};
+
+export const mountAssets = (
+  assets: Asset[],
+  { unmount = true, nonce }: { unmount?: boolean; nonce?: string } = {}
+) => {
   if (!assets.length) return;
 
-  if (isServer) {
-    useAssets(() => assets.map((asset: Asset) => renderAsset(asset)));
-    const a: [] = (sharedConfig.context as any).assets;
-    const index = a.length - 1;
-    onCleanup(() => {
-      // TODO: index is not properly tracked!
-      a.splice(index, assets.length);
-    });
-    return;
-  }
+  const registry: Registry = isServer
+    ? (getRequestEvent()!.locals[EVENT_REGISTRY] ??= {})
+    : globalRegistry;
+  const ssrRequestAssets: Function[] = (sharedConfig.context as any)?.assets;
+  const cssKeys: string[] = [];
 
-  const keys: string[] = [];
   for (const asset of assets) {
-    const attrs = Object.entries(asset.attrs);
-    let key = asset.tag;
-    for (const [k, v] of attrs) {
-      if (k === "key") continue;
-      key += `[${k}='${v}']`;
+    const entity = getEntity(registry, asset);
+    const isCSS = asset.tag === "link" && asset.attrs.rel === "stylesheet";
+    if (isCSS && entity.el?.dataset.keep != "") {
+      cssKeys.push(entity.key);
     }
-    keys.push(key);
 
-    console.log("mount", key);
+    entity.consumers++;
+    if (entity.consumers > 1 || entity.el) continue;
 
-    const ssrEl = document.querySelector("head " + key) as HTMLElement;
-    const instance = (instances[key] ??= {
-      uses: 0,
-      el: ssrEl ?? document.createElement(asset.tag)
-    });
-    instance.uses++;
+    // Mounting logic
+    if (isServer) {
+      if (!unmount && isCSS) {
+        asset.attrs["data-keep" as AttrKeys] = "";
+      }
+      useAssets(() => renderAsset(asset, nonce));
+      entity.ssrIdx = ssrRequestAssets.length - 1;
+    } else {
+      const el = (entity.el = document.createElement(asset.tag));
 
-    if (instance.uses > 1 || ssrEl) continue;
+      if (isCSS) {
+        const [r] = createResource(() => {
+          return new Promise(res => {
+            el.addEventListener("load", res, { once: true });
+            el.addEventListener(CANCEL_EVENT, res, { once: true });
+            el.addEventListener("error", res, { once: true });
+          });
+        });
+        createRenderEffect(r);
+      }
 
-    const [r] = createResource(() => {
-      return new Promise(res => {
-        instance.el.addEventListener("load", res, { once: true });
-        instance.el.addEventListener("error", res, { once: true });
-      });
-    });
-    createRenderEffect(r);
-
-    for (const [k, v] of attrs) {
-      if (k === "key") continue;
-      instance.el.setAttribute(k, v);
+      for (const k of Object.keys(asset.attrs)) {
+        if (k === "key") continue;
+        el.setAttribute(k, asset.attrs[k as AttrKeys]);
+      }
+      document.head.appendChild(el);
     }
-    document.head.append(instance.el);
   }
 
+  // Unmounting logic
+  if (!unmount) return;
   onCleanup(() => {
-    for (const key of keys) {
-      const instance = instances[key]!;
-      instance.uses--;
-      if (instance.uses === 0) {
-        console.log("unmount", key);
-        instance.el.remove();
-        delete instances[key];
+    for (const key of cssKeys) {
+      const entity = registry[key]!;
+      entity.consumers--;
+      if (entity.consumers != 0) {
+        continue;
+      }
+
+      if (isServer) {
+        // Ideally this logic should be implemented directly in dom-expressions
+        ssrRequestAssets.splice(entity.ssrIdx!, 1, NOOP);
+      } else {
+        entity.el!.dispatchEvent(new CustomEvent(CANCEL_EVENT));
+        entity.el!.remove();
+        delete registry[key];
       }
     }
   });
