@@ -10,10 +10,11 @@ import {
   useAssets
 } from "solid-js/web";
 
+import { mountAssets } from "../shared/css.js";
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
+import { getSsrManifest } from "./manifest/ssr-manifest.js";
 import { renderAsset } from "./renderAsset.jsx";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
-import { getSsrManifest } from "./manifest/ssr-manifest.js";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -73,18 +74,14 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
     .catch(console.error);
 
   useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));
+  mountAssets(context.assets,  { unmount: false, nonce });
 
   return (
     <NoHydration>
       {docType as unknown as any}
       <TopErrorBoundary>
         <props.document
-          assets={
-            <>
-              <HydrationScript />
-              {context.assets.map((m: any) => renderAsset(m, nonce))}
-            </>
-          }
+          assets={<HydrationScript />}
           scripts={
             <>
               <script

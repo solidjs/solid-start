@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-success: var(--color-emerald-700);
+  --color-error: var(--color-rose-700);
+  --color-warn: var(--color-orange-500);
+}
+
+@layer base {
+  body {
+    @apply bg-gray-800 text-gray-100;
+  }
+
+  a {
+    @apply text-sky-400 underline underline-offset-4 hover:no-underline;
+  }
+
+  h1 {
+    @apply text-2xl font-bold;
+  }
+}

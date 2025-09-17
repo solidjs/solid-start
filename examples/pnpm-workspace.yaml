@@ -6,6 +6,7 @@ packages:
   - ./experiments
   - ./notes
   - ./bare
+  - ./css-garden
   - ./with-auth
   - ./with-authjs
   - ./with-drizzle
