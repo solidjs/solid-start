@@ -44,7 +44,7 @@ export function createBaseHandler(
         }
 
         // api
-        const match = matchAPIRoute(new URL(event.request.url).pathname, event.request.method);
+        const match = matchAPIRoute(event.nativeEvent.path, event.request.method);
         if (match) {
           const mod = await match.handler.import();
           const fn =
