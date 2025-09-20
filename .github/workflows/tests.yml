@@ -43,19 +43,17 @@ jobs:
       - name: E2E Chromium
         uses: cypress-io/github-action@v6
         with:
-          project: ./packages/tests
+          project: ./apps/tests
           install: false
           start: pnpm --filter tests start --host 127.0.0.1 --port 3000
-          wait-on: 'http://127.0.0.1:3000'
+          wait-on: "http://127.0.0.1:3000"
           browser: chromium
 
       - name: E2E Firefox
         uses: cypress-io/github-action@v6
         with:
-          project: ./packages/tests
+          project: ./apps/tests
           install: false
           start: pnpm --filter tests start --host 127.0.0.1 --port 3000
-          wait-on: 'http://127.0.0.1:3000'
+          wait-on: "http://127.0.0.1:3000"
           browser: firefox
-
-

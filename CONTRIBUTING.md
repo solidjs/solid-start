@@ -47,12 +47,11 @@ Then reinstall dependencies and rebuild.
 SolidStart is a pnpm-based monorepo with nested workspaces. Key directories include
 
 - **`packages/start`**: The core `@solidjs/start` package.
-- **`packages/landing-page`**: The official landing page.
-- **`examples/`**: Example projects for testing (a nested workspace; see details below).
-- **`packages/tests`**: Unit and end-to-end (E2E) tests using Vitest and Cypress.
+- **`apps/landing-page`**: The official landing page.
+- **`apps/e2e`**: Unit and end-to-end (E2E) tests using Vitest and Cypress.
+- **`apps/fixtures`**: Fixture projects for testing.
 
-Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific packages.  
-The `examples/` directory is a separate workspace with its own `pnpm-workspace.yaml` and `pnpm-lock.yaml`.
+Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific packages.
 
 ## Developing and Testing Changes
 
@@ -68,11 +67,9 @@ The `examples/` directory is a separate workspace with its own `pnpm-workspace.y
 
 3. Test your changes
 
-   - For examples
+   - For fixtures, pick the name of the fixture and run the `dev` with workspace filtering.
      ```bash
-     cd examples
-     pnpm install
-     pnpm --filter example-hackernews run dev # Runs the HackerNews example
+     pnpm --filter fixture-basic dev
      ```
    - For the landing page (from the root directory)
      ```bash
@@ -88,7 +85,7 @@ The `examples/` directory is a separate workspace with its own `pnpm-workspace.y
 
 ## Running Tests
 
-Tests are located in `packages/tests`, using Vitest for unit tests and Cypress for E2E tests.
+End-to-end tests are located in `apps/tests` projects. For manual testing and development there's the `apps/fixtures` apps, and finally, integration and unit tests live inside their respective packages.
 
 1. Install the Cypress binary (required only once)
 
@@ -114,31 +111,13 @@ Tests are located in `packages/tests`, using Vitest for unit tests and Cypress f
 4. Run E2E tests
 
    ```bash
-   pnpm --filter tests run e2e:run
+   pnpm --filter tests run tests:run
    ```
 
-   - Interactive mode: `pnpm --filter tests run e2e:open`
-   - With dev server: `pnpm --filter tests run e2e`
+   - Interactive mode: `pnpm --filter tests run tests:open`
+   - With dev server: `pnpm --filter tests run tests`
 
 5. Clean test artifacts
    ```bash
    pnpm run clean:test
    ```
-
-## Using SolidStart in Your Own Monorepo
-
-When integrating `@solidjs/start` into your own monorepo (e.g. using Yarn workspaces), configure dependency hoisting to ensure proper resolution. This helps runtime components (e.g. `client/index.tsx`) resolve correctly in generated files like `index.html`.
-
-### Yarn v2+
-
-In the project root's `package.json`
-
-```jsonc
-{
-  "installConfig": {
-    "hoistingLimits": "dependencies"
-  }
-}
-```
-
-For pnpm monorepos, define workspaces in `pnpm-workspace.yaml`. If you encounter resolution issues (e.g. missing modules like `h3` from Vinxi), add `shamefully-hoist=true` to your `.npmrc` file. Test for duplicates and adjust configurations as necessary.
