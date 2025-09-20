@@ -1,6 +1,6 @@
 {
   "name": "solid-start-monorepo",
-  "description": "Official starter for SolidJS",
+  "description": "monorepo for the SolidStart ecosystem",
   "version": "0.2.0",
   "author": "Ryan Carniato",
   "type": "module",
@@ -23,12 +23,8 @@
     "lp:clean": "pnpx rimraf ./packages/landing-page/node_modules ./packages/landing-page/.vinxi/ ./packages/landing-page/.output/",
     "packages:build": "pnpm --filter @solidjs/start build",
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
-    "install:playwright": "pnpm --filter solid-start-tests run install:playwright",
     "clean:test": "pnpx rimraf .tmp",
-    "test:all": "pnpm run clean:test && cross-env START_ADAPTER=solid-start-node npm run test",
-    "test": "pnpm run clean:test && pnpm --filter solid-start-tests test --",
-    "release": "pnpm build && changeset publish",
-    "show:test-report": "pnpm --filter solid-start-tests show:test-report"
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
