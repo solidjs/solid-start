@@ -1,8 +1,7 @@
 "use server";
 
-import { join } from 'node:path';
+import { join } from "node:path";
 
 export function serverFnWithNodeBuiltin() {
-
-  return join('can','externalize');
+  return join("can", "externalize");
 }

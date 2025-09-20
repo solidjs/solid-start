@@ -47,6 +47,7 @@ jobs:
           install: false
           start: pnpm --filter tests start --host 127.0.0.1 --port 3000
           wait-on: "http://127.0.0.1:3000"
+          wait-on-timeout: 120
           browser: chromium
 
       - name: E2E Firefox
@@ -56,4 +57,5 @@ jobs:
           install: false
           start: pnpm --filter tests start --host 127.0.0.1 --port 3000
           wait-on: "http://127.0.0.1:3000"
+          wait-on-timeout: 120
           browser: firefox
