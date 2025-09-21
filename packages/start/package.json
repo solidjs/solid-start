@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "type": "module",
   "author": "Ryan Carniato",
   "license": "MIT",
@@ -16,7 +16,9 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "node build && pnpm tsc"
+    "build": "node build && pnpm tsc",
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "files": [
     "config",
@@ -60,12 +62,14 @@
   },
   "devDependencies": {
     "solid-js": "^1.9.5",
-    "vinxi": "^0.5.7"
+    "vinxi": "^0.5.7",
+    "vitest": "3.0.5"
   },
   "dependencies": {
     "@tanstack/server-functions-plugin": "1.121.21",
     "@vinxi/plugin-directives": "^0.5.0",
     "@vinxi/server-components": "^0.5.0",
+    "cookie-es": "^2.0.0",
     "defu": "^6.1.2",
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",

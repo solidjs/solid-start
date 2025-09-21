@@ -1,10 +1,14 @@
 [![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
 
-[![Version](https://img.shields.io/npm/v/@solidjs/start.svg?style=for-the-badge&color=blue)](https://www.npmjs.com/package/@solidjs/start)
-[![Downloads](https://img.shields.io/npm/dm/@solidjs/start.svg?style=for-the-badge&color=green)](https://www.npmjs.com/package/@solidjs/start)
-[![Stars](https://img.shields.io/github/stars/solidjs/solid-start?style=for-the-badge&color=yellow)](https://github.com/solidjs/solid-start)
-[![Discord](https://img.shields.io/discord/722131463138705510?style=for-the-badge&color=5865F2)](https://discord.com/invite/solidjs)
-[![Reddit](https://img.shields.io/reddit/subreddit-subscribers/solidjs?style=for-the-badge&color=FF4500)](https://www.reddit.com/r/solidjs/)
+<div align="center">
+
+[![Version](https://img.shields.io/npm/v/@solidjs/start.svg?style=for-the-badge&color=blue&logo=npm)](https://npmjs.com/package/@solidjs/start)
+[![Downloads](https://img.shields.io/npm/dm/@solidjs/start.svg?style=for-the-badge&color=green&logo=npm)](https://npmjs.com/package/@solidjs/start)
+[![Stars](https://img.shields.io/github/stars/solidjs/solid-start?style=for-the-badge&color=yellow&logo=github)](https://github.com/solidjs/solid-start)
+[![Discord](https://img.shields.io/discord/722131463138705510?label=join&style=for-the-badge&color=5865F2&logo=discord&logoColor=white)](https://discord.com/invite/solidjs)
+[![Reddit](https://img.shields.io/reddit/subreddit-subscribers/solidjs?label=join&style=for-the-badge&color=FF4500&logo=reddit&logoColor=white)](https://reddit.com/r/solidjs)
+
+</div>
 
 **SolidStart** brings fine-grained reactivity fullstack with full flexibility. Built with features like unified rendering and isomorphic code execution, SolidStart enables you to create highly performant and scalable web applications.
 
@@ -15,7 +19,7 @@ Explore the official [documentation](https://docs.solidjs.com/solid-start) for d
 - **All Rendering Modes**:
   - Server-Side Rendering _(SSR)_ with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler)
   - Client-Side Rendering _(CSR)_
-  - Static Site Generation _(SSG)_
+  - Static Site Generation _(SSG)_ with route [pre-rendering](https://docs.solidjs.com/solid-start/building-your-application/route-prerendering)
 - **TypeScript**: Full integration for robust, type-safe development
 - **File-Based Routing**: Intuitive routing based on your project’s file structure
 - **API Routes**: Dedicated server-side endpoints for seamless API development
@@ -27,35 +31,21 @@ Explore the official [documentation](https://docs.solidjs.com/solid-start) for d
 
 ### Installation
 
-Create a template project with your preferred package manager
+Create a SolidStart template project with your preferred package manager
 
 ```bash
 # using npm
-npm create solid@latest -- --solidstart
+npm create solid@latest -- -s
 ```
 
 ```bash
 # using pnpm
-pnpm create solid@latest --solidstart
+pnpm create solid@latest -s
 ```
 
 ```bash
 # using bun
-bun create solid@latest --solidstart
-```
-
-1. Follow the CLI prompts to set up your project
-2. Navigate to your project directory and install the dependencies
-
-```bash
-cd <project-name>
-npm install # or pnpm install or bun install
-```
-
-3. Start the development server
-
-```bash
-npm run dev # or pnpm dev or bun dev
+bun create solid@latest --s
 ```
 
 ### Project Structure
@@ -68,7 +58,7 @@ npm run dev # or pnpm dev or bun dev
   - `entry-server.tsx`: Manages server-side request handling
 - **Configuration Files**: `app.config.ts`, `package.json`, and more
 
-Learn more about routing in the [documentation](https://docs.solidjs.com/solid-start/building-your-application/routing).
+Learn more about [routing](https://docs.solidjs.com/solid-start/building-your-application/routing)
 
 ## Adapters
 
@@ -79,14 +69,14 @@ import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
   ssr: true, // false for client-side rendering only
-  server: { preset: "vercel" },
+  server: { preset: "vercel" }
 });
 ```
 
-Presets also include runtimes like Node.js, Bun or Deno. For example, the `node-server` preset enables hosting on your server.
-Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config).
+Presets also include runtimes like Node.js, Bun or Deno. For example, a preset like `node-server` enables hosting on your server.  
+Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config)
 
-## Building for Production
+## Building
 
 Generate production-ready bundles
 
@@ -95,77 +85,3 @@ npm run build # or pnpm build or bun build
 ```
 
 After the build completes, you’ll be guided through deployment for your specific preset.
-
-## Contributing
-
-Join the SolidJS community and contribute!
-
-- [Discord](https://discord.com/invite/solidjs): Ask for help and discuss ideas
-- [Issues](https://github.com/solidjs/solid-start/issues): Report bugs or suggest features
-- [Docs Issues](https://github.com/solidjs/solid-docs/issues): Report documentation issues
-
-<details>
-  <summary><h3>Development Setup</h3></summary>
-
-Use a Node.js version manager compatible with `.node-version`. We recommend [asdf-vm](https://asdf-vm.com/) for macOS and Linux users.
-
-### Monorepo & Package Manager
-
-SolidStart uses `pnpm` as the package manager. Install it globally:
-
-```bash
-npm install -g pnpm
-```
-
-Install dependencies for the monorepo:
-
-```bash
-pnpm install
-```
-
-Build the project:
-
-```bash
-pnpm build
-```
-
-### Monorepo & `package.json` Workspaces
-
-If using a monorepo with `package.json` `"workspaces"` (e.g., [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)), ensure `@solidjs/start` is not hoisted. Add it to the `"nohoist"` field in the workspace root or project root:
-
-**Workspace Root Example**:
-
-```jsonc
-{
-  "workspaces": {
-    "packages": [
-      /* ... */
-    ],
-    "nohoist": ["**/@solidjs/start"]
-  }
-}
-```
-
-**Project Root Example**:
-
-```jsonc
-{
-  "workspaces": {
-    "nohoist": ["@solidjs/start"]
-  }
-}
-```
-
-For **Yarn v2+**, use `installConfig` to prevent hoisting:
-
-```jsonc
-{
-  "installConfig": {
-    "hoistingLimits": "dependencies"
-  }
-}
-```
-
-**Note**: Add `@solidjs/start` as a `devDependency` in the child `package.json` to ensure the `/node_modules/@solidjs/start/runtime/entry.jsx` script is available.
-
-</details>

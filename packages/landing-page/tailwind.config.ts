@@ -20,9 +20,18 @@ export default {
         "accordion-up": {
           from: { height: "var(--kb-accordion-content-height)" },
           to: { height: "0" }
+        },
+        "shiny-text": {
+          "0%, 90%, 100%": {
+            backgroundPosition: "calc(-100% - var(--shiny-width)) 0"
+          },
+          "30%, 60%": {
+            backgroundPosition: "calc(100% + var(--shiny-width)) 0"
+          }
         }
       },
       animation: {
+        "shiny-text": "shiny-text 8s infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out"
       }
