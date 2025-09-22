@@ -69,7 +69,7 @@ import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
   ssr: true, // false for client-side rendering only
-  server: { preset: "vercel" }
+  server: { preset: "netlify" }
 });
 ```
 

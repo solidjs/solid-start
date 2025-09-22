@@ -48,7 +48,7 @@ SolidStart is a pnpm-based monorepo with nested workspaces. Key directories incl
 
 - **`packages/start`**: The core `@solidjs/start` package.
 - **`apps/landing-page`**: The official landing page.
-- **`apps/e2e`**: Unit and end-to-end (E2E) tests using Vitest and Cypress.
+- **`apps/tests`**: Unit and end-to-end (E2E) tests using Vitest and Cypress.
 - **`apps/fixtures`**: Fixture projects for testing.
 
 Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific packages.
