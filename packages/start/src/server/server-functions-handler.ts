@@ -1,3 +1,4 @@
+import { parseSetCookie } from "cookie-es";
 // @ts-ignore - seroval exports issue with NodeNext
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
 // @ts-ignore
@@ -311,9 +312,16 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   }
   SetCookies.forEach(cookie => {
     if (!cookie) return;
-    const keyValue = cookie.split(";")[0]!;
-    const [key, value] = keyValue.split("=");
-    key && value && (cookies[key] = value);
+    const { maxAge, expires, name, value } = parseSetCookie(cookie);
+    if (maxAge != null && maxAge <= 0) {
+      delete cookies[name];
+      return;
+    }
+    if (expires != null && expires.getTime() <= Date.now()) {
+      delete cookies[name];
+      return;
+    }
+    cookies[name] = value;
   });
   Object.entries(cookies).forEach(([key, value]) => {
     headers.append("cookie", `${key}=${value}`);

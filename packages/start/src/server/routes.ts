@@ -94,15 +94,29 @@ export function matchAPIRoute(path: string, method: string): {
   handler: {
     import: () => Promise<Record<string, (e: FetchEvent) => Promise<any>>>
   }
+  isPage: boolean
 } | undefined {
   const match = router.lookup(path);
   if (match && match.route) {
-    const handler =
-      method === "HEAD" ? match.route["$HEAD"] || match.route["$GET"] : match.route[`$${method}`];
+    const route = match.route;
+
+    // Find the appropriate handler for the HTTP method
+    const handler = method === "HEAD"
+      ? route.$HEAD || route.$GET
+      : route[`$${method}`];
+
     if (handler === undefined) return;
+
+    // Check if this is a page route
+    const isPage = route.page === true && route.$component !== undefined;
+
+    // Return comprehensive route information
     return {
       handler,
-      params: match.params
+      params: match.params,
+      isPage
     };
   }
+
+  return undefined;
 }

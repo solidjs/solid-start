@@ -1,4 +1,4 @@
-import { analyzeModule, BaseFileSystemRouter, cleanPath } from "vinxi/fs-router";
+import {analyzeModule, BaseFileSystemRouter, cleanPath} from "vinxi/fs-router";
 
 export class SolidStartClientFileRouter extends BaseFileSystemRouter {
   toPath(src) {
@@ -43,13 +43,13 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
         page: true,
         $component: {
           src: src,
-          pick: ["default", "$css"]
+          pick: [...exports.filter(e => e.n === e.ln && e.n !== "route").map(e => e.n), "default", "$css"]
         },
         $$route: hasRouteConfig
           ? {
-              src: src,
-              pick: ["route"]
-            }
+            src: src,
+            pick: ["route"]
+          }
           : undefined,
         path,
         filePath: src
@@ -123,15 +123,15 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
         $component:
           !this.config.dataOnly && hasDefault
             ? {
-                src: src,
-                pick: ["default", "$css"]
-              }
+              src: src,
+              pick: [...exports.filter(e => e.n === e.ln && e.n !== "route" && !HTTP_METHODS.includes(e.n)).map(e => e.n), "default", "$css"]
+            }
             : undefined,
         $$route: hasRouteConfig
           ? {
-              src: src,
-              pick: ["route"]
-            }
+            src: src,
+            pick: ["route"]
+          }
           : undefined,
         ...createHTTPHandlers(src, exports),
         path,

@@ -49,7 +49,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
         page: true,
         $component: {
           src: src,
-          pick: ["default", "$css"]
+          pick: [...exports.filter(e => e.n === e.ln && e.n !== "route").map(e => e.n), "default", "$css"]
         },
         $$route: hasRouteConfig
           ? {
@@ -135,7 +135,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
           !this.config.dataOnly && hasDefault
             ? {
                 src: src,
-                pick: ["default", "$css"]
+                pick: [...exports.filter(e => e.n === e.ln && e.n !== "route" && !HTTP_METHODS.includes(e.n)).map(e => e.n), "default", "$css"]
               }
             : undefined,
         $$route: hasRouteConfig

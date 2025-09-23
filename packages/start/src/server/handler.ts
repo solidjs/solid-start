@@ -53,6 +53,7 @@ export function createBaseHandler(
             `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
           );
         }
+        if (!match.isPage) return;
       }
 
       const context = await createPageEvent(event);

@@ -2,12 +2,27 @@ import { CodeSnippet } from "../code-snippet";
 import { GithubIcon } from "../icons/github-icon";
 import { SolidStartLogo } from "../icons/solidstart-logo";
 import { buttonVariants } from "../ui/button";
+import { AnimatedShinyText } from "../ui/mystic/shine";
+
 const buttonOutlineStyles = buttonVariants({
   variant: "outline"
 });
+
 export function Hero() {
   return (
-    <header class="w-full mx-auto pb-24 md:px-10 bg-gradient-to-b from-transparent dark:to-[#081924] via-white dark:via-white/0 to-white">
+    <header class="w-full mx-auto md:px-10 bg-gradient-to-b from-transparent dark:to-[#081924] via-white dark:via-white/0 to-white">
+      <div class="flex flex-col items-center justify-center">
+        <a
+          href="https://github.com/solidjs/solid-start/discussions/1960"
+          target="_blank"
+          rel="noopener"
+          class="inline-block px-4 py-1 group rounded-full border border-black/5 text-base text-white transition-all ease-in dark:border-white/15 dark:bg-neutral-900/30 dark:hover:bg-neutral-800/20"
+        >
+          <AnimatedShinyText>
+            <span>✨ Public Roadmap - DeVinxi and Beyond</span>
+          </AnimatedShinyText>
+        </a>
+      </div>
       <div class="max-w-5xl mx-auto">
         <SolidStartLogo class="drop-shadow-[10px_20px_35px_rgb(125,211,252,0.3)] size-52 md:size-[400px] mx-auto" />
         <div class="flex flex-col">
