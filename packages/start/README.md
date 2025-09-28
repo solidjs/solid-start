@@ -18,7 +18,7 @@ Explore the official [documentation](https://docs.solidjs.com/solid-start) for d
 
 - **All Rendering Modes**:
   - Server-Side Rendering _(SSR)_ with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler)
-  - Client-Side Rendering _(CSR)_ with fine-grained page/component [hydration](https://docs.solidjs.com/solid-start/reference/client/client-only) or full CSR
+  - Client-Side Rendering _(CSR)_ with the possibility of being page/component [scoped](https://docs.solidjs.com/solid-start/reference/client/client-only)
   - Static Site Generation _(SSG)_ with route [pre-rendering](https://docs.solidjs.com/solid-start/building-your-application/route-prerendering)
 - **TypeScript**: Full integration for robust, type-safe development
 - **File-Based Routing**: Intuitive routing based on your project’s file structure
