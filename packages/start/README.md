@@ -88,5 +88,5 @@ After the build completes, you’ll be guided through deployment for your specif
 
 ## Contributing
 
-- For contributing to codebase, check [CONTRIBUTING.md](/CONTRIBUTING.md)
+- For contributing to the codebase, check [CONTRIBUTING.md](https://github.com/solidjs/solid-start/blob/main/CONTRIBUTING.md)
 - For creating a new template, please head on to [solidjs/templates](https://github.com/solidjs/templates)
