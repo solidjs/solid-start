@@ -1,6 +1,6 @@
-[![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
-
 <div align="center">
+
+[![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
 
 [![Version](https://img.shields.io/npm/v/@solidjs/start.svg?style=for-the-badge&color=blue&logo=npm)](https://npmjs.com/package/@solidjs/start)
 [![Downloads](https://img.shields.io/npm/dm/@solidjs/start.svg?style=for-the-badge&color=green&logo=npm)](https://npmjs.com/package/@solidjs/start)
@@ -18,7 +18,7 @@ Explore the official [documentation](https://docs.solidjs.com/solid-start) for d
 
 - **All Rendering Modes**:
   - Server-Side Rendering _(SSR)_ with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler)
-  - Client-Side Rendering _(CSR)_
+  - Client-Side Rendering _(CSR)_ with the possibility of being page/component [scoped](https://docs.solidjs.com/solid-start/reference/client/client-only)
   - Static Site Generation _(SSG)_ with route [pre-rendering](https://docs.solidjs.com/solid-start/building-your-application/route-prerendering)
 - **TypeScript**: Full integration for robust, type-safe development
 - **File-Based Routing**: Intuitive routing based on your project’s file structure
@@ -69,7 +69,7 @@ import { defineConfig } from "@solidjs/start/config";
 
 export default defineConfig({
   ssr: true, // false for client-side rendering only
-  server: { preset: "netlify" }
+  server: { preset: "netlify" },
 });
 ```
 
@@ -86,20 +86,7 @@ npm run build # or pnpm build or bun build
 
 After the build completes, you’ll be guided through deployment for your specific preset.
 
-## Using SolidStart (v1) in Your Own Monorepo
+## Contributing
 
-When integrating `@solidjs/start` into your own monorepo (e.g. using Yarn workspaces), configure dependency hoisting to ensure proper resolution. This helps runtime components (e.g. `client/index.tsx`) resolve correctly in generated files like `index.html`.
-
-### Yarn v2+
-
-In the project root's `package.json`
-
-```jsonc
-{
-  "installConfig": {
-    "hoistingLimits": "dependencies"
-  }
-}
-```
-
-For pnpm monorepos, define workspaces in `pnpm-workspace.yaml`. If you encounter resolution issues (e.g. missing modules like `h3` from Vinxi), add `shamefully-hoist=true` to your `.npmrc` file. Test for duplicates and adjust configurations as necessary.
+- For contributing to codebase, check [CONTRIBUTING.md](/CONTRIBUTING.md)
+- For creating a new template, please head on to [solidjs/templates](https://github.com/solidjs/templates)
