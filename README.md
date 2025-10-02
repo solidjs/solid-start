@@ -49,8 +49,10 @@ Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific pa
 3. Install dependencies
 
    ```bash
-   pnpm install
+   pnpm dedupe
    ```
+
+   (`pnpm dedupe` will install dependencies _and_ clean the lockfile from duplicates, useful to preventing conflicts).
 
 4. Build all packages and the landing page
    ```bash
