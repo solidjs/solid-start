@@ -6,7 +6,7 @@ import { ErrorBoundary, For, Show, Suspense, createMemo, createSignal } from "so
 import { Portal } from "solid-js/web";
 // @ts-ignore - terracotta module resolution issue with NodeNext
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from "terracotta";
-import info from "../../../package.json";
+import info from "../../../package.json" with { type: "json" };
 import { CodeView } from "./CodeView.jsx";
 import { createStackFrame, type StackFrameSource } from "./createStackFrame.js";
 import download from "./download.js";
