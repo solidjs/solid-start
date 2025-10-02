@@ -5,7 +5,7 @@ index 735444a825e6940d0f5f5df0240fe25a0e9a48bb..2ab390b6fc6a61a0180399735cd5b54e
 @@ -134,6 +134,9 @@ function solidPlugin(options = {}) {
          }
        }
-       config.resolve.conditions = ['solid', ...(replaceDev ? ['development'] : []), ...(isTestMode && !opts.isSsrTargetWebworker ? ['browser'] : []), ...config.resolve.conditions];
+       config.resolve.conditions = ['solid', ...(replaceDev ? ['development'] : []), ...(isTestMode && !opts.isSsrTargetWebworker && !options.ssr ? ['browser'] : []), ...config.resolve.conditions];
 +      config.resolve.externalConditions ??= [];
 +      config.resolve.externalConditions.push("solid");
 +      config.resolve.externalConditions.push("node");

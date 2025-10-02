@@ -41,8 +41,8 @@
     "@tanstack/server-functions-plugin": "^1.131.2",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.9",
-    "defu": "^6.1.4",
     "cookie-es": "^2.0.0",
+    "defu": "^6.1.4",
     "error-stack-parser": "^2.1.4",
     "es-module-lexer": "^1.7.0",
     "esbuild": "^0.25.3",
@@ -61,7 +61,7 @@
     "source-map-js": "^1.2.1",
     "terracotta": "^1.0.6",
     "vite": "7.1.3",
-    "vite-plugin-solid": "^2.11.6",
+    "vite-plugin-solid": "^2.11.9",
     "vitest": "3.0.5"
   },
   "engines": {

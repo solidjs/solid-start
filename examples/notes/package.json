@@ -10,7 +10,7 @@
     "@solidjs/start": "file:../../packages/start",
     "date-fns": "^3.6.0",
     "marked": "^12.0.1",
-    "solid-js": "^1.9.5",
+    "solid-js": "^1.9.9",
     "unstorage": "1.10.2",
     "vite": "7.1.3"
   },
