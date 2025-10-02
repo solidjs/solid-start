@@ -10,78 +10,133 @@
 
 </div>
 
-**SolidStart** brings fine-grained reactivity fullstack with full flexibility. Built with features like unified rendering and isomorphic code execution, SolidStart enables you to create highly performant and scalable web applications.
+- For contributing to codebase, check [CONTRIBUTING.md](/CONTRIBUTING.md)
+- For creating a new template, please head on to [solidjs/templates](https://github.com/solidjs/templates)
+- For instructions on building with SolidStart, check the [package README.md](/packages/start/README.md) and our [official docs](https://docs.solidjs.com/solid-start)
 
-Explore the official [documentation](https://docs.solidjs.com/solid-start) for detailed guides and examples.
+## Prerequisites
 
-## Core Features
+- **Node.js**: Use the version specified in `.nvmrc`, to manage multiple versions across your system, we recommend a version manager such as [fnm](https://github.com/Schniz/fnm), or another of your preference.
+- **pnpm**: Install globally via `npm install -g pnpm`. Or let **Corepack** handle it in the setup step below.
+- **Git**: Ensure Git is installed for cloning and managing the repository
 
-- **All Rendering Modes**:
-  - Server-Side Rendering _(SSR)_ with sync, async, and stream [modes](https://docs.solidjs.com/solid-start/reference/server/create-handler)
-  - Client-Side Rendering _(CSR)_
-  - Static Site Generation _(SSG)_ with route [pre-rendering](https://docs.solidjs.com/solid-start/building-your-application/route-prerendering)
-- **TypeScript**: Full integration for robust, type-safe development
-- **File-Based Routing**: Intuitive routing based on your project’s file structure
-- **API Routes**: Dedicated server-side endpoints for seamless API development
-- **Streaming**: Efficient data rendering for faster page loads
-- **Build Optimizations**: Code splitting, tree shaking, and dead code elimination
-- **Deployment Adapters**: Easily deploy to platforms like Vercel, Netlify, Cloudflare, and more
+## Monorepo Structure
 
-## Getting Started
+SolidStart is a pnpm-based monorepo with nested workspaces. Key directories include
 
-### Installation
+- **`packages/start`**: The core `@solidjs/start` package.
+- **`apps/landing-page`**: The official landing page.
+- **`apps/tests`**: Unit and end-to-end (E2E) tests using Vitest and Cypress.
+- **`apps/fixtures`**: Fixture projects for testing.
 
-Create a SolidStart template project with your preferred package manager
+Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific packages.
 
-```bash
-# using npm
-npm create solid@latest -- -s
-```
+## Local Setup
 
-```bash
-# using pnpm
-pnpm create solid@latest -s
-```
+1. Clone the repository
 
-```bash
-# using bun
-bun create solid@latest --s
-```
+   ```bash
+   git clone https://github.com/solidjs/solid-start.git
+   cd solid-start
+   ```
 
-### Project Structure
+2. Enable the correct pnpm version specified in package.json
 
-- `public/`: Static assets like icons, images, and fonts
-- `src/`: Core application (aliased to `~/`)
-  - `routes/`: File-based routing for pages and APIs
-  - `app.tsx`: Root component of your application
-  - `entry-client.tsx`: Handles client-side hydration
-  - `entry-server.tsx`: Manages server-side request handling
-- **Configuration Files**: `app.config.ts`, `package.json`, and more
+   ```bash
+   corepack enable
+   ```
 
-Learn more about [routing](https://docs.solidjs.com/solid-start/building-your-application/routing)
+3. Install dependencies
 
-## Adapters
+   ```bash
+   pnpm dedupe
+   ```
 
-Configure adapters in `app.config.ts` to deploy to platforms like Vercel, Netlify, Cloudflare, and others
+   (`pnpm dedupe` will install dependencies _and_ clean the lockfile from duplicates, useful to preventing conflicts).
 
-```ts
-import { defineConfig } from "@solidjs/start/config";
+4. Build all packages and the landing page
+   ```bash
+   pnpm run build:all
+   ```
 
-export default defineConfig({
-  ssr: true, // false for client-side rendering only
-  server: { preset: "vercel" }
-});
-```
-
-Presets also include runtimes like Node.js, Bun or Deno. For example, a preset like `node-server` enables hosting on your server.  
-Learn more about [`defineConfig`](https://docs.solidjs.com/solid-start/reference/config/define-config)
-
-## Building
-
-Generate production-ready bundles
+If you encounter issues (e.g. missing `node_modules`), clean the workspace
 
 ```bash
-npm run build # or pnpm build or bun build
+pnpm run clean:all
 ```
 
-After the build completes, you’ll be guided through deployment for your specific preset.
+Then reinstall dependencies and rebuild.
+
+## Running Tests
+
+End-to-end tests are located in `apps/tests` projects. For manual testing and development there's the `apps/fixtures` apps, and finally, integration and unit tests live inside their respective packages.
+
+1. Install the Cypress binary (required only once)
+
+   ```bash
+   pnpm --filter tests exec cypress install
+   ```
+
+2. For unit tests that check build artifacts, build the test app first
+
+   ```bash
+   pnpm --filter tests run build
+   ```
+
+3. Run unit tests
+
+   ```bash
+   pnpm --filter tests run unit
+   ```
+
+   - CI mode (run once): `pnpm --filter tests run unit:ci`
+   - UI mode: `pnpm --filter tests run unit:ui`
+
+4. Run E2E tests
+
+   ```bash
+   pnpm --filter tests run tests:run
+   ```
+
+   - Interactive mode: `pnpm --filter tests run tests:open`
+   - With dev server: `pnpm --filter tests run tests`
+
+5. Clean test artifacts
+   ```bash
+   pnpm run clean:test
+   ```
+
+## Development
+
+1. Make your changes in the relevant package (e.g. `packages/start`)
+
+2. Rebuild affected packages
+
+   ```bash
+   pnpm run packages:build
+   ```
+
+   For a full rebuild: `pnpm run build:all`
+
+3. Test your changes
+
+   - For fixtures, pick the name of the fixture and run the `dev` with workspace filtering.
+     ```bash
+     pnpm --filter fixture-basic dev
+     ```
+   - For the landing page (from the root directory)
+     ```bash
+     pnpm run lp:dev
+     ```
+
+4. Clean builds if needed
+   ```bash
+   pnpm run packages:clean # Cleans packages' node_modules and dist folders
+   pnpm run lp:clean # Cleans the landing page
+   pnpm run clean:root # Cleans root-level caches
+   ```
+
+---
+
+If you have read all the way here, you're already a champ! 🏆
+Thank you.

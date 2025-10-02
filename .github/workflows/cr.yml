@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 1.x
   merge_group:
   pull_request:
 
