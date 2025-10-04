@@ -10,9 +10,9 @@
 
 </div>
 
+- For building apps with SolidStart, check the [package README](/packages/start/README.md) and our [official docs](https://docs.solidjs.com/solid-start)
 - For contributing to codebase, check [CONTRIBUTING.md](/CONTRIBUTING.md)
 - For creating a new template, please head over to [solidjs/templates](https://github.com/solidjs/templates)
-- For instructions on building with SolidStart, check the [package README.md](/packages/start/README.md) and our [official docs](https://docs.solidjs.com/solid-start)
 
 ## Prerequisites
 
