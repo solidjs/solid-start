@@ -127,9 +127,8 @@ export function nitroV2Plugin(nitroConfig?: NitroConfig): PluginOption {
 							},
 							virtual: {
 								...nitroConfig?.virtual,
-								[virtualEntry]: `import { fromWebHandler } from 'h3'
-                                    import handler from '${ssrEntryFile}'
-                                    export default handler`,
+								[virtualEntry]: `import handler from '${ssrEntryFile}'
+                                 export default handler`,
 							},
 						};
 
