@@ -12,6 +12,7 @@
     ".": "./dist/index.js",
     "./config": "./dist/config/index.js",
     "./server": "./dist/server/index.jsx",
+    "./server/entry": "./dist/server/entry.js",
     "./client": "./dist/client/index.jsx",
     "./router": "./dist/router.jsx",
     "./server/spa": "./dist/server/spa/index.jsx",

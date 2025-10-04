@@ -1,5 +1,6 @@
 import { solidBase } from "@kobalte/solidbase/config";
 import { solidStart } from "@solidjs/start/config";
+import { nitroV2Plugin } from "@solidjs/start/nitro-v2-plugin";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -31,13 +32,11 @@ export default defineConfig({
         }
       }
     }),
-    solidStart({
-      extensions: ["md", "mdx"],
-      server: {
-        prerender: {
-          crawlLinks: true
-        }
+    solidStart({ extensions: ["md", "mdx"] }),
+    nitroV2Plugin({
+      prerender: {
+        crawlLinks: true
       }
-    }),
+    })
   ]
 });

@@ -3,5 +3,8 @@ import { nitroV2Plugin } from "@solidjs/start/nitro-v2-plugin";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-	plugins: [solidStart(), nitroV2Plugin({ preset: "node-server" })],
+	plugins: [
+  	solidStart(),
+    nitroV2Plugin()
+	],
 });

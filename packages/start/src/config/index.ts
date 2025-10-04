@@ -128,12 +128,12 @@ function solidStartVitePlugin(
 									input:
 										viteConfig.environments?.[VITE_ENVIRONMENT_NAMES.server]
 											?.build?.rollupOptions?.input ?? ENTRY_POINTS.server,
+										treeshake: true
 								},
 								outDir: getServerOutputDirectory(viteConfig),
 								copyPublicDir:
 									viteConfig.environments?.[VITE_ENVIRONMENT_NAMES.server]
-										?.build?.copyPublicDir ?? false,
-							},
+										?.build?.copyPublicDir ?? false, },
 						},
 					},
 					resolve: {

@@ -1,6 +1,5 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { join } from "pathe";
-import { CLIENT_BASE_PATH } from "../../constants.js";
 import type { Asset } from "../renderAsset.jsx";
 
 // Only reads from client manifest atm, might need server support for islands
@@ -13,7 +12,7 @@ export function getSsrProdManifest() {
 			if (!viteManifestEntry)
 				throw new Error("No entry found in vite manifest");
 
-			return `/${CLIENT_BASE_PATH}/${viteManifestEntry.file}`;
+			return `/${viteManifestEntry.file}`;
 		},
 		async getAssets(id) {
 			return createHtmlTagsForAssets(
@@ -31,7 +30,7 @@ export function getSsrProdManifest() {
 
 			for (const entryKey of entryKeys) {
 				json[entryKey] = {
-					output: join("/", CLIENT_BASE_PATH, viteManifest[entryKey]!.file),
+					output: join("/", viteManifest[entryKey]!.file),
 					assets: await this.getAssets(entryKey),
 				};
 			}
@@ -55,8 +54,8 @@ function createHtmlTagsForAssets(assets: string[]) {
 		.map<Asset>((asset) => ({
 			tag: "link",
 			attrs: {
-				href: join("/", CLIENT_BASE_PATH, asset),
-				key: join("/", CLIENT_BASE_PATH, asset),
+				href: join("/", asset),
+				key: join("/", asset),
 				...(asset.endsWith(".css")
 					? { rel: "stylesheet", fetchPriority: "high" }
 					: { rel: "modulepreload" }),

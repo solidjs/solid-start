@@ -1,4 +1,4 @@
-import { relative } from "node:path";
+import { relative } from "pathe";
 import type { PluginOption } from "vite";
 
 import { VITE_ENVIRONMENT_NAMES } from "../../constants.js";

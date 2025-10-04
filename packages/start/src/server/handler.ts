@@ -33,7 +33,7 @@ export function createBaseHandler(
 		| HandlerOptions
 		| ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
-	const handler = eventHandler({
+	const _handler = eventHandler({
 		...middleware,
 		handler: async (e: H3Event) => {
 			const event = getRequestEvent()!;
@@ -107,8 +107,8 @@ export function createBaseHandler(
 	});
 
 	return eventHandler((e: H3Event) =>
-		provideRequestEvent(getFetchEvent(e), () => handler(e)),
-	);
+		provideRequestEvent(getFetchEvent(e), () => _handler(e)),
+	)
 }
 
 export function createHandler(

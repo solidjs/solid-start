@@ -6,6 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@cloudflare/vite-plugin": "^1.13.10",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "file:../../packages/start",

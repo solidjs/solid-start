@@ -1,4 +1,5 @@
 import { solidStart } from "@solidjs/start/config";
+import { nitroV2Plugin } from "@solidjs/start/nitro-v2-plugin";
 import { defineConfig } from "vite";
 /* @ts-ignore */
 import pkg from "@vinxi/plugin-mdx";
@@ -14,5 +15,6 @@ export default defineConfig({
     solidStart({
       extensions: ["mdx", "md"],
     }),
+    nitroV2Plugin()
   ]
 });

@@ -25,3 +25,7 @@ declare module "solid-start:middleware" {
     onBeforeResponse?: MaybeArray<import("h3")._ResponseMiddleware>;
   };
 }
+
+declare module "virtual:solid-start-server-entry" {
+  export default serverEntry as import("h3").EventHandler
+}

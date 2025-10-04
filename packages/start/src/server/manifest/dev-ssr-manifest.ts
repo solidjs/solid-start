@@ -1,5 +1,5 @@
-import { join, resolve } from "pathe";
-import { normalizePath, type ViteDevServer } from "vite";
+import { join, normalize, resolve } from "pathe";
+import type { ViteDevServer } from "vite";
 
 import { findStylesInModuleGraph } from "../collect-styles.js";
 
@@ -7,7 +7,7 @@ export function getSsrDevManifest(target: "client" | "server") {
   const vite: ViteDevServer = (globalThis as any).VITE_DEV_SERVER;
 
   return {
-    path: (id: string) => normalizePath(join("/@fs", resolve(process.cwd(), id))),
+    path: (id: string) => normalize(join("/@fs", resolve(process.cwd(), id))),
     async getAssets(id: string) {
       const styles = await findStylesInModuleGraph(vite, id, target === "server");
 

@@ -60,24 +60,6 @@ export function nitroV2Plugin(nitroConfig?: NitroConfig): PluginOption {
 				ssrBundle = bundle;
 			},
 		},
-		configEnvironment(name) {
-			if (name === VITE_ENVIRONMENT_NAMES.server) {
-				return {
-					build: {
-						commonjsOptions: {
-							include: [],
-						},
-						ssr: true,
-						sourcemap: true,
-						rollupOptions: {
-							input: "~/entry-server.tsx",
-						},
-					},
-				} satisfies EnvironmentOptions;
-			}
-
-			return null;
-		},
 		configResolved(config) {
 			resolvedConfig = config;
 		},
@@ -138,7 +120,7 @@ export function nitroV2Plugin(nitroConfig?: NitroConfig): PluginOption {
 								asyncContext: true,
 								...nitroConfig?.experimental,
 							},
-							renderer: ssrEntryFile,
+							renderer: virtualEntry,
 							rollupConfig: {
 								...nitroConfig?.rollupConfig,
 								plugins: [virtualBundlePlugin(ssrBundle) as any],
@@ -147,7 +129,7 @@ export function nitroV2Plugin(nitroConfig?: NitroConfig): PluginOption {
 								...nitroConfig?.virtual,
 								[virtualEntry]: `import { fromWebHandler } from 'h3'
                                     import handler from '${ssrEntryFile}'
-                                    export default fromWebHandler(handler.fetch)`,
+                                    export default handler`,
 							},
 						};
 
