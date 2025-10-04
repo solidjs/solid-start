@@ -1,6 +1,6 @@
-[![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
-
 <div align="center">
+
+[![Banner](https://assets.solidjs.com/banner?project=Start&type=core)](https://github.com/solidjs)
 
 [![Version](https://img.shields.io/npm/v/@solidjs/start.svg?style=for-the-badge&color=blue&logo=npm)](https://npmjs.com/package/@solidjs/start)
 [![Downloads](https://img.shields.io/npm/dm/@solidjs/start.svg?style=for-the-badge&color=green&logo=npm)](https://npmjs.com/package/@solidjs/start)
@@ -11,18 +11,18 @@
 </div>
 
 - For contributing to codebase, check [CONTRIBUTING.md](/CONTRIBUTING.md)
-- For creating a new template, please head on to [solidjs/templates](https://github.com/solidjs/templates)
+- For creating a new template, please head over to [solidjs/templates](https://github.com/solidjs/templates)
 - For instructions on building with SolidStart, check the [package README.md](/packages/start/README.md) and our [official docs](https://docs.solidjs.com/solid-start)
 
 ## Prerequisites
 
-- **Node.js**: Use the version specified in `.nvmrc`, to manage multiple versions across your system, we recommend a version manager such as [fnm](https://github.com/Schniz/fnm), or another of your preference.
+- **Node.js**: Use the version specified in `.nvmrc`. To manage multiple versions across your system, we recommend a version manager such as [fnm](https://github.com/Schniz/fnm), or another of your preference.
 - **pnpm**: Install globally via `npm install -g pnpm`. Or let **Corepack** handle it in the setup step below.
-- **Git**: Ensure Git is installed for cloning and managing the repository
+- **Git**: Ensure Git is installed for cloning and managing the repository.
 
 ## Monorepo Structure
 
-SolidStart is a pnpm-based monorepo with nested workspaces. Key directories include
+SolidStart is a pnpm-based monorepo with nested workspaces. Key directories include:
 
 - **`packages/start`**: The core `@solidjs/start` package.
 - **`apps/landing-page`**: The official landing page.
@@ -52,7 +52,7 @@ Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific pa
    pnpm dedupe
    ```
 
-   (`pnpm dedupe` will install dependencies _and_ clean the lockfile from duplicates, useful to preventing conflicts).
+   (`pnpm dedupe` will install dependencies _and_ clean the lockfile from duplicates, useful for preventing conflicts).
 
 4. Build all packages and the landing page
    ```bash
@@ -69,7 +69,7 @@ Then reinstall dependencies and rebuild.
 
 ## Running Tests
 
-End-to-end tests are located in `apps/tests` projects. For manual testing and development there's the `apps/fixtures` apps, and finally, integration and unit tests live inside their respective packages.
+End-to-end tests are located in `apps/tests` projects. For manual testing and development use the `apps/fixtures` apps, and finally, integration and unit tests live inside their respective packages.
 
 1. Install the Cypress binary (required only once)
 
