@@ -16,7 +16,7 @@
 
 ## Prerequisites
 
-- **Node.js**: Use the version specified in `.nvmrc`. To manage multiple versions across your system, we recommend a version manager such as [fnm](https://github.com/Schniz/fnm), or another of your preference.
+- **Node.js**: Use the version specified in `.nvmrc`. To manage multiple versions across your system, we recommend a version manager such as [fnm](https://github.com/Schniz/fnm), or another of your choice.
 - **pnpm**: Install globally via `npm install -g pnpm`. Or let **Corepack** handle it in the setup step below.
 - **Git**: Ensure Git is installed for cloning and managing the repository.
 
