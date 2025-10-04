@@ -46,7 +46,7 @@ We recommend using the `create-solid` package with the **basic** setting.
 | --------------- | ---------------------------------------- |
 | pnpm            | `pnpm create solid@latest -st basic`     |
 | npm             | `npm create solid@latest -- -st basic`   |
-| yarn            | `yarn create solid@latest -st basic`     |
+| yarn            | `yarn create solid -st basic`            |
 | bun             | `bun create solid@latest --s --t basic`  |
 | deno            | `deno run -A npm:create-solid -st basic` |
 
