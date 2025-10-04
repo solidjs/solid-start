@@ -17,7 +17,8 @@
     "./server/spa": "./dist/server/spa/index.jsx",
     "./client/spa": "./dist/client/spa/index.jsx",
     "./middleware": "./dist/middleware/index.jsx",
-    "./http": "./dist/http.js"
+    "./http": "./dist/server/http.js",
+    "./nitro-v2-plugin": "./dist/config/nitro-v2-plugin.js"
   },
   "dependencies": {
     "@babel/core": "^7.28.3",

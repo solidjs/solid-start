@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "allowSyntheticDefaultImports": true,
@@ -12,14 +12,10 @@
     "allowJs": true,
     "isolatedModules": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "declaration": true,
     "skipLibCheck": true,
-    "types": [
-      "vite/client"
-    ]
+    "types": ["vite/client"]
   },
-  "include": [
-    "./src",
-    "./src/env.d.ts"
-  ]
+  "include": ["./src", "./src/env.d.ts"]
 }
