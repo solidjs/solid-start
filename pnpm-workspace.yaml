@@ -1,8 +1,18 @@
 packages:
-  # all packages in subdirs of packages/
-  - "packages/*"
-  - "tests/*"
-  - "!**/.tmp/**"
+  - packages/*
+  - apps/*
+  - '!**/.tmp/**'
+
+ignoredBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - better-sqlite3
+  - msw
+  - prisma
+
+onlyBuiltDependencies:
+  - cypress
+  - esbuild
 
 patchedDependencies:
   vite-plugin-solid: patches/vite-plugin-solid.patch
