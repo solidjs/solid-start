@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "start": "vite serve",
     "unit:ci": "vitest run",
     "unit": "vitest",
     "unit:ui": "vitest --ui",

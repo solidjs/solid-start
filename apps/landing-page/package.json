@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "pnpm --filter @solidjs/start build && vite build"
+    "build": "pnpm --filter @solidjs/start build && vite build",
+    "start": "vite serve"
   },
   "devDependencies": {
     "@kobalte/core": "^0.13.11",
