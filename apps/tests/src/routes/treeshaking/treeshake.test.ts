@@ -10,7 +10,7 @@ describe("Make sure treeshaking works", () => {
 		);
 		const files = await readdir(buildDir);
 		const targetFile = files.find(
-			(file) => file.startsWith("(no-side-effects)-") && file.endsWith(".ts"),
+			(file) => file.startsWith("(no-side-effects)-") && file.endsWith(".js"),
 		);
 		if (!targetFile) {
 			throw new Error("Treeshaking test: No target file not found");
