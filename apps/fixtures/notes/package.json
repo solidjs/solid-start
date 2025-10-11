@@ -7,12 +7,12 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.15.0",
-    "@solidjs/start": "file:../../../packages/start",
+    "@solidjs/start": "workspace:*",
     "date-fns": "^3.6.0",
     "marked": "^12.0.1",
     "solid-js": "^1.9.9",
     "unstorage": "1.10.2",
-    "vite": "7.1.3"
+    "vite": "7.1.9"
   },
   "engines": {
     "node": ">=22"

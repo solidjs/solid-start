@@ -4,9 +4,9 @@ import {
 	defineMiddleware,
 	type H3Event as HTTPEvent,
 	sendWebResponse,
-} from "../http/index.js";
-import { getFetchEvent } from "../server/fetchEvent.js";
-import type { FetchEvent } from "../server/types.js";
+} from "../http/index.ts";
+import { getFetchEvent } from "../server/fetchEvent.ts";
+import type { FetchEvent } from "../server/types.ts";
 
 /** Function responsible for receiving an observable [operation]{@link Operation} and returning a [result]{@link OperationResult}. */
 
