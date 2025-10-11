@@ -36,7 +36,7 @@ jobs:
         working-directory: packages/start
         run: |
           pnpm run build
-          echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
+          pnpm run apply-publish-config
 
       - name: Release
         run: |

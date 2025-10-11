@@ -8,7 +8,8 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "validate-imports": "node scripts/validate-imports.js",
-    "check": "npm run validate-imports && npm run build && npm run test:ci"
+    "check": "npm run validate-imports && npm run build && npm run test:ci",
+    "apply-publish-config": "echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json"
   },
   "exports": {
     ".": "./src/index.ts",
