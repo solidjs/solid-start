@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "Preserve",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "types": ["vite/client"],
     "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": "./src"
   },
   "include": ["./src", "./src/env.d.ts"]
 }

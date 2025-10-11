@@ -217,9 +217,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				envName: VITE_ENVIRONMENTS.client,
 				getRuntimeCode: () =>
 					`import { createServerReference } from "${normalize(
-						fileURLToPath(
-							new URL("../server/server-runtime.ts", import.meta.url),
-						),
+						fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
 					)}"`,
 				replacer: (opts) =>
 					`createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`,
@@ -229,7 +227,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				getRuntimeCode: () =>
 					`import { createServerReference } from '${normalize(
 						fileURLToPath(
-							new URL("../server/server-fns-runtime.ts", import.meta.url),
+							new URL("../server/server-fns-runtime", import.meta.url),
 						),
 					)}'`,
 				replacer: (opts) =>
