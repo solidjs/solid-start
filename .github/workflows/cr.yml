@@ -36,4 +36,6 @@ jobs:
         run: pnpm run packages:build
 
       - name: Release
-        run: pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact
+        run: |
+          echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
+          pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact
