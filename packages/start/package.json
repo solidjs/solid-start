@@ -3,12 +3,11 @@
   "version": "2.0.0-devinxi.0",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "pnpm validate-imports && tsc",
     "dev": "tsc --watch",
     "test": "vitest",
     "test:ci": "vitest run",
     "validate-imports": "node scripts/validate-imports.js",
-    "check": "npm run validate-imports && npm run build && npm run test:ci",
     "apply-publish-config": "echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json"
   },
   "exports": {
