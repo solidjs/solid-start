@@ -6,9 +6,9 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@solidjs/start": "file:../../../packages/start",
+    "@solidjs/start": "workspace:*",
     "solid-js": "^1.9.9",
-    "vite": "7.1.3"
+    "vite": "7.1.9"
   },
   "engines": {
     "node": ">=22"

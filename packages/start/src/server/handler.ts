@@ -1,154 +1,176 @@
-import { eventHandler, getCookie, getResponseHeaders, type H3Event, setCookie } from "h3";
+import middleware from "solid-start:middleware";
+import {
+	eventHandler,
+	getCookie,
+	getResponseHeaders,
+	type H3Event,
+	setCookie,
+} from "h3";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import middleware from "solid-start:middleware";
 
-import { createRoutes } from "../router.jsx";
-import { getFetchEvent } from "./fetchEvent.js";
-import { matchAPIRoute } from "./routes.js";
-import { handleServerFunction } from "./server-functions-handler.js";
-import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.js";
-import { getSsrManifest } from "./manifest/ssr-manifest.js";
+import { createRoutes } from "../router.tsx";
+import { getFetchEvent } from "./fetchEvent.ts";
+import { getSsrManifest } from "./manifest/ssr-manifest.ts";
+import { matchAPIRoute } from "./routes.ts";
+import { handleServerFunction } from "./server-functions-handler.ts";
+import type {
+	APIEvent,
+	FetchEvent,
+	HandlerOptions,
+	PageEvent,
+} from "./types.ts";
 
 const SERVER_FN_BASE = "/_server";
 
 export function createBaseHandler(
-  createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
-  fn: (context: PageEvent) => JSX.Element,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
+	createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
+	fn: (context: PageEvent) => JSX.Element,
+	options:
+		| HandlerOptions
+		| ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
-  const handler = eventHandler({
-    ...middleware,
-    handler: async (e: H3Event) => {
-      const event = getRequestEvent()!;
-      const url = new URL(event.request.url);
-      const pathname = url.pathname;
+	const handler = eventHandler({
+		...middleware,
+		handler: async (e: H3Event) => {
+			const event = getRequestEvent()!;
+			const url = new URL(event.request.url);
+			const pathname = url.pathname;
 
-      const serverFunctionTest = join("/", SERVER_FN_BASE);
-      if (pathname.startsWith(serverFunctionTest)) {
-        const serverFnResponse = await handleServerFunction(e);
+			const serverFunctionTest = join("/", SERVER_FN_BASE);
+			if (pathname.startsWith(serverFunctionTest)) {
+				const serverFnResponse = await handleServerFunction(e);
 
-        if (serverFnResponse instanceof Response) return serverFnResponse;
+				if (serverFnResponse instanceof Response) return serverFnResponse;
 
-        return new Response(serverFnResponse as any, {
-          headers: getResponseHeaders(e) as any
-        });
-      }
+				return new Response(serverFnResponse as any, {
+					headers: getResponseHeaders(e) as any,
+				});
+			}
 
-      const match = matchAPIRoute(pathname, event.request.method);
-      if (match) {
-        const mod = await match.handler.import();
-        const fn =
-          event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
-        (event as APIEvent).params = match.params || {};
-        // @ts-expect-error
-        sharedConfig.context = { event };
-        const res = await fn!(event);
-        if (res !== undefined) return res;
-        if (event.request.method !== "GET") {
-          throw new Error(
-            `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
-          );
-        }
-        if (!match.isPage) return;
-      }
+			const match = matchAPIRoute(pathname, event.request.method);
+			if (match) {
+				const mod = await match.handler.import();
+				const fn =
+					event.request.method === "HEAD"
+						? mod["HEAD"] || mod["GET"]
+						: mod[event.request.method];
+				(event as APIEvent).params = match.params || {};
+				// @ts-expect-error
+				sharedConfig.context = { event };
+				const res = await fn!(event);
+				if (res !== undefined) return res;
+				if (event.request.method !== "GET") {
+					throw new Error(
+						`API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
+					);
+				}
+				if (!match.isPage) return;
+			}
 
-      const context = await createPageEvent(event);
+			const context = await createPageEvent(event);
 
-      const resolvedOptions =
-        typeof options === "function" ? await options(context) : { ...options };
-      const mode = resolvedOptions.mode || "stream";
-      if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
+			const resolvedOptions =
+				typeof options === "function" ? await options(context) : { ...options };
+			const mode = resolvedOptions.mode || "stream";
+			if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
 
-      if (mode === "sync" || !import.meta.env.START_SSR) {
-        const html = renderToString(() => {
-          (sharedConfig.context as any).event = context;
-          return fn(context);
-        });
-        context.complete = true;
+			if (mode === "sync" || !import.meta.env.START_SSR) {
+				const html = renderToString(() => {
+					(sharedConfig.context as any).event = context;
+					return fn(context);
+				});
+				context.complete = true;
 
-        // insert redirect handling here
+				// insert redirect handling here
 
-        return html;
-      }
+				return html;
+			}
 
-      const _stream = renderToStream(() => {
-        (sharedConfig.context as any).event = context;
-        return fn(context);
-      }, resolvedOptions);
-      const stream = _stream as typeof _stream & Promise<string> // stream has a hidden 'then' method
+			const _stream = renderToStream(() => {
+				(sharedConfig.context as any).event = context;
+				return fn(context);
+			}, resolvedOptions);
+			const stream = _stream as typeof _stream & Promise<string>; // stream has a hidden 'then' method
 
-      // insert redirect handling here
+			// insert redirect handling here
 
-      if (mode === "async") return stream
+			if (mode === "async") return stream;
 
-      const { writable, readable } = new TransformStream();
-      stream.pipeTo(writable);
-      return readable;
-    }
-  });
+			const { writable, readable } = new TransformStream();
+			stream.pipeTo(writable);
+			return readable;
+		},
+	});
 
-  return eventHandler((e: H3Event) => provideRequestEvent(getFetchEvent(e), () => handler(e)));
+	return eventHandler((e: H3Event) =>
+		provideRequestEvent(getFetchEvent(e), () => handler(e)),
+	);
 }
 
 export function createHandler(
-  fn: (context: PageEvent) => JSX.Element,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
+	fn: (context: PageEvent) => JSX.Element,
+	options:
+		| HandlerOptions
+		| ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
-  return createBaseHandler(createPageEvent, fn, options)
+	return createBaseHandler(createPageEvent, fn, options);
 }
 
 export async function createPageEvent(ctx: FetchEvent) {
-  ctx.response.headers.set("Content-Type", "text/html");
-  // const prevPath = ctx.request.headers.get("x-solid-referrer");
-  // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
-  const manifest = getSsrManifest('client');
-  const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: 'json' in manifest ? await manifest.json() : {},
-    assets: [
-      ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
-      ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
-      // ...(import.meta.env.START_ISLANDS
-      //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
-      //       s => (s as any).attrs.rel !== "modulepreload"
-      //     )
-      //   : [])
-    ],
-    router: {
-      submission: initFromFlash(ctx) as any
-    },
-    routes: createRoutes(),
-    // prevUrl: prevPath || "",
-    // mutation: mutation,
-    // $type: FETCH_EVENT,
-    complete: false,
-    $islands: new Set<string>()
-  });
+	ctx.response.headers.set("Content-Type", "text/html");
+	// const prevPath = ctx.request.headers.get("x-solid-referrer");
+	// const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
+	const manifest = getSsrManifest("client");
+	const pageEvent: PageEvent = Object.assign(ctx, {
+		manifest: "json" in manifest ? await manifest.json() : {},
+		assets: [
+			...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
+			...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
+			// ...(import.meta.env.START_ISLANDS
+			//   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
+			//       s => (s as any).attrs.rel !== "modulepreload"
+			//     )
+			//   : [])
+		],
+		router: {
+			submission: initFromFlash(ctx) as any,
+		},
+		routes: createRoutes(),
+		// prevUrl: prevPath || "",
+		// mutation: mutation,
+		// $type: FETCH_EVENT,
+		complete: false,
+		$islands: new Set<string>(),
+	});
 
-  return pageEvent;
+	return pageEvent;
 }
 
 function initFromFlash(ctx: FetchEvent) {
-  const flash = getCookie(ctx.nativeEvent, "flash");
-  if (!flash) return;
-  try {
-    const param = JSON.parse(flash);
-    if (!param || !param.result) return;
-    const input = [...param.input.slice(0, -1), new Map(param.input[param.input.length - 1])];
-    const result = param.error ? new Error(param.result) : param.result;
-    return {
-      input,
-      url: param.url,
-      pending: false,
-      result: param.thrown ? undefined : result,
-      error: param.thrown ? result : undefined
-    };
-  } catch (e) {
-    console.error(e);
-  } finally {
-    setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
-  }
+	const flash = getCookie(ctx.nativeEvent, "flash");
+	if (!flash) return;
+	try {
+		const param = JSON.parse(flash);
+		if (!param || !param.result) return;
+		const input = [
+			...param.input.slice(0, -1),
+			new Map(param.input[param.input.length - 1]),
+		];
+		const result = param.error ? new Error(param.result) : param.result;
+		return {
+			input,
+			url: param.url,
+			pending: false,
+			result: param.thrown ? undefined : result,
+			error: param.thrown ? result : undefined,
+		};
+	} catch (e) {
+		console.error(e);
+	} finally {
+		setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
+	}
 }

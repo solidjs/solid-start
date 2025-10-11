@@ -1,9 +1,9 @@
 import { getManifest } from "solid-start:get-manifest";
 import { getRequestEvent, isServer } from "solid-js/web";
 
-import lazyRoute from "./server/lazyRoute.jsx";
-import { pageRoutes as routeConfigs } from "./server/routes.js";
-import type { PageEvent } from "./server/types.js";
+import lazyRoute from "./server/lazyRoute.tsx";
+import { pageRoutes as routeConfigs } from "./server/routes.ts";
+import type { PageEvent } from "./server/types.ts";
 
 export function createRoutes() {
   function createRoute(route: any) {

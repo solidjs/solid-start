@@ -52,3 +52,5 @@ vite.config.ts.timestamp*
 
 # ignore cypress screenshots
 **/cypress/screenshots
+
+.data

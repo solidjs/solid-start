@@ -1,11 +1,12 @@
 packages:
   - packages/*
   - apps/*
-  - '!**/.tmp/**'
+  - apps/fixtures/*
+  - "!**/.tmp/**"
 
 ignoredBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
+  - "@prisma/client"
+  - "@prisma/engines"
   - better-sqlite3
   - msw
   - prisma

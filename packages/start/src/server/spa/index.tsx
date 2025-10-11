@@ -1,5 +1,4 @@
 // @refresh skip
-export * from "../types.js";
-export { StartServer } from "./StartServer.jsx";
-export { createHandler } from "./handler.js";
-
+export * from "../types.ts";
+export { StartServer } from "./StartServer.tsx";
+export { createHandler } from "./handler.ts";

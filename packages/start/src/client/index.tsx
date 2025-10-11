@@ -1,3 +1,2 @@
-export { mount } from "./mount.js";
-export { StartClient, StartClientTanstack } from "./StartClient.jsx";
-
+export { mount } from "./mount.ts";
+export { StartClient, StartClientTanstack } from "./StartClient.tsx";

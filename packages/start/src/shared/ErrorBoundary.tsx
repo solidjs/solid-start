@@ -1,8 +1,8 @@
 // @refresh skip
 import { ErrorBoundary as DefaultErrorBoundary, catchError, type ParentProps } from "solid-js";
 import { isServer } from "solid-js/web";
-import { HttpStatusCode } from "./HttpStatusCode.js";
-import { DevOverlay } from "./dev-overlay/index.jsx";
+import { HttpStatusCode } from "./HttpStatusCode.ts";
+import { DevOverlay } from "./dev-overlay/index.tsx";
 
 export const ErrorBoundary =
   import.meta.env.DEV && import.meta.env.START_DEV_OVERLAY

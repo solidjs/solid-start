@@ -8,8 +8,8 @@ import {
   resetErrorBoundaries,
   type JSX
 } from "solid-js";
-import { HttpStatusCode } from "../HttpStatusCode.js";
-import clientOnly from "../clientOnly.js";
+import { HttpStatusCode } from "../HttpStatusCode.ts";
+import clientOnly from "../clientOnly.ts";
 
 export interface DevOverlayProps {
   children?: JSX.Element;
@@ -17,7 +17,7 @@ export interface DevOverlayProps {
 
 const DevOverlayDialog = import.meta.env.PROD
   ? () => <></>
-  : clientOnly(() => import("./DevOverlayDialog.jsx"), { lazy: true });
+  : clientOnly(() => import("./DevOverlayDialog.tsx"), { lazy: true });
 
 export function DevOverlay(props: DevOverlayProps): JSX.Element {
   const [errors, setErrors] = createSignal<unknown[]>([]);
