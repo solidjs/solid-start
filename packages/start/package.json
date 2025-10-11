@@ -7,8 +7,7 @@
     "dev": "tsc --watch",
     "test": "vitest",
     "test:ci": "vitest run",
-    "validate-imports": "node scripts/validate-imports.js",
-    "apply-publish-config": "echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json"
+    "validate-imports": "node scripts/validate-imports.js"
   },
   "exports": {
     ".": "./src/index.ts",
