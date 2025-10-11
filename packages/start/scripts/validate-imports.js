@@ -13,6 +13,7 @@
  * Features:
  * - Scans all .ts and .tsx files in the src/ directory recursively
  * - Detects relative imports (starting with ./ or ../) without extensions
+ * - Prevents .js/.jsx imports in TypeScript files (should use .ts/.tsx)
  * - Ignores commented code and CSS imports (handled by bundlers)
  * - Provides detailed error reporting with line numbers and suggestions
  * - Exits with appropriate status codes for CI/CD integration
@@ -24,13 +25,17 @@
  *   0 - All relative imports have valid extensions
  *   1 - Found relative imports without extensions
  *
- * Valid extensions: .ts, .tsx, .js, .jsx, .json
+ * Valid extensions for TypeScript files: .ts, .tsx, .json
+ * Invalid extensions for TypeScript files: .js, .jsx (use .ts/.tsx instead)
  *
  * @example
  * // ❌ Invalid - missing extension
  * import { config } from "./config/index";
  *
- * // ✅ Valid - has extension
+ * // ❌ Invalid - .js extension in TypeScript file
+ * import { config } from "./config/index.js";
+ *
+ * // ✅ Valid - has .ts extension
  * import { config } from "./config/index.ts";
  *
  * // ✅ Valid - external package import (no extension needed)
@@ -46,7 +51,8 @@ const __dirname = dirname(__filename);
 
 // Configuration
 const SRC_DIR = join(__dirname, "..", "src");
-const VALID_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".json"];
+const VALID_EXTENSIONS = [".ts", ".tsx", ".json"];
+const INVALID_EXTENSIONS = [".js", ".jsx"];
 const FILE_EXTENSIONS = [".ts", ".tsx"];
 
 /**
@@ -85,6 +91,13 @@ function isRelativeImport(path) {
  */
 function hasValidExtension(path) {
   return VALID_EXTENSIONS.some(ext => path.endsWith(ext));
+}
+
+/**
+ * Check if an import path has an invalid extension for TypeScript files
+ */
+function hasInvalidExtension(path) {
+  return INVALID_EXTENSIONS.some(ext => path.endsWith(ext));
 }
 
 /**
@@ -154,13 +167,24 @@ function validateFile(filePath) {
     const statements = extractImportExportStatements(content, filePath);
 
     statements.forEach(statement => {
-      if (isRelativeImport(statement.path) && !hasValidExtension(statement.path)) {
-        errors.push({
-          file: filePath,
-          line: statement.line,
-          importPath: statement.path,
-          fullLine: statement.fullLine
-        });
+      if (isRelativeImport(statement.path)) {
+        if (hasInvalidExtension(statement.path)) {
+          errors.push({
+            file: filePath,
+            line: statement.line,
+            importPath: statement.path,
+            fullLine: statement.fullLine,
+            type: "invalid-extension"
+          });
+        } else if (!hasValidExtension(statement.path)) {
+          errors.push({
+            file: filePath,
+            line: statement.line,
+            importPath: statement.path,
+            fullLine: statement.fullLine,
+            type: "missing-extension"
+          });
+        }
       }
     });
   } catch (error) {
@@ -203,26 +227,85 @@ function validateImports() {
     console.log("✅ All relative imports have valid extensions!");
     process.exit(0);
   } else {
-    console.log(`❌ Found ${totalErrors} relative import(s) without extensions:\n`);
+    const missingExtensionErrors = [];
+    const invalidExtensionErrors = [];
 
-    errorsByFile.forEach((errors, file) => {
-      const relativePath = file.replace(process.cwd(), "").replace(/^\//, "");
-      console.log(`📄 ${relativePath}:`);
-
+    errorsByFile.forEach(errors => {
       errors.forEach(error => {
-        console.log(`  Line ${error.line}: ${error.importPath}`);
-        console.log(`    ${error.fullLine}`);
-        console.log(
-          `    ${"".padStart(error.fullLine.indexOf(error.importPath), " ")}${"".padStart(error.importPath.length, "^")}`
-        );
+        if (error.type === "missing-extension") {
+          missingExtensionErrors.push(error);
+        } else if (error.type === "invalid-extension") {
+          invalidExtensionErrors.push(error);
+        }
       });
-      console.log("");
     });
 
+    if (missingExtensionErrors.length > 0) {
+      console.log(
+        `❌ Found ${missingExtensionErrors.length} relative import(s) without extensions:\n`
+      );
+
+      const missingByFile = new Map();
+      missingExtensionErrors.forEach(error => {
+        if (!missingByFile.has(error.file)) {
+          missingByFile.set(error.file, []);
+        }
+        missingByFile.get(error.file).push(error);
+      });
+
+      missingByFile.forEach((errors, file) => {
+        const relativePath = file.replace(process.cwd(), "").replace(/^\//, "");
+        console.log(`📄 ${relativePath}:`);
+
+        errors.forEach(error => {
+          console.log(`  Line ${error.line}: ${error.importPath}`);
+          console.log(`    ${error.fullLine}`);
+          console.log(
+            `    ${"".padStart(error.fullLine.indexOf(error.importPath), " ")}${"".padStart(error.importPath.length, "^")}`
+          );
+        });
+        console.log("");
+      });
+    }
+
+    if (invalidExtensionErrors.length > 0) {
+      console.log(
+        `❌ Found ${invalidExtensionErrors.length} relative import(s) with invalid extensions:\n`
+      );
+
+      const invalidByFile = new Map();
+      invalidExtensionErrors.forEach(error => {
+        if (!invalidByFile.has(error.file)) {
+          invalidByFile.set(error.file, []);
+        }
+        invalidByFile.get(error.file).push(error);
+      });
+
+      invalidByFile.forEach((errors, file) => {
+        const relativePath = file.replace(process.cwd(), "").replace(/^\//, "");
+        console.log(`📄 ${relativePath}:`);
+
+        errors.forEach(error => {
+          console.log(`  Line ${error.line}: ${error.importPath}`);
+          console.log(`    ${error.fullLine}`);
+          console.log(
+            `    ${"".padStart(error.fullLine.indexOf(error.importPath), " ")}${"".padStart(error.importPath.length, "^")}`
+          );
+        });
+        console.log("");
+      });
+    }
+
     console.log("💡 Tips:");
-    console.log('  - Add file extensions to relative imports (e.g., "./file" → "./file.ts")');
+    if (missingExtensionErrors.length > 0) {
+      console.log('  - Add file extensions to relative imports (e.g., "./file" → "./file.ts")');
+    }
+    if (invalidExtensionErrors.length > 0) {
+      console.log("  - Replace .js/.jsx with .ts/.tsx in TypeScript files");
+    }
     console.log("  - This is required by Node.js ESM modules");
-    console.log("  - Valid extensions: " + VALID_EXTENSIONS.join(", "));
+    console.log("  - Valid extensions for TypeScript files: " + VALID_EXTENSIONS.join(", "));
+    console.log("  - Invalid extensions for TypeScript files: " + INVALID_EXTENSIONS.join(", "));
 
     process.exit(1);
   }

@@ -7,9 +7,9 @@ import { Portal } from "solid-js/web";
 // @ts-ignore - terracotta module resolution issue with NodeNext
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from "terracotta";
 import info from "../../../package.json" with { type: "json" };
-import { CodeView } from "./CodeView.jsx";
-import { createStackFrame, type StackFrameSource } from "./createStackFrame.js";
-import download from "./download.js";
+import { CodeView } from "./CodeView.tsx";
+import { createStackFrame, type StackFrameSource } from "./createStackFrame.ts";
+import download from "./download.ts";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -20,7 +20,7 @@ import {
   SolidStartIcon,
   ViewCompiledIcon,
   ViewOriginalIcon
-} from "./icons.jsx";
+} from "./icons.tsx";
 // import "./styles.css";
 
 export function classNames(...classes: (string | boolean | undefined)[]): string {

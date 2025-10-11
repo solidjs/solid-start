@@ -12,7 +12,7 @@ import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 
-import { createRoutes } from "../router.jsx";
+import { createRoutes } from "../router.tsx";
 import { getFetchEvent } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";

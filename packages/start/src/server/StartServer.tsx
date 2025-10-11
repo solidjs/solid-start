@@ -10,10 +10,10 @@ import {
   useAssets
 } from "solid-js/web";
 
-import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.jsx";
-import { renderAsset } from "./renderAsset.jsx";
+import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.tsx";
+import { renderAsset } from "./renderAsset.tsx";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
-import { getSsrManifest } from "./manifest/ssr-manifest.js";
+import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 
 const docType = ssr("<!DOCTYPE html>");
 

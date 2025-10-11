@@ -3,10 +3,10 @@
 import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
 
-import { TopErrorBoundary } from "../../shared/ErrorBoundary.jsx";
-import { renderAsset } from "../renderAsset.jsx";
-import type { DocumentComponentProps, PageEvent } from "../types.js";
-import { getSsrManifest } from "../manifest/ssr-manifest.js";
+import { TopErrorBoundary } from "../../shared/ErrorBoundary.tsx";
+import { renderAsset } from "../renderAsset.tsx";
+import type { DocumentComponentProps, PageEvent } from "../types.ts";
+import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 
 const docType = ssr("<!DOCTYPE html>");
 
