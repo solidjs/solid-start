@@ -33,9 +33,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build start
-        run: pnpm run packages:build
+        working-directory: packages/start
+        run: |
+          pnpm run build
+          echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
 
       - name: Release
         run: |
-          echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
           pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact
