@@ -17,7 +17,7 @@ export interface DevOverlayProps {
 
 const DevOverlayDialog = import.meta.env.PROD
   ? () => <></>
-  : clientOnly(() => import("./DevOverlayDialog.tsx"), { lazy: true });
+  : clientOnly(() => import("./DevOverlayDialog"), { lazy: true });
 
 export function DevOverlay(props: DevOverlayProps): JSX.Element {
   const [errors, setErrors] = createSignal<unknown[]>([]);
