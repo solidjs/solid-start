@@ -297,9 +297,6 @@ importers:
       fast-glob:
         specifier: ^3.3.3
         version: 3.3.3
-      h3:
-        specifier: ^1.15.2
-        version: 1.15.3
       h3-v2:
         specifier: npm:h3-nightly
         version: h3-nightly@2.0.1-20251011-181119-7df4426
