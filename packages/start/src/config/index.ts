@@ -3,6 +3,7 @@ import path, { extname, isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TanStackServerFnPluginEnv } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
+import type { NitroConfig } from "nitropack";
 import {
 	normalizePath,
 	type PluginOption,
@@ -10,9 +11,7 @@ import {
 	type ViteDevServer,
 } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-
 import {
-	CLIENT_BASE_PATH,
 	DEFAULT_EXTENSIONS,
 	VIRTUAL_MODULES,
 	VITE_ENVIRONMENTS,
@@ -25,30 +24,19 @@ import {
 } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
-import {
-	clientDistDir,
-	nitroPlugin,
-	serverDistDir,
-	ssrEntryFile,
-	type UserNitroConfig,
-} from "./nitroPlugin.ts";
-
-export type { UserNitroConfig } from "./nitroPlugin.ts";
+import { nitroPlugin } from "./nitroPlugin.ts";
 
 export interface SolidStartOptions {
 	solid?: Partial<SolidOptions>;
 	ssr?: boolean;
 	routeDir?: string;
 	extensions?: string[];
-	server?: UserNitroConfig;
 	middleware?: string;
+	server?: NitroConfig;
 }
 
 const absolute = (path: string, root: string) =>
 	path ? (isAbsolute(path) ? path : join(root, path)) : path;
-
-// this needs to live outside of the TanStackStartVitePlugin since it will be invoked multiple times by vite
-let ssrBundle: Rollup.OutputBundle;
 
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 	const start = defu(options ?? {}, {
@@ -60,18 +48,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			islands: false,
 		},
 		solid: {},
-		server: {
-			...options?.server,
-			routeRules: {
-				"/_build/assets/**": {
-					headers: { "cache-control": "public, immutable, max-age=31536000" },
-				},
-			},
-			experimental: {
-				asyncContext: true,
-			},
-		},
 		extensions: [],
+		server: {},
 	});
 	const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
 	const routeDir = join(start.appRoot, start.routeDir);
@@ -87,7 +65,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 	};
 	return [
 		{
-			name: "solid-start:vite-config",
+			name: "solid-start:config",
 			enforce: "pre",
 			configEnvironment(name) {
 				return {
@@ -115,7 +93,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 					}
 				}
 				return {
-					base: env.command === "build" ? `/${CLIENT_BASE_PATH}` : undefined,
+					appType: "custom",
+					build: { assetsDir: "_build/assets" },
 					environments: {
 						[VITE_ENVIRONMENTS.client]: {
 							consumer: "client",
@@ -123,16 +102,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 								copyPublicDir: false,
 								write: true,
 								manifest: true,
+								outDir: "dist/client",
 								rollupOptions: {
 									input: clientInput,
-									output: {
-										dir: path.resolve(
-											process.cwd(),
-											clientDistDir,
-											CLIENT_BASE_PATH,
-										),
-									},
-									external: ["node:fs", "node:path", "node:os", "node:crypto"],
 									treeshake: true,
 									preserveEntrySignatures: "exports-only",
 								},
@@ -146,20 +118,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 								manifest: true,
 								copyPublicDir: false,
 								rollupOptions: {
-									output: {
-										dir: path.resolve(process.cwd(), serverDistDir),
-										entryFileNames: ssrEntryFile,
-									},
-									plugins: [
-										{
-											name: "capture-output",
-											generateBundle(options, bundle) {
-												// TODO can this hook be called more than once?
-												ssrBundle = bundle;
-											},
-										},
-									] as Array<PluginOption>,
+									input: "~/entry-server.tsx",
 								},
+								outDir: "dist/server",
 								commonjsOptions: {
 									include: [/node_modules/],
 								},
@@ -183,12 +144,22 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 						"import.meta.env.START_SSR": JSON.stringify(start.ssr),
 						"import.meta.env.START_APP_ENTRY": `"${normalizePath(appEntryPath)}"`,
 						"import.meta.env.START_CLIENT_ENTRY": `"${normalizePath(handlers.client)}"`,
-						"import.meta.env.SERVER_BASE_URL": JSON.stringify(
-							(start.server as any).baseURL ?? "",
-						),
 						"import.meta.env.START_DEV_OVERLAY": JSON.stringify(
 							start.devOverlay,
 						),
+					},
+					builder: {
+						sharedPlugins: true,
+						async buildApp(builder) {
+							const client = builder.environments[VITE_ENVIRONMENTS.client];
+							const server = builder.environments[VITE_ENVIRONMENTS.server];
+
+							if (!client) throw new Error("Client environment not found");
+							if (!server) throw new Error("SSR environment not found");
+
+							if (!client.isBuilt) await builder.build(client);
+							if (!server.isBuilt) await builder.build(server);
+						},
 					},
 				};
 			},
@@ -295,11 +266,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				}
 			},
 		},
-		nitroPlugin(
-			{ root: process.cwd() },
-			() => ssrBundle,
-			start.server as UserNitroConfig,
-		),
 		{
 			name: "solid-start:capture-client-bundle",
 			enforce: "post",
@@ -307,6 +273,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				globalThis.START_CLIENT_BUNDLE = bundle;
 			},
 		},
+		nitroPlugin(start.server),
 		solid({
 			...start.solid,
 			ssr: true,

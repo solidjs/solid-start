@@ -28,16 +28,16 @@ import { VITE_ENVIRONMENTS } from "../constants.ts";
 
 export const clientDistDir = "node_modules/.solid-start/client-dist";
 export const serverDistDir = "node_modules/.solid-start/server-dist";
-export const ssrEntryFile = "ssr.mjs";
 
 export type UserNitroConfig = Omit<
 	NitroConfig,
 	"dev" | "publicAssets" | "renderer" | "rollupConfig"
 >;
 
+let ssrBundle: Rollup.OutputBundle;
+let ssrEntryFile: string;
+
 export function nitroPlugin(
-	options: { root: string },
-	getSsrBundle: () => Rollup.OutputBundle,
 	nitroConfig?: UserNitroConfig,
 ): Array<PluginOption> {
 	return [
@@ -126,6 +126,35 @@ export function nitroPlugin(
 		},
 		{
 			name: "solid-start-vite-plugin-nitro",
+			generateBundle: {
+				handler(_options, bundle) {
+					if (this.environment.name !== "ssr") {
+						return;
+					}
+
+					// find entry point of ssr bundle
+					let entryFile: string | undefined;
+					for (const [_name, file] of Object.entries(bundle)) {
+						if (file.type === "chunk") {
+							if (file.isEntry) {
+								if (entryFile !== undefined) {
+									this.error(
+										`Multiple entry points found for service "${this.environment.name}". Only one entry point is allowed.`,
+									);
+								}
+								entryFile = file.fileName;
+							}
+						}
+					}
+					if (entryFile === undefined) {
+						this.error(
+							`No entry point found for service "${this.environment.name}".`,
+						);
+					}
+					ssrEntryFile = entryFile!;
+					ssrBundle = bundle;
+				},
+			},
 			configEnvironment(name) {
 				if (name === VITE_ENVIRONMENTS.server) {
 					return {
@@ -149,14 +178,14 @@ export function nitroPlugin(
 					builder: {
 						sharedPlugins: true,
 						async buildApp(builder) {
-							const clientEnv = builder.environments[VITE_ENVIRONMENTS.client];
-							const serverEnv = builder.environments[VITE_ENVIRONMENTS.server];
+							const client = builder.environments[VITE_ENVIRONMENTS.client];
+							const server = builder.environments[VITE_ENVIRONMENTS.server];
 
-							if (!clientEnv) throw new Error("Client environment not found");
-							if (!serverEnv) throw new Error("SSR environment not found");
+							if (!client) throw new Error("Client environment not found");
+							if (!server) throw new Error("SSR environment not found");
 
-							await builder.build(clientEnv);
-							await builder.build(serverEnv);
+							await builder.build(client);
+							await builder.build(server);
 
 							const resolvedNitroConfig: NitroConfig = {
 								compatibilityDate: "2024-11-19",
@@ -169,12 +198,17 @@ export function nitroPlugin(
 								...nitroConfig,
 								dev: false,
 								publicAssets: [
-									{ dir: path.resolve(options.root, clientDistDir) },
+									{
+										dir: client.config.build.outDir,
+										maxAge: 31536000, // 1 year
+										baseURL: "/",
+									},
 								],
 								renderer: ssrEntryFile,
 								rollupConfig: {
-									plugins: [virtualBundlePlugin(getSsrBundle()) as any],
+									plugins: [virtualBundlePlugin(ssrBundle) as any],
 								},
+								experimental: { asyncContext: true },
 							};
 
 							const nitro = await createNitro(resolvedNitroConfig);

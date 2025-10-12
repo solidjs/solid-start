@@ -13,7 +13,7 @@ export function getSsrProdManifest() {
 			if (!viteManifestEntry)
 				throw new Error("No entry found in vite manifest");
 
-			return `/${CLIENT_BASE_PATH}/${viteManifestEntry.file}`;
+			return viteManifestEntry.file;
 		},
 		async getAssets(id) {
 			return createHtmlTagsForAssets(
@@ -29,7 +29,7 @@ export function getSsrProdManifest() {
 
 			for (const entryKey of entryKeys) {
 				json[entryKey] = {
-					output: join("/", CLIENT_BASE_PATH, viteManifest[entryKey]!.file),
+					output: join("/", viteManifest[entryKey]!.file),
 					assets: await this.getAssets(entryKey),
 				};
 			}
@@ -53,8 +53,8 @@ function createHtmlTagsForAssets(assets: string[]) {
 		.map<Asset>((asset) => ({
 			tag: "link",
 			attrs: {
-				href: join("/", CLIENT_BASE_PATH, asset),
-				key: join("/", CLIENT_BASE_PATH, asset),
+				href: asset,
+				key: asset,
 				...(asset.endsWith(".css")
 					? { rel: "stylesheet", fetchPriority: "high" }
 					: { rel: "modulepreload" }),
