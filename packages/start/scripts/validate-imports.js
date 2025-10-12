@@ -14,7 +14,7 @@
  * - Scans all .ts and .tsx files in the src/ directory recursively
  * - Detects relative imports (starting with ./ or ../) without extensions
  * - Prevents .js/.jsx imports in TypeScript files (should use .ts/.tsx)
- * - Ignores commented code and CSS imports (handled by bundlers)
+ * - Ignores commented code, CSS imports, and dynamic imports (handled by bundlers)
  * - Provides detailed error reporting with line numbers and suggestions
  * - Exits with appropriate status codes for CI/CD integration
  *
@@ -115,22 +115,23 @@ function extractImportExportStatements(content, filePath) {
     // Export from: export { ... } from '...'
     /export\s+(?:\{[^}]*\}|\*)\s+from\s+['"`]([^'"`]+)['"`]/g,
     // Export default from: export { default } from '...'
-    /export\s+\{\s*default\s*\}\s+from\s+['"`]([^'"`]+)['"`]/g,
-    // Dynamic imports: import('...')
-    /import\s*\(\s*['"`]([^'"`]+)['"`]\s*\)/g
+    /export\s+\{\s*default\s*\}\s+from\s+['"`]([^'"`]+)['"`]/g
+    // Note: Dynamic imports are excluded as they're handled by bundlers
   ];
 
   lines.forEach((line, lineNumber) => {
     const trimmedLine = line.trim();
 
-    // Skip commented lines and TypeScript type-only imports in d.ts files
+    // Skip commented lines, dynamic imports, and TypeScript type-only imports in d.ts files
     if (
       trimmedLine.startsWith("//") ||
       trimmedLine.startsWith("/*") ||
       trimmedLine.startsWith("*") ||
       (filePath.endsWith(".d.ts") && trimmedLine.includes("import(")) ||
       // Skip CSS imports as they're handled by bundlers
-      /import\s+['"`][^'"`]*\.css['"`]/.test(trimmedLine)
+      /import\s+['"`][^'"`]*\.css['"`]/.test(trimmedLine) ||
+      // Skip dynamic imports as they're handled by bundlers
+      /import\s*\(\s*['"`]/.test(trimmedLine)
     ) {
       return;
     }
