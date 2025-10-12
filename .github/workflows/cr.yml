@@ -41,4 +41,4 @@ jobs:
 
       - name: Release
         run: |
-          pnpm dlx pkg-pr-new@0.0 publish './packages/*' --template './examples/*' --compact
+          pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact
