@@ -9,7 +9,7 @@ import {
 	DEFAULT_EXTENSIONS,
 	VIRTUAL_MODULES,
 	VITE_ENVIRONMENTS,
-} from "../constants.ts";
+} from "./constants.ts";
 import { isCssModulesFile } from "../server/collect-styles.ts";
 import { getSsrDevManifest } from "../server/manifest/dev-ssr-manifest.ts";
 import { devServer } from "./dev-server.ts";

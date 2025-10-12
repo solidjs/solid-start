@@ -1,6 +1,6 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { join } from "pathe";
-import { CLIENT_BASE_PATH } from "../../constants.ts";
+import { CLIENT_BASE_PATH } from "../../config/constants.ts";
 import type { Asset } from "../renderAsset.tsx";
 
 // Only reads from client manifest atm, might need server support for islands

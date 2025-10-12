@@ -5,7 +5,7 @@ import {
 	type PluginOption,
 	type ViteDevServer,
 } from "vite";
-import { VITE_ENVIRONMENTS } from "../constants.ts";
+import { VITE_ENVIRONMENTS } from "./constants.ts";
 
 export function devServer(): Array<PluginOption> {
 	return [

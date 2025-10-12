@@ -1,7 +1,7 @@
 import { relative } from "node:path";
 import type { PluginOption } from "vite";
 
-import { VITE_ENVIRONMENTS } from "../../constants.ts";
+import { VITE_ENVIRONMENTS } from "../constants.ts";
 import { fileSystemWatcher } from "./fs-watcher.ts";
 import type { BaseFileSystemRouter } from "./router.ts";
 import { treeShake } from "./tree-shake.ts";
