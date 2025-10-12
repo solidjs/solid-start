@@ -36,8 +36,9 @@ jobs:
         working-directory: packages/start
         run: |
           pnpm run build
-          echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
+          # rewrite .ts exports to .js
+          pnpm --filter='./packages/*' -c exec "echo \$(cat package.json | jq '.exports = .publishConfig.exports') > package.json"
 
       - name: Release
         run: |
-          pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact
+          pnpm dlx pkg-pr-new@0.0 publish './packages/*' --template './examples/*' --compact

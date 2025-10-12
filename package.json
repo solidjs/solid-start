@@ -21,7 +21,7 @@
     "lp:build": "pnpm --filter landing-page build",
     "lp:start": "pnpm --filter landing-page start",
     "lp:clean": "pnpx rimraf ./packages/landing-page/node_modules ./packages/landing-page/.vinxi/ ./packages/landing-page/.output/",
-    "packages:build": "pnpm --filter @solidjs/start build",
+    "packages:build": "pnpm --filter=./packages/* build",
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
     "clean:test": "pnpx rimraf .tmp",
     "release": "pnpm build && changeset publish"
