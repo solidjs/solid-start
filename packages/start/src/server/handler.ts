@@ -1,11 +1,5 @@
 import middleware from "solid-start:middleware";
-import {
-	eventHandler,
-	getCookie,
-	getResponseHeaders,
-	type H3Event,
-	setCookie,
-} from "h3";
+import { defineHandler, getCookie, H3, type H3Event, setCookie } from "h3-v2";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
@@ -33,8 +27,8 @@ export function createBaseHandler(
 		| HandlerOptions
 		| ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
-	const handler = eventHandler({
-		...middleware,
+	const handler = defineHandler({
+		middleware,
 		handler: async (e: H3Event) => {
 			const event = getRequestEvent()!;
 			const url = new URL(event.request.url);
@@ -47,7 +41,7 @@ export function createBaseHandler(
 				if (serverFnResponse instanceof Response) return serverFnResponse;
 
 				return new Response(serverFnResponse as any, {
-					headers: getResponseHeaders(e) as any,
+					headers: e.res.headers,
 				});
 			}
 
@@ -106,9 +100,15 @@ export function createBaseHandler(
 		},
 	});
 
-	return eventHandler((e: H3Event) =>
-		provideRequestEvent(getFetchEvent(e), () => handler(e)),
+	const app = new H3();
+
+	app.use(
+		defineHandler((e) =>
+			provideRequestEvent(getFetchEvent(e), () => handler(e)),
+		),
 	);
+
+	return app;
 }
 
 export function createHandler(

@@ -300,15 +300,15 @@ importers:
       h3:
         specifier: ^1.15.2
         version: 1.15.3
+      h3-v2:
+        specifier: npm:h3-nightly
+        version: h3-nightly@2.0.1-20251011-181119-7df4426
       html-to-image:
         specifier: ^1.11.13
         version: 1.11.13
       micromatch:
         specifier: ^4.0.8
         version: 4.0.8
-      nitropack:
-        specifier: ^2.11.10
-        version: 2.11.11(@netlify/blobs@8.2.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))
       path-to-regexp:
         specifier: ^8.2.0
         version: 8.2.0
@@ -333,6 +333,9 @@ importers:
       source-map-js:
         specifier: ^1.2.1
         version: 1.2.1
+      srvx:
+        specifier: ^0.8.16
+        version: 0.8.16
       terracotta:
         specifier: ^1.0.6
         version: 1.0.6(solid-js@1.9.9)
@@ -349,6 +352,15 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
+
+  packages/start-nitro-v2-plugin:
+    dependencies:
+      nitropack:
+        specifier: ^2.11.10
+        version: 2.11.11(@netlify/blobs@8.2.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))
+      vite:
+        specifier: ^7.1.9
+        version: 7.1.9(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0)
 
 packages:
 
@@ -3730,6 +3742,15 @@ packages:
     resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  h3-nightly@2.0.1-20251011-181119-7df4426:
+    resolution: {integrity: sha512-PkmThrkZIqAilZuIwPw0RYW9BPOfPk64vjdjXhFC/Y7ZbUMiyBZyr4hJAmQHa/7yEiWazgKQzncQNOs9QUGg2Q==}
+    engines: {node: '>=20.11.1'}
+    peerDependencies:
+      crossws: ^0.4.1
+    peerDependenciesMeta:
+      crossws:
+        optional: true
+
   h3@1.15.3:
     resolution: {integrity: sha512-z6GknHqyX0h9aQaTx22VZDf6QyZn+0Nh+Ym8O/u0SGSkyF5cuTJYKlc8MkzW3Nzf9LE1ivcpmYC3FUGpywhuUQ==}
 
@@ -5190,6 +5211,9 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  rou3@0.7.7:
+    resolution: {integrity: sha512-z+6o7c3DarUbuBMLIdhzj2CqJLtUWrGk4fZlf07dIMitX3UpBXeInJ3lMD9huxj9yh9eo1RqtXf9aL0YzkDDUA==}
+
   rrweb-cssom@0.7.1:
     resolution: {integrity: sha512-TrEMa7JGdVm0UThDJSx7ddw5nVm3UJS9o9CCIZ72B1vSyEZoziDqBYP3XIoi/12lKrJR8rE3jeFHMok2F/Mnsg==}
 
@@ -5409,6 +5433,11 @@ packages:
 
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
+
+  srvx@0.8.16:
+    resolution: {integrity: sha512-hmcGW4CgroeSmzgF1Ihwgl+Ths0JqAJ7HwjP2X7e3JzY7u4IydLMcdnlqGQiQGUswz+PO9oh/KtCpOISIvs9QQ==}
+    engines: {node: '>=20.16.0'}
+    hasBin: true
 
   sshpk@1.18.0:
     resolution: {integrity: sha512-2p2KJZTSqQ/I3+HX42EpYOa2l3f8Erv8MWKsy2I9uf4wA7yFIkXRffYdsx86y6z4vHtV8u7g+pPlr8/4ouAxsQ==}
@@ -9955,6 +9984,11 @@ snapshots:
     dependencies:
       duplexer: 0.1.2
 
+  h3-nightly@2.0.1-20251011-181119-7df4426:
+    dependencies:
+      rou3: 0.7.7
+      srvx: 0.8.16
+
   h3@1.15.3:
     dependencies:
       cookie-es: 1.2.2
@@ -11505,6 +11539,8 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.52.4
       fsevents: 2.3.3
 
+  rou3@0.7.7: {}
+
   rrweb-cssom@0.7.1: {}
 
   run-parallel@1.2.0:
@@ -11765,6 +11801,8 @@ snapshots:
   spdx-license-ids@3.0.21: {}
 
   sprintf-js@1.0.3: {}
+
+  srvx@0.8.16: {}
 
   sshpk@1.18.0:
     dependencies:

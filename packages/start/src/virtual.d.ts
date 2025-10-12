@@ -20,8 +20,5 @@ declare module "#start/app" {
 
 declare module "solid-start:middleware" {
   type MaybeArray<T> = T | Array<T>;
-  export default Middleware as {
-    onRequest?: MaybeArray<import("h3")._RequestMiddleware>;
-    onBeforeResponse?: MaybeArray<import("h3")._ResponseMiddleware>;
-  };
+  export default Middleware as import("h3-v2").Middleware[];
 }

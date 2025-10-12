@@ -1,10 +1,6 @@
 // @refresh skip
 
-import {
-	defineMiddleware,
-	type H3Event as HTTPEvent,
-	sendWebResponse,
-} from "../http/index.ts";
+import { H3Event, Middleware } from "h3-v2";
 import { getFetchEvent } from "../server/fetchEvent.ts";
 import type { FetchEvent } from "../server/types.ts";
 
@@ -32,47 +28,48 @@ export type ResponseMiddleware = (
 ) => Response | Promise<Response> | void | Promise<void>;
 
 function wrapRequestMiddleware(onRequest: RequestMiddleware) {
-	return async (h3Event: HTTPEvent) => {
+	return async (h3Event: H3Event) => {
 		const fetchEvent = getFetchEvent(h3Event);
 		const response = await onRequest(fetchEvent);
-		if (response) {
-			await sendWebResponse(h3Event, response);
-		}
+		if (response) return response;
 	};
 }
 
-function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware) {
+function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middleware {
 	return async (
-		h3Event: HTTPEvent,
-		response: ResponseMiddlewareResponseParam,
+		h3Event,
+		next
 	) => {
+    const resp = await next();
+
 		const fetchEvent = getFetchEvent(h3Event);
-		const mwResponse = await onBeforeResponse(fetchEvent, response);
-		if (mwResponse) {
-			await sendWebResponse(h3Event, mwResponse);
-		}
+		const mwResponse = await onBeforeResponse(fetchEvent, {body: (resp as any)?.body });
+		if (mwResponse) return mwResponse
 	};
 }
 
-export function createMiddleware({
-	onRequest,
-	onBeforeResponse,
-}: {
+export function createMiddleware(args: {
+  /** @deprecated Use H3 `Middleware` */
 	onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
+	/** @deprecated Use H3 `Middleware` */
 	onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
-}) {
-	return defineMiddleware({
-		onRequest:
-			typeof onRequest === "function"
-				? wrapRequestMiddleware(onRequest)
-				: Array.isArray(onRequest)
-					? onRequest.map(wrapRequestMiddleware)
-					: undefined,
-		onBeforeResponse:
-			typeof onBeforeResponse === "function"
-				? wrapResponseMiddleware(onBeforeResponse)
-				: Array.isArray(onBeforeResponse)
-					? onBeforeResponse.map(wrapResponseMiddleware)
-					: undefined,
-	});
+} | Middleware[]): Middleware[] {
+  if(Array.isArray(args)) return args
+
+  const mw: Middleware[] = [];
+
+  if(typeof args.onRequest === "function") {
+    mw.push(wrapRequestMiddleware(args.onRequest));
+  } else if (Array.isArray(args.onRequest)) {
+    mw.push(...args.onRequest.map(wrapRequestMiddleware));
+  }
+
+  if(typeof args.onBeforeResponse === "function") {
+    mw.push(wrapResponseMiddleware(args.onBeforeResponse));
+  } else if (Array.isArray(args.onBeforeResponse)) {
+    mw.push(...args.onBeforeResponse.map(wrapResponseMiddleware));
+  }
+
+
+  return mw
 }

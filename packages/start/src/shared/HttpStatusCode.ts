@@ -19,9 +19,8 @@ export const HttpStatusCode = isServer
 			event.response.statusText = props.text;
 			onCleanup(
 				() =>
-					!event.nativeEvent.handled &&
-					!event.complete &&
-					(event.response.status = 200),
+					// !event.nativeEvent.handled &&
+					!event.complete && (event.response.status = 200),
 			);
 			return null;
 		}

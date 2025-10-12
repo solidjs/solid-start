@@ -1,15 +1,9 @@
 import { globSync } from "node:fs";
-import path, { extname, isAbsolute, join, normalize } from "node:path";
+import { extname, isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TanStackServerFnPluginEnv } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
-import type { NitroConfig } from "nitropack";
-import {
-	normalizePath,
-	type PluginOption,
-	type Rollup,
-	type ViteDevServer,
-} from "vite";
+import { normalizePath, type PluginOption, type ViteDevServer } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import {
 	DEFAULT_EXTENSIONS,
@@ -18,13 +12,13 @@ import {
 } from "../constants.ts";
 import { isCssModulesFile } from "../server/collect-styles.ts";
 import { getSsrDevManifest } from "../server/manifest/dev-ssr-manifest.ts";
+import { devServer } from "./dev-server.ts";
 import {
 	SolidStartClientFileRouter,
 	SolidStartServerFileRouter,
 } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
-import { nitroPlugin } from "./nitroPlugin.ts";
 
 export interface SolidStartOptions {
 	solid?: Partial<SolidOptions>;
@@ -32,7 +26,6 @@ export interface SolidStartOptions {
 	routeDir?: string;
 	extensions?: string[];
 	middleware?: string;
-	server?: NitroConfig;
 }
 
 const absolute = (path: string, root: string) =>
@@ -49,7 +42,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 		},
 		solid: {},
 		extensions: [],
-		server: {},
 	});
 	const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
 	const routeDir = join(start.appRoot, start.routeDir);
@@ -273,7 +265,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				globalThis.START_CLIENT_BUNDLE = bundle;
 			},
 		},
-		nitroPlugin(start.server),
+		devServer(),
 		solid({
 			...start.solid,
 			ssr: true,

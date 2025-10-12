@@ -54,3 +54,4 @@ vite.config.ts.timestamp*
 **/cypress/screenshots
 
 .data
+tsconfig.tsbuildinfo

@@ -1,12 +1,6 @@
 import serverFnManifest from "solidstart:server-fn-manifest";
 import { parseSetCookie } from "cookie-es";
-import {
-	type H3Event,
-	parseCookies,
-	setHeader,
-	setResponseHeader,
-	setResponseStatus,
-} from "h3";
+import { type H3Event, parseCookies } from "h3-v2";
 import {
 	crossSerializeStream,
 	fromJSON,
@@ -149,8 +143,10 @@ export async function handleServerFunction(h3Event: H3Event) {
 
 		// Nodes native IncomingMessage doesn't have a body,
 		// But we need to access it for some reason (#1282)
-		type EdgeIncomingMessage = typeof h3Event.node.req & { body?: BodyInit };
-		const h3Request = h3Event.node.req as EdgeIncomingMessage | ReadableStream;
+		type EdgeIncomingMessage = Request & { body?: BodyInit };
+		const h3Request = h3Event.req as unknown as
+			| EdgeIncomingMessage
+			| ReadableStream;
 
 		// This should never be the case in "proper" Nitro presets since node.req has to be IncomingMessage,
 		// But the new azure-functions preset for some reason uses a ReadableStream in node.req (#1521)
@@ -223,7 +219,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 				if (result.headers) mergeResponseHeaders(h3Event, result.headers);
 				// forward non-redirect statuses
 				if (result.status && (result.status < 300 || result.status >= 400))
-					setResponseStatus(h3Event, result.status);
+					h3Event.res.status = result.status;
 				if ((result as any).customBody) {
 					result = await (result as any).customBody();
 				} else if (result.body == undefined) result = null;
@@ -233,7 +229,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 		// handle no JS success case
 		if (!instance) return handleNoJS(result, request, parsed);
 
-		setResponseHeader(h3Event, "content-type", "text/javascript");
+		h3Event.res.headers.set("content-type", "text/javascript");
 
 		return serializeToStream(instance, result);
 	} catch (x) {
@@ -248,20 +244,21 @@ export async function handleServerFunction(h3Event: H3Event) {
 				(x as any).status &&
 				(!instance || (x as any).status < 300 || (x as any).status >= 400)
 			)
-				setResponseStatus(h3Event, (x as any).status);
+				h3Event.res.status = (x as any).status;
 			if ((x as any).customBody) {
 				x = (x as any).customBody();
 			} else if ((x as any).body === undefined) x = null;
-			setHeader(h3Event, "X-Error", "true");
+			h3Event.res.headers.set("X-Error", "true");
 		} else if (instance) {
 			const error =
 				x instanceof Error ? x.message : typeof x === "string" ? x : "true";
-			setHeader(h3Event, "X-Error", error.replace(/[\r\n]+/g, ""));
+
+			h3Event.res.headers.set("X-Error", error.replace(/[\r\n]+/g, ""));
 		} else {
 			x = handleNoJS(x, request, parsed, true);
 		}
 		if (instance) {
-			setHeader(h3Event, "content-type", "text/javascript");
+			h3Event.res.headers.set("content-type", "text/javascript");
 			return serializeToStream(instance, x);
 		}
 		return x;
@@ -323,15 +320,15 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
 	// unclear if h3 internals are available on all platforms but we need a way to
 	// update request headers on the underlying H3 event.
 
-	const headers = new Headers(sourceEvent.request.headers);
+	const headers = sourceEvent.request.headers;
 	const cookies = parseCookies(sourceEvent.nativeEvent);
 	const SetCookies = sourceEvent.response.headers.getSetCookie();
 	headers.delete("cookie");
-	let useH3Internals = false;
-	if (sourceEvent.nativeEvent.node?.req) {
-		useH3Internals = true;
-		sourceEvent.nativeEvent.node.req.headers.cookie = "";
-	}
+	// let useH3Internals = false;
+	// if (sourceEvent.nativeEvent.node?.req) {
+	// 	useH3Internals = true;
+	// 	sourceEvent.nativeEvent.node.req.headers.cookie = "";
+	// }
 	SetCookies.forEach((cookie) => {
 		if (!cookie) return;
 		const { maxAge, expires, name, value } = parseSetCookie(cookie);
@@ -347,8 +344,8 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
 	});
 	Object.entries(cookies).forEach(([key, value]) => {
 		headers.append("cookie", `${key}=${value}`);
-		useH3Internals &&
-			(sourceEvent.nativeEvent.node.req.headers.cookie += `${key}=${value};`);
+		// useH3Internals &&
+		// 	(sourceEvent.nativeEvent.node.req.headers.cookie += `${key}=${value};`);
 	});
 
 	return headers;

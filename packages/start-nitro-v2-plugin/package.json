@@ -1,0 +1,20 @@
+{
+  "name": "@solidjs/start-nitro-v2-plugin",
+  "version": "1.0.0-devinxi.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      "./": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "nitropack": "^2.11.10",
+    "vite": "^7.1.9"
+  }
+}
