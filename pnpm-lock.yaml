@@ -352,9 +352,9 @@ importers:
 
   packages/start-nitro-v2-plugin:
     dependencies:
-      h3:
-        specifier: 2.0.1-rc.2
-        version: 2.0.1-rc.2
+      h3-v1:
+        specifier: npm:h3@^1.0
+        version: h3@1.15.3
       nitropack:
         specifier: ^2.11.10
         version: 2.11.11(@netlify/blobs@8.2.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))
@@ -3750,15 +3750,6 @@ packages:
 
   h3@2.0.0-beta.4:
     resolution: {integrity: sha512-/JdwHUGuHjbBXAVxQN7T7QeI9cVlhsqMKVNFHebZVs9RoEYH85Ogh9O1DEy/1ZiJkmMwa1gNg6bBcGhc1Itjdg==}
-    engines: {node: '>=20.11.1'}
-    peerDependencies:
-      crossws: ^0.4.1
-    peerDependenciesMeta:
-      crossws:
-        optional: true
-
-  h3@2.0.1-rc.2:
-    resolution: {integrity: sha512-2vS7OETzPDzGQxmmcs6ttu7p0NW25zAdkPXYOr43dn4GZf81uUljJvupa158mcpUGpsQUqIy4O4THWUQT1yVeA==}
     engines: {node: '>=20.11.1'}
     peerDependencies:
       crossws: ^0.4.1
@@ -10011,13 +10002,6 @@ snapshots:
       uncrypto: 0.1.3
 
   h3@2.0.0-beta.4:
-    dependencies:
-      cookie-es: 2.0.0
-      fetchdts: 0.1.7
-      rou3: 0.7.7
-      srvx: 0.8.16
-
-  h3@2.0.1-rc.2:
     dependencies:
       cookie-es: 2.0.0
       fetchdts: 0.1.7
