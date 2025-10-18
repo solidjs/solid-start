@@ -1,6 +1,6 @@
 import serverFnManifest from "solidstart:server-fn-manifest";
 import { parseSetCookie } from "cookie-es";
-import { type H3Event, parseCookies } from "h3-v2";
+import { type H3Event, parseCookies } from "h3";
 import {
 	crossSerializeStream,
 	fromJSON,

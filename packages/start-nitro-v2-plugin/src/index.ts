@@ -97,13 +97,16 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
 							],
 							renderer: virtualEntry,
 							rollupConfig: {
-							...nitroConfig?.rollupConfig,
+								...nitroConfig?.rollupConfig,
 								plugins: [virtualBundlePlugin(ssrBundle) as any],
 							},
-							experimental: { ...nitroConfig?.experimental, asyncContext: true },
+							experimental: {
+								...nitroConfig?.experimental,
+								asyncContext: true,
+							},
 							virtual: {
-							  ...nitroConfig?.virtual,
-								[virtualEntry]: `import { fromWebHandler } from 'h3'
+								...nitroConfig?.virtual,
+								[virtualEntry]: `import { fromWebHandler } from 'h3-v1'
                                 import handler from '${ssrEntryFile}'
                                 export default fromWebHandler(handler.fetch)`,
 							},

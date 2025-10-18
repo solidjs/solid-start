@@ -1,4 +1,4 @@
-import { getRequestIP, type H3Event } from "h3-v2";
+import { getRequestIP, type H3Event } from "h3";
 import type { FetchEvent } from "./types.ts";
 
 const FETCH_EVENT_CONTEXT = "solidFetchEvent";

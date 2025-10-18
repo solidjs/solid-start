@@ -1,5 +1,5 @@
+import * as h3 from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import * as h3 from "h3-v2";
 
 import {
 	createFetchEvent,
@@ -7,22 +7,22 @@ import {
 	mergeResponseHeaders,
 } from "./fetchEvent.ts";
 
-vi.mock(import("h3-v2"), async (mod) => {
-  return ({
-    ...(await mod()),
-    getRequestIP: vi.fn(),
-  })
+vi.mock(import("h3"), async (mod) => {
+	return {
+		...(await mod()),
+		getRequestIP: vi.fn(),
+	};
 });
 
 const mockedH3 = vi.mocked(h3);
 
 const createMockH3Event = (): h3.H3Event => {
-  const event = new h3.H3Event(new Request("http://localhost/test"));
+	const event = new h3.H3Event(new Request("http://localhost/test"));
 
-  event.res.status = 200;
-  event.res.statusText = "OK"
+	event.res.status = 200;
+	event.res.statusText = "OK";
 
-  return event;
+	return event;
 };
 
 describe("fetchEvent", () => {
@@ -82,8 +82,8 @@ describe("fetchEvent", () => {
 
 			mergeResponseHeaders(mockH3Event, headers);
 
-			expect(headers.get("content-type")).toBe("application/json")
-			expect(headers.get("x-custom")).toBe("value")
+			expect(headers.get("content-type")).toBe("application/json");
+			expect(headers.get("x-custom")).toBe("value");
 		});
 	});
 });

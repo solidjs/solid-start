@@ -1,4 +1,4 @@
-import type { H3Event } from "h3-v2";
+import type { H3Event } from "h3";
 import type { JSX } from "solid-js";
 import type { RequestEvent } from "solid-js/web";
 
