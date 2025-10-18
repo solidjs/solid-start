@@ -14,6 +14,7 @@
     }
   },
   "dependencies": {
+    "h3-v1": "npm:h3@^1.0",
     "nitropack": "^2.11.10",
     "vite": "^7.1.9"
   }
