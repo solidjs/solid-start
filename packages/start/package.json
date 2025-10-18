@@ -46,7 +46,7 @@
     "es-module-lexer": "^1.7.0",
     "esbuild": "^0.25.3",
     "fast-glob": "^3.3.3",
-    "h3-v2": "npm:h3-nightly",
+    "h3-v2": "npm:h3@2.0.0-beta.4",
     "html-to-image": "^1.11.13",
     "micromatch": "^4.0.8",
     "path-to-regexp": "^8.2.0",
