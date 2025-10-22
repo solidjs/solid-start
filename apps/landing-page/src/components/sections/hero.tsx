@@ -1,7 +1,8 @@
 import { CodeSnippet } from "../code-snippet";
+import { DownloadLogosMenu } from "../download-logos-menu";
 import { GithubIcon } from "../icons/github-icon";
-import { SolidStartLogo } from "../icons/solidstart-logo";
 import { buttonVariants } from "../ui/button";
+
 import { AnimatedShinyText } from "../ui/mystic/shine";
 
 const buttonOutlineStyles = buttonVariants({
@@ -24,7 +25,7 @@ export function Hero() {
         </a>
       </div>
       <div class="max-w-5xl mx-auto">
-        <SolidStartLogo class="drop-shadow-[10px_20px_35px_rgb(125,211,252,0.3)] size-52 md:size-[400px] mx-auto" />
+        <DownloadLogosMenu />
         <div class="flex flex-col">
           <div class="text-center text-6xl font-semibold">
             Solid<span class="text-[#017AD4]">Start</span>
