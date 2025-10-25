@@ -54,7 +54,7 @@ function createRoutesReloader(
 			}
 		}
 
-		if (!server.config.server.hmr) {
+		if (!server.hot) {
 			server.ws.send({ type: "full-reload" });
 		}
 	}
