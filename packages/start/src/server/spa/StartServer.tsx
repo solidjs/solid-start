@@ -2,8 +2,8 @@
 // @ts-ignore
 import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
-import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 
+import clientAssets from "solid-start:client-entry?assets=client";
 import { TopErrorBoundary } from "../../shared/ErrorBoundary.tsx";
 import { renderAsset } from "../renderAsset.tsx";
 import type { DocumentComponentProps, PageEvent } from "../types.ts";
@@ -24,18 +24,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
       <TopErrorBoundary>
         <props.document
           assets={<>{context.assets.map((m: any) => renderAsset(m))}</>}
-          scripts={
-            <>
-              <script
-                nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-              />
-              <script
-                type="module"
-                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
-              />
-            </>
-          }
+          scripts={<script type="module" src={clientAssets.entry} />}
         />
       </TopErrorBoundary>
     </NoHydration>

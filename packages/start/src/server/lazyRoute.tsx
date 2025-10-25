@@ -49,7 +49,7 @@ export default function lazyRoute<T extends Record<string, any>>(
       };
       return { default: Comp };
     } else {
-      const assets = await clientManifest.getAssets(component.src);
+      const assets = []; // await clientManifest.getAssets(component.src);
       const styles = assets.filter(
         asset =>
           asset.tag === "style" ||

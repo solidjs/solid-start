@@ -33,6 +33,8 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
 
 				const routes = await router.getRoutes();
 
+        let assetImports: Promise<string>[] = [];
+
 				let routesCode = JSON.stringify(routes ?? [], (k, v) => {
 					if (v === undefined) return undefined;
 
@@ -54,24 +56,30 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
 						};
 					} else if (k.startsWith("$")) {
 						const buildId = `${v.src}?${v.pick.map((p: any) => `pick=${p}`).join("&")}`;
+
+            const [id, queryString] = relative(root, buildId).split("?");
+            const query = new URLSearchParams(queryString ?? "");
+            const resolved = this.resolve(`${id}?assets&${query.toString()}`)
+            const assetIndex = assetImports.length;
+            assetImports.push(resolved.then(resolved => `import assets_${assetIndex} from "${resolved!.id}";`))
+
 						return {
-							src: relative(root, buildId),
-							build: isBuild
-								? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
-								: undefined,
+							assets: `_$(() => assets_${assetIndex})$_`,
 							import:
 								this.environment.name === VITE_ENVIRONMENTS.server
 									? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
-									: `_$(() => clientManifestImport('${relative(root, buildId)}'))$_`,
+                  : `_$() => import(assets_${assetIndex}.entry)$_`,
 						};
 					}
 					return v;
 				});
 
+        routesCode = routesCode.replaceAll("\\n", "");
 				routesCode = routesCode.replaceAll('"_$(', "(").replaceAll(')$_"', ")");
 
 				const code = `
 ${js.getImportStatements()}
+${(await Promise.all(assetImports)).join("\n")}
 ${
 	this.environment.name === VITE_ENVIRONMENTS.server
 		? ""

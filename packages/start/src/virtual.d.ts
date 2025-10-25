@@ -25,3 +25,42 @@ declare module "solid-start:middleware" {
 	type MaybeArray<T> = T | Array<T>;
 	export default Middleware as import("h3").Middleware[];
 }
+
+type ImportAssetsResultRaw = {
+  entry?: string;
+  js: { href: string }[];
+  css: CssLinkAttributes[];
+};
+
+type CssLinkAttributes = {
+  href: string;
+  "data-vite-dev-id"?: string;
+};
+
+type ImportAssetsOptions = {
+  import?: string;
+  environment?: string; // TODO: can we remove in favor of asEntry and universal?
+  asEntry?: boolean;
+  // universal?: boolean;
+};
+
+// TODO: rename to just Assets?
+type ImportAssetsResult = ImportAssetsResultRaw & {
+  merge(...args: ImportAssetsResultRaw[]): ImportAssetsResult;
+};
+
+
+declare module "*?assets" {
+  const assets: ImportAssetsResultRaw;
+  export default assets;
+}
+
+declare module "*?assets=client" {
+  const assets: ImportAssetsResultRaw;
+  export default assets;
+}
+
+declare module "*?assets=ssr" {
+  const assets: ImportAssetsResultRaw;
+  export default assets;
+}

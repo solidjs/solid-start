@@ -3,6 +3,7 @@ import { For, Show } from "solid-js";
 import Story from "~/components/story";
 import { getStories } from "~/lib/api";
 import { StoryTypes } from "~/types";
+import { test } from "./[...stories].module.css";
 
 export const route = {
   preload({ location, params }) {
@@ -46,7 +47,7 @@ export default function Stories(props: RouteSectionProps) {
       </div>
       <main class="news-list">
         <Show when={stories()}>
-          <ul>
+          <ul class={test}>
             <For each={stories()}>{story => <Story story={story} />}</For>
           </ul>
         </Show>

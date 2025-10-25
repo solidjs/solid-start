@@ -1,21 +1,9 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
-import { join } from "pathe";
 import type { Asset } from "../renderAsset.tsx";
 
 // Only reads from client manifest atm, might need server support for islands
 export function getSsrProdManifest() {
-	const viteManifest = clientViteManifest;
 	return {
-		path(id: string) {
-      if (id.startsWith("./")) id = id.slice(2);
-
-			const viteManifestEntry =
-				clientViteManifest[id /*import.meta.env.START_CLIENT_ENTRY*/];
-			if (!viteManifestEntry)
-				throw new Error(`No entry found in vite manifest for '${id}'`);
-
-			return viteManifestEntry.file;
-		},
 		async getAssets(id) {
       if (id.startsWith("./")) id = id.slice(2);
 
@@ -23,26 +11,7 @@ export function getSsrProdManifest() {
 				findAssetsInViteManifest(clientViteManifest, id),
 			);
 		},
-		async json() {
-			const json: Record<string, any> = {};
-
-			const entryKeys = Object.keys(viteManifest)
-				.filter((id) => viteManifest[id]?.isEntry)
-				.map((id) => id);
-
-			for (const entryKey of entryKeys) {
-				json[entryKey] = {
-					output: join("/", viteManifest[entryKey]!.file),
-					assets: await this.getAssets(entryKey),
-				};
-			}
-
-			return json;
-		},
-	} satisfies StartManifest & {
-		json(): Promise<Record<string, any>>;
-		path(id: string): string;
-	};
+	} satisfies StartManifest
 }
 
 function createHtmlTagsForAssets(assets: string[]) {

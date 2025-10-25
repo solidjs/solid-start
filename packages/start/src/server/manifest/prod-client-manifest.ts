@@ -10,9 +10,5 @@ export function getClientProdManifest() {
       // @ts-ignore
       return window.manifest[id]?.assets ?? []
     },
-    async json() {
-      // @ts-ignore
-      return window.manifest
-    },
-  } satisfies StartManifest & { json(): Promise<Record<string, any>>, import(id: string): Promise<any>; }
+  } satisfies StartManifest & { import(id: string): Promise<any>; }
 }

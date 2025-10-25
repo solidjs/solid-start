@@ -1,25 +1,11 @@
-import { join, normalize } from "pathe";
+import { getStyleElementsForId } from "../dev/css";
 
 export function getSsrDevManifest(environment: "client" | "ssr") {
   return {
-    path: (id: string) => normalize(join("/", id)),
     async getAssets(id) {
-      const assetsPath =
-        join(
-          import.meta.env.BASE_URL,
-          `@manifest/${environment}/${Date.now()}/assets?id=${id}`,
-        );
-
-      const assets = (await import(/* @vite-ignore */ assetsPath)).default;
-
-      return await Promise.all(assets.map(async v => ({
-        ...v,
-        children: await v.children()
-      })));
+      return getStyleElementsForId(id, environment)
     },
-  } satisfies StartManifest & {
-		path(id: string): string;
-	};
+  } satisfies StartManifest;
 }
 
 export { getSsrDevManifest as getSsrManifest };

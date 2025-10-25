@@ -10,6 +10,7 @@ import {
   useAssets
 } from "solid-js/web";
 
+import clientAssets from "solid-start:client-entry?assets=client";
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.tsx";
 import { renderAsset } from "./renderAsset.tsx";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types.ts";
@@ -57,7 +58,8 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         if (matched) {
           for (let i = 0; i < matched.length; i++) {
             const segment = matched[i];
-            assetPromises.push(manifest.getAssets(segment["$component"].src));
+            console.log(segment["$component"].assets());
+            // assetPromises.push(manifest.getAssets());
           }
         } else if (import.meta.env.DEV)
           console.warn(
@@ -89,20 +91,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
               {context.assets.map((m: any) => renderAsset(m, nonce))}
             </>
           }
-          scripts={
-            <>
-              <script
-                nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-              />
-              <script
-                type="module"
-                nonce={nonce}
-                async
-                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
-              />
-            </>
-          }
+          scripts={<script type="module" nonce={nonce} async src={clientAssets.entry} />}
         >
           {!import.meta.env.START_ISLANDS ? (
             <Hydration>

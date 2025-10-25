@@ -19,7 +19,7 @@ import {
 } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
-import { manifest } from "./manifest.ts";
+import { manifest } from "./new-manifest.ts";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
