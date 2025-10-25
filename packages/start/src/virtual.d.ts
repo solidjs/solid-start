@@ -14,10 +14,10 @@ declare module "solid-start:get-client-manifest" {
 }
 
 declare module "solid-start:get-manifest" {
-	export const getManifest: (target: "client" | "server") => StartManifest;
+	export const getManifest: (target: "client" | "ssr") => StartManifest;
 }
 
-declare module "#start/app" {
+declare module "solid-start:app" {
 	export default App as import("solid-js").Component;
 }
 

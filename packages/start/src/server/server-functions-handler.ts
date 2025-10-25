@@ -1,4 +1,4 @@
-import serverFnManifest from "solidstart:server-fn-manifest";
+import { getServerFnById } from "solidstart:server-fn-manifest";
 import { parseSetCookie } from "cookie-es";
 import { type H3Event, parseCookies } from "h3";
 import {
@@ -98,17 +98,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 		}
 	}
 
-	const serverFnInfo = serverFnManifest[functionId!];
-
-	if (!serverFnInfo) {
-		return process.env.NODE_ENV === "development"
-			? new Response("Server function not found", { status: 404 })
-			: new Response(null, { status: 404 });
-	}
-
-	const fnModule: undefined | { [key: string]: any } =
-		await serverFnInfo.importer();
-	const serverFunction = fnModule![serverFnInfo.functionName];
+	const serverFunction = await getServerFnById(functionId!);
 
 	let parsed: any[] = [];
 
@@ -141,47 +131,13 @@ export async function handleServerFunction(h3Event: H3Event) {
 	if (h3Event.method === "POST") {
 		const contentType = request.headers.get("content-type");
 
-		// Nodes native IncomingMessage doesn't have a body,
-		// But we need to access it for some reason (#1282)
-		type EdgeIncomingMessage = Request & { body?: BodyInit };
-		const h3Request = h3Event.req as unknown as
-			| EdgeIncomingMessage
-			| ReadableStream;
-
-		// This should never be the case in "proper" Nitro presets since node.req has to be IncomingMessage,
-		// But the new azure-functions preset for some reason uses a ReadableStream in node.req (#1521)
-		const isReadableStream = h3Request instanceof ReadableStream;
-		const hasReadableStream =
-			(h3Request as EdgeIncomingMessage).body instanceof ReadableStream;
-		const isH3EventBodyStreamLocked =
-			(isReadableStream && h3Request.locked) ||
-			(hasReadableStream &&
-				((h3Request as EdgeIncomingMessage).body as ReadableStream).locked);
-		const requestBody = isReadableStream ? h3Request : h3Request.body;
-
 		if (
 			contentType?.startsWith("multipart/form-data") ||
 			contentType?.startsWith("application/x-www-form-urlencoded")
 		) {
-			// workaround for https://github.com/unjs/nitro/issues/1721
-			// (issue only in edge runtimes and netlify preset)
-			parsed.push(
-				await (isH3EventBodyStreamLocked
-					? request
-					: new Request(request, { ...request, body: requestBody })
-				).formData(),
-			);
-			// what should work when #1721 is fixed
-			// parsed.push(await request.formData);
+			parsed.push(await event.request.formData());
 		} else if (contentType?.startsWith("application/json")) {
-			// workaround for https://github.com/unjs/nitro/issues/1721
-			// (issue only in edge runtimes and netlify preset)
-			const tmpReq = isH3EventBodyStreamLocked
-				? request
-				: new Request(request, { ...request, body: requestBody });
-			// what should work when #1721 is fixed
-			// just use request.json() here
-			parsed = fromJSON(await tmpReq.json(), {
+			parsed = fromJSON(await event.request.json(), {
 				plugins: [
 					CustomEventPlugin,
 					DOMExceptionPlugin,
@@ -372,7 +328,7 @@ async function handleSingleFlight(
 	});
 	return await provideRequestEvent(event, async () => {
 		await createPageEvent(event);
-		App || (App = (await import("#start/app")).default);
+		App || (App = (await import("solid-start:app")).default);
 		/* @ts-expect-error */
 		event.router.dataOnly = revalidate || true;
 		/* @ts-expect-error */

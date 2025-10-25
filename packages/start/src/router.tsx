@@ -15,12 +15,7 @@ export function createRoutes() {
         filesystem: true
       },
       component:
-        route.$component &&
-        lazyRoute(
-          route.$component,
-          getManifest(import.meta.env.START_ISLANDS ? "server" : "client"),
-          getManifest("server")
-        ),
+        route.$component && lazyRoute(route.$component, getManifest("ssr"), getManifest("ssr")),
       children: route.children ? route.children.map(createRoute) : undefined
     };
   }

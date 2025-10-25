@@ -21,6 +21,7 @@
     "./http": "./src/http/index.ts"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       ".": "./dist/index.js",
       "./config": "./dist/config/index.js",
@@ -37,7 +38,7 @@
     "@babel/core": "^7.28.3",
     "@babel/traverse": "^7.28.3",
     "@solidjs/meta": "^0.29.4",
-    "@tanstack/server-functions-plugin": "^1.131.2",
+    "@tanstack/server-functions-plugin": "^1.133.11",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.9",
     "cookie-es": "^2.0.0",
@@ -59,7 +60,7 @@
     "source-map-js": "^1.2.1",
     "srvx": "^0.8.16",
     "terracotta": "^1.0.6",
-    "vite": "7.1.9",
+    "vite": "7.1.10",
     "vite-plugin-solid": "^2.11.9",
     "vitest": "3.0.5"
   },

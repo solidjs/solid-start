@@ -1,17 +1,17 @@
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { TanStackServerFnPluginEnv } from "@tanstack/server-functions-plugin";
+import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
-import { normalizePath, type PluginOption, type ViteDevServer } from "vite";
+import { type PluginOption, type ViteDevServer } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
+
+import { isCssModulesFile } from "../server/collect-styles.ts";
 import {
 	DEFAULT_EXTENSIONS,
 	VIRTUAL_MODULES,
 	VITE_ENVIRONMENTS,
 } from "./constants.ts";
-import { isCssModulesFile } from "../server/collect-styles.ts";
-import { getSsrDevManifest } from "../server/manifest/dev-ssr-manifest.ts";
 import { devServer } from "./dev-server.ts";
 import {
 	SolidStartClientFileRouter,
@@ -19,6 +19,8 @@ import {
 } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import { manifest } from "./manifest.ts";
+import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
 	solid?: Partial<SolidOptions>;
@@ -121,7 +123,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 					},
 					resolve: {
 						alias: {
-							"#start/app": appEntryPath,
+							"@solidjs/start/server/entry": handlers.server,
 							"~": join(process.cwd(), start.appRoot),
 							...(!start.ssr
 								? {
@@ -134,8 +136,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 					define: {
 						"import.meta.env.MANIFEST": `globalThis.MANIFEST`,
 						"import.meta.env.START_SSR": JSON.stringify(start.ssr),
-						"import.meta.env.START_APP_ENTRY": `"${normalizePath(appEntryPath)}"`,
-						"import.meta.env.START_CLIENT_ENTRY": `"${normalizePath(handlers.client)}"`,
+						"import.meta.env.START_APP_ENTRY": `"${appEntryPath}"`,
+						"import.meta.env.START_CLIENT_ENTRY": `"${handlers.client}"`,
 						"import.meta.env.START_DEV_OVERLAY": JSON.stringify(
 							start.devOverlay,
 						),
@@ -156,6 +158,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				};
 			},
 		},
+		manifest(start),
 		css(),
 		fsRoutes({
 			routers: {
@@ -172,7 +175,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 		}),
 		// Must be placed after fsRoutes, as treeShake will remove the
 		// server fn exports added in by this plugin
-		TanStackServerFnPluginEnv({
+		TanStackServerFnPlugin({
 			// This is the ID that will be available to look up and import
 			// our server function manifest and resolve its module
 			manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
@@ -198,65 +201,26 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			},
 		}),
 		{
-			name: "solid-start:manifest-plugin",
-			enforce: "pre",
-			async resolveId(id) {
-				if (id === VIRTUAL_MODULES.clientViteManifest)
-					return `\0${VIRTUAL_MODULES.clientViteManifest}`;
-				if (id === VIRTUAL_MODULES.getClientManifest)
-					return this.resolve(
-						new URL("../server/manifest/client-manifest", import.meta.url)
-							.pathname,
-					);
-				if (id === VIRTUAL_MODULES.getManifest) {
-					return this.environment.config.consumer === "client"
-						? this.resolve(
-								new URL("../server/manifest/client-manifest", import.meta.url)
-									.pathname,
-							)
-						: this.resolve(
-								new URL("../server/manifest/ssr-manifest", import.meta.url)
-									.pathname,
-							);
-				}
-				if (id === VIRTUAL_MODULES.middleware) {
-					if (start.middleware) return await this.resolve(start.middleware);
-					return `\0${VIRTUAL_MODULES.middleware}`;
-				}
-			},
-			async load(id) {
-				if (id === `\0${VIRTUAL_MODULES.clientViteManifest}`) {
-					let clientViteManifest: Record<string, Record<string, any>>;
-					if (this.environment.config.command === "serve") {
-						clientViteManifest = {};
-					} else {
-						const entry = Object.values(globalThis.START_CLIENT_BUNDLE).find(
-							(v) => "isEntry" in v && v.isEntry,
-						);
-						if (!entry) throw new Error("No client entry found");
-						clientViteManifest = JSON.parse(
-							(globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any)
-								.source,
-						);
-					}
-					return `export const clientViteManifest = ${JSON.stringify(clientViteManifest)};`;
-				} else if (id === `\0${VIRTUAL_MODULES.middleware}`)
-					return "export default {};";
-				else if (id.startsWith("/@manifest")) {
-					const [path, query] = id.split("?");
-					const params = new URLSearchParams(query);
-					if (!path || !query) return;
-					if (path.endsWith("assets")) {
-						const id = params.get("id");
-						if (!id) {
-							throw new Error("Missing id to get assets.");
-						}
-						return `export default ${JSON.stringify(
-							await getSsrDevManifest("server").getAssets(id),
-						)}`;
-					}
-				}
-			},
+  		name: "solid-start:virtual-modules",
+  		async resolveId(id) {
+        const { filename, query } = parseIdQuery(id);
+
+        let base;
+        if (filename === VIRTUAL_MODULES.clientEntry)
+          base = handlers.client;
+        if (filename === VIRTUAL_MODULES.serverEntry)
+          base = handlers.server;
+        if (filename === VIRTUAL_MODULES.app)
+          base = appEntryPath;
+
+        if(base) {
+          let id = (await this.resolve(base))?.id
+          if (!id) return;
+
+          if (query.size > 0) id += `?${query.toString()}`;
+          return id
+        }
+  		}
 		},
 		{
 			name: "solid-start:capture-client-bundle",
@@ -266,11 +230,11 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			},
 		},
 		devServer(),
-		solid({
-			...start.solid,
-			ssr: true,
-			extensions: extensions.map((ext) => `.${ext}`),
-		}),
+ 	  solid({
+  		...start.solid,
+  		ssr: true,
+  		extensions: extensions.map((ext) => `.${ext}`),
+  	}),
 	];
 }
 

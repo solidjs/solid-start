@@ -22,7 +22,7 @@ export default function lazyRoute<T extends Record<string, any>>(
     if (import.meta.env.DEV) {
       const manifest = import.meta.env.SSR ? serverManifest : clientManifest;
 
-      const assets = await manifest.getAssets(component.src);
+      const assets = []; // await manifest.getAssets(component.src);
       const styles = assets.filter((asset: any) => asset.tag === "style");
 
       if (import.meta.env.SSR && import.meta.hot)

@@ -16,7 +16,7 @@ export function createHandler(
 }
 
 async function createPageEvent(ctx: FetchEvent) {
-	const manifest = getSsrManifest("client");
+	const manifest = getSsrManifest("ssr");
 	const pageEvent: PageEvent = Object.assign(ctx, {
 		manifest: "json" in manifest ? await manifest.json() : {},
 		assets: await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY),

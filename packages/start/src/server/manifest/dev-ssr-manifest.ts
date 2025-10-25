@@ -1,32 +1,23 @@
-import { join, normalize, resolve } from "pathe";
-import type { ViteDevServer } from "vite";
+import { join, normalize } from "pathe";
 
-import { findStylesInModuleGraph } from "../collect-styles.ts";
+export function getSsrDevManifest(environment: "client" | "ssr") {
+  return {
+    path: (id: string) => normalize(join("/", id)),
+    async getAssets(id) {
+      const assetsPath =
+        join(
+          import.meta.env.BASE_URL,
+          `@manifest/${environment}/${Date.now()}/assets?id=${id}`,
+        );
 
-export function getSsrDevManifest(target: "client" | "server") {
-	const vite: ViteDevServer = (globalThis as any).VITE_DEV_SERVER;
+      const assets = (await import(/* @vite-ignore */ assetsPath)).default;
 
-	return {
-		path: (id: string) => normalize(join("/@fs", resolve(process.cwd(), id))),
-		async getAssets(id: string) {
-			const styles = await findStylesInModuleGraph(
-				vite,
-				id,
-				target === "server",
-			);
-
-			return Object.entries(styles).map(([key, value]) => ({
-				tag: "style" as const,
-				attrs: {
-					type: "text/css",
-					key,
-					"data-vite-dev-id": key,
-					"data-vite-ref": "0",
-				},
-				children: value,
-			}));
-		},
-	} satisfies StartManifest & {
+      return await Promise.all(assets.map(async v => ({
+        ...v,
+        children: await v.children()
+      })));
+    },
+  } satisfies StartManifest & {
 		path(id: string): string;
 	};
 }

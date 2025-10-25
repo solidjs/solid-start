@@ -2,11 +2,11 @@
 // @ts-ignore
 import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
+import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 
 import { TopErrorBoundary } from "../../shared/ErrorBoundary.tsx";
 import { renderAsset } from "../renderAsset.tsx";
 import type { DocumentComponentProps, PageEvent } from "../types.ts";
-import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 
 const docType = ssr("<!DOCTYPE html>");
 

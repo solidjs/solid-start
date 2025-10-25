@@ -1,5 +1,5 @@
 // @refresh skip
-import App from "#start/app";
+import App from "solid-start:app";
 import type { JSX } from "solid-js";
 import { ErrorBoundary } from "../shared/ErrorBoundary.tsx";
 

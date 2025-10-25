@@ -124,18 +124,19 @@ export async function createPageEvent(ctx: FetchEvent) {
 	ctx.response.headers.set("Content-Type", "text/html");
 	// const prevPath = ctx.request.headers.get("x-solid-referrer");
 	// const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
-	const manifest = getSsrManifest("client");
+	const manifest = getSsrManifest("ssr");
+	const assets = [
+    ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
+    ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
+    // ...(import.meta.env.START_ISLANDS
+    //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
+    //       s => (s as any).attrs.rel !== "modulepreload"
+    //     )
+    //   : [])
+  ];
 	const pageEvent: PageEvent = Object.assign(ctx, {
 		manifest: "json" in manifest ? await manifest.json() : {},
-		assets: [
-			...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
-			...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
-			// ...(import.meta.env.START_ISLANDS
-			//   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
-			//       s => (s as any).attrs.rel !== "modulepreload"
-			//     )
-			//   : [])
-		],
+		assets,
 		router: {
 			submission: initFromFlash(ctx) as any,
 		},

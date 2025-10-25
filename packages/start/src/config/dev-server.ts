@@ -14,14 +14,23 @@ export function devServer(): Array<PluginOption> {
 			configureServer(viteDevServer) {
 				(globalThis as any).VITE_DEV_SERVER = viteDevServer;
 				return async () => {
-					removeHtmlMiddlewares(viteDevServer);
+				  if (viteDevServer.config.server.middlewareMode) return
 
 					const serverEnv =
 						viteDevServer.environments[VITE_ENVIRONMENTS.server];
 
 					if (!serverEnv) throw new Error("Server environment not found");
-					if (!isRunnableDevEnvironment(serverEnv))
-						throw new Error("Server environment is not runnable");
+					if (
+						// do not check via `isFetchableDevEnvironment` since nitro does implement the `FetchableDevEnvironment` interface but not via inheritance (which this helper checks)
+						"dispatchFetch" in serverEnv
+					)
+						return;
+					// another plugin is controlling the dev server
+					if (!isRunnableDevEnvironment(serverEnv)) {
+            return;
+					}
+
+					removeHtmlMiddlewares(viteDevServer);
 
 					viteDevServer.middlewares.use(async (req, res) => {
 						if (req.originalUrl) {

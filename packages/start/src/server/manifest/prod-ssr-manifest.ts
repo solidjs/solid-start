@@ -1,6 +1,5 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { join } from "pathe";
-import { CLIENT_BASE_PATH } from "../../config/constants.ts";
 import type { Asset } from "../renderAsset.tsx";
 
 // Only reads from client manifest atm, might need server support for islands
@@ -8,14 +7,18 @@ export function getSsrProdManifest() {
 	const viteManifest = clientViteManifest;
 	return {
 		path(id: string) {
+      if (id.startsWith("./")) id = id.slice(2);
+
 			const viteManifestEntry =
 				clientViteManifest[id /*import.meta.env.START_CLIENT_ENTRY*/];
 			if (!viteManifestEntry)
-				throw new Error("No entry found in vite manifest");
+				throw new Error(`No entry found in vite manifest for '${id}'`);
 
 			return viteManifestEntry.file;
 		},
 		async getAssets(id) {
+      if (id.startsWith("./")) id = id.slice(2);
+
 			return createHtmlTagsForAssets(
 				findAssetsInViteManifest(clientViteManifest, id),
 			);

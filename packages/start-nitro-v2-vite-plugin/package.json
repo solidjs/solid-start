@@ -1,6 +1,6 @@
 {
-  "name": "@solidjs/start-nitro-v2-plugin",
-  "version": "1.0.0-devinxi.0",
+  "name": "@solidjs/start-nitro-v2-vite-plugin",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "build": "tsc"
@@ -9,13 +9,13 @@
     ".": "./src/index.ts"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
-      "./": "./dist/index.js"
+      ".": "./dist/index.js"
     }
   },
   "dependencies": {
-    "h3-v1": "npm:h3@^1.0",
     "nitropack": "^2.11.10",
-    "vite": "^7.1.9"
+    "vite": "^7.1.10"
   }
 }

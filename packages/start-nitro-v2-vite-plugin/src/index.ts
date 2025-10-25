@@ -106,7 +106,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
 							},
 							virtual: {
 								...nitroConfig?.virtual,
-								[virtualEntry]: `import { fromWebHandler } from 'h3-v1'
+								[virtualEntry]: `import { fromWebHandler } from 'h3'
                                 import handler from '${ssrEntryFile}'
                                 export default fromWebHandler(handler.fetch)`,
 							},

@@ -1,5 +1,5 @@
 // @refresh skip
-import App from "#start/app";
+import App from "solid-start:app";
 import type { Component, JSX } from "solid-js";
 import {
   Hydration,
@@ -12,7 +12,7 @@ import {
 
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.tsx";
 import { renderAsset } from "./renderAsset.tsx";
-import type { Asset, DocumentComponentProps, PageEvent } from "./types.js";
+import type { Asset, DocumentComponentProps, PageEvent } from "./types.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 
 const docType = ssr("<!DOCTYPE html>");
@@ -38,13 +38,14 @@ function matchRoute(matches: any[], routes: any[], matched = []): any[] | undefi
  */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
+
   // @ts-ignore
   const nonce = context.nonce;
 
   let assets: Asset[] = [];
   Promise.resolve()
     .then(async () => {
-      const manifest = getSsrManifest(import.meta.env.START_ISLANDS);
+      const manifest = getSsrManifest("ssr");
 
       let assetPromises: Promise<Asset[]>[] = [];
       // @ts-ignore
@@ -58,7 +59,10 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             const segment = matched[i];
             assetPromises.push(manifest.getAssets(segment["$component"].src));
           }
-        } else if (import.meta.env.DEV) console.warn("No route matched for preloading js assets");
+        } else if (import.meta.env.DEV)
+          console.warn(
+            `No route matched for preloading js assets for path ${new URL(context.request.url).pathname}`
+          );
       }
       assets = await Promise.all(assetPromises).then(a =>
         // dedupe assets

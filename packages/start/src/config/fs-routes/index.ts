@@ -1,5 +1,5 @@
-import { relative } from "node:path";
-import type { PluginOption } from "vite";
+import { relative, resolve } from "node:path";
+import { normalizePath, type PluginOption } from "vite";
 
 import { VITE_ENVIRONMENTS } from "../constants.ts";
 import { fileSystemWatcher } from "./fs-watcher.ts";

@@ -5,6 +5,8 @@ export function getClientProdManifest() {
       return import(/* @vite-ignore */ window.manifest[id].output)
     },
     async getAssets(id) {
+      if (id.startsWith("./")) id = id.slice(2);
+
       // @ts-ignore
       return window.manifest[id]?.assets ?? []
     },
