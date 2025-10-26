@@ -10,12 +10,7 @@ export function getSsrDevManifest(environment: "client" | "ssr") {
           `@manifest/${environment}/${Date.now()}/assets?id=${id}`,
         );
 
-      const assets = (await import(/* @vite-ignore */ assetsPath)).default;
-
-      return await Promise.all(assets.map(async (v: any) => ({
-        ...v,
-        children: await v.children()
-      })));
+      return (await import(/* @vite-ignore */ assetsPath)).default;
     },
   } satisfies StartManifest & {
 		path(id: string): string;

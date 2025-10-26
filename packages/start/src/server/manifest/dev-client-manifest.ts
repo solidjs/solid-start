@@ -12,12 +12,7 @@ export function getClientDevManifest() {
           `@manifest/client/${Date.now()}/assets?id=${id}`,
         );
 
-      const assets = (await import(/* @vite-ignore */ assetsPath)).default;
-
-      return await Promise.all(assets.map(async (v: any) => ({
-        ...v,
-        children: await v.children()
-      })));
+      return (await import(/* @vite-ignore */ assetsPath)).default;
     },
   } satisfies StartManifest & { import(id: string): Promise<any> };
 }

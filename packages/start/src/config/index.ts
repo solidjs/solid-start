@@ -158,7 +158,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			},
 		},
 		manifest(start),
-		css(),
+		// css(),
 		fsRoutes({
 			routers: {
 				client: new SolidStartClientFileRouter({
@@ -237,37 +237,37 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 	];
 }
 
-function css(): PluginOption {
-	let viteServer!: ViteDevServer;
-	const cssModules: Record<string, any> = {};
-	return {
-		name: "solid-start:css-hmr",
-		configureServer(dev) {
-			viteServer = dev;
-		},
-		async handleHotUpdate({ file, server }) {
-			if (file.endsWith(".css")) {
-				const resp = await server.transformRequest(file);
-				if (!resp) return;
-				const json = resp.code
-					.match(/const __vite__css = .*\n/)?.[0]
-					?.slice("const __vite__css = ".length);
-				if (!json) return;
-				resp.code = JSON.parse(json);
-				viteServer.ws.send({
-					type: "custom",
-					event: "css-update",
-					data: {
-						file,
-						contents: resp.code,
-					},
-				});
-			}
-		},
-		transform(code, id) {
-			if (isCssModulesFile(id)) {
-				cssModules[id] = code;
-			}
-		},
-	};
-}
+// function css(): PluginOption {
+// 	let viteServer!: ViteDevServer;
+// 	const cssModules: Record<string, any> = {};
+// 	return {
+// 		name: "solid-start:css-hmr",
+// 		configureServer(dev) {
+// 			viteServer = dev;
+// 		},
+// 		async handleHotUpdate({ file, server }) {
+// 			if (file.endsWith(".css")) {
+// 				const resp = await server.transformRequest(file);
+// 				if (!resp) return;
+// 				const json = resp.code
+// 					.match(/const __vite__css = .*\n/)?.[0]
+// 					?.slice("const __vite__css = ".length);
+// 				if (!json) return;
+// 				resp.code = JSON.parse(json);
+// 				viteServer.ws.send({
+// 					type: "custom",
+// 					event: "css-update",
+// 					data: {
+// 						file,
+// 						contents: resp.code,
+// 					},
+// 				});
+// 			}
+// 		},
+// 		transform(code, id) {
+// 			if (isCssModulesFile(id)) {
+// 				cssModules[id] = code;
+// 			}
+// 		},
+// 	};
+// }

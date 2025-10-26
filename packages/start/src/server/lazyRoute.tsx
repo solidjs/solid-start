@@ -1,6 +1,7 @@
 import { type Component, createComponent, type JSX, lazy, onCleanup } from "solid-js";
 
 import { type Asset, renderAsset } from "./renderAsset.tsx";
+import { useAssets } from "solid-js/web";
 
 export default function lazyRoute<T extends Record<string, any>>(
   component: { src: string; import(): Promise<Record<string, Component>> },
@@ -22,46 +23,46 @@ export default function lazyRoute<T extends Record<string, any>>(
     if (import.meta.env.DEV) {
       const manifest = import.meta.env.SSR ? serverManifest : clientManifest;
 
-      const assets = await manifest.getAssets(component.src);
-      const styles = assets.filter((asset: any) => asset.tag === "style");
+      const assets = (await manifest.getAssets(component.src)).filter(
+        (asset: any) => asset.tag === "link"
+      );
 
-      if (import.meta.env.SSR && import.meta.hot)
-        import.meta.hot.on("css-update", data => {
-          updateStyles(styles, data);
-        });
+      // if (import.meta.env.SSR && import.meta.hot)
+      //   import.meta.hot.on("css-update", data => {
+      //     updateStyles(styles, data);
+      //   });
 
       const Comp: Component<T> = props => {
         if (typeof window !== "undefined") {
-          appendStyles(styles);
+          appendStyles(assets);
         }
 
         onCleanup(() => {
           if (typeof window !== "undefined") {
             // remove style tags added by vite when a CSS file is imported
-            cleanupStyles(styles);
+            cleanupStyles(assets);
           }
         });
 
-        return [
-          ...assets.map((asset: Asset) => renderAsset(asset)),
-          createComponent(Component, props)
-        ];
+        useAssets(() => assets.map((asset: Asset) => renderAsset(asset)));
+
+        return [createComponent(Component, props)];
       };
       return { default: Comp };
     } else {
-      const assets = await clientManifest.getAssets(component.src);
-      const styles = assets.filter(
+      const assets = (await clientManifest.getAssets(component.src)).filter(
         asset =>
           asset.tag === "style" ||
           (asset.attrs as JSX.LinkHTMLAttributes<HTMLLinkElement>).rel === "stylesheet"
       );
       if (typeof window !== "undefined") {
-        preloadStyles(styles);
+        preloadStyles(assets);
       }
+
       const Comp: Component<T> = props => {
         return [
-          ...styles.map((asset: Asset) => renderAsset(asset)),
-          createComponent(Component, props)
+          createComponent(Component, props),
+          ...assets.map((asset: Asset) => renderAsset(asset))
         ];
       };
       return { default: Comp };
@@ -69,16 +70,17 @@ export default function lazyRoute<T extends Record<string, any>>(
   });
 }
 
-function appendStyles(styles: Array<any>) {
-  styles.forEach(style => {
+function appendStyles(links: Array<any>) {
+  links.forEach(link => {
     let element = document.head.querySelector(
-      `style[data-vite-dev-id="${style.attrs["data-vite-dev-id"]}"]`
+      `link[data-vite-dev-id="${link.attrs["data-vite-dev-id"]}"]`
     );
     if (!element) {
-      element = document.createElement("style");
-      element.setAttribute("data-vite-dev-id", style.attrs["data-vite-dev-id"]);
-      element.innerHTML = style.children;
+      element = document.createElement("link");
+      element.setAttribute("data-vite-dev-id", link.attrs["data-vite-dev-id"]);
       element.setAttribute("data-vite-ref", "0");
+      element.setAttribute("href", link.attrs["href"]);
+      element.setAttribute("rel", link.attrs["rel"]);
       document.head.appendChild(element);
     }
 
@@ -86,17 +88,17 @@ function appendStyles(styles: Array<any>) {
   });
 }
 
-function updateStyles(styles: Array<any>, data: any) {
-  const styleAsset = styles.find(s => s.attrs["data-vite-dev-id"] === data.file);
-  if (styleAsset) {
-    styleAsset.children = data.contents;
-  }
-}
+// function updateStyles(links: Array<any>, data: any) {
+//   const linkAsset = links.find(s => s.attrs["data-vite-dev-id"] === data.file);
+//   // if (linkAsset) {
+//   //   linkAsset.children = data.contents;
+//   // }
+// }
 
-function cleanupStyles(styles: Array<any>) {
-  styles.forEach(style => {
+function cleanupStyles(links: Array<any>) {
+  links.forEach(link => {
     const element = document.head.querySelector(
-      `style[data-vite-dev-id="${style.attrs["data-vite-dev-id"]}"]`
+      `link[data-vite-dev-id="${link.attrs["data-vite-dev-id"]}"]`
     );
 
     if (!element) {
@@ -111,27 +113,26 @@ function cleanupStyles(styles: Array<any>) {
   });
 }
 
-if (!import.meta.env.SSR && import.meta.hot) {
-  import.meta.hot.on("css-update", data => {
-    for (const el of document.querySelectorAll(`style[data-vite-dev-id="${data.file}"]`)) {
-      el.innerHTML = data.contents;
-    }
-  });
-}
+// if (!import.meta.env.SSR && import.meta.hot) {
+// import.meta.hot.on("css-update", data => {
+//   for (const el of document.querySelectorAll(`link[data-vite-dev-id="${data.file}"]`)) {
+//     el.innerHTML = data.contents;
+//   }
+// });
+// }
 
-export function preloadStyles(styles: Array<any>) {
-  styles.forEach(style => {
-    if (!style.attrs.href) {
+export function preloadStyles(links: Array<any>) {
+  links.forEach(link => {
+    if (!link.attrs.href) {
       return;
     }
-
-    let element = document.head.querySelector(`link[href="${style.attrs.href}"]`);
+    let element = document.head.querySelector(`link[href="${link.attrs.href}"]`);
     if (!element) {
       // create a link preload element for the css file so it starts loading but doesnt get attached
       element = document.createElement("link");
       element.setAttribute("rel", "preload");
       element.setAttribute("as", "style");
-      element.setAttribute("href", style.attrs.href);
+      element.setAttribute("href", link.attrs.href);
       document.head.appendChild(element);
     }
   });

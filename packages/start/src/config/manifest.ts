@@ -69,18 +69,17 @@ export function manifest(start: SolidStartOptions): PluginOption {
 						target === "ssr",
 					);
 
-					const cssAssets = Object.entries(styles).map(([key, value]) => `{
-						tag: "style",
+					const cssAssets = Object.entries(styles).map(([key, value]) => ({
+						tag: "link",
 						attrs: {
-							type: "text/css",
-							key: "${key}",
-							"data-vite-dev-id": "${key}",
+							rel: "stylesheet",
+							href: key,
+							"data-vite-dev-id": key,
 							"data-vite-ref": "0",
 						},
-						children: () => import("${value}?inline").then(mod => mod.default),
-					}`);
+					}));
 
-					return `export default [${cssAssets.join(",")}]`;
+					return `export default ${JSON.stringify(cssAssets)}`;
 				}
 			}
 		},
