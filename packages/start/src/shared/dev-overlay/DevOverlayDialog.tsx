@@ -21,7 +21,7 @@ import {
   ViewCompiledIcon,
   ViewOriginalIcon
 } from "./icons.tsx";
-// import "./styles.css";
+import "./styles.css";
 
 export function classNames(...classes: (string | boolean | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
