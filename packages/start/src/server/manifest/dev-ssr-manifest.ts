@@ -12,7 +12,7 @@ export function getSsrDevManifest(environment: "client" | "ssr") {
 
       const assets = (await import(/* @vite-ignore */ assetsPath)).default;
 
-      return await Promise.all(assets.map(async v => ({
+      return await Promise.all(assets.map(async (v: any) => ({
         ...v,
         children: await v.children()
       })));
