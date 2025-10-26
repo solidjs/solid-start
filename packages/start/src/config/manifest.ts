@@ -66,7 +66,7 @@ export function manifest(start: SolidStartOptions): PluginOption {
 					const styles = await findStylesInModuleGraph(
 						this.environment,
 						id,
-						target === "server",
+						target === "ssr",
 					);
 
 					const cssAssets = Object.entries(styles).map(([key, value]) => `{
