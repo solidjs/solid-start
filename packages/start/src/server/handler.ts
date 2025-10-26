@@ -1,5 +1,5 @@
 import middleware from "solid-start:middleware";
-import { defineHandler, getCookie, H3, type H3Event, setCookie } from "h3";
+import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
@@ -17,6 +17,7 @@ import type {
 	HandlerOptions,
 	PageEvent,
 } from "./types.ts";
+import { getExpectedRedirectStatus } from "./util.ts";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -79,24 +80,52 @@ export function createBaseHandler(
 				});
 				context.complete = true;
 
-				// insert redirect handling here
+				if (context.response && context.response.headers.get("Location")) {
+          const status = getExpectedRedirectStatus(context.response);
+          return redirect(context.response.headers.get("Location")!, status);
+        }
 
 				return html;
 			}
+
+			if (resolvedOptions.onCompleteAll) {
+        const og = resolvedOptions.onCompleteAll;
+        resolvedOptions.onCompleteAll = options => {
+          handleStreamCompleteRedirect(context)(options);
+          og(options);
+        };
+      } else resolvedOptions.onCompleteAll = handleStreamCompleteRedirect(context);
+      if (resolvedOptions.onCompleteShell) {
+        const og = resolvedOptions.onCompleteShell;
+        resolvedOptions.onCompleteShell = options => {
+          handleShellCompleteRedirect(context, e)();
+          og(options);
+        };
+      } else resolvedOptions.onCompleteShell = handleShellCompleteRedirect(context, e);
 
 			const _stream = renderToStream(() => {
 				(sharedConfig.context as any).event = context;
 				return fn(context);
 			}, resolvedOptions);
-			const stream = _stream as typeof _stream & Promise<string>; // stream has a hidden 'then' method
+      const stream = _stream as typeof _stream & PromiseLike<string>; // stream has a hidden 'then' method
 
-			// insert redirect handling here
+      if (context.response && context.response.headers.get("Location")) {
+        const status = getExpectedRedirectStatus(context.response);
+        return redirect(context.response.headers.get("Location")!, status);
+      }
 
-			if (mode === "async") return stream;
+			if (mode === "async") return await stream
 
-			const { writable, readable } = new TransformStream();
-			stream.pipeTo(writable);
-			return readable;
+      delete (stream as any).then;
+
+      // using TransformStream in dev can cause solid-start-dev-server to crash
+      // when stream is cancelled
+      if(import.meta.env.DEV) return stream
+
+      // returning stream directly breaks cloudflare workers
+      const { writable, readable } = new TransformStream();
+      stream.pipeTo(writable);
+      return readable
 		},
 	});
 
@@ -174,4 +203,22 @@ function initFromFlash(ctx: FetchEvent) {
 	} finally {
 		setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
 	}
+}
+
+function handleShellCompleteRedirect(context: PageEvent, e: H3Event) {
+  return () => {
+    if (context.response && context.response.headers.get("Location")) {
+      const status = getExpectedRedirectStatus(context.response);
+      e.res.status = status
+      e.res.headers.set("Location", context.response.headers.get("Location")!);
+    }
+  };
+}
+
+function handleStreamCompleteRedirect(context: PageEvent) {
+  return ({ write }: { write: (html: string) => void }) => {
+    context.complete = true;
+    const to = context.response && context.response.headers.get("Location");
+    to && write(`<script>window.location="${to}"</script>`);
+  };
 }
