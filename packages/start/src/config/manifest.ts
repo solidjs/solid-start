@@ -69,12 +69,12 @@ export function manifest(start: SolidStartOptions): PluginOption {
 						target === "ssr",
 					);
 
-					const cssAssets = [...styles].map((url) => ({
-						tag: "link",
+					const cssAssets = Object.entries(styles).map(([id, url]) => ({
+					  tag: "link",
 						attrs: {
 							rel: "stylesheet",
 							href: url,
-							"data-vite-dev-id": url,
+							"data-vite-dev-id": id,
 							"data-vite-ref": "0",
 						},
 					}));

@@ -155,7 +155,7 @@ export async function findStylesInModuleGraph(
 
 	const dependencies = await findFilesDepedencies(vite, [absolute], ssr);
 
-	const styles = new Set<string>();
+	const styles: Record<string, string> = {};
 
 	for (const dep of dependencies) {
 		if (isCssFile(dep.url)) {
@@ -164,7 +164,7 @@ export async function findStylesInModuleGraph(
 				depURL = injectQuery(dep.url, "inline");
 			}
 
-      styles.add(dep.url);
+			if(dep.id) styles[dep.id] = (dep.url);
 		}
 	}
 
