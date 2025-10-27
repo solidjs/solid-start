@@ -3,7 +3,7 @@
   "version": "2.0.0-devinxi.0",
   "type": "module",
   "scripts": {
-    "build": "pnpm validate-imports && tsc",
+    "build": "pnpm validate-imports && tsc && node scripts/build.js",
     "dev": "tsc --watch",
     "test": "vitest",
     "test:ci": "vitest run",
