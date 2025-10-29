@@ -1,6 +1,6 @@
 import path from "node:path";
 import { join, resolve } from "pathe";
-import type { DevEnvironment, EnvironmentModuleNode, ModuleNode, RunnableDevEnvironment, ViteDevServer } from "vite";
+import type { DevEnvironment, EnvironmentModuleNode } from "vite";
 
 async function getViteModuleNode(
 	vite: DevEnvironment,
