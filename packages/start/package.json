@@ -61,7 +61,7 @@
     }
   },
   "devDependencies": {
-    "solid-js": "^1.9.5",
+    "solid-js": "^1.9.10",
     "vinxi": "^0.5.7",
     "vitest": "3.0.5"
   },
@@ -80,7 +80,7 @@
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
-    "vite-plugin-solid": "^2.11.1"
+    "vite-plugin-solid": "^2.11.10"
   },
   "peerDependencies": {
     "vinxi": "^0.5.7"
