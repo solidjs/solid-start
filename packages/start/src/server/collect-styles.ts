@@ -2,6 +2,15 @@ import path from "node:path";
 import { join, resolve } from "pathe";
 import type { DevEnvironment, EnvironmentModuleNode } from "vite";
 
+const prepareTransformResult = async (vite: DevEnvironment, module: EnvironmentModuleNode) => {
+	if (module.transformResult || !module.id) return;
+	try {
+		await vite.transformRequest(module.id);
+	} catch (e) {
+		console.warn(`Failed to transform '${module.id}' during css collection.`, e);
+	}
+};
+
 async function getViteModuleNode(
 	vite: DevEnvironment,
 	file: string,
@@ -28,30 +37,13 @@ async function getViteModuleNode(
 		node = vite.moduleGraph.getModuleById(nodePath);
 	}
 
-	if (nodePath.includes("node_modules")) {
+	if (!node || nodePath.includes("node_modules")) {
 		return;
 	}
 
-	try {
-		if (!node?.transformResult && !ssr) {
-			await vite.transformRequest(nodePath);
-			node = vite.moduleGraph.getModuleById(nodePath);
-		}
+	await prepareTransformResult(vite, node);
 
-		// if (ssr && !node?.ssrTransformResult) {
-			// if (skip.includes(file)) {
-			//   return null;
-			// }
-		// 	await vite.ssrLoadModule(file);
-		// 	node = vite.moduleGraph.getModuleById(nodePath);
-		// }
-
-		// vite.config.logger.error = prev;
-		return node;
-	} catch (e) {
-		// vite.config.logger.error = prev;
-		return null;
-	}
+	return node;
 }
 
 async function findModuleDependencies(
@@ -76,6 +68,7 @@ async function findModuleDependencies(
 	if (module.url.endsWith(".css")) return;
 
 	if (ssr) {
+		await prepareTransformResult(vite, module);
 		if (module.transformResult?.deps) {
 			for (const url of module.transformResult.deps) {
 				await addByUrl(url, ssr);
