@@ -15,7 +15,7 @@ export function createRoutes() {
         filesystem: true
       },
       component:
-        route.$component && lazyRoute(route.$component, getManifest("ssr"), getManifest("ssr")),
+        route.$component && lazyRoute(route.$component, getManifest("client"), getManifest("ssr")),
       children: route.children ? route.children.map(createRoute) : undefined
     };
   }
