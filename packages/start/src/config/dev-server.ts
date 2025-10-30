@@ -10,7 +10,7 @@ import { VITE_ENVIRONMENTS } from "./constants.ts";
 export function devServer(): Array<PluginOption> {
 	return [
 		{
-			name: "solid-start-nitro-dev-server",
+			name: "solid-start-dev-server",
 			configureServer(viteDevServer) {
 				(globalThis as any).VITE_DEV_SERVER = viteDevServer;
 				return async () => {
@@ -29,6 +29,8 @@ export function devServer(): Array<PluginOption> {
 					if (!isRunnableDevEnvironment(serverEnv)) {
             return;
 					}
+
+          (globalThis as any).USING_SOLID_START_DEV_SERVER = true;
 
 					removeHtmlMiddlewares(viteDevServer);
 
