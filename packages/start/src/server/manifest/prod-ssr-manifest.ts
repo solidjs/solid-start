@@ -50,6 +50,7 @@ function createHtmlTagsForAssets(assets: string[]) {
 		.filter(
 			(asset) =>
 				asset.endsWith(".css") ||
+				asset.endsWith(".js") ||
 				asset.endsWith(".ts") ||
 				asset.endsWith(".mjs"),
 		)
