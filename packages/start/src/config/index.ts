@@ -93,7 +93,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 						[VITE_ENVIRONMENTS.client]: {
 							consumer: "client",
 							build: {
-								copyPublicDir: false,
 								write: true,
 								manifest: true,
 								outDir: "dist/client",
