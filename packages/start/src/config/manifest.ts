@@ -72,10 +72,11 @@ export function manifest(start: SolidStartOptions): PluginOption {
 					const cssAssets = Object.entries(styles).map(([id, url]) => ({
 					  tag: "link",
 						attrs: {
-							rel: "stylesheet",
-							href: url,
-							"data-vite-dev-id": id,
-							"data-vite-ref": "0",
+						  rel: "stylesheet",
+						  fetchPriority: "high",
+						  href: url,
+						  "data-vite-dev-id": id,
+						  "data-vite-ref": "0",
 						},
 					}));
 
