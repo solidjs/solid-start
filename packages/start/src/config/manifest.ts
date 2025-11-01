@@ -73,7 +73,6 @@ export function manifest(start: SolidStartOptions): PluginOption {
 						tag: "style",
 						attrs: {
 							type: "text/css",
-							key: "${key}",
 							"data-vite-dev-id": "${key}",
 							"data-vite-ref": "0",
 						},

@@ -37,9 +37,7 @@ async function getViteModuleNode(
 		node = vite.moduleGraph.getModuleById(nodePath);
 	}
 
-	if (!node || nodePath.includes("node_modules")) {
-		return;
-	}
+	if (!node) return;
 
 	await prepareTransformResult(vite, node);
 
@@ -132,6 +130,8 @@ async function findFilesDepedencies(
 	deps = new Set<EnvironmentModuleNode>(),
 ) {
 	for (const file of files) {
+    if (file.includes("node_modules")) continue;
+
 		try {
 			const node = await getViteModuleNode(vite, file, ssr);
 			if (node) await findModuleDependencies(vite, node, ssr, deps);
