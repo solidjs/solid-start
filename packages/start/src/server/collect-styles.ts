@@ -37,9 +37,7 @@ async function getViteModuleNode(
 		node = vite.moduleGraph.getModuleById(nodePath);
 	}
 
-	if (!node || nodePath.includes("node_modules")) {
-		return;
-	}
+	if (!node) return;
 
 	await prepareTransformResult(vite, node);
 
