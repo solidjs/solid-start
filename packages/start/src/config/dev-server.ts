@@ -30,7 +30,7 @@ export function devServer(): Array<PluginOption> {
             return;
 					}
 
-          (globalThis as any).USING_SOLID_START_DEV_SERVER = true;
+          globalThis.USING_SOLID_START_DEV_SERVER = true;
 
 					removeHtmlMiddlewares(viteDevServer);
 
