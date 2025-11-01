@@ -1,5 +1,5 @@
 import path from "node:path";
-import { join, resolve } from "pathe";
+import { resolve } from "pathe";
 import type { DevEnvironment, EnvironmentModuleNode } from "vite";
 
 const prepareTransformResult = async (vite: DevEnvironment, module: EnvironmentModuleNode) => {
@@ -62,27 +62,10 @@ async function findModuleDependencies(
 
 	if (module.url.endsWith(".css") || module.url.includes("node_modules")) return;
 
-	if (ssr) {
-		await prepareTransformResult(vite, module);
-		if (module.transformResult?.deps) {
-			for (const url of module.transformResult.deps) {
-				await addByUrl(url, ssr);
-			}
+	if (ssr) await prepareTransformResult(vite, module);
 
-			// Parallel version with incorrect style order
-			/* node.ssrTransformResult.deps.forEach((url) =>
-        branches.push(add_by_url(url, ssr)),
-      ); */
-		}
-	} else {
-		for (const { url } of module.importedModules) {
-			const node = await getViteModuleNode(vite, url, ssr);
-
-			if (node && !deps.has(node)) {
-				deps.add(node);
-				await findModuleDependencies(vite, node, ssr, deps);
-			}
-		}
+	for (const mod of module.importedModules) {
+		await addByUrl(mod.url, ssr);
 	}
 }
 
@@ -138,9 +121,6 @@ async function findFilesDepedencies(
 	return deps;
 }
 
-const injectQuery = (url: string, query: string) =>
-	url.includes("?") ? url.replace("?", `?${query}&`) : `${url}?${query}`;
-
 export async function findStylesInModuleGraph(
   vite: DevEnvironment,
 	id: string,
@@ -153,13 +133,8 @@ export async function findStylesInModuleGraph(
 	const styles: Record<string, any> = {};
 
 	for (const dep of dependencies) {
-		if (isCssFile(dep.url)) {
-			let depURL = dep.url;
-			if (!isCssUrlWithoutSideEffects(depURL)) {
-				depURL = injectQuery(dep.url, "inline");
-			}
-
-      styles[join(vite.config.root, dep.url)] = dep.url;
+		if (isCssFile(dep.url) && dep.id) {
+			styles[dep.id] = dep.url;
 		}
 	}
 
