@@ -4,11 +4,8 @@ import type { DevEnvironment, EnvironmentModuleNode } from "vite";
 
 const prepareTransformResult = async (vite: DevEnvironment, module: EnvironmentModuleNode) => {
 	if (module.transformResult || !module.id) return;
-	try {
-		await vite.transformRequest(module.id);
-	} catch (e) {
-		console.warn(`Failed to transform '${module.id}' during css collection.`, e);
-	}
+
+	await vite.transformRequest(module.id).catch(() => {});
 };
 
 async function getViteModuleNode(
@@ -63,7 +60,7 @@ async function findModuleDependencies(
 		if (node) await add(node);
 	}
 
-	if (module.url.endsWith(".css")) return;
+	if (module.url.endsWith(".css") || module.url.includes("node_modules")) return;
 
 	if (ssr) {
 		await prepareTransformResult(vite, module);
@@ -130,8 +127,6 @@ async function findFilesDepedencies(
 	deps = new Set<EnvironmentModuleNode>(),
 ) {
 	for (const file of files) {
-    if (file.includes("node_modules")) continue;
-
 		try {
 			const node = await getViteModuleNode(vite, file, ssr);
 			if (node) await findModuleDependencies(vite, node, ssr, deps);
