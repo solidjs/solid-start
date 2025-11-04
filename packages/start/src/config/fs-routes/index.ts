@@ -1,7 +1,6 @@
-import { relative, resolve } from "node:path";
-import { normalizePath, type PluginOption } from "vite";
+import { relative } from "node:path";
+import { type PluginOption } from "vite";
 
-import { VITE_ENVIRONMENTS } from "../constants.ts";
 import { fileSystemWatcher } from "./fs-watcher.ts";
 import type { BaseFileSystemRouter } from "./router.ts";
 import { treeShake } from "./tree-shake.ts";
@@ -59,10 +58,7 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
 							build: isBuild
 								? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
 								: undefined,
-							import:
-								this.environment.name === VITE_ENVIRONMENTS.server
-									? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
-									: `_$(() => clientManifestImport('${relative(root, buildId)}'))$_`,
+							import: `_$() => import(/* @vite-ignore */ '${buildId}')$_`
 						};
 					}
 					return v;
@@ -72,15 +68,6 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
 
 				const code = `
 ${js.getImportStatements()}
-${
-	this.environment.name === VITE_ENVIRONMENTS.server
-		? ""
-		: `
-import { getClientManifest } from "solid-start:get-client-manifest";
-function clientManifestImport(id) {
-  return getClientManifest().import(id)
-}`
-}
 export default ${routesCode}`;
 				return code;
 			},
