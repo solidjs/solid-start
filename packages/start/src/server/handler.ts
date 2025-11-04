@@ -164,7 +164,6 @@ export async function createPageEvent(ctx: FetchEvent) {
     //   : [])
   ];
 	const pageEvent: PageEvent = Object.assign(ctx, {
-		manifest: "json" in manifest ? await manifest.json() : {},
 		assets,
 		router: {
 			submission: initFromFlash(ctx) as any,

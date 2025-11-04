@@ -28,10 +28,6 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           scripts={
             <>
               <script
-                nonce={nonce}
-                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-              />
-              <script
                 type="module"
                 src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
               />
