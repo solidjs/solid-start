@@ -28,7 +28,7 @@ export function getSsrProdManifest() {
 			const json: Record<string, any> = {};
 
 			const entryKeys = Object.keys(viteManifest)
-				.filter((id) => viteManifest[id]?.isEntry)
+				.filter((id) => viteManifest[id]?.isEntry || viteManifest[id]?.isDynamicEntry)
 				.map((id) => id);
 
 			for (const entryKey of entryKeys) {
