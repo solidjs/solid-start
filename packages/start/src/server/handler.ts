@@ -153,7 +153,7 @@ export async function createPageEvent(ctx: FetchEvent) {
 	ctx.response.headers.set("Content-Type", "text/html");
 	// const prevPath = ctx.request.headers.get("x-solid-referrer");
 	// const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
-	const manifest = getSsrManifest("ssr");
+	const manifest = getSsrManifest(import.meta.env.SSR && import.meta.env.DEV ? "ssr": "client");
 	const assets = [
     ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
     ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
