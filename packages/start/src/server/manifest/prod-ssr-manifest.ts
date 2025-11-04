@@ -66,6 +66,9 @@ function createHtmlTagsForAssets(assets: string[]) {
 		}));
 }
 
+const entryId = import.meta.env.START_CLIENT_ENTRY.slice(2);
+let entryImports: string[] | undefined = undefined;
+
 function findAssetsInViteManifest(
 	manifest: any,
 	id: string,
@@ -85,6 +88,17 @@ function findAssetsInViteManifest(
 		return [];
 	}
 
+	if (!entryImports) {
+		entryImports = [
+			entryId,
+			...(manifest[entryId]?.imports ?? [])
+		];
+	}
+
+	// Only include entry imports, if we are specifically crawling the entry
+	// Chunks (e.g. routes) that import something from entry, should not render entry css redundantly
+	const excludeEntryImports = id !== entryId;
+
 	const assets = [
 		...(chunk.assets?.filter(Boolean) || []),
 		...(chunk.css?.filter(Boolean) || []),
@@ -92,10 +106,12 @@ function findAssetsInViteManifest(
 	if (chunk.imports) {
 		stack.push(id);
 		for (let i = 0, l = chunk.imports.length; i < l; i++) {
+			const importId = chunk.imports[i];
+			if (!importId || (excludeEntryImports && entryImports.includes(importId))) continue;
 			assets.push(
 				...findAssetsInViteManifest(
 					manifest,
-					chunk.imports[i],
+					importId,
 					assetMap,
 					stack,
 				),
