@@ -2,16 +2,9 @@ import path from "node:path";
 import { resolve } from "pathe";
 import type { DevEnvironment, EnvironmentModuleNode } from "vite";
 
-const prepareTransformResult = async (vite: DevEnvironment, module: EnvironmentModuleNode) => {
-	if (module.transformResult || !module.id) return;
-
-	await vite.transformRequest(module.id).catch(() => {});
-};
-
 async function getViteModuleNode(
 	vite: DevEnvironment,
 	file: string,
-	ssr = false,
 ) {
 	let nodePath = file;
 	let node = vite.moduleGraph.getModuleById(file);
@@ -34,38 +27,36 @@ async function getViteModuleNode(
 		node = vite.moduleGraph.getModuleById(nodePath);
 	}
 
-	if (!node) return;
-
-	await prepareTransformResult(vite, node);
-
 	return node;
 }
 
 async function findModuleDependencies(
-  vite: DevEnvironment,
-	module: EnvironmentModuleNode,
-	ssr = false,
+	vite: DevEnvironment,
+	file: string,
 	deps: Set<EnvironmentModuleNode>,
+	crawledFiles = new Set<string>()
 ) {
-	async function add(module: EnvironmentModuleNode) {
-		if (!deps.has(module)) {
-			deps.add(module);
-			await findModuleDependencies(vite, module, ssr, deps);
-		}
-	}
+	crawledFiles.add(file);
+	const module = await getViteModuleNode(vite, file);
+	if (!module?.id || deps.has(module)) return;
 
-	async function addByUrl(url: string, ssr: boolean) {
-		const node = await getViteModuleNode(vite, url, ssr);
-
-		if (node) await add(node);
-	}
-
+	deps.add(module);
+	
 	if (module.url.endsWith(".css") || module.url.includes("node_modules")) return;
 
-	if (ssr) await prepareTransformResult(vite, module);
+	if (!module.transformResult) {
+		await vite.transformRequest(module.id).catch(() => {});
+	}
+	if (!module.transformResult?.deps) return;
 
-	for (const mod of module.importedModules) {
-		await addByUrl(mod.url, ssr);
+	// Relying on module.transformResult.deps instead of module.importedModules because:
+	// transformResult properly separates imports into deps and dynamicDeps, importedModules doesn't
+	// Style crawling has to skip dynamic imports as such modules load their styles themselves
+	for (const dep of module.transformResult.deps) {
+		if (crawledFiles.has(dep)) {
+			continue;
+		}
+		await findModuleDependencies(vite, dep, deps, crawledFiles);
 	}
 }
 
@@ -79,61 +70,22 @@ const cssModulesRegExp = new RegExp(`\\.module${cssFileRegExp.source}`);
 const isCssFile = (file: string) => cssFileRegExp.test(file);
 export const isCssModulesFile = (file: string) => cssModulesRegExp.test(file);
 
-// https://github.com/remix-run/remix/blob/65326e39099f3b2285d83aecfe734ba35f668396/packages/remix-dev/vite/styles.ts#L29
-const cssUrlParamsWithoutSideEffects = ["url", "inline", "raw", "inline-css"];
-export const isCssUrlWithoutSideEffects = (url: string) => {
-	const queryString = url.split("?")[1];
-
-	if (!queryString) {
-		return false;
-	}
-
-	const params = new URLSearchParams(queryString);
-	for (const paramWithoutSideEffects of cssUrlParamsWithoutSideEffects) {
-		if (
-			// Parameter is blank and not explicitly set, i.e. "?url", not "?url="
-			params.get(paramWithoutSideEffects) === "" &&
-			!url.includes(`?${paramWithoutSideEffects}=`) &&
-			!url.includes(`&${paramWithoutSideEffects}=`)
-		) {
-			return true;
-		}
-	}
-
-	return false;
-};
-
-async function findFilesDepedencies(
-	vite: DevEnvironment,
-	files: Array<string>,
-	ssr = false,
-	deps = new Set<EnvironmentModuleNode>(),
-) {
-	for (const file of files) {
-		try {
-			const node = await getViteModuleNode(vite, file, ssr);
-			if (node) await findModuleDependencies(vite, node, ssr, deps);
-		} catch (e) {
-			console.error(e);
-		}
-	}
-
-	return deps;
-}
-
 export async function findStylesInModuleGraph(
-  vite: DevEnvironment,
+	vite: DevEnvironment,
 	id: string,
-	ssr = false,
 ) {
 	const absolute = path.resolve(process.cwd(), id);
+	const dependencies = new Set<EnvironmentModuleNode>();
 
-	const dependencies = await findFilesDepedencies(vite, [absolute], ssr);
+	try {
+		await findModuleDependencies(vite, absolute, dependencies);
+	} catch (e) {
+		console.error(e);
+	}
 
 	const styles: Record<string, any> = {};
-
 	for (const dep of dependencies) {
-		if (isCssFile(dep.url) && dep.id) {
+		if (dep.id && isCssFile(dep.url)) {
 			styles[dep.id] = dep.url;
 		}
 	}

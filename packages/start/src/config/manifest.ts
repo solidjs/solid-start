@@ -1,13 +1,15 @@
-import { PluginOption } from "vite";
+import { PluginOption, ViteDevServer } from "vite";
 
+import { findStylesInModuleGraph } from "../server/collect-styles.ts";
 import { VIRTUAL_MODULES } from "./constants.ts";
 import { SolidStartOptions } from "./index.ts";
-import { findStylesInModuleGraph } from "../server/collect-styles.ts";
 
 export function manifest(start: SolidStartOptions): PluginOption {
+	let devServer: ViteDevServer = undefined!;
   return {
 		name: "solid-start:manifest-plugin",
 		enforce: "pre",
+		configureServer(server) { devServer = server },
 		async resolveId(id) {
 			if (id === VIRTUAL_MODULES.clientViteManifest)
 				return `\0${VIRTUAL_MODULES.clientViteManifest}`;
@@ -63,10 +65,12 @@ export function manifest(start: SolidStartOptions): PluginOption {
 						throw new Error("Missing id to get assets.");
 					}
 
+					// Client env does not have css dependencies in mod.transformResult
+					// Aalways use ssr env instead, to prevent hydration mismatches
+					const env = devServer.environments['ssr']
 					const styles = await findStylesInModuleGraph(
-						this.environment,
+						env,
 						id,
-						target === "ssr",
 					);
 
 					const cssAssets = Object.entries(styles).map(([key, value]) => `{
