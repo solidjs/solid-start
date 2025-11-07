@@ -1,30 +1,29 @@
-import { createBaseHandler } from "../handler";
-import { FetchEvent, HandlerOptions, PageEvent } from "../types";
+import type { JSX } from "solid-js";
+
+import { createBaseHandler } from "../handler.ts";
+import { getSsrManifest } from "../manifest/ssr-manifest.ts";
+import type { FetchEvent, HandlerOptions, PageEvent } from "../types.ts";
 
 /**
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/create-handler
  */
 export function createHandler(
-  fn: (context: PageEvent) => unknown,
-  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions),
-  routerLoad?: (event: FetchEvent) => Promise<void>
+	fn: (context: PageEvent) => JSX.Element,
+	options?: HandlerOptions | ((context: PageEvent) => HandlerOptions),
 ) {
-  return createBaseHandler(fn, createPageEvent, options, routerLoad);
+	return createBaseHandler(createPageEvent, fn, options);
 }
 
-export async function createPageEvent(ctx: FetchEvent) {
-  const clientManifest = import.meta.env.MANIFEST["client"]!;
-  const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: await clientManifest.json(),
-    assets: [...(await clientManifest.inputs[clientManifest.handler]!.assets())],
-    routes: [],
-    complete: false,
-    // prevUrl: "",
-    // mutation: false,
-    // $type: FETCH_EVENT,
-    $islands: new Set<string>()
-  });
+async function createPageEvent(ctx: FetchEvent) {
+	const manifest = getSsrManifest("ssr");
+	const pageEvent: PageEvent = Object.assign(ctx, {
+		manifest: "json" in manifest ? await manifest.json() : {},
+		assets: await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY),
+		routes: [],
+		complete: false,
+		$islands: new Set<string>(),
+	});
 
-  return pageEvent;
+	return pageEvent;
 }

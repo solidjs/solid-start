@@ -1,5 +1,2 @@
-// @refresh skip
-import "vinxi/client";
-export { StartClient, StartClientTanstack } from "./StartClient";
-export { mount } from "./mount";
-
+export { mount } from "./mount.ts";
+export { StartClient, StartClientTanstack } from "./StartClient.tsx";

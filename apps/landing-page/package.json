@@ -3,9 +3,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "pnpm --filter @solidjs/start build && vinxi build",
-    "start": "vinxi start"
+    "dev": "vite dev",
+    "build": "pnpm --filter @solidjs/start build && vite build",
+    "start": "vite serve"
   },
   "devDependencies": {
     "@kobalte/core": "^0.13.11",
@@ -18,7 +18,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tinyglobby": "^0.2.14",
     "tippy.js": "^6.3.7",
-    "vinxi": "^0.5.3"
+    "vite": "^7.1.10"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",

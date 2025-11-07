@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start",
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "vite serve",
     "unit:ci": "vitest run",
     "unit": "vitest",
     "unit:ui": "vitest --ui",
@@ -23,9 +23,9 @@
     "@vitest/ui": "3.0.5",
     "jsdom": "^25.0.1",
     "lodash": "^4.17.21",
-    "solid-js": "^1.9.5",
-    "vinxi": "^0.5.8",
-    "vite-plugin-solid": "^2.11.8",
+    "solid-js": "^1.9.9",
+    "vite": "^7.1.10",
+    "vite-plugin-solid": "^2.11.9",
     "vitest": "3.0.5"
   },
   "devDependencies": {

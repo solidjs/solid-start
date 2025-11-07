@@ -2,9 +2,11 @@
 // @ts-ignore
 import type { Component } from "solid-js";
 import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
-import { TopErrorBoundary } from "../../shared/ErrorBoundary";
-import { renderAsset } from "../renderAsset";
-import type { DocumentComponentProps, PageEvent } from "../types";
+import { getSsrManifest } from "../manifest/ssr-manifest.ts";
+
+import { TopErrorBoundary } from "../../shared/ErrorBoundary.tsx";
+import { renderAsset } from "../renderAsset.tsx";
+import type { DocumentComponentProps, PageEvent } from "../types.ts";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -23,34 +25,16 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         <props.document
           assets={<>{context.assets.map((m: any) => renderAsset(m))}</>}
           scripts={
-            nonce ? (
-              <>
-                <script
-                  nonce={nonce}
-                  innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
-                />
-                <script
-                  type="module"
-                  src={
-                    import.meta.env.MANIFEST["client"]!.inputs[
-                      import.meta.env.MANIFEST["client"]!.handler
-                    ]!.output.path
-                  }
-                />
-              </>
-            ) : (
-              <>
-                <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
-                <script
-                  type="module"
-                  src={
-                    import.meta.env.MANIFEST["client"]!.inputs[
-                      import.meta.env.MANIFEST["client"]!.handler
-                    ]!.output.path
-                  }
-                />
-              </>
-            )
+            <>
+              <script
+                nonce={nonce}
+                innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
+              />
+              <script
+                type="module"
+                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
+              />
+            </>
           }
         />
       </TopErrorBoundary>

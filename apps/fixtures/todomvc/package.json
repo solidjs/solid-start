@@ -2,16 +2,17 @@
   "name": "fixture-todomvc",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "vite start"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.0",
-    "@solidjs/start": "^1.1.0",
-    "solid-js": "^1.9.5",
+    "@solidjs/start": "workspace:*",
+    "nitro": "3.0.1-alpha.0",
+    "solid-js": "^1.9.9",
     "unstorage": "1.10.2",
-    "vinxi": "^0.5.7"
+    "vite": "7.1.10"
   },
   "engines": {
     "node": ">=22"
