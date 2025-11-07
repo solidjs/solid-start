@@ -10,7 +10,7 @@
     "@solidjs/start": "workspace:*",
     "nitro": "3.0.1-alpha.0",
     "solid-js": "^1.9.10",
-    "vite": "7.2.1"
+    "vite": "7.2.2"
   },
   "engines": {
     "node": ">=22"

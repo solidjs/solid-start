@@ -10,7 +10,7 @@
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "workspace:*",
     "solid-js": "^1.9.10",
-    "vite": "7.2.1"
+    "vite": "7.2.2"
   },
   "engines": {
     "node": ">=22"
