@@ -179,14 +179,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			// our server function manifest and resolve its module
 			manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
 			directive: "use server",
-      // generateFunctionId: startPluginOpts?.serverFns?.generateFunctionId,
-      // TODO: Is this correct???
-      // generateFunctionId: (opts) => {
-      //   const id = `${opts.filename}/${opts.functionName}`
-      //   // if (FUNCTIONS_WITH_CONSTANT_ID.includes(id)) return 'constant_id'
-      //   // else return undefined
-      //   return id;
-      // },
       callers: [
         {
           envConsumer: 'client',
@@ -208,17 +200,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   					)}'`,
           envName: VITE_ENVIRONMENTS.server,
          	replacer: (opts) =>
-            `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
-					//getServerFnById: corePluginOpts.serverFn?.ssr?.getServerFnById,
-          // getServerFnById: (opts) => {
-          //   const id = `${opts.filename}/${opts.functionName}`
-          //   // if (FUNCTIONS_WITH_CONSTANT_ID.includes(id)) return 'constant_id'
-          //   // else return undefined
-          //   return id
-          // },
+            `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`
         },
       ],
-      // TODO: Is this correct?
       provider: {
         getRuntimeCode: () =>
 					`import { createServerReference } from '${normalize(
