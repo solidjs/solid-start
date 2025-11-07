@@ -1,6 +1,7 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { join } from "pathe";
 import type { Asset } from "../renderAsset.tsx";
+import path from "node:path";
 
 // Only reads from client manifest atm, might need server support for islands
 export function getSsrProdManifest() {
@@ -14,7 +15,7 @@ export function getSsrProdManifest() {
 			if (!viteManifestEntry)
 				throw new Error(`No entry found in vite manifest for '${id}'`);
 
-			return viteManifestEntry.file;
+      return path.resolve("/", viteManifestEntry.file);
 		},
 		async getAssets(id) {
       if (id.startsWith("./")) id = id.slice(2);
