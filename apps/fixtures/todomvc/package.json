@@ -7,12 +7,12 @@
     "start": "vite start"
   },
   "dependencies": {
-    "@solidjs/router": "^0.15.0",
+    "@solidjs/router": "^0.15.3",
     "@solidjs/start": "workspace:*",
     "nitro": "3.0.1-alpha.0",
-    "solid-js": "^1.9.9",
-    "unstorage": "1.10.2",
-    "vite": "7.1.10"
+    "solid-js": "^1.9.10",
+    "unstorage": "1.17.2",
+    "vite": "7.2.1"
   },
   "engines": {
     "node": ">=22"

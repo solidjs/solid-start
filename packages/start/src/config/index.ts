@@ -178,26 +178,57 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			// This is the ID that will be available to look up and import
 			// our server function manifest and resolve its module
 			manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
-			client: {
-				envName: VITE_ENVIRONMENTS.client,
-				getRuntimeCode: () =>
-					`import { createServerReference } from "${normalize(
-						fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
-					)}"`,
-				replacer: (opts) =>
-					`createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`,
-			},
-			server: {
-				envName: VITE_ENVIRONMENTS.server,
-				getRuntimeCode: () =>
+			directive: "use server",
+      // generateFunctionId: startPluginOpts?.serverFns?.generateFunctionId,
+      // TODO: Is this correct???
+      // generateFunctionId: (opts) => {
+      //   const id = `${opts.filename}/${opts.functionName}`
+      //   // if (FUNCTIONS_WITH_CONSTANT_ID.includes(id)) return 'constant_id'
+      //   // else return undefined
+      //   return id;
+      // },
+      callers: [
+        {
+          envConsumer: 'client',
+          getRuntimeCode: () =>
+  					`import { createServerReference } from "${normalize(
+  						fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
+  					)}"`,
+     			replacer: (opts) =>
+            `createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`,
+          envName: VITE_ENVIRONMENTS.client,
+        },
+        {
+          envConsumer: 'server',
+          getRuntimeCode: () =>
+  					`import { createServerReference } from '${normalize(
+  						fileURLToPath(
+  							new URL("../server/server-fns-runtime", import.meta.url),
+  						),
+  					)}'`,
+          envName: VITE_ENVIRONMENTS.server,
+         	replacer: (opts) =>
+            `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
+					//getServerFnById: corePluginOpts.serverFn?.ssr?.getServerFnById,
+          // getServerFnById: (opts) => {
+          //   const id = `${opts.filename}/${opts.functionName}`
+          //   // if (FUNCTIONS_WITH_CONSTANT_ID.includes(id)) return 'constant_id'
+          //   // else return undefined
+          //   return id
+          // },
+        },
+      ],
+      // TODO: Is this correct?
+      provider: {
+        getRuntimeCode: () =>
 					`import { createServerReference } from '${normalize(
 						fileURLToPath(
 							new URL("../server/server-fns-runtime", import.meta.url),
 						),
 					)}'`,
-				replacer: (opts) =>
-					`createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
-			},
+        replacer: (opts) =>  `createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
+        envName: VITE_ENVIRONMENTS.server,
+      },
 		}),
 		{
   		name: "solid-start:virtual-modules",

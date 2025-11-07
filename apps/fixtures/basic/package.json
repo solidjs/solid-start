@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.0",
+    "@solidjs/router": "^0.15.3",
     "@solidjs/start": "workspace:*",
-    "solid-js": "^1.9.9",
-    "vite": "7.1.10"
+    "solid-js": "^1.9.10",
+    "vite": "7.2.1"
   },
   "engines": {
     "node": ">=22"

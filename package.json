@@ -27,14 +27,13 @@
     "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.12",
-    "citty": "^0.1.5",
-    "cypress": "^14.3.0",
-    "tinyglobby": "^0.2.2",
+    "@changesets/cli": "^2.29.7",
+    "citty": "^0.1.6",
+    "cypress": "^15.6.0",
+    "tinyglobby": "^0.2.15",
     "tippy.js": "^6.3.7",
-    "typescript": "^5.7.0"
+    "typescript": "^5.9.3"
   },
-  "dependencies": {},
   "engines": {
     "pnpm": "^10.8.1",
     "node": ">=22"

@@ -18,22 +18,22 @@
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "workspace:*",
     "@solidjs/testing-library": "^0.8.10",
-    "@testing-library/jest-dom": "^6.6.2",
-    "@testing-library/user-event": "^14.5.2",
-    "@vitest/ui": "3.0.5",
-    "jsdom": "^25.0.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitest/ui": "4.0.7",
+    "jsdom": "^27.1.0",
     "lodash": "^4.17.21",
-    "solid-js": "^1.9.9",
-    "vite": "^7.1.10",
-    "vite-plugin-solid": "^2.11.9",
-    "vitest": "3.0.5"
+    "solid-js": "^1.9.10",
+    "vite": "^7.2.1",
+    "vite-plugin-solid": "^2.11.10",
+    "vitest": "4.0.7"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.14.0",
-    "@types/lodash": "^4.17.14",
-    "@vitest/browser": "^3.0.4",
-    "cypress": "^14.3.0",
+    "@cypress/code-coverage": "^3.14.7",
+    "@types/lodash": "^4.17.20",
+    "@vitest/browser": "^4.0.7",
+    "cypress": "^15.6.0",
     "cypress-plugin-tab": "^1.0.5",
-    "cypress-vite": "^1.6.0"
+    "cypress-vite": "^1.8.0"
   }
 }
