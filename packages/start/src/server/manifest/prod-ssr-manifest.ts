@@ -14,7 +14,7 @@ export function getSsrProdManifest() {
 			if (!viteManifestEntry)
 				throw new Error(`No entry found in vite manifest for '${id}'`);
 
-			return viteManifestEntry.file;
+			return join("/", viteManifestEntry.file);
 		},
 		async getAssets(id) {
       if (id.startsWith("./")) id = id.slice(2);
