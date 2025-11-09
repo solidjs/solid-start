@@ -57,8 +57,8 @@ function createHtmlTagsForAssets(assets: string[]) {
 		.map<Asset>((asset) => ({
 			tag: "link",
 			attrs: {
-				href: '/' + asset,
-				key: asset,
+				href: join("/", asset),
+				key: join("/", asset),
 				...(asset.endsWith(".css")
 					? { rel: "stylesheet", fetchPriority: "high" }
 					: { rel: "modulepreload" }),
