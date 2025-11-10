@@ -14,6 +14,11 @@
 - For contributing to codebase, check [CONTRIBUTING.md](/CONTRIBUTING.md)
 - For creating a new template, please head over to [solidjs/templates](https://github.com/solidjs/templates)
 
+> [!IMPORTANT]
+> This is the branch for the SolidStart 2.0.0-alpha that is currently under heavy development.
+> 
+> Current SolidStart is maintained at [`1.x`](https://github.com/solidjs/solid-start/tree/1.x).
+
 ## Prerequisites
 
 - **Node.js**: Use the version specified in `.nvmrc`. To manage multiple versions across your system, we recommend a version manager such as [fnm](https://github.com/Schniz/fnm), or another of your choice.
