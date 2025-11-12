@@ -6,7 +6,7 @@ declare module "solid-start:client-vite-manifest" {
 }
 
 interface StartManifest {
-	getAssets(id: string): Promise<import("./server/renderAsset").Asset[]>;
+	getAssets(id: string): Promise<import("./server/assets/render").Asset[]>;
 }
 
 declare module "solid-start:get-client-manifest" {

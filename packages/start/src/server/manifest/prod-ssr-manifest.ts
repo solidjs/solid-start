@@ -1,6 +1,7 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { join } from "pathe";
-import type { Asset } from "../renderAsset.tsx";
+import { Manifest } from "vite";
+import type { Asset } from "../assets/render.tsx";
 
 // Only reads from client manifest atm, might need server support for islands
 export function getSsrProdManifest() {
@@ -27,7 +28,7 @@ export function getSsrProdManifest() {
 			const json: Record<string, any> = {};
 
 			const entryKeys = Object.keys(viteManifest)
-				.filter((id) => viteManifest[id]?.isEntry)
+				.filter((id) => viteManifest[id]?.isEntry || viteManifest[id]?.isDynamicEntry)
 				.map((id) => id);
 
 			for (const entryKey of entryKeys) {
@@ -60,7 +61,7 @@ function createHtmlTagsForAssets(assets: string[]) {
 				href: '/' + asset,
 				key: asset,
 				...(asset.endsWith(".css")
-					? { rel: "stylesheet", fetchPriority: "high" }
+					? { rel: "stylesheet" }
 					: { rel: "modulepreload" }),
 			},
 		}));
@@ -70,7 +71,7 @@ const entryId = import.meta.env.START_CLIENT_ENTRY.slice(2);
 let entryImports: string[] | undefined = undefined;
 
 function findAssetsInViteManifest(
-	manifest: any,
+	manifest: Manifest,
 	id: string,
 	assetMap = new Map(),
 	stack: string[] = [],
@@ -99,10 +100,7 @@ function findAssetsInViteManifest(
 	// Chunks (e.g. routes) that import something from entry, should not render entry css redundantly
 	const excludeEntryImports = id !== entryId;
 
-	const assets = [
-		...(chunk.assets?.filter(Boolean) || []),
-		...(chunk.css?.filter(Boolean) || []),
-	];
+	const assets = chunk.css?.filter(Boolean) || [];
 	if (chunk.imports) {
 		stack.push(id);
 		for (let i = 0, l = chunk.imports.length; i < l; i++) {

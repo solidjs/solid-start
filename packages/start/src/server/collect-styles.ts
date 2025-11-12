@@ -63,7 +63,7 @@ async function findModuleDependencies(
 // Vite doesn't expose these so we just copy the list for now
 // https://github.com/vitejs/vite/blob/d6bde8b03d433778aaed62afc2be0630c8131908/packages/vite/src/node/constants.ts#L49C23-L50
 const cssFileRegExp =
-	/\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/;
+	/\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)$/;
 // https://github.com/vitejs/vite/blob/d6bde8b03d433778aaed62afc2be0630c8131908/packages/vite/src/node/plugins/css.ts#L160
 const cssModulesRegExp = new RegExp(`\\.module${cssFileRegExp.source}`);
 

@@ -1,12 +1,15 @@
-import { getManifest } from "solid-start:get-manifest";
+import { lazy, type Component } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 
-import lazyRoute from "./server/lazyRoute.tsx";
 import { pageRoutes as routeConfigs } from "./server/routes.ts";
 import type { PageEvent } from "./server/types.ts";
 
+const components: Record<string, Component> = {};
+
 export function createRoutes() {
   function createRoute(route: any) {
+    const component = route.$component && (components[route.$component.src] ??= lazy(route.$component.import));
+
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),
@@ -14,8 +17,7 @@ export function createRoutes() {
         ...(route.$$route ? route.$$route.require().route.info : {}),
         filesystem: true
       },
-      component:
-        route.$component && lazyRoute(route.$component, getManifest("client"), getManifest("ssr")),
+      component,
       children: route.children ? route.children.map(createRoute) : undefined
     };
   }
