@@ -1,5 +1,4 @@
 // @refresh skip
-// TODO rename to renderAsset.ts?
 import type { JSX } from "solid-js";
 
 const assetMap = {
