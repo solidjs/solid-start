@@ -1,12 +1,12 @@
-import { PluginOption, ViteDevServer } from "vite";
+import { type PluginOption, type ViteDevServer } from "vite";
 
 import { findStylesInModuleGraph } from "../server/collect-styles.ts";
 import { VIRTUAL_MODULES } from "./constants.ts";
-import { SolidStartOptions } from "./index.ts";
+import { type SolidStartOptions } from "./index.ts";
 
 export function manifest(start: SolidStartOptions): PluginOption {
 	let devServer: ViteDevServer = undefined!;
-  return {
+	return {
 		name: "solid-start:manifest-plugin",
 		enforce: "pre",
 		configureServer(server) { devServer = server },
@@ -21,13 +21,13 @@ export function manifest(start: SolidStartOptions): PluginOption {
 			if (id === VIRTUAL_MODULES.getManifest) {
 				return this.environment.config.consumer === "client"
 					? this.resolve(
-							new URL("../server/manifest/client-manifest", import.meta.url)
-								.pathname,
-						)
+						new URL("../server/manifest/client-manifest", import.meta.url)
+							.pathname,
+					)
 					: this.resolve(
-							new URL("../server/manifest/ssr-manifest", import.meta.url)
-								.pathname,
-						);
+						new URL("../server/manifest/ssr-manifest", import.meta.url)
+							.pathname,
+					);
 			}
 			if (id === VIRTUAL_MODULES.middleware) {
 				if (start.middleware) return await this.resolve(start.middleware);
@@ -53,10 +53,10 @@ export function manifest(start: SolidStartOptions): PluginOption {
 			} else if (id === `\0${VIRTUAL_MODULES.middleware}`)
 				return "export default {};";
 			else if (id.startsWith("/@manifest")) {
-        if (this.environment.mode !== "dev") throw new Error("@manifest queries are only allowed in dev");
+				if (this.environment.mode !== "dev") throw new Error("@manifest queries are only allowed in dev");
 
 				const [path, query] = id.split("?");
-        const target = id.split("/")[2]!;
+				const target = id.split("/")[2]!;
 				const params = new URLSearchParams(query);
 				if (!path || !query) return;
 				if (path.endsWith("assets")) {
