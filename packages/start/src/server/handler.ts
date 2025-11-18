@@ -154,7 +154,13 @@ export async function createPageEvent(ctx: FetchEvent) {
 	// const prevPath = ctx.request.headers.get("x-solid-referrer");
 	// const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
 	const manifest = getSsrManifest(import.meta.env.SSR && import.meta.env.DEV ? "ssr": "client");
+
+	// Handle Vite build.cssCodeSplit
+	// When build.cssCodeSplit is false, a single CSS file is generated with the key style.css
+	const mergedCSS = import.meta.env.PROD ? await manifest.getAssets('style.css'): [];
+
 	const assets = [
+    ...mergedCSS,
     ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
     ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
     // ...(import.meta.env.START_ISLANDS
@@ -164,7 +170,6 @@ export async function createPageEvent(ctx: FetchEvent) {
     //   : [])
   ];
 	const pageEvent: PageEvent = Object.assign(ctx, {
-		manifest: "json" in manifest ? await manifest.json() : {},
 		assets,
 		router: {
 			submission: initFromFlash(ctx) as any,

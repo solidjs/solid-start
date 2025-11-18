@@ -1,12 +1,11 @@
+import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
+import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
-import { defu } from "defu";
-import { type PluginOption, type ViteDevServer } from "vite";
+import { type PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
-import { isCssModulesFile } from "../server/collect-styles.ts";
 import {
 	DEFAULT_EXTENSIONS,
 	VIRTUAL_MODULES,
@@ -19,6 +18,7 @@ import {
 } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
 
@@ -158,7 +158,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			},
 		},
 		manifest(start),
-		css(),
 		fsRoutes({
 			routers: {
 				client: new SolidStartClientFileRouter({
@@ -172,6 +171,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				}),
 			},
 		}),
+		lazy(),
 		// Must be placed after fsRoutes, as treeShake will remove the
 		// server fn exports added in by this plugin
 		TanStackServerFnPlugin({
@@ -235,39 +235,4 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   		extensions: extensions.map((ext) => `.${ext}`),
   	}),
 	];
-}
-
-function css(): PluginOption {
-	let viteServer!: ViteDevServer;
-	const cssModules: Record<string, any> = {};
-	return {
-		name: "solid-start:css-hmr",
-		configureServer(dev) {
-			viteServer = dev;
-		},
-		async handleHotUpdate({ file, server }) {
-			if (file.endsWith(".css")) {
-				const resp = await server.transformRequest(file);
-				if (!resp) return;
-				const json = resp.code
-					.match(/const __vite__css = .*\n/)?.[0]
-					?.slice("const __vite__css = ".length);
-				if (!json) return;
-				resp.code = JSON.parse(json);
-				viteServer.ws.send({
-					type: "custom",
-					event: "css-update",
-					data: {
-						file,
-						contents: resp.code,
-					},
-				});
-			}
-		},
-		transform(code, id) {
-			if (isCssModulesFile(id)) {
-				cssModules[id] = code;
-			}
-		},
-	};
 }
