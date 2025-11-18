@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  vite-plugin-solid:
-    hash: 71233f1afab9e3ea2dbb03dbda3d84894ef1c6bfbbe69df9f864d03bfe67b6f5
-    path: patches/vite-plugin-solid.patch
-
 importers:
 
   .:
@@ -240,8 +235,8 @@ importers:
         specifier: ^7.1.10
         version: 7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0)
       vite-plugin-solid:
-        specifier: ^2.11.9
-        version: 2.11.9(patch_hash=71233f1afab9e3ea2dbb03dbda3d84894ef1c6bfbbe69df9f864d03bfe67b6f5)(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0))
+        specifier: https://pkg.pr.new/vite-plugin-solid@228
+        version: https://pkg.pr.new/vite-plugin-solid@228(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0))
       vitest:
         specifier: 3.0.5
         version: 3.0.5(@types/debug@4.1.12)(@types/node@24.9.1)(@vitest/browser@3.0.5)(@vitest/ui@3.0.5)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.27.0)(msw@2.7.0(@types/node@24.9.1)(typescript@5.7.3))(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0)
@@ -346,8 +341,8 @@ importers:
         specifier: 7.1.10
         version: 7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0)
       vite-plugin-solid:
-        specifier: ^2.11.9
-        version: 2.11.9(patch_hash=71233f1afab9e3ea2dbb03dbda3d84894ef1c6bfbbe69df9f864d03bfe67b6f5)(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0))
+        specifier: https://pkg.pr.new/vite-plugin-solid@228
+        version: https://pkg.pr.new/vite-plugin-solid@228(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0))
       vitest:
         specifier: 3.0.5
         version: 3.0.5(@types/debug@4.1.12)(@types/node@24.9.1)(@vitest/browser@3.0.5)(@vitest/ui@3.0.5)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.27.0)(msw@2.7.0(@types/node@24.9.1)(typescript@5.7.3))(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0)
@@ -6503,8 +6498,9 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
-  vite-plugin-solid@2.11.9:
-    resolution: {integrity: sha512-bTA6p+bspXZsuulSd2y6aTzegF8xGaJYcq1Uyh/mv+W4DQtzCgL9nN6n2fsTaxp/dMk+ZHHKgGndlNeooqHLKw==}
+  vite-plugin-solid@https://pkg.pr.new/vite-plugin-solid@228:
+    resolution: {tarball: https://pkg.pr.new/vite-plugin-solid@228}
+    version: 2.11.8
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
       solid-js: ^1.7.2
@@ -6943,7 +6939,7 @@ snapshots:
 
   '@babel/helper-module-imports@7.18.6':
     dependencies:
-      '@babel/types': 7.28.4
+      '@babel/types': 7.28.5
 
   '@babel/helper-module-imports@7.27.1':
     dependencies:
@@ -9476,7 +9472,7 @@ snapshots:
       '@babel/core': 7.28.3
       '@babel/helper-module-imports': 7.18.6
       '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.3)
-      '@babel/types': 7.28.4
+      '@babel/types': 7.28.5
       html-entities: 2.3.3
       parse5: 7.3.0
       validate-html-nesting: 1.2.3
@@ -12580,9 +12576,9 @@ snapshots:
 
   solid-refresh@0.6.3(solid-js@1.9.9):
     dependencies:
-      '@babel/generator': 7.28.3
+      '@babel/generator': 7.28.5
       '@babel/helper-module-imports': 7.27.1
-      '@babel/types': 7.28.4
+      '@babel/types': 7.28.5
       solid-js: 1.9.9
     transitivePeerDependencies:
       - supports-color
@@ -13230,7 +13226,7 @@ snapshots:
       - tsx
       - yaml
 
-  vite-plugin-solid@2.11.9(patch_hash=71233f1afab9e3ea2dbb03dbda3d84894ef1c6bfbbe69df9f864d03bfe67b6f5)(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0)):
+  vite-plugin-solid@https://pkg.pr.new/vite-plugin-solid@228(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.0)):
     dependencies:
       '@babel/core': 7.28.3
       '@types/babel__core': 7.20.5

@@ -14,6 +14,3 @@ ignoredBuiltDependencies:
 onlyBuiltDependencies:
   - cypress
   - esbuild
-
-patchedDependencies:
-  vite-plugin-solid: patches/vite-plugin-solid.patch

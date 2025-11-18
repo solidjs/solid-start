@@ -61,7 +61,7 @@
     "srvx": "^0.9.1",
     "terracotta": "^1.0.6",
     "vite": "7.1.10",
-    "vite-plugin-solid": "^2.11.9",
+    "vite-plugin-solid": "https://pkg.pr.new/vite-plugin-solid@228",
     "vitest": "3.0.5"
   },
   "engines": {
