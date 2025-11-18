@@ -30,9 +30,8 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
 
-      - name: Build ${{ matrix.package }} package and dependencies
-        # build the package and all its dependencies
-        run: pnpm --filter ${{ matrix.package }}... build
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Check types with @arethetypeswrong/cli
-        run: pnpx @arethetypeswrong/cli --pack packages/${{ matrix.package }} --profile esm-only
+        run: pnpm --filter ${{ matrix.package }} typecheck:dist
