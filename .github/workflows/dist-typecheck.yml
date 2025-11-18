@@ -35,4 +35,4 @@ jobs:
         run: pnpm --filter ${{ matrix.package }}... build
 
       - name: Check types with @arethetypeswrong/cli
-        run: pnpx @arethetypeswrong/cli --pack packages/${{ matrix.package }} --profile esm-only
+        run: pnpm --filter ${{ matrix.package }} typecheck:dist
