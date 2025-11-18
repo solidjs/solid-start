@@ -188,7 +188,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 							fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
 						)}"`,
 					replacer: (opts) =>
-						`createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`,
+						`createServerReference('${opts.functionId}')`,
 				},
 				{
 					envConsumer: "server",
@@ -200,7 +200,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 							),
 						)}'`,
 					replacer: (opts) =>
-						`createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
+						`createServerReference(${opts.fn}, '${opts.functionId}')`,
 				}
 			],
 			provider: {
@@ -212,7 +212,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 						),
 					)}'`,
 				replacer: (opts) =>
-					`createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
+					`createServerReference(${opts.fn}, '${opts.functionId}')`,
 			},
 		}),
 		{

@@ -192,20 +192,20 @@ async function fetchServerFunction(
   return result;
 }
 
-export function createServerReference(fn: Function, id: string, name: string) {
+export function createServerReference(id: string) {
   const baseURL = import.meta.env.SERVER_BASE_URL ?? "";
+  const fn = (...args: any[]) => fetchServerFunction(`${baseURL}/_server`, id, {}, args);
+
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        return `${baseURL}/_server?id=${encodeURIComponent(id)}`;
       }
       if (prop === "GET") {
         return receiver.withOptions({ method: "GET" });
       }
       if (prop === "withOptions") {
-        const url = `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(
-          name
-        )}`;
+        const url = `${baseURL}/_server?id=${encodeURIComponent(id)}`;
         return (options: RequestInit) => {
           const fn = async (...args: any[]) => {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
@@ -218,7 +218,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
                         )}`
                       : "")
                 : `${baseURL}/_server`,
-              `${id}#${name}`,
+              id,
               options,
               encodeArgs ? [] : args
             );
@@ -229,12 +229,9 @@ export function createServerReference(fn: Function, id: string, name: string) {
       }
       return (target as any)[prop];
     },
-    apply(target, thisArg, args) {
-      return fetchServerFunction(`${baseURL}/_server`, `${id}#${name}`, {}, args);
-    }
   });
 }
 
-export function createClientReference(Component: Component<any>, id: string, name: string) {
+export function createClientReference(Component: Component<any>, id: string) {
   return Component;
 }
