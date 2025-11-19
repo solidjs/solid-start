@@ -178,16 +178,32 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			// This is the ID that will be available to look up and import
 			// our server function manifest and resolve its module
 			manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
-			client: {
-				envName: VITE_ENVIRONMENTS.client,
-				getRuntimeCode: () =>
-					`import { createServerReference } from "${normalize(
-						fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
-					)}"`,
-				replacer: (opts) =>
-					`createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`,
-			},
-			server: {
+			directive: "use server",
+			callers: [
+				{
+					envConsumer: "client",
+					envName: VITE_ENVIRONMENTS.client,
+					getRuntimeCode: () =>
+						`import { createServerReference } from "${normalize(
+							fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
+						)}"`,
+					replacer: (opts) =>
+						`createServerReference('${opts.functionId}')`,
+				},
+				{
+					envConsumer: "server",
+					envName: VITE_ENVIRONMENTS.server,
+					getRuntimeCode: () =>
+						`import { createServerReference } from '${normalize(
+							fileURLToPath(
+								new URL("../server/server-fns-runtime", import.meta.url),
+							),
+						)}'`,
+					replacer: (opts) =>
+						`createServerReference(${opts.fn}, '${opts.functionId}')`,
+				}
+			],
+			provider: {
 				envName: VITE_ENVIRONMENTS.server,
 				getRuntimeCode: () =>
 					`import { createServerReference } from '${normalize(
@@ -196,7 +212,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 						),
 					)}'`,
 				replacer: (opts) =>
-					`createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
+					`createServerReference(${opts.fn}, '${opts.functionId}')`,
 			},
 		}),
 		{
