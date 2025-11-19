@@ -1,0 +1,37 @@
+name: Type Check Distribution
+
+on:
+  pull_request:
+    branches-ignore:
+      - 1.x
+  push:
+    branches:
+      - main
+
+jobs:
+  typecheck-dist:
+    name: Check ${{ matrix.package }} distributed types
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # @todo
+        # add Start for v2
+        package: ["@solidjs/vite-plugin-nitro-2"]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v3
+
+      - name: Use Node.js from nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check types with @arethetypeswrong/cli
+        run: pnpm --filter ${{ matrix.package }} typecheck:dist
