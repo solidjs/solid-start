@@ -4,10 +4,9 @@ import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
-import { provideRequestEvent } from "solid-js/web/storage";
 
 import { createRoutes } from "../router.tsx";
-import { getFetchEvent } from "./fetchEvent.ts";
+import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "./server-functions-handler.ts";
@@ -29,8 +28,8 @@ export function createBaseHandler(
 		| ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
 	const handler = defineHandler({
-		middleware,
-		handler: async (e: H3Event) => {
+		middleware: middleware.length ? middleware.map(decorateMiddleware): undefined,
+		handler: decorateHandler(async (e: H3Event) => {
 			const event = getRequestEvent()!;
 			const url = new URL(event.request.url);
 			const pathname = url.pathname;
@@ -126,16 +125,12 @@ export function createBaseHandler(
       const { writable, readable } = new TransformStream();
       stream.pipeTo(writable);
       return readable
-		},
+		}),
 	});
 
 	const app = new H3();
 
-	app.use(
-		defineHandler((e) =>
-			provideRequestEvent(getFetchEvent(e), () => handler(e)),
-		),
-	);
+	app.use(handler);
 
 	return app;
 }
