@@ -194,9 +194,6 @@ importers:
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.9)
-      '@solidjs/start':
-        specifier: workspace:*
-        version: link:../../packages/start
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
