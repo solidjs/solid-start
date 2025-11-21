@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     mockReset: true,
     globals: true,
-    exclude: ["**/src/e2e/**"], // we need this to offload these to playwright
+    exclude: ["**/src/e2e/**"], // we need this to offload these to playwright, for e2e tests
     projects: [
       {
         // 1. NODE Project (For fs, tree-shaking, server utilities)
@@ -15,8 +15,7 @@ export default defineConfig({
         test: {
           include: ["**/*.server.test.ts"], // Matches the tree-shaking test
           name: { label: "Node Logic", color: "green" },
-          environment: "node" // Crucial for node:fs access
-          // Ensure browser config is absent or explicitly disabled here
+          environment: "node"
         }
       },
       {
