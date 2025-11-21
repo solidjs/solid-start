@@ -55,3 +55,4 @@ vite.config.ts.timestamp*
 
 .data
 tsconfig.tsbuildinfo
+.solid-start
