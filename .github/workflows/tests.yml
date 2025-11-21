@@ -27,7 +27,7 @@ jobs:
         run: pnpm i
 
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install chromium
+        run: pnpm --filter tests exec playwright install chromium
 
       - name: Build SolidStart
         run: pnpm --filter @solidjs/start build
