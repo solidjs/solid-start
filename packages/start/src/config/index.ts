@@ -92,14 +92,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				}
 				return {
 					appType: "custom",
-					build: { assetsDir: "_build/assets" },
+					build: { assetsDir: "_build/assets", outDir: ".solid-start/" },
 					environments: {
 						[VITE_ENVIRONMENTS.client]: {
 							consumer: "client",
 							build: {
 								write: true,
 								manifest: true,
-								outDir: "dist/client",
+								outDir: ".solid-start/client",
 								rollupOptions: {
 									input: clientInput,
 									treeshake: true,
@@ -117,7 +117,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 								rollupOptions: {
 									input: "~/entry-server.tsx",
 								},
-								outDir: "dist/server",
+								outDir: ".solid-start/server",
 								commonjsOptions: {
 									include: [/node_modules/],
 								},
