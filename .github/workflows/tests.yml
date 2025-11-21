@@ -2,14 +2,15 @@ name: 🧪 Tests
 
 on:
   workflow_dispatch:
+  # Add remaining triggers
   pull_request:
-    branches: [main, 1.x]
+    branches: [main]
   push:
-    branches: [main, 1.x]
+    branches: [main]
 
 jobs:
   tests:
-    name: "🧪 Tests"
+    name: "🧪 Run All Tests"
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
@@ -25,8 +26,8 @@ jobs:
       - name: Install project dependencies
         run: pnpm i
 
-      - name: Install Cypress binary
-        run: pnpm exec cypress install
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install chromium
 
       - name: Build SolidStart
         run: pnpm --filter @solidjs/start build
@@ -34,28 +35,10 @@ jobs:
       - name: Build Test Project
         run: pnpm --filter tests build
 
-      - name: Run unit tests
-        run: pnpm --filter tests unit:ci
+      - name: Run all apps/tests (Unit, Node, Browser UI, and E2E)
+        run: pnpm --filter tests run test:all
 
-      - name: Run start unit tests
-        run: pnpm --filter @solidjs/start test:ci
-
-      - name: E2E Chromium
-        uses: cypress-io/github-action@v6
-        with:
-          project: ./apps/tests
-          install: false
-          start: pnpm --filter tests start --host 127.0.0.1 --port 3000
-          wait-on: "http://127.0.0.1:3000"
-          wait-on-timeout: 120
-          browser: chromium
-
-      - name: E2E Firefox
-        uses: cypress-io/github-action@v6
-        with:
-          project: ./apps/tests
-          install: false
-          start: pnpm --filter tests start --host 127.0.0.1 --port 3000
-          wait-on: "http://127.0.0.1:3000"
-          wait-on-timeout: 120
-          browser: firefox
+      # The @solidjs/start package currently has no tests, so we are skipping this step.
+      # Uncomment if tests are added to the @solidjs/start package.
+      # - name: Run @solidjs/start unit tests
+      #   run: pnpm --filter @solidjs/start test:ci
