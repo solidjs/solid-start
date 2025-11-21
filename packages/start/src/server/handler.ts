@@ -31,8 +31,7 @@ export function createBaseHandler(
 		middleware: middleware.length ? middleware.map(decorateMiddleware): undefined,
 		handler: decorateHandler(async (e: H3Event) => {
 			const event = getRequestEvent()!;
-			const url = new URL(event.request.url);
-			const pathname = url.pathname;
+			const pathname = e.url.pathname;
 
 			const serverFunctionTest = join("/", SERVER_FN_BASE);
 			if (pathname.startsWith(serverFunctionTest)) {
