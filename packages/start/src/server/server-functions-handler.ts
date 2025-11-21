@@ -83,15 +83,14 @@ export async function handleServerFunction(h3Event: H3Event) {
 	const instance = request.headers.get("X-Server-Instance");
 	const singleFlight = request.headers.has("X-Single-Flight");
 	const url = new URL(request.url);
-	let functionId: string | undefined | null, name: string | undefined | null;
+	let functionId: string | undefined | null;
 	if (serverReference) {
 		// invariant(typeof serverReference === "string", "Invalid server function");
-		[functionId, name] = serverReference.split("#");
+		[functionId] = serverReference.split("#");
 	} else {
 		functionId = url.searchParams.get("id");
-		name = url.searchParams.get("name");
 
-		if (!functionId || !name) {
+		if (!functionId) {
 			return process.env.NODE_ENV === "development"
 				? new Response("Server function not found", { status: 404 })
 				: new Response(null, { status: 404 });
@@ -158,7 +157,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 			/* @ts-expect-error */
 			sharedConfig.context = { event };
 			event.locals.serverFunctionMeta = {
-				id: functionId + "#" + name,
+				id: functionId
 			};
 			return serverFunction(...parsed);
 		});

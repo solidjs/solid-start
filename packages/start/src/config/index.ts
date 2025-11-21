@@ -1,12 +1,11 @@
+import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
+import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
-import { defu } from "defu";
-import { type PluginOption, type ViteDevServer } from "vite";
+import { type PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
-import { isCssModulesFile } from "../server/collect-styles.ts";
 import {
 	DEFAULT_EXTENSIONS,
 	VIRTUAL_MODULES,
@@ -19,6 +18,7 @@ import {
 } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
 
@@ -68,6 +68,10 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 							name === VITE_ENVIRONMENTS.server,
 						),
 					},
+					resolve: {
+						// remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
+						externalConditions: ["solid", "node"]
+					}
 				};
 			},
 			async config(_, env) {
@@ -158,7 +162,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 			},
 		},
 		manifest(start),
-		css(),
 		fsRoutes({
 			routers: {
 				client: new SolidStartClientFileRouter({
@@ -172,22 +175,39 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 				}),
 			},
 		}),
+		lazy(),
 		// Must be placed after fsRoutes, as treeShake will remove the
 		// server fn exports added in by this plugin
 		TanStackServerFnPlugin({
 			// This is the ID that will be available to look up and import
 			// our server function manifest and resolve its module
 			manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
-			client: {
-				envName: VITE_ENVIRONMENTS.client,
-				getRuntimeCode: () =>
-					`import { createServerReference } from "${normalize(
-						fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
-					)}"`,
-				replacer: (opts) =>
-					`createServerReference(${() => {}}, '${opts.functionId}', '${opts.extractedFilename}')`,
-			},
-			server: {
+			directive: "use server",
+			callers: [
+				{
+					envConsumer: "client",
+					envName: VITE_ENVIRONMENTS.client,
+					getRuntimeCode: () =>
+						`import { createServerReference } from "${normalize(
+							fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
+						)}"`,
+					replacer: (opts) =>
+						`createServerReference('${opts.functionId}')`,
+				},
+				{
+					envConsumer: "server",
+					envName: VITE_ENVIRONMENTS.server,
+					getRuntimeCode: () =>
+						`import { createServerReference } from '${normalize(
+							fileURLToPath(
+								new URL("../server/server-fns-runtime", import.meta.url),
+							),
+						)}'`,
+					replacer: (opts) =>
+						`createServerReference(${opts.fn}, '${opts.functionId}')`,
+				}
+			],
+			provider: {
 				envName: VITE_ENVIRONMENTS.server,
 				getRuntimeCode: () =>
 					`import { createServerReference } from '${normalize(
@@ -196,7 +216,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 						),
 					)}'`,
 				replacer: (opts) =>
-					`createServerReference(${opts.fn}, '${opts.functionId}', '${opts.extractedFilename}')`,
+					`createServerReference(${opts.fn}, '${opts.functionId}')`,
 			},
 		}),
 		{
@@ -235,39 +255,4 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   		extensions: extensions.map((ext) => `.${ext}`),
   	}),
 	];
-}
-
-function css(): PluginOption {
-	let viteServer!: ViteDevServer;
-	const cssModules: Record<string, any> = {};
-	return {
-		name: "solid-start:css-hmr",
-		configureServer(dev) {
-			viteServer = dev;
-		},
-		async handleHotUpdate({ file, server }) {
-			if (file.endsWith(".css")) {
-				const resp = await server.transformRequest(file);
-				if (!resp) return;
-				const json = resp.code
-					.match(/const __vite__css = .*\n/)?.[0]
-					?.slice("const __vite__css = ".length);
-				if (!json) return;
-				resp.code = JSON.parse(json);
-				viteServer.ws.send({
-					type: "custom",
-					event: "css-update",
-					data: {
-						file,
-						contents: resp.code,
-					},
-				});
-			}
-		},
-		transform(code, id) {
-			if (isCssModulesFile(id)) {
-				cssModules[id] = code;
-			}
-		},
-	};
 }

@@ -1,3 +1,4 @@
+export { default as lazy } from "../shared/lazy.ts";
 export { getServerFunctionMeta } from "../shared/serverFunction.ts";
 export { StartServer } from "./StartServer.tsx";
 export { createHandler } from "./handler.ts";

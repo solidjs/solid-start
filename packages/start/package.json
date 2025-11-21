@@ -37,8 +37,9 @@
   "dependencies": {
     "@babel/core": "^7.28.3",
     "@babel/traverse": "^7.28.3",
+    "@babel/types": "^7.28.5",
     "@solidjs/meta": "^0.29.4",
-    "@tanstack/server-functions-plugin": "^1.133.11",
+    "@tanstack/server-functions-plugin": "1.134.5",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.9",
     "cookie-es": "^2.0.0",

@@ -5,7 +5,7 @@ import type { RequestEvent } from "solid-js/web";
 // export const FETCH_EVENT = "$FETCH";
 
 export type DocumentComponentProps = {
-	assets: JSX.Element;
+	assets?: JSX.Element;
 	scripts: JSX.Element;
 	children?: JSX.Element;
 };
@@ -55,7 +55,6 @@ export interface FetchEvent {
 }
 
 export interface PageEvent extends RequestEvent {
-	manifest?: any;
 	assets: any[];
 	routes: any[];
 	// prevUrl: string | null;

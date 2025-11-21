@@ -1,14 +1,14 @@
 import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 
-export function createServerReference(fn: Function, id: string, name: string) {
+export function createServerReference(fn: Function, id: string) {
   if (typeof fn !== "function")
     throw new Error("Export from a 'use server' module must be a function");
   const baseURL = import.meta.env.SERVER_BASE_URL ?? "";
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        return `${baseURL}/_server?id=${encodeURIComponent(id)}`;
       }
       if (prop === "GET") return receiver;
       return (target as any)[prop];
@@ -18,7 +18,7 @@ export function createServerReference(fn: Function, id: string, name: string) {
       if (!ogEvt) throw new Error("Cannot call server function outside of a request");
       const evt = { ...ogEvt };
       evt.locals.serverFunctionMeta = {
-        id: id + "#" + name
+        id
       };
       evt.serverOnly = true;
       return provideRequestEvent(evt, () => {

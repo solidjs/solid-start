@@ -1,4 +1,5 @@
-import { getRequestIP, type H3Event } from "h3";
+import { type EventHandler, getRequestIP, type H3Event, type Middleware } from "h3";
+import { provideRequestEvent } from "solid-js/web/storage";
 import type { FetchEvent } from "./types.ts";
 
 const FETCH_EVENT_CONTEXT = "solidFetchEvent";
@@ -27,3 +28,9 @@ export function mergeResponseHeaders(h3Event: H3Event, headers: Headers) {
 		h3Event.res.headers.append(key, value);
 	}
 }
+
+export const decorateHandler = <T extends EventHandler>(fn: T) =>
+	(event => provideRequestEvent(getFetchEvent(event), () => fn(event))) as T;
+
+export const decorateMiddleware = <T extends Middleware>(fn: T) =>
+	((event, next) => provideRequestEvent(getFetchEvent(event), () => fn(event, next))) as T;
