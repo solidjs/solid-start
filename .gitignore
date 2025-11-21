@@ -54,3 +54,4 @@ vite.config.ts.timestamp*
 tsconfig.tsbuildinfo
 
 apps/tests/**/test-results
+.solid-start
