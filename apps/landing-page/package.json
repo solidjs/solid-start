@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "pnpm --filter @solidjs/start build && vite build",
+    "build": "vite build",
     "start": "vite serve"
   },
   "devDependencies": {
@@ -23,6 +23,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
+    "@solidjs/start": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "solid-js": "^1.9.9",

@@ -1,4 +1,4 @@
-import { createHandler, StartServer } from "../../../packages/start/src/server";
+import { createHandler, StartServer } from "@solidjs/start/server";
 
 export default createHandler(() => {
   return (
