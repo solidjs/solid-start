@@ -32,12 +32,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build start
+      - name: Build Packages
         run: |
           pnpm run build
           # rewrite .ts exports to .js
           pnpm --filter='./packages/*' -c exec "echo \$(cat package.json | jq '.exports = .publishConfig.exports') > package.json"
 
-      - name: Release
+      - name: Release Packages
+        # remove the compat flag until all packages are available on npm
+        # run: |
+        #   pnpm dlx pkg-pr-new@0.0 publish './packages/*' --template './examples/*' --compact
         run: |
-          pnpm dlx pkg-pr-new@0.0 publish './packages/start' --template './examples/*' --compact
+          pnpm dlx pkg-pr-new@0.0 publish './packages/*'
