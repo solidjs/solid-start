@@ -82,7 +82,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 	const serverReference = request.headers.get("X-Server-Id");
 	const instance = request.headers.get("X-Server-Instance");
 	const singleFlight = request.headers.has("X-Single-Flight");
-	const url = new URL(request.url);
+	const url = h3Event.url;
 	let functionId: string | undefined | null, name: string | undefined | null;
 	if (serverReference) {
 		// invariant(typeof serverReference === "string", "Invalid server function");
