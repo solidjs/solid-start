@@ -348,7 +348,7 @@ importers:
         version: 3.3.3
       h3:
         specifier: npm:h3@2.0.1-rc.4
-        version: 2.0.1-rc.4(crossws@0.4.1(srvx@0.9.1))
+        version: 2.0.1-rc.4(crossws@0.4.1(srvx@0.9.6))
       html-to-image:
         specifier: ^1.11.13
         version: 1.11.13
@@ -381,7 +381,7 @@ importers:
         version: 1.2.1
       srvx:
         specifier: ^0.9.1
-        version: 0.9.1
+        version: 0.9.6
       terracotta:
         specifier: ^1.0.6
         version: 1.0.6(solid-js@1.9.9)
@@ -2264,21 +2264,9 @@ packages:
     resolution: {integrity: sha512-b4PhJ+zYj4357zwk4TTuF2nEe0vVtOrwdsrNo5hL+u1ojXNhh1FgJ6pg1jzDlwlT4oBdzfSwaBwMCtFCsIWg8Q==}
     engines: {node: '>=18.0.0'}
 
-  '@whatwg-node/fetch@0.10.6':
-    resolution: {integrity: sha512-6uzhO2aQ757p3bSHcemA8C4pqEXuyBqyGAM7cYpO0c6/igRMV9As9XL0W12h5EPYMclgr7FgjmbVQBoWEdJ/yA==}
-    engines: {node: '>=18.0.0'}
-
-  '@whatwg-node/node-fetch@0.7.18':
-    resolution: {integrity: sha512-IxKdVWfZYasGiyxBcsROxq6FmDQu3MNNiOYJ/yqLKhe+Qq27IIWsK7ItbjS2M9L5aM5JxjWkIS7JDh7wnsn+CQ==}
-    engines: {node: '>=18.0.0'}
-
   '@whatwg-node/node-fetch@0.8.4':
     resolution: {integrity: sha512-AlKLc57loGoyYlrzDbejB9EeR+pfdJdGzbYnkEuZaGekFboBwzfVYVMsy88PMriqPI1ORpiGYGgSSWpx7a2sDA==}
     engines: {node: '>=18.0.0'}
-
-  '@whatwg-node/promise-helpers@1.3.1':
-    resolution: {integrity: sha512-D+OwTEunoQhVHVToD80dPhfz9xgPLqJyEA3F5jCRM14A2u8tBBQVdZekqfqx6ZAfZ+POT4Hb0dn601UKMsvADw==}
-    engines: {node: '>=16.0.0'}
 
   '@whatwg-node/promise-helpers@1.3.2':
     resolution: {integrity: sha512-Nst5JdK47VIl9UcGwtv2Rcgyn5lWtZ0/mhRQ4G8NN2isxpq2TO30iqHzmwoJycjWuyUfg3GFXqP/gFHXeV57IA==}
@@ -4106,9 +4094,6 @@ packages:
   nf3@0.1.12:
     resolution: {integrity: sha512-qbMXT7RTGh74MYWPeqTIED8nDW70NXOULVHpdWcdZ7IVHVnAsMV9fNugSNnvooipDc1FMOzpis7T9nXJEbJhvQ==}
 
-  nf3@0.1.2:
-    resolution: {integrity: sha512-7QJv2caGRLqFX7v5lSliqckqDecxEEqqRyhbcTBxYHP1uzRe2SEPv+e1sIn70Wi/D8QoL7fselpdzDiO0UqgtA==}
-
   nitro@3.0.1-alpha.0:
     resolution: {integrity: sha512-lR3RplfXBOZXNlFQf9AJkqFVFhg5/CNbpBijM0dSYhGymb+FthJSdL6crmXVg518h2NVOd40rehhGZaf9ijW9w==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -4743,9 +4728,6 @@ packages:
   rou3@0.7.10:
     resolution: {integrity: sha512-aoFj6f7MJZ5muJ+Of79nrhs9N3oLGqi2VEMe94Zbkjb6Wupha46EuoYgpWSOZlXww3bbd8ojgXTAA2mzimX5Ww==}
 
-  rou3@0.7.8:
-    resolution: {integrity: sha512-21X/el5fdOaEsqwl3an/d9kpZ8hshVIyrwFCpsoleJ4ccAGRbN+PVoxyXzWXkHDxfMkVnLe4yzx+imz2qoem2Q==}
-
   rrweb-cssom@0.7.1:
     resolution: {integrity: sha512-TrEMa7JGdVm0UThDJSx7ddw5nVm3UJS9o9CCIZ72B1vSyEZoziDqBYP3XIoi/12lKrJR8rE3jeFHMok2F/Mnsg==}
 
@@ -4945,11 +4927,6 @@ packages:
 
   srvx@0.8.16:
     resolution: {integrity: sha512-hmcGW4CgroeSmzgF1Ihwgl+Ths0JqAJ7HwjP2X7e3JzY7u4IydLMcdnlqGQiQGUswz+PO9oh/KtCpOISIvs9QQ==}
-    engines: {node: '>=20.16.0'}
-    hasBin: true
-
-  srvx@0.9.1:
-    resolution: {integrity: sha512-5aj0RC0IGUMoSClrFvwz8AJkI4x6y91treTDN8CALV7sib/7szhPN4RbbcgLJ+YMZ0gz1XDoiiPA+SgZ5Gm8Uw==}
     engines: {node: '>=20.16.0'}
     hasBin: true
 
@@ -5805,11 +5782,6 @@ packages:
   yallist@5.0.0:
     resolution: {integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==}
     engines: {node: '>=18'}
-
-  yaml@2.6.0:
-    resolution: {integrity: sha512-a6ae//JvKDEra2kdi1qzCyrJW/WZCgFi8ydDV+eXExl95t+5R+ijnqHJbz9tmMh8FUjx3iv2fCQ4dclAQlO2UQ==}
-    engines: {node: '>= 14'}
-    hasBin: true
 
   yaml@2.8.1:
     resolution: {integrity: sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==}
@@ -7771,26 +7743,13 @@ snapshots:
 
   '@whatwg-node/disposablestack@0.0.6':
     dependencies:
-      '@whatwg-node/promise-helpers': 1.3.1
+      '@whatwg-node/promise-helpers': 1.3.2
       tslib: 2.8.0
 
   '@whatwg-node/fetch@0.10.13':
     dependencies:
       '@whatwg-node/node-fetch': 0.8.4
       urlpattern-polyfill: 10.0.0
-    optional: true
-
-  '@whatwg-node/fetch@0.10.6':
-    dependencies:
-      '@whatwg-node/node-fetch': 0.7.18
-      urlpattern-polyfill: 10.0.0
-
-  '@whatwg-node/node-fetch@0.7.18':
-    dependencies:
-      '@fastify/busboy': 3.1.1
-      '@whatwg-node/disposablestack': 0.0.6
-      '@whatwg-node/promise-helpers': 1.3.1
-      tslib: 2.8.0
 
   '@whatwg-node/node-fetch@0.8.4':
     dependencies:
@@ -7798,16 +7757,10 @@ snapshots:
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/promise-helpers': 1.3.2
       tslib: 2.8.0
-    optional: true
-
-  '@whatwg-node/promise-helpers@1.3.1':
-    dependencies:
-      tslib: 2.8.0
 
   '@whatwg-node/promise-helpers@1.3.2':
     dependencies:
       tslib: 2.8.0
-    optional: true
 
   '@whatwg-node/server@0.10.17':
     dependencies:
@@ -7821,8 +7774,8 @@ snapshots:
   '@whatwg-node/server@0.9.71':
     dependencies:
       '@whatwg-node/disposablestack': 0.0.6
-      '@whatwg-node/fetch': 0.10.6
-      '@whatwg-node/promise-helpers': 1.3.1
+      '@whatwg-node/fetch': 0.10.13
+      '@whatwg-node/promise-helpers': 1.3.2
       tslib: 2.8.0
 
   abbrev@1.1.1: {}
@@ -8258,11 +8211,6 @@ snapshots:
   crossws@0.4.1(srvx@0.8.16):
     optionalDependencies:
       srvx: 0.8.16
-
-  crossws@0.4.1(srvx@0.9.1):
-    optionalDependencies:
-      srvx: 0.9.1
-    optional: true
 
   crossws@0.4.1(srvx@0.9.6):
     optionalDependencies:
@@ -8909,17 +8857,17 @@ snapshots:
     dependencies:
       cookie-es: 2.0.0
       fetchdts: 0.1.7
-      rou3: 0.7.8
+      rou3: 0.7.10
       srvx: 0.8.16
     optionalDependencies:
       crossws: 0.4.1(srvx@0.8.16)
 
-  h3@2.0.1-rc.4(crossws@0.4.1(srvx@0.9.1)):
+  h3@2.0.1-rc.4(crossws@0.4.1(srvx@0.9.6)):
     dependencies:
-      rou3: 0.7.8
-      srvx: 0.9.1
+      rou3: 0.7.10
+      srvx: 0.9.6
     optionalDependencies:
-      crossws: 0.4.1(srvx@0.9.1)
+      crossws: 0.4.1(srvx@0.9.6)
 
   h3@2.0.1-rc.5(crossws@0.4.1(srvx@0.9.6)):
     dependencies:
@@ -9570,8 +9518,6 @@ snapshots:
 
   nf3@0.1.12: {}
 
-  nf3@0.1.2: {}
-
   nitro@3.0.1-alpha.0(@netlify/blobs@10.4.1)(better-sqlite3@11.8.1)(chokidar@4.0.3)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)):
     dependencies:
       consola: 3.4.2
@@ -9582,7 +9528,7 @@ snapshots:
       fetchdts: 0.1.7
       h3: 2.0.1-rc.2(crossws@0.4.1(srvx@0.8.16))
       jiti: 2.6.1
-      nf3: 0.1.2
+      nf3: 0.1.12
       ofetch: 1.4.1
       ohash: 2.0.11
       rendu: 0.0.6
@@ -9735,7 +9681,7 @@ snapshots:
       ultrahtml: 1.6.0
       uncrypto: 0.1.3
       unctx: 2.4.1
-      unenv: 2.0.0-rc.21
+      unenv: 2.0.0-rc.24
       unimport: 5.0.0
       unplugin-utils: 0.2.4
       unstorage: 1.16.0(@netlify/blobs@8.2.0)(db0@0.3.4(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0)))(ioredis@5.6.1)
@@ -10077,7 +10023,7 @@ snapshots:
   postcss-load-config@4.0.2(postcss@8.5.6):
     dependencies:
       lilconfig: 3.1.3
-      yaml: 2.6.0
+      yaml: 2.8.1
     optionalDependencies:
       postcss: 8.5.6
 
@@ -10389,8 +10335,6 @@ snapshots:
 
   rou3@0.7.10: {}
 
-  rou3@0.7.8: {}
-
   rrweb-cssom@0.7.1: {}
 
   run-parallel@1.2.0:
@@ -10615,8 +10559,6 @@ snapshots:
   sprintf-js@1.0.3: {}
 
   srvx@0.8.16: {}
-
-  srvx@0.9.1: {}
 
   srvx@0.9.6: {}
 
@@ -11305,10 +11247,7 @@ snapshots:
 
   yallist@5.0.0: {}
 
-  yaml@2.6.0: {}
-
-  yaml@2.8.1:
-    optional: true
+  yaml@2.8.1: {}
 
   yargs-parser@21.1.1: {}
 
