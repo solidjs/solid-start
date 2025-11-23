@@ -20,106 +20,120 @@ export type UserNitroConfig = Omit<
 >;
 
 export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
-	return {
-		name: "solid-start-vite-plugin-nitro",
-		generateBundle: {
-			handler(_options, bundle) {
-				if (this.environment.name !== "ssr") {
-					return;
-				}
+	return [
+  	{
+  		name: "solid-start-vite-plugin-nitro",
+  		generateBundle: {
+  			handler(_options, bundle) {
+  				if (this.environment.name !== "ssr") {
+  					return;
+  				}
 
-				// find entry point of ssr bundle
-				let entryFile: string | undefined;
-				for (const [_name, file] of Object.entries(bundle)) {
-					if (file.type === "chunk") {
-						if (file.isEntry) {
-							if (entryFile !== undefined) {
-								this.error(
-									`Multiple entry points found for service "${this.environment.name}". Only one entry point is allowed.`,
-								);
-							}
-							entryFile = file.fileName;
-						}
-					}
-				}
-				if (entryFile === undefined) {
-					this.error(
-						`No entry point found for service "${this.environment.name}".`,
-					);
-				}
-				ssrEntryFile = entryFile!;
-				ssrBundle = bundle;
-			},
-		},
-		config() {
-			return {
-				environments: {
-					ssr: {
-						consumer: "server",
-						build: {
-							commonjsOptions: {
-								include: [],
-							},
-							ssr: true,
-							sourcemap: true,
-						},
-					},
-				},
-				builder: {
-					sharedPlugins: true,
-					async buildApp(builder) {
-						const client = builder.environments.client;
-						const server = builder.environments.ssr;
+  				// find entry point of ssr bundle
+  				let entryFile: string | undefined;
+  				for (const [_name, file] of Object.entries(bundle)) {
+  					if (file.type === "chunk") {
+  						if (file.isEntry) {
+  							if (entryFile !== undefined) {
+  								this.error(
+  									`Multiple entry points found for service "${this.environment.name}". Only one entry point is allowed.`,
+  								);
+  							}
+  							entryFile = file.fileName;
+  						}
+  					}
+  				}
+  				if (entryFile === undefined) {
+  					this.error(
+  						`No entry point found for service "${this.environment.name}".`,
+  					);
+  				}
+  				ssrEntryFile = entryFile!;
+  				ssrBundle = bundle;
+  			},
+  		},
+  		config() {
+  			return {
+  				environments: {
+  					ssr: {
+  						consumer: "server",
+  						build: {
+  							commonjsOptions: {
+  								include: [],
+  							},
+  							ssr: true,
+  							sourcemap: true,
+  						},
+  					},
+  				},
+  				builder: {
+  					sharedPlugins: true,
+  					async buildApp(builder) {
+  						const client = builder.environments.client;
+  						const server = builder.environments.ssr;
 
-						if (!client) throw new Error("Client environment not found");
-						if (!server) throw new Error("SSR environment not found");
+  						if (!client) throw new Error("Client environment not found");
+  						if (!server) throw new Error("SSR environment not found");
 
-						await builder.build(client);
-						await builder.build(server);
+  						await builder.build(client);
+  						await builder.build(server);
 
-						const virtualEntry = "#solid-start/entry";
-						const resolvedNitroConfig: NitroConfig = {
-							compatibilityDate: "2024-11-19",
-							logLevel: 3,
-							preset: "node-server",
-							typescript: {
-								generateTsConfig: false,
-								generateRuntimeConfigTypes: false,
-							},
-							...nitroConfig,
-							dev: false,
-							publicAssets: [
-								{
-									dir: client.config.build.outDir,
-									maxAge: 31536000, // 1 year
-									baseURL: "/",
-								},
-							],
-							renderer: virtualEntry,
-							rollupConfig: {
-								...nitroConfig?.rollupConfig,
-								plugins: [virtualBundlePlugin(ssrBundle) as any],
-							},
-							experimental: {
-								...nitroConfig?.experimental,
-								asyncContext: true,
-							},
-							virtual: {
-								...nitroConfig?.virtual,
-								[virtualEntry]: `import { fromWebHandler } from 'h3'
-                                import handler from '${ssrEntryFile}'
-                                export default fromWebHandler(handler.fetch)`,
-							},
-						};
+  						const virtualEntry = "#solid-start/entry";
+  						const resolvedNitroConfig: NitroConfig = {
+  							compatibilityDate: "2024-11-19",
+  							logLevel: 3,
+  							preset: "node-server",
+  							typescript: {
+  								generateTsConfig: false,
+  								generateRuntimeConfigTypes: false,
+  							},
+  							...nitroConfig,
+  							dev: false,
+  							publicAssets: [
+  								{
+  									dir: client.config.build.outDir,
+  									maxAge: 31536000, // 1 year
+  									baseURL: "/",
+  								},
+  							],
+  							renderer: virtualEntry,
+  							rollupConfig: {
+  								...nitroConfig?.rollupConfig,
+  								plugins: [virtualBundlePlugin(ssrBundle) as any],
+  							},
+  							experimental: {
+  								...nitroConfig?.experimental,
+  								asyncContext: true,
+  							},
+  							virtual: {
+  								...nitroConfig?.virtual,
+  								[virtualEntry]: `import { fromWebHandler } from 'h3'
+                                  import handler from '${ssrEntryFile}'
+                                  export default fromWebHandler(handler.fetch)`,
+  							},
+  						};
 
-						const nitro = await createNitro(resolvedNitroConfig);
+  						const nitro = await createNitro(resolvedNitroConfig);
 
-						await buildNitroEnvironment(nitro, () => build(nitro));
-					},
-				},
-			};
-		},
-	};
+  						await buildNitroEnvironment(nitro, () => build(nitro));
+  					},
+  				},
+  			};
+  		},
+  	},
+  	nitroConfig?.preset === "netlify" && {
+    	name: "solid-start-nitro-netlify-fix",
+      enforce: "post",
+     	config() {
+        return {
+          environments: {
+            client: { build: { outDir: ".solid-start/client" } },
+            ssr: { build: { outDir: ".solid-start/server" } }
+          }
+        }
+     	}
+  	}
+	];
 }
 
 export async function buildNitroEnvironment(
