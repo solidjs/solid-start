@@ -38,10 +38,8 @@ export function createBaseHandler(
 			if (pathname.startsWith(serverFunctionTest)) {
 				const serverFnResponse = await handleServerFunction(e);
 
-        if (serverFnResponse instanceof Response) {
-          writeEventResponseHeaders(serverFnResponse.headers)
-          return serverFnResponse;
-        }
+        if (serverFnResponse instanceof Response)
+          return produceResponseWithEventHeaders(serverFnResponse);
 
 				return new Response(serverFnResponse as any, {
 					headers: e.res.headers,
@@ -60,7 +58,7 @@ export function createBaseHandler(
 				sharedConfig.context = { event };
 				const res = await fn!(event);
         if (res !== undefined) {
-          if(res instanceof Response) writeEventResponseHeaders(res.headers)
+          if(res instanceof Response) return produceResponseWithEventHeaders(res)
 
           return res;
         }
@@ -230,10 +228,23 @@ function handleStreamCompleteRedirect(context: PageEvent) {
   };
 }
 
-function writeEventResponseHeaders(target: Headers) {
+function produceResponseWithEventHeaders(res: Response) {
   const event = getRequestEvent()!;
 
-  for(const [name, value] of event.response.headers) {
-    if(!target.has(name)) target.set(name, value);
+  let ret = res;
+
+  // Response.redirect returns an immutable value, so we clone on any redirect just in case
+  if(300 <= res.status && res.status < 400) {
+    ret = new Response(res.body, {
+      status: res.status,
+      statusText: res.statusText,
+      headers: Object.fromEntries(res.headers.entries())
+    });
   }
+
+  for(const [name, value] of event.response.headers) {
+    if(!ret.headers.has(name)) ret.headers.set(name, value);
+  }
+
+  return ret
 }
