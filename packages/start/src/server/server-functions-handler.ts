@@ -237,7 +237,7 @@ function handleNoJS(
 				`Location`,
 				new URL(
 					result.headers.get("Location")!,
-					url.origin + import.meta.env.SERVER_BASE_URL,
+					url.origin + import.meta.env.BASE_URL,
 				).toString(),
 			);
 			statusCode = getExpectedRedirectStatus(result);
@@ -318,7 +318,7 @@ async function handleSingleFlight(
 			url = new URL(
 				result.headers.get("Location")!,
 				new URL(sourceEvent.request.url).origin +
-					import.meta.env.SERVER_BASE_URL,
+					import.meta.env.BASE_URL,
 			).toString();
 	}
 	const event = { ...sourceEvent } as PageEvent;
