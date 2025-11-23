@@ -38,7 +38,10 @@ export function createBaseHandler(
 			if (pathname.startsWith(serverFunctionTest)) {
 				const serverFnResponse = await handleServerFunction(e);
 
-				if (serverFnResponse instanceof Response) return serverFnResponse;
+        if (serverFnResponse instanceof Response) {
+          writeEventResponseHeaders(serverFnResponse.headers)
+          return serverFnResponse;
+        }
 
 				return new Response(serverFnResponse as any, {
 					headers: e.res.headers,
@@ -56,7 +59,11 @@ export function createBaseHandler(
 				// @ts-expect-error
 				sharedConfig.context = { event };
 				const res = await fn!(event);
-				if (res !== undefined) return res;
+        if (res !== undefined) {
+          if(res instanceof Response) writeEventResponseHeaders(res.headers)
+
+          return res;
+        }
 				if (event.request.method !== "GET") {
 					throw new Error(
 						`API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
@@ -221,4 +228,12 @@ function handleStreamCompleteRedirect(context: PageEvent) {
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location="${to}"</script>`);
   };
+}
+
+function writeEventResponseHeaders(target: Headers) {
+  const event = getRequestEvent()!;
+
+  for(const [name, value] of event.response.headers) {
+    if(!target.has(name)) target.set(name, value);
+  }
 }
