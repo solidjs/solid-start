@@ -28,7 +28,6 @@
     "nitropack": "^2.11.10"
   },
   "devDependencies": {
-    "tsdown": "^0.16.5",
     "vite": "^7.1.10"
   },
   "peerDependencies": {
