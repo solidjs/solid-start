@@ -30,7 +30,7 @@ export default defineConfig({
     solidStart(),
     nitroV2Plugin({
       prerender: {
-        crawlinks: true
+        crawlLinks: true
       }
     })
   ]
