@@ -34,5 +34,7 @@ jobs:
         # build the package and all its dependencies
         run: pnpm --filter ${{ matrix.package }}... build
 
+      - run: pnpm rewrite-exports
+
       - name: Check types with @arethetypeswrong/cli
         run: pnpm --filter ${{ matrix.package }} typecheck:dist
