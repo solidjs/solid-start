@@ -234,7 +234,7 @@ function produceResponseWithEventHeaders(res: Response) {
   let ret = res;
 
   // Response.redirect returns an immutable value, so we clone on any redirect just in case
-  if(300 <= res.status && res.status < 400) {
+  if((300 <= res.status && res.status < 400) || true) {
     ret = new Response(res.body, {
       status: res.status,
       statusText: res.statusText,
