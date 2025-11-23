@@ -135,7 +135,7 @@ export function createBaseHandler(
 
 	const app = new H3();
 
-	app.use(handler);
+  app.use(handler);
 
 	return app;
 }
@@ -243,7 +243,7 @@ function produceResponseWithEventHeaders(res: Response) {
   }
 
   for(const [name, value] of event.response.headers) {
-    if(!ret.headers.has(name)) ret.headers.set(name, value);
+    ret.headers.set(name, value);
   }
 
   return ret
