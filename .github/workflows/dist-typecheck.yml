@@ -1,0 +1,38 @@
+name: Type Check Distribution
+
+on:
+  pull_request: ~
+  push:
+    branches:
+      - main
+
+jobs:
+  typecheck-dist:
+    name: Check ${{ matrix.package }} distributed types
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ## to add other packages from the monorepo, add them to the matrix
+        package: [start]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v3
+
+      - name: Use Node.js from nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Build ${{ matrix.package }} package and dependencies
+        # build the package and all its dependencies
+        run: pnpm --filter ${{ matrix.package }}... build
+
+      - name: Check types with @arethetypeswrong/cli
+        run: pnpx @arethetypeswrong/cli --pack packages/${{ matrix.package }} --profile esm-only
