@@ -50,8 +50,7 @@ vite.config.ts.timestamp*
 .nitro
 .output
 
-# ignore cypress screenshots
-**/cypress/screenshots
-
 .data
 tsconfig.tsbuildinfo
+
+apps/tests/**/test-results
