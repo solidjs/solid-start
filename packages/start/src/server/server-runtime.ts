@@ -193,7 +193,7 @@ async function fetchServerFunction(
 }
 
 export function createServerReference(id: string) {
-  const baseURL = import.meta.env.SERVER_BASE_URL ?? "";
+  const baseURL = import.meta.env.BASE_URL ?? "";
   const fn = (...args: any[]) => fetchServerFunction(`${baseURL}/_server`, id, {}, args);
 
   return new Proxy(fn, {

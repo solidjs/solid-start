@@ -4,7 +4,7 @@ import { provideRequestEvent } from "solid-js/web/storage";
 export function createServerReference(fn: Function, id: string) {
   if (typeof fn !== "function")
     throw new Error("Export from a 'use server' module must be a function");
-  const baseURL = import.meta.env.SERVER_BASE_URL ?? "";
+  const baseURL = import.meta.env.BASE_URL ?? "";
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {

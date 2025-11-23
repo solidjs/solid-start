@@ -34,7 +34,7 @@ export function createBaseHandler(
 			const url = new URL(event.request.url);
 			const pathname = url.pathname;
 
-			const serverFunctionTest = join("/", SERVER_FN_BASE);
+			const serverFunctionTest = join(import.meta.env.BASE_URL, SERVER_FN_BASE);
 			if (pathname.startsWith(serverFunctionTest)) {
 				const serverFnResponse = await handleServerFunction(e);
 
