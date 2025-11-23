@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
 
       - name: Use Node.js from nvmrc
         uses: actions/setup-node@v4
