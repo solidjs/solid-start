@@ -33,5 +33,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - run: pnpm rewrite-exports
+
       - name: Check types with @arethetypeswrong/cli
         run: pnpm --filter ${{ matrix.package }} typecheck:dist
