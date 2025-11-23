@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "preserve",
@@ -11,7 +11,6 @@
     "strict": true,
     "noEmit": true,
     "isolatedModules": true,
-    "types": ["vite/client"],
     "paths": {
       "~/*": ["./src/*"]
     }

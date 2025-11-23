@@ -31,7 +31,7 @@ SolidStart is a pnpm-based monorepo with nested workspaces. Key directories incl
 
 - **`packages/start`**: The core `@solidjs/start` package.
 - **`apps/landing-page`**: The official landing page.
-- **`apps/tests`**: Unit and end-to-end (E2E) tests using Vitest and Cypress.
+- **`apps/tests`**: Unit and end-to-end (E2E) tests using Vitest and Playwright.
 - **`apps/fixtures`**: Fixture projects for testing.
 
 Use pnpm filters (e.g. `pnpm --filter @solidjs/start ...`) to target specific packages.
@@ -76,10 +76,10 @@ Then reinstall dependencies and rebuild.
 
 End-to-end tests are located in `apps/tests` projects. For manual testing and development use the `apps/fixtures` apps, and finally, integration and unit tests live inside their respective packages.
 
-1. Install the Cypress binary (required only once)
+1. Install the Chromium for Playwright binary (required only once)
 
    ```bash
-   pnpm --filter tests exec cypress install
+   pnpm --filter tests exec playwright install chromium
    ```
 
 2. For unit tests that check build artifacts, build the test app first
@@ -88,7 +88,7 @@ End-to-end tests are located in `apps/tests` projects. For manual testing and de
    pnpm --filter tests run build
    ```
 
-3. Run unit tests
+3. Run unit tests (puts vitest in watch mode)
 
    ```bash
    pnpm --filter tests run unit
@@ -100,11 +100,10 @@ End-to-end tests are located in `apps/tests` projects. For manual testing and de
 4. Run E2E tests
 
    ```bash
-   pnpm --filter tests run tests:run
+   pnpm --filter tests run e2e
    ```
 
-   - Interactive mode: `pnpm --filter tests run tests:open`
-   - With dev server: `pnpm --filter tests run tests`
+   - UI mode: `pnpm --filter tests run e2e:ui`
 
 5. Clean test artifacts
    ```bash

@@ -4,10 +4,9 @@ import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
-import { provideRequestEvent } from "solid-js/web/storage";
 
 import { createRoutes } from "../router.tsx";
-import { getFetchEvent } from "./fetchEvent.ts";
+import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "./server-functions-handler.ts";
@@ -29,16 +28,17 @@ export function createBaseHandler(
 		| ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
 	const handler = defineHandler({
-		middleware,
-		handler: async (e: H3Event) => {
+		middleware: middleware.length ? middleware.map(decorateMiddleware): undefined,
+		handler: decorateHandler(async (e: H3Event) => {
 			const event = getRequestEvent()!;
 			const pathname = e.url.pathname;
 
-			const serverFunctionTest = join("/", SERVER_FN_BASE);
+			const serverFunctionTest = join(import.meta.env.BASE_URL, SERVER_FN_BASE);
 			if (pathname.startsWith(serverFunctionTest)) {
 				const serverFnResponse = await handleServerFunction(e);
 
-				if (serverFnResponse instanceof Response) return serverFnResponse;
+        if (serverFnResponse instanceof Response)
+          return produceResponseWithEventHeaders(serverFnResponse);
 
 				return new Response(serverFnResponse as any, {
 					headers: e.res.headers,
@@ -56,7 +56,11 @@ export function createBaseHandler(
 				// @ts-expect-error
 				sharedConfig.context = { event };
 				const res = await fn!(event);
-				if (res !== undefined) return res;
+        if (res !== undefined) {
+          if(res instanceof Response) return produceResponseWithEventHeaders(res)
+
+          return res;
+        }
 				if (event.request.method !== "GET") {
 					throw new Error(
 						`API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
@@ -125,16 +129,12 @@ export function createBaseHandler(
       const { writable, readable } = new TransformStream();
       stream.pipeTo(writable);
       return readable
-		},
+		}),
 	});
 
 	const app = new H3();
 
-	app.use(
-		defineHandler((e) =>
-			provideRequestEvent(getFetchEvent(e), () => handler(e)),
-		),
-	);
+  app.use(handler);
 
 	return app;
 }
@@ -225,4 +225,25 @@ function handleStreamCompleteRedirect(context: PageEvent) {
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location="${to}"</script>`);
   };
+}
+
+function produceResponseWithEventHeaders(res: Response) {
+  const event = getRequestEvent()!;
+
+  let ret = res;
+
+  // Response.redirect returns an immutable value, so we clone on any redirect just in case
+  if(300 <= res.status && res.status < 400) {
+    ret = new Response(res.body, {
+      status: res.status,
+      statusText: res.statusText,
+      headers: Object.fromEntries(res.headers.entries())
+    });
+  }
+
+  for(const [name, value] of event.response.headers) {
+    ret.headers.set(name, value);
+  }
+
+  return ret
 }

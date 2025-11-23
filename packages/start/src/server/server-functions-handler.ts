@@ -84,14 +84,15 @@ export async function handleServerFunction(h3Event: H3Event) {
 	const singleFlight = request.headers.has("X-Single-Flight");
 	const url = h3Event.url;
 	let functionId: string | undefined | null, name: string | undefined | null;
+	const url = new URL(request.url);
+	let functionId: string | undefined | null;
 	if (serverReference) {
 		// invariant(typeof serverReference === "string", "Invalid server function");
-		[functionId, name] = serverReference.split("#");
+		[functionId] = serverReference.split("#");
 	} else {
 		functionId = url.searchParams.get("id");
-		name = url.searchParams.get("name");
 
-		if (!functionId || !name) {
+		if (!functionId) {
 			return process.env.NODE_ENV === "development"
 				? new Response("Server function not found", { status: 404 })
 				: new Response(null, { status: 404 });
@@ -158,7 +159,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 			/* @ts-expect-error */
 			sharedConfig.context = { event };
 			event.locals.serverFunctionMeta = {
-				id: functionId + "#" + name,
+				id: functionId
 			};
 			return serverFunction(...parsed);
 		});
@@ -238,7 +239,7 @@ function handleNoJS(
 				`Location`,
 				new URL(
 					result.headers.get("Location")!,
-					url.origin + import.meta.env.SERVER_BASE_URL,
+					url.origin + import.meta.env.BASE_URL,
 				).toString(),
 			);
 			statusCode = getExpectedRedirectStatus(result);
@@ -320,6 +321,8 @@ async function handleSingleFlight(
 				result.headers.get("Location")!,
 				sourceEvent.nativeEvent.url.origin +
 					import.meta.env.SERVER_BASE_URL,
+				new URL(sourceEvent.request.url).origin +
+					import.meta.env.BASE_URL,
 			).toString();
 	}
 	const event = { ...sourceEvent } as PageEvent;
