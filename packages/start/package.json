@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "2.0.0-devinxi.0",
+  "version": "2.0.0-alpha.0",
   "type": "module",
   "scripts": {
     "build": "pnpm validate-imports && tsc && node scripts/build.js",
@@ -10,7 +10,7 @@
     "validate-imports": "node scripts/validate-imports.js"
   },
   "exports": {
-    ".": "./src/index.ts",
+    ".": "./src/index.tsx",
     "./config": "./src/config/index.ts",
     "./server": "./src/server/index.tsx",
     "./client": "./src/client/index.tsx",
@@ -23,7 +23,7 @@
   "publishConfig": {
     "access": "public",
     "exports": {
-      ".": "./dist/index.js",
+      ".": "./dist/index.jsx",
       "./config": "./dist/config/index.js",
       "./server": "./dist/server/index.jsx",
       "./client": "./dist/client/index.jsx",
@@ -61,14 +61,17 @@
     "source-map-js": "^1.2.1",
     "srvx": "^0.9.1",
     "terracotta": "^1.0.6",
-    "vite": "7.1.10",
-    "vite-plugin-solid": "^2.11.9",
-    "vitest": "^4.0.10"
+    "vite-plugin-solid": "^2.11.9"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
-    "@types/babel__core": "^7.20.5"
+    "@types/babel__core": "^7.20.5",
+    "vite": "^7.1.10",
+    "vitest": "^4.0.10"
+  },
+  "peerDependencies": {
+    "vite": "^7"
   }
 }

@@ -385,25 +385,26 @@ importers:
       terracotta:
         specifier: ^1.0.6
         version: 1.0.6(solid-js@1.9.9)
-      vite:
-        specifier: 7.1.10
-        version: 7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
       vite-plugin-solid:
         specifier: ^2.11.9
         version: 2.11.9(patch_hash=71233f1afab9e3ea2dbb03dbda3d84894ef1c6bfbbe69df9f864d03bfe67b6f5)(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
-      vitest:
-        specifier: ^4.0.10
-        version: 4.0.10(@types/debug@4.1.12)(@types/node@24.9.1)(@vitest/browser-playwright@4.0.10)(@vitest/ui@4.0.10)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(msw@2.7.0(@types/node@24.9.1)(typescript@5.7.3))(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
     devDependencies:
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
+      vite:
+        specifier: ^7.1.10
+        version: 7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
+      vitest:
+        specifier: ^4.0.10
+        version: 4.0.10(@types/debug@4.1.12)(@types/node@24.9.1)(@vitest/browser-playwright@4.0.10)(@vitest/ui@4.0.10)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(msw@2.7.0(@types/node@24.9.1)(typescript@5.7.3))(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
 
   packages/start-nitro-v2-vite-plugin:
     dependencies:
       nitropack:
         specifier: ^2.11.10
         version: 2.11.11(@netlify/blobs@8.2.0)(better-sqlite3@11.8.1)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))
+    devDependencies:
       vite:
         specifier: ^7.1.10
         version: 7.1.10(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
@@ -4561,8 +4562,8 @@ packages:
     resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
     engines: {node: '>=0.6'}
 
-  quansync@0.2.10:
-    resolution: {integrity: sha512-t41VRkMYbkHyCYmOvx/6URnN80H7k4X0lLdBMGsz+maAwrJQYB1djpV6vHrQIBE0WBSGqhtEHrK9U3DWWH8v7A==}
+  quansync@0.2.11:
+    resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
 
   querystringify@2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
@@ -9269,7 +9270,7 @@ snapshots:
     dependencies:
       mlly: 1.7.4
       pkg-types: 2.1.0
-      quansync: 0.2.10
+      quansync: 0.2.11
 
   locate-path@5.0.0:
     dependencies:
@@ -10129,7 +10130,7 @@ snapshots:
     dependencies:
       side-channel: 1.1.0
 
-  quansync@0.2.10: {}
+  quansync@0.2.11: {}
 
   querystringify@2.2.0:
     optional: true

@@ -24,7 +24,8 @@
     "packages:build": "pnpm --filter=./packages/* build",
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
     "clean:test": "pnpx rimraf .tmp",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish",
+    "rewrite-exports": "pnpm --filter='./packages/*' -c exec \"echo \\$(cat package.json | jq '.exports = .publishConfig.exports') > package.json\""
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
