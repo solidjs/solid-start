@@ -5,7 +5,7 @@ export function createServerReference(fn: Function, id: string) {
   if (typeof fn !== "function")
     throw new Error("Export from a 'use server' module must be a function");
   let baseURL = import.meta.env.BASE_URL ?? "/";
-  if(!baseURL.endsWith("/")) baseURL += "/"
+  if (!baseURL.endsWith("/")) baseURL += "/";
 
   return new Proxy(fn, {
     get(target, prop, receiver) {

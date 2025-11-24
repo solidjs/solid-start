@@ -34,8 +34,8 @@ const command = defineCommand({
     );
 
     await Promise.all(
-      globSync(["package.json", "packages/*/package.json", "examples/*/package.json"])
-        .map(async path => {
+      globSync(["package.json", "packages/*/package.json", "examples/*/package.json"]).map(
+        async path => {
           const packageJson = JSON.parse(await fs.readFile(path));
           let deps = packages;
           for (const dep of deps) {
@@ -45,7 +45,8 @@ const command = defineCommand({
               (packageJson.devDependencies[dep.name] = `^${dep.version}`);
           }
           await fs.writeFile(path, JSON.stringify(packageJson, null, 2) + "\n");
-        })
+        }
+      )
     );
 
     console.log("Updating lock file...\n");

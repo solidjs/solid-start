@@ -6,3 +6,5 @@ indent_size = 2
 end_of_line = LF
 charset = utf-8
 insert_final_newline = true
+max_line_length = 100
+quote_type = double

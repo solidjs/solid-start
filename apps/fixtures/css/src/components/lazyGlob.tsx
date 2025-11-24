@@ -1,7 +1,7 @@
 import "../styles/lazyGlob.css";
 
 const Lazy = () => {
-  return <></>
-}
+  return <></>;
+};
 
 export default Lazy;

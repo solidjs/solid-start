@@ -16,15 +16,9 @@ import { OverrideComponentProps } from "@kobalte/utils";
 
 const Dialog = DialogPrimitive;
 
-const DialogTrigger = (
-  props: OverrideComponentProps<"button", DialogTriggerProps>
-) => {
+const DialogTrigger = (props: OverrideComponentProps<"button", DialogTriggerProps>) => {
   const [, rest] = splitProps(props, ["children"]);
-  return (
-    <DialogPrimitive.Trigger {...rest}>
-      {props.children}
-    </DialogPrimitive.Trigger>
-  );
+  return <DialogPrimitive.Trigger {...rest}>{props.children}</DialogPrimitive.Trigger>;
 };
 
 const DialogPortal = (props: DialogPortalProps) => {
@@ -38,9 +32,7 @@ const DialogPortal = (props: DialogPortalProps) => {
   );
 };
 
-const DialogOverlay = (
-  props: OverrideComponentProps<"div", DialogOverlayProps>
-) => {
+const DialogOverlay = (props: OverrideComponentProps<"div", DialogOverlayProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <DialogPrimitive.Overlay
@@ -53,9 +45,7 @@ const DialogOverlay = (
   );
 };
 
-const DialogContent = (
-  props: OverrideComponentProps<"div", DialogContentProps>
-) => {
+const DialogContent = (props: OverrideComponentProps<"div", DialogContentProps>) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DialogPortal>
@@ -92,13 +82,7 @@ const DialogContent = (
 const DialogHeader = (props: ComponentProps<"div">) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
-    <div
-      class={cn(
-        "flex flex-col space-y-1.5 text-center sm:text-left",
-        props.class
-      )}
-      {...rest}
-    />
+    <div class={cn("flex flex-col space-y-1.5 text-center sm:text-left", props.class)} {...rest} />
   );
 };
 
@@ -106,10 +90,7 @@ const DialogFooter = (props: ComponentProps<"div">) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <div
-      class={cn(
-        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-        props.class
-      )}
+      class={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", props.class)}
       {...rest}
     />
   );
@@ -119,18 +100,13 @@ const DialogTitle = (props: OverrideComponentProps<"h2", DialogTitleProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <DialogPrimitive.Title
-      class={cn(
-        "text-lg font-semibold leading-none tracking-tight",
-        props.class
-      )}
+      class={cn("text-lg font-semibold leading-none tracking-tight", props.class)}
       {...rest}
     />
   );
 };
 
-const DialogDescription = (
-  props: OverrideComponentProps<"p", DialogDescriptionProps>
-) => {
+const DialogDescription = (props: OverrideComponentProps<"p", DialogDescriptionProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <DialogPrimitive.Description
@@ -147,5 +123,5 @@ export {
   DialogHeader,
   DialogFooter,
   DialogTitle,
-  DialogDescription,
+  DialogDescription
 };

@@ -45,7 +45,8 @@ const withAssets = function <T extends () => Promise<{ default: Component<any> }
   return wrapper as T;
 };
 
-const lazy = !isServer ? solidLazy: <T extends Component<any>>(fn: () => Promise<{ default: T }>) =>
-  solidLazy(withAssets(fn));
+const lazy = !isServer
+  ? solidLazy
+  : <T extends Component<any>>(fn: () => Promise<{ default: T }>) => solidLazy(withAssets(fn));
 
 export default lazy;

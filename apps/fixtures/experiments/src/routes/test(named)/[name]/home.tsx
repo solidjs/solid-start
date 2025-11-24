@@ -1,3 +1,3 @@
-export default function() {
-  return <section>DIFFERENT CONTENT</section>
+export default function () {
+  return <section>DIFFERENT CONTENT</section>;
 }
