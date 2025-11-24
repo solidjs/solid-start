@@ -10,7 +10,7 @@
     "validate-imports": "node scripts/validate-imports.js"
   },
   "exports": {
-    ".": "./src/index.ts",
+    ".": "./src/index.tsx",
     "./config": "./src/config/index.ts",
     "./server": "./src/server/index.tsx",
     "./client": "./src/client/index.tsx",
@@ -23,7 +23,7 @@
   "publishConfig": {
     "access": "public",
     "exports": {
-      ".": "./dist/index.js",
+      ".": "./dist/index.jsx",
       "./config": "./dist/config/index.js",
       "./server": "./dist/server/index.jsx",
       "./client": "./dist/client/index.jsx",
