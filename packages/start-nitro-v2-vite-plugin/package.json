@@ -1,10 +1,18 @@
 {
-  "name": "@solidjs/start-nitro-v2-vite-plugin",
+  "name": "@solidjs/vite-plugin-nitro-2",
+  "description": "Nitro v2 plugin for development with SolidStart 2.0",
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only"
   },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
   "exports": {
     ".": "./src/index.ts"
   },
@@ -15,7 +23,12 @@
     }
   },
   "dependencies": {
-    "nitropack": "^2.11.10",
+    "nitropack": "^2.11.10"
+  },
+  "devDependencies": {
     "vite": "^7.1.10"
+  },
+  "peerDependencies": {
+    "vite": "^7"
   }
 }
