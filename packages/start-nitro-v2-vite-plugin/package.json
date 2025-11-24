@@ -1,7 +1,7 @@
 {
   "name": "@solidjs/vite-plugin-nitro-2",
   "description": "Nitro v2 plugin for development with SolidStart 2.0",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "build": "tsc",
