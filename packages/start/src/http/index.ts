@@ -216,8 +216,8 @@ export const appendHeader = appendResponseHeader;
 export const appendHeaders = appendResponseHeaders;
 export const setHeader = setResponseHeader;
 export const setHeaders = setResponseHeaders;
-export const getHeader = getResponseHeader;
-export const getHeaders = getResponseHeaders;
+export const getHeader = getRequestHeader;
+export const getHeaders = getRequestHeaders;
 export const getRequestFingerprint = createWrapperFunction(
 	h3.getRequestFingerprint,
 );
