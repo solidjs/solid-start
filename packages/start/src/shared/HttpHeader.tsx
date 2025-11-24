@@ -2,6 +2,7 @@
 import { onCleanup } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 import type { PageEvent } from "../server/types";
+import { appendHeader, setHeader } from "../http";
 
 export interface HttpHeaderProps {
   name: string;
@@ -17,8 +18,8 @@ export const HttpHeader = isServer
   ? (props: HttpHeaderProps) => {
     const event = getRequestEvent() as PageEvent;
 
-    if (props.append) event.response.headers.append(props.name, props.value);
-    else event.response.headers.set(props.name, props.value);
+    if (props.append) appendHeader(props.name, props.value);
+    else setHeader(props.name, props.value);
 
     onCleanup(() => {
       // @ts-expect-error

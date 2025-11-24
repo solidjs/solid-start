@@ -1,9 +1,9 @@
-import { HttpHeader } from "../../../../packages/start/src/shared/HttpHeader";
+import { HttpHeader } from "@solidjs/start";
 
 export default function HttpHeaderRoute() {
     return (
         <main>
-            <h1> Http Header </h1>
+            <h1>Http Header</h1>
             <HttpHeader name="test-header" value="test-value" />
         </main>
     );
