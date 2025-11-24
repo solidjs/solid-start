@@ -22,7 +22,7 @@ export default function Home() {
     console.log(v);
     console.log(await v.hello);
   });
-  const port = isServer ? new URL(getRequestEvent()!.request.url).port: location.port;
+  const port = isServer ? new URL(getRequestEvent()!.request.url).port : location.port;
   fetch(`http://localhost:${port}${import.meta.env.BASE_URL}/unknown`, {
     headers: { Accept: "application/json" }
   }).then(async res => console.log(await res.json()));

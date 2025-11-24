@@ -34,4 +34,4 @@ export default function User(props: RouteSectionProps) {
       </Show>
     </div>
   );
-};
+}

@@ -195,7 +195,7 @@ async function fetchServerFunction(
 
 export function createServerReference(id: string) {
   let baseURL = import.meta.env.BASE_URL ?? "/";
-  if(!baseURL.endsWith("/")) baseURL += "/"
+  if (!baseURL.endsWith("/")) baseURL += "/";
 
   const fn = (...args: any[]) => fetchServerFunction(`${baseURL}_server`, id, {}, args);
 
@@ -231,7 +231,7 @@ export function createServerReference(id: string) {
         };
       }
       return (target as any)[prop];
-    },
+    }
   });
 }
 

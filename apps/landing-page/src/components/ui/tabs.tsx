@@ -1,6 +1,12 @@
 import { splitProps } from "solid-js";
 
-import { TabsContentProps, TabsIndicatorProps, TabsListProps, Tabs as TabsPrimitive, TabsTriggerProps } from "@kobalte/core/tabs";
+import {
+  TabsContentProps,
+  TabsIndicatorProps,
+  TabsListProps,
+  Tabs as TabsPrimitive,
+  TabsTriggerProps
+} from "@kobalte/core/tabs";
 
 import { cn } from "~/lib/utils";
 import { OverrideComponentProps } from "@kobalte/utils";

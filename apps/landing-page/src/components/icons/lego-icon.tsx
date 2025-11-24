@@ -15,10 +15,7 @@ export function LegoSVG() {
         id="bottom"
         class="translate-y-20 group-hover:translate-y-0 transition-transform duration-200 ease-in-out"
       >
-        <path
-          d="M23 263.935V293.608L99.8126 337.982V308.309L23 263.935Z"
-          fill="#0079D1"
-        />
+        <path d="M23 263.935V293.608L99.8126 337.982V308.309L23 263.935Z" fill="#0079D1" />
         <path
           d="M23 263.935V293.608L99.8126 337.982V308.309L23 263.935Z"
           stroke={stroke}
@@ -138,10 +135,7 @@ export function LegoSVG() {
         />
       </g>
       <g id="middle">
-        <path
-          d="M23 234.24V263.919L99.8126 308.288V278.614L23 234.24Z"
-          fill="#D4F0FF"
-        />
+        <path d="M23 234.24V263.919L99.8126 308.288V278.614L23 234.24Z" fill="#D4F0FF" />
         <path
           d="M23 234.24V263.919L99.8126 308.288V278.614L23 234.24Z"
           stroke={stroke}
@@ -149,10 +143,7 @@ export function LegoSVG() {
           stroke-linecap="round"
           stroke-linejoin="round"
         />
-        <path
-          d="M176.625 234.24V263.919L99.8126 308.288V278.614L176.625 234.24Z"
-          fill="#D4F0FF"
-        />
+        <path d="M176.625 234.24V263.919L99.8126 308.288V278.614L176.625 234.24Z" fill="#D4F0FF" />
         <path
           d="M176.625 234.24V263.919L99.8126 308.288V278.614L176.625 234.24Z"
           stroke={stroke}
@@ -264,10 +255,7 @@ export function LegoSVG() {
         id="top"
         class="-translate-y-20 group-hover:translate-y-0 transition-transform duration-200 ease-in-out"
       >
-        <path
-          d="M23 204.547V234.221L99.8126 278.594V248.921L23 204.547Z"
-          fill="#74CDFF"
-        />
+        <path d="M23 204.547V234.221L99.8126 278.594V248.921L23 204.547Z" fill="#74CDFF" />
         <path
           d="M23 204.547V234.221L99.8126 278.594V248.921L23 204.547Z"
           stroke={stroke}

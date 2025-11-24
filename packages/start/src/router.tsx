@@ -8,7 +8,8 @@ const components: Record<string, Component> = {};
 
 export function createRoutes() {
   function createRoute(route: any) {
-    const component = route.$component && (components[route.$component.src] ??= lazy(route.$component.import));
+    const component =
+      route.$component && (components[route.$component.src] ??= lazy(route.$component.import));
 
     return {
       ...route,

@@ -4,9 +4,9 @@ import type { ResponseStub } from "./types.ts";
 const validRedirectStatuses = new Set([301, 302, 303, 307, 308]);
 
 export function getExpectedRedirectStatus(response: ResponseStub): number {
-	if (response.status && validRedirectStatuses.has(response.status)) {
-		return response.status;
-	}
+  if (response.status && validRedirectStatuses.has(response.status)) {
+    return response.status;
+  }
 
-	return 302;
+  return 302;
 }

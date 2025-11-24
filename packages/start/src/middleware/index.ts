@@ -10,73 +10,63 @@ export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
 /** This composes an array of Exchanges into a single ExchangeIO function */
 
 export type RequestMiddleware = (
-	event: FetchEvent,
-) =>
-	| Response
-	| Promise<Response>
-	| void
-	| Promise<void>
-	| Promise<void | Response>;
+  event: FetchEvent
+) => Response | Promise<Response> | void | Promise<void> | Promise<void | Response>;
 
 // copy-pasted from h3/dist/index.d.ts
 type EventHandlerResponse<T = any> = T | Promise<T>;
 type ResponseMiddlewareResponseParam = { body?: Awaited<EventHandlerResponse> };
 
 export type ResponseMiddleware = (
-	event: FetchEvent,
-	response: ResponseMiddlewareResponseParam,
+  event: FetchEvent,
+  response: ResponseMiddlewareResponseParam
 ) => Response | Promise<Response> | void | Promise<void>;
 
 function wrapRequestMiddleware(onRequest: RequestMiddleware) {
-	return async (h3Event: H3Event) => {
-		const fetchEvent = getFetchEvent(h3Event);
-		const response = await onRequest(fetchEvent);
-		if (response) return response;
-	};
+  return async (h3Event: H3Event) => {
+    const fetchEvent = getFetchEvent(h3Event);
+    const response = await onRequest(fetchEvent);
+    if (response) return response;
+  };
 }
 
-function wrapResponseMiddleware(
-	onBeforeResponse: ResponseMiddleware,
-): Middleware {
-	return async (h3Event, next) => {
-		const resp = await next();
+function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middleware {
+  return async (h3Event, next) => {
+    const resp = await next();
 
-		const fetchEvent = getFetchEvent(h3Event);
-		const mwResponse = await onBeforeResponse(fetchEvent, {
-			body: (resp as any)?.body,
-		});
-		if (mwResponse) return mwResponse;
-	};
+    const fetchEvent = getFetchEvent(h3Event);
+    const mwResponse = await onBeforeResponse(fetchEvent, {
+      body: (resp as any)?.body
+    });
+    if (mwResponse) return mwResponse;
+  };
 }
 
 export function createMiddleware(
-	args:
-		| {
-				/** @deprecated Use H3 `Middleware` */
-				onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
-				/** @deprecated Use H3 `Middleware` */
-				onBeforeResponse?:
-					| ResponseMiddleware
-					| ResponseMiddleware[]
-					| undefined;
-		  }
-		| Middleware[],
+  args:
+    | {
+        /** @deprecated Use H3 `Middleware` */
+        onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
+        /** @deprecated Use H3 `Middleware` */
+        onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
+      }
+    | Middleware[]
 ): Middleware[] {
-	if (Array.isArray(args)) return args;
+  if (Array.isArray(args)) return args;
 
-	const mw: Middleware[] = [];
+  const mw: Middleware[] = [];
 
-	if (typeof args.onRequest === "function") {
-		mw.push(wrapRequestMiddleware(args.onRequest));
-	} else if (Array.isArray(args.onRequest)) {
-		mw.push(...args.onRequest.map(wrapRequestMiddleware));
-	}
+  if (typeof args.onRequest === "function") {
+    mw.push(wrapRequestMiddleware(args.onRequest));
+  } else if (Array.isArray(args.onRequest)) {
+    mw.push(...args.onRequest.map(wrapRequestMiddleware));
+  }
 
-	if (typeof args.onBeforeResponse === "function") {
-		mw.push(wrapResponseMiddleware(args.onBeforeResponse));
-	} else if (Array.isArray(args.onBeforeResponse)) {
-		mw.push(...args.onBeforeResponse.map(wrapResponseMiddleware));
-	}
+  if (typeof args.onBeforeResponse === "function") {
+    mw.push(wrapResponseMiddleware(args.onBeforeResponse));
+  } else if (Array.isArray(args.onBeforeResponse)) {
+    mw.push(...args.onBeforeResponse.map(wrapResponseMiddleware));
+  }
 
-	return mw;
+  return mw;
 }

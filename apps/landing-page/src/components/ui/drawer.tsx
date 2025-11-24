@@ -13,7 +13,7 @@ const DrawerPortal = DrawerPrimitive.Portal;
 
 const DrawerClose = DrawerPrimitive.Close;
 
-const DrawerOverlay: Component<DrawerPrimitive.OverlayProps> = (props) => {
+const DrawerOverlay: Component<DrawerPrimitive.OverlayProps> = props => {
   const [, rest] = splitProps(props, ["class"]);
   const drawerContext = DrawerPrimitive.useContext();
   return (
@@ -23,16 +23,14 @@ const DrawerOverlay: Component<DrawerPrimitive.OverlayProps> = (props) => {
         props.class
       )}
       style={{
-        "background-color": `rgb(0 0 0 / ${
-          0.8 * drawerContext.openPercentage()
-        })`,
+        "background-color": `rgb(0 0 0 / ${0.8 * drawerContext.openPercentage()})`
       }}
       {...rest}
     />
   );
 };
 
-const DrawerContent: Component<DrawerPrimitive.ContentProps> = (props) => {
+const DrawerContent: Component<DrawerPrimitive.ContentProps> = props => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DrawerPortal>
@@ -51,39 +49,27 @@ const DrawerContent: Component<DrawerPrimitive.ContentProps> = (props) => {
   );
 };
 
-const DrawerHeader: Component<ComponentProps<"div">> = (props) => {
+const DrawerHeader: Component<ComponentProps<"div">> = props => {
   const [, rest] = splitProps(props, ["class"]);
-  return (
-    <div
-      class={cn("grid gap-1.5 p-4 text-center sm:text-left", props.class)}
-      {...rest}
-    />
-  );
+  return <div class={cn("grid gap-1.5 p-4 text-center sm:text-left", props.class)} {...rest} />;
 };
 
-const DrawerFooter: Component<ComponentProps<"div">> = (props) => {
+const DrawerFooter: Component<ComponentProps<"div">> = props => {
   const [, rest] = splitProps(props, ["class"]);
-  return (
-    <div class={cn("t-auto flex flex-col gap-2 p-4", props.class)} {...rest} />
-  );
+  return <div class={cn("t-auto flex flex-col gap-2 p-4", props.class)} {...rest} />;
 };
 
-const DrawerTitle: Component<DrawerPrimitive.LabelProps> = (props) => {
+const DrawerTitle: Component<DrawerPrimitive.LabelProps> = props => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <DrawerPrimitive.Label
-      class={cn(
-        "text-lg font-semibold leading-none tracking-tight",
-        props.class
-      )}
+      class={cn("text-lg font-semibold leading-none tracking-tight", props.class)}
       {...rest}
     />
   );
 };
 
-const DrawerDescription: Component<DrawerPrimitive.DescriptionProps> = (
-  props
-) => {
+const DrawerDescription: Component<DrawerPrimitive.DescriptionProps> = props => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <DrawerPrimitive.Description
@@ -103,5 +89,5 @@ export {
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
-  DrawerDescription,
+  DrawerDescription
 };

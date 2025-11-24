@@ -57,7 +57,9 @@ export default function App() {
               <a href="/text-plain-response">Text Plain Response</a>
             </li>
             <li>
-              <a href="/referencing-multiple-export-named-functions-in-the-same-file">referencing multiple export named functions in the same file</a>
+              <a href="/referencing-multiple-export-named-functions-in-the-same-file">
+                referencing multiple export named functions in the same file
+              </a>
             </li>
           </ul>
           <Suspense>{props.children}</Suspense>

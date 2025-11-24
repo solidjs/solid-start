@@ -1,30 +1,28 @@
 import { splitProps } from "solid-js";
 
-import { AccordionContentProps, AccordionItemProps, Accordion as AccordionPrimitive, AccordionTriggerProps } from "@kobalte/core/accordion";
+import {
+  AccordionContentProps,
+  AccordionItemProps,
+  Accordion as AccordionPrimitive,
+  AccordionTriggerProps
+} from "@kobalte/core/accordion";
 
 import { cn } from "~/lib/utils";
 import { OverrideComponentProps } from "@kobalte/utils";
 
 const Accordion = AccordionPrimitive;
 
-const AccordionItem = (
-  props: OverrideComponentProps<"div", AccordionItemProps>
-) => {
+const AccordionItem = (props: OverrideComponentProps<"div", AccordionItemProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <AccordionPrimitive.Item
-      class={cn(
-        "border-b max-w-prose mx-auto last-of-type:border-none",
-        props.class
-      )}
+      class={cn("border-b max-w-prose mx-auto last-of-type:border-none", props.class)}
       {...rest}
     />
   );
 };
 
-const AccordionTrigger = (
-  props: OverrideComponentProps<"button", AccordionTriggerProps>
-) => {
+const AccordionTrigger = (props: OverrideComponentProps<"button", AccordionTriggerProps>) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <AccordionPrimitive.Header class="flex">
@@ -53,9 +51,7 @@ const AccordionTrigger = (
   );
 };
 
-const AccordionContent = (
-  props: OverrideComponentProps<"div", AccordionContentProps>
-) => {
+const AccordionContent = (props: OverrideComponentProps<"div", AccordionContentProps>) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <AccordionPrimitive.Content

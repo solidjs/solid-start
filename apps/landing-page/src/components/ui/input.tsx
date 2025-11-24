@@ -3,7 +3,7 @@ import { splitProps } from "solid-js";
 
 import { cn } from "~/lib/utils";
 
-const Input: Component<ComponentProps<"input">> = (props) => {
+const Input: Component<ComponentProps<"input">> = props => {
   const [, rest] = splitProps(props, ["type", "class"]);
   return (
     <input

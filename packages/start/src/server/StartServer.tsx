@@ -1,12 +1,6 @@
 // @refresh skip
 import type { Component } from "solid-js";
-import {
-  Hydration,
-  HydrationScript,
-  NoHydration,
-  getRequestEvent,
-  ssr
-} from "solid-js/web";
+import { Hydration, HydrationScript, NoHydration, getRequestEvent, ssr } from "solid-js/web";
 import App from "solid-start:app";
 
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.tsx";

@@ -18,14 +18,7 @@ export function SolidIcon(props: Props) {
         d="M163 35S110-4 69 5l-3 1c-6 2-11 5-14 9l-2 3-15 26 26 5c11 7 25 10 38 7l46 9 18-30z"
         fill="#76b3e1"
       />
-      <linearGradient
-        id="a"
-        gradientUnits="userSpaceOnUse"
-        x1="27.5"
-        y1="3"
-        x2="152"
-        y2="63.5"
-      >
+      <linearGradient id="a" gradientUnits="userSpaceOnUse" x1="27.5" y1="3" x2="152" y2="63.5">
         <stop offset=".1" stop-color="#76b3e1" />
         <stop offset=".3" stop-color="#dcf2fd" />
         <stop offset="1" stop-color="#76b3e1" />
@@ -35,18 +28,8 @@ export function SolidIcon(props: Props) {
         opacity=".3"
         fill="url(#a)"
       />
-      <path
-        d="M52 35l-4 1c-17 5-22 21-13 35 10 13 31 20 48 15l62-21S92 26 52 35z"
-        fill="#518ac8"
-      />
-      <linearGradient
-        id="b"
-        gradientUnits="userSpaceOnUse"
-        x1="95.8"
-        y1="32.6"
-        x2="74"
-        y2="105.2"
-      >
+      <path d="M52 35l-4 1c-17 5-22 21-13 35 10 13 31 20 48 15l62-21S92 26 52 35z" fill="#518ac8" />
+      <linearGradient id="b" gradientUnits="userSpaceOnUse" x1="95.8" y1="32.6" x2="74" y2="105.2">
         <stop offset="0" stop-color="#76b3e1" />
         <stop offset=".5" stop-color="#4377bb" />
         <stop offset="1" stop-color="#1f3b77" />
@@ -68,10 +51,7 @@ export function SolidIcon(props: Props) {
         <stop offset=".5" stop-color="#518ac8" />
         <stop offset="1" stop-color="#315aa9" />
       </linearGradient>
-      <path
-        d="M134 80a45 45 0 00-48-15L24 85 4 120l112 19 20-36c4-7 3-15-2-23z"
-        fill="url(#c)"
-      />
+      <path d="M134 80a45 45 0 00-48-15L24 85 4 120l112 19 20-36c4-7 3-15-2-23z" fill="url(#c)" />
       <linearGradient
         id="d"
         gradientUnits="userSpaceOnUse"
@@ -84,10 +64,7 @@ export function SolidIcon(props: Props) {
         <stop offset=".5" stop-color="#1a336b" />
         <stop offset="1" stop-color="#1a336b" />
       </linearGradient>
-      <path
-        d="M114 115a45 45 0 00-48-15L4 120s53 40 94 30l3-1c17-5 23-21 13-34z"
-        fill="url(#d)"
-      />
+      <path d="M114 115a45 45 0 00-48-15L4 120s53 40 94 30l3-1c17-5 23-21 13-34z" fill="url(#d)" />
     </svg>
   );
 }

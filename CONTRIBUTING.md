@@ -74,6 +74,10 @@ Once the PR is there, **create an issue** and link the PR (mention the PR as you
 > [!IMPORTANT]
 > Mark the **allow edit by the maintainers** so we can more easily investigate the failing test and propose a fix. Otherwise we may need to close your PR and cherry-pick your commit.
 
+### Formatting your code
+
+We have a set of rules defined in the `.editorconfig` and `.oxfmtrc.json` files. Please format your code before opening a PR, so that we keep the codebase consistent. Regardless of what editor you use, running `pnpm format` will format your code according to our rules.
+
 ---
 
 If you have read all the way here, you're already a champ! 🏆
