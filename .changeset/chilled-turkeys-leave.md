@@ -2,4 +2,4 @@
 "@solidjs/start": patch
 ---
 
-redirect Response with multiple Set-Cookie headers
+Fix multiple Set-Cookie headers being lost on redirect responses
