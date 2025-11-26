@@ -1,9 +1,9 @@
+import middleware from "solid-start:middleware";
 import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
-import middleware from "solid-start:middleware";
 
 import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
@@ -11,10 +11,10 @@ import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "./server-functions-handler.ts";
 import type {
-  APIEvent,
-  FetchEvent,
-  HandlerOptions,
-  PageEvent,
+	APIEvent,
+	FetchEvent,
+	HandlerOptions,
+	PageEvent,
 } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
