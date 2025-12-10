@@ -1,0 +1,9 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@solidjs/start": "2.0.0-alpha.0",
+    "@solidjs/vite-plugin-nitro-2": "0.1.0"
+  },
+  "changesets": []
+}
