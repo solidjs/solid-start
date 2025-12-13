@@ -32,10 +32,9 @@ export function createBaseHandler(
 		handler: decorateHandler(async (e: H3Event) => {
 			const event = getRequestEvent()!;
 			const url = new URL(event.request.url);
-			const pathname = url.pathname;
+			const pathname = stripBaseUrl(url.pathname);
 
-			const serverFunctionTest = join(import.meta.env.BASE_URL, SERVER_FN_BASE);
-			if (pathname.startsWith(serverFunctionTest)) {
+			if (pathname.startsWith(SERVER_FN_BASE)) {
 				const serverFnResponse = await handleServerFunction(e);
 
         if (serverFnResponse instanceof Response)
@@ -264,4 +263,9 @@ function produceResponseWithEventHeaders(res: Response) {
   }
 
   return ret
+}
+
+function stripBaseUrl(path: string) {
+  if(import.meta.env.BASE_URL === "/" || import.meta.env.BASE_URL === "") return path;
+  return path.slice(import.meta.env.BASE_URL.length);
 }
