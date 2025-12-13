@@ -25,10 +25,9 @@ export function createBaseHandler(
     handler: decorateHandler(async (e: H3Event) => {
       const event = getRequestEvent()!;
       const url = new URL(event.request.url);
-      const pathname = url.pathname;
+      const pathname = stripBaseUrl(url.pathname);
 
-      const serverFunctionTest = join(import.meta.env.BASE_URL, SERVER_FN_BASE);
-      if (pathname.startsWith(serverFunctionTest)) {
+      if (pathname.startsWith(SERVER_FN_BASE)) {
         const serverFnResponse = await handleServerFunction(e);
 
         if (serverFnResponse instanceof Response)
@@ -221,16 +220,38 @@ function produceResponseWithEventHeaders(res: Response) {
 
   // Response.redirect returns an immutable value, so we clone on any redirect just in case
   if (300 <= res.status && res.status < 400) {
+    const cookies = res.headers.getSetCookie?.() ?? [];
+    const headers = new Headers();
+    res.headers.forEach((value, key) => {
+      if (key.toLowerCase() !== "set-cookie") {
+        headers.set(key, value);
+      }
+    });
+    for (const cookie of cookies) {
+      headers.append("Set-Cookie", cookie);
+    }
     ret = new Response(res.body, {
       status: res.status,
       statusText: res.statusText,
-      headers: Object.fromEntries(res.headers.entries())
+      headers
     });
   }
 
+  const eventCookies = event.response.headers.getSetCookie?.() ?? [];
+  for (const cookie of eventCookies) {
+    ret.headers.append("Set-Cookie", cookie);
+  }
+
   for (const [name, value] of event.response.headers) {
-    ret.headers.set(name, value);
+    if (name.toLowerCase() !== "set-cookie") {
+      ret.headers.set(name, value);
+    }
   }
 
   return ret;
+}
+
+function stripBaseUrl(path: string) {
+  if (import.meta.env.BASE_URL === "/" || import.meta.env.BASE_URL === "") return path;
+  return path.slice(import.meta.env.BASE_URL.length);
 }

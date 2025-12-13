@@ -1,6 +1,7 @@
 {
   "name": "fixture-basic",
   "type": "module",
+  "private": true,
   "scripts": {
     "dev": "vite dev",
     "build": "vite build"
