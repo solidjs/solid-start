@@ -8,14 +8,12 @@ function serverFnWithIsServer() {
 }
 
 export default function App() {
-  const [output, setOutput] = createSignal<{  serverFnWithIsServer?: boolean }>({});
-
+  const [output, setOutput] = createSignal<{ serverFnWithIsServer?: boolean }>({});
 
   createEffect(async () => {
     const result = await serverFnWithIsServer();
     setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
   });
-
 
   return (
     <main>

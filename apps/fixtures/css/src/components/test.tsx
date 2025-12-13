@@ -6,7 +6,7 @@ const integrations = {
   import: "import",
   module: "import module",
   url: "?url without render",
-  link: "?url + <link>",
+  link: "?url + <link>"
 };
 const Test = (props: {
   invert?: boolean;

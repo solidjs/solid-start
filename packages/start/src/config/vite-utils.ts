@@ -16,7 +16,7 @@ export const NULL_BYTE_PLACEHOLDER = `__x00__`;
 export function normalizeResolvedIdToUrl(
   environment: DevEnvironment,
   url: string,
-  resolved: Rollup.PartialResolvedId,
+  resolved: Rollup.PartialResolvedId
 ): string {
   const root = environment.config.root;
   const depsOptimizer = environment.depsOptimizer;
@@ -64,10 +64,7 @@ export function unwrapId(id: string): string {
     : id;
 }
 
-export function normalizeViteImportAnalysisUrl(
-  environment: DevEnvironment,
-  id: string,
-): string {
+export function normalizeViteImportAnalysisUrl(environment: DevEnvironment, id: string): string {
   let url = normalizeResolvedIdToUrl(environment, id, { id });
 
   // https://github.com/vitejs/vite/blob/c18ce868c4d70873406e9f7d1b2d0a03264d2168/packages/vite/src/node/plugins/importAnalysis.ts#L416
@@ -101,8 +98,7 @@ export function slash(p: string): string {
   return p.replace(windowsSlashRE, "/");
 }
 
-const isWindows =
-  typeof process !== "undefined" && process.platform === "win32";
+const isWindows = typeof process !== "undefined" && process.platform === "win32";
 
 export function injectQuery(url: string, queryToInject: string): string {
   const { file, postfix } = splitFileAndPostfix(url);

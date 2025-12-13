@@ -26,8 +26,8 @@ const Layout = (props: FlowProps<{ title: string }>) => {
 
       <ul class="list-inside list-disc mb-4 text-gray-400 font-semibold text-xs">
         <li>
-          Enable throttling & disable cache in the network tab to see eventual FOUC's (frames of unstyled
-          content)
+          Enable throttling & disable cache in the network tab to see eventual FOUC's (frames of
+          unstyled content)
         </li>
         <li>Click on routes to test client navigation</li>
       </ul>

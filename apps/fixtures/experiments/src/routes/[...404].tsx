@@ -2,10 +2,9 @@ import { Title } from "@solidjs/meta";
 import { HttpStatusCode } from "@solidjs/start";
 import type { APIEvent } from "@solidjs/start/server";
 
-
 export const GET = (event: APIEvent) => {
   if (event.request.headers.get("accept") !== "application/json") return;
-  return { notFound: "API"}
+  return { notFound: "API" };
 };
 
 export default function NotFound() {

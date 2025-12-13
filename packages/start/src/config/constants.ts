@@ -16,4 +16,4 @@ export const VIRTUAL_MODULES = {
 export const VITE_ENVIRONMENTS = {
   client: "client",
   server: "ssr"
-}
+};
