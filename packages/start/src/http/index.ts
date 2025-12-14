@@ -34,7 +34,7 @@ type Tail<T> = T extends [any, ...infer U] ? U : never;
 
 type PrependOverload<
   TOriginal extends (...args: Array<any>) => any,
-  TOverload extends (...args: Array<any>) => any
+  TOverload extends (...args: Array<any>) => any,
 > = TOverload & TOriginal;
 
 // add an overload to the function without the event argument
@@ -48,7 +48,7 @@ type WrapFunction<TFn extends (...args: Array<any>) => any> = PrependOverload<
 >;
 
 function createWrapperFunction<TFn extends (...args: Array<any>) => any>(
-  h3Function: TFn
+  h3Function: TFn,
 ): WrapFunction<TFn> {
   return ((...args: Array<any>) => {
     const event = args[0];
@@ -83,7 +83,7 @@ export const isMethod = createWrapperFunction(h3.isMethod);
 export const isPreflightRequest = createWrapperFunction(h3.isPreflightRequest);
 type WrappedGetValidatedQuery = <
   T extends HTTPEvent,
-  TEventInput = InferEventInput<"query", H3Event, T>
+  TEventInput = InferEventInput<"query", H3Event, T>,
 >(
   ...args: Tail<Parameters<typeof h3.getValidatedQuery<T, H3Event, TEventInput>>>
 ) => ReturnType<typeof h3.getValidatedQuery<T, H3Event, TEventInput>>;
@@ -95,12 +95,12 @@ export const getRouterParams = createWrapperFunction(h3.getRouterParams);
 export const getRouterParam = createWrapperFunction(h3.getRouterParam);
 type WrappedGetValidatedRouterParams = <
   T extends HTTPEvent,
-  TEventInput = InferEventInput<"routerParams", H3Event, T>
+  TEventInput = InferEventInput<"routerParams", H3Event, T>,
 >(
   ...args: Tail<Parameters<typeof h3.getValidatedRouterParams<T, H3Event, TEventInput>>>
 ) => ReturnType<typeof h3.getValidatedRouterParams<T, H3Event, TEventInput>>;
 export const getValidatedRouterParams = createWrapperFunction(
-  h3.getValidatedRouterParams
+  h3.getValidatedRouterParams,
 ) as PrependOverload<typeof h3.getValidatedRouterParams, WrappedGetValidatedRouterParams>;
 export const assertMethod = createWrapperFunction(h3.assertMethod);
 export const getRequestHeaders = createWrapperFunction(h3.getRequestHeaders);
@@ -190,7 +190,7 @@ export const getRequestWebStream = () => getEvent().req.body;
 export const readFormData = () => getEvent().req.formData();
 type WrappedReadValidatedBody = <
   T extends HTTPEvent,
-  TEventInput = InferEventInput<"body", H3Event, T>
+  TEventInput = InferEventInput<"body", H3Event, T>,
 >(
   ...args: Tail<Parameters<typeof h3.readValidatedBody<T, H3Event, TEventInput>>>
 ) => ReturnType<typeof h3.readValidatedBody<T, H3Event, TEventInput>>;

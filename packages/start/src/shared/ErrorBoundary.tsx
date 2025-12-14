@@ -37,7 +37,7 @@ export const TopErrorBoundary = (props: ParentProps) => {
     err => {
       console.error(err);
       isError = !!err;
-    }
+    },
   );
   return isError ? (
     <>

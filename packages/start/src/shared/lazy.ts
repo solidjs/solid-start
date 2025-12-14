@@ -38,7 +38,7 @@ const withAssets = function <T extends () => Promise<{ default: Component<any> }
         useAssets(assets, nonce);
 
         return mod.default(props);
-      }
+      },
     };
   };
 

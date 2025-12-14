@@ -9,7 +9,7 @@ import {
   mergeProps,
   onCleanup,
   onMount,
-  splitProps
+  splitProps,
 } from "solid-js";
 import { cn } from "~/lib/utils";
 
@@ -39,11 +39,11 @@ export const SparklesText: ParentComponent<SparklesTextProps> = props => {
     "children",
     "class",
     "colors",
-    "sparklesCount"
+    "sparklesCount",
   ]);
   const localProps = mergeProps(
     { colors: ["#2c4f7c", "#3b82f6", "#60a5fa"], sparklesCount: 10 },
-    _localProps
+    _localProps,
   );
   const [sparkles, setSparkles] = createSignal<Sparkle[]>([]);
 
@@ -72,7 +72,7 @@ export const SparklesText: ParentComponent<SparklesTextProps> = props => {
             return generateStar();
           }
           return { ...star, lifespan: star.lifespan - 0.1 };
-        })
+        }),
       );
     };
 
@@ -100,12 +100,12 @@ const Sparkle: Component<Sparkle> = props => {
       animate={{
         opacity: [0, 1, 0],
         scale: [0, props.scale, 0],
-        rotate: [75, 120, 150]
+        rotate: [75, 120, 150],
       }}
       transition={{
         duration: 1.2,
         repeat: Number.POSITIVE_INFINITY,
-        delay: props.delay
+        delay: props.delay,
       }}
       width="21"
       height="21"

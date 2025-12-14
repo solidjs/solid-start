@@ -3,7 +3,7 @@ import {
   analyzeModule,
   BaseFileSystemRouter,
   cleanPath,
-  type FileSystemRouterConfig
+  type FileSystemRouterConfig,
 } from "./fs-routes/router.ts";
 
 export class SolidStartClientFileRouter extends BaseFileSystemRouter {
@@ -33,10 +33,10 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
         page: true,
         $component: {
           src: src,
-          pick: ["$css"]
+          pick: ["$css"],
         },
         $$route: undefined,
-        path
+        path,
         // filePath: src
       };
     }
@@ -52,16 +52,16 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
           pick: [
             ...exports.filter(e => e.n === e.ln && e.n !== "route").map(e => e.n),
             "default",
-            "$css"
-          ]
+            "$css",
+          ],
         },
         $$route: hasRouteConfig
           ? {
               src: src,
-              pick: ["route"]
+              pick: ["route"],
             }
           : undefined,
-        path
+        path,
         // filePath: src
       };
     }
@@ -75,12 +75,12 @@ function createHTTPHandlers(src: string, exports: readonly ExportSpecifier[]) {
     if (HTTP_METHODS.includes(exp.n)) {
       handlers[`$${exp.n}`] = {
         src: src,
-        pick: [exp.n]
+        pick: [exp.n],
       };
       if (exp.n === "GET" && !exports.find(exp => exp.n === "HEAD")) {
         handlers.$HEAD = {
           src: src,
-          pick: [exp.n]
+          pick: [exp.n],
         };
       }
     }
@@ -121,10 +121,10 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
         page: true,
         $component: {
           src: src,
-          pick: ["$css"]
+          pick: ["$css"],
         },
         $$route: undefined,
-        path
+        path,
       };
     }
 
@@ -144,18 +144,18 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
                     .filter(e => e.n === e.ln && e.n !== "route" && !HTTP_METHODS.includes(e.n))
                     .map(e => e.n),
                   "default",
-                  "$css"
-                ]
+                  "$css",
+                ],
               }
             : undefined,
         $$route: hasRouteConfig
           ? {
               src: src,
-              pick: ["route"]
+              pick: ["route"],
             }
           : undefined,
         ...createHTTPHandlers(src, exports),
-        path
+        path,
       };
     }
   }

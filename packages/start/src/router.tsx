@@ -16,10 +16,10 @@ export function createRoutes() {
       ...(route.$$route ? route.$$route.require().route : undefined),
       info: {
         ...(route.$$route ? route.$$route.require().route.info : {}),
-        filesystem: true
+        filesystem: true,
       },
       component,
-      children: route.children ? route.children.map(createRoute) : undefined
+      children: route.children ? route.children.map(createRoute) : undefined,
     };
   }
   const routes = routeConfigs.map(createRoute);

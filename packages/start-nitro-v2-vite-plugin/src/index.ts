@@ -5,7 +5,7 @@ import {
   type Nitro,
   type NitroConfig,
   prepare,
-  prerender
+  prerender,
 } from "nitropack";
 import { promises as fsp } from "node:fs";
 import path, { dirname, resolve } from "node:path";
@@ -33,7 +33,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
               if (file.isEntry) {
                 if (entryFile !== undefined) {
                   this.error(
-                    `Multiple entry points found for service "${this.environment.name}". Only one entry point is allowed.`
+                    `Multiple entry points found for service "${this.environment.name}". Only one entry point is allowed.`,
                   );
                 }
                 entryFile = file.fileName;
@@ -45,7 +45,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
           }
           ssrEntryFile = entryFile!;
           ssrBundle = bundle;
-        }
+        },
       },
       config() {
         return {
@@ -54,12 +54,12 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
               consumer: "server",
               build: {
                 commonjsOptions: {
-                  include: []
+                  include: [],
                 },
                 ssr: true,
-                sourcemap: true
-              }
-            }
+                sourcemap: true,
+              },
+            },
           },
           builder: {
             sharedPlugins: true,
@@ -80,7 +80,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                 preset: "node-server",
                 typescript: {
                   generateTsConfig: false,
-                  generateRuntimeConfigTypes: false
+                  generateRuntimeConfigTypes: false,
                 },
                 ...nitroConfig,
                 dev: false,
@@ -88,33 +88,33 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                   {
                     dir: client.config.build.outDir,
                     maxAge: 31536000, // 1 year
-                    baseURL: "/"
-                  }
+                    baseURL: "/",
+                  },
                 ],
                 renderer: virtualEntry,
                 rollupConfig: {
                   ...nitroConfig?.rollupConfig,
-                  plugins: [virtualBundlePlugin(ssrBundle) as any]
+                  plugins: [virtualBundlePlugin(ssrBundle) as any],
                 },
                 experimental: {
                   ...nitroConfig?.experimental,
-                  asyncContext: true
+                  asyncContext: true,
                 },
                 virtual: {
                   ...nitroConfig?.virtual,
                   [virtualEntry]: `import { fromWebHandler } from 'h3'
                                   import handler from '${ssrEntryFile}'
-                                  export default fromWebHandler(handler.fetch)`
-                }
+                                  export default fromWebHandler(handler.fetch)`,
+                },
               };
 
               const nitro = await createNitro(resolvedNitroConfig);
 
               await buildNitroEnvironment(nitro, () => build(nitro));
-            }
-          }
+            },
+          },
         };
-      }
+      },
     },
     nitroConfig?.preset === "netlify" && {
       name: "solid-start-nitro-netlify-fix",
@@ -123,11 +123,11 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
         return {
           environments: {
             client: { build: { outDir: ".solid-start/client" } },
-            ssr: { build: { outDir: ".solid-start/server" } }
-          }
+            ssr: { build: { outDir: ".solid-start/server" } },
+          },
         };
-      }
-    }
+      },
+    },
   ];
 }
 
@@ -161,7 +161,7 @@ function virtualBundlePlugin(ssrBundle: Rollup.OutputBundle): PluginOption {
     if (content.type === "chunk") {
       const virtualModule: VirtualModule = {
         code: content.code,
-        map: null
+        map: null,
       };
       const maybeMap = ssrBundle[`${fileName}.map`];
       if (maybeMap && maybeMap.type === "asset") {
@@ -193,6 +193,6 @@ function virtualBundlePlugin(ssrBundle: Rollup.OutputBundle): PluginOption {
         return null;
       }
       return m;
-    }
+    },
   };
 }

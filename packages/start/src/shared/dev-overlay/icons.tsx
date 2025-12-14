@@ -2,7 +2,7 @@
 import type { JSX } from "solid-js";
 
 export function ArrowRightIcon(
-  props: JSX.IntrinsicElements["svg"] & { title: string }
+  props: JSX.IntrinsicElements["svg"] & { title: string },
 ): JSX.Element {
   return (
     <svg
@@ -24,7 +24,7 @@ export function ArrowRightIcon(
 }
 
 export function ArrowLeftIcon(
-  props: JSX.IntrinsicElements["svg"] & { title: string }
+  props: JSX.IntrinsicElements["svg"] & { title: string },
 ): JSX.Element {
   return (
     <svg
@@ -66,7 +66,7 @@ export function RefreshIcon(props: JSX.IntrinsicElements["svg"] & { title: strin
 }
 
 export function ViewCompiledIcon(
-  props: JSX.IntrinsicElements["svg"] & { title: string }
+  props: JSX.IntrinsicElements["svg"] & { title: string },
 ): JSX.Element {
   return (
     <svg
@@ -94,7 +94,7 @@ export function ViewCompiledIcon(
 }
 
 export function ViewOriginalIcon(
-  props: JSX.IntrinsicElements["svg"] & { title: string }
+  props: JSX.IntrinsicElements["svg"] & { title: string },
 ): JSX.Element {
   return (
     <svg
@@ -170,7 +170,7 @@ export function GithubIcon(props: JSX.IntrinsicElements["svg"] & { title: string
 }
 
 export function SolidStartIcon(
-  props: JSX.IntrinsicElements["svg"] & { title: string }
+  props: JSX.IntrinsicElements["svg"] & { title: string },
 ): JSX.Element {
   return (
     <svg viewBox="0 0 701 701" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

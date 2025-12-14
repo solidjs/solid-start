@@ -18,14 +18,14 @@ const assetMap = {
   },
   noscript: (props: { attrs: JSX.HTMLAttributes<HTMLElement>; children: JSX.Element }) => (
     <noscript {...props.attrs}>{props.children}</noscript>
-  )
+  ),
 };
 
 export function renderAsset(asset: Asset, nonce?: string) {
   let {
     tag,
     attrs: { key, ...attrs } = { key: undefined },
-    children
+    children,
   } = asset as any;
   return (assetMap as any)[tag]({ attrs: { ...attrs, nonce }, key, children });
 }

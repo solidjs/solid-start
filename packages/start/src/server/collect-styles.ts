@@ -31,7 +31,7 @@ async function findModuleDependencies(
   vite: DevEnvironment,
   file: string,
   deps: Set<EnvironmentModuleNode>,
-  crawledFiles = new Set<string>()
+  crawledFiles = new Set<string>(),
 ) {
   crawledFiles.add(file);
   const module = await getViteModuleNode(vite, file);

@@ -21,7 +21,7 @@ export const DotPattern: Component<DotPatternProps> = props => {
     "cx",
     "cy",
     "cr",
-    "class"
+    "class",
   ]);
   const localProps = mergeProps(
     {
@@ -31,9 +31,9 @@ export const DotPattern: Component<DotPatternProps> = props => {
       y: 0,
       cx: 1,
       cy: 1,
-      cr: 1
+      cr: 1,
     },
-    _localProps
+    _localProps,
   );
   const id = createUniqueId();
 
@@ -42,7 +42,7 @@ export const DotPattern: Component<DotPatternProps> = props => {
       aria-hidden="true"
       class={cn(
         "pointer-events-none absolute inset-0 h-full w-full fill-neutral-400/80",
-        localProps.class
+        localProps.class,
       )}
       {...forwardProps}
     >

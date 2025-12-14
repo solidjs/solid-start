@@ -7,7 +7,7 @@ import {
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
-  ContextMenuTrigger
+  ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import { SolidStartLogo } from "./icons/solidstart-logo";
 export function DownloadLogosMenu() {

@@ -12,7 +12,7 @@ import {
   RequestPlugin,
   ResponsePlugin,
   URLPlugin,
-  URLSearchParamsPlugin
+  URLSearchParamsPlugin,
 } from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
@@ -51,11 +51,11 @@ function serializeToStream(id: string, value: any) {
           RequestPlugin,
           ResponsePlugin,
           URLSearchParamsPlugin,
-          URLPlugin
+          URLPlugin,
         ],
         onSerialize(data: string, initial: boolean) {
           controller.enqueue(
-            createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data)
+            createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data),
           );
         },
         onDone() {
@@ -63,9 +63,9 @@ function serializeToStream(id: string, value: any) {
         },
         onError(error: any) {
           controller.error(error);
-        }
+        },
       });
-    }
+    },
   });
 }
 
@@ -112,8 +112,8 @@ export async function handleServerFunction(h3Event: H3Event) {
               RequestPlugin,
               ResponsePlugin,
               URLSearchParamsPlugin,
-              URLPlugin
-            ]
+              URLPlugin,
+            ],
           }) as any)
         : json
       ).forEach((arg: any) => {
@@ -141,8 +141,8 @@ export async function handleServerFunction(h3Event: H3Event) {
           RequestPlugin,
           ResponsePlugin,
           URLSearchParamsPlugin,
-          URLPlugin
-        ]
+          URLPlugin,
+        ],
       });
     }
   }
@@ -151,7 +151,7 @@ export async function handleServerFunction(h3Event: H3Event) {
       /* @ts-expect-error */
       sharedConfig.context = { event };
       event.locals.serverFunctionMeta = {
-        id: functionId
+        id: functionId,
       };
       return serverFunction(...parsed);
     });
@@ -220,13 +220,13 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
     if (result.headers.has("Location")) {
       headers.set(
         `Location`,
-        new URL(result.headers.get("Location")!, url.origin + import.meta.env.BASE_URL).toString()
+        new URL(result.headers.get("Location")!, url.origin + import.meta.env.BASE_URL).toString(),
       );
       statusCode = getExpectedRedirectStatus(result);
     }
   } else
     headers = new Headers({
-      Location: new URL(request.headers.get("referer")!).toString()
+      Location: new URL(request.headers.get("referer")!).toString(),
     });
   if (result) {
     headers.append(
@@ -237,14 +237,14 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
           result: isError ? result.message : result,
           thrown: thrown,
           error: isError,
-          input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-        })
-      )}; Secure; HttpOnly;`
+          input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]],
+        }),
+      )}; Secure; HttpOnly;`,
     );
   }
   return new Response(null, {
     status: statusCode,
-    headers
+    headers,
   });
 }
 
@@ -293,12 +293,12 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
     if (result.headers.has("Location"))
       url = new URL(
         result.headers.get("Location")!,
-        new URL(sourceEvent.request.url).origin + import.meta.env.BASE_URL
+        new URL(sourceEvent.request.url).origin + import.meta.env.BASE_URL,
       ).toString();
   }
   const event = { ...sourceEvent } as PageEvent;
   event.request = new Request(url, {
-    headers: createSingleFlightHeaders(sourceEvent)
+    headers: createSingleFlightHeaders(sourceEvent),
   });
   return await provideRequestEvent(event, async () => {
     await createPageEvent(event);

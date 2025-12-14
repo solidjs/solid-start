@@ -48,7 +48,7 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
             return {
               require: `_$() => ({ ${Object.entries(refs)
                 .map(([pick, namedImport]) => `'${pick}': ${namedImport}`)
-                .join(", ")} })$_`
+                .join(", ")} })$_`,
               // src: isBuild ? relative(root, buildId) : buildId
             };
           } else if (k.startsWith("$")) {
@@ -56,7 +56,7 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
             return {
               src: relative(root, buildId),
               build: isBuild ? `_$() => import(/* @vite-ignore */ '${buildId}')$_` : undefined,
-              import: `_$() => import(/* @vite-ignore */ '${buildId}')$_`
+              import: `_$() => import(/* @vite-ignore */ '${buildId}')$_`,
             };
           }
           return v;
@@ -68,10 +68,10 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
 ${js.getImportStatements()}
 export default ${routesCode}`;
         return code;
-      }
+      },
     },
     treeShake(),
-    fileSystemWatcher(routers)
+    fileSystemWatcher(routers),
   ];
 }
 
@@ -123,7 +123,7 @@ function jsCode() {
             imports.get(i).default
               ? `${imports.get(i).default}${Object.keys(imports.get(i)).length > 1 ? ", " : ""}`
               : ""
-          } ${getNamedExport(i)} from '${i}';`
+          } ${getNamedExport(i)} from '${i}';`,
       )
       .join("\n")}`;
   };
@@ -131,6 +131,6 @@ function jsCode() {
   return {
     addImport,
     addNamedImport,
-    getImportStatements
+    getImportStatements,
   };
 }

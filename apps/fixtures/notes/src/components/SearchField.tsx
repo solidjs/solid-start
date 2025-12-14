@@ -22,7 +22,7 @@ export default function SearchField() {
         value={search.searchText || ""}
         onInput={e => {
           setParams({
-            searchText: e.target.value
+            searchText: e.target.value,
           });
         }}
       />

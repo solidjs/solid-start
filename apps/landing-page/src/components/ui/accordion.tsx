@@ -4,7 +4,7 @@ import {
   AccordionContentProps,
   AccordionItemProps,
   Accordion as AccordionPrimitive,
-  AccordionTriggerProps
+  AccordionTriggerProps,
 } from "@kobalte/core/accordion";
 
 import { cn } from "~/lib/utils";
@@ -29,7 +29,7 @@ const AccordionTrigger = (props: OverrideComponentProps<"button", AccordionTrigg
       <AccordionPrimitive.Trigger
         class={cn(
           "flex flex-1 items-center justify-between py-4 font-medium transition-all  [&[data-expanded]>svg]:rotate-180",
-          props.class
+          props.class,
         )}
         {...rest}
       >
@@ -57,7 +57,7 @@ const AccordionContent = (props: OverrideComponentProps<"div", AccordionContentP
     <AccordionPrimitive.Content
       class={cn(
         "animate-accordion-up overflow-hidden text-sm transition-all data-[expanded]:animate-accordion-down",
-        props.class
+        props.class,
       )}
       {...rest}
     >

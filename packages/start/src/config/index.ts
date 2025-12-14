@@ -33,10 +33,10 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     ssr: true,
     devOverlay: true,
     experimental: {
-      islands: false
+      islands: false,
     },
     solid: {},
-    extensions: []
+    extensions: [],
   });
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   const routeDir = join(start.appRoot, start.routeDir);
@@ -48,7 +48,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const entryExtension = extname(appEntryPath);
   const handlers = {
     client: `${start.appRoot}/entry-client${entryExtension}`,
-    server: `${start.appRoot}/entry-server${entryExtension}`
+    server: `${start.appRoot}/entry-server${entryExtension}`,
   };
   return [
     {
@@ -57,12 +57,12 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       configEnvironment(name) {
         return {
           define: {
-            "import.meta.env.SSR": JSON.stringify(name === VITE_ENVIRONMENTS.server)
+            "import.meta.env.SSR": JSON.stringify(name === VITE_ENVIRONMENTS.server),
           },
           resolve: {
             // remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
-            externalConditions: ["solid", "node"]
-          }
+            externalConditions: ["solid", "node"],
+          },
         };
       },
       async config(_, env) {
@@ -93,9 +93,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 rollupOptions: {
                   input: clientInput,
                   treeshake: true,
-                  preserveEntrySignatures: "exports-only"
-                }
-              }
+                  preserveEntrySignatures: "exports-only",
+                },
+              },
             },
             [VITE_ENVIRONMENTS.server]: {
               consumer: "server",
@@ -105,14 +105,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
-                  input: "~/entry-server.tsx"
+                  input: "~/entry-server.tsx",
                 },
                 outDir: "dist/server",
                 commonjsOptions: {
-                  include: [/node_modules/]
-                }
-              }
-            }
+                  include: [/node_modules/],
+                },
+              },
+            },
           },
           resolve: {
             alias: {
@@ -121,17 +121,17 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
               ...(!start.ssr
                 ? {
                     "@solidjs/start/server": "@solidjs/start/server/spa",
-                    "@solidjs/start/client": "@solidjs/start/client/spa"
+                    "@solidjs/start/client": "@solidjs/start/client/spa",
                   }
-                : {})
-            }
+                : {}),
+            },
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
             "import.meta.env.START_APP_ENTRY": `"${appEntryPath}"`,
             "import.meta.env.START_CLIENT_ENTRY": `"${handlers.client}"`,
-            "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay)
+            "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
           },
           builder: {
             sharedPlugins: true,
@@ -144,24 +144,24 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
 
               if (!client.isBuilt) await builder.build(client);
               if (!server.isBuilt) await builder.build(server);
-            }
-          }
+            },
+          },
         };
-      }
+      },
     },
     manifest(start),
     fsRoutes({
       routers: {
         client: new SolidStartClientFileRouter({
           dir: absolute(routeDir, root),
-          extensions
+          extensions,
         }),
         ssr: new SolidStartServerFileRouter({
           dir: absolute(routeDir, root),
           extensions,
-          dataOnly: !start.ssr
-        })
-      }
+          dataOnly: !start.ssr,
+        }),
+      },
     }),
     lazy(),
     // Must be placed after fsRoutes, as treeShake will remove the
@@ -177,28 +177,28 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           envName: VITE_ENVIRONMENTS.client,
           getRuntimeCode: () =>
             `import { createServerReference } from "${normalize(
-              fileURLToPath(new URL("../server/server-runtime", import.meta.url))
+              fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
             )}"`,
-          replacer: opts => `createServerReference('${opts.functionId}')`
+          replacer: opts => `createServerReference('${opts.functionId}')`,
         },
         {
           envConsumer: "server",
           envName: VITE_ENVIRONMENTS.server,
           getRuntimeCode: () =>
             `import { createServerReference } from '${normalize(
-              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
+              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
             )}'`,
-          replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`
-        }
+          replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
+        },
       ],
       provider: {
         envName: VITE_ENVIRONMENTS.server,
         getRuntimeCode: () =>
           `import { createServerReference } from '${normalize(
-            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
+            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
           )}'`,
-        replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`
-      }
+        replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
+      },
     }),
     {
       name: "solid-start:virtual-modules",
@@ -217,20 +217,20 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           if (query.size > 0) id += `?${query.toString()}`;
           return id;
         }
-      }
+      },
     },
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
       generateBundle(_options, bundle) {
         globalThis.START_CLIENT_BUNDLE = bundle;
-      }
+      },
     },
     devServer(),
     solid({
       ...start.solid,
       ssr: true,
-      extensions: extensions.map(ext => `.${ext}`)
-    })
+      extensions: extensions.map(ext => `.${ext}`),
+    }),
   ];
 }

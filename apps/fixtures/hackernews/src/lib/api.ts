@@ -31,7 +31,7 @@ const mapStories = {
   new: "newest",
   show: "show",
   ask: "ask",
-  job: "jobs"
+  job: "jobs",
 } as const;
 
 export const getStories = query(
@@ -39,7 +39,7 @@ export const getStories = query(
     "use server";
     return fetchAPI(`${mapStories[type]}?page=${page}`);
   },
-  "stories"
+  "stories",
 );
 
 export const getStory = query(async (id: string): Promise<StoryDefinition> => {

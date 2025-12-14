@@ -5,6 +5,6 @@ import fsLiteDriver from "unstorage/drivers/fs-lite";
 // swap with the key value of your choice in your deployed environment
 export const storage = createStorage({
   driver: fsLiteDriver({
-    base: "./.data"
-  })
+    base: "./.data",
+  }),
 });

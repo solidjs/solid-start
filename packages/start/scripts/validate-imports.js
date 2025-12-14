@@ -115,7 +115,7 @@ function extractImportExportStatements(content, filePath) {
     // Export from: export { ... } from '...'
     /export\s+(?:\{[^}]*\}|\*)\s+from\s+['"`]([^'"`]+)['"`]/g,
     // Export default from: export { default } from '...'
-    /export\s+\{\s*default\s*\}\s+from\s+['"`]([^'"`]+)['"`]/g
+    /export\s+\{\s*default\s*\}\s+from\s+['"`]([^'"`]+)['"`]/g,
     // Note: Dynamic imports are excluded as they're handled by bundlers
   ];
 
@@ -147,7 +147,7 @@ function extractImportExportStatements(content, filePath) {
             path: importPath,
             line: lineNumber + 1,
             fullLine: line.trim(),
-            filePath
+            filePath,
           });
         }
       }
@@ -175,7 +175,7 @@ function validateFile(filePath) {
             line: statement.line,
             importPath: statement.path,
             fullLine: statement.fullLine,
-            type: "invalid-extension"
+            type: "invalid-extension",
           });
         } else if (!hasValidExtension(statement.path)) {
           errors.push({
@@ -183,7 +183,7 @@ function validateFile(filePath) {
             line: statement.line,
             importPath: statement.path,
             fullLine: statement.fullLine,
-            type: "missing-extension"
+            type: "missing-extension",
           });
         }
       }
@@ -243,7 +243,7 @@ function validateImports() {
 
     if (missingExtensionErrors.length > 0) {
       console.log(
-        `❌ Found ${missingExtensionErrors.length} relative import(s) without extensions:\n`
+        `❌ Found ${missingExtensionErrors.length} relative import(s) without extensions:\n`,
       );
 
       const missingByFile = new Map();
@@ -262,7 +262,7 @@ function validateImports() {
           console.log(`  Line ${error.line}: ${error.importPath}`);
           console.log(`    ${error.fullLine}`);
           console.log(
-            `    ${"".padStart(error.fullLine.indexOf(error.importPath), " ")}${"".padStart(error.importPath.length, "^")}`
+            `    ${"".padStart(error.fullLine.indexOf(error.importPath), " ")}${"".padStart(error.importPath.length, "^")}`,
           );
         });
         console.log("");
@@ -271,7 +271,7 @@ function validateImports() {
 
     if (invalidExtensionErrors.length > 0) {
       console.log(
-        `❌ Found ${invalidExtensionErrors.length} relative import(s) with invalid extensions:\n`
+        `❌ Found ${invalidExtensionErrors.length} relative import(s) with invalid extensions:\n`,
       );
 
       const invalidByFile = new Map();
@@ -290,7 +290,7 @@ function validateImports() {
           console.log(`  Line ${error.line}: ${error.importPath}`);
           console.log(`    ${error.fullLine}`);
           console.log(
-            `    ${"".padStart(error.fullLine.indexOf(error.importPath), " ")}${"".padStart(error.importPath.length, "^")}`
+            `    ${"".padStart(error.fullLine.indexOf(error.importPath), " ")}${"".padStart(error.importPath.length, "^")}`,
           );
         });
         console.log("");

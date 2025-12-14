@@ -11,7 +11,7 @@ import {
   DropdownMenuSubContentProps,
   DropdownMenuCheckboxItemProps,
   DropdownMenuGroupLabelProps,
-  DropdownMenuRadioItemProps
+  DropdownMenuRadioItemProps,
 } from "@kobalte/core/dropdown-menu";
 
 import { cn } from "~/lib/utils";
@@ -32,7 +32,7 @@ const DropdownMenuContent = (props: OverrideComponentProps<"div", DropdownMenuCo
       <DropdownMenuPrimitive.Content
         class={cn(
           "z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] animate-content-hide overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[expanded]:animate-content-show",
-          props.class
+          props.class,
         )}
         {...rest}
       />
@@ -46,7 +46,7 @@ const DropdownMenuItem = (props: OverrideComponentProps<"div", DropdownMenuItemP
     <DropdownMenuPrimitive.Item
       class={cn(
         "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-        props.class
+        props.class,
       )}
       {...rest}
     />
@@ -81,14 +81,14 @@ const DropdownMenuSeparator = (props: OverrideComponentProps<"hr", DropdownMenuS
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 
 const DropdownMenuSubTrigger = (
-  props: OverrideComponentProps<"div", DropdownMenuSubTriggerProps>
+  props: OverrideComponentProps<"div", DropdownMenuSubTriggerProps>,
 ) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DropdownMenuPrimitive.SubTrigger
       class={cn(
         "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent",
-        props.class
+        props.class,
       )}
       {...rest}
     >
@@ -110,14 +110,14 @@ const DropdownMenuSubTrigger = (
 };
 
 const DropdownMenuSubContent = (
-  props: OverrideComponentProps<"div", DropdownMenuSubContentProps>
+  props: OverrideComponentProps<"div", DropdownMenuSubContentProps>,
 ) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <DropdownMenuPrimitive.SubContent
       class={cn(
         "z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in",
-        props.class
+        props.class,
       )}
       {...rest}
     />
@@ -125,14 +125,14 @@ const DropdownMenuSubContent = (
 };
 
 const DropdownMenuCheckboxItem = (
-  props: OverrideComponentProps<"div", DropdownMenuCheckboxItemProps>
+  props: OverrideComponentProps<"div", DropdownMenuCheckboxItemProps>,
 ) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DropdownMenuPrimitive.CheckboxItem
       class={cn(
         "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-        props.class
+        props.class,
       )}
       {...rest}
     >
@@ -160,7 +160,7 @@ const DropdownMenuCheckboxItem = (
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 const DropdownMenuGroupLabel = (
-  props: OverrideComponentProps<"span", DropdownMenuGroupLabelProps>
+  props: OverrideComponentProps<"span", DropdownMenuGroupLabelProps>,
 ) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
@@ -174,14 +174,14 @@ const DropdownMenuGroupLabel = (
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 const DropdownMenuRadioItem = (
-  props: OverrideComponentProps<"div", DropdownMenuRadioItemProps>
+  props: OverrideComponentProps<"div", DropdownMenuRadioItemProps>,
 ) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DropdownMenuPrimitive.RadioItem
       class={cn(
         "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-        props.class
+        props.class,
       )}
       {...rest}
     >
@@ -222,5 +222,5 @@ export {
   DropdownMenuGroup,
   DropdownMenuGroupLabel,
   DropdownMenuRadioGroup,
-  DropdownMenuRadioItem
+  DropdownMenuRadioItem,
 };

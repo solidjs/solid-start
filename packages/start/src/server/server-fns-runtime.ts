@@ -20,12 +20,12 @@ export function createServerReference(fn: Function, id: string) {
       if (!ogEvt) throw new Error("Cannot call server function outside of a request");
       const evt = { ...ogEvt };
       evt.locals.serverFunctionMeta = {
-        id
+        id,
       };
       evt.serverOnly = true;
       return provideRequestEvent(evt, () => {
         return fn.apply(thisArg, args);
       });
-    }
+    },
   });
 }

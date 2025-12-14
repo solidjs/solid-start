@@ -6,8 +6,8 @@ self.addEventListener("fetch", e => {
         .then(t =>
           t
             .match(e.request)
-            .then(n => n || fetch(e.request).then(n => (t.put(e.request, n.clone()), n)))
-        )
+            .then(n => n || fetch(e.request).then(n => (t.put(e.request, n.clone()), n))),
+        ),
     );
 });
 

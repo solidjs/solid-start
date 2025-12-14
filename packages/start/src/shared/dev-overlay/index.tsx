@@ -6,7 +6,7 @@ import {
   createSignal,
   onCleanup,
   resetErrorBoundaries,
-  type JSX
+  type JSX,
 } from "solid-js";
 import { HttpStatusCode } from "../HttpStatusCode.ts";
 import clientOnly from "../clientOnly.ts";

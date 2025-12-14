@@ -13,7 +13,7 @@ const hello = GET(async (name: string) => {
   console.log("ID", id, e.locals.foo);
   return json(
     { hello: new Promise<string>(r => setTimeout(() => r(name), 1000)) },
-    { headers: { "cache-control": "max-age=60" } }
+    { headers: { "cache-control": "max-age=60" } },
   );
 });
 
@@ -24,7 +24,7 @@ export default function Home() {
   });
   const port = isServer ? new URL(getRequestEvent()!.request.url).port : location.port;
   fetch(`http://localhost:${port}${import.meta.env.BASE_URL}/unknown`, {
-    headers: { Accept: "application/json" }
+    headers: { Accept: "application/json" },
   }).then(async res => console.log(await res.json()));
   return (
     <main>

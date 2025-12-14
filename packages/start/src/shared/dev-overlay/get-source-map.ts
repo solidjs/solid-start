@@ -6,7 +6,7 @@ const SOURCEMAP_REGEX =
 
 export default async function getSourceMap(
   url: string,
-  content: string
+  content: string,
 ): Promise<SourceMapConsumer | null> {
   const lines = content.split("\n");
   let sourceMapUrl: string | undefined;

@@ -11,7 +11,7 @@ export function VariableImportTestComponent() {
 export const testStringExport = "♡(˃͈ દ ˂͈ ༶ )";
 
 export const testObjectExport = {
-  stringValue: testStringExport
+  stringValue: testStringExport,
 };
 
 export default function () {

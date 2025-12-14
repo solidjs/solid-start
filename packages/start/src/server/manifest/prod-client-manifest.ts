@@ -13,7 +13,7 @@ export function getClientProdManifest() {
     async json() {
       // @ts-ignore
       return window.manifest;
-    }
+    },
   } satisfies StartManifest & {
     json(): Promise<Record<string, any>>;
     import(id: string): Promise<any>;

@@ -16,7 +16,7 @@ export const NULL_BYTE_PLACEHOLDER = `__x00__`;
 export function normalizeResolvedIdToUrl(
   environment: DevEnvironment,
   url: string,
-  resolved: Rollup.PartialResolvedId
+  resolved: Rollup.PartialResolvedId,
 ): string {
   const root = environment.config.root;
   const depsOptimizer = environment.depsOptimizer;

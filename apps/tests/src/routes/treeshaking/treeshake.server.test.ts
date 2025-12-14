@@ -8,7 +8,7 @@ describe("Make sure treeshaking works", () => {
     const buildDir = path.resolve(process.cwd(), ".output/public/_build/assets");
     const files = await readdir(buildDir);
     const targetFile = files.find(
-      file => file.startsWith("(no-side-effects)-") && file.endsWith(".js")
+      file => file.startsWith("(no-side-effects)-") && file.endsWith(".js"),
     );
     if (!targetFile) {
       throw new Error("Treeshaking test: No target file not found");

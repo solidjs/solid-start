@@ -20,10 +20,10 @@ const DrawerOverlay: Component<DrawerPrimitive.OverlayProps> = props => {
     <DrawerPrimitive.Overlay
       class={cn(
         "fixed inset-0 z-50 data-[transitioning]:transition-colors data-[transitioning]:duration-300",
-        props.class
+        props.class,
       )}
       style={{
-        "background-color": `rgb(0 0 0 / ${0.8 * drawerContext.openPercentage()})`
+        "background-color": `rgb(0 0 0 / ${0.8 * drawerContext.openPercentage()})`,
       }}
       {...rest}
     />
@@ -38,7 +38,7 @@ const DrawerContent: Component<DrawerPrimitive.ContentProps> = props => {
       <DrawerPrimitive.Content
         class={cn(
           "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background after:absolute after:inset-x-0 after:top-full after:h-1/2 after:bg-inherit data-[transitioning]:transition-transform data-[transitioning]:duration-300 md:select-none",
-          props.class
+          props.class,
         )}
         {...rest}
       >
@@ -89,5 +89,5 @@ export {
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
-  DrawerDescription
+  DrawerDescription,
 };

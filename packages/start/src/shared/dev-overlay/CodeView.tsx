@@ -18,7 +18,7 @@ async function loadHighlighter() {
     await loadWasm(await fetch(url));
     HIGHLIGHTER = await getSingletonHighlighter({
       themes: [darkPlus],
-      langs: [langJS, langJSX, langTS, langTSX]
+      langs: [langJS, langJSX, langTS, langTSX],
     });
   }
   return HIGHLIGHTER;
@@ -36,7 +36,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
   const lines = () =>
     props.content.split("\n").map((item, index) => ({
       index: index + 1,
-      line: item
+      line: item,
     }));
 
   const minLine = () => Math.max(props.line - (1 + RANGE), 0);
@@ -59,9 +59,9 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       }
       return highlighter.codeToHtml(value, {
         theme: "dark-plus",
-        lang
+        lang,
       });
-    }
+    },
   );
 
   createEffect(() => {
@@ -85,7 +85,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       ref={ref}
       class="dev-overlay-code-view"
       style={{
-        "--dev-overlay-code-view-start": minLine() + 1
+        "--dev-overlay-code-view-start": minLine() + 1,
       }}
     />
   );

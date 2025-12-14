@@ -4,7 +4,7 @@ import type {
   ModuleGraph,
   ModuleNode,
   PluginOption,
-  ViteDevServer
+  ViteDevServer,
 } from "vite";
 import { moduleId } from "./index.ts";
 import type { BaseFileSystemRouter } from "./router.ts";
@@ -26,7 +26,7 @@ function setupWatcher(watcher: FSWatcher, routes: CompiledRouter): void {
 function createRoutesReloader(
   server: ViteDevServer,
   routes: CompiledRouter,
-  environment: "client" | "ssr"
+  environment: "client" | "ssr",
 ): () => void {
   routes.addEventListener("reload", handleRoutesReload);
   return () => routes.removeEventListener("reload", handleRoutesReload);
@@ -61,7 +61,7 @@ function createRoutesReloader(
 }
 
 export const fileSystemWatcher = (
-  routers: Record<"client" | "ssr", BaseFileSystemRouter>
+  routers: Record<"client" | "ssr", BaseFileSystemRouter>,
 ): PluginOption => {
   const plugin: PluginOption = {
     name: "fs-watcher",
@@ -71,7 +71,7 @@ export const fileSystemWatcher = (
         setupWatcher(server.watcher, router);
         createRoutesReloader(server, router, environment as keyof typeof routers);
       });
-    }
+    },
   };
   return plugin;
 };

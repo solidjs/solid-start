@@ -9,7 +9,7 @@ const Label: Component<ComponentProps<"label">> = props => {
     <label
       class={cn(
         "text-3xl text-neutral-300 font-thin leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-        props.class
+        props.class,
       )}
       {...rest}
     />

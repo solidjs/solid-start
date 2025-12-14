@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { SunIcon } from "./icons/sun-icon";
 import { MoonIcon } from "./icons/moon-icon";

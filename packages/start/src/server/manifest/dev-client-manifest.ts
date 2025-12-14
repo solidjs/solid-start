@@ -13,9 +13,9 @@ export function getClientDevManifest() {
       return await Promise.all(
         assets.map(async (v: any) => ({
           ...v,
-          children: await v.children()
-        }))
+          children: await v.children(),
+        })),
       );
-    }
+    },
   } satisfies StartManifest & { import(id: string): Promise<any> };
 }

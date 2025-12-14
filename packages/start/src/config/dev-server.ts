@@ -3,7 +3,7 @@ import {
   type Connect,
   isRunnableDevEnvironment,
   type PluginOption,
-  type ViteDevServer
+  type ViteDevServer,
 } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
 
@@ -59,15 +59,15 @@ export function devServer(): Array<PluginOption> {
                       status: 500,
                       error: "Internal Server Error",
                       message: "An unexpected error occurred. Please try again later.",
-                      timestamp: new Date().toISOString()
+                      timestamp: new Date().toISOString(),
                     },
                     {
                       status: 500,
                       headers: {
-                        "Content-Type": "application/json"
-                      }
-                    }
-                  )
+                        "Content-Type": "application/json",
+                      },
+                    },
+                  ),
                 );
               }
 
@@ -83,7 +83,7 @@ export function devServer(): Array<PluginOption> {
                         <script type="module">
                           import { ErrorOverlay } from '/@vite/client'
                           document.body.appendChild(new ErrorOverlay(${JSON.stringify(
-                            prepareError(req, e)
+                            prepareError(req, e),
                           ).replace(/</g, "\\u003c")}))
                         </script>
                       </head>
@@ -93,15 +93,15 @@ export function devServer(): Array<PluginOption> {
                   `,
                   {
                     status: 500,
-                    headers: { "Content-Type": "text/html" }
-                  }
-                )
+                    headers: { "Content-Type": "text/html" },
+                  },
+                ),
               );
             }
           });
         };
-      }
-    }
+      },
+    },
   ];
 }
 
@@ -114,13 +114,13 @@ function removeHtmlMiddlewares(server: ViteDevServer) {
   const html_middlewares = [
     "viteIndexHtmlMiddleware",
     "vite404Middleware",
-    "viteSpaFallbackMiddleware"
+    "viteSpaFallbackMiddleware",
   ];
   for (let i = server.middlewares.stack.length - 1; i > 0; i--) {
     if (
       html_middlewares.includes(
         // @ts-expect-error
-        server.middlewares.stack[i].handle.name
+        server.middlewares.stack[i].handle.name,
       )
     ) {
       server.middlewares.stack.splice(i, 1);
@@ -140,6 +140,6 @@ function prepareError(req: Connect.IncomingMessage, error: unknown) {
     message: `An error occured while server rendering ${req.url}:\n\n\t${
       typeof e === "string" ? e : e.message
     } `,
-    stack: typeof e === "string" ? "" : e.stack
+    stack: typeof e === "string" ? "" : e.stack,
   };
 }

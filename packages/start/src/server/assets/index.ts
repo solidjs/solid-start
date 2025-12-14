@@ -24,7 +24,7 @@ const getEntity = (registry: Registry, asset: Asset) => {
 
   const entity = (registry[key] ??= {
     key,
-    consumers: 0
+    consumers: 0,
   });
 
   return entity;

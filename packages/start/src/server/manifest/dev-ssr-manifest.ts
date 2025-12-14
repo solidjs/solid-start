@@ -11,10 +11,10 @@ export function getSsrDevManifest(environment: "client" | "ssr") {
       return await Promise.all(
         assets.map(async (v: any) => ({
           ...v,
-          children: await v.children()
-        }))
+          children: await v.children(),
+        })),
       );
-    }
+    },
   } satisfies StartManifest & {
     path(id: string): string;
   };

@@ -6,7 +6,7 @@ import { getNote } from "~/lib/api";
 export const route = {
   preload({ params }) {
     getNote(+params.id);
-  }
+  },
 } satisfies RouteDefinition;
 
 export default function EditNote({ params }: RouteSectionProps) {

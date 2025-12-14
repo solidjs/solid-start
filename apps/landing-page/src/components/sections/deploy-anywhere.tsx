@@ -12,12 +12,12 @@ const PLATFORMS = [
   {
     name: "Cloudflare",
     url: "https://www.cloudflare.com/",
-    icon: <CloudflareLogo class="grayscale group-hover:grayscale-0  w-full  aspect-auto" />
+    icon: <CloudflareLogo class="grayscale group-hover:grayscale-0  w-full  aspect-auto" />,
   },
   {
     name: "Netlify",
     url: "https://www.netlify.com/",
-    icon: <NetlifyLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
+    icon: <NetlifyLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />,
   },
 
   {
@@ -25,28 +25,28 @@ const PLATFORMS = [
     url: "https://vercel.com/",
     icon: (
       <Vercel class="fill-neutral-500 dark:group-hover:fill-white group-hover:fill-black  w-full h-full aspect-auto " />
-    )
+    ),
   },
   {
     name: "Bun",
     url: "https://bun.sh/",
-    icon: <BunLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
+    icon: <BunLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />,
   },
   {
     name: "Deno",
     url: "https://deno.land/",
-    icon: <DenoLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
+    icon: <DenoLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />,
   },
   {
     name: "AWS",
     url: "https://aws.amazon.com/",
-    icon: <AwsLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
+    icon: <AwsLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />,
   },
   {
     name: "Azure",
     url: "https://azure.microsoft.com/",
-    icon: <AzureLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />
-  }
+    icon: <AzureLogo class="grayscale group-hover:grayscale-0  w-full h-full aspect-auto" />,
+  },
 ];
 
 export function DeployAnywhere() {

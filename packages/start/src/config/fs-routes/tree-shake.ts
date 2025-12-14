@@ -83,7 +83,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                           ? "argument"
                           : (() => {
                               throw new Error("invariant");
-                            })()
+                            })(),
                     );
                     if (isIdentifierReferenced(local)) {
                       variableState.refs.add(local);
@@ -178,9 +178,9 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                 ) {
                   path.remove();
                 }
-              }
+              },
             },
-            state
+            state,
           );
 
           const refs = state.refs;
@@ -232,7 +232,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                           ? "argument"
                           : (() => {
                               throw new Error("invariant");
-                            })()
+                            })(),
                     );
                     if (refs.has(local) && !isIdentifierReferenced(local)) {
                       ++count;
@@ -270,12 +270,12 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
               ArrowFunctionExpression: sweepFunction,
               ImportSpecifier: sweepImport,
               ImportDefaultSpecifier: sweepImport,
-              ImportNamespaceSpecifier: sweepImport
+              ImportNamespaceSpecifier: sweepImport,
             });
           } while (count);
-        }
-      }
-    }
+        },
+      },
+    },
   };
 }
 
@@ -292,14 +292,14 @@ export function treeShake(): Plugin {
       const transformed = await babel.transformAsync(code, {
         plugins: [[treeShakeTransform, { pick: query.getAll("pick") }]],
         parserOpts: {
-          plugins: ["jsx", "typescript"]
+          plugins: ["jsx", "typescript"],
         },
         filename: basename(id),
         ast: false,
         sourceMaps: true,
         configFile: false,
         babelrc: false,
-        sourceFileName: id
+        sourceFileName: id,
       });
 
       return transformed;
@@ -363,9 +363,9 @@ export function treeShake(): Plugin {
 
         return {
           code: transformed.code,
-          map: transformed.map
+          map: transformed.map,
         };
       }
-    }
+    },
   };
 }

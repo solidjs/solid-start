@@ -11,7 +11,7 @@ import {
   RequestPlugin,
   ResponsePlugin,
   URLPlugin,
-  URLSearchParamsPlugin
+  URLSearchParamsPlugin,
 } from "seroval-plugins/web";
 import { type Component } from "solid-js";
 
@@ -46,7 +46,7 @@ class SerovalChunkReader {
       if (this.done) {
         return {
           done: true,
-          value: undefined
+          value: undefined,
         };
       }
       // Otherwise, read a new chunk
@@ -77,7 +77,7 @@ class SerovalChunkReader {
     // Deserialize the chunk
     return {
       done: false,
-      value: deserialize(partial)
+      value: deserialize(partial),
     };
   }
 
@@ -107,7 +107,7 @@ async function deserializeStream(id: string, response: Response) {
       },
       () => {
         // no-op
-      }
+      },
     );
   }
 
@@ -123,8 +123,8 @@ function createRequest(base: string, id: string, instance: string, options: Requ
     headers: {
       ...options.headers,
       "X-Server-Id": id,
-      "X-Server-Instance": instance
-    }
+      "X-Server-Instance": instance,
+    },
   });
 }
 
@@ -138,14 +138,14 @@ const plugins = [
   RequestPlugin,
   ResponsePlugin,
   URLSearchParamsPlugin,
-  URLPlugin
+  URLPlugin,
 ];
 
 async function fetchServerFunction(
   base: string,
   id: string,
   options: Omit<RequestInit, "body">,
-  args: any[]
+  args: any[],
 ) {
   const instance = `server-fn:${INSTANCE++}`;
   const response = await (args.length === 0
@@ -156,12 +156,12 @@ async function fetchServerFunction(
         ? createRequest(base, id, instance, {
             ...options,
             body: args[0],
-            headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" }
+            headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" },
           })
         : createRequest(base, id, instance, {
             ...options,
             body: JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
-            headers: { ...options.headers, "Content-Type": "application/json" }
+            headers: { ...options.headers, "Content-Type": "application/json" },
           }));
 
   if (
@@ -217,13 +217,13 @@ export function createServerReference(id: string) {
                 ? url +
                     (args.length
                       ? `&args=${encodeURIComponent(
-                          JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins })))
+                          JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
                         )}`
                       : "")
                 : `${baseURL}_server`,
               id,
               options,
-              encodeArgs ? [] : args
+              encodeArgs ? [] : args,
             );
           };
           fn.url = url;
@@ -231,7 +231,7 @@ export function createServerReference(id: string) {
         };
       }
       return (target as any)[prop];
-    }
+    },
   });
 }
 

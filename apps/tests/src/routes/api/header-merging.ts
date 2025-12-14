@@ -15,15 +15,15 @@ export async function GET() {
       headers: {
         location: "http://::/abc",
         "x-return-header": "value",
-        "x-shared-header": "return"
-      }
+        "x-shared-header": "return",
+      },
     });
   } else {
     return new Response(null, {
       headers: {
         "x-return-header": "value",
-        "x-shared-header": "return"
-      }
+        "x-shared-header": "return",
+      },
     });
   }
 }

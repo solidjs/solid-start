@@ -6,7 +6,7 @@ import { createFetchEvent, getFetchEvent, mergeResponseHeaders } from "./fetchEv
 vi.mock(import("h3"), async mod => {
   return {
     ...(await mod()),
-    getRequestIP: vi.fn()
+    getRequestIP: vi.fn(),
   };
 });
 
@@ -40,7 +40,7 @@ describe("fetchEvent", () => {
         response: expect.any(Object),
         clientAddress: "127.0.0.1",
         locals: {},
-        nativeEvent: mockH3Event
+        nativeEvent: mockH3Event,
       });
     });
 
@@ -73,7 +73,7 @@ describe("fetchEvent", () => {
     it("should merge headers from Headers object to H3Event", () => {
       const headers = new Headers({
         "content-type": "application/json",
-        "x-custom": "value"
+        "x-custom": "value",
       });
 
       mergeResponseHeaders(mockH3Event, headers);

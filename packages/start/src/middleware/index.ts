@@ -10,7 +10,7 @@ export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
 /** This composes an array of Exchanges into a single ExchangeIO function */
 
 export type RequestMiddleware = (
-  event: FetchEvent
+  event: FetchEvent,
 ) => Response | Promise<Response> | void | Promise<void> | Promise<void | Response>;
 
 // copy-pasted from h3/dist/index.d.ts
@@ -19,7 +19,7 @@ type ResponseMiddlewareResponseParam = { body?: Awaited<EventHandlerResponse> };
 
 export type ResponseMiddleware = (
   event: FetchEvent,
-  response: ResponseMiddlewareResponseParam
+  response: ResponseMiddlewareResponseParam,
 ) => Response | Promise<Response> | void | Promise<void>;
 
 function wrapRequestMiddleware(onRequest: RequestMiddleware) {
@@ -36,7 +36,7 @@ function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middlewar
 
     const fetchEvent = getFetchEvent(h3Event);
     const mwResponse = await onBeforeResponse(fetchEvent, {
-      body: (resp as any)?.body
+      body: (resp as any)?.body,
     });
     if (mwResponse) return mwResponse;
   };
@@ -50,7 +50,7 @@ export function createMiddleware(
         /** @deprecated Use H3 `Middleware` */
         onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
       }
-    | Middleware[]
+    | Middleware[],
 ): Middleware[] {
   if (Array.isArray(args)) return args;
 

@@ -27,9 +27,9 @@ export function analyzeModule(src: string) {
     esbuild.transformSync(fs.readFileSync(src, "utf-8"), {
       jsx: "transform",
       format: "esm",
-      loader: "tsx"
+      loader: "tsx",
     }).code,
-    src
+    src,
   );
 }
 
@@ -86,9 +86,9 @@ export class BaseFileSystemRouter extends EventTarget {
     return {
       $component: {
         src: src,
-        pick: ["default", "$css"]
+        pick: ["default", "$css"],
       },
-      path
+      path,
       // filePath: src
     };
   }
@@ -123,9 +123,9 @@ export class BaseFileSystemRouter extends EventTarget {
       new Event("reload", {
         // @ts-ignore
         detail: {
-          route
-        }
-      })
+          route,
+        },
+      }),
     );
   }
 

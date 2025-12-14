@@ -10,7 +10,7 @@ import type { FetchEvent, HandlerOptions, PageEvent } from "../types.ts";
  */
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
-  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions)
+  options?: HandlerOptions | ((context: PageEvent) => HandlerOptions),
 ) {
   return createBaseHandler(createPageEvent, fn, options);
 }
@@ -22,7 +22,7 @@ async function createPageEvent(ctx: FetchEvent) {
     assets: await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY),
     routes: [],
     complete: false,
-    $islands: new Set<string>()
+    $islands: new Set<string>(),
   });
 
   return pageEvent;

@@ -18,7 +18,7 @@ const SERVER_FN_BASE = "/_server";
 export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
   fn: (context: PageEvent) => JSX.Element,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
+  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
   const handler = defineHandler({
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
@@ -34,7 +34,7 @@ export function createBaseHandler(
           return produceResponseWithEventHeaders(serverFnResponse);
 
         return new Response(serverFnResponse as any, {
-          headers: e.res.headers
+          headers: e.res.headers,
         });
       }
 
@@ -54,7 +54,7 @@ export function createBaseHandler(
         }
         if (event.request.method !== "GET") {
           throw new Error(
-            `API handler for ${event.request.method} "${event.request.url}" did not return a response.`
+            `API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
           );
         }
         if (!match.isPage) return;
@@ -120,7 +120,7 @@ export function createBaseHandler(
       const { writable, readable } = new TransformStream();
       stream.pipeTo(writable);
       return readable;
-    })
+    }),
   });
 
   const app = new H3();
@@ -132,7 +132,7 @@ export function createBaseHandler(
 
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
-  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {}
+  options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
   return createBaseHandler(createPageEvent, fn, options);
 }
@@ -150,7 +150,7 @@ export async function createPageEvent(ctx: FetchEvent) {
   const assets = [
     ...mergedCSS,
     ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
-    ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY))
+    ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
     // ...(import.meta.env.START_ISLANDS
     //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
     //       s => (s as any).attrs.rel !== "modulepreload"
@@ -160,14 +160,14 @@ export async function createPageEvent(ctx: FetchEvent) {
   const pageEvent: PageEvent = Object.assign(ctx, {
     assets,
     router: {
-      submission: initFromFlash(ctx) as any
+      submission: initFromFlash(ctx) as any,
     },
     routes: createRoutes(),
     // prevUrl: prevPath || "",
     // mutation: mutation,
     // $type: FETCH_EVENT,
     complete: false,
-    $islands: new Set<string>()
+    $islands: new Set<string>(),
   });
 
   return pageEvent;
@@ -186,7 +186,7 @@ function initFromFlash(ctx: FetchEvent) {
       url: param.url,
       pending: false,
       result: param.thrown ? undefined : result,
-      error: param.thrown ? result : undefined
+      error: param.thrown ? result : undefined,
     };
   } catch (e) {
     console.error(e);
@@ -233,7 +233,7 @@ function produceResponseWithEventHeaders(res: Response) {
     ret = new Response(res.body, {
       status: res.status,
       statusText: res.statusText,
-      headers
+      headers,
     });
   }
 

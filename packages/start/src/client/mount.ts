@@ -5,7 +5,7 @@ import {
   getHydrationKey,
   getOwner,
   hydrate,
-  type MountableElement
+  type MountableElement,
 } from "solid-js/web";
 
 /**
@@ -48,14 +48,14 @@ export function mount(fn: () => JSX.Element, el: MountableElement) {
             (a as any).__$owner = getOwner();
           });
           return;
-        }
+        },
       });
 
       map.set(el, props);
 
       hydrate(() => createComponent(Component, props[0]), el, {
         renderId: hk.slice(0, hk.length - 1) + `${1 + Number(el.dataset.offset)}-`,
-        owner: lookupOwner(el)
+        owner: lookupOwner(el),
       });
 
       delete el.dataset.hk;
@@ -84,8 +84,8 @@ export function mount(fn: () => JSX.Element, el: MountableElement) {
               /* @vite-ignore */ import.meta.env.MANIFEST["client"]!.chunks[
                 asset.split("#")[0] as string
               ]!.output.path
-            )
-        )
+            ),
+        ),
       )
         .then(() => {
           islands.forEach((el: HTMLElement) => {

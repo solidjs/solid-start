@@ -30,7 +30,7 @@ function defineRoutes(fileRoutes: Route[]) {
       routes.push({
         ...route,
         id,
-        path: id.replace(/\([^)/]+\)/g, "").replace(/\/+/g, "/")
+        path: id.replace(/\([^)/]+\)/g, "").replace(/\/+/g, "/"),
       });
       return routes;
     }
@@ -38,7 +38,7 @@ function defineRoutes(fileRoutes: Route[]) {
       parentRoute.children || (parentRoute.children = []),
       route,
       id.slice(parentRoute.id.length),
-      full
+      full,
     );
 
     return routes;
@@ -69,14 +69,14 @@ const router = createRouter({
         throw new Error(
           `Duplicate API routes for "${path}" found at "${memo[path]!.route.path}" and "${
             route.path
-          }"`
+          }"`,
         );
       }
       memo[path] = { route };
       return memo;
     },
-    {} as Record<string, { route: Route }>
-  )
+    {} as Record<string, { route: Route }>,
+  ),
 });
 
 function containsHTTP(route: Route) {
@@ -92,7 +92,7 @@ function containsHTTP(route: Route) {
 
 export function matchAPIRoute(
   path: string,
-  method: string
+  method: string,
 ):
   | {
       params?: Record<string, any>;
@@ -118,7 +118,7 @@ export function matchAPIRoute(
     return {
       handler,
       params: match.params,
-      isPage
+      isPage,
     };
   }
 

@@ -15,8 +15,8 @@ export default defineConfig({
         test: {
           include: ["**/*.server.test.ts"], // Matches the tree-shaking test
           name: { label: "Node Logic", color: "green" },
-          environment: "node"
-        }
+          environment: "node",
+        },
       },
       {
         // 2. BROWSER Project (For Solid components and DOM interaction)
@@ -30,10 +30,10 @@ export default defineConfig({
             provider: playwright(),
             enabled: true,
             headless: true,
-            instances: [{ browser: "chromium" }]
-          }
-        }
-      }
-    ]
-  }
+            instances: [{ browser: "chromium" }],
+          },
+        },
+      },
+    ],
+  },
 });

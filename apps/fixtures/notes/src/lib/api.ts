@@ -12,7 +12,7 @@ export const getNotes = query(async (searchText: string) => {
       const updatedAt = new Date(note.updatedAt);
       return {
         ...note,
-        updatedAt: isToday(updatedAt) ? format(updatedAt, "h:mm bb") : format(updatedAt, "M/d/yy")
+        updatedAt: isToday(updatedAt) ? format(updatedAt, "h:mm bb") : format(updatedAt, "M/d/yy"),
       };
     });
 }, "notes");
@@ -25,7 +25,7 @@ export const getNote = query(async (id: number) => {
 export const getNotePreview = query(async (id: number) => {
   "use server";
   const note = (((await storage.getItem("notes:data")) as Note[]) || []).find(
-    note => note.id === id
+    note => note.id === id,
   );
   if (!note) return;
   note.body = marked(note.body);
@@ -39,7 +39,7 @@ export const saveNote = action(async (id: number | undefined, formData: FormData
   const body = formData.get("body") as string;
   let [{ value: notes }, { value: index }] = (await storage.getItems([
     "notes:data",
-    "notes:counter"
+    "notes:counter",
   ])) as [{ key: string; value: Note[] }, { key: string; value: number }];
   // default value for first write
   notes = notes || [];
@@ -49,9 +49,9 @@ export const saveNote = action(async (id: number | undefined, formData: FormData
     await Promise.all([
       storage.setItem("notes:data", [
         ...notes,
-        { id: index, title, body, updatedAt: new Date().toISOString() }
+        { id: index, title, body, updatedAt: new Date().toISOString() },
       ]),
-      storage.setItem("notes:counter", index + 1)
+      storage.setItem("notes:counter", index + 1),
     ]);
     return redirect(`/notes/${index}`);
   }
@@ -60,7 +60,7 @@ export const saveNote = action(async (id: number | undefined, formData: FormData
     notes.map(note => {
       if (note.id !== id) return note;
       return { id, title, body, updatedAt: new Date().toISOString() };
-    })
+    }),
   );
   return redirect(`/notes/${id}`);
 });
@@ -70,6 +70,6 @@ export const deleteNote = action(async (id: number) => {
   const notes = (await storage.getItem("notes:data")) as Note[];
   await storage.setItem(
     "notes:data",
-    notes.filter(note => note.id !== id)
+    notes.filter(note => note.id !== id),
   );
 });

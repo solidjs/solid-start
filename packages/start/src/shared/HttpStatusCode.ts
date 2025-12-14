@@ -20,7 +20,7 @@ export const HttpStatusCode = isServer
       onCleanup(
         () =>
           // !event.nativeEvent.handled &&
-          !event.complete && (event.response.status = 200)
+          !event.complete && (event.response.status = 200),
       );
       return null;
     }

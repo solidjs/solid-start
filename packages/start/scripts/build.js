@@ -9,7 +9,7 @@ await Promise.all(
     fs.cp(
       path.join(import.meta.dirname, "../src", file),
       path.join(import.meta.dirname, "../dist", file),
-      { recursive: true }
-    )
-  )
+      { recursive: true },
+    ),
+  ),
 );

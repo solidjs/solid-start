@@ -12,7 +12,7 @@ test.describe("server-function", () => {
   });
 
   test("should have an id of type string in the server function meta - nested", async ({
-    page
+    page,
   }) => {
     await page.goto("http://localhost:3000/server-function-meta-nested");
     await expect(page.locator("#server-fn-test")).toContainText('{"serverFnWithMeta":"string"}');
@@ -21,14 +21,14 @@ test.describe("server-function", () => {
   test("should externalize node builtin in server function - nested", async ({ page }) => {
     await page.goto("http://localhost:3000/node-builtin-nested");
     await expect(page.locator("#server-fn-test")).toContainText(
-      '{"serverFnWithNodeBuiltin":"can/externalize"}'
+      '{"serverFnWithNodeBuiltin":"can/externalize"}',
     );
   });
 
   test("should externalize npm module in server function - nested", async ({ page }) => {
     await page.goto("http://localhost:3000/npm-module-nested");
     await expect(page.locator("#server-fn-test")).toContainText(
-      '{"serverFnWithNpmModule":[2,4,6]}'
+      '{"serverFnWithNpmModule":[2,4,6]}',
     );
   });
 
@@ -38,7 +38,7 @@ test.describe("server-function", () => {
   });
 
   test("should have an id of type string in the server function meta - toplevel", async ({
-    page
+    page,
   }) => {
     await page.goto("http://localhost:3000/server-function-meta");
     await expect(page.locator("#server-fn-test")).toContainText('{"serverFnWithMeta":"string"}');
@@ -47,14 +47,14 @@ test.describe("server-function", () => {
   test("should externalize node builtin in server function - toplevel", async ({ page }) => {
     await page.goto("http://localhost:3000/node-builtin-toplevel");
     await expect(page.locator("#server-fn-test")).toContainText(
-      '{"serverFnWithNodeBuiltin":"can/externalize"}'
+      '{"serverFnWithNodeBuiltin":"can/externalize"}',
     );
   });
 
   test("should externalize npm module in server function - toplevel", async ({ page }) => {
     await page.goto("http://localhost:3000/npm-module-toplevel");
     await expect(page.locator("#server-fn-test")).toContainText(
-      '{"serverFnWithNpmModule":[2,4,6]}'
+      '{"serverFnWithNpmModule":[2,4,6]}',
     );
   });
 

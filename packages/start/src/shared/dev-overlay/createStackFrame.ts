@@ -22,7 +22,7 @@ export function createStackFrame(stackframe: StackFrame, isCompiled: () => boole
       fileName: stackframe.fileName,
       line: stackframe.lineNumber,
       column: stackframe.columnNumber,
-      functionName: stackframe.functionName
+      functionName: stackframe.functionName,
     }),
     async source => {
       if (!source.fileName) {
@@ -37,9 +37,9 @@ export function createStackFrame(stackframe: StackFrame, isCompiled: () => boole
       return {
         source,
         content,
-        sourceMap
+        sourceMap,
       };
-    }
+    },
   );
 
   const info = createMemo(() => {
@@ -52,12 +52,12 @@ export function createStackFrame(stackframe: StackFrame, isCompiled: () => boole
     if (!isCompiled() && source.line && source.column && sourceMap) {
       const result = sourceMap.originalPositionFor({
         line: source.line,
-        column: source.column
+        column: source.column,
       });
 
       return {
         ...result,
-        content: sourceMap.sourceContentFor(result.source)
+        content: sourceMap.sourceContentFor(result.source),
       } as StackFrameSource;
     }
 
@@ -66,7 +66,7 @@ export function createStackFrame(stackframe: StackFrame, isCompiled: () => boole
       line: source.line,
       column: source.column,
       name: source.functionName,
-      content
+      content,
     } as StackFrameSource;
   });
 

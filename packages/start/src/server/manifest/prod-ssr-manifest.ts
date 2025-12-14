@@ -30,12 +30,12 @@ export function getSsrProdManifest() {
       for (const entryKey of entryKeys) {
         json[entryKey] = {
           output: join("/", viteManifest[entryKey]!.file),
-          assets: await this.getAssets(entryKey)
+          assets: await this.getAssets(entryKey),
         };
       }
 
       return json;
-    }
+    },
   } satisfies StartManifest & {
     json(): Promise<Record<string, any>>;
     path(id: string): string;
@@ -49,15 +49,15 @@ function createHtmlTagsForAssets(assets: string[]) {
         asset.endsWith(".css") ||
         asset.endsWith(".js") ||
         asset.endsWith(".ts") ||
-        asset.endsWith(".mjs")
+        asset.endsWith(".mjs"),
     )
     .map<Asset>(asset => ({
       tag: "link",
       attrs: {
         href: "/" + asset,
         key: asset,
-        ...(asset.endsWith(".css") ? { rel: "stylesheet" } : { rel: "modulepreload" })
-      }
+        ...(asset.endsWith(".css") ? { rel: "stylesheet" } : { rel: "modulepreload" }),
+      },
     }));
 }
 
@@ -68,7 +68,7 @@ function findAssetsInViteManifest(
   manifest: Manifest,
   id: string,
   assetMap = new Map(),
-  stack: string[] = []
+  stack: string[] = [],
 ) {
   if (stack.includes(id)) {
     return [];
