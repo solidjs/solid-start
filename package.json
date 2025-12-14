@@ -25,10 +25,11 @@
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
     "clean:test": "pnpx rimraf .tmp",
     "release": "pnpm build && changeset publish",
-    "format": "pnpm oxfmt"
+    "format": "pnpm oxfmt",
+    "rewrite-exports": "pnpm --filter='./packages/*' -c exec \"echo \\$(cat package.json | jq '.exports = .publishConfig.exports') > package.json\""
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.12",
+    "@changesets/cli": "^2.29.8",
     "citty": "^0.1.5",
     "oxfmt": "^0.14.0",
     "tinyglobby": "^0.2.2",

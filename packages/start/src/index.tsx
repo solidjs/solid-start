@@ -10,7 +10,7 @@ export type {
   HandlerOptions,
   PageEvent,
   ResponseStub,
-  ServerFunctionMeta,
+  ServerFunctionMeta
 } from "./server/types.ts";
 
 export { default as clientOnly } from "./shared/clientOnly.ts";

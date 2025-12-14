@@ -1,5 +1,3 @@
-import { promises as fsp } from "node:fs";
-import path, { dirname, resolve } from "node:path";
 import {
   build,
   copyPublicAssets,
@@ -9,6 +7,8 @@ import {
   prepare,
   prerender
 } from "nitropack";
+import { promises as fsp } from "node:fs";
+import path, { dirname, resolve } from "node:path";
 import type { PluginOption, Rollup } from "vite";
 
 let ssrBundle: Rollup.OutputBundle;
