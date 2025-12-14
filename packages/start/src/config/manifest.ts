@@ -17,7 +17,7 @@ export function manifest(start: SolidStartOptions): PluginOption {
         return `\0${VIRTUAL_MODULES.clientViteManifest}`;
       if (id === VIRTUAL_MODULES.getClientManifest)
         return this.resolve(
-          new URL("../server/manifest/client-manifest", import.meta.url).pathname
+          new URL("../server/manifest/client-manifest", import.meta.url).pathname,
         );
       if (id === VIRTUAL_MODULES.getManifest) {
         return this.environment.config.consumer === "client"
@@ -36,11 +36,11 @@ export function manifest(start: SolidStartOptions): PluginOption {
           clientViteManifest = {};
         } else {
           const entry = Object.values(globalThis.START_CLIENT_BUNDLE).find(
-            v => "isEntry" in v && v.isEntry
+            v => "isEntry" in v && v.isEntry,
           );
           if (!entry) throw new Error("No client entry found");
           clientViteManifest = JSON.parse(
-            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source
+            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source,
           );
         }
         return `export const clientViteManifest = ${JSON.stringify(clientViteManifest)};`;
@@ -73,12 +73,12 @@ export function manifest(start: SolidStartOptions): PluginOption {
 							"data-vite-ref": "0",
 						},
 						children: () => import("${value}?inline").then(mod => mod.default),
-					}`
+					}`,
           );
 
           return `export default [${cssAssets.join(",")}]`;
         }
       }
-    }
+    },
   };
 }

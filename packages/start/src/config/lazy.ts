@@ -13,12 +13,12 @@ const idTransform = (id: string): PluginItem => {
         path.node.body.unshift(
           t.exportNamedDeclaration(
             t.variableDeclaration("const", [
-              t.variableDeclarator(t.identifier("id$$"), t.stringLiteral(id))
-            ])
-          )
+              t.variableDeclarator(t.identifier("id$$"), t.stringLiteral(id)),
+            ]),
+          ),
         );
-      }
-    }
+      },
+    },
   };
 };
 
@@ -34,13 +34,13 @@ const importTransform = (): PluginItem => {
             path.insertAfter(
               t.importDeclaration(
                 [t.importSpecifier(t.identifier("lazy"), t.identifier("lazy"))],
-                t.stringLiteral("@solidjs/start/server")
-              )
+                t.stringLiteral("@solidjs/start/server"),
+              ),
             );
-          }
+          },
         });
-      }
-    }
+      },
+    },
   };
 };
 
@@ -79,21 +79,21 @@ const lazy = (): PluginOption => {
       const transformed = await babel.transformAsync(src, {
         plugins,
         parserOpts: {
-          plugins: ["jsx", "typescript"]
+          plugins: ["jsx", "typescript"],
         },
         filename: basename(id),
         ast: false,
         sourceMaps: true,
         configFile: false,
         babelrc: false,
-        sourceFileName: id
+        sourceFileName: id,
       });
 
       if (!transformed?.code) return;
 
       const { code, map } = transformed;
       return { code, map };
-    }
+    },
   };
 };
 

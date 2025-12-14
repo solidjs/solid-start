@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     solidStart(),
     nitroV2Plugin({
-      preset: "netlify"
-    })
-  ]
+      preset: "netlify",
+    }),
+  ],
 });

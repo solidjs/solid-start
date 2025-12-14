@@ -12,7 +12,7 @@ export default function clientOnly<T extends Component<any>>(
   fn: () => Promise<{
     default: T;
   }>,
-  options: { lazy?: boolean } = {}
+  options: { lazy?: boolean } = {},
 ) {
   if (isServer) return (props: ComponentProps<T> & { fallback?: JSX.Element }) => props.fallback;
 
@@ -29,7 +29,7 @@ export default function clientOnly<T extends Component<any>>(
     return createMemo(
       () => (
         (Comp = comp()), (m = mounted()), untrack(() => (Comp && m ? Comp(rest) : props.fallback))
-      )
+      ),
     );
   };
 }
@@ -38,7 +38,7 @@ function load<T>(
   fn: () => Promise<{
     default: T;
   }>,
-  setComp: Setter<T>
+  setComp: Setter<T>,
 ) {
   fn().then(m => setComp(() => m.default));
 }

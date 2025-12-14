@@ -6,7 +6,7 @@ import { getStory } from "~/lib/api";
 export const route = {
   preload({ params }) {
     void getStory(params.id);
-  }
+  },
 } satisfies RouteDefinition;
 
 export default function Story(props: RouteSectionProps) {

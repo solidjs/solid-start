@@ -23,7 +23,7 @@ const Test = (props: {
       "grid grid-cols-subgrid col-span-full items-center rounded text-white font-medium py-1 px-2 border-4 transition-colors duration-[1.5s]",
       props.invert ? "bg-success" : "bg-error",
       props.noSupport ? "border-warn" : "border-transparent",
-      props.class
+      props.class,
     )}
   >
     <div>{props.component}</div>

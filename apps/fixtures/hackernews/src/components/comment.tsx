@@ -7,8 +7,8 @@ const Comment: Component<{ comment: CommentDefinition }> = props => {
   return (
     <li class="comment">
       <div class="by">
-        <A href={`/users/${props.comment.user}`}>{props.comment.user}</A>{" "}
-        {props.comment.time_ago} ago
+        <A href={`/users/${props.comment.user}`}>{props.comment.user}</A> {props.comment.time_ago}{" "}
+        ago
       </div>
       <div class="text" innerHTML={props.comment.content} />
       <Show when={props.comment.comments.length}>

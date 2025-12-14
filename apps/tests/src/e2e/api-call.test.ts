@@ -13,7 +13,9 @@ test.describe("api calls", () => {
     expect(okResp.headers.get("x-return-header")).toBe("value");
     expect(okResp.headers.get("x-shared-header")).toBe("event");
 
-    const redirectResp = await fetch("http://localhost:3000/api/header-merging?status=redirect", { redirect: "manual" });
+    const redirectResp = await fetch("http://localhost:3000/api/header-merging?status=redirect", {
+      redirect: "manual",
+    });
     expect(redirectResp.headers.get("Set-Cookie")).toBeTruthy();
     expect(redirectResp.headers.get("x-event-header")).toBe("value");
     expect(redirectResp.headers.get("x-return-header")).toBe("value");
@@ -21,9 +23,8 @@ test.describe("api calls", () => {
   });
 
   test("should preserve multiple Set-Cookie headers on redirect (RFC 6265)", async () => {
-
     const response = await fetch("http://localhost:3000/api/multi-set-cookie-redirect", {
-      redirect: "manual"
+      redirect: "manual",
     });
 
     expect(response.status).toBe(302);

@@ -12,7 +12,7 @@ export const addTodo = action(async (formData: FormData) => {
   const title = formData.get("title") as string;
   let [{ value: todos }, { value: index }] = await storage.getItems([
     "todos:data",
-    "todos:counter"
+    "todos:counter",
   ]);
   // default value for first write
   todos = todos || [];
@@ -21,9 +21,9 @@ export const addTodo = action(async (formData: FormData) => {
   await Promise.all([
     storage.setItem("todos:data", [
       ...(todos as Todo[]),
-      { id: index as number, title, completed: false }
+      { id: index as number, title, completed: false },
     ]),
-    storage.setItem("todos:counter", (index as number) + 1)
+    storage.setItem("todos:counter", (index as number) + 1),
   ]);
 });
 
@@ -32,7 +32,7 @@ export const removeTodo = action(async (id: number) => {
   const todos = (await storage.getItem("todos:data")) as Todo[];
   await storage.setItem(
     "todos:data",
-    todos.filter(todo => todo.id !== id)
+    todos.filter(todo => todo.id !== id),
   );
 });
 
@@ -46,7 +46,7 @@ export const toggleTodo = action(async (id: number) => {
         todo.completed = !todo.completed;
       }
       return todo;
-    })
+    }),
   );
 });
 
@@ -61,7 +61,7 @@ export const editTodo = action(async (id: number, formData: FormData) => {
         todo.title = title;
       }
       return todo;
-    })
+    }),
   );
 });
 
@@ -70,7 +70,7 @@ export const toggleAll = action(async (completed: boolean) => {
   const todos = (await storage.getItem("todos:data")) as Todo[];
   await storage.setItem(
     "todos:data",
-    todos.map(todo => ({ ...todo, completed }))
+    todos.map(todo => ({ ...todo, completed })),
   );
 });
 
@@ -79,6 +79,6 @@ export const clearCompleted = action(async () => {
   const todos = (await storage.getItem("todos:data")) as Todo[];
   await storage.setItem(
     "todos:data",
-    todos.filter(todo => !todo.completed)
+    todos.filter(todo => !todo.completed),
   );
 });

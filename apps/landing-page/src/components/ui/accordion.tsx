@@ -1,37 +1,35 @@
 import { splitProps } from "solid-js";
 
-import { AccordionContentProps, AccordionItemProps, Accordion as AccordionPrimitive, AccordionTriggerProps } from "@kobalte/core/accordion";
+import {
+  AccordionContentProps,
+  AccordionItemProps,
+  Accordion as AccordionPrimitive,
+  AccordionTriggerProps,
+} from "@kobalte/core/accordion";
 
 import { cn } from "~/lib/utils";
 import { OverrideComponentProps } from "@kobalte/utils";
 
 const Accordion = AccordionPrimitive;
 
-const AccordionItem = (
-  props: OverrideComponentProps<"div", AccordionItemProps>
-) => {
+const AccordionItem = (props: OverrideComponentProps<"div", AccordionItemProps>) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <AccordionPrimitive.Item
-      class={cn(
-        "border-b max-w-prose mx-auto last-of-type:border-none",
-        props.class
-      )}
+      class={cn("border-b max-w-prose mx-auto last-of-type:border-none", props.class)}
       {...rest}
     />
   );
 };
 
-const AccordionTrigger = (
-  props: OverrideComponentProps<"button", AccordionTriggerProps>
-) => {
+const AccordionTrigger = (props: OverrideComponentProps<"button", AccordionTriggerProps>) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <AccordionPrimitive.Header class="flex">
       <AccordionPrimitive.Trigger
         class={cn(
           "flex flex-1 items-center justify-between py-4 font-medium transition-all  [&[data-expanded]>svg]:rotate-180",
-          props.class
+          props.class,
         )}
         {...rest}
       >
@@ -53,15 +51,13 @@ const AccordionTrigger = (
   );
 };
 
-const AccordionContent = (
-  props: OverrideComponentProps<"div", AccordionContentProps>
-) => {
+const AccordionContent = (props: OverrideComponentProps<"div", AccordionContentProps>) => {
   const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <AccordionPrimitive.Content
       class={cn(
         "animate-accordion-up overflow-hidden text-sm transition-all data-[expanded]:animate-accordion-down",
-        props.class
+        props.class,
       )}
       {...rest}
     >

@@ -1,4 +1,4 @@
-import { TextRenderTestComponent as ExternalCuteFaceDisplay} from "../functions/text-render-test-component";
+import { TextRenderTestComponent as ExternalCuteFaceDisplay } from "../functions/text-render-test-component";
 
 export function TextRenderTestComponent() {
   return <>(´｡• ᵕ •｡`) ♡</>;
@@ -15,9 +15,11 @@ export const testObjectExport = {
 };
 
 export default function () {
-  return <>
-    <TextRenderTestComponent/>
-    <VariableImportTestComponent/>
-    <ExternalCuteFaceDisplay/>
-  </>;
+  return (
+    <>
+      <TextRenderTestComponent />
+      <VariableImportTestComponent />
+      <ExternalCuteFaceDisplay />
+    </>
+  );
 }

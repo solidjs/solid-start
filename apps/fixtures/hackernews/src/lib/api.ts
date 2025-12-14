@@ -31,13 +31,16 @@ const mapStories = {
   new: "newest",
   show: "show",
   ask: "ask",
-  job: "jobs"
+  job: "jobs",
 } as const;
 
-export const getStories = query(async (type: StoryTypes, page: number): Promise<StoryDefinition[]> => {
-  "use server";
-  return fetchAPI(`${mapStories[type]}?page=${page}`);
-}, "stories");
+export const getStories = query(
+  async (type: StoryTypes, page: number): Promise<StoryDefinition[]> => {
+    "use server";
+    return fetchAPI(`${mapStories[type]}?page=${page}`);
+  },
+  "stories",
+);
 
 export const getStory = query(async (id: string): Promise<StoryDefinition> => {
   "use server";

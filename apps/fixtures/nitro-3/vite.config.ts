@@ -3,5 +3,5 @@ import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [solidStart(), nitro({ preset: "node-server" })]
+  plugins: [solidStart(), nitro({ preset: "node-server" })],
 });

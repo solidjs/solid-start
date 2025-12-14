@@ -1,3 +1,3 @@
-export default function() {
-  return <section>OTHER</section>
+export default function () {
+  return <section>OTHER</section>;
 }

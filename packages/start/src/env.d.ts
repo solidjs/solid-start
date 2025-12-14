@@ -5,31 +5,29 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 declare namespace App {
-	export interface RequestEventLocals {
-		[key: string | symbol]: any;
-	}
+  export interface RequestEventLocals {
+    [key: string | symbol]: any;
+  }
 }
 
 declare module "solidstart:server-fn-manifest" {
-	type ServerFn = (...args: Array<any>) => Promise<any>;
-	export function getServerFnById(id: string): Promise<ServerFn>;
+  type ServerFn = (...args: Array<any>) => Promise<any>;
+  export function getServerFnById(id: string): Promise<ServerFn>;
 }
 
-interface ImportMetaEnv
-	extends Record<`VITE_${string}`, any>,
-		SolidStartMetaEnv {
-	BASE_URL: string;
-	MODE: string;
-	DEV: boolean;
-	PROD: boolean;
-	SSR: boolean;
+interface ImportMetaEnv extends Record<`VITE_${string}`, any>, SolidStartMetaEnv {
+  BASE_URL: string;
+  MODE: string;
+  DEV: boolean;
+  PROD: boolean;
+  SSR: boolean;
 }
 
 interface SolidStartMetaEnv {
-	START_SSR: boolean;
-	START_APP_ENTRY: string;
-	START_CLIENT_ENTRY: string;
-	// START_ISLANDS: boolean;
-	// START_DEV_OVERLAY: boolean;
-	// SERVER_BASE_URL: string;
+  START_SSR: boolean;
+  START_APP_ENTRY: string;
+  START_CLIENT_ENTRY: string;
+  // START_ISLANDS: boolean;
+  // START_DEV_OVERLAY: boolean;
+  // SERVER_BASE_URL: string;
 }

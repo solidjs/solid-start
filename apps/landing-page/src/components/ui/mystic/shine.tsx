@@ -12,7 +12,7 @@ export const AnimatedShinyText: ParentComponent<AnimatedShinyTextProps> = props 
   return (
     <p
       style={{
-        "--shiny-width": `${localProps.shimmerWidth}px`
+        "--shiny-width": `${localProps.shimmerWidth}px`,
       }}
       class={cn(
         "mx-auto max-w-md text-neutral-600/70 dark:text-neutral-400/70",
@@ -23,7 +23,7 @@ export const AnimatedShinyText: ParentComponent<AnimatedShinyTextProps> = props 
         // Shine gradient
         "bg-gradient-to-r from-black dark:from-transparent via-black/80 via-50% to-transparent  dark:via-white/80",
 
-        localProps.class
+        localProps.class,
       )}
       {...forwardProps}
     >

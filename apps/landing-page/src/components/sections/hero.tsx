@@ -6,7 +6,7 @@ import { buttonVariants } from "../ui/button";
 import { AnimatedShinyText } from "../ui/mystic/shine";
 
 const buttonOutlineStyles = buttonVariants({
-  variant: "outline"
+  variant: "outline",
 });
 
 export function Hero() {

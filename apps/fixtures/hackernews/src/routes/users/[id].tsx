@@ -5,7 +5,7 @@ import { getUser } from "~/lib/api";
 export const route = {
   preload({ params }) {
     void getUser(params.id);
-  }
+  },
 } satisfies RouteDefinition;
 
 export default function User(props: RouteSectionProps) {
@@ -34,4 +34,4 @@ export default function User(props: RouteSectionProps) {
       </Show>
     </div>
   );
-};
+}

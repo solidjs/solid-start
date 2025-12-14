@@ -10,10 +10,10 @@ export const VIRTUAL_MODULES = {
   serverFnManifest: "solidstart:server-fn-manifest",
   clientEntry: "solid-start:client-entry",
   serverEntry: "solid-start:server-entry",
-  app: "solid-start:app"
+  app: "solid-start:app",
 } as const;
 
 export const VITE_ENVIRONMENTS = {
   client: "client",
-  server: "ssr"
-}
+  server: "ssr",
+};

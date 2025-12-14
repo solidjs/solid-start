@@ -3,7 +3,7 @@ import {
   createAsyncStore,
   useSubmission,
   useSubmissions,
-  type RouteSectionProps
+  type RouteSectionProps,
 } from "@solidjs/router";
 import { For, Show, createMemo, createSignal } from "solid-js";
 import { CompleteIcon, IncompleteIcon } from "~/components/icons";
@@ -14,7 +14,7 @@ import {
   getTodos,
   removeTodo,
   toggleAll,
-  toggleTodo
+  toggleTodo,
 } from "~/lib/api";
 import { Todo } from "~/types";
 
@@ -30,7 +30,7 @@ const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
 export const route = {
   preload() {
     getTodos();
-  }
+  },
 } satisfies RouteDefinition;
 
 export default function TodoApp(props: RouteSectionProps) {
@@ -50,7 +50,7 @@ export default function TodoApp(props: RouteSectionProps) {
       todos().length +
       addingTodo.length -
       todos().filter(todo => todo.completed).length -
-      removingTodo.length
+      removingTodo.length,
   );
   const filterList = (todos: Todo[]) => {
     if (location.query.show === "active") return todos.filter(todo => !todo.completed);
@@ -112,7 +112,7 @@ export default function TodoApp(props: RouteSectionProps) {
                     classList={{
                       editing: editingTodoId() === todo.id,
                       completed: completed(),
-                      pending: pending()
+                      pending: pending(),
                     }}
                   >
                     <form class="view" method="post">

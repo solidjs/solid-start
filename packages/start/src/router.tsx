@@ -8,17 +8,18 @@ const components: Record<string, Component> = {};
 
 export function createRoutes() {
   function createRoute(route: any) {
-    const component = route.$component && (components[route.$component.src] ??= lazy(route.$component.import));
+    const component =
+      route.$component && (components[route.$component.src] ??= lazy(route.$component.import));
 
     return {
       ...route,
       ...(route.$$route ? route.$$route.require().route : undefined),
       info: {
         ...(route.$$route ? route.$$route.require().route.info : {}),
-        filesystem: true
+        filesystem: true,
       },
       component,
-      children: route.children ? route.children.map(createRoute) : undefined
+      children: route.children ? route.children.map(createRoute) : undefined,
     };
   }
   const routes = routeConfigs.map(createRoute);

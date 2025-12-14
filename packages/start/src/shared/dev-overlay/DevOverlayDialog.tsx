@@ -19,7 +19,7 @@ import {
   RefreshIcon,
   SolidStartIcon,
   ViewCompiledIcon,
-  ViewOriginalIcon
+  ViewOriginalIcon,
 } from "./icons.tsx";
 import "./styles.css";
 
@@ -134,7 +134,7 @@ function StackFramesContent(props: StackFramesContentProps) {
                       content: "",
                       line: current.getLineNumber()!,
                       column: current.getColumnNumber()!,
-                      name: current.getFunctionName()
+                      name: current.getFunctionName(),
                     })}
                   </span>
                 </div>
@@ -225,8 +225,8 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
       htmlToImage
         .toPng(current, {
           style: {
-            transform: "scale(0.75)"
-          }
+            transform: "scale(0.75)",
+          },
         })
         .then(url => {
           download(url, "start-screenshot.png");

@@ -7,7 +7,7 @@ import { StoryTypes } from "~/types";
 export const route = {
   preload({ location, params }) {
     void getStories((params.stories as StoryTypes) || "top", +location.query.page || 1);
-  }
+  },
 } satisfies RouteDefinition;
 
 export default function Stories(props: RouteSectionProps) {

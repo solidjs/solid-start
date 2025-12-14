@@ -34,7 +34,7 @@ export default function SidebarNote(props: { note: Note }) {
         itemRef.classList.remove("flash");
       }}
       style={{
-        color: "black"
+        color: "black",
       }}
       class={["sidebar-note-list-item", isExpanded() ? "note-expanded" : ""].join(" ")}
     >
@@ -49,9 +49,9 @@ export default function SidebarNote(props: { note: Note }) {
           "background-color": isPending()
             ? "var(--gray-80)"
             : isActive()
-            ? "var(--tertiary-blue)"
-            : "",
-          border: isActive() ? "1px solid var(--primary-border)" : "1px solid transparent"
+              ? "var(--tertiary-blue)"
+              : "",
+          border: isActive() ? "1px solid var(--primary-border)" : "1px solid transparent",
         }}
       >
         Open note for preview
@@ -72,7 +72,7 @@ export default function SidebarNote(props: { note: Note }) {
       </button>
       <div
         style={{
-          display: isExpanded() ? "block" : "none"
+          display: isExpanded() ? "block" : "none",
         }}
       >
         <p class="sidebar-note-excerpt" innerHTML={props.note.body || `<i>No content</i>`} />

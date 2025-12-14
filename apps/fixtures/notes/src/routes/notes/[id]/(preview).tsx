@@ -6,7 +6,7 @@ import { getNotePreview } from "~/lib/api";
 export const route = {
   preload({ params }) {
     getNotePreview(+params.id);
-  }
+  },
 } satisfies RouteDefinition;
 
 export default function NotePage({ params }: RouteSectionProps) {
