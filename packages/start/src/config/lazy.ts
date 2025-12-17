@@ -48,13 +48,43 @@ const fileEndingRegex = /(ts|js)x(\?.*)?$/;
 
 const lazy = (): PluginOption => {
   const cwd = process.cwd().replaceAll(osSep, sep);
+
+  /**
+   * Maps module ids to their client-specific shared chunk names.
+   * Modules in shared chunks need to find their assets via the chunk name, instead of their module id.
+   *
+   * Vite includes assets of such modules in the manifest via the chunk name:
+   * https://github.com/vitejs/vite/blob/4be37a8389c67873880f826b01fe40137e1c29a7/packages/vite/src/node/plugins/manifest.ts#L179
+   * https://github.com/vitejs/vite/blob/4be37a8389c67873880f826b01fe40137e1c29a7/packages/vite/src/node/plugins/manifest.ts#L319
+   *
+   * Rollup occassionally creates shared chunks automatically,
+   * but they can also be manually created by the user via:
+   * https://rollupjs.org/configuration-options/#output-manualchunks
+   *
+   * More infos on Rollup's logic:
+   * https://github.com/rollup/rollup/issues/3772#issuecomment-689955168
+   */
+  const sharedChunkNames: Record<string, string> = {};
+
   return {
     name: "solid-lazy-css",
     enforce: "pre",
-    applyToEnvironment(env) {
-      return env.name === VITE_ENVIRONMENTS.server;
+    generateBundle(_, bundle) {
+      if (this.environment.name !== VITE_ENVIRONMENTS.client) return;
+
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type !== "chunk" || !chunk.isDynamicEntry || chunk.facadeModuleId) continue;
+
+        // Has to follow Vites implementation:
+        // https://github.com/vitejs/vite/blob/4be37a8389c67873880f826b01fe40137e1c29a7/packages/vite/src/node/plugins/manifest.ts#L179
+        const chunkName = `_${basename(chunk.fileName)}`;
+        for (const id of chunk.moduleIds) {
+          sharedChunkNames[id] = chunkName;
+        }
+      }
     },
     async transform(src, id) {
+      if (this.environment.name !== VITE_ENVIRONMENTS.server) return;
       if (!id.match(fileEndingRegex)) return;
 
       // The transformed files either import "lazy" or css files
@@ -66,7 +96,8 @@ const lazy = (): PluginOption => {
       const hasDefaultExport = src.indexOf("export default") !== -1;
       if (hasDefaultExport) {
         const localId = relative(cwd, id);
-        plugins.push(idTransform(localId));
+        const chunkName = sharedChunkNames[id];
+        plugins.push(idTransform(chunkName ?? localId));
       }
 
       const hasLazy = src.indexOf("lazy(") !== -1;
