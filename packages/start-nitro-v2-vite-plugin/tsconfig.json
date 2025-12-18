@@ -17,7 +17,7 @@
     "types": ["vite/client"],
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
-    "rootDir": "./src"
+    "rootDir": "./src",
   },
-  "include": ["./src", "./src/env.d.ts"]
+  "include": ["./src", "./src/env.d.ts"],
 }

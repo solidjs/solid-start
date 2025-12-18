@@ -12,8 +12,8 @@
     "noEmit": true,
     "isolatedModules": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
     },
-    "types": ["vite/client"]
-  }
+    "types": ["@solidjs/start/env"],
+  },
 }
