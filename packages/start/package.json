@@ -19,10 +19,7 @@
     "./client/spa": "./src/client/spa/index.tsx",
     "./middleware": "./src/middleware/index.ts",
     "./http": "./src/http/index.ts",
-    "./env": {
-      "types": "./env.d.ts",
-      "import": null
-    }
+    "./env": "./env.d.ts"
   },
   "publishConfig": {
     "access": "public",
@@ -36,10 +33,7 @@
       "./client/spa": "./dist/client/spa/index.jsx",
       "./middleware": "./dist/middleware/index.js",
       "./http": "./dist/http/index.js",
-      "./env": {
-        "types": "./env.d.ts",
-        "import": null
-      }
+      "./env": "./env.d.ts"
     }
   },
   "dependencies": {
