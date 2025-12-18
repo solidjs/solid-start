@@ -56,9 +56,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       enforce: "pre",
       configEnvironment(name) {
         return {
-          define: {
-            "import.meta.env.SSR": JSON.stringify(name === VITE_ENVIRONMENTS.server),
-          },
           resolve: {
             // remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
             externalConditions: ["solid", "node"],
