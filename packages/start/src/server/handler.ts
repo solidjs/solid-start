@@ -71,7 +71,7 @@ export function createBaseHandler(
         const html = renderToString(() => {
           (sharedConfig.context as any).event = context;
           return fn(context);
-        });
+        }, resolvedOptions);
         context.complete = true;
 
         if (context.response && context.response.headers.get("Location")) {
