@@ -74,7 +74,7 @@
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
     "radix3": "^1.1.0",
-    "seroval": "^1.0.2",
+    "seroval": "^1.4.1",
     "seroval-plugins": "^1.0.2",
     "shiki": "^1.26.1",
     "source-map-js": "^1.0.2",
