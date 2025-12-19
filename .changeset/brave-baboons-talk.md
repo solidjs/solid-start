@@ -1,5 +1,5 @@
 ---
-"@fake-scope/fake-pkg": patch
+"@solidjs/start": patch
 ---
 
 Rework `@solidjs/start/env`
