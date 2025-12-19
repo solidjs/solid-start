@@ -11,8 +11,9 @@
     "strict": true,
     "noEmit": true,
     "isolatedModules": true,
+    "types": ["@solidjs/start/env"],
     "paths": {
-      "~/*": ["./src/*"]
-    }
-  }
+      "~/*": ["./src/*"],
+    },
+  },
 }

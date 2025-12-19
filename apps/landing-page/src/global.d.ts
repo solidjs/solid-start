@@ -1,5 +1,3 @@
-/// <reference types="@solidjs/start/env" />
-
 import { Session, User } from "lucia";
 import { lucia } from "./db/auth";
 
