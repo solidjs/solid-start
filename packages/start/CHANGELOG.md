@@ -1,5 +1,13 @@
 # @solidjs/start
 
+## 1.2.1
+
+### Patch Changes
+
+- c408656: ## Update Seroval
+
+  Version `1.4.1`.
+
 ## 1.2.0
 
 ### Minor Changes
