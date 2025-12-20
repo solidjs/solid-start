@@ -14,6 +14,11 @@ const LazyLinkTmp = lazy(() => import("../components/lazyLinkTmp"));
 const entries = import.meta.glob("../components/lazyG*.tsx");
 const LazyGlob = lazy(Object.values(entries)[0] as any);
 
+const SharedChunk = lazy(() => import("../components/sharedChunk/lazy1"));
+// Do not remove this.
+// Rollup only creates a shared chunk if there are atleast two modules.
+lazy(() => import("../components/sharedChunk/lazy2"));
+
 const getData = query(async () => {
   "use server";
   await new Promise(res => setTimeout(res, 1000));
@@ -35,6 +40,7 @@ export default function Home() {
       <Show when={!data()}>
         <LazyLinkTmp />
       </Show>
+      <SharedChunk />
 
       <Layout title="CSS Tests">
         <CommonTests routeModuleClass={classes["route"]} />
