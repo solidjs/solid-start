@@ -3,6 +3,7 @@ import { type PluginOption, type ViteDevServer } from "vite";
 import { findStylesInModuleGraph } from "../server/collect-styles.ts";
 import { VIRTUAL_MODULES } from "./constants.ts";
 import { type SolidStartOptions } from "./index.ts";
+import { wrapId } from "./vite-utils.ts";
 
 export function manifest(start: SolidStartOptions): PluginOption {
   let devServer: ViteDevServer = undefined!;
@@ -69,10 +70,10 @@ export function manifest(start: SolidStartOptions): PluginOption {
 						tag: "style",
 						attrs: {
 							type: "text/css",
-							"data-vite-dev-id": "${key}",
+							"data-vite-dev-id": "${wrapId(key)}",
 							"data-vite-ref": "0",
 						},
-						children: () => import("${value}?inline").then(mod => mod.default),
+						children: () => import("${wrapId(value)}?inline").then(mod => mod.default),
 					}`,
           );
 

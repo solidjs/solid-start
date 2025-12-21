@@ -6,6 +6,7 @@ import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 
 import { TopErrorBoundary } from "../../shared/ErrorBoundary.tsx";
 import { useAssets } from "../assets/index.ts";
+import PatchVirtualDevStyles from "../assets/PatchVirtualDevStyles.tsx";
 import type { DocumentComponentProps, PageEvent } from "../types.ts";
 
 const docType = ssr("<!DOCTYPE html>");
@@ -27,6 +28,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
         <props.document
           scripts={
             <>
+              <PatchVirtualDevStyles nonce={nonce} />
               <script
                 type="module"
                 src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}

@@ -5,6 +5,7 @@ import App from "solid-start:app";
 
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.tsx";
 import { useAssets } from "./assets/index.ts";
+import PatchVirtualDevStyles from "./assets/PatchVirtualDevStyles.tsx";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import type { DocumentComponentProps, PageEvent } from "./types.ts";
 
@@ -29,6 +30,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
           assets={<HydrationScript />}
           scripts={
             <>
+              <PatchVirtualDevStyles nonce={nonce} />
               <script
                 type="module"
                 nonce={nonce}

@@ -1,5 +1,6 @@
 import { createAsync, query } from "@solidjs/router";
 import { lazy, Show } from "solid-js";
+import "virtual:virtualModule.css";
 import Layout from "../components/layout";
 import { CommonTests } from "../components/test";
 import notRenderedInlineCSS from "../styles/notRendered.css?url";

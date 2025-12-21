@@ -62,6 +62,12 @@ export const CommonTests = (props: { routeModuleClass?: string }) => (
     />
     <Test
       component="Route"
+      file="virtual:virtualModule.css"
+      class="virtualCss"
+      comment="CSS from virtual module (virtualCssPlugin.ts)."
+    />
+    <Test
+      component="Route"
       file="url.css"
       class="url"
       integration="link"
