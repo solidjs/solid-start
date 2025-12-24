@@ -1,5 +1,4 @@
-import { init } from "es-module-lexer";
-import { parse } from "es-module-lexer";
+import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "fs";
@@ -19,6 +18,9 @@ type Route = { path: string } & Record<string, any>;
 export function cleanPath(src: string, config: FileSystemRouterConfig) {
   return src
     .slice(config.dir.length)
+    // replace double backslashes with single forward slashes (windows compatibility)
+    .replace(/\\+/g, "/")
+    .replace(/\/\/+/, "/")
     .replace(new RegExp(`\.(${(config.extensions ?? []).join("|")})$`), "");
 }
 
