@@ -6,7 +6,7 @@ import micromatch from "micromatch";
 import { posix } from "path";
 import { pathToRegexp } from "path-to-regexp";
 
-import { normalize } from "node:path";
+import { normalizePath } from "vite";
 
 export { pathToRegexp };
 
@@ -18,9 +18,6 @@ type Route = { path: string } & Record<string, any>;
 export function cleanPath(src: string, config: FileSystemRouterConfig) {
   return src
     .slice(config.dir.length)
-    // replace double backslashes with single forward slashes (windows compatibility)
-    .replace(/\\+/g, "/")
-    .replace(/\/\/+/, "/")
     .replace(new RegExp(`\.(${(config.extensions ?? []).join("|")})$`), "");
 }
 
@@ -106,7 +103,7 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   async addRoute(src: string) {
-    src = normalize(src);
+    src = normalizePath(src);
     if (this.isRoute(src)) {
       try {
         const route = this.toRoute(src);
@@ -132,7 +129,7 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   async updateRoute(src: string) {
-    src = normalize(src);
+    src = normalizePath(src);
     if (this.isRoute(src)) {
       try {
         const route = this.toRoute(src);
@@ -148,7 +145,7 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   removeRoute(src: string) {
-    src = normalize(src);
+    src = normalizePath(src);
     if (this.isRoute(src)) {
       const path = this.toPath(src);
       if (path === undefined) {
