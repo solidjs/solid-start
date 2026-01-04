@@ -1,9 +1,9 @@
-// @ts-ignore - seroval exports issue with NodeNext
+
 import { type Component } from "solid-js";
 import {
   deserializeJSONStream,
   deserializeJSStream,
-  serializeToJSONStream,
+  // serializeToJSONStream,
   serializeToJSONString,
 } from "./serialization";
 
@@ -51,7 +51,11 @@ async function fetchServerFunction(
           body: await serializeToJSONString(args),
           // duplex: 'half',
           // body: serializeToJSONStream(args),
-          headers: { ...options.headers, "Content-Type": "text/plain" },
+          headers: {
+            ...options.headers,
+            "x-serialized": "true",
+            "Content-Type": "text/plain"
+          },
         }));
 
   if (
