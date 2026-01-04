@@ -59,8 +59,10 @@ async function fetchServerFunction(
     if (response.body) {
       /* @ts-ignore-next-line */
       response.customBody = () => {
-        // TODO check for serialization mode
-        return deserializeJSStream(instance, response);
+        if (import.meta.env.SEROVAL_MODE === "js") {
+          return deserializeJSStream(instance, response);
+        }
+        return deserializeJSONStream(response);
       };
     }
     return response;
@@ -73,7 +75,6 @@ async function fetchServerFunction(
   } else if (contentType && contentType.startsWith("application/json")) {
     result = await response.json();
   } else if (import.meta.env.SEROVAL_MODE === "js") {
-    // TODO check for serialization mode
     result = await deserializeJSStream(instance, response);
   } else {
     result = await deserializeJSONStream(response);
