@@ -60,7 +60,7 @@ export async function handleServerFunction(h3Event: H3Event) {
       contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
       parsed.push(await event.request.formData());
-    } else {
+    } else if (contentType?.startsWith('text/plain')) {
       parsed = (await deserializeJSONStream(event.request.clone())) as any[];
     }
   }
@@ -96,11 +96,11 @@ export async function handleServerFunction(h3Event: H3Event) {
     // handle no JS success case
     if (!instance) return handleNoJS(result, request, parsed);
 
+    h3Event.res.headers.set("x-serialized", "true");
     if (import.meta.env.SEROVAL_MODE === "js") {
       h3Event.res.headers.set("content-type", "text/javascript");
       return serializeToJSStream(instance, result);
     }
-    h3Event.res.headers.set("content-type", "text/plain");
     return serializeToJSONStream(result);
   } catch (x) {
     if (x instanceof Response) {
