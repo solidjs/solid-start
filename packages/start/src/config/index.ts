@@ -21,6 +21,10 @@ export interface SolidStartOptions {
   routeDir?: string;
   extensions?: string[];
   middleware?: string;
+  serialization?: {
+    // This only matters for server function responses
+    mode?: 'js' | 'json';
+  };
 }
 
 const absolute = (path: string, root: string) =>
@@ -131,6 +135,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+            "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || 'json'),
           },
           builder: {
             sharedPlugins: true,
