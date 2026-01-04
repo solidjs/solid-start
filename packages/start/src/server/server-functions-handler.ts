@@ -130,11 +130,11 @@ export async function handleServerFunction(h3Event: H3Event) {
       x = handleNoJS(x, request, parsed, true);
     }
     if (instance) {
+      h3Event.res.headers.set("x-serialized", "true");
       if (import.meta.env.SEROVAL_MODE === "js") {
         h3Event.res.headers.set("content-type", "text/javascript");
         return serializeToJSStream(instance, x);
       }
-      h3Event.res.headers.set("content-type", "text/plain");
       return serializeToJSONStream(x);
     }
     return x;
