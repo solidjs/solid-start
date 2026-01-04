@@ -47,8 +47,11 @@ async function fetchServerFunction(
         })
         : createRequest(base, id, instance, {
           ...options,
-          body: serializeToJSONStream(args),
-          headers: { ...options.headers, "Content-Type": "application/json" },
+          // TODO(Alexis): move to serializeToJSONStream
+          body: await serializeToJSONString(args),
+          // duplex: 'half',
+          // body: serializeToJSONStream(args),
+          headers: { ...options.headers, "Content-Type": "text/plain" },
         }));
 
   if (
@@ -70,14 +73,16 @@ async function fetchServerFunction(
 
   const contentType = response.headers.get("Content-Type");
   let result;
-  if (contentType && contentType.startsWith("text/plain")) {
+  if (contentType?.startsWith("text/plain")) {
     result = await response.text();
-  } else if (contentType && contentType.startsWith("application/json")) {
+  } else if (contentType?.startsWith("application/json")) {
     result = await response.json();
-  } else if (import.meta.env.SEROVAL_MODE === "js") {
-    result = await deserializeJSStream(instance, response);
-  } else {
-    result = await deserializeJSONStream(response);
+  } else if (response.headers.get('x-serialized')) {
+    if (import.meta.env.SEROVAL_MODE === "js") {
+      result = await deserializeJSStream(instance, response);
+    } else {
+      result = await deserializeJSONStream(response);
+    }
   }
   if (response.headers.has("X-Error")) {
     throw result;
