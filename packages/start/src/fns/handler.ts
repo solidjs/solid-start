@@ -167,7 +167,6 @@ export async function handleServerFunction(h3Event: H3Event) {
         h3Event.res.headers.set("content-type", "text/javascript");
         return serializeToJSStream(instance, x);
       }
-      h3Event.res.headers.set("content-type", "text/plain");
       return serializeToJSONStream(x);
     }
     return x;
