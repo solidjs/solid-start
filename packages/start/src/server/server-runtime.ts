@@ -1,122 +1,20 @@
 // @ts-ignore - seroval exports issue with NodeNext
-import { join } from "pathe";
-import { deserialize, toJSONAsync } from "seroval";
-import {
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLPlugin,
-  URLSearchParamsPlugin,
-} from "seroval-plugins/web";
 import { type Component } from "solid-js";
-
-class SerovalChunkReader {
-  reader: ReadableStreamDefaultReader<Uint8Array>;
-  buffer: Uint8Array;
-  done: boolean;
-  constructor(stream: ReadableStream<Uint8Array>) {
-    this.reader = stream.getReader();
-    this.buffer = new Uint8Array(0);
-    this.done = false;
-  }
-
-  async readChunk() {
-    // if there's no chunk, read again
-    const chunk = await this.reader.read();
-    if (!chunk.done) {
-      // repopulate the buffer
-      let newBuffer = new Uint8Array(this.buffer.length + chunk.value.length);
-      newBuffer.set(this.buffer);
-      newBuffer.set(chunk.value, this.buffer.length);
-      this.buffer = newBuffer;
-    } else {
-      this.done = true;
-    }
-  }
-
-  async next(): Promise<any> {
-    // Check if the buffer is empty
-    if (this.buffer.length === 0) {
-      // if we are already done...
-      if (this.done) {
-        return {
-          done: true,
-          value: undefined,
-        };
-      }
-      // Otherwise, read a new chunk
-      await this.readChunk();
-      return await this.next();
-    }
-    // Read the "byte header"
-    // The byte header tells us how big the expected data is
-    // so we know how much data we should wait before we
-    // deserialize the data
-    const head = new TextDecoder().decode(this.buffer.subarray(1, 11));
-    const bytes = Number.parseInt(head, 16); // ;0x00000000;
-    // Check if the buffer has enough bytes to be parsed
-    while (bytes > this.buffer.length - 12) {
-      // If it's not enough, and the reader is done
-      // then the chunk is invalid.
-      if (this.done) {
-        throw new Error("Malformed server function stream.");
-      }
-      // Otherwise, we read more chunks
-      await this.readChunk();
-    }
-    // Extract the exact chunk as defined by the byte header
-    const partial = new TextDecoder().decode(this.buffer.subarray(12, 12 + bytes));
-    // The rest goes to the buffer
-    this.buffer = this.buffer.subarray(12 + bytes);
-
-    // Deserialize the chunk
-    return {
-      done: false,
-      value: deserialize(partial),
-    };
-  }
-
-  async drain() {
-    while (true) {
-      const result = await this.next();
-      if (result.done) {
-        break;
-      }
-    }
-  }
-}
-
-async function deserializeStream(id: string, response: Response) {
-  if (!response.body) {
-    throw new Error("missing body");
-  }
-  const reader = new SerovalChunkReader(response.body);
-
-  const result = await reader.next();
-
-  if (!result.done) {
-    reader.drain().then(
-      () => {
-        // @ts-ignore
-        delete $R[id];
-      },
-      () => {
-        // no-op
-      },
-    );
-  }
-
-  return result.value;
-}
+import {
+  deserializeJSONStream,
+  deserializeJSStream,
+  serializeToJSONStream,
+  serializeToJSONString,
+} from "./serialization";
 
 let INSTANCE = 0;
 
-function createRequest(base: string, id: string, instance: string, options: RequestInit) {
+function createRequest(
+  base: string,
+  id: string,
+  instance: string,
+  options: RequestInit,
+) {
   return fetch(base, {
     method: "POST",
     ...options,
@@ -127,20 +25,6 @@ function createRequest(base: string, id: string, instance: string, options: Requ
     },
   });
 }
-
-const plugins = [
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLSearchParamsPlugin,
-  URLPlugin,
-];
-
 async function fetchServerFunction(
   base: string,
   id: string,
@@ -154,15 +38,18 @@ async function fetchServerFunction(
       ? createRequest(base, id, instance, { ...options, body: args[0] })
       : args.length === 1 && args[0] instanceof URLSearchParams
         ? createRequest(base, id, instance, {
-            ...options,
-            body: args[0],
-            headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" },
-          })
+          ...options,
+          body: args[0],
+          headers: {
+            ...options.headers,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
         : createRequest(base, id, instance, {
-            ...options,
-            body: JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
-            headers: { ...options.headers, "Content-Type": "application/json" },
-          }));
+          ...options,
+          body: serializeToJSONStream(args),
+          headers: { ...options.headers, "Content-Type": "application/json" },
+        }));
 
   if (
     response.headers.has("Location") ||
@@ -172,7 +59,8 @@ async function fetchServerFunction(
     if (response.body) {
       /* @ts-ignore-next-line */
       response.customBody = () => {
-        return deserializeStream(instance, response);
+        // TODO check for serialization mode
+        return deserializeJSStream(instance, response);
       };
     }
     return response;
@@ -184,8 +72,11 @@ async function fetchServerFunction(
     result = await response.text();
   } else if (contentType && contentType.startsWith("application/json")) {
     result = await response.json();
+  } else if (import.meta.env.SEROVAL_MODE === "js") {
+    // TODO check for serialization mode
+    result = await deserializeJSStream(instance, response);
   } else {
-    result = await deserializeStream(instance, response);
+    result = await deserializeJSONStream(response);
   }
   if (response.headers.has("X-Error")) {
     throw result;
@@ -197,7 +88,8 @@ export function createServerReference(id: string) {
   let baseURL = import.meta.env.BASE_URL ?? "/";
   if (!baseURL.endsWith("/")) baseURL += "/";
 
-  const fn = (...args: any[]) => fetchServerFunction(`${baseURL}_server`, id, {}, args);
+  const fn = (...args: any[]) =>
+    fetchServerFunction(`${baseURL}_server`, id, {}, args);
 
   return new Proxy(fn, {
     get(target, prop, receiver) {
@@ -211,15 +103,16 @@ export function createServerReference(id: string) {
         const url = `${baseURL}_server?id=${encodeURIComponent(id)}`;
         return (options: RequestInit) => {
           const fn = async (...args: any[]) => {
-            const encodeArgs = options.method && options.method.toUpperCase() === "GET";
+            const encodeArgs =
+              options.method && options.method.toUpperCase() === "GET";
             return fetchServerFunction(
               encodeArgs
                 ? url +
-                    (args.length
-                      ? `&args=${encodeURIComponent(
-                          JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
-                        )}`
-                      : "")
+                (args.length
+                  ? `&args=${encodeURIComponent(
+                    await serializeToJSONString(args),
+                  )}`
+                  : "")
                 : `${baseURL}_server`,
               id,
               options,
