@@ -60,7 +60,9 @@ export async function handleServerFunction(h3Event: H3Event) {
       contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
       parsed.push(await event.request.formData());
-    } else if (contentType?.startsWith('text/plain')) {
+    } else if (contentType?.startsWith('application/json')) {
+      parsed = await event.request.json() as any[];
+    } else if (request.headers.has('x-serialized')) {
       parsed = (await deserializeJSONStream(event.request.clone())) as any[];
     }
   }
