@@ -50,7 +50,11 @@ async function fetchServerFunction(
           body: await serializeToJSONString(args),
           // duplex: 'half',
           // body: serializeToJSONStream(args),
-          headers: { ...options.headers, "Content-Type": "text/plain" },
+          headers: {
+            ...options.headers,
+            "x-serialized": "true",
+            "Content-Type": "text/plain"
+          },
         }));
 
   if (
