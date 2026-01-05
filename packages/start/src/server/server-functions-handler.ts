@@ -52,18 +52,19 @@ export async function handleServerFunction(h3Event: H3Event) {
       }
     }
   }
-  if (h3Event.method === "POST") {
+  if (request.method === "POST") {
     const contentType = request.headers.get("content-type");
+    const clone = request.clone();
 
     if (
       contentType?.startsWith("multipart/form-data") ||
       contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
-      parsed.push(await event.request.formData());
+      parsed.push(await clone.formData());
     } else if (contentType?.startsWith('application/json')) {
-      parsed = await event.request.json() as any[];
+      parsed = await clone.json() as any[];
     } else if (request.headers.has('x-serialized')) {
-      parsed = (await deserializeJSONStream(event.request.clone())) as any[];
+      parsed = (await deserializeJSONStream(clone)) as any[];
     }
   }
   try {

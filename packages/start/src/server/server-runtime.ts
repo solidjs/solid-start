@@ -67,25 +67,26 @@ async function fetchServerFunction(
       /* @ts-ignore-next-line */
       response.customBody = () => {
         if (import.meta.env.SEROVAL_MODE === "js") {
-          return deserializeJSStream(instance, response);
+          return deserializeJSStream(instance, response.clone());
         }
-        return deserializeJSONStream(response);
+        return deserializeJSONStream(response.clone());
       };
     }
     return response;
   }
 
   const contentType = response.headers.get("Content-Type");
+  const clone = response.clone();
   let result;
   if (contentType?.startsWith("text/plain")) {
-    result = await response.text();
+    result = await clone.text();
   } else if (contentType?.startsWith("application/json")) {
-    result = await response.json();
+    result = await clone.json();
   } else if (response.headers.get('x-serialized')) {
     if (import.meta.env.SEROVAL_MODE === "js") {
-      result = await deserializeJSStream(instance, response);
+      result = await deserializeJSStream(instance, clone);
     } else {
-      result = await deserializeJSONStream(response);
+      result = await deserializeJSONStream(clone);
     }
   }
   if (response.headers.has("X-Error")) {
