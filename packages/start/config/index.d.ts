@@ -26,6 +26,10 @@ type SolidStartInlineConfig = {
   experimental?: {
     islands?: boolean;
   };
+  serialization?: {
+    // This only matters for server function responses
+    mode?: 'js' | 'json';
+  }
   vite?:
     | ViteCustomizableConfig
     | ((options: { router: "server" | "client" | "server-function" }) => ViteCustomizableConfig);

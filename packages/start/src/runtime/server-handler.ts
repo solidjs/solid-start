@@ -1,19 +1,5 @@
 /// <reference types="vinxi/types/server" />
 import { parseSetCookie } from "cookie-es";
-import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
-// @ts-ignore
-import {
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLPlugin,
-  URLSearchParamsPlugin
-} from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
@@ -32,52 +18,7 @@ import { createPageEvent } from "../server/pageEvent";
 import { FetchEvent, PageEvent } from "../server";
 // @ts-ignore
 import serverFnManifest from "solidstart:server-fn-manifest";
-
-function createChunk(data: string) {
-  const encodeData = new TextEncoder().encode(data);
-  const bytes = encodeData.length;
-  const baseHex = bytes.toString(16);
-  const totalHex = "00000000".substring(0, 8 - baseHex.length) + baseHex; // 32-bit
-  const head = new TextEncoder().encode(`;0x${totalHex};`);
-
-  const chunk = new Uint8Array(12 + bytes);
-  chunk.set(head);
-  chunk.set(encodeData, 12);
-  return chunk;
-}
-
-function serializeToStream(id: string, value: any) {
-  return new ReadableStream({
-    start(controller) {
-      crossSerializeStream(value, {
-        scopeId: id,
-        plugins: [
-          CustomEventPlugin,
-          DOMExceptionPlugin,
-          EventPlugin,
-          FormDataPlugin,
-          HeadersPlugin,
-          ReadableStreamPlugin,
-          RequestPlugin,
-          ResponsePlugin,
-          URLSearchParamsPlugin,
-          URLPlugin
-        ],
-        onSerialize(data, initial) {
-          controller.enqueue(
-            createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data)
-          );
-        },
-        onDone() {
-          controller.close();
-        },
-        onError(error) {
-          controller.error(error);
-        }
-      });
-    }
-  });
-}
+import { deserializeFromJSONString, deserializeJSONStream, serializeToJSONStream, serializeToJSStream } from "./serialization";
 
 async function handleServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
@@ -131,24 +72,10 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   if (!instance || h3Event.method === "GET") {
     const args = url.searchParams.get("args");
     if (args) {
-      const json = JSON.parse(args);
-      (json.t
-        ? (fromJSON(json, {
-            plugins: [
-              CustomEventPlugin,
-              DOMExceptionPlugin,
-              EventPlugin,
-              FormDataPlugin,
-              HeadersPlugin,
-              ReadableStreamPlugin,
-              RequestPlugin,
-              ResponsePlugin,
-              URLSearchParamsPlugin,
-              URLPlugin
-            ]
-          }) as any)
-        : json
-      ).forEach((arg: any) => parsed.push(arg));
+      const result = (await deserializeFromJSONString(args)) as any[];
+      for (const arg of result) {
+        parsed.push(arg);
+      }
     }
   }
   if (h3Event.method === "POST") {
@@ -168,42 +95,26 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       (hasReadableStream && ((h3Request as EdgeIncomingMessage).body as ReadableStream).locked);
     const requestBody = isReadableStream ? h3Request : h3Request.body;
 
+    // workaround for https://github.com/unjs/nitro/issues/1721
+    // (issue only in edge runtimes and netlify preset)
+    const tmpReq = isH3EventBodyStreamLocked
+      ? request
+      : new Request(request, { ...request, body: requestBody });
     if (
       contentType?.startsWith("multipart/form-data") ||
       contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
       // workaround for https://github.com/unjs/nitro/issues/1721
       // (issue only in edge runtimes and netlify preset)
-      parsed.push(
-        await (isH3EventBodyStreamLocked
-          ? request
-          : new Request(request, { ...request, body: requestBody })
-        ).formData()
-      );
+      parsed.push(await tmpReq.formData());
       // what should work when #1721 is fixed
       // parsed.push(await request.formData);
-    } else if (contentType?.startsWith("application/json")) {
-      // workaround for https://github.com/unjs/nitro/issues/1721
-      // (issue only in edge runtimes and netlify preset)
-      const tmpReq = isH3EventBodyStreamLocked
-        ? request
-        : new Request(request, { ...request, body: requestBody });
+    } else if (contentType?.startsWith('application/json')) {
       // what should work when #1721 is fixed
       // just use request.json() here
-      parsed = fromJSON(await tmpReq.json(), {
-        plugins: [
-          CustomEventPlugin,
-          DOMExceptionPlugin,
-          EventPlugin,
-          FormDataPlugin,
-          HeadersPlugin,
-          ReadableStreamPlugin,
-          RequestPlugin,
-          ResponsePlugin,
-          URLSearchParamsPlugin,
-          URLPlugin
-        ]
-      });
+      parsed = await tmpReq.json() as any[];
+    } else if (request.headers.get('x-serialized')) {
+      parsed = await deserializeJSONStream(tmpReq) as any[];
     }
   }
   try {
@@ -238,8 +149,12 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     // handle no JS success case
     if (!instance) return handleNoJS(result, request, parsed);
 
-    setHeader(h3Event, "content-type", "text/javascript");
-    return serializeToStream(instance, result);
+    setHeader(h3Event, 'x-serialized', 'true');
+    if (import.meta.env.SEROVAL_MODE === 'js') {
+      setHeader(h3Event, "content-type", "text/javascript");
+      return serializeToJSStream(instance, result);
+    }
+    return serializeToJSONStream(result);
   } catch (x) {
     if (x instanceof Response) {
       if (singleFlight && instance) {
@@ -261,8 +176,12 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       x = handleNoJS(x, request, parsed, true);
     }
     if (instance) {
-      setHeader(h3Event, "content-type", "text/javascript");
-      return serializeToStream(instance, x);
+      setHeader(h3Event, 'x-serialized', 'true');
+      if (import.meta.env.SEROVAL_MODE === 'js') {
+        setHeader(h3Event, "content-type", "text/javascript");
+        return serializeToJSStream(instance, x);
+      }
+      return serializeToJSONStream(x);
     }
     return x;
   }
