@@ -1,30 +1,12 @@
 import path from "node:path";
-import { resolve } from "pathe";
 import type { DevEnvironment, EnvironmentModuleNode } from "vite";
 
-async function getViteModuleNode(vite: DevEnvironment, file: string) {
-  let nodePath = file;
-  let node = vite.moduleGraph.getModuleById(file);
-
-  if (!node) {
-    const resolvedId = await vite.pluginContainer.resolveId(file, undefined);
-    if (!resolvedId) return;
-
-    nodePath = resolvedId.id;
-    node = vite.moduleGraph.getModuleById(file);
-  }
-
-  if (!node) {
-    nodePath = resolve(nodePath);
-    node = await vite.moduleGraph.getModuleByUrl(file);
-  }
-
-  if (!node) {
-    await vite.moduleGraph.ensureEntryFromUrl(nodePath, false);
-    node = vite.moduleGraph.getModuleById(nodePath);
-  }
-
-  return node;
+async function getViteModuleNode(vite: DevEnvironment, file: string, importer?: string) {
+  try {
+    const res = await vite.fetchModule(file, importer);
+    if (!("id" in res)) return;
+    return vite.moduleGraph.getModuleById(res.id);
+  } catch (err) {}
 }
 
 async function findModuleDependencies(
@@ -32,9 +14,10 @@ async function findModuleDependencies(
   file: string,
   deps: Set<EnvironmentModuleNode>,
   crawledFiles = new Set<string>(),
+  importer?: string,
 ) {
   crawledFiles.add(file);
-  const module = await getViteModuleNode(vite, file);
+  const module = await getViteModuleNode(vite, file, importer);
   if (!module?.id || deps.has(module)) return;
 
   deps.add(module);
@@ -53,7 +36,7 @@ async function findModuleDependencies(
     if (crawledFiles.has(dep)) {
       continue;
     }
-    await findModuleDependencies(vite, dep, deps, crawledFiles);
+    await findModuleDependencies(vite, dep, deps, crawledFiles, module.id);
   }
 }
 
