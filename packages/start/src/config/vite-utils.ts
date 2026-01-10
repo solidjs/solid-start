@@ -12,6 +12,7 @@ export const FS_PREFIX = `/@fs/`;
 export const VALID_ID_PREFIX = `/@id/`;
 
 export const NULL_BYTE_PLACEHOLDER = `__x00__`;
+const NULL_BYTE_REGEX = /^\0/;
 
 export function normalizeResolvedIdToUrl(
   environment: DevEnvironment,
@@ -52,10 +53,13 @@ export function normalizeResolvedIdToUrl(
   return url;
 }
 
+/**
+ * Inspired by:
+ * https://github.com/withastro/astro/blob/fddde5fad81007795eb263c7fd0cea096b8e2cba/packages/astro/src/core/util.ts#L115
+ * https://github.com/vitejs/vite/blob/130e7181a55c524383c63bbfb1749d0ff7185cad/packages/vite/src/shared/utils.ts#L11
+ */
 export function wrapId(id: string): string {
-  return id.startsWith(VALID_ID_PREFIX)
-    ? id
-    : VALID_ID_PREFIX + id.replace("\0", NULL_BYTE_PLACEHOLDER);
+  return id.replace(NULL_BYTE_REGEX, `${VALID_ID_PREFIX}${NULL_BYTE_PLACEHOLDER}`);
 }
 
 export function unwrapId(id: string): string {
