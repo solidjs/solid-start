@@ -107,6 +107,19 @@ export const CommonTests = (props: { routeModuleClass?: string }) => (
         </>
       }
     />
+    <Test
+      component="SharedChunk"
+      file="sharedChunk.css"
+      class="sharedChunk"
+      integration="import"
+      lazy
+      comment={
+        <>
+          Tests if CSS from shared chunks is server rendered properly. Rollup occasionally combines
+          modules into such shared chunks.
+        </>
+      }
+    />
   </>
 );
 
