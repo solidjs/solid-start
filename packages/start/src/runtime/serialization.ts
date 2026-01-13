@@ -3,9 +3,11 @@ import {
   deserialize,
   Feature,
   fromCrossJSON,
+  fromJSON,
   getCrossReferenceHeader,
   type SerovalNode,
   toCrossJSONStream,
+  toJSONAsync,
 } from "seroval";
 import {
   AbortSignalPlugin,
@@ -194,13 +196,20 @@ class SerovalChunkReader {
 }
 
 export async function serializeToJSONString(value: any) {
-  const response = new Response(serializeToJSONStream(value));
-  return await response.text();
+  // const response = new Response(serializeToJSONStream(value));
+  // return await response.text();
+  return JSON.stringify(toJSONAsync(value, {
+    plugins: DEFAULT_PLUGINS,
+    depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
+    disabledFeatures: DISABLED_FEATURES,
+  }));
 }
 
 export async function deserializeFromJSONString(json: string) {
-  const blob = new Response(json);
-  return await deserializeJSONStream(blob);
+  return fromJSON(JSON.parse(json), {
+    plugins: DEFAULT_PLUGINS,
+    disabledFeatures: DISABLED_FEATURES,
+  });
 }
 
 export async function deserializeJSONStream(response: Response | Request) {

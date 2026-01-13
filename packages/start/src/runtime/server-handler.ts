@@ -18,7 +18,7 @@ import { createPageEvent } from "../server/pageEvent";
 import { FetchEvent, PageEvent } from "../server";
 // @ts-ignore
 import serverFnManifest from "solidstart:server-fn-manifest";
-import { deserializeFromJSONString, deserializeJSONStream, serializeToJSONStream, serializeToJSStream } from "./serialization";
+import { deserializeFromJSONString, serializeToJSONStream, serializeToJSStream } from "./serialization";
 
 async function handleServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
@@ -100,7 +100,9 @@ async function handleServerFunction(h3Event: HTTPEvent) {
     const tmpReq = isH3EventBodyStreamLocked
       ? request
       : new Request(request, { ...request, body: requestBody });
-    if (
+    if (request.headers.get('x-serialized')) {
+      parsed = await deserializeFromJSONString(await tmpReq.text()) as any[];
+    } else if (
       contentType?.startsWith("multipart/form-data") ||
       contentType?.startsWith("application/x-www-form-urlencoded")
     ) {
@@ -113,9 +115,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       // what should work when #1721 is fixed
       // just use request.json() here
       parsed = await tmpReq.json() as any[];
-    } else if (request.headers.get('x-serialized')) {
-      parsed = await deserializeJSONStream(tmpReq) as any[];
-    }
+    } 
   }
   try {
     let result = await provideRequestEvent(event, async () => {
