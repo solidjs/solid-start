@@ -11,6 +11,9 @@ export function devServer(): Array<PluginOption> {
   return [
     {
       name: "solid-start-dev-server",
+      config() {
+        return { server: { port: 3000 } };
+      },
       configureServer(viteDevServer) {
         (globalThis as any).VITE_DEV_SERVER = viteDevServer;
         return async () => {
