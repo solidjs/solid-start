@@ -55,13 +55,6 @@ function getHeadersAndBody(body: any): {
         },
         body,
       };
-    case body instanceof Blob:
-      return {
-        headers: {
-          [BODY_FORMAT_KEY]: BodyFormat.Blob,
-        },
-        body,
-      };
     case body instanceof File: {
       const formData = new FormData();
       formData.append(BODY_FORMAL_FILE, body, body.name);
@@ -69,9 +62,16 @@ function getHeadersAndBody(body: any): {
         headers: {
           [BODY_FORMAT_KEY]: BodyFormat.File,
         },
-        body: new FormData(),
+        body: formData,
       };
     }
+    case body instanceof Blob:
+      return {
+        headers: {
+          [BODY_FORMAT_KEY]: BodyFormat.Blob,
+        },
+        body,
+      };
     case body instanceof ArrayBuffer:
       return {
         headers: {
