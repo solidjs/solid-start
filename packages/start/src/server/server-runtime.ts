@@ -1,4 +1,3 @@
-
 import { type Component } from "solid-js";
 import {
   deserializeJSONStream,
@@ -6,6 +5,7 @@ import {
   // serializeToJSONStream,
   serializeToJSONString,
 } from "./serialization";
+import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "./server-functions-shared";
 
 let INSTANCE = 0;
 
@@ -25,6 +25,113 @@ function createRequest(
     },
   });
 }
+
+function getHeadersAndBody(body: any): {
+  headers?: HeadersInit;
+  body: BodyInit;
+} | undefined {
+  switch (true) {
+    case typeof body === "string":
+      return {
+        headers: {
+          "Content-Type": "text/plain",
+          [BODY_FORMAT_KEY]: BodyFormat.String,
+        },
+        body,
+      };
+    case body instanceof FormData:
+      return {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          [BODY_FORMAT_KEY]: BodyFormat.FormData,
+        },
+        body,
+      };
+    case body instanceof URLSearchParams:
+      return {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          [BODY_FORMAT_KEY]: BodyFormat.URLSearchParams,
+        },
+        body,
+      };
+    case body instanceof Blob:
+      return {
+        headers: {
+          [BODY_FORMAT_KEY]: BodyFormat.Blob,
+        },
+        body,
+      };
+    case body instanceof File: {
+      const formData = new FormData();
+      formData.append(BODY_FORMAL_FILE, body, body.name);
+      return {
+        headers: {
+          [BODY_FORMAT_KEY]: BodyFormat.File,
+        },
+        body: new FormData(),
+      };
+    }
+    case body instanceof ArrayBuffer:
+      return {
+        headers: {
+          [BODY_FORMAT_KEY]: BodyFormat.ArrayBuffer,
+        },
+        body,
+      };
+    case body instanceof Uint8Array:
+      return {
+        headers: {
+          [BODY_FORMAT_KEY]: BodyFormat.Uint8Array,
+        },
+        body: new Uint8Array(body),
+      };
+    default:
+      return undefined;
+  }
+}
+
+async function initializeResponse(
+  base: string,
+  id: string,
+  instance: string,
+  options: RequestInit,
+  args: any[],
+) {
+  // No args, skip serialization
+  if (args.length === 0) {
+    return createRequest(base, id, instance, options);
+  }
+  // For single arguments, we can directly encode as body
+  if (args.length === 1) {
+    const body = args[0];
+    const result = getHeadersAndBody(body);
+    if (result) {
+      return createRequest(base, id, instance, {
+        ...options,
+        body: result.body,
+        headers: {
+          ...options.headers,
+          ...result.headers,
+        },
+      });
+    }
+  }
+  // Fallback to seroval
+  return createRequest(base, id, instance, {
+    ...options,
+    // TODO(Alexis): move to serializeToJSONStream
+    body: await serializeToJSONString(args),
+    // duplex: 'half',
+    // body: serializeToJSONStream(args),
+    headers: {
+      ...options.headers,
+      "Content-Type": "text/plain",
+      [BODY_FORMAT_KEY]: BodyFormat.Seroval,
+    },
+  });
+}
+
 async function fetchServerFunction(
   base: string,
   id: string,
@@ -32,31 +139,8 @@ async function fetchServerFunction(
   args: any[],
 ) {
   const instance = `server-fn:${INSTANCE++}`;
-  const response = await (args.length === 0
-    ? createRequest(base, id, instance, options)
-    : args.length === 1 && args[0] instanceof FormData
-      ? createRequest(base, id, instance, { ...options, body: args[0] })
-      : args.length === 1 && args[0] instanceof URLSearchParams
-        ? createRequest(base, id, instance, {
-          ...options,
-          body: args[0],
-          headers: {
-            ...options.headers,
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        })
-        : createRequest(base, id, instance, {
-          ...options,
-          // TODO(Alexis): move to serializeToJSONStream
-          body: await serializeToJSONString(args),
-          // duplex: 'half',
-          // body: serializeToJSONStream(args),
-          headers: {
-            ...options.headers,
-            "x-serialized": "true",
-            "Content-Type": "text/plain"
-          },
-        }));
+
+  const response = await initializeResponse(base, id, instance, options, args);
 
   if (
     response.headers.has("Location") ||
@@ -82,7 +166,7 @@ async function fetchServerFunction(
     result = await clone.text();
   } else if (contentType?.startsWith("application/json")) {
     result = await clone.json();
-  } else if (response.headers.get('x-serialized')) {
+  } else if (response.headers.get(BODY_FORMAT_KEY)) {
     if (import.meta.env.SEROVAL_MODE === "js") {
       result = await deserializeJSStream(instance, clone);
     } else {
