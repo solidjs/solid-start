@@ -14,11 +14,11 @@ export type ResponseMiddleware = (
   response: Response,
 ) => ReturnType<Parameters<typeof onResponse>[0]>;
 
-function wrapRequestMiddleware(onRequestFn: RequestMiddleware) {
+function wrapRequestMiddleware(onRequest: RequestMiddleware) {
   return async (h3Event: H3Event) => {
     // h3 onRequest doesn't allow returning a response, but we will for backwards compatibility with start v1
     const fetchEvent = getFetchEvent(h3Event);
-    const response = await onRequestFn(fetchEvent);
+    const response = await onRequest(fetchEvent);
     if (response) return response;
   };
 }
@@ -32,13 +32,14 @@ function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middlewar
 }
 
 export function createMiddleware(
-  args:
+  args?:
     | {
         onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
         onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
       }
     | Middleware[],
 ): Middleware[] {
+  if (!args) return [];
   if (Array.isArray(args)) return args;
 
   const mw: Middleware[] = [];
