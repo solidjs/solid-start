@@ -1,0 +1,15 @@
+[data-start-section] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+[data-start-section-title] {
+
+}
+
+
+[data-start-section-content] {
+  padding: 0rem 0.5rem;
+  width: 100%;
+}
