@@ -1,9 +1,9 @@
 import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
 import { globSync } from "node:fs";
-import { extname, isAbsolute, join, normalize } from "node:path";
+import { extname, isAbsolute, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { type PluginOption } from "vite";
+import { normalizePath, type PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
@@ -126,8 +126,10 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-            "import.meta.env.START_APP_ENTRY": `"${appEntryPath}"`,
-            "import.meta.env.START_CLIENT_ENTRY": `"${handlers.client}"`,
+            // Use JSON.stringify so backslashes on Windows are escaped and
+            // esbuild receives a valid JS string literal for the define value
+            "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
+            "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
           },
           builder: {
@@ -173,8 +175,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           envConsumer: "client",
           envName: VITE_ENVIRONMENTS.client,
           getRuntimeCode: () =>
-            `import { createServerReference } from "${normalize(
-              fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
+            `import { createServerReference } from "${normalizePath(
+              fileURLToPath(new URL("../server/server-runtime", import.meta.url))
             )}"`,
           replacer: opts => `createServerReference('${opts.functionId}')`,
         },
@@ -182,8 +184,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           envConsumer: "server",
           envName: VITE_ENVIRONMENTS.server,
           getRuntimeCode: () =>
-            `import { createServerReference } from '${normalize(
-              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
+            `import { createServerReference } from '${normalizePath(
+              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
             )}'`,
           replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
         },
@@ -191,8 +193,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       provider: {
         envName: VITE_ENVIRONMENTS.server,
         getRuntimeCode: () =>
-          `import { createServerReference } from '${normalize(
-            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
+          `import { createServerReference } from '${normalizePath(
+            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
           )}'`,
         replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
       },

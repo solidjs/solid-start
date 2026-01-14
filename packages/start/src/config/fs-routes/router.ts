@@ -1,5 +1,4 @@
-import { init } from "es-module-lexer";
-import { parse } from "es-module-lexer";
+import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "fs";
@@ -7,7 +6,7 @@ import micromatch from "micromatch";
 import { posix } from "path";
 import { pathToRegexp } from "path-to-regexp";
 
-import { normalize } from "node:path";
+import { normalizePath } from "vite";
 
 export { pathToRegexp };
 
@@ -104,7 +103,7 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   async addRoute(src: string) {
-    src = normalize(src);
+    src = normalizePath(src);
     if (this.isRoute(src)) {
       try {
         const route = this.toRoute(src);
@@ -130,7 +129,7 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   async updateRoute(src: string) {
-    src = normalize(src);
+    src = normalizePath(src);
     if (this.isRoute(src)) {
       try {
         const route = this.toRoute(src);
@@ -146,7 +145,7 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   removeRoute(src: string) {
-    src = normalize(src);
+    src = normalizePath(src);
     if (this.isRoute(src)) {
       const path = this.toPath(src);
       if (path === undefined) {
