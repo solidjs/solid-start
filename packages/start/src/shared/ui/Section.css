@@ -10,6 +10,7 @@
 
 
 [data-start-section-content] {
-  padding: 0rem 0.5rem;
   width: 100%;
+
+  overflow: auto;
 }

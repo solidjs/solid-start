@@ -76,8 +76,6 @@
   flex-direction: column;
   gap: 0.25rem;
   margin: 0rem 0.25rem;
-
-  overflow: auto;
 }
 
 [data-start-seroval-property] {
