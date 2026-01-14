@@ -1,0 +1,38 @@
+
+[data-start-select] {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  margin-block: 0;
+  list-style-type: none;
+  padding-inline: 0;
+}
+
+[data-start-select] > * + * {
+  border-top: 1px oklch(70.7% 0.165 254.624) solid;
+}
+
+[data-start-select-option] {
+  color: rgb(17 24 39);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+  cursor: pointer;
+
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+
+  white-space: nowrap;
+}
+
+[data-start-select-option][tc-active],
+[data-start-select-option][tc-selected],
+[data-start-select-option]:focus {
+  background-color: rgb(219 234 254);
+  color: rgb(30 58 138);
+}
