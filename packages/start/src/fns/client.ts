@@ -1,5 +1,9 @@
 import { type Component } from "solid-js";
 import {
+  pushRequest,
+  pushResponse,
+} from "../shared/server-function-inspector/server-function-tracker";
+import {
   // serializeToJSONStream,
   serializeToJSONString,
 } from "./serialization.ts";
@@ -12,13 +16,13 @@ import {
 
 let INSTANCE = 0;
 
-function createRequest(
+async function createRequest(
   base: string,
   id: string,
   instance: string,
   options: RequestInit,
 ) {
-  return fetch(base, {
+  const request = new Request(base, {
     method: "POST",
     ...options,
     headers: {
@@ -27,6 +31,14 @@ function createRequest(
       "X-Server-Instance": instance,
     },
   });
+  if (import.meta.env.DEV) {
+    pushRequest(id, instance, request.clone());
+  }
+  const response = await fetch(request);
+  if (import.meta.env.DEV) {
+    pushResponse(id, instance, response.clone());
+  }
+  return response;
 }
 
 async function initializeResponse(

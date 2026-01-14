@@ -1,40 +1,50 @@
 // @refresh skip
-import { ErrorBoundary as DefaultErrorBoundary, catchError, type ParentProps } from "solid-js";
+import {
+  catchError,
+  ErrorBoundary as DefaultErrorBoundary,
+  type ParentProps,
+} from "solid-js";
 import { isServer } from "solid-js/web";
-import { HttpStatusCode } from "./HttpStatusCode.ts";
 import { DevOverlay } from "./dev-overlay/index.tsx";
+import { HttpStatusCode } from "./HttpStatusCode.ts";
+import { ServerFunctionInspector } from "./server-function-inspector/index.tsx";
 
 export const ErrorBoundary =
   import.meta.env.DEV && import.meta.env.START_DEV_OVERLAY
-    ? (props: ParentProps) => <DevOverlay>{props.children}</DevOverlay>
+    ? (props: ParentProps) => (
+      <DevOverlay>
+        <ServerFunctionInspector />
+        {props.children}
+      </DevOverlay>
+    )
     : (props: ParentProps) => {
-        const message = isServer
-          ? "500 | Internal Server Error"
-          : "Error | Uncaught Client Exception";
-        return (
-          <DefaultErrorBoundary
-            fallback={error => {
-              console.error(error);
-              return (
-                <>
-                  <span style="font-size:1.5em;text-align:center;position:fixed;left:0px;bottom:55%;width:100%;">
-                    {message}
-                  </span>
-                  <HttpStatusCode code={500} />
-                </>
-              );
-            }}
-          >
-            {props.children}
-          </DefaultErrorBoundary>
-        );
-      };
+      const message = isServer
+        ? "500 | Internal Server Error"
+        : "Error | Uncaught Client Exception";
+      return (
+        <DefaultErrorBoundary
+          fallback={(error) => {
+            console.error(error);
+            return (
+              <>
+                <span style="font-size:1.5em;text-align:center;position:fixed;left:0px;bottom:55%;width:100%;">
+                  {message}
+                </span>
+                <HttpStatusCode code={500} />
+              </>
+            );
+          }}
+        >
+          {props.children}
+        </DefaultErrorBoundary>
+      );
+    };
 
 export const TopErrorBoundary = (props: ParentProps) => {
   let isError = false;
   const res = catchError(
     () => props.children,
-    err => {
+    (err) => {
       console.error(err);
       isError = !!err;
     },

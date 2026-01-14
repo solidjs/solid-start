@@ -1,0 +1,22 @@
+[data-start-table] {
+  border: 1px oklch(70.7% 0.165 254.624) solid;
+}
+
+[data-start-table-header] {
+  display: flex;
+  flex-direction: row;
+  background-color: oklch(93.2% 0.032 255.585);
+  font-weight: 600;
+}
+
+[data-start-table-row] {
+  display: flex;
+  flex-direction: row;
+  border-top: 1px oklch(70.7% 0.165 254.624) solid;
+}
+
+[data-start-table-cell] {
+  flex: 1;
+  padding: 0.25rem 0.75rem;
+  overflow: auto;
+}
