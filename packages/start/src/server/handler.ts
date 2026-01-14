@@ -21,7 +21,7 @@ export function createBaseHandler(
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
   const handler = defineHandler({
-    middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
+    middleware: middleware?.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
       const event = getRequestEvent()!;
       const url = new URL(event.request.url);
