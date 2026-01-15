@@ -8,12 +8,15 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Portal } from "solid-js/web";
+import { BODY_FORMAT_KEY, BodyFormat } from "../../server/server-functions-shared.ts";
 import { Badge } from "../ui/Badge.tsx";
 import Button from "../ui/Button.tsx";
 import { Dialog, DialogOverlay, DialogPanel } from "../ui/Dialog.tsx";
+import { Section } from "../ui/Section.tsx";
 import { Select, SelectOption } from "../ui/Select.tsx";
 import { Tab, TabGroup, TabList, TabPanel } from "../ui/Tabs.tsx";
 import { HeadersViewer } from "./HeadersViewer.tsx";
+import { HexViewer } from "./HexViewer.tsx";
 import { SerovalViewer } from "./SerovalViewer.tsx";
 import {
   captureServerFunctionCall,
@@ -21,7 +24,6 @@ import {
   type ServerFunctionResponse,
 } from "./server-function-tracker.ts";
 import "./styles.css";
-import { Section } from "../ui/Section.tsx";
 
 interface ContentViewerProps {
   source: ServerFunctionRequest | ServerFunctionResponse;
@@ -35,8 +37,29 @@ function ContentViewer(props: ContentViewerProps): JSX.Element {
       </Section>
       <Section title="Body">
         {(() => {
-          if (props.source.source.headers.has('x-serialized')) {
-            return <SerovalViewer stream={props.source.source.clone()} />
+          const startType = props.source.source.headers.get(BODY_FORMAT_KEY);
+          const contentType = props.source.source.headers.get('Content-Type');
+          switch (true) {
+            case startType === "true":
+            case startType === BodyFormat.Seroval:
+              return <SerovalViewer stream={props.source.source.clone()} />;
+            case startType === BodyFormat.String:
+              return undefined;
+            case startType === BodyFormat.File: {
+              return undefined;
+            }
+            case startType === BodyFormat.FormData:
+            case contentType?.startsWith("multipart/form-data"):
+              return undefined;
+            case startType === BodyFormat.URLSearchParams:
+            case contentType?.startsWith("application/x-www-form-urlencoded"):
+              return undefined;
+            case startType === BodyFormat.Blob:
+              return undefined;
+            case startType === BodyFormat.ArrayBuffer:
+              return undefined;
+            case startType === BodyFormat.Uint8Array:
+              return <HexViewer bytes={props.source.source.clone().bytes()} />;
           }
         })()}
       </Section>
