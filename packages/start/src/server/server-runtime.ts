@@ -4,8 +4,8 @@ import {
   deserializeJSStream,
   // serializeToJSONStream,
   serializeToJSONString,
-} from "./serialization";
-import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "./server-functions-shared";
+} from "./serialization.ts";
+import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "./server-functions-shared.ts";
 
 let INSTANCE = 0;
 
