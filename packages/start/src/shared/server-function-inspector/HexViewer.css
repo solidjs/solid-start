@@ -1,0 +1,34 @@
+[data-start-hex-viewer] {
+  display: flex;
+  border: 1px oklch(70.7% 0.165 254.624) solid;
+  overflow: auto;
+}
+
+[data-start-hex-viewer-bytes] {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+[data-start-hex-viewer-text] {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-left: 1px oklch(70.7% 0.165 254.624) solid;
+}
+
+[data-start-hex-row] {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+[data-start-hex-text] {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
