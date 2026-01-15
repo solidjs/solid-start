@@ -6,6 +6,7 @@ import { Cascade, CascadeOption } from "../ui/Cascade.tsx";
 import { Section } from "../ui/Section.tsx";
 import { Text } from "../ui/Text.tsx";
 import './SerovalViewer.css';
+import { HexViewer } from "./HexViewer.tsx";
 
 function LinkIcon(
   props: JSX.IntrinsicElements["svg"] & { title: string },
@@ -545,15 +546,6 @@ function renderSerovalNode(
           </Show >
         </>
       );
-    // TypedArray = 15,
-    case 15:
-    // BigIntTypedArray = 16,
-    case 16:
-      return (
-        <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
-          {renderSerovalNode(ctx, node.f, onSelect, true)}
-        </Cascade>
-      );
     // WKSymbol = 17,
     case 17:
       return <SerovalValue value={getSymbolValue(node.s)} />
@@ -561,8 +553,15 @@ function renderSerovalNode(
     case 18:
       break;
     // ArrayBuffer = 19,
-    case 19:
-      return <SerovalValue value={node.s} />;
+    case 19: {
+      const data = atob(node.s);
+      const result = new TextEncoder().encode(data);
+      return <HexViewer bytes={result} />;
+    }
+    // TypedArray = 15,
+    case 15:
+    // BigIntTypedArray = 16,
+    case 16:
     // DataView = 20,
     case 20:
       return (
