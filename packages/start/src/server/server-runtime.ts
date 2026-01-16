@@ -42,7 +42,6 @@ function getHeadersAndBody(body: any): {
     case body instanceof FormData:
       return {
         headers: {
-          "Content-Type": "multipart/form-data",
           [BODY_FORMAT_KEY]: BodyFormat.FormData,
         },
         body,
