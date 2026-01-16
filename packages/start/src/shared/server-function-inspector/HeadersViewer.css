@@ -1,0 +1,12 @@
+[data-start-headers-viewer] {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+[data-start-header-key] {
+  white-space: nowrap;
+}
+
+[data-start-header-value] {
+  white-space: nowrap;
+}
