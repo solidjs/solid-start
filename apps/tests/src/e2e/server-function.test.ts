@@ -72,4 +72,9 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/server-function-ping");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
   });
+
+  test("should build with a server function w/ form data", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-form-data");
+    await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+  });
 });
