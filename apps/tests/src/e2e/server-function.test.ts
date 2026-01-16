@@ -74,7 +74,7 @@ test.describe("server-function", () => {
   });
 
   test("should build with a server function w/ form data", async ({ page }) => {
-    await page.goto("http://localhost:3000/server-form-data");
+    await page.goto("http://localhost:3000/server-function-form-data");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
   });
 });
