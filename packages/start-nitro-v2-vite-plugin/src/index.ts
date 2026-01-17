@@ -116,14 +116,18 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
         };
       },
     },
-    nitroConfig?.preset === "netlify" && {
+    nitroConfig?.preset.startsWith("netlify") && {
       name: "solid-start-nitro-netlify-fix",
       enforce: "post",
-      config() {
+      async config() {
+        await fsp.rm(".solid-start", { recursive: true, force: true });
+
         return {
           environments: {
             client: { build: { outDir: ".solid-start/client" } },
-            ssr: { build: { outDir: ".solid-start/server" } },
+            ssr: nitroConfig.preset.toLowerCase().includes("static")
+              ? undefined
+              : { build: { outDir: ".solid-start/server" } },
           },
         };
       },
