@@ -84,6 +84,13 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                 },
                 ...nitroConfig,
                 dev: false,
+                routeRules: {
+                  "/_build/assets/**": {
+                    headers: {
+                      "cache-control": "public, immutable, max-age=31536000",
+                    },
+                  },
+                },
                 publicAssets: [
                   {
                     dir: client.config.build.outDir,
