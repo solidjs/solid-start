@@ -116,18 +116,19 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
         };
       },
     },
-    nitroConfig?.preset.startsWith("netlify") && {
-      name: "solid-start-nitro-netlify-fix",
+    {
+      name: "solid-start-nitro-edge-fix",
       enforce: "post",
       async config() {
         await fsp.rm(".solid-start", { recursive: true, force: true });
-
         return {
           environments: {
             client: { build: { outDir: ".solid-start/client" } },
-            ssr: nitroConfig.preset.toLowerCase().includes("static")
-              ? undefined
-              : { build: { outDir: ".solid-start/server" } },
+            ssr: {
+              build: nitroConfig?.preset?.toLowerCase().includes("static")
+                ? undefined
+                : { outDir: ".solid-start/server" },
+            },
           },
         };
       },
