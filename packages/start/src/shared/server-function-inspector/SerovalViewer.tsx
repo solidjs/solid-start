@@ -1,12 +1,22 @@
 import type { SerovalNode } from "seroval";
-import { createEffect, createSignal, For, type JSX, Show, splitProps } from "solid-js";
+import {
+  createEffect,
+  createSignal,
+  For,
+  type JSX,
+  Show,
+  splitProps,
+} from "solid-js";
+
 import { SerovalChunkReader } from "../../server/serialization.ts";
 import { Badge } from "../ui/Badge.tsx";
 import { Cascade, CascadeOption } from "../ui/Cascade.tsx";
 import { Section } from "../ui/Section.tsx";
-import { Text } from "../ui/Text.tsx";
-import './SerovalViewer.css';
 import { HexViewer } from "./HexViewer.tsx";
+import { SerovalValue } from "./SerovalValue.tsx";
+import { PropertySeparator } from "../ui/Properties.tsx";
+
+import "./SerovalViewer.css";
 
 function LinkIcon(
   props: JSX.IntrinsicElements["svg"] & { title: string },
@@ -20,7 +30,11 @@ function LinkIcon(
       {...props}
     >
       <title>{props.title}</title>
-      <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+      />
     </svg>
   );
 }
@@ -32,80 +46,115 @@ export interface SerovalViewerProps {
 function getNodeType(node: SerovalNode) {
   switch (node.t) {
     // Number = 0,
-    case 0: return 'number';
+    case 0:
+      return "number";
     // String = 1,
-    case 1: return 'string';
+    case 1:
+      return "string";
     // Constant = 2,
     case 2:
       switch (node.s) {
-        case 0: return 'null';
-        case 1: return 'undefined';
-        case 2: return 'true';
-        case 3: return 'false';
-        case 4: return '-0';
-        case 5: return 'Infinity';
-        case 6: return '-Infinity';
-        case 7: return 'NaN';
+        case 0:
+          return "null";
+        case 1:
+          return "undefined";
+        case 2:
+          return "true";
+        case 3:
+          return "false";
+        case 4:
+          return "-0";
+        case 5:
+          return "Infinity";
+        case 6:
+          return "-Infinity";
+        case 7:
+          return "NaN";
       }
       break;
     // BigInt = 3,
-    case 3: return 'bigint'
+    case 3:
+      return "bigint";
     // Date = 5,
-    case 5: return 'Date';
+    case 5:
+      return "Date";
     // RegExp = 6,
-    case 6: return 'RegExp';
+    case 6:
+      return "RegExp";
     // Set = 7,
-    case 7: return 'Set';
+    case 7:
+      return "Set";
     // Map = 8,
-    case 8: return 'Map';
+    case 8:
+      return "Map";
     // Array = 9,
-    case 9: return 'Array';
+    case 9:
+      return "Array";
     // Object = 10,
     case 10:
     // NullConstructor = 11,
-    case 11: return 'Object';
+    case 11:
+      return "Object";
     // Promise = 12,
-    case 12: return 'Promise';
+    case 12:
+      return "Promise";
     // Error = 13,
     case 13:
       switch (node.s) {
-        case 0: return 'Error';
-        case 1: return 'EvalError';
-        case 2: return 'RangeError';
-        case 3: return 'ReferenceError';
-        case 4: return 'SyntaxError';
-        case 5: return 'TypeError';
-        case 6: return 'URIError';
+        case 0:
+          return "Error";
+        case 1:
+          return "EvalError";
+        case 2:
+          return "RangeError";
+        case 3:
+          return "ReferenceError";
+        case 4:
+          return "SyntaxError";
+        case 5:
+          return "TypeError";
+        case 6:
+          return "URIError";
       }
-      return 'Error';
+      return "Error";
     // AggregateError = 14,
-    case 14: return 'AggregateError';
+    case 14:
+      return "AggregateError";
     // TypedArray = 15,
     case 15:
     // BigIntTypedArray = 16,
-    case 16: return node.c;
+    case 16:
+      return node.c;
     // WKSymbol = 17,
-    case 17: return 'symbol';
+    case 17:
+      return "symbol";
     // ArrayBuffer = 19,
-    case 19: return 'ArrayBuffer'
+    case 19:
+      return "ArrayBuffer";
     // DataView = 20,
-    case 20: return 'DataView'
+    case 20:
+      return "DataView";
     // Boxed = 21,
-    case 21: return 'Boxed';
+    case 21:
+      return "Boxed";
     // PromiseConstructor = 22,
-    case 22: return 'Promise';
+    case 22:
+      return "Promise";
     // Plugin = 25,
     case 25:
       // due to the nature of this node, we have to traverse it ourselves
-      return 'Plugin';
+      return "Plugin";
     // IteratorFactoryInstance = 28,
-    case 28: return 'Iterator';
+    case 28:
+      return "Iterator";
     // AsyncIteratorFactoryInstance = 30,
-    case 30: return 'AsyncIterator';
+    case 30:
+      return "AsyncIterator";
     // StreamConstructor = 31,
-    case 31: return 'Stream';
+    case 31:
+      return "Stream";
   }
-  throw new Error('unsupported node type');
+  throw new Error("unsupported node type");
 }
 
 function traverse(
@@ -230,7 +279,7 @@ function traverse(
     case 28:
       traverse(node.a[0], handler);
       traverse(node.a[1], handler);
-      break
+      break;
     // AsyncIteratorFactory = 29,
     case 29:
       traverse(node.a[1], handler);
@@ -239,7 +288,7 @@ function traverse(
     case 30:
       traverse(node.a[0], handler);
       traverse(node.a[1], handler);
-      break
+      break;
     // StreamConstructor = 31,
     case 31:
       // Traverse items
@@ -258,60 +307,75 @@ function traverse(
   }
 }
 
-interface SerovalValueProps {
-  value: string | number | boolean | undefined | null;
-}
-
-function SerovalValue(props: SerovalValueProps) {
-  return (
-    <Text data-start-seroval-value options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>
-      {`${props.value}`}
-    </Text>
-  );
-}
-
 function getConstantValue(value: number) {
   switch (value) {
-    case 0: return 'null';
-    case 1: return 'undefined';
-    case 2: return 'true';
-    case 3: return 'false';
-    case 4: return '-0';
-    case 5: return 'Infinity';
-    case 6: return '-Infinity';
-    case 7: return 'NaN';
+    case 0:
+      return "null";
+    case 1:
+      return "undefined";
+    case 2:
+      return "true";
+    case 3:
+      return "false";
+    case 4:
+      return "-0";
+    case 5:
+      return "Infinity";
+    case 6:
+      return "-Infinity";
+    case 7:
+      return "NaN";
   }
-  return '';
+  return "";
 }
 
 function getSymbolValue(value: number) {
   switch (value) {
-    case 0: return 'Symbol.asyncIterator';
-    case 1: return 'Symbol.hasInstance';
-    case 2: return 'Symbol.isConcatSpreadable';
-    case 3: return 'Symbol.iterator';
-    case 4: return 'Symbol.match';
-    case 5: return 'Symbol.matchAll';
-    case 6: return 'Symbol.replace';
-    case 7: return 'Symbol.search';
-    case 8: return 'Symbol.species';
-    case 9: return 'Symbol.toPrimitive';
-    case 10: return 'Symbol.toStringTag';
-    case 11: return 'Symbol.unscopables';
+    case 0:
+      return "Symbol.asyncIterator";
+    case 1:
+      return "Symbol.hasInstance";
+    case 2:
+      return "Symbol.isConcatSpreadable";
+    case 3:
+      return "Symbol.iterator";
+    case 4:
+      return "Symbol.match";
+    case 5:
+      return "Symbol.matchAll";
+    case 6:
+      return "Symbol.replace";
+    case 7:
+      return "Symbol.search";
+    case 8:
+      return "Symbol.species";
+    case 9:
+      return "Symbol.toPrimitive";
+    case 10:
+      return "Symbol.toStringTag";
+    case 11:
+      return "Symbol.unscopables";
   }
-  return '';
+  return "";
 }
 
 function getObjectFlag(value: number) {
   switch (value) {
-    case 1: return 'non-extensible';
-    case 2: return 'sealed';
-    case 3: return 'frozen';
-    default: return 'none';
+    case 1:
+      return "non-extensible";
+    case 2:
+      return "sealed";
+    case 3:
+      return "frozen";
+    default:
+      return "none";
   }
 }
 
-function zip<Key, Value>(keys: Key[], values: Value[]): [key: Key, value: Value][] {
+function zip<Key, Value>(
+  keys: Key[],
+  values: Value[],
+): [key: Key, value: Value][] {
   const zipped: [key: Key, value: Value][] = [];
 
   for (let i = 0, len = keys.length; i < len; i++) {
@@ -323,20 +387,23 @@ function zip<Key, Value>(keys: Key[], values: Value[]): [key: Key, value: Value]
 
 interface RenderContext {
   getNode: (index: number) => SerovalNode | undefined;
-  getPromise: (index: number) => Extract<SerovalNode, { t: 23 | 24 }> | undefined;
-  getStream: (index: number) => Extract<SerovalNode, { t: 32 | 33 | 34 }>[] | undefined;
+  getPromise: (
+    index: number,
+  ) => Extract<SerovalNode, { t: 23 | 24 }> | undefined;
+  getStream: (
+    index: number,
+  ) => Extract<SerovalNode, { t: 32 | 33 | 34 }>[] | undefined;
 }
 
 function getStreamKeyword(t: 32 | 33 | 34): string {
   switch (t) {
-    case 32: return 'next';
-    case 33: return 'throw';
-    case 34: return 'return';
+    case 32:
+      return "next";
+    case 33:
+      return "throw";
+    case 34:
+      return "return";
   }
-}
-
-function PropertySeparator() {
-  return <Text options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>:</Text>;
 }
 
 function renderSerovalNode(
@@ -345,55 +412,64 @@ function renderSerovalNode(
   onSelect: (index: number | undefined) => void,
   inner?: boolean,
 ): JSX.Element {
-  if (node.t >= 4 && (inner || node.t === 4) && node.i != null && !(node.t === 5 || node.t === 6 || node.t === 17)) {
+  if (
+    node.t >= 4 &&
+    (inner || node.t === 4) &&
+    node.i != null &&
+    !(node.t === 5 || node.t === 6 || node.t === 17)
+  ) {
     const index = node.i;
     const description = `id: ${index}`;
     const lookup = ctx.getNode(index)!;
     return (
       <CascadeOption data-start-seroval-link value={index}>
         <LinkIcon title={description} />
-        <Badge type="info" value={getNodeType(lookup)} />
-        <Badge type="info" value={description} />
+        <Badge type="info">{getNodeType(lookup)}</Badge>
+        <Badge type="info">{description}</Badge>
       </CascadeOption>
     );
   }
   switch (node.t) {
     // Number = 0,
     case 0:
-      return <SerovalValue value={node.s} />
+      return <SerovalValue value={node.s} />;
     // String = 1,
     case 1:
-      return <SerovalValue value={`"${node.s}"`} />
+      return <SerovalValue value={`"${node.s}"`} />;
     // Constant = 2,
     case 2:
-      return <SerovalValue value={getConstantValue(node.s)} />
+      return <SerovalValue value={getConstantValue(node.s)} />;
     // BigInt = 3,
     case 3:
       return (
         <>
-          <Badge type="info" value="bigint" />
+          <Badge type="info">bigint</Badge>
           <SerovalValue value={node.s} />
         </>
       );
     // Date = 5,
     case 5:
-      return <SerovalValue value={node.s} />
+      return <SerovalValue value={node.s} />;
     // RegExp = 6,
     case 6:
-      return <SerovalValue value={`/${node.c}/${node.m}`} />
+      return <SerovalValue value={`/${node.c}/${node.m}`} />;
     // Set = 7,
     case 7:
       return (
         <>
-          <Section title="Information" options={{ size: 'xs' }}>
+          <Section title="Information" options={{ size: "xs" }}>
             <div data-start-seroval-property>
               <SerovalValue value="size" />
               <PropertySeparator />
               <SerovalValue value={`${node.a.length}`} />
             </div>
           </Section>
-          <Section title="Items" options={{ size: 'xs' }}>
-            <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+          <Section title="Items" options={{ size: "xs" }}>
+            <Cascade<number | undefined>
+              data-start-seroval-properties
+              defaultValue={undefined}
+              onChange={onSelect}
+            >
               <For each={node.a.map((node, index) => [index, node] as const)}>
                 {([key, value]) => (
                   <div data-start-seroval-property>
@@ -411,15 +487,19 @@ function renderSerovalNode(
     case 8:
       return (
         <>
-          <Section title="Information" options={{ size: 'xs' }}>
+          <Section title="Information" options={{ size: "xs" }}>
             <div data-start-seroval-property>
               <SerovalValue value="size" />
               <PropertySeparator />
               <SerovalValue value={`${node.e.k.length}`} />
             </div>
           </Section>
-          <Section title="Items" options={{ size: 'xs' }}>
-            <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+          <Section title="Items" options={{ size: "xs" }}>
+            <Cascade<number | undefined>
+              data-start-seroval-properties
+              defaultValue={undefined}
+              onChange={onSelect}
+            >
               <For each={zip(node.e.k, node.e.v)}>
                 {([key, value]) => (
                   <div data-start-seroval-property>
@@ -437,7 +517,7 @@ function renderSerovalNode(
     case 9:
       return (
         <>
-          <Section title="Information" options={{ size: 'xs' }}>
+          <Section title="Information" options={{ size: "xs" }}>
             <div data-start-seroval-property>
               <SerovalValue value="length" />
               <PropertySeparator />
@@ -446,21 +526,25 @@ function renderSerovalNode(
             <div data-start-seroval-property>
               <SerovalValue value="state" />
               <PropertySeparator />
-              <Badge type="info" value={getObjectFlag(node.o)} />
+              <Badge type="info">{getObjectFlag(node.o)}</Badge>
             </div>
           </Section>
-          <Section title="Items" options={{ size: 'xs' }}>
-            <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+          <Section title="Items" options={{ size: "xs" }}>
+            <Cascade<number | undefined>
+              data-start-seroval-properties
+              defaultValue={undefined}
+              onChange={onSelect}
+            >
               <For each={node.a.map((node, index) => [index, node] as const)}>
                 {([key, value]) => (
                   <div data-start-seroval-property>
                     <SerovalValue value={key} />
                     <PropertySeparator />
-                    {
-                      value === 0
-                        ? <SerovalValue value="empty" />
-                        : renderSerovalNode(ctx, value, onSelect, true)
-                    }
+                    {value === 0 ? (
+                      <SerovalValue value="empty" />
+                    ) : (
+                      renderSerovalNode(ctx, value, onSelect, true)
+                    )}
                   </div>
                 )}
               </For>
@@ -474,7 +558,7 @@ function renderSerovalNode(
     case 11:
       return (
         <>
-          <Section title="Information" options={{ size: 'xs' }}>
+          <Section title="Information" options={{ size: "xs" }}>
             <div data-start-seroval-property>
               <SerovalValue value="size" />
               <PropertySeparator />
@@ -483,18 +567,22 @@ function renderSerovalNode(
             <div data-start-seroval-property>
               <SerovalValue value="state" />
               <PropertySeparator />
-              <Badge type="info" value={getObjectFlag(node.o)} />
+              <Badge type="info">{getObjectFlag(node.o)}</Badge>
             </div>
           </Section>
-          <Section title="Properties" options={{ size: 'xs' }}>
-            <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+          <Section title="Properties" options={{ size: "xs" }}>
+            <Cascade<number | undefined>
+              data-start-seroval-properties
+              defaultValue={undefined}
+              onChange={onSelect}
+            >
               <For each={zip(node.p.k, node.p.v)}>
                 {([key, value]) => (
                   <div data-start-seroval-property>
-                    {(
-                      typeof key === 'string'
-                        ? <SerovalValue value={`"${key}"`} />
-                        : renderSerovalNode(ctx, key, onSelect, true)
+                    {typeof key === "string" ? (
+                      <SerovalValue value={`"${key}"`} />
+                    ) : (
+                      renderSerovalNode(ctx, key, onSelect, true)
                     )}
                     <PropertySeparator />
                     {renderSerovalNode(ctx, value, onSelect, true)}
@@ -508,7 +596,11 @@ function renderSerovalNode(
     // Promise = 12,
     case 12:
       return (
-        <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+        <Cascade<number | undefined>
+          data-start-seroval-properties
+          defaultValue={undefined}
+          onChange={onSelect}
+        >
           {renderSerovalNode(ctx, node.f, onSelect, true)}
         </Cascade>
       );
@@ -518,7 +610,7 @@ function renderSerovalNode(
     case 14:
       return (
         <>
-          <Section title="Information" options={{ size: 'xs' }}>
+          <Section title="Information" options={{ size: "xs" }}>
             <div data-start-seroval-property>
               <SerovalValue value="message" />
               <PropertySeparator />
@@ -526,15 +618,21 @@ function renderSerovalNode(
             </div>
           </Section>
           <Show when={node.p}>
-            {current => (
-              <Section title="Properties" options={{ size: 'xs' }}>
-                <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+            {(current) => (
+              <Section title="Properties" options={{ size: "xs" }}>
+                <Cascade<number | undefined>
+                  data-start-seroval-properties
+                  defaultValue={undefined}
+                  onChange={onSelect}
+                >
                   <For each={zip(current().k, current().v)}>
                     {([key, value]) => (
                       <div data-start-seroval-property>
-                        {typeof key === 'string'
-                          ? <SerovalValue value={`"${key}"`} />
-                          : renderSerovalNode(ctx, key, onSelect, true)}
+                        {typeof key === "string" ? (
+                          <SerovalValue value={`"${key}"`} />
+                        ) : (
+                          renderSerovalNode(ctx, key, onSelect, true)
+                        )}
                         <PropertySeparator />
                         {renderSerovalNode(ctx, value, onSelect, true)}
                       </div>
@@ -543,12 +641,12 @@ function renderSerovalNode(
                 </Cascade>
               </Section>
             )}
-          </Show >
+          </Show>
         </>
       );
     // WKSymbol = 17,
     case 17:
-      return <SerovalValue value={getSymbolValue(node.s)} />
+      return <SerovalValue value={getSymbolValue(node.s)} />;
     // Reference = 18,
     case 18:
       break;
@@ -566,7 +664,7 @@ function renderSerovalNode(
     case 20:
       return (
         <>
-          <Section title="Information" options={{size: 'xs'}}>
+          <Section title="Information" options={{ size: "xs" }}>
             <div data-start-seroval-property>
               <SerovalValue value="byteLength" />
               <PropertySeparator />
@@ -578,8 +676,12 @@ function renderSerovalNode(
               <SerovalValue value={node.b} />
             </div>
           </Section>
-          <Section title="Buffer" options={{size: 'xs'}}>
-            <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+          <Section title="Buffer" options={{ size: "xs" }}>
+            <Cascade<number | undefined>
+              data-start-seroval-properties
+              defaultValue={undefined}
+              onChange={onSelect}
+            >
               {renderSerovalNode(ctx, node.f, onSelect, true)}
             </Cascade>
           </Section>
@@ -588,34 +690,44 @@ function renderSerovalNode(
     // Boxed = 21,
     case 21:
       return (
-        <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+        <Cascade<number | undefined>
+          data-start-seroval-properties
+          defaultValue={undefined}
+          onChange={onSelect}
+        >
           {renderSerovalNode(ctx, node.f, onSelect, true)}
         </Cascade>
       );
     case 22:
-      return <>
-        {(() => {
-          const result = ctx.getPromise(node.s);
-          if (result) {
-            const status = result.t === 23 ? 'success' : 'failure' as const;
-            return (
-              <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
-                <div data-start-seroval-property>
-                  <SerovalValue value="status" />
-                  <PropertySeparator />
-                  <Badge type={status} value={status} />
-                </div>
-                <span data-start-seroval-property>
-                  <SerovalValue value="value" />
-                  <PropertySeparator />
-                  {renderSerovalNode(ctx, result.a[1], onSelect, true)}
-                </span>
-              </Cascade>
-            );
-          }
-          return <Badge type="warning" value="pending" />
-        })()}
-      </>;
+      return (
+        <>
+          {(() => {
+            const result = ctx.getPromise(node.s);
+            if (result) {
+              const status = result.t === 23 ? "success" : ("failure" as const);
+              return (
+                <Cascade<number | undefined>
+                  data-start-seroval-properties
+                  defaultValue={undefined}
+                  onChange={onSelect}
+                >
+                  <div data-start-seroval-property>
+                    <SerovalValue value="status" />
+                    <PropertySeparator />
+                    <Badge type={status}>{status}</Badge>
+                  </div>
+                  <span data-start-seroval-property>
+                    <SerovalValue value="value" />
+                    <PropertySeparator />
+                    {renderSerovalNode(ctx, result.a[1], onSelect, true)}
+                  </span>
+                </Cascade>
+              );
+            }
+            return <Badge type="warning">pending</Badge>;
+          })()}
+        </>
+      );
     // Plugin = 25
     case 25:
       // due to the nature of this node, we have to traverse it ourselves
@@ -639,7 +751,11 @@ function renderSerovalNode(
           {(() => {
             const result = ctx.getStream(node.i) || [];
             return (
-              <Cascade<number | undefined> data-start-seroval-properties defaultValue={undefined} onChange={onSelect}>
+              <Cascade<number | undefined>
+                data-start-seroval-properties
+                defaultValue={undefined}
+                onChange={onSelect}
+              >
                 <For each={result}>
                   {(current) => (
                     <div data-start-seroval-property>
@@ -662,8 +778,8 @@ interface SerovalNodeRendererProps extends RenderContext {
 }
 
 function SerovalNodeRenderer(props: SerovalNodeRendererProps): JSX.Element {
-  const [, rest] = splitProps(props, ['node']);
-  const [next, setNext] = createSignal<SerovalNode>()
+  const [, rest] = splitProps(props, ["node"]);
+  const [next, setNext] = createSignal<SerovalNode>();
 
   function onSelect(index: number | undefined) {
     if (index == null) {
@@ -678,44 +794,39 @@ function SerovalNodeRenderer(props: SerovalNodeRendererProps): JSX.Element {
       <div data-start-seroval-node>
         <div data-start-seroval-node-header>
           {props.node.i != null && (
-            <Badge
-              type="info"
-              value={`id: ${props.node.i}`}
-            />
+            <Badge type="info">{`id: ${props.node.i}`}</Badge>
           )}
-          <Badge type="info" value={getNodeType(props.node)} />
+          <Badge type="info">{getNodeType(props.node)}</Badge>
         </div>
         <div data-start-seroval-node-content>
           {renderSerovalNode(props, props.node, onSelect)}
         </div>
       </div>
       <Show when={next()} keyed>
-        {(current) => (
-          <SerovalNodeRenderer node={current} {...rest} />
-        )}
+        {(current) => <SerovalNodeRenderer node={current} {...rest} />}
       </Show>
     </>
   );
 }
 
-interface SerovalRendererProps extends Omit<RenderContext, 'onSelect'> {
+interface SerovalRendererProps extends Omit<RenderContext, "onSelect"> {
   node?: SerovalNode;
 }
 
 function SerovalRenderer(props: SerovalRendererProps): JSX.Element {
-  const [, rest] = splitProps(props, ['node']);
+  const [, rest] = splitProps(props, ["node"]);
   return (
     <div data-start-seroval-renderer>
       <Show when={props.node}>
-        {(current) => (
-          <SerovalNodeRenderer node={current()} {...rest} />
-        )}
+        {(current) => <SerovalNodeRenderer node={current()} {...rest} />}
       </Show>
     </div>
   );
 }
 
-function createSimpleStore<T extends Record<string | number, unknown>>(initial: T) {
+function createSimpleStore<T extends Record<string | number, unknown>>(
+  initial: T,
+) {
   const [state, setState] = createSignal<T>(initial);
 
   return {
@@ -736,16 +847,22 @@ function createSimpleStore<T extends Record<string | number, unknown>>(initial: 
         ...current,
         [key]: value(current[key]),
       }));
-    }
-  }
+    },
+  };
 }
 
 export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
   const [selected, setSelected] = createSignal<SerovalNode>();
 
-  const references = createSimpleStore<Record<number, Extract<SerovalNode, { i: number }> | undefined>>({});
-  const streams = createSimpleStore<Record<number, Extract<SerovalNode, { t: 32 | 33 | 34 }>[] | undefined>>({});
-  const promises = createSimpleStore<Record<number, Extract<SerovalNode, { t: 23 | 24 }> | undefined>>({});
+  const references = createSimpleStore<
+    Record<number, Extract<SerovalNode, { i: number }> | undefined>
+  >({});
+  const streams = createSimpleStore<
+    Record<number, Extract<SerovalNode, { t: 32 | 33 | 34 }>[] | undefined>
+  >({});
+  const promises = createSimpleStore<
+    Record<number, Extract<SerovalNode, { t: 23 | 24 }> | undefined>
+  >({});
 
   createEffect(async () => {
     setSelected(undefined);

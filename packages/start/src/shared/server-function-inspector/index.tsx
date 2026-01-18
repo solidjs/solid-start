@@ -15,6 +15,7 @@ import { Dialog, DialogOverlay, DialogPanel } from "../ui/Dialog.tsx";
 import { Section } from "../ui/Section.tsx";
 import { Select, SelectOption } from "../ui/Select.tsx";
 import { Tab, TabGroup, TabList, TabPanel } from "../ui/Tabs.tsx";
+import { FormDataViewer } from "./FormDataViewer.tsx";
 import { HeadersViewer } from "./HeadersViewer.tsx";
 import { HexViewer } from "./HexViewer.tsx";
 import { SerovalViewer } from "./SerovalViewer.tsx";
@@ -37,12 +38,13 @@ function ContentViewer(props: ContentViewerProps): JSX.Element {
       </Section>
       <Section title="Body">
         {(() => {
-          const startType = props.source.source.headers.get(BODY_FORMAT_KEY);
-          const contentType = props.source.source.headers.get('Content-Type');
+          const source = props.source.source.clone();
+          const startType = source.headers.get(BODY_FORMAT_KEY);
+          const contentType = source.headers.get('Content-Type');
           switch (true) {
             case startType === "true":
             case startType === BodyFormat.Seroval:
-              return <SerovalViewer stream={props.source.source.clone()} />;
+              return <SerovalViewer stream={source} />;
             case startType === BodyFormat.String:
               return undefined;
             case startType === BodyFormat.File: {
@@ -50,7 +52,7 @@ function ContentViewer(props: ContentViewerProps): JSX.Element {
             }
             case startType === BodyFormat.FormData:
             case contentType?.startsWith("multipart/form-data"):
-              return undefined;
+              return <FormDataViewer source={source.formData()} />;
             case startType === BodyFormat.URLSearchParams:
             case contentType?.startsWith("application/x-www-form-urlencoded"):
               return undefined;
@@ -59,7 +61,7 @@ function ContentViewer(props: ContentViewerProps): JSX.Element {
             case startType === BodyFormat.ArrayBuffer:
               return undefined;
             case startType === BodyFormat.Uint8Array:
-              return <HexViewer bytes={props.source.source.clone().bytes()} />;
+              return <HexViewer bytes={source.bytes()} />;
           }
         })()}
       </Section>
@@ -188,16 +190,17 @@ export function ServerFunctionInspector(): JSX.Element {
                               <span class="server-function-instance-detail">
                                 <Badge
                                   type="info"
-                                  value={current().request.source.method}
-                                />
+                                >
+                                  {current().request.source.method}
+                                </Badge>
                                 {instance}
                               </span>
                               <Show when={current().response}>
                                 {(response) => {
                                   if (response().source.ok) {
-                                    return <Badge type="success" value={response().source.status} />;
+                                    return <Badge type="success">{response().source.status}</Badge>;
                                   }
-                                  return <Badge type="failure" value={response().source.status} />;
+                                  return <Badge type="failure">{response().source.status}</Badge>;
                                 }}
                               </Show>
                             </>
