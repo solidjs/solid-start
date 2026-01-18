@@ -154,15 +154,15 @@ async function fetchServerFunction(
       ? createRequest(base, id, instance, { ...options, body: args[0] })
       : args.length === 1 && args[0] instanceof URLSearchParams
         ? createRequest(base, id, instance, {
-            ...options,
-            body: args[0],
-            headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" },
-          })
+          ...options,
+          body: args[0],
+          headers: { ...options.headers, "Content-Type": "application/x-www-form-urlencoded" },
+        })
         : createRequest(base, id, instance, {
-            ...options,
-            body: JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
-            headers: { ...options.headers, "Content-Type": "application/json" },
-          }));
+          ...options,
+          body: JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
+          headers: { ...options.headers, "Content-Type": "application/json" },
+        }));
 
   if (
     response.headers.has("Location") ||
@@ -193,12 +193,7 @@ async function fetchServerFunction(
   return result;
 }
 
-export function createServerReference(id: string) {
-  let baseURL = import.meta.env.BASE_URL ?? "/";
-  if (!baseURL.endsWith("/")) baseURL += "/";
-
-  const fn = (...args: any[]) => fetchServerFunction(`${baseURL}_server`, id, {}, args);
-
+function enhanceServerFunction(id: string, baseURL: string, fn: Function) {
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
@@ -215,11 +210,11 @@ export function createServerReference(id: string) {
             return fetchServerFunction(
               encodeArgs
                 ? url +
-                    (args.length
-                      ? `&args=${encodeURIComponent(
-                          JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
-                        )}`
-                      : "")
+                (args.length
+                  ? `&args=${encodeURIComponent(
+                    JSON.stringify(await Promise.resolve(toJSONAsync(args, { plugins }))),
+                  )}`
+                  : "")
                 : `${baseURL}_server`,
               id,
               options,
@@ -232,6 +227,27 @@ export function createServerReference(id: string) {
       }
       return (target as any)[prop];
     },
+  });
+}
+
+export function createServerReference(id: string) {
+  let baseURL = import.meta.env.BASE_URL ?? "/";
+  if (!baseURL.endsWith("/")) baseURL += "/";
+
+  const fn = (...args: any[]) => fetchServerFunction(`${baseURL}_server`, id, {}, args);
+  return enhanceServerFunction(id, baseURL, fn);
+}
+
+export function createServerFunction<T extends any[], R>(
+  id: string,
+  fn: () => Promise<(...args: T) => Promise<R>>,
+) {
+  let baseURL = import.meta.env.BASE_URL ?? "/";
+  if (!baseURL.endsWith("/")) baseURL += "/";
+  let instance: (...args: T) => Promise<R>;
+  return enhanceServerFunction(id, baseURL, async (...args: T) => {
+    instance = instance || (await fn());
+    return instance(...args);
   });
 }
 
