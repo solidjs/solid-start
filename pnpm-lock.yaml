@@ -335,8 +335,8 @@ importers:
         specifier: ^6.1.4
         version: 6.1.4
       dismantle:
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.6.1
+        version: 0.6.1
       error-stack-parser:
         specifier: ^2.1.4
         version: 2.1.4
@@ -2930,8 +2930,8 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
-  dismantle@0.6.0:
-    resolution: {integrity: sha512-StVGWwjFNIjYteHZfWbFKlyVQf4anQDmGEOF0W/jHgxGZuWxiwRfcq69sT9DnFPorsAOQXAOl1cBJhHE6oQfEg==}
+  dismantle@0.6.1:
+    resolution: {integrity: sha512-O2Q4sAVCpswhB/qDldk2J2vk+AdwkYuUuaAT9vRw6oJHUGJ5Tdawx114DIjATuPXuxEuGGxJqquZr9V0xxZ0Qg==}
     engines: {node: '>=10'}
 
   dlv@1.1.3:
@@ -6039,7 +6039,7 @@ snapshots:
 
   '@babel/parser@7.28.5':
     dependencies:
-      '@babel/types': 7.28.5
+      '@babel/types': 7.28.6
 
   '@babel/parser@7.28.6':
     dependencies:
@@ -7586,12 +7586,12 @@ snapshots:
 
   '@types/babel__generator@7.27.0':
     dependencies:
-      '@babel/types': 7.28.5
+      '@babel/types': 7.28.6
 
   '@types/babel__template@7.4.4':
     dependencies:
       '@babel/parser': 7.28.5
-      '@babel/types': 7.28.5
+      '@babel/types': 7.28.6
 
   '@types/babel__traverse@7.28.0':
     dependencies:
@@ -8397,7 +8397,7 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
-  dismantle@0.6.0:
+  dismantle@0.6.1:
     dependencies:
       '@babel/core': 7.28.6
       '@babel/generator': 7.28.6
