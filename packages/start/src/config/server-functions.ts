@@ -231,7 +231,7 @@ export function serverFunctionsPlugin(
         }
         return null;
       },
-      load(id, opts) {
+      async load(id, opts) {
         const mode = opts?.ssr ? 'server' : 'client';
         if (id === VIRTUAL_MODULE) {
           const current = new Debouncer(() =>
@@ -240,7 +240,8 @@ export function serverFunctionsPlugin(
               .join('\n'),
           );
           preload[mode] = current;
-          return current.promise.reference;
+          const result = await current.promise.reference;
+          return result;
         }
         return null;
       },
@@ -278,23 +279,36 @@ export function serverFunctionsPlugin(
         if (!filter(id)) {
           return null;
         }
-        const preloader = preload[mode];
-        if (preloader) {
-          preloader.defer();
+        const clientPreloader = preload[mode];
+        if (clientPreloader) {
+          clientPreloader.defer();
         }
-        const result = await compile(id, code, {
+        const clientResult = await compile(id!, code, {
           ...options,
-          mode,
+          mode: 'client',
           env,
         });
-
         invalidateModules(
           currentServer,
-          mergeManifestRecord(manifest[mode], {
-            files: result.files,
-            entries: new Set(result.entries),
+          mergeManifestRecord(manifest.client, {
+            files: clientResult.files,
+            entries: new Set(clientResult.entries),
           }),
         );
+        const serverResult = await compile(id!, code, {
+          ...options,
+          mode: 'server',
+          env,
+        });
+        invalidateModules(
+          currentServer,
+          mergeManifestRecord(manifest.server, {
+            files: serverResult.files,
+            entries: new Set(serverResult.entries),
+          }),
+        );
+
+        const result = opts?.ssr ? serverResult : clientResult;
 
         return {
           code: result.code || '',
