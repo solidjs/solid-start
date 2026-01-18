@@ -1,5 +1,5 @@
 import { For, type JSX } from 'solid-js';
-
+import { Text } from './Text.tsx';
 import './Properties.css';
 
 export type PropertyEntry = [key: unknown, value: unknown];
@@ -26,4 +26,8 @@ export function Properties<T extends PropertyEntry>(
       </For>
     </div>
   );
+}
+
+export function PropertySeparator() {
+  return <Text options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>:</Text>;
 }

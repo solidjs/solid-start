@@ -1,16 +1,6 @@
 [data-start-seroval-viewer] {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  border: 1px oklch(70.7% 0.165 254.624) solid;
-  overflow: auto;
-  width: 100%;
-  max-height: 50vh;
-}
-
-[data-start-seroval-value] {
-  display: flex;
-  gap: 0.25rem;
-  align-items: center;
 }
 
 [data-start-seroval-promise] {
@@ -21,9 +11,11 @@
 
 [data-start-seroval-renderer] {
   display: flex;
+  border-top: 1px oklch(70.7% 0.165 254.624) solid;
+  border-bottom: 1px oklch(70.7% 0.165 254.624) solid;
 }
 
-[data-start-seroval-renderer] > * + * {
+[data-start-seroval-renderer] > * {
   border-left: 1px oklch(70.7% 0.165 254.624) solid;
 }
 
