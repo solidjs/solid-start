@@ -10,10 +10,7 @@
   background-color: oklch(97% 0.014 254.604);
 
   color: rgb(17 24 39);
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
   border: none;
