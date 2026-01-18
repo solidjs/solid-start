@@ -1,4 +1,3 @@
-import { getServerFnById } from "solidstart:server-fn-manifest";
 import { parseSetCookie } from "cookie-es";
 import { type H3Event, parseCookies } from "h3";
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
@@ -22,6 +21,7 @@ import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
 import { createPageEvent } from "../server/handler.ts";
 import type { FetchEvent, PageEvent } from "../server/types.ts";
 import { getExpectedRedirectStatus } from "../server/util.ts";
+import { getServerFunction } from "./manifest.ts";
 
 function createChunk(data: string) {
   const encodeData = new TextEncoder().encode(data);
@@ -91,7 +91,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
   }
 
-  const serverFunction = await getServerFnById(functionId!);
+  const serverFunction = getServerFunction(functionId!);
 
   let parsed: any[] = [];
 
