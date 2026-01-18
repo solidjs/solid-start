@@ -1,9 +1,11 @@
 import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
+import { registerServerFunction } from "./manifest.ts";
 
-export function createServerReference(fn: Function, id: string) {
-  if (typeof fn !== "function")
-    throw new Error("Export from a 'use server' module must be a function");
+function enhanceServerFunction<T extends any[], R>(
+  id: string,
+  fn: (...args: T) => Promise<R>,
+) {
   let baseURL = import.meta.env.BASE_URL ?? "/";
   if (!baseURL.endsWith("/")) baseURL += "/";
 
@@ -15,9 +17,10 @@ export function createServerReference(fn: Function, id: string) {
       if (prop === "GET") return receiver;
       return (target as any)[prop];
     },
-    apply(target, thisArg, args) {
+    apply(target, thisArg, args: T) {
       const ogEvt = getRequestEvent();
-      if (!ogEvt) throw new Error("Cannot call server function outside of a request");
+      if (!ogEvt)
+        throw new Error("Cannot call server function outside of a request");
       const evt = { ...ogEvt };
       evt.locals.serverFunctionMeta = {
         id,
@@ -27,5 +30,25 @@ export function createServerReference(fn: Function, id: string) {
         return fn.apply(thisArg, args);
       });
     },
+  });
+}
+
+export function createServerReference<T extends any[], R>(
+  id: string,
+  fn: (...args: T) => Promise<R>,
+) {
+  let baseURL = import.meta.env.BASE_URL ?? "/";
+  if (!baseURL.endsWith("/")) baseURL += "/";
+
+  return registerServerFunction(id, enhanceServerFunction(id, fn));
+}
+
+export function createServerFunction<T extends any[], R>(
+  id: string,
+  fn: () => Promise<(...args: T) => Promise<R>>,
+) {
+  let instance = fn();
+  return enhanceServerFunction(id, async (...args: T) => {
+    return (await instance)(...args);
   });
 }
