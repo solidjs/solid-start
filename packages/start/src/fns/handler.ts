@@ -153,7 +153,7 @@ export async function handleServerFunction(h3Event: H3Event) {
       event.locals.serverFunctionMeta = {
         id: functionId,
       };
-      return serverFunction(...parsed);
+      return serverFunction({ l:[], m:[] },...parsed);
     });
 
     if (singleFlight && instance) {

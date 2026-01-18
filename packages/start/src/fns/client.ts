@@ -145,7 +145,7 @@ async function fetchServerFunction(
   base: string,
   id: string,
   options: Omit<RequestInit, "body">,
-  args: any[],
+  [_ctx, ...args]: any[],
 ) {
   const instance = `server-fn:${INSTANCE++}`;
   const response = await (args.length === 0
