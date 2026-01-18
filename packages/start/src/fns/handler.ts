@@ -18,10 +18,10 @@ import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 
-import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
-import { createPageEvent } from "./handler.ts";
-import type { FetchEvent, PageEvent } from "./types.ts";
-import { getExpectedRedirectStatus } from "./util.ts";
+import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
+import { createPageEvent } from "../server/handler.ts";
+import type { FetchEvent, PageEvent } from "../server/types.ts";
+import { getExpectedRedirectStatus } from "../server/util.ts";
 
 function createChunk(data: string) {
   const encodeData = new TextEncoder().encode(data);

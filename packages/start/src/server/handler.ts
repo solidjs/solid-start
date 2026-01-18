@@ -9,7 +9,7 @@ import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
-import { handleServerFunction } from "./server-functions-handler.ts";
+import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
