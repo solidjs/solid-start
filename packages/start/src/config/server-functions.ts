@@ -272,8 +272,9 @@ export function serverFunctionsPlugin(
     },
     {
       name: "solid-start:server-functions/compiler",
-      async transform(code, id, opts) {
+      async transform(code, fileId, opts) {
         const mode = opts?.ssr ? 'server' : 'client';
+        const [id] = fileId.split('?');
         if (!filter(id)) {
           return null;
         }

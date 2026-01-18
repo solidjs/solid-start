@@ -1,12 +1,10 @@
-type HandlerRegistration = [id: string, callback: Function];
-
-const REGISTRATIONS = new Map<string, HandlerRegistration>();
+const REGISTRATIONS = new Map<string, Function>();
 
 export function registerServerFunction<T extends any[], R>(
   id: string,
   callback: (...args: T) => Promise<R>,
 ) {
-  REGISTRATIONS.set(id, [id, callback]);
+  REGISTRATIONS.set(id, callback);
   return callback;
 }
 
