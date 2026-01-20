@@ -8,13 +8,14 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Portal } from "solid-js/web";
-import { BODY_FORMAT_KEY, BodyFormat } from "../../server/server-functions-shared.ts";
+import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "../../server/server-functions-shared.ts";
 import { Badge } from "../ui/Badge.tsx";
 import Button from "../ui/Button.tsx";
 import { Dialog, DialogOverlay, DialogPanel } from "../ui/Dialog.tsx";
 import { Section } from "../ui/Section.tsx";
 import { Select, SelectOption } from "../ui/Select.tsx";
 import { Tab, TabGroup, TabList, TabPanel } from "../ui/Tabs.tsx";
+import { BlobViewer } from "./BlobViewer.tsx";
 import { FormDataViewer } from "./FormDataViewer.tsx";
 import { HeadersViewer } from "./HeadersViewer.tsx";
 import { HexViewer } from "./HexViewer.tsx";
@@ -25,6 +26,21 @@ import {
   type ServerFunctionResponse,
 } from "./server-function-tracker.ts";
 import "./styles.css";
+import { URLSearchParamsViewer } from "./URLSearchParamsViewer.tsx";
+
+async function getFile(source: Response | Request): Promise<File> {
+  const formData = await source.formData();
+  const file = formData.get(BODY_FORMAL_FILE);
+  if (!(file && file instanceof File)) {
+    throw new Error('invalid file input');
+  }
+  return file;
+}
+
+async function getURLSearchParams(source: Response | Request): Promise<URLSearchParams> {
+  const text = await source.text();
+  return new URLSearchParams(text);
+}
 
 interface ContentViewerProps {
   source: ServerFunctionRequest | ServerFunctionResponse;
@@ -46,20 +62,18 @@ function ContentViewer(props: ContentViewerProps): JSX.Element {
             case startType === BodyFormat.Seroval:
               return <SerovalViewer stream={source} />;
             case startType === BodyFormat.String:
-              return undefined;
-            case startType === BodyFormat.File: {
-              return undefined;
-            }
+              return <HexViewer bytes={source.bytes()} />;
+            case startType === BodyFormat.File:
+              return <BlobViewer source={getFile(source)} />;
             case startType === BodyFormat.FormData:
             case contentType?.startsWith("multipart/form-data"):
               return <FormDataViewer source={source.formData()} />;
             case startType === BodyFormat.URLSearchParams:
             case contentType?.startsWith("application/x-www-form-urlencoded"):
-              return undefined;
+              return <URLSearchParamsViewer source={getURLSearchParams(source)} />;
             case startType === BodyFormat.Blob:
-              return undefined;
+              return <BlobViewer source={source.blob()} />;
             case startType === BodyFormat.ArrayBuffer:
-              return undefined;
             case startType === BodyFormat.Uint8Array:
               return <HexViewer bytes={source.bytes()} />;
           }
