@@ -1,25 +1,22 @@
 import { createResource, For, type JSX, Show, Suspense } from 'solid-js';
 import { PropertySeparator } from '../ui/Properties.tsx';
 import { Section } from '../ui/Section';
-import { BlobViewer } from './BlobViewer.tsx';
 import { SerovalValue } from './SerovalValue.tsx';
 
-interface FormDataViewerInnerProps {
-  source: FormData;
+interface URLSearchParamsViewerInnerProps {
+  source: URLSearchParams;
 }
 
-function FormDataViewerInner(props: FormDataViewerInnerProps): JSX.Element {
+function URLSearchParamsViewerInner(props: URLSearchParamsViewerInnerProps): JSX.Element {
   return (
-    <Section title="FormData" options={{ size: 'sm' }}>
-      <div data-start-form-data-viewer data-start-seroval-properties>
+    <Section title="URLSearchParams" options={{ size: 'sm' }}>
+      <div data-start-seroval-properties>
         <For each={Array.from(props.source.entries())}>
           {([key, value]) => (
             <div data-start-seroval-property>
               <SerovalValue value={`"${key}"`} />
               <PropertySeparator />
-              {typeof value === 'string'
-                ? <SerovalValue value={`"${JSON.stringify(value)}"`} />
-                : <BlobViewer source={value} />}
+              <SerovalValue value={`"${JSON.stringify(value)}"`} />
             </div>
           )}
         </For>
@@ -28,17 +25,17 @@ function FormDataViewerInner(props: FormDataViewerInnerProps): JSX.Element {
   );
 }
 
-export interface FormDataViewerProps {
-  source: FormData | Promise<FormData>;
+export interface URLSearchParamsViewerProps {
+  source: URLSearchParams | Promise<URLSearchParams>;
 }
 
-export function FormDataViewer(props: FormDataViewerProps) {
+export function URLSearchParamsViewer(props: URLSearchParamsViewerProps) {
   const [data] = createResource(() => props.source);
 
   return (
     <Suspense>
       <Show when={data()}>
-        {(current) => <FormDataViewerInner source={current()} />}
+        {(current) => <URLSearchParamsViewerInner source={current()} />}
       </Show>
     </Suspense>
   );
