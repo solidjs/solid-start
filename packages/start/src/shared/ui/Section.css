@@ -10,7 +10,10 @@
 
 
 [data-start-section-content] {
-  width: 100%;
+  padding-left: 0.5rem;
+  border-left: 1px oklch(70.7% 0.165 254.624) solid;
+
+  width: calc(100% - 0.5rem);
 
   overflow: auto;
 }
