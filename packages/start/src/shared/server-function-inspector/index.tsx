@@ -1,5 +1,6 @@
 import {
   createEffect,
+  createMemo,
   createSignal,
   For,
   type JSX,
@@ -27,6 +28,9 @@ import {
 } from "./server-function-tracker.ts";
 import "./styles.css";
 import { URLSearchParamsViewer } from "./URLSearchParamsViewer.tsx";
+import { Text } from "../ui/Text.tsx";
+import Placeholder from "../ui/Placeholder.tsx";
+import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
 async function getFile(source: Response | Request): Promise<File> {
   const formData = await source.formData();
@@ -87,24 +91,80 @@ interface RequestViewerProps {
   request: ServerFunctionRequest;
 }
 
+function convertRequestToEntries(request: Request) {
+  return [
+    ['Cache', request.cache],
+    ['Credentials', request.credentials],
+    ['Destination', request.destination],
+    ['Integrity', request.integrity],
+    ['Keep Alive', request.keepalive],
+    ['Mode', request.mode],
+    ['Redirect', request.redirect],
+    ['Referrer', request.referrer],
+    ['Referrer Policy', request.referrerPolicy],
+    ['URL', request.url],
+  ];
+}
+
 function RequestViewer(props: RequestViewerProps): JSX.Element {
   return (
-    <TabPanel class="server-function-instance-tab-panel" value="request">
+    <TabPanel value="request">
+      <Section title="Information">
+        <For each={convertRequestToEntries(props.request.source)}>
+          {([key, value]) => (
+            <div data-start-property>
+              <Text options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>{key}</Text>
+              <PropertySeparator />
+              <SerovalValue value={value} />
+            </div>
+          )}
+        </For>
+      </Section>
       <ContentViewer source={props.request} />
     </TabPanel>
   );
 }
 
 interface ResponseViewerProps {
+  request: ServerFunctionRequest;
   response?: ServerFunctionResponse;
+}
+
+function convertResponseToEntries(response: Response) {
+  return [
+    ['OK', response.ok],
+    ['Redirected', response.redirected],
+    ['Status', response.status],
+    ['Status Text', response.statusText],
+    ['Type', response.type],
+    ['URL', response.url],
+  ];
 }
 
 function ResponseViewer(props: ResponseViewerProps): JSX.Element {
   return (
-    <TabPanel class="server-function-instance-tab-panel" value="response">
+    <TabPanel value="response">
       <Show when={props.response}>
         {(instance) => (
-          <ContentViewer source={instance()} />
+          <>
+            <Section title="Information">
+              <For each={convertResponseToEntries(instance().source)}>
+                {([key, value]) => (
+                  <div data-start-property>
+                    <Text options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>{key}</Text>
+                    <PropertySeparator />
+                    <SerovalValue value={value} />
+                  </div>
+                )}
+              </For>
+              <div data-start-property>
+                <Text options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>Timing</Text>
+                <PropertySeparator />
+                <SerovalValue value={`${((instance().time - props.request.time) / 1000).toFixed(2)}s`} />
+              </div>
+            </Section>
+            <ContentViewer source={instance()} />
+          </>
         )}
       </Show>
     </TabPanel>
@@ -148,8 +208,18 @@ function ServerFunctionInstanceViewer(
         </div>
       </div>
       <RequestViewer request={props.instance.request} />
-      <ResponseViewer response={props.instance.response} />
+      <ResponseViewer request={props.instance.request} response={props.instance.response} />
     </TabGroup>
+  );
+}
+
+function EmptyServerFunctions(): JSX.Element {
+  return (
+    <Placeholder>
+      <Text options={{ size: 'xs' }}>
+        No server function calls detected.
+      </Text>
+    </Placeholder>
   );
 }
 
@@ -180,6 +250,8 @@ export function ServerFunctionInspector(): JSX.Element {
     (window as any).__START__SERVER_FN__ = setIsOpen;
   });
 
+  const keys = createMemo(() => Object.keys(store.instances));
+
   return (
     <Portal>
       <Dialog isOpen={isOpen()} onChange={setIsOpen}>
@@ -189,41 +261,43 @@ export function ServerFunctionInspector(): JSX.Element {
             <div class="server-function-inspector">
               {/* list of calls */}
               <div class="server-function-instances-container">
-                <Select
-                  class="server-function-instances"
-                  horizontal={false}
-                  value={currentInstance()}
-                  onChange={(current) => setCurrentInstance(current)}
-                >
-                  <For each={Object.keys(store.instances)}>
-                    {(instance) => (
-                      <SelectOption value={instance}>
-                        <Show when={store.instances[instance]}>
-                          {(current) => (
-                            <>
-                              <span class="server-function-instance-detail">
-                                <Badge
-                                  type="info"
-                                >
-                                  {current().request.source.method}
-                                </Badge>
-                                {instance}
-                              </span>
-                              <Show when={current().response}>
-                                {(response) => {
-                                  if (response().source.ok) {
-                                    return <Badge type="success">{response().source.status}</Badge>;
-                                  }
-                                  return <Badge type="failure">{response().source.status}</Badge>;
-                                }}
-                              </Show>
-                            </>
-                          )}
-                        </Show>
-                      </SelectOption>
-                    )}
-                  </For>
-                </Select>
+                <Show when={keys().length}  fallback={<EmptyServerFunctions />}>
+                  <Select
+                    class="server-function-instances"
+                    horizontal={false}
+                    value={currentInstance()}
+                    onChange={(current) => setCurrentInstance(current)}
+                  >
+                    <For each={keys()}>
+                      {(instance) => (
+                        <SelectOption value={instance}>
+                          <Show when={store.instances[instance]}>
+                            {(current) => (
+                              <>
+                                <span class="server-function-instance-detail">
+                                  <Badge
+                                    type="info"
+                                  >
+                                    {current().request.source.method}
+                                  </Badge>
+                                  {instance}
+                                </span>
+                                <Show when={current().response}>
+                                  {(response) => {
+                                    if (response().source.ok) {
+                                      return <Badge type="success">{response().source.status}</Badge>;
+                                    }
+                                    return <Badge type="failure">{response().source.status}</Badge>;
+                                  }}
+                                </Show>
+                              </>
+                            )}
+                          </Show>
+                        </SelectOption>
+                      )}
+                    </For>
+                  </Select> 
+                </Show>
               </div>
               {/* request/response viewer */}
               <Show when={currentInstance()}>

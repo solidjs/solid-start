@@ -45,4 +45,10 @@
   background-color: rgb(249 250 251);
   border-radius: 0.5rem;
   height: 100%;
+
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }

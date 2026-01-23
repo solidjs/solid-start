@@ -12,7 +12,7 @@ export interface SectionProps {
 export function Section(props: SectionProps): JSX.Element {
   return (
     <div data-start-section>
-      <Text data-start-section-title options={{ weight: 'bold', ...props.options }}>
+      <Text data-start-section-title options={{ weight: 'bold', font: 'sans', ...props.options }}>
         {props.title}
       </Text>
       <div data-start-section-content>
