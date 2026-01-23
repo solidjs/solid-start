@@ -11,10 +11,10 @@ import {
 import { SerovalChunkReader } from "../../server/serialization.ts";
 import { Badge } from "../ui/Badge.tsx";
 import { Cascade, CascadeOption } from "../ui/Cascade.tsx";
+import { PropertySeparator } from "../ui/Properties.tsx";
 import { Section } from "../ui/Section.tsx";
 import { HexViewer } from "./HexViewer.tsx";
 import { SerovalValue } from "./SerovalValue.tsx";
-import { PropertySeparator } from "../ui/Properties.tsx";
 
 import "./SerovalViewer.css";
 
@@ -153,6 +153,8 @@ function getNodeType(node: SerovalNode) {
     // StreamConstructor = 31,
     case 31:
       return "Stream";
+    case 35:
+      return "Sequence";
   }
   throw new Error("unsupported node type");
 }
@@ -266,7 +268,12 @@ function traverse(
       break;
     // Plugin = 25,
     case 25:
-      // due to the nature of this node, we have to traverse it ourselves
+      for (const key in node.s) {
+        const current = node.s[key];
+        if (current) {
+          traverse(current, handler);
+        }
+      }
       break;
     // SpecialReference = 26,
     case 26:
@@ -303,6 +310,14 @@ function traverse(
     // StreamReturn = 34
     case 34:
       traverse(node.f, handler);
+      break;
+    case 35:
+      // Traverse items
+      for (const child of node.a) {
+        if (child) {
+          traverse(child, handler);
+        }
+      }
       break;
   }
 }
@@ -442,17 +457,27 @@ function renderSerovalNode(
     // BigInt = 3,
     case 3:
       return (
-        <>
+        <div data-start-seroval-link>
           <Badge type="info">bigint</Badge>
           <SerovalValue value={node.s} />
-        </>
+        </div>
       );
     // Date = 5,
     case 5:
-      return <SerovalValue value={node.s} />;
+      return (
+        <div data-start-seroval-link>
+          <Badge type="info">Date</Badge>
+          <SerovalValue value={node.s} />
+        </div>
+      );
     // RegExp = 6,
     case 6:
-      return <SerovalValue value={`/${node.c}/${node.m}`} />;
+      return (
+        <div data-start-seroval-link>
+          <Badge type="info">RegExp</Badge>
+          <SerovalValue value={`/${node.c}/${node.m}`} />
+        </div>
+      );
     // Set = 7,
     case 7:
       return (
@@ -730,8 +755,34 @@ function renderSerovalNode(
       );
     // Plugin = 25
     case 25:
-      // due to the nature of this node, we have to traverse it ourselves
-      break;
+      return (
+        <>
+          <Section title="Information" options={{ size: "xs" }}>
+            <div data-start-seroval-property>
+              <SerovalValue value="plugin" />
+              <PropertySeparator />
+              <SerovalValue value={node.c} />
+            </div>
+          </Section>
+          <Section title="Properties" options={{ size: "xs" }}>
+            <Cascade<number | undefined>
+              data-start-seroval-properties
+              defaultValue={undefined}
+              onChange={onSelect}
+            >
+              <For each={Object.entries(node.s)}>
+                {([key, value]) => (
+                  <div data-start-seroval-property>
+                    <SerovalValue value={key} />
+                    <PropertySeparator />
+                    {renderSerovalNode(ctx, value, onSelect, true)}
+                  </div>
+                )}
+              </For>
+            </Cascade>
+          </Section>
+        </>
+      );
     // IteratorFactory = 27,
     case 27:
       break;
@@ -769,6 +820,24 @@ function renderSerovalNode(
             );
           })()}
         </>
+      );
+    case 35:
+      return (
+        <Cascade<number | undefined>
+          data-start-seroval-properties
+          defaultValue={undefined}
+          onChange={onSelect}
+        >
+          <For each={node.a}>
+            {(current, index) => (
+              <div data-start-seroval-property>
+                <SerovalValue value={index() === node.l ? 'return' : index() === node.s ? 'throw' : 'next'} />
+                <PropertySeparator />
+                {renderSerovalNode(ctx, current, onSelect, true)}
+              </div>
+            )}
+          </For>
+        </Cascade>
       );
   }
 }
@@ -917,12 +986,8 @@ export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
           case 27:
           case 29:
           case 31:
+          case 35:
             references.write(node.i, node);
-            break;
-          case 28: {
-            break;
-          }
-          case 30:
             break;
         }
       }

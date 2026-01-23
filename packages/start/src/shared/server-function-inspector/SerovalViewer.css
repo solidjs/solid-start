@@ -52,6 +52,12 @@
   color: oklch(62.3% 0.214 259.815);
 }
 
+[data-start-seroval-value-wrapper] {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
 [data-start-seroval-link] {
   display: inline-flex;
   gap: 0.25rem;
