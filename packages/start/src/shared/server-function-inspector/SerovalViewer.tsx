@@ -11,10 +11,9 @@ import {
 import { SerovalChunkReader } from "../../server/serialization.ts";
 import { Badge } from "../ui/Badge.tsx";
 import { Cascade, CascadeOption } from "../ui/Cascade.tsx";
-import { PropertySeparator } from "../ui/Properties.tsx";
 import { Section } from "../ui/Section.tsx";
 import { HexViewer } from "./HexViewer.tsx";
-import { SerovalValue } from "./SerovalValue.tsx";
+import { SerovalValue, PropertySeparator } from "./SerovalValue.tsx";
 
 import "./SerovalViewer.css";
 
@@ -483,7 +482,7 @@ function renderSerovalNode(
       return (
         <>
           <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="size" />
               <PropertySeparator />
               <SerovalValue value={`${node.a.length}`} />
@@ -491,13 +490,13 @@ function renderSerovalNode(
           </Section>
           <Section title="Items" options={{ size: "xs" }}>
             <Cascade<number | undefined>
-              data-start-seroval-properties
+              data-start-properties
               defaultValue={undefined}
               onChange={onSelect}
             >
               <For each={node.a.map((node, index) => [index, node] as const)}>
                 {([key, value]) => (
-                  <div data-start-seroval-property>
+                  <div data-start-property>
                     <SerovalValue value={key} />
                     <PropertySeparator />
                     {renderSerovalNode(ctx, value, onSelect, true)}
@@ -513,7 +512,7 @@ function renderSerovalNode(
       return (
         <>
           <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="size" />
               <PropertySeparator />
               <SerovalValue value={`${node.e.k.length}`} />
@@ -521,13 +520,13 @@ function renderSerovalNode(
           </Section>
           <Section title="Items" options={{ size: "xs" }}>
             <Cascade<number | undefined>
-              data-start-seroval-properties
+              data-start-properties
               defaultValue={undefined}
               onChange={onSelect}
             >
-              <For each={zip(node.e.k, node.e.v)}>
+              <For each={zip(node.e.k, node.e.v)} fallback={<SerovalValue value="none" />}>
                 {([key, value]) => (
-                  <div data-start-seroval-property>
+                  <div data-start-property>
                     {renderSerovalNode(ctx, key, onSelect, true)}
                     <PropertySeparator />
                     {renderSerovalNode(ctx, value, onSelect, true)}
@@ -543,12 +542,12 @@ function renderSerovalNode(
       return (
         <>
           <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="length" />
               <PropertySeparator />
               <SerovalValue value={`${node.a.length}`} />
             </div>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="state" />
               <PropertySeparator />
               <Badge type="info">{getObjectFlag(node.o)}</Badge>
@@ -556,13 +555,13 @@ function renderSerovalNode(
           </Section>
           <Section title="Items" options={{ size: "xs" }}>
             <Cascade<number | undefined>
-              data-start-seroval-properties
+              data-start-properties
               defaultValue={undefined}
               onChange={onSelect}
             >
-              <For each={node.a.map((node, index) => [index, node] as const)}>
+              <For each={node.a.map((node, index) => [index, node] as const)} fallback={<SerovalValue value="none" />}>
                 {([key, value]) => (
-                  <div data-start-seroval-property>
+                  <div data-start-property>
                     <SerovalValue value={key} />
                     <PropertySeparator />
                     {value === 0 ? (
@@ -584,12 +583,12 @@ function renderSerovalNode(
       return (
         <>
           <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="size" />
               <PropertySeparator />
               <SerovalValue value={`${node.p.k.length}`} />
             </div>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="state" />
               <PropertySeparator />
               <Badge type="info">{getObjectFlag(node.o)}</Badge>
@@ -597,13 +596,13 @@ function renderSerovalNode(
           </Section>
           <Section title="Properties" options={{ size: "xs" }}>
             <Cascade<number | undefined>
-              data-start-seroval-properties
+              data-start-properties
               defaultValue={undefined}
               onChange={onSelect}
             >
-              <For each={zip(node.p.k, node.p.v)}>
+              <For each={zip(node.p.k, node.p.v)} fallback={<SerovalValue value="none" />}>
                 {([key, value]) => (
-                  <div data-start-seroval-property>
+                  <div data-start-property>
                     {typeof key === "string" ? (
                       <SerovalValue value={`"${key}"`} />
                     ) : (
@@ -622,7 +621,7 @@ function renderSerovalNode(
     case 12:
       return (
         <Cascade<number | undefined>
-          data-start-seroval-properties
+          data-start-properties
           defaultValue={undefined}
           onChange={onSelect}
         >
@@ -636,7 +635,7 @@ function renderSerovalNode(
       return (
         <>
           <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="message" />
               <PropertySeparator />
               <SerovalValue value={`"${node.m}"`} />
@@ -646,13 +645,13 @@ function renderSerovalNode(
             {(current) => (
               <Section title="Properties" options={{ size: "xs" }}>
                 <Cascade<number | undefined>
-                  data-start-seroval-properties
+                  data-start-properties
                   defaultValue={undefined}
                   onChange={onSelect}
                 >
-                  <For each={zip(current().k, current().v)}>
+                  <For each={zip(current().k, current().v)} fallback={<SerovalValue value="none" />}>
                     {([key, value]) => (
-                      <div data-start-seroval-property>
+                      <div data-start-property>
                         {typeof key === "string" ? (
                           <SerovalValue value={`"${key}"`} />
                         ) : (
@@ -690,12 +689,12 @@ function renderSerovalNode(
       return (
         <>
           <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="byteLength" />
               <PropertySeparator />
               <SerovalValue value={node.l} />
             </div>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="byteOffset" />
               <PropertySeparator />
               <SerovalValue value={node.b} />
@@ -703,7 +702,7 @@ function renderSerovalNode(
           </Section>
           <Section title="Buffer" options={{ size: "xs" }}>
             <Cascade<number | undefined>
-              data-start-seroval-properties
+              data-start-properties
               defaultValue={undefined}
               onChange={onSelect}
             >
@@ -716,7 +715,7 @@ function renderSerovalNode(
     case 21:
       return (
         <Cascade<number | undefined>
-          data-start-seroval-properties
+          data-start-properties
           defaultValue={undefined}
           onChange={onSelect}
         >
@@ -732,16 +731,16 @@ function renderSerovalNode(
               const status = result.t === 23 ? "success" : ("failure" as const);
               return (
                 <Cascade<number | undefined>
-                  data-start-seroval-properties
+                  data-start-properties
                   defaultValue={undefined}
                   onChange={onSelect}
                 >
-                  <div data-start-seroval-property>
+                  <div data-start-property>
                     <SerovalValue value="status" />
                     <PropertySeparator />
                     <Badge type={status}>{status}</Badge>
                   </div>
-                  <span data-start-seroval-property>
+                  <span data-start-property>
                     <SerovalValue value="value" />
                     <PropertySeparator />
                     {renderSerovalNode(ctx, result.a[1], onSelect, true)}
@@ -758,7 +757,7 @@ function renderSerovalNode(
       return (
         <>
           <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value="plugin" />
               <PropertySeparator />
               <SerovalValue value={node.c} />
@@ -766,13 +765,13 @@ function renderSerovalNode(
           </Section>
           <Section title="Properties" options={{ size: "xs" }}>
             <Cascade<number | undefined>
-              data-start-seroval-properties
+              data-start-properties
               defaultValue={undefined}
               onChange={onSelect}
             >
-              <For each={Object.entries(node.s)}>
+              <For each={Object.entries(node.s)} fallback={<SerovalValue value="none" />}>
                 {([key, value]) => (
-                  <div data-start-seroval-property>
+                  <div data-start-property>
                     <SerovalValue value={key} />
                     <PropertySeparator />
                     {renderSerovalNode(ctx, value, onSelect, true)}
@@ -803,13 +802,13 @@ function renderSerovalNode(
             const result = ctx.getStream(node.i) || [];
             return (
               <Cascade<number | undefined>
-                data-start-seroval-properties
+                data-start-properties
                 defaultValue={undefined}
                 onChange={onSelect}
               >
-                <For each={result}>
+                <For each={result} fallback={<SerovalValue value="none" />}>
                   {(current) => (
-                    <div data-start-seroval-property>
+                    <div data-start-property>
                       <SerovalValue value={getStreamKeyword(current.t)} />
                       <PropertySeparator />
                       {renderSerovalNode(ctx, current.f, onSelect, true)}
@@ -824,13 +823,13 @@ function renderSerovalNode(
     case 35:
       return (
         <Cascade<number | undefined>
-          data-start-seroval-properties
+          data-start-properties
           defaultValue={undefined}
           onChange={onSelect}
         >
-          <For each={node.a}>
+          <For each={node.a} fallback={<SerovalValue value="none" />}>
             {(current, index) => (
-              <div data-start-seroval-property>
+              <div data-start-property>
                 <SerovalValue value={index() === node.l ? 'return' : index() === node.s ? 'throw' : 'next'} />
                 <PropertySeparator />
                 {renderSerovalNode(ctx, current, onSelect, true)}
@@ -862,10 +861,10 @@ function SerovalNodeRenderer(props: SerovalNodeRendererProps): JSX.Element {
     <>
       <div data-start-seroval-node>
         <div data-start-seroval-node-header>
+          <Badge type="info">{getNodeType(props.node)}</Badge>
           {props.node.i != null && (
             <Badge type="info">{`id: ${props.node.i}`}</Badge>
           )}
-          <Badge type="info">{getNodeType(props.node)}</Badge>
         </div>
         <div data-start-seroval-node-content>
           {renderSerovalNode(props, props.node, onSelect)}

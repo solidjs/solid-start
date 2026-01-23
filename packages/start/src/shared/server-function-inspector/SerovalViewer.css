@@ -69,15 +69,3 @@
   height: 1rem;
 }
 
-[data-start-seroval-properties] {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-[data-start-seroval-property] {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: nowrap;
-}
