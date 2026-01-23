@@ -1,19 +1,19 @@
 [data-start-section] {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
 }
 
 [data-start-section-title] {
-
+  text-transform: uppercase;
 }
 
 
 [data-start-section-content] {
+  margin-left: 0.5rem;
   padding-left: 0.5rem;
   border-left: 1px oklch(70.7% 0.165 254.624) solid;
 
-  width: calc(100% - 0.5rem);
+  width: calc(100% - 1rem);
 
   overflow: auto;
 }

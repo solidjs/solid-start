@@ -3,10 +3,6 @@
   line-height: 1rem;
 }
 
-[data-start-header-key] {
-  white-space: nowrap;
-}
-
-[data-start-header-value] {
-  white-space: nowrap;
+[data-start-headers-viewer] > [data-start-property] > *:first-child {
+  text-transform: capitalize;
 }

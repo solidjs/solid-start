@@ -1,7 +1,6 @@
 import { createResource, For, type JSX, Show, Suspense } from 'solid-js';
-import { PropertySeparator } from '../ui/Properties.tsx';
 import { Section } from '../ui/Section';
-import { SerovalValue } from './SerovalValue.tsx';
+import { SerovalValue, PropertySeparator } from './SerovalValue.tsx';
 
 interface URLSearchParamsViewerInnerProps {
   source: URLSearchParams;
@@ -10,10 +9,10 @@ interface URLSearchParamsViewerInnerProps {
 function URLSearchParamsViewerInner(props: URLSearchParamsViewerInnerProps): JSX.Element {
   return (
     <Section title="URLSearchParams" options={{ size: 'sm' }}>
-      <div data-start-seroval-properties>
+      <div data-start-properties>
         <For each={Array.from(props.source.entries())}>
           {([key, value]) => (
-            <div data-start-seroval-property>
+            <div data-start-property>
               <SerovalValue value={`"${key}"`} />
               <PropertySeparator />
               <SerovalValue value={`"${JSON.stringify(value)}"`} />
