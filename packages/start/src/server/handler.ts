@@ -79,6 +79,8 @@ export function createBaseHandler(
           return redirect(context.response.headers.get("Location")!, status);
         }
 
+        event.response.headers.set("content-type", "text/html");
+
         return html;
       }
 
