@@ -43,6 +43,7 @@ export function devServer(): Array<PluginOption> {
 
         return async () => {
           vitePreviewServer.middlewares.use(async (req, res) => {
+            // fix streaming because vite uses gzip by default
             res.setHeader("Content-Encoding", "identity");
 
             const webReq = new NodeRequest({ req, res });
