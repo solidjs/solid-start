@@ -41,12 +41,14 @@ export function devServer(): Array<PluginOption> {
         });
         app.mount("/", h3App);
 
-        vitePreviewServer.middlewares.use(async (req, res) => {
-          const webReq = new NodeRequest({ req, res });
+        return async () => {
+          vitePreviewServer.middlewares.use(async (req, res) => {
+            const webReq = new NodeRequest({ req, res });
 
-          const webRes = await app.fetch(webReq);
-          sendNodeResponse(res, webRes);
-        });
+            const webRes = await app.fetch(webReq);
+            sendNodeResponse(res, webRes);
+          });
+        };
       },
       configureServer(viteDevServer) {
         (globalThis as any).VITE_DEV_SERVER = viteDevServer;
