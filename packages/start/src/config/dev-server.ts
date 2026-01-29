@@ -6,11 +6,48 @@ import {
   type ViteDevServer,
 } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
+import { join, resolve } from "node:path";
+import { H3, serveStatic } from "h3";
+import { stat, readFile } from "node:fs/promises";
+
+type Server = {
+  default: { fetch: (req: Request) => Promise<Response> };
+};
 
 export function devServer(): Array<PluginOption> {
   return [
     {
       name: "solid-start-dev-server",
+      async configurePreviewServer(vitePreviewServer) {
+        const { default: h3App }: Server = await import(
+          resolve(process.cwd(), "dist/server/entry-server.js")
+        );
+        const app = new H3();
+        app.use("/_build/**", event => {
+          return serveStatic(event, {
+            indexNames: ["/index.html"],
+            headers: { "cache-control": "public, max-age=3156000, immutable" },
+            getContents: id => readFile(join(process.cwd(), "dist/client", id)),
+            getMeta: async id => {
+              const stats = await stat(join("dist/client", id)).catch(() => {});
+              if (stats?.isFile()) {
+                return {
+                  size: stats.size,
+                  mtime: stats.mtimeMs,
+                };
+              }
+            },
+          });
+        });
+        app.mount("/", h3App);
+
+        vitePreviewServer.middlewares.use(async (req, res) => {
+          const webReq = new NodeRequest({ req, res });
+
+          const webRes = await app.fetch(webReq);
+          sendNodeResponse(res, webRes);
+        });
+      },
       configureServer(viteDevServer) {
         (globalThis as any).VITE_DEV_SERVER = viteDevServer;
         return async () => {
@@ -40,9 +77,7 @@ export function devServer(): Array<PluginOption> {
             const webReq = new NodeRequest({ req, res });
 
             try {
-              const serverEntry: {
-                default: { fetch: (req: Request) => Promise<Response> };
-              } = await serverEnv.runner.import("./src/entry-server.tsx");
+              const serverEntry: Server = await serverEnv.runner.import("./src/entry-server.tsx");
 
               const webRes = await serverEntry.default.fetch(webReq);
 
