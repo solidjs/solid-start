@@ -229,7 +229,7 @@ export async function deserializeJSONStream(response: Response | Request) {
   return undefined;
 }
 
-export async function deserializeJSStream(id: string, response: Response) {
+export async function deserializeJSStream(id: string, response: Request | Response) {
   if (!response.body) {
     throw new Error("missing body");
   }

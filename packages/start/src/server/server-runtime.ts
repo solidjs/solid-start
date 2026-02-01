@@ -5,7 +5,7 @@ import {
   // serializeToJSONStream,
   serializeToJSONString,
 } from "./serialization.ts";
-import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "./server-functions-shared.ts";
+import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./server-functions-shared.ts";
 
 let INSTANCE = 0;
 
@@ -24,70 +24,6 @@ function createRequest(
       "X-Server-Instance": instance,
     },
   });
-}
-
-function getHeadersAndBody(body: any): {
-  headers?: HeadersInit;
-  body: BodyInit;
-} | undefined {
-  switch (true) {
-    case typeof body === "string":
-      return {
-        headers: {
-          "Content-Type": "text/plain",
-          [BODY_FORMAT_KEY]: BodyFormat.String,
-        },
-        body,
-      };
-    case body instanceof FormData:
-      return {
-        headers: {
-          [BODY_FORMAT_KEY]: BodyFormat.FormData,
-        },
-        body,
-      };
-    case body instanceof URLSearchParams:
-      return {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          [BODY_FORMAT_KEY]: BodyFormat.URLSearchParams,
-        },
-        body,
-      };
-    case body instanceof File: {
-      const formData = new FormData();
-      formData.append(BODY_FORMAL_FILE, body, body.name);
-      return {
-        headers: {
-          [BODY_FORMAT_KEY]: BodyFormat.File,
-        },
-        body: formData,
-      };
-    }
-    case body instanceof Blob:
-      return {
-        headers: {
-          [BODY_FORMAT_KEY]: BodyFormat.Blob,
-        },
-        body,
-      };
-    case body instanceof ArrayBuffer:
-      return {
-        headers: {
-          [BODY_FORMAT_KEY]: BodyFormat.ArrayBuffer,
-        },
-        body,
-      };
-    case body instanceof Uint8Array:
-      return {
-        headers: {
-          [BODY_FORMAT_KEY]: BodyFormat.Uint8Array,
-        },
-        body: new Uint8Array(body),
-      };
-    default:
-      return undefined;
-  }
 }
 
 async function initializeResponse(
@@ -158,20 +94,8 @@ async function fetchServerFunction(
     return response;
   }
 
-  const contentType = response.headers.get("Content-Type");
   const clone = response.clone();
-  let result;
-  if (contentType?.startsWith("text/plain")) {
-    result = await clone.text();
-  } else if (contentType?.startsWith("application/json")) {
-    result = await clone.json();
-  } else if (response.headers.get(BODY_FORMAT_KEY)) {
-    if (import.meta.env.SEROVAL_MODE === "js") {
-      result = await deserializeJSStream(instance, clone);
-    } else {
-      result = await deserializeJSONStream(clone);
-    }
-  }
+  const result = await extractBody(instance, true, clone);
   if (response.headers.has("X-Error")) {
     throw result;
   }

@@ -9,11 +9,10 @@ import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
 import { createPageEvent } from "./handler.ts";
 import {
   deserializeFromJSONString,
-  deserializeJSONStream,
   serializeToJSONStream,
   serializeToJSStream,
 } from "./serialization.ts";
-import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "./server-functions-shared.ts";
+import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./server-functions-shared.ts";
 import type { FetchEvent, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
@@ -54,40 +53,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
   }
   if (request.method === "POST") {
-    const contentType = request.headers.get("content-type");
-    const startType = request.headers.get(BODY_FORMAT_KEY);
-    const clone = request.clone();
-
-    switch (true) {
-      case startType === BodyFormat.Seroval:
-        parsed = (await deserializeJSONStream(clone)) as any[];
-        break;
-      case startType === BodyFormat.String:
-        parsed.push(await clone.text());
-        break;
-      case startType === BodyFormat.File: {
-        const formData = await clone.formData();
-        parsed.push(formData.get(BODY_FORMAL_FILE));
-        break;
-      }
-      case startType === BodyFormat.FormData:
-      case contentType?.startsWith("multipart/form-data"):
-        parsed.push(await clone.formData());
-        break;
-      case startType === BodyFormat.URLSearchParams:
-      case contentType?.startsWith("application/x-www-form-urlencoded"):
-        parsed.push(new URLSearchParams(await clone.text()));
-        break;
-      case startType === BodyFormat.Blob:
-        parsed.push(await clone.blob());
-        break;
-      case startType === BodyFormat.ArrayBuffer:
-        parsed.push(await clone.arrayBuffer());
-        break;
-      case startType === BodyFormat.Uint8Array:
-        parsed.push(await clone.bytes());
-        break;
-    }
+    parsed.push(await extractBody('', false, request.clone()));
   }
   try {
     let result = await provideRequestEvent(event, async () => {
@@ -121,12 +87,18 @@ export async function handleServerFunction(h3Event: H3Event) {
     // handle no JS success case
     if (!instance) return handleNoJS(result, request, parsed);
 
-    h3Event.res.headers.set(BODY_FORMAT_KEY, "true");
-    if (import.meta.env.SEROVAL_MODE === "js") {
-      h3Event.res.headers.set("content-type", "text/javascript");
-      return serializeToJSStream(instance, result);
-    }
-    return serializeToJSONStream(result);
+      const body = getHeadersAndBody(result);
+      if (body) {
+        return new Response(body.body, {
+          headers: body.headers,
+        });
+      }
+      h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
+      if (import.meta.env.SEROVAL_MODE === "js") {
+        h3Event.res.headers.set("content-type", "text/javascript");
+        return serializeToJSStream(instance, result);
+      }
+      return serializeToJSONStream(result);
   } catch (x) {
     if (x instanceof Response) {
       if (singleFlight && instance) {
@@ -153,7 +125,13 @@ export async function handleServerFunction(h3Event: H3Event) {
       x = handleNoJS(x, request, parsed, true);
     }
     if (instance) {
-      h3Event.res.headers.set(BODY_FORMAT_KEY, "true");
+      const body = getHeadersAndBody(x);
+      if (body) {
+        return new Response(body.body, {
+          headers: body.headers,
+        });
+      }
+      h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
       if (import.meta.env.SEROVAL_MODE === "js") {
         h3Event.res.headers.set("content-type", "text/javascript");
         return serializeToJSStream(instance, x);
