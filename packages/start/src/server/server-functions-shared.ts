@@ -112,5 +112,5 @@ export async function extractBody(instance: string, client: boolean, source: Req
       return await clone.bytes();
   }
 
-  throw new Error("Unknown body format");
+  return undefined;
 }

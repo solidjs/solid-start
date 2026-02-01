@@ -84,18 +84,14 @@ async function fetchServerFunction(
   ) {
     if (response.body) {
       /* @ts-ignore-next-line */
-      response.customBody = () => {
-        if (import.meta.env.SEROVAL_MODE === "js") {
-          return deserializeJSStream(instance, response.clone());
-        }
-        return deserializeJSONStream(response.clone());
+      response.customBody = async () => {
+        return await extractBody(instance, true, response.clone())
       };
     }
     return response;
   }
 
-  const clone = response.clone();
-  const result = await extractBody(instance, true, clone);
+  const result = await extractBody(instance, true, response.clone());
   if (response.headers.has("X-Error")) {
     throw result;
   }
