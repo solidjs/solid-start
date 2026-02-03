@@ -125,7 +125,7 @@ function createRequest(base: string, id: string, instance: string, options: Requ
     ...options,
     headers: {
       ...options.headers,
-      "X-Server-Id": id,
+      "X-Server-Id": encodeURIComponent(id),
       "X-Server-Instance": instance
     }
   });
