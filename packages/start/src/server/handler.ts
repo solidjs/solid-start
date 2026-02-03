@@ -15,6 +15,30 @@ import { getExpectedRedirectStatus } from "./util.ts";
 
 const SERVER_FN_BASE = "/_server";
 
+try {
+  const nodeHTTP = await import("http");
+  const http2 = await import("http2");
+
+  function patchListen(proto: any) {
+    if (!proto || proto.__patched) return;
+
+    const original = proto.listen;
+    proto.listen = function (...args: any[]) {
+      globalThis.canSendFastNodeStreams = true;
+      return original.apply(this, args);
+    };
+
+    proto.__patched = true;
+  }
+
+  // http + https
+  patchListen(nodeHTTP.Server.prototype);
+
+  // http2 (discover prototypes safely)
+  patchListen(Object.getPrototypeOf(http2.createServer()));
+  patchListen(Object.getPrototypeOf(http2.createSecureServer()));
+} catch {}
+
 export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
   fn: (context: PageEvent) => JSX.Element,
@@ -24,8 +48,7 @@ export function createBaseHandler(
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
       const event = getRequestEvent()!;
-      const url = new URL(event.request.url);
-      const pathname = stripBaseUrl(url.pathname);
+      const pathname = stripBaseUrl(e.url.pathname);
 
       if (pathname.startsWith(SERVER_FN_BASE)) {
         const serverFnResponse = await handleServerFunction(e);
@@ -114,7 +137,7 @@ export function createBaseHandler(
 
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
-      if (globalThis.USING_SOLID_START_DEV_SERVER) return stream;
+      if (globalThis.canSendFastNodeStreams) return stream;
 
       // returning stream directly breaks cloudflare workers
       const { writable, readable } = new TransformStream();
