@@ -24,7 +24,7 @@ try {
 
     const original = proto.listen;
     proto.listen = function (...args: any[]) {
-      globalThis.canSendFastNodeStreams = true;
+      globalThis.CAN_SEND_FAST_NODE_STREAMS = true;
       return original.apply(this, args);
     };
 
@@ -137,7 +137,7 @@ export function createBaseHandler(
 
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
-      if (globalThis.canSendFastNodeStreams) return stream;
+      if (globalThis.CAN_SEND_FAST_NODE_STREAMS) return stream;
 
       // returning stream directly breaks cloudflare workers
       const { writable, readable } = new TransformStream();

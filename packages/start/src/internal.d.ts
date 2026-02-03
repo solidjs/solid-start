@@ -10,6 +10,6 @@ declare module "h3" {
 import type { Rollup } from "vite";
 declare global {
   var START_CLIENT_BUNDLE: Rollup.OutputBundle;
-  var canSendFastNodeStreams: boolean | undefined;
+  var CAN_SEND_FAST_NODE_STREAMS: boolean | undefined;
   var USING_SOLID_START_DEV_SERVER: boolean | undefined;
 }
