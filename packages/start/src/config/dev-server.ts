@@ -13,7 +13,6 @@ export function devServer(): Array<PluginOption> {
       name: "solid-start-dev-server",
       configurePreviewServer(server) {
         return () => {
-          globalThis.CAN_SEND_FAST_NODE_STREAMS = true;
           server.middlewares.use(async (req, res) => {
             res.setHeader("content-encoding", "identity");
             const webReq = new NodeRequest({ req, res });
