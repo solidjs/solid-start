@@ -15,30 +15,6 @@ import { getExpectedRedirectStatus } from "./util.ts";
 
 const SERVER_FN_BASE = "/_server";
 
-try {
-  const nodeHTTP = await import("http");
-  const http2 = await import("http2");
-
-  function patchListen(proto: any) {
-    if (!proto || proto.__patched) return;
-
-    const original = proto.listen;
-    proto.listen = function (...args: any[]) {
-      globalThis.CAN_SEND_FAST_NODE_STREAMS = true;
-      return original.apply(this, args);
-    };
-
-    proto.__patched = true;
-  }
-
-  // http + https
-  patchListen(nodeHTTP.Server.prototype);
-
-  // http2 (discover prototypes safely)
-  patchListen(Object.getPrototypeOf(http2.createServer()));
-  patchListen(Object.getPrototypeOf(http2.createSecureServer()));
-} catch {}
-
 export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
   fn: (context: PageEvent) => JSX.Element,
@@ -137,7 +113,8 @@ export function createBaseHandler(
 
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
-      if (globalThis.CAN_SEND_FAST_NODE_STREAMS) return stream;
+      // send fast node streams (for now this is only available in nodejs)
+      if (e.runtime?.name === "node") return stream;
 
       // returning stream directly breaks cloudflare workers
       const { writable, readable } = new TransformStream();
