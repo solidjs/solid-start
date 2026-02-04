@@ -57,12 +57,17 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       configEnvironment(name) {
         return {
           resolve: {
+            noExternal: ["h3"],
             // remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
             externalConditions: ["solid", "node"],
           },
         };
       },
       async config(_, env) {
+        _.ssr ??= {};
+        _.ssr.resolve ??= {};
+        _.ssr.resolve.conditions ??= [];
+        _.ssr.resolve.conditions.push("generic");
         const clientInput = [handlers.client];
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;

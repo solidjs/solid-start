@@ -12,6 +12,7 @@ import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "./server-functions-handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
+import { FastResponse } from "srvx/node";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -114,7 +115,7 @@ export function createBaseHandler(
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
       // send fast node streams (for now this is only available in nodejs)
-      if (e.runtime?.name === "node") return stream;
+      if (e.runtime?.name === "node") return new FastResponse(stream);
 
       // returning stream directly breaks cloudflare workers
       const { writable, readable } = new TransformStream();
