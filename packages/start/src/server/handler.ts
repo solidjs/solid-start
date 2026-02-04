@@ -114,7 +114,7 @@ export function createBaseHandler(
 
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
-      // send fast node streams (for now this is only available in nodejs)
+      // send fast node streams
       // @ts-expect-error
       if (e.runtime?.name === "node") return new FastResponse(stream);
 
