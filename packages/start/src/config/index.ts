@@ -57,7 +57,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       configEnvironment(name) {
         return {
           resolve: {
-            noExternal: ["h3"],
+            noExternal: ["h3", "srvx"],
             // remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
             externalConditions: ["solid", "node"],
           },
