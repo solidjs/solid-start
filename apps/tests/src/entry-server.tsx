@@ -19,3 +19,5 @@ export default createHandler(() => (
     )}
   />
 ));
+
+import 'solid-start/fns/preload';
