@@ -91,6 +91,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                     baseURL: "/",
                   },
                 ],
+                noExternals: false,
                 renderer: virtualEntry,
                 rollupConfig: {
                   ...nitroConfig?.rollupConfig,
