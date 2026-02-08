@@ -11,6 +11,18 @@ export function devServer(): Array<PluginOption> {
   return [
     {
       name: "solid-start-dev-server",
+      configurePreviewServer(server) {
+        return () => {
+          server.middlewares.use(async (req, res) => {
+            res.setHeader("content-encoding", "identity");
+            const webReq = new NodeRequest({ req, res });
+            const def: {
+              default: { fetch: (req: Request) => Promise<Response> };
+            } = await import(process.cwd() + "/dist/server/entry-server.js");
+            sendNodeResponse(res, await def.default.fetch(webReq));
+          });
+        };
+      },
       configureServer(viteDevServer) {
         (globalThis as any).VITE_DEV_SERVER = viteDevServer;
         return async () => {
