@@ -76,7 +76,7 @@ export async function handleServerFunction(h3Event: H3Event) {
   const serverReference = request.headers.get("X-Server-Id");
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
-  const url = new URL(request.url);
+  const url = h3Event.url;
   let functionId: string | undefined | null;
   if (serverReference) {
     // invariant(typeof serverReference === "string", "Invalid server function");
@@ -96,7 +96,7 @@ export async function handleServerFunction(h3Event: H3Event) {
   let parsed: any[] = [];
 
   // grab bound arguments from url when no JS
-  if (!instance || h3Event.method === "GET") {
+  if (!instance || request.method === "GET") {
     const args = url.searchParams.get("args");
     if (args) {
       const json = JSON.parse(args);
@@ -121,7 +121,7 @@ export async function handleServerFunction(h3Event: H3Event) {
       });
     }
   }
-  if (h3Event.method === "POST") {
+  if (request.method === "POST") {
     const contentType = request.headers.get("content-type");
 
     if (
@@ -176,7 +176,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
 
     // handle no JS success case
-    if (!instance) return handleNoJS(result, request, parsed);
+    if (!instance) return handleNoJS(result, h3Event, parsed);
 
     h3Event.res.headers.set("content-type", "text/javascript");
 
@@ -200,7 +200,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 
       h3Event.res.headers.set("X-Error", error.replace(/[\r\n]+/g, ""));
     } else {
-      x = handleNoJS(x, request, parsed, true);
+      x = handleNoJS(x, h3Event, parsed, true);
     }
     if (instance) {
       h3Event.res.headers.set("content-type", "text/javascript");
@@ -210,8 +210,8 @@ export async function handleServerFunction(h3Event: H3Event) {
   }
 }
 
-function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
-  const url = new URL(request.url);
+function handleNoJS(result: any, h3Event: H3Event, parsed: any[], thrown?: boolean) {
+  const url = h3Event.url;
   const isError = result instanceof Error;
   let statusCode = 302;
   let headers: Headers;
@@ -226,7 +226,7 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
     }
   } else
     headers = new Headers({
-      Location: new URL(request.headers.get("referer")!).toString(),
+      Location: new URL(h3Event.req.headers.get("referer")!).toString(),
     });
   if (result) {
     headers.append(
@@ -293,7 +293,7 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
     if (result.headers.has("Location"))
       url = new URL(
         result.headers.get("Location")!,
-        new URL(sourceEvent.request.url).origin + import.meta.env.BASE_URL,
+        sourceEvent.nativeEvent.url.origin + import.meta.env.BASE_URL,
       ).toString();
   }
   const event = { ...sourceEvent } as PageEvent;

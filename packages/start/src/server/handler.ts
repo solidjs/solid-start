@@ -12,6 +12,7 @@ import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "./server-functions-handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
+import { FastResponse } from "srvx/node";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -24,8 +25,7 @@ export function createBaseHandler(
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
       const event = getRequestEvent()!;
-      const url = new URL(event.request.url);
-      const pathname = stripBaseUrl(url.pathname);
+      const pathname = stripBaseUrl(e.url.pathname);
 
       if (pathname.startsWith(SERVER_FN_BASE)) {
         const serverFnResponse = await handleServerFunction(e);
@@ -116,7 +116,9 @@ export function createBaseHandler(
 
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
-      if (globalThis.USING_SOLID_START_DEV_SERVER) return stream;
+      // send fast node streams
+      // @ts-expect-error
+      if (e.runtime?.name === "node") return new FastResponse(stream);
 
       // returning stream directly breaks cloudflare workers
       const { writable, readable } = new TransformStream();
