@@ -23,5 +23,5 @@ declare module "solid-start:app" {
 
 declare module "solid-start:middleware" {
   type MaybeArray<T> = T | Array<T>;
-  export default Middleware as import("h3").Middleware[];
+  export default Middleware as import("h3").Middleware[] | undefined;
 }
