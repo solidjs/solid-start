@@ -1,73 +1,20 @@
-import { getServerFnById } from "solidstart:server-fn-manifest";
 import { parseSetCookie } from "cookie-es";
 import { type H3Event, parseCookies } from "h3";
-import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
-import {
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLPlugin,
-  URLSearchParamsPlugin,
-} from "seroval-plugins/web";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
+import { getServerFnById } from "solidstart:server-fn-manifest";
 
 import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
 import { createPageEvent } from "./handler.ts";
+import {
+  deserializeFromJSONString,
+  serializeToJSONStream,
+  serializeToJSStream,
+} from "./serialization.ts";
+import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./server-functions-shared.ts";
 import type { FetchEvent, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
-
-function createChunk(data: string) {
-  const encodeData = new TextEncoder().encode(data);
-  const bytes = encodeData.length;
-  const baseHex = bytes.toString(16);
-  const totalHex = "00000000".substring(0, 8 - baseHex.length) + baseHex; // 32-bit
-  const head = new TextEncoder().encode(`;0x${totalHex};`);
-
-  const chunk = new Uint8Array(12 + bytes);
-  chunk.set(head);
-  chunk.set(encodeData, 12);
-  return chunk;
-}
-
-function serializeToStream(id: string, value: any) {
-  return new ReadableStream({
-    start(controller) {
-      crossSerializeStream(value, {
-        scopeId: id,
-        plugins: [
-          CustomEventPlugin,
-          DOMExceptionPlugin,
-          EventPlugin,
-          FormDataPlugin,
-          HeadersPlugin,
-          ReadableStreamPlugin,
-          RequestPlugin,
-          ResponsePlugin,
-          URLSearchParamsPlugin,
-          URLPlugin,
-        ],
-        onSerialize(data: string, initial: boolean) {
-          controller.enqueue(
-            createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data),
-          );
-        },
-        onDone() {
-          controller.close();
-        },
-        onError(error: any) {
-          controller.error(error);
-        },
-      });
-    },
-  });
-}
 
 export async function handleServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
@@ -96,55 +43,17 @@ export async function handleServerFunction(h3Event: H3Event) {
   let parsed: any[] = [];
 
   // grab bound arguments from url when no JS
-  if (!instance || h3Event.method === "GET") {
+  if (!instance || request.method === "GET") {
     const args = url.searchParams.get("args");
     if (args) {
-      const json = JSON.parse(args);
-      (json.t
-        ? (fromJSON(json, {
-            plugins: [
-              CustomEventPlugin,
-              DOMExceptionPlugin,
-              EventPlugin,
-              FormDataPlugin,
-              HeadersPlugin,
-              ReadableStreamPlugin,
-              RequestPlugin,
-              ResponsePlugin,
-              URLSearchParamsPlugin,
-              URLPlugin,
-            ],
-          }) as any)
-        : json
-      ).forEach((arg: any) => {
+      const result = (await deserializeFromJSONString(args)) as any[];
+      for (const arg of result) {
         parsed.push(arg);
-      });
+      }
     }
   }
-  if (h3Event.method === "POST") {
-    const contentType = request.headers.get("content-type");
-
-    if (
-      contentType?.startsWith("multipart/form-data") ||
-      contentType?.startsWith("application/x-www-form-urlencoded")
-    ) {
-      parsed.push(await event.request.formData());
-    } else if (contentType?.startsWith("application/json")) {
-      parsed = fromJSON(await event.request.json(), {
-        plugins: [
-          CustomEventPlugin,
-          DOMExceptionPlugin,
-          EventPlugin,
-          FormDataPlugin,
-          HeadersPlugin,
-          ReadableStreamPlugin,
-          RequestPlugin,
-          ResponsePlugin,
-          URLSearchParamsPlugin,
-          URLPlugin,
-        ],
-      });
-    }
+  if (request.method === "POST") {
+    parsed.push(await extractBody('', false, request.clone()));
   }
   try {
     let result = await provideRequestEvent(event, async () => {
@@ -171,16 +80,25 @@ export async function handleServerFunction(h3Event: H3Event) {
           h3Event.res.status = result.status;
         if ((result as any).customBody) {
           result = await (result as any).customBody();
-        } else if (result.body == undefined) result = null;
+        } else if (result.body == null) result = null;
       }
     }
 
     // handle no JS success case
     if (!instance) return handleNoJS(result, request, parsed);
 
-    h3Event.res.headers.set("content-type", "text/javascript");
-
-    return serializeToStream(instance, result);
+      const body = getHeadersAndBody(result);
+      if (body) {
+        return new Response(body.body, {
+          headers: body.headers,
+        });
+      }
+      h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
+      if (import.meta.env.SEROVAL_MODE === "js") {
+        h3Event.res.headers.set("content-type", "text/javascript");
+        return serializeToJSStream(instance, result);
+      }
+      return serializeToJSONStream(result);
   } catch (x) {
     if (x instanceof Response) {
       if (singleFlight && instance) {
@@ -189,28 +107,47 @@ export async function handleServerFunction(h3Event: H3Event) {
       // forward headers
       if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
       // forward non-redirect statuses
-      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400))
+      if (
+        (x as any).status &&
+        (!instance || (x as any).status < 300 || (x as any).status >= 400)
+      )
         h3Event.res.status = (x as any).status;
       if ((x as any).customBody) {
         x = (x as any).customBody();
       } else if ((x as any).body === undefined) x = null;
       h3Event.res.headers.set("X-Error", "true");
     } else if (instance) {
-      const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
+      const error =
+        x instanceof Error ? x.message : typeof x === "string" ? x : "true";
 
       h3Event.res.headers.set("X-Error", error.replace(/[\r\n]+/g, ""));
     } else {
       x = handleNoJS(x, request, parsed, true);
     }
     if (instance) {
-      h3Event.res.headers.set("content-type", "text/javascript");
-      return serializeToStream(instance, x);
+      const body = getHeadersAndBody(x);
+      if (body) {
+        return new Response(body.body, {
+          headers: body.headers,
+        });
+      }
+      h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
+      if (import.meta.env.SEROVAL_MODE === "js") {
+        h3Event.res.headers.set("content-type", "text/javascript");
+        return serializeToJSStream(instance, x);
+      }
+      return serializeToJSONStream(x);
     }
     return x;
   }
 }
 
-function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
+function handleNoJS(
+  result: any,
+  request: Request,
+  parsed: any[],
+  thrown?: boolean,
+) {
   const url = new URL(request.url);
   const isError = result instanceof Error;
   let statusCode = 302;
@@ -220,7 +157,10 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
     if (result.headers.has("Location")) {
       headers.set(
         `Location`,
-        new URL(result.headers.get("Location")!, url.origin + import.meta.env.BASE_URL).toString(),
+        new URL(
+          result.headers.get("Location")!,
+          url.origin + import.meta.env.BASE_URL,
+        ).toString(),
       );
       statusCode = getExpectedRedirectStatus(result);
     }
@@ -237,7 +177,10 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
           result: isError ? result.message : result,
           thrown: thrown,
           error: isError,
-          input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]],
+          input: [
+            ...parsed.slice(0, -1),
+            [...parsed[parsed.length - 1].entries()],
+          ],
         }),
       )}; Secure; HttpOnly;`,
     );
@@ -263,7 +206,7 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // 	useH3Internals = true;
   // 	sourceEvent.nativeEvent.node.req.headers.cookie = "";
   // }
-  SetCookies.forEach(cookie => {
+  SetCookies.forEach((cookie) => {
     if (!cookie) return;
     const { maxAge, expires, name, value } = parseSetCookie(cookie);
     if (maxAge != null && maxAge <= 0) {
@@ -284,7 +227,10 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
 
   return headers;
 }
-async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
+async function handleSingleFlight(
+  sourceEvent: FetchEvent,
+  result: any,
+): Promise<Response> {
   let revalidate: string[];
   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
   if (result instanceof Response) {
