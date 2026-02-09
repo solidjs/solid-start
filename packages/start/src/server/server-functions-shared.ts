@@ -1,4 +1,4 @@
-import { deserializeJSONStream, deserializeJSStream } from "./serialization";
+import { deserializeJSONStream, deserializeJSStream } from "./serialization.ts";
 
 export const BODY_FORMAT_KEY = "X-Start-Type";
 
