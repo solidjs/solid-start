@@ -66,7 +66,7 @@ function getImageTransformer(imagePath: string, outputTypes: string[], sizes: nu
   for (const format of outputTypes) {
     for (const size of sizes) {
       const variantName = "variant_" + format + "_" + size;
-      const importPath = JSON.stringify(imagePath + "?start-image-" + format + "-" + size);
+      const importPath = JSON.stringify(imagePath + "?image-" + format + "-" + size);
       imported += "import " + variantName + " from " + importPath + ";\n";
       exported += variantName + ",";
     }
@@ -82,7 +82,7 @@ function getImageTransformer(imagePath: string, outputTypes: string[], sizes: nu
 }
 
 function getImageVariant(imagePath: string, target: StartImageFormat, size: number): string {
-  return `import source from ${JSON.stringify(imagePath + "?start-image-raw-" + target + "-" + size)};
+  return `import source from ${JSON.stringify(imagePath + "?image-raw-" + target + "-" + size)};
 export default {
   width: ${size},
   type: '${getMIMEFromFormat(target)}',
@@ -91,22 +91,22 @@ export default {
 }
 
 function getImageEntryPoint(imagePath: string): string {
-  return `import src from ${JSON.stringify(imagePath + "?start-image-source")};
-import transformer from ${JSON.stringify(imagePath + "?start-image-transformer")};
+  return `import src from ${JSON.stringify(imagePath + "?image-source")};
+import transformer from ${JSON.stringify(imagePath + "?image-transformer")};
 
 export default { src, transformer };
 `;
 }
 
-const LOCAL_PATH = /\?start-image(-[a-z]+(-[0-9]+)?)?/;
-const REMOTE_PATH = "start-image:";
+const LOCAL_PATH = /\?image(-[a-z]+(-[0-9]+)?)?/;
+const REMOTE_PATH = "image:";
 
 export const imagePlugin = (options: StartImageOptions) => {
   const plugins: Plugin[] = [];
   if (options.remote) {
     const transformUrl = options.remote.transformURL;
     plugins.push({
-      name: "start-image/remote",
+      name: "solid-start:image/remote",
       enforce: "pre",
       resolveId(id) {
         if (id.startsWith(REMOTE_PATH)) {
@@ -144,7 +144,7 @@ export default {
     const validInputFileExtensions = getValidFileExtensions(inputFormat);
 
     plugins.push({
-      name: "start-image/local",
+      name: "solid-start:image/local",
       enforce: "pre",
       resolveId(id, importer) {
         if (LOCAL_PATH.test(id) && importer) {
@@ -168,32 +168,32 @@ export default {
         const originalPath = `${dir}/${name}.${actualExtension}`;
         const relativePath = `./${name}.${actualExtension}`;
         // Get the true source
-        if (condition.startsWith("start-image-source")) {
+        if (condition.startsWith("image-source")) {
           return await getImageSource(originalPath, relativePath);
         }
         // Get the transformer file
-        if (condition.startsWith("start-image-transformer")) {
+        if (condition.startsWith("image-transformer")) {
           return getImageTransformer(relativePath, outputFormat, sizes);
         }
         // Image transformer variant
-        if (condition.startsWith("start-image-raw")) {
+        if (condition.startsWith("image-raw")) {
           const [, , format, size] = condition.split("-");
           const hash = xxHash32(originalPath).toString(16);
           const filename = `i-${hash}-${size}.${getOutputFileFromFormat(format as StartImageFormat)}`;
           const image = transformImage(originalPath, format as StartImageFormat, +size!, quality);
           const buffer = await image.toBuffer();
-          const basePath = path.join(".start-image", filename);
+          const basePath = path.join(".image", filename);
           const targetPath = path.join(publicPath, basePath);
           await outputFile(targetPath, buffer);
           return `export default "/${basePath}"`;
         }
         // Image transformer variant
-        if (condition.startsWith("start-image-")) {
+        if (condition.startsWith("image-")) {
           const [, format, size] = condition.split("-");
 
           return getImageVariant(relativePath, format as StartImageFormat, +size!);
         }
-        if (condition.startsWith("start-image")) {
+        if (condition.startsWith("image")) {
           return getImageEntryPoint(relativePath);
         }
         return null;
