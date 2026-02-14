@@ -30,29 +30,6 @@ export function getAspectRatioBoxStyle(ratio: AspectRatio): JSX.CSSProperties {
   };
 }
 
-export const IMAGE_CONTAINER: JSX.CSSProperties = {
-  width: "100%",
-  height: "100%",
-  position: "relative",
-};
-
-export const BLOCKER_STYLE: JSX.CSSProperties = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-};
-
-export const IMAGE_STYLE: JSX.CSSProperties = {
-  ...BLOCKER_STYLE,
-  width: "100%",
-  height: "100%",
-  "object-fit": "contain",
-  "pointer-events": "none",
-  "user-select": "none",
-};
-
 export function getEmptySVGPlaceholder({ width, height }: AspectRatio): string {
   return `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" version="1.1"/>`;
 }
