@@ -16,7 +16,7 @@ export interface StartImageProps<T> {
   transformer?: StartImageTransformer<T>;
 
   onLoad?: () => void;
-  children: (visible: () => boolean, onLoad: () => void) => JSX.Element;
+  fallback: (visible: () => boolean, onLoad: () => void) => JSX.Element;
 
   crossOrigin?: JSX.HTMLCrossorigin | undefined;
   fetchPriority?: "high" | "low" | "auto" | undefined;
@@ -109,7 +109,7 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
       </div>
       <div style={BLOCKER_STYLE}>
         <ClientOnly>
-          <Show when={laze.visible}>{props.children(showPlaceholder, onPlaceholderLoad)}</Show>
+          <Show when={laze.visible}>{props.fallback(showPlaceholder, onPlaceholderLoad)}</Show>
         </ClientOnly>
       </div>
     </div>
