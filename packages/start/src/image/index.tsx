@@ -8,7 +8,9 @@ import {
   mergeImageVariantsToSrcSet,
 } from "./transformer.ts";
 import type { StartImageSource, StartImageTransformer, StartImageVariant } from "./types.ts";
-import { BLOCKER_STYLE, getAspectRatioBoxStyle, IMAGE_CONTAINER, IMAGE_STYLE } from "./utils.ts";
+import { getAspectRatioBoxStyle } from "./utils.ts";
+
+import "./styles.css";
 
 export interface StartImageProps<T> {
   src: StartImageSource<T>;
@@ -58,7 +60,7 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
   const height = createMemo(() => props.src.height);
 
   return (
-    <div ref={laze.ref} data-start-image="image-container" style={IMAGE_CONTAINER}>
+    <div ref={laze.ref} data-start-image="container">
       <div
         data-start-image="aspect-ratio"
         style={getAspectRatioBoxStyle({
@@ -66,7 +68,7 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
           height: height(),
         })}
       >
-        <picture style={IMAGE_STYLE}>
+        <picture data-start-image="picture">
           <Show when={props.transformer} fallback={<source src={props.src.source} />}>
             {cb => <StartImageSources variants={createImageVariants(props.src, cb())} {...props} />}
           </Show>
@@ -75,7 +77,6 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
               <img
                 data-start-image="image"
                 alt={props.alt}
-                style={IMAGE_STYLE}
                 crossOrigin={props.crossOrigin}
                 fetchpriority={props.fetchPriority}
                 decoding={props.decoding}
@@ -107,7 +108,7 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
           </ClientOnly>
         </picture>
       </div>
-      <div style={BLOCKER_STYLE}>
+      <div data-start-image="blocker">
         <ClientOnly>
           <Show when={laze.visible}>{props.fallback(showPlaceholder, onPlaceholderLoad)}</Show>
         </ClientOnly>
