@@ -14,6 +14,7 @@ import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
+import { serverFunctionsPlugin } from "../directives/index.ts";
 
 export interface SolidStartOptions {
   solid?: Partial<SolidOptions>;
@@ -163,42 +164,45 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
     }),
     lazy(),
-    // Must be placed after fsRoutes, as treeShake will remove the
-    // server fn exports added in by this plugin
-    TanStackServerFnPlugin({
-      // This is the ID that will be available to look up and import
-      // our server function manifest and resolve its module
-      manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
-      directive: "use server",
-      callers: [
-        {
-          envConsumer: "client",
-          envName: VITE_ENVIRONMENTS.client,
-          getRuntimeCode: () =>
-            `import { createServerReference } from "${normalizePath(
-              fileURLToPath(new URL("../server/server-runtime", import.meta.url))
-            )}"`,
-          replacer: opts => `createServerReference('${opts.functionId}')`,
-        },
-        {
-          envConsumer: "server",
-          envName: VITE_ENVIRONMENTS.server,
-          getRuntimeCode: () =>
-            `import { createServerReference } from '${normalizePath(
-              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
-            )}'`,
-          replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
-        },
-      ],
-      provider: {
-        envName: VITE_ENVIRONMENTS.server,
-        getRuntimeCode: () =>
-          `import { createServerReference } from '${normalizePath(
-            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
-          )}'`,
-        replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
-      },
+    serverFunctionsPlugin({
+      manifest: VIRTUAL_MODULES.serverFnManifest,
     }),
+    // // Must be placed after fsRoutes, as treeShake will remove the
+    // // server fn exports added in by this plugin
+    // TanStackServerFnPlugin({
+    //   // This is the ID that will be available to look up and import
+    //   // our server function manifest and resolve its module
+    //   manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
+    //   directive: "use server",
+    //   callers: [
+    //     {
+    //       envConsumer: "client",
+    //       envName: VITE_ENVIRONMENTS.client,
+    //       getRuntimeCode: () =>
+    //         `import { createServerReference } from "${normalizePath(
+    //           fileURLToPath(new URL("../server/server-runtime", import.meta.url))
+    //         )}"`,
+    //       replacer: opts => `createServerReference('${opts.functionId}')`,
+    //     },
+    //     {
+    //       envConsumer: "server",
+    //       envName: VITE_ENVIRONMENTS.server,
+    //       getRuntimeCode: () =>
+    //         `import { createServerReference } from '${normalizePath(
+    //           fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
+    //         )}'`,
+    //       replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
+    //     },
+    //   ],
+    //   provider: {
+    //     envName: VITE_ENVIRONMENTS.server,
+    //     getRuntimeCode: () =>
+    //       `import { createServerReference } from '${normalizePath(
+    //         fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
+    //       )}'`,
+    //     replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
+    //   },
+    // }),
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
