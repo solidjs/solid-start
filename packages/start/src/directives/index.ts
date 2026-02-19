@@ -1,5 +1,12 @@
 import { fileURLToPath } from "node:url";
-import { createFilter, type FilterPattern, normalizePath, type Plugin } from "vite";
+import {
+  createFilter,
+  EnvironmentModuleGraph,
+  type FilterPattern,
+  normalizePath,
+  type Plugin,
+  ViteDevServer,
+} from "vite";
 import { compile, type CompileOptions } from "./compile.ts";
 
 export interface ServerFunctionsFilter {
@@ -108,6 +115,40 @@ class Debouncer<T> {
   }
 }
 
+function mergeManifestRecord(
+  source: Set<string>,
+  target: Set<string>,
+): { invalidPreload: boolean; invalidated: string[] } {
+  const current = source.size;
+  for (const entry of target) {
+    source.add(entry);
+  }
+  return {
+    invalidPreload: current !== source.size,
+    invalidated: [...source],
+  };
+}
+
+function invalidateModule(moduleGraph: EnvironmentModuleGraph, path: string) {
+  const target = moduleGraph.getModuleById(path);
+  if (target) {
+    moduleGraph.invalidateModule(target);
+  }
+}
+
+function invalidateModules(
+  server: ViteDevServer | undefined,
+  result: ReturnType<typeof mergeManifestRecord>,
+  manifest: string,
+): void {
+  if (server) {
+    if (result.invalidPreload) {
+      invalidateModule(server.environments.client.moduleGraph, manifest);
+      invalidateModule(server.environments.ssr.moduleGraph, manifest);
+    }
+  }
+}
+
 export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[] {
   const filter = createFilter(
     options.filter?.include || DEFAULT_INCLUDE,
@@ -122,6 +163,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
     server: undefined,
     client: undefined,
   };
+  let currentServer: ViteDevServer;
 
   return [
     {
@@ -129,6 +171,9 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
       enforce: "pre",
       configResolved(config) {
         env = config.mode !== "production" ? "development" : "production";
+      },
+      configureServer(server) {
+        currentServer = server;
       },
     },
     {
@@ -161,19 +206,23 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
         if (!filter(id)) {
           return null;
         }
-        const preloader = preload[mode];
-        if (preloader) {
-          preloader.defer();
-        }
 
         const result = await compile(id!, code, {
-          ...(mode === 'server' ? SERVER_OPTIONS : CLIENT_OPTIONS),
+          ...(mode === "server" ? SERVER_OPTIONS : CLIENT_OPTIONS),
           mode,
           env,
         });
 
         if (result.valid) {
-          manifest[mode].add(id!);
+          const preloader = preload[mode];
+          if (preloader) {
+            preloader.defer();
+          }
+          invalidateModules(
+            currentServer,
+            mergeManifestRecord(manifest.server, new Set([id!])),
+            options.manifest,
+          );
 
           return {
             code: result.code || "",
