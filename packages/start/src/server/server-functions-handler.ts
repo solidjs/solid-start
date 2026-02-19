@@ -1,4 +1,3 @@
-import "solidstart:server-fn-manifest";
 import { parseSetCookie } from "cookie-es";
 import { type H3Event, parseCookies } from "h3";
 import { crossSerializeStream, fromJSON, getCrossReferenceHeader } from "seroval";
@@ -17,12 +16,13 @@ import {
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
+import "solidstart:server-fn-manifest";
 
 import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
 import { createPageEvent } from "./handler.ts";
+import { getServerFunction } from "./server-fns.ts";
 import type { FetchEvent, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
-import { getServerFunction } from "./server-fns.ts";
 
 function createChunk(data: string) {
   const encodeData = new TextEncoder().encode(data);
