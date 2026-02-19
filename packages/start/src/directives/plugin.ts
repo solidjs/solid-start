@@ -225,6 +225,20 @@ function transformModuleLevelDirective(ctx: StateContext, program: babel.NodePat
             }
           }
         }
+        const declarations = path.get("declaration");
+
+        if (isPathValid(declarations, t.isVariableDeclaration)) {
+          for (const declaration of declarations.get("declarations")) {
+            // Check if left is identifier
+            const left = unwrapPath(declaration.get("id"), t.isIdentifier);
+            if (left) {
+              const binding = traceBinding(left, left.node.name);
+              if (binding) {
+                bindings.add(binding);
+              }
+            }
+          }
+        }
       },
     });
 
@@ -261,6 +275,22 @@ function transformModuleLevelDirective(ctx: StateContext, program: babel.NodePat
                 : specifier.node.exported.value;
               uniqueBindings.add(binding);
               exportedBindings.set(key, binding);
+            }
+          }
+        }
+
+        const declarations = path.get("declaration");
+
+        if (isPathValid(declarations, t.isVariableDeclaration)) {
+          for (const declaration of declarations.get("declarations")) {
+            // Check if left is identifier
+            const left = unwrapPath(declaration.get("id"), t.isIdentifier);
+            if (left) {
+              const binding = traceBinding(left, left.node.name);
+              if (binding) {
+                uniqueBindings.add(binding);
+                exportedBindings.set(left.node.name, binding);
+              }
             }
           }
         }
