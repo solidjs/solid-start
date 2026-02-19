@@ -1,6 +1,6 @@
 import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { registerServerFunction } from "./server-fns";
+import { registerServerFunction } from "./server-fns.ts";
 
 interface Registration<T extends any[], R> {
   id: string;
