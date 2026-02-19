@@ -1,3 +1,4 @@
+import "solidstart:server-fn-manifest";
 import { parseSetCookie } from "cookie-es";
 import { type H3Event, parseCookies } from "h3";
 import { sharedConfig } from "solid-js";
@@ -20,6 +21,7 @@ import {
 } from "./server-functions-shared.ts";
 import type { FetchEvent, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
+import { getServerFunction } from "./server-fns.ts";
 
 export async function handleServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
@@ -43,7 +45,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
   }
 
-  const serverFunction = await getServerFnById(functionId!);
+  const serverFunction = getServerFunction(functionId!);
 
   let parsed: any[] = [];
 

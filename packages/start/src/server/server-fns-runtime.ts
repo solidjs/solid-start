@@ -1,7 +1,22 @@
 import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
+import { registerServerFunction } from "./server-fns";
 
-export function createServerReference(fn: Function, id: string) {
+interface Registration<T extends any[], R> {
+  id: string;
+  fn: (...args: T) => Promise<R>;
+}
+
+export function createServerReference<T extends any[], R>(
+  id: string,
+  fn: (...args: T) => Promise<R>,
+) {
+  const registration: Registration<T, R> = { id, fn };
+  registerServerFunction(id, fn);
+  return registration;
+}
+
+export function cloneServerReference<T extends any[], R>({ id, fn }: Registration<T, R>) {
   if (typeof fn !== "function")
     throw new Error("Export from a 'use server' module must be a function");
   let baseURL = import.meta.env.BASE_URL ?? "/";
@@ -24,7 +39,7 @@ export function createServerReference(fn: Function, id: string) {
       };
       evt.serverOnly = true;
       return provideRequestEvent(evt, () => {
-        return fn.apply(thisArg, args);
+        return fn.apply(thisArg, args as T);
       });
     },
   });
