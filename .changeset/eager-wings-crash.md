@@ -2,4 +2,4 @@
 "@solidjs/start": minor
 ---
 
-fix onBeforeResponse
+fix `body` being `undefined` for  `onBeforeResponse` middlewares

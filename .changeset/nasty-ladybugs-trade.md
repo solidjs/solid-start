@@ -2,4 +2,4 @@
 "@solidjs/start": patch
 ---
 
-Handle base url in api routes
+Handle base url in API routes
