@@ -2,4 +2,4 @@
 "@solidjs/start": patch
 ---
 
-export server types from /server
+export server types from `/server`
