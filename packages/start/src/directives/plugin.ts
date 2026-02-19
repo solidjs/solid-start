@@ -8,6 +8,7 @@ import { getImportIdentifier } from "./get-import-identifier.ts";
 import { getRootStatementPath } from "./get-root-statement-path.ts";
 import { isStatementTopLevel } from "./is-statement-top-level.ts";
 import { isPathValid, unwrapPath } from "./paths.ts";
+import { removeUnusedVariables } from "./remove-unused-variables.ts";
 import type { ImportDefinition } from "./types.ts";
 
 export interface StateContext {
@@ -124,6 +125,8 @@ function transformFunction(
       ]),
     );
   }
+
+  path.scope.crawl();
 }
 
 function traceBinding(path: babel.NodePath, name: string): Binding | undefined {
@@ -162,23 +165,6 @@ function transformBindingForServer(ctx: StateContext, binding: Binding) {
     const right = unwrapPath(binding.path.get("init"), isValidFunction);
     if (right) {
       transformFunction(ctx, right, true);
-    }
-  }
-}
-
-function treeshake(path: babel.NodePath, name: string): void {
-  const binding = path.scope.getBinding(name);
-
-  if (!(binding && binding.references + binding.constantViolations.length > 0)) {
-    if (isPathValid(path.parentPath, t.isImportDeclaration)) {
-      const parent = path.parentPath;
-      if (parent.node.specifiers.length === 1) {
-        parent.remove();
-      } else {
-        path.remove();
-      }
-    } else {
-      path.remove();
     }
   }
 }
@@ -377,20 +363,11 @@ export function directivesPlugin(): babel.PluginObj<State> {
               transformFunction(ctx.opts, path, false);
             },
           });
-
           program.scope.crawl();
-          // Tree-shaking
-          program.traverse({
-            ImportDefaultSpecifier(path) {
-              treeshake(path, path.node.local.name);
-            },
-            ImportNamespaceSpecifier(path) {
-              treeshake(path, path.node.local.name);
-            },
-            ImportSpecifier(path) {
-              treeshake(path, path.node.local.name);
-            },
-          });
+
+          if (ctx.opts.count > 0) {
+            removeUnusedVariables(program);
+          }
         }
       },
     },

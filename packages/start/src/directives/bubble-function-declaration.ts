@@ -18,7 +18,7 @@ export function bubbleFunctionDeclaration(path: babel.NodePath<t.FunctionDeclara
       ]),
     );
     path.scope.registerDeclaration(tmp);
-    tmp.skip();
+    // tmp.skip();
     if (path.parentPath.isExportNamedDeclaration()) {
       path.parentPath.replaceWith(
         t.exportNamedDeclaration(undefined, [t.exportSpecifier(decl.id, decl.id)]),
