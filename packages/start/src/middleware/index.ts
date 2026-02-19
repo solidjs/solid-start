@@ -42,12 +42,15 @@ function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middlewar
   };
 }
 
+/**
+ * Creates middleware for handling requests and responses.
+ *
+ * @see https://docs.solidjs.com/solid-start/reference/server/create-middleware
+ */
 export function createMiddleware(
   args:
     | {
-        /** @deprecated Use H3 `Middleware` */
         onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
-        /** @deprecated Use H3 `Middleware` */
         onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
       }
     | Middleware[],
