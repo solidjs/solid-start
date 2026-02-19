@@ -84,6 +84,13 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                 },
                 ...nitroConfig,
                 dev: false,
+                routeRules: {
+                  "/_build/assets/**": {
+                    headers: {
+                      "cache-control": "public, immutable, max-age=31536000",
+                    },
+                  },
+                },
                 publicAssets: [
                   {
                     dir: client.config.build.outDir,
@@ -91,6 +98,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                     baseURL: "/",
                   },
                 ],
+                noExternals: false,
                 renderer: virtualEntry,
                 rollupConfig: {
                   ...nitroConfig?.rollupConfig,
@@ -116,14 +124,19 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
         };
       },
     },
-    nitroConfig?.preset === "netlify" && {
-      name: "solid-start-nitro-netlify-fix",
+    {
+      name: "solid-start-nitro-edge-fix",
       enforce: "post",
-      config() {
+      async config() {
+        await fsp.rm(".solid-start", { recursive: true, force: true });
         return {
           environments: {
             client: { build: { outDir: ".solid-start/client" } },
-            ssr: { build: { outDir: ".solid-start/server" } },
+            ssr: {
+              build: nitroConfig?.preset?.toLowerCase().includes("static")
+                ? undefined
+                : { outDir: ".solid-start/server" },
+            },
           },
         };
       },
