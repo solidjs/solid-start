@@ -12,7 +12,12 @@ import {
   serializeToJSONStream,
   serializeToJSStream,
 } from "./serialization.ts";
-import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./server-functions-shared.ts";
+import {
+  BODY_FORMAT_KEY,
+  BodyFormat,
+  extractBody,
+  getHeadersAndBody,
+} from "./server-functions-shared.ts";
 import type { FetchEvent, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
@@ -52,8 +57,14 @@ export async function handleServerFunction(h3Event: H3Event) {
       }
     }
   }
-  if (request.method === "POST") {
-    parsed.push(await extractBody('', false, request.clone()));
+  if (request.method === "POST" && request.body !== null) {
+    const bodyFormat = request.headers.get(BODY_FORMAT_KEY);
+    const decoded = await extractBody("", false, request.clone());
+    if (bodyFormat === BodyFormat.Seroval) {
+      parsed = decoded as any[];
+    } else {
+      parsed.push(decoded);
+    }
   }
   try {
     let result = await provideRequestEvent(event, async () => {
@@ -87,18 +98,19 @@ export async function handleServerFunction(h3Event: H3Event) {
     // handle no JS success case
     if (!instance) return handleNoJS(result, request, parsed);
 
-      const body = getHeadersAndBody(result);
-      if (body) {
-        return new Response(body.body, {
-          headers: body.headers,
-        });
-      }
-      h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
-      if (import.meta.env.SEROVAL_MODE === "js") {
-        h3Event.res.headers.set("content-type", "text/javascript");
-        return serializeToJSStream(instance, result);
-      }
-      return serializeToJSONStream(result);
+    const body = getHeadersAndBody(result);
+    if (body) {
+      return new Response(body.body, {
+        headers: body.headers,
+      });
+    }
+    h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
+    if (import.meta.env.SEROVAL_MODE === "js") {
+      h3Event.res.headers.set("content-type", "text/javascript");
+      return serializeToJSStream(instance, result);
+    }
+    h3Event.res.headers.set("content-type", "text/plain");
+    return serializeToJSONStream(result);
   } catch (x) {
     if (x instanceof Response) {
       if (singleFlight && instance) {
@@ -107,18 +119,14 @@ export async function handleServerFunction(h3Event: H3Event) {
       // forward headers
       if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
       // forward non-redirect statuses
-      if (
-        (x as any).status &&
-        (!instance || (x as any).status < 300 || (x as any).status >= 400)
-      )
+      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400))
         h3Event.res.status = (x as any).status;
       if ((x as any).customBody) {
-        x = (x as any).customBody();
-      } else if ((x as any).body === undefined) x = null;
+        x = await (x as any).customBody();
+      } else if ((x as any).body == null) x = null;
       h3Event.res.headers.set("X-Error", "true");
     } else if (instance) {
-      const error =
-        x instanceof Error ? x.message : typeof x === "string" ? x : "true";
+      const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
 
       h3Event.res.headers.set("X-Error", error.replace(/[\r\n]+/g, ""));
     } else {
@@ -127,6 +135,11 @@ export async function handleServerFunction(h3Event: H3Event) {
     if (instance) {
       const body = getHeadersAndBody(x);
       if (body) {
+        const headers = new Headers(body.headers as HeadersInit);
+        const errorHeader = h3Event.res.headers.get("X-Error");
+        if (errorHeader !== null) {
+          headers.set("X-Error", errorHeader);
+        }
         return new Response(body.body, {
           headers: body.headers,
         });
@@ -136,18 +149,14 @@ export async function handleServerFunction(h3Event: H3Event) {
         h3Event.res.headers.set("content-type", "text/javascript");
         return serializeToJSStream(instance, x);
       }
+      h3Event.res.headers.set("content-type", "text/plain");
       return serializeToJSONStream(x);
     }
     return x;
   }
 }
 
-function handleNoJS(
-  result: any,
-  request: Request,
-  parsed: any[],
-  thrown?: boolean,
-) {
+function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
   const url = new URL(request.url);
   const isError = result instanceof Error;
   let statusCode = 302;
@@ -157,10 +166,7 @@ function handleNoJS(
     if (result.headers.has("Location")) {
       headers.set(
         `Location`,
-        new URL(
-          result.headers.get("Location")!,
-          url.origin + import.meta.env.BASE_URL,
-        ).toString(),
+        new URL(result.headers.get("Location")!, url.origin + import.meta.env.BASE_URL).toString(),
       );
       statusCode = getExpectedRedirectStatus(result);
     }
@@ -177,10 +183,7 @@ function handleNoJS(
           result: isError ? result.message : result,
           thrown: thrown,
           error: isError,
-          input: [
-            ...parsed.slice(0, -1),
-            [...parsed[parsed.length - 1].entries()],
-          ],
+          input: [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]],
         }),
       )}; Secure; HttpOnly;`,
     );
@@ -206,7 +209,7 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // 	useH3Internals = true;
   // 	sourceEvent.nativeEvent.node.req.headers.cookie = "";
   // }
-  SetCookies.forEach((cookie) => {
+  SetCookies.forEach(cookie => {
     if (!cookie) return;
     const { maxAge, expires, name, value } = parseSetCookie(cookie);
     if (maxAge != null && maxAge <= 0) {
@@ -227,10 +230,7 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
 
   return headers;
 }
-async function handleSingleFlight(
-  sourceEvent: FetchEvent,
-  result: any,
-): Promise<Response> {
+async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
   let revalidate: string[];
   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
   if (result instanceof Response) {

@@ -17,9 +17,9 @@ export const enum BodyFormat {
 
 export function getHeadersAndBody(body: any):
   | {
-    headers?: HeadersInit;
-    body: BodyInit;
-  }
+      headers?: HeadersInit;
+      body: BodyInit;
+    }
   | undefined {
   switch (true) {
     case typeof body === "string":
@@ -109,7 +109,7 @@ export async function extractBody(instance: string, client: boolean, source: Req
     case startType === BodyFormat.ArrayBuffer:
       return await clone.arrayBuffer();
     case startType === BodyFormat.Uint8Array:
-      return await clone.bytes();
+      return new Uint8Array(await clone.arrayBuffer());
   }
 
   return undefined;
