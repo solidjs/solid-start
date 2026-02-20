@@ -1,11 +1,11 @@
 import { fileURLToPath } from "node:url";
 import {
   createFilter,
-  EnvironmentModuleGraph,
+  type EnvironmentModuleGraph,
   type FilterPattern,
   normalizePath,
   type Plugin,
-  ViteDevServer,
+  type ViteDevServer,
 } from "vite";
 import { compile, type CompileOptions } from "./compile.ts";
 
