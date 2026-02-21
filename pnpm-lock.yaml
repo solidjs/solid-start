@@ -29,6 +29,132 @@ importers:
 
   apps/fixtures: {}
 
+  apps/fixtures/bare:
+    dependencies:
+      '@solidjs/start':
+        specifier: ^1.1.0
+        version: 1.2.1(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.9
+      vinxi:
+        specifier: ^0.5.7
+        version: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+
+  apps/fixtures/basic:
+    dependencies:
+      '@solidjs/meta':
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@1.9.9)
+      '@solidjs/router':
+        specifier: ^0.15.0
+        version: 0.15.3(solid-js@1.9.9)
+      '@solidjs/start':
+        specifier: ^1.1.0
+        version: 1.2.1(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.9
+      vinxi:
+        specifier: ^0.5.7
+        version: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+
+  apps/fixtures/experiments:
+    dependencies:
+      '@solidjs/meta':
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@1.9.9)
+      '@solidjs/router':
+        specifier: ^0.15.0
+        version: 0.15.3(solid-js@1.9.9)
+      '@solidjs/start':
+        specifier: ^1.1.0
+        version: 1.2.1(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.9
+      vinxi:
+        specifier: ^0.5.7
+        version: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+
+  apps/fixtures/hackernews:
+    dependencies:
+      '@solidjs/router':
+        specifier: ^0.15.0
+        version: 0.15.3(solid-js@1.9.9)
+      '@solidjs/start':
+        specifier: ^1.1.0
+        version: 1.2.1(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.9
+      vinxi:
+        specifier: ^0.5.7
+        version: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+
+  apps/fixtures/notes:
+    dependencies:
+      '@solidjs/router':
+        specifier: ^0.15.0
+        version: 0.15.3(solid-js@1.9.9)
+      '@solidjs/start':
+        specifier: ^1.1.0
+        version: 1.2.1(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
+      marked:
+        specifier: ^12.0.1
+        version: 12.0.2
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.9
+      unstorage:
+        specifier: 1.10.2
+        version: 1.10.2(ioredis@5.7.0)
+      vinxi:
+        specifier: ^0.5.7
+        version: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+
+  apps/fixtures/serialization-modes:
+    dependencies:
+      '@solidjs/meta':
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@1.9.9)
+      '@solidjs/router':
+        specifier: ^0.15.0
+        version: 0.15.3(solid-js@1.9.9)
+      '@solidjs/start':
+        specifier: workspace:*
+        version: link:../../../packages/start
+      shieldwall:
+        specifier: ^0.4.0
+        version: 0.4.0(@solidjs/start@packages+start)
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.9
+      vinxi:
+        specifier: ^0.5.7
+        version: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+
+  apps/fixtures/todomvc:
+    dependencies:
+      '@solidjs/router':
+        specifier: ^0.15.0
+        version: 0.15.3(solid-js@1.9.9)
+      '@solidjs/start':
+        specifier: ^1.1.0
+        version: 1.2.1(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      solid-js:
+        specifier: ^1.9.5
+        version: 1.9.9
+      unstorage:
+        specifier: 1.10.2
+        version: 1.10.2(ioredis@5.7.0)
+      vinxi:
+        specifier: ^0.5.7
+        version: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+
   apps/landing-page:
     dependencies:
       '@solidjs/meta':
@@ -1568,6 +1694,11 @@ packages:
     peerDependencies:
       solid-js: ^1.8.6
 
+  '@solidjs/start@1.2.1':
+    resolution: {integrity: sha512-O5E7rcCwm2f8GlXKgS2xnU37Ld5vMVXJgo/qR7UI5iR5uFo9V2Ac+SSVNXkM98CeHKHt55h1UjbpxxTANEsHmA==}
+    peerDependencies:
+      vinxi: ^0.5.7
+
   '@solidjs/testing-library@0.8.10':
     resolution: {integrity: sha512-qdeuIerwyq7oQTIrrKvV0aL9aFeuwTd86VYD3afdq5HYEwoox1OBTJy4y8A3TFZr8oAR0nujYgCzY/8wgHGfeQ==}
     engines: {node: '>= 14'}
@@ -2400,6 +2531,10 @@ packages:
   crossws@0.3.5:
     resolution: {integrity: sha512-ojKiDvcmByhwa8YYqbQI/hg7MEU0NC03+pSdEq4ZUnZR9xXpwk7E43SMNGkn+JxJGPFtNvQ48+vV2p+P1ml5PA==}
 
+  csp-header@5.2.1:
+    resolution: {integrity: sha512-qOJNu39JZkPrbrAM40a1tQCePEPYVIoI6nMDhX4RA07QjU8efS+zyd/zE83XJu85KKazH9NjKlvvlswFMteMgg==}
+    engines: {node: '>=10'}
+
   css.escape@1.5.1:
     resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
 
@@ -2436,8 +2571,12 @@ packages:
     resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
     engines: {node: '>=18'}
 
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
   dax-sh@0.43.2:
     resolution: {integrity: sha512-uULa1sSIHgXKGCqJ/pA0zsnzbHlVnuq7g8O2fkHokWFNwEGIhh5lAJlxZa1POG5En5ba7AU4KcBAvGQWMMf8rg==}
+    deprecated: This package has moved to simply be 'dax' instead of 'dax-sh'
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
@@ -2962,11 +3101,12 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-dirs@3.0.1:
     resolution: {integrity: sha512-NBcGGFbBA9s1VzD41QXDG+3++t9Mn5t1FpLdhESY6oKY4gYTFpX4wO3sqGUa0Srjtbfj3szX0RnemmrVRUdULA==}
@@ -3451,6 +3591,11 @@ packages:
   make-dir@4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
+
+  marked@12.0.2:
+    resolution: {integrity: sha512-qXUm7e/YKFoqFPYPa3Ukg9xlI5cyAtGmyEIzMfW//m6kXwCy2Ps9DYf5ioijFKQ8qyuscrHoY04iJGctu2Kg0Q==}
+    engines: {node: '>= 18'}
+    hasBin: true
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -4196,6 +4341,11 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
+  shieldwall@0.4.0:
+    resolution: {integrity: sha512-3IO6SxrRUlL7BGWnfhdACnuG8bqa+kKzSgtuW0daZpdF9iGoEW9EroY2djuP1AjY/R3SCbql6xCJ1CtX+GDMRw==}
+    peerDependencies:
+      '@solidjs/start': ^1.1.1
+
   shiki@1.29.2:
     resolution: {integrity: sha512-njXuliz/cP+67jU2hukkxCNuH1yUi4QfdZZY+sMr5PPrIyXSu5iTb/qYC4BiWWB0vZ+7TbdvYUCeL23zpwCfbg==}
 
@@ -4442,6 +4592,7 @@ packages:
   tar@7.4.4:
     resolution: {integrity: sha512-O1z7ajPkjTgEgmTGz0v9X4eqeEXTDREPTO77pVC1Nbs86feBU1Zhdg+edzavPmYW1olxkwsqA2v4uOw6E8LeDg==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
@@ -4689,6 +4840,50 @@ packages:
     resolution: {integrity: sha512-6NCPkv1ClwH+/BGE9QeoTIl09nuiAt0gS28nn1PvYXsGKRwM2TCbFA2QiilmehPDTXIe684k4rZI1yl3A1PCUw==}
     engines: {node: '>=18.12.0'}
 
+  unstorage@1.10.2:
+    resolution: {integrity: sha512-cULBcwDqrS8UhlIysUJs2Dk0Mmt8h7B0E6mtR+relW9nZvsf/u4SkAYyNliPiPW7XtFNb5u3IUMkxGxFTTRTgQ==}
+    peerDependencies:
+      '@azure/app-configuration': ^1.5.0
+      '@azure/cosmos': ^4.0.0
+      '@azure/data-tables': ^13.2.2
+      '@azure/identity': ^4.0.1
+      '@azure/keyvault-secrets': ^4.8.0
+      '@azure/storage-blob': ^12.17.0
+      '@capacitor/preferences': ^5.0.7
+      '@netlify/blobs': ^6.5.0 || ^7.0.0
+      '@planetscale/database': ^1.16.0
+      '@upstash/redis': ^1.28.4
+      '@vercel/kv': ^1.0.1
+      idb-keyval: ^6.2.1
+      ioredis: ^5.3.2
+    peerDependenciesMeta:
+      '@azure/app-configuration':
+        optional: true
+      '@azure/cosmos':
+        optional: true
+      '@azure/data-tables':
+        optional: true
+      '@azure/identity':
+        optional: true
+      '@azure/keyvault-secrets':
+        optional: true
+      '@azure/storage-blob':
+        optional: true
+      '@capacitor/preferences':
+        optional: true
+      '@netlify/blobs':
+        optional: true
+      '@planetscale/database':
+        optional: true
+      '@upstash/redis':
+        optional: true
+      '@vercel/kv':
+        optional: true
+      idb-keyval:
+        optional: true
+      ioredis:
+        optional: true
+
   unstorage@1.17.1:
     resolution: {integrity: sha512-KKGwRTT0iVBCErKemkJCLs7JdxNVfqTPc/85ae1XES0+bsHbc/sFBfVi5kJp156cc51BHinIH2l3k0EZ24vOBQ==}
     peerDependencies:
@@ -4931,6 +5126,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
@@ -6647,6 +6843,30 @@ snapshots:
     dependencies:
       solid-js: 1.9.9
 
+  '@solidjs/start@1.2.1(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))':
+    dependencies:
+      '@tanstack/server-functions-plugin': 1.121.21(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      '@vinxi/plugin-directives': 0.5.1(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      '@vinxi/server-components': 0.5.1(vinxi@0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+      cookie-es: 2.0.0
+      defu: 6.1.4
+      error-stack-parser: 2.1.4
+      html-to-image: 1.11.13
+      radix3: 1.1.2
+      seroval: 1.4.1
+      seroval-plugins: 1.4.0(seroval@1.4.1)
+      shiki: 1.29.2
+      source-map-js: 1.2.1
+      terracotta: 1.0.6(solid-js@1.9.9)
+      tinyglobby: 0.2.15
+      vinxi: 0.5.8(@types/node@25.0.3)(db0@0.3.2)(ioredis@5.7.0)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1)
+      vite-plugin-solid: 2.11.8(@testing-library/jest-dom@6.8.0)(solid-js@1.9.9)(vite@6.3.6(@types/node@25.0.3)(jiti@2.6.0)(terser@5.44.1)(yaml@2.8.1))
+    transitivePeerDependencies:
+      - '@testing-library/jest-dom'
+      - solid-js
+      - supports-color
+      - vite
+
   '@solidjs/testing-library@0.8.10(@solidjs/router@0.15.3(solid-js@1.9.9))(solid-js@1.9.9)':
     dependencies:
       '@testing-library/dom': 10.4.1
@@ -6836,7 +7056,7 @@ snapshots:
       consola: 3.4.2
       defu: 6.1.4
       get-port-please: 3.2.0
-      h3: 1.15.3
+      h3: 1.15.4
       http-shutdown: 1.2.2
       jiti: 1.21.7
       mlly: 1.8.0
@@ -7588,6 +7808,8 @@ snapshots:
     dependencies:
       uncrypto: 0.1.3
 
+  csp-header@5.2.1: {}
+
   css.escape@1.5.1: {}
 
   cssesc@3.0.0: {}
@@ -7666,6 +7888,8 @@ snapshots:
     dependencies:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
+
+  date-fns@3.6.0: {}
 
   dax-sh@0.43.2:
     dependencies:
@@ -8671,6 +8895,8 @@ snapshots:
     dependencies:
       semver: 7.7.2
 
+  marked@12.0.2: {}
+
   math-intrinsics@1.1.0: {}
 
   mdast-util-to-hast@13.2.0:
@@ -9508,6 +9734,12 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
+  shieldwall@0.4.0(@solidjs/start@packages+start):
+    dependencies:
+      '@solidjs/start': link:packages/start
+      csp-header: 5.2.1
+      h3: 1.15.4
+
   shiki@1.29.2:
     dependencies:
       '@shikijs/core': 1.29.2
@@ -10050,6 +10282,21 @@ snapshots:
       acorn: 8.15.0
       picomatch: 4.0.3
       webpack-virtual-modules: 0.6.2
+
+  unstorage@1.10.2(ioredis@5.7.0):
+    dependencies:
+      anymatch: 3.1.3
+      chokidar: 3.6.0
+      destr: 2.0.5
+      h3: 1.15.4
+      listhen: 1.9.0
+      lru-cache: 10.4.3
+      mri: 1.2.0
+      node-fetch-native: 1.6.7
+      ofetch: 1.4.1
+      ufo: 1.6.1
+    optionalDependencies:
+      ioredis: 5.7.0
 
   unstorage@1.17.1(db0@0.3.2)(ioredis@5.7.0):
     dependencies:
