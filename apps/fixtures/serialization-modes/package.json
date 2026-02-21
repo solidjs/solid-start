@@ -1,5 +1,5 @@
 {
-  "name": "fixture-csp-strong",
+  "name": "fixture-serialization-modes",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
