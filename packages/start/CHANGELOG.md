@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 1.3.0
+
+### Minor Changes
+
+- 83bd861: seroval json mode
+
+### Patch Changes
+
+- 7144da5: fix: use percent encoding for `x-server-id` header value instead of reserved `#` character
+
 ## 1.2.1
 
 ### Patch Changes
