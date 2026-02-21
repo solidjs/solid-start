@@ -89,6 +89,7 @@ export function defineConfig(baseConfig = {}) {
       }
     }
   });
+  
   const routeDir = join(start.appRoot, start.routeDir);
   let server = start.server;
   if (!start.ssr) {
@@ -98,6 +99,8 @@ export function defineConfig(baseConfig = {}) {
   if (existsSync(join(process.cwd(), start.appRoot, "app.jsx"))) {
     entryExtension = ".jsx";
   }
+
+  const serializationMode = start.serialization?.mode || 'js'
 
   return createApp({
     server: {
@@ -167,7 +170,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
-                "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || 'json'),
+                "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
               }
             })
@@ -235,7 +238,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.SERVER_BASE_URL": JSON.stringify(server?.baseURL ?? ""),
-                "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || 'json'),
+                "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
               }
             })
@@ -295,7 +298,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
-                "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || 'json'),
+                "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
               }
             })

@@ -27,9 +27,16 @@ type SolidStartInlineConfig = {
     islands?: boolean;
   };
   serialization?: {
-    // This only matters for server function responses
-    mode?: 'js' | 'json';
-  }
+    /**
+     * The serialization mode to use for server functions.
+     * The "js" mode uses a custom binary format that is more efficient than JSON, but requires a custom deserializer (with `eval()`) on the client.
+     * The "json" mode uses JSON for serialization, which is less efficient but can be deserialized with `JSON.parse` on the client.
+     *
+     * @default "js"
+     * @warning on v2, "json" will be the default.
+     */
+    mode?: "js" | "json";
+  };
   vite?:
     | ViteCustomizableConfig
     | ((options: { router: "server" | "client" | "server-function" }) => ViteCustomizableConfig);
