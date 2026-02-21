@@ -31,7 +31,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   let functionId: string | undefined | null, name: string | undefined | null;
   if (serverReference) {
     invariant(typeof serverReference === "string", "Invalid server function");
-    [functionId, name] = serverReference.split("#");
+    [functionId, name] = decodeURIComponent(serverReference).split("#");
   } else {
     functionId = url.searchParams.get("id");
     name = url.searchParams.get("name");

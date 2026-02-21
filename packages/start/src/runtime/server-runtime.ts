@@ -19,9 +19,9 @@ function createRequest(
     ...options,
     headers: {
       ...options.headers,
-      "X-Server-Id": id,
-      "X-Server-Instance": instance,
-    },
+      "X-Server-Id": encodeURIComponent(id),
+      "X-Server-Instance": instance
+    }
   });
 }
 
