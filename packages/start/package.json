@@ -61,7 +61,7 @@
     }
   },
   "devDependencies": {
-    "solid-js": "^1.9.5",
+    "solid-js": "^1.9.11",
     "vinxi": "^0.5.7",
     "vitest": "3.0.5"
   },
@@ -74,13 +74,13 @@
     "error-stack-parser": "^2.1.4",
     "html-to-image": "^1.11.11",
     "radix3": "^1.1.0",
-    "seroval": "^1.4.1",
-    "seroval-plugins": "^1.4.0",
+    "seroval": "^1.5.0",
+    "seroval-plugins": "^1.5.0",
     "shiki": "^1.26.1",
     "source-map-js": "^1.0.2",
     "terracotta": "^1.0.4",
     "tinyglobby": "^0.2.2",
-    "vite-plugin-solid": "^2.11.1"
+    "vite-plugin-solid": "^2.11.10"
   },
   "peerDependencies": {
     "vinxi": "^0.5.7"
