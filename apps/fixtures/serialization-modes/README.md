@@ -1,6 +1,6 @@
 # Serialization checks
 
-this fixture is designed to point out the differences between Seroval 2 modes.
+This fixture is designed to point out the differences between Seroval 2 modes.
 
 ```ts
 export default defineConfig({
