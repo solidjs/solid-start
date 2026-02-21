@@ -2,18 +2,6 @@ import { Title } from "@solidjs/meta";
 import { action, useSubmission } from "@solidjs/router";
 import { Show } from "solid-js";
 
-const TEXT = `
-Roses are red,
-Violets are blue,
-SolidStart is shiny,
-And so are you.
-
-Code flows like rivers,
-Logic sings in rhyme,
-Building with passion,
-One commit at a time.
-`;
-
 const actionStuff = action(async () => {
   "use server";
 
