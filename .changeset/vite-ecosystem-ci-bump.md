@@ -1,5 +1,5 @@
 ---
-"@solidjs/start": patch
+"@solidjs/start": minor
 ---
 
-Add vite-ecosystem-ci scripts and support Vite 8 asset manifest loading
+Add support for Vite 8 asset manifest loading
