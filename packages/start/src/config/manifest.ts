@@ -56,15 +56,7 @@ export function manifest(start: SolidStartOptions): PluginOption {
           const manifestKey = Object.keys(globalThis.START_CLIENT_BUNDLE).find(k => k.endsWith("manifest.json"));
           if (manifestKey && viteMajor < 8) {
             const manifestAsset = globalThis.START_CLIENT_BUNDLE[manifestKey] as any;
-            if (manifestAsset.type === "asset") {
-               rawManifest = manifestAsset.source as string;
-            } else if (manifestAsset.type === "chunk") {
-               rawManifest = manifestAsset.code as string;
-            } else if (typeof manifestAsset === "string") {
-               rawManifest = manifestAsset;
-            } else {
-               rawManifest = manifestAsset.source || manifestAsset.code || JSON.stringify(manifestAsset);
-            }
+            rawManifest = manifestAsset.source as string;
           } else {
              const fs = await import("node:fs");
              const path = await import("node:path");
