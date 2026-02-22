@@ -18,6 +18,7 @@ export interface StateContext {
   hash: string;
   count: number;
   imports: Map<string, t.Identifier>;
+  valid: boolean;
 
   definitions: {
     register: ImportDefinition;
@@ -146,7 +147,12 @@ function traceBinding(path: babel.NodePath, name: string): Binding | undefined {
           if (right) {
             return traceBinding(path, right.node.name);
           }
-          return current;
+
+          // Only valid for functions
+          const func = unwrapPath(current.path.get('init'), isValidFunction);
+          if (func) {
+            return current;
+          }
         }
       }
       return undefined;
@@ -329,10 +335,16 @@ function transformModuleLevelDirective(ctx: StateContext, program: babel.NodePat
       }
     }
 
-    program.pushContainer("body", [
-      t.variableDeclaration("const", declarations),
-      t.exportNamedDeclaration(null, specifiers, null),
-    ]);
+    const body: t.Statement[] = [];
+
+    if (declarations.length > 0) {
+      body.push(t.variableDeclaration("const", declarations));
+    }
+    if (specifiers.length > 0) {
+      body.push(t.exportNamedDeclaration(null, specifiers, null));
+    }
+
+    program.pushContainer("body", body);
   }
 }
 
@@ -344,6 +356,7 @@ export function directivesPlugin(): babel.PluginObj<State> {
         const isModuleLevel = isDirectiveValid(ctx.opts, program.node.directives);
         if (isModuleLevel) {
           transformModuleLevelDirective(ctx.opts, program);
+          ctx.opts.valid = true;
         } else {
           // First, bubble up function declarations
           program.traverse({
@@ -366,6 +379,7 @@ export function directivesPlugin(): babel.PluginObj<State> {
           program.scope.crawl();
 
           if (ctx.opts.count > 0) {
+            ctx.opts.valid = true;
             removeUnusedVariables(program);
           }
         }

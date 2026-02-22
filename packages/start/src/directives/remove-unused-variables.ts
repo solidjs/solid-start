@@ -1,5 +1,6 @@
 import type * as babel from "@babel/core";
-import type * as t from "@babel/types";
+import * as t from "@babel/types";
+import { isPathValid } from "./paths.ts";
 
 export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
   // TODO(Alexis):
@@ -23,7 +24,16 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
             case "hoisted":
             case "module":
               if (binding.references === 0 && !binding.path.removed) {
-                binding.path.remove();
+                if (isPathValid(path.parentPath, t.isImportDeclaration)) {
+                  const parent = path.parentPath;
+                  if (parent.node.specifiers.length === 1) {
+                    parent.remove();
+                  } else {
+                    binding.path.remove();
+                  }
+                } else {
+                  binding.path.remove();
+                }
                 dirty = true;
               }
               break;
@@ -32,6 +42,11 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
             case "unknown":
               break;
           }
+        }
+      },
+      VariableDeclaration(path) {
+        if (path.node.declarations.length === 0) {
+          path.remove();
         }
       },
     });

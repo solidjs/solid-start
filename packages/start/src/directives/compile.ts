@@ -1,5 +1,5 @@
-import path from "node:path";
 import * as babel from "@babel/core";
+import path from "node:path";
 import { directivesPlugin, type StateContext } from "./plugin.ts";
 import xxHash32 from "./xxhash32.ts";
 
@@ -9,7 +9,7 @@ export interface CompileResult {
   map: babel.BabelFileResult["map"];
 }
 
-export type CompileOptions = Omit<StateContext, "count" | "hash" | "imports">;
+export type CompileOptions = Omit<StateContext, "count" | "hash" | "imports" | "valid">;
 
 export async function compile(
   id: string,
@@ -17,15 +17,13 @@ export async function compile(
   options: CompileOptions,
 ): Promise<CompileResult> {
   const context: StateContext = {
-      ...options,
-      hash: xxHash32(id).toString(16),
-      count: 0,
-      imports: new Map(),
-    } 
-  const pluginOption = [
-    directivesPlugin,
-    context,
-  ];
+    ...options,
+    valid: false,
+    hash: xxHash32(id).toString(16),
+    count: 0,
+    imports: new Map(),
+  };
+  const pluginOption = [directivesPlugin, context];
   const plugins: NonNullable<NonNullable<babel.TransformOptions["parserOpts"]>["plugins"]> = [
     "jsx",
   ];
@@ -47,7 +45,7 @@ export async function compile(
 
   if (result) {
     return {
-      valid: context.count > 0,
+      valid: context.valid,
       code: result.code || "",
       map: result.map,
     };
