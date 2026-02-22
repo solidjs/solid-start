@@ -91,6 +91,16 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         return {
           appType: "custom",
           build: { assetsDir: "_build/assets" },
+          optimizeDeps: {
+            // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
+            ...({
+              rolldownOptions: {
+                transform: {
+                  jsx: "react",
+                },
+              },
+            } as any),
+          },
           environments: {
             [VITE_ENVIRONMENTS.client]: {
               consumer: "client",
