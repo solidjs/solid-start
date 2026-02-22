@@ -62,7 +62,15 @@ export function manifest(start: SolidStartOptions): PluginOption {
              const path = await import("node:path");
              try {
                const appRoot = (start as any).appRoot || "./src";
-               const manifestPath = path.resolve(appRoot, "..", ".solid-start/client/.vite/manifest.json");
+               let outDir = ".solid-start/client";
+               if (devServer?.environments?.client?.config?.build?.outDir) {
+                 outDir = devServer.environments.client.config.build.outDir;
+               } else if (this.environment?.config?.build?.outDir && this.environment?.config?.consumer === "client") {
+                 outDir = this.environment.config.build.outDir;
+               } else if ((globalThis as any).START_CLIENT_OUT_DIR) {
+                 outDir = (globalThis as any).START_CLIENT_OUT_DIR;
+               }
+               const manifestPath = path.resolve(appRoot, "..", outDir, ".vite/manifest.json");
                rawManifest = fs.readFileSync(manifestPath, "utf-8");
              } catch (e) {
                throw new Error(`Manifest asset not found in bundle and could not be read from disk. Keys: ${Object.keys(globalThis.START_CLIENT_BUNDLE).join(", ")}. Error: ${e}`);

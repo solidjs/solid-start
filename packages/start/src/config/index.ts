@@ -243,8 +243,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
-      generateBundle(_options, bundle) {
+      generateBundle(options, bundle) {
         globalThis.START_CLIENT_BUNDLE = bundle;
+        (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
     devServer(),
