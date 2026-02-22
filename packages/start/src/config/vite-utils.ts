@@ -1,4 +1,4 @@
-import { DevEnvironment, Rollup } from "vite";
+import type { DevEnvironment, Rollup } from "vite";
 import fs from "node:fs";
 import path from "node:path";
 
