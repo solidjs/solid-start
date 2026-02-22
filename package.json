@@ -26,7 +26,10 @@
     "clean:test": "pnpx rimraf .tmp",
     "release": "pnpm build && changeset publish",
     "format": "pnpm oxfmt",
-    "rewrite-exports": "pnpm --filter='./packages/*' -c exec \"echo \\$(cat package.json | jq '.exports = .publishConfig.exports') > package.json\""
+    "rewrite-exports": "pnpm --filter='./packages/*' -c exec \"echo \\$(cat package.json | jq '.exports = .publishConfig.exports') > package.json\"",
+    "vite-ecosystem-ci:build": "pnpm run build:all",
+    "vite-ecosystem-ci:before-test": "pnpm --filter tests exec playwright install chromium",
+    "vite-ecosystem-ci:test": "pnpm --filter tests run test:all"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
