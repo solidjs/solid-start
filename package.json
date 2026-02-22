@@ -27,7 +27,7 @@
     "release": "pnpm build && changeset publish",
     "format": "pnpm oxfmt",
     "rewrite-exports": "pnpm --filter='./packages/*' -c exec \"echo \\$(cat package.json | jq '.exports = .publishConfig.exports') > package.json\"",
-    "vite-ecosystem-ci:build": "pnpm run build:all",
+    "vite-ecosystem-ci:build": "pnpm run build:all && pnpm --filter fixture-nitro-3 build",
     "vite-ecosystem-ci:before-test": "pnpm --filter tests exec playwright install chromium",
     "vite-ecosystem-ci:test": "pnpm --filter tests run test:all"
   },
