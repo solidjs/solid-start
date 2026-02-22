@@ -37,6 +37,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../../packages/start-nitro-v2-vite-plugin
       solid-js:
         specifier: ^1.9.9
         version: 1.9.9
@@ -55,6 +58,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../../packages/start-nitro-v2-vite-plugin
       solid-js:
         specifier: ^1.9.9
         version: 1.9.9
@@ -73,6 +79,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../../packages/start-nitro-v2-vite-plugin
       solid-js:
         specifier: ^1.9.9
         version: 1.9.9
@@ -98,6 +107,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../../packages/start-nitro-v2-vite-plugin
       solid-js:
         specifier: ^1.9.9
         version: 1.9.9
@@ -113,6 +125,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../../packages/start-nitro-v2-vite-plugin
       nitro:
         specifier: 3.0.1-alpha.0
         version: 3.0.1-alpha.0(@netlify/blobs@10.4.1)(better-sqlite3@11.8.1)(chokidar@4.0.3)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(vite@7.1.10(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -152,6 +167,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../../packages/start-nitro-v2-vite-plugin
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -176,6 +194,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../../packages/start-nitro-v2-vite-plugin
       nitro:
         specifier: 3.0.1-alpha.0
         version: 3.0.1-alpha.0(@netlify/blobs@10.4.1)(better-sqlite3@11.8.1)(chokidar@4.0.3)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.6.1)(vite@7.1.10(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -200,6 +221,9 @@ importers:
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../packages/start
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../packages/start-nitro-v2-vite-plugin
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -264,6 +288,9 @@ importers:
       '@solidjs/testing-library':
         specifier: ^0.8.10
         version: 0.8.10(@solidjs/router@0.15.3(solid-js@1.9.9))(solid-js@1.9.9)
+      '@solidjs/vite-plugin-nitro-2':
+        specifier: workspace:*
+        version: link:../../packages/start-nitro-v2-vite-plugin
       '@testing-library/jest-dom':
         specifier: ^6.6.2
         version: 6.6.2
@@ -4577,6 +4604,7 @@ packages:
   prebuild-install@7.1.3:
     resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
     engines: {node: '>=10'}
+    deprecated: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
     hasBin: true
 
   precinct@11.0.5:

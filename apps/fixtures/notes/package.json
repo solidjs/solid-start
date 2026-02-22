@@ -9,6 +9,7 @@
   "dependencies": {
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "workspace:*",
+    "@solidjs/vite-plugin-nitro-2": "workspace:*",
     "date-fns": "^3.6.0",
     "marked": "^12.0.1",
     "solid-js": "^1.9.9",
