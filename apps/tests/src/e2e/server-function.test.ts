@@ -80,6 +80,9 @@ test.describe("server-function", () => {
   test("should build with a server function w/ blob data", async ({ page }) => {
     await page.goto("http://localhost:3000/server-function-blob");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+  test("should remove exports for non-function values when top-level use server is used", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-query-toplevel");
+    await expect(page.locator("#server-fn-test")).toContainText('false');
   });
 
   // TODO not sure if this is the correct place

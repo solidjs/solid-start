@@ -2,10 +2,10 @@ import { createEffect, createSignal } from "solid-js";
 import * as testModule from "~/functions/solid-router-query";
 
 export default function App() {
-  const [output, setOutput] = createSignal<{ serverFnWithMeta?: boolean }>({});
+  const [output, setOutput] = createSignal<boolean | null>();
 
   createEffect(() => {
-    setOutput(prev => ({ ...prev, serverFnWithMeta: 'testQuery' in testModule }));
+    setOutput('testQuery' in testModule);
   });
 
   return (
