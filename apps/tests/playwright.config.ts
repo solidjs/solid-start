@@ -5,15 +5,15 @@ export default defineConfig({
   testMatch: "**/*.test.ts",
 
   webServer: {
-    command: "pnpm run dev --host 127.0.0.1 --port 3000 --strictPort",
-    url: "http://127.0.0.1:3000",
+    command: "pnpm run dev",
+    url: "http://localhost:3000",
     reuseExistingServer: true,
     stdout: "pipe",
     stderr: "pipe",
   },
 
   use: {
-    baseURL: "http://127.0.0.1:3000",
+    baseURL: "http://localhost:3000",
     trace: "on-first-retry",
   },
 
