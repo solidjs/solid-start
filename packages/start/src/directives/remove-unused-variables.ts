@@ -24,8 +24,8 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
             case "hoisted":
             case "module":
               if (binding.references === 0 && !binding.path.removed) {
-                if (isPathValid(path.parentPath, t.isImportDeclaration)) {
-                  const parent = path.parentPath;
+                if (isPathValid(binding.path.parentPath, t.isImportDeclaration)) {
+                  const parent = binding.path.parentPath;
                   if (parent.node.specifiers.length === 1) {
                     parent.remove();
                   } else {
