@@ -40,40 +40,9 @@ export function manifest(start: SolidStartOptions): PluginOption {
             v => "isEntry" in v && v.isEntry,
           );
           if (!entry) throw new Error("No client entry found");
-          let viteStrVersion = (devServer?.config?.logger as any)?.config?.version;
-          if (!viteStrVersion) {
-            try {
-              viteStrVersion = await import("vite").then(m => m.version);
-            } catch (e) {
-              // ignore
-            }
-          }
-
-          let rawManifest: string | undefined;
-
-          const viteMajor = parseInt(viteStrVersion!.split('.')[0], 10);
-
-          const manifestKey = Object.keys(globalThis.START_CLIENT_BUNDLE).find(k => k.endsWith("manifest.json"));
-          if (manifestKey && viteMajor < 8) {
-            const manifestAsset = globalThis.START_CLIENT_BUNDLE[manifestKey] as any;
-            rawManifest = manifestAsset.source as string;
-          } else {
-             const fs = await import("node:fs");
-             const path = await import("node:path");
-             try {
-               const appRoot = (start as any).appRoot || "./src";
-               const manifestPath = path.resolve(appRoot, "..", ".solid-start/client/.vite/manifest.json");
-               rawManifest = fs.readFileSync(manifestPath, "utf-8");
-             } catch (e) {
-               throw new Error(`Manifest asset not found in bundle and could not be read from disk. Keys: ${Object.keys(globalThis.START_CLIENT_BUNDLE).join(", ")}. Error: ${e}`);
-             }
-          }
-
-          if (!rawManifest) {
-            throw new Error("Failed to extract or read raw manifest.");
-          }
-
-          clientViteManifest = JSON.parse(rawManifest);
+          clientViteManifest = JSON.parse(
+            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source,
+          );
         }
         return `export const clientViteManifest = ${JSON.stringify(clientViteManifest)};`;
       } else if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
