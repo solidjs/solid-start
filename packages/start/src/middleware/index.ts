@@ -50,9 +50,9 @@ function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middlewar
 export function createMiddleware(
   args:
     | {
-        /** @deprecated Use H3 `Middleware` instead - https://h3.dev/guide/basics/middleware */
+        /** @deprecated Use H3 `Middleware` */
         onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
-        /** @deprecated Use H3 `Middleware` instead - https://h3.dev/guide/basics/middleware */
+        /** @deprecated Use H3 `Middleware` */
         onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
       }
     | Middleware[],
