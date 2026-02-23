@@ -9,7 +9,7 @@ import type { FetchEvent } from "../server/types.ts";
 export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
 /** This composes an array of Exchanges into a single ExchangeIO function */
 
-export type RequestMiddleware = (
+0export type RequestMiddleware = (
   event: FetchEvent,
 ) => Response | Promise<Response> | void | Promise<void> | Promise<void | Response>;
 
@@ -50,7 +50,9 @@ function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middlewar
 export function createMiddleware(
   args:
     | {
+        /** @deprecated Use H3 `Middleware` instead - https://h3.dev/guide/basics/middleware */
         onRequest?: RequestMiddleware | RequestMiddleware[] | undefined;
+        /** @deprecated Use H3 `Middleware` instead - https://h3.dev/guide/basics/middleware */
         onBeforeResponse?: ResponseMiddleware | ResponseMiddleware[] | undefined;
       }
     | Middleware[],
