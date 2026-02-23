@@ -1,5 +1,6 @@
 {
   "name": "fixture-bare",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",

@@ -1,5 +1,6 @@
 {
   "name": "fixture-serialization-modes",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",

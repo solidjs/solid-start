@@ -1,5 +1,6 @@
 {
   "name": "fixture-notes",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",

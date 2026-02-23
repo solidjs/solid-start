@@ -1,5 +1,6 @@
 {
   "name": "solid-start-examples",
+  "private": true,
   "description": "Examples for SolidStart",
   "type": "module",
   "scripts": {
