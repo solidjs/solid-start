@@ -67,4 +67,9 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/generator-server-function");
     await expect(page.locator("#server-fn-test")).toContainText("¡Hola, Mundo!");
   });
+
+  test("should remove exports for non-function values when top-level use server is used", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-query-toplevel");
+    await expect(page.locator("#server-fn-test")).toContainText('false');
+  });
 });
