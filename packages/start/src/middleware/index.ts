@@ -9,7 +9,7 @@ import type { FetchEvent } from "../server/types.ts";
 export type MiddlewareFn = (event: FetchEvent) => Promise<unknown> | unknown;
 /** This composes an array of Exchanges into a single ExchangeIO function */
 
-0export type RequestMiddleware = (
+export type RequestMiddleware = (
   event: FetchEvent,
 ) => Response | Promise<Response> | void | Promise<void> | Promise<void | Response>;
 
