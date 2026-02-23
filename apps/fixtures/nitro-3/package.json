@@ -12,7 +12,7 @@
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "workspace:*",
     "solid-js": "^1.9.9",
-    "nitro": "^3.0.1-alpha.1",
+    "nitro": "^3.0.1-alpha.2",
     "vite": "7.1.10"
   },
   "engines": {
