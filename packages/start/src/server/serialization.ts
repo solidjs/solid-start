@@ -74,9 +74,7 @@ export function serializeToJSStream(id: string, value: any) {
         plugins: DEFAULT_PLUGINS,
         onSerialize(data: string, initial: boolean) {
           controller.enqueue(
-            createChunk(
-              initial ? `(${getCrossReferenceHeader(id)},${data})` : data,
-            ),
+            createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data),
           );
         },
         onDone() {
@@ -135,9 +133,7 @@ class SerovalChunkReader {
     }
   }
 
-  async next(): Promise<
-    { done: true; value: undefined } | { done: false; value: string }
-  > {
+  async next(): Promise<{ done: true; value: undefined } | { done: false; value: string }> {
     // Check if the buffer is empty
     if (this.buffer.length === 0) {
       // if we are already done...
@@ -157,6 +153,9 @@ class SerovalChunkReader {
     // deserialize the data
     const head = new TextDecoder().decode(this.buffer.subarray(1, 11));
     const bytes = Number.parseInt(head, 16); // ;0x00000000;
+    if (Number.isNaN(bytes)) {
+      throw new Error("Malformed server function stream.");
+    }
     // Check if the buffer has enough bytes to be parsed
     while (bytes > this.buffer.length - 12) {
       // If it's not enough, and the reader is done
@@ -168,9 +167,7 @@ class SerovalChunkReader {
       await this.readChunk();
     }
     // Extract the exact chunk as defined by the byte header
-    const partial = new TextDecoder().decode(
-      this.buffer.subarray(12, 12 + bytes),
-    );
+    const partial = new TextDecoder().decode(this.buffer.subarray(12, 12 + bytes));
     // The rest goes to the buffer
     this.buffer = this.buffer.subarray(12 + bytes);
 
