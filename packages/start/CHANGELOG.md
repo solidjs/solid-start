@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.3.1
+
+### Patch Changes
+
+- 5249fdd: fix client-side serialization typo
+
 ## 1.3.0
 
 ### Minor Changes
