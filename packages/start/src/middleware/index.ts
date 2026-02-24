@@ -46,6 +46,21 @@ function wrapResponseMiddleware(onBeforeResponse: ResponseMiddleware): Middlewar
  * Creates middleware for handling requests and responses.
  *
  * @see https://docs.solidjs.com/solid-start/reference/server/create-middleware
+/**
+ * Creates request/response middlewares via H3.
+ *
+ * Accepts an array of H3 {@link Middleware}
+ *
+ * @tip To run your middleware before response, `await next()` in your function block.
+ *@example
+ * const middleware = createMiddleware([
+ *   async (event, next) => {
+ *     const resp = await next();
+ *     if (resp instanceof Response) return resp;
+ *     return new Response("Not found", { status: 404 });
+ *   },
+ * ]);
+ *
  */
 export function createMiddleware(
   args:
