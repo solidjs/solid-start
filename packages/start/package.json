@@ -19,7 +19,8 @@
     "./client/spa": "./src/client/spa/index.tsx",
     "./middleware": "./src/middleware/index.ts",
     "./http": "./src/http/index.ts",
-    "./env": "./env.d.ts"
+    "./env": "./env.d.ts",
+    "./image": "./src/image/index.tsx"
   },
   "publishConfig": {
     "access": "public",
@@ -33,7 +34,8 @@
       "./client/spa": "./dist/client/spa/index.jsx",
       "./middleware": "./dist/middleware/index.js",
       "./http": "./dist/http/index.js",
-      "./env": "./env.d.ts"
+      "./env": "./env.d.ts",
+      "./image": "./dist/image/index.jsx"
     }
   },
   "dependencies": {
@@ -58,6 +60,7 @@
     "radix3": "^1.1.2",
     "seroval": "^1.4.1",
     "seroval-plugins": "^1.4.0",
+    "sharp": "^0.34.5",
     "shiki": "^1.26.1",
     "solid-js": "^1.9.9",
     "source-map-js": "^1.2.1",
