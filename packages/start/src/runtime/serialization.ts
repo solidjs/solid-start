@@ -198,7 +198,7 @@ class SerovalChunkReader {
 export async function serializeToJSONString(value: any) {
   // const response = new Response(serializeToJSONStream(value));
   // return await response.text();
-  return JSON.stringify(toJSONAsync(value, {
+  return JSON.stringify(await toJSONAsync(value, {
     plugins: DEFAULT_PLUGINS,
     depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
     disabledFeatures: DISABLED_FEATURES,
