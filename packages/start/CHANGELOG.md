@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.3.2
+
+### Patch Changes
+
+- e534ea8: Fix a regression introduced in SolidStart v1.3.0 that could cause an infinite loop when a server function returns unexpected response (for example, S3/XML error responses).
+
 ## 1.3.1
 
 ### Patch Changes
