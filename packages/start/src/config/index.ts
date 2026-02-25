@@ -30,7 +30,6 @@ export interface SolidStartOptions {
      *
      * @default "json"
      */
-
     mode?: "js" | "json";
   };
 }
