@@ -67,4 +67,18 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/generator-server-function");
     await expect(page.locator("#server-fn-test")).toContainText("¡Hola, Mundo!");
   });
+
+  test("should build with a server function ping", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-ping");
+    await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+  });
+
+  test("should build with a server function w/ form data", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-form-data");
+    await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+  });
+  test("should build with a server function w/ blob data", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-blob");
+    await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+  });
 });

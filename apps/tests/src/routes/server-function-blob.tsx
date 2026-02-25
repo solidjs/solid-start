@@ -1,0 +1,29 @@
+import { createEffect, createSignal } from "solid-js";
+
+async function ping(value: Blob) {
+  "use server";
+  return value;
+}
+
+const blobURI =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNjYgMTU1LjMnPjxwYXRoIGQ9J00xNjMgMzVTMTEwLTQgNjkgNWwtMyAxYy02IDItMTEgNS0xNCA5bC0yIDMtMTUgMjYgMjYgNWMxMSA3IDI1IDEwIDM4IDdsNDYgOSAxOC0zMHonIGZpbGw9JyM3NmIzZTEnLz48bGluZWFyR3JhZGllbnQgaWQ9J2EnIGdyYWRpZW50VW5pdHM9J3VzZXJTcGFjZU9uVXNlJyB4MT0nMjcuNScgeTE9JzMnIHgyPScxNTInIHkyPSc2My41Jz48c3RvcCBvZmZzZXQ9Jy4xJyBzdG9wLWNvbG9yPScjNzZiM2UxJy8+PHN0b3Agb2Zmc2V0PScuMycgc3RvcC1jb2xvcj0nI2RjZjJmZCcvPjxzdG9wIG9mZnNldD0nMScgc3RvcC1jb2xvcj0nIzc2YjNlMScvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGggZD0nTTE2MyAzNVMxMTAtNCA2OSA1bC0zIDFjLTYgMi0xMSA1LTE0IDlsLTIgMy0xNSAyNiAyNiA1YzExIDcgMjUgMTAgMzggN2w0NiA5IDE4LTMweicgb3BhY2l0eT0nLjMnIGZpbGw9J3VybCgjYSknLz48cGF0aCBkPSdNNTIgMzVsLTQgMWMtMTcgNS0yMiAyMS0xMyAzNSAxMCAxMyAzMSAyMCA0OCAxNWw2Mi0yMVM5MiAyNiA1MiAzNXonIGZpbGw9JyM1MThhYzgnLz48bGluZWFyR3JhZGllbnQgaWQ9J2InIGdyYWRpZW50VW5pdHM9J3VzZXJTcGFjZU9uVXNlJyB4MT0nOTUuOCcgeTE9JzMyLjYnIHgyPSc3NCcgeTI9JzEwNS4yJz48c3RvcCBvZmZzZXQ9JzAnIHN0b3AtY29sb3I9JyM3NmIzZTEnLz48c3RvcCBvZmZzZXQ9Jy41JyBzdG9wLWNvbG9yPScjNDM3N2JiJy8+PHN0b3Agb2Zmc2V0PScxJyBzdG9wLWNvbG9yPScjMWYzYjc3Jy8+PC9saW5lYXJHcmFkaWVudD48cGF0aCBkPSdNNTIgMzVsLTQgMWMtMTcgNS0yMiAyMS0xMyAzNSAxMCAxMyAzMSAyMCA0OCAxNWw2Mi0yMVM5MiAyNiA1MiAzNXonIG9wYWNpdHk9Jy4zJyBmaWxsPSd1cmwoI2IpJy8+PGxpbmVhckdyYWRpZW50IGlkPSdjJyBncmFkaWVudFVuaXRzPSd1c2VyU3BhY2VPblVzZScgeDE9JzE4LjQnIHkxPSc2NC4yJyB4Mj0nMTQ0LjMnIHkyPScxNDkuOCc+PHN0b3Agb2Zmc2V0PScwJyBzdG9wLWNvbG9yPScjMzE1YWE5Jy8+PHN0b3Agb2Zmc2V0PScuNScgc3RvcC1jb2xvcj0nIzUxOGFjOCcvPjxzdG9wIG9mZnNldD0nMScgc3RvcC1jb2xvcj0nIzMxNWFhOScvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGggZD0nTTEzNCA4MGE0NSA0NSAwIDAwLTQ4LTE1TDI0IDg1IDQgMTIwbDExMiAxOSAyMC0zNmM0LTcgMy0xNS0yLTIzeicgZmlsbD0ndXJsKCNjKScvPjxsaW5lYXJHcmFkaWVudCBpZD0nZCcgZ3JhZGllbnRVbml0cz0ndXNlclNwYWNlT25Vc2UnIHgxPSc3NS4yJyB5MT0nNzQuNScgeDI9JzI0LjQnIHkyPScyNjAuOCc+PHN0b3Agb2Zmc2V0PScwJyBzdG9wLWNvbG9yPScjNDM3N2JiJy8+PHN0b3Agb2Zmc2V0PScuNScgc3RvcC1jb2xvcj0nIzFhMzM2YicvPjxzdG9wIG9mZnNldD0nMScgc3RvcC1jb2xvcj0nIzFhMzM2YicvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGggZD0nTTExNCAxMTVhNDUgNDUgMCAwMC00OC0xNUw0IDEyMHM1MyA0MCA5NCAzMGwzLTFjMTctNSAyMy0yMSAxMy0zNHonIGZpbGw9J3VybCgjZCknLz48L3N2Zz4=";
+
+export default function App() {
+  const [output, setOutput] = createSignal<{ result?: boolean }>({});
+
+  createEffect(async () => {
+    const request = await fetch(blobURI);
+    const blob = await request.blob();
+    const result = await ping(blob);
+    const value = await blob.text();
+    const test = await result.text();
+
+    setOutput(prev => ({ ...prev, result: value === test }));
+  });
+
+  return (
+    <main>
+      <span id="server-fn-test">{JSON.stringify(output())}</span>
+    </main>
+  );
+}
