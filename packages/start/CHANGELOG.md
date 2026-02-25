@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 2.0.0-alpha.3
+
+### Minor Changes
+
+- f6f0452: seroval json mode
+
+### Patch Changes
+
+- ff9607c: import DevEnvironment and Rollup as type from vite
+
 ## 2.0.0-alpha.2
 
 ### Minor Changes
