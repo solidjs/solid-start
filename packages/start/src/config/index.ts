@@ -22,7 +22,14 @@ export interface SolidStartOptions {
   extensions?: string[];
   middleware?: string;
   serialization?: {
-    // This only matters for server function responses
+    /**
+     * The serialization mode to use for server functions/actions.
+     * The "js" mode uses a custom binary format that is more efficient than JSON, but requires a custom deserializer (with `eval()`) on the client.
+     * A strong CSP should block `eval()` executions, which would prevent the "js" mode from working.
+     * The "json" mode uses JSON for serialization, which is less efficient but can be deserialized with `JSON.parse` on the client.
+     *
+     * @default "json"
+     */
     mode?: "js" | "json";
   };
 }
