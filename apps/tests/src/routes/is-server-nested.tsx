@@ -15,10 +15,6 @@ export default function App() {
     setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
   });
 
-  createEffect(() => {
-    throw new Error('foo');
-  });
-
   return (
     <main>
       <span id="server-fn-test">{JSON.stringify(output())}</span>
