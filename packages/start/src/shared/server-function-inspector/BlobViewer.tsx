@@ -1,7 +1,7 @@
 import { createMemo, createResource, type JSX, onCleanup, Show, Suspense } from 'solid-js';
 
-import { Badge } from "../ui/Badge";
-import Button from "../ui/Button";
+import { Badge } from "../ui/Badge.tsx";
+import Button from "../ui/Button.tsx";
 
 import './BlobViewer.css';
 
