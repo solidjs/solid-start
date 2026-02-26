@@ -380,8 +380,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.6
       terracotta:
-        specifier: ^1.0.6
-        version: 1.0.6(solid-js@1.9.9)
+        specifier: ^1.1.0
+        version: 1.1.0(solid-js@1.9.9)
       vite-plugin-solid:
         specifier: ^2.11.9
         version: 2.11.9(patch_hash=71233f1afab9e3ea2dbb03dbda3d84894ef1c6bfbbe69df9f864d03bfe67b6f5)(@testing-library/jest-dom@6.6.2)(solid-js@1.9.9)(vite@7.1.10(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -4985,8 +4985,8 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  solid-use@0.9.0:
-    resolution: {integrity: sha512-8TGwB4m3qQ7qKo8Lg0pi/ZyyGVmQIjC4sPyxRCH7VPds0BzSsT734PhP3jhR6zMJxoYHM+uoivjq0XdpzXeOJg==}
+  solid-use@0.9.1:
+    resolution: {integrity: sha512-UwvXDVPlrrbj/9ewG9ys5uL2IO4jSiwys2KPzK4zsnAcmEl7iDafZWW1Mo4BSEWOmQCGK6IvpmGHo1aou8iOFw==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.7
@@ -5183,8 +5183,8 @@ packages:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
 
-  terracotta@1.0.6:
-    resolution: {integrity: sha512-yVrmT/Lg6a3tEbeYEJH8ksb1PYkR5FA9k5gr1TchaSNIiA2ZWs5a+koEbePXwlBP0poaV7xViZ/v50bQFcMgqw==}
+  terracotta@1.1.0:
+    resolution: {integrity: sha512-kfQciWUBUBgYkXu7gh3CK3FAJng/iqZslAaY08C+k1Hdx17aVEpcFFb/WPaysxAfcupNH3y53s/pc53xxZauww==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.8
@@ -10594,7 +10594,7 @@ snapshots:
       '@solid-primitives/transition-group': 1.1.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
-  solid-use@0.9.0(solid-js@1.9.9):
+  solid-use@0.9.1(solid-js@1.9.9):
     dependencies:
       solid-js: 1.9.9
 
@@ -10813,10 +10813,10 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terracotta@1.0.6(solid-js@1.9.9):
+  terracotta@1.1.0(solid-js@1.9.9):
     dependencies:
       solid-js: 1.9.9
-      solid-use: 0.9.0(solid-js@1.9.9)
+      solid-use: 0.9.1(solid-js@1.9.9)
 
   terser@5.44.0:
     dependencies:

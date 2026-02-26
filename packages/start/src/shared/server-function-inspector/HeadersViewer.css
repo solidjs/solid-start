@@ -1,0 +1,8 @@
+[data-start-headers-viewer] {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+[data-start-headers-viewer] > [data-start-property] > *:first-child {
+  text-transform: capitalize;
+}

@@ -1,0 +1,69 @@
+[data-start-text-size="xs"] {
+  font-size: 0.75rem;
+  line-height: calc(1 / 0.75);
+}
+[data-start-text-size="sm"] {
+  font-size: 0.875rem;
+  line-height: calc(1.25 / 0.875);
+}
+[data-start-text-size="base"] {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+[data-start-text-size="lg"] {
+  font-size: 1.125rem;
+  line-height: calc(1.75 / 1.125);
+}
+[data-start-text-size="xl"] {
+  font-size: 1.25rem;
+  line-height: calc(1.75 / 1.25);
+}
+[data-start-text-size="2xl"] {
+  font-size: 1.5rem;
+  line-height: calc(2 / 1.5);
+}
+
+[data-start-text-font="sans"] {
+  font-family: system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+[data-start-text-font="serif"] {
+  font-family: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+[data-start-text-font="mono"] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+[data-start-text-weight="thin"] {
+  font-weight: 100;
+}
+[data-start-text-weight="extralight"] {
+  font-weight: 200;
+}
+[data-start-text-weight="light"] {
+  font-weight: 300;
+}
+[data-start-text-weight="normal"] {
+  font-weight: 400;
+}
+[data-start-text-weight="medium"] {
+  font-weight: 500;
+}
+[data-start-text-weight="semibold"] {
+  font-weight: 600;
+}
+[data-start-text-weight="bold"] {
+  font-weight: 700;
+}
+[data-start-text-weight="extrabold"] {
+  font-weight: 800;
+}
+[data-start-text-weight="black"] {
+  font-weight: 900;
+}
+
+[data-start-text-wrap="wrap"] {
+  white-space: wrap;
+}
+[data-start-text-wrap="nowrap"] {
+  white-space: nowrap;
+}
