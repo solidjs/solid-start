@@ -1,15 +1,13 @@
 // @refresh skip
-import { getSingletonHighlighter, type BuiltinLanguage, type Highlighter } from "shiki";
+import { type BuiltinLanguage, getSingletonHighlighter, type Highlighter } from "shiki";
 import { loadWasm } from "shiki/engine/oniguruma";
-import { createEffect, createResource, type JSX } from "solid-js";
-
-import url from "shiki/onig.wasm?url";
-
 import langJS from "shiki/langs/javascript.mjs";
 import langJSX from "shiki/langs/jsx.mjs";
 import langTSX from "shiki/langs/tsx.mjs";
 import langTS from "shiki/langs/typescript.mjs";
+import url from "shiki/onig.wasm?url";
 import darkPlus from "shiki/themes/dark-plus.mjs";
+import { createEffect, createResource, type JSX } from "solid-js";
 
 let HIGHLIGHTER: Highlighter;
 
@@ -74,7 +72,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       for (let i = 0, len = lines.length; i < len; i++) {
         const el = lines[i] as HTMLElement;
         if (props.line - minLine() - 1 === i) {
-          el.classList.add("dev-overlay-error-line");
+          el.dataset.startDevOverlayErrorLine = '';
         }
       }
     }
@@ -83,7 +81,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
   return (
     <div
       ref={ref}
-      class="dev-overlay-code-view"
+      data-start-dev-overlay-code-view
       style={{
         "--dev-overlay-code-view-start": minLine() + 1,
       }}
