@@ -1,7 +1,7 @@
 import { createResource, For, type JSX, Show, Suspense } from 'solid-js';
-import { Section } from '../ui/Section';
+import { Section } from '../ui/Section.tsx';
 import { BlobViewer } from './BlobViewer.tsx';
-import { SerovalValue, PropertySeparator } from './SerovalValue.tsx';
+import { PropertySeparator, SerovalValue } from './SerovalValue.tsx';
 
 interface FormDataViewerInnerProps {
   source: FormData;

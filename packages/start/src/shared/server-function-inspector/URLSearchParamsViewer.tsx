@@ -1,6 +1,6 @@
 import { createResource, For, type JSX, Show, Suspense } from 'solid-js';
-import { Section } from '../ui/Section';
-import { SerovalValue, PropertySeparator } from './SerovalValue.tsx';
+import { Section } from '../ui/Section.tsx';
+import { PropertySeparator, SerovalValue } from './SerovalValue.tsx';
 
 interface URLSearchParamsViewerInnerProps {
   source: URLSearchParams;
