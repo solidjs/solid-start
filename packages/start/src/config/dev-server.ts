@@ -78,8 +78,8 @@ export function devServer(): Array<PluginOption> {
                       headers: {
                         "Content-Type": "application/json",
                       },
-                    }
-                  )
+                    },
+                  ),
                 );
               }
 
@@ -95,7 +95,7 @@ export function devServer(): Array<PluginOption> {
                         <script type="module">
                           import { ErrorOverlay } from '/@vite/client'
                           document.body.appendChild(new ErrorOverlay(${JSON.stringify(
-                            prepareError(req, e)
+                            prepareError(req, e),
                           ).replace(/</g, "\\u003c")}))
                         </script>
                       </head>
@@ -106,8 +106,8 @@ export function devServer(): Array<PluginOption> {
                   {
                     status: 500,
                     headers: { "Content-Type": "text/html" },
-                  }
-                )
+                  },
+                ),
               );
             }
           });
@@ -132,7 +132,7 @@ function removeHtmlMiddlewares(server: ViteDevServer) {
     if (
       html_middlewares.includes(
         // @ts-expect-error
-        server.middlewares.stack[i].handle.name
+        server.middlewares.stack[i].handle.name,
       )
     ) {
       server.middlewares.stack.splice(i, 1);
