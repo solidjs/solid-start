@@ -54,7 +54,7 @@ export function devServer(): Array<PluginOption> {
             try {
               const serverEntry: {
                 default: { fetch: (req: Request) => Promise<Response> };
-              } = await serverEnv.runner.import(`./src/entry-server${START_ENTRY_EXTENSION}`);
+              } = await serverEnv.runner.import(START_HANDLERS.server);
 
               const webRes = await serverEntry.default.fetch(webReq);
 
