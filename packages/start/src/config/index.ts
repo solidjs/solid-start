@@ -91,6 +91,16 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         return {
           appType: "custom",
           build: { assetsDir: "_build/assets" },
+          optimizeDeps: {
+            // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
+            ...({
+              rolldownOptions: {
+                transform: {
+                  jsx: "react",
+                },
+              },
+            } as any),
+          },
           environments: {
             [VITE_ENVIRONMENTS.client]: {
               consumer: "client",
@@ -233,8 +243,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
-      generateBundle(_options, bundle) {
+      generateBundle(options, bundle) {
         globalThis.START_CLIENT_BUNDLE = bundle;
+        (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
     devServer(),
