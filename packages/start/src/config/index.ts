@@ -113,7 +113,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
-                  input: `~/entry-server.${START_ENTRY_EXTENSION}`,
+                  input: `~/entry-server${START_ENTRY_EXTENSION}`,
                 },
                 outDir: "dist/server",
                 commonjsOptions: {
