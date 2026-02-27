@@ -56,10 +56,10 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   if (!appEntryPath) {
     throw new Error(`Could not find an app jsx/tsx entry in ${start.appRoot}.`);
   }
-  const entryExtension = extname(appEntryPath);
+  globalThis.START_ENTRY_EXTENSION = extname(appEntryPath);
   const handlers = {
-    client: `${start.appRoot}/entry-client${entryExtension}`,
-    server: `${start.appRoot}/entry-server${entryExtension}`,
+    client: `${start.appRoot}/entry-client${START_ENTRY_EXTENSION}`,
+    server: `${start.appRoot}/entry-server${START_ENTRY_EXTENSION}`,
   };
   return [
     {
@@ -113,7 +113,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
-                  input: "~/entry-server.tsx",
+                  input: `~/entry-server.${START_ENTRY_EXTENSION}`,
                 },
                 outDir: "dist/server",
                 commonjsOptions: {
@@ -188,7 +188,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           envName: VITE_ENVIRONMENTS.client,
           getRuntimeCode: () =>
             `import { createServerReference } from "${normalizePath(
-              fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
+              fileURLToPath(new URL("../server/server-runtime", import.meta.url))
             )}"`,
           replacer: opts => `createServerReference('${opts.functionId}')`,
         },
@@ -197,7 +197,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           envName: VITE_ENVIRONMENTS.server,
           getRuntimeCode: () =>
             `import { createServerReference } from '${normalizePath(
-              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
+              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
             )}'`,
           replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
         },
@@ -206,7 +206,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         envName: VITE_ENVIRONMENTS.server,
         getRuntimeCode: () =>
           `import { createServerReference } from '${normalizePath(
-            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
+            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url))
           )}'`,
         replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
       },
