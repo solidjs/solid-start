@@ -11,5 +11,8 @@ import type { Rollup } from "vite";
 declare global {
   var START_CLIENT_BUNDLE: Rollup.OutputBundle;
   var USING_SOLID_START_DEV_SERVER: boolean | undefined;
-  var START_ENTRY_EXTENSION: string;
+  var START_HANDLERS: {
+    client: string;
+    server: string;
+  };
 }
