@@ -3,7 +3,7 @@ import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from 
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
-import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
+import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 
 import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
@@ -44,8 +44,7 @@ export function createBaseHandler(
         const fn =
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
         (event as APIEvent).params = match.params || {};
-        // @ts-expect-error
-        sharedConfig.context = { event };
+        (sharedConfig as any).context = { event };
         const res = await fn!(event);
         if (res !== undefined) {
           if (res instanceof Response) return produceResponseWithEventHeaders(res);
@@ -69,7 +68,7 @@ export function createBaseHandler(
 
       if (mode === "sync" || !import.meta.env.START_SSR) {
         const html = renderToString(() => {
-          (sharedConfig.context as any).event = context;
+          (sharedConfig as any).context = { ...(sharedConfig as any).context, event: context };
           return fn(context);
         }, resolvedOptions);
         context.complete = true;
@@ -100,7 +99,7 @@ export function createBaseHandler(
       } else resolvedOptions.onCompleteShell = handleShellCompleteRedirect(context, e);
 
       const _stream = renderToStream(() => {
-        (sharedConfig.context as any).event = context;
+        (sharedConfig as any).context = { ...(sharedConfig as any).context, event: context };
         return fn(context);
       }, resolvedOptions);
       const stream = _stream as typeof _stream & PromiseLike<string>; // stream has a hidden 'then' method

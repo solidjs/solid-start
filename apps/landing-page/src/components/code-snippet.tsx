@@ -1,5 +1,5 @@
 import { Tabs } from "@kobalte/core/tabs";
-import { createResource, Suspense } from "solid-js";
+import { createMemo, Loading } from "solid-js";
 import { CopyToClipboard } from "./clipboard-button";
 const getSolidStartVersion = async () => {
   "use server";
@@ -12,7 +12,7 @@ const getSolidStartVersion = async () => {
 };
 
 export function CodeSnippet() {
-  const [npmVersion] = createResource(() => getSolidStartVersion());
+  const npmVersion = createMemo(() => getSolidStartVersion());
   return (
     <aside class="pt-20 px-4 sm:px-4 md:px-0 md:max-w-[30rem] max-w-screen mx-auto w-5/6">
       <Tabs defaultValue="pnpm">
@@ -54,11 +54,11 @@ export function CodeSnippet() {
         <TabContent manager="yarn" command="create solid" />
         <TabContent manager="deno" command="init --npm solid" />
       </Tabs>
-      <Suspense>
+      <Loading>
         <small class="font-mono text-right pt-2 inline-block w-full dark:text-sky-400/60 text-sky-950">
           Latest version: {npmVersion()}
         </small>
-      </Suspense>
+      </Loading>
     </aside>
   );
 }

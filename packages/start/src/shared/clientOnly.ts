@@ -1,7 +1,7 @@
 // @refresh skip
 import type { Component, ComponentProps, JSX, Setter } from "solid-js";
-import { createMemo, createSignal, onMount, sharedConfig, splitProps, untrack } from "solid-js";
-import { isServer } from "solid-js/web";
+import { createMemo, createSignal, onSettled, sharedConfig, omit, untrack } from "solid-js";
+import { isServer } from "@solidjs/web";
 
 /**
  *
@@ -21,11 +21,11 @@ export default function clientOnly<T extends Component<any>>(
   return (props: ComponentProps<T>) => {
     let Comp: T | undefined;
     let m: boolean;
-    const [, rest] = splitProps(props, ["fallback"]);
+    const rest = omit(props, "fallback");
     options.lazy && load(fn, setComp);
-    if ((Comp = comp()) && !sharedConfig.context) return Comp(rest);
-    const [mounted, setMounted] = createSignal(!sharedConfig.context);
-    onMount(() => setMounted(true));
+    if ((Comp = comp()) && !sharedConfig.hydrating) return Comp(rest);
+    const [mounted, setMounted] = createSignal(!sharedConfig.hydrating);
+    onSettled(() => { setMounted(true); });
     return createMemo(
       () => (
         (Comp = comp()), (m = mounted()), untrack(() => (Comp && m ? Comp(rest) : props.fallback))

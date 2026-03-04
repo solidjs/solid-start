@@ -6,11 +6,11 @@
  *
  */
 import { useSearchParams } from "@solidjs/router";
-import { useTransition } from "solid-js";
+import { isPending } from "solid-js";
 
 export default function SearchField() {
-  const [isSearching] = useTransition();
   const [search, setParams] = useSearchParams();
+  const isSearching = () => isPending(() => search.searchText);
   return (
     <form class="search" role="search" onSubmit={e => e.preventDefault()} $ServerOnly>
       <label class="offscreen" for="sidebar-search-input">

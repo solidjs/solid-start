@@ -1,5 +1,5 @@
 import type { Component, ComponentProps } from "solid-js";
-import { splitProps } from "solid-js";
+import { omit } from "solid-js";
 
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
@@ -37,7 +37,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {}
 
 const Button: Component<ButtonProps> = props => {
-  const [, rest] = splitProps(props, ["variant", "size", "class"]);
+  const rest = omit(props, "variant", "size", "class");
   return (
     <button
       class={cn(buttonVariants({ variant: props.variant, size: props.size }), props.class)}

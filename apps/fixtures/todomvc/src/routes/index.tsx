@@ -20,12 +20,10 @@ import { Todo } from "~/types";
 
 declare module "solid-js" {
   namespace JSX {
-    interface Directives {
-      setFocus: true;
-    }
+    interface ExplicitProperties {}
   }
 }
-const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
+const setFocus = () => (el: HTMLElement) => setTimeout(() => el.focus());
 
 export const route = {
   preload() {
@@ -108,12 +106,11 @@ export default function TodoApp(props: RouteSectionProps) {
               return (
                 <Show when={!removing()}>
                   <li
-                    class="todo"
-                    classList={{
+                    class={["todo", {
                       editing: editingTodoId() === todo.id,
                       completed: completed(),
                       pending: pending(),
-                    }}
+                    }]}
                   >
                     <form class="view" method="post">
                       <button
@@ -144,7 +141,7 @@ export default function TodoApp(props: RouteSectionProps) {
                               e.currentTarget.form!.requestSubmit();
                             } else setTimeout(() => setEditing({}));
                           }}
-                          use:setFocus
+                          ref={setFocus()}
                         />
                       </form>
                     </Show>
@@ -175,20 +172,20 @@ export default function TodoApp(props: RouteSectionProps) {
             <li>
               <a
                 href="?show=all"
-                classList={{ selected: !location.query.show || location.query.show === "all" }}
+                class={{ selected: !location.query.show || location.query.show === "all" }}
               >
                 All
               </a>
             </li>
             <li>
-              <a href="?show=active" classList={{ selected: location.query.show === "active" }}>
+              <a href="?show=active" class={{ selected: location.query.show === "active" }}>
                 Active
               </a>
             </li>
             <li>
               <a
                 href="?show=completed"
-                classList={{ selected: location.query.show === "completed" }}
+                class={{ selected: location.query.show === "completed" }}
               >
                 Completed
               </a>

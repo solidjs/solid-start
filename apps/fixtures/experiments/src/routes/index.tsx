@@ -2,7 +2,7 @@ import { Title } from "@solidjs/meta";
 import { json } from "@solidjs/router";
 import { clientOnly, GET } from "@solidjs/start";
 import { getServerFunctionMeta } from "@solidjs/start/server";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { getRequestEvent, isServer } from "@solidjs/web";
 import Counter from "~/components/Counter";
 const BreaksOnServer = clientOnly(() => import("~/components/BreaksOnServer"));
 

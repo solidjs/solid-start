@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
 import type { JSX } from "solid-js";
-import type { RequestEvent } from "solid-js/web";
+import type { RequestEvent } from "@solidjs/web";
 
 // export const FETCH_EVENT = "$FETCH";
 
@@ -75,7 +75,7 @@ export interface ServerFunctionMeta {
   id: string;
 }
 
-declare module "solid-js/web" {
+declare module "@solidjs/web" {
   interface RequestEvent extends FetchEvent {
     serverOnly?: boolean;
   }

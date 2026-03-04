@@ -1,10 +1,10 @@
 import type { Component, ComponentProps } from "solid-js";
-import { splitProps } from "solid-js";
+import { omit } from "solid-js";
 
 import { cn } from "~/lib/utils";
 
 const Label: Component<ComponentProps<"label">> = props => {
-  const [, rest] = splitProps(props, ["class"]);
+  const rest = omit(props, "class");
   return (
     <label
       class={cn(

@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 async function ping(value: string) {
   "use server";
@@ -9,7 +9,7 @@ async function ping(value: string) {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  createEffect(async () => {
+  onSettled(async () => {
     const value = `${Math.random() * 1000}`;
     const result = await ping(value);
     setOutput(prev => ({ ...prev, result: value === result }));

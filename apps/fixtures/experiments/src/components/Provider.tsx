@@ -4,8 +4,8 @@ import counterContext from "./counterContext";
 
 export default function Provider(props) {
   return (
-    <counterContext.Provider value={createSignal(props.initialCount)}>
+    <counterContext value={createSignal(props.initialCount)}>
       {props.children}
-    </counterContext.Provider>
+    </counterContext>
   );
 }

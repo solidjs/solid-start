@@ -1,4 +1,4 @@
-import { type Component, type JSX, createUniqueId, mergeProps, splitProps } from "solid-js";
+import { type Component, type JSX, createUniqueId, merge, omit } from "solid-js";
 
 import { cn } from "~/lib/utils";
 
@@ -13,17 +13,8 @@ export interface DotPatternProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
 }
 
 export const DotPattern: Component<DotPatternProps> = props => {
-  const [_localProps, forwardProps] = splitProps(props, [
-    "width",
-    "height",
-    "x",
-    "y",
-    "cx",
-    "cy",
-    "cr",
-    "class",
-  ]);
-  const localProps = mergeProps(
+  const forwardProps = omit(props, "width", "height", "x", "y", "cx", "cy", "cr", "class");
+  const localProps = merge(
     {
       width: 16,
       height: 16,
@@ -33,7 +24,7 @@ export const DotPattern: Component<DotPatternProps> = props => {
       cy: 1,
       cr: 1,
     },
-    _localProps,
+    props,
   );
   const id = createUniqueId();
 

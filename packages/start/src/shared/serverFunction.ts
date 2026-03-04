@@ -1,4 +1,4 @@
-import { getRequestEvent } from "solid-js/web";
+import { getRequestEvent } from "@solidjs/web";
 import type { ServerFunctionMeta } from "../server/types.ts";
 
 /**

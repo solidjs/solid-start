@@ -1,5 +1,5 @@
 import { Component, lazy as solidLazy } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { getRequestEvent, isServer } from "@solidjs/web";
 import { getManifest } from "solid-start:get-manifest";
 import { useAssets } from "../server/assets/index.ts";
 import { Asset, PageEvent } from "../server/types.ts";

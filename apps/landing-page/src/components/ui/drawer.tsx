@@ -1,5 +1,5 @@
 import type { Component, ComponentProps } from "solid-js";
-import { splitProps } from "solid-js";
+import { omit } from "solid-js";
 
 import * as DrawerPrimitive from "corvu/drawer";
 
@@ -14,7 +14,7 @@ const DrawerPortal = DrawerPrimitive.Portal;
 const DrawerClose = DrawerPrimitive.Close;
 
 const DrawerOverlay: Component<DrawerPrimitive.OverlayProps> = props => {
-  const [, rest] = splitProps(props, ["class"]);
+  const rest = omit(props, "class");
   const drawerContext = DrawerPrimitive.useContext();
   return (
     <DrawerPrimitive.Overlay
@@ -31,7 +31,7 @@ const DrawerOverlay: Component<DrawerPrimitive.OverlayProps> = props => {
 };
 
 const DrawerContent: Component<DrawerPrimitive.ContentProps> = props => {
-  const [, rest] = splitProps(props, ["class", "children"]);
+  const rest = omit(props, "class", "children");
   return (
     <DrawerPortal>
       <DrawerOverlay />
@@ -50,17 +50,17 @@ const DrawerContent: Component<DrawerPrimitive.ContentProps> = props => {
 };
 
 const DrawerHeader: Component<ComponentProps<"div">> = props => {
-  const [, rest] = splitProps(props, ["class"]);
+  const rest = omit(props, "class");
   return <div class={cn("grid gap-1.5 p-4 text-center sm:text-left", props.class)} {...rest} />;
 };
 
 const DrawerFooter: Component<ComponentProps<"div">> = props => {
-  const [, rest] = splitProps(props, ["class"]);
+  const rest = omit(props, "class");
   return <div class={cn("t-auto flex flex-col gap-2 p-4", props.class)} {...rest} />;
 };
 
 const DrawerTitle: Component<DrawerPrimitive.LabelProps> = props => {
-  const [, rest] = splitProps(props, ["class"]);
+  const rest = omit(props, "class");
   return (
     <DrawerPrimitive.Label
       class={cn("text-lg font-semibold leading-none tracking-tight", props.class)}
@@ -70,7 +70,7 @@ const DrawerTitle: Component<DrawerPrimitive.LabelProps> = props => {
 };
 
 const DrawerDescription: Component<DrawerPrimitive.DescriptionProps> = props => {
-  const [, rest] = splitProps(props, ["class"]);
+  const rest = omit(props, "class");
   return (
     <DrawerPrimitive.Description
       class={cn("text-sm text-muted-foreground", props.class)}

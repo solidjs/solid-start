@@ -1,7 +1,7 @@
 // @refresh skip
 import { getSingletonHighlighter, type BuiltinLanguage, type Highlighter } from "shiki";
 import { loadWasm } from "shiki/engine/oniguruma";
-import { createEffect, createResource, type JSX } from "solid-js";
+import { createEffect, createMemo, type JSX } from "solid-js";
 
 import url from "shiki/onig.wasm?url";
 
@@ -44,41 +44,40 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
 
   let ref: HTMLDivElement | undefined;
 
-  const [data] = createResource(
-    () =>
-      lines()
-        .slice(minLine(), maxLine())
-        .map(item => item.line)
-        .join("\n"),
-    async value => {
-      const highlighter = await loadHighlighter();
-      const fileExtension = props.fileName.split(/[#?]/)[0]!.split(".").pop()?.trim();
-      let lang = fileExtension as BuiltinLanguage;
-      if (fileExtension === "mjs" || fileExtension === "cjs") {
-        lang = "js";
-      }
-      return highlighter.codeToHtml(value, {
-        theme: "dark-plus",
-        lang,
-      });
-    },
-  );
+  const data = createMemo(async () => {
+    const value = lines()
+      .slice(minLine(), maxLine())
+      .map(item => item.line)
+      .join("\n");
+    const highlighter = await loadHighlighter();
+    const fileExtension = props.fileName.split(/[#?]/)[0]!.split(".").pop()?.trim();
+    let lang = fileExtension as BuiltinLanguage;
+    if (fileExtension === "mjs" || fileExtension === "cjs") {
+      lang = "js";
+    }
+    return highlighter.codeToHtml(value, {
+      theme: "dark-plus",
+      lang,
+    });
+  });
 
-  createEffect(() => {
-    const result = data();
-    if (ref && result) {
-      ref.innerHTML = result;
+  createEffect(
+    () => data(),
+    (result) => {
+      if (ref && result) {
+        ref.innerHTML = result;
 
-      const lines = ref.querySelectorAll('span[class="line"]');
+        const lines = ref.querySelectorAll('span[class="line"]');
 
-      for (let i = 0, len = lines.length; i < len; i++) {
-        const el = lines[i] as HTMLElement;
-        if (props.line - minLine() - 1 === i) {
-          el.classList.add("dev-overlay-error-line");
+        for (let i = 0, len = lines.length; i < len; i++) {
+          const el = lines[i] as HTMLElement;
+          if (props.line - minLine() - 1 === i) {
+            el.classList.add("dev-overlay-error-line");
+          }
         }
       }
-    }
-  });
+    },
+  );
 
   return (
     <div

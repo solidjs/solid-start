@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 function serverFnWithNpmModule() {
   "use server";
@@ -10,7 +10,7 @@ function serverFnWithNpmModule() {
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithNpmModule?: number[] }>({});
 
-  createEffect(async () => {
+  onSettled(async () => {
     const result = await serverFnWithNpmModule();
     setOutput(prev => ({ ...prev, serverFnWithNpmModule: result }));
   });

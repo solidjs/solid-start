@@ -1,8 +1,8 @@
 import { parseSetCookie } from "cookie-es";
 import { type H3Event, parseCookies } from "h3";
 import { sharedConfig } from "solid-js";
-import { renderToString } from "solid-js/web";
-import { provideRequestEvent } from "solid-js/web/storage";
+import { renderToString } from "@solidjs/web";
+import { provideRequestEvent } from "@solidjs/web/storage";
 import { getServerFnById } from "solidstart:server-fn-manifest";
 
 import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";

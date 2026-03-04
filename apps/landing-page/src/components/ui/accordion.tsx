@@ -1,4 +1,4 @@
-import { splitProps } from "solid-js";
+import { omit } from "solid-js";
 
 import {
   AccordionContentProps,
@@ -13,7 +13,7 @@ import { OverrideComponentProps } from "@kobalte/utils";
 const Accordion = AccordionPrimitive;
 
 const AccordionItem = (props: OverrideComponentProps<"div", AccordionItemProps>) => {
-  const [, rest] = splitProps(props, ["class"]);
+  const rest = omit(props, "class");
   return (
     <AccordionPrimitive.Item
       class={cn("border-b max-w-prose mx-auto last-of-type:border-none", props.class)}
@@ -23,7 +23,7 @@ const AccordionItem = (props: OverrideComponentProps<"div", AccordionItemProps>)
 };
 
 const AccordionTrigger = (props: OverrideComponentProps<"button", AccordionTriggerProps>) => {
-  const [, rest] = splitProps(props, ["class", "children"]);
+  const rest = omit(props, "class", "children");
   return (
     <AccordionPrimitive.Header class="flex">
       <AccordionPrimitive.Trigger
@@ -52,7 +52,7 @@ const AccordionTrigger = (props: OverrideComponentProps<"button", AccordionTrigg
 };
 
 const AccordionContent = (props: OverrideComponentProps<"div", AccordionContentProps>) => {
-  const [, rest] = splitProps(props, ["class", "children"]);
+  const rest = omit(props, "class", "children");
   return (
     <AccordionPrimitive.Content
       class={cn(
