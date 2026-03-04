@@ -10,7 +10,7 @@
   "dependencies": {
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "workspace:*",
-    "solid-js": "^2.0.0-beta.0",
+    "solid-js": "2.0.0-beta.0",
     "unstorage": "1.10.2",
     "vite": "7.1.10"
   },

@@ -43,5 +43,10 @@
     "pnpm": "^10.8.1",
     "node": ">=22"
   },
-  "packageManager": "pnpm@10.8.1"
+  "packageManager": "pnpm@10.8.1",
+  "pnpm": {
+    "overrides": {
+      "babel-preset-solid": "2.0.0-beta.0"
+    }
+  }
 }
