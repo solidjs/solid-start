@@ -47,7 +47,7 @@ export default function Stories(props: RouteSectionProps) {
       <main class="news-list">
         <Show when={stories()}>
           <ul>
-            <For each={stories()}>{story => <Story story={story} />}</For>
+            <For each={stories()}>{story => <Story story={story()} />}</For>
           </ul>
         </Show>
       </main>

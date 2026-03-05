@@ -12,7 +12,8 @@
     "@solidjs/start": "workspace:*",
     "solid-js": "2.0.0-beta.0",
     "unstorage": "1.10.2",
-    "vite": "7.1.10"
+    "vite": "7.1.10",
+    "@solidjs/web": "2.0.0-beta.0"
   },
   "engines": {
     "node": ">=22"

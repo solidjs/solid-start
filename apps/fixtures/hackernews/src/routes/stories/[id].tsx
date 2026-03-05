@@ -31,7 +31,7 @@ export default function Story(props: RouteSectionProps) {
             {story()!.comments_count ? story()!.comments_count + " comments" : "No comments yet."}
           </p>
           <ul class="comment-children">
-            <For each={story()!.comments}>{comment => <Comment comment={comment} />}</For>
+            <For each={story()!.comments}>{comment => <Comment comment={comment()} />}</For>
           </ul>
         </div>
       </div>
