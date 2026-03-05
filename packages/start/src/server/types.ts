@@ -29,6 +29,7 @@ export type HandlerOptions = {
   mode?: "sync" | "async" | "stream";
   nonce?: string;
   renderId?: string;
+  manifest?: Record<string, any>;
   onCompleteAll?: (options: { write: (v: any) => void }) => void;
   onCompleteShell?: (options: { write: (v: any) => void }) => void;
 };
