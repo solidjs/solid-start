@@ -1,33 +1,27 @@
 // @refresh skip
 import App from "solid-start:app";
-import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary.tsx";
+import { ErrorBoundary } from "../shared/ErrorBoundary.tsx";
 
 /**
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/client/start-client
  */
 export function StartClient() {
-  // The server-side StartServer wraps the app in:
-  //   <TopErrorBoundary> → <Hydration> → <ErrorBoundary> → <App />
-  // TopErrorBoundary uses Errored which creates owners via createErrorBoundary.
-  // We must mirror the same owner structure on the client for hydration keys
-  // to match. In Solid 2.0 createComponent no longer creates owners, so the
-  // old Dummy wrapper approach is insufficient.
+  // The server wraps the app in: NoHydration → TopErrorBoundary → Hydration → ErrorBoundary → App
+  // TopErrorBoundary lives outside the Hydration zone (inside NoHydration), so it doesn't
+  // contribute to hydration keys. The client only needs to mirror what's inside the
+  // server's Hydration boundary: ErrorBoundary → App.
   return (
-    <TopErrorBoundary>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </TopErrorBoundary>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   );
 }
 
 export function StartClientTanstack() {
   return (
-    <TopErrorBoundary>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </TopErrorBoundary>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   );
 }

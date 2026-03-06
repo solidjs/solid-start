@@ -7,10 +7,11 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@solidjs/meta": "link:../../../../solid-meta",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "workspace:*",
-    "@solidjs/web": "2.0.0-beta.0",
-    "solid-js": "2.0.0-beta.0",
+    "@solidjs/web": "2.0.0-beta.1",
+    "solid-js": "2.0.0-beta.1",
     "vite": "7.1.10"
   },
   "engines": {
