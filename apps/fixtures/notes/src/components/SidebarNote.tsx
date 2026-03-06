@@ -49,8 +49,8 @@ export default function SidebarNote(props: { note: Note }) {
         class="sidebar-note-open"
         style={{
           "background-color": isActive()
-              ? "var(--tertiary-blue)"
-              : "",
+            ? "var(--tertiary-blue)"
+            : "",
           border: isActive() ? "1px solid var(--primary-border)" : "1px solid transparent",
         }}
       >

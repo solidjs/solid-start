@@ -11,7 +11,7 @@ export default function App() {
   return (
     <Router
       root={props => (
-        <div class="main" $ServerOnly>
+        <div class="main">
           <section class="col sidebar">
             <section class="sidebar-header">
               <a href="/">

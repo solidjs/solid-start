@@ -1,5 +1,5 @@
-import { createAsync, type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
-import { For, Show } from "solid-js";
+import { A, type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
+import { For, Show, createMemo } from "solid-js";
 import Story from "~/components/story";
 import { getStories } from "~/lib/api";
 import { StoryTypes } from "~/types";
@@ -13,7 +13,7 @@ export const route = {
 export default function Stories(props: RouteSectionProps) {
   const page = () => +props.location.query.page || 1;
   const type = () => (props.params.stories || "top") as StoryTypes;
-  const stories = createAsync(() => getStories(type(), page()));
+  const stories = createMemo(() => getStories(type(), page()));
 
   return (
     <div class="news-view">
@@ -26,9 +26,9 @@ export default function Stories(props: RouteSectionProps) {
             </span>
           }
         >
-          <a class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
+          <A class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
             {"<"} prev
-          </a>
+          </A>
         </Show>
         <span>page {page()}</span>
         <Show
@@ -39,17 +39,13 @@ export default function Stories(props: RouteSectionProps) {
             </span>
           }
         >
-          <a class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
+          <A class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
             more {">"}
-          </a>
+          </A>
         </Show>
       </div>
       <main class="news-list">
-        <Show when={stories()}>
-          <ul>
-            <For each={stories()}>{story => <Story story={story()} />}</For>
-          </ul>
-        </Show>
+        <For each={stories()}>{story => <Story story={story()} />}</For>
       </main>
     </div>
   );
