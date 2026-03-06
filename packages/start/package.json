@@ -37,41 +37,42 @@
     }
   },
   "dependencies": {
-    "@babel/core": "^7.28.3",
-    "@babel/traverse": "^7.28.3",
-    "@babel/types": "^7.28.5",
+    "@babel/core": "^7.29.0",
+    "@babel/traverse": "^7.29.0",
+    "@babel/types": "^7.29.0",
     "@solidjs/meta": "^0.29.4",
     "@tanstack/server-functions-plugin": "1.134.5",
     "@types/babel__traverse": "^7.28.0",
-    "@types/micromatch": "^4.0.9",
+    "@types/micromatch": "^4.0.10",
     "cookie-es": "^2.0.0",
     "defu": "^6.1.4",
     "error-stack-parser": "^2.1.4",
-    "es-module-lexer": "^1.7.0",
-    "esbuild": "^0.25.3",
+    "es-module-lexer": "^2.0.0",
+    "esbuild": "^0.27.3",
     "fast-glob": "^3.3.3",
-    "h3": "npm:h3@2.0.1-rc.4",
+    "h3": "^2.0.1-rc.14",
     "html-to-image": "^1.11.13",
     "micromatch": "^4.0.8",
-    "path-to-regexp": "^8.2.0",
+    "path-to-regexp": "^8.3.0",
     "pathe": "^2.0.3",
     "radix3": "^1.1.2",
     "seroval": "^1.5.0",
     "seroval-plugins": "^1.5.0",
     "shiki": "^1.26.1",
-    "solid-js": "^1.9.9",
+    "solid-js": "^1.9.11",
     "source-map-js": "^1.2.1",
-    "srvx": "^0.9.1",
-    "terracotta": "^1.0.6",
-    "vite-plugin-solid": "^2.11.9"
+    "srvx": "^0.11.8",
+    "terracotta": "^1.1.0",
+    "vite-plugin-solid": "^2.11.10"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
-    "vite": "^7.1.10",
-    "vitest": "^4.0.10"
+    "@types/node": "^25.3.5",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "vite": "^7"
