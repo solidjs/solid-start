@@ -2,18 +2,16 @@ packages:
   - packages/*
   - apps/*
   - apps/fixtures/*
-  - "!**/.tmp/**"
+  - '!**/.tmp/**'
 
 ignoredBuiltDependencies:
-  - "@prisma/client"
-  - "@prisma/engines"
+  - '@prisma/client'
+  - '@prisma/engines'
   - better-sqlite3
   - msw
   - prisma
 
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - cypress
   - esbuild
-
-patchedDependencies:
-  vite-plugin-solid: patches/vite-plugin-solid.patch
