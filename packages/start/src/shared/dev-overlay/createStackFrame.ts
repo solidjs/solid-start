@@ -1,4 +1,4 @@
-import { type Accessor, createMemo, createResource } from "solid-js";
+import { type Accessor, createMemo } from "solid-js";
 import getSourceMap from "./get-source-map.ts";
 
 export interface StackFrameSource {
@@ -17,30 +17,28 @@ function getActualFileSource(path: string): string {
 }
 
 export function createStackFrame(stackframe: StackFrame, isCompiled: () => boolean) {
-  const [data] = createResource(
-    () => ({
+  const data = createMemo(async () => {
+    const source = {
       fileName: stackframe.fileName,
       line: stackframe.lineNumber,
       column: stackframe.columnNumber,
       functionName: stackframe.functionName,
-    }),
-    async source => {
-      if (!source.fileName) {
-        return null;
-      }
-      const response = await fetch(getActualFileSource(source.fileName));
-      if (!response.ok) {
-        return null;
-      }
-      const content = await response.text();
-      const sourceMap = await getSourceMap(source.fileName, content);
-      return {
-        source,
-        content,
-        sourceMap,
-      };
-    },
-  );
+    };
+    if (!source.fileName) {
+      return null;
+    }
+    const response = await fetch(getActualFileSource(source.fileName));
+    if (!response.ok) {
+      return null;
+    }
+    const content = await response.text();
+    const sourceMap = await getSourceMap(source.fileName, content);
+    return {
+      source,
+      content,
+      sourceMap,
+    };
+  });
 
   const info = createMemo(() => {
     const current = data();

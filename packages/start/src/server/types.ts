@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
 import type { JSX } from "solid-js";
-import type { RequestEvent } from "solid-js/web";
+import type { RequestEvent } from "@solidjs/web";
 
 // export const FETCH_EVENT = "$FETCH";
 
@@ -29,6 +29,7 @@ export type HandlerOptions = {
   mode?: "sync" | "async" | "stream";
   nonce?: string;
   renderId?: string;
+  manifest?: Record<string, any>;
   onCompleteAll?: (options: { write: (v: any) => void }) => void;
   onCompleteShell?: (options: { write: (v: any) => void }) => void;
 };
@@ -75,7 +76,7 @@ export interface ServerFunctionMeta {
   id: string;
 }
 
-declare module "solid-js/web" {
+declare module "@solidjs/web" {
   interface RequestEvent extends FetchEvent {
     serverOnly?: boolean;
   }

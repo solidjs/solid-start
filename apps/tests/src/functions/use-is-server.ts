@@ -1,6 +1,6 @@
 "use server";
 
-import { isServer } from "solid-js/web";
+import { isServer } from "@solidjs/web";
 
 export function serverFnWithIsServer() {
   return isServer;

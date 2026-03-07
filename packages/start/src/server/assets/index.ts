@@ -1,5 +1,5 @@
 import { onCleanup, sharedConfig } from "solid-js";
-import { getRequestEvent, useAssets as useAssets_ } from "solid-js/web";
+import { getRequestEvent, useAssets as useAssets_ } from "@solidjs/web";
 import { renderAsset, type Asset } from "./render.tsx";
 
 const REGISTRY = Symbol("assetRegistry");
@@ -34,7 +34,7 @@ export const useAssets = (assets: Asset[], nonce?: string) => {
   if (!assets.length) return;
 
   const registry: Registry = (getRequestEvent()!.locals[REGISTRY] ??= {});
-  const ssrRequestAssets: Function[] = (sharedConfig.context as any)?.assets;
+  const ssrRequestAssets: Function[] | undefined = (sharedConfig as any).context?.assets;
   const cssKeys: string[] = [];
 
   for (const asset of assets) {
@@ -49,9 +49,13 @@ export const useAssets = (assets: Asset[], nonce?: string) => {
     if (entity.consumers > 1) continue;
 
     // Mounting logic
-    useAssets_(() => renderAsset(asset, nonce));
-    entity.ssrIdx = ssrRequestAssets.length - 1;
+    useAssets_(() => renderAsset(asset, nonce) as any);
+    if (ssrRequestAssets) {
+      entity.ssrIdx = ssrRequestAssets.length - 1;
+    }
   }
+
+  if (!ssrRequestAssets) return;
 
   onCleanup(() => {
     for (const key of cssKeys) {

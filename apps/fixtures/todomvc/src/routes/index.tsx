@@ -20,12 +20,10 @@ import { Todo } from "~/types";
 
 declare module "solid-js" {
   namespace JSX {
-    interface Directives {
-      setFocus: true;
-    }
+    interface ExplicitProperties { }
   }
 }
-const setFocus = (el: HTMLElement) => setTimeout(() => el.focus());
+const setFocus = () => (el: HTMLElement) => setTimeout(() => el.focus());
 
 export const route = {
   preload() {
@@ -93,42 +91,41 @@ export default function TodoApp(props: RouteSectionProps) {
         <ul class="todo-list">
           <For each={filterList(todos())}>
             {todo => {
-              const togglingTodo = useSubmission(toggleTodo, input => input[0] == todo.id);
-              const editingTodo = useSubmission(editTodo, input => input[0] == todo.id);
-              const title = () => (editingTodo.pending ? editingTodo.input[0] : todo.title);
+              const togglingTodo = useSubmission(toggleTodo, input => input[0] == todo().id);
+              const editingTodo = useSubmission(editTodo, input => input[0] == todo().id);
+              const title = () => (editingTodo.pending ? editingTodo.input[0] : todo().title);
               const pending = () =>
                 togglingAll.pending || togglingTodo.pending || editingTodo.pending;
               const completed = () =>
                 togglingAll.pending
                   ? !togglingAll.input[0]
                   : togglingTodo.pending
-                    ? !todo.completed
-                    : todo.completed;
-              const removing = () => removingTodo.some(data => data.input[0] === todo.id);
+                    ? !todo().completed
+                    : todo().completed;
+              const removing = () => removingTodo.some(data => data.input[0] === todo().id);
               return (
                 <Show when={!removing()}>
                   <li
-                    class="todo"
-                    classList={{
-                      editing: editingTodoId() === todo.id,
+                    class={["todo", {
+                      editing: editingTodoId() === todo().id,
                       completed: completed(),
-                      pending: pending(),
-                    }}
+                      pending: pending() ?? false,
+                    }]}
                   >
                     <form class="view" method="post">
                       <button
-                        formAction={toggleTodo.with(todo.id)}
+                        formaction={toggleTodo.with(todo().id)}
                         class="toggle"
                         disabled={pending()}
                       >
-                        {completed() ? <CompleteIcon /> : <IncompleteIcon />}
+                        <Show when={completed()} fallback={<IncompleteIcon />}><CompleteIcon /></Show>
                       </button>
-                      <label onDblClick={[setEditing, { id: todo.id, pending }]}>{title()}</label>
-                      <button formAction={removeTodo.with(todo.id)} class="destroy" />
+                      <label onDblClick={[setEditing, { id: todo().id, pending }]}>{title()}</label>
+                      <button formaction={removeTodo.with(todo().id)} class="destroy" />
                     </form>
-                    <Show when={editingTodoId() === todo.id}>
+                    <Show when={editingTodoId() === todo().id}>
                       <form
-                        action={editTodo.with(todo.id)}
+                        action={editTodo.with(todo().id)}
                         method="post"
                         onSubmit={e => {
                           e.preventDefault();
@@ -138,13 +135,13 @@ export default function TodoApp(props: RouteSectionProps) {
                         <input
                           name="title"
                           class="edit"
-                          value={todo.title}
+                          value={todo().title}
                           onBlur={e => {
-                            if (todo.title !== e.currentTarget.value) {
+                            if (todo().title !== e.currentTarget.value) {
                               e.currentTarget.form!.requestSubmit();
                             } else setTimeout(() => setEditing({}));
                           }}
-                          use:setFocus
+                          ref={setFocus()}
                         />
                       </form>
                     </Show>
@@ -157,7 +154,7 @@ export default function TodoApp(props: RouteSectionProps) {
             {sub => (
               <li class="todo pending">
                 <div class="view">
-                  <label>{String(sub.input[0].get("title"))}</label>
+                  <label>{String(sub().input[0].get("title"))}</label>
                   <button disabled class="destroy" />
                 </div>
               </li>
@@ -175,20 +172,20 @@ export default function TodoApp(props: RouteSectionProps) {
             <li>
               <a
                 href="?show=all"
-                classList={{ selected: !location.query.show || location.query.show === "all" }}
+                class={{ selected: !location.query.show || location.query.show === "all" }}
               >
                 All
               </a>
             </li>
             <li>
-              <a href="?show=active" classList={{ selected: location.query.show === "active" }}>
+              <a href="?show=active" class={{ selected: location.query.show === "active" }}>
                 Active
               </a>
             </li>
             <li>
               <a
                 href="?show=completed"
-                classList={{ selected: location.query.show === "completed" }}
+                class={{ selected: location.query.show === "completed" }}
               >
                 Completed
               </a>
@@ -201,6 +198,6 @@ export default function TodoApp(props: RouteSectionProps) {
           </Show>
         </footer>
       </Show>
-    </section>
+    </section >
   );
 }

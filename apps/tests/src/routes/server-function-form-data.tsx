@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 async function ping(value: FormData) {
   "use server";
@@ -9,7 +9,7 @@ async function ping(value: FormData) {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  createEffect(async () => {
+  onSettled(async () => {
     const file = new File(["Hello, World!"], "hello-world.txt");
     const formData = new FormData();
     formData.append("example", file);

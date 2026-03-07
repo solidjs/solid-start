@@ -1,5 +1,5 @@
-import { getRequestEvent } from "solid-js/web";
-import { provideRequestEvent } from "solid-js/web/storage";
+import { getRequestEvent } from "@solidjs/web";
+import { provideRequestEvent } from "@solidjs/web/storage";
 
 export function createServerReference(fn: Function, id: string) {
   if (typeof fn !== "function")

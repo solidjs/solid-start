@@ -1,8 +1,8 @@
 import { parseSetCookie } from "cookie-es";
 import { type H3Event, parseCookies } from "h3";
 import { sharedConfig } from "solid-js";
-import { renderToString } from "solid-js/web";
-import { provideRequestEvent } from "solid-js/web/storage";
+import { renderToString } from "@solidjs/web";
+import { provideRequestEvent } from "@solidjs/web/storage";
 import { getServerFnById } from "solidstart:server-fn-manifest";
 
 import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
@@ -51,7 +51,14 @@ export async function handleServerFunction(h3Event: H3Event) {
   if (!instance || request.method === "GET") {
     const args = url.searchParams.get("args");
     if (args) {
-      const result = (await deserializeFromJSONString(args)) as any[];
+      // args may be in seroval chunk format (from createServerReference)
+      // or plain JSON (from router's .with() / hashKey for no-JS form submissions)
+      let result: any[];
+      if (args.startsWith(";0x")) {
+        result = (await deserializeFromJSONString(args)) as any[];
+      } else {
+        result = JSON.parse(args);
+      }
       for (const arg of result) {
         parsed.push(arg);
       }

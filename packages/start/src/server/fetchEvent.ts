@@ -1,5 +1,5 @@
 import { type EventHandler, getRequestIP, type H3Event, type Middleware } from "h3";
-import { provideRequestEvent } from "solid-js/web/storage";
+import { provideRequestEvent } from "@solidjs/web/storage";
 import type { FetchEvent } from "./types.ts";
 
 const FETCH_EVENT_CONTEXT = "solidFetchEvent";

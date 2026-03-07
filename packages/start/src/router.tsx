@@ -1,6 +1,7 @@
-import { lazy, type Component } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { type Component } from "solid-js";
+import { getRequestEvent, isServer } from "@solidjs/web";
 
+import lazy from "./shared/lazy.ts";
 import { pageRoutes as routeConfigs } from "./server/routes.ts";
 import type { PageEvent } from "./server/types.ts";
 
@@ -9,7 +10,7 @@ const components: Record<string, Component> = {};
 export function createRoutes() {
   function createRoute(route: any) {
     const component =
-      route.$component && (components[route.$component.src] ??= lazy(route.$component.import));
+      route.$component && (components[route.$component.src] ??= lazy(route.$component.import, route.$component.src));
 
     return {
       ...route,

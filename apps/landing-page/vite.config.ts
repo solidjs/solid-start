@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { nitroV2Plugin } from "../../packages/start-nitro-v2-vite-plugin/src";
-import { solidStart } from "../../packages/start/src/config";
+import { solidStart } from "@solidjs/start/config";
 
 export default defineConfig({
   plugins: [

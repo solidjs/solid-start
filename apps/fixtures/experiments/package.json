@@ -10,7 +10,8 @@
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "workspace:*",
-    "solid-js": "^1.9.9",
+    "@solidjs/web": "2.0.0-beta.1",
+    "solid-js": "2.0.0-beta.1",
     "vite": "7.1.10"
   },
   "engines": {

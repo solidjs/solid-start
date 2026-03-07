@@ -1,5 +1,5 @@
-import { createSignal, FlowProps, onMount } from "solid-js";
-import { getRequestEvent } from "solid-js/web";
+import { createSignal, FlowProps, onSettled } from "solid-js";
+import { getRequestEvent } from "@solidjs/web";
 
 const Badge = (props: FlowProps) => (
   <div class="text-base text-white bg-gray-700 rounded-lg px-2 font-medium">{props.children}</div>
@@ -7,7 +7,7 @@ const Badge = (props: FlowProps) => (
 
 const Layout = (props: FlowProps<{ title: string }>) => {
   const [mounted, setMounted] = createSignal(false);
-  onMount(() => setMounted(true));
+  onSettled(() => setMounted(true));
 
   return (
     <div class="flex gap-2 flex-col">

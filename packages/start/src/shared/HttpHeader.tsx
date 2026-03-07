@@ -1,6 +1,6 @@
 // @refresh skip
 import { onCleanup } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { getRequestEvent, isServer } from "@solidjs/web";
 
 import type { PageEvent } from "../server/types.ts";
 import { appendHeader, setHeader } from "../http/index.ts";
