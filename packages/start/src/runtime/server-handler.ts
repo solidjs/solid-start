@@ -154,6 +154,10 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       setHeader(h3Event, "content-type", "text/javascript");
       return serializeToJSStream(instance, result);
     }
+    // Explicitly set the Content-Type to avoid runtimes (e.g., AWS Lambda)
+    // that default to `application/json`, which can break serialization
+    // when the SEROVAL output is not valid JSON.
+    setHeader(h3Event, "content-type", "text/plain");
     return serializeToJSONStream(result);
   } catch (x) {
     if (x instanceof Response) {
@@ -181,6 +185,10 @@ async function handleServerFunction(h3Event: HTTPEvent) {
         setHeader(h3Event, "content-type", "text/javascript");
         return serializeToJSStream(instance, x);
       }
+      // Explicitly set the Content-Type to avoid runtimes (e.g., AWS Lambda)
+      // that default to `application/json`, which can break serialization
+      // when the SEROVAL output is not valid JSON.
+      setHeader(h3Event, "content-type", "text/plain");
       return serializeToJSONStream(x);
     }
     return x;
