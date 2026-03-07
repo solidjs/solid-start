@@ -1,4 +1,4 @@
-import { type JSX, type ParentComponent, merge, omit } from "solid-js";
+import { type JSX, type ParentComponent, mergeProps, splitProps } from "solid-js";
 import { cn } from "~/lib/utils";
 
 export interface AnimatedShinyTextProps extends JSX.HTMLAttributes<HTMLParagraphElement> {
@@ -6,8 +6,8 @@ export interface AnimatedShinyTextProps extends JSX.HTMLAttributes<HTMLParagraph
 }
 
 export const AnimatedShinyText: ParentComponent<AnimatedShinyTextProps> = props => {
-  const forwardProps = omit(props, "shimmerWidth", "class", "children");
-  const localProps = merge({ shimmerWidth: 100 }, props);
+  const [_localProps, forwardProps] = splitProps(props, ["shimmerWidth", "class", "children"]);
+  const localProps = mergeProps({ shimmerWidth: 100 }, _localProps);
 
   return (
     <p

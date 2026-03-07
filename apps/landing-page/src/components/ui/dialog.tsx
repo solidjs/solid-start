@@ -1,5 +1,5 @@
 import type { ComponentProps } from "solid-js";
-import { omit } from "solid-js";
+import { splitProps } from "solid-js";
 
 import {
   Dialog as DialogPrimitive,
@@ -17,12 +17,12 @@ import { OverrideComponentProps } from "@kobalte/utils";
 const Dialog = DialogPrimitive;
 
 const DialogTrigger = (props: OverrideComponentProps<"button", DialogTriggerProps>) => {
-  const rest = omit(props, "children");
+  const [, rest] = splitProps(props, ["children"]);
   return <DialogPrimitive.Trigger {...rest}>{props.children}</DialogPrimitive.Trigger>;
 };
 
 const DialogPortal = (props: DialogPortalProps) => {
-  const rest = omit(props, "children");
+  const [, rest] = splitProps(props, ["children"]);
   return (
     <DialogPrimitive.Portal {...rest}>
       <div class="fixed inset-0 z-50 flex items-start justify-center sm:items-center">
@@ -33,7 +33,7 @@ const DialogPortal = (props: DialogPortalProps) => {
 };
 
 const DialogOverlay = (props: OverrideComponentProps<"div", DialogOverlayProps>) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DialogPrimitive.Overlay
       class={cn(
@@ -46,7 +46,7 @@ const DialogOverlay = (props: OverrideComponentProps<"div", DialogOverlayProps>)
 };
 
 const DialogContent = (props: OverrideComponentProps<"div", DialogContentProps>) => {
-  const rest = omit(props, "class", "children");
+  const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -80,14 +80,14 @@ const DialogContent = (props: OverrideComponentProps<"div", DialogContentProps>)
 };
 
 const DialogHeader = (props: ComponentProps<"div">) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <div class={cn("flex flex-col space-y-1.5 text-center sm:text-left", props.class)} {...rest} />
   );
 };
 
 const DialogFooter = (props: ComponentProps<"div">) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <div
       class={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", props.class)}
@@ -97,7 +97,7 @@ const DialogFooter = (props: ComponentProps<"div">) => {
 };
 
 const DialogTitle = (props: OverrideComponentProps<"h2", DialogTitleProps>) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DialogPrimitive.Title
       class={cn("text-lg font-semibold leading-none tracking-tight", props.class)}
@@ -107,7 +107,7 @@ const DialogTitle = (props: OverrideComponentProps<"h2", DialogTitleProps>) => {
 };
 
 const DialogDescription = (props: OverrideComponentProps<"p", DialogDescriptionProps>) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DialogPrimitive.Description
       class={cn("text-sm text-muted-foreground", props.class)}

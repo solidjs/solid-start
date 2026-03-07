@@ -1,11 +1,11 @@
-import { merge } from "solid-js";
+import { mergeProps } from "solid-js";
 
 interface Props {
   class: string;
 }
 
 export function LockIcon(props: Props) {
-  props = merge({ class: "w-6 h-6" }, props);
+  props = mergeProps({ class: "w-6 h-6" }, props);
 
   return (
     <svg

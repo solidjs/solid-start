@@ -1,10 +1,10 @@
 import type { Component, ComponentProps } from "solid-js";
-import { omit } from "solid-js";
+import { splitProps } from "solid-js";
 
 import { cn } from "~/lib/utils";
 
 const Input: Component<ComponentProps<"input">> = props => {
-  const rest = omit(props, "type", "class");
+  const [, rest] = splitProps(props, ["type", "class"]);
   return (
     <input
       type={props.type}

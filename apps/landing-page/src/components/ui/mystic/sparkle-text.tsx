@@ -2,14 +2,14 @@ import { Motion } from "solid-motionone";
 
 import {
   type Component,
-  For,
+  Index,
   type JSX,
   type ParentComponent,
   createSignal,
-  merge,
+  mergeProps,
   onCleanup,
-  onSettled,
-  omit,
+  onMount,
+  splitProps,
 } from "solid-js";
 import { cn } from "~/lib/utils";
 
@@ -35,14 +35,19 @@ export interface SparklesTextProps extends JSX.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const SparklesText: ParentComponent<SparklesTextProps> = props => {
-  const forwardProps = omit(props, "children", "class", "colors", "sparklesCount");
-  const localProps = merge(
+  const [_localProps, forwardProps] = splitProps(props, [
+    "children",
+    "class",
+    "colors",
+    "sparklesCount",
+  ]);
+  const localProps = mergeProps(
     { colors: ["#2c4f7c", "#3b82f6", "#60a5fa"], sparklesCount: 10 },
-    props,
+    _localProps,
   );
   const [sparkles, setSparkles] = createSignal<Sparkle[]>([]);
 
-  onSettled(() => {
+  onMount(() => {
     const generateStar = (): Sparkle => {
       const starX = `${Math.random() * 100}%`;
       const starY = `${Math.random() * 100}%`;
@@ -79,7 +84,7 @@ export const SparklesText: ParentComponent<SparklesTextProps> = props => {
 
   return (
     <span class={cn("relative inline-block", localProps.class)} {...forwardProps}>
-      <For each={sparkles()} keyed={false}>{(sparkle) => <Sparkle {...sparkle()} />}</For>
+      <Index each={sparkles()}>{sparkle => <Sparkle {...sparkle()} />}</Index>
       {localProps.children}
     </span>
   );

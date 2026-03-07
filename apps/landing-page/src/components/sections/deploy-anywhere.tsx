@@ -1,4 +1,4 @@
-import { For } from "solid-js";
+import { Index } from "solid-js";
 import { AwsLogo } from "../icons/platform/aws-logo";
 import { AzureLogo } from "../icons/platform/azure-logo";
 import { BunLogo } from "../icons/platform/bun-logo";
@@ -96,7 +96,7 @@ export function DeployAnywhere() {
         </pre>
       </div>
       <ul class="pt-16 grid grid-cols-2 place-items-center gap-4 sm:gap-6 md:grid-cols-3">
-        <For each={PLATFORMS} keyed={false}>
+        <Index each={PLATFORMS}>
           {platform => (
             <li>
               <a
@@ -110,7 +110,7 @@ export function DeployAnywhere() {
               </a>
             </li>
           )}
-        </For>
+        </Index>
         <li>...and over 20 others!</li>
       </ul>
     </section>

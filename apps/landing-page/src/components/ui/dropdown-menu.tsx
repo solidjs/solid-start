@@ -1,5 +1,5 @@
 import type { Component, ComponentProps } from "solid-js";
-import { omit } from "solid-js";
+import { splitProps } from "solid-js";
 
 import {
   DropdownMenu as DropdownMenuPrimitive,
@@ -26,7 +26,7 @@ const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 
 const DropdownMenuContent = (props: OverrideComponentProps<"div", DropdownMenuContentProps>) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
@@ -41,7 +41,7 @@ const DropdownMenuContent = (props: OverrideComponentProps<"div", DropdownMenuCo
 };
 
 const DropdownMenuItem = (props: OverrideComponentProps<"div", DropdownMenuItemProps>) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DropdownMenuPrimitive.Item
       class={cn(
@@ -54,12 +54,12 @@ const DropdownMenuItem = (props: OverrideComponentProps<"div", DropdownMenuItemP
 };
 
 const DropdownMenuShortcut = (props: ComponentProps<"span">) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return <span class={cn("ml-auto text-xs tracking-widest opacity-60", props.class)} {...rest} />;
 };
 
 const DropdownMenuLabel = (props: ComponentProps<"div"> & { inset?: boolean }) => {
-  const rest = omit(props, "class", "inset");
+  const [, rest] = splitProps(props, ["class", "inset"]);
   return (
     <div
       class={cn("px-2 py-1.5 text-sm font-semibold", props.inset && "pl-8", props.class)}
@@ -69,7 +69,7 @@ const DropdownMenuLabel = (props: ComponentProps<"div"> & { inset?: boolean }) =
 };
 
 const DropdownMenuSeparator = (props: OverrideComponentProps<"hr", DropdownMenuSeparatorProps>) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DropdownMenuPrimitive.Separator
       class={cn("-mx-1 my-1 h-px bg-muted", props.class)}
@@ -83,7 +83,7 @@ const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 const DropdownMenuSubTrigger = (
   props: OverrideComponentProps<"div", DropdownMenuSubTriggerProps>,
 ) => {
-  const rest = omit(props, "class", "children");
+  const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DropdownMenuPrimitive.SubTrigger
       class={cn(
@@ -112,7 +112,7 @@ const DropdownMenuSubTrigger = (
 const DropdownMenuSubContent = (
   props: OverrideComponentProps<"div", DropdownMenuSubContentProps>,
 ) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DropdownMenuPrimitive.SubContent
       class={cn(
@@ -127,7 +127,7 @@ const DropdownMenuSubContent = (
 const DropdownMenuCheckboxItem = (
   props: OverrideComponentProps<"div", DropdownMenuCheckboxItemProps>,
 ) => {
-  const rest = omit(props, "class", "children");
+  const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DropdownMenuPrimitive.CheckboxItem
       class={cn(
@@ -162,7 +162,7 @@ const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 const DropdownMenuGroupLabel = (
   props: OverrideComponentProps<"span", DropdownMenuGroupLabelProps>,
 ) => {
-  const rest = omit(props, "class");
+  const [, rest] = splitProps(props, ["class"]);
   return (
     <DropdownMenuPrimitive.GroupLabel
       class={cn("px-2 py-1.5 text-sm font-semibold", props.class)}
@@ -176,7 +176,7 @@ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 const DropdownMenuRadioItem = (
   props: OverrideComponentProps<"div", DropdownMenuRadioItemProps>,
 ) => {
-  const rest = omit(props, "class", "children");
+  const [, rest] = splitProps(props, ["class", "children"]);
   return (
     <DropdownMenuPrimitive.RadioItem
       class={cn(

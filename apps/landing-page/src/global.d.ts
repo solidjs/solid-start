@@ -16,7 +16,7 @@ interface DatabaseUserAttributes {
   githubImage: string;
 }
 
-declare module "@solidjs/web" {
+declare module "solid-js/web" {
   interface RequestEvent {
     locals: {
       nonce: string;
