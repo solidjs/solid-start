@@ -41,7 +41,7 @@
     "@babel/traverse": "^7.28.3",
     "@babel/types": "^7.28.5",
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/web": "2.0.0-beta.1",
+    "@solidjs/web": "next",
     "@tanstack/server-functions-plugin": "1.134.5",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.9",
@@ -60,7 +60,7 @@
     "seroval": "^1.5.0",
     "seroval-plugins": "^1.5.0",
     "shiki": "^1.26.1",
-    "solid-js": "2.0.0-beta.1",
+    "solid-js": "next",
     "source-map-js": "^1.2.1",
     "srvx": "^0.9.1",
     "vite-plugin-solid": "3.0.0-next.2"
