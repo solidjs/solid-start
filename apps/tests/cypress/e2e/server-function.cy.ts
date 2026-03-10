@@ -52,4 +52,8 @@ describe("server-function", () => {
     cy.visit("/generator-server-function");
     cy.get("#server-fn-test").contains('¡Hola, Mundo!');
   });
+  it("should remove non-function exports in a module-level use server file", () => {
+    cy.visit("/server-function-query-toplevel");
+    cy.get("#server-fn-test").contains("false");
+  });
 });

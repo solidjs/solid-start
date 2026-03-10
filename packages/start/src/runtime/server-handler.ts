@@ -16,9 +16,9 @@ import { getExpectedRedirectStatus } from "../server/handler";
 import { createPageEvent } from "../server/pageEvent";
 // @ts-ignore
 import { FetchEvent, PageEvent } from "../server";
-// @ts-ignore
-import serverFnManifest from "solidstart:server-fn-manifest";
 import { deserializeFromJSONString, serializeToJSONStream, serializeToJSStream } from "./serialization";
+import "solidstart:server-fn-manifest";
+import { getServerFunction } from "./server-fns";
 
 async function handleServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
@@ -28,43 +28,37 @@ async function handleServerFunction(h3Event: HTTPEvent) {
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
   const url = new URL(request.url);
-  let functionId: string | undefined | null, name: string | undefined | null;
+  let functionId: string | undefined | null;
   if (serverReference) {
     invariant(typeof serverReference === "string", "Invalid server function");
-    [functionId, name] = decodeURIComponent(serverReference).split("#");
+    [functionId] = decodeURIComponent(serverReference).split("#");
   } else {
     functionId = url.searchParams.get("id");
-    name = url.searchParams.get("name");
 
-    if (!functionId || !name) {
+    if (!functionId) {
       return process.env.NODE_ENV === "development"
         ? new Response("Server function not found", { status: 404 })
         : new Response(null, { status: 404 });
     }
   }
 
-  const serverFnInfo = serverFnManifest[functionId];
-  let fnModule: undefined | { [key: string]: any };
+  let serverFunction;
+  try {
+    serverFunction = getServerFunction(functionId!);
+  } catch (error) {
+    if (process.env.NODE_ENV !== "development") {
+      throw error;
+    }
 
-  if (!serverFnInfo) {
-    return process.env.NODE_ENV === "development"
-      ? new Response("Server function not found", { status: 404 })
-      : new Response(null, { status: 404 });
+    const at = functionId!.lastIndexOf("@");
+    if (at === -1) {
+      throw error;
+    }
+
+    const moduleId = functionId!.slice(at + 1);
+    await (globalThis as any).app.getRouter("server-fns").internals.devServer.ssrLoadModule(moduleId);
+    serverFunction = getServerFunction(functionId!);
   }
-
-  if (process.env.NODE_ENV === "development") {
-    // In dev, we use Vinxi to get the "server" server-side router
-    // Then we use that router's devServer.ssrLoadModule to get the serverFn
-
-    // This code comes from:
-    // https://github.com/TanStack/router/blob/266f5cc863cd1a99809d1af2669e58b6b6db9a67/packages/start-server-functions-handler/src/index.tsx#L83-L87
-    fnModule = await (globalThis as any).app
-      .getRouter("server-fns")
-      .internals.devServer.ssrLoadModule(serverFnInfo.extractedFilename);
-  } else {
-    fnModule = await serverFnInfo.importer();
-  }
-  const serverFunction = fnModule![serverFnInfo.functionName];
 
   let parsed: any[] = [];
 
@@ -122,7 +116,7 @@ async function handleServerFunction(h3Event: HTTPEvent) {
       /* @ts-ignore */
       sharedConfig.context = { event };
       event.locals.serverFunctionMeta = {
-        id: functionId + "#" + name
+        id: functionId
       };
       return serverFunction(...parsed);
     });

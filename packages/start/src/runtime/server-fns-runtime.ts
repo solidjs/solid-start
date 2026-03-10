@@ -1,14 +1,30 @@
 import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import { cloneEvent } from "../server/fetchEvent";
+import { registerServerFunction } from "./server-fns";
 
-export function createServerReference(fn: Function, id: string, name: string) {
-  if (typeof fn !== "function") throw new Error("Export from a 'use server' module must be a function");
+interface Registration<T extends any[], R> {
+  id: string;
+  fn: (...args: T) => Promise<R>;
+}
+
+export function createServerReference<T extends any[], R>(
+  id: string,
+  fn: (...args: T) => Promise<R>,
+) {
+  const registration: Registration<T, R> = { id, fn };
+  registerServerFunction(id, fn);
+  return registration;
+}
+
+export function cloneServerReference<T extends any[], R>({ id, fn }: Registration<T, R>) {
+  if (typeof fn !== "function")
+    throw new Error("Export from a 'use server' module must be a function");
   const baseURL = import.meta.env.SERVER_BASE_URL;
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}/_server?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        return `${baseURL}/_server?id=${encodeURIComponent(id)}`;
       }
       if (prop === "GET") return receiver;
       return (target as any)[prop];
@@ -18,11 +34,11 @@ export function createServerReference(fn: Function, id: string, name: string) {
       if (!ogEvt) throw new Error("Cannot call server function outside of a request");
       const evt = cloneEvent(ogEvt);
       evt.locals.serverFunctionMeta = {
-        id: id + "#" + name,
+        id,
       };
       evt.serverOnly = true;
       return provideRequestEvent(evt, () => {
-        return fn.apply(thisArg, args);
+        return fn.apply(thisArg, args as T);
       });
     }
   });
