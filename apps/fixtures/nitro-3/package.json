@@ -11,7 +11,7 @@
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "workspace:*",
-    "solid-js": "2.0.0-beta.1",
+    "solid-js": "next",
     "nitro": "^3.0.1-alpha.2",
     "vite": "7.1.10"
   },
