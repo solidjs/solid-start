@@ -6,8 +6,6 @@ settings:
 
 overrides:
   vite-plugin-solid@3.0.0-next.2>babel-preset-solid: next
-  '@solidjs/meta': link:../solid-meta
-  '@solidjs/router': link:../solid-router
 
 patchedDependencies:
   vite-plugin-solid:
@@ -55,11 +53,11 @@ importers:
   apps/fixtures/basic:
     dependencies:
       '@solidjs/meta':
-        specifier: link:../../../../solid-meta
-        version: link:../../../../solid-meta
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@2.0.0-beta.2)
       '@solidjs/router':
-        specifier: link:../../../../solid-router
-        version: link:../../../../solid-router
+        specifier: ^0.15.0
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -76,11 +74,11 @@ importers:
   apps/fixtures/css:
     dependencies:
       '@solidjs/meta':
-        specifier: link:../../../../solid-meta
-        version: link:../../../../solid-meta
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@2.0.0-beta.2)
       '@solidjs/router':
-        specifier: link:../../../../solid-router
-        version: link:../../../../solid-router
+        specifier: ^0.15.0
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -104,11 +102,11 @@ importers:
   apps/fixtures/experiments:
     dependencies:
       '@solidjs/meta':
-        specifier: link:../../../../solid-meta
-        version: link:../../../../solid-meta
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@2.0.0-beta.2)
       '@solidjs/router':
-        specifier: link:../../../../solid-router
-        version: link:../../../../solid-router
+        specifier: ^0.15.0
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -125,8 +123,8 @@ importers:
   apps/fixtures/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: link:../../../../solid-router
-        version: link:../../../../solid-router
+        specifier: ^0.15.0
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -143,11 +141,11 @@ importers:
   apps/fixtures/nitro-3:
     dependencies:
       '@solidjs/meta':
-        specifier: link:../../../../solid-meta
-        version: link:../../../../solid-meta
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@2.0.0-beta.2)
       '@solidjs/router':
-        specifier: link:../../../../solid-router
-        version: link:../../../../solid-router
+        specifier: ^0.15.0
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -164,8 +162,8 @@ importers:
   apps/fixtures/notes:
     dependencies:
       '@solidjs/router':
-        specifier: link:../../../../solid-router
-        version: link:../../../../solid-router
+        specifier: ^0.15.0
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -191,8 +189,8 @@ importers:
   apps/fixtures/todomvc:
     dependencies:
       '@solidjs/router':
-        specifier: link:../../../../solid-router
-        version: link:../../../../solid-router
+        specifier: ^0.15.0
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -212,11 +210,11 @@ importers:
   apps/landing-page:
     dependencies:
       '@solidjs/meta':
-        specifier: link:../../../solid-meta
-        version: link:../../../solid-meta
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@1.9.9)
       '@solidjs/router':
-        specifier: link:../../../solid-router
-        version: link:../../../solid-router
+        specifier: ^0.15.3
+        version: 0.15.4(solid-js@1.9.9)
       '@solidjs/start':
         specifier: 2.0.0-alpha.2
         version: 2.0.0-alpha.2(@testing-library/jest-dom@6.6.2)(crossws@0.4.4(srvx@0.11.7))(vite@7.1.10(@types/node@25.4.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -273,17 +271,17 @@ importers:
   apps/tests:
     dependencies:
       '@solidjs/meta':
-        specifier: link:../../../solid-meta
-        version: link:../../../solid-meta
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@2.0.0-beta.2)
       '@solidjs/router':
-        specifier: link:../../../solid-router
-        version: link:../../../solid-router
+        specifier: ^0.15.3
+        version: 0.15.4(solid-js@2.0.0-beta.2)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.10
-        version: 0.8.10(@solidjs/router@solid-router)(solid-js@2.0.0-beta.2)
+        version: 0.8.10(@solidjs/router@0.15.4(solid-js@2.0.0-beta.2))(solid-js@2.0.0-beta.2)
       '@solidjs/web':
         specifier: next
         version: 2.0.0-beta.2(@solidjs/signals@0.12.0)(solid-js@2.0.0-beta.2)
@@ -343,8 +341,8 @@ importers:
         specifier: ^7.28.5
         version: 7.28.5
       '@solidjs/meta':
-        specifier: link:../../../solid-meta
-        version: link:../../../solid-meta
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@2.0.0-beta.2)
       '@solidjs/web':
         specifier: next
         version: 2.0.0-beta.2(@solidjs/signals@0.12.0)(solid-js@2.0.0-beta.2)
@@ -2111,6 +2109,16 @@ packages:
     resolution: {integrity: sha512-hZ/M/qr25QOCcwDPOHtGjxTD8w2mNyVAYvcfgwzBHq2RwNqHNdDNsMZYap20+ruRwW4A3Cdkczyoz0TSxLCAPQ==}
     peerDependencies:
       solid-js: ^1.6.12
+
+  '@solidjs/meta@0.29.4':
+    resolution: {integrity: sha512-zdIWBGpR9zGx1p1bzIPqF5Gs+Ks/BH8R6fWhmUa/dcK1L2rUC8BAcZJzNRYBQv74kScf1TSOs0EY//Vd/I0V8g==}
+    peerDependencies:
+      solid-js: '>=1.8.4'
+
+  '@solidjs/router@0.15.4':
+    resolution: {integrity: sha512-WOpgg9a9T638cR+5FGbFi/IV4l2FpmBs1GpIMSPa0Ce9vyJN7Wts+X2PqMf9IYn0zUj2MlSJtm1gp7/HI/n5TQ==}
+    peerDependencies:
+      solid-js: ^1.8.6
 
   '@solidjs/signals@0.12.0':
     resolution: {integrity: sha512-4yeBvMCTCCPZZ1G/x0XUVg82tgC/gLikPhl91cSdGvZXMLQUEHO9Ugbca0MfICcHHJXySieFyZrMNlQ5rWcGyQ==}
@@ -7575,6 +7583,22 @@ snapshots:
     dependencies:
       solid-js: 1.9.9
 
+  '@solidjs/meta@0.29.4(solid-js@1.9.9)':
+    dependencies:
+      solid-js: 1.9.9
+
+  '@solidjs/meta@0.29.4(solid-js@2.0.0-beta.2)':
+    dependencies:
+      solid-js: 2.0.0-beta.2
+
+  '@solidjs/router@0.15.4(solid-js@1.9.9)':
+    dependencies:
+      solid-js: 1.9.9
+
+  '@solidjs/router@0.15.4(solid-js@2.0.0-beta.2)':
+    dependencies:
+      solid-js: 2.0.0-beta.2
+
   '@solidjs/signals@0.12.0': {}
 
   '@solidjs/start@2.0.0-alpha.2(@testing-library/jest-dom@6.6.2)(crossws@0.4.4(srvx@0.11.7))(vite@7.1.10(@types/node@25.4.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))':
@@ -7582,7 +7606,7 @@ snapshots:
       '@babel/core': 7.28.3
       '@babel/traverse': 7.28.5
       '@babel/types': 7.28.5
-      '@solidjs/meta': link:../solid-meta
+      '@solidjs/meta': 0.29.4(solid-js@1.9.9)
       '@tanstack/server-functions-plugin': 1.134.5(vite@7.1.10(@types/node@25.4.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
       '@types/babel__traverse': 7.28.0
       '@types/micromatch': 4.0.9
@@ -7612,12 +7636,12 @@ snapshots:
       - crossws
       - supports-color
 
-  '@solidjs/testing-library@0.8.10(@solidjs/router@solid-router)(solid-js@2.0.0-beta.2)':
+  '@solidjs/testing-library@0.8.10(@solidjs/router@0.15.4(solid-js@2.0.0-beta.2))(solid-js@2.0.0-beta.2)':
     dependencies:
       '@testing-library/dom': 10.4.0
       solid-js: 2.0.0-beta.2
     optionalDependencies:
-      '@solidjs/router': link:../solid-router
+      '@solidjs/router': 0.15.4(solid-js@2.0.0-beta.2)
 
   '@solidjs/web@2.0.0-beta.2(@solidjs/signals@0.12.0)(solid-js@2.0.0-beta.2)':
     dependencies:
