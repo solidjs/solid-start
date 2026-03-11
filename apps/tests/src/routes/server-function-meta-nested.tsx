@@ -1,5 +1,5 @@
 import { getServerFunctionMeta } from "@solidjs/start";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 function serverFnWithMeta() {
   "use server";
@@ -10,7 +10,7 @@ function serverFnWithMeta() {
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithMeta?: string }>({});
 
-  createEffect(async () => {
+  onSettled(async () => {
     const result = await serverFnWithMeta();
     setOutput(prev => ({ ...prev, serverFnWithMeta: result }));
   });

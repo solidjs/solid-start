@@ -1,14 +1,13 @@
-import { createAsyncStore } from "@solidjs/router";
-import { For, Show } from "solid-js";
+import { For, createMemo, Show } from "solid-js";
 import { getNotes } from "~/lib/api";
 import SidebarNote from "./SidebarNote";
 
 export default function NoteList(props: { searchText: string }) {
-  const notes = createAsyncStore(() => getNotes(props.searchText));
+  const notes = createMemo(() => getNotes(props.searchText));
 
   return (
     <Show
-      when={notes()?.length}
+      when={notes().length > 0}
       fallback={
         <div class="notes-empty">
           {props.searchText
@@ -21,7 +20,7 @@ export default function NoteList(props: { searchText: string }) {
         <For each={notes()}>
           {note => (
             <li>
-              <SidebarNote note={note} />
+              <SidebarNote note={note()} />
             </li>
           )}
         </For>

@@ -1,6 +1,6 @@
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { Suspense } from "solid-js";
+import { Loading } from "solid-js";
 import EditButton from "~/components/EditButton";
 import NoteList from "~/components/NoteList";
 import { getNotes } from "~/lib/api";
@@ -11,7 +11,7 @@ export default function App() {
   return (
     <Router
       root={props => (
-        <div class="main" $ServerOnly>
+        <div class="main">
           <section class="col sidebar">
             <section class="sidebar-header">
               <a href="/">
@@ -31,13 +31,13 @@ export default function App() {
               <EditButton>New</EditButton>
             </section>
             <nav>
-              <Suspense fallback="Loading Notes..">
+              <Loading fallback="Loading Notes..">
                 <NoteList searchText={props.location.query.searchText || ""} />
-              </Suspense>
+              </Loading>
             </nav>
           </section>
           <section class="col note-viewer">
-            <Suspense fallback="Loading Content">{props.children}</Suspense>
+            <Loading fallback="Loading Content">{props.children}</Loading>
           </section>
         </div>
       )}

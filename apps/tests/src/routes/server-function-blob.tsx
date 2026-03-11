@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 async function ping(value: Blob) {
   "use server";
@@ -11,7 +11,7 @@ const blobURI =
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  createEffect(async () => {
+  onSettled(async () => {
     const request = await fetch(blobURI);
     const blob = await request.blob();
     const result = await ping(blob);

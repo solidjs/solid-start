@@ -11,9 +11,10 @@
     "@solidjs/start": "workspace:*",
     "date-fns": "^3.6.0",
     "marked": "^12.0.1",
-    "solid-js": "^1.9.9",
+    "solid-js": "next",
     "unstorage": "1.10.2",
-    "vite": "7.1.10"
+    "vite": "7.1.10",
+    "@solidjs/web": "next"
   },
   "engines": {
     "node": ">=22"

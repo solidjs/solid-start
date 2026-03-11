@@ -1,9 +1,10 @@
 import middleware from "solid-start:middleware";
+import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
-import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
+import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 
 import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
@@ -12,6 +13,25 @@ import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "./server-functions-handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
+
+import { pageRoutes } from "./routes.ts";
+
+function buildDevManifest(): Record<string, any> {
+  const manifest: Record<string, any> = {};
+  function walk(routes: any[]) {
+    for (const route of routes) {
+      if (route.$component?.src) {
+        const src = route.$component.src;
+        manifest[src] = { file: src, isEntry: true };
+      }
+      if (route.children) walk(route.children);
+    }
+  }
+  walk(pageRoutes);
+  return manifest;
+}
+
+const devManifest = import.meta.env.DEV ? buildDevManifest() : undefined;
 
 const SERVER_FN_BASE = "/_server";
 
@@ -44,8 +64,7 @@ export function createBaseHandler(
         const fn =
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
         (event as APIEvent).params = match.params || {};
-        // @ts-expect-error
-        sharedConfig.context = { event };
+        (sharedConfig as any).context = { event };
         const res = await fn!(event);
         if (res !== undefined) {
           if (res instanceof Response) return produceResponseWithEventHeaders(res);
@@ -66,10 +85,11 @@ export function createBaseHandler(
         typeof options === "function" ? await options(context) : { ...options };
       const mode = resolvedOptions.mode || "stream";
       if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
+      (resolvedOptions as any).manifest = import.meta.env.DEV ? devManifest : clientViteManifest;
 
       if (mode === "sync" || !import.meta.env.START_SSR) {
         const html = renderToString(() => {
-          (sharedConfig.context as any).event = context;
+          (sharedConfig as any).context.event = context;
           return fn(context);
         }, resolvedOptions);
         context.complete = true;
@@ -100,7 +120,7 @@ export function createBaseHandler(
       } else resolvedOptions.onCompleteShell = handleShellCompleteRedirect(context, e);
 
       const _stream = renderToStream(() => {
-        (sharedConfig.context as any).event = context;
+        (sharedConfig as any).context.event = context;
         return fn(context);
       }, resolvedOptions);
       const stream = _stream as typeof _stream & PromiseLike<string>; // stream has a hidden 'then' method
