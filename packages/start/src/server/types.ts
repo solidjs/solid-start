@@ -69,7 +69,7 @@ export interface APIEvent extends FetchEvent {
   params: { [key: string]: string };
 }
 
-export type APIHandler = (event: APIEvent) => Promise<any>;
+export type APIHandler = (event: APIEvent) => any;
 
 export interface ServerFunctionMeta {
   id: string;
