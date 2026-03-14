@@ -164,7 +164,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                       if (!state.opts.pick.includes(name)) {
                         // Keep the variable, just not exported
                         // Replace export const foo = ... with const foo = ...
-                        exportNamedPath.replaceWith(decl.node);
+                        exportNamedPath.replaceWith(decl.node!);
                       }
                     });
                     break;
