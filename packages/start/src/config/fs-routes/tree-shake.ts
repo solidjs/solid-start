@@ -107,7 +107,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                   });
                 }
               },
-             ExportDefaultDeclaration(exportNamedPath) {
+              ExportDefaultDeclaration(exportNamedPath) {
                 if (state.opts.pick && !state.opts.pick.includes("default")) {
                   const decl = exportNamedPath.get("declaration");
                   if (decl.node) {
@@ -127,7 +127,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
 
                 // Handle: export { foo, bar }
                 if (specifiers.length) {
-                  specifiers.forEach((s) => {
+                  specifiers.forEach(s => {
                     const exportedName = t.isIdentifier(s.node.exported)
                       ? s.node.exported.name
                       : s.node.exported.value;
@@ -158,7 +158,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                   }
                   case "VariableDeclaration": {
                     const inner = decl.get("declarations");
-                    inner.forEach((d) => {
+                    inner.forEach(d => {
                       if (d.node.id.type !== "Identifier") return;
                       const name = d.node.id.name;
                       if (!state.opts.pick.includes(name)) {
