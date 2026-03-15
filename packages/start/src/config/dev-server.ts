@@ -18,11 +18,9 @@ export function devServer(): Array<PluginOption> {
             const def: {
               default: { fetch: (req: Request) => Promise<Response> };
             } = await import(process.cwd() + "/dist/server/entry-server.js");
-            let webRes = await def.default.fetch(webReq);
+            const webRes = await def.default.fetch(webReq);
             if (webRes.headers.get("content-type")?.startsWith("text/html")) {
-              const newHeaders = new Headers(webRes.headers);
               res.setHeader("content-encoding", "identity");
-              webRes = new Response(webRes.body, { headers: newHeaders, status: webRes.status });
             }
             sendNodeResponse(res, webRes);
           });
