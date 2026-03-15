@@ -149,7 +149,7 @@ function traceBinding(path: babel.NodePath, name: string): Binding | undefined {
           }
 
           // Only valid for functions
-          const func = unwrapPath(current.path.get('init'), isValidFunction);
+          const func = unwrapPath(current.path.get("init"), isValidFunction);
           if (func) {
             return current;
           }
@@ -361,9 +361,9 @@ export function directivesPlugin(): babel.PluginObj<State> {
           // First, bubble up function declarations
           program.traverse({
             FunctionDeclaration(child) {
-              if (isFunctionDirectiveValid(ctx.opts, child)) {
-                bubbleFunctionDeclaration(child);
-              }
+              // if (isFunctionDirectiveValid(ctx.opts, child)) {
+              bubbleFunctionDeclaration(child);
+              // }
             },
           });
           program.scope.crawl();
