@@ -8,17 +8,6 @@ export function bubbleFunctionDeclaration(path: babel.NodePath<t.FunctionDeclara
     const block = (path.findParent(current => current.isBlockStatement()) ||
       path.scope.getProgramParent().path) as babel.NodePath<t.BlockStatement>;
 
-    const [tmp] = block.unshiftContainer(
-      "body",
-      t.variableDeclaration("const", [
-        t.variableDeclarator(
-          decl.id,
-          t.functionExpression(decl.id, decl.params, decl.body, decl.generator, decl.async),
-        ),
-      ]),
-    );
-    path.scope.registerDeclaration(tmp);
-    // tmp.skip();
     if (path.parentPath.isExportNamedDeclaration()) {
       path.parentPath.replaceWith(
         t.exportNamedDeclaration(undefined, [t.exportSpecifier(decl.id, decl.id)]),
@@ -28,5 +17,17 @@ export function bubbleFunctionDeclaration(path: babel.NodePath<t.FunctionDeclara
     } else {
       path.remove();
     }
+
+    const [tmp] = block.unshiftContainer(
+      "body",
+      t.variableDeclaration("const", [
+        t.variableDeclarator(
+          decl.id,
+          t.functionExpression(decl.id, decl.params, decl.body, decl.generator, decl.async),
+        ),
+      ]),
+    );
+    block.scope.registerDeclaration(tmp);
+    tmp.skip();
   }
 }
