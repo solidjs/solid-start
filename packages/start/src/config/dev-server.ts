@@ -14,12 +14,17 @@ export function devServer(): Array<PluginOption> {
       configurePreviewServer(server) {
         return () => {
           server.middlewares.use(async (req, res) => {
-            res.setHeader("content-encoding", "identity");
             const webReq = new NodeRequest({ req, res });
             const def: {
               default: { fetch: (req: Request) => Promise<Response> };
             } = await import(process.cwd() + "/dist/server/entry-server.js");
-            sendNodeResponse(res, await def.default.fetch(webReq));
+            let webRes = await def.default.fetch(webReq);
+            if (webRes.headers.get("content-type")?.startsWith("text/html")) {
+              const newHeaders = new Headers(webRes.headers);
+              res.setHeader("content-encoding", "identity");
+              webRes = new Response(webRes.body, { headers: newHeaders, status: webRes.status });
+            }
+            sendNodeResponse(res, webRes);
           });
         };
       },
