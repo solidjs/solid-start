@@ -1,6 +1,5 @@
 import type * as babel from "@babel/core";
 import * as t from "@babel/types";
-import { generateUniqueName } from "./generate-unique-name.ts";
 import { isPathValid } from "./paths.ts";
 
 export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
@@ -32,24 +31,6 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
                   } else {
                     binding.path.remove();
                   }
-
-                /**
-                 * TODO (Alexis):
-                 * For some reason, we can't directly remove function declarations,
-                 * Babel yields an error that is entirely on its fault.
-                 * 
-                 * For now, we replace this with an unused variable and that variable
-                 * will then get removed on the next cycle.
-                 * 
-                 * (Although weirdly enough, this should've been a variable
-                 * in the first phase during the earlier function bubbling phase)
-                 */
-                } else if (binding.kind === 'hoisted') {
-                  binding.path.replaceWith(
-                    t.variableDeclaration("const", [
-                      t.variableDeclarator(generateUniqueName(binding.path, "var")),
-                    ]),
-                  );
                 } else {
                   binding.path.remove();
                 }
