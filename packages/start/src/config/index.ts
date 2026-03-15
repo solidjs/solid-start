@@ -1,7 +1,8 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join } from "node:path";
-import { type PluginOption } from "vite";
+import { fileURLToPath } from "node:url";
+import { normalizePath, type PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { serverFunctionsPlugin } from "../directives/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
@@ -180,6 +181,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     // server fn exports added in by this plugin
     serverFunctionsPlugin({
       manifest: VIRTUAL_MODULES.serverFnManifest,
+      runtime: {
+        server: normalizePath(
+          fileURLToPath(new URL("../server/server-fns-runtime.ts", import.meta.url)),
+        ),
+        client: normalizePath(
+          fileURLToPath(new URL("../server/server-runtime.ts", import.meta.url)),
+        ),
+      },
     }),
     {
       name: "solid-start:virtual-modules",
