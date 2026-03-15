@@ -1,9 +1,7 @@
-import { fileURLToPath } from "node:url";
 import {
   createFilter,
   type EnvironmentModuleGraph,
   type FilterPattern,
-  normalizePath,
   type Plugin,
   type ViteDevServer,
 } from "vite";
@@ -16,50 +14,16 @@ export interface ServerFunctionsFilter {
 
 export interface ServerFunctionsOptions {
   manifest: string;
+  runtime: {
+    server: string;
+    client: string;
+  };
   filter?: ServerFunctionsFilter;
 }
-
-const CLIENT_PATH = normalizePath(
-  fileURLToPath(new URL("../server/server-runtime.ts", import.meta.url)),
-);
-const SERVER_PATH = normalizePath(
-  fileURLToPath(new URL("../server/server-fns-runtime.ts", import.meta.url)),
-);
 
 const DEFAULT_INCLUDE = "src/**/*.{jsx,tsx,ts,js,mjs,cjs}";
 const DEFAULT_EXCLUDE = "node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}";
 const DIRECTIVE = "use server";
-
-const CLIENT_OPTIONS: Pick<CompileOptions, "directive" | "definitions"> = {
-  directive: DIRECTIVE,
-  definitions: {
-    register: {
-      kind: "named",
-      name: "createServerReference",
-      source: CLIENT_PATH,
-    },
-    clone: {
-      kind: "named",
-      name: "cloneServerReference",
-      source: CLIENT_PATH,
-    },
-  },
-};
-const SERVER_OPTIONS: Pick<CompileOptions, "directive" | "definitions"> = {
-  directive: DIRECTIVE,
-  definitions: {
-    register: {
-      kind: "named",
-      name: "createServerReference",
-      source: SERVER_PATH,
-    },
-    clone: {
-      kind: "named",
-      name: "cloneServerReference",
-      source: SERVER_PATH,
-    },
-  },
-};
 
 type Manifest = Record<CompileOptions["mode"], Set<string>>;
 
@@ -165,6 +129,37 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
   };
   let currentServer: ViteDevServer;
 
+  const clientOptions: Pick<CompileOptions, "directive" | "definitions"> = {
+    directive: DIRECTIVE,
+    definitions: {
+      register: {
+        kind: "named",
+        name: "createServerReference",
+        source: options.runtime.client,
+      },
+      clone: {
+        kind: "named",
+        name: "cloneServerReference",
+        source: options.runtime.client,
+      },
+    },
+  };
+  const serverOptions: Pick<CompileOptions, "directive" | "definitions"> = {
+    directive: DIRECTIVE,
+    definitions: {
+      register: {
+        kind: "named",
+        name: "createServerReference",
+        source: options.runtime.server,
+      },
+      clone: {
+        kind: "named",
+        name: "cloneServerReference",
+        source: options.runtime.server,
+      },
+    },
+  };
+
   return [
     {
       name: "solid-start:server-functions/setup",
@@ -208,7 +203,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
         }
 
         const result = await compile(id!, code, {
-          ...(mode === "server" ? SERVER_OPTIONS : CLIENT_OPTIONS),
+          ...(mode === "server" ? serverOptions : clientOptions),
           mode,
           env,
         });
