@@ -224,7 +224,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
             map: result.map,
           };
         }
-        return code;
+        return null;
       },
     },
   ];
