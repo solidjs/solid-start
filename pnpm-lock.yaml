@@ -359,9 +359,6 @@ importers:
       '@babel/types':
         specifier: ^7.28.5
         version: 7.28.5
-      '@solidjs/image':
-        specifier: workspace:*
-        version: link:../image
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.9)

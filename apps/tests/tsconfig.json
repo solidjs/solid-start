@@ -10,7 +10,7 @@
     "allowJs": true,
     "strict": true,
     "noEmit": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom", "@solidjs/start/env"],
+    "types": ["vitest/globals", "@testing-library/jest-dom", "@solidjs/start/env", "@solidjs/image/env"],
     "isolatedModules": true,
     "paths": {
       "~/*": ["./src/*"],
