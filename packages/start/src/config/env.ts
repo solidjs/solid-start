@@ -88,9 +88,15 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
         return convertObjectToModule(vars);
       }
       if (id === SERVER_RUNTIME_LOADER) {
+        if (!opts?.ssr) {
+          return SERVER_ONLY_MODULE;
+        }
         return runtimeCode;
       }
       if (id === SERVER_RUNTIME_ENV) {
+        if (!opts?.ssr) {
+          return SERVER_ONLY_MODULE;
+        }
         return SERVER_RUNTIME_CODE;
       }
       return null;
