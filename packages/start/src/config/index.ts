@@ -8,6 +8,7 @@ import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
+import { EnvPluginOptions, envPlugin } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
@@ -32,6 +33,7 @@ export interface SolidStartOptions {
      */
     mode?: "js" | "json";
   };
+  env?: EnvPluginOptions;
 }
 
 const absolute = (path: string, root: string) =>
@@ -175,6 +177,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
     }),
     lazy(),
+    envPlugin(options?.env),
     // Must be placed after fsRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
     TanStackServerFnPlugin({
