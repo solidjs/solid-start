@@ -1,18 +1,15 @@
 import { defineConfig } from "vite";
-import { imagePlugin } from "../../packages/image/src/vite";
-import { nitroV2Plugin } from "../../packages/start-nitro-v2-vite-plugin/src";
-import { solidStart } from "../../packages/start/src/config";
+import { imagePlugin } from "../../../packages/image/src/vite";
+import { solidStart } from "../../../packages/start/src/config";
+import { nitroV2Plugin } from "../../../packages/start-nitro-v2-vite-plugin/src";
 
 export default defineConfig({
-  server: {
-    port: 3000,
-  },
   plugins: [
-    solidStart(),
     imagePlugin({
       local: {
         sizes: [480, 600],
         quality: 80,
+        output: ["avif"],
         publicPath: "public",
       },
       remote: {
@@ -49,6 +46,7 @@ export default defineConfig({
         },
       },
     }),
+    solidStart(),
     nitroV2Plugin(),
   ],
 });
