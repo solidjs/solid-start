@@ -43,6 +43,7 @@ function convertObjectToModule(object: Record<string, string>): string {
   for (const key in object) {
     result += `export const ${key} = ${JSON.stringify(object[key])};`;
   }
+  console.log(result);
   return result;
 }
 
@@ -65,26 +66,27 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
         id === SERVER_ENV ||
         id === CLIENT_ENV ||
         id === SERVER_RUNTIME_ENV ||
-        SERVER_RUNTIME_LOADER
+        id === SERVER_RUNTIME_LOADER
       ) {
         return id;
       }
-      return null;
+      return undefined;
     },
     load(id, opts) {
       if (id === SERVER_ENV) {
         if (!opts?.ssr) {
           return SERVER_ONLY_MODULE;
         }
+        console.log('LOAD SERVER');
         const vars = currentOptions.server?.load
           ? currentOptions.server.load()
-          : loadEnv(env, false, serverPrefix);
+          : loadEnv(env, '.', serverPrefix);
         return convertObjectToModule(vars);
       }
       if (id === CLIENT_ENV) {
         const vars = currentOptions.client?.load
           ? currentOptions.client.load()
-          : loadEnv(env, false, clientPrefix);
+          : loadEnv(env, '.', clientPrefix);
         return convertObjectToModule(vars);
       }
       if (id === SERVER_RUNTIME_LOADER) {
@@ -99,7 +101,7 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
         }
         return SERVER_RUNTIME_CODE;
       }
-      return null;
+      return undefined;
     },
   };
 }
