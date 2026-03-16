@@ -14,7 +14,7 @@
     "test:all": "npm run unit:ci && npm run e2e"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.29.4",
+    "@kobalte/core": "^0.13.11",
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "workspace:*",
     "@solidjs/testing-library": "^0.8.10",
@@ -24,6 +24,7 @@
     "@vitest/ui": "^4.0.10",
     "jsdom": "^25.0.1",
     "lodash": "^4.17.21",
+    "lucide-solid": "^0.577.0",
     "solid-js": "next",
     "vite": "^7.1.10",
     "vite-plugin-solid": "^3.0.0-next.0",

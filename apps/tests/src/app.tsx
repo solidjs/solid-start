@@ -1,7 +1,7 @@
-import { MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Loading } from "solid-js";
+import { MetaProvider, Title } from "./meta";
 import "./app.css";
 
 export default function App() {
@@ -55,6 +55,9 @@ export default function App() {
             </li>
             <li>
               <a href="/text-plain-response">Text Plain Response</a>
+            </li>
+            <li>
+              <a href="/hydration-scroll-repro">Hydration Scroll Repro</a>
             </li>
             <li>
               <a href="/referencing-multiple-export-named-functions-in-the-same-file">

@@ -270,9 +270,9 @@ importers:
 
   apps/tests:
     dependencies:
-      '@solidjs/meta':
-        specifier: ^0.29.4
-        version: 0.29.4(solid-js@2.0.0-beta.2)
+      '@kobalte/core':
+        specifier: ^0.13.11
+        version: 0.13.11(solid-js@2.0.0-beta.2)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.4(solid-js@2.0.0-beta.2)
@@ -300,6 +300,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      lucide-solid:
+        specifier: ^0.577.0
+        version: 0.577.0(solid-js@2.0.0-beta.2)
       solid-js:
         specifier: next
         version: 2.0.0-beta.2
@@ -4077,6 +4080,11 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
+  lucide-solid@0.577.0:
+    resolution: {integrity: sha512-r/rsauBlyNjFlUhXCkD544tOH1GgcFFupw9oP2zZT4BiFkHoO3MTr12QfKBrS5zCRIhktc/qY2tRr925hFlNuQ==}
+    peerDependencies:
+      solid-js: ^1.4.7
+
   luxon@3.6.1:
     resolution: {integrity: sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==}
     engines: {node: '>=12'}
@@ -6389,10 +6397,20 @@ snapshots:
       '@floating-ui/dom': 1.6.11
       solid-js: 1.9.9
 
+  '@corvu/utils@0.2.0(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@floating-ui/dom': 1.6.11
+      solid-js: 2.0.0-beta.2
+
   '@corvu/utils@0.4.2(solid-js@1.9.9)':
     dependencies:
       '@floating-ui/dom': 1.6.11
       solid-js: 1.9.9
+
+  '@corvu/utils@0.4.2(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@floating-ui/dom': 1.6.11
+      solid-js: 2.0.0-beta.2
 
   '@dabh/diagnostics@2.0.3':
     dependencies:
@@ -6758,6 +6776,18 @@ snapshots:
       solid-presence: 0.1.8(solid-js@1.9.9)
       solid-prevent-scroll: 0.1.7(solid-js@1.9.9)
 
+  '@kobalte/core@0.13.11(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@floating-ui/dom': 1.6.11
+      '@internationalized/date': 3.5.4
+      '@internationalized/number': 3.5.3
+      '@kobalte/utils': 0.9.1(solid-js@2.0.0-beta.2)
+      '@solid-primitives/props': 3.1.11(solid-js@2.0.0-beta.2)
+      '@solid-primitives/resize-observer': 2.0.26(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+      solid-presence: 0.1.8(solid-js@2.0.0-beta.2)
+      solid-prevent-scroll: 0.1.7(solid-js@2.0.0-beta.2)
+
   '@kobalte/utils@0.9.1(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/event-listener': 2.3.3(solid-js@1.9.9)
@@ -6768,6 +6798,17 @@ snapshots:
       '@solid-primitives/refs': 1.1.2(solid-js@1.9.9)
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
+
+  '@kobalte/utils@0.9.1(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.3.3(solid-js@2.0.0-beta.2)
+      '@solid-primitives/keyed': 1.2.2(solid-js@2.0.0-beta.2)
+      '@solid-primitives/map': 0.4.11(solid-js@2.0.0-beta.2)
+      '@solid-primitives/media': 2.2.9(solid-js@2.0.0-beta.2)
+      '@solid-primitives/props': 3.1.11(solid-js@2.0.0-beta.2)
+      '@solid-primitives/refs': 1.1.2(solid-js@2.0.0-beta.2)
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -7525,14 +7566,28 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  '@solid-primitives/event-listener@2.3.3(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+
   '@solid-primitives/keyed@1.2.2(solid-js@1.9.9)':
     dependencies:
       solid-js: 1.9.9
+
+  '@solid-primitives/keyed@1.2.2(solid-js@2.0.0-beta.2)':
+    dependencies:
+      solid-js: 2.0.0-beta.2
 
   '@solid-primitives/map@0.4.11(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/trigger': 1.0.11(solid-js@1.9.9)
       solid-js: 1.9.9
+
+  '@solid-primitives/map@0.4.11(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/trigger': 1.0.11(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
 
   '@solid-primitives/media@2.2.9(solid-js@1.9.9)':
     dependencies:
@@ -7542,15 +7597,33 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  '@solid-primitives/media@2.2.9(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.3.3(solid-js@2.0.0-beta.2)
+      '@solid-primitives/rootless': 1.4.5(solid-js@2.0.0-beta.2)
+      '@solid-primitives/static-store': 0.0.8(solid-js@2.0.0-beta.2)
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+
   '@solid-primitives/props@3.1.11(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  '@solid-primitives/props@3.1.11(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+
   '@solid-primitives/refs@1.1.2(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
+
+  '@solid-primitives/refs@1.1.2(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
 
   '@solid-primitives/resize-observer@2.0.26(solid-js@1.9.9)':
     dependencies:
@@ -7560,15 +7633,33 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  '@solid-primitives/resize-observer@2.0.26(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.3.3(solid-js@2.0.0-beta.2)
+      '@solid-primitives/rootless': 1.4.5(solid-js@2.0.0-beta.2)
+      '@solid-primitives/static-store': 0.0.8(solid-js@2.0.0-beta.2)
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+
   '@solid-primitives/rootless@1.4.5(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  '@solid-primitives/rootless@1.4.5(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+
   '@solid-primitives/static-store@0.0.8(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
+
+  '@solid-primitives/static-store@0.0.8(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
 
   '@solid-primitives/transition-group@1.1.2(solid-js@1.9.9)':
     dependencies:
@@ -7579,9 +7670,18 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  '@solid-primitives/trigger@1.0.11(solid-js@2.0.0-beta.2)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+
   '@solid-primitives/utils@6.3.2(solid-js@1.9.9)':
     dependencies:
       solid-js: 1.9.9
+
+  '@solid-primitives/utils@6.3.2(solid-js@2.0.0-beta.2)':
+    dependencies:
+      solid-js: 2.0.0-beta.2
 
   '@solidjs/meta@0.29.4(solid-js@1.9.9)':
     dependencies:
@@ -9640,6 +9740,10 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
+  lucide-solid@0.577.0(solid-js@2.0.0-beta.2):
+    dependencies:
+      solid-js: 2.0.0-beta.2
+
   luxon@3.6.1: {}
 
   lz-string@1.5.0: {}
@@ -10820,10 +10924,20 @@ snapshots:
       '@corvu/utils': 0.4.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  solid-presence@0.1.8(solid-js@2.0.0-beta.2):
+    dependencies:
+      '@corvu/utils': 0.4.2(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
+
   solid-prevent-scroll@0.1.7(solid-js@1.9.9):
     dependencies:
       '@corvu/utils': 0.2.0(solid-js@1.9.9)
       solid-js: 1.9.9
+
+  solid-prevent-scroll@0.1.7(solid-js@2.0.0-beta.2):
+    dependencies:
+      '@corvu/utils': 0.2.0(solid-js@2.0.0-beta.2)
+      solid-js: 2.0.0-beta.2
 
   solid-refresh@0.6.3(solid-js@1.9.9):
     dependencies:

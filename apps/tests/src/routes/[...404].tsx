@@ -1,4 +1,4 @@
-import { Title } from "@solidjs/meta";
+import { Title } from "../meta";
 import { HttpStatusCode } from "@solidjs/start";
 import type { APIEvent } from "@solidjs/start/server";
 

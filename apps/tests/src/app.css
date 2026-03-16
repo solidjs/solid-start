@@ -1,5 +1,6 @@
 body {
-  font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    Gordita, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 a {
@@ -58,4 +59,169 @@ p {
 
 .increment:active {
   background-color: rgba(68, 107, 158, 0.2);
+}
+
+.hydration-scroll-root {
+  color-scheme: light;
+  color: #1e2b21;
+  background: radial-gradient(circle at top, #e8fff5 0%, #f7f6f0 35%, #efe9de 100%);
+}
+
+.hydration-scroll-root a {
+  margin-right: 0;
+}
+
+.hydration-scroll-shell {
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.hydration-scroll-frame {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.hydration-scroll-header {
+  position: sticky;
+  top: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(30, 43, 33, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 253, 247, 0.9);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(42, 53, 43, 0.1);
+}
+
+.hydration-scroll-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.hydration-scroll-brand {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.hydration-scroll-desktop-nav {
+  display: none;
+  gap: 10px;
+}
+
+.hydration-scroll-desktop-nav a,
+.hydration-scroll-mobile-nav a {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(30, 43, 33, 0.06);
+}
+
+.hydration-scroll-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1px solid rgba(30, 43, 33, 0.15);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #3a4b40;
+}
+
+.hydration-scroll-trigger-label {
+  display: inline-flex;
+  align-items: center;
+}
+
+.hydration-scroll-chevron {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.hydration-scroll-panel {
+  padding-top: 12px;
+  border-top: 1px solid rgba(30, 43, 33, 0.12);
+}
+
+.hydration-scroll-mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hydration-scroll-main {
+  padding: 32px 0 64px;
+}
+
+.hydration-scroll-hero {
+  padding: 24px;
+  border-radius: 28px;
+  background: rgba(255, 253, 247, 0.78);
+  border: 1px solid rgba(30, 43, 33, 0.12);
+}
+
+.hydration-scroll-eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #54675b;
+}
+
+.hydration-scroll-hero h1 {
+  margin: 0 0 16px;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  line-height: 0.95;
+}
+
+.hydration-scroll-hero p {
+  margin: 0;
+  max-width: 48rem;
+  line-height: 1.7;
+}
+
+.hydration-scroll-stack {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.hydration-scroll-panel-card {
+  padding: 20px 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(30, 43, 33, 0.1);
+}
+
+.hydration-scroll-panel-card h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+
+.hydration-scroll-panel-card p {
+  margin: 0;
+  max-width: none;
+  line-height: 1.6;
+}
+
+@media (min-width: 960px) {
+  .hydration-scroll-desktop-nav {
+    display: flex;
+  }
+
+  .hydration-scroll-trigger,
+  .hydration-scroll-panel {
+    display: none;
+  }
 }
