@@ -19,8 +19,7 @@
     "./client/spa": "./src/client/spa/index.tsx",
     "./middleware": "./src/middleware/index.ts",
     "./http": "./src/http/index.ts",
-    "./env": "./env.d.ts",
-    "./image": "./src/image.tsx"
+    "./env": "./env.d.ts"
   },
   "publishConfig": {
     "access": "public",
@@ -34,15 +33,13 @@
       "./client/spa": "./dist/client/spa/index.jsx",
       "./middleware": "./dist/middleware/index.js",
       "./http": "./dist/http/index.js",
-      "./env": "./env.d.ts",
-      "./image": "./dist/image.jsx"
+      "./env": "./env.d.ts"
     }
   },
   "dependencies": {
     "@babel/core": "^7.28.3",
     "@babel/traverse": "^7.28.3",
     "@babel/types": "^7.28.5",
-    "@solidjs/image": "workspace:*",
     "@solidjs/meta": "^0.29.4",
     "@tanstack/server-functions-plugin": "1.134.5",
     "@types/babel__traverse": "^7.28.0",
