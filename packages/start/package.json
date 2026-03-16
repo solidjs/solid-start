@@ -20,7 +20,7 @@
     "./middleware": "./src/middleware/index.ts",
     "./http": "./src/http/index.ts",
     "./env": "./env.d.ts",
-    "./image": "./src/image/index.tsx"
+    "./image": "./src/image.tsx"
   },
   "publishConfig": {
     "access": "public",
@@ -35,13 +35,14 @@
       "./middleware": "./dist/middleware/index.js",
       "./http": "./dist/http/index.js",
       "./env": "./env.d.ts",
-      "./image": "./dist/image/index.jsx"
+      "./image": "./dist/image.jsx"
     }
   },
   "dependencies": {
     "@babel/core": "^7.28.3",
     "@babel/traverse": "^7.28.3",
     "@babel/types": "^7.28.5",
+    "@solidjs/image": "workspace:*",
     "@solidjs/meta": "^0.29.4",
     "@tanstack/server-functions-plugin": "1.134.5",
     "@types/babel__traverse": "^7.28.0",
@@ -60,7 +61,6 @@
     "radix3": "^1.1.2",
     "seroval": "^1.4.1",
     "seroval-plugins": "^1.4.0",
-    "sharp": "^0.34.5",
     "shiki": "^1.26.1",
     "solid-js": "^1.9.9",
     "source-map-js": "^1.2.1",

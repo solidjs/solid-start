@@ -1,4 +1,4 @@
-import { StartImage as Image } from "@solidjs/start/image";
+import { Image } from "@solidjs/start/image";
 import { type JSX, onMount, Show } from "solid-js";
 import exampleImage from "../images/example.jpg?image";
 
@@ -20,7 +20,7 @@ export default function App(): JSX.Element {
       <Image
         {...exampleImage}
         alt="example"
-        fallback={(visible, show) => (
+        fallback={(visible: () => boolean, show: () => void) => (
           <Show when={visible()}>
             <Placeholder show={show} />
           </Show>

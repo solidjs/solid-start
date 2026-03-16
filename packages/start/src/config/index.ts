@@ -5,7 +5,6 @@ import { extname, isAbsolute, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizePath, type PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-import { imagePlugin, type StartImageOptions } from "../image/plugin/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
@@ -21,8 +20,6 @@ export interface SolidStartOptions {
   routeDir?: string;
   extensions?: string[];
   middleware?: string;
-
-  image?: StartImageOptions;
 }
 
 const absolute = (path: string, root: string) =>
@@ -115,6 +112,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
           resolve: {
             alias: {
+              "solid-js/jsx-runtime": "solid-js/h/jsx-runtime",
+              "solid-js/jsx-dev-runtime": "solid-js/h/jsx-dev-runtime",
               "@solidjs/start/server/entry": handlers.server,
               "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
@@ -201,7 +200,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
       },
     }),
-    options?.image ? imagePlugin(options.image) : undefined,
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
