@@ -1,4 +1,6 @@
-import { type PluginOption, type ViteDevServer } from "vite";
+import fs from "node:fs";
+import path from "node:path";
+import { type PluginOption, type ViteDevServer, version as viteVersion } from "vite";
 
 import { findStylesInModuleGraph } from "../server/collect-styles.ts";
 import { VIRTUAL_MODULES } from "./constants.ts";
@@ -40,26 +42,15 @@ export function manifest(start: SolidStartOptions): PluginOption {
             v => "isEntry" in v && v.isEntry,
           );
           if (!entry) throw new Error("No client entry found");
-          let viteStrVersion = (devServer?.config?.logger as any)?.config?.version;
-          if (!viteStrVersion) {
-            try {
-              viteStrVersion = await import("vite").then(m => m.version);
-            } catch (e) {
-              // ignore
-            }
-          }
-
           let rawManifest: string | undefined;
 
-          const viteMajor = parseInt(viteStrVersion!.split('.')[0], 10);
+          const viteMajor = parseInt(viteVersion.split('.')[0]!, 10);
 
           const manifestKey = Object.keys(globalThis.START_CLIENT_BUNDLE).find(k => k.endsWith("manifest.json"));
           if (manifestKey && viteMajor < 8) {
             const manifestAsset = globalThis.START_CLIENT_BUNDLE[manifestKey] as any;
             rawManifest = manifestAsset.source as string;
           } else {
-             const fs = await import("node:fs");
-             const path = await import("node:path");
              try {
                const appRoot = (start as any).appRoot || "./src";
                let outDir = ".solid-start/client";
@@ -89,11 +80,11 @@ export function manifest(start: SolidStartOptions): PluginOption {
         if (this.environment.mode !== "dev")
           throw new Error("@manifest queries are only allowed in dev");
 
-        const [path, query] = id.split("?");
+        const [urlPath, query] = id.split("?");
         const target = id.split("/")[2]!;
         const params = new URLSearchParams(query);
-        if (!path || !query) return;
-        if (path.endsWith("assets")) {
+        if (!urlPath || !query) return;
+        if (urlPath.endsWith("assets")) {
           const id = params.get("id");
           if (!id) {
             throw new Error("Missing id to get assets.");
