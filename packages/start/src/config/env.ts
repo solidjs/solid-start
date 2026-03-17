@@ -77,7 +77,6 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
         if (!opts?.ssr) {
           return SERVER_ONLY_MODULE;
         }
-        console.log('LOAD SERVER');
         const vars = currentOptions.server?.load
           ? currentOptions.server.load()
           : loadEnv(env, '.', serverPrefix);
