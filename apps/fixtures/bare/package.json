@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@solidjs/start": "workspace:*",
-    "@solidjs/web": "next",
-    "solid-js": "next",
+    "@solidjs/web": "2.0.0-beta.3",
+    "solid-js": "2.0.0-beta.3",
     "vite": "7.1.10"
   },
   "engines": {
