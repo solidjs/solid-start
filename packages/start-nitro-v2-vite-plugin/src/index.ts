@@ -3,13 +3,14 @@ import {
   copyPublicAssets,
   createNitro,
   type Nitro,
-  type NitroConfig,
+  NitroConfig,
   prepare,
   prerender,
 } from "nitropack";
 import { promises as fsp } from "node:fs";
 import path, { dirname, resolve } from "node:path";
 import type { PluginOption, Rollup } from "vite";
+import { isCloudflarePreset, getCloudflareVirtualEntryContent } from "./cloudflare.js";
 
 let ssrBundle: Rollup.OutputBundle;
 let ssrEntryFile: string;
@@ -74,10 +75,13 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
               await builder.build(server);
 
               const virtualEntry = "#solid-start/entry";
+
+              const preset = nitroConfig?.preset ?? "node-server";
+
               const resolvedNitroConfig: NitroConfig = {
                 compatibilityDate: "2024-11-19",
                 logLevel: 3,
-                preset: "node-server",
+                preset,
                 typescript: {
                   generateTsConfig: false,
                   generateRuntimeConfigTypes: false,
@@ -98,7 +102,9 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                     baseURL: "/",
                   },
                 ],
-                noExternals: false,
+                // For Cloudflare presets, bundle everything inline to avoid conditional export
+                // resolution issues (e.g., srvx's "workerd" export not being copied to output)
+                noExternals: isCloudflarePreset(preset),
                 renderer: virtualEntry,
                 rollupConfig: {
                   ...nitroConfig?.rollupConfig,
@@ -110,9 +116,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                 },
                 virtual: {
                   ...nitroConfig?.virtual,
-                  [virtualEntry]: `import { fromWebHandler } from 'h3'
-                                  import handler from '${ssrEntryFile}'
-                                  export default fromWebHandler(handler.fetch)`,
+                  [virtualEntry]: getVirtualEntryContent(preset, ssrEntryFile),
                 },
               };
 
@@ -142,6 +146,19 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
       },
     },
   ];
+}
+
+function getVirtualEntryContent(preset: string, ssrEntry: string): string {
+  if (isCloudflarePreset(preset)) {
+    return getCloudflareVirtualEntryContent(ssrEntry);
+  }
+
+  return `
+    import { fromWebHandler } from 'h3';
+    import handler from '${ssrEntry}';
+
+    export default fromWebHandler(handler.fetch);
+  `;
 }
 
 export async function buildNitroEnvironment(nitro: Nitro, build: () => Promise<any>) {
