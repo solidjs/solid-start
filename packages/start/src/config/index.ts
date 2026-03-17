@@ -8,7 +8,7 @@ import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
-import { EnvPluginOptions, envPlugin } from "./env.ts";
+import { type EnvPluginOptions, envPlugin } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
