@@ -14,7 +14,7 @@
     "test:all": "npm run unit:ci && npm run e2e"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.29.4",
+    "@solidjs/meta": "0.30.0-next.0",
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "workspace:*",
     "@solidjs/testing-library": "^0.8.10",
