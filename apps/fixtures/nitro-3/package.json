@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@solidjs/meta": "0.30.0-next.0",
-    "@solidjs/router": "^0.15.0",
+    "@solidjs/router": "0.17.0-next.1",
     "@solidjs/start": "workspace:*",
     "nitro": "^3.0.1-alpha.2",
     "solid-js": "2.0.0-beta.3",

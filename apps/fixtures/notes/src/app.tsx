@@ -10,6 +10,7 @@ import SearchField from "./components/SearchField";
 export default function App() {
   return (
     <Router
+      rootPreload={({ location }) => getNotes(String(location.query.searchText || ""))}
       root={props => (
         <div class="main">
           <section class="col sidebar">
@@ -32,7 +33,7 @@ export default function App() {
             </section>
             <nav>
               <Loading fallback="Loading Notes..">
-                <NoteList searchText={props.location.query.searchText || ""} />
+                <NoteList searchText={String(props.location.query.searchText || "")} />
               </Loading>
             </nav>
           </section>
@@ -41,7 +42,6 @@ export default function App() {
           </section>
         </div>
       )}
-      rootLoad={({ location }) => getNotes(location.query.searchText || "")}
     >
       <FileRoutes />
     </Router>

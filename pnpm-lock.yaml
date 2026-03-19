@@ -56,8 +56,8 @@ importers:
         specifier: 0.30.0-next.0
         version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/router':
-        specifier: ^0.15.0
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -77,8 +77,8 @@ importers:
         specifier: 0.30.0-next.0
         version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/router':
-        specifier: ^0.15.0
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -105,8 +105,8 @@ importers:
         specifier: 0.30.0-next.0
         version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/router':
-        specifier: ^0.15.0
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -123,8 +123,8 @@ importers:
   apps/fixtures/hackernews:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.15.0
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -144,8 +144,8 @@ importers:
         specifier: 0.30.0-next.0
         version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/router':
-        specifier: ^0.15.0
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -162,8 +162,8 @@ importers:
   apps/fixtures/notes:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.15.0
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -189,8 +189,8 @@ importers:
   apps/fixtures/todomvc:
     dependencies:
       '@solidjs/router':
-        specifier: ^0.15.0
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -210,8 +210,8 @@ importers:
   apps/landing-page:
     dependencies:
       '@solidjs/meta':
-        specifier: 0.30.0-next.0
-        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@1.9.11))(solid-js@1.9.11)
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@1.9.11)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.4(solid-js@1.9.11)
@@ -225,7 +225,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       solid-js:
-        specifier: ^1.9.11
+        specifier: ^1.9.9
         version: 1.9.11
       solid-motionone:
         specifier: ^1.0.4
@@ -274,14 +274,14 @@ importers:
         specifier: 0.30.0-next.0
         version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/router':
-        specifier: ^0.15.3
-        version: 0.15.4(solid-js@2.0.0-beta.3)
+        specifier: 0.17.0-next.1
+        version: 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.10
-        version: 0.8.10(@solidjs/router@0.15.4(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
+        version: 0.8.10(@solidjs/router@0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       '@solidjs/web':
         specifier: 2.0.0-beta.3
         version: 2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3)
@@ -2125,6 +2125,12 @@ packages:
     resolution: {integrity: sha512-WOpgg9a9T638cR+5FGbFi/IV4l2FpmBs1GpIMSPa0Ce9vyJN7Wts+X2PqMf9IYn0zUj2MlSJtm1gp7/HI/n5TQ==}
     peerDependencies:
       solid-js: ^1.8.6
+
+  '@solidjs/router@0.17.0-next.1':
+    resolution: {integrity: sha512-yfYRlELHSNS1ZXvffI+A810F+3lAH6SVPyZGR9L+SGMIUrjQ4lb+nS9+Za4/y60Nd9y7MoD8fQyXH1pXZwdEyg==}
+    peerDependencies:
+      '@solidjs/web': ^2.0.0-beta.3
+      solid-js: ^2.0.0-beta.3
 
   '@solidjs/signals@0.13.3':
     resolution: {integrity: sha512-Rlq8Kc0WtuhPv8SDNT1ANh45OUIbFKnY7AOiNmCSeOaGKlFaaYPPDxXN8qJtojykwGGwWXV6ZmHwCb1ZeY0b/A==}
@@ -7593,11 +7599,6 @@ snapshots:
     dependencies:
       solid-js: 1.9.11
 
-  '@solidjs/meta@0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@1.9.11))(solid-js@1.9.11)':
-    dependencies:
-      '@solidjs/web': 2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@1.9.11)
-      solid-js: 1.9.11
-
   '@solidjs/meta@0.30.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)':
     dependencies:
       '@solidjs/web': 2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3)
@@ -7607,8 +7608,9 @@ snapshots:
     dependencies:
       solid-js: 1.9.11
 
-  '@solidjs/router@0.15.4(solid-js@2.0.0-beta.3)':
+  '@solidjs/router@0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)':
     dependencies:
+      '@solidjs/web': 2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3)
       solid-js: 2.0.0-beta.3
 
   '@solidjs/signals@0.13.3': {}
@@ -7648,19 +7650,12 @@ snapshots:
       - crossws
       - supports-color
 
-  '@solidjs/testing-library@0.8.10(@solidjs/router@0.15.4(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)':
+  '@solidjs/testing-library@0.8.10(@solidjs/router@0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)':
     dependencies:
       '@testing-library/dom': 10.4.0
       solid-js: 2.0.0-beta.3
     optionalDependencies:
-      '@solidjs/router': 0.15.4(solid-js@2.0.0-beta.3)
-
-  '@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@1.9.11)':
-    dependencies:
-      '@solidjs/signals': 0.13.3
-      seroval: 1.5.0
-      seroval-plugins: 1.5.0(seroval@1.5.0)
-      solid-js: 1.9.11
+      '@solidjs/router': 0.17.0-next.1(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
 
   '@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3)':
     dependencies:
