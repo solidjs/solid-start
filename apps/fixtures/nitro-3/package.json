@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.0",
+    "@solidjs/router": "^0.15.4",
     "@solidjs/start": "workspace:*",
-    "solid-js": "^1.9.9",
-    "nitro": "^3.0.1-alpha.2",
-    "vite": "7.1.10"
+    "nitro": "3.0.1-alpha.2",
+    "solid-js": "^1.9.11",
+    "vite": "7.3.1"
   },
   "engines": {
     "node": ">=22"
