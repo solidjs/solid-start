@@ -1,9 +1,12 @@
 import { createEffect, createSignal } from "solid-js";
 import { isServer } from "solid-js/web";
+import { serverSecret } from "~/functions/server-secret";
+import { keepAlive } from "~/utils/keep-alive-util";
 
 function serverFnWithIsServer() {
   "use server";
-
+  keepAlive("MyServerSuperSecretUniqueString3");
+  keepAlive(serverSecret);
   return isServer;
 }
 
