@@ -43,7 +43,6 @@ function convertObjectToModule(object: Record<string, string>): string {
   for (const key in object) {
     result += `export const ${key} = ${JSON.stringify(object[key])};`;
   }
-  console.log(result);
   return result;
 }
 
