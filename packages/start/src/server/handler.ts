@@ -254,6 +254,10 @@ function produceResponseWithEventHeaders(res: Response) {
 }
 
 function stripBaseUrl(path: string) {
-  if (import.meta.env.BASE_URL === "/" || import.meta.env.BASE_URL === "") return path;
-  return path.slice(import.meta.env.BASE_URL.length);
+  const base =
+    import.meta.env.SERVER_BASE_URL || import.meta.env.BASE_URL || "/";
+  if (base === "/" || base === "") return path;
+  const normalizedBase = base.endsWith("/") ? base.slice(0, -1) : base;
+  if (normalizedBase === "") return path;
+  return path.startsWith(normalizedBase) ? path.slice(normalizedBase.length) || "/" : path;
 }

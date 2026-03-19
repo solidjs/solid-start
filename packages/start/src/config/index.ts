@@ -73,7 +73,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
         };
       },
-      async config(_, env) {
+      async config(config, env) {
         const clientInput = [handlers.client];
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
@@ -143,6 +143,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify(
+              (config as { server?: { baseURL?: string } })?.server?.baseURL ?? "",
+            ),
           },
           builder: {
             sharedPlugins: true,
