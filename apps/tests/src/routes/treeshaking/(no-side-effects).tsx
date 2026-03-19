@@ -1,4 +1,4 @@
-import { createAsync } from "@solidjs/router";
+import { createMemo } from "solid-js";
 
 const a = 1;
 
@@ -13,6 +13,6 @@ async function getGetA() {
 }
 
 export default function Treeshaking() {
-  const s = createAsync(() => getGetA());
+  const s = createMemo(() => getGetA());
   return <h1>hello: {s()}</h1>;
 }
