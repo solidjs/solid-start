@@ -8,12 +8,12 @@ const LOADERS = {
 
 export interface EnvPluginOptions {
   server?: {
-    runtime: keyof typeof LOADERS | (string & {});
-    load?: () => Record<string, string>;
+    runtime?: keyof typeof LOADERS | (string & {});
+    load?: (mode: string) => Record<string, string>;
     prefix?: string;
   };
   client?: {
-    load?: () => Record<string, string>;
+    load?: (mode: string) => Record<string, string>;
     prefix?: string;
   };
 }
@@ -77,13 +77,13 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
           return SERVER_ONLY_MODULE;
         }
         const vars = currentOptions.server?.load
-          ? currentOptions.server.load()
+          ? currentOptions.server.load(env)
           : loadEnv(env, '.', serverPrefix);
         return convertObjectToModule(vars);
       }
       if (id === CLIENT_ENV) {
         const vars = currentOptions.client?.load
-          ? currentOptions.client.load()
+          ? currentOptions.client.load(env)
           : loadEnv(env, '.', clientPrefix);
         return convertObjectToModule(vars);
       }
