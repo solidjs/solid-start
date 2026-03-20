@@ -81,4 +81,10 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/server-function-blob");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
   });
+
+  // TODO not sure if this is the correct place
+  test("should build with a env:server", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-env");
+    await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+  });
 });
