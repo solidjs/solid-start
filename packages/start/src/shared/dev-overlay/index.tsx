@@ -6,8 +6,8 @@ import {
   onSettled,
   type JSX,
 } from "solid-js";
-import { HttpStatusCode } from "../HttpStatusCode.ts";
 import clientOnly from "../clientOnly.ts";
+import { HttpStatusCode } from "../HttpStatusCode.ts";
 
 export interface DevOverlayProps {
   children?: JSX.Element;
@@ -44,7 +44,7 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
   return (
     <>
       <Errored
-        fallback={(error) => {
+        fallback={error => {
           pushError(error);
           return <HttpStatusCode code={500} />;
         }}
