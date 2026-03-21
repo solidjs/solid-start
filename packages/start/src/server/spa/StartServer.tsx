@@ -1,7 +1,7 @@
 // @refresh skip
 // @ts-ignore
 import type { Component } from "solid-js";
-import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
+import { NoHydration, getRequestEvent, ssr } from "@solidjs/web";
 import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 
 import { TopErrorBoundary } from "../../shared/ErrorBoundary.tsx";

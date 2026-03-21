@@ -13,7 +13,7 @@ const Comment: Component<{ comment: CommentDefinition }> = props => {
       <div class="text" innerHTML={props.comment.content} />
       <Show when={props.comment.comments.length}>
         <Toggle>
-          <For each={props.comment.comments}>{comment => <Comment comment={comment} />}</For>
+          <For each={props.comment.comments}>{comment => <Comment comment={comment()} />}</For>
         </Toggle>
       </Show>
     </li>

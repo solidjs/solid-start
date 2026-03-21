@@ -287,6 +287,7 @@
   color: rgba(115, 138, 148, .4)
 }
 
-[data-start-dev-overlay-error-line] {
+[data-start-dev-overlay-error-line],
+.dev-overlay-error-line {
   background-color: rgba(239, 68, 68, .4);
 }

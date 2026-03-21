@@ -2,10 +2,10 @@
 import ErrorStackParser from "error-stack-parser";
 import * as htmlToImage from "html-to-image";
 import type { JSX } from "solid-js";
-import { createMemo, createSignal, ErrorBoundary, For, Show, Suspense } from "solid-js";
-import { Portal } from "solid-js/web";
-// @ts-ignore - terracotta module resolution issue with NodeNext
-import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from "terracotta";
+import { Errored, For, Loading, Show, createMemo, createSignal } from "solid-js";
+import { Portal } from "@solidjs/web";
+import { Dialog, DialogOverlay, DialogPanel } from 'terracotta/dialog';
+import { Select, SelectOption } from 'terracotta/select';
 import info from "../../../package.json" with { type: "json" };
 import { CodeView } from "./CodeView.tsx";
 import { createStackFrame, type StackFrameSource } from "./createStackFrame.ts";
@@ -91,29 +91,29 @@ function StackFramesContent(props: StackFramesContentProps) {
   return (
     <div data-start-dev-overlay-stack-frames-content>
       <div data-start-dev-overlay-stack-frames-code>
-        <ErrorBoundary fallback={null}>
+        <Errored fallback={null}>
           {(() => {
             const data = createStackFrame(selectedFrame(), () => props.isCompiled);
             return (
-              <Suspense fallback={<CodeFallback />}>
+              <Loading fallback={<CodeFallback />}>
                 <Show when={data()} keyed fallback={<CodeFallback />}>
                   {source => (
                     <>
-                      <span data-start-dev-overlay-stack-frames-code-source>{source.source}</span>
+                      <span data-start-dev-overlay-stack-frames-code-source>{source().source}</span>
                       <div data-start-dev-overlay-stack-frames-code-container>
                         <CodeView
-                          fileName={source.source}
-                          line={source.line}
-                          content={source.content}
+                          fileName={source().source}
+                          line={source().line}
+                          content={source().content}
                         />
                       </div>
                     </>
                   )}
                 </Show>
-              </Suspense>
+              </Loading>
             );
           })()}
-        </ErrorBoundary>
+        </Errored>
       </div>
       <Select<ErrorStackParser.StackFrame>
         data-start-dev-overlay-stack-frames
@@ -122,42 +122,42 @@ function StackFramesContent(props: StackFramesContentProps) {
       >
         <For each={stackframes}>
           {current => (
-            <ErrorBoundary
+            <Errored
               fallback={
                 <div data-start-dev-overlay-stack-frame>
                   <span data-start-dev-overlay-stack-frame-function>
-                    {current.functionName ?? "<anonymous>"}
+                    {current().functionName ?? "<anonymous>"}
                   </span>
                   <span data-start-dev-overlay-stack-frame-file>
                     {getFilePath({
-                      source: current.getFileName()!,
+                      source: current().getFileName()!,
                       content: "",
-                      line: current.getLineNumber()!,
-                      column: current.getColumnNumber()!,
-                      name: current.getFunctionName(),
+                      line: current().getLineNumber()!,
+                      column: current().getColumnNumber()!,
+                      name: current().getFunctionName(),
                     })}
                   </span>
                 </div>
               }
             >
               {(() => {
-                const data = createStackFrame(current, () => props.isCompiled);
+                const data = createStackFrame(current(), () => props.isCompiled);
                 return (
-                  <Suspense>
+                  <Loading>
                     <Show when={data()} keyed>
                       {source => (
-                        <SelectOption data-start-dev-overlay-stack-frame value={current}>
+                        <SelectOption data-start-dev-overlay-stack-frame value={current()}>
                           <span data-start-dev-overlay-stack-frame-function>
-                            {source.name ?? "<anonymous>"}
+                            {source().name ?? "<anonymous>"}
                           </span>
-                          <span data-start-dev-overlay-stack-frame-file>{getFilePath(source)}</span>
+                          <span data-start-dev-overlay-stack-frame-file>{getFilePath(source())}</span>
                         </SelectOption>
                       )}
                     </Show>
-                  </Suspense>
+                  </Loading>
                 );
               })()}
-            </ErrorBoundary>
+            </Errored>
           )}
         </For>
       </Select>
@@ -173,7 +173,7 @@ interface StackFramesProps {
 function StackFrames(props: StackFramesProps) {
   return (
     <Show when={props.error instanceof Error && props.error} keyed>
-      {current => <StackFramesContent error={current} isCompiled={props.isCompiled} />}
+      {current => <StackFramesContent error={current()} isCompiled={props.isCompiled} />}
     </Show>
   );
 }
@@ -302,8 +302,8 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
               <Show when={props.errors[truncated() - 1]} keyed>
                 {current => (
                   <div data-start-dev-overlay-content>
-                    <ErrorInfo error={current} />
-                    <StackFrames error={current} isCompiled={isCompiled()} />
+                    <ErrorInfo error={current()} />
+                    <StackFrames error={current()} isCompiled={isCompiled()} />
                   </div>
                 )}
               </Show>

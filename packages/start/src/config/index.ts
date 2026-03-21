@@ -91,6 +91,12 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         return {
           appType: "custom",
           build: { assetsDir: "_build/assets" },
+          optimizeDeps: {
+            include: [
+              "@solidjs/start > seroval",
+              "@solidjs/start > seroval-plugins/web",
+            ],
+          },
           environments: {
             [VITE_ENVIRONMENTS.client]: {
               consumer: "client",

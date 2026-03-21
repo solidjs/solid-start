@@ -1,5 +1,5 @@
-import { createEffect, createSignal } from "solid-js";
-import { isServer } from "solid-js/web";
+import { createSignal, onSettled } from "solid-js";
+import { isServer } from "@solidjs/web";
 import { serverSecret } from "~/functions/server-secret";
 import { keepAlive } from "~/utils/keep-alive-util";
 
@@ -13,7 +13,7 @@ function serverFnWithIsServer() {
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithIsServer?: boolean }>({});
 
-  createEffect(async () => {
+  onSettled(async () => {
     const result = await serverFnWithIsServer();
     setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
   });

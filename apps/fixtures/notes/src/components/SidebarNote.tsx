@@ -7,12 +7,11 @@
  */
 
 import { useLocation } from "@solidjs/router";
-import { createEffect, createSignal, Show, useTransition } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 import { Note } from "~/lib/types";
 
 export default function SidebarNote(props: { note: Note }) {
   const location = useLocation();
-  const [isPending] = useTransition();
   const [isExpanded, setIsExpanded] = createSignal(false);
   const isActive = () => {
     return location.pathname.startsWith(`/notes/${props.note.id}`);
@@ -20,12 +19,15 @@ export default function SidebarNote(props: { note: Note }) {
   let itemRef!: HTMLDivElement;
 
   let title = props.note.title;
-  createEffect(() => {
-    if (props.note.title !== title) {
-      title = props.note.title;
-      itemRef.classList.add("flash");
-    }
-  });
+  createEffect(
+    () => props.note.title,
+    (newTitle) => {
+      if (newTitle !== title) {
+        title = newTitle;
+        itemRef.classList.add("flash");
+      }
+    },
+  );
 
   return (
     <div
@@ -46,11 +48,9 @@ export default function SidebarNote(props: { note: Note }) {
         href={`/notes/${props.note.id}`}
         class="sidebar-note-open"
         style={{
-          "background-color": isPending()
-            ? "var(--gray-80)"
-            : isActive()
-              ? "var(--tertiary-blue)"
-              : "",
+          "background-color": isActive()
+            ? "var(--tertiary-blue)"
+            : "",
           border: isActive() ? "1px solid var(--primary-border)" : "1px solid transparent",
         }}
       >

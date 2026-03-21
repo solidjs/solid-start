@@ -40,7 +40,8 @@
     "@babel/core": "^7.29.0",
     "@babel/traverse": "^7.29.0",
     "@babel/types": "^7.29.0",
-    "@solidjs/meta": "^0.29.4",
+    "@solidjs/meta": "0.30.0-next.0",
+    "@solidjs/web": "2.0.0-beta.4",
     "@tanstack/server-functions-plugin": "1.134.5",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.10",
@@ -59,11 +60,11 @@
     "seroval": "^1.5.1",
     "seroval-plugins": "^1.5.1",
     "shiki": "^1.29.2",
-    "solid-js": "^1.9.11",
+    "solid-js": "2.0.0-beta.4",
     "source-map-js": "^1.2.1",
     "srvx": "^0.11.9",
-    "terracotta": "^1.1.0",
-    "vite-plugin-solid": "^2.11.11"
+    "terracotta": "2.0.0-next.2",
+    "vite-plugin-solid": "3.0.0-next.2"
   },
   "engines": {
     "node": ">=22"
