@@ -4,16 +4,8 @@ import * as htmlToImage from "html-to-image";
 import type { JSX } from "solid-js";
 import { Errored, For, Show, Loading, createMemo, createSignal } from "solid-js";
 import { Portal } from "@solidjs/web";
-// @ts-ignore - terracotta removed during Solid 2.0 migration; stubbed below
-// import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from "terracotta";
-
-// Minimal stubs for terracotta components (removed during Solid 2.0 migration).
-// These are only used in the dev error overlay so exact behaviour is not critical.
-function Dialog(props: any) { return <div class={props.class}>{props.children}</div>; }
-function DialogOverlay(props: any) { return <div class={props.class} />; }
-function DialogPanel(props: any) { return <div ref={props.ref} class={props.class}>{props.children}</div>; }
-function Select<T>(props: any) { return <div class={props.class}>{props.children}</div>; }
-function SelectOption(props: any) { return <div class={props.class}>{props.children}</div>; }
+import { Dialog, DialogOverlay, DialogPanel } from 'terracotta/dialog';
+import { Select, SelectOption } from 'terracotta/select';
 import info from "../../../package.json" with { type: "json" };
 import { CodeView } from "./CodeView.tsx";
 import { createStackFrame, type StackFrameSource } from "./createStackFrame.ts";
