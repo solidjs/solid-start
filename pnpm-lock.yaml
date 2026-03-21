@@ -411,8 +411,8 @@ importers:
         specifier: ^0.11.9
         version: 0.11.12
       terracotta:
-        specifier: 2.0.0-next.0
-        version: 2.0.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
+        specifier: 2.0.0-next.2
+        version: 2.0.0-next.2(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3)
       vite-plugin-solid:
         specifier: 3.0.0-next.2
         version: 3.0.0-next.2(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -2834,11 +2834,11 @@ packages:
       solid-js:
         optional: true
 
-  babel-preset-solid@2.0.0-beta.3:
-    resolution: {integrity: sha512-hV8Gi0Akolju1ydXNZNmt/SWcvGSWX5mqg+HHQFU2/iz22MDMflRSJrhaqrmN0gxJin9s3A/x3A20HqmcGhkBg==}
+  babel-preset-solid@2.0.0-beta.4:
+    resolution: {integrity: sha512-5WllDZ3vUlQHFsH21vccTqGWxZaiwH/oQeQcU32P4b4XAlDio3wuVc2rYLaY9A2sDQ+SRuE2oPeC+5zaXZC4LQ==}
     peerDependencies:
       '@babel/core': ^7.0.0
-      solid-js: ^2.0.0-beta.3
+      solid-js: ^2.0.0-beta.4
     peerDependenciesMeta:
       solid-js:
         optional: true
@@ -5028,12 +5028,12 @@ packages:
     peerDependencies:
       solid-js: ^1.8
 
-  terracotta@2.0.0-next.0:
-    resolution: {integrity: sha512-9RrkiOZQjUtolRERXmCHYiY3qw3WsyJqzw5otlfUZCcWTl5G5SY6e0zmG6V6okjUf10InZuQV4ZWON2d0xHj4A==}
+  terracotta@2.0.0-next.2:
+    resolution: {integrity: sha512-UORIHiWeF1Z5svbPjCVEqZ5LKmbyNEe52HXqtUh0yFFS7zOBiQbL75x8vZLb0TlbxaLk31ZwUbyfE/z5x0O85w==}
     engines: {node: '>=20'}
     peerDependencies:
-      '@solidjs/web': 2.0.0-beta.3
-      solid-js: 2.0.0-beta.3
+      '@solidjs/web': ^2.0.0-beta.4
+      solid-js: ^2.0.0-beta.4
 
   terser@5.44.0:
     resolution: {integrity: sha512-nIVck8DK+GM/0Frwd+nIhZ84pR/BX7rmXMfYwyg+Sri5oGVE99/E3KvXqpC2xHFxyqXyGHTKBSioxxplrO4I4w==}
@@ -7978,7 +7978,7 @@ snapshots:
     optionalDependencies:
       solid-js: 1.9.11
 
-  babel-preset-solid@2.0.0-beta.3(@babel/core@7.28.3)(solid-js@2.0.0-beta.3):
+  babel-preset-solid@2.0.0-beta.4(@babel/core@7.28.3)(solid-js@2.0.0-beta.3):
     dependencies:
       '@babel/core': 7.28.3
       babel-plugin-jsx-dom-expressions: 0.41.0-next.11(@babel/core@7.28.3)
@@ -10342,7 +10342,7 @@ snapshots:
       solid-js: 1.9.11
       solid-use: 0.9.1(solid-js@1.9.11)
 
-  terracotta@2.0.0-next.0(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3):
+  terracotta@2.0.0-next.2(@solidjs/web@2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3))(solid-js@2.0.0-beta.3):
     dependencies:
       '@solidjs/web': 2.0.0-beta.3(@solidjs/signals@0.13.3)(solid-js@2.0.0-beta.3)
       solid-js: 2.0.0-beta.3
@@ -10658,7 +10658,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.3
       '@types/babel__core': 7.20.5
-      babel-preset-solid: 2.0.0-beta.3(@babel/core@7.28.3)(solid-js@2.0.0-beta.3)
+      babel-preset-solid: 2.0.0-beta.4(@babel/core@7.28.3)(solid-js@2.0.0-beta.3)
       merge-anything: 5.1.7
       solid-js: 2.0.0-beta.3
       solid-refresh: 0.8.0-next.4(solid-js@2.0.0-beta.3)

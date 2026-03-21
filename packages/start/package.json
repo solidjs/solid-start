@@ -63,7 +63,7 @@
     "solid-js": "2.0.0-beta.3",
     "source-map-js": "^1.2.1",
     "srvx": "^0.11.9",
-    "terracotta": "2.0.0-next.0",
+    "terracotta": "2.0.0-next.2",
     "vite-plugin-solid": "3.0.0-next.2"
   },
   "engines": {
