@@ -10,6 +10,7 @@ import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "./server-functions-handler.ts";
+import { stripPathBase } from "./strip-path-base.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
@@ -254,6 +255,7 @@ function produceResponseWithEventHeaders(res: Response) {
 }
 
 function stripBaseUrl(path: string) {
-  if (import.meta.env.BASE_URL === "/" || import.meta.env.BASE_URL === "") return path;
-  return path.slice(import.meta.env.BASE_URL.length);
+  const base =
+    import.meta.env.SERVER_BASE_URL || import.meta.env.BASE_URL || "/";
+  return stripPathBase(path, base);
 }
