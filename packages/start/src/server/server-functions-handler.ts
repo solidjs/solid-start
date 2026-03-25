@@ -200,7 +200,7 @@ function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // unclear if h3 internals are available on all platforms but we need a way to
   // update request headers on the underlying H3 event.
 
-  const headers = sourceEvent.request.headers;
+  const headers = new Headers(sourceEvent.request.headers);
   const cookies = parseCookies(sourceEvent.nativeEvent);
   const SetCookies = sourceEvent.response.headers.getSetCookie();
   headers.delete("cookie");
