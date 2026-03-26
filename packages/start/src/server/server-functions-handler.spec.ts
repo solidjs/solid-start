@@ -33,6 +33,7 @@ function createMockFetchEvent(headers: Record<string, string> = {}): FetchEvent 
       },
     },
     nativeEvent: {},
+    locals: {},
   } as FetchEvent;
 }
 
@@ -70,6 +71,7 @@ describe("createSingleFlightHeaders", () => {
         },
       },
       nativeEvent: {},
+      locals: {},
     } as FetchEvent;
 
     const originalCookieHeader = sourceEvent.request.headers.get("cookie");
