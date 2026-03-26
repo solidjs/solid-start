@@ -1,5 +1,18 @@
 # @solidjs/start
 
+## 2.0.0-alpha.3
+
+### Minor Changes
+
+- 798b285: Updated dependencies.
+- f6f0452: seroval json mode
+- b9c4ade: feat: add `env:*` runtime environment variables support
+
+### Patch Changes
+
+- ff9607c: import DevEnvironment and Rollup as type from vite
+- 2885905: fix: clone request headers in single-flight to avoid mutating immutable headers
+
 ## 2.0.0-alpha.2
 
 ### Minor Changes
