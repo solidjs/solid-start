@@ -1,8 +1,5 @@
-import { existsSync } from "node:fs";
-import { readdir, readFile } from "node:fs/promises";
-import path from "node:path";
-import { brotliDecompressSync, gunzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
+import { getBuildOutputDirs, getFiles, readFileContent } from "~/utils/build-output-utils";
 
 // Avoid full pattern to exclude this file from scan
 const SECRET_MARKER = new RegExp(`${"MyServer"}${"SuperSecretUniqueString"}\\d+`, "g");
@@ -10,21 +7,7 @@ const ALL_FILE_EXTENSIONS = /\.(ts|tsx|js|jsx|mjs|cjs|mts|cts|css|map|gz|br)$/;
 
 describe("server code does not leak to client bundle", () => {
   it("verifies secret markers are server-only and not in client output", async () => {
-    const appRoot = process.cwd();
-    const sourceRoot = path.join(appRoot, "src");
-    const serverOutputRoot = path.join(appRoot, ".output/server");
-    const clientOutputRoot = path.join(appRoot, ".output/public");
-
-    // Verify required directories exist
-    expect(existsSync(sourceRoot), `Source dir not found: ${sourceRoot}`).toBe(true);
-    expect(
-      existsSync(serverOutputRoot),
-      `Server output dir not found: ${serverOutputRoot}. Did you run the build? (pnpm --filter tests run build)`,
-    ).toBe(true);
-    expect(
-      existsSync(clientOutputRoot),
-      `Client output dir not found: ${clientOutputRoot}. Did you run the build? (pnpm --filter tests run build)`,
-    ).toBe(true);
+    const { sourceRoot, serverOutputRoot, clientOutputRoot } = getBuildOutputDirs();
 
     // Collect and validate markers from source code
     const sourceMarkerCounts = await countSourceMarkers(sourceRoot);
@@ -76,23 +59,4 @@ async function countSourceMarkers(rootDir: string) {
     }
   }
   return markerCounts;
-}
-
-async function getFiles(dir: string, fileRegex: RegExp): Promise<string[]> {
-  const entries = await readdir(dir, { recursive: true, withFileTypes: true });
-  return entries
-    .filter(e => e.isFile() && fileRegex.test(e.name))
-    .map(e => path.join(e.parentPath, e.name));
-}
-
-async function readFileContent(filePath: string) {
-  if (filePath.endsWith(".br")) {
-    return brotliDecompressSync(await readFile(filePath)).toString("utf-8");
-  }
-
-  if (filePath.endsWith(".gz")) {
-    return gunzipSync(await readFile(filePath)).toString("utf-8");
-  }
-
-  return readFile(filePath, "utf-8");
 }
