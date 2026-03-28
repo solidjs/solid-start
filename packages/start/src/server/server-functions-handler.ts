@@ -195,12 +195,12 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
 }
 
 let App: any;
-function createSingleFlightHeaders(sourceEvent: FetchEvent) {
+export function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // cookie handling logic is pretty simplistic so this might be imperfect
   // unclear if h3 internals are available on all platforms but we need a way to
   // update request headers on the underlying H3 event.
 
-  const headers = sourceEvent.request.headers;
+  const headers = new Headers(sourceEvent.request.headers);
   const cookies = parseCookies(sourceEvent.nativeEvent);
   const SetCookies = sourceEvent.response.headers.getSetCookie();
   headers.delete("cookie");
