@@ -2,7 +2,7 @@
 import ErrorStackParser from "error-stack-parser";
 import * as htmlToImage from "html-to-image";
 import type { JSX } from "solid-js";
-import { ErrorBoundary, For, Show, Suspense, createMemo, createSignal } from "solid-js";
+import { createMemo, createSignal, ErrorBoundary, For, Show, Suspense } from "solid-js";
 import { Portal } from "solid-js/web";
 // @ts-ignore - terracotta module resolution issue with NodeNext
 import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from "terracotta";
@@ -47,9 +47,9 @@ function ErrorInfo(props: ErrorInfoProps): JSX.Element {
   });
 
   return (
-    <span class="dev-overlay-error-info">
-      <span class="dev-overlay-error-info-name">{error().name}</span>
-      <span class="dev-overlay-error-info-message">{error().message}</span>
+    <span data-start-dev-overlay-error-info>
+      <span data-start-dev-overlay-error-info-name>{error().name}</span>
+      <span data-start-dev-overlay-error-info-message>{error().message}</span>
     </span>
   );
 }
@@ -77,7 +77,7 @@ function getFilePath(source: StackFrameSource) {
 
 function CodeFallback(): JSX.Element {
   return (
-    <div class="dev-overlay-stack-frames-code-fallback">
+    <div data-start-dev-overlay-stack-frames-code-fallback>
       <span>Source not available.</span>
     </div>
   );
@@ -89,8 +89,8 @@ function StackFramesContent(props: StackFramesContentProps) {
   const [selectedFrame, setSelectedFrame] = createSignal(stackframes[0]!);
 
   return (
-    <div class="dev-overlay-stack-frames-content">
-      <div class="dev-overlay-stack-frames-code">
+    <div data-start-dev-overlay-stack-frames-content>
+      <div data-start-dev-overlay-stack-frames-code>
         <ErrorBoundary fallback={null}>
           {(() => {
             const data = createStackFrame(selectedFrame(), () => props.isCompiled);
@@ -99,8 +99,8 @@ function StackFramesContent(props: StackFramesContentProps) {
                 <Show when={data()} keyed fallback={<CodeFallback />}>
                   {source => (
                     <>
-                      <span class="dev-overlay-stack-frames-code-source">{source.source}</span>
-                      <div class="dev-overlay-stack-frames-code-container">
+                      <span data-start-dev-overlay-stack-frames-code-source>{source.source}</span>
+                      <div data-start-dev-overlay-stack-frames-code-container>
                         <CodeView
                           fileName={source.source}
                           line={source.line}
@@ -116,7 +116,7 @@ function StackFramesContent(props: StackFramesContentProps) {
         </ErrorBoundary>
       </div>
       <Select<ErrorStackParser.StackFrame>
-        class="dev-overlay-stack-frames"
+        data-start-dev-overlay-stack-frames
         value={selectedFrame()}
         onChange={setSelectedFrame}
       >
@@ -124,11 +124,11 @@ function StackFramesContent(props: StackFramesContentProps) {
           {current => (
             <ErrorBoundary
               fallback={
-                <div class="dev-overlay-stack-frame">
-                  <span class="dev-overlay-stack-frame-function">
+                <div data-start-dev-overlay-stack-frame>
+                  <span data-start-dev-overlay-stack-frame-function>
                     {current.functionName ?? "<anonymous>"}
                   </span>
-                  <span class="dev-overlay-stack-frame-file">
+                  <span data-start-dev-overlay-stack-frame-file>
                     {getFilePath({
                       source: current.getFileName()!,
                       content: "",
@@ -146,11 +146,11 @@ function StackFramesContent(props: StackFramesContentProps) {
                   <Suspense>
                     <Show when={data()} keyed>
                       {source => (
-                        <SelectOption class="dev-overlay-stack-frame" value={current}>
-                          <span class="dev-overlay-stack-frame-function">
+                        <SelectOption data-start-dev-overlay-stack-frame value={current}>
+                          <span data-start-dev-overlay-stack-frame-function>
                             {source.name ?? "<anonymous>"}
                           </span>
-                          <span class="dev-overlay-stack-frame-file">{getFilePath(source)}</span>
+                          <span data-start-dev-overlay-stack-frame-file>{getFilePath(source)}</span>
                         </SelectOption>
                       )}
                     </Show>
@@ -249,44 +249,44 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
 
   return (
     <Portal>
-      <Dialog class="dev-overlay" isOpen>
+      <Dialog data-start-dev-overlay isOpen>
         <div>
-          <DialogOverlay class="dev-overlay-background" />
-          <DialogPanel ref={setPanel} class="dev-overlay-panel-container">
-            <div class="dev-overlay-panel">
-              <div class="dev-overlay-navbar">
-                <div class="dev-overlay-navbar-left">
-                  <div class="dev-overlay-version">
+          <DialogOverlay data-start-dev-overlay-background />
+          <DialogPanel ref={setPanel} data-start-dev-overlay-panel-container>
+            <div data-start-dev-overlay-panel>
+              <div data-start-dev-overlay-navbar>
+                <div data-start-dev-overlay-navbar-left>
+                  <div data-start-dev-overlay-version>
                     <div>
                       <SolidStartIcon title="Solid Start Version" />
                     </div>
                     <span>{info.version as string}</span>
                   </div>
                   <Show when={props.errors.length > 1}>
-                    <div class="dev-overlay-pagination">
-                      <button class="dev-overlay-button" onClick={goPrev} type="button">
+                    <div data-start-dev-overlay-pagination>
+                      <button data-start-dev-overlay-button onClick={goPrev} type="button">
                         <ArrowLeftIcon title="Go Previous" />
                       </button>
-                      <div class="dev-overlay-page-counter">
+                      <div data-start-dev-overlay-page-counter>
                         {`${truncated()} of ${props.errors.length}`}
                       </div>
-                      <button class="dev-overlay-button" onClick={goNext} type="button">
+                      <button data-start-dev-overlay-button onClick={goNext} type="button">
                         <ArrowRightIcon title="Go Next" />
                       </button>
                     </div>
                   </Show>
                 </div>
-                <div class="dev-overlay-controls">
-                  <button class="dev-overlay-button" onClick={redirectToGithub} type="button">
+                <div data-start-dev-overlay-controls>
+                  <button data-start-dev-overlay-button onClick={redirectToGithub} type="button">
                     <GithubIcon title="Create an issue thread on Github" />
                   </button>
-                  <button class="dev-overlay-button" onClick={redirectToDiscord} type="button">
+                  <button data-start-dev-overlay-button onClick={redirectToDiscord} type="button">
                     <DiscordIcon title="Join our Discord Channel" />
                   </button>
-                  <button class="dev-overlay-button" onClick={downloadScreenshot} type="button">
+                  <button data-start-dev-overlay-button onClick={downloadScreenshot} type="button">
                     <CameraIcon title="Capture Error Overlay" />
                   </button>
-                  <button class="dev-overlay-button" onClick={toggleIsCompiled} type="button">
+                  <button data-start-dev-overlay-button onClick={toggleIsCompiled} type="button">
                     <Show
                       when={isCompiled()}
                       fallback={<ViewOriginalIcon title="View Original Source" />}
@@ -294,14 +294,14 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
                       <ViewCompiledIcon title="View Compiled Source" />
                     </Show>
                   </button>
-                  <button class="dev-overlay-button" onClick={props.resetError} type="button">
+                  <button data-start-dev-overlay-button onClick={props.resetError} type="button">
                     <RefreshIcon title="Reset Error" />
                   </button>
                 </div>
               </div>
               <Show when={props.errors[truncated() - 1]} keyed>
                 {current => (
-                  <div class="dev-overlay-content">
+                  <div data-start-dev-overlay-content>
                     <ErrorInfo error={current} />
                     <StackFrames error={current} isCompiled={isCompiled()} />
                   </div>
