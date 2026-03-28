@@ -20,4 +20,5 @@
     "rootDir": "./src",
   },
   "include": ["env.d.ts", "./src", "./src/env.d.ts"],
+  "exclude": ["**/*.spec.ts"]
 }

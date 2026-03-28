@@ -1,15 +1,15 @@
 // @refresh skip
 import {
-  ErrorBoundary,
-  Show,
   createEffect,
   createSignal,
+  ErrorBoundary,
+  type JSX,
   onCleanup,
   resetErrorBoundaries,
-  type JSX,
+  Show,
 } from "solid-js";
-import { HttpStatusCode } from "../HttpStatusCode.ts";
 import clientOnly from "../clientOnly.ts";
+import { HttpStatusCode } from "../HttpStatusCode.ts";
 
 export interface DevOverlayProps {
   children?: JSX.Element;
