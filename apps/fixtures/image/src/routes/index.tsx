@@ -2,8 +2,6 @@ import { Image } from "@solidjs/image";
 import { Title } from "@solidjs/meta";
 import imageData from "../images/example.jpg?image";
 
-const { src, transformer } = imageData;
-
 export default function Home() {
   return (
     <main>
@@ -14,8 +12,7 @@ export default function Home() {
       </p>
       <div style={{ width: "60vw", "margin-left": "auto", "margin-right": "auto", background: "white", padding: "1rem" }}>
         <Image
-          src={src}
-          transformer={transformer}
+          src={imageData}
           alt="Example"
         />
       </div>
