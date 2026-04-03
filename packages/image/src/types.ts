@@ -1,7 +1,7 @@
 /**
  * List of supported image types
  *
- * Based on https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types
+ * @see https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types
  */
 export type StartImageMIME =
   | "image/avif"

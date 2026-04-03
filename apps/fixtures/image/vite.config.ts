@@ -1,7 +1,11 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite";
-import { imagePlugin } from "../../../packages/image/src/vite";
-import { solidStart } from "../../../packages/start/src/config";
+import { imagePlugin } from "@solidjs/image/vite";
+import { solidStart } from "../../../packages/start/src/config/index.js";
 import { nitroV2Plugin } from "../../../packages/start-nitro-v2-vite-plugin/src";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [
@@ -49,4 +53,9 @@ export default defineConfig({
     solidStart(),
     nitroV2Plugin(),
   ],
+  // resolve: {
+  //     alias: {
+  //       "@solidjs/image": path.resolve(__dirname, "../../../packages/image/dist/index.js"),
+  //     }
+  // }
 });
