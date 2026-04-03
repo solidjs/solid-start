@@ -34,17 +34,21 @@ function createRoutesReloader(
     const envName =
       environment === "ssr" ? VITE_ENVIRONMENTS.server : VITE_ENVIRONMENTS.client;
     const devEnv = server.environments[envName];
-    if (devEnv && devEnv.moduleGraph) {
-      const mod: EnvironmentModuleNode | undefined =
-        devEnv.moduleGraph.getModuleById(moduleId);
-      if (mod) {
-        const seen = new Set<EnvironmentModuleNode>();
-        devEnv.moduleGraph.invalidateModule(mod, seen);
-      }
+    if (!devEnv?.moduleGraph) return;
+
+    const mod: EnvironmentModuleNode | undefined =
+      devEnv.moduleGraph.getModuleById(moduleId);
+    if (mod) {
+      const seen = new Set<EnvironmentModuleNode>();
+      devEnv.moduleGraph.invalidateModule(mod, seen);
     }
 
-    if (devEnv && devEnv.hot) {
-      devEnv.hot.send({ type: "full-reload" });
+    if (environment !== "ssr") {
+      if (mod) {
+        devEnv.reloadModule(mod);
+      } else if (devEnv.hot) {
+        devEnv.hot.send({ type: "full-reload" });
+      }
     }
   }
 }
