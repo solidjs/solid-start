@@ -1,5 +1,5 @@
 import middleware from "solid-start:middleware";
-import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
+import { defineEventHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
@@ -20,7 +20,7 @@ export function createBaseHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
 ) {
-  const handler = defineHandler({
+  const handler = defineEventHandler({
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
       const event = getRequestEvent()!;
