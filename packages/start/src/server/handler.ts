@@ -43,21 +43,23 @@ export function createBaseHandler(
         const mod = await match.handler.import();
         const fn =
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
-        (event as APIEvent).params = match.params || {};
-        // @ts-expect-error
-        sharedConfig.context = { event };
-        const res = await fn!(event);
-        if (res !== undefined) {
-          if (res instanceof Response) return produceResponseWithEventHeaders(res);
+        if (typeof fn === "function") {
+          (event as APIEvent).params = match.params || {};
+          // @ts-expect-error
+          sharedConfig.context = { event };
+          const res = await fn(event);
+          if (res !== undefined) {
+            if (res instanceof Response) return produceResponseWithEventHeaders(res);
 
-          return res;
+            return res;
+          }
+          if (event.request.method !== "GET") {
+            throw new Error(
+              `API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
+            );
+          }
+          if (!match.isPage) return;
         }
-        if (event.request.method !== "GET") {
-          throw new Error(
-            `API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
-          );
-        }
-        if (!match.isPage) return;
       }
 
       const context = await createPageEvent(event);
