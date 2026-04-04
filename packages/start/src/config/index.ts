@@ -1,10 +1,9 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { normalizePath, type PluginOption } from "vite";
+import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-import { ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
+import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
