@@ -1,5 +1,13 @@
 /// <reference types="vite/client" />
 
+
+/**
+ * @warning do not copy this pattern in your apps
+ * 
+ * duplicating types from @solidjs/image/env
+ * because we can't consume it within the monorepo due to the relative import
+ * in env.d.ts
+ */
 type StartImageMIME =
   | "image/avif"
   | "image/jpeg"
