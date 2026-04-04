@@ -1,13 +1,12 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { normalizePath, type PluginOption } from "vite";
+import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-import { serverFunctionsPlugin } from "../directives/index.ts";
+import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
-import { type EnvPluginOptions, envPlugin } from "./env.ts";
+import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
@@ -33,6 +32,7 @@ export interface SolidStartOptions {
     mode?: "js" | "json";
   };
   env?: EnvPluginOptions;
+  serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
 }
 
 const absolute = (path: string, root: string) =>
@@ -182,13 +182,10 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     serverFunctionsPlugin({
       manifest: VIRTUAL_MODULES.serverFnManifest,
       runtime: {
-        server: normalizePath(
-          fileURLToPath(new URL("../server/server-fns-runtime.ts", import.meta.url)),
-        ),
-        client: normalizePath(
-          fileURLToPath(new URL("../server/server-runtime.ts", import.meta.url)),
-        ),
+        server: '@solidjs/start/fns/server',
+        client: '@solidjs/start/fns/client',
       },
+      filter: options?.serverFunctions?.filter,
     }),
     {
       name: "solid-start:virtual-modules",
