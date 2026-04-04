@@ -108,55 +108,72 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                 }
               },
               ExportDefaultDeclaration(exportNamedPath) {
-                // if opts.keep is true, we don't remove the routeData export
                 if (state.opts.pick && !state.opts.pick.includes("default")) {
-                  exportNamedPath.remove();
+                  const decl = exportNamedPath.get("declaration");
+                  if (decl.node) {
+                    // Keep the declaration, just remove the export
+                    exportNamedPath.replaceWith(decl.node);
+                  } else {
+                    exportNamedPath.remove();
+                  }
                 }
               },
               ExportNamedDeclaration(exportNamedPath) {
-                // if opts.keep is false, we don't remove the routeData export
                 if (!state.opts.pick) {
                   return;
                 }
+
                 const specifiers = exportNamedPath.get("specifiers");
+
+                // Handle: export { foo, bar }
                 if (specifiers.length) {
                   specifiers.forEach(s => {
-                    if (
-                      t.isIdentifier(s.node.exported)
-                        ? s.node.exported.name
-                        : state.opts.pick.includes(s.node.exported.value)
-                    ) {
-                      s.remove();
+                    const exportedName = t.isIdentifier(s.node.exported)
+                      ? s.node.exported.name
+                      : s.node.exported.value;
+                    if (!state.opts.pick.includes(exportedName)) {
+                      s.remove(); // Remove from export list, but keep the local binding
                     }
                   });
                   if (exportNamedPath.node.specifiers.length < 1) {
-                    exportNamedPath.remove();
+                    exportNamedPath.remove(); // Remove empty export statement
                   }
                   return;
                 }
+
                 const decl = exportNamedPath.get("declaration");
                 if (decl == null || decl.node == null) {
                   return;
                 }
+
                 switch (decl.node.type) {
                   case "FunctionDeclaration": {
                     const name = decl.node.id?.name;
-                    if (name && state.opts.pick && !state.opts.pick.includes(name)) {
-                      exportNamedPath.remove();
+                    if (name && !state.opts.pick.includes(name)) {
+                      // REPLACE export function foo() {} with function foo() {}
+                      // Don't remove - just remove the export!
+                      exportNamedPath.replaceWith(decl.node);
                     }
                     break;
                   }
                   case "VariableDeclaration": {
-                    const inner = decl.get("declarations") as Array<NodePath<any>>;
+                    const inner = decl.get("declarations");
                     inner.forEach(d => {
-                      if (d.node.id.type !== "Identifier") {
-                        return;
-                      }
+                      if (d.node.id.type !== "Identifier") return;
                       const name = d.node.id.name;
-                      if (state.opts.pick && !state.opts.pick.includes(name)) {
-                        d.remove();
+                      if (!state.opts.pick.includes(name)) {
+                        // Keep the variable, just not exported
+                        // Replace export const foo = ... with const foo = ...
+                        exportNamedPath.replaceWith(decl.node!);
                       }
                     });
+                    break;
+                  }
+                  case "ClassDeclaration": {
+                    const name = decl.node.id?.name;
+                    if (name && !state.opts.pick.includes(name)) {
+                      exportNamedPath.replaceWith(decl.node);
+                    }
                     break;
                   }
                   default: {
