@@ -19,7 +19,9 @@
     "./client/spa": "./src/client/spa/index.tsx",
     "./middleware": "./src/middleware/index.ts",
     "./http": "./src/http/index.ts",
-    "./env": "./env.d.ts"
+    "./env": "./env.d.ts",
+    "./fns/server": "./src/fns/server.ts",
+    "./fns/client": "./src/fns/client.ts"
   },
   "publishConfig": {
     "access": "public",
@@ -33,7 +35,9 @@
       "./client/spa": "./dist/client/spa/index.jsx",
       "./middleware": "./dist/middleware/index.js",
       "./http": "./dist/http/index.js",
-      "./env": "./env.d.ts"
+      "./env": "./env.d.ts",
+      "./fns/server": "./dist/fns/server.js",
+      "./fns/client": "./dist/fns/client.js"
     }
   },
   "dependencies": {
