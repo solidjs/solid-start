@@ -1,11 +1,10 @@
-import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizePath, type PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-
+import { serverFunctionsPlugin } from "../directives/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { type EnvPluginOptions, envPlugin } from "./env.ts";
@@ -190,38 +189,15 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     envPlugin(options?.env),
     // Must be placed after fsRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
-    TanStackServerFnPlugin({
-      // This is the ID that will be available to look up and import
-      // our server function manifest and resolve its module
-      manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
-      directive: "use server",
-      callers: [
-        {
-          envConsumer: "client",
-          envName: VITE_ENVIRONMENTS.client,
-          getRuntimeCode: () =>
-            `import { createServerReference } from "${normalizePath(
-              fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
-            )}"`,
-          replacer: opts => `createServerReference('${opts.functionId}')`,
-        },
-        {
-          envConsumer: "server",
-          envName: VITE_ENVIRONMENTS.server,
-          getRuntimeCode: () =>
-            `import { createServerReference } from '${normalizePath(
-              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
-            )}'`,
-          replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
-        },
-      ],
-      provider: {
-        envName: VITE_ENVIRONMENTS.server,
-        getRuntimeCode: () =>
-          `import { createServerReference } from '${normalizePath(
-            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
-          )}'`,
-        replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
+    serverFunctionsPlugin({
+      manifest: VIRTUAL_MODULES.serverFnManifest,
+      runtime: {
+        server: normalizePath(
+          fileURLToPath(new URL("../server/server-fns-runtime.ts", import.meta.url)),
+        ),
+        client: normalizePath(
+          fileURLToPath(new URL("../server/server-runtime.ts", import.meta.url)),
+        ),
       },
     }),
     {

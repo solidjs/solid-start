@@ -96,7 +96,7 @@ async function fetchServerFunction(
   return result;
 }
 
-export function createServerReference(id: string) {
+export function cloneServerReference(id: string) {
   let baseURL = import.meta.env.BASE_URL ?? "/";
   if (!baseURL.endsWith("/")) baseURL += "/";
 
