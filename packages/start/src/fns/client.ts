@@ -8,7 +8,7 @@ import {
   BodyFormat,
   extractBody,
   getHeadersAndBody,
-} from "./server-functions-shared.ts";
+} from "./shared.ts";
 
 let INSTANCE = 0;
 
