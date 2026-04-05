@@ -7,7 +7,7 @@ export const VIRTUAL_MODULES = {
   getClientManifest: "solid-start:get-client-manifest",
   getManifest: "solid-start:get-manifest",
   middleware: "solid-start:middleware",
-  serverFnManifest: "solidstart:server-fn-manifest",
+  serverFnManifest: "solid-start:server-fn-manifest",
   clientEntry: "solid-start:client-entry",
   serverEntry: "solid-start:server-entry",
   app: "solid-start:app",
