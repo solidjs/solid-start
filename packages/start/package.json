@@ -11,7 +11,7 @@
   },
   "exports": {
     ".": "./src/index.tsx",
-    "./config": "./src/config/index.ts",
+    "./config": "./dist/config/index.js",
     "./server": "./src/server/index.tsx",
     "./client": "./src/client/index.tsx",
     "./router": "./src/router.tsx",
