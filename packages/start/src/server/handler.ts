@@ -118,8 +118,11 @@ export function createBaseHandler(
 
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
-      if (globalThis.USING_SOLID_START_DEV_SERVER) return stream;
-
+      if (globalThis.USING_SOLID_START_DEV_SERVER) {
+        const { writable, readable } = new TransformStream();
+        stream.pipeTo(writable);
+        return new Response(readable, { headers: { "content-type": "text/html" } });
+      }
       // returning stream directly breaks cloudflare workers
       const { writable, readable } = new TransformStream();
       stream.pipeTo(writable);
