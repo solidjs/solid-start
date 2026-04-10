@@ -30,7 +30,7 @@ export const route = {
 } satisfies RouteDefinition;
 
 export default function TodoApp(props: RouteSectionProps) {
-  const todos = createProjection(() => getTodos());
+  const todos = createProjection(() => getTodos(), []);
   const location = props.location;
 
   const addingTodo = useSubmissions(addTodo);

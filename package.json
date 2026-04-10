@@ -46,7 +46,7 @@
   "packageManager": "pnpm@10.8.1",
   "pnpm": {
     "overrides": {
-      "vite-plugin-solid@3.0.0-next.2>babel-preset-solid": "next"
+      "vite-plugin-solid@3.0.0-next.4>babel-preset-solid": "next"
     }
   }
 }
