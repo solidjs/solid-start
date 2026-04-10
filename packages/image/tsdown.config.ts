@@ -14,7 +14,7 @@ export default defineConfig([
     outExtensions: () => ({
       js: ".jsx",
     }),
-    external: ["solid-js", "vite", "sharp", "*.css"],
+    external: ["solid-js", "vite", "sharp", /\.css$/],
   },
   {
     entry: {
