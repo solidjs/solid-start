@@ -10,10 +10,11 @@ export default defineConfig([
     tsconfig: "tsconfig.build.json",
     clean: true,
     platform: "browser",
+    inputOptions: { jsx: "preserve" },
     outExtensions: () => ({
-      js: ".js",
+      js: ".jsx",
     }),
-    external: ["solid-js", "vite", "sharp"],
+    external: ["solid-js", "vite", "sharp", "*.css"],
   },
   {
     entry: {

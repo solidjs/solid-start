@@ -4,7 +4,7 @@
   "type": "module",
   "types": "./env.d.ts",
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && cp src/styles.css dist/styles.css",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit -p tsconfig.build.json",
     "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only"
@@ -16,14 +16,20 @@
     "README.md"
   ],
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "solid": "./dist/index.jsx",
+      "default": "./dist/index.jsx"
+    },
     "./vite": "./dist/vite.js",
     "./env": "./env.d.ts"
   },
   "publishConfig": {
     "access": "public",
     "exports": {
-      ".": "./dist/index.js",
+      ".": {
+        "solid": "./dist/index.jsx",
+        "default": "./dist/index.jsx"
+      },
       "./vite": "./dist/vite.js",
       "./env": "./env.d.ts"
     }
