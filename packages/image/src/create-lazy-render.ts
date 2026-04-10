@@ -1,5 +1,4 @@
-import { createSignal } from "solid-js";
-import { isServer } from "solid-js/web";
+import { createEffect, createSignal, onCleanup } from "solid-js";
 
 export interface LazyRender<T extends HTMLElement> {
   ref: (value: T) => void;
@@ -14,66 +13,51 @@ export function createLazyRender<T extends HTMLElement>(
   options?: LazyRenderOptions,
 ): LazyRender<T> {
   const [visible, setVisible] = createSignal(false);
-  let element: T | null = null;
-  let observer: IntersectionObserver | null = null;
 
-  function setupObserver(el: T) {
-    if (isServer) return;
-    
-    if (observer) {
-      observer.disconnect();
+  // We use a reactive ref here so that the component
+  // re-renders if the host element changes, therefore
+  // re-evaluating our intersection logic
+  const [ref, setRef] = createSignal<T | null>(null);
+
+  createEffect(() => {
+    // If the host changed, make sure that
+    // visibility is set to false
+    setVisible(false);
+    const shouldRefresh = options?.refresh;
+
+    const current = ref();
+    if (!current) {
+      return;
     }
-    
-    observer = new IntersectionObserver(entries => {
-      console.log("[lazy-render] intersection:", entries);
+
+    const observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
-        if (entry.isIntersecting) {
-          console.log("[lazy-render] element is intersecting, setting visible to true");
+        if (shouldRefresh) {
+          setVisible(entry.isIntersecting);
+        } else if (entry.isIntersecting) {
+          // Host intersected, set visibility to true
           setVisible(true);
-          observer?.disconnect();
+
+          // Stop observing
+          observer.disconnect();
         }
       }
     });
 
-    observer.observe(el);
-    
-    // Check immediately in case element is already visible
-    requestAnimationFrame(() => {
-      if (!el || !observer) return;
-      const rect = el.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-      console.log("[lazy-render] rect:", rect, "isVisible:", isVisible);
-      if (isVisible) {
-        setVisible(true);
-        observer.disconnect();
-      }
-    });
+    observer.observe(current);
 
-    // Also check after a short delay
-    setTimeout(() => {
-      if (!el || !observer) return;
-      const rect = el.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-      console.log("[lazy-render] delayed check - isVisible:", isVisible);
-      if (isVisible) {
-        setVisible(true);
-        observer.disconnect();
-      }
-    }, 100);
-  }
+    onCleanup(() => {
+      observer.unobserve(current);
+      observer.disconnect();
+    });
+  });
 
   return {
-    ref(value: T) {
-      console.log("[lazy-render] ref called with:", value);
-      element = value;
-      if (element && !isServer) {
-        setupObserver(element);
-      }
+    ref(value) {
+      return setRef(() => value);
     },
     get visible() {
-      const v = visible();
-      console.log("[lazy-render] visible getter:", v);
-      return v;
+      return visible();
     },
   };
 }

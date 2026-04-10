@@ -1,3 +1,3 @@
-export { Image } from "./Image.tsx";
-export { ClientOnly } from "./client-only";
-export type { ImageProps } from "./Image.tsx";
+export { StartImage } from "./Image.tsx";
+export { ClientOnly } from "./client-only.tsx";
+export type { StartImageProps } from "./Image.tsx";

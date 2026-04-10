@@ -1,6 +1,19 @@
-import { Image } from "@solidjs/image";
+import { StartImage as Image } from "@solidjs/image";
 import { Title } from "@solidjs/meta";
+import { type JSX, onMount, Show } from "solid-js";
 import imageData from "../images/example.jpg?image";
+
+interface PlaceholderProps {
+  show: () => void;
+}
+
+function Placeholder(props: PlaceholderProps): JSX.Element {
+  onMount(() => {
+    props.show();
+  });
+
+  return <div>Loading...</div>;
+}
 
 export default function Home() {
   return (
@@ -12,8 +25,13 @@ export default function Home() {
       </p>
       <div style={{ width: "60vw", "margin-left": "auto", "margin-right": "auto", background: "white", padding: "1rem" }}>
         <Image
-          src={imageData}
+          {...imageData}
           alt="Example"
+          fallback={(visible, show) => (
+            <Show when={visible()}>
+              <Placeholder show={show} />
+            </Show>
+          )}
         />
       </div>
     </main>
