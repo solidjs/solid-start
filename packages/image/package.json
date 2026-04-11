@@ -18,20 +18,28 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "solid": "./dist/index.jsx",
       "default": "./dist/index.jsx"
     },
-    "./vite": "./dist/vite.js",
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "default": "./dist/vite.js"
+    },
     "./env": "./env.d.ts"
   },
   "publishConfig": {
     "access": "public",
     "exports": {
       ".": {
+        "types": "./dist/index.d.ts",
         "solid": "./dist/index.jsx",
         "default": "./dist/index.jsx"
       },
-      "./vite": "./dist/vite.js",
+      "./vite": {
+        "types": "./dist/vite.d.ts",
+        "default": "./dist/vite.js"
+      },
       "./env": "./env.d.ts"
     }
   },

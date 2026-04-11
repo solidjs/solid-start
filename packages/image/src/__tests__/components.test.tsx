@@ -82,7 +82,7 @@ describe("StartImage SSR", () => {
     expect(() => {
       renderToString(() => (
         <StartImage
-          src={{ source: "/test.jpg", width: 100, height: 100, options: {} }}
+          src={{ source: { source: "/test.jpg", width: 100, height: 100, options: {} } }}
           alt="test"
           fallback={() => <div>loading</div>}
         />
@@ -93,7 +93,7 @@ describe("StartImage SSR", () => {
   it("produces HTML containing the image container", () => {
     const html = renderToString(() => (
       <StartImage
-        src={{ source: "/test.jpg", width: 100, height: 100, options: {} }}
+        src={{ source: { source: "/test.jpg", width: 100, height: 100, options: {} } }}
         alt="test"
         fallback={() => <div>loading</div>}
       />
@@ -106,7 +106,7 @@ describe("StartImage SSR", () => {
   it("renders without a transformer (default <source> fallback path)", () => {
     const html = renderToString(() => (
       <StartImage
-        src={{ source: "/hero.png", width: 800, height: 600, options: {} }}
+        src={{ source: { source: "/hero.png", width: 800, height: 600, options: {} } }}
         alt="hero image"
         fallback={() => <span>placeholder</span>}
       />

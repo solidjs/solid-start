@@ -33,31 +33,31 @@ interface StartImageTransformer<T> {
 }
 
 declare module "*.jpg?image" {
-  const props: { src: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
+  const props: { source: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
   export default props;
 }
 
 declare module "*.png?image" {
-  const props: { src: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
+  const props: { source: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
   export default props;
 }
 
 declare module "*.jpeg?image" {
-  const props: { src: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
+  const props: { source: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
   export default props;
 }
 
 declare module "*.webp?image" {
-  const props: { src: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
+  const props: { source: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
   export default props;
 }
 
 declare module "*.gif?image" {
-  const props: { src: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
+  const props: { source: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
   export default props;
 }
 
 declare module "*.svg?image" {
-  const props: { src: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
+  const props: { source: StartImageSource<unknown>; transformer?: StartImageTransformer<unknown> };
   export default props;
 }
