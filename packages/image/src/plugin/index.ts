@@ -1,10 +1,10 @@
 import path from "node:path";
 import { Plugin } from "vite";
-import { getFilesFromFormat, getMIMEFromFormat, getOutputFileFromFormat } from "../transformer.ts";
-import type { StartImageFile, StartImageFormat, StartImageVariant } from "../types.ts";
-import { outputFile } from "./fs.ts";
-import { getImageData, transformImage } from "./transformers.ts";
-import xxHash32 from "./xxhash32.ts";
+import { getFilesFromFormat, getMIMEFromFormat, getOutputFileFromFormat } from "../transformer";
+import type { StartImageFile, StartImageFormat, StartImageVariant } from "../types";
+import { outputFile } from "./fs";
+import { getImageData, transformImage } from "./transformers";
+import xxHash32 from "./xxhash32";
 
 const DEFAULT_INPUT: StartImageFormat[] = ["png", "jpeg", "webp"];
 const DEFAULT_OUTPUT: StartImageFormat[] = ["png", "jpeg", "webp"];
@@ -47,7 +47,6 @@ function isValidFileExtension(extensions: Set<string>, target: string): target i
 }
 
 async function getImageSource(imagePath: string, relativePath: string): Promise<string> {
-  // TODO add format variation
   const imageData = await getImageData(imagePath);
   return `
 import source from ${JSON.stringify(relativePath)};
@@ -55,6 +54,7 @@ export default {
   width: ${JSON.stringify(imageData.width)},
   height: ${JSON.stringify(imageData.height)},
   source,
+  options: {},
 };
 `;
 }
@@ -106,15 +106,15 @@ export const imagePlugin = (options: StartImageOptions) => {
   if (options.remote) {
     const transformUrl = options.remote.transformURL;
     plugins.push({
-      name: "solid-start:image/remote",
+      name: "solidjs:image/remote",
       enforce: "pre",
-      resolveId(id) {
+      resolveId(id: string) {
         if (id.startsWith(REMOTE_PATH)) {
           return id;
         }
         return null;
       },
-      async load(id) {
+      async load(id: string) {
         if (id.startsWith(REMOTE_PATH)) {
           const param = id.substring(REMOTE_PATH.length);
 
@@ -144,20 +144,25 @@ export default {
     const validInputFileExtensions = getValidFileExtensions(inputFormat);
 
     plugins.push({
-      name: "solid-start:image/local",
+      name: "solidjs:image/local",
       enforce: "pre",
-      resolveId(id, importer) {
+      resolveId(id: string, importer?: string) {
         if (LOCAL_PATH.test(id) && importer) {
-          return path.join(path.dirname(importer), id);
+          const [pathPart, query] = id.split("?");
+          const resolved = path.join(path.dirname(importer), pathPart || id);
+          return query ? `${resolved}?${query}` : resolved;
         }
         return null;
       },
-      async load(id) {
+      async load(id: string) {
         if (id.startsWith("\0")) {
           return null;
         }
-        const { dir, name, ext } = path.parse(id);
-        const [actualExtension, condition] = ext.substring(1).split("?");
+        const [pathPart, query] = id.split("?");
+        const pathWithoutQuery = pathPart || id;
+        const { dir, name, ext } = path.parse(pathWithoutQuery);
+        const actualExtension = ext.substring(1);
+        const condition = query || "";
         // Check if extension is valid
         if (!isValidFileExtension(validInputFileExtensions, actualExtension!)) {
           return null;

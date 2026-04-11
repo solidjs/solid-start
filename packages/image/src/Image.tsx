@@ -13,9 +13,11 @@ import { getAspectRatioBoxStyle } from "./utils.ts";
 import "./styles.css";
 
 export interface StartImageProps<T> {
-  src: StartImageSource<T>;
+  src: {
+    source: StartImageSource<T>;
+    transformer?: StartImageTransformer<T>;
+  }
   alt: string;
-  transformer?: StartImageTransformer<T>;
 
   onLoad?: () => void;
   fallback: (visible: () => boolean, onLoad: () => void) => JSX.Element;
@@ -47,7 +49,7 @@ function StartImageSources<T>(props: StartImageSourcesProps<T>): JSX.Element {
   );
 }
 
-export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
+export function Image<T>(props: StartImageProps<T>): JSX.Element {
   const [showPlaceholder, setShowPlaceholder] = createSignal(true);
   const laze = createLazyRender<HTMLDivElement>();
   const [defer, setDefer] = createSignal(true);
@@ -56,8 +58,8 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
     setDefer(false);
   }
 
-  const width = createMemo(() => props.src.width);
-  const height = createMemo(() => props.src.height);
+  const width = createMemo(() => props.src.source.width);
+  const height = createMemo(() => props.src.source.height);
 
   return (
     <div ref={laze.ref} data-start-image="container">
@@ -69,8 +71,8 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
         })}
       >
         <picture data-start-image="picture">
-          <Show when={props.transformer} fallback={<source src={props.src.source} />}>
-            {cb => <StartImageSources variants={createImageVariants(props.src, cb())} {...props} />}
+          <Show when={props.src.transformer} fallback={<source src={props.src.source.source} />}>
+            {cb => <StartImageSources variants={createImageVariants(props.src.source, cb())} {...props} />}
           </Show>
           <ClientOnly
             fallback={
@@ -86,10 +88,6 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
             <Show when={laze.visible}>
               <img
                 data-start-image="image"
-                // src={getEmptyImageURL({
-                //   width: width(),
-                //   height: height(),
-                // })}
                 alt={props.alt}
                 onLoad={() => {
                   if (!defer()) {

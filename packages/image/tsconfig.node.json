@@ -3,18 +3,20 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "allowJs": true,
-    "strict": true,
-    "noEmit": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom", "@solidjs/start/env", "@solidjs/image/env"],
     "isolatedModules": true,
-    "paths": {
-      "~/*": ["./src/*"],
-    },
+    "declaration": true,
+    "skipLibCheck": true,
+    "types": ["node", "vite/client"],
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true
   },
-  "include": ["src/**/*"]
+  "include": ["./src", "./env.d.ts"],
+  "exclude": ["./dist"]
 }

@@ -1,18 +1,19 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite";
-import { imagePlugin } from "../../packages/image/src/vite";
-import { nitroV2Plugin } from "../../packages/start-nitro-v2-vite-plugin/src";
-import { solidStart } from "../../packages/start/src/config";
+import { imagePlugin } from "@solidjs/image/vite";
+import { solidStart } from "../../../packages/start/src/config/index.js";
+import { nitroV2Plugin } from "../../../packages/start-nitro-v2-vite-plugin/src";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  server: {
-    port: 3000,
-  },
   plugins: [
-    solidStart(),
     imagePlugin({
       local: {
         sizes: [480, 600],
         quality: 80,
+        output: ["avif"],
         publicPath: "public",
       },
       remote: {
@@ -49,6 +50,12 @@ export default defineConfig({
         },
       },
     }),
+    solidStart(),
     nitroV2Plugin(),
   ],
+  // resolve: {
+  //     alias: {
+  //       "@solidjs/image": path.resolve(__dirname, "../../../packages/image/dist/index.js"),
+  //     }
+  // }
 });

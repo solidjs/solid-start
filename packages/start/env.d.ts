@@ -7,19 +7,3 @@ declare namespace App {
     [key: string | symbol]: any;
   }
 }
-
-declare module 'image:*' {
-  import type { StartImageProps } from "./src/image.ts";
-
-  const props: Pick<StartImageProps<unknown>, 'src' | 'transformer'>;
-
-  export default props;
-}
-
-declare module '*?image' {
-  import type { StartImageProps } from "./src/image.ts";
-
-  const props: Pick<StartImageProps<unknown>, 'src' | 'transformer'>;
-
-  export default props;
-}

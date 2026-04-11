@@ -29,6 +29,7 @@ export function createLazyRender<T extends HTMLElement>(
     if (!current) {
       return;
     }
+
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
         if (shouldRefresh) {
