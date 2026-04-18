@@ -15,19 +15,19 @@
   },
   "dependencies": {
     "@solidjs/meta": "0.30.0-next.0",
-    "@solidjs/router": "0.17.0-next.1",
+    "@solidjs/router": "0.17.0-next.2",
     "@solidjs/start": "workspace:*",
     "@solidjs/testing-library": "^0.8.10",
     "@solidjs/signals": "0.13.11",
-    "@solidjs/web": "2.0.0-beta.6",
+    "@solidjs/web": "2.0.0-beta.7",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/user-event": "^14.6.1",
     "@vitest/ui": "^4.1.0",
     "jsdom": "^28.1.0",
     "lodash": "^4.17.23",
-    "solid-js": "2.0.0-beta.6",
+    "solid-js": "2.0.0-beta.7",
     "vite": "^7.3.1",
-    "vite-plugin-solid": "^3.0.0-next.4",
+    "vite-plugin-solid": "^3.0.0-next.5",
     "vitest": "^4.1.0"
   },
   "devDependencies": {
