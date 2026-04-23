@@ -1,4 +1,5 @@
 import { type PluginOption, type ViteDevServer } from "vite";
+import { fileURLToPath } from "node:url";
 
 import { findStylesInModuleGraph } from "../server/collect-styles.ts";
 import { VIRTUAL_MODULES } from "./constants.ts";
@@ -18,12 +19,16 @@ export function manifest(start: SolidStartOptions): PluginOption {
         return `\0${VIRTUAL_MODULES.clientViteManifest}`;
       if (id === VIRTUAL_MODULES.getClientManifest)
         return this.resolve(
-          new URL("../server/manifest/client-manifest", import.meta.url).pathname,
+          fileURLToPath(new URL("../server/manifest/client-manifest", import.meta.url)),
         );
       if (id === VIRTUAL_MODULES.getManifest) {
         return this.environment.config.consumer === "client"
-          ? this.resolve(new URL("../server/manifest/client-manifest", import.meta.url).pathname)
-          : this.resolve(new URL("../server/manifest/ssr-manifest", import.meta.url).pathname);
+          ? this.resolve(
+              fileURLToPath(new URL("../server/manifest/client-manifest", import.meta.url)),
+            )
+          : this.resolve(
+              fileURLToPath(new URL("../server/manifest/ssr-manifest", import.meta.url)),
+            );
       }
       if (id === VIRTUAL_MODULES.middleware) {
         if (start.middleware) return await this.resolve(start.middleware);
