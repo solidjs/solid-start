@@ -213,7 +213,7 @@ function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
     context.complete = true;
     const to = context.response && context.response.headers.get("Location");
-    to && write(`<script>window.location="${to}"</script>`);
+    to && write(`<script>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`);
   };
 }
 
