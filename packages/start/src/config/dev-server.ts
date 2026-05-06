@@ -14,12 +14,21 @@ export function devServer(): Array<PluginOption> {
       configurePreviewServer(server) {
         return () => {
           server.middlewares.use(async (req, res) => {
-            res.setHeader("content-encoding", "identity");
             const webReq = new NodeRequest({ req, res });
+            const { default: packageJSON } = await import(process.cwd() + "/package.json", {
+              with: { type: "json" },
+            });
             const def: {
               default: { fetch: (req: Request) => Promise<Response> };
-            } = await import(process.cwd() + "/dist/server/entry-server.js");
-            sendNodeResponse(res, await def.default.fetch(webReq));
+            } = await import(
+              process.cwd() +
+                `/dist/server/entry-server.${packageJSON.type === "module" ? "js" : "mjs"}`
+            );
+            const webRes = await def.default.fetch(webReq);
+            if (webRes.headers.get("content-type")?.startsWith("text/html")) {
+              res.setHeader("content-encoding", "identity");
+            }
+            sendNodeResponse(res, webRes);
           });
         };
       },
