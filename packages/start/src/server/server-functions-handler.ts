@@ -17,7 +17,7 @@ import {
   extractBody,
   getHeadersAndBody,
 } from "./server-functions-shared.ts";
-import "solidstart:server-fn-manifest";
+import "solid-start:server-fn-manifest";
 
 import { getServerFunction } from "./server-fns.ts";
 import type { FetchEvent, PageEvent } from "./types.ts";
