@@ -11,7 +11,7 @@ vi.mock("solid-js/web", () => ({
   provideRequestEvent: vi.fn((_event, fn) => fn()),
 }));
 
-vi.mock("solidstart:server-fn-manifest", () => ({
+vi.mock("solid-start:server-fn-manifest", () => ({
   getServerFnById: vi.fn(),
 }));
 
