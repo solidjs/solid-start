@@ -3,7 +3,6 @@ import { type H3Event, parseCookies } from "h3";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
-import { getServerFnById } from "solidstart:server-fn-manifest";
 
 import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
 import { createPageEvent } from "./handler.ts";
@@ -18,6 +17,9 @@ import {
   extractBody,
   getHeadersAndBody,
 } from "./server-functions-shared.ts";
+import "solid-start:server-fn-manifest";
+
+import { getServerFunction } from "./server-fns.ts";
 import type { FetchEvent, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
@@ -43,7 +45,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
   }
 
-  const serverFunction = await getServerFnById(functionId!);
+  const serverFunction = getServerFunction(functionId!);
 
   let parsed: any[] = [];
 
@@ -195,12 +197,12 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
 }
 
 let App: any;
-function createSingleFlightHeaders(sourceEvent: FetchEvent) {
+export function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // cookie handling logic is pretty simplistic so this might be imperfect
   // unclear if h3 internals are available on all platforms but we need a way to
   // update request headers on the underlying H3 event.
 
-  const headers = sourceEvent.request.headers;
+  const headers = new Headers(sourceEvent.request.headers);
   const cookies = parseCookies(sourceEvent.nativeEvent);
   const SetCookies = sourceEvent.response.headers.getSetCookie();
   headers.delete("cookie");
