@@ -134,6 +134,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                   }
                 : {}),
             },
+            // Depending on the package manager and dependency structure Vite externalizes @solidjs/start
+            // This makes sure that @solidjs/start goes through the Vite build process
+            noExternal: ["@solidjs/start"],
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
