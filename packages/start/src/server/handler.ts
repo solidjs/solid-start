@@ -1,5 +1,5 @@
 import middleware from "solid-start:middleware";
-import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
+import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3/generic";
 import { join } from "pathe";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";

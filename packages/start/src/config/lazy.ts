@@ -90,6 +90,7 @@ const lazy = (): PluginOption => {
       // The transformed files either import "lazy" or css files
       // Therefore we skip, if the src doesn't have any import
       if (src.indexOf("import") === -1) return;
+      if (id.includes("entry-server")) return;
 
       const plugins: PluginItem[] = [];
 
