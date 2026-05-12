@@ -9,7 +9,6 @@ import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.js";
 import { serverComponents } from "./server-components.js";
-import xxhash from './xxhash32.js';
 import xxHash32 from "./xxhash32.js";
 
 const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
@@ -40,6 +39,7 @@ function solidStartServerFsRouter(config) {
 }
 
 function getFunctionId(id) {
+  console.log(id);
   return xxHash32(id).toString(16);
 }
 
@@ -53,7 +53,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-runtime.js", import.meta.url))
       )}"`,
     replacer: opts =>
-      `createServerReference(${() => {}}, '${getFunctionId(opts.functionId)}', '${opts.extractedFilename}')`
+      `createServerReference(${() => {}}, '${(opts.functionId)}', '${getFunctionId(opts.extractedFilename)}')`
   },
   ssr: {
     getRuntimeCode: () =>
@@ -61,7 +61,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
-      `createServerReference(${opts.fn}, '${getFunctionId(opts.functionId)}', '${opts.extractedFilename}')`
+      `createServerReference(${opts.fn}, '${(opts.functionId)}', '${getFunctionId(opts.extractedFilename)}')`
   },
   server: {
     getRuntimeCode: () =>
@@ -69,7 +69,7 @@ const SolidStartServerFnsPlugin = createTanStackServerFnPlugin({
         fileURLToPath(new URL("../dist/runtime/server-fns-runtime.js", import.meta.url))
       )}'`,
     replacer: opts =>
-      `createServerReference(${opts.fn}, '${getFunctionId(opts.functionId)}', '${opts.extractedFilename}')`
+      `createServerReference(${opts.fn}, '${(opts.functionId)}', '${getFunctionId(opts.extractedFilename)}')`
   }
 });
 
