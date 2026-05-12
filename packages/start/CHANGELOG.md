@@ -1,5 +1,23 @@
 # @solidjs/start
 
+## 2.0.0-alpha.3
+
+### Minor Changes
+
+- 798b285: Updated dependencies.
+- f6f0452: seroval json mode
+- d4be1b6: Add new directives plugin with shorter function IDs and inner declaration support
+- b9c4ade: feat: add `env:*` runtime environment variables support
+
+### Patch Changes
+
+- ff9607c: import DevEnvironment and Rollup as type from vite
+- 2885905: fix: clone request headers in single-flight to avoid mutating immutable headers
+- abe3979: reload ssr server when new route files are created in dev
+- 7c288f6: Sanitize Location header value in streaming redirect script
+- 6c83886: update seroval to 1.5.4
+- 9d5d783: Add support for Vite 8 asset manifest loading
+
 ## 2.0.0-alpha.2
 
 ### Minor Changes
