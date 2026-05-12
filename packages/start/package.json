@@ -11,7 +11,7 @@
   },
   "exports": {
     ".": "./src/index.tsx",
-    "./config": "./src/config/index.ts",
+    "./config": "./dist/config/index.js",
     "./server": "./src/server/index.tsx",
     "./client": "./src/client/index.tsx",
     "./router": "./src/router.tsx",
@@ -55,7 +55,7 @@
     "path-to-regexp": "^8.3.0",
     "pathe": "^2.0.3",
     "radix3": "^1.1.2",
-    "seroval": "^1.5.1",
+    "seroval": "^1.5.4",
     "seroval-plugins": "^1.5.1",
     "shiki": "^1.29.2",
     "solid-js": "^1.9.11",
