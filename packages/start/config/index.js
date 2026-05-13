@@ -39,7 +39,6 @@ function solidStartServerFsRouter(config) {
 }
 
 function getFunctionId(id) {
-  console.log(id);
   return xxHash32(id).toString(16);
 }
 
