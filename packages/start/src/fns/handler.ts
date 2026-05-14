@@ -4,8 +4,8 @@ import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 
-import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
-import { createPageEvent } from "./handler.ts";
+import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
+import { createPageEvent } from "../server/handler.ts";
 import {
   deserializeFromJSONString,
   serializeToJSONStream,
@@ -16,12 +16,12 @@ import {
   BodyFormat,
   extractBody,
   getHeadersAndBody,
-} from "./server-functions-shared.ts";
+} from "./shared.ts";
 import "solid-start:server-fn-manifest";
 
-import { getServerFunction } from "./server-fns.ts";
-import type { FetchEvent, PageEvent } from "./types.ts";
-import { getExpectedRedirectStatus } from "./util.ts";
+import { getServerFunction } from "./registration.ts";
+import type { FetchEvent, PageEvent } from "../server/types.ts";
+import { getExpectedRedirectStatus } from "../server/util.ts";
 
 export async function handleServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
