@@ -108,7 +108,26 @@ export const getRequestHeader = createWrapperFunction(h3.getRequestHeader);
 export const getRequestURL = createWrapperFunction(h3.getRequestURL);
 export const getRequestHost = createWrapperFunction(h3.getRequestHost);
 export const getRequestProtocol = createWrapperFunction(h3.getRequestProtocol);
-export const getRequestIP = createWrapperFunction(h3.getRequestIP);
+export const getRequestIP = ((...args: any[]) => {
+  const firstArg = args[0];
+
+  if (isEvent(firstArg)) {
+    // Explicit event provided - use h3 directly without fallback
+    const h3Event: h3.H3Event =
+      firstArg instanceof h3.H3Event || (firstArg as any).__is_event__
+        ? (firstArg as h3.H3Event)
+        : (firstArg as { [HTTPEventSymbol]: h3.H3Event })[HTTPEventSymbol];
+    return h3.getRequestIP(h3Event, args[1]);
+  }
+
+  // No explicit event - use the current request's h3 event
+  const ip = h3.getRequestIP(getEvent(), firstArg);
+
+  // Fall back to the stored clientAddress in the FetchEvent.
+  // This handles adapters (e.g. Nitro) that pass a plain Web Request to the h3 app,
+  // which means h3 cannot access the IP via the srvx-specific `req.ip` getter.
+  return ip ?? getRequestEvent()?.clientAddress;
+}) as WrapFunction<typeof h3.getRequestIP>;
 export const setResponseStatus = (code?: number, text?: string) => {
   const e = getEvent();
 
