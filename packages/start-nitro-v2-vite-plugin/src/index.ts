@@ -82,6 +82,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                   generateTsConfig: false,
                   generateRuntimeConfigTypes: false,
                 },
+                compressPublicAssets: true,
                 ...nitroConfig,
                 dev: false,
                 routeRules: {
