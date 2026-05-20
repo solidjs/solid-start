@@ -35,21 +35,22 @@ function createRoutesReloader(
       const seen = new Set<EnvironmentModuleNode>();
       devEnv.moduleGraph.invalidateModule(mod, seen);
     }
-
+    
     if (environment !== "ssr") {
       if (mod) {
         devEnv.reloadModule(mod);
-
+        
         const extensions = [".css", ".scss", ".sass.", ".less"];
         for (const [file, mods] of devEnv.moduleGraph.fileToModulesMap) {
           if (extensions.some(ext => file.endsWith(ext))) {
             for (const cssModule of mods) {
               if (cssModule) {
-                devEnv.moduleGraph.invalidateModule(cssModule);
+                devEnv.reloadModule(cssModule);
               }
             }
           }
         }
+
       } else if (devEnv.hot) {
         devEnv.hot.send({ type: "full-reload" });
       }
