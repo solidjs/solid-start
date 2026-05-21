@@ -1,5 +1,11 @@
 # @solidjs/vite-plugin-nitro-2
 
+## 0.3.0-alpha.0
+
+### Minor Changes
+
+- 798b285: Updated dependencies.
+
 ## 0.2.0-alpha.0
 
 ### Minor Changes
