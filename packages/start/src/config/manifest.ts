@@ -16,6 +16,8 @@ export function manifest(start: SolidStartOptions): PluginOption {
       devServer = server;
     },
     async resolveId(id) {
+      if (id.startsWith("/@manifest/")) return id;
+
       if (id === VIRTUAL_MODULES.clientViteManifest)
         return `\0${VIRTUAL_MODULES.clientViteManifest}`;
       if (id === VIRTUAL_MODULES.getClientManifest)
