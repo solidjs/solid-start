@@ -3,7 +3,7 @@ import { join } from "pathe";
 export function getClientDevManifest() {
   return {
     import(id) {
-      return import(/* @vite-ignore */ join("/", id));
+      return import(/* @vite-ignore */ join(import.meta.env.BASE_URL, id));
     },
     async getAssets(id) {
       const assetsPath = `/@manifest/client/${Date.now()}/assets?id=${id}`;
