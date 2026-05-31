@@ -13,6 +13,7 @@ import type { PluginOption, Rollup } from "vite";
 
 let ssrBundle: Rollup.OutputBundle;
 let ssrEntryFile: string;
+let viteBase: string = "/";
 
 export type UserNitroConfig = Omit<NitroConfig, "dev" | "publicAssets" | "renderer">;
 
@@ -20,6 +21,12 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
   return [
     {
       name: "solid-start-vite-plugin-nitro",
+      configResolved(config) {
+        // Capture the resolved Vite base so the Nitro build can default its
+        // baseURL to the same subpath. A user-supplied nitroConfig.baseURL
+        // still wins; this just removes the need to set the same prefix twice.
+        viteBase = config.base ?? "/";
+      },
       generateBundle: {
         handler(_options, bundle) {
           if (this.environment.name !== "ssr") {
@@ -78,6 +85,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                 compatibilityDate: "2024-11-19",
                 logLevel: 3,
                 preset: "node-server",
+                baseURL: viteBase,
                 typescript: {
                   generateTsConfig: false,
                   generateRuntimeConfigTypes: false,
