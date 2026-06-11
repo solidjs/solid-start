@@ -9,7 +9,7 @@ import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
-import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import type { BaseFileSystemRouter, RouteModuleTransform } from "./fs-routes/router.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
@@ -19,6 +19,24 @@ export interface SolidStartOptions {
   ssr?: boolean;
   routeDir?: string;
   extensions?: string[];
+  /**
+   * Per-extension (without dot) source transforms applied before route
+   * modules are analyzed for their exports.  The analyzer parses route
+   * files with esbuild's tsx loader; extensions registered here are
+   * transformed to JS/TS/TSX first, so compile-to-JS languages can be
+   * used in the route directory:
+   *
+   * ```ts
+   * import civet from "@danielx/civet";
+   * solidStart({
+   *   extensions: ["civet"],
+   *   routeTransforms: {
+   *     civet: (code, sourcePath) => civet.compile(code, { filename: sourcePath, sync: true }),
+   *   },
+   * })
+   * ```
+   */
+  routeTransforms?: Record<string, RouteModuleTransform>;
   middleware?: string;
   serialization?: {
     /**
@@ -180,10 +198,12 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         client: new SolidStartClientFileRouter({
           dir: absolute(routeDir, root),
           extensions,
+          routeTransforms: options?.routeTransforms,
         }),
         ssr: new SolidStartServerFileRouter({
           dir: absolute(routeDir, root),
           extensions,
+          routeTransforms: options?.routeTransforms,
           dataOnly: !start.ssr,
         }),
       },
