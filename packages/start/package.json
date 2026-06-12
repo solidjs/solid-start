@@ -2,6 +2,11 @@
   "name": "@solidjs/start",
   "version": "2.0.0-alpha.3",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solidjs/solid-start.git",
+    "directory": "packages/start"
+  },
   "scripts": {
     "build": "pnpm validate-imports && tsc && node scripts/build.js",
     "dev": "tsc --watch",
