@@ -1,9 +1,4 @@
-import type {
-  EnvironmentModuleNode,
-  FSWatcher,
-  PluginOption,
-  ViteDevServer,
-} from "vite";
+import type { EnvironmentModuleNode, FSWatcher, PluginOption, ViteDevServer } from "vite";
 import { VITE_ENVIRONMENTS } from "../constants.ts";
 import { moduleId } from "./index.ts";
 import type { BaseFileSystemRouter } from "./router.ts";
@@ -31,21 +26,31 @@ function createRoutesReloader(
   return () => routes.removeEventListener("reload", handleRoutesReload);
 
   function handleRoutesReload(): void {
-    const envName =
-      environment === "ssr" ? VITE_ENVIRONMENTS.server : VITE_ENVIRONMENTS.client;
+    const envName = environment === "ssr" ? VITE_ENVIRONMENTS.server : VITE_ENVIRONMENTS.client;
     const devEnv = server.environments[envName];
     if (!devEnv?.moduleGraph) return;
 
-    const mod: EnvironmentModuleNode | undefined =
-      devEnv.moduleGraph.getModuleById(moduleId);
+    const mod: EnvironmentModuleNode | undefined = devEnv.moduleGraph.getModuleById(moduleId);
     if (mod) {
       const seen = new Set<EnvironmentModuleNode>();
       devEnv.moduleGraph.invalidateModule(mod, seen);
     }
-
+    
     if (environment !== "ssr") {
       if (mod) {
         devEnv.reloadModule(mod);
+        
+        const extensions = [".css", ".scss", ".sass.", ".less"];
+        for (const [file, mods] of devEnv.moduleGraph.fileToModulesMap) {
+          if (extensions.some(ext => file.endsWith(ext))) {
+            for (const cssModule of mods) {
+              if (cssModule) {
+                devEnv.reloadModule(cssModule);
+              }
+            }
+          }
+        }
+
       } else if (devEnv.hot) {
         devEnv.hot.send({ type: "full-reload" });
       }
