@@ -1,6 +1,6 @@
 import type { ExportSpecifier } from "es-module-lexer";
 import {
-  analyzeModule,
+  analyzeRouteModule,
   BaseFileSystemRouter,
   cleanPath,
   type FileSystemRouterConfig,
@@ -25,7 +25,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
     return routePath?.length > 0 ? `/${routePath}` : "/";
   }
 
-  toRoute(src: string) {
+  async toRoute(src: string) {
     const path = this.toPath(src);
 
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
@@ -41,7 +41,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
+    const [_, exports] = await analyzeRouteModule(src, this.config);
     const hasDefault = !!exports.find(e => e.n === "default");
     const hasRouteConfig = !!exports.find(e => e.n === "route");
     if (hasDefault) {
@@ -114,7 +114,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
     return routePath?.length > 0 ? `/${routePath}` : "/";
   }
 
-  toRoute(src: string) {
+  async toRoute(src: string) {
     const path = this.toPath(src);
     if (src.endsWith(".md") || src.endsWith(".mdx")) {
       return {
@@ -128,7 +128,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
+    const [_, exports] = await analyzeRouteModule(src, this.config);
     const hasRouteConfig = exports.find(e => e.n === "route");
     const hasDefault = !!exports.find(e => e.n === "default");
     const hasAPIRoutes = !!exports.find(exp => HTTP_METHODS.includes(exp.n));
