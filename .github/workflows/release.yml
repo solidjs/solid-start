@@ -46,6 +46,3 @@ jobs:
           commit: "chore: release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Empty token keeps changesets/action happy while npm authenticates via OIDC
-          # https://github.com/changesets/changesets/issues/1152
-          NPM_TOKEN: ""
