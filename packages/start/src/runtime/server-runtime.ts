@@ -88,8 +88,8 @@ async function fetchServerFunction(
       result = await deserializeJSONStream(cloned);
     }
   }
-  if (response.headers.has("X-Error")) {
-    throw result;
+  if (response.headers.has("X-Error") || response.status >= 500) {
+    throw result ?? new Error(`Server function call failed with status ${response.status}`);
   }
   return result;
 }
