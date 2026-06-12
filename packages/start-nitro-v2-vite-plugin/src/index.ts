@@ -110,9 +110,13 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
                 },
                 virtual: {
                   ...nitroConfig?.virtual,
-                  [virtualEntry]: `import { fromWebHandler } from 'h3'
+                  [virtualEntry]: `import { eventHandler, getRequestIP, toWebRequest } from 'h3'
                                   import handler from '${ssrEntryFile}'
-                                  export default fromWebHandler(handler.fetch)`,
+                                  export default eventHandler((event) => {
+                                    const ip = getRequestIP(event);
+                                    if (ip) event.context.clientAddress = ip;
+                                    return handler.fetch(toWebRequest(event), event.context);
+                                  })`,
                 },
               };
 

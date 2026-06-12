@@ -44,6 +44,23 @@ describe("fetchEvent", () => {
       });
     });
 
+    it("should fall back to event.context.clientAddress when getRequestIP returns undefined", () => {
+      mockedH3.getRequestIP.mockReturnValue(undefined);
+      mockH3Event.context.clientAddress = "10.0.0.1";
+
+      const fetchEvent = createFetchEvent(mockH3Event);
+
+      expect(fetchEvent.clientAddress).toBe("10.0.0.1");
+    });
+
+    it("should have undefined clientAddress when neither getRequestIP nor event.context.clientAddress is set", () => {
+      mockedH3.getRequestIP.mockReturnValue(undefined);
+
+      const fetchEvent = createFetchEvent(mockH3Event);
+
+      expect(fetchEvent.clientAddress).toBeUndefined();
+    });
+
     it("should create response stub with correct properties", () => {
       const fetchEvent = createFetchEvent(mockH3Event);
 

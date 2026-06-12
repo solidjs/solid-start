@@ -8,7 +8,7 @@ export function createFetchEvent(event: H3Event): FetchEvent {
   return {
     request: event.req,
     response: event.res,
-    clientAddress: getRequestIP(event),
+    clientAddress: getRequestIP(event) ?? (event.context.clientAddress as string | undefined),
     locals: {},
     nativeEvent: event,
   };
