@@ -52,4 +52,14 @@ describe("server-function", () => {
     cy.visit("/generator-server-function");
     cy.get("#server-fn-test").contains('¡Hola, Mundo!');
   });
+  it("should reject the promise when the response is a 5xx without an X-Error header", () => {
+    cy.intercept("POST", "/_server*", {
+      statusCode: 500,
+      headers: { "content-type": "application/json" },
+      body: { statusCode: 500, statusMessage: "boom" }
+    });
+    cy.visit("/server-function-rejected-on-500");
+    cy.get("#call").click();
+    cy.get("#server-fn-test").contains("rejected");
+  });
 });
