@@ -181,15 +181,10 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
         }
         return null;
       },
-      async load(id, opts) {
+      load(id, opts) {
         const mode = opts?.ssr ? "server" : "client";
         if (id === options.manifest) {
-          const current = new Debouncer(() =>
-            [...manifest[mode]].map(entry => `import "${entry}";`).join("\n"),
-          );
-          preload[mode] = current;
-          const result = await current.promise.reference;
-          return result;
+          return [...manifest[mode]].map(entry => `import "${entry}";`).join("\n");
         }
         return null;
       },
