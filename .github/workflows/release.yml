@@ -8,13 +8,18 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write # Required for npm trusted publishing (OIDC)
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v3
 
@@ -24,6 +29,10 @@ jobs:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
+
+      # Trusted publishing requires npm >= 11.5.1; Node 22 bundles npm 10.x
+      - name: Update npm for trusted publishing
+        run: npm install -g npm@latest
 
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile
@@ -37,5 +46,6 @@ jobs:
           commit: "chore: release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          # Empty token keeps changesets/action happy while npm authenticates via OIDC
+          # https://github.com/changesets/changesets/issues/1152
+          NPM_TOKEN: ""
