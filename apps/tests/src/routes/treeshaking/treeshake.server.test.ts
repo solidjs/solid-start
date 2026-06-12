@@ -1,23 +1,30 @@
-// I'm not sure if it's fair calling this a unit test, but let's go with that
-import { readdir, readFile } from "node:fs/promises";
-import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { getBuildOutputDirs, getFiles, readFileContent } from "~/utils/build-output-utils";
 
 describe("Make sure treeshaking works", () => {
   it("should not have any unused code in the client-bundle", async () => {
-    const buildDir = path.resolve(process.cwd(), ".output/public/_build/assets");
-    const files = await readdir(buildDir);
-    const targetFile = files.find(
-      file => file.startsWith("(no-side-effects)-") && file.endsWith(".js"),
-    );
-    if (!targetFile) {
-      throw new Error("Treeshaking test: No target file not found");
+    const { clientOutputRoot } = getBuildOutputDirs();
+    const files = await getFiles(clientOutputRoot, /^\(no-side-effects\)-.*\.js(\.gz|\.br)?$/);
+
+    expect(files.length, "No files matching the treeshaking pattern found").toBeGreaterThan(0);
+
+    for (const targetFile of files) {
+      const file = await readFileContent(targetFile);
+      const result = file.includes("myTreeshakingTestUniqueString1");
+      expect(result, `Unused code found in file: ${targetFile}`).toBeFalsy();
     }
-    const file = await readFile(path.join(buildDir, targetFile), "utf-8");
+  });
 
-    const regex = /const a = 1;/g;
-    const result = regex.test(file);
+  it("should include side-effects code in the client-bundle", async () => {
+    const { clientOutputRoot } = getBuildOutputDirs();
+    const files = await getFiles(clientOutputRoot, /^side-effects.*\.js(\.gz|\.br)?$/);
 
-    expect(result).toBeFalsy();
+    expect(files.length, "No side-effects files matching the pattern found").toBeGreaterThan(0);
+
+    for (const targetFile of files) {
+      const file = await readFileContent(targetFile);
+      const result = file.includes("myTreeshakingTestUniqueString2");
+      expect(result, `Side-effects code not found in file: ${targetFile}`).toBeTruthy();
+    }
   });
 });
