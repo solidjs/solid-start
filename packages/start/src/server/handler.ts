@@ -114,11 +114,14 @@ export function createBaseHandler(
 
       if (mode === "async") return await stream;
 
-      delete (stream as any).then;
-
       // using TransformStream in dev can cause solid-start-dev-server to crash
       // when stream is cancelled
       if (globalThis.USING_SOLID_START_DEV_SERVER) return stream;
+
+      // remove thenable so h3/Cloudflare Workers do not await the stream object;
+      // must happen after the dev-server branch so the stream remains awaitable
+      // when returned to solid-start-dev-server above
+      delete (stream as any).then;
 
       // returning stream directly breaks cloudflare workers
       const { writable, readable } = new TransformStream();
