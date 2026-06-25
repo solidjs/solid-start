@@ -201,6 +201,30 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       filter: options?.serverFunctions?.filter,
     }),
     {
+      name: "solid-start:boundary-modules",
+      resolveId(id, importer, { ssr }) {
+        if (id === "server-only") {
+          if (!ssr) {
+            this.error(
+              `[server-only] "${importer}" cannot import a server-only module on the client`,
+            );
+          }
+          return "\0server-only";
+        }
+        if (id === "client-only") {
+          if (ssr) {
+            this.error(
+              `[client-only] "${importer}" cannot import a client-only module on the server`,
+            );
+          }
+          return "\0client-only";
+        }
+      },
+      load(id) {
+        if (id === "\0server-only" || id === "\0client-only") return "export {}";
+      },
+    },
+    {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
         const { filename, query } = parseIdQuery(id);
