@@ -98,4 +98,11 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/server-function-unused-trycatch");
     await expect(page.locator("#server-fn-test")).toContainText("false");
   });
+
+  test("should build with a server function including an unused destructured variable", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-unused-destructure");
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
 });
