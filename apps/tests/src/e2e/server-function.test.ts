@@ -91,4 +91,11 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/server-env");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
   });
+
+  test("should build with a server function including an unused try/catch variable", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-unused-trycatch");
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
 });
