@@ -6,7 +6,7 @@ import type * as Babel from "@babel/core";
 import type { NodePath, PluginObj, PluginPass } from "@babel/core";
 import type { Binding } from "@babel/traverse";
 import { basename } from "pathe";
-import type { Plugin, ResolvedConfig, ViteDevServer } from "vite";
+import type { Plugin } from "vite";
 
 type State = Omit<PluginPass, "opts"> & {
   opts: { pick: string[] };
@@ -280,10 +280,6 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
 }
 
 export function treeShake(): Plugin {
-  let config: ResolvedConfig;
-  const cache: Record<string, any> = {};
-  let server: ViteDevServer;
-
   async function transform(id: string, code: string) {
     const [path, queryString] = id.split("?");
     const query = new URLSearchParams(queryString);
@@ -308,46 +304,6 @@ export function treeShake(): Plugin {
   return {
     name: "tree-shake",
     enforce: "pre",
-    configResolved(resolvedConfig) {
-      config = resolvedConfig;
-    },
-    configureServer(s) {
-      server = s;
-    },
-    async handleHotUpdate(ctx) {
-      if (cache[ctx.file]) {
-        const mods = [];
-        const newCode = await ctx.read();
-        for (const [id, code] of Object.entries(cache[ctx.file])) {
-          const transformed = await transform(id, newCode);
-          if (!transformed) continue;
-
-          const { code: transformedCode } = transformed;
-
-          if (transformedCode !== code) {
-            const mod = server.moduleGraph.getModuleById(id);
-            if (mod) mods.push(mod);
-          }
-
-          cache[ctx.file] ??= {};
-          cache[ctx.file][id] = transformedCode;
-          // server.moduleGraph.setModuleSource(id, code);
-        }
-
-        return mods;
-      }
-      // 	const mods = [];
-      // 	[...server.moduleGraph.urlToModuleMap.entries()].forEach(([url, m]) => {
-      // 		if (m.file === ctx.file && m.id.includes("pick=")) {
-      // 			if (!m.id.includes("pick=loader")) {
-      // 				mods.push(m);
-      // 			}
-      // 		}
-      // 	});
-      // 	return mods;
-      // 	// this.router.updateRoute(ctx.path);
-      // }
-    },
     async transform(code, id) {
       const [path, queryString] = id.split("?");
       if (!path) return;
@@ -357,9 +313,6 @@ export function treeShake(): Plugin {
       if (query.has("pick") && ["js", "jsx", "ts", "tsx"].includes(ext)) {
         const transformed = await transform(id, code);
         if (!transformed?.code) return;
-
-        cache[path] ??= {};
-        cache[path][id] = transformed.code;
 
         return {
           code: transformed.code,
