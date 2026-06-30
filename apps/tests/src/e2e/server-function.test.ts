@@ -105,4 +105,19 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/server-function-unused-destructure");
     await expect(page.locator("#server-fn-test")).toContainText("false");
   });
+
+  /**
+   * Makes sure that server function dead code elimination
+   * runs before Solid's SSR transforms.
+   *
+   * Solid's SSR code removes client-only event handler code
+   * such as onClick, but server function's only referenced
+   * in such event handlers still must be registered on
+   * the server.
+   */
+  test("should build with a server function only referenced inside onClick", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-onclick");
+    await page.locator("#server-fn-test").click();
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
 });
