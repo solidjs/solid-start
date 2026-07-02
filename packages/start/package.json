@@ -83,6 +83,6 @@
     "vitest": "^4.1.0"
   },
   "peerDependencies": {
-    "vite": "^7"
+    "vite": "^7 || ^8"
   }
 }
