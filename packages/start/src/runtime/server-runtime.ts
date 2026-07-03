@@ -77,16 +77,16 @@ async function fetchServerFunction(
   const contentType = response.headers.get("Content-Type");
   const cloned = response.clone();
   let result;
-  if (contentType && contentType.startsWith("text/plain")) {
-    result = await cloned.text();
-  } else if (contentType && contentType.startsWith("application/json")) {
-    result = await cloned.json();
-  } else if (response.headers.get("x-serialized")) {
+  if (response.headers.get("x-serialized")) {
     if (import.meta.env.SEROVAL_MODE === "js") {
       result = await deserializeJSStream(instance, cloned);
     } else {
       result = await deserializeJSONStream(cloned);
     }
+  } else if (contentType && contentType.startsWith("text/plain")) {
+    result = await cloned.text();
+  } else if (contentType && contentType.startsWith("application/json")) {
+    result = await cloned.json();
   }
   if (response.headers.has("X-Error") || response.status >= 500) {
     throw result ?? new Error(`Server function call failed with status ${response.status}`);
