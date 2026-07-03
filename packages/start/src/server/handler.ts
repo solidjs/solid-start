@@ -2,7 +2,7 @@ import middleware from "solid-start:middleware";
 import { clientViteManifest } from "solid-start:client-vite-manifest";
 import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
 import { join } from "pathe";
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 

@@ -1,11 +1,6 @@
 // @refresh skip
-import {
-  Errored,
-  Show,
-  createSignal,
-  onSettled,
-  type JSX,
-} from "solid-js";
+import { Errored, Show, createSignal, onSettled } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import clientOnly from "../clientOnly.ts";
 import { HttpStatusCode } from "../HttpStatusCode.ts";
 

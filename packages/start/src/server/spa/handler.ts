@@ -1,4 +1,4 @@
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 
 import { createBaseHandler } from "../handler.ts";
 import { getSsrManifest } from "../manifest/ssr-manifest.ts";

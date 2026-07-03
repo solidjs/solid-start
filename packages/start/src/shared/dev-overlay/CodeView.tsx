@@ -7,7 +7,8 @@ import langTSX from "shiki/langs/tsx.mjs";
 import langTS from "shiki/langs/typescript.mjs";
 import url from "shiki/onig.wasm?url";
 import darkPlus from "shiki/themes/dark-plus.mjs";
-import { createEffect, createMemo, type JSX } from "solid-js";
+import { createEffect, createMemo } from "solid-js";
+import type { JSX } from "@solidjs/web";
 
 let HIGHLIGHTER: Highlighter;
 

@@ -1,5 +1,5 @@
 import type { H3Event } from "h3";
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import type { RequestEvent } from "@solidjs/web";
 
 // export const FETCH_EVENT = "$FETCH";

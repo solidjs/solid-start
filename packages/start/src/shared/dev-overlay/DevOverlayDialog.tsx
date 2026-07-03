@@ -1,7 +1,7 @@
 // @refresh skip
 import ErrorStackParser from "error-stack-parser";
 import * as htmlToImage from "html-to-image";
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import { Errored, For, Loading, Show, createMemo, createSignal } from "solid-js";
 import { Portal } from "@solidjs/web";
 import { Dialog, DialogOverlay, DialogPanel } from 'terracotta/dialog';
@@ -99,12 +99,12 @@ function StackFramesContent(props: StackFramesContentProps) {
                 <Show when={data()} keyed fallback={<CodeFallback />}>
                   {source => (
                     <>
-                      <span data-start-dev-overlay-stack-frames-code-source>{source().source}</span>
+                      <span data-start-dev-overlay-stack-frames-code-source>{source.source}</span>
                       <div data-start-dev-overlay-stack-frames-code-container>
                         <CodeView
-                          fileName={source().source}
-                          line={source().line}
-                          content={source().content}
+                          fileName={source.source}
+                          line={source.line}
+                          content={source.content}
                         />
                       </div>
                     </>
@@ -115,10 +115,18 @@ function StackFramesContent(props: StackFramesContentProps) {
           })()}
         </Errored>
       </div>
+      {/*
+        terracotta's Select types import `JSX` from "solid-js", which solid-js
+        2.0.0-beta.15 removed (it moved to "@solidjs/web"). That degrades
+        terracotta's prop union until terracotta migrates, so the single-select
+        controlled props are cast through `any`.
+      */}
       <Select<ErrorStackParser.StackFrame>
-        data-start-dev-overlay-stack-frames
-        value={selectedFrame()}
-        onChange={setSelectedFrame}
+        {...({
+          "data-start-dev-overlay-stack-frames": true,
+          value: selectedFrame(),
+          onChange: setSelectedFrame,
+        } as any)}
       >
         <For each={stackframes}>
           {current => (
@@ -126,31 +134,31 @@ function StackFramesContent(props: StackFramesContentProps) {
               fallback={
                 <div data-start-dev-overlay-stack-frame>
                   <span data-start-dev-overlay-stack-frame-function>
-                    {current().functionName ?? "<anonymous>"}
+                    {current.functionName ?? "<anonymous>"}
                   </span>
                   <span data-start-dev-overlay-stack-frame-file>
                     {getFilePath({
-                      source: current().getFileName()!,
+                      source: current.getFileName()!,
                       content: "",
-                      line: current().getLineNumber()!,
-                      column: current().getColumnNumber()!,
-                      name: current().getFunctionName(),
+                      line: current.getLineNumber()!,
+                      column: current.getColumnNumber()!,
+                      name: current.getFunctionName(),
                     })}
                   </span>
                 </div>
               }
             >
               {(() => {
-                const data = createStackFrame(current(), () => props.isCompiled);
+                const data = createStackFrame(current, () => props.isCompiled);
                 return (
                   <Loading>
                     <Show when={data()} keyed>
                       {source => (
-                        <SelectOption data-start-dev-overlay-stack-frame value={current()}>
+                        <SelectOption data-start-dev-overlay-stack-frame value={current}>
                           <span data-start-dev-overlay-stack-frame-function>
-                            {source().name ?? "<anonymous>"}
+                            {source.name ?? "<anonymous>"}
                           </span>
-                          <span data-start-dev-overlay-stack-frame-file>{getFilePath(source())}</span>
+                          <span data-start-dev-overlay-stack-frame-file>{getFilePath(source)}</span>
                         </SelectOption>
                       )}
                     </Show>
@@ -173,7 +181,7 @@ interface StackFramesProps {
 function StackFrames(props: StackFramesProps) {
   return (
     <Show when={props.error instanceof Error && props.error} keyed>
-      {current => <StackFramesContent error={current()} isCompiled={props.isCompiled} />}
+      {current => <StackFramesContent error={current} isCompiled={props.isCompiled} />}
     </Show>
   );
 }

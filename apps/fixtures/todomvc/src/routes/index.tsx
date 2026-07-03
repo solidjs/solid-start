@@ -16,7 +16,7 @@ import {
 } from "~/lib/api";
 import { Todo } from "~/types";
 
-declare module "solid-js" {
+declare module "@solidjs/web" {
   namespace JSX {
     interface ExplicitProperties { }
   }

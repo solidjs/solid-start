@@ -1,5 +1,5 @@
 // @refresh skip
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import { render, type MountableElement } from "@solidjs/web";
 
 export function mount(fn: () => JSX.Element, el: MountableElement) {

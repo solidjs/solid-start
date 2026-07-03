@@ -7,7 +7,7 @@
 // bug.  Instead we build the HTML strings directly — these assets are only
 // ever rendered during SSR so reactive JSX is unnecessary.
 
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 
 /** Escape HTML special characters for safe attribute / text insertion. */
 function esc(s: string): string {

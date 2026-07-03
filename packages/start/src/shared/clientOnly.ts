@@ -1,5 +1,6 @@
 // @refresh skip
-import type { Component, ComponentProps, JSX, Setter } from "solid-js";
+import type { Component, ComponentProps, Setter } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import { createMemo, createSignal, onSettled, sharedConfig, omit, untrack } from "solid-js";
 import { isServer } from "@solidjs/web";
 
