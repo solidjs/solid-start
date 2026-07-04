@@ -100,8 +100,11 @@ export class BaseFileSystemRouter extends EventTarget {
   update = undefined;
 
   _addRoute(route: Route) {
-    this.routes = this.routes.filter(r => r.path !== route.path);
+    const idx = this.routes.findIndex(r => r.path === route.path);
+    if (idx >= 0) this.routes.splice(idx, 1);
     this.routes.push(route);
+
+    return idx >= 0;
   }
 
   async addRoute(src: string) {
@@ -130,14 +133,16 @@ export class BaseFileSystemRouter extends EventTarget {
     );
   }
 
-  async updateRoute(src: string) {
-    src = normalizePath(src);
+  async updateRoute(src_: string) {
+    const src = normalizePath(src_);
     if (this.isRoute(src)) {
       try {
         const route = this.toRoute(src);
         if (route) {
-          this._addRoute(route);
-          this.reload(route.path, "update");
+          const updated = this._addRoute(route);
+          this.reload(route.path, updated ? "update" : "add");
+        } else {
+          this.removeRoute(src_);
         }
       } catch (e) {
         console.error(e);
@@ -153,7 +158,11 @@ export class BaseFileSystemRouter extends EventTarget {
       if (path === undefined) {
         return;
       }
-      this.routes = this.routes.filter(r => r.path !== path);
+
+      const idx = this.routes.findIndex(r => r.path === path);
+      if (idx === -1) return;
+
+      this.routes.splice(idx, 1);
       this.reload(path, "remove");
     }
   }
