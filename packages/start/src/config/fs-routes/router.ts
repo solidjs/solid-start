@@ -32,6 +32,8 @@ export function analyzeModule(src: string) {
   );
 }
 
+type RouterEvent = CustomEvent<{ route: string; type: "update" | "remove" | "add" }>;
+
 export class BaseFileSystemRouter extends EventTarget {
   routes: Route[];
 
@@ -109,7 +111,7 @@ export class BaseFileSystemRouter extends EventTarget {
         const route = this.toRoute(src);
         if (route) {
           this._addRoute(route);
-          this.reload(route.path);
+          this.reload(route.path, "add");
         }
       } catch (e) {
         console.error(e);
@@ -117,12 +119,12 @@ export class BaseFileSystemRouter extends EventTarget {
     }
   }
 
-  reload(route: string) {
+  reload(route: string, type: "update" | "remove" | "add") {
     this.dispatchEvent(
-      new Event("reload", {
-        // @ts-ignore
+      new CustomEvent("reload", {
         detail: {
           route,
+          type,
         },
       }),
     );
@@ -135,7 +137,7 @@ export class BaseFileSystemRouter extends EventTarget {
         const route = this.toRoute(src);
         if (route) {
           this._addRoute(route);
-          this.reload(route.path);
+          this.reload(route.path, "update");
         }
       } catch (e) {
         console.error(e);
@@ -152,8 +154,13 @@ export class BaseFileSystemRouter extends EventTarget {
         return;
       }
       this.routes = this.routes.filter(r => r.path !== path);
-      this.dispatchEvent(new Event("reload", {}));
+      this.reload(path, "remove");
     }
+  }
+
+  on(type: string, cb: (evt: RouterEvent) => void) {
+    this.addEventListener(type, cb as any);
+    return () => this.removeEventListener(type, cb as any);
   }
 
   buildRoutesPromise?: Promise<any[]>;
