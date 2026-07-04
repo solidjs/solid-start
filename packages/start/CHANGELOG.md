@@ -1,5 +1,13 @@
 # @solidjs/start
 
+## 1.3.3
+
+### Patch Changes
+
+- fe9b18f: Fixed an issue where runtimes like AWS Lambda would default to `application/json` when no header was present, causing parsing errors in `json` serialization mode. To ensure consistent behavior, the `Content-Type` is now explicitly set to `text/plain`.
+- d62f09c: Reject server function calls when the response is a 5xx without an X-Error header, instead of resolving with the parsed error body
+- 7052bde: update seroval to 1.5.4
+
 ## 1.3.2
 
 ### Patch Changes
