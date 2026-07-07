@@ -7,6 +7,11 @@ settings:
 overrides:
   vite-plugin-solid@3.0.0-next.5>babel-preset-solid: next
 
+patchedDependencies:
+  terracotta@2.0.0-next.2:
+    hash: 0783211c9f1805b80f90b29f1fb9215d035580e80b2291b2d71889192a4efd95
+    path: patches/terracotta@2.0.0-next.2.patch
+
 importers:
 
   .:
@@ -275,8 +280,8 @@ importers:
         specifier: 0.17.0-next.3
         version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
       '@solidjs/signals':
-        specifier: 0.13.11
-        version: 0.13.11
+        specifier: 2.0.0-beta.15
+        version: 2.0.0-beta.15
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../packages/start
@@ -412,7 +417,7 @@ importers:
         version: 0.11.12
       terracotta:
         specifier: 2.0.0-next.2
-        version: 2.0.0-next.2(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 2.0.0-next.2(patch_hash=0783211c9f1805b80f90b29f1fb9215d035580e80b2291b2d71889192a4efd95)(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
       vite-plugin-solid:
         specifier: 3.0.0-next.5
         version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.15)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -2259,9 +2264,6 @@ packages:
     peerDependencies:
       '@solidjs/web': '>=2.0.0-beta.7 <2.0.0-experimental.0'
       solid-js: '>=2.0.0-beta.7 <2.0.0-experimental.0'
-
-  '@solidjs/signals@0.13.11':
-    resolution: {integrity: sha512-EHrJONVsjvCeWSWTRhDWqqbT9MsP3IVZzBrprw6H1OTU99FBoo+oQ9JX976bhY6zAn/WApsAp/M5i92VVRtKCQ==}
 
   '@solidjs/signals@2.0.0-beta.15':
     resolution: {integrity: sha512-lw4a4frNajnmVjILbyfrgJ4ksqU+YKhkepZ8glKK9Q68O3zq7W8qDLOtsz5v1mt0o3TB11/rozJFpgMTmnYegg==}
@@ -7121,8 +7123,6 @@ snapshots:
       '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
       solid-js: 2.0.0-beta.15
 
-  '@solidjs/signals@0.13.11': {}
-
   '@solidjs/signals@2.0.0-beta.15': {}
 
   '@solidjs/start@2.0.0-alpha.2(@testing-library/jest-dom@6.9.1)(crossws@0.4.4(srvx@0.11.12))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))':
@@ -10035,7 +10035,7 @@ snapshots:
       solid-js: 1.9.11
       solid-use: 0.9.1(solid-js@1.9.11)
 
-  terracotta@2.0.0-next.2(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15):
+  terracotta@2.0.0-next.2(patch_hash=0783211c9f1805b80f90b29f1fb9215d035580e80b2291b2d71889192a4efd95)(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15):
     dependencies:
       '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
       solid-js: 2.0.0-beta.15

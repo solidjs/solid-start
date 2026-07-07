@@ -20,7 +20,7 @@ export default function NoteList(props: { searchText: string }) {
         <For each={notes()}>
           {note => (
             <li>
-              <SidebarNote note={note()} />
+              <SidebarNote note={note} />
             </li>
           )}
         </For>

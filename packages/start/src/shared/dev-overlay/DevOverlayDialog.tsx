@@ -310,8 +310,8 @@ export default function DevOverlayDialog(props: DevOverlayDialogProps): JSX.Elem
               <Show when={props.errors[truncated() - 1]} keyed>
                 {current => (
                   <div data-start-dev-overlay-content>
-                    <ErrorInfo error={current()} />
-                    <StackFrames error={current()} isCompiled={isCompiled()} />
+                    <ErrorInfo error={current} />
+                    <StackFrames error={current} isCompiled={isCompiled()} />
                   </div>
                 )}
               </Show>

@@ -90,30 +90,30 @@ export default function TodoApp(props: RouteSectionProps) {
         <ul class="todo-list">
           <For each={filterList(todos as any)}>
             {todo => {
-              const title = () => todo().title
-              const completed = () => todo().completed;
-              const removing = () => removingTodo.some(data => data.input[0] === todo().id);
+              const title = () => todo.title
+              const completed = () => todo.completed;
+              const removing = () => removingTodo.some(data => data.input[0] === todo.id);
               return (
                 <Show when={!removing()}>
                   <li
                     class={["todo", {
-                      editing: editingTodoId() === todo().id,
+                      editing: editingTodoId() === todo.id,
                       completed: completed(),
                     }]}
                   >
                     <form class="view" method="post">
                       <button
-                        formaction={toggleTodo.with(todo().id)}
+                        formaction={toggleTodo.with(todo.id)}
                         class="toggle"
                       >
                         <Show when={completed()} fallback={<IncompleteIcon />}><CompleteIcon /></Show>
                       </button>
-                      <label onDblClick={[setEditing, { id: todo().id }]}>{title()}</label>
-                      <button formaction={removeTodo.with(todo().id)} class="destroy" />
+                      <label onDblClick={[setEditing, { id: todo.id }]}>{title()}</label>
+                      <button formaction={removeTodo.with(todo.id)} class="destroy" />
                     </form>
-                    <Show when={editingTodoId() === todo().id}>
+                    <Show when={editingTodoId() === todo.id}>
                       <form
-                        action={editTodo.with(todo().id)}
+                        action={editTodo.with(todo.id)}
                         method="post"
                         onSubmit={e => {
                           e.preventDefault();
@@ -123,9 +123,9 @@ export default function TodoApp(props: RouteSectionProps) {
                         <input
                           name="title"
                           class="edit"
-                          value={todo().title}
+                          value={todo.title}
                           onBlur={e => {
-                            if (todo().title !== e.currentTarget.value) {
+                            if (todo.title !== e.currentTarget.value) {
                               e.currentTarget.form!.requestSubmit();
                             } else setTimeout(() => setEditing({}));
                           }}
@@ -142,7 +142,7 @@ export default function TodoApp(props: RouteSectionProps) {
             {sub => (
               <li class="todo pending">
                 <div class="view">
-                  <label>{String(sub().input[0].get("title"))}</label>
+                  <label>{String(sub.input[0].get("title"))}</label>
                   <button disabled class="destroy" />
                 </div>
               </li>
