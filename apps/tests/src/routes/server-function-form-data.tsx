@@ -9,13 +9,15 @@ async function ping(value: FormData) {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  onSettled(async () => {
-    const file = new File(["Hello, World!"], "hello-world.txt");
-    const formData = new FormData();
-    formData.append("example", file);
-    const result = await ping(formData);
-    const value = await file.text();
-    setOutput(prev => ({ ...prev, result: value === result }));
+  onSettled(() => {
+    void (async () => {
+      const file = new File(["Hello, World!"], "hello-world.txt");
+      const formData = new FormData();
+      formData.append("example", file);
+      const result = await ping(formData);
+      const value = await file.text();
+      setOutput(prev => ({ ...prev, result: value === result }));
+    })();
   });
 
   return (

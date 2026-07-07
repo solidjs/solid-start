@@ -9,10 +9,12 @@ async function ping(value: string) {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  onSettled(async () => {
-    const value = `${Math.random() * 1000}`;
-    const result = await ping(value);
-    setOutput(prev => ({ ...prev, result: value === result }));
+  onSettled(() => {
+    void (async () => {
+      const value = `${Math.random() * 1000}`;
+      const result = await ping(value);
+      setOutput(prev => ({ ...prev, result: value === result }));
+    })();
   });
 
   return (

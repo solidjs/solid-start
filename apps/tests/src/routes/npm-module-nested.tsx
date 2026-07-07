@@ -10,9 +10,11 @@ function serverFnWithNpmModule() {
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithNpmModule?: number[] }>({});
 
-  onSettled(async () => {
-    const result = await serverFnWithNpmModule();
-    setOutput(prev => ({ ...prev, serverFnWithNpmModule: result }));
+  onSettled(() => {
+    void (async () => {
+      const result = await serverFnWithNpmModule();
+      setOutput(prev => ({ ...prev, serverFnWithNpmModule: result }));
+    })();
   });
 
   return (

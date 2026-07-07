@@ -4,9 +4,11 @@ import { serverFnWithMeta } from "~/functions/use-server-function-meta";
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithMeta?: string }>({});
 
-  onSettled(async () => {
-    const result = await serverFnWithMeta();
-    setOutput(prev => ({ ...prev, serverFnWithMeta: result }));
+  onSettled(() => {
+    void (async () => {
+      const result = await serverFnWithMeta();
+      setOutput(prev => ({ ...prev, serverFnWithMeta: result }));
+    })();
   });
 
   return (

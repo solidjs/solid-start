@@ -4,9 +4,11 @@ import { serverFnWithIsServer } from "~/functions/use-is-server-const";
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithIsServer?: boolean }>({});
 
-  onSettled(async () => {
-    const result = await serverFnWithIsServer();
-    setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
+  onSettled(() => {
+    void (async () => {
+      const result = await serverFnWithIsServer();
+      setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
+    })();
   });
 
   return (

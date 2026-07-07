@@ -11,14 +11,16 @@ const blobURI =
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  onSettled(async () => {
-    const request = await fetch(blobURI);
-    const blob = await request.blob();
-    const result = await ping(blob);
-    const value = await blob.text();
-    const test = await result.text();
+  onSettled(() => {
+    void (async () => {
+      const request = await fetch(blobURI);
+      const blob = await request.blob();
+      const result = await ping(blob);
+      const value = await blob.text();
+      const test = await result.text();
 
-    setOutput(prev => ({ ...prev, result: value === test }));
+      setOutput(prev => ({ ...prev, result: value === test }));
+    })();
   });
 
   return (

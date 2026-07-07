@@ -40,7 +40,10 @@ export function DevOverlay(props: DevOverlayProps): JSX.Element {
     <>
       <Errored
         fallback={error => {
-          pushError(error);
+          // `error` is an accessor in Solid 2, and signal writes are not
+          // allowed inside the boundary's owned scope, so defer the push.
+          const err = error();
+          queueMicrotask(() => pushError(err));
           return <HttpStatusCode code={500} />;
         }}
       >
