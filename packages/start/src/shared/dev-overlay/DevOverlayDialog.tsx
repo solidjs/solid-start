@@ -115,18 +115,10 @@ function StackFramesContent(props: StackFramesContentProps) {
           })()}
         </Errored>
       </div>
-      {/*
-        terracotta's Select types import `JSX` from "solid-js", which solid-js
-        2.0.0-beta.15 removed (it moved to "@solidjs/web"). That degrades
-        terracotta's prop union until terracotta migrates, so the single-select
-        controlled props are cast through `any`.
-      */}
       <Select<ErrorStackParser.StackFrame>
-        {...({
-          "data-start-dev-overlay-stack-frames": true,
-          value: selectedFrame(),
-          onChange: setSelectedFrame,
-        } as any)}
+        data-start-dev-overlay-stack-frames
+        value={selectedFrame()}
+        onChange={setSelectedFrame}
       >
         <For each={stackframes}>
           {current => (

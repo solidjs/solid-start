@@ -7,11 +7,6 @@ settings:
 overrides:
   vite-plugin-solid@3.0.0-next.5>babel-preset-solid: next
 
-patchedDependencies:
-  terracotta@2.0.0-next.2:
-    hash: 0783211c9f1805b80f90b29f1fb9215d035580e80b2291b2d71889192a4efd95
-    path: patches/terracotta@2.0.0-next.2.patch
-
 importers:
 
   .:
@@ -413,8 +408,8 @@ importers:
         specifier: ^0.11.9
         version: 0.11.12
       terracotta:
-        specifier: 2.0.0-next.2
-        version: 2.0.0-next.2(patch_hash=0783211c9f1805b80f90b29f1fb9215d035580e80b2291b2d71889192a4efd95)(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-next.6
+        version: 2.0.0-next.6(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
       vite-plugin-solid:
         specifier: 3.0.0-next.5
         version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.15)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -4925,12 +4920,12 @@ packages:
     peerDependencies:
       solid-js: ^1.8
 
-  terracotta@2.0.0-next.2:
-    resolution: {integrity: sha512-UORIHiWeF1Z5svbPjCVEqZ5LKmbyNEe52HXqtUh0yFFS7zOBiQbL75x8vZLb0TlbxaLk31ZwUbyfE/z5x0O85w==}
+  terracotta@2.0.0-next.6:
+    resolution: {integrity: sha512-eaCR2stCu6/zJzvCjtCy+l83jfEUxqsdKIZ88DuGX8zkAmT8jnEK0LQwtpc6PudUTCP0hbhyrhAJMKsRi0zn1A==}
     engines: {node: '>=20'}
     peerDependencies:
-      '@solidjs/web': ^2.0.0-beta.4
-      solid-js: ^2.0.0-beta.4
+      '@solidjs/web': ^2.0.0-beta.15
+      solid-js: ^2.0.0-beta.15
 
   terser@5.44.0:
     resolution: {integrity: sha512-nIVck8DK+GM/0Frwd+nIhZ84pR/BX7rmXMfYwyg+Sri5oGVE99/E3KvXqpC2xHFxyqXyGHTKBSioxxplrO4I4w==}
@@ -5676,7 +5671,7 @@ snapshots:
 
   '@babel/helper-module-imports@7.18.6':
     dependencies:
-      '@babel/types': 7.29.0
+      '@babel/types': 7.29.7
 
   '@babel/helper-module-imports@7.28.6':
     dependencies:
@@ -7430,7 +7425,7 @@ snapshots:
 
   '@testing-library/dom@10.4.1':
     dependencies:
-      '@babel/code-frame': 7.29.0
+      '@babel/code-frame': 7.29.7
       '@babel/runtime': 7.28.6
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
@@ -7788,7 +7783,7 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/helper-module-imports': 7.18.6
       '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.0)
-      '@babel/types': 7.29.0
+      '@babel/types': 7.29.7
       html-entities: 2.3.3
       parse5: 7.3.0
       validate-html-nesting: 1.2.4
@@ -10136,7 +10131,7 @@ snapshots:
       solid-js: 1.9.11
       solid-use: 0.9.1(solid-js@1.9.11)
 
-  terracotta@2.0.0-next.2(patch_hash=0783211c9f1805b80f90b29f1fb9215d035580e80b2291b2d71889192a4efd95)(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15):
+  terracotta@2.0.0-next.6(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15):
     dependencies:
       '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
       solid-js: 2.0.0-beta.15

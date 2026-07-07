@@ -47,9 +47,6 @@
   "pnpm": {
     "overrides": {
       "vite-plugin-solid@3.0.0-next.5>babel-preset-solid": "next"
-    },
-    "patchedDependencies": {
-      "terracotta@2.0.0-next.2": "patches/terracotta@2.0.0-next.2.patch"
     }
   }
 }
