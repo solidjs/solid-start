@@ -1,13 +1,12 @@
-import { TanStackServerFnPlugin } from "@tanstack/server-functions-plugin";
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { normalizePath, type PluginOption } from "vite";
+import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-
+import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
+import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
@@ -32,6 +31,8 @@ export interface SolidStartOptions {
      */
     mode?: "js" | "json";
   };
+  env?: EnvPluginOptions;
+  serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
 }
 
 const absolute = (path: string, root: string) =>
@@ -96,6 +97,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
               "@solidjs/start > seroval",
               "@solidjs/start > seroval-plugins/web",
             ],
+            // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
+            ...({
+              rolldownOptions: {
+                transform: {
+                  jsx: "react",
+                },
+              },
+            } as any),
           },
           environments: {
             [VITE_ENVIRONMENTS.client]: {
@@ -139,6 +148,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                   }
                 : {}),
             },
+            // Depending on the package manager and dependency structure Vite externalizes @solidjs/start
+            // This makes sure that @solidjs/start goes through the Vite build process
+            noExternal: ["@solidjs/start"],
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
@@ -181,41 +193,16 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
     }),
     lazy(),
+    envPlugin(options?.env),
     // Must be placed after fsRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
-    TanStackServerFnPlugin({
-      // This is the ID that will be available to look up and import
-      // our server function manifest and resolve its module
-      manifestVirtualImportId: VIRTUAL_MODULES.serverFnManifest,
-      directive: "use server",
-      callers: [
-        {
-          envConsumer: "client",
-          envName: VITE_ENVIRONMENTS.client,
-          getRuntimeCode: () =>
-            `import { createServerReference } from "${normalizePath(
-              fileURLToPath(new URL("../server/server-runtime", import.meta.url)),
-            )}"`,
-          replacer: opts => `createServerReference('${opts.functionId}')`,
-        },
-        {
-          envConsumer: "server",
-          envName: VITE_ENVIRONMENTS.server,
-          getRuntimeCode: () =>
-            `import { createServerReference } from '${normalizePath(
-              fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
-            )}'`,
-          replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
-        },
-      ],
-      provider: {
-        envName: VITE_ENVIRONMENTS.server,
-        getRuntimeCode: () =>
-          `import { createServerReference } from '${normalizePath(
-            fileURLToPath(new URL("../server/server-fns-runtime", import.meta.url)),
-          )}'`,
-        replacer: opts => `createServerReference(${opts.fn}, '${opts.functionId}')`,
+    serverFunctionsPlugin({
+      manifest: VIRTUAL_MODULES.serverFnManifest,
+      runtime: {
+        server: '@solidjs/start/fns/server',
+        client: '@solidjs/start/fns/client',
       },
+      filter: options?.serverFunctions?.filter,
     }),
     {
       name: "solid-start:virtual-modules",
@@ -239,8 +226,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
-      generateBundle(_options, bundle) {
+      generateBundle(options, bundle) {
         globalThis.START_CLIENT_BUNDLE = bundle;
+        (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
     devServer(),

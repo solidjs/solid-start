@@ -1,9 +1,9 @@
 import { init, parse } from "es-module-lexer";
 import esbuild from "esbuild";
 import fg from "fast-glob";
-import fs from "fs";
+import fs from "node:fs";
 import micromatch from "micromatch";
-import { posix } from "path";
+import { posix } from "node:path";
 import { pathToRegexp } from "path-to-regexp";
 
 import { normalizePath } from "vite";

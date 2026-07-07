@@ -1,8 +1,8 @@
 import type { PluginItem } from "@babel/core";
 import babel from "@babel/core";
 import * as t from "@babel/types";
-import { sep as osSep } from "path";
-import { basename, relative, sep } from "path/posix";
+import { sep as osSep } from "node:path";
+import { basename, relative, sep } from "node:path/posix";
 import type { PluginOption } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
 

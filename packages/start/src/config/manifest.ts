@@ -1,4 +1,6 @@
-import { type PluginOption, type ViteDevServer } from "vite";
+import fs from "node:fs";
+import path from "node:path";
+import { type PluginOption, type ViteDevServer, version as viteVersion } from "vite";
 
 import { findStylesInModuleGraph } from "../server/collect-styles.ts";
 import { VIRTUAL_MODULES } from "./constants.ts";
@@ -40,9 +42,37 @@ export function manifest(start: SolidStartOptions): PluginOption {
             v => "isEntry" in v && v.isEntry,
           );
           if (!entry) throw new Error("No client entry found");
-          clientViteManifest = JSON.parse(
-            (globalThis.START_CLIENT_BUNDLE[".vite/manifest.json"] as any).source,
-          );
+          let rawManifest: string | undefined;
+
+          const viteMajor = parseInt(viteVersion.split('.')[0]!, 10);
+
+          const manifestKey = Object.keys(globalThis.START_CLIENT_BUNDLE).find(k => k.endsWith("manifest.json"));
+          if (manifestKey && viteMajor < 8) {
+            const manifestAsset = globalThis.START_CLIENT_BUNDLE[manifestKey] as any;
+            rawManifest = manifestAsset.source as string;
+          } else {
+             try {
+               const appRoot = (start as any).appRoot || "./src";
+               let outDir = ".solid-start/client";
+               if (devServer?.environments?.client?.config?.build?.outDir) {
+                 outDir = devServer.environments.client.config.build.outDir;
+               } else if (this.environment?.config?.build?.outDir && this.environment?.config?.consumer === "client") {
+                 outDir = this.environment.config.build.outDir;
+               } else if ((globalThis as any).START_CLIENT_OUT_DIR) {
+                 outDir = (globalThis as any).START_CLIENT_OUT_DIR;
+               }
+               const manifestPath = path.resolve(appRoot, "..", outDir, ".vite/manifest.json");
+               rawManifest = fs.readFileSync(manifestPath, "utf-8");
+             } catch (e) {
+               throw new Error(`Manifest asset not found in bundle and could not be read from disk. Keys: ${Object.keys(globalThis.START_CLIENT_BUNDLE).join(", ")}. Error: ${e}`);
+             }
+          }
+
+          if (!rawManifest) {
+            throw new Error("Failed to extract or read raw manifest.");
+          }
+
+          clientViteManifest = JSON.parse(rawManifest);
         }
         return `export const clientViteManifest = ${JSON.stringify(clientViteManifest)};`;
       } else if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
@@ -50,11 +80,11 @@ export function manifest(start: SolidStartOptions): PluginOption {
         if (this.environment.mode !== "dev")
           throw new Error("@manifest queries are only allowed in dev");
 
-        const [path, query] = id.split("?");
+        const [urlPath, query] = id.split("?");
         const target = id.split("/")[2]!;
         const params = new URLSearchParams(query);
-        if (!path || !query) return;
-        if (path.endsWith("assets")) {
+        if (!urlPath || !query) return;
+        if (urlPath.endsWith("assets")) {
           const id = params.get("id");
           if (!id) {
             throw new Error("Missing id to get assets.");

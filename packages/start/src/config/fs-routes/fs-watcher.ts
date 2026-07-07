@@ -1,11 +1,10 @@
 import type {
   EnvironmentModuleNode,
   FSWatcher,
-  ModuleGraph,
-  ModuleNode,
   PluginOption,
   ViteDevServer,
 } from "vite";
+import { VITE_ENVIRONMENTS } from "../constants.ts";
 import { moduleId } from "./index.ts";
 import type { BaseFileSystemRouter } from "./router.ts";
 
@@ -32,30 +31,24 @@ function createRoutesReloader(
   return () => routes.removeEventListener("reload", handleRoutesReload);
 
   function handleRoutesReload(): void {
-    if (environment === "ssr") {
-      // Handle server environment HMR reload
-      const serverEnv = server.environments.server;
-      if (serverEnv && serverEnv.moduleGraph) {
-        const mod: EnvironmentModuleNode | undefined =
-          serverEnv.moduleGraph.getModuleById(moduleId);
-        if (mod) {
-          const seen = new Set<EnvironmentModuleNode>();
-          serverEnv.moduleGraph.invalidateModule(mod, seen);
-        }
-      }
-    } else {
-      // Handle client environment HMR reload
-      const { moduleGraph }: { moduleGraph: ModuleGraph } = server;
-      const mod: ModuleNode | undefined = moduleGraph.getModuleById(moduleId);
-      if (mod) {
-        const seen = new Set<ModuleNode>();
-        moduleGraph.invalidateModule(mod, seen);
-        server.reloadModule(mod);
-      }
+    const envName =
+      environment === "ssr" ? VITE_ENVIRONMENTS.server : VITE_ENVIRONMENTS.client;
+    const devEnv = server.environments[envName];
+    if (!devEnv?.moduleGraph) return;
+
+    const mod: EnvironmentModuleNode | undefined =
+      devEnv.moduleGraph.getModuleById(moduleId);
+    if (mod) {
+      const seen = new Set<EnvironmentModuleNode>();
+      devEnv.moduleGraph.invalidateModule(mod, seen);
     }
 
-    if (!server.hot) {
-      server.ws.send({ type: "full-reload" });
+    if (environment !== "ssr") {
+      if (mod) {
+        devEnv.reloadModule(mod);
+      } else if (devEnv.hot) {
+        devEnv.hot.send({ type: "full-reload" });
+      }
     }
   }
 }

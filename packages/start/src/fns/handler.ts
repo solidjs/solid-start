@@ -3,10 +3,9 @@ import { type H3Event, parseCookies } from "h3";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "@solidjs/web";
 import { provideRequestEvent } from "@solidjs/web/storage";
-import { getServerFnById } from "solidstart:server-fn-manifest";
 
-import { getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
-import { createPageEvent } from "./handler.ts";
+import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
+import { createPageEvent } from "../server/handler.ts";
 import {
   deserializeFromJSONString,
   serializeToJSONStream,
@@ -17,9 +16,12 @@ import {
   BodyFormat,
   extractBody,
   getHeadersAndBody,
-} from "./server-functions-shared.ts";
-import type { FetchEvent, PageEvent } from "./types.ts";
-import { getExpectedRedirectStatus } from "./util.ts";
+} from "./shared.ts";
+import "solid-start:server-fn-manifest";
+
+import { getServerFunction } from "./registration.ts";
+import type { FetchEvent, PageEvent } from "../server/types.ts";
+import { getExpectedRedirectStatus } from "../server/util.ts";
 
 export async function handleServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
@@ -43,7 +45,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
   }
 
-  const serverFunction = await getServerFnById(functionId!);
+  const serverFunction = getServerFunction(functionId!);
 
   let parsed: any[] = [];
 
@@ -202,12 +204,12 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
 }
 
 let App: any;
-function createSingleFlightHeaders(sourceEvent: FetchEvent) {
+export function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // cookie handling logic is pretty simplistic so this might be imperfect
   // unclear if h3 internals are available on all platforms but we need a way to
   // update request headers on the underlying H3 event.
 
-  const headers = sourceEvent.request.headers;
+  const headers = new Headers(sourceEvent.request.headers);
   const cookies = parseCookies(sourceEvent.nativeEvent);
   const SetCookies = sourceEvent.response.headers.getSetCookie();
   headers.delete("cookie");

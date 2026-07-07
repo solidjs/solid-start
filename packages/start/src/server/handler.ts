@@ -10,7 +10,7 @@ import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
-import { handleServerFunction } from "./server-functions-handler.ts";
+import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
@@ -63,20 +63,22 @@ export function createBaseHandler(
         const mod = await match.handler.import();
         const fn =
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
-        (event as APIEvent).params = match.params || {};
-        (sharedConfig as any).context = { event };
-        const res = await fn!(event);
-        if (res !== undefined) {
-          if (res instanceof Response) return produceResponseWithEventHeaders(res);
+        if (typeof fn === "function") {
+          (event as APIEvent).params = match.params || {};
+          (sharedConfig as any).context = { event };
+          const res = await fn(event);
+          if (res !== undefined) {
+            if (res instanceof Response) return produceResponseWithEventHeaders(res);
 
-          return res;
+            return res;
+          }
+          if (event.request.method !== "GET") {
+            throw new Error(
+              `API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
+            );
+          }
+          if (!match.isPage) return;
         }
-        if (event.request.method !== "GET") {
-          throw new Error(
-            `API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
-          );
-        }
-        if (!match.isPage) return;
       }
 
       const context = await createPageEvent(event);
@@ -231,7 +233,7 @@ function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
     context.complete = true;
     const to = context.response && context.response.headers.get("Location");
-    to && write(`<script>window.location="${to}"</script>`);
+    to && write(`<script>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`);
   };
 }
 
