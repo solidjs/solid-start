@@ -176,7 +176,7 @@ export function SolidStartIcon(
     <svg viewBox="0 0 701 701" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <title>{props.title}</title>
       <g filter="url(#filter0_d_1_2)">
-        <rect width="693" height="693" transform="translate(4)" fill="white" />
+        <rect width="693" height="693" transform="translate(4)" fill="none" />
         <mask
           id="mask0_1_2"
           style="mask-type:luminance"
