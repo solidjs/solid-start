@@ -8,7 +8,6 @@ import {
   splitProps,
 } from "solid-js";
 
-import { SerovalChunkReader } from "../../server/serialization.ts";
 import { Badge } from "../ui/Badge.tsx";
 import { Cascade, CascadeOption } from "../ui/Cascade.tsx";
 import { Section } from "../ui/Section.tsx";
@@ -16,6 +15,7 @@ import { HexViewer } from "./HexViewer.tsx";
 import { SerovalValue, PropertySeparator } from "./SerovalValue.tsx";
 
 import "./SerovalViewer.css";
+import { SerovalChunkReader } from "../../fns/serialization.ts";
 
 function LinkIcon(
   props: JSX.IntrinsicElements["svg"] & { title: string },

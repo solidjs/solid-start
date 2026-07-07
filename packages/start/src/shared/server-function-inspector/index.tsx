@@ -9,7 +9,7 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Portal } from "solid-js/web";
-import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "../../server/server-functions-shared.ts";
+import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "../../fns/shared.ts";
 import { Badge } from "../ui/Badge.tsx";
 import Button from "../ui/Button.tsx";
 import { Dialog, DialogOverlay, DialogPanel } from "../ui/Dialog.tsx";
@@ -27,10 +27,10 @@ import {
   type ServerFunctionResponse,
 } from "./server-function-tracker.ts";
 import "./styles.css";
-import { URLSearchParamsViewer } from "./URLSearchParamsViewer.tsx";
-import { Text } from "../ui/Text.tsx";
 import Placeholder from "../ui/Placeholder.tsx";
+import { Text } from "../ui/Text.tsx";
 import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
+import { URLSearchParamsViewer } from "./URLSearchParamsViewer.tsx";
 
 async function getFile(source: Response | Request): Promise<File> {
   const formData = await source.formData();
