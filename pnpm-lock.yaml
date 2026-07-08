@@ -36,11 +36,11 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/start
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       vite:
         specifier: 7.3.1
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
@@ -49,19 +49,19 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: 0.30.0-next.0
-        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       vite:
         specifier: 7.3.1
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
@@ -70,19 +70,19 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: 0.30.0-next.0
-        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       vite:
         specifier: 7.3.1
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
@@ -98,19 +98,19 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: 0.30.0-next.0
-        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       vite:
         specifier: 7.3.1
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
@@ -119,16 +119,16 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       vite:
         specifier: 7.3.1
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
@@ -137,10 +137,10 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: 0.30.0-next.0
-        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
@@ -148,8 +148,8 @@ importers:
         specifier: ^3.0.1-alpha.2
         version: 3.0.1-alpha.2(@netlify/blobs@10.4.1)(better-sqlite3@11.8.1)(chokidar@5.0.0)(drizzle-orm@0.31.4(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(prisma@5.22.0))(ioredis@5.10.0)(lru-cache@11.2.7)(rollup@4.59.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       vite:
         specifier: 7.3.1
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
@@ -158,13 +158,13 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -172,8 +172,8 @@ importers:
         specifier: ^12.0.2
         version: 12.0.2
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.10.0)
@@ -185,16 +185,16 @@ importers:
     dependencies:
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../../packages/start
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       unstorage:
         specifier: 1.10.2
         version: 1.10.2(ioredis@5.10.0)
@@ -270,22 +270,22 @@ importers:
     dependencies:
       '@solidjs/meta':
         specifier: 0.30.0-next.0
-        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/router':
         specifier: 0.17.0-next.3
-        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/signals':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       '@solidjs/start':
         specifier: workspace:*
         version: link:../../packages/start
       '@solidjs/testing-library':
         specifier: ^0.8.10
-        version: 0.8.10(@solidjs/router@0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.8.10(@solidjs/router@0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -302,14 +302,14 @@ importers:
         specifier: ^4.17.23
         version: 4.17.23
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       vite:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
       vite-plugin-solid:
         specifier: ^3.0.0-next.5
-        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.15)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.16)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
       vitest:
         specifier: ^4.1.0
         version: 4.1.0(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(@vitest/browser-playwright@4.1.0)(@vitest/ui@4.1.0)(jsdom@28.1.0)(msw@2.7.0(@types/node@25.5.0)(typescript@5.9.3))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
@@ -343,10 +343,10 @@ importers:
         version: 7.29.0
       '@solidjs/meta':
         specifier: 0.30.0-next.0
-        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 0.30.0-next.0(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       '@solidjs/web':
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       '@types/babel__traverse':
         specifier: ^7.28.0
         version: 7.28.0
@@ -399,8 +399,8 @@ importers:
         specifier: ^1.29.2
         version: 1.29.2
       solid-js:
-        specifier: 2.0.0-beta.15
-        version: 2.0.0-beta.15
+        specifier: 2.0.0-beta.16
+        version: 2.0.0-beta.16
       source-map-js:
         specifier: ^1.2.1
         version: 1.2.1
@@ -409,10 +409,10 @@ importers:
         version: 0.11.12
       terracotta:
         specifier: 2.0.0-next.6
-        version: 2.0.0-next.6(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+        version: 2.0.0-next.6(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
       vite-plugin-solid:
         specifier: 3.0.0-next.5
-        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.15)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.16)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
     devDependencies:
       '@types/babel__core':
         specifier: ^7.20.5
@@ -790,6 +790,11 @@ packages:
   '@csstools/css-tokenizer@4.0.0':
     resolution: {integrity: sha512-QxULHAm7cNu72w97JUNCBFODFaXpbDg+dP8b/oWFAZ2MTRppA3U00Y2L1HqaS4J6yBqxwa/Y3nMBaxVKbB/NsA==}
     engines: {node: '>=20.19.0'}
+
+  '@dom-expressions/babel-plugin-jsx@0.50.0-next.16':
+    resolution: {integrity: sha512-y9QE60BFrFwD9DGxwULvLec15ya20CtOneRm6XNLFYbjzHmzQ9M6LocveFkS3q3Zko9ZARRcJPeixn51gY/MlA==}
+    peerDependencies:
+      '@babel/core': ^7.20.12
 
   '@emnapi/core@1.7.1':
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
@@ -2294,8 +2299,8 @@ packages:
       '@solidjs/web': '>=2.0.0-beta.7 <2.0.0-experimental.0'
       solid-js: '>=2.0.0-beta.7 <2.0.0-experimental.0'
 
-  '@solidjs/signals@2.0.0-beta.15':
-    resolution: {integrity: sha512-lw4a4frNajnmVjILbyfrgJ4ksqU+YKhkepZ8glKK9Q68O3zq7W8qDLOtsz5v1mt0o3TB11/rozJFpgMTmnYegg==}
+  '@solidjs/signals@2.0.0-beta.16':
+    resolution: {integrity: sha512-BBOXytK+Tf2jn7Lh9MIdRTHaRiPxgXw6XkwhpuPZWbGaPNjLoSnnFFzRhgKiUCWMcXbm+g5lP6pd21s88pifWQ==}
 
   '@solidjs/start@2.0.0-alpha.2':
     resolution: {integrity: sha512-z56ATi3P07q8F5Io2I+RQrwjyWZtFZzpXN/J+8scf/gqrAW83LtgRkZFZjJaGH7i9WrHP+ep9F+ZiJ2gDHVBcw==}
@@ -2318,10 +2323,10 @@ packages:
     peerDependencies:
       vite: ^7
 
-  '@solidjs/web@2.0.0-beta.15':
-    resolution: {integrity: sha512-+LvmzzN5CHxQ+TeCGgA8DKuB8S4t0EHVlmDUlAp4hkLnh7My3ZGuKYHKWsFMd8w08nPgF6LdBZkH+c5iNcmcSA==}
+  '@solidjs/web@2.0.0-beta.16':
+    resolution: {integrity: sha512-BZaMwDMN8/NLl8LuGQX8TdsNoXU7L02Ay4KhNaUsMocdMcj5G2EDXLssI+iZdzHVV637Cj4N9KWaTeizGrZeDw==}
     peerDependencies:
-      solid-js: ^2.0.0-beta.15
+      solid-js: ^2.0.0-beta.16
 
   '@speed-highlight/core@1.2.15':
     resolution: {integrity: sha512-BMq1K3DsElxDWawkX6eLg9+CKJrTVGCBAWVuHXVUV2u0s2711qiChLSId6ikYPfxhdYocLNt3wWwSvDiTvFabw==}
@@ -2723,11 +2728,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.20.12
 
-  babel-plugin-jsx-dom-expressions@0.50.0-next.14:
-    resolution: {integrity: sha512-eMUq8UuVs5ROCiYmtMBp/TWuRxL7GZ32JUs47CmTzZo8hX9AIayTnNtbsBmQlfEnJla3TaxgBYDvGxNlHCqVcA==}
-    peerDependencies:
-      '@babel/core': ^7.20.12
-
   babel-preset-solid@1.9.10:
     resolution: {integrity: sha512-HCelrgua/Y+kqO8RyL04JBWS/cVdrtUv/h45GntgQY+cJl4eBcKkCDV3TdMjtKx1nXwRaR9QXslM/Npm1dxdZQ==}
     peerDependencies:
@@ -2737,11 +2737,11 @@ packages:
       solid-js:
         optional: true
 
-  babel-preset-solid@2.0.0-beta.15:
-    resolution: {integrity: sha512-nXbT3ZlgHmVcH1VvEFwyrxcMQmpRJ55JoOLy+4wAxpaYtADw5YJh4t5UlT5WyuWfv6VC7URDCkFGEdAOjmTwjw==}
+  babel-preset-solid@2.0.0-beta.16:
+    resolution: {integrity: sha512-CQHR/MW4SHJAjiz8om6gSBhs788raGpYSMD/uY1/C93woCXOQI7k0KuPf1Te1QDcMiqfshxv4YyTnwIc3Zrj9Q==}
     peerDependencies:
       '@babel/core': ^7.0.0
-      solid-js: ^2.0.0-beta.15
+      solid-js: ^2.0.0-beta.16
     peerDependenciesMeta:
       solid-js:
         optional: true
@@ -4688,8 +4688,8 @@ packages:
   solid-js@1.9.11:
     resolution: {integrity: sha512-WEJtcc5mkh/BnHA6Yrg4whlF8g6QwpmXXRg4P2ztPmcKeHHlH4+djYecBLhSpecZY2RRECXYUwIc/C2r3yzQ4Q==}
 
-  solid-js@2.0.0-beta.15:
-    resolution: {integrity: sha512-3hvcmEFUgDlahc++/ulrPhnc5IM7aJbW1P4TUaKsMZpDY5qGcOagtL4nbXGdUPnVP0JsJhMuE9bXEcLdLE+2SA==}
+  solid-js@2.0.0-beta.16:
+    resolution: {integrity: sha512-8GVhd4QACNK5K8EJI9VB478U8wg7ulRIZY36Vj0LNKmQrRAVcdv8FitNnA/NPFOzmfLVHf8ZAh0wbjxNTtAjvg==}
 
   solid-motionone@1.0.4:
     resolution: {integrity: sha512-aqEjgecoO9raDFznu/dEci7ORSmA26Kjj9J4Cn1Gyr0GZuOVdvsNxdxClTL9J40Aq/uYFx4GLwC8n70fMLHiuA==}
@@ -6055,6 +6055,16 @@ snapshots:
 
   '@csstools/css-tokenizer@4.0.0': {}
 
+  '@dom-expressions/babel-plugin-jsx@0.50.0-next.16(@babel/core@7.29.0)':
+    dependencies:
+      '@babel/core': 7.29.0
+      '@babel/helper-module-imports': 7.18.6
+      '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.0)
+      '@babel/types': 7.29.7
+      html-entities: 2.3.3
+      parse5: 7.3.0
+      validate-html-nesting: 1.2.4
+
   '@emnapi/core@1.7.1':
     dependencies:
       '@emnapi/wasi-threads': 1.1.0
@@ -7188,21 +7198,21 @@ snapshots:
     dependencies:
       solid-js: 1.9.11
 
-  '@solidjs/meta@0.30.0-next.0(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)':
+  '@solidjs/meta@0.30.0-next.0(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)':
     dependencies:
-      '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
-      solid-js: 2.0.0-beta.15
+      '@solidjs/web': 2.0.0-beta.16(solid-js@2.0.0-beta.16)
+      solid-js: 2.0.0-beta.16
 
   '@solidjs/router@0.15.4(solid-js@1.9.11)':
     dependencies:
       solid-js: 1.9.11
 
-  '@solidjs/router@0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)':
+  '@solidjs/router@0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)':
     dependencies:
-      '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
-      solid-js: 2.0.0-beta.15
+      '@solidjs/web': 2.0.0-beta.16(solid-js@2.0.0-beta.16)
+      solid-js: 2.0.0-beta.16
 
-  '@solidjs/signals@2.0.0-beta.15': {}
+  '@solidjs/signals@2.0.0-beta.16': {}
 
   '@solidjs/start@2.0.0-alpha.2(@testing-library/jest-dom@6.9.1)(crossws@0.4.4(srvx@0.11.12))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))':
     dependencies:
@@ -7239,12 +7249,12 @@ snapshots:
       - crossws
       - supports-color
 
-  '@solidjs/testing-library@0.8.10(@solidjs/router@0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)':
+  '@solidjs/testing-library@0.8.10(@solidjs/router@0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)':
     dependencies:
       '@testing-library/dom': 10.4.0
-      solid-js: 2.0.0-beta.15
+      solid-js: 2.0.0-beta.16
     optionalDependencies:
-      '@solidjs/router': 0.17.0-next.3(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+      '@solidjs/router': 0.17.0-next.3(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
 
   '@solidjs/vite-plugin-nitro-2@0.2.0(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))':
     dependencies:
@@ -7279,11 +7289,11 @@ snapshots:
       - uploadthing
       - xml2js
 
-  '@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15)':
+  '@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16)':
     dependencies:
-      seroval: 1.5.1
-      seroval-plugins: 1.5.1(seroval@1.5.1)
-      solid-js: 2.0.0-beta.15
+      seroval: 1.5.4
+      seroval-plugins: 1.5.1(seroval@1.5.4)
+      solid-js: 2.0.0-beta.16
 
   '@speed-highlight/core@1.2.15': {}
 
@@ -7778,16 +7788,6 @@ snapshots:
       html-entities: 2.3.3
       parse5: 7.3.0
 
-  babel-plugin-jsx-dom-expressions@0.50.0-next.14(@babel/core@7.29.0):
-    dependencies:
-      '@babel/core': 7.29.0
-      '@babel/helper-module-imports': 7.18.6
-      '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.0)
-      '@babel/types': 7.29.7
-      html-entities: 2.3.3
-      parse5: 7.3.0
-      validate-html-nesting: 1.2.4
-
   babel-preset-solid@1.9.10(@babel/core@7.29.0)(solid-js@1.9.11):
     dependencies:
       '@babel/core': 7.29.0
@@ -7795,12 +7795,12 @@ snapshots:
     optionalDependencies:
       solid-js: 1.9.11
 
-  babel-preset-solid@2.0.0-beta.15(@babel/core@7.29.0)(solid-js@2.0.0-beta.15):
+  babel-preset-solid@2.0.0-beta.16(@babel/core@7.29.0)(solid-js@2.0.0-beta.16):
     dependencies:
       '@babel/core': 7.29.0
-      babel-plugin-jsx-dom-expressions: 0.50.0-next.14(@babel/core@7.29.0)
+      '@dom-expressions/babel-plugin-jsx': 0.50.0-next.16(@babel/core@7.29.0)
     optionalDependencies:
-      solid-js: 2.0.0-beta.15
+      solid-js: 2.0.0-beta.16
 
   balanced-match@1.0.2: {}
 
@@ -9876,12 +9876,12 @@ snapshots:
       seroval: 1.5.1
       seroval-plugins: 1.5.1(seroval@1.5.1)
 
-  solid-js@2.0.0-beta.15:
+  solid-js@2.0.0-beta.16:
     dependencies:
-      '@solidjs/signals': 2.0.0-beta.15
+      '@solidjs/signals': 2.0.0-beta.16
       csstype: 3.1.3
-      seroval: 1.5.1
-      seroval-plugins: 1.5.1(seroval@1.5.1)
+      seroval: 1.5.4
+      seroval-plugins: 1.5.1(seroval@1.5.4)
 
   solid-motionone@1.0.4(solid-js@1.9.11):
     dependencies:
@@ -9912,11 +9912,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  solid-refresh@0.8.0-next.7(solid-js@2.0.0-beta.15):
+  solid-refresh@0.8.0-next.7(solid-js@2.0.0-beta.16):
     dependencies:
       '@babel/generator': 7.29.1
       '@babel/types': 7.29.0
-      solid-js: 2.0.0-beta.15
+      solid-js: 2.0.0-beta.16
 
   solid-transition-group@0.3.0(solid-js@1.9.11):
     dependencies:
@@ -9928,10 +9928,10 @@ snapshots:
     dependencies:
       solid-js: 1.9.11
 
-  solid-use@1.0.0-next.2(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15):
+  solid-use@1.0.0-next.2(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16):
     dependencies:
-      '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
-      solid-js: 2.0.0-beta.15
+      '@solidjs/web': 2.0.0-beta.16(solid-js@2.0.0-beta.16)
+      solid-js: 2.0.0-beta.16
 
   source-map-js@1.2.1: {}
 
@@ -10131,11 +10131,11 @@ snapshots:
       solid-js: 1.9.11
       solid-use: 0.9.1(solid-js@1.9.11)
 
-  terracotta@2.0.0-next.6(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15):
+  terracotta@2.0.0-next.6(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16):
     dependencies:
-      '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
-      solid-js: 2.0.0-beta.15
-      solid-use: 1.0.0-next.2(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(solid-js@2.0.0-beta.15)
+      '@solidjs/web': 2.0.0-beta.16(solid-js@2.0.0-beta.16)
+      solid-js: 2.0.0-beta.16
+      solid-use: 1.0.0-next.2(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(solid-js@2.0.0-beta.16)
 
   terser@5.44.0:
     dependencies:
@@ -10443,15 +10443,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.15(solid-js@2.0.0-beta.15))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.15)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)):
+  vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.16(solid-js@2.0.0-beta.16))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.16)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)):
     dependencies:
       '@babel/core': 7.29.0
-      '@solidjs/web': 2.0.0-beta.15(solid-js@2.0.0-beta.15)
+      '@solidjs/web': 2.0.0-beta.16(solid-js@2.0.0-beta.16)
       '@types/babel__core': 7.20.5
-      babel-preset-solid: 2.0.0-beta.15(@babel/core@7.29.0)(solid-js@2.0.0-beta.15)
+      babel-preset-solid: 2.0.0-beta.16(@babel/core@7.29.0)(solid-js@2.0.0-beta.16)
       merge-anything: 5.1.7
-      solid-js: 2.0.0-beta.15
-      solid-refresh: 0.8.0-next.7(solid-js@2.0.0-beta.15)
+      solid-js: 2.0.0-beta.16
+      solid-refresh: 0.8.0-next.7(solid-js@2.0.0-beta.16)
       vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1)
       vitefu: 1.1.1(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.44.0)(tsx@4.19.2)(yaml@2.8.1))
     optionalDependencies:
