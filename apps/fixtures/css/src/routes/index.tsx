@@ -1,5 +1,5 @@
-import { createAsync, query } from "@solidjs/router";
-import { lazy, Show } from "solid-js";
+import { query } from "@solidjs/router";
+import { createMemo, lazy, Show } from "solid-js";
 import "virtual:virtualModule.css";
 import Layout from "../components/layout";
 import { CommonTests } from "../components/test";
@@ -12,8 +12,10 @@ const Lazy = lazy(() => import("../components/lazy"));
 const LazyLink = lazy(() => import("../components/lazyLink"));
 const LazyLinkTmp = lazy(() => import("../components/lazyLinkTmp"));
 
-const entries = import.meta.glob("../components/lazyG*.tsx");
-const LazyGlob = lazy(Object.values(entries)[0] as any);
+const entries = import.meta.glob("/src/components/lazyG*.tsx");
+// Solid 2 lazy() requires an explicit moduleUrl in SSR when the loader
+// isn't a static dynamic import the bundler plugin can analyze.
+const LazyGlob = lazy(Object.values(entries)[0] as any, Object.keys(entries)[0]!.slice(1));
 
 const SharedChunk = lazy(() => import("../components/sharedChunk/lazy1"));
 // Do not remove this.
@@ -27,7 +29,7 @@ const getData = query(async () => {
 }, "data");
 
 export default function Home() {
-  const data = createAsync(() => getData(), { deferStream: true });
+  const data = createMemo(() => getData());
 
   return (
     <main>

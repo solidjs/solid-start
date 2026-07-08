@@ -7,7 +7,9 @@ const Badge = (props: FlowProps) => (
 
 const Layout = (props: FlowProps<{ title: string }>) => {
   const [mounted, setMounted] = createSignal(false);
-  onSettled(() => setMounted(true));
+  onSettled(() => {
+    setMounted(true);
+  });
 
   return (
     <div class="flex gap-2 flex-col">

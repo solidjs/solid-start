@@ -28,7 +28,14 @@ function buildDevManifest(): Record<string, any> {
     }
   }
   walk(pageRoutes);
-  return manifest;
+  // In dev, Vite serves any module at "/<id>", so resolve unknown lazy()
+  // moduleUrls on the fly — mirrors vite-plugin-solid's dev manifest.
+  return new Proxy(manifest, {
+    get(target, key) {
+      if (typeof key !== "string" || key.startsWith("_")) return (target as any)[key];
+      return (target as any)[key] ?? { file: key };
+    },
+  });
 }
 
 const devManifest = import.meta.env.DEV ? buildDevManifest() : undefined;

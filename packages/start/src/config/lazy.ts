@@ -22,6 +22,33 @@ const idTransform = (id: string): PluginItem => {
   };
 };
 
+// Matches vite-plugin-solid's placeholder, which its transform hook resolves
+// to a project-root-relative module id via Vite's resolver.
+const LAZY_PLACEHOLDER_PREFIX = "__SOLID_LAZY_MODULE__:";
+
+const extractDynamicImportSpecifier = (node: t.Node): string | null => {
+  if (!t.isArrowFunctionExpression(node) && !t.isFunctionExpression(node)) return null;
+
+  let callExpr: t.CallExpression | null = null;
+  if (t.isCallExpression(node.body)) {
+    callExpr = node.body;
+  } else if (
+    t.isBlockStatement(node.body) &&
+    node.body.body.length === 1 &&
+    t.isReturnStatement(node.body.body[0]) &&
+    t.isCallExpression(node.body.body[0].argument)
+  ) {
+    callExpr = node.body.body[0].argument;
+  }
+
+  if (!callExpr || !t.isImport(callExpr.callee)) return null;
+  if (callExpr.arguments.length !== 1) return null;
+  const arg = callExpr.arguments[0]!;
+  if (!t.isStringLiteral(arg)) return null;
+
+  return arg.value;
+};
+
 const importTransform = (): PluginItem => {
   return {
     visitor: {
@@ -30,6 +57,20 @@ const importTransform = (): PluginItem => {
         path.traverse({
           ImportSpecifier(subPath) {
             if (subPath.node.local.name !== "lazy") return;
+
+            // Solid 2 requires a moduleUrl second argument for lazy() in SSR.
+            // vite-plugin-solid only injects it for lazy imported from "solid-js",
+            // so inject its placeholder here before rewriting the import source.
+            const binding = subPath.scope.getBinding(subPath.node.local.name);
+            for (const ref of binding?.referencePaths ?? []) {
+              const call = ref.parentPath;
+              if (!call?.isCallExpression() || call.node.callee !== ref.node) continue;
+              if (call.node.arguments.length !== 1) continue;
+              const specifier = extractDynamicImportSpecifier(call.node.arguments[0]!);
+              if (!specifier) continue;
+              call.node.arguments.push(t.stringLiteral(LAZY_PLACEHOLDER_PREFIX + specifier));
+            }
+
             subPath.remove();
             path.insertAfter(
               t.importDeclaration(
