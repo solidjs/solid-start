@@ -29,7 +29,7 @@ const getData = query(async () => {
 }, "data");
 
 export default function Home() {
-  const data = createMemo(() => getData());
+  const data = createMemo(() => getData(), { deferStream: true });
 
   return (
     <main>
