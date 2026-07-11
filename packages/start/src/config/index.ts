@@ -10,7 +10,6 @@ import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
-import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
 
@@ -192,7 +191,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         }),
       },
     }),
-    lazy(),
     envPlugin(options?.env),
     // Must be placed after fsRoutes, as treeShake will remove the
     // server fn exports added in by this plugin

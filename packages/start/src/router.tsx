@@ -1,7 +1,6 @@
-import { type Component } from "solid-js";
+import { lazy, type Component } from "solid-js";
 import { getRequestEvent, isServer } from "@solidjs/web";
 
-import lazy from "./shared/lazy.ts";
 import { pageRoutes as routeConfigs } from "./server/routes.ts";
 import type { PageEvent } from "./server/types.ts";
 

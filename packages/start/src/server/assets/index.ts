@@ -31,6 +31,13 @@ const getEntity = (registry: Registry, asset: Asset) => {
 };
 
 export const useAssets = (assets: Asset[], nonce?: string) => {
+  /**
+   * CSS will be rendered by Solid v2 Core directly
+   * Disabling this via early return for now
+   * 
+   * TODO: Remove once all logic has been transfered to Solid
+   */
+  return;
   if (!assets.length) return;
 
   const registry: Registry = (getRequestEvent()!.locals[REGISTRY] ??= {});
