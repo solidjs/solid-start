@@ -1,6 +1,6 @@
 import { createAsync } from "@solidjs/router";
 
-const a = 1;
+const a = "myTreeshakingTestUniqueString1";
 
 function getA() {
   return a;
