@@ -354,11 +354,11 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       seroval:
-        specifier: ^1.5.1
-        version: 1.5.1
+        specifier: ^1.5.4
+        version: 1.5.4
       seroval-plugins:
         specifier: ^1.5.1
-        version: 1.5.1(seroval@1.5.1)
+        version: 1.5.1(seroval@1.5.4)
       shiki:
         specifier: ^1.29.2
         version: 1.29.2
@@ -3542,6 +3542,10 @@ packages:
 
   seroval@1.5.1:
     resolution: {integrity: sha512-OwrZRZAfhHww0WEnKHDY8OM0U/Qs8OTfIDWhUD4BLpNJUfXK4cGmjiagGze086m+mhI+V2nD0gfbHEnJjb9STA==}
+    engines: {node: '>=10'}
+
+  seroval@1.5.4:
+    resolution: {integrity: sha512-46uFvgrXTVxZcUorgSSRZ4y+ieqLLQRMlG4bnCZKW3qI6BZm7Rg4ntMW4p1mILEEBZWrFlcpp0AyIIlM6jD9iw==}
     engines: {node: '>=10'}
 
   serve-placeholder@2.0.2:
@@ -7435,7 +7439,13 @@ snapshots:
     dependencies:
       seroval: 1.5.1
 
+  seroval-plugins@1.5.1(seroval@1.5.4):
+    dependencies:
+      seroval: 1.5.4
+
   seroval@1.5.1: {}
+
+  seroval@1.5.4: {}
 
   serve-placeholder@2.0.2:
     dependencies:
