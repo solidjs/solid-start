@@ -2,6 +2,20 @@ import type * as babel from "@babel/core";
 import * as t from "@babel/types";
 import { isPathValid } from "./paths.ts";
 
+function isInvalidForRemoval(path: babel.NodePath) {
+  if (isPathValid(path, t.isCatchClause)) {
+    // This case is for `catch (error)` blocks
+    return true;
+  }
+
+  // This one is for destructured variables
+  let target = path;
+  if (isPathValid(path, t.isVariableDeclarator)) {
+    target = path.get('id');
+  }
+  return isPathValid(target, t.isObjectPattern) || isPathValid(target, t.isArrayPattern);
+}
+
 export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
   // TODO(Alexis):
   // This implementation is simple but slow
@@ -24,17 +38,18 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
             case "hoisted":
             case "module":
               if (binding.references === 0 && !binding.path.removed) {
-                if (isPathValid(binding.path.parentPath, t.isImportDeclaration)) {
                   const parent = binding.path.parentPath;
+                if (isPathValid(parent, t.isImportDeclaration)) {
                   if (parent.node.specifiers.length === 1) {
                     parent.remove();
                   } else {
                     binding.path.remove();
                   }
-                } else {
+                  dirty = true;
+                } else if (!(isInvalidForRemoval(binding.path))) {
                   binding.path.remove();
+                  dirty = true;
                 }
-                dirty = true;
               }
               break;
             case "local":

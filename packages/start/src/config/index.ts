@@ -63,6 +63,18 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     server: `${start.appRoot}/entry-server${entryExtension}`,
   };
   return [
+    // TODO (Alexis): check if the comment below is still relevant
+    //
+    // Must be placed after fsRoutes, as treeShake will remove the
+    // server fn exports added in by this plugin
+    serverFunctionsPlugin({
+      manifest: VIRTUAL_MODULES.serverFnManifest,
+      runtime: {
+        server: '@solidjs/start/fns/server',
+        client: '@solidjs/start/fns/client',
+      },
+      filter: options?.serverFunctions?.filter,
+    }),
     {
       name: "solid-start:config",
       enforce: "pre",
@@ -190,16 +202,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     }),
     lazy(),
     envPlugin(options?.env),
-    // Must be placed after fsRoutes, as treeShake will remove the
-    // server fn exports added in by this plugin
-    serverFunctionsPlugin({
-      manifest: VIRTUAL_MODULES.serverFnManifest,
-      runtime: {
-        server: '@solidjs/start/fns/server',
-        client: '@solidjs/start/fns/client',
-      },
-      filter: options?.serverFunctions?.filter,
-    }),
     {
       name: "solid-start:boundary-modules",
       enforce: "pre",
