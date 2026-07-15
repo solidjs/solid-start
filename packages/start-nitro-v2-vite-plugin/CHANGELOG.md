@@ -1,5 +1,12 @@
 # @solidjs/vite-plugin-nitro-2
 
+## 0.3.1-beta.0
+
+### Patch Changes
+
+- b28c7ac: fix: compress public assets by default, matching `1.x` behavior
+- ec1b82b: Included Vite 8 in the peer dependency range.
+
 ## 0.3.0
 
 ### Minor Changes
