@@ -1,44 +1,46 @@
 import middleware from "solid-start:middleware";
-import { clientViteManifest } from "solid-start:client-vite-manifest";
+import manifest from "virtual:solid-manifest";
 import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
-import { join } from "pathe";
 import type { JSX } from "@solidjs/web";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 
 import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
-import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 
-import { pageRoutes } from "./routes.ts";
-
-function buildDevManifest(): Record<string, any> {
-  const manifest: Record<string, any> = {};
-  function walk(routes: any[]) {
-    for (const route of routes) {
-      if (route.$component?.src) {
-        const src = route.$component.src;
-        manifest[src] = { file: src, isEntry: true };
-      }
-      if (route.children) walk(route.children);
-    }
+/**
+ * Entry-owned CSS for dev SSR. The runtime registers entry assets itself for
+ * static (build) manifests, but the dev manifest is an async resolver it
+ * can't enumerate — so resolve the client/app entry keys here and register
+ * the collected inline styles at render start (pre-shell registrations are
+ * injected into <head>, styled from the first byte).
+ */
+async function resolveDevEntryStyles(): Promise<any[] | undefined> {
+  if (typeof (manifest as any)?.resolve !== "function") return;
+  const keys = [
+    import.meta.env.START_CLIENT_ENTRY.replace(/^\.\//, ""),
+    import.meta.env.START_APP_ENTRY,
+  ];
+  const styles: any[] = [];
+  for (const key of keys) {
+    const assets = await (manifest as any).resolve(key).catch(() => null);
+    if (assets?.css) styles.push(...assets.css);
   }
-  walk(pageRoutes);
-  // In dev, Vite serves any module at "/<id>", so resolve unknown lazy()
-  // moduleUrls on the fly — mirrors vite-plugin-solid's dev manifest.
-  return new Proxy(manifest, {
-    get(target, key) {
-      if (typeof key !== "string" || key.startsWith("_")) return (target as any)[key];
-      return (target as any)[key] ?? { file: key };
-    },
-  });
+  return styles;
 }
 
-const devManifest = import.meta.env.DEV ? buildDevManifest() : undefined;
+function registerEntryStyles(styles: any[]) {
+  const ctx = (sharedConfig as any).context;
+  if (!ctx?.registerAsset) return;
+  for (const css of styles) {
+    if (typeof css === "string") ctx.registerAsset("style", css);
+    else ctx.registerAsset("inline-style", css);
+  }
+}
 
 const SERVER_FN_BASE = "/_server";
 
@@ -94,11 +96,13 @@ export function createBaseHandler(
         typeof options === "function" ? await options(context) : { ...options };
       const mode = resolvedOptions.mode || "stream";
       if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
-      (resolvedOptions as any).manifest = import.meta.env.DEV ? devManifest : clientViteManifest;
+      (resolvedOptions as any).manifest = manifest;
+      const entryStyles = import.meta.env.DEV ? await resolveDevEntryStyles() : undefined;
 
       if (mode === "sync" || !import.meta.env.START_SSR) {
         const html = renderToString(() => {
           (sharedConfig as any).context.event = context;
+          if (entryStyles) registerEntryStyles(entryStyles);
           return fn(context);
         }, resolvedOptions);
         context.complete = true;
@@ -130,6 +134,7 @@ export function createBaseHandler(
 
       const _stream = renderToStream(() => {
         (sharedConfig as any).context.event = context;
+        if (entryStyles) registerEntryStyles(entryStyles);
         return fn(context);
       }, resolvedOptions);
       const stream = _stream as typeof _stream & PromiseLike<string>; // stream has a hidden 'then' method
@@ -170,33 +175,11 @@ export function createHandler(
 
 export async function createPageEvent(ctx: FetchEvent) {
   ctx.response.headers.set("Content-Type", "text/html");
-  // const prevPath = ctx.request.headers.get("x-solid-referrer");
-  // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
-  const manifest = getSsrManifest(import.meta.env.SSR && import.meta.env.DEV ? "ssr" : "client");
-
-  // Handle Vite build.cssCodeSplit
-  // When build.cssCodeSplit is false, a single CSS file is generated with the key style.css
-  const mergedCSS = import.meta.env.PROD ? await manifest.getAssets("style.css") : [];
-
-  const assets = [
-    ...mergedCSS,
-    ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
-    ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
-    // ...(import.meta.env.START_ISLANDS
-    //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
-    //       s => (s as any).attrs.rel !== "modulepreload"
-    //     )
-    //   : [])
-  ];
   const pageEvent: PageEvent = Object.assign(ctx, {
-    assets,
     router: {
       submission: initFromFlash(ctx) as any,
     },
     routes: createRoutes(),
-    // prevUrl: prevPath || "",
-    // mutation: mutation,
-    // $type: FETCH_EVENT,
     complete: false,
     $islands: new Set<string>(),
   });

@@ -3,9 +3,6 @@ export const DEFAULT_EXTENSIONS = ["js", "jsx", "ts", "tsx"];
 export const CLIENT_BASE_PATH = "_build";
 
 export const VIRTUAL_MODULES = {
-  clientViteManifest: "solid-start:client-vite-manifest",
-  getClientManifest: "solid-start:get-client-manifest",
-  getManifest: "solid-start:get-manifest",
   middleware: "solid-start:middleware",
   serverFnManifest: "solid-start:server-fn-manifest",
   clientEntry: "solid-start:client-entry",

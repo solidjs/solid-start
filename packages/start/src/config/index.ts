@@ -1,8 +1,8 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
-import { extname, isAbsolute, join } from "node:path";
+import { extname, isAbsolute, join, relative } from "node:path";
 import type { PluginOption } from "vite";
-import solid, { type Options as SolidOptions } from "vite-plugin-solid";
+import solid, { devStylePatch, type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
@@ -10,7 +10,6 @@ import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
-import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
@@ -154,12 +153,17 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-            // Use JSON.stringify so backslashes on Windows are escaped and
-            // esbuild receives a valid JS string literal for the define value
-            "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
+            // Root-relative (posix) so it can key manifest/resolver lookups.
+            // JSON.stringify keeps the define a valid JS string literal.
+            "import.meta.env.START_APP_ENTRY": JSON.stringify(
+              relative(root, appEntryPath).split("\\").join("/"),
+            ),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
+            // Inline dev script (from vite-plugin-solid) that reconciles
+            // SSR'd <style data-vite-dev-id> tags with Vite's HMR client.
+            "import.meta.env.START_DEV_STYLE_PATCH": JSON.stringify(devStylePatch),
           },
           builder: {
             sharedPlugins: true,
@@ -177,7 +181,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
     },
-    manifest(start),
     fsRoutes({
       routers: {
         client: new SolidStartClientFileRouter({
@@ -207,6 +210,11 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       async resolveId(id) {
         const { filename, query } = parseIdQuery(id);
 
+        if (filename === VIRTUAL_MODULES.middleware) {
+          if (start.middleware) return await this.resolve(start.middleware);
+          return `\0${VIRTUAL_MODULES.middleware}`;
+        }
+
         let base;
         if (filename === VIRTUAL_MODULES.clientEntry) base = handlers.client;
         if (filename === VIRTUAL_MODULES.serverEntry) base = handlers.server;
@@ -220,13 +228,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           return id;
         }
       },
-    },
-    {
-      name: "solid-start:capture-client-bundle",
-      enforce: "post",
-      generateBundle(options, bundle) {
-        globalThis.START_CLIENT_BUNDLE = bundle;
-        (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
+      load(id) {
+        if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
       },
     },
     devServer(),

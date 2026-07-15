@@ -1,15 +1,51 @@
-import { lazy, type Component } from "solid-js";
-import { getRequestEvent, isServer } from "@solidjs/web";
+import clientAssets from "virtual:solid-manifest/client";
+import { createComponent, lazy, onCleanup, type Component } from "solid-js";
+import { acquireAsset, getRequestEvent, isServer } from "@solidjs/web";
 
 import { pageRoutes as routeConfigs } from "./server/routes.ts";
 import type { PageEvent } from "./server/types.ts";
 
 const components: Record<string, Component> = {};
 
+/**
+ * Ties a route's client CSS lifecycle to the route component: acquire the
+ * stylesheets from the client asset manifest on mount, release on route
+ * leave. `acquireAsset` ref-counts by href and adopts links however they got
+ * into the document (SSR-streamed, injected by Vite's dynamic-import preload
+ * helper, or created by another route sharing the stylesheet), so styles
+ * from a left route are removed instead of accumulating — with a grace
+ * period covering A → B → A navigation. The wrapper is applied on both
+ * server and client so the component tree (and with it hydration ids) stays
+ * aligned. In dev the map is empty and Vite's own client manages CSS.
+ */
+function withRouteAssets(src: string, component: Component): Component {
+  const entry = (clientAssets as Record<string, { css: string[] }>)[src.split("?")[0]!];
+  if (!entry?.css?.length) return component;
+  const wrapped: Component & { preload?: unknown } = props => {
+    if (!isServer) {
+      for (const href of entry.css) {
+        onCleanup(acquireAsset({ type: "style", href }));
+      }
+    }
+    return createComponent(component, props as any);
+  };
+  // Routers drive `preload` (navigation intent) and islands read `moduleUrl`
+  // off the component — forward both from the underlying lazy component.
+  wrapped.preload = (component as any).preload;
+  Object.defineProperty(wrapped, "moduleUrl", {
+    get: () => (component as any).moduleUrl,
+  });
+  return wrapped;
+}
+
 export function createRoutes() {
   function createRoute(route: any) {
     const component =
-      route.$component && (components[route.$component.src] ??= lazy(route.$component.import, route.$component.src));
+      route.$component &&
+      (components[route.$component.src] ??= withRouteAssets(
+        route.$component.src,
+        lazy(route.$component.import, route.$component.src),
+      ));
 
     return {
       ...route,

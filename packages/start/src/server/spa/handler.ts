@@ -1,7 +1,6 @@
 import type { JSX } from "@solidjs/web";
 
 import { createBaseHandler } from "../handler.ts";
-import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 import type { FetchEvent, HandlerOptions, PageEvent } from "../types.ts";
 
 /**
@@ -16,10 +15,7 @@ export function createHandler(
 }
 
 async function createPageEvent(ctx: FetchEvent) {
-  const manifest = getSsrManifest("ssr");
   const pageEvent: PageEvent = Object.assign(ctx, {
-    manifest: "json" in manifest ? await manifest.json() : {},
-    assets: await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY),
     routes: [],
     complete: false,
     $islands: new Set<string>(),
