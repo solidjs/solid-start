@@ -113,6 +113,7 @@ function invalidateModules(
   }
 }
 
+
 export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[] {
   const filter = createFilter(
     options.filter?.include || DEFAULT_INCLUDE,
@@ -195,6 +196,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
     },
     {
       name: "solid-start:server-functions/compiler",
+      enforce: 'pre',
       async transform(code, fileId, opts) {
         const mode = opts?.ssr ? "server" : "client";
         const [id] = fileId.split("?");

@@ -55,8 +55,8 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
             const buildId = `${v.src}?${v.pick.map((p: any) => `pick=${p}`).join("&")}`;
             return {
               src: relative(root, buildId),
-              build: isBuild ? `_$() => import(/* @vite-ignore */ '${buildId}')$_` : undefined,
-              import: `_$() => import(/* @vite-ignore */ '${buildId}')$_`,
+              build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
+              import: `_$() => import('${buildId}')$_`,
             };
           }
           return v;

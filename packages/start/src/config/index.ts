@@ -1,13 +1,12 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { normalizePath, type PluginOption } from "vite";
+import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-import { serverFunctionsPlugin } from "../directives/index.ts";
+import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
-import { type EnvPluginOptions, envPlugin } from "./env.ts";
+import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
@@ -33,6 +32,7 @@ export interface SolidStartOptions {
     mode?: "js" | "json";
   };
   env?: EnvPluginOptions;
+  serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
 }
 
 const absolute = (path: string, root: string) =>
@@ -63,6 +63,18 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     server: `${start.appRoot}/entry-server${entryExtension}`,
   };
   return [
+    // TODO (Alexis): check if the comment below is still relevant
+    //
+    // Must be placed after fsRoutes, as treeShake will remove the
+    // server fn exports added in by this plugin
+    serverFunctionsPlugin({
+      manifest: VIRTUAL_MODULES.serverFnManifest,
+      runtime: {
+        server: '@solidjs/start/fns/server',
+        client: '@solidjs/start/fns/client',
+      },
+      filter: options?.serverFunctions?.filter,
+    }),
     {
       name: "solid-start:config",
       enforce: "pre",
@@ -92,6 +104,16 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         return {
           appType: "custom",
           build: { assetsDir: "_build/assets" },
+          optimizeDeps: {
+            // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
+            ...({
+              rolldownOptions: {
+                transform: {
+                  jsx: "react",
+                },
+              },
+            } as any),
+          },
           environments: {
             [VITE_ENVIRONMENTS.client]: {
               consumer: "client",
@@ -134,6 +156,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                   }
                 : {}),
             },
+            // Depending on the package manager and dependency structure Vite externalizes @solidjs/start
+            // This makes sure that @solidjs/start goes through the Vite build process
+            noExternal: ["@solidjs/start"],
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
@@ -177,19 +202,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     }),
     lazy(),
     envPlugin(options?.env),
-    // Must be placed after fsRoutes, as treeShake will remove the
-    // server fn exports added in by this plugin
-    serverFunctionsPlugin({
-      manifest: VIRTUAL_MODULES.serverFnManifest,
-      runtime: {
-        server: normalizePath(
-          fileURLToPath(new URL("../server/server-fns-runtime.ts", import.meta.url)),
-        ),
-        client: normalizePath(
-          fileURLToPath(new URL("../server/server-runtime.ts", import.meta.url)),
-        ),
-      },
-    }),
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
@@ -212,8 +224,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     {
       name: "solid-start:capture-client-bundle",
       enforce: "post",
-      generateBundle(_options, bundle) {
+      generateBundle(options, bundle) {
         globalThis.START_CLIENT_BUNDLE = bundle;
+        (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
     devServer(),
