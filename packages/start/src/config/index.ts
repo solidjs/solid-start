@@ -2,8 +2,12 @@ import { defu } from "defu";
 import { globSync } from "node:fs";
 import { extname, isAbsolute, join, relative } from "node:path";
 import type { PluginOption } from "vite";
-import solid, { devStylePatch, type Options as SolidOptions } from "vite-plugin-solid";
-import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
+import solid, {
+  devStylePatch,
+  serverFunctions,
+  type Options as SolidOptions,
+  type ServerFunctionsOptions,
+} from "vite-plugin-solid";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
@@ -197,11 +201,11 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     envPlugin(options?.env),
     // Must be placed after fsRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
-    serverFunctionsPlugin({
+    serverFunctions({
       manifest: VIRTUAL_MODULES.serverFnManifest,
       runtime: {
-        server: '@solidjs/start/fns/server',
-        client: '@solidjs/start/fns/client',
+        server: "@solidjs/start/fns/server",
+        client: "@solidjs/start/fns/client",
       },
       filter: options?.serverFunctions?.filter,
     }),

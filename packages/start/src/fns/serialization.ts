@@ -1,44 +1,23 @@
+// Serialization for the server function transport.
+//
+// Layering (a rough taxonomy used across fns/*):
+// - [protocol] the wire contract both peers must agree on. The JSON codec
+//   (plugins, feature policy, depth limit) lives in @solidjs/web/serialization
+//   and is consumed here — Start no longer owns those defaults.
+// - [generic]  transport machinery any implementation would need (the chunk
+//   framing below). Candidate for hoisting alongside the codec later.
+// - [policy]   Start-specific choices, e.g. the opt-in "js" (eval) mode.
 import {
-  crossSerializeStream,
-  deserialize,
-  Feature,
-  fromCrossJSON,
-  getCrossReferenceHeader,
+  createJSONDeserializer,
+  resolveSerializerPlugins,
+  serializeJSON,
   type SerovalNode,
-  toCrossJSONStream,
-} from "seroval";
-import {
-  AbortSignalPlugin,
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLPlugin,
-  URLSearchParamsPlugin,
-} from "seroval-plugins/web";
-
-// TODO(Alexis): if we can, allow providing an option to extend these.
-const DEFAULT_PLUGINS = [
-  AbortSignalPlugin,
-  CustomEventPlugin,
-  DOMExceptionPlugin,
-  EventPlugin,
-  FormDataPlugin,
-  HeadersPlugin,
-  ReadableStreamPlugin,
-  RequestPlugin,
-  ResponsePlugin,
-  URLSearchParamsPlugin,
-  URLPlugin,
-];
-const MAX_SERIALIZATION_DEPTH_LIMIT = 64;
-const DISABLED_FEATURES = Feature.RegExp;
+} from "@solidjs/web/serialization";
+import { crossSerializeStream, deserialize, getCrossReferenceHeader } from "seroval";
 
 /**
+ * [generic] Chunk framing.
+ *
  * Alexis:
  *
  * A "chunk" is a piece of data emitted by the streaming serializer.
@@ -66,12 +45,19 @@ function createChunk(data: string): Uint8Array {
   return chunk;
 }
 
+/**
+ * [policy] "js" mode: chunks are executable JS the client `eval()`s. More
+ * compact than the JSON codec but incompatible with a strict CSP, so it is
+ * opt-in (`serialization.mode: "js"`). Uses raw seroval because the wire
+ * format (cross-reference header + deserialize) differs from both hydration
+ * output and the JSON codec; only the plugin set is shared.
+ */
 export function serializeToJSStream(id: string, value: any) {
   return new ReadableStream({
     start(controller) {
       crossSerializeStream(value, {
         scopeId: id,
-        plugins: DEFAULT_PLUGINS,
+        plugins: resolveSerializerPlugins(),
         onSerialize(data: string, initial: boolean) {
           controller.enqueue(
             createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data),
@@ -88,13 +74,15 @@ export function serializeToJSStream(id: string, value: any) {
   });
 }
 
+/**
+ * [protocol] JSON mode (the default): chunks are SerovalNode JSON decoded
+ * without eval. Codec defaults (web plugins, RegExp disabled, depth limit)
+ * come from @solidjs/web/serialization so both peers stay in agreement.
+ */
 export function serializeToJSONStream(value: any) {
   return new ReadableStream({
     start(controller) {
-      toCrossJSONStream(value, {
-        disabledFeatures: DISABLED_FEATURES,
-        depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
-        plugins: DEFAULT_PLUGINS,
+      serializeJSON(value, {
         onParse(node) {
           controller.enqueue(createChunk(JSON.stringify(node)));
         },
@@ -207,16 +195,12 @@ export async function deserializeJSONStream(response: Response | Request) {
   const reader = new SerovalChunkReader(response.body);
   const result = await reader.next();
   if (!result.done) {
-    const refs = new Map();
+    // Cross-references between chunks resolve through state inside the
+    // deserializer, so one instance handles the whole stream.
+    const deserializeChunk = createJSONDeserializer();
 
     function interpretChunk(chunk: string): unknown {
-      const value = fromCrossJSON(JSON.parse(chunk) as SerovalNode, {
-        refs,
-        disabledFeatures: DISABLED_FEATURES,
-        depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
-        plugins: DEFAULT_PLUGINS,
-      });
-      return value;
+      return deserializeChunk(JSON.parse(chunk) as SerovalNode);
     }
 
     void reader.drain(interpretChunk);
