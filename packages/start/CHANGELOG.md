@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.0-beta.5
+
+### Patch Changes
+
+- eb73dd5: Use `oxc-parser` to analyze filesystem route exports.
+
 ## 2.0.0-beta.4
 
 ### Patch Changes
