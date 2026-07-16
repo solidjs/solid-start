@@ -1,23 +1,10 @@
-import type {
-  EnvironmentModuleNode,
-  FSWatcher,
-  ModuleGraph,
-  ModuleNode,
-  PluginOption,
-  ViteDevServer,
-} from "vite";
+import type { EnvironmentModuleNode, FSWatcher, PluginOption, ViteDevServer } from "vite";
+import { debounce } from "../../utils/debounce.ts";
+import { VITE_ENVIRONMENTS } from "../constants.ts";
 import { moduleId } from "./index.ts";
 import type { BaseFileSystemRouter } from "./router.ts";
 
-interface CompiledRouter {
-  removeRoute(path: string): void;
-  addRoute(path: string): void;
-  updateRoute(path: string): void;
-  addEventListener(event: "reload", handler: () => void): void;
-  removeEventListener(event: "reload", handler: () => void): void;
-}
-
-function setupWatcher(watcher: FSWatcher, routes: CompiledRouter): void {
+function setupWatcher(watcher: FSWatcher, routes: BaseFileSystemRouter): void {
   watcher.on("unlink", path => routes.removeRoute(path));
   watcher.on("add", path => routes.addRoute(path));
   watcher.on("change", path => routes.updateRoute(path));
@@ -25,39 +12,41 @@ function setupWatcher(watcher: FSWatcher, routes: CompiledRouter): void {
 
 function createRoutesReloader(
   server: ViteDevServer,
-  routes: CompiledRouter,
+  routes: BaseFileSystemRouter,
   environment: "client" | "ssr",
-): () => void {
-  routes.addEventListener("reload", handleRoutesReload);
-  return () => routes.removeEventListener("reload", handleRoutesReload);
+) {
+  const devEnv = server.environments[environment]!;
+  if (!devEnv?.moduleGraph) return;
 
-  function handleRoutesReload(): void {
-    if (environment === "ssr") {
-      // Handle server environment HMR reload
-      const serverEnv = server.environments.server;
-      if (serverEnv && serverEnv.moduleGraph) {
-        const mod: EnvironmentModuleNode | undefined =
-          serverEnv.moduleGraph.getModuleById(moduleId);
-        if (mod) {
-          const seen = new Set<EnvironmentModuleNode>();
-          serverEnv.moduleGraph.invalidateModule(mod, seen);
-        }
-      }
+  /**
+   * Debounce catches multiple route changes in a row
+   * Short timeout for inexpensive invalidations
+   */
+  const invalidateModule = debounce((mod: EnvironmentModuleNode) => {
+    devEnv.moduleGraph.invalidateModule(mod);
+  }, 0);
+
+  /**
+   * Long debounce timeout for expensive reloads
+   */
+  const reloadModule = debounce((mod: EnvironmentModuleNode) => {
+    devEnv.reloadModule(mod);
+  }, 200);
+
+  return routes.on("reload", function handleRoutesReload(evt): void {
+    const mod = devEnv.moduleGraph.getModuleById(moduleId)!;
+    if (!mod) {
+      devEnv.hot.send({ type: "full-reload" });
+      return;
+    }
+
+    if (environment === VITE_ENVIRONMENTS.client && evt.detail.type !== "update") {
+      // Client has to be reloaded when routes are added or removed
+      reloadModule(mod);
     } else {
-      // Handle client environment HMR reload
-      const { moduleGraph }: { moduleGraph: ModuleGraph } = server;
-      const mod: ModuleNode | undefined = moduleGraph.getModuleById(moduleId);
-      if (mod) {
-        const seen = new Set<ModuleNode>();
-        moduleGraph.invalidateModule(mod, seen);
-        server.reloadModule(mod);
-      }
+      invalidateModule(mod);
     }
-
-    if (!server.hot) {
-      server.ws.send({ type: "full-reload" });
-    }
-  }
+  });
 }
 
 export const fileSystemWatcher = (
@@ -66,11 +55,11 @@ export const fileSystemWatcher = (
   const plugin: PluginOption = {
     name: "fs-watcher",
     async configureServer(server: ViteDevServer) {
-      Object.keys(routers).forEach(environment => {
-        const router = (globalThis as any).ROUTERS[environment];
+      for (const environment of [VITE_ENVIRONMENTS.server, VITE_ENVIRONMENTS.client]) {
+        const router = routers[environment];
         setupWatcher(server.watcher, router);
-        createRoutesReloader(server, router, environment as keyof typeof routers);
-      });
+        createRoutesReloader(server, router, environment);
+      }
     },
   };
   return plugin;

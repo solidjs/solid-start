@@ -1,6 +1,6 @@
 // This file contains global type definitions that are internal to SolidStart and are not exported
 
-declare module "solidstart:server-fn-manifest" {
+declare module "solid-start:server-fn-manifest" {
   type ServerFn = (...args: Array<any>) => Promise<any>;
   export function getServerFnById(id: string): Promise<ServerFn>;
 }

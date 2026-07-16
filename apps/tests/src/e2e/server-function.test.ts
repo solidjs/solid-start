@@ -81,4 +81,43 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/server-function-blob");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
   });
+  test("should remove exports for non-function values when top-level use server is used", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-query-toplevel");
+    await expect(page.locator("#server-fn-test")).toContainText('false');
+  });
+
+  // TODO not sure if this is the correct place
+  test("should build with a env:server", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-env");
+    await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+  });
+
+  test("should build with a server function including an unused try/catch variable", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-unused-trycatch");
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
+
+  test("should build with a server function including an unused destructured variable", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-unused-destructure");
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
+
+  /**
+   * Makes sure that server function dead code elimination
+   * runs before Solid's SSR transforms.
+   *
+   * Solid's SSR code removes client-only event handler code
+   * such as onClick, but server function's only referenced
+   * in such event handlers still must be registered on
+   * the server.
+   */
+  test("should build with a server function only referenced inside onClick", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-onclick");
+    await page.locator("#server-fn-test").click();
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
 });

@@ -1,8 +1,8 @@
 import type { PluginItem } from "@babel/core";
 import babel from "@babel/core";
 import * as t from "@babel/types";
-import { sep as osSep } from "path";
-import { basename, relative, sep } from "path/posix";
+import { sep as osSep } from "node:path";
+import { basename, relative, sep } from "node:path/posix";
 import type { PluginOption } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
 
@@ -90,6 +90,7 @@ const lazy = (): PluginOption => {
       // The transformed files either import "lazy" or css files
       // Therefore we skip, if the src doesn't have any import
       if (src.indexOf("import") === -1) return;
+      if (id.includes("entry-server")) return;
 
       const plugins: PluginItem[] = [];
 

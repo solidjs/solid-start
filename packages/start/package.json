@@ -1,17 +1,28 @@
 {
   "name": "@solidjs/start",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-beta.6",
   "type": "module",
+  "files": [
+    "dist",
+    "env.d.ts",
+    "CHANGELOG.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solidjs/solid-start.git",
+    "directory": "packages/start"
+  },
   "scripts": {
     "build": "pnpm validate-imports && tsc && node scripts/build.js",
     "dev": "tsc --watch",
     "test": "vitest",
     "test:ci": "vitest run",
+    "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only",
     "validate-imports": "node scripts/validate-imports.js"
   },
   "exports": {
     ".": "./src/index.tsx",
-    "./config": "./src/config/index.ts",
+    "./config": "./dist/config/index.js",
     "./server": "./src/server/index.tsx",
     "./client": "./src/client/index.tsx",
     "./router": "./src/router.tsx",
@@ -19,7 +30,9 @@
     "./client/spa": "./src/client/spa/index.tsx",
     "./middleware": "./src/middleware/index.ts",
     "./http": "./src/http/index.ts",
-    "./env": "./env.d.ts"
+    "./env": "./env.d.ts",
+    "./fns/server": "./src/fns/server.ts",
+    "./fns/client": "./src/fns/client.ts"
   },
   "publishConfig": {
     "access": "public",
@@ -33,47 +46,48 @@
       "./client/spa": "./dist/client/spa/index.jsx",
       "./middleware": "./dist/middleware/index.js",
       "./http": "./dist/http/index.js",
-      "./env": "./env.d.ts"
+      "./env": "./env.d.ts",
+      "./fns/server": "./dist/fns/server.js",
+      "./fns/client": "./dist/fns/client.js"
     }
   },
   "dependencies": {
-    "@babel/core": "^7.28.3",
-    "@babel/traverse": "^7.28.3",
-    "@babel/types": "^7.28.5",
+    "@babel/core": "^7.29.0",
+    "@babel/traverse": "^7.29.0",
+    "@babel/types": "^7.29.0",
     "@solidjs/meta": "^0.29.4",
-    "@tanstack/server-functions-plugin": "1.134.5",
     "@types/babel__traverse": "^7.28.0",
-    "@types/micromatch": "^4.0.9",
+    "@types/micromatch": "^4.0.10",
     "cookie-es": "^2.0.0",
     "defu": "^6.1.4",
     "error-stack-parser": "^2.1.4",
-    "es-module-lexer": "^1.7.0",
-    "esbuild": "^0.25.3",
     "fast-glob": "^3.3.3",
-    "h3": "npm:h3@2.0.1-rc.4",
+    "h3": "^2.0.1-rc.25",
     "html-to-image": "^1.11.13",
     "micromatch": "^4.0.8",
-    "path-to-regexp": "^8.2.0",
+    "oxc-parser": "^0.139.0",
+    "path-to-regexp": "^8.3.0",
     "pathe": "^2.0.3",
     "radix3": "^1.1.2",
-    "seroval": "^1.5.0",
-    "seroval-plugins": "^1.5.0",
-    "shiki": "^1.26.1",
-    "solid-js": "^1.9.9",
+    "seroval": "^1.5.4",
+    "seroval-plugins": "^1.5.1",
+    "shiki": "^1.29.2",
+    "solid-js": "^1.9.11",
     "source-map-js": "^1.2.1",
-    "srvx": "^0.9.1",
-    "terracotta": "^1.0.6",
-    "vite-plugin-solid": "^2.11.9"
+    "srvx": "^0.11.22",
+    "terracotta": "^1.1.0",
+    "vite-plugin-solid": "^2.11.11"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
-    "vite": "^7.1.10",
-    "vitest": "^4.0.10"
+    "@types/node": "^25.5.0",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
-    "vite": "^7"
+    "vite": "^8"
   }
 }

@@ -1,4 +1,4 @@
-import { RawSourceMap, SourceMapConsumer } from "source-map-js";
+import { type RawSourceMap, SourceMapConsumer } from "source-map-js";
 
 const INLINE_SOURCEMAP_REGEX = /^data:application\/json[^,]+base64,/;
 const SOURCEMAP_REGEX =

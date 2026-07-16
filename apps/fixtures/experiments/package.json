@@ -1,19 +1,20 @@
 {
   "name": "fixture-experiments",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.0",
+    "@solidjs/router": "^0.15.4",
     "@solidjs/start": "workspace:*",
-    "solid-js": "^1.9.9",
-    "vite": "7.1.10"
+    "nitro": "^3.0.260610-beta",
+    "solid-js": "^1.9.11",
+    "vite": "^8.0.0"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   }
 }
