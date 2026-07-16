@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 2.0.0-beta.6
+
+### Patch Changes
+
+- 25769f2: Fix Vite preview for non-HTML responses and projects whose server build uses an `.mjs`
+  entry.
+
 ## 2.0.0-beta.5
 
 ### Patch Changes
