@@ -23,6 +23,7 @@
     "@vitest/ui": "^4.1.0",
     "jsdom": "^28.1.0",
     "lodash": "^4.17.23",
+    "nitro": "^3.0.260610-beta",
     "solid-js": "^1.9.11",
     "vite": "^8.0.0",
     "vite-plugin-solid": "^2.11.11",
