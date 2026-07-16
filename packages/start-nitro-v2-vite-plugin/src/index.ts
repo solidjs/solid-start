@@ -20,6 +20,13 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
   return [
     {
       name: "solid-start-vite-plugin-nitro",
+      configResolved(config) {
+        if (config.command === "build") {
+          config.logger.warn(
+            "[@solidjs/vite-plugin-nitro-2] This plugin is deprecated. Migrate to Nitro v3 using the official `nitro/vite` plugin. See https://github.com/solidjs/templates/tree/main/solid-start-v2 for examples.",
+          );
+        }
+      },
       generateBundle: {
         handler(_options, bundle) {
           if (this.environment.name !== "ssr") {
