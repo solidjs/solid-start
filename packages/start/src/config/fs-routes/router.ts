@@ -51,7 +51,7 @@ export function analyzeModule(src: string) {
         ln = entry.localName.name ?? undefined;
       } else if (entry.importName.kind === "Name") {
         ln = entry.importName.name ?? undefined;
-      } else if (entry.importName.kind === "Default" || entry.importName.kind === "All") {
+      } else if (entry.importName.kind === "All") {
         ln = n;
       }
 

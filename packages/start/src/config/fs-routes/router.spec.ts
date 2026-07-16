@@ -45,16 +45,16 @@ describe("analyzeModule", () => {
 
   it("preserves local-name semantics for re-exports", () => {
     const route = writeRoute(`
-      export { external, external as renamedExternal } from "./external";
-      export { default as DefaultExport } from "./external";
-      export * as namespace from "./external";
-      export * from "./external";
+      export { external, external as renamedExternal } from "./external.ts";
+      export { default as DefaultExport } from "./external.ts";
+      export * as namespace from "./external.ts";
+      export * from "./external.ts";
     `);
 
     expect(analyzeModule(route)).toEqual([
       { n: "external", ln: "external" },
       { n: "renamedExternal", ln: "external" },
-      { n: "DefaultExport", ln: "DefaultExport" },
+      { n: "DefaultExport", ln: "default" },
       { n: "namespace", ln: "namespace" },
     ]);
   });
