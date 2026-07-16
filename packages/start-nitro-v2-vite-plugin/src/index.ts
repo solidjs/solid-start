@@ -26,7 +26,7 @@ export function nitroV2Plugin(nitroConfig?: UserNitroConfig): PluginOption {
         if (config.command === "build" && !didWarn) {
           didWarn = true;
           config.logger.warn(
-            "[@solidjs/vite-plugin-nitro-2] This plugin is deprecated. Migrate to Nitro v3 using the official `nitro/vite` plugin. See https://github.com/solidjs/templates/tree/main/solid-start-v2 for examples.",
+            "[@solidjs/vite-plugin-nitro-2] This plugin is deprecated. Migrate to Nitro v3 using the official `nitro/vite` plugin. See https://github.com/solidjs/templates/blob/main/solid-start-v2/bare/vite.config.ts for a SolidStart example and https://nitro.build/docs#vite-integration for general configuration.",
           );
         }
       },

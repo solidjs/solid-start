@@ -13,7 +13,7 @@
 > });
 > ```
 >
-> See the official [SolidStart templates](https://github.com/solidjs/templates/tree/main/solid-start-v2) for complete, up-to-date examples.
+> See the official [SolidStart Vite configuration](https://github.com/solidjs/templates/blob/main/solid-start-v2/bare/vite.config.ts) for an up-to-date example and the [Nitro Vite integration guide](https://nitro.build/docs#vite-integration) for general configuration.
 
 This package moves Nitro into a Vite-Plugin to consolidate the API surface between Nitro v2 and v3.
 
