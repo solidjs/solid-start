@@ -15,8 +15,5 @@ async function getGetA() {
 
 export default function Treeshaking() {
   const s = createAsync(() => getGetA());
-  createEffect(() => {
-    throw new Error('something')
-  })
   return <h1>hello: {s()}</h1>;
 }
