@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.0-beta.4
+
+### Patch Changes
+
+- 21fdb2c: Update `h3` to `2.0.1-rc.25`.
+
 ## 2.0.0-beta.3
 
 ### Patch Changes
