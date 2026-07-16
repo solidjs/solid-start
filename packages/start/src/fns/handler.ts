@@ -114,6 +114,11 @@ export async function handleServerFunction(h3Event: H3Event) {
     h3Event.res.headers.set("content-type", "text/plain");
     return serializeToJSONStream(result);
   } catch (x) {
+    // Give monitoring a chance to observe server-function failures before
+    // they are serialized into the response, since no error hook fires for
+    // them today. Thrown Responses are control flow (redirects, forbidden),
+    // not errors.
+    if (!(x instanceof Response)) (globalThis as any).__reportServerFnError?.(x);
     if (x instanceof Response) {
       if (singleFlight && instance) {
         x = await handleSingleFlight(event, x);
