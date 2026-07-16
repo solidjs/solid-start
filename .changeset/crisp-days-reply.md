@@ -1,5 +1,6 @@
 ---
-"@solidjs/start": minor
+"@solidjs/start": patch
 ---
 
-better way to disable compression of ssr html
+Fix Vite preview for non-HTML responses and projects whose server build uses an `.mjs`
+entry.

@@ -127,7 +127,7 @@ export function devServer(): Array<PluginOption> {
 
 export function resolvePreviewServerEntry(root: string): string {
   const serverDirectory = join(root, "dist/server");
-  const serverEntry = ["js", "mjs", "cjs"]
+  const serverEntry = ["js", "mjs"]
     .map(extension => join(serverDirectory, `entry-server.${extension}`))
     .find(existsSync);
 
