@@ -26,7 +26,6 @@ export default defineConfig({
       },
     }),
     nitro({
-      preset: "node-server",
       compressPublicAssets: true,
     }),
   ],

@@ -5,7 +5,7 @@ import { solidStart } from "../../../packages/start/src/config";
 import virtualCSS from "./src/virtualCssPlugin";
 
 export default defineConfig({
-  plugins: [virtualCSS(), solidStart(), nitro({ preset: "node-server" }), tailwindcss()],
+  plugins: [virtualCSS(), solidStart(), nitro(), tailwindcss()],
   build: {
     rollupOptions: {
       output: {
