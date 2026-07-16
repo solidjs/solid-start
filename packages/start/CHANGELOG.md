@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 2.0.0-beta.2
+
+### Patch Changes
+
+- 3e961e0: Require Vite 8
+- 11907a2: Fix published package missing `dist/`: pnpm 11 respects `.gitignore` when packing a package without a `files` field, so `2.0.0-beta.1` was published without its build output. Add an explicit `files` field.
+
 ## 2.0.0-beta.1
 
 ### Patch Changes
