@@ -58,7 +58,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     throw new Error(`Could not find an app jsx/tsx entry in ${start.appRoot}.`);
   }
   const entryExtension = extname(appEntryPath);
-  globalThis.START_HANDLERS = {
+  const handlers = {
     client: `${start.appRoot}/entry-client${entryExtension}`,
     server: `${start.appRoot}/entry-server${entryExtension}`,
   };
@@ -70,8 +70,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     serverFunctionsPlugin({
       manifest: VIRTUAL_MODULES.serverFnManifest,
       runtime: {
-        server: '@solidjs/start/fns/server',
-        client: '@solidjs/start/fns/client',
+        server: "@solidjs/start/fns/server",
+        client: "@solidjs/start/fns/client",
       },
       filter: options?.serverFunctions?.filter,
     }),
@@ -87,7 +87,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
       async config(_, env) {
-        const clientInput = [START_HANDLERS.client];
+        const clientInput = [handlers.client];
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
           for (const route of await clientRouter.getRoutes()) {
@@ -136,7 +136,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
-                  input: `~/entry-server${entryExtension}`,
+                  input: handlers.server,
                 },
                 outDir: "dist/server",
                 commonjsOptions: {
@@ -147,7 +147,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
           resolve: {
             alias: {
-              "@solidjs/start/server/entry": START_HANDLERS.server,
+              "@solidjs/start/server/entry": handlers.server,
               "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
@@ -173,7 +173,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             // Use JSON.stringify so backslashes on Windows are escaped and
             // esbuild receives a valid JS string literal for the define value
             "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
-            "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(START_HANDLERS.client),
+            "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
@@ -215,8 +215,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         const { filename, query } = parseIdQuery(id);
 
         let base;
-        if (filename === VIRTUAL_MODULES.clientEntry) base = START_HANDLERS.client;
-        if (filename === VIRTUAL_MODULES.serverEntry) base = START_HANDLERS.server;
+        if (filename === VIRTUAL_MODULES.clientEntry) base = handlers.client;
+        if (filename === VIRTUAL_MODULES.serverEntry) base = handlers.server;
         if (filename === VIRTUAL_MODULES.app) base = appEntryPath;
 
         if (base) {
@@ -236,7 +236,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
-    devServer(),
+    devServer(handlers.server),
     solid({
       ...start.solid,
       ssr: true,

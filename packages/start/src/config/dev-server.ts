@@ -10,7 +10,7 @@ import {
 } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
 
-export function devServer(): Array<PluginOption> {
+export function devServer(serverEntryPath: string): Array<PluginOption> {
   return [
     {
       name: "solid-start-dev-server",
@@ -62,7 +62,7 @@ export function devServer(): Array<PluginOption> {
             try {
               const serverEntry: {
                 default: { fetch: (req: Request) => Promise<Response> };
-              } = await serverEnv.runner.import(START_HANDLERS.server);
+              } = await serverEnv.runner.import(serverEntryPath);
 
               const webRes = await serverEntry.default.fetch(webReq);
 
