@@ -64,7 +64,7 @@
     "es-module-lexer": "^2.0.0",
     "esbuild": "^0.27.4",
     "fast-glob": "^3.3.3",
-    "h3": "2.0.1-rc.16",
+    "h3": "^2.0.1-rc.25",
     "html-to-image": "^1.11.13",
     "micromatch": "^4.0.8",
     "path-to-regexp": "^8.3.0",
