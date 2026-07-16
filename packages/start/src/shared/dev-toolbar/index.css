@@ -1,0 +1,87 @@
+[data-start-dev-toolbar] {
+  position: fixed;
+
+  bottom: 0px;
+  left: 0px;
+
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+
+  cursor: grab;
+}
+
+[data-start-dev-toolbar]:active {
+  cursor: grabbing;
+}
+
+[data-start-dev-toolbar] > [tc-toolbar] {
+  position: relative;
+
+  background: oklch(25.7% 0.09 281.288);
+  margin: 1rem;
+  padding: 0.25rem 0.5rem;
+
+  overflow: hidden;
+  border-radius: 9999px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  border: rgb(249 250 251) 1px solid;
+}
+
+[data-start-dev-toolbar] > [tc-toolbar] > div {
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-start-dev-toolbar] > [tc-toolbar] > div:last-child {
+  border-left: rgb(249 250 251) 1px solid;
+  padding-left: 0.5rem;
+
+  gap: 0.5rem;
+}
+
+[data-start-dev-toolbar-version] {
+  border-radius: 9999px;
+  color: rgb(249 250 251);
+  padding: 0.125rem 0.5rem;
+
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+
+  border: rgb(249 250 251) 1px solid;
+}
+
+[data-start-dev-toolbar-version] > div {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+[data-start-dev-toolbar] svg {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+[data-start-dev-toolbar-panel] {
+  background: oklch(25.7% 0.09 281.288);
+  margin: 0rem 1rem;
+
+  overflow: auto;
+
+  width: 50rem;
+  height: 30rem;
+
+  max-width: calc(100vw - 1rem);
+  max-height: calc(100vh - 1rem);
+
+  border-radius: 1rem;
+}

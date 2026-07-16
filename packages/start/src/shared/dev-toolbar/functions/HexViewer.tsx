@@ -1,5 +1,5 @@
 import { createMemo, createResource, For, type JSX, Show, Suspense } from "solid-js";
-import { Text } from "../ui/Text.tsx";
+import { Text } from "../../ui/Text.tsx";
 
 import './HexViewer.css';
 

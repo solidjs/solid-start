@@ -1,4 +1,3 @@
-
 [data-start-select] {
   display: flex;
   flex-direction: column;
@@ -13,7 +12,7 @@
 }
 
 [data-start-select-option] {
-  color: rgb(17 24 39);
+  color: rgb(249 250 251);
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 1rem;
@@ -33,6 +32,6 @@
 [data-start-select-option][tc-active],
 [data-start-select-option][tc-selected],
 [data-start-select-option]:focus {
-  background-color: rgb(219 234 254);
-  color: rgb(30 58 138);
+  color: rgb(229 231 235);
+  background-color: rgb(55 65 81);
 }

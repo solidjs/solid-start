@@ -1,25 +1,16 @@
 import type { SerovalNode } from "seroval";
-import {
-  createEffect,
-  createSignal,
-  For,
-  type JSX,
-  Show,
-  splitProps,
-} from "solid-js";
+import { createEffect, createSignal, For, type JSX, Show, splitProps } from "solid-js";
 
-import { Badge } from "../ui/Badge.tsx";
-import { Cascade, CascadeOption } from "../ui/Cascade.tsx";
-import { Section } from "../ui/Section.tsx";
+import { Badge } from "../../ui/Badge.tsx";
+import { Cascade, CascadeOption } from "../../ui/Cascade.tsx";
+import { Section } from "../../ui/Section.tsx";
 import { HexViewer } from "./HexViewer.tsx";
-import { SerovalValue, PropertySeparator } from "./SerovalValue.tsx";
+import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
+import { SerovalChunkReader } from "../../../fns/serialization.ts";
 import "./SerovalViewer.css";
-import { SerovalChunkReader } from "../../fns/serialization.ts";
 
-function LinkIcon(
-  props: JSX.IntrinsicElements["svg"] & { title: string },
-): JSX.Element {
+function LinkIcon(props: JSX.IntrinsicElements["svg"] & { title: string }): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -158,10 +149,7 @@ function getNodeType(node: SerovalNode) {
   throw new Error("unsupported node type");
 }
 
-function traverse(
-  node: SerovalNode,
-  handler: (node: SerovalNode) => void,
-): void {
+function traverse(node: SerovalNode, handler: (node: SerovalNode) => void): void {
   handler(node);
   switch (node.t) {
     // Number = 0,
@@ -386,10 +374,7 @@ function getObjectFlag(value: number) {
   }
 }
 
-function zip<Key, Value>(
-  keys: Key[],
-  values: Value[],
-): [key: Key, value: Value][] {
+function zip<Key, Value>(keys: Key[], values: Value[]): [key: Key, value: Value][] {
   const zipped: [key: Key, value: Value][] = [];
 
   for (let i = 0, len = keys.length; i < len; i++) {
@@ -401,12 +386,8 @@ function zip<Key, Value>(
 
 interface RenderContext {
   getNode: (index: number) => SerovalNode | undefined;
-  getPromise: (
-    index: number,
-  ) => Extract<SerovalNode, { t: 23 | 24 }> | undefined;
-  getStream: (
-    index: number,
-  ) => Extract<SerovalNode, { t: 32 | 33 | 34 }>[] | undefined;
+  getPromise: (index: number) => Extract<SerovalNode, { t: 23 | 24 }> | undefined;
+  getStream: (index: number) => Extract<SerovalNode, { t: 32 | 33 | 34 }>[] | undefined;
 }
 
 function getStreamKeyword(t: 32 | 33 | 34): string {
@@ -559,7 +540,10 @@ function renderSerovalNode(
               defaultValue={undefined}
               onChange={onSelect}
             >
-              <For each={node.a.map((node, index) => [index, node] as const)} fallback={<SerovalValue value="none" />}>
+              <For
+                each={node.a.map((node, index) => [index, node] as const)}
+                fallback={<SerovalValue value="none" />}
+              >
                 {([key, value]) => (
                   <div data-start-property>
                     <SerovalValue value={key} />
@@ -642,14 +626,17 @@ function renderSerovalNode(
             </div>
           </Section>
           <Show when={node.p}>
-            {(current) => (
+            {current => (
               <Section title="Properties" options={{ size: "xs" }}>
                 <Cascade<number | undefined>
                   data-start-properties
                   defaultValue={undefined}
                   onChange={onSelect}
                 >
-                  <For each={zip(current().k, current().v)} fallback={<SerovalValue value="none" />}>
+                  <For
+                    each={zip(current().k, current().v)}
+                    fallback={<SerovalValue value="none" />}
+                  >
                     {([key, value]) => (
                       <div data-start-property>
                         {typeof key === "string" ? (
@@ -807,7 +794,7 @@ function renderSerovalNode(
                 onChange={onSelect}
               >
                 <For each={result} fallback={<SerovalValue value="none" />}>
-                  {(current) => (
+                  {current => (
                     <div data-start-property>
                       <SerovalValue value={getStreamKeyword(current.t)} />
                       <PropertySeparator />
@@ -830,7 +817,9 @@ function renderSerovalNode(
           <For each={node.a} fallback={<SerovalValue value="none" />}>
             {(current, index) => (
               <div data-start-property>
-                <SerovalValue value={index() === node.l ? 'return' : index() === node.s ? 'throw' : 'next'} />
+                <SerovalValue
+                  value={index() === node.l ? "return" : index() === node.s ? "throw" : "next"}
+                />
                 <PropertySeparator />
                 {renderSerovalNode(ctx, current, onSelect, true)}
               </div>
@@ -862,16 +851,12 @@ function SerovalNodeRenderer(props: SerovalNodeRendererProps): JSX.Element {
       <div data-start-seroval-node>
         <div data-start-seroval-node-header>
           <Badge type="info">{getNodeType(props.node)}</Badge>
-          {props.node.i != null && (
-            <Badge type="info">{`id: ${props.node.i}`}</Badge>
-          )}
+          {props.node.i != null && <Badge type="info">{`id: ${props.node.i}`}</Badge>}
         </div>
-        <div data-start-seroval-node-content>
-          {renderSerovalNode(props, props.node, onSelect)}
-        </div>
+        <div data-start-seroval-node-content>{renderSerovalNode(props, props.node, onSelect)}</div>
       </div>
       <Show when={next()} keyed>
-        {(current) => <SerovalNodeRenderer node={current} {...rest} />}
+        {current => <SerovalNodeRenderer node={current} {...rest} />}
       </Show>
     </>
   );
@@ -885,16 +870,12 @@ function SerovalRenderer(props: SerovalRendererProps): JSX.Element {
   const [, rest] = splitProps(props, ["node"]);
   return (
     <div data-start-seroval-renderer>
-      <Show when={props.node}>
-        {(current) => <SerovalNodeRenderer node={current()} {...rest} />}
-      </Show>
+      <Show when={props.node}>{current => <SerovalNodeRenderer node={current()} {...rest} />}</Show>
     </div>
   );
 }
 
-function createSimpleStore<T extends Record<string | number, unknown>>(
-  initial: T,
-) {
+function createSimpleStore<T extends Record<string | number, unknown>>(initial: T) {
   const [state, setState] = createSignal<T>(initial);
 
   return {
@@ -905,13 +886,13 @@ function createSimpleStore<T extends Record<string | number, unknown>>(
       return state()[key];
     },
     write<K extends keyof T>(key: K, value: T[K]): void {
-      setState((current) => ({
+      setState(current => ({
         ...current,
         [key]: value,
       }));
     },
     update<K extends keyof T>(key: K, value: (current: T[K]) => T[K]): void {
-      setState((current) => ({
+      setState(current => ({
         ...current,
         [key]: value(current[key]),
       }));
@@ -956,7 +937,7 @@ export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
           case 32:
           case 33:
           case 34:
-            streams.update(node.i, (current) => {
+            streams.update(node.i, current => {
               if (current) {
                 return [...current, node];
               }
@@ -1007,9 +988,9 @@ export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
     <div data-start-seroval-viewer>
       <SerovalRenderer
         node={selected()}
-        getNode={(index) => references.read(index)}
-        getPromise={(index) => promises.read(index)}
-        getStream={(index) => streams.read(index)}
+        getNode={index => references.read(index)}
+        getPromise={index => promises.read(index)}
+        getStream={index => streams.read(index)}
       />
     </div>
   );

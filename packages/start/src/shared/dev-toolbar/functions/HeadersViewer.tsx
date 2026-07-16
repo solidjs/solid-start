@@ -2,7 +2,7 @@ import { For } from "solid-js";
 import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
 import './HeadersViewer.css';
-import { Text } from "../ui/Text.tsx";
+import { Text } from "../../ui/Text.tsx";
 
 interface HeadersViewerProps {
   headers: Headers;

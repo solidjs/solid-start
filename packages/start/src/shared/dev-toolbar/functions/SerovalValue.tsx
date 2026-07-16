@@ -1,4 +1,4 @@
-import { Text } from "../ui/Text.tsx";
+import { Text } from "../../ui/Text.tsx";
 import './SerovalValue.css';
 
 interface SerovalValueProps {

@@ -1,56 +1,41 @@
-
-
-.server-function-instance-detail {
+[data-start-functions-instance-detail] {
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
 
+[data-start-functions-viewer] {
+  color: rgb(249 250 251);
+  margin: 0.5rem;
 
-.server-function-inspector {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  width: 75vw;
-  height: 75vh;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  color: rgb(17 24 39);
+
+  min-height: 100%;
 }
 
-.server-function-instances-container {
+[data-start-functions-instances-container] {
   border-radius: 0.5rem;
-  background-color: rgb(249 250 251);
+  color: rgb(249 250 251);
+  width: 100%;
+  min-height: 100%;
   overflow: auto;
 }
 
-
-.server-function-instances {
+[data-start-functions-instances] {
   list-style: none;
   display: flex;
   flex-direction: column;
   padding: 0px;
 }
 
-.server-function-instances > [data-start-select-option] {
+[data-start-functions-instances] > [data-start-select-option] {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.25rem;
-}
-
-.server-function-instance-viewer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  height: 100%;
-  overflow: hidden;
-}
-
-.server-function-instance-viewer-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  color: rgb(249 250 251);
 }
 
 [data-start-headers] {
@@ -76,4 +61,44 @@
   flex-wrap: nowrap;
 
   gap: 0.25rem;
+}
+
+[data-start-function-instance-viewer] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  width: 100%;
+}
+
+[data-start-function-instance-viewer-nav] {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  justify-content: space-between;
+}
+
+[data-start-function-instance-viewer-nav-left] {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+[data-start-function-instance-viewer-nav-left] > div {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+[data-start-function-instance-viewer-content] {
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: rgb(249 250 251);
+
+  height: 100%;
+}
+
+[data-start-function-instance-viewer-content] > [tc-tab-group] {
+  height: 100%;
 }

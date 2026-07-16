@@ -1,5 +1,5 @@
 import { createResource, For, type JSX, Show, Suspense } from 'solid-js';
-import { Section } from '../ui/Section.tsx';
+import { Section } from '../../ui/Section.tsx';
 import { BlobViewer } from './BlobViewer.tsx';
 import { PropertySeparator, SerovalValue } from './SerovalValue.tsx';
 

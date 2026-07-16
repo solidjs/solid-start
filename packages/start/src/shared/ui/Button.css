@@ -7,9 +7,9 @@
 
   border-radius: 0.5rem;
 
-  background-color: oklch(97% 0.014 254.604);
+  color: oklch(97% 0.014 254.604);
 
-  color: rgb(17 24 39);
+  background-color: rgb(17 24 39);
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -27,6 +27,6 @@
 [data-start-button][tc-selected],
 [data-start-button]:hover,
 [data-start-button]:focus {
-  background-color: rgb(219 234 254);
-  color: rgb(30 58 138);
+  color: rgb(219 234 254);
+  background-color: rgb(30 58 138);
 }

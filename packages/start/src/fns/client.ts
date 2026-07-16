@@ -1,27 +1,14 @@
 import { type Component } from "solid-js";
-import {
-  pushRequest,
-  pushResponse,
-} from "../shared/server-function-inspector/server-function-tracker";
+import { pushRequest, pushResponse } from "../shared/dev-toolbar/functions/tracker.ts";
 import {
   // serializeToJSONStream,
   serializeToJSONString,
 } from "./serialization.ts";
-import {
-  BODY_FORMAT_KEY,
-  BodyFormat,
-  extractBody,
-  getHeadersAndBody,
-} from "./shared.ts";
+import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
 
 let INSTANCE = 0;
 
-async function createRequest(
-  base: string,
-  id: string,
-  instance: string,
-  options: RequestInit,
-) {
+async function createRequest(base: string, id: string, instance: string, options: RequestInit) {
   const request = new Request(base, {
     method: "POST",
     ...options,
@@ -32,6 +19,7 @@ async function createRequest(
     },
   });
   if (import.meta.env.DEV) {
+    console.log(pushRequest);
     pushRequest(id, instance, request.clone());
   }
   const response = await fetch(request);
@@ -117,8 +105,7 @@ export function cloneServerReference(id: string) {
   let baseURL = import.meta.env.BASE_URL ?? "/";
   if (!baseURL.endsWith("/")) baseURL += "/";
 
-  const fn = (...args: any[]) =>
-    fetchServerFunction(`${baseURL}_server`, id, {}, args);
+  const fn = (...args: any[]) => fetchServerFunction(`${baseURL}_server`, id, {}, args);
 
   return new Proxy(fn, {
     get(target, prop, receiver) {
@@ -132,8 +119,7 @@ export function cloneServerReference(id: string) {
         const url = `${baseURL}_server?id=${encodeURIComponent(id)}`;
         return (options: RequestInit) => {
           const fn = async (...args: any[]) => {
-            const encodeArgs =
-              options.method && options.method.toUpperCase() === "GET";
+            const encodeArgs = options.method && options.method.toUpperCase() === "GET";
             return fetchServerFunction(
               encodeArgs
                 ? url +
