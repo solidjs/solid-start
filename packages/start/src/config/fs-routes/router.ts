@@ -32,6 +32,8 @@ export function analyzeModule(src: string) {
   );
 }
 
+type RouterEvent = CustomEvent<{ route: string; type: "update" | "remove" | "add" }>;
+
 export class BaseFileSystemRouter extends EventTarget {
   routes: Route[];
 
@@ -98,8 +100,11 @@ export class BaseFileSystemRouter extends EventTarget {
   update = undefined;
 
   _addRoute(route: Route) {
-    this.routes = this.routes.filter(r => r.path !== route.path);
+    const idx = this.routes.findIndex(r => r.path === route.path);
+    if (idx >= 0) this.routes.splice(idx, 1);
     this.routes.push(route);
+
+    return idx >= 0;
   }
 
   async addRoute(src: string) {
@@ -109,7 +114,7 @@ export class BaseFileSystemRouter extends EventTarget {
         const route = this.toRoute(src);
         if (route) {
           this._addRoute(route);
-          this.reload(route.path);
+          this.reload(route.path, "add");
         }
       } catch (e) {
         console.error(e);
@@ -117,25 +122,27 @@ export class BaseFileSystemRouter extends EventTarget {
     }
   }
 
-  reload(route: string) {
+  reload(route: string, type: "update" | "remove" | "add") {
     this.dispatchEvent(
-      new Event("reload", {
-        // @ts-ignore
+      new CustomEvent("reload", {
         detail: {
           route,
+          type,
         },
       }),
     );
   }
 
-  async updateRoute(src: string) {
-    src = normalizePath(src);
+  async updateRoute(src_: string) {
+    const src = normalizePath(src_);
     if (this.isRoute(src)) {
       try {
         const route = this.toRoute(src);
         if (route) {
-          this._addRoute(route);
-          this.reload(route.path);
+          const updated = this._addRoute(route);
+          this.reload(route.path, updated ? "update" : "add");
+        } else {
+          this.removeRoute(src_);
         }
       } catch (e) {
         console.error(e);
@@ -151,9 +158,18 @@ export class BaseFileSystemRouter extends EventTarget {
       if (path === undefined) {
         return;
       }
-      this.routes = this.routes.filter(r => r.path !== path);
-      this.dispatchEvent(new Event("reload", {}));
+
+      const idx = this.routes.findIndex(r => r.path === path);
+      if (idx === -1) return;
+
+      this.routes.splice(idx, 1);
+      this.reload(path, "remove");
     }
+  }
+
+  on(type: string, cb: (evt: RouterEvent) => void) {
+    this.addEventListener(type, cb as any);
+    return () => this.removeEventListener(type, cb as any);
   }
 
   buildRoutesPromise?: Promise<any[]>;

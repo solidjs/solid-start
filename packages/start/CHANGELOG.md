@@ -1,5 +1,28 @@
 # @solidjs/start
 
+## 2.0.0-beta.1
+
+### Patch Changes
+
+- ee1193a: Update srvx to maintain response compatibility with Nitro v3.
+- e263338: Fix `ERR_UNSUPPORTED_ESM_URL_SCHEME` when running `vite preview` on Windows
+
+## 2.0.0-beta.0
+
+### Minor Changes
+
+- 0a9fdc3: fix cloudflare
+
+### Patch Changes
+
+- 0c95804: Fix URL to path conversion in manifest resolver
+- 6011e5a: Fixed changes in route files resulting in a reload instead of hot module replace. Reloads now only are triggered when adding or removing routes.
+- 8fb81e6: Fixed niche edge cases in the server functions dead code removal (DCE) logic:
+  - Server functions only referenced in event handlers (e.g. `onClick`) now aren't considered unused and work properly.
+  - Unused variables in server functions no longer lead to compilation errors.
+- 8d12d6a: Fixed tailwind class changes not getting applied via HMR in filesystem routes.
+- ec1b82b: Included Vite 8 in the peer dependency range.
+
 ## 2.0.0-alpha.3
 
 ### Minor Changes

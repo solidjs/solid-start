@@ -1,11 +1,22 @@
 {
   "name": "landing-page",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "start": "vite serve"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.4",
+    "@solidjs/start": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "nitro": "^3.0.260610-beta",
+    "solid-js": "^1.9.11",
+    "solid-motionone": "^1.0.4",
+    "solid-transition-group": "^0.3.0"
   },
   "devDependencies": {
     "@kobalte/core": "^0.13.11",
@@ -18,16 +29,6 @@
     "tailwindcss-animate": "^1.0.7",
     "tinyglobby": "^0.2.15",
     "tippy.js": "^6.3.7",
-    "vite": "^7.3.1"
-  },
-  "dependencies": {
-    "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.4",
-    "@solidjs/start": "workspace:*",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "solid-js": "^1.9.11",
-    "solid-motionone": "^1.0.4",
-    "solid-transition-group": "^0.3.0"
+    "vite": "^8.0.0"
   }
 }
