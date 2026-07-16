@@ -181,8 +181,8 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
         }
         return null;
       },
-      async load(id, opts) {
-        const mode = opts?.ssr ? "server" : "client";
+      async load(id) {
+        const mode = this.environment.config.consumer;
         if (id === options.manifest) {
           const current = new Debouncer(() =>
             [...manifest[mode]].map(entry => `import "${entry}";`).join("\n"),
@@ -197,8 +197,8 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
     {
       name: "solid-start:server-functions/compiler",
       enforce: 'pre',
-      async transform(code, fileId, opts) {
-        const mode = opts?.ssr ? "server" : "client";
+      async transform(code, fileId) {
+        const mode = this.environment.config.consumer;
         const [id] = fileId.split("?");
         if (!filter(id)) {
           return null;
