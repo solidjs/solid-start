@@ -1,4 +1,3 @@
-import type { ExportSpecifier } from "es-module-lexer";
 import {
   analyzeModule,
   BaseFileSystemRouter,
@@ -41,7 +40,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
+    const exports = analyzeModule(src);
     const hasDefault = !!exports.find(e => e.n === "default");
     const hasRouteConfig = !!exports.find(e => e.n === "route");
     if (hasDefault) {
@@ -69,6 +68,8 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 }
 
 const HTTP_METHODS = ["HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"];
+type ExportSpecifier = ReturnType<typeof analyzeModule>[number];
+
 function createHTTPHandlers(src: string, exports: readonly ExportSpecifier[]) {
   const handlers: Record<string, any> = {};
   for (const exp of exports) {
@@ -128,7 +129,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
+    const exports = analyzeModule(src);
     const hasRouteConfig = exports.find(e => e.n === "route");
     const hasDefault = !!exports.find(e => e.n === "default");
     const hasAPIRoutes = !!exports.find(exp => HTTP_METHODS.includes(exp.n));

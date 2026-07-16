@@ -1,9 +1,8 @@
-import { init, parse } from "es-module-lexer";
-import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "node:fs";
 import micromatch from "micromatch";
 import { posix } from "node:path";
+import { parseSync } from "oxc-parser";
 import { pathToRegexp } from "path-to-regexp";
 
 import { normalizePath } from "vite";
@@ -22,13 +21,17 @@ export function cleanPath(src: string, config: FileSystemRouterConfig) {
 }
 
 export function analyzeModule(src: string) {
-  return parse(
-    esbuild.transformSync(fs.readFileSync(src, "utf-8"), {
-      jsx: "transform",
-      format: "esm",
-      loader: "tsx",
-    }).code,
-    src,
+  const result = parseSync(src, fs.readFileSync(src, "utf-8"), { lang: "tsx" });
+  const error = result.errors[0];
+  if (error) throw new SyntaxError(`Failed to parse ${src}:\n${error.codeframe || error.message}`);
+
+  return result.module.staticExports.flatMap(({ entries }) =>
+    entries.flatMap(entry => {
+      const n = entry.exportName.kind === "Default" ? "default" : entry.exportName.name;
+      return entry.isType || n === null
+        ? []
+        : [{ n, ln: entry.localName.name ?? entry.importName.name ?? n }];
+    }),
   );
 }
 
@@ -57,7 +60,6 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   async buildRoutes(): Promise<any[]> {
-    await init;
     for (var src of glob(this.glob())) {
       await this.addRoute(src);
     }
@@ -78,7 +80,7 @@ export class BaseFileSystemRouter extends EventTarget {
 
     if (path === undefined) return;
 
-    const [_, exports] = analyzeModule(src);
+    const exports = analyzeModule(src);
 
     if (!exports.find(e => e.n === "default")) {
       console.warn("No default export", src);
