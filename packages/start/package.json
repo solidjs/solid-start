@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "type": "module",
   "repository": {
     "type": "git",
@@ -70,7 +70,7 @@
     "shiki": "^1.29.2",
     "solid-js": "^1.9.11",
     "source-map-js": "^1.2.1",
-    "srvx": "^0.11.9",
+    "srvx": "^0.11.22",
     "terracotta": "^1.1.0",
     "vite-plugin-solid": "^2.11.11"
   },
