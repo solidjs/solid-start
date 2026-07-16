@@ -1,6 +1,6 @@
 # @solidjs/vite-plugin-nitro-2
 
-## 0.3.2-beta.0
+## 0.3.2
 
 ### Patch Changes
 
