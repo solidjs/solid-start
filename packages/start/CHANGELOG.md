@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.0-beta.3
+
+### Patch Changes
+
+- 12dc2d3: Bundle `h3` and `cookie-es` into server builds to avoid resolving incompatible hoisted versions
+
 ## 2.0.0-beta.2
 
 ### Patch Changes
