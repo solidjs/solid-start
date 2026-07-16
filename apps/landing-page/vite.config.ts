@@ -7,6 +7,7 @@ export default defineConfig({
     solidStart(),
     nitro({
       preset: "netlify",
+      exportConditions: ["module"],
     }),
   ],
 });
