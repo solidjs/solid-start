@@ -75,6 +75,7 @@ function getExportName(entry: StaticExportEntry) {
 
 function getLocalExportName(entry: StaticExportEntry) {
   const name = getExportName(entry);
+  if (name === "default") return;
   return name === (entry.localName.name ?? entry.importName.name ?? name) ? name : undefined;
 }
 

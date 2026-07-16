@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { SolidStartClientFileRouter } from "../fs-router.ts";
 import { analyzeModule } from "./router.ts";
 
 const temporaryDirectories: string[] = [];
@@ -70,5 +71,15 @@ describe("analyzeModule", () => {
     const route = writeRoute("export default function Route( {");
 
     expect(() => analyzeModule(route)).toThrow(`Failed to parse ${route}`);
+  });
+
+  it("does not include an anonymous default export twice", () => {
+    const route = writeRoute("export default () => <main />;");
+    const router = new SolidStartClientFileRouter({
+      dir: path.dirname(route),
+      extensions: ["tsx"],
+    });
+
+    expect(router.toRoute(route)?.$component.pick).toEqual(["default", "$css"]);
   });
 });
