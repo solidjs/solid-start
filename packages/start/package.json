@@ -89,6 +89,6 @@
     "vitest": "^4.1.0"
   },
   "peerDependencies": {
-    "vite": "^8"
+    "vite": "^8 || ^9"
   }
 }
