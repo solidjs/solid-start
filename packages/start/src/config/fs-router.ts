@@ -1,8 +1,8 @@
-import type { ExportSpecifier } from "es-module-lexer";
 import {
   analyzeModule,
   BaseFileSystemRouter,
   cleanPath,
+  type ExportSpecifier,
   type FileSystemRouterConfig,
 } from "./fs-routes/router.ts";
 
@@ -41,7 +41,7 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
+    const exports = analyzeModule(src);
     const hasDefault = !!exports.find(e => e.n === "default");
     const hasRouteConfig = !!exports.find(e => e.n === "route");
     if (hasDefault) {
@@ -128,7 +128,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
+    const exports = analyzeModule(src);
     const hasRouteConfig = exports.find(e => e.n === "route");
     const hasDefault = !!exports.find(e => e.n === "default");
     const hasAPIRoutes = !!exports.find(exp => HTTP_METHODS.includes(exp.n));

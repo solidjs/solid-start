@@ -1,9 +1,8 @@
-import { init, parse } from "es-module-lexer";
-import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "node:fs";
 import micromatch from "micromatch";
 import { posix } from "node:path";
+import { parseSync } from "oxc-parser";
 import { pathToRegexp } from "path-to-regexp";
 
 import { normalizePath } from "vite";
@@ -15,6 +14,11 @@ export const glob = (path: string) => fg.sync(path, { absolute: true });
 export type FileSystemRouterConfig = { dir: string; extensions: string[] };
 type Route = { path: string } & Record<string, any>;
 
+export interface ExportSpecifier {
+  readonly n: string;
+  readonly ln: string | undefined;
+}
+
 export function cleanPath(src: string, config: FileSystemRouterConfig) {
   return src
     .slice(config.dir.length)
@@ -22,13 +26,37 @@ export function cleanPath(src: string, config: FileSystemRouterConfig) {
 }
 
 export function analyzeModule(src: string) {
-  return parse(
-    esbuild.transformSync(fs.readFileSync(src, "utf-8"), {
-      jsx: "transform",
-      format: "esm",
-      loader: "tsx",
-    }).code,
-    src,
+  const result = parseSync(src, fs.readFileSync(src, "utf-8"), {
+    lang: "tsx",
+    sourceType: "module",
+  });
+
+  if (result.errors.length > 0) {
+    throw new SyntaxError(
+      `Failed to parse ${src}:\n${result.errors
+        .map(error => error.codeframe || error.message)
+        .join("\n\n")}`,
+    );
+  }
+
+  return result.module.staticExports.flatMap(({ entries }): ExportSpecifier[] =>
+    entries.flatMap(entry => {
+      if (entry.isType || entry.exportName.kind === "None") return [];
+
+      const n = entry.exportName.kind === "Default" ? "default" : entry.exportName.name;
+      if (n === null) return [];
+
+      let ln: string | undefined;
+      if (entry.localName.kind === "Name") {
+        ln = entry.localName.name ?? undefined;
+      } else if (entry.importName.kind === "Name") {
+        ln = entry.importName.name ?? undefined;
+      } else if (entry.importName.kind === "Default" || entry.importName.kind === "All") {
+        ln = n;
+      }
+
+      return [{ n, ln }];
+    }),
   );
 }
 
@@ -57,7 +85,6 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   async buildRoutes(): Promise<any[]> {
-    await init;
     for (var src of glob(this.glob())) {
       await this.addRoute(src);
     }
@@ -78,7 +105,7 @@ export class BaseFileSystemRouter extends EventTarget {
 
     if (path === undefined) return;
 
-    const [_, exports] = analyzeModule(src);
+    const exports = analyzeModule(src);
 
     if (!exports.find(e => e.n === "default")) {
       console.warn("No default export", src);
