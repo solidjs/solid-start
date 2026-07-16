@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.0-beta.7
+
+### Patch Changes
+
+- d2f0621: Support JavaScript projects whose app and client/server entries use `.jsx`.
+
 ## 2.0.0-beta.6
 
 ### Patch Changes
