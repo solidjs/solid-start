@@ -1,7 +1,7 @@
 {
   "name": "fixture-experiments",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build"
@@ -10,6 +10,7 @@
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.4",
     "@solidjs/start": "workspace:*",
+    "nitro": "^3.0.260610-beta",
     "solid-js": "^1.9.11",
     "vite": "^8.0.0"
   },
