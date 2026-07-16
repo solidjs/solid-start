@@ -4,6 +4,10 @@ packages:
   - apps/fixtures/*
   - '!**/.tmp/**'
 
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+
 ignoredBuiltDependencies:
   - '@prisma/client'
   - '@prisma/engines'

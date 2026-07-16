@@ -63,6 +63,18 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     server: `${start.appRoot}/entry-server${entryExtension}`,
   };
   return [
+    // TODO (Alexis): check if the comment below is still relevant
+    //
+    // Must be placed after fsRoutes, as treeShake will remove the
+    // server fn exports added in by this plugin
+    serverFunctionsPlugin({
+      manifest: VIRTUAL_MODULES.serverFnManifest,
+      runtime: {
+        server: '@solidjs/start/fns/server',
+        client: '@solidjs/start/fns/client',
+      },
+      filter: options?.serverFunctions?.filter,
+    }),
     {
       name: "solid-start:config",
       enforce: "pre",
@@ -146,7 +158,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             },
             // Depending on the package manager and dependency structure Vite externalizes @solidjs/start
             // This makes sure that @solidjs/start goes through the Vite build process
-            noExternal: ["@solidjs/start"],
+            //
+            // h3 and cookie-es must be bundled as well: if they stay external, the server build
+            // emits bare imports that nitro later re-resolves from the project root, where package
+            // managers like yarn may have hoisted the older major versions required by nitropack
+            // and unstorage (h3 v1 / cookie-es v1) instead of the versions @solidjs/start needs
+            // (see https://github.com/solidjs/solid-start/issues/2101
+            // and https://github.com/solidjs/solid-start/issues/2178)
+            noExternal: ["@solidjs/start", "h3", "cookie-es"],
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
@@ -190,16 +209,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     }),
     lazy(),
     envPlugin(options?.env),
-    // Must be placed after fsRoutes, as treeShake will remove the
-    // server fn exports added in by this plugin
-    serverFunctionsPlugin({
-      manifest: VIRTUAL_MODULES.serverFnManifest,
-      runtime: {
-        server: '@solidjs/start/fns/server',
-        client: '@solidjs/start/fns/client',
-      },
-      filter: options?.serverFunctions?.filter,
-    }),
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {

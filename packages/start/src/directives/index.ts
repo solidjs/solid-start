@@ -191,6 +191,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
     },
     {
       name: "solid-start:server-functions/compiler",
+      enforce: 'pre',
       async transform(code, fileId, opts) {
         const mode = opts?.ssr ? "server" : "client";
         const [id] = fileId.split("?");

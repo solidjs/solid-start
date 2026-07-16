@@ -1,4 +1,5 @@
-import type { ExportSpecifier } from "es-module-lexer";
+import type { StaticExportEntry } from "oxc-parser";
+
 import {
   analyzeModule,
   BaseFileSystemRouter,
@@ -41,19 +42,17 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
-    const hasDefault = !!exports.find(e => e.n === "default");
-    const hasRouteConfig = !!exports.find(e => e.n === "route");
+    const exports = analyzeModule(src);
+    const exportNames = exports.map(getExportName);
+    const localExportNames = exports.map(getLocalExportName).filter(name => name !== undefined);
+    const hasDefault = exportNames.includes("default");
+    const hasRouteConfig = exportNames.includes("route");
     if (hasDefault) {
       return {
         page: true,
         $component: {
           src: src,
-          pick: [
-            ...exports.filter(e => e.n === e.ln && e.n !== "route").map(e => e.n),
-            "default",
-            "$css",
-          ],
+          pick: [...localExportNames.filter(name => name !== "route"), "default", "$css"],
         },
         $$route: hasRouteConfig
           ? {
@@ -69,18 +68,29 @@ export class SolidStartClientFileRouter extends BaseFileSystemRouter {
 }
 
 const HTTP_METHODS = ["HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"];
-function createHTTPHandlers(src: string, exports: readonly ExportSpecifier[]) {
+
+function getExportName(entry: StaticExportEntry) {
+  return entry.exportName.name ?? "default";
+}
+
+function getLocalExportName(entry: StaticExportEntry) {
+  const name = getExportName(entry);
+  if (name === "default") return;
+  return name === (entry.localName.name ?? entry.importName.name ?? name) ? name : undefined;
+}
+
+function createHTTPHandlers(src: string, exports: readonly string[]) {
   const handlers: Record<string, any> = {};
   for (const exp of exports) {
-    if (HTTP_METHODS.includes(exp.n)) {
-      handlers[`$${exp.n}`] = {
+    if (HTTP_METHODS.includes(exp)) {
+      handlers[`$${exp}`] = {
         src: src,
-        pick: [exp.n],
+        pick: [exp],
       };
-      if (exp.n === "GET" && !exports.find(exp => exp.n === "HEAD")) {
+      if (exp === "GET" && !exports.includes("HEAD")) {
         handlers.$HEAD = {
           src: src,
-          pick: [exp.n],
+          pick: [exp],
         };
       }
     }
@@ -128,10 +138,12 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
       };
     }
 
-    const [_, exports] = analyzeModule(src);
-    const hasRouteConfig = exports.find(e => e.n === "route");
-    const hasDefault = !!exports.find(e => e.n === "default");
-    const hasAPIRoutes = !!exports.find(exp => HTTP_METHODS.includes(exp.n));
+    const exports = analyzeModule(src);
+    const exportNames = exports.map(getExportName);
+    const localExportNames = exports.map(getLocalExportName).filter(name => name !== undefined);
+    const hasRouteConfig = exportNames.includes("route");
+    const hasDefault = exportNames.includes("default");
+    const hasAPIRoutes = exportNames.some(name => HTTP_METHODS.includes(name));
     if (hasDefault || hasAPIRoutes) {
       return {
         page: hasDefault,
@@ -140,9 +152,9 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
             ? {
                 src: src,
                 pick: [
-                  ...exports
-                    .filter(e => e.n === e.ln && e.n !== "route" && !HTTP_METHODS.includes(e.n))
-                    .map(e => e.n),
+                  ...localExportNames.filter(
+                    name => name !== "route" && !HTTP_METHODS.includes(name),
+                  ),
                   "default",
                   "$css",
                 ],
@@ -154,7 +166,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
               pick: ["route"],
             }
           : undefined,
-        ...createHTTPHandlers(src, exports),
+        ...createHTTPHandlers(src, exportNames),
         path,
       };
     }

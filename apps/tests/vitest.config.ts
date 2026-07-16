@@ -1,8 +1,14 @@
 import solid from "vite-plugin-solid";
 import { defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
+import path from "path";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "~": path.resolve(__dirname, "./src"),
+    },
+  },
   plugins: [solid()],
   test: {
     mockReset: true,
