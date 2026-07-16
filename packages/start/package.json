@@ -15,6 +15,17 @@
     "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only",
     "validate-imports": "node scripts/validate-imports.js"
   },
+  "files": [
+    "dist",
+    "src",
+    "scripts",
+    "env.d.ts",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md",
+    "tsconfig.json",
+    "vitest.config.ts"
+  ],
   "exports": {
     ".": "./src/index.tsx",
     "./config": "./dist/config/index.js",
