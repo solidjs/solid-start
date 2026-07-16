@@ -1,7 +1,12 @@
 {
   "name": "@solidjs/start",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-beta.7",
   "type": "module",
+  "files": [
+    "dist",
+    "env.d.ts",
+    "CHANGELOG.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/solidjs/solid-start.git",
@@ -12,6 +17,8 @@
     "dev": "tsc --watch",
     "test": "vitest",
     "test:ci": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only",
     "validate-imports": "node scripts/validate-imports.js"
   },
   "exports": {
@@ -55,12 +62,11 @@
     "cookie-es": "^2.0.0",
     "defu": "^6.1.4",
     "error-stack-parser": "^2.1.4",
-    "es-module-lexer": "^2.0.0",
-    "esbuild": "^0.27.4",
     "fast-glob": "^3.3.3",
-    "h3": "2.0.1-rc.16",
+    "h3": "^2.0.1-rc.25",
     "html-to-image": "^1.11.13",
     "micromatch": "^4.0.8",
+    "oxc-parser": "^0.139.0",
     "path-to-regexp": "^8.3.0",
     "pathe": "^2.0.3",
     "radix3": "^1.1.2",
@@ -69,20 +75,20 @@
     "shiki": "^1.29.2",
     "solid-js": "^1.9.11",
     "source-map-js": "^1.2.1",
-    "srvx": "^0.11.9",
+    "srvx": "^0.11.22",
     "terracotta": "^1.1.0",
     "vite-plugin-solid": "^2.11.11"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
     "@types/node": "^25.5.0",
-    "vite": "^7.3.1",
+    "vite": "^8.0.0",
     "vitest": "^4.1.0"
   },
   "peerDependencies": {
-    "vite": "^7 || ^8"
+    "vite": "^8"
   }
 }

@@ -1,5 +1,66 @@
 # @solidjs/start
 
+## 2.0.0-beta.7
+
+### Patch Changes
+
+- d2f0621: Support JavaScript projects whose app and client/server entries use `.jsx`.
+
+## 2.0.0-beta.6
+
+### Patch Changes
+
+- 25769f2: Fix Vite preview for non-HTML responses and projects whose server build uses an `.mjs`
+  entry.
+
+## 2.0.0-beta.5
+
+### Patch Changes
+
+- eb73dd5: Use `oxc-parser` to analyze filesystem route exports.
+
+## 2.0.0-beta.4
+
+### Patch Changes
+
+- 21fdb2c: Update `h3` to `2.0.1-rc.25`.
+
+## 2.0.0-beta.3
+
+### Patch Changes
+
+- 12dc2d3: Bundle `h3` and `cookie-es` into server builds to avoid resolving incompatible hoisted versions
+
+## 2.0.0-beta.2
+
+### Patch Changes
+
+- 3e961e0: Require Vite 8
+- 11907a2: Fix published package missing `dist/`: pnpm 11 respects `.gitignore` when packing a package without a `files` field, so `2.0.0-beta.1` was published without its build output. Add an explicit `files` field.
+
+## 2.0.0-beta.1
+
+### Patch Changes
+
+- ee1193a: Update srvx to maintain response compatibility with Nitro v3.
+- e263338: Fix `ERR_UNSUPPORTED_ESM_URL_SCHEME` when running `vite preview` on Windows
+
+## 2.0.0-beta.0
+
+### Minor Changes
+
+- 0a9fdc3: fix cloudflare
+
+### Patch Changes
+
+- 0c95804: Fix URL to path conversion in manifest resolver
+- 6011e5a: Fixed changes in route files resulting in a reload instead of hot module replace. Reloads now only are triggered when adding or removing routes.
+- 8fb81e6: Fixed niche edge cases in the server functions dead code removal (DCE) logic:
+  - Server functions only referenced in event handlers (e.g. `onClick`) now aren't considered unused and work properly.
+  - Unused variables in server functions no longer lead to compilation errors.
+- 8d12d6a: Fixed tailwind class changes not getting applied via HMR in filesystem routes.
+- ec1b82b: Included Vite 8 in the peer dependency range.
+
 ## 2.0.0-alpha.3
 
 ### Minor Changes

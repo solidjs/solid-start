@@ -70,8 +70,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     serverFunctionsPlugin({
       manifest: VIRTUAL_MODULES.serverFnManifest,
       runtime: {
-        server: '@solidjs/start/fns/server',
-        client: '@solidjs/start/fns/client',
+        server: "@solidjs/start/fns/server",
+        client: "@solidjs/start/fns/client",
       },
       filter: options?.serverFunctions?.filter,
     }),
@@ -136,7 +136,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
-                  input: "~/entry-server.tsx",
+                  input: handlers.server,
                 },
                 outDir: "dist/server",
                 commonjsOptions: {
@@ -158,7 +158,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             },
             // Depending on the package manager and dependency structure Vite externalizes @solidjs/start
             // This makes sure that @solidjs/start goes through the Vite build process
-            noExternal: ["@solidjs/start"],
+            //
+            // h3 and cookie-es must be bundled as well: if they stay external, the server build
+            // emits bare imports that nitro later re-resolves from the project root, where package
+            // managers like yarn may have hoisted the older major versions required by nitropack
+            // and unstorage (h3 v1 / cookie-es v1) instead of the versions @solidjs/start needs
+            // (see https://github.com/solidjs/solid-start/issues/2101
+            // and https://github.com/solidjs/solid-start/issues/2178)
+            noExternal: ["@solidjs/start", "h3", "cookie-es"],
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
@@ -252,7 +259,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
-    devServer(),
+    devServer(handlers.server),
     solid({
       ...start.solid,
       ssr: true,
