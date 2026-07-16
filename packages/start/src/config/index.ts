@@ -70,8 +70,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     serverFunctionsPlugin({
       manifest: VIRTUAL_MODULES.serverFnManifest,
       runtime: {
-        server: '@solidjs/start/fns/server',
-        client: '@solidjs/start/fns/client',
+        server: "@solidjs/start/fns/server",
+        client: "@solidjs/start/fns/client",
       },
       filter: options?.serverFunctions?.filter,
     }),
@@ -136,7 +136,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
-                  input: "~/entry-server.tsx",
+                  input: handlers.server,
                 },
                 outDir: "dist/server",
                 commonjsOptions: {
@@ -236,7 +236,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
-    devServer(),
+    devServer(handlers.server),
     solid({
       ...start.solid,
       ssr: true,

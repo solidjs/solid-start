@@ -42,6 +42,21 @@ importers:
         specifier: ^8.0.0
         version: 8.1.4(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0)
 
+  apps/fixtures/bare-js:
+    dependencies:
+      '@solidjs/start':
+        specifier: workspace:*
+        version: link:../../../packages/start
+      nitro:
+        specifier: ^3.0.260610-beta
+        version: 3.0.260610-beta(chokidar@5.0.0)(dotenv@17.3.1)(giget@2.0.0)(ioredis@5.10.0)(jiti@2.7.0)(lru-cache@11.2.7)(vite@8.1.4(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
+      solid-js:
+        specifier: ^1.9.11
+        version: 1.9.11
+      vite:
+        specifier: ^8.0.0
+        version: 8.1.4(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0)
+
   apps/fixtures/basic:
     dependencies:
       '@solidjs/meta':
