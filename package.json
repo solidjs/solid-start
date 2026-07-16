@@ -37,7 +37,7 @@
     "oxfmt": "^0.36.0",
     "tinyglobby": "^0.2.15",
     "tippy.js": "^6.3.7",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.0"
   },
   "engines": {
     "pnpm": "^10.8.1",
