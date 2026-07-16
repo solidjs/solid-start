@@ -1,3 +1,5 @@
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { NodeRequest, sendNodeResponse } from "srvx/node";
 import {
   type Connect,
@@ -18,7 +20,9 @@ export function devServer(): Array<PluginOption> {
             const webReq = new NodeRequest({ req, res });
             const def: {
               default: { fetch: (req: Request) => Promise<Response> };
-            } = await import(process.cwd() + "/dist/server/entry-server.js");
+            } = await import(
+              pathToFileURL(join(process.cwd(), "dist/server/entry-server.js")).href
+            );
             sendNodeResponse(res, await def.default.fetch(webReq));
           });
         };

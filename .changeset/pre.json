@@ -7,6 +7,7 @@
   },
   "changesets": [
     "brave-baboons-talk",
+    "bright-pandas-smile",
     "brown-mice-train",
     "calm-paths-pull",
     "chilled-turkeys-leave",
@@ -15,6 +16,7 @@
     "eager-wings-crash",
     "eight-months-camp",
     "eight-pears-kiss",
+    "fair-bars-fail",
     "famous-ducks-flash",
     "fifty-flies-yell",
     "fresh-eyes-bet",
@@ -25,6 +27,7 @@
     "nasty-ladybugs-trade",
     "plenty-geese-enter",
     "purple-taxes-join",
+    "quick-taxis-smile",
     "rare-canyons-travel",
     "sanitize-location-header",
     "sharp-llamas-grab",
@@ -33,9 +36,11 @@
     "silent-laws-study",
     "slick-badgers-wear",
     "smooth-foxes-taste",
+    "tidy-pans-flash",
     "tricky-eels-march",
     "tricky-hounds-relate",
     "vite-8-compat",
-    "wicked-laws-bake"
+    "wicked-laws-bake",
+    "windows-preview-file-url"
   ]
 }
