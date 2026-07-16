@@ -12,6 +12,7 @@
     "dev": "tsc --watch",
     "test": "vitest",
     "test:ci": "vitest run",
+    "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only",
     "validate-imports": "node scripts/validate-imports.js"
   },
   "exports": {
