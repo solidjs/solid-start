@@ -19,7 +19,7 @@ export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
-) {
+): H3 {
   const handler = defineHandler({
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
@@ -137,7 +137,7 @@ export function createBaseHandler(
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
-) {
+): H3 {
   return createBaseHandler(createPageEvent, fn, options);
 }
 
