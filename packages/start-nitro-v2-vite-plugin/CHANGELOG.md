@@ -1,5 +1,11 @@
 # @solidjs/vite-plugin-nitro-2
 
+## 0.3.2-beta.0
+
+### Patch Changes
+
+- fa32165: fix: add deprecation note and warn at build time that the Nitro v2 plugin is deprecated and guide users to Nitro v3.
+
 ## 0.3.1
 
 ### Patch Changes
