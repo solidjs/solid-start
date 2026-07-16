@@ -1,8 +1,7 @@
 import { Title } from "@solidjs/meta";
-import { json } from "@solidjs/router";
 import { clientOnly, GET } from "@solidjs/start";
 import { getServerFunctionMeta } from "@solidjs/start/server";
-import { getRequestEvent, isServer } from "@solidjs/web";
+import { getRequestEvent, isServer, respond } from "@solidjs/web";
 import Counter from "~/components/Counter";
 const BreaksOnServer = clientOnly(() => import("~/components/BreaksOnServer"));
 
@@ -11,7 +10,7 @@ const hello = GET(async (name: string) => {
   const e = getRequestEvent()!;
   const { id } = getServerFunctionMeta()!;
   console.log("ID", id, e.locals.foo);
-  return json(
+  return respond(
     { hello: new Promise<string>(r => setTimeout(() => r(name), 1000)) },
     { headers: { "cache-control": "max-age=60" } },
   );

@@ -57,14 +57,7 @@ export function createBaseHandler(
       const pathname = stripBaseUrl(url.pathname);
 
       if (pathname.startsWith(SERVER_FN_BASE)) {
-        const serverFnResponse = await handleServerFunction(e);
-
-        if (serverFnResponse instanceof Response)
-          return produceResponseWithEventHeaders(serverFnResponse);
-
-        return new Response(serverFnResponse as any, {
-          headers: e.res.headers,
-        });
+        return produceResponseWithEventHeaders(await handleServerFunction(e));
       }
 
       const match = matchAPIRoute(pathname, event.request.method);

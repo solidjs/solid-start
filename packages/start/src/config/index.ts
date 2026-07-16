@@ -22,17 +22,6 @@ export interface SolidStartOptions {
   routeDir?: string;
   extensions?: string[];
   middleware?: string;
-  serialization?: {
-    /**
-     * The serialization mode to use for server functions/actions.
-     * The "js" mode uses a custom binary format that is more efficient than JSON, but requires a custom deserializer (with `eval()`) on the client.
-     * A strong CSP should block `eval()` executions, which would prevent the "js" mode from working.
-     * The "json" mode uses JSON for serialization, which is less efficient but can be deserialized with `JSON.parse` on the client.
-     *
-     * @default "json"
-     */
-    mode?: "js" | "json";
-  };
   env?: EnvPluginOptions;
   serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
 }
@@ -164,7 +153,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             ),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
-            "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
             // Inline dev script (from vite-plugin-solid) that reconciles
             // SSR'd <style data-vite-dev-id> tags with Vite's HMR client.
             "import.meta.env.START_DEV_STYLE_PATCH": JSON.stringify(devStylePatch),

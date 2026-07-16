@@ -1,4 +1,5 @@
-import { action, query, redirect } from "@solidjs/router";
+import { action, query } from "@solidjs/router";
+import { redirect } from "@solidjs/web";
 import { format, isToday } from "date-fns";
 import { marked } from "marked";
 import { storage } from "./db";
