@@ -34,13 +34,12 @@ describe("analyzeModule", () => {
       }
     `);
 
-    expect(analyzeModule(route)).toEqual([
-      { n: "local", ln: "local" },
-      { n: "renamed", ln: "local" },
-      { n: "route", ln: "route" },
-      { n: "GET", ln: "GET" },
-      { n: "default", ln: "Route" },
-    ]);
+    const exports = analyzeModule(route);
+
+    expect(
+      exports.map(entry => entry.exportName.name ?? entry.exportName.kind.toLowerCase()),
+    ).toEqual(["local", "renamed", "route", "GET", "default"]);
+    expect(exports.every(entry => !entry.isType)).toBe(true);
   });
 
   it("preserves local-name semantics for re-exports", () => {
@@ -51,11 +50,19 @@ describe("analyzeModule", () => {
       export * from "./external.ts";
     `);
 
-    expect(analyzeModule(route)).toEqual([
-      { n: "external", ln: "external" },
-      { n: "renamedExternal", ln: "external" },
-      { n: "DefaultExport", ln: "default" },
-      { n: "namespace", ln: "namespace" },
+    const exports = analyzeModule(route);
+
+    expect(exports.map(entry => entry.exportName.name)).toEqual([
+      "external",
+      "renamedExternal",
+      "DefaultExport",
+      "namespace",
+    ]);
+    expect(exports.map(entry => entry.importName.name)).toEqual([
+      "external",
+      "external",
+      "default",
+      null,
     ]);
   });
 

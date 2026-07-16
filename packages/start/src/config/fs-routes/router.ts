@@ -2,7 +2,7 @@ import fg from "fast-glob";
 import fs from "node:fs";
 import micromatch from "micromatch";
 import { posix } from "node:path";
-import { parseSync } from "oxc-parser";
+import { parseSync, type StaticExportEntry } from "oxc-parser";
 import { pathToRegexp } from "path-to-regexp";
 
 import { normalizePath } from "vite";
@@ -20,18 +20,13 @@ export function cleanPath(src: string, config: FileSystemRouterConfig) {
     .replace(new RegExp(`\.(${(config.extensions ?? []).join("|")})$`), "");
 }
 
-export function analyzeModule(src: string) {
+export function analyzeModule(src: string): StaticExportEntry[] {
   const result = parseSync(src, fs.readFileSync(src, "utf-8"), { lang: "tsx" });
   const error = result.errors[0];
   if (error) throw new SyntaxError(`Failed to parse ${src}:\n${error.codeframe || error.message}`);
 
   return result.module.staticExports.flatMap(({ entries }) =>
-    entries.flatMap(entry => {
-      const n = entry.exportName.kind === "Default" ? "default" : entry.exportName.name;
-      return entry.isType || n === null
-        ? []
-        : [{ n, ln: entry.localName.name ?? entry.importName.name ?? n }];
-    }),
+    entries.filter(entry => !entry.isType && entry.exportName.kind !== "None"),
   );
 }
 
@@ -82,7 +77,7 @@ export class BaseFileSystemRouter extends EventTarget {
 
     const exports = analyzeModule(src);
 
-    if (!exports.find(e => e.n === "default")) {
+    if (!exports.find(entry => entry.exportName.kind === "Default")) {
       console.warn("No default export", src);
     }
 
