@@ -12,6 +12,7 @@
     "dev": "tsc --watch",
     "test": "vitest",
     "test:ci": "vitest run",
+    "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only",
     "validate-imports": "node scripts/validate-imports.js"
   },
   "exports": {
@@ -74,12 +75,12 @@
     "vite-plugin-solid": "^2.11.11"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
     "@types/node": "^25.5.0",
-    "vite": "^7.3.1",
+    "vite": "^8.0.0",
     "vitest": "^4.1.0"
   },
   "peerDependencies": {

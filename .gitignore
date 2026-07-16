@@ -55,3 +55,4 @@ tsconfig.tsbuildinfo
 
 apps/tests/**/test-results
 .solid-start
+.pnpm-store
