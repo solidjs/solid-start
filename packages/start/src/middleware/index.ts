@@ -85,7 +85,10 @@ export function createMiddleware(
   if (typeof args.onBeforeResponse === "function") {
     mw.push(wrapResponseMiddleware(args.onBeforeResponse));
   } else if (Array.isArray(args.onBeforeResponse)) {
-    mw.push(...args.onBeforeResponse.map(wrapResponseMiddleware));
+    // h3 middleware compose onion-style: logic after `await next()` unwinds
+    // innermost-first (reverse registration order). Register the wrappers
+    // reversed so onBeforeResponse functions run in their declared order.
+    mw.push(...args.onBeforeResponse.map(wrapResponseMiddleware).reverse());
   }
 
   return mw;
