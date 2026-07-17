@@ -10,8 +10,9 @@
     "unit:ui": "vitest --ui",
     "unit:ci": "vitest run",
     "e2e": "playwright test",
+    "e2e:bundled-dev": "playwright test --config playwright.bundled-dev.config.ts",
     "e2e:ui": "playwright test --ui",
-    "test:all": "npm run unit:ci && npm run e2e"
+    "test:all": "npm run unit:ci && npm run e2e && npm run e2e:bundled-dev"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",

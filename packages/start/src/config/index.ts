@@ -1,6 +1,6 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
-import { extname, isAbsolute, join } from "node:path";
+import { basename, extname, isAbsolute, join } from "node:path";
 import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
@@ -86,8 +86,12 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
         };
       },
-      async config(_, env) {
+      async config(config, env) {
         const clientInput = [handlers.client];
+        const clientEntryUrl =
+          env.command === "serve" && config.experimental?.bundledDev
+            ? `assets/${basename(handlers.client, entryExtension)}.js`
+            : handlers.client;
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
           for (const route of await clientRouter.getRoutes()) {
@@ -174,6 +178,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             // esbuild receives a valid JS string literal for the define value
             "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
+            "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
