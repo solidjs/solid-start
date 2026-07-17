@@ -110,7 +110,17 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
               ExportDefaultDeclaration(exportNamedPath) {
                 // if opts.keep is true, we don't remove the routeData export
                 if (state.opts.pick && !state.opts.pick.includes("default")) {
-                  exportNamedPath.remove();
+                  const decl = exportNamedPath.node.declaration;
+                  // A named function/class declaration creates a module-scope
+                  // binding that picked exports may reference, so only strip
+                  // the `export default`; the sweep below removes the
+                  // declaration again if nothing references it.
+                  if ((t.isFunctionDeclaration(decl) || t.isClassDeclaration(decl)) && decl.id) {
+                    const [newPath] = exportNamedPath.replaceWith(decl);
+                    state.refs.add((newPath as NodePath<any>).get("id"));
+                  } else {
+                    exportNamedPath.remove();
+                  }
                 }
               },
               ExportNamedDeclaration(exportNamedPath) {
@@ -121,11 +131,9 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                 const specifiers = exportNamedPath.get("specifiers");
                 if (specifiers.length) {
                   specifiers.forEach(s => {
-                    if (
-                      t.isIdentifier(s.node.exported)
-                        ? s.node.exported.name
-                        : state.opts.pick.includes(s.node.exported.value)
-                    ) {
+                    const exported = s.node.exported;
+                    const exportedName = t.isIdentifier(exported) ? exported.name : exported.value;
+                    if (!state.opts.pick.includes(exportedName)) {
                       s.remove();
                     }
                   });
@@ -139,24 +147,46 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                   return;
                 }
                 switch (decl.node.type) {
-                  case "FunctionDeclaration": {
+                  case "FunctionDeclaration":
+                  case "ClassDeclaration": {
                     const name = decl.node.id?.name;
                     if (name && state.opts.pick && !state.opts.pick.includes(name)) {
-                      exportNamedPath.remove();
+                      // Keep the declaration in module scope since picked
+                      // exports may reference it; the sweep below removes it
+                      // again if unreferenced.
+                      const [newPath] = exportNamedPath.replaceWith(decl.node);
+                      state.refs.add((newPath as NodePath<any>).get("id"));
                     }
                     break;
                   }
                   case "VariableDeclaration": {
-                    const inner = decl.get("declarations") as Array<NodePath<any>>;
-                    inner.forEach(d => {
-                      if (d.node.id.type !== "Identifier") {
-                        return;
-                      }
-                      const name = d.node.id.name;
-                      if (state.opts.pick && !state.opts.pick.includes(name)) {
-                        d.remove();
-                      }
+                    const declNode = decl.node;
+                    // Destructuring declarators are conservatively treated as
+                    // picked (matching the previous behavior of leaving them
+                    // untouched).
+                    const isPicked = (d: (typeof declNode.declarations)[number]) =>
+                      d.id.type !== "Identifier" || state.opts.pick.includes(d.id.name);
+                    if (declNode.declarations.every(isPicked)) {
+                      break;
+                    }
+                    // Split into one declaration per declarator (preserving
+                    // evaluation order) and export only the picked ones.
+                    // Unpicked bindings are kept since picked exports may
+                    // reference them; the sweep below removes them again if
+                    // unreferenced.
+                    const statements = declNode.declarations.map(d => {
+                      const single = t.variableDeclaration(declNode.kind, [d]);
+                      return isPicked(d) ? t.exportNamedDeclaration(single, []) : single;
                     });
+                    const newPaths = exportNamedPath.replaceWithMultiple(statements);
+                    for (const p of newPaths) {
+                      if (!p.isVariableDeclaration()) continue;
+                      for (const d of p.get("declarations")) {
+                        if (d.node.id.type === "Identifier") {
+                          state.refs.add(d.get("id"));
+                        }
+                      }
+                    }
                     break;
                   }
                   default: {
