@@ -15,9 +15,9 @@ import clientOnly from "../clientOnly.ts";
 import { HttpStatusCode } from "../HttpStatusCode.ts";
 import IconButton from "../ui/IconButton.tsx";
 import { Text } from "../ui/Text.tsx";
-import { ServerFunctionInstance, ServerFunctionViewer } from "./functions/index.tsx";
+import { type ServerFunctionInstance, ServerFunctionViewer } from "./functions/index.tsx";
 import { captureServerFunctionCall } from "./functions/tracker.ts";
-import { ErrorIcon, FunctionIcon, SolidStartIcon } from "./icons";
+import { ErrorIcon, FunctionIcon, SolidStartIcon } from "./icons.tsx";
 import "./index.css";
 
 const ErrorViewer = import.meta.env.PROD
