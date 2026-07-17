@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./src/e2e",
-  testMatch: "**/hydration.test.ts",
+  testMatch: "**/*.test.ts",
 
   webServer: {
     command: "pnpm run dev --experimental-bundle --host 127.0.0.1 --port 3000 --strictPort",
