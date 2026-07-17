@@ -4,6 +4,7 @@ import { extname, isAbsolute, join } from "node:path";
 import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
+import { boundaryModules } from "./boundary-modules.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
@@ -12,7 +13,6 @@ import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
-import { serverOnlyGuard } from "./server-only-guard.ts";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
@@ -210,30 +210,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     }),
     lazy(),
     envPlugin(options?.env),
-    serverOnlyGuard(),
-    {
-      name: "solid-start:boundary-modules",
-      enforce: "pre",
-      resolveId(id, importer, { ssr }) {
-        if (id === "server-only") {
-          if (!ssr)
-            this.error(
-              `Attempt to import 'server-only' in a client module: ${importer}`,
-            );
-        } else if (id === "client-only") {
-          if (ssr)
-            this.error(
-              `Attempt to import 'client-only' in a server module: ${importer}`,
-            );
-        } else {
-          return null;
-        }
-        return "\0solid-start:boundary-modules:id";
-      },
-      load(id) {
-        if (id === "\0solid-start:boundary-modules:id") return "export {}";
-      },
-    },
+    boundaryModules(),
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
