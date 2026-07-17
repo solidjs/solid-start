@@ -94,7 +94,7 @@
 [data-start-function-instance-viewer-content] {
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: rgb(249 250 251);
+  border-top-color: oklch(87% 0.065 274.039);
 
   height: 100%;
 }

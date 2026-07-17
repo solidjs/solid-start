@@ -31,7 +31,7 @@
 
   gap: 0.5rem;
 
-  border: rgb(249 250 251) 1px solid;
+  border: oklch(87% 0.065 274.039) 1px solid;
 }
 
 [data-start-dev-toolbar] > [tc-toolbar] > div {
@@ -58,7 +58,7 @@
   line-height: 1.25rem;
   font-weight: 600;
 
-  border: rgb(249 250 251) 1px solid;
+  border: oklch(87% 0.065 274.039) 1px solid;
 }
 
 [data-start-dev-toolbar-version] > div {
@@ -72,7 +72,7 @@
 }
 
 [data-start-dev-toolbar-panel] {
-  border: rgb(249 250 251) 1px solid;
+  border: oklch(87% 0.065 274.039) 1px solid;
   background: oklch(25.7% 0.09 281.288);
   margin: 0rem 1rem;
 

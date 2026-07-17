@@ -1,6 +1,6 @@
 [data-start-hex-viewer] {
   display: flex;
-  border: 1px oklch(70.7% 0.165 254.624) solid;
+  border: 1px oklch(87% 0.065 274.039) solid;
   overflow: auto;
 }
 
@@ -18,7 +18,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem;
-  border-left: 1px oklch(70.7% 0.165 254.624) solid;
+  border-left: 1px oklch(87% 0.065 274.039) solid;
 }
 
 [data-start-hex-row] {
