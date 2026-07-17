@@ -12,6 +12,7 @@ import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
+import { serverOnlyGuard } from "./server-only-guard.ts";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
@@ -209,6 +210,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     }),
     lazy(),
     envPlugin(options?.env),
+    serverOnlyGuard(),
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
