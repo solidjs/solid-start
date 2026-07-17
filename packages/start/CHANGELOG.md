@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 2.0.0-beta.8
+
+### Patch Changes
+
+- ecc02be: fix: resolve server functions in dev when their route was reached through client-side navigation before its module was evaluated on the server
+- 85b24b2: Use per-environment Vite plugin hook APIs for forward compatibility with Vite 9.
+
 ## 2.0.0-beta.7
 
 ### Patch Changes
