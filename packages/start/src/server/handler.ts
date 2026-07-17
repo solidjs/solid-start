@@ -116,11 +116,12 @@ export function createBaseHandler(
 
       delete (stream as any).then;
 
-      // using TransformStream in dev can cause solid-start-dev-server to crash
-      // when stream is cancelled
-      if (globalThis.USING_SOLID_START_DEV_SERVER) return stream;
-
-      // returning stream directly breaks cloudflare workers
+      // Always pipe through a TransformStream so h3 receives a standard web
+      // ReadableStream. Returning the raw Solid stream only renders on Node
+      // by accident (srvx's NodeResponse duck-types `.pipe`); on Bun and
+      // Deno srvx's FastResponse is the native Response, which coerces the
+      // object to the string "[object Object]" (#2133). Returning the raw
+      // stream also breaks Cloudflare Workers.
       const { writable, readable } = new TransformStream();
       stream.pipeTo(writable);
       return readable;
