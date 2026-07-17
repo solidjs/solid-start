@@ -5,7 +5,9 @@ import {
   type Plugin,
   type ViteDevServer,
 } from "vite";
+import fg from "fast-glob";
 import { compile, type CompileOptions } from "./compile.ts";
+import xxHash32 from "./xxhash32.ts";
 
 export interface ServerFunctionsFilter {
   include?: FilterPattern;
@@ -24,6 +26,11 @@ export interface ServerFunctionsOptions {
 const DEFAULT_INCLUDE = "src/**/*.{jsx,tsx,ts,js,mjs,cjs}";
 const DEFAULT_EXCLUDE = "node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}";
 const DIRECTIVE = "use server";
+
+// Dev-only virtual module used by fns/handler.ts to lazily resolve a server
+// function id back to its owning module when the function was never evaluated
+// in the server environment (e.g. its route was only client-side navigated to).
+const LOOKUP_ID = "solid-start:server-fn-lookup";
 
 type Manifest = Record<CompileOptions["mode"], Set<string>>;
 
@@ -107,12 +114,14 @@ function invalidateModules(
 ): void {
   if (server) {
     if (result.invalidPreload) {
-      invalidateModule(server.environments.client.moduleGraph, manifest);
-      invalidateModule(server.environments.ssr.moduleGraph, manifest);
+      // Environments are not limited to "client"/"ssr": plugins like nitro
+      // render in their own environment (e.g. "nitro"), so invalidate everywhere.
+      for (const environment of Object.values(server.environments)) {
+        invalidateModule(environment.moduleGraph, manifest);
+      }
     }
   }
 }
-
 
 export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[] {
   const filter = createFilter(
@@ -179,6 +188,9 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
         if (source === options.manifest) {
           return { id: options.manifest, moduleSideEffects: true };
         }
+        if (source.startsWith(LOOKUP_ID)) {
+          return { id: source, moduleSideEffects: true };
+        }
         return null;
       },
       async load(id) {
@@ -191,12 +203,32 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
           const result = await current.promise.reference;
           return result;
         }
+        if (id.startsWith(LOOKUP_ID)) {
+          if (this.environment.mode !== "dev") {
+            throw new Error(`${LOOKUP_ID} is only available in dev`);
+          }
+          const functionId = new URLSearchParams(id.slice(LOOKUP_ID.length + 1)).get("id");
+          // dev function ids are `${xxHash32(file)}-${count}-${name}`
+          const hash = functionId?.split("-")[0];
+          if (!hash) return "export {};";
+
+          // Look through the files already discovered by the transform first;
+          // fall back to scanning the project so a function is found even when
+          // the browser kept a chunk from before a dev server restart.
+          let files = [...manifest.server].filter(file => xxHash32(file).toString(16) === hash);
+          if (files.length === 0) {
+            files = fg
+              .sync(DEFAULT_INCLUDE, { cwd: this.environment.config.root, absolute: true })
+              .filter(file => filter(file) && xxHash32(file).toString(16) === hash);
+          }
+          return files.map(file => `import ${JSON.stringify(file)};`).join("\n") || "export {};";
+        }
         return null;
       },
     },
     {
       name: "solid-start:server-functions/compiler",
-      enforce: 'pre',
+      enforce: "pre",
       async transform(code, fileId) {
         const mode = this.environment.config.consumer;
         const [id] = fileId.split("?");
