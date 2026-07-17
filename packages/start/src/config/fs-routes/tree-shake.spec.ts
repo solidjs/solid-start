@@ -127,7 +127,7 @@ describe("treeShake", () => {
 
   it("removes imports only used by removed exports", async () => {
     const code = `
-      import { db } from "./db";
+      import { db } from "./db.ts";
       export const POST = () => db.write();
       export const GET = () => "ok";
     `;
