@@ -120,4 +120,23 @@ test.describe("server-function", () => {
     await page.locator("#server-fn-test").click();
     await expect(page.locator("#server-fn-test")).toContainText("false");
   });
+
+  /**
+   * A thrown server-function error whose message contains non-ByteString
+   * characters (> U+00FF) must still reach the client. Previously the raw
+   * message was assigned to the X-Error response header, and Headers.set threw
+   * a TypeError, producing a bare 500 with no error to deserialize.
+   * https://github.com/solidjs/solid-start/issues/1874
+   */
+  test("should propagate a server function error with non-latin1 message", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-unicode-error");
+    // Retry the click until it registers post-hydration (clicks aren't auto-retried).
+    await expect(async () => {
+      await page.locator("#server-fn-test").click();
+      await expect(page.locator("#server-fn-test")).toContainText(
+        "Ошибка 🚀 ünïcode — special chars",
+        { timeout: 1000 },
+      );
+    }).toPass({ timeout: 15000 });
+  });
 });
