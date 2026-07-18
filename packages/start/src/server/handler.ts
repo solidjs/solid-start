@@ -12,6 +12,7 @@ import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
+import { toWebReadableStream } from "./web-stream.ts";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -116,15 +117,9 @@ export function createBaseHandler(
 
       delete (stream as any).then;
 
-      // Always pipe through a TransformStream so h3 receives a standard web
-      // ReadableStream. Returning the raw Solid stream only renders on Node
-      // by accident (srvx's NodeResponse duck-types `.pipe`); on Bun and
-      // Deno srvx's FastResponse is the native Response, which coerces the
-      // object to the string "[object Object]" (#2133). Returning the raw
-      // stream also breaks Cloudflare Workers.
-      const { writable, readable } = new TransformStream();
-      stream.pipeTo(writable);
-      return readable;
+      // h3 expects a standard web ReadableStream across runtimes. The adapter
+      // also tolerates cancellation while Solid finishes outstanding work.
+      return toWebReadableStream(stream);
     }),
   });
 
