@@ -4,5 +4,8 @@
   "initialVersions": {
     "@solidjs/start": "2.0.0-beta.7"
   },
-  "changesets": []
+  "changesets": [
+    "fix-dev-server-function-lookup",
+    "tame-dingos-wave"
+  ]
 }

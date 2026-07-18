@@ -71,9 +71,10 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
       }
       return undefined;
     },
-    load(id, opts) {
+    load(id) {
+      const isServer = this.environment.config.consumer === "server";
       if (id === SERVER_ENV) {
-        if (!opts?.ssr) {
+        if (!isServer) {
           return SERVER_ONLY_MODULE;
         }
         const vars = currentOptions.server?.load
@@ -88,13 +89,13 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
         return convertObjectToModule(vars);
       }
       if (id === SERVER_RUNTIME_LOADER) {
-        if (!opts?.ssr) {
+        if (!isServer) {
           return SERVER_ONLY_MODULE;
         }
         return runtimeCode;
       }
       if (id === SERVER_RUNTIME_ENV) {
-        if (!opts?.ssr) {
+        if (!isServer) {
           return SERVER_ONLY_MODULE;
         }
         return SERVER_RUNTIME_CODE;
