@@ -143,7 +143,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     } else if (instance) {
       const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
 
-      h3Event.res.headers.set("X-Error", error.replace(/[\r\n]+/g, ""));
+      h3Event.res.headers.set("X-Error", toHeaderValue(error));
     } else {
       x = handleNoJS(x, request, parsed, true);
     }
@@ -156,7 +156,7 @@ export async function handleServerFunction(h3Event: H3Event) {
           headers.set("X-Error", errorHeader);
         }
         return new Response(body.body, {
-          headers: body.headers,
+          headers,
         });
       }
       h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
@@ -168,6 +168,17 @@ export async function handleServerFunction(h3Event: H3Event) {
       return serializeToJSONStream(x);
     }
     return x;
+  }
+}
+
+// header values must be ByteString-safe (no chars > 0xFF), otherwise Headers.set throws
+function toHeaderValue(value: string) {
+  const stripped = value.replace(/[\r\n]+/g, "");
+  try {
+    return /[^\x00-\xFF]/.test(stripped) ? encodeURIComponent(stripped) : stripped;
+  } catch {
+    // encodeURIComponent throws on lone surrogates
+    return "true";
   }
 }
 
