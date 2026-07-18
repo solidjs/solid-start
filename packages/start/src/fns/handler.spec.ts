@@ -1,25 +1,25 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import type { FetchEvent } from "./types.ts";
+import type { FetchEvent } from "../server/types.ts";
 
 vi.mock("h3", () => ({
   parseCookies: vi.fn(() => ({})),
-  parseSetCookie: vi.fn(),
 }));
 
 vi.mock("solid-js/web", () => ({
   renderToString: vi.fn(),
+}));
+
+vi.mock("solid-js/web/storage", () => ({
   provideRequestEvent: vi.fn((_event, fn) => fn()),
 }));
 
-vi.mock("solid-start:server-fn-manifest", () => ({
-  getServerFnById: vi.fn(),
-}));
+vi.mock("solid-start:server-fn-manifest", () => ({}));
 
-vi.mock("./handler.ts", () => ({
+vi.mock("../server/handler.ts", () => ({
   createPageEvent: vi.fn(),
 }));
 
-vi.mock("./fetchEvent.ts", () => ({
+vi.mock("../server/fetchEvent.ts", () => ({
   getFetchEvent: vi.fn(),
   mergeResponseHeaders: vi.fn(),
 }));
@@ -42,7 +42,7 @@ describe("createSingleFlightHeaders", () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    const module = await import("./server-functions-handler.ts");
+    const module = await import("./handler.ts");
     createSingleFlightHeaders = module.createSingleFlightHeaders;
   });
 
