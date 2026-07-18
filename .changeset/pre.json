@@ -5,7 +5,9 @@
     "@solidjs/start": "2.0.0-beta.7"
   },
   "changesets": [
+    "fix-2068-server-only-guard",
     "fix-dev-server-function-lookup",
+    "support-server-client-only",
     "tame-dingos-wave"
   ]
 }
