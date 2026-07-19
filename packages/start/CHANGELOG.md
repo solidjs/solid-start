@@ -1,5 +1,14 @@
 # @solidjs/start
 
+## 2.0.0-beta.10
+
+### Patch Changes
+
+- 8af6304: Support for Vite 8.1 Experimental Bundled Dev Mode
+- 9d91484: fix: don't crash when a server function throws an error whose message contains non-latin1 characters. 
+- 068b64c: Return a cancellation-safe web `ReadableStream` for streaming SSR in development. Returning Solid's
+  raw stream only rendered on Node; Bun and Deno coerced it to `[object Object]`.
+
 ## 2.0.0-beta.9
 
 ### Minor Changes
