@@ -90,6 +90,7 @@ test.describe("server-function", () => {
   test("should build with a env:server", async ({ page }) => {
     await page.goto("http://localhost:3000/server-env");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+    await expect(page.locator("vite-error-overlay")).toHaveCount(0);
   });
 
   test("should build with a server function including an unused try/catch variable", async ({

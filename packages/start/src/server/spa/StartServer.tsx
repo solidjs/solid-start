@@ -31,7 +31,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
               <PatchVirtualDevStyles nonce={nonce} />
               <script
                 type="module"
-                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY)}
+                src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY_URL)}
               />
             </>
           }
