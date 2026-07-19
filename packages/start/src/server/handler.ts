@@ -12,6 +12,7 @@ import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
+import { toWebReadableStream } from "./web-stream.ts";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -116,14 +117,9 @@ export function createBaseHandler(
 
       delete (stream as any).then;
 
-      // using TransformStream in dev can cause solid-start-dev-server to crash
-      // when stream is cancelled
-      if (globalThis.USING_SOLID_START_DEV_SERVER) return stream;
-
-      // returning stream directly breaks cloudflare workers
-      const { writable, readable } = new TransformStream();
-      stream.pipeTo(writable);
-      return readable;
+      // h3 expects a standard web ReadableStream across runtimes. The adapter
+      // also tolerates cancellation while Solid finishes outstanding work.
+      return toWebReadableStream(stream);
     }),
   });
 
