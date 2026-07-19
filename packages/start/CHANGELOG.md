@@ -4,8 +4,7 @@
 
 ### Patch Changes
 
-- 8af6304: Support client hydration and lazy virtual modules with Vite's experimental bundled development
-  mode.
+- 8af6304: Support for Vite 8.1 Experimental Bundled Dev Mode
 - 9d91484: fix: don't crash when a server function throws an error whose message contains non-latin1 characters. The message was assigned verbatim to the `X-Error` response header, and since header values must be ByteString-safe, a message like `"Ошибка 🚀"` made `Headers.set` throw inside the catch block — producing a bare 500 with no error propagated, so the client never threw and the route section hung empty instead of hitting the `ErrorBoundary`. The header value is now encoded when it contains such characters (the real error still travels in the serialized body). (#1874)
 - 068b64c: Return a cancellation-safe web `ReadableStream` for streaming SSR in development. Returning Solid's
   raw stream only rendered on Node; Bun and Deno coerced it to `[object Object]`.
