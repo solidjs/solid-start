@@ -7,7 +7,7 @@ import { Section } from "../../ui/Section.tsx";
 import { Select, SelectOption } from "../../ui/Select.tsx";
 import { Tab, TabGroup, TabList, TabPanel } from "../../ui/Tabs.tsx";
 import { Text } from "../../ui/Text.tsx";
-import { ArrowLeftIcon, TrashIcon } from "../icons.tsx";
+import { ArrowLeftIcon, FunctionIcon, TrashIcon } from "../icons.tsx";
 import { BlobViewer } from "./BlobViewer.tsx";
 import { FormDataViewer } from "./FormDataViewer.tsx";
 import { HeadersViewer } from "./HeadersViewer.tsx";
@@ -272,6 +272,10 @@ export function ServerFunctionViewer(props: ServerFunctionViewerProps): JSX.Elem
           </Show>
           <Show when={!currentInstance()}>
             {/* list of calls */}
+            <div data-start-functions-nav>
+              <FunctionIcon title="Server functions" />
+              <Text options={{ size: "sm" }}>Server functions</Text>
+            </div>
             <div data-start-functions-instances-container>
               <Show when={keys().length} fallback={<EmptyServerFunctions />}>
                 <Select
