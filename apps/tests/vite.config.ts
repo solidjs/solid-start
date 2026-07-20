@@ -1,7 +1,7 @@
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import { solidStart } from "../../packages/start/src/config";
-import { imagePlugin } from '@solidjs/image/vite';
+import { imagePlugin } from '../../packages/image/src/vite';
 
 export default defineConfig({
   server: {
