@@ -7,3 +7,15 @@ declare namespace App {
     [key: string | symbol]: any;
   }
 }
+
+/**
+ * Import `server-only` to ensure this module is never bundled for the client.
+ * Importing it in a client module will throw a build error.
+ */
+declare module "server-only" {}
+
+/**
+ * Import `client-only` to ensure this module is never bundled for the server.
+ * Importing it in a server module will throw a build error.
+ */
+declare module "client-only" {}
