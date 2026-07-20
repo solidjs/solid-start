@@ -6,11 +6,15 @@
   },
   "changesets": [
     "curvy-mice-thank",
+    "expose-h3-request-event-decorators",
     "fix-1874-unicode-error-header",
     "fix-2068-server-only-guard",
+    "fix-2100-exports-disappear",
+    "fix-2131-middleware-order",
     "fix-2133-bun-deno-stream",
     "fix-dev-server-function-lookup",
     "support-server-client-only",
-    "tame-dingos-wave"
+    "tame-dingos-wave",
+    "tidy-zebras-route"
   ]
 }

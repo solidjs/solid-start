@@ -1,11 +1,28 @@
 # @solidjs/start
 
+## 2.0.0-beta.11
+
+### Minor Changes
+
+- 02e561e: Expose experimental `decorateHandler` and `decorateMiddleware` helpers from
+  `@solidjs/start/server` for providing Solid's request context to custom h3 handlers and
+  middleware.
+
+### Patch Changes
+
+- f66b5a9: fix: keep non-picked route exports that picked exports reference instead of deleting their bindings, so API handlers can call helpers exported from the same file (#2100); also fixes picked exports declared via `export { ... }` specifiers being dropped (#1659)
+- 1763296: fix: run `onBeforeResponse` middleware in declared order (#2131)
+
+  Applications that reversed their `onBeforeResponse` arrays as a workaround should restore the intended declaration order.
+
+- cd98e7d: Fix API route matching when `server.baseURL` is configured.
+
 ## 2.0.0-beta.10
 
 ### Patch Changes
 
 - 8af6304: Support for Vite 8.1 Experimental Bundled Dev Mode
-- 9d91484: fix: don't crash when a server function throws an error whose message contains non-latin1 characters. 
+- 9d91484: fix: don't crash when a server function throws an error whose message contains non-latin1 characters.
 - 068b64c: Return a cancellation-safe web `ReadableStream` for streaming SSR in development. Returning Solid's
   raw stream only rendered on Node; Bun and Deno coerced it to `[object Object]`.
 
