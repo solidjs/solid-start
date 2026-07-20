@@ -1,6 +1,9 @@
 import { type Accessor, createMemo, createResource } from "solid-js";
 import getSourceMap from "./get-source-map.ts";
 
+const HTTP_URL_REGEX = /^https?:\/\//;
+const LEADING_SLASH_REGEX = /^\/+/;
+
 export interface StackFrameSource {
   content: string;
   source: string;
@@ -14,15 +17,15 @@ export interface StackFrameSource {
 // mapped back to the original source by the Vite module runner, unlike
 // client frames whose positions refer to the compiled module.
 function isServerSource(path: string): boolean {
-  return !/^https?:\/\//.test(path);
+  return !HTTP_URL_REGEX.test(path);
 }
 
 function getActualFileSource(path: string): string {
   if (path.startsWith("file://")) {
-    return "/@fs/" + path.substring("file://".length).replace(/^\/+/, "");
+    return "/@fs/" + path.substring("file://".length).replace(LEADING_SLASH_REGEX, "");
   }
   if (isServerSource(path)) {
-    return "/@fs/" + path.replace(/^\/+/, "");
+    return "/@fs/" + path.replace(LEADING_SLASH_REGEX, "");
   }
   return path;
 }
