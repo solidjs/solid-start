@@ -1,6 +1,6 @@
 # @solidjs/start
 
-## 2.0.0-beta.11
+## 2.0.0-rc.1
 
 ### Minor Changes
 
@@ -144,7 +144,6 @@
 - 8256190: Rework `@solidjs/start/env`
 - 6cbba24: Fix multiple Set-Cookie headers being lost on redirect responses
 - d4cc548: ## Bump Seroval
-
   - version `1.4.1`
 
 - dd40610: Handle base url in api routes
