@@ -20,6 +20,7 @@
 		"solid-js": "^1.9.9",
 		"tsdown": "^0.22.12",
 		"vite": "^8.1.5",
+		"vite-plugin-solid": "^2.11.11",
 		"vitest": "^4.0.10"
 	},
 	"dependencies": {
