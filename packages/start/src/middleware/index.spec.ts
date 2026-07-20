@@ -1,15 +1,16 @@
+import { setTimeout } from "node:timers/promises";
 import { defineHandler, H3, type Middleware } from "h3";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { createMiddleware } from "./index.ts";
+
+vi.mock("server-only", () => ({}));
 
 const createApp = (middleware: Middleware[]) => {
   const app = new H3();
   app.use(defineHandler({ middleware, handler: () => "ok" }));
   return app;
 };
-
-const delay = () => new Promise(resolve => setTimeout(resolve, 5));
 
 describe("createMiddleware", () => {
   it("runs onRequest middleware in declared order", async () => {
@@ -19,7 +20,7 @@ describe("createMiddleware", () => {
         onRequest: [
           async () => {
             calls.push("one");
-            await delay();
+            await setTimeout(5);
           },
           () => {
             calls.push("two");
@@ -41,11 +42,11 @@ describe("createMiddleware", () => {
         onBeforeResponse: [
           async () => {
             calls.push("one");
-            await delay();
+            await setTimeout(5);
           },
           async () => {
             calls.push("two");
-            await delay();
+            await setTimeout(5);
           },
           () => {
             calls.push("three");
@@ -57,6 +58,24 @@ describe("createMiddleware", () => {
     await app.fetch(new Request("http://localhost/"));
 
     expect(calls).toEqual(["one", "two", "three"]);
+  });
+
+  it("passes replacement responses to later onBeforeResponse middleware", async () => {
+    const app = createApp(
+      createMiddleware({
+        onBeforeResponse: [
+          () => new Response("one"),
+          async (_event, response) => {
+            expect(response.body).toBeInstanceOf(Response);
+            return new Response(`${await (response.body as Response).text()} two`);
+          },
+        ],
+      }),
+    );
+
+    const res = await app.fetch(new Request("http://localhost/"));
+
+    expect(await res.text()).toBe("one two");
   });
 
   it("runs onRequest before the handler and onBeforeResponse after", async () => {
@@ -83,7 +102,7 @@ describe("createMiddleware", () => {
   it("lets an onBeforeResponse middleware replace the response", async () => {
     const app = createApp(
       createMiddleware({
-        onBeforeResponse: [() => new Response("replaced", { status: 418 })],
+        onBeforeResponse: () => new Response("replaced", { status: 418 }),
       }),
     );
 
@@ -91,5 +110,11 @@ describe("createMiddleware", () => {
 
     expect(res.status).toBe(418);
     expect(await res.text()).toBe("replaced");
+  });
+
+  it("passes through an array of H3 middleware", () => {
+    const middleware: Middleware[] = [async (_event, next) => next()];
+
+    expect(createMiddleware(middleware)).toBe(middleware);
   });
 });
