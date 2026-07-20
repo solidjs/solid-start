@@ -15,6 +15,7 @@
     "test:all": "npm run unit:ci && npm run e2e && npm run e2e:bundled-dev"
   },
   "dependencies": {
+    "@solidjs/image": "workspace:*",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.4",
     "@solidjs/start": "workspace:*",

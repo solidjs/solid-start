@@ -256,6 +256,9 @@ importers:
 
   apps/tests:
     dependencies:
+      '@solidjs/image':
+        specifier: workspace:*
+        version: link:../../packages/image
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.11)
@@ -6136,7 +6139,7 @@ snapshots:
     dependencies:
       citty: 0.1.6
       consola: 3.4.2
-      defu: 6.1.4
+      defu: 6.1.7
       node-fetch-native: 1.6.7
       nypm: 0.6.5
       pathe: 2.0.3
@@ -6673,7 +6676,7 @@ snapshots:
     dependencies:
       citty: 0.2.1
       pathe: 2.0.3
-      tinyexec: 1.0.4
+      tinyexec: 1.2.4
     optional: true
 
   object-assign@4.1.1: {}
