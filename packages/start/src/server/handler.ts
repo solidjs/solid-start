@@ -1,6 +1,6 @@
 import middleware from "solid-start:middleware";
 import manifest from "virtual:solid-manifest";
-import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3/generic";
+import { defineHandler, H3, type H3Event, redirect } from "h3/generic";
 import type { JSX } from "@solidjs/web";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
@@ -189,38 +189,15 @@ export function createHandler(
 
 export async function createPageEvent(ctx: FetchEvent) {
   ctx.response.headers.set("Content-Type", "text/html");
+  // No-JS submission seeding is the router's now: it reads (and clears) the
+  // flash cookie itself during SSR initialization.
   const pageEvent: PageEvent = Object.assign(ctx, {
-    router: {
-      submission: initFromFlash(ctx) as any,
-    },
     routes: createRoutes(),
     complete: false,
     $islands: new Set<string>(),
   });
 
   return pageEvent;
-}
-
-function initFromFlash(ctx: FetchEvent) {
-  const flash = getCookie(ctx.nativeEvent, "flash");
-  if (!flash) return;
-  try {
-    const param = JSON.parse(flash);
-    if (!param || !param.result) return;
-    const input = [...param.input.slice(0, -1), new Map(param.input[param.input.length - 1])];
-    const result = param.error ? new Error(param.result) : param.result;
-    return {
-      input,
-      url: param.url,
-      pending: false,
-      result: param.thrown ? undefined : result,
-      error: param.thrown ? result : undefined,
-    };
-  } catch (e) {
-    console.error(e);
-  } finally {
-    setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
-  }
 }
 
 function handleShellCompleteRedirect(context: PageEvent, e: H3Event) {
