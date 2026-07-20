@@ -18,5 +18,5 @@
     "rewriteRelativeImportExtensions": true
   },
   "include": ["./src", "./env.d.ts"],
-  "exclude": ["./dist"]
+  "exclude": ["./dist", "**/*.spec.ts"]
 }

@@ -9,6 +9,9 @@
 	"publishConfig": {
 		"access": "public"
 	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"prepublishOnly": "tsdown",
 		"build": "tsdown",
@@ -17,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@tsdown/css": "^0.22.12",
+		"@types/node": "^25.5.0",
 		"solid-js": "^1.9.9",
 		"tsdown": "^0.22.12",
 		"vite": "^8.1.5",

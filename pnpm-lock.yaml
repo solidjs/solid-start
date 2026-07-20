@@ -327,6 +327,9 @@ importers:
       '@tsdown/css':
         specifier: ^0.22.12
         version: 0.22.12(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
       solid-js:
         specifier: ^1.9.9
         version: 1.9.11
