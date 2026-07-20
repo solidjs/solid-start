@@ -1,9 +1,9 @@
 import sharp from "sharp";
-import type { StartImageFormat } from "../types.ts";
+import type { SolidImageFormat } from "../core/types.ts";
 
 export function transformImage(
   originalPath: string,
-  targetFormat: StartImageFormat,
+  targetFormat: SolidImageFormat,
   size: number,
   quality: number,
 ) {

@@ -1,13 +1,13 @@
 import type {
-  StartImageFile,
-  StartImageFormat,
-  StartImageMIME,
-  StartImageSource,
-  StartImageTransformer,
-  StartImageVariant,
+  SolidImageFile,
+  SolidImageFormat,
+  SolidImageMIME,
+  SolidImageSource,
+  SolidImageTransformer,
+  SolidImageVariant,
 } from "./types";
 
-const MIME_TO_FORMAT: Record<StartImageMIME, StartImageFormat> = {
+const MIME_TO_FORMAT: Record<SolidImageMIME, SolidImageFormat> = {
   "image/avif": "avif",
   "image/jpeg": "jpeg",
   "image/png": "png",
@@ -15,11 +15,11 @@ const MIME_TO_FORMAT: Record<StartImageMIME, StartImageFormat> = {
   "image/tiff": "tiff",
 };
 
-export function getFormatFromMIME(mime: StartImageMIME): StartImageFormat {
+export function getFormatFromMIME(mime: SolidImageMIME): SolidImageFormat {
   return MIME_TO_FORMAT[mime];
 }
 
-const FORMAT_TO_MIME: Record<StartImageFormat, StartImageMIME> = {
+const FORMAT_TO_MIME: Record<SolidImageFormat, SolidImageMIME> = {
   avif: "image/avif",
   jpeg: "image/jpeg",
   png: "image/png",
@@ -27,11 +27,11 @@ const FORMAT_TO_MIME: Record<StartImageFormat, StartImageMIME> = {
   tiff: "image/tiff",
 };
 
-export function getMIMEFromFormat(format: StartImageFormat): StartImageMIME {
+export function getMIMEFromFormat(format: SolidImageFormat): SolidImageMIME {
   return FORMAT_TO_MIME[format];
 }
 
-const FILE_TO_FORMAT: Record<StartImageFile, StartImageFormat> = {
+const FILE_TO_FORMAT: Record<SolidImageFile, SolidImageFormat> = {
   avif: "avif",
   jfif: "jpeg",
   jpeg: "jpeg",
@@ -44,11 +44,11 @@ const FILE_TO_FORMAT: Record<StartImageFile, StartImageFormat> = {
   tiff: "tiff",
 };
 
-export function getFormatFromFile(file: StartImageFile): StartImageFormat {
+export function getFormatFromFile(file: SolidImageFile): SolidImageFormat {
   return FILE_TO_FORMAT[file];
 }
 
-const FORMAT_TO_FILES: Record<StartImageFormat, StartImageFile[]> = {
+const FORMAT_TO_FILES: Record<SolidImageFormat, SolidImageFile[]> = {
   avif: ["avif"],
   jpeg: ["jfif", "jpeg", "jpg", "pjp", "pjpeg"],
   png: ["png"],
@@ -56,11 +56,11 @@ const FORMAT_TO_FILES: Record<StartImageFormat, StartImageFile[]> = {
   tiff: ["tif", "tiff"],
 };
 
-export function getFilesFromFormat(format: StartImageFormat): StartImageFile[] {
+export function getFilesFromFormat(format: SolidImageFormat): SolidImageFile[] {
   return FORMAT_TO_FILES[format];
 }
 
-const FORMAT_TO_OUTPUT: Record<StartImageFormat, StartImageFile> = {
+const FORMAT_TO_OUTPUT: Record<SolidImageFormat, SolidImageFile> = {
   avif: "avif",
   jpeg: "jpg",
   png: "png",
@@ -68,7 +68,7 @@ const FORMAT_TO_OUTPUT: Record<StartImageFormat, StartImageFile> = {
   tiff: "tiff",
 };
 
-export function getOutputFileFromFormat(format: StartImageFormat): StartImageFile {
+export function getOutputFileFromFormat(format: SolidImageFormat): SolidImageFile {
   return FORMAT_TO_OUTPUT[format];
 }
 
@@ -80,17 +80,17 @@ function ensureArray<T>(value: T | T[]): T[] {
 }
 
 export function createImageVariants<T>(
-  source: StartImageSource<T>,
-  transformer: StartImageTransformer<T>,
-): StartImageVariant[] {
+  source: SolidImageSource<T>,
+  transformer: SolidImageTransformer<T>,
+): SolidImageVariant[] {
   return ensureArray(transformer.transform(source));
 }
 
-function variantToSrcSetPart(variant: StartImageVariant): string {
+function variantToSrcSetPart(variant: SolidImageVariant): string {
   return variant.path + " " + variant.width + "w";
 }
 
-export function mergeImageVariantsToSrcSet(variants: StartImageVariant[]): string {
+export function mergeImageVariantsToSrcSet(variants: SolidImageVariant[]): string {
   let result = variantToSrcSetPart(variants[0]!);
 
   for (let i = 1, len = variants.length; i < len; i++) {
@@ -101,9 +101,9 @@ export function mergeImageVariantsToSrcSet(variants: StartImageVariant[]): strin
 }
 
 export function mergeImageVariantsByType(
-  variants: StartImageVariant[],
-): Map<string, StartImageVariant[]> {
-  const map = new Map<string, StartImageVariant[]>();
+  variants: SolidImageVariant[],
+): Map<string, SolidImageVariant[]> {
+  const map = new Map<string, SolidImageVariant[]>();
 
   for (let i = 0, len = variants.length; i < len; i++) {
     const current = variants[i]!;

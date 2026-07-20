@@ -1,22 +1,22 @@
 import path from "node:path";
-import { Plugin } from "vite";
-import { getFilesFromFormat, getMIMEFromFormat, getOutputFileFromFormat } from "../transformer.ts";
-import type { StartImageFile, StartImageFormat, StartImageVariant } from "../types.ts";
+import type { Plugin } from "vite";
+import { getFilesFromFormat, getMIMEFromFormat, getOutputFileFromFormat } from "../core/transformer.ts";
+import type { SolidImageFile, SolidImageFormat, SolidImageVariant } from "../core/types.ts";
 import { outputFile } from "./fs.ts";
 import { getImageData, transformImage } from "./transformers.ts";
 import xxHash32 from "./xxhash32.ts";
 
-const DEFAULT_INPUT: StartImageFormat[] = ["png", "jpeg", "webp"];
-const DEFAULT_OUTPUT: StartImageFormat[] = ["png", "jpeg", "webp"];
+const DEFAULT_INPUT: SolidImageFormat[] = ["png", "jpeg", "webp"];
+const DEFAULT_OUTPUT: SolidImageFormat[] = ["png", "jpeg", "webp"];
 const DEFAULT_QUALITY = 0.8;
 
 type MaybePromise<T> = T | Promise<T>;
 
-export interface StartImageOptions {
+export interface SolidImageOptions {
   local?: {
     sizes: number[];
-    input?: StartImageFormat[];
-    output?: StartImageFormat[];
+    input?: SolidImageFormat[];
+    output?: SolidImageFormat[];
     quality: number;
     publicPath?: string;
   };
@@ -27,13 +27,13 @@ export interface StartImageOptions {
         width: number;
         height: number;
       };
-      variants: StartImageVariant | StartImageVariant[];
+      variants: SolidImageVariant | SolidImageVariant[];
     }>;
   };
 }
 
-function getValidFileExtensions(formats: StartImageFormat[]): Set<string> {
-  const result = new Set<StartImageFile>();
+function getValidFileExtensions(formats: SolidImageFormat[]): Set<string> {
+  const result = new Set<SolidImageFile>();
   for (const format of formats) {
     for (const file of getFilesFromFormat(format)) {
       result.add(file);
@@ -42,7 +42,7 @@ function getValidFileExtensions(formats: StartImageFormat[]): Set<string> {
   return result;
 }
 
-function isValidFileExtension(extensions: Set<string>, target: string): target is StartImageFile {
+function isValidFileExtension(extensions: Set<string>, target: string): target is SolidImageFile {
   return extensions.has(target);
 }
 
@@ -81,7 +81,7 @@ function getImageTransformer(imagePath: string, outputTypes: string[], sizes: nu
   );
 }
 
-function getImageVariant(imagePath: string, target: StartImageFormat, size: number): string {
+function getImageVariant(imagePath: string, target: SolidImageFormat, size: number): string {
   return `import source from ${JSON.stringify(imagePath + "?image-raw-" + target + "-" + size)};
 export default {
   width: ${size},
@@ -101,7 +101,7 @@ export default { src, transformer };
 const LOCAL_PATH = /\?image(-[a-z]+(-[0-9]+)?)?/;
 const REMOTE_PATH = "image:";
 
-export const imagePlugin = (options: StartImageOptions) => {
+export const imagePlugin = (options: SolidImageOptions) => {
   const plugins: Plugin[] = [];
   if (options.remote) {
     const transformUrl = options.remote.transformURL;
@@ -179,8 +179,8 @@ export default {
         if (condition.startsWith("image-raw")) {
           const [, , format, size] = condition.split("-");
           const hash = xxHash32(originalPath).toString(16);
-          const filename = `i-${hash}-${size}.${getOutputFileFromFormat(format as StartImageFormat)}`;
-          const image = transformImage(originalPath, format as StartImageFormat, +size!, quality);
+          const filename = `i-${hash}-${size}.${getOutputFileFromFormat(format as SolidImageFormat)}`;
+          const image = transformImage(originalPath, format as SolidImageFormat, +size!, quality);
           const buffer = await image.toBuffer();
           const basePath = path.join(".image", filename);
           const targetPath = path.join(publicPath, basePath);
@@ -191,7 +191,7 @@ export default {
         if (condition.startsWith("image-")) {
           const [, format, size] = condition.split("-");
 
-          return getImageVariant(relativePath, format as StartImageFormat, +size!);
+          return getImageVariant(relativePath, format as SolidImageFormat, +size!);
         }
         if (condition.startsWith("image")) {
           return getImageEntryPoint(relativePath);

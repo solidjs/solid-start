@@ -1,4 +1,4 @@
-import { StartImage as Image } from "@solidjs/start/image";
+import { SolidImage as Image } from "@solidjs/start/image";
 import { type JSX, onMount, Show } from "solid-js";
 // local
 // import exampleImage from './example.jpg?image';

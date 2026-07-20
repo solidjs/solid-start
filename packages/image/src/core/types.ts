@@ -3,42 +3,42 @@
  *
  * Based on https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types
  */
-export type StartImageMIME =
+export type SolidImageMIME =
   | "image/avif"
   | "image/jpeg"
   | "image/png"
   | "image/webp"
   | "image/tiff";
 
-export type StartImagePNG = "png";
-export type StartImageAVIF = "avif";
-export type StartImageJPEG = "jpg" | "jpeg" | "jfif" | "pjpeg" | "pjp";
-export type StartImageWebP = "webp";
-export type StartImageTIFF = "tiff" | "tif";
+export type SolidImagePNG = "png";
+export type SolidImageAVIF = "avif";
+export type SolidImageJPEG = "jpg" | "jpeg" | "jfif" | "pjpeg" | "pjp";
+export type SolidImageWebP = "webp";
+export type SolidImageTIFF = "tiff" | "tif";
 
-export type StartImageFile =
-  | StartImageAVIF
-  | StartImageJPEG
-  | StartImagePNG
-  | StartImageWebP
-  | StartImageTIFF;
+export type SolidImageFile =
+  | SolidImageAVIF
+  | SolidImageJPEG
+  | SolidImagePNG
+  | SolidImageWebP
+  | SolidImageTIFF;
 
-export type StartImageFormat = "avif" | "jpeg" | "png" | "webp" | "tiff";
+export type SolidImageFormat = "avif" | "jpeg" | "png" | "webp" | "tiff";
 
 /**
  * A variant of an image source. This is used to transform a given source string
  * into a <source> element
  */
-export interface StartImageVariant {
+export interface SolidImageVariant {
   path: string;
   width: number;
-  type: StartImageMIME;
+  type: SolidImageMIME;
 }
 
 /**
  * An image source
  */
-export interface StartImageSource<T> {
+export interface SolidImageSource<T> {
   source: string;
   width: number;
   height: number;
@@ -48,6 +48,6 @@ export interface StartImageSource<T> {
 /**
  * Transforms an image source into a set of image variants
  */
-export interface StartImageTransformer<T> {
-  transform: (source: StartImageSource<T>) => StartImageVariant | StartImageVariant[];
+export interface SolidImageTransformer<T> {
+  transform: (source: SolidImageSource<T>) => SolidImageVariant | SolidImageVariant[];
 }

@@ -7,15 +7,15 @@ import {
   mergeImageVariantsByType,
   mergeImageVariantsToSrcSet,
 } from "./transformer.ts";
-import type { StartImageSource, StartImageTransformer, StartImageVariant } from "./types.ts";
+import type { SolidImageSource, SolidImageTransformer, SolidImageVariant } from "./types.ts";
 import { getAspectRatioBoxStyle } from "./utils.ts";
 
 import "./styles.css";
 
-export interface StartImageProps<T> {
-  src: StartImageSource<T>;
+export interface SolidImageProps<T> {
+  src: SolidImageSource<T>;
   alt: string;
-  transformer?: StartImageTransformer<T>;
+  transformer?: SolidImageTransformer<T>;
 
   onLoad?: () => void;
   fallback: (visible: () => boolean, onLoad: () => void) => JSX.Element;
@@ -25,11 +25,11 @@ export interface StartImageProps<T> {
   decoding?: "sync" | "async" | "auto" | undefined;
 }
 
-interface StartImageSourcesProps<T> extends StartImageProps<T> {
-  variants: StartImageVariant[];
+interface SolidImageSourcesProps<T> extends SolidImageProps<T> {
+  variants: SolidImageVariant[];
 }
 
-function StartImageSources<T>(props: StartImageSourcesProps<T>): JSX.Element {
+function SolidImageSources<T>(props: SolidImageSourcesProps<T>): JSX.Element {
   const mergedVariants = createMemo(() => {
     const types = mergeImageVariantsByType(props.variants);
 
@@ -47,7 +47,7 @@ function StartImageSources<T>(props: StartImageSourcesProps<T>): JSX.Element {
   );
 }
 
-export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
+export function SolidImage<T>(props: SolidImageProps<T>): JSX.Element {
   const [showPlaceholder, setShowPlaceholder] = createSignal(true);
   const laze = createLazyRender<HTMLDivElement>();
   const [defer, setDefer] = createSignal(true);
@@ -70,7 +70,7 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
       >
         <picture data-start-image="picture">
           <Show when={props.transformer} fallback={<source src={props.src.source} />}>
-            {cb => <StartImageSources variants={createImageVariants(props.src, cb())} {...props} />}
+            {cb => <SolidImageSources variants={createImageVariants(props.src, cb())} {...props} />}
           </Show>
           <ClientOnly
             fallback={
@@ -116,3 +116,5 @@ export function StartImage<T>(props: StartImageProps<T>): JSX.Element {
     </div>
   );
 }
+
+export * from "./types";
