@@ -126,7 +126,6 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                 }
               },
               ExportDefaultDeclaration(exportNamedPath) {
-                // if opts.keep is true, we don't remove the routeData export
                 if (state.opts.pick && !state.opts.pick.includes("default")) {
                   const decl = exportNamedPath.node.declaration;
                   // A named function/class declaration creates a module-scope
@@ -144,7 +143,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                 }
               },
               ExportNamedDeclaration(exportNamedPath) {
-                // if opts.keep is false, we don't remove the routeData export
+                // No pick list means nothing gets pruned.
                 if (!state.opts.pick) {
                   return;
                 }
@@ -245,7 +244,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
           // from runtime code outside that graph.
           path.scope.crawl();
           const tracked = new Map<Binding, Set<NodePath>>();
-          const candidates = new Map<Binding, Set<NodePath>>();
+          const candidateOwners = new Map<Binding, Set<NodePath>>();
           const addOwner = (
             owners: Map<Binding, Set<NodePath>>,
             binding: Binding,
@@ -266,7 +265,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
             const binding = identifier.scope.getBinding(identifier.node.name);
             if (!binding) continue;
             addOwner(tracked, binding, identifier.parentPath);
-            addOwner(candidates, binding, identifier.parentPath);
+            addOwner(candidateOwners, binding, identifier.parentPath);
           }
 
           const dependencies = new Map<Binding, Set<Binding>>();
@@ -285,14 +284,15 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
             }
           }
 
-          const owningBinding = (reference: NodePath) => {
-            for (const [binding, owners] of tracked) {
-              for (const owner of owners) {
-                if (reference === owner || reference.findParent(parent => parent === owner)) {
-                  return binding;
-                }
-              }
+          const ownerBindings = new Map<NodePath, Binding>();
+          for (const [binding, owners] of tracked) {
+            for (const owner of owners) {
+              ownerBindings.set(owner, binding);
             }
+          }
+          const owningBinding = (reference: NodePath) => {
+            const owner = reference.find(parent => ownerBindings.has(parent));
+            return owner && ownerBindings.get(owner);
           };
 
           for (const target of tracked.keys()) {
@@ -315,7 +315,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
           }
 
           const deadCandidates = new Set(
-            [...candidates.keys()].filter(candidate => !live.has(candidate)),
+            [...candidateOwners.keys()].filter(candidate => !live.has(candidate)),
           );
           path.traverse({
             VariableDeclarator(variablePath) {
@@ -324,7 +324,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
               if (binding && deadCandidates.has(binding)) variablePath.remove();
             },
           });
-          for (const [candidate, owners] of candidates) {
+          for (const [candidate, owners] of candidateOwners) {
             if (!deadCandidates.has(candidate)) continue;
             for (const owner of owners) {
               if (!owner.removed && !owner.isVariableDeclarator()) owner.remove();
