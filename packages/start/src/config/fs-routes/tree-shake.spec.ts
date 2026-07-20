@@ -137,4 +137,153 @@ describe("treeShake", () => {
     expect(output).not.toContain("db");
     expect(output).toContain("export const GET");
   });
+
+  it("removes unreachable export cycles and their imports", async () => {
+    const code = `
+      import { register } from "./registry.ts";
+      export const first = register(() => second);
+      export const second = register(() => first);
+      export const GET = () => "ok";
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).not.toContain("register");
+    expect(output).not.toContain("first");
+    expect(output).not.toContain("second");
+    expect(output).toContain("export const GET");
+  });
+
+  it("keeps an export cycle reachable from a picked export", async () => {
+    const code = `
+      export const first = () => second();
+      export const second = () => first();
+      export const GET = () => first();
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).toContain("const first");
+    expect(output).toContain("const second");
+    expect(output).not.toContain("export const first");
+    expect(output).not.toContain("export const second");
+  });
+
+  it("removes an unreachable cycle through a non-exported binding", async () => {
+    const code = `
+      import { register } from "./registry.ts";
+      export const first = register(() => helper());
+      const helper = () => first;
+      export const GET = () => "ok";
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).not.toContain("register");
+    expect(output).not.toContain("first");
+    expect(output).not.toContain("helper");
+    expect(output).toContain("export const GET");
+  });
+
+  it("ignores type-only references when determining reachability", async () => {
+    const code = `
+      import { initializeSecret } from "./secret.ts";
+      export const secret = initializeSecret();
+      type Secret = typeof secret;
+      export const GET = (_value: Secret) => "ok";
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).not.toContain("initializeSecret");
+    expect(output).not.toContain("const secret");
+    expect(output).toContain("export const GET");
+  });
+
+  it("keeps runtime references wrapped in TypeScript syntax", async () => {
+    const code = `
+      type Handler = () => string;
+      export const helper = () => "ok";
+      export const GET = () => helper satisfies Handler;
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).toContain("const helper");
+    expect(output).not.toContain("export const helper");
+  });
+
+  it("removes an unreferenced named default class", async () => {
+    const code = `
+      export default class Page {
+        static { globalThis.initializePage(); }
+      }
+      export const GET = () => "ok";
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).not.toContain("Page");
+    expect(output).not.toContain("initializePage");
+    expect(output).toContain("export const GET");
+  });
+
+  it("keeps a class reachable from a picked export", async () => {
+    const code = `
+      export class Helper {
+        static value = "ok";
+      }
+      export const GET = () => Helper.value;
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).toContain("class Helper");
+    expect(output).not.toContain("export class Helper");
+    expect(output).toContain("export const GET");
+  });
+
+  it("removes an unreachable cycle through a non-exported class", async () => {
+    const code = `
+      import { register } from "./registry.ts";
+      export const first = register(() => Helper);
+      class Helper {
+        value() { return first; }
+      }
+      export const GET = () => "ok";
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).not.toContain("register");
+    expect(output).not.toContain("first");
+    expect(output).not.toContain("Helper");
+    expect(output).toContain("export const GET");
+  });
+
+  it("preserves declare when splitting mixed variable declarations", async () => {
+    const code = `
+      export declare const helper: string, GET: () => string;
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).not.toContain("helper");
+    expect(output).toContain("export declare const GET");
+  });
+
+  it("removes an unpicked var initializer when the binding is redeclared", async () => {
+    const code = `
+      import { initializeSecret } from "./secret.ts";
+      var secret = initializeSecret();
+      export var secret;
+      var secret;
+      export const GET = () => "ok";
+    `;
+
+    const output = await shake(code, ["GET"]);
+
+    expect(output).not.toContain("initializeSecret");
+    expect(output).toContain("export const GET");
+  });
 });

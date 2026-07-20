@@ -5,12 +5,14 @@
 import type * as Babel from "@babel/core";
 import type { NodePath, PluginObj, PluginPass } from "@babel/core";
 import type { Binding } from "@babel/traverse";
+import type { Identifier } from "@babel/types";
 import { basename } from "pathe";
 import type { Plugin } from "vite";
 
 type State = Omit<PluginPass, "opts"> & {
   opts: { pick: string[] };
   refs: Set<any>;
+  candidates: Set<NodePath<Identifier>>;
   done: boolean;
 };
 
@@ -33,13 +35,28 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
     return path.node.id && path.node.id.type === "Identifier" ? path.get("id") : null;
   }
 
-  function isIdentifierReferenced(ident: any) {
+  function isTypeOnlyReference(path: NodePath) {
+    return path.getAncestry().some(parent => {
+      if (parent.isTSType()) return true;
+      if (parent.isExportNamedDeclaration()) return parent.node.exportKind === "type";
+      if (parent.isExportSpecifier()) return parent.node.exportKind === "type";
+      return false;
+    });
+  }
+
+  function runtimeReferences(binding: Binding) {
+    return binding.referencePaths.filter(ref => !isTypeOnlyReference(ref));
+  }
+
+  function isIdentifierReferenced(ident: any, includeTypes = false) {
     const b: Binding | undefined = ident.scope.getBinding(ident.node.name);
-    if (b?.referenced) {
+    if (b) {
+      const references = b.constantViolations.concat(
+        includeTypes ? b.referencePaths : runtimeReferences(b),
+      );
+      if (!references.length) return false;
       if (b.path.type === "FunctionDeclaration") {
-        return !b.constantViolations
-          .concat(b.referencePaths)
-          .every(ref => ref.findParent(p => p === b.path));
+        return !references.every(ref => ref.findParent(p => p === b.path));
       }
       return true;
     }
@@ -47,13 +64,13 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
   }
   function markFunction(path: any, state: any) {
     const ident = getIdentifier(path);
-    if (ident && ident.node && isIdentifierReferenced(ident)) {
+    if (ident && ident.node && isIdentifierReferenced(ident, true)) {
       state.refs.add(ident);
     }
   }
   function markImport(path: any, state: any) {
     const local = path.get("local");
-    if (isIdentifierReferenced(local)) {
+    if (isIdentifierReferenced(local, true)) {
       state.refs.add(local);
     }
   }
@@ -63,13 +80,14 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
       Program: {
         enter(path, state) {
           state.refs = new Set();
+          state.candidates = new Set();
           state.done = false;
           path.traverse(
             {
               VariableDeclarator(variablePath, variableState: any) {
                 if (variablePath.node.id.type === "Identifier") {
                   const local = variablePath.get("id");
-                  if (isIdentifierReferenced(local)) {
+                  if (isIdentifierReferenced(local, true)) {
                     variableState.refs.add(local);
                   }
                 } else if (variablePath.node.id.type === "ObjectPattern") {
@@ -85,7 +103,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                               throw new Error("invariant");
                             })(),
                     );
-                    if (isIdentifierReferenced(local)) {
+                    if (isIdentifierReferenced(local, true)) {
                       variableState.refs.add(local);
                     }
                   });
@@ -101,7 +119,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                     } else {
                       return;
                     }
-                    if (isIdentifierReferenced(local)) {
+                    if (isIdentifierReferenced(local, true)) {
                       variableState.refs.add(local);
                     }
                   });
@@ -117,7 +135,9 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                   // declaration again if nothing references it.
                   if ((t.isFunctionDeclaration(decl) || t.isClassDeclaration(decl)) && decl.id) {
                     const [newPath] = exportNamedPath.replaceWith(decl);
-                    state.refs.add((newPath as NodePath<any>).get("id"));
+                    const id = (newPath as NodePath<any>).get("id") as NodePath<Identifier>;
+                    state.refs.add(id);
+                    state.candidates.add(id);
                   } else {
                     exportNamedPath.remove();
                   }
@@ -155,7 +175,9 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                       // exports may reference it; the sweep below removes it
                       // again if unreferenced.
                       const [newPath] = exportNamedPath.replaceWith(decl.node);
-                      state.refs.add((newPath as NodePath<any>).get("id"));
+                      const id = (newPath as NodePath<any>).get("id") as NodePath<Identifier>;
+                      state.refs.add(id);
+                      state.candidates.add(id);
                     }
                     break;
                   }
@@ -176,6 +198,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                     // unreferenced.
                     const statements = declNode.declarations.map(d => {
                       const single = t.variableDeclaration(declNode.kind, [d]);
+                      single.declare = declNode.declare;
                       return isPicked(d) ? t.exportNamedDeclaration(single, []) : single;
                     });
                     const newPaths = exportNamedPath.replaceWithMultiple(statements);
@@ -183,7 +206,9 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                       if (!p.isVariableDeclaration()) continue;
                       for (const d of p.get("declarations")) {
                         if (d.node.id.type === "Identifier") {
-                          state.refs.add(d.get("id"));
+                          const id = d.get("id") as NodePath<Identifier>;
+                          state.refs.add(id);
+                          state.candidates.add(id);
                         }
                       }
                     }
@@ -197,6 +222,8 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
               FunctionDeclaration: markFunction,
               FunctionExpression: markFunction,
               ArrowFunctionExpression: markFunction,
+              ClassDeclaration: markFunction,
+              ClassExpression: markFunction,
               ImportSpecifier: markImport,
               ImportDefaultSpecifier: markImport,
               ImportNamespaceSpecifier: markImport,
@@ -213,11 +240,103 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
             state,
           );
 
+          // References alone cannot distinguish live bindings from dead cycles.
+          // Build a graph of localized exports and retain only those reachable
+          // from runtime code outside that graph.
+          path.scope.crawl();
+          const tracked = new Map<Binding, Set<NodePath>>();
+          const candidates = new Map<Binding, Set<NodePath>>();
+          const addOwner = (
+            owners: Map<Binding, Set<NodePath>>,
+            binding: Binding,
+            owner: NodePath,
+          ) => {
+            const paths = owners.get(binding) ?? new Set();
+            paths.add(owner);
+            owners.set(binding, paths);
+          };
+
+          for (const identifier of state.refs) {
+            if (identifier.node?.type !== "Identifier" || !identifier.parentPath) continue;
+            const binding = identifier.scope.getBinding(identifier.node.name);
+            if (binding) addOwner(tracked, binding, identifier.parentPath);
+          }
+          for (const identifier of state.candidates) {
+            if (!identifier.parentPath) continue;
+            const binding = identifier.scope.getBinding(identifier.node.name);
+            if (!binding) continue;
+            addOwner(tracked, binding, identifier.parentPath);
+            addOwner(candidates, binding, identifier.parentPath);
+          }
+
+          const dependencies = new Map<Binding, Set<Binding>>();
+          const live = new Set<Binding>();
+          for (const [binding, owners] of tracked) {
+            dependencies.set(binding, new Set());
+            if (
+              [...owners].some(owner =>
+                owner.findParent(
+                  parent =>
+                    parent.isExportNamedDeclaration() || parent.isExportDefaultDeclaration(),
+                ),
+              )
+            ) {
+              live.add(binding);
+            }
+          }
+
+          const owningBinding = (reference: NodePath) => {
+            for (const [binding, owners] of tracked) {
+              for (const owner of owners) {
+                if (reference === owner || reference.findParent(parent => parent === owner)) {
+                  return binding;
+                }
+              }
+            }
+          };
+
+          for (const target of tracked.keys()) {
+            const references = target.constantViolations.concat(runtimeReferences(target));
+            for (const reference of references) {
+              const source = owningBinding(reference);
+              if (source) dependencies.get(source)?.add(target);
+              else live.add(target);
+            }
+          }
+
+          const pending = [...live];
+          while (pending.length) {
+            const source = pending.pop()!;
+            for (const dependency of dependencies.get(source) ?? []) {
+              if (live.has(dependency)) continue;
+              live.add(dependency);
+              pending.push(dependency);
+            }
+          }
+
+          const deadCandidates = new Set(
+            [...candidates.keys()].filter(candidate => !live.has(candidate)),
+          );
+          path.traverse({
+            VariableDeclarator(variablePath) {
+              if (variablePath.node.id.type !== "Identifier") return;
+              const binding = variablePath.scope.getBinding(variablePath.node.id.name);
+              if (binding && deadCandidates.has(binding)) variablePath.remove();
+            },
+          });
+          for (const [candidate, owners] of candidates) {
+            if (!deadCandidates.has(candidate)) continue;
+            for (const owner of owners) {
+              if (!owner.removed && !owner.isVariableDeclarator()) owner.remove();
+            }
+          }
+
           const refs = state.refs;
+          const refNodes = new Set([...refs].map(ref => ref.node));
           let count = 0;
           const sweepFunction = (sweepPath: any) => {
             const ident = getIdentifier(sweepPath);
-            if (ident && ident.node && refs.has(ident) && !isIdentifierReferenced(ident)) {
+            if (ident && ident.node && refNodes.has(ident.node) && !isIdentifierReferenced(ident)) {
               ++count;
               if (
                 t.isAssignmentExpression(sweepPath.parentPath) ||
@@ -231,7 +350,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
           };
           function sweepImport(sweepPath: any) {
             const local = sweepPath.get("local");
-            if (refs.has(local) && !isIdentifierReferenced(local)) {
+            if (refNodes.has(local.node) && !isIdentifierReferenced(local)) {
               ++count;
               sweepPath.remove();
               if (sweepPath.parent.specifiers.length === 0) {
@@ -246,7 +365,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
               VariableDeclarator(variablePath) {
                 if (variablePath.node.id.type === "Identifier") {
                   const local = variablePath.get("id");
-                  if (refs.has(local) && !isIdentifierReferenced(local)) {
+                  if (refNodes.has(local.node) && !isIdentifierReferenced(local)) {
                     ++count;
                     variablePath.remove();
                   }
@@ -264,7 +383,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                               throw new Error("invariant");
                             })(),
                     );
-                    if (refs.has(local) && !isIdentifierReferenced(local)) {
+                    if (refNodes.has(local.node) && !isIdentifierReferenced(local)) {
                       ++count;
                       p.remove();
                     }
@@ -285,7 +404,7 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                     } else {
                       return;
                     }
-                    if (refs.has(local) && !isIdentifierReferenced(local)) {
+                    if (refNodes.has(local.node) && !isIdentifierReferenced(local)) {
                       ++count;
                       e.remove();
                     }
@@ -298,6 +417,8 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
               FunctionDeclaration: sweepFunction,
               FunctionExpression: sweepFunction,
               ArrowFunctionExpression: sweepFunction,
+              ClassDeclaration: sweepFunction,
+              ClassExpression: sweepFunction,
               ImportSpecifier: sweepImport,
               ImportDefaultSpecifier: sweepImport,
               ImportNamespaceSpecifier: sweepImport,
