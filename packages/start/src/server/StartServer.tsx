@@ -12,7 +12,8 @@ const docType = ssr("<!DOCTYPE html>");
 
 function clientEntrySrc() {
   const key = import.meta.env.START_CLIENT_ENTRY.replace(/^\.\//, "");
-  if (import.meta.env.DEV) return join(import.meta.env.BASE_URL || "/", key);
+  if (import.meta.env.DEV)
+    return join(import.meta.env.BASE_URL || "/", import.meta.env.START_CLIENT_ENTRY_URL);
   const entry = (manifest as Record<string, any>)[key];
   if (!entry) throw new Error(`No entry found in client manifest for '${key}'`);
   return join(import.meta.env.BASE_URL || "/", entry.file);

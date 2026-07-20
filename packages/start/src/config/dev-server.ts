@@ -1,3 +1,6 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { NodeRequest, sendNodeResponse } from "srvx/node";
 import {
   type Connect,
@@ -7,19 +10,24 @@ import {
 } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
 
-export function devServer(): Array<PluginOption> {
+export function devServer(serverEntryPath: string): Array<PluginOption> {
   return [
     {
       name: "solid-start-dev-server",
       configurePreviewServer(server) {
+        const serverEntryUrl = pathToFileURL(resolvePreviewServerEntry(server.config.root)).href;
+
         return () => {
           server.middlewares.use(async (req, res) => {
-            res.setHeader("content-encoding", "identity");
             const webReq = new NodeRequest({ req, res });
             const def: {
               default: { fetch: (req: Request) => Promise<Response> };
-            } = await import(process.cwd() + "/dist/server/entry-server.js");
-            sendNodeResponse(res, await def.default.fetch(webReq));
+            } = await import(serverEntryUrl);
+            const webRes = await def.default.fetch(webReq);
+            if (isHtmlResponse(webRes)) {
+              res.setHeader("content-encoding", "identity");
+            }
+            sendNodeResponse(res, webRes);
           });
         };
       },
@@ -54,7 +62,7 @@ export function devServer(): Array<PluginOption> {
             try {
               const serverEntry: {
                 default: { fetch: (req: Request) => Promise<Response> };
-              } = await serverEnv.runner.import("./src/entry-server.tsx");
+              } = await serverEnv.runner.import(serverEntryPath);
 
               const webRes = await serverEntry.default.fetch(webReq);
 
@@ -115,6 +123,23 @@ export function devServer(): Array<PluginOption> {
       },
     },
   ];
+}
+
+export function resolvePreviewServerEntry(root: string): string {
+  const serverDirectory = join(root, "dist/server");
+  const serverEntry = ["js", "mjs"]
+    .map(extension => join(serverDirectory, `entry-server.${extension}`))
+    .find(existsSync);
+
+  if (!serverEntry) {
+    throw new Error(`Could not find the SolidStart server entry in ${serverDirectory}`);
+  }
+
+  return serverEntry;
+}
+
+export function isHtmlResponse(response: Response): boolean {
+  return response.headers.get("content-type")?.startsWith("text/html") ?? false;
 }
 
 /**

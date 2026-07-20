@@ -90,5 +90,54 @@ test.describe("server-function", () => {
   test("should build with a env:server", async ({ page }) => {
     await page.goto("http://localhost:3000/server-env");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
+    await expect(page.locator("vite-error-overlay")).toHaveCount(0);
+  });
+
+  test("should build with a server function including an unused try/catch variable", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-unused-trycatch");
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
+
+  test("should build with a server function including an unused destructured variable", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-unused-destructure");
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
+
+  /**
+   * Makes sure that server function dead code elimination
+   * runs before Solid's SSR transforms.
+   *
+   * Solid's SSR code removes client-only event handler code
+   * such as onClick, but server function's only referenced
+   * in such event handlers still must be registered on
+   * the server.
+   */
+  test("should build with a server function only referenced inside onClick", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-onclick");
+    await page.locator("#server-fn-test").click();
+    await expect(page.locator("#server-fn-test")).toContainText("false");
+  });
+
+  /**
+   * A thrown server-function error whose message contains non-ByteString
+   * characters (> U+00FF) must still reach the client. Previously the raw
+   * message was assigned to the X-Error response header, and Headers.set threw
+   * a TypeError, producing a bare 500 with no error to deserialize.
+   * https://github.com/solidjs/solid-start/issues/1874
+   */
+  test("should propagate a server function error with non-latin1 message", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-unicode-error");
+    // Retry the click until it registers post-hydration (clicks aren't auto-retried).
+    await expect(async () => {
+      await page.locator("#server-fn-test").click();
+      await expect(page.locator("#server-fn-test")).toContainText(
+        "Ошибка 🚀 ünïcode — special chars",
+        { timeout: 1000 },
+      );
+    }).toPass({ timeout: 15000 });
   });
 });

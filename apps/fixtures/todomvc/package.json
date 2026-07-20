@@ -1,7 +1,7 @@
 {
   "name": "fixture-todomvc",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -11,11 +11,12 @@
     "@solidjs/router": "0.17.0-next.5",
     "@solidjs/start": "workspace:*",
     "@solidjs/web": "2.0.0-beta.20",
+    "nitro": "^3.0.260610-beta",
     "solid-js": "2.0.0-beta.20",
     "unstorage": "1.10.2",
-    "vite": "7.3.1"
+    "vite": "^8.0.0"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   }
 }

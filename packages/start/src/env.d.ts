@@ -12,9 +12,10 @@ interface SolidStartMetaEnv {
   /** Root-relative (posix) path to the app entry, e.g. `src/app.tsx`. */
   START_APP_ENTRY: string;
   START_CLIENT_ENTRY: string;
+  START_CLIENT_ENTRY_URL: string;
   START_ISLANDS: boolean;
   /** Inline dev script from vite-plugin-solid reconciling SSR'd dev styles with Vite's HMR client. */
   START_DEV_STYLE_PATCH: string;
   // START_DEV_OVERLAY: boolean;
-  // SERVER_BASE_URL: string;
+  SERVER_BASE_URL: string;
 }

@@ -38,7 +38,5 @@ jobs:
       - name: Run all apps/tests (Unit, Node, Browser UI, and E2E)
         run: pnpm --filter tests run test:all
 
-      # The @solidjs/start package currently has no tests, so we are skipping this step.
-      # Uncomment if tests are added to the @solidjs/start package.
-      # - name: Run @solidjs/start unit tests
-      #   run: pnpm --filter @solidjs/start test:ci
+      - name: Run @solidjs/start unit tests
+        run: pnpm --filter @solidjs/start test:ci

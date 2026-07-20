@@ -1,6 +1,6 @@
 import middleware from "solid-start:middleware";
 import manifest from "virtual:solid-manifest";
-import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3";
+import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3/generic";
 import type { JSX } from "@solidjs/web";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
@@ -11,6 +11,8 @@ import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
+import { toWebReadableStream } from "./web-stream.ts";
+import { stripPathBase } from "./strip-path-base.ts";
 
 /**
  * Entry-owned CSS for dev SSR. The runtime registers entry assets itself for
@@ -19,16 +21,32 @@ import { getExpectedRedirectStatus } from "./util.ts";
  * the collected inline styles at render start (pre-shell registrations are
  * injected into <head>, styled from the first byte).
  */
-async function resolveDevEntryStyles(): Promise<any[] | undefined> {
-  if (typeof (manifest as any)?.resolve !== "function") return;
+const DEV_MANIFEST_ENDPOINT = "/@solid-start/dev-manifest";
+
+async function resolveDevAssets(request: Request, key: string): Promise<any> {
+  // Resolve through the host Vite server because adapter SSR runners may not
+  // share the process or global where vite-plugin-solid stores its resolver.
+  const url = new URL(DEV_MANIFEST_ENDPOINT, request.url);
+  url.searchParams.set("key", key);
+  const response = await fetch(url);
+  return response.ok ? response.json() : null;
+}
+
+async function resolveDevEntryStyles(
+  resolve: (key: string) => Promise<any>,
+): Promise<any[] | undefined> {
   const keys = [
     import.meta.env.START_CLIENT_ENTRY.replace(/^\.\//, ""),
     import.meta.env.START_APP_ENTRY,
   ];
   const styles: any[] = [];
   for (const key of keys) {
-    const assets = await (manifest as any).resolve(key).catch(() => null);
-    if (assets?.css) styles.push(...assets.css);
+    try {
+      const assets = await resolve(key);
+      if (assets?.css) styles.push(...assets.css);
+    } catch {
+      // Entry styles are optional when the dev manifest cannot resolve a key.
+    }
   }
   return styles;
 }
@@ -48,7 +66,7 @@ export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
-) {
+): H3 {
   const handler = defineHandler({
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
@@ -89,8 +107,16 @@ export function createBaseHandler(
         typeof options === "function" ? await options(context) : { ...options };
       const mode = resolvedOptions.mode || "stream";
       if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
-      (resolvedOptions as any).manifest = manifest;
-      const entryStyles = import.meta.env.DEV ? await resolveDevEntryStyles() : undefined;
+      const renderManifest = import.meta.env.DEV
+        ? {
+            ...(manifest as Record<string, any>),
+            resolve: (key: string) => resolveDevAssets(event.request, key),
+          }
+        : manifest;
+      (resolvedOptions as any).manifest = renderManifest;
+      const entryStyles = import.meta.env.DEV
+        ? await resolveDevEntryStyles(renderManifest.resolve)
+        : undefined;
 
       if (mode === "sync" || !import.meta.env.START_SSR) {
         const html = renderToString(() => {
@@ -141,14 +167,9 @@ export function createBaseHandler(
 
       delete (stream as any).then;
 
-      // using TransformStream in dev can cause solid-start-dev-server to crash
-      // when stream is cancelled
-      if (globalThis.USING_SOLID_START_DEV_SERVER) return stream;
-
-      // returning stream directly breaks cloudflare workers
-      const { writable, readable } = new TransformStream();
-      stream.pipeTo(writable);
-      return readable;
+      // h3 expects a standard web ReadableStream across runtimes. The adapter
+      // also tolerates cancellation while Solid finishes outstanding work.
+      return toWebReadableStream(stream);
     }),
   });
 
@@ -162,7 +183,7 @@ export function createBaseHandler(
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
-) {
+): H3 {
   return createBaseHandler(createPageEvent, fn, options);
 }
 
@@ -259,6 +280,6 @@ function produceResponseWithEventHeaders(res: Response) {
 }
 
 function stripBaseUrl(path: string) {
-  if (import.meta.env.BASE_URL === "/" || import.meta.env.BASE_URL === "") return path;
-  return path.slice(import.meta.env.BASE_URL.length);
+  const base = import.meta.env.SERVER_BASE_URL || import.meta.env.BASE_URL || "/";
+  return stripPathBase(path, base);
 }

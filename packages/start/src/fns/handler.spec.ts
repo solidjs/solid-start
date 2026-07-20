@@ -3,7 +3,6 @@ import type { FetchEvent } from "../server/types.ts";
 
 vi.mock("h3", () => ({
   parseCookies: vi.fn(() => ({})),
-  parseSetCookie: vi.fn(),
 }));
 
 vi.mock("@solidjs/web", () => ({
@@ -60,7 +59,7 @@ describe("createSingleFlightHeaders", () => {
   it("should not mutate the original request headers", () => {
     const originalHeaders = new Headers({
       "content-type": "application/json",
-      "cookie": "session=abc123",
+      cookie: "session=abc123",
       "cf-ray": "abc123",
       "cf-cache-status": "HIT",
     });

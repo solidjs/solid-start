@@ -27,7 +27,7 @@
     "release": "pnpm build && changeset publish",
     "format": "pnpm oxfmt",
     "rewrite-exports": "pnpm --filter='./packages/*' -c exec \"echo \\$(cat package.json | jq '.exports = .publishConfig.exports') > package.json\"",
-    "vite-ecosystem-ci:build": "pnpm run build:all && pnpm --filter fixture-nitro-3 build",
+    "vite-ecosystem-ci:build": "pnpm run build:all && pnpm --filter fixture-basic build",
     "vite-ecosystem-ci:before-test": "pnpm --filter tests exec playwright install chromium",
     "vite-ecosystem-ci:test": "pnpm --filter tests run test:all"
   },
@@ -37,12 +37,11 @@
     "oxfmt": "^0.36.0",
     "tinyglobby": "^0.2.15",
     "tippy.js": "^6.3.7",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.0"
   },
   "engines": {
-    "pnpm": "^10.8.1",
-    "node": ">=22"
+    "pnpm": "^11.13.0",
+    "node": ">=24"
   },
-  "packageManager": "pnpm@10.8.1",
-  "pnpm": {}
+  "packageManager": "pnpm@11.13.0"
 }

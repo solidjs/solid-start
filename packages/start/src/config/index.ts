@@ -1,6 +1,6 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
-import { extname, isAbsolute, join, relative } from "node:path";
+import { basename, extname, isAbsolute, join, relative } from "node:path";
 import type { PluginOption } from "vite";
 import solid, {
   devStylePatch,
@@ -8,6 +8,7 @@ import solid, {
   type Options as SolidOptions,
   type ServerFunctionsOptions,
 } from "vite-plugin-solid";
+import { boundaryModules } from "./boundary-modules.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
@@ -28,6 +29,9 @@ export interface SolidStartOptions {
 
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
+
+const DEV_MANIFEST_REGISTRY_KEY = Symbol.for("vite-plugin-solid:dev-manifest");
+const DEV_MANIFEST_ENDPOINT = "/@solid-start/dev-manifest";
 
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
@@ -55,6 +59,36 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   };
   return [
     {
+      name: "solid-start:dev-manifest-bridge",
+      apply: "serve",
+      enforce: "pre",
+      configureServer(server) {
+        // Nitro's SSR runner is isolated from Vite's global resolver registry,
+        // so expose the resolver through Vite's own dev middleware.
+        server.middlewares.use(async (req, res, next) => {
+          const url = new URL(req.url || "/", "http://localhost");
+          if (url.pathname !== DEV_MANIFEST_ENDPOINT) return next();
+
+          const key = url.searchParams.get("key");
+          if (!key) {
+            res.statusCode = 400;
+            return res.end("Missing asset key");
+          }
+
+          try {
+            const registry = (globalThis as any)[DEV_MANIFEST_REGISTRY_KEY];
+            const resolver = registry?.[server.config.root];
+            const assets = resolver ? await resolver.resolve(key) : null;
+            res.setHeader("content-type", "application/json");
+            res.setHeader("cache-control", "no-store");
+            return res.end(JSON.stringify(assets));
+          } catch (error) {
+            return next(error);
+          }
+        });
+      },
+    },
+    {
       name: "solid-start:config",
       enforce: "pre",
       configEnvironment(name) {
@@ -65,8 +99,12 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
         };
       },
-      async config(_, env) {
+      async config(config, env) {
         const clientInput = [handlers.client];
+        const clientEntryUrl =
+          env.command === "serve" && config.experimental?.bundledDev
+            ? `assets/${basename(handlers.client, entryExtension)}.js`
+            : handlers.client;
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
           for (const route of await clientRouter.getRoutes()) {
@@ -84,10 +122,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           appType: "custom",
           build: { assetsDir: "_build/assets" },
           optimizeDeps: {
-            include: [
-              "@solidjs/start > seroval",
-              "@solidjs/start > seroval-plugins/web",
-            ],
+            include: ["@solidjs/start > seroval", "@solidjs/start > seroval-plugins/web"],
             // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
             ...({
               rolldownOptions: {
@@ -119,7 +154,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 manifest: true,
                 copyPublicDir: false,
                 rollupOptions: {
-                  input: "~/entry-server.tsx",
+                  input: handlers.server,
                 },
                 outDir: "dist/server",
                 commonjsOptions: {
@@ -141,7 +176,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             },
             // Depending on the package manager and dependency structure Vite externalizes @solidjs/start
             // This makes sure that @solidjs/start goes through the Vite build process
-            noExternal: ["@solidjs/start"],
+            //
+            // h3 and cookie-es must be bundled as well: if they stay external, the server build
+            // emits bare imports that nitro later re-resolves from the project root, where package
+            // managers like yarn may have hoisted the older major versions required by nitropack
+            // and unstorage (h3 v1 / cookie-es v1) instead of the versions @solidjs/start needs
+            // (see https://github.com/solidjs/solid-start/issues/2101
+            // and https://github.com/solidjs/solid-start/issues/2178)
+            noExternal: ["@solidjs/start", "h3", "cookie-es"],
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
@@ -152,10 +194,14 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
               relative(root, appEntryPath).split("\\").join("/"),
             ),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
+            "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
             // Inline dev script (from vite-plugin-solid) that reconciles
             // SSR'd <style data-vite-dev-id> tags with Vite's HMR client.
             "import.meta.env.START_DEV_STYLE_PATCH": JSON.stringify(devStylePatch),
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify(
+              (config.server as { baseURL?: string } | undefined)?.baseURL ?? "",
+            ),
           },
           builder: {
             sharedPlugins: true,
@@ -197,6 +243,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
       filter: options?.serverFunctions?.filter,
     }),
+    boundaryModules(),
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
@@ -224,7 +271,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
       },
     },
-    devServer(),
+    devServer(handlers.server),
     solid({
       ...start.solid,
       ssr: true,

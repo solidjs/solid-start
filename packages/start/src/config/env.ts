@@ -1,4 +1,5 @@
 import { loadEnv, type Plugin } from "vite";
+import { parseIdQuery } from "./utils.ts";
 
 const LOADERS = {
   node: `export default key => process.env[key];`,
@@ -61,19 +62,22 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
       env = config.mode !== "production" ? "development" : "production";
     },
     resolveId(id) {
+      const { filename } = parseIdQuery(id);
       if (
-        id === SERVER_ENV ||
-        id === CLIENT_ENV ||
-        id === SERVER_RUNTIME_ENV ||
-        id === SERVER_RUNTIME_LOADER
+        filename === SERVER_ENV ||
+        filename === CLIENT_ENV ||
+        filename === SERVER_RUNTIME_ENV ||
+        filename === SERVER_RUNTIME_LOADER
       ) {
         return id;
       }
       return undefined;
     },
-    load(id, opts) {
-      if (id === SERVER_ENV) {
-        if (!opts?.ssr) {
+    load(id) {
+      const { filename } = parseIdQuery(id);
+      const isServer = this.environment.config.consumer === "server";
+      if (filename === SERVER_ENV) {
+        if (!isServer) {
           return SERVER_ONLY_MODULE;
         }
         const vars = currentOptions.server?.load
@@ -81,20 +85,20 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
           : loadEnv(env, '.', serverPrefix);
         return convertObjectToModule(vars);
       }
-      if (id === CLIENT_ENV) {
+      if (filename === CLIENT_ENV) {
         const vars = currentOptions.client?.load
           ? currentOptions.client.load(env)
           : loadEnv(env, '.', clientPrefix);
         return convertObjectToModule(vars);
       }
-      if (id === SERVER_RUNTIME_LOADER) {
-        if (!opts?.ssr) {
+      if (filename === SERVER_RUNTIME_LOADER) {
+        if (!isServer) {
           return SERVER_ONLY_MODULE;
         }
         return runtimeCode;
       }
-      if (id === SERVER_RUNTIME_ENV) {
-        if (!opts?.ssr) {
+      if (filename === SERVER_RUNTIME_ENV) {
+        if (!isServer) {
           return SERVER_ONLY_MODULE;
         }
         return SERVER_RUNTIME_CODE;

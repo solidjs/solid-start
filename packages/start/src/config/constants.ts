@@ -11,6 +11,6 @@ export const VIRTUAL_MODULES = {
 } as const;
 
 export const VITE_ENVIRONMENTS = {
-  client: "client",
-  server: "ssr",
+  client: "client" as const,
+  server: "ssr" as const,
 };

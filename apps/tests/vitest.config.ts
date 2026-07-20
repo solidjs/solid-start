@@ -1,19 +1,21 @@
 import { createRequire } from "node:module";
 import solid from "vite-plugin-solid";
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
+import path from "path";
 
 const require = createRequire(import.meta.url);
 
 export default defineConfig({
-  plugins: [solid()],
   resolve: {
     alias: {
+      "~": path.resolve(__dirname, "./src"),
       "solid-js/web": "@solidjs/web",
       "solid-js/store": "solid-js",
     },
     conditions: ["solid", "development", "browser"],
   },
+  plugins: [solid()],
   optimizeDeps: {
     include: ["@solidjs/testing-library"],
     esbuildOptions: {
@@ -30,7 +32,7 @@ export default defineConfig({
               path: require.resolve("solid-js"),
             }));
             // Shim onMount/onError removed in Solid v2 for @solidjs/testing-library compat
-            build.onResolve({ filter: /^solid-js$/ }, (args) => {
+            build.onResolve({ filter: /^solid-js$/ }, args => {
               if (args.importer?.includes("@solidjs/testing-library")) {
                 return { path: args.path, namespace: "solid-compat" };
               }
@@ -51,13 +53,13 @@ export default defineConfig({
   test: {
     mockReset: true,
     globals: true,
-    exclude: ["**/src/e2e/**"], // we need this to offload these to playwright, for e2e tests
+    exclude: [...configDefaults.exclude, "**/src/e2e/**"],
     projects: [
       {
         // 1. NODE Project (For fs, tree-shaking, server utilities)
         extends: true,
         test: {
-          include: ["**/*.server.test.ts"], // Matches the tree-shaking test
+          include: ["src/**/*.server.test.ts"],
           name: { label: "Node Logic", color: "green" },
           environment: "node",
         },
@@ -67,7 +69,7 @@ export default defineConfig({
         extends: true,
         test: {
           // Exclude the server files, include component/browser tests
-          include: ["**/*.{test,spec}.tsx", "**/*.browser.test.ts"],
+          include: ["src/**/*.{test,spec}.tsx", "src/**/*.browser.test.ts"],
           name: { label: "Browser UI", color: "cyan" },
           // Browser configuration must live inside the project's 'test' key
           browser: {

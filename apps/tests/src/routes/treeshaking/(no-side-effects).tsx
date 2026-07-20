@@ -1,6 +1,6 @@
 import { createMemo } from "solid-js";
 
-const a = 1;
+const a = "myTreeshakingTestUniqueString1";
 
 function getA() {
   return a;

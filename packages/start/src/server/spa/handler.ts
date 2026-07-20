@@ -1,3 +1,4 @@
+import type { H3 } from "h3/generic";
 import type { JSX } from "@solidjs/web";
 
 import { createBaseHandler } from "../handler.ts";
@@ -10,7 +11,7 @@ import type { FetchEvent, HandlerOptions, PageEvent } from "../types.ts";
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options?: HandlerOptions | ((context: PageEvent) => HandlerOptions),
-) {
+): H3 {
   return createBaseHandler(createPageEvent, fn, options);
 }
 
