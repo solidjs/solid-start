@@ -11,15 +11,10 @@ import {
   serializeToJSONStream,
   serializeToJSStream,
 } from "./serialization.ts";
-import {
-  BODY_FORMAT_KEY,
-  BodyFormat,
-  extractBody,
-  getHeadersAndBody,
-} from "./shared.ts";
+import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
 import "solid-start:server-fn-manifest";
 
-import { getServerFunction } from "./registration.ts";
+import { getServerFunction, hasServerFunction } from "./registration.ts";
 import type { FetchEvent, PageEvent } from "../server/types.ts";
 import { getExpectedRedirectStatus } from "../server/util.ts";
 
@@ -42,6 +37,24 @@ export async function handleServerFunction(h3Event: H3Event) {
       return process.env.NODE_ENV === "development"
         ? new Response("Server function not found", { status: 404 })
         : new Response(null, { status: 404 });
+    }
+  }
+
+  if (import.meta.env.DEV && !hasServerFunction(functionId!)) {
+    // The module that owns this function has not been evaluated in the server
+    // environment yet (e.g. the route was reached by client-side navigation, so
+    // it was only ever loaded in the browser). Ask the dev server to resolve the
+    // function id back to its owning module and import it, which registers it.
+    // Resolved by the "solid-start:server-functions/preload" plugin.
+    try {
+      // the /@id/ prefix routes the request through the plugin container so the
+      // virtual module can be resolved (bare ids get node-resolved by the runner)
+      await import(
+        /* @vite-ignore */ `/@id/solid-start:server-fn-lookup?id=${encodeURIComponent(functionId!)}`
+      );
+    } catch (error) {
+      // fall through to getServerFunction, which reports the missing function
+      console.error("[solid-start] server function lookup failed:", error);
     }
   }
 
@@ -130,7 +143,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     } else if (instance) {
       const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
 
-      h3Event.res.headers.set("X-Error", error.replace(/[\r\n]+/g, ""));
+      h3Event.res.headers.set("X-Error", toHeaderValue(error));
     } else {
       x = handleNoJS(x, request, parsed, true);
     }
@@ -143,7 +156,7 @@ export async function handleServerFunction(h3Event: H3Event) {
           headers.set("X-Error", errorHeader);
         }
         return new Response(body.body, {
-          headers: body.headers,
+          headers,
         });
       }
       h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
@@ -155,6 +168,17 @@ export async function handleServerFunction(h3Event: H3Event) {
       return serializeToJSONStream(x);
     }
     return x;
+  }
+}
+
+// header values must be ByteString-safe (no chars > 0xFF), otherwise Headers.set throws
+function toHeaderValue(value: string) {
+  const stripped = value.replace(/[\r\n]+/g, "");
+  try {
+    return /[^\x00-\xFF]/.test(stripped) ? encodeURIComponent(stripped) : stripped;
+  } catch {
+    // encodeURIComponent throws on lone surrogates
+    return "true";
   }
 }
 

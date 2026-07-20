@@ -1,9 +1,10 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
-import { extname, isAbsolute, join } from "node:path";
+import { basename, extname, isAbsolute, join } from "node:path";
 import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
+import { boundaryModules } from "./boundary-modules.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
@@ -86,8 +87,12 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
         };
       },
-      async config(_, env) {
+      async config(config, env) {
         const clientInput = [handlers.client];
+        const clientEntryUrl =
+          env.command === "serve" && config.experimental?.bundledDev
+            ? `assets/${basename(handlers.client, entryExtension)}.js`
+            : handlers.client;
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
           for (const route of await clientRouter.getRoutes()) {
@@ -174,7 +179,11 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             // esbuild receives a valid JS string literal for the define value
             "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
+            "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify(
+              (config.server as { baseURL?: string } | undefined)?.baseURL ?? "",
+            ),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
           builder: {
@@ -209,6 +218,30 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     }),
     lazy(),
     envPlugin(options?.env),
+    boundaryModules(),
+    {
+      name: "solid-start:boundary-modules",
+      enforce: "pre",
+      resolveId(id, importer, { ssr }) {
+        if (id === "server-only") {
+          if (!ssr)
+            this.error(
+              `Attempt to import 'server-only' in a client module: ${importer}`,
+            );
+        } else if (id === "client-only") {
+          if (ssr)
+            this.error(
+              `Attempt to import 'client-only' in a server module: ${importer}`,
+            );
+        } else {
+          return null;
+        }
+        return "\0solid-start:boundary-modules:id";
+      },
+      load(id) {
+        if (id === "\0solid-start:boundary-modules:id") return "export {}";
+      },
+    },
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {

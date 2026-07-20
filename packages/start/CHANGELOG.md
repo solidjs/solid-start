@@ -1,5 +1,31 @@
 # @solidjs/start
 
+## 2.0.0-beta.10
+
+### Patch Changes
+
+- 8af6304: Support for Vite 8.1 Experimental Bundled Dev Mode
+- 9d91484: fix: don't crash when a server function throws an error whose message contains non-latin1 characters. 
+- 068b64c: Return a cancellation-safe web `ReadableStream` for streaming SSR in development. Returning Solid's
+  raw stream only rendered on Node; Bun and Deno coerced it to `[object Object]`.
+
+## 2.0.0-beta.9
+
+### Minor Changes
+
+- f3e84ec: Add support for `server-only` and `client-only` modules
+
+### Patch Changes
+
+- a8a2328: fix: mark `@solidjs/start/http` and `@solidjs/start/middleware` as `server-only` so importing them from client-reachable code fails loudly at dev/build time, instead of silently shipping them to the browser where they crashed hydration and broke unrelated actions/forms with no diagnostic (#2068)
+
+## 2.0.0-beta.8
+
+### Patch Changes
+
+- ecc02be: fix: resolve server functions in dev when their route was reached through client-side navigation before its module was evaluated on the server
+- 85b24b2: Use per-environment Vite plugin hook APIs for forward compatibility with Vite 9.
+
 ## 2.0.0-beta.7
 
 ### Patch Changes

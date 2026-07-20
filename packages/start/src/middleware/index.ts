@@ -1,5 +1,7 @@
 // @refresh skip
 
+import "server-only";
+
 import type { H3Event, Middleware } from "h3";
 import { getFetchEvent } from "../server/fetchEvent.ts";
 import type { FetchEvent } from "../server/types.ts";

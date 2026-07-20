@@ -3,7 +3,7 @@ import { onCleanup } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 
 import type { PageEvent } from "../server/types.ts";
-import { appendHeader, setHeader } from "../http/index.ts";
+import { appendHeader, setHeader } from "../http/http.ts";
 
 export interface HttpHeaderProps {
   name: string;

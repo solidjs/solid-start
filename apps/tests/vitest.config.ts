@@ -1,5 +1,5 @@
 import solid from "vite-plugin-solid";
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 import path from "path";
 
@@ -13,13 +13,13 @@ export default defineConfig({
   test: {
     mockReset: true,
     globals: true,
-    exclude: ["**/src/e2e/**"], // we need this to offload these to playwright, for e2e tests
+    exclude: [...configDefaults.exclude, "**/src/e2e/**"],
     projects: [
       {
         // 1. NODE Project (For fs, tree-shaking, server utilities)
         extends: true,
         test: {
-          include: ["**/*.server.test.ts"], // Matches the tree-shaking test
+          include: ["src/**/*.server.test.ts"],
           name: { label: "Node Logic", color: "green" },
           environment: "node",
         },
@@ -29,7 +29,7 @@ export default defineConfig({
         extends: true,
         test: {
           // Exclude the server files, include component/browser tests
-          include: ["**/*.{test,spec}.tsx", "**/*.browser.test.ts"],
+          include: ["src/**/*.{test,spec}.tsx", "src/**/*.browser.test.ts"],
           name: { label: "Browser UI", color: "cyan" },
           // Browser configuration must live inside the project's 'test' key
           browser: {
