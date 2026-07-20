@@ -15,18 +15,23 @@ ignoredBuiltDependencies:
   - msw
   - prisma
 
+minimumReleaseAgeExclude:
+  - '@dom-expressions/babel-plugin-jsx@0.50.0-next.24'
+  - '@dom-expressions/compiler-darwin-arm64@0.50.0-next.24'
+  - '@dom-expressions/compiler-darwin-x64@0.50.0-next.24'
+  - '@dom-expressions/compiler-linux-arm64-gnu@0.50.0-next.24'
+  - '@dom-expressions/compiler-linux-x64-gnu@0.50.0-next.24'
+  - '@dom-expressions/compiler-wasm32-wasi@0.50.0-next.24'
+  - '@dom-expressions/compiler-win32-x64-msvc@0.50.0-next.24'
+  - '@dom-expressions/compiler@0.50.0-next.24'
+  - '@solidjs/router@0.17.0-next.6'
+  - '@solidjs/signals@2.0.0-beta.21'
+  - '@solidjs/web@2.0.0-beta.21'
+  - babel-preset-solid@2.0.0-beta.21
+  - solid-js@2.0.0-beta.21
+  - vite-plugin-solid@3.0.0-next.14
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - cypress
   - esbuild
-
-overrides:
-  # TEMPORARY: Start now wires the router's server-function integration
-  # (@solidjs/router/server) on top of the single-flight core protocol,
-  # which needs the unpublished router work and the @solidjs/web bridge
-  # carrying subscribeFlightData/collectFlightData. Link the sibling
-  # checkouts until those releases ship, then remove these overrides and
-  # pin the released versions.
-  '@solidjs/router': link:../solid-router
-  solid-js: link:../solid/packages/solid
-  '@solidjs/web': link:../solid/packages/solid-web
