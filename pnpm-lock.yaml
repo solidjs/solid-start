@@ -349,7 +349,7 @@ importers:
         version: 3.3.3
       h3:
         specifier: ^2.0.1-rc.25
-        version: 2.0.1-rc.25(crossws@0.4.10(srvx@0.11.22))
+        version: 2.0.1-rc.25(crossws@0.4.10(srvx@0.12.0))
       html-to-image:
         specifier: ^1.11.13
         version: 1.11.13
@@ -384,8 +384,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       srvx:
-        specifier: ^0.11.22
-        version: 0.11.22
+        specifier: ^0.12.0
+        version: 0.12.0
       terracotta:
         specifier: ^1.1.0
         version: 1.1.0(solid-js@1.9.11)
@@ -3100,6 +3100,11 @@ packages:
     engines: {node: '>=20.16.0'}
     hasBin: true
 
+  srvx@0.12.0:
+    resolution: {integrity: sha512-c1GYFl3U8Aa/9rX9GTgvJ4tQMgmbX9YX26+km5iYu+d6/fuwpMFJ6d+Z/DtLDiXpDioKcbGTj5jD7+mn94Timw==}
+    engines: {node: '>=20.16.0'}
+    hasBin: true
+
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
@@ -4973,6 +4978,11 @@ snapshots:
     optionalDependencies:
       srvx: 0.11.22
 
+  crossws@0.4.10(srvx@0.12.0):
+    optionalDependencies:
+      srvx: 0.12.0
+    optional: true
+
   css-tree@3.2.1:
     dependencies:
       mdn-data: 2.27.1
@@ -5233,12 +5243,12 @@ snapshots:
     optionalDependencies:
       crossws: 0.4.10(srvx@0.11.22)
 
-  h3@2.0.1-rc.25(crossws@0.4.10(srvx@0.11.22)):
+  h3@2.0.1-rc.25(crossws@0.4.10(srvx@0.12.0)):
     dependencies:
       rou3: 0.9.1
       srvx: 0.11.22
     optionalDependencies:
-      crossws: 0.4.10(srvx@0.11.22)
+      crossws: 0.4.10(srvx@0.12.0)
 
   hasown@2.0.2:
     dependencies:
@@ -6150,6 +6160,8 @@ snapshots:
   sprintf-js@1.0.3: {}
 
   srvx@0.11.22: {}
+
+  srvx@0.12.0: {}
 
   stackback@0.0.2: {}
 
