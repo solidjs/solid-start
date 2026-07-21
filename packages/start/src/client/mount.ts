@@ -1,1 +1,1 @@
-export { hydrate as mount } from "solid-js/web"
+export { hydrate as mount } from "@solidjs/web"

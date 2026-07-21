@@ -1,5 +1,5 @@
 import * as h3 from "h3";
-import { getRequestEvent } from "solid-js/web";
+import { getRequestEvent } from "@solidjs/web";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {

@@ -1,19 +1,64 @@
 import middleware from "solid-start:middleware";
-import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3/generic";
-import { join } from "pathe";
-import type { JSX } from "solid-js";
+import manifest from "virtual:solid-manifest";
+import { defineHandler, H3, type H3Event, redirect } from "h3/generic";
+import type { JSX } from "@solidjs/web";
 import { sharedConfig } from "solid-js";
-import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
+import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 
 import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
-import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 import { toWebReadableStream } from "./web-stream.ts";
 import { stripPathBase } from "./strip-path-base.ts";
+
+/**
+ * Entry-owned CSS for dev SSR. The runtime registers entry assets itself for
+ * static (build) manifests, but the dev manifest is an async resolver it
+ * can't enumerate — so resolve the client/app entry keys here and register
+ * the collected inline styles at render start (pre-shell registrations are
+ * injected into <head>, styled from the first byte).
+ */
+const DEV_MANIFEST_ENDPOINT = "/@solid-start/dev-manifest";
+
+async function resolveDevAssets(request: Request, key: string): Promise<any> {
+  // Resolve through the host Vite server because adapter SSR runners may not
+  // share the process or global where vite-plugin-solid stores its resolver.
+  const url = new URL(DEV_MANIFEST_ENDPOINT, request.url);
+  url.searchParams.set("key", key);
+  const response = await fetch(url);
+  return response.ok ? response.json() : null;
+}
+
+async function resolveDevEntryStyles(
+  resolve: (key: string) => Promise<any>,
+): Promise<any[] | undefined> {
+  const keys = [
+    import.meta.env.START_CLIENT_ENTRY.replace(/^\.\//, ""),
+    import.meta.env.START_APP_ENTRY,
+  ];
+  const styles: any[] = [];
+  for (const key of keys) {
+    try {
+      const assets = await resolve(key);
+      if (assets?.css) styles.push(...assets.css);
+    } catch {
+      // Entry styles are optional when the dev manifest cannot resolve a key.
+    }
+  }
+  return styles;
+}
+
+function registerEntryStyles(styles: any[]) {
+  const ctx = (sharedConfig as any).context;
+  if (!ctx?.registerAsset) return;
+  for (const css of styles) {
+    if (typeof css === "string") ctx.registerAsset("style", css);
+    else ctx.registerAsset("inline-style", css);
+  }
+}
 
 const SERVER_FN_BASE = "/_server";
 
@@ -30,14 +75,7 @@ export function createBaseHandler(
       const pathname = stripBaseUrl(url.pathname);
 
       if (pathname.startsWith(SERVER_FN_BASE)) {
-        const serverFnResponse = await handleServerFunction(e);
-
-        if (serverFnResponse instanceof Response)
-          return produceResponseWithEventHeaders(serverFnResponse);
-
-        return new Response(serverFnResponse as any, {
-          headers: e.res.headers,
-        });
+        return produceResponseWithEventHeaders(await handleServerFunction(e));
       }
 
       const match = matchAPIRoute(pathname, event.request.method);
@@ -47,8 +85,7 @@ export function createBaseHandler(
           event.request.method === "HEAD" ? mod["HEAD"] || mod["GET"] : mod[event.request.method];
         if (typeof fn === "function") {
           (event as APIEvent).params = match.params || {};
-          // @ts-expect-error
-          sharedConfig.context = { event };
+          (sharedConfig as any).context = { event };
           const res = await fn(event);
           if (res !== undefined) {
             if (res instanceof Response) return produceResponseWithEventHeaders(res);
@@ -70,10 +107,21 @@ export function createBaseHandler(
         typeof options === "function" ? await options(context) : { ...options };
       const mode = resolvedOptions.mode || "stream";
       if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
+      const renderManifest = import.meta.env.DEV
+        ? {
+            ...(manifest as Record<string, any>),
+            resolve: (key: string) => resolveDevAssets(event.request, key),
+          }
+        : manifest;
+      (resolvedOptions as any).manifest = renderManifest;
+      const entryStyles = import.meta.env.DEV
+        ? await resolveDevEntryStyles(renderManifest.resolve)
+        : undefined;
 
       if (mode === "sync" || !import.meta.env.START_SSR) {
         const html = renderToString(() => {
-          (sharedConfig.context as any).event = context;
+          (sharedConfig as any).context.event = context;
+          if (entryStyles) registerEntryStyles(entryStyles);
           return fn(context);
         }, resolvedOptions);
         context.complete = true;
@@ -104,7 +152,8 @@ export function createBaseHandler(
       } else resolvedOptions.onCompleteShell = handleShellCompleteRedirect(context, e);
 
       const _stream = renderToStream(() => {
-        (sharedConfig.context as any).event = context;
+        (sharedConfig as any).context.event = context;
+        if (entryStyles) registerEntryStyles(entryStyles);
         return fn(context);
       }, resolvedOptions);
       const stream = _stream as typeof _stream & PromiseLike<string>; // stream has a hidden 'then' method
@@ -140,60 +189,15 @@ export function createHandler(
 
 export async function createPageEvent(ctx: FetchEvent) {
   ctx.response.headers.set("Content-Type", "text/html");
-  // const prevPath = ctx.request.headers.get("x-solid-referrer");
-  // const mutation = ctx.request.headers.get("x-solid-mutation") === "true";
-  const manifest = getSsrManifest(import.meta.env.SSR && import.meta.env.DEV ? "ssr" : "client");
-
-  // Handle Vite build.cssCodeSplit
-  // When build.cssCodeSplit is false, a single CSS file is generated with the key style.css
-  const mergedCSS = import.meta.env.PROD ? await manifest.getAssets("style.css") : [];
-
-  const assets = [
-    ...mergedCSS,
-    ...(await manifest.getAssets(import.meta.env.START_CLIENT_ENTRY)),
-    ...(await manifest.getAssets(import.meta.env.START_APP_ENTRY)),
-    // ...(import.meta.env.START_ISLANDS
-    //   ? (await serverManifest.inputs[serverManifest.handler]!.assets()).filter(
-    //       s => (s as any).attrs.rel !== "modulepreload"
-    //     )
-    //   : [])
-  ];
+  // No-JS submission seeding is the router's now: it reads (and clears) the
+  // flash cookie itself during SSR initialization.
   const pageEvent: PageEvent = Object.assign(ctx, {
-    assets,
-    router: {
-      submission: initFromFlash(ctx) as any,
-    },
     routes: createRoutes(),
-    // prevUrl: prevPath || "",
-    // mutation: mutation,
-    // $type: FETCH_EVENT,
     complete: false,
     $islands: new Set<string>(),
   });
 
   return pageEvent;
-}
-
-function initFromFlash(ctx: FetchEvent) {
-  const flash = getCookie(ctx.nativeEvent, "flash");
-  if (!flash) return;
-  try {
-    const param = JSON.parse(flash);
-    if (!param || !param.result) return;
-    const input = [...param.input.slice(0, -1), new Map(param.input[param.input.length - 1])];
-    const result = param.error ? new Error(param.result) : param.result;
-    return {
-      input,
-      url: param.url,
-      pending: false,
-      result: param.thrown ? undefined : result,
-      error: param.thrown ? result : undefined,
-    };
-  } catch (e) {
-    console.error(e);
-  } finally {
-    setCookie(ctx.nativeEvent, "flash", "", { maxAge: 0 });
-  }
 }
 
 function handleShellCompleteRedirect(context: PageEvent, e: H3Event) {

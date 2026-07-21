@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 
 export default function EditButton(props: { noteId?: number; children: JSX.Element }) {
   const isDraft = !("noteId" in props);

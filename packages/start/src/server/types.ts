@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import type { JSX } from "solid-js";
-import type { RequestEvent } from "solid-js/web";
+import type { JSX } from "@solidjs/web";
+import type { RequestEvent } from "@solidjs/web";
 
 // export const FETCH_EVENT = "$FETCH";
 
@@ -10,25 +10,11 @@ export type DocumentComponentProps = {
   children?: JSX.Element;
 };
 
-export type Asset =
-  | {
-      tag: "style";
-      attrs: JSX.StyleHTMLAttributes<HTMLStyleElement> & { key?: string };
-      children?: JSX.Element;
-    }
-  | {
-      tag: "script";
-      attrs: JSX.ScriptHTMLAttributes<HTMLScriptElement> & { key?: string };
-    }
-  | {
-      tag: "link";
-      attrs: JSX.LinkHTMLAttributes<HTMLLinkElement> & { key?: string };
-    };
-
 export type HandlerOptions = {
   mode?: "sync" | "async" | "stream";
   nonce?: string;
   renderId?: string;
+  manifest?: Record<string, any>;
   onCompleteAll?: (options: { write: (v: any) => void }) => void;
   onCompleteShell?: (options: { write: (v: any) => void }) => void;
 };
@@ -55,7 +41,6 @@ export interface FetchEvent {
 }
 
 export interface PageEvent extends RequestEvent {
-  assets: any[];
   routes: any[];
   // prevUrl: string | null;
   // $type: typeof FETCH_EVENT;
@@ -75,7 +60,7 @@ export interface ServerFunctionMeta {
   id: string;
 }
 
-declare module "solid-js/web" {
+declare module "@solidjs/web" {
   interface RequestEvent extends FetchEvent {
     serverOnly?: boolean;
   }

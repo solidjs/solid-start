@@ -56,10 +56,11 @@
     "@babel/core": "^7.29.0",
     "@babel/traverse": "^7.29.0",
     "@babel/types": "^7.29.0",
-    "@solidjs/meta": "^0.29.4",
+    "@solidjs/meta": "0.30.0-next.0",
+    "@solidjs/router": "0.17.0-next.6",
+    "@solidjs/web": "2.0.0-beta.21",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.10",
-    "cookie-es": "^2.0.0",
     "defu": "^6.1.4",
     "error-stack-parser": "^2.1.4",
     "fast-glob": "^3.3.3",
@@ -73,11 +74,11 @@
     "seroval": "^1.5.4",
     "seroval-plugins": "^1.5.1",
     "shiki": "^1.29.2",
-    "solid-js": "^1.9.11",
+    "solid-js": "2.0.0-beta.21",
     "source-map-js": "^1.2.1",
     "srvx": "^0.11.22",
-    "terracotta": "^1.1.0",
-    "vite-plugin-solid": "^2.11.11"
+    "terracotta": "2.0.0-next.6",
+    "vite-plugin-solid": "3.0.0-next.14"
   },
   "engines": {
     "node": ">=24"

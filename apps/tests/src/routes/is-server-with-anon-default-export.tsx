@@ -1,12 +1,14 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 import { serverFnWithIsServer } from "~/functions/use-is-server-with-anon-default-export";
 
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithIsServer?: boolean }>({});
 
-  createEffect(async () => {
-    const result = await serverFnWithIsServer();
-    setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
+  onSettled(() => {
+    void (async () => {
+      const result = await serverFnWithIsServer();
+      setOutput(prev => ({ ...prev, serverFnWithIsServer: result }));
+    })();
   });
 
   return (

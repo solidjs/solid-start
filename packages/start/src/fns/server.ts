@@ -1,46 +1,22 @@
-import { getRequestEvent } from "solid-js/web";
-import { provideRequestEvent } from "solid-js/web/storage";
-import { registerServerFunction } from "./registration.ts";
+// Server half of the runtime ABI: the core runtime from
+// @solidjs/web/server-functions, configured for Start's policies. Compiled
+// server output (via vite-plugin-solid's serverFunctions transform) imports
+// registerServerReference / createServerReference from here.
+import { provideRequestEvent } from "@solidjs/web/storage";
+import { configureServerFunctionsServer } from "@solidjs/web/server-functions/server";
+import type { FetchEvent } from "../server/types.ts";
 
-interface Registration<T extends any[], R> {
-  id: string;
-  fn: (...args: T) => Promise<R>;
-}
+let baseURL = import.meta.env.BASE_URL ?? "/";
+if (!baseURL.endsWith("/")) baseURL += "/";
 
-export function createServerReference<T extends any[], R>(
-  id: string,
-  fn: (...args: T) => Promise<R>,
-) {
-  const registration: Registration<T, R> = { id, fn };
-  registerServerFunction(id, fn);
-  return registration;
-}
+configureServerFunctionsServer({
+  // Explicit rather than relying on the runtime's global fallback — SSR
+  // in-process calls and the HTTP handler both scope events through this.
+  // (Events here are always Start's rich FetchEvents; the runtime types only
+  // know the lean core shape.)
+  provideEvent: (event, fn) => provideRequestEvent(event as FetchEvent, fn),
+  // Reference `url`s (form actions) must respect the app's base path.
+  endpoint: `${baseURL}_server`,
+});
 
-export function cloneServerReference<T extends any[], R>({ id, fn }: Registration<T, R>) {
-  if (typeof fn !== "function")
-    throw new Error("Export from a 'use server' module must be a function");
-  let baseURL = import.meta.env.BASE_URL ?? "/";
-  if (!baseURL.endsWith("/")) baseURL += "/";
-
-  return new Proxy(fn, {
-    get(target, prop, receiver) {
-      if (prop === "url") {
-        return `${baseURL}_server?id=${encodeURIComponent(id)}`;
-      }
-      if (prop === "GET") return receiver;
-      return (target as any)[prop];
-    },
-    apply(target, thisArg, args) {
-      const ogEvt = getRequestEvent();
-      if (!ogEvt) throw new Error("Cannot call server function outside of a request");
-      const evt = { ...ogEvt };
-      evt.locals.serverFunctionMeta = {
-        id,
-      };
-      evt.serverOnly = true;
-      return provideRequestEvent(evt, () => {
-        return fn.apply(thisArg, args as T);
-      });
-    },
-  });
-}
+export { registerServerReference, createServerReference } from "@solidjs/web/server-functions/server";

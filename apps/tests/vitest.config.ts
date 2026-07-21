@@ -1,15 +1,55 @@
+import { createRequire } from "node:module";
 import solid from "vite-plugin-solid";
 import { configDefaults, defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 import path from "path";
 
+const require = createRequire(import.meta.url);
+
 export default defineConfig({
   resolve: {
     alias: {
       "~": path.resolve(__dirname, "./src"),
+      "solid-js/web": "@solidjs/web",
+      "solid-js/store": "solid-js",
     },
+    conditions: ["solid", "development", "browser"],
   },
   plugins: [solid()],
+  optimizeDeps: {
+    include: ["@solidjs/testing-library"],
+    esbuildOptions: {
+      plugins: [
+        {
+          name: "solid-compat",
+          setup(build) {
+            // Let Vite resolve @solidjs/web at runtime with proper conditions
+            build.onResolve({ filter: /^solid-js\/web$/ }, () => ({
+              path: "@solidjs/web",
+              external: true,
+            }));
+            build.onResolve({ filter: /^solid-js\/store$/ }, () => ({
+              path: require.resolve("solid-js"),
+            }));
+            // Shim onMount/onError removed in Solid v2 for @solidjs/testing-library compat
+            build.onResolve({ filter: /^solid-js$/ }, args => {
+              if (args.importer?.includes("@solidjs/testing-library")) {
+                return { path: args.path, namespace: "solid-compat" };
+              }
+            });
+            build.onLoad({ filter: /.*/, namespace: "solid-compat" }, () => ({
+              contents: `
+                export * from ${JSON.stringify(require.resolve("solid-js"))};
+                export function onMount(fn) { queueMicrotask(fn); }
+                export function onError() {}
+              `,
+              resolveDir: ".",
+            }));
+          },
+        },
+      ],
+    },
+  },
   test: {
     mockReset: true,
     globals: true,

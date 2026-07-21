@@ -37,6 +37,10 @@ const mapStories = {
 export const getStories = query(
   async (type: StoryTypes, page: number): Promise<StoryDefinition[]> => {
     "use server";
+    const storyType = mapStories[type];
+    if (!storyType) {
+      return [];
+    }
     return fetchAPI(`${mapStories[type]}?page=${page}`);
   },
   "stories",

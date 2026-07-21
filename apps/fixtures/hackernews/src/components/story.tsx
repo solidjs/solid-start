@@ -10,7 +10,7 @@ const Story: Component<{ story: StoryDefinition }> = props => {
       <span class="title">
         <Show
           when={props.story.url}
-          fallback={<A href={`/item/${props.story.id}`}>{props.story.title}</A>}
+          fallback={<A href={`/stories/${props.story.id}`}>{props.story.title}</A>}
         >
           <a href={props.story.url} target="_blank" rel="noreferrer">
             {props.story.title}

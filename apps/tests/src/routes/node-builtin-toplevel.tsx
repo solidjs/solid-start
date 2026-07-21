@@ -1,12 +1,14 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 import { serverFnWithNodeBuiltin } from "~/functions/use-node-builtin";
 
 export default function App() {
   const [output, setOutput] = createSignal<{ serverFnWithNodeBuiltin?: string }>({});
 
-  createEffect(async () => {
-    const result = await serverFnWithNodeBuiltin();
-    setOutput(prev => ({ ...prev, serverFnWithNodeBuiltin: result }));
+  onSettled(() => {
+    void (async () => {
+      const result = await serverFnWithNodeBuiltin();
+      setOutput(prev => ({ ...prev, serverFnWithNodeBuiltin: result }));
+    })();
   });
 
   return (

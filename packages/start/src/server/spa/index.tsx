@@ -1,5 +1,5 @@
 // @refresh skip
-export { default as lazy } from "../../shared/lazy.ts";
+export { lazy } from "solid-js";
 export * from "../types.ts";
 export { StartServer } from "./StartServer.tsx";
 export { createHandler } from "./handler.ts";

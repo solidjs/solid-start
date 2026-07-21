@@ -1,6 +1,6 @@
 // @refresh skip
-import { ErrorBoundary as DefaultErrorBoundary, catchError, type ParentProps } from "solid-js";
-import { isServer } from "solid-js/web";
+import { Errored, type ParentProps } from "solid-js";
+import { isServer } from "@solidjs/web";
 import { HttpStatusCode } from "./HttpStatusCode.ts";
 import { DevOverlay } from "./dev-overlay/index.tsx";
 
@@ -12,8 +12,8 @@ export const ErrorBoundary =
           ? "500 | Internal Server Error"
           : "Error | Uncaught Client Exception";
         return (
-          <DefaultErrorBoundary
-            fallback={error => {
+          <Errored
+            fallback={(error: any) => {
               console.error(error);
               return (
                 <>
@@ -26,27 +26,26 @@ export const ErrorBoundary =
             }}
           >
             {props.children}
-          </DefaultErrorBoundary>
+          </Errored>
         );
       };
 
 export const TopErrorBoundary = (props: ParentProps) => {
-  let isError = false;
-  const res = catchError(
-    () => props.children,
-    err => {
-      console.error(err);
-      isError = !!err;
-    },
-  );
-  return isError ? (
-    <>
-      <span style="font-size:1.5em;text-align:center;position:fixed;left:0px;bottom:55%;width:100%;">
-        500 | Internal Server Error
-      </span>
-      <HttpStatusCode code={500} />
-    </>
-  ) : (
-    res
+  return (
+    <Errored
+      fallback={(err: any) => {
+        console.error(err);
+        return (
+          <>
+            <span style="font-size:1.5em;text-align:center;position:fixed;left:0px;bottom:55%;width:100%;">
+              500 | Internal Server Error
+            </span>
+            <HttpStatusCode code={500} />
+          </>
+        );
+      }}
+    >
+      {props.children}
+    </Errored>
   );
 };

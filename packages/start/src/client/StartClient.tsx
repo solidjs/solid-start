@@ -1,34 +1,27 @@
 // @refresh skip
 import App from "solid-start:app";
-import type { JSX } from "solid-js";
 import { ErrorBoundary } from "../shared/ErrorBoundary.tsx";
-
-function Dummy(props: { children: JSX.Element }) {
-  return props.children;
-}
 
 /**
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/client/start-client
  */
 export function StartClient() {
+  // The server wraps the app in: NoHydration → TopErrorBoundary → Hydration → ErrorBoundary → App
+  // TopErrorBoundary lives outside the Hydration zone (inside NoHydration), so it doesn't
+  // contribute to hydration keys. The client only needs to mirror what's inside the
+  // server's Hydration boundary: ErrorBoundary → App.
   return (
-    <Dummy>
-      <Dummy>
-        <ErrorBoundary>
-          <App />
-        </ErrorBoundary>
-      </Dummy>
-    </Dummy>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   );
 }
 
 export function StartClientTanstack() {
   return (
-    <Dummy>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </Dummy>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   );
 }

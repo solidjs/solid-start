@@ -1,11 +1,11 @@
 // @refresh skip
 import ErrorStackParser from "error-stack-parser";
 import * as htmlToImage from "html-to-image";
-import type { JSX } from "solid-js";
-import { createMemo, createSignal, ErrorBoundary, For, Show, Suspense } from "solid-js";
-import { Portal } from "solid-js/web";
-// @ts-ignore - terracotta module resolution issue with NodeNext
-import { Dialog, DialogOverlay, DialogPanel, Select, SelectOption } from "terracotta";
+import type { JSX } from "@solidjs/web";
+import { Errored, For, Loading, Show, createMemo, createSignal } from "solid-js";
+import { Portal } from "@solidjs/web";
+import { Dialog, DialogOverlay, DialogPanel } from 'terracotta/dialog';
+import { Select, SelectOption } from 'terracotta/select';
 import info from "../../../package.json" with { type: "json" };
 import { CodeView } from "./CodeView.tsx";
 import { createStackFrame, type StackFrameSource } from "./createStackFrame.ts";
@@ -91,11 +91,11 @@ function StackFramesContent(props: StackFramesContentProps) {
   return (
     <div data-start-dev-overlay-stack-frames-content>
       <div data-start-dev-overlay-stack-frames-code>
-        <ErrorBoundary fallback={null}>
+        <Errored fallback={null}>
           {(() => {
             const data = createStackFrame(selectedFrame(), () => props.isCompiled);
             return (
-              <Suspense fallback={<CodeFallback />}>
+              <Loading fallback={<CodeFallback />}>
                 <Show when={data()} keyed fallback={<CodeFallback />}>
                   {source => (
                     <>
@@ -110,10 +110,10 @@ function StackFramesContent(props: StackFramesContentProps) {
                     </>
                   )}
                 </Show>
-              </Suspense>
+              </Loading>
             );
           })()}
-        </ErrorBoundary>
+        </Errored>
       </div>
       <Select<ErrorStackParser.StackFrame>
         data-start-dev-overlay-stack-frames
@@ -122,7 +122,7 @@ function StackFramesContent(props: StackFramesContentProps) {
       >
         <For each={stackframes}>
           {current => (
-            <ErrorBoundary
+            <Errored
               fallback={
                 <div data-start-dev-overlay-stack-frame>
                   <span data-start-dev-overlay-stack-frame-function>
@@ -143,7 +143,7 @@ function StackFramesContent(props: StackFramesContentProps) {
               {(() => {
                 const data = createStackFrame(current, () => props.isCompiled);
                 return (
-                  <Suspense>
+                  <Loading>
                     <Show when={data()} keyed>
                       {source => (
                         <SelectOption data-start-dev-overlay-stack-frame value={current}>
@@ -154,10 +154,10 @@ function StackFramesContent(props: StackFramesContentProps) {
                         </SelectOption>
                       )}
                     </Show>
-                  </Suspense>
+                  </Loading>
                 );
               })()}
-            </ErrorBoundary>
+            </Errored>
           )}
         </For>
       </Select>

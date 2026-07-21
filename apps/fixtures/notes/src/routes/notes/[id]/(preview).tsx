@@ -1,5 +1,5 @@
-import { RouteDefinition, RouteSectionProps, createAsync } from "@solidjs/router";
-import { Show } from "solid-js";
+import { RouteDefinition, RouteSectionProps } from "@solidjs/router";
+import { Show, createMemo } from "solid-js";
 import EditButton from "~/components/EditButton";
 import { getNotePreview } from "~/lib/api";
 
@@ -10,7 +10,7 @@ export const route = {
 } satisfies RouteDefinition;
 
 export default function NotePage({ params }: RouteSectionProps) {
-  const note = createAsync(() => getNotePreview(+params.id));
+  const note = createMemo(() => getNotePreview(+params.id));
   return (
     <Show when={note()} keyed>
       {note => (
