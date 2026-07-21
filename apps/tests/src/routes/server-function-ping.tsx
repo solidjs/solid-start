@@ -1,38 +1,18 @@
 import { createEffect, createSignal } from "solid-js";
 
-async function sleep(value: unknown, ms: number) {
-  return new Promise((res) => {
-    setTimeout(res, ms, value);
-  })
-}
-
-async function ping(value: Date) {
+async function ping(value: string) {
   "use server";
 
-  const current = [
-    value,
-    {
-      name: 'example',
-      async *[Symbol.asyncIterator]() {
-        yield sleep('foo', 5000);
-        yield sleep('bar', 5000);
-        yield sleep('baz', 5000);
-      }
-    }
-  ];
-
-  return current;
+  return await Promise.resolve(value);
 }
 
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
   createEffect(async () => {
-    const value = new Date();
+    const value = `${Math.random() * 1000}`;
     const result = await ping(value);
-    await ping(value);
-    console.log(result);
-    setOutput((prev) => ({ ...prev, result: value.toString() === result[0].toString() }));
+    setOutput(prev => ({ ...prev, result: value === result }));
   });
 
   return (

@@ -109,7 +109,7 @@ export function serializeToJSONStream(value: any) {
   });
 }
 
-export class SerovalChunkReader {
+class SerovalChunkReader {
   reader: ReadableStreamDefaultReader<Uint8Array>;
   buffer: Uint8Array;
   done: boolean;

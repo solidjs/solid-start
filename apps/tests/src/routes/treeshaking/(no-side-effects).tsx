@@ -1,5 +1,4 @@
 import { createAsync } from "@solidjs/router";
-import { createEffect } from "solid-js";
 
 const a = "myTreeshakingTestUniqueString1";
 
