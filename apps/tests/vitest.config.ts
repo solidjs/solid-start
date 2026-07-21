@@ -10,6 +10,9 @@ export default defineConfig({
     },
   },
   plugins: [solid()],
+  optimizeDeps: {
+    include: ["@solidjs/testing-library"],
+  },
   test: {
     mockReset: true,
     globals: true,
