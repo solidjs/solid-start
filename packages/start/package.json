@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "2.0.0-beta.10",
+  "version": "2.0.0-rc.1",
   "type": "module",
   "files": [
     "dist",
