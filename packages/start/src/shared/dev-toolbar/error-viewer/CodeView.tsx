@@ -72,7 +72,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       for (let i = 0, len = lines.length; i < len; i++) {
         const el = lines[i] as HTMLElement;
         if (props.line - minLine() - 1 === i) {
-          el.dataset.startDevOverlayErrorLine = '';
+          el.dataset.startErrorViewerErrorLine = '';
         }
       }
     }
@@ -81,9 +81,9 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
   return (
     <div
       ref={ref}
-      data-start-dev-overlay-code-view
+      data-start-error-viewer-code-view
       style={{
-        "--dev-overlay-code-view-start": minLine() + 1,
+        "--error-viewer-code-view-start": minLine() + 1,
       }}
     />
   );

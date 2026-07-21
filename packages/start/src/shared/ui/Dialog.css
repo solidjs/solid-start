@@ -1,0 +1,26 @@
+[data-start-dialog] {
+  position: fixed;
+  inset: 0px;
+  z-index: 50;
+  overflow-y: auto;
+}
+
+
+[data-start-dialog]>div {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+[data-start-dialog-overlay] {
+  position: absolute;
+  inset: 0px;
+  background-color: rgb(17 24 39 / 0.5);
+}
+
+[data-start-dialog-panel] {
+  margin: 2rem;
+  z-index: 10;
+}

@@ -1,0 +1,51 @@
+[data-start-tab] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border: none;
+  outline: none;
+
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+[data-start-tab][tc-active],
+[data-start-tab][tc-selected],
+[data-start-tab]:hover,
+[data-start-tab]:focus {
+  color: rgb(229 231 235);
+  background-color: rgb(55 65 81);
+}
+
+[data-start-tab-group] {
+}
+
+[data-start-tab-list] {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem;
+}
+
+[data-start-tab-panel] {
+  height: 100%;
+
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+
+  border-top: oklch(87% 0.065 274.039) 1px solid;
+}

@@ -6,20 +6,14 @@ async function sleep(value: unknown, ms: number) {
   })
 }
 
-async function ping(value: Date) {
+async function ping(value: URLSearchParams, clone: URLSearchParams) {
   "use server";
 
   const current = [
+    value.toString() === clone.toString(),
     value,
-    {
-      name: 'example',
-      async *[Symbol.asyncIterator]() {
-        yield sleep('foo', 5000);
-        yield sleep('bar', 5000);
-        yield sleep('baz', 5000);
-      }
-    }
-  ];
+    clone,
+  ] as const;
 
   return current;
 }
@@ -28,11 +22,12 @@ export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
   createEffect(async () => {
-    const value = new Date();
-    const result = await ping(value);
-    await ping(value);
-    console.log(result);
-    setOutput((prev) => ({ ...prev, result: value.toString() === result[0].toString() }));
+    const value = new URLSearchParams([
+      ['foo', 'bar'],
+      ['hello', 'world'],
+    ]);
+    const result = await ping(value, value);
+    setOutput((prev) => ({ ...prev, result: result[0] }));
   });
 
   return (

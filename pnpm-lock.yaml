@@ -387,8 +387,8 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
       terracotta:
-        specifier: ^1.1.0
-        version: 1.1.0(solid-js@1.9.11)
+        specifier: ^1.1.1
+        version: 1.1.1(solid-js@1.9.11)
       vite-plugin-solid:
         specifier: ^2.11.11
         version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@8.1.4(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
@@ -3179,8 +3179,8 @@ packages:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
 
-  terracotta@1.1.0:
-    resolution: {integrity: sha512-kfQciWUBUBgYkXu7gh3CK3FAJng/iqZslAaY08C+k1Hdx17aVEpcFFb/WPaysxAfcupNH3y53s/pc53xxZauww==}
+  terracotta@1.1.1:
+    resolution: {integrity: sha512-Sa6wnvkGMFmPq8N/wQb2aKkIW2eXH0LJvUOEk6QZLBEjqy+LsbzAOpDuqEfOmfA/hexssE6eQve2i1IIOeOh4g==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.8
@@ -6247,7 +6247,7 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terracotta@1.1.0(solid-js@1.9.11):
+  terracotta@1.1.1(solid-js@1.9.11):
     dependencies:
       solid-js: 1.9.11
       solid-use: 0.9.1(solid-js@1.9.11)
