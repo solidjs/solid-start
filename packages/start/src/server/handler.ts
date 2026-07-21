@@ -13,6 +13,7 @@ import { handleServerFunction } from "../fns/handler.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 import { toWebReadableStream } from "./web-stream.ts";
+import { stripPathBase } from "./strip-path-base.ts";
 
 const SERVER_FN_BASE = "/_server";
 
@@ -252,6 +253,6 @@ function produceResponseWithEventHeaders(res: Response) {
 }
 
 function stripBaseUrl(path: string) {
-  if (import.meta.env.BASE_URL === "/" || import.meta.env.BASE_URL === "") return path;
-  return path.slice(import.meta.env.BASE_URL.length);
+  const base = import.meta.env.SERVER_BASE_URL || import.meta.env.BASE_URL || "/";
+  return stripPathBase(path, base);
 }

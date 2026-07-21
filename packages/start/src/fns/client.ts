@@ -1,19 +1,15 @@
 import { type Component } from "solid-js";
+import { pushRequest, pushResponse } from "../shared/dev-toolbar/functions/tracker.ts";
 import {
   // serializeToJSONStream,
   serializeToJSONString,
 } from "./serialization.ts";
-import {
-  BODY_FORMAT_KEY,
-  BodyFormat,
-  extractBody,
-  getHeadersAndBody,
-} from "./shared.ts";
+import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
 
 let INSTANCE = 0;
 
-function createRequest(base: string, id: string, instance: string, options: RequestInit) {
-  return fetch(base, {
+async function createRequest(base: string, id: string, instance: string, options: RequestInit) {
+  const request = new Request(base, {
     method: "POST",
     ...options,
     headers: {
@@ -22,6 +18,15 @@ function createRequest(base: string, id: string, instance: string, options: Requ
       "X-Server-Instance": instance,
     },
   });
+  if (import.meta.env.DEV) {
+    console.log(pushRequest);
+    pushRequest(id, instance, request.clone());
+  }
+  const response = await fetch(request);
+  if (import.meta.env.DEV) {
+    pushResponse(id, instance, response.clone());
+  }
+  return response;
 }
 
 async function initializeResponse(

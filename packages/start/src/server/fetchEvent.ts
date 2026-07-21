@@ -29,8 +29,18 @@ export function mergeResponseHeaders(h3Event: H3Event, headers: Headers) {
   }
 }
 
+/**
+ * Wrap an h3 event handler so Solid's request context is available while it runs.
+ *
+ * @experimental
+ */
 export const decorateHandler = <T extends EventHandler>(fn: T) =>
   (event => provideRequestEvent(getFetchEvent(event), () => fn(event))) as T;
 
+/**
+ * Wrap h3 middleware so Solid's request context is available while it runs.
+ *
+ * @experimental
+ */
 export const decorateMiddleware = <T extends Middleware>(fn: T) =>
   ((event, next) => provideRequestEvent(getFetchEvent(event), () => fn(event, next))) as T;

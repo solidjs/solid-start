@@ -380,7 +380,7 @@ importers:
         version: 3.3.3
       h3:
         specifier: ^2.0.1-rc.25
-        version: 2.0.1-rc.25(crossws@0.4.10(srvx@0.11.22))
+        version: 2.0.1-rc.25(crossws@0.4.10(srvx@0.12.0))
       html-to-image:
         specifier: ^1.11.13
         version: 1.11.13
@@ -415,11 +415,11 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       srvx:
-        specifier: ^0.11.22
-        version: 0.11.22
+        specifier: ^0.12.0
+        version: 0.12.0
       terracotta:
-        specifier: ^1.1.0
-        version: 1.1.0(solid-js@1.9.11)
+        specifier: ^1.1.1
+        version: 1.1.1(solid-js@1.9.11)
       vite-plugin-solid:
         specifier: ^2.11.11
         version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@8.1.4(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
@@ -3633,6 +3633,11 @@ packages:
     engines: {node: '>=20.16.0'}
     hasBin: true
 
+  srvx@0.12.0:
+    resolution: {integrity: sha512-c1GYFl3U8Aa/9rX9GTgvJ4tQMgmbX9YX26+km5iYu+d6/fuwpMFJ6d+Z/DtLDiXpDioKcbGTj5jD7+mn94Timw==}
+    engines: {node: '>=20.16.0'}
+    hasBin: true
+
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
@@ -3707,8 +3712,8 @@ packages:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
 
-  terracotta@1.1.0:
-    resolution: {integrity: sha512-kfQciWUBUBgYkXu7gh3CK3FAJng/iqZslAaY08C+k1Hdx17aVEpcFFb/WPaysxAfcupNH3y53s/pc53xxZauww==}
+  terracotta@1.1.1:
+    resolution: {integrity: sha512-Sa6wnvkGMFmPq8N/wQb2aKkIW2eXH0LJvUOEk6QZLBEjqy+LsbzAOpDuqEfOmfA/hexssE6eQve2i1IIOeOh4g==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.8
@@ -5918,6 +5923,11 @@ snapshots:
     optionalDependencies:
       srvx: 0.11.22
 
+  crossws@0.4.10(srvx@0.12.0):
+    optionalDependencies:
+      srvx: 0.12.0
+    optional: true
+
   css-tree@3.2.1:
     dependencies:
       mdn-data: 2.27.1
@@ -6189,12 +6199,12 @@ snapshots:
     optionalDependencies:
       crossws: 0.4.10(srvx@0.11.22)
 
-  h3@2.0.1-rc.25(crossws@0.4.10(srvx@0.11.22)):
+  h3@2.0.1-rc.25(crossws@0.4.10(srvx@0.12.0)):
     dependencies:
       rou3: 0.9.1
       srvx: 0.11.22
     optionalDependencies:
-      crossws: 0.4.10(srvx@0.11.22)
+      crossws: 0.4.10(srvx@0.12.0)
 
   hasown@2.0.2:
     dependencies:
@@ -7192,6 +7202,8 @@ snapshots:
 
   srvx@0.11.22: {}
 
+  srvx@0.12.0: {}
+
   stackback@0.0.2: {}
 
   stackframe@1.3.4: {}
@@ -7276,7 +7288,7 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terracotta@1.1.0(solid-js@1.9.11):
+  terracotta@1.1.1(solid-js@1.9.11):
     dependencies:
       solid-js: 1.9.11
       solid-use: 0.9.1(solid-js@1.9.11)

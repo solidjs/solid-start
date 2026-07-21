@@ -1,7 +1,14 @@
 import * as h3 from "h3";
+import { getRequestEvent } from "solid-js/web";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createFetchEvent, getFetchEvent, mergeResponseHeaders } from "./fetchEvent.ts";
+import {
+  createFetchEvent,
+  decorateHandler,
+  decorateMiddleware,
+  getFetchEvent,
+  mergeResponseHeaders,
+} from "./fetchEvent.ts";
 
 vi.mock(import("h3"), async mod => {
   return {
@@ -80,6 +87,37 @@ describe("fetchEvent", () => {
 
       expect(headers.get("content-type")).toBe("application/json");
       expect(headers.get("x-custom")).toBe("value");
+    });
+  });
+
+  describe("decorateHandler", () => {
+    it("provides the FetchEvent while the handler runs", async () => {
+      const handler = decorateHandler(async event => {
+        await Promise.resolve();
+        expect(getRequestEvent()).toBe(getFetchEvent(event));
+        return "handled";
+      });
+
+      expect(await handler(mockH3Event)).toBe("handled");
+    });
+  });
+
+  describe("decorateMiddleware", () => {
+    it("provides the FetchEvent while the middleware runs", async () => {
+      const next = vi.fn(async () => {
+        await Promise.resolve();
+        expect(getRequestEvent()).toBe(getFetchEvent(mockH3Event));
+        return "next";
+      });
+      const middleware = decorateMiddleware(async (event, middlewareNext) => {
+        expect(getRequestEvent()).toBe(getFetchEvent(event));
+        const result = await middlewareNext();
+        expect(getRequestEvent()).toBe(getFetchEvent(event));
+        return result;
+      });
+
+      expect(await middleware(mockH3Event, next)).toBe("next");
+      expect(next).toHaveBeenCalledOnce();
     });
   });
 });
