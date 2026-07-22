@@ -17,19 +17,19 @@ ignoredBuiltDependencies:
 
 minimumReleaseAgeExclude:
   - '@dom-expressions/babel-plugin-jsx@0.50.0-next.25'
-  - '@dom-expressions/compiler-darwin-arm64@0.50.0-next.24'
-  - '@dom-expressions/compiler-darwin-x64@0.50.0-next.24'
-  - '@dom-expressions/compiler-linux-arm64-gnu@0.50.0-next.24'
-  - '@dom-expressions/compiler-linux-x64-gnu@0.50.0-next.24'
-  - '@dom-expressions/compiler-wasm32-wasi@0.50.0-next.24'
-  - '@dom-expressions/compiler-win32-x64-msvc@0.50.0-next.24'
-  - '@dom-expressions/compiler@0.50.0-next.24'
+  - '@dom-expressions/compiler-darwin-arm64@0.50.0-next.24 || 0.50.0-next.25'
+  - '@dom-expressions/compiler-darwin-x64@0.50.0-next.24 || 0.50.0-next.25'
+  - '@dom-expressions/compiler-linux-arm64-gnu@0.50.0-next.24 || 0.50.0-next.25'
+  - '@dom-expressions/compiler-linux-x64-gnu@0.50.0-next.24 || 0.50.0-next.25'
+  - '@dom-expressions/compiler-wasm32-wasi@0.50.0-next.24 || 0.50.0-next.25'
+  - '@dom-expressions/compiler-win32-x64-msvc@0.50.0-next.24 || 0.50.0-next.25'
+  - '@dom-expressions/compiler@0.50.0-next.24 || 0.50.0-next.25'
   - '@solidjs/router@1.0.0-next.8'
   - '@solidjs/signals@2.0.0-beta.22'
   - '@solidjs/web@2.0.0-beta.22'
   - babel-preset-solid@2.0.0-beta.22
   - solid-js@2.0.0-beta.22
-  - vite-plugin-solid@3.0.0-next.14
+  - vite-plugin-solid@3.0.0-next.15
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
