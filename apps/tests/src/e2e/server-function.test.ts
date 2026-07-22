@@ -132,14 +132,13 @@ test.describe("server-function", () => {
    * a TypeError, producing a bare 500 with no error to deserialize.
    * https://github.com/solidjs/solid-start/issues/1874
    */
-  test.skip("should propagate a server function error with non-latin1 message", async ({
-    page,
-  }) => {
+  test("should propagate a server function error with non-latin1 message", async ({ page }) => {
     await page.goto("http://localhost:3000/server-function-unicode-error");
     // Retry the click until it registers post-hydration (clicks aren't auto-retried).
     await expect(async () => {
       await page.locator("#server-fn-test").click();
-      await expect(page.locator("#server-fn-test")).toContainText(
+      // The message must round-trip exactly, byte for byte.
+      await expect(page.locator("#server-fn-test")).toHaveText(
         "Ошибка 🚀 ünïcode — special chars",
         { timeout: 1000 },
       );
