@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@solidjs/meta": "0.30.0-next.0",
-    "@solidjs/router": "1.0.0-next.7",
+    "@solidjs/router": "1.0.0-next.8",
     "@solidjs/start": "workspace:*",
     "@solidjs/testing-library": "^0.8.10",
     "@solidjs/signals": "2.0.0-beta.22",
