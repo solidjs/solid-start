@@ -12,9 +12,8 @@ import { boundaryModules } from "./boundary-modules.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
+import { fileRoutes } from "@solidjs/file-routes/vite";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
-import { fsRoutes } from "./fs-routes/index.ts";
-import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
@@ -56,6 +55,17 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const handlers = {
     client: `${start.appRoot}/entry-client${entryExtension}`,
     server: `${start.appRoot}/entry-server${entryExtension}`,
+  };
+  const routers = {
+    client: new SolidStartClientFileRouter({
+      dir: absolute(routeDir, root),
+      extensions,
+    }),
+    ssr: new SolidStartServerFileRouter({
+      dir: absolute(routeDir, root),
+      extensions,
+      dataOnly: !start.ssr,
+    }),
   };
   return [
     {
@@ -106,7 +116,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             ? `assets/${basename(handlers.client, entryExtension)}.js`
             : handlers.client;
         if (env.command === "build") {
-          const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
+          const clientRouter = routers.client;
           for (const route of await clientRouter.getRoutes()) {
             for (const [key, value] of Object.entries(route)) {
               if (value && key.startsWith("$") && !key.startsWith("$$")) {
@@ -219,21 +229,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
     },
-    fsRoutes({
-      routers: {
-        client: new SolidStartClientFileRouter({
-          dir: absolute(routeDir, root),
-          extensions,
-        }),
-        ssr: new SolidStartServerFileRouter({
-          dir: absolute(routeDir, root),
-          extensions,
-          dataOnly: !start.ssr,
-        }),
-      },
-    }),
+    fileRoutes({ routers }),
     envPlugin(options?.env),
-    // Must be placed after fsRoutes, as treeShake will remove the
+    // Must be placed after fileRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
     serverFunctions({
       manifest: VIRTUAL_MODULES.serverFnManifest,
