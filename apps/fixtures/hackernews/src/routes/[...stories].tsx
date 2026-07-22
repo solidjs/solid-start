@@ -1,4 +1,4 @@
-import { A, type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
+import { type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
 import { For, Show, createMemo } from "solid-js";
 import Story from "~/components/story";
 import { getStories } from "~/lib/api";
@@ -26,9 +26,9 @@ export default function Stories(props: RouteSectionProps) {
             </span>
           }
         >
-          <A class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
+          <a class="page-link" href={`/${type()}?page=${page() - 1}`} aria-label="Previous Page">
             {"<"} prev
-          </A>
+          </a>
         </Show>
         <span>page {page()}</span>
         <Show
@@ -39,9 +39,9 @@ export default function Stories(props: RouteSectionProps) {
             </span>
           }
         >
-          <A class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
+          <a class="page-link" href={`/${type()}?page=${page() + 1}`} aria-label="Next Page">
             more {">"}
-          </A>
+          </a>
         </Show>
       </div>
       <main class="news-list">

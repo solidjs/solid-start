@@ -17,7 +17,6 @@ export function createHandler(
 
 async function createPageEvent(ctx: FetchEvent) {
   const pageEvent: PageEvent = Object.assign(ctx, {
-    routes: [],
     complete: false,
     $islands: new Set<string>(),
   });

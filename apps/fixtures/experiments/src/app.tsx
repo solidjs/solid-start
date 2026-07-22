@@ -1,14 +1,16 @@
 import { MetaProvider, Title } from "@solidjs/meta";
-import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start/router";
+import { createRouter } from "@solidjs/router";
+import { fileRoutes } from "@solidjs/start/router";
 import { Loading } from "solid-js";
 import "./app.css";
 import Provider from "./components/Provider";
 
+const Router = createRouter({ routes: fileRoutes });
+
 export default function App() {
   return (
-    <Router
-      root={props => (
+    <Router>
+      {props => (
         <MetaProvider>
           <Provider initialCount={10}>
             <Title>SolidStart - Bare</Title>
@@ -18,8 +20,6 @@ export default function App() {
           </Provider>
         </MetaProvider>
       )}
-    >
-      <FileRoutes />
     </Router>
   );
 }

@@ -41,7 +41,6 @@ export interface FetchEvent {
 }
 
 export interface PageEvent extends RequestEvent {
-  routes: any[];
   // prevUrl: string | null;
   // $type: typeof FETCH_EVENT;
   $islands: Set<string>;

@@ -1,9 +1,8 @@
 import clientAssets from "virtual:solid-manifest/client";
 import { createComponent, lazy, onCleanup, type Component } from "solid-js";
-import { acquireAsset, getRequestEvent, isServer } from "@solidjs/web";
+import { acquireAsset, isServer } from "@solidjs/web";
 
 import { pageRoutes as routeConfigs } from "./server/routes.ts";
-import type { PageEvent } from "./server/types.ts";
 
 const components: Record<string, Component> = {};
 
@@ -38,7 +37,7 @@ function withRouteAssets(src: string, component: Component): Component {
   return wrapped;
 }
 
-export function createRoutes() {
+function createRoutes() {
   function createRoute(route: any) {
     const component =
       route.$component &&
@@ -62,12 +61,13 @@ export function createRoutes() {
   return routes;
 }
 
-let routes: any[];
-
 /**
+ * The file-system route tree, shaped as `@solidjs/router` route definitions.
+ * Pass it to the router factory: `createRouter({ routes: fileRoutes })`.
+ * Routes are immutable per router instance, so one shared tree serves every
+ * request and mount (in dev, route file changes invalidate the module graph
+ * and this module re-evaluates).
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/routing/file-routes
  */
-export const FileRoutes = isServer
-  ? () => (getRequestEvent() as PageEvent).routes
-  : () => routes || (routes = createRoutes());
+export const fileRoutes = /*#__PURE__*/ createRoutes();

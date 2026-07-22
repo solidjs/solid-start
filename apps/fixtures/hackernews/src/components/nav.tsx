@@ -1,24 +1,22 @@
-import { A } from "@solidjs/router";
-
 function Nav() {
   return (
     <header class="header">
       <nav class="inner">
-        <A href="/" end>
+        <a href="/">
           <strong>HN</strong>
-        </A>
-        <A href="/new">
+        </a>
+        <a href="/new">
           <strong>New</strong>
-        </A>
-        <A href="/show">
+        </a>
+        <a href="/show">
           <strong>Show</strong>
-        </A>
-        <A href="/ask">
+        </a>
+        <a href="/ask">
           <strong>Ask</strong>
-        </A>
-        <A href="/job">
+        </a>
+        <a href="/job">
           <strong>Jobs</strong>
-        </A>
+        </a>
         <a class="github" href="http://github.com/solidjs/solid" target="_blank" rel="noreferrer">
           Built with Solid
         </a>
