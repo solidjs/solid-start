@@ -21,6 +21,7 @@ export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
+  routerLoad?: (event: FetchEvent) => Promise<void>,
 ): H3 {
   const handler = defineHandler({
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
@@ -63,6 +64,8 @@ export function createBaseHandler(
           if (!match.isPage) return;
         }
       }
+
+      if (routerLoad) await routerLoad(event);
 
       const context = await createPageEvent(event);
 
@@ -134,8 +137,9 @@ export function createBaseHandler(
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
+  routerLoad?: (event: FetchEvent) => Promise<void>,
 ): H3 {
-  return createBaseHandler(createPageEvent, fn, options);
+  return createBaseHandler(createPageEvent, fn, options, routerLoad);
 }
 
 export async function createPageEvent(ctx: FetchEvent) {

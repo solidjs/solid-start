@@ -12,8 +12,9 @@ import type { FetchEvent, HandlerOptions, PageEvent } from "../types.ts";
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options?: HandlerOptions | ((context: PageEvent) => HandlerOptions),
+  routerLoad?: (event: FetchEvent) => Promise<void>,
 ): H3 {
-  return createBaseHandler(createPageEvent, fn, options);
+  return createBaseHandler(createPageEvent, fn, options, routerLoad);
 }
 
 async function createPageEvent(ctx: FetchEvent) {
