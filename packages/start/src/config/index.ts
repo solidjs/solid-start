@@ -101,10 +101,18 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
       async config(config, env) {
         const clientInput = [handlers.client];
-        const clientEntryUrl =
-          env.command === "serve" && config.experimental?.bundledDev
-            ? `assets/${basename(handlers.client, entryExtension)}.js`
-            : handlers.client;
+        const bundledDev = env.command === "serve" && !!config.experimental?.bundledDev;
+        if (bundledDev) {
+          console.warn(
+            "[solid-start] Vite's experimental `bundledDev` mode is currently unsupported by SolidStart. " +
+              "Vite does not yet provide an API to map a module id to its served URL, which SolidStart " +
+              "needs to emit SSR preload and hydration hints. Until it does " +
+              "(see https://github.com/vitejs/vite/issues/22991), hydration of code-split routes will fail."
+          );
+        }
+        const clientEntryUrl = bundledDev
+          ? `assets/${basename(handlers.client, entryExtension)}.js`
+          : handlers.client;
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
           for (const route of await clientRouter.getRoutes()) {

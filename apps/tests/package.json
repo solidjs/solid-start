@@ -12,7 +12,7 @@
     "e2e": "playwright test",
     "e2e:bundled-dev": "playwright test --config playwright.bundled-dev.config.ts",
     "e2e:ui": "playwright test --ui",
-    "test:all": "npm run unit:ci && npm run e2e && npm run e2e:bundled-dev"
+    "test:all": "npm run unit:ci && npm run e2e"
   },
   "dependencies": {
     "@solidjs/meta": "0.30.0-next.0",
