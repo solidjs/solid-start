@@ -10,9 +10,9 @@
     "@solidjs/meta": "0.30.0-next.0",
     "@solidjs/router": "1.0.0-next.8",
     "@solidjs/start": "workspace:*",
-    "@solidjs/web": "2.0.0-beta.22",
+    "@solidjs/web": "2.0.0-beta.25",
     "nitro": "^3.0.260610-beta",
-    "solid-js": "2.0.0-beta.22",
+    "solid-js": "2.0.0-beta.25",
     "vite": "^8.0.0"
   },
   "engines": {
