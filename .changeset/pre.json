@@ -2,7 +2,13 @@
   "mode": "pre",
   "tag": "rc",
   "initialVersions": {
-    "@solidjs/start": "2.0.0-rc.1"
+    "@solidjs/start": "2.0.0-rc.1",
+    "@solidjs/image": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "bright-dogs-serve",
+    "chilly-rabbits-lie",
+    "spotty-moons-repeat",
+    "sweet-moments-fry"
+  ]
 }
