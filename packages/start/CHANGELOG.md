@@ -1,5 +1,16 @@
 # @solidjs/start
 
+## 2.0.0-rc.2
+
+### Minor Changes
+
+- eeff49a: add new dev toolbar
+
+### Patch Changes
+
+- bd8cb01: Update srvx to version 0.12.0.
+- 4e98ac0: Restore the optional `routerLoad` third argument to `createHandler`, which primes custom routers (e.g. TanStack Router) on the server before SSR rendering. It was accidentally dropped in the v2 rewrite.
+
 ## 2.0.0-rc.1
 
 ### Minor Changes
@@ -144,6 +155,7 @@
 - 8256190: Rework `@solidjs/start/env`
 - 6cbba24: Fix multiple Set-Cookie headers being lost on redirect responses
 - d4cc548: ## Bump Seroval
+
   - version `1.4.1`
 
 - dd40610: Handle base url in api routes
