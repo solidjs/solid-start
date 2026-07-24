@@ -1,0 +1,24 @@
+[data-solid-image="blocker"],
+[data-solid-image="image"],
+[data-solid-image="picture"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+[data-solid-image="image"],
+[data-solid-image="picture"] {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+[data-solid-image="container"] {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}

@@ -32,6 +32,9 @@ jobs:
       - name: Build SolidStart
         run: pnpm --filter @solidjs/start build
 
+      - name: Build @solidjs/image
+        run: pnpm --filter @solidjs/image build
+
       - name: Build Test Project
         run: pnpm --filter tests build
 
