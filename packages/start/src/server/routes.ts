@@ -1,5 +1,5 @@
 // @ts-expect-error
-import fileRoutes from "solid-start:routes";
+import fileRoutes from "solid:file-routes";
 import { createRouter } from "radix3";
 
 import type { FetchEvent } from "./types.ts";
