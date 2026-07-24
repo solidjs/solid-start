@@ -123,7 +123,13 @@ export function createBaseHandler(
 
       // h3 expects a standard web ReadableStream across runtimes. The adapter
       // also tolerates cancellation while Solid finishes outstanding work.
-      return toWebReadableStream(stream);
+      const [webStream, shellRendered] = toWebReadableStream(stream);
+
+      // Waiting for the first stream payload
+      // This blocks h3 from sending the Response without deferred response status/headers
+      await shellRendered;
+
+      return webStream;
     }),
   });
 

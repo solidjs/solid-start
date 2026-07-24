@@ -6,7 +6,7 @@ import { toWebReadableStream } from "./web-stream.ts";
 
 describe("toWebReadableStream", () => {
   it("returns encoded output as a standard ReadableStream", async () => {
-    const readable = toWebReadableStream({
+    const [readable] = toWebReadableStream({
       pipe(writable) {
         writable.write("Hello, ");
         writable.write("world!");
@@ -20,7 +20,7 @@ describe("toWebReadableStream", () => {
 
   it("ignores writes after the consumer cancels", async () => {
     let writable!: { write(payload: string): void; end(): void };
-    const readable = toWebReadableStream({
+    const [readable] = toWebReadableStream({
       pipe(value) {
         writable = value;
         writable.write("shell");
@@ -60,7 +60,7 @@ describe("toWebReadableStream", () => {
       },
       { onCompleteAll: () => resolveComplete() },
     );
-    const reader = toWebReadableStream(stream).getReader();
+    const reader = toWebReadableStream(stream)[0].getReader();
 
     const shell = await reader.read();
     expect(new TextDecoder().decode(shell.value)).toContain("loading");
