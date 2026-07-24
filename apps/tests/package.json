@@ -15,7 +15,6 @@
     "test:all": "pnpm run unit:ci && pnpm run e2e && pnpm run e2e:bundled-dev"
   },
   "dependencies": {
-    "@solidjs/image": "workspace:*",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.4",
     "@solidjs/start": "workspace:*",
