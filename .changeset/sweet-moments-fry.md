@@ -1,5 +1,5 @@
 ---
-"@solidjs/start": minor
+"@solidjs/image": minor
 ---
 
 Release initial version
