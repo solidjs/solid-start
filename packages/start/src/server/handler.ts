@@ -1,6 +1,13 @@
 import middleware from "solid-start:middleware";
-import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3/generic";
-import { join } from "pathe";
+import {
+  defineHandler,
+  getCookie,
+  H3,
+  type H3Event,
+  iterable,
+  redirect,
+  setCookie,
+} from "h3/generic";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
@@ -110,11 +117,9 @@ export function createBaseHandler(
 
       if (mode === "async") return await stream;
 
-      delete (stream as any).then;
-
       // h3 expects a standard web ReadableStream across runtimes. The adapter
       // also tolerates cancellation while Solid finishes outstanding work.
-      return toWebReadableStream(stream);
+      return iterable(toWebReadableStream(stream));
     }),
   });
 
