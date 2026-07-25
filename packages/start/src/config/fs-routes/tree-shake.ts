@@ -147,6 +147,11 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
                 if (!state.opts.pick) {
                   return;
                 }
+                // Only module-level exports are route exports; `export` inside a
+                // TS namespace/module block is unrelated to the pick list.
+                if (!exportNamedPath.parentPath.isProgram()) {
+                  return;
+                }
                 const specifiers = exportNamedPath.get("specifiers");
                 if (specifiers.length) {
                   specifiers.forEach(s => {
