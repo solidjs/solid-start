@@ -1,5 +1,15 @@
 # @solidjs/start
 
+## 2.0.0-rc.3
+
+### Patch Changes
+
+- d9018d6: fix(types): add missing properties to `SolidStartOptions` and expose them via Vite plugin configuration
+- e26cef0: Fix TS2883/TS2742 when emitting declarations for `entry-server.tsx`. `createHandler` now returns `StartHandler`, a type owned by `@solidjs/start`, instead of h3's `H3`, so the inferred type of `export default createHandler(...)` no longer has to be named through a nested `node_modules/@solidjs/start/node_modules/h3` path.
+- 7c8dbe6: keep TypeScript namespace members in route files during production builds
+- b3c7aaf: Update `h3` to `2.0.1-rc.26`.
+- b3c7aaf: Fixed event response status and headers set during server-side rendering with deferred async resources, not being applied on the outgoing response.
+
 ## 2.0.0-rc.2
 
 ### Minor Changes
