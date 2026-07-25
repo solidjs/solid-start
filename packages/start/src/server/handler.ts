@@ -17,7 +17,7 @@ import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
-import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
+import type { APIEvent, FetchEvent, HandlerOptions, PageEvent, StartHandler } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 import { toWebReadableStream } from "./web-stream.ts";
 import { stripPathBase } from "./strip-path-base.ts";
@@ -29,7 +29,7 @@ export function createBaseHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
   routerLoad?: (event: FetchEvent) => Promise<void>,
-): H3 {
+): StartHandler {
   const handler = defineHandler({
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
@@ -134,7 +134,7 @@ export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
   routerLoad?: (event: FetchEvent) => Promise<void>,
-): H3 {
+): StartHandler {
   return createBaseHandler(createPageEvent, fn, options, routerLoad);
 }
 
