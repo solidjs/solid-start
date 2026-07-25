@@ -16,8 +16,13 @@ import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
+  appRoot: string;
   solid?: Partial<SolidOptions>;
   ssr?: boolean;
+  devOverlay: boolean;
+  experimental: {
+    islands: false;
+  };
   routeDir?: string;
   extensions?: string[];
   middleware?: string;
@@ -50,7 +55,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     },
     solid: {},
     extensions: [],
-  });
+  } satisfies SolidStartOptions);
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   const routeDir = join(start.appRoot, start.routeDir);
   const root = process.cwd();
@@ -224,15 +229,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       enforce: "pre",
       resolveId(id, importer, { ssr }) {
         if (id === "server-only") {
-          if (!ssr)
-            this.error(
-              `Attempt to import 'server-only' in a client module: ${importer}`,
-            );
+          if (!ssr) this.error(`Attempt to import 'server-only' in a client module: ${importer}`);
         } else if (id === "client-only") {
-          if (ssr)
-            this.error(
-              `Attempt to import 'client-only' in a server module: ${importer}`,
-            );
+          if (ssr) this.error(`Attempt to import 'client-only' in a server module: ${importer}`);
         } else {
           return null;
         }
