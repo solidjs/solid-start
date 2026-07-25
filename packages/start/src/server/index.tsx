@@ -15,6 +15,7 @@ export type {
   PageEvent,
   ResponseStub,
   ServerFunctionMeta,
+  StartHandler,
 } from "./types.ts";
 
 /**
