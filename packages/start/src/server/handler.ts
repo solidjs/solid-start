@@ -1,6 +1,13 @@
 import middleware from "solid-start:middleware";
-import { defineHandler, getCookie, H3, type H3Event, redirect, setCookie } from "h3/generic";
-import { join } from "pathe";
+import {
+  defineHandler,
+  getCookie,
+  H3,
+  type H3Event,
+  iterable,
+  redirect,
+  setCookie,
+} from "h3/generic";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
@@ -31,14 +38,7 @@ export function createBaseHandler(
       const pathname = stripBaseUrl(url.pathname);
 
       if (pathname.startsWith(SERVER_FN_BASE)) {
-        const serverFnResponse = await handleServerFunction(e);
-
-        if (serverFnResponse instanceof Response)
-          return produceResponseWithEventHeaders(serverFnResponse);
-
-        return new Response(serverFnResponse as any, {
-          headers: e.res.headers,
-        });
+        return await handleServerFunction(e);
       }
 
       const match = matchAPIRoute(pathname, event.request.method);
@@ -52,8 +52,6 @@ export function createBaseHandler(
           sharedConfig.context = { event };
           const res = await fn(event);
           if (res !== undefined) {
-            if (res instanceof Response) return produceResponseWithEventHeaders(res);
-
             return res;
           }
           if (event.request.method !== "GET") {
@@ -119,11 +117,9 @@ export function createBaseHandler(
 
       if (mode === "async") return await stream;
 
-      delete (stream as any).then;
-
       // h3 expects a standard web ReadableStream across runtimes. The adapter
       // also tolerates cancellation while Solid finishes outstanding work.
-      return toWebReadableStream(stream);
+      return iterable(toWebReadableStream(stream));
     }),
   });
 
@@ -216,44 +212,6 @@ function handleStreamCompleteRedirect(context: PageEvent) {
     const to = context.response && context.response.headers.get("Location");
     to && write(`<script>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`);
   };
-}
-
-function produceResponseWithEventHeaders(res: Response) {
-  const event = getRequestEvent()!;
-
-  let ret = res;
-
-  // Response.redirect returns an immutable value, so we clone on any redirect just in case
-  if (300 <= res.status && res.status < 400) {
-    const cookies = res.headers.getSetCookie?.() ?? [];
-    const headers = new Headers();
-    res.headers.forEach((value, key) => {
-      if (key.toLowerCase() !== "set-cookie") {
-        headers.set(key, value);
-      }
-    });
-    for (const cookie of cookies) {
-      headers.append("Set-Cookie", cookie);
-    }
-    ret = new Response(res.body, {
-      status: res.status,
-      statusText: res.statusText,
-      headers,
-    });
-  }
-
-  const eventCookies = event.response.headers.getSetCookie?.() ?? [];
-  for (const cookie of eventCookies) {
-    ret.headers.append("Set-Cookie", cookie);
-  }
-
-  for (const [name, value] of event.response.headers) {
-    if (name.toLowerCase() !== "set-cookie") {
-      ret.headers.set(name, value);
-    }
-  }
-
-  return ret;
 }
 
 function stripBaseUrl(path: string) {

@@ -3,15 +3,19 @@ type PipeableStream = {
 };
 
 /** Convert Solid's streaming SSR result into a cancellation-safe web stream. */
-export function toWebReadableStream(stream: PipeableStream): ReadableStream<Uint8Array> {
+export function toWebReadableStream(stream: PipeableStream) {
   const encoder = new TextEncoder();
   let active = true;
 
-  return new ReadableStream({
+  return new ReadableStream<Uint8Array>({
     start(controller) {
       stream.pipe({
         write(payload) {
-          if (active) controller.enqueue(encoder.encode(payload));
+          if (!active) return;
+
+          // Encoding string to Uint8Array makes sure that
+          // the stream can be consumed as Response body
+          controller.enqueue(encoder.encode(payload));
         },
         end() {
           if (!active) return;
