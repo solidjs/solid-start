@@ -16,10 +16,7 @@ ignoredBuiltDependencies:
   - prisma
 
 minimumReleaseAgeExclude:
-  - '@tsdown/css@0.22.12'
   - srvx@0.12.0
-  - tsdown@0.22.12
-  - verkit@0.1.0
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
