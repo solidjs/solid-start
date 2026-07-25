@@ -63,7 +63,7 @@
     "defu": "^6.1.4",
     "error-stack-parser": "^2.1.4",
     "fast-glob": "^3.3.3",
-    "h3": "^2.0.1-rc.25",
+    "h3": "^2.0.1-rc.26",
     "html-to-image": "^1.11.13",
     "micromatch": "^4.0.8",
     "oxc-parser": "^0.139.0",
