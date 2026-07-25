@@ -15,29 +15,109 @@ import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
 
+/**
+ * Configuration options for SolidStart. (previously in `app.config.ts`)
+ *
+ * @see https://docs.solidjs.com/solid-start/v2/migrating-from-v1#move-framework-configuration-into-viteconfigts
+ */
 export interface SolidStartOptions {
+  /**
+   * Path to the root of the application (where `app.tsx` / `app.jsx` lives).
+   *
+   * @default "./src"
+   */
   appRoot: string;
+
+  /**
+   * Options forwarded to `vite-plugin-solid`.
+   *
+   * @see https://github.com/solidjs/vite-plugin-solid#api
+   */
   solid?: Partial<SolidOptions>;
+
+  /**
+   * Enable or disable server-side rendering.
+   *
+   * - `true` — SSR (default)
+   * - `false` — client-side rendering only (SPA mode)
+   *
+   * @default true
+   */
   ssr?: boolean;
+
+  /**
+   * Show the SolidStart development overlay (error overlay, etc.) in development.
+   *
+   * @default true
+   */
   devOverlay: boolean;
+
+  /**
+   * Experimental features.
+   */
   experimental: {
+    /**
+     * Enable islands architecture mode.
+     *
+     * Currently fixed to `false` (not yet fully supported).
+     *
+     * @default false
+     */
     islands: false;
   };
+
+  /**
+   * Directory containing file-system routes, relative to {@link appRoot}.
+   *
+   * @default "./routes"
+   */
   routeDir?: string;
+
+  /**
+   * File extensions that should be treated as routes.
+   *
+   * @default ["js", "jsx", "ts", "tsx"]
+   */
   extensions?: string[];
+
+  /**
+   * Path to an optional middleware module.
+   *
+   * The module should export a middleware created with `createMiddleware`
+   * from `@solidjs/start/middleware`.
+   *
+   * @example "src/middleware/index.ts"
+   */
   middleware?: string;
+
+  /**
+   * Serialization settings for server-function / action payloads
+   * that cross the server-client boundary.
+   */
   serialization?: {
     /**
      * The serialization mode to use for server functions/actions.
-     * The "js" mode uses a custom binary format that is more efficient than JSON, but requires a custom deserializer (with `eval()`) on the client.
-     * A strong CSP should block `eval()` executions, which would prevent the "js" mode from working.
-     * The "json" mode uses JSON for serialization, which is less efficient but can be deserialized with `JSON.parse` on the client.
+     *
+     * - `"js"` — Uses a custom binary format (Seroval) that is more efficient
+     *   than JSON, but requires a custom deserializer (with `eval()`) on the client.
+     *   A strong CSP that blocks `eval()` will prevent this mode from working.
+     * - `"json"` — Uses JSON for serialization. Less efficient / larger payloads,
+     *   but can be deserialized with `JSON.parse` on the client and is CSP-friendly.
      *
      * @default "json"
      */
     mode?: "js" | "json";
   };
+
+  /**
+   * Configures plugin behavior per build environment
+   */
   env?: EnvPluginOptions;
+
+  /**
+   * Options controlling which files are processed as server functions
+   * (inclusion / exclusion filters for the `"use server"` transform).
+   */
   serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
 }
 
