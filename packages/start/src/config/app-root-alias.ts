@@ -3,8 +3,19 @@ import { dirname, isAbsolute, join, resolve } from "node:path";
 import { normalizePath, type Plugin } from "vite";
 
 /**
- * Provides SolidStart's `~` app-root alias without claiming imports made by
- * other workspace packages. Those packages may define their own `~` mapping
+ * `~/app.css`, `~/logo.svg`, ... but not `~/lib/api.ts` or `~/components/Counter`.
+ *
+ * CSS `@import`, `url()`, preprocessor imports and `new URL(..., import.meta.url)`
+ * are resolved by internal Vite resolvers that only run the alias plugin, never
+ * user plugins, so those ids can never reach `resolveId` below. Keeping non-module
+ * ids on a plain alias preserves `~` in stylesheets and asset URLs, where it always
+ * means the app root.
+ */
+const NON_MODULE_ID = /^~\/([^?#]*\.(?![cm]?[jt]sx?(?:[?#]|$))[^./?#]+(?:[?#].*)?)$/;
+
+/**
+ * Provides SolidStart's `~` app-root alias without claiming module imports made
+ * by other workspace packages. Those packages may map `~` to their own root
  * through an importer-aware resolver such as vite-tsconfig-paths.
  */
 export function appRootAlias(projectRoot: string, appRoot: string): Plugin {
@@ -40,6 +51,9 @@ export function appRootAlias(projectRoot: string, appRoot: string): Plugin {
   return {
     name: "solid-start:app-root-alias",
     enforce: "pre",
+    config() {
+      return { resolve: { alias: [{ find: NON_MODULE_ID, replacement: `${appDir}/$1` }] } };
+    },
     async resolveId(id, importer, options) {
       if (id !== "~" && !id.startsWith("~/")) return null;
       if (importer && isForeignImporter(importer)) return null;
