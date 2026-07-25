@@ -1,87 +1,40 @@
-import { existsSync, realpathSync } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import type { Plugin } from "vite";
-
-const FS_PREFIX = "/@fs/";
-
-function canonicalPath(path: string): string {
-  try {
-    return realpathSync.native(path);
-  } catch {
-    return path;
-  }
-}
-
-function filePathFromId(id: string): string | undefined {
-  let filename = id.replace(/[?#].*$/s, "");
-
-  if (filename.startsWith("\0")) return;
-  if (filename.startsWith(FS_PREFIX)) filename = filename.slice(FS_PREFIX.length);
-  if (filename.startsWith("file://")) filename = fileURLToPath(filename);
-
-  return isAbsolute(filename) ? filename : undefined;
-}
+import { existsSync } from "node:fs";
+import { dirname, isAbsolute, join, resolve } from "node:path";
+import { normalizePath, type Plugin } from "vite";
 
 /**
  * Provides SolidStart's `~` app-root alias without claiming imports made by
- * workspace packages. Those packages may define their own `~` mapping through
- * an importer-aware resolver such as vite-tsconfig-paths.
+ * other workspace packages. Those packages may define their own `~` mapping
+ * through an importer-aware resolver such as vite-tsconfig-paths.
  */
 export function appRootAlias(projectRoot: string, appRoot: string): Plugin {
-  const absoluteProjectRoot = resolve(projectRoot);
-  const absoluteAppRoot = resolve(absoluteProjectRoot, appRoot);
-  const canonicalProjectRoot = canonicalPath(absoluteProjectRoot);
-  const packageRootCache = new Map<string, string | undefined>();
+  const appDir = normalizePath(resolve(projectRoot, appRoot));
+  const packageRoots = new Map<string, string | undefined>();
 
-  function findPackageRoot(start: string): string | undefined {
-    let directory = start;
-    const visited: string[] = [];
-
-    while (true) {
-      if (packageRootCache.has(directory)) {
-        const packageRoot = packageRootCache.get(directory);
-        for (const visitedDirectory of visited) {
-          packageRootCache.set(visitedDirectory, packageRoot);
-        }
-        return packageRoot;
-      }
-
-      visited.push(directory);
-      if (existsSync(join(directory, "package.json"))) {
-        const packageRoot = canonicalPath(directory);
-        for (const visitedDirectory of visited) {
-          packageRootCache.set(visitedDirectory, packageRoot);
-        }
-        return packageRoot;
-      }
-
+  /** Nearest directory at or above `directory` that holds a `package.json`. */
+  function packageRoot(directory: string): string | undefined {
+    if (!packageRoots.has(directory)) {
       const parent = dirname(directory);
-      if (parent === directory) {
-        for (const visitedDirectory of visited) {
-          packageRootCache.set(visitedDirectory, undefined);
-        }
-        return;
-      }
-      directory = parent;
+      packageRoots.set(
+        directory,
+        existsSync(join(directory, "package.json"))
+          ? directory
+          : parent === directory
+            ? undefined
+            : packageRoot(parent),
+      );
     }
+    return packageRoots.get(directory);
   }
 
-  const appPackageRoot = findPackageRoot(absoluteAppRoot);
+  const appPackage = packageRoot(appDir);
 
-  function isAppImporter(importer: string): boolean {
-    const importerPath = filePathFromId(importer);
-    if (!importerPath) return false;
-
-    if (appPackageRoot) {
-      return findPackageRoot(dirname(importerPath)) === appPackageRoot;
-    }
-
-    const relativeImporter = relative(canonicalProjectRoot, canonicalPath(importerPath));
-    return (
-      relativeImporter === "" ||
-      (!relativeImporter.startsWith("..") && !isAbsolute(relativeImporter))
-    );
+  /** True only when the importer demonstrably belongs to another package. */
+  function isForeignImporter(importer: string) {
+    const file = normalizePath(importer.replace(/[?#].*$/s, ""));
+    if (!isAbsolute(file)) return false;
+    const owner = packageRoot(dirname(file));
+    return owner !== undefined && owner !== appPackage;
   }
 
   return {
@@ -89,9 +42,9 @@ export function appRootAlias(projectRoot: string, appRoot: string): Plugin {
     enforce: "pre",
     async resolveId(id, importer, options) {
       if (id !== "~" && !id.startsWith("~/")) return null;
-      if (importer && !isAppImporter(importer)) return null;
+      if (importer && isForeignImporter(importer)) return null;
 
-      const target = id === "~" ? absoluteAppRoot : join(absoluteAppRoot, id.slice(2));
+      const target = join(appDir, id.slice(1));
       return (await this.resolve(target, importer, { ...options, skipSelf: true })) ?? target;
     },
   };
