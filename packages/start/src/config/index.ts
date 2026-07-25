@@ -26,7 +26,7 @@ export interface SolidStartOptions {
    *
    * @default "./src"
    */
-  appRoot: string;
+  appRoot?: string;
 
   /**
    * Options forwarded to `vite-plugin-solid`.
@@ -50,12 +50,12 @@ export interface SolidStartOptions {
    *
    * @default true
    */
-  devOverlay: boolean;
+  devOverlay?: boolean;
 
   /**
    * Experimental features.
    */
-  experimental: {
+  experimental?: {
     /**
      * Enable islands architecture mode.
      *
@@ -63,7 +63,7 @@ export interface SolidStartOptions {
      *
      * @default false
      */
-    islands: false;
+    islands?: false;
   };
 
   /**
