@@ -21,6 +21,13 @@ export interface ServerFunctionsOptions {
     client: string;
   };
   filter?: ServerFunctionsFilter;
+  /**
+   * Include the function name in generated server function ids for production
+   * builds. Ids are the last segment of the `_server/<id>` request URL, so this
+   * makes production logs and traces readable at the cost of exposing the
+   * source name of each server function. Always on in development.
+   */
+  readableIds?: boolean;
 }
 
 const DEFAULT_INCLUDE = "src/**/*.{jsx,tsx,ts,js,mjs,cjs}";
@@ -240,6 +247,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
           ...(mode === "server" ? serverOptions : clientOptions),
           mode,
           env,
+          readableIds: options.readableIds,
         });
 
         if (result.valid) {

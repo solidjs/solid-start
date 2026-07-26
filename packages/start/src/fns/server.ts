@@ -1,6 +1,7 @@
 import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import { registerServerFunction } from "./registration.ts";
+import { serverFunctionURL } from "./url.ts";
 
 interface Registration<T extends any[], R> {
   id: string;
@@ -19,13 +20,12 @@ export function createServerReference<T extends any[], R>(
 export function cloneServerReference<T extends any[], R>({ id, fn }: Registration<T, R>) {
   if (typeof fn !== "function")
     throw new Error("Export from a 'use server' module must be a function");
-  let baseURL = import.meta.env.BASE_URL ?? "/";
-  if (!baseURL.endsWith("/")) baseURL += "/";
+  const url = serverFunctionURL(id);
 
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}_server?id=${encodeURIComponent(id)}`;
+        return url;
       }
       if (prop === "GET") return receiver;
       return (target as any)[prop];

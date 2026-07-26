@@ -17,12 +17,11 @@ import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
+import { isServerFunctionPath } from "../fns/url.ts";
 import type { APIEvent, FetchEvent, HandlerOptions, PageEvent, StartHandler } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 import { toWebReadableStream } from "./web-stream.ts";
 import { stripPathBase } from "./strip-path-base.ts";
-
-const SERVER_FN_BASE = "/_server";
 
 export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
@@ -37,7 +36,7 @@ export function createBaseHandler(
       const url = new URL(event.request.url);
       const pathname = stripBaseUrl(url.pathname);
 
-      if (pathname.startsWith(SERVER_FN_BASE)) {
+      if (isServerFunctionPath(pathname)) {
         return await handleServerFunction(e);
       }
 

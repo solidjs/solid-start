@@ -19,6 +19,8 @@ export interface StateContext {
   count: number;
   imports: Map<string, t.Identifier>;
   valid: boolean;
+  /** Keep the function name in the generated id in production builds too. */
+  readableIds?: boolean;
 
   definitions: {
     register: ImportDefinition;
@@ -78,7 +80,10 @@ function isFunctionDirectiveValid(
 
 function createID(ctx: StateContext, name: string) {
   const base = `${ctx.hash}-${ctx.count++}`;
-  if (ctx.env === "development") {
+  // The id is the last segment of the `_server/<id>` request URL, so including
+  // the source name keeps logs and traces readable. Production ids stay opaque
+  // unless the app opts in, since the name is then exposed to the client.
+  if (ctx.env === "development" || ctx.readableIds) {
     return `${base}-${name}`;
   }
   return base;

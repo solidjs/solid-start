@@ -5,6 +5,7 @@ import {
   serializeToJSONString,
 } from "./serialization.ts";
 import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
+import { serverFunctionURL } from "./url.ts";
 
 let INSTANCE = 0;
 
@@ -102,21 +103,19 @@ async function fetchServerFunction(
 }
 
 export function cloneServerReference(id: string) {
-  let baseURL = import.meta.env.BASE_URL ?? "/";
-  if (!baseURL.endsWith("/")) baseURL += "/";
+  const url = serverFunctionURL(id);
 
-  const fn = (...args: any[]) => fetchServerFunction(`${baseURL}_server`, id, {}, args);
+  const fn = (...args: any[]) => fetchServerFunction(url, id, {}, args);
 
   return new Proxy(fn, {
     get(target, prop, receiver) {
       if (prop === "url") {
-        return `${baseURL}_server?id=${encodeURIComponent(id)}`;
+        return url;
       }
       if (prop === "GET") {
         return receiver.withOptions({ method: "GET" });
       }
       if (prop === "withOptions") {
-        const url = `${baseURL}_server?id=${encodeURIComponent(id)}`;
         return (options: RequestInit) => {
           const fn = async (...args: any[]) => {
             const encodeArgs = options.method && options.method.toUpperCase() === "GET";
@@ -124,9 +123,9 @@ export function cloneServerReference(id: string) {
               encodeArgs
                 ? url +
                     (args.length
-                      ? `&args=${encodeURIComponent(await serializeToJSONString(args))}`
+                      ? `?args=${encodeURIComponent(await serializeToJSONString(args))}`
                       : "")
-                : `${baseURL}_server`,
+                : url,
               id,
               options,
               encodeArgs ? [] : args,

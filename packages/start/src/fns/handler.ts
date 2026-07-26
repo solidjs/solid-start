@@ -15,6 +15,7 @@ import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./s
 import "solid-start:server-fn-manifest";
 
 import { getServerFunction, hasServerFunction } from "./registration.ts";
+import { getFunctionIdFromPath } from "./url.ts";
 import type { FetchEvent, PageEvent } from "../server/types.ts";
 import { getExpectedRedirectStatus } from "../server/util.ts";
 
@@ -31,7 +32,8 @@ export async function handleServerFunction(h3Event: H3Event) {
     // invariant(typeof serverReference === "string", "Invalid server function");
     [functionId] = serverReference.split("#");
   } else {
-    functionId = url.searchParams.get("id");
+    // `?id=` is still honoured for hand-written URLs predating `_server/<id>`
+    functionId = getFunctionIdFromPath(url.pathname) ?? url.searchParams.get("id");
 
     if (!functionId) {
       return process.env.NODE_ENV === "development"

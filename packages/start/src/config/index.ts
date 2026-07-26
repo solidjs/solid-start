@@ -116,9 +116,10 @@ export interface SolidStartOptions {
 
   /**
    * Options controlling which files are processed as server functions
-   * (inclusion / exclusion filters for the `"use server"` transform).
+   * (inclusion / exclusion filters for the `"use server"` transform) and how
+   * their ids are generated.
    */
-  serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
+  serverFunctions?: Pick<ServerFunctionsOptions, "filter" | "readableIds">;
 }
 
 const absolute = (path: string, root: string) =>
@@ -160,6 +161,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         client: "@solidjs/start/fns/client",
       },
       filter: options?.serverFunctions?.filter,
+      readableIds: options?.serverFunctions?.readableIds,
     }),
     {
       name: "solid-start:config",
