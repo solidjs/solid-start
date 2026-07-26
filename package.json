@@ -40,8 +40,8 @@
     "typescript": "^7.0.0"
   },
   "engines": {
-    "pnpm": "^11.13.0",
+    "pnpm": "^11.17.0",
     "node": ">=24"
   },
-  "packageManager": "pnpm@11.13.0"
+  "packageManager": "pnpm@11.17.0"
 }
