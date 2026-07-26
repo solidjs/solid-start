@@ -1,5 +1,13 @@
 # @solidjs/start
 
+## 2.0.0-rc.4
+
+### Patch Changes
+
+- b6dfaac: Updated dependencies, including `cookie-es` to 3, `shiki` to 4, `srvx` to 0.12.4, `oxc-parser` to 0.141 and `seroval` to 1.5.6. `parseSetCookie` now returns `undefined` for cookies with a forbidden name or an empty name and value, and those cookies are no longer forwarded to nested server function requests.
+- 02cd41e: Stop the dev toolbar from reporting benign `ResizeObserver loop` notifications as application errors. Browsers dispatch these as window `error` events carrying no error object, so the toolbar was capturing the raw `ErrorEvent` and force-opening the error panel over the app on every resize.
+- d3c2af2: Don't send server error stack traces to the client in production builds. When a server function throws, the error is serialized and rethrown on the client, and seroval included `Error.prototype.stack` by default, leaking server file paths and internal function names. Stacks are still serialized in development.
+
 ## 2.0.0-rc.3
 
 ### Patch Changes
