@@ -4,6 +4,7 @@ import { basename, extname, isAbsolute, join } from "node:path";
 import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
+import { appRootAlias } from "./app-root-alias.ts";
 import { boundaryModules } from "./boundary-modules.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
@@ -262,7 +263,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           resolve: {
             alias: {
               "@solidjs/start/server/entry": handlers.server,
-              "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
                     "@solidjs/start/server": "@solidjs/start/server/spa",
@@ -311,6 +311,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
     },
+    appRootAlias(root, start.appRoot),
     manifest(start),
     fsRoutes({
       routers: {
