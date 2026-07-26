@@ -157,6 +157,11 @@ export function DevToolbar(props: DevToolbarProps) {
 
   createEffect(() => {
     const onErrorEvent = (error: ErrorEvent) => {
+      // Browsers dispatch benign ResizeObserver loop notifications as window
+      // "error" events carrying no error object. They aren't app errors.
+      if (!error.error && error.message?.startsWith("ResizeObserver loop")) {
+        return;
+      }
       pushError(error.error ?? error);
     };
 
