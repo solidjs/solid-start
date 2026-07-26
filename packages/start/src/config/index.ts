@@ -11,6 +11,7 @@ import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import { sanitizeChunkFileName, toPickId } from "./fs-routes/tree-shake.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
@@ -183,17 +184,23 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           for (const route of await clientRouter.getRoutes()) {
             for (const [key, value] of Object.entries(route)) {
               if (value && key.startsWith("$") && !key.startsWith("$$")) {
-                function toRouteId(route: any) {
-                  return `${route.src}?${route.pick.map((p: string) => `pick=${p}`).join("&")}`;
-                }
-                clientInput.push(toRouteId(value));
+                clientInput.push(toPickId((value as any).src, (value as any).pick));
               }
             }
           }
         }
         return {
           appType: "custom",
-          build: { assetsDir: "_build/assets" },
+          build: {
+            assetsDir: "_build/assets",
+            rollupOptions: {
+              output: {
+                // Keeps route chunks named after their file rather than after
+                // the `?pick=...` id that addresses them. See toPickId.
+                sanitizeFileName: sanitizeChunkFileName,
+              },
+            },
+          },
           optimizeDeps: {
             // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
             ...({
