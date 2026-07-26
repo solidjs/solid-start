@@ -20,8 +20,8 @@ import {
   URLPlugin,
   URLSearchParamsPlugin,
 } from "seroval-plugins/web";
+import userPlugins from "solid-start:seroval-plugins";
 
-// TODO(Alexis): if we can, allow providing an option to extend these.
 const DEFAULT_PLUGINS = [
   AbortSignalPlugin,
   CustomEventPlugin,
@@ -35,6 +35,17 @@ const DEFAULT_PLUGINS = [
   URLSearchParamsPlugin,
   URLPlugin,
 ];
+
+/**
+ * Plugins from `serialization.plugins` are appended rather than prepended:
+ * seroval picks the first plugin whose `test()` passes, so the built-ins win
+ * and a loose user `test()` can't take over `Request`/`FormData`/`URL`.
+ *
+ * The same list has to be used on both ends of a server function, which is why
+ * this comes from a virtual module bundled into the client and the server
+ * rather than a runtime option.
+ */
+const PLUGINS = [...DEFAULT_PLUGINS, ...userPlugins];
 const MAX_SERIALIZATION_DEPTH_LIMIT = 64;
 const DISABLED_FEATURES = Feature.RegExp;
 
@@ -93,7 +104,7 @@ export function serializeToJSStream(id: string, value: any) {
       crossSerializeStream(value, {
         scopeId: id,
         disabledFeatures: JS_SERIALIZE_DISABLED_FEATURES,
-        plugins: DEFAULT_PLUGINS,
+        plugins: PLUGINS,
         onSerialize(data: string, initial: boolean) {
           controller.enqueue(
             createChunk(initial ? `(${getCrossReferenceHeader(id)},${data})` : data),
@@ -116,7 +127,7 @@ export function serializeToJSONStream(value: any) {
       toCrossJSONStream(value, {
         disabledFeatures: SERIALIZE_DISABLED_FEATURES,
         depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
-        plugins: DEFAULT_PLUGINS,
+        plugins: PLUGINS,
         onParse(node) {
           controller.enqueue(createChunk(JSON.stringify(node)));
         },
@@ -236,7 +247,7 @@ export async function deserializeJSONStream(response: Response | Request) {
         refs,
         disabledFeatures: DISABLED_FEATURES,
         depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
-        plugins: DEFAULT_PLUGINS,
+        plugins: PLUGINS,
       });
       return value;
     }
