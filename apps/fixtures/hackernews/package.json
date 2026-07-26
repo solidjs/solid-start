@@ -1,17 +1,17 @@
 {
   "name": "fixture-hackernews",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
     "build": "vite build"
   },
   "dependencies": {
-    "@solidjs/router": "^0.15.4",
+    "@solidjs/router": "^0.16.2",
     "@solidjs/start": "workspace:*",
-    "solid-js": "^1.9.11",
-    "vite": "^8.0.0"
+    "solid-js": "^1.9.14",
+    "vite": "^8.1.5"
   },
   "engines": {
     "node": ">=24"

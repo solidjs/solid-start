@@ -12,7 +12,7 @@ export function MetaFramework() {
           of these pieces can be replaced with your own implementation.
         </p>
       </header>
-      <div class="pt-12 lg:pt-0 grid grid-rows-[auto,auto] lg:grid-rows-1 lg:grid-cols-[auto,auto] place-items-center gap-0">
+      <div class="pt-12 lg:pt-0 grid grid-rows-[auto_auto] lg:grid-rows-1 lg:grid-cols-[auto_auto] place-items-center gap-0">
         <NesterBox>
           <NestItem accent="purple" title="Seroval">
             <p>A strong, highly-performant serializer.</p>

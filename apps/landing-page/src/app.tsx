@@ -29,10 +29,10 @@ export default function App() {
     <>
       {/* <ColorModeScript storageType={storageManager.type} /> */}
       {/* <ColorModeProvider storageManager={storageManager}> */}
-      <main class="min-h-screen h-full grid grid-rows-[auto,1fr,auto] place-items-center relative bg-gradient-to-b dark:from-sky-950 from-sky-800 to-sky-200 dark:to-[#081924]">
+      <main class="min-h-screen h-full grid grid-rows-[auto_1fr_auto] place-items-center relative bg-linear-to-b dark:from-sky-950 from-sky-800 to-sky-200 dark:to-[#081924]">
         <TopNav />
         <Hero />
-        <article class="w-full flex flex-col bg-white dark:bg-gradient-to-b dark:from-[#081924] from-white dark:via-[#081924] via-white dark:to-sky-950 to-sky-300">
+        <article class="w-full flex flex-col bg-white dark:bg-linear-to-b dark:from-[#081924] from-white dark:via-[#081924] via-white dark:to-sky-950 to-sky-300">
           <MetaFramework />
           <RockSolidDX />
           <DeployAnywhere />

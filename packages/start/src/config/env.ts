@@ -82,13 +82,13 @@ export function envPlugin(options?: EnvPluginOptions): Plugin {
         }
         const vars = currentOptions.server?.load
           ? currentOptions.server.load(env)
-          : loadEnv(env, '.', serverPrefix);
+          : loadEnv(env, ".", serverPrefix);
         return convertObjectToModule(vars);
       }
       if (filename === CLIENT_ENV) {
         const vars = currentOptions.client?.load
           ? currentOptions.client.load(env)
-          : loadEnv(env, '.', clientPrefix);
+          : loadEnv(env, ".", clientPrefix);
         return convertObjectToModule(vars);
       }
       if (filename === SERVER_RUNTIME_LOADER) {
