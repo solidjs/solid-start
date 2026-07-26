@@ -1,5 +1,45 @@
 # @solidjs/start
 
+## 2.0.0-rc.5
+
+### Minor Changes
+
+- 4c803e5: Add `serialization.plugins` to configure custom Seroval plugins for server functions.
+
+  Values Seroval has no built-in support for (Mongo's `ObjectId`, Prisma's `Decimal`, `Temporal`, and other custom classes) previously threw when returned from or passed to a server function. Point the new option at a module whose default export is an array of plugins:
+
+  ```ts
+  // vite.config.ts
+  solidStart({
+    serialization: {
+      plugins: "src/seroval-plugins.ts",
+    },
+  });
+  ```
+
+  ```ts
+  // src/seroval-plugins.ts
+  import { createPlugin } from "@solidjs/start/serialization";
+  ```
+
+  The module is bundled into both the client and the server so both ends of a server function agree on the format, so it must not import server-only code. SolidStart's built-in plugins keep precedence. Only server-function and action payloads are affected; the SSR hydration payload is serialized by `solid-js/web`.
+
+  Also adds a `@solidjs/start/serialization` entrypoint re-exporting Seroval's `createPlugin`, `OpaqueReference`, and plugin types, so plugin authors stay on the same Seroval version SolidStart serializes with.
+
+### Patch Changes
+
+- e117d91: Route module ids now end in the source extension, so ecosystem plugins apply inside `src/routes`.
+
+  Route files are imported through an id carrying the picked exports in the query (`routes/api.ts?pick=GET`), which left the id ending in the export name. Plugins whose filter is anchored on the file extension (`/\.[cm]?[jt]sx?$/`, the default for `unplugin-auto-import`, `unplugin-macros` and others) silently skipped every route file. The id now ends with a `lang.<ext>` marker, the same convention Vue SFCs use for `?vue&type=script&lang.ts`. Chunk filenames are unchanged.
+
+- d8f1ea8: Apply the configured `nonce` to the two script tags that were still missing it, so a strict `script-src` CSP no longer needs `unsafe-inline`:
+
+  - The client-side redirect that streaming mode emits after the shell has already flushed (`<script>window.location=...</script>`) now carries the nonce.
+  - The SPA entry script tag now carries the nonce, matching the SSR entry script.
+
+- 27fca88: Fix actions returning `json()` or `reload()` leaving no-JS form submissions stranded on the `/_server` endpoint. These responses carry a value rather than a destination, so the redirect issued for progressive-enhancement submissions had no `Location` header. It now falls back to the submitting page, and the response value is unwrapped into the flash cookie so `useSubmission().result` matches the JS path.
+- 75debc3: Scope the built-in `~` alias to the app package, so files in other workspace packages can map `~` to their own root through an importer-aware plugin such as `vite-tsconfig-paths`. In stylesheets and asset URLs (CSS `@import`, `url()`, `new URL(..., import.meta.url)`) `~` still always means the app root, since Vite resolves those without running plugins.
+
 ## 2.0.0-rc.4
 
 ### Patch Changes
