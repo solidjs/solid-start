@@ -1,4 +1,4 @@
-/// <reference types="@solidjs/file-routes/types" />
+/// <reference types="filesystem-routes/types" />
 import fileRoutes, { pageRoutes as nestedPageRoutes } from "virtual:file-routes";
 import { createRouter } from "radix3";
 

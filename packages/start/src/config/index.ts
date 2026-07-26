@@ -12,8 +12,8 @@ import { boundaryModules } from "./boundary-modules.ts";
 import { VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
-import { PageFileSystemRouter } from "@solidjs/file-routes";
-import { DEFAULT_EXTENSIONS, fileRoutes } from "@solidjs/file-routes/vite";
+import { PageFileSystemRouter } from "filesystem-routes";
+import { DEFAULT_EXTENSIONS, fileRoutes } from "filesystem-routes/vite";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
