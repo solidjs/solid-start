@@ -1,13 +1,66 @@
 import { describe, expect, it } from "vitest";
 
-import { treeShake } from "./tree-shake.ts";
+import { sanitizeRouteChunkName, toRouteModuleId, treeShake } from "./tree-shake.ts";
 
 async function shake(code: string, pick: string[]) {
   const plugin = treeShake() as any;
-  const id = `/routes/route.ts?${pick.map(p => `pick=${p}`).join("&")}`;
+  const id = toRouteModuleId({ src: "/routes/route.ts", pick });
   const result = await plugin.transform(code, id);
   return result?.code as string | undefined;
 }
+
+// https://github.com/solidjs/solid-start/issues/1374
+describe("toRouteModuleId", () => {
+  it("ends in the source extension so extension filters still match", () => {
+    const id = toRouteModuleId({ src: "/routes/index.tsx", pick: ["default", "$css"] });
+
+    expect(id).toBe("/routes/index.tsx?pick=default&pick=$css&lang.tsx");
+    // The default include filter of unplugin-auto-import, unplugin-vue-components, etc.
+    expect(id).toMatch(/\.[jt]sx?$/);
+  });
+
+  it("keeps the picks parseable as query params", () => {
+    const id = toRouteModuleId({ src: "/routes/api.ts", pick: ["GET", "POST"] });
+    const query = new URLSearchParams(id.split("?")[1]);
+
+    expect(query.getAll("pick")).toEqual(["GET", "POST"]);
+  });
+
+  it("uses the real extension for non-js route files", () => {
+    expect(toRouteModuleId({ src: "/routes/post.md", pick: ["$css"] })).toBe(
+      "/routes/post.md?pick=$css&lang.md",
+    );
+  });
+
+  it("omits the suffix when the source has no extension", () => {
+    expect(toRouteModuleId({ src: "/routes/route", pick: ["default"] })).toBe(
+      "/routes/route?pick=default",
+    );
+  });
+});
+
+describe("sanitizeRouteChunkName", () => {
+  it("names a route chunk after its route file, not the pick query", () => {
+    const name = toRouteModuleId({ src: "index.tsx", pick: ["default", "$css"] });
+
+    expect(sanitizeRouteChunkName(name)).toBe("index");
+  });
+
+  it("sanitizes dynamic segments the way vite does", () => {
+    expect(sanitizeRouteChunkName(toRouteModuleId({ src: "[id].tsx", pick: ["default"] }))).toBe(
+      "_id_",
+    );
+    expect(
+      sanitizeRouteChunkName(toRouteModuleId({ src: "[...stories].tsx", pick: ["default"] })),
+    ).toBe("_...stories_");
+  });
+
+  it("leaves non-route chunk names alone", () => {
+    expect(sanitizeRouteChunkName("entry-client")).toBe("entry-client");
+    expect(sanitizeRouteChunkName("some.vendor.chunk")).toBe("some.vendor.chunk");
+    expect(sanitizeRouteChunkName("weird?name")).toBe("weird_name");
+  });
+});
 
 describe("treeShake", () => {
   it("keeps only the picked export", async () => {

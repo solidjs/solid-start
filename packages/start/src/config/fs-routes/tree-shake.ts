@@ -6,7 +6,7 @@ import type * as Babel from "@babel/core";
 import type { NodePath, PluginObj, PluginPass } from "@babel/core";
 import type { Binding } from "@babel/traverse";
 import type { Identifier } from "@babel/types";
-import { basename } from "pathe";
+import { basename, extname } from "pathe";
 import type { Plugin } from "vite";
 
 type State = Omit<PluginPass, "opts"> & {
@@ -433,6 +433,44 @@ function treeShakeTransform({ types: t }: typeof Babel): PluginObj<State> {
       },
     },
   };
+}
+
+/**
+ * Builds the module id used to request a subset of a route file's exports.
+ *
+ * The trailing `&lang.<ext>` follows the Vite sub-request convention (the same
+ * one `@vitejs/plugin-vue` uses for `?vue&type=script&lang.ts`) so the id still
+ * ends in the source extension. Plugins that filter on ids with an end-anchored
+ * extension regex (`/\.[jt]sx?$/`, the default in `unplugin-auto-import` and
+ * friends) would otherwise skip every route file.
+ *
+ * https://github.com/solidjs/solid-start/issues/1374
+ */
+export function toRouteModuleId(route: { src: string; pick: string[] }): string {
+  const query = route.pick.map(p => `pick=${p}`).join("&");
+  const ext = extname(route.src).slice(1);
+  return `${route.src}?${query}${ext ? `&lang.${ext}` : ""}`;
+}
+
+// Mirrors Vite's default `build.rollupOptions.output.sanitizeFileName`, which
+// overriding the option replaces rather than composes with.
+const INVALID_CHAR_REGEX = /[\u0000-\u001F"#$&*+,:;<=>?[\]^`{|}\u007F]/g;
+const DRIVE_LETTER_REGEX = /^[a-z]:/i;
+
+/**
+ * Rollup derives a chunk's name from the module id's basename minus its
+ * extension. Because {@link toRouteModuleId} ends ids with the extension rather
+ * than the query, that basename now includes the query, which would surface as
+ * `index.tsx_pick_default_pick__css_lang-<hash>.js` in the build output. Strip
+ * the query back off so route chunks stay named after their route file.
+ */
+export function sanitizeRouteChunkName(name: string): string {
+  if (name.includes("?pick=")) {
+    const file = name.slice(0, name.indexOf("?"));
+    name = basename(file, extname(file));
+  }
+  const driveLetter = DRIVE_LETTER_REGEX.exec(name)?.[0] ?? "";
+  return driveLetter + name.slice(driveLetter.length).replace(INVALID_CHAR_REGEX, "_");
 }
 
 export function treeShake(): Plugin {

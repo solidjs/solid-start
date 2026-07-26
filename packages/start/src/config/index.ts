@@ -11,6 +11,7 @@ import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import { sanitizeRouteChunkName, toRouteModuleId } from "./fs-routes/tree-shake.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
@@ -183,10 +184,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           for (const route of await clientRouter.getRoutes()) {
             for (const [key, value] of Object.entries(route)) {
               if (value && key.startsWith("$") && !key.startsWith("$$")) {
-                function toRouteId(route: any) {
-                  return `${route.src}?${route.pick.map((p: string) => `pick=${p}`).join("&")}`;
-                }
-                clientInput.push(toRouteId(value));
+                clientInput.push(toRouteModuleId(value as any));
               }
             }
           }
@@ -215,6 +213,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                   input: clientInput,
                   treeshake: true,
                   preserveEntrySignatures: "exports-only",
+                  output: { sanitizeFileName: sanitizeRouteChunkName },
                 },
               },
             },
@@ -227,6 +226,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 copyPublicDir: false,
                 rollupOptions: {
                   input: handlers.server,
+                  output: { sanitizeFileName: sanitizeRouteChunkName },
                 },
                 outDir: "dist/server",
                 commonjsOptions: {

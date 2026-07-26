@@ -3,7 +3,7 @@ import { type PluginOption } from "vite";
 
 import { fileSystemWatcher } from "./fs-watcher.ts";
 import type { BaseFileSystemRouter } from "./router.ts";
-import { treeShake } from "./tree-shake.ts";
+import { toRouteModuleId, treeShake } from "./tree-shake.ts";
 
 export const moduleId = "solid-start:routes";
 
@@ -36,7 +36,7 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
           if (v === undefined) return undefined;
 
           if (k.startsWith("$$")) {
-            const buildId = `${v.src}?${v.pick.map((p: any) => `pick=${p}`).join("&")}`;
+            const buildId = toRouteModuleId(v);
 
             /**
              * @type {{ [key: string]: string }}
@@ -52,7 +52,7 @@ export function fsRoutes({ routers }: FsRoutesArgs): Array<PluginOption> {
               // src: isBuild ? relative(root, buildId) : buildId
             };
           } else if (k.startsWith("$")) {
-            const buildId = `${v.src}?${v.pick.map((p: any) => `pick=${p}`).join("&")}`;
+            const buildId = toRouteModuleId(v);
             return {
               src: relative(root, buildId),
               build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
