@@ -111,7 +111,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
 
     // handle no JS success case
-    if (!instance) return handleNoJS(result, request, parsed);
+    if (!instance) return await handleNoJS(result, request, parsed);
 
     const body = getHeadersAndBody(result);
     if (body) {
@@ -148,7 +148,7 @@ export async function handleServerFunction(h3Event: H3Event) {
 
       h3Event.res.headers.set("X-Error", toHeaderValue(error));
     } else {
-      x = handleNoJS(x, request, parsed, true);
+      x = await handleNoJS(x, request, parsed, true);
     }
     if (instance) {
       const body = getHeadersAndBody(x);
@@ -184,7 +184,24 @@ function toHeaderValue(value: string) {
   }
 }
 
-function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
+function getRefererLocation(request: Request, url: URL) {
+  const referer = request.headers.get("referer");
+  try {
+    if (referer) return new URL(referer).toString();
+  } catch {
+    // fall through to the app root below
+  }
+  // no usable referer (e.g. a no-referrer policy): the app root still beats
+  // leaving the browser sitting on the server function endpoint
+  return new URL(import.meta.env.BASE_URL, url.origin).toString();
+}
+
+async function handleNoJS(
+  result: any,
+  request: Request,
+  parsed: any[],
+  thrown?: boolean,
+) {
   const url = new URL(request.url);
   const isError = result instanceof Error;
   let statusCode = 302;
@@ -200,10 +217,20 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
         ).toString(),
       );
       statusCode = getExpectedRedirectStatus(result);
+    } else {
+      // responses that carry a value rather than a destination (json(), reload())
+      // still have to send the browser back to the page the form came from
+      headers.set("Location", getRefererLocation(request, url));
     }
+    // the body is dropped from the redirect, so don't advertise its type
+    headers.delete("Content-Type");
+    // mirror the JS path: the flash cookie carries the value, not the Response
+    result = (result as any).customBody
+      ? await (result as any).customBody()
+      : null;
   } else
     headers = new Headers({
-      Location: new URL(request.headers.get("referer")!).toString(),
+      Location: getRefererLocation(request, url),
     });
   if (result) {
     headers.append(
@@ -214,10 +241,9 @@ function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boole
           result: isError ? result.message : result,
           thrown: thrown,
           error: isError,
-          input: [
-            ...parsed.slice(0, -1),
-            [...parsed[parsed.length - 1].entries()],
-          ],
+          input: parsed.length
+            ? [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
+            : [],
         }),
       )}; Secure; HttpOnly;`,
     );
