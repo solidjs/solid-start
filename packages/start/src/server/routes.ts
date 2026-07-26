@@ -1,5 +1,5 @@
-// @ts-expect-error
-import fileRoutes from "solid:file-routes";
+/// <reference types="@solidjs/file-routes/types" />
+import fileRoutes, { pageRoutes as nestedPageRoutes } from "virtual:file-routes";
 import { createRouter } from "radix3";
 
 import type { FetchEvent } from "./types.ts";
@@ -18,38 +18,12 @@ interface Route {
   $DELETE?: any;
 }
 
-export const pageRoutes = defineRoutes((fileRoutes as unknown as Route[]).filter(o => o.page));
-
-function defineRoutes(fileRoutes: Route[]) {
-  function processRoute(routes: Route[], route: Route, id: string, full: string) {
-    const parentRoute = Object.values(routes).find(o => {
-      return id.startsWith(o.id + "/");
-    });
-
-    if (!parentRoute) {
-      routes.push({
-        ...route,
-        id,
-        path: id.replace(/\([^)/]+\)/g, "").replace(/\/+/g, "/"),
-      });
-      return routes;
-    }
-    processRoute(
-      parentRoute.children || (parentRoute.children = []),
-      route,
-      id.slice(parentRoute.id.length),
-      full,
-    );
-
-    return routes;
-  }
-
-  return fileRoutes
-    .sort((a, b) => a.path.length - b.path.length)
-    .reduce((prevRoutes: Route[], route) => {
-      return processRoute(prevRoutes, route, route.path, route.path);
-    }, []);
-}
+/**
+ * The page routes, nested and stripped of `(group)` segments by the
+ * file-routes delivery adapter. API routes are matched off the flat manifest
+ * below, which keeps every route — pages, handlers and modules that are both.
+ */
+export const pageRoutes = nestedPageRoutes as unknown as Route[];
 
 const router = createRouter({
   routes: (fileRoutes as unknown as Route[]).reduce(
