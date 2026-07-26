@@ -4,6 +4,7 @@ import { basename, extname, isAbsolute, join } from "node:path";
 import type { PluginOption } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
+import { appRootAlias } from "./app-root-alias.ts";
 import { boundaryModules } from "./boundary-modules.ts";
 import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
@@ -11,6 +12,7 @@ import { envPlugin, type EnvPluginOptions } from "./env.ts";
 import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
 import { fsRoutes } from "./fs-routes/index.ts";
 import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import { sanitizeChunkFileName, toPickId } from "./fs-routes/tree-shake.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
 import { parseIdQuery } from "./utils.ts";
@@ -107,6 +109,30 @@ export interface SolidStartOptions {
      * @default "json"
      */
     mode?: "js" | "json";
+
+    /**
+     * Path to a module whose default export is an array of custom Seroval
+     * plugins, used to serialize values Seroval doesn't understand natively
+     * (ORM id types, decimals, `Temporal`, and other custom classes).
+     *
+     * Build plugins with `createPlugin` from `seroval`. The module is bundled
+     * into both the client and the server so that both ends of a server
+     * function agree on the format, so it must not import server-only code.
+     *
+     * SolidStart's built-in plugins take precedence: Seroval uses the first
+     * plugin whose `test()` passes, and these are appended after the built-ins.
+     *
+     * A plugin's `deserialize` rebuilds the value under {@link mode} `"json"`.
+     * `serialize` is only used by `mode: "js"`, where the payload is evaluated
+     * on the client and may therefore reference globals only, not the plugin
+     * module's own imports.
+     *
+     * Only applies to server-function and action payloads. The SSR hydration
+     * payload is serialized by `solid-js/web` and is unaffected.
+     *
+     * @example "src/seroval-plugins.ts"
+     */
+    plugins?: string;
   };
 
   /**
@@ -183,17 +209,23 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           for (const route of await clientRouter.getRoutes()) {
             for (const [key, value] of Object.entries(route)) {
               if (value && key.startsWith("$") && !key.startsWith("$$")) {
-                function toRouteId(route: any) {
-                  return `${route.src}?${route.pick.map((p: string) => `pick=${p}`).join("&")}`;
-                }
-                clientInput.push(toRouteId(value));
+                clientInput.push(toPickId((value as any).src, (value as any).pick));
               }
             }
           }
         }
         return {
           appType: "custom",
-          build: { assetsDir: "_build/assets" },
+          build: {
+            assetsDir: "_build/assets",
+            rollupOptions: {
+              output: {
+                // Keeps route chunks named after their file rather than after
+                // the `?pick=...` id that addresses them. See toPickId.
+                sanitizeFileName: sanitizeChunkFileName,
+              },
+            },
+          },
           optimizeDeps: {
             // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
             ...({
@@ -238,7 +270,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           resolve: {
             alias: {
               "@solidjs/start/server/entry": handlers.server,
-              "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
                     "@solidjs/start/server": "@solidjs/start/server/spa",
@@ -287,6 +318,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
     },
+    appRootAlias(root, start.appRoot),
     manifest(start),
     fsRoutes({
       routers: {
