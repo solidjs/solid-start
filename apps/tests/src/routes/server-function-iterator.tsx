@@ -6,13 +6,13 @@ async function ping(value: Date) {
   const current = [
     value,
     {
-      name: 'example',
+      name: "example",
       *[Symbol.iterator]() {
-        yield 'foo';
-        yield 'bar';
-        yield 'baz';
-      }
-    }
+        yield "foo";
+        yield "bar";
+        yield "baz";
+      },
+    },
   ];
 
   return current;
@@ -24,7 +24,7 @@ export default function App() {
   createEffect(async () => {
     const value = new Date();
     const result = await ping(value);
-    setOutput((prev) => ({ ...prev, result: value.toString() === result[0].toString() }));
+    setOutput(prev => ({ ...prev, result: value.toString() === result[0].toString() }));
   });
 
   return (

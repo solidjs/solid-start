@@ -5,7 +5,7 @@ export default function App() {
   const [output, setOutput] = createSignal<boolean | null>();
 
   createEffect(() => {
-    setOutput('testQuery' in testModule);
+    setOutput("testQuery" in testModule);
   });
 
   return (

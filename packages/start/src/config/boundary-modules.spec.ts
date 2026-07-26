@@ -42,9 +42,7 @@ describe("boundaryModules", () => {
   it("marks Start's server-only entry points with server-only", () => {
     for (const entry of ["http/index.ts", "middleware/index.ts"]) {
       const source = readFileSync(join(import.meta.dirname, "..", entry), "utf-8");
-      expect(source, `src/${entry} must import "server-only"`).toMatch(
-        /^import "server-only";$/m,
-      );
+      expect(source, `src/${entry} must import "server-only"`).toMatch(/^import "server-only";$/m);
     }
   });
 });
