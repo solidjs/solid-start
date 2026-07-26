@@ -25,3 +25,7 @@ declare module "solid-start:middleware" {
   type MaybeArray<T> = T | Array<T>;
   export default Middleware as import("h3").Middleware[];
 }
+
+declare module "solid-start:seroval-plugins" {
+  export default SerovalPlugins as import("seroval").Plugin<any, any>[];
+}
