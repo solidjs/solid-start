@@ -11,7 +11,7 @@ const buttonOutlineStyles = buttonVariants({
 
 export function Hero() {
   return (
-    <header class="w-full mx-auto md:px-10 bg-gradient-to-b from-transparent dark:to-[#081924] via-white dark:via-white/0 to-white">
+    <header class="w-full mx-auto md:px-10 bg-linear-to-b from-transparent dark:to-[#081924] via-white dark:via-white/0 to-white">
       <div class="flex flex-col items-center justify-center">
         <a
           href="https://github.com/solidjs/solid-start/discussions/1960"

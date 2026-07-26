@@ -17,7 +17,9 @@ ol[class] {
   z-index: 1;
 }
 
-solid-island, solid-children, outlet-wrapper {
+solid-island,
+solid-children,
+outlet-wrapper {
   display: contents;
 }
 
@@ -119,10 +121,9 @@ select {
   --outline-box-shadow-contrast: 0 0 0 2px var(--navy-blue);
 
   /* Fonts */
-  --sans-serif: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Ubuntu, Helvetica, sans-serif;
-  --monospace: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
-    monospace;
+  --sans-serif:
+    -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Helvetica, sans-serif;
+  --monospace: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
 }
 
 html {
@@ -246,7 +247,7 @@ hr {
   border-radius: 100px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 6px 20px ;
+  padding: 6px 20px;
   cursor: pointer;
   font-weight: 700;
   outline-style: none;
@@ -298,7 +299,9 @@ ul.notes-list {
 }
 
 .sidebar {
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1), 0px 2px 2px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0px 8px 24px rgba(0, 0, 0, 0.1),
+    0px 2px 2px rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
   z-index: 1000;
   flex-shrink: 0;
@@ -310,7 +313,7 @@ ul.notes-list {
   background: var(--white);
 }
 .dark .sidebar {
-  background:#151d28;
+  background: #151d28;
 }
 .sidebar-header {
   letter-spacing: 0.15em;
@@ -402,7 +405,9 @@ ul.notes-list {
   visibility: hidden;
   opacity: 0;
   cursor: default;
-  transition: visibility 0s linear 20ms, opacity 300ms;
+  transition:
+    visibility 0s linear 20ms,
+    opacity 300ms;
   outline-style: none;
 }
 .sidebar-note-toggle-expand:focus {
@@ -414,7 +419,9 @@ ul.notes-list {
 .sidebar-note-toggle-expand:focus {
   visibility: visible;
   opacity: 1;
-  transition: visibility 0s linear 0s, opacity 300ms;
+  transition:
+    visibility 0s linear 0s,
+    opacity 300ms;
 }
 .sidebar-note-toggle-expand img {
   width: 10px;
@@ -435,7 +442,7 @@ ul.notes-list {
 
 .dark > .sidebar-note-excerpt {
   color: var(--secondary-text-dark);
-} 
+}
 
 .search input {
   padding: 0 16px;
@@ -461,7 +468,9 @@ ul.notes-list {
 }
 .note {
   background: var(--white);
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1), 0px 0px 1px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0px 0px 5px rgba(0, 0, 0, 0.1),
+    0px 0px 1px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   height: 95%;
   width: 95%;
@@ -652,7 +661,7 @@ ul.notes-list {
 }
 
 .skeleton::after {
-  content: 'Loading...';
+  content: "Loading...";
 }
 .skeleton {
   height: 100%;

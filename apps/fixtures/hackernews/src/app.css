@@ -1,5 +1,7 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   font-size: 15px;
   background-color: #f2f3f5;
   margin: 0;
@@ -98,7 +100,8 @@ a {
   padding-top: 45px;
 }
 
-.news-list, .news-list-nav {
+.news-list,
+.news-list-nav {
   background-color: #fff;
   border-radius: 2px;
 }
@@ -160,17 +163,20 @@ a {
   margin-top: -10px;
 }
 
-.news-item .host, .news-item .meta {
+.news-item .host,
+.news-item .meta {
   font-size: 0.85em;
   color: #626262;
 }
 
-.news-item .host a, .news-item .meta a {
+.news-item .host a,
+.news-item .meta a {
   color: #626262;
   text-decoration: underline;
 }
 
-.news-item .host a:hover, .news-item .meta a:hover {
+.news-item .host a:hover,
+.news-item .meta a:hover {
   color: #335d92;
 }
 
@@ -187,7 +193,9 @@ a {
   margin-right: 0.5em;
 }
 
-.item-view-header .host, .item-view-header .meta, .item-view-header .meta a {
+.item-view-header .host,
+.item-view-header .meta,
+.item-view-header .meta a {
   color: #626262;
 }
 
@@ -234,7 +242,9 @@ a {
   position: relative;
 }
 
-.comment .by, .comment .text, .comment .toggle {
+.comment .by,
+.comment .text,
+.comment .toggle {
   font-size: 0.9em;
   margin: 1em 0;
 }

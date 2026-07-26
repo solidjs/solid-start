@@ -72,7 +72,7 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
       for (let i = 0, len = lines.length; i < len; i++) {
         const el = lines[i] as HTMLElement;
         if (props.line - minLine() - 1 === i) {
-          el.dataset.startErrorViewerErrorLine = '';
+          el.dataset.startErrorViewerErrorLine = "";
         }
       }
     }

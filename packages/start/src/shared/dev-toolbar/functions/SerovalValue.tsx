@@ -1,5 +1,5 @@
 import { Text } from "../../ui/Text.tsx";
-import './SerovalValue.css';
+import "./SerovalValue.css";
 
 interface SerovalValueProps {
   value: string | number | boolean | undefined | null;
@@ -7,12 +7,12 @@ interface SerovalValueProps {
 
 export function SerovalValue(props: SerovalValueProps) {
   return (
-    <Text data-start-seroval-value options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>
+    <Text data-start-seroval-value options={{ size: "xs", weight: "semibold", wrap: "nowrap" }}>
       {`${props.value}`}
     </Text>
   );
 }
 
 export function PropertySeparator() {
-  return <Text options={{ size: 'xs', weight: 'semibold', wrap: 'nowrap' }}>:</Text>;
+  return <Text options={{ size: "xs", weight: "semibold", wrap: "nowrap" }}>:</Text>;
 }
