@@ -1,15 +1,15 @@
 {
   "name": "solid-start-monorepo",
-  "description": "monorepo for the SolidStart ecosystem",
   "version": "0.2.0",
-  "author": "Ryan Carniato",
-  "type": "module",
+  "private": true,
+  "description": "monorepo for the SolidStart ecosystem",
   "license": "MIT",
+  "author": "Ryan Carniato",
   "repository": {
     "type": "git",
     "url": "https://github.com/solidjs/solid-start"
   },
-  "private": true,
+  "type": "module",
   "scripts": {
     "bump": "node scripts/bump.js",
     "build": "pnpm run packages:build",
@@ -25,7 +25,8 @@
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
     "clean:test": "pnpx rimraf .tmp",
     "release": "pnpm build && changeset publish",
-    "format": "pnpm oxfmt",
+    "format": "oxfmt --write",
+    "format:check": "oxfmt --check",
     "rewrite-exports": "pnpm --filter='./packages/*' -c exec \"echo \\$(cat package.json | jq '.exports = .publishConfig.exports') > package.json\"",
     "vite-ecosystem-ci:build": "pnpm run build:all && pnpm --filter fixture-basic build",
     "vite-ecosystem-ci:before-test": "pnpm --filter tests exec playwright install chromium",
@@ -40,8 +41,8 @@
     "typescript": "^7.0.2"
   },
   "engines": {
-    "pnpm": "^11.17.0",
-    "node": ">=24"
+    "node": ">=24",
+    "pnpm": "^11.17.0"
   },
   "packageManager": "pnpm@11.17.0"
 }

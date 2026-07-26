@@ -49,28 +49,35 @@ export function manifest(start: SolidStartOptions): PluginOption {
           if (!entry) throw new Error("No client entry found");
           let rawManifest: string | undefined;
 
-          const viteMajor = parseInt(viteVersion.split('.')[0]!, 10);
+          const viteMajor = parseInt(viteVersion.split(".")[0]!, 10);
 
-          const manifestKey = Object.keys(globalThis.START_CLIENT_BUNDLE).find(k => k.endsWith("manifest.json"));
+          const manifestKey = Object.keys(globalThis.START_CLIENT_BUNDLE).find(k =>
+            k.endsWith("manifest.json"),
+          );
           if (manifestKey && viteMajor < 8) {
             const manifestAsset = globalThis.START_CLIENT_BUNDLE[manifestKey] as any;
             rawManifest = manifestAsset.source as string;
           } else {
-             try {
-               const appRoot = (start as any).appRoot || "./src";
-               let outDir = ".solid-start/client";
-               if (devServer?.environments?.client?.config?.build?.outDir) {
-                 outDir = devServer.environments.client.config.build.outDir;
-               } else if (this.environment?.config?.build?.outDir && this.environment?.config?.consumer === "client") {
-                 outDir = this.environment.config.build.outDir;
-               } else if ((globalThis as any).START_CLIENT_OUT_DIR) {
-                 outDir = (globalThis as any).START_CLIENT_OUT_DIR;
-               }
-               const manifestPath = path.resolve(appRoot, "..", outDir, ".vite/manifest.json");
-               rawManifest = fs.readFileSync(manifestPath, "utf-8");
-             } catch (e) {
-               throw new Error(`Manifest asset not found in bundle and could not be read from disk. Keys: ${Object.keys(globalThis.START_CLIENT_BUNDLE).join(", ")}. Error: ${e}`);
-             }
+            try {
+              const appRoot = (start as any).appRoot || "./src";
+              let outDir = ".solid-start/client";
+              if (devServer?.environments?.client?.config?.build?.outDir) {
+                outDir = devServer.environments.client.config.build.outDir;
+              } else if (
+                this.environment?.config?.build?.outDir &&
+                this.environment?.config?.consumer === "client"
+              ) {
+                outDir = this.environment.config.build.outDir;
+              } else if ((globalThis as any).START_CLIENT_OUT_DIR) {
+                outDir = (globalThis as any).START_CLIENT_OUT_DIR;
+              }
+              const manifestPath = path.resolve(appRoot, "..", outDir, ".vite/manifest.json");
+              rawManifest = fs.readFileSync(manifestPath, "utf-8");
+            } catch (e) {
+              throw new Error(
+                `Manifest asset not found in bundle and could not be read from disk. Keys: ${Object.keys(globalThis.START_CLIENT_BUNDLE).join(", ")}. Error: ${e}`,
+              );
+            }
           }
 
           if (!rawManifest) {

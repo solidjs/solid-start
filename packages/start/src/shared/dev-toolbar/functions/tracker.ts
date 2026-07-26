@@ -19,18 +19,12 @@ export type ServerFunctionCallListener = (event: ServerFunctionCall) => void;
 
 const LISTENERS = new Set<ServerFunctionCallListener>();
 
-export function captureServerFunctionCall(
-  listener: ServerFunctionCallListener,
-): () => void {
+export function captureServerFunctionCall(listener: ServerFunctionCallListener): () => void {
   LISTENERS.add(listener);
   return () => LISTENERS.delete(listener);
 }
 
-export function pushRequest(
-  id: string,
-  instance: string,
-  source: Request,
-): void {
+export function pushRequest(id: string, instance: string, source: Request): void {
   const event: ServerFunctionCall = {
     type: "request",
     id,
@@ -43,11 +37,7 @@ export function pushRequest(
   }
 }
 
-export function pushResponse(
-  id: string,
-  instance: string,
-  source: Response,
-): void {
+export function pushResponse(id: string, instance: string, source: Response): void {
   const event: ServerFunctionCall = {
     type: "response",
     id,

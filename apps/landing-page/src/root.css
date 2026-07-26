@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
@@ -126,7 +126,7 @@
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -150%;
@@ -144,11 +144,7 @@
 }
 
 @utility sonar {
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.25),
-    rgba(255, 255, 255, 0)
-  );
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0));
   animation: sonarEffect 4s infinite cubic-bezier(0.36, 0.85, 0.57, 0.88);
 }
 
@@ -250,7 +246,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 
   @media (max-width: 640px) {
@@ -275,37 +273,37 @@
 
 @keyframes earthquake {
   0% {
-    transform: translate(.5px, .5px) rotate(0deg);
+    transform: translate(0.5px, 0.5px) rotate(0deg);
   }
   10% {
-    transform: translate(-.5px, -1px) rotate(-.5deg);
+    transform: translate(-0.5px, -1px) rotate(-0.5deg);
   }
   20% {
-    transform: translate(-1.5px, 0px) rotate(.5deg);
+    transform: translate(-1.5px, 0px) rotate(0.5deg);
   }
   30% {
     transform: translate(1.5px, 1px) rotate(0deg);
   }
   40% {
-    transform: translate(.5px, -.5px) rotate(.5deg);
+    transform: translate(0.5px, -0.5px) rotate(0.5deg);
   }
   50% {
-    transform: translate(-.5px, 1px) rotate(-.5deg);
+    transform: translate(-0.5px, 1px) rotate(-0.5deg);
   }
   60% {
-    transform: translate(-1.5px, .5px) rotate(0deg);
+    transform: translate(-1.5px, 0.5px) rotate(0deg);
   }
   70% {
-    transform: translate(1.5px, .5px) rotate(-.5deg);
+    transform: translate(1.5px, 0.5px) rotate(-0.5deg);
   }
   80% {
-    transform: translate(-.5px, -.5px) rotate(.5deg);
+    transform: translate(-0.5px, -0.5px) rotate(0.5deg);
   }
   90% {
-    transform: translate(.5px, 1px) rotate(0deg);
+    transform: translate(0.5px, 1px) rotate(0deg);
   }
   100% {
-    transform: translate(.5px, -1px) rotate(-.5deg);
+    transform: translate(0.5px, -1px) rotate(-0.5deg);
   }
 }
 
@@ -327,7 +325,7 @@
     opacity: 1;
   }
   45% {
-    opacity: .5;
+    opacity: 0.5;
   }
   70% {
     transform: scale(6);

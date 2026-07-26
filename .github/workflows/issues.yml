@@ -1,4 +1,4 @@
-name: 'Close issues'
+name: "Close issues"
 
 on:
   issues:

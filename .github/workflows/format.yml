@@ -1,0 +1,42 @@
+name: 💅 Format
+
+on:
+  push:
+    branches:
+      - main
+      - 1.x
+      - dev
+      - release-*
+    tags-ignore:
+      - v*
+
+  pull_request:
+    branches:
+      - main
+      - 1.x
+      - dev
+      - release-*
+
+jobs:
+  format:
+    name: "💅 Check formatting"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Use Node.js from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 💅 Check formatting
+        run: pnpm format:check
