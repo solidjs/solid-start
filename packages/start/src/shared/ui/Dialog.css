@@ -5,8 +5,7 @@
   overflow-y: auto;
 }
 
-
-[data-start-dialog]>div {
+[data-start-dialog] > div {
   position: relative;
   display: flex;
   align-items: center;
