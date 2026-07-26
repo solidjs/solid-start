@@ -24,7 +24,8 @@
     "./http": "./src/http/index.ts",
     "./env": "./env.d.ts",
     "./fns/server": "./src/fns/server.ts",
-    "./fns/client": "./src/fns/client.ts"
+    "./fns/client": "./src/fns/client.ts",
+    "./serialization": "./src/fns/plugins.ts"
   },
   "publishConfig": {
     "exports": {
@@ -39,7 +40,8 @@
       "./http": "./dist/http/index.js",
       "./env": "./env.d.ts",
       "./fns/server": "./dist/fns/server.js",
-      "./fns/client": "./dist/fns/client.js"
+      "./fns/client": "./dist/fns/client.js",
+      "./serialization": "./dist/fns/plugins.js"
     },
     "access": "public"
   },
