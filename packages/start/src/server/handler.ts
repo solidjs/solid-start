@@ -210,8 +210,18 @@ function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
     context.complete = true;
     const to = context.response && context.response.headers.get("Location");
-    to && write(`<script>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`);
+    if (!to) return;
+    // The shell has already flushed, so the redirect has to happen client side.
+    // Carry the nonce so a strict `script-src` CSP doesn't block it.
+    const nonce = context.nonce ? ` nonce="${escapeAttribute(context.nonce)}"` : "";
+    write(
+      `<script${nonce}>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`,
+    );
   };
+}
+
+function escapeAttribute(value: string) {
+  return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
 
 function stripBaseUrl(path: string) {
