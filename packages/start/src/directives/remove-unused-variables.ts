@@ -11,7 +11,7 @@ function isInvalidForRemoval(path: babel.NodePath) {
   // This one is for destructured variables
   let target = path;
   if (isPathValid(path, t.isVariableDeclarator)) {
-    target = path.get('id');
+    target = path.get("id");
   }
   return isPathValid(target, t.isObjectPattern) || isPathValid(target, t.isArrayPattern);
 }
@@ -38,7 +38,7 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
             case "hoisted":
             case "module":
               if (binding.references === 0 && !binding.path.removed) {
-                  const parent = binding.path.parentPath;
+                const parent = binding.path.parentPath;
                 if (isPathValid(parent, t.isImportDeclaration)) {
                   if (parent.node.specifiers.length === 1) {
                     parent.remove();
@@ -46,7 +46,7 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
                     binding.path.remove();
                   }
                   dirty = true;
-                } else if (!(isInvalidForRemoval(binding.path))) {
+                } else if (!isInvalidForRemoval(binding.path)) {
                   binding.path.remove();
                   dirty = true;
                 }

@@ -39,6 +39,27 @@ const MAX_SERIALIZATION_DEPTH_LIMIT = 64;
 const DISABLED_FEATURES = Feature.RegExp;
 
 /**
+ * An error thrown by a server function is serialized and rethrown on the
+ * client, and seroval includes `Error.prototype.stack` by default. In
+ * production that leaks server file paths, internal function names and the
+ * shape of the deployment to anyone who can trigger a throw, so strip it.
+ * Development keeps the stack: that's where it's actually useful, and the
+ * paths it exposes are the developer's own.
+ *
+ * Only applied when writing; parsing leaves `DISABLED_FEATURES` alone so an
+ * incoming payload that does carry a stack still deserializes.
+ */
+const SERIALIZE_DISABLED_FEATURES = import.meta.env.PROD
+  ? DISABLED_FEATURES | Feature.ErrorPrototypeStack
+  : DISABLED_FEATURES;
+
+/**
+ * `crossSerializeStream` historically ran with every feature enabled, so only
+ * add the stack removal here rather than the full serialize set.
+ */
+const JS_SERIALIZE_DISABLED_FEATURES = import.meta.env.PROD ? Feature.ErrorPrototypeStack : 0;
+
+/**
  * Alexis:
  *
  * A "chunk" is a piece of data emitted by the streaming serializer.
@@ -71,6 +92,7 @@ export function serializeToJSStream(id: string, value: any) {
     start(controller) {
       crossSerializeStream(value, {
         scopeId: id,
+        disabledFeatures: JS_SERIALIZE_DISABLED_FEATURES,
         plugins: DEFAULT_PLUGINS,
         onSerialize(data: string, initial: boolean) {
           controller.enqueue(
@@ -92,7 +114,7 @@ export function serializeToJSONStream(value: any) {
   return new ReadableStream({
     start(controller) {
       toCrossJSONStream(value, {
-        disabledFeatures: DISABLED_FEATURES,
+        disabledFeatures: SERIALIZE_DISABLED_FEATURES,
         depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
         plugins: DEFAULT_PLUGINS,
         onParse(node) {

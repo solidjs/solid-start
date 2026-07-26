@@ -5,6 +5,6 @@ export const debounce = <T extends (...args: any[]) => void>(cb: T, debounceMs: 
   let timeout: NodeJS.Timeout | undefined;
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => cb(...args), debounceMs)
-  }
-}
+    timeout = setTimeout(() => cb(...args), debounceMs);
+  };
+};

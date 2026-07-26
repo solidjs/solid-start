@@ -60,14 +60,14 @@ export function DeployAnywhere() {
         </p>
       </header>
       <div class="mx-auto w-fit pt-12">
-        <pre class="bg-gradient-to-tr px-4 py-14 sm:p-14 dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.10)] ring-1 ring-sky-950 relative rounded-md">
+        <pre class="bg-linear-to-tr px-4 py-14 sm:p-14 dark:from-sky-950/20 dark:to-sky-800/20 from-sky-50 to-sky-100 dark:shadow-[0px_0px_35px_rgb(125,211,252,0.10)] ring-1 ring-sky-950 relative rounded-md">
           <div
             id="upper-line"
-            class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-blue-300/0 via-blue-300/70 to-blue-300/0 animate-bounce"
+            class="absolute -top-px left-20 right-11 h-px bg-linear-to-r from-blue-300/0 via-blue-300/70 to-blue-300/0 animate-bounce"
           ></div>
           <div
             id="bottom-line"
-            class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
+            class="absolute -bottom-px left-11 right-20 h-px bg-linear-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
           ></div>
           <code>
             <span class="dark:text-[#C792EA] text-purple-800">export default</span>{" "}

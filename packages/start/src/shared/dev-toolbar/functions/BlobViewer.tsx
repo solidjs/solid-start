@@ -1,14 +1,11 @@
-import { createMemo, createResource, type JSX, onCleanup, Show, Suspense } from 'solid-js';
+import { createMemo, createResource, type JSX, onCleanup, Show, Suspense } from "solid-js";
 
 import { Badge } from "../../ui/Badge.tsx";
 import Button from "../../ui/Button.tsx";
 
-import './BlobViewer.css';
+import "./BlobViewer.css";
 
-
-function DocumentIcon(
-  props: JSX.IntrinsicElements["svg"] & { title: string },
-): JSX.Element {
+function DocumentIcon(props: JSX.IntrinsicElements["svg"] & { title: string }): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +15,11 @@ function DocumentIcon(
       {...props}
     >
       <title>{props.title}</title>
-      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+      />
     </svg>
   );
 }
@@ -46,33 +47,28 @@ function BlobViewerInner(props: BlobViewerInnerProps): JSX.Element {
 
   return (
     <Button data-start-blob-viewer onClick={() => openFileInNewTab()}>
-      {props.source instanceof File
-        ? (
-          <Badge type="info">
-            <DocumentIcon title={props.source.name} />
-            {props.source.name}
-          </Badge>
-        )
-        : <Badge type="info">{props.source.type}</Badge>
-      }
+      {props.source instanceof File ? (
+        <Badge type="info">
+          <DocumentIcon title={props.source.name} />
+          {props.source.name}
+        </Badge>
+      ) : (
+        <Badge type="info">{props.source.type}</Badge>
+      )}
     </Button>
-  )
+  );
 }
-
 
 export interface BlobViewerProps {
   source: Blob | File | Promise<Blob | File>;
 }
-
 
 export function BlobViewer(props: BlobViewerProps): JSX.Element {
   const [data] = createResource(() => props.source);
 
   return (
     <Suspense>
-      <Show when={data()}>
-        {(current) => <BlobViewerInner source={current()} />}
-      </Show>
+      <Show when={data()}>{current => <BlobViewerInner source={current()} />}</Show>
     </Suspense>
   );
 }

@@ -1,26 +1,17 @@
 {
   "name": "@solidjs/start",
   "version": "2.0.0-rc.3",
-  "type": "module",
-  "files": [
-    "dist",
-    "env.d.ts",
-    "CHANGELOG.md"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/solidjs/solid-start.git",
     "directory": "packages/start"
   },
-  "scripts": {
-    "build": "pnpm validate-imports && tsc && node scripts/build.js",
-    "dev": "tsc --watch",
-    "test": "vitest",
-    "test:ci": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only",
-    "validate-imports": "node scripts/validate-imports.js"
-  },
+  "files": [
+    "dist",
+    "env.d.ts",
+    "CHANGELOG.md"
+  ],
+  "type": "module",
   "exports": {
     ".": "./src/index.tsx",
     "./config": "./dist/config/index.js",
@@ -36,7 +27,6 @@
     "./fns/client": "./src/fns/client.ts"
   },
   "publishConfig": {
-    "access": "public",
     "exports": {
       ".": "./dist/index.jsx",
       "./config": "./dist/config/index.js",
@@ -50,45 +40,55 @@
       "./env": "./env.d.ts",
       "./fns/server": "./dist/fns/server.js",
       "./fns/client": "./dist/fns/client.js"
-    }
+    },
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm validate-imports && tsc && node scripts/build.js",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "typecheck:dist": "pnpm build && pnpx @arethetypeswrong/cli --pack . --profile esm-only",
+    "validate-imports": "node scripts/validate-imports.js"
   },
   "dependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/traverse": "^7.29.0",
-    "@babel/types": "^7.29.0",
+    "@babel/core": "^7.29.7",
+    "@babel/traverse": "^7.29.7",
+    "@babel/types": "^7.29.7",
     "@solidjs/meta": "^0.29.4",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.10",
-    "cookie-es": "^2.0.0",
-    "defu": "^6.1.4",
+    "cookie-es": "^3.1.1",
+    "defu": "^6.1.7",
     "error-stack-parser": "^2.1.4",
     "fast-glob": "^3.3.3",
     "h3": "^2.0.1-rc.26",
     "html-to-image": "^1.11.13",
     "micromatch": "^4.0.8",
-    "oxc-parser": "^0.139.0",
-    "path-to-regexp": "^8.3.0",
+    "oxc-parser": "^0.141.0",
+    "path-to-regexp": "^8.4.2",
     "pathe": "^2.0.3",
     "radix3": "^1.1.2",
-    "seroval": "^1.5.4",
-    "seroval-plugins": "^1.5.1",
-    "shiki": "^1.29.2",
-    "solid-js": "^1.9.11",
+    "seroval": "^1.5.6",
+    "seroval-plugins": "^1.5.6",
+    "shiki": "^4.3.1",
+    "solid-js": "^1.9.14",
     "source-map-js": "^1.2.1",
-    "srvx": "^0.12.0",
+    "srvx": "^0.12.4",
     "terracotta": "^1.1.1",
-    "vite-plugin-solid": "^2.11.11"
-  },
-  "engines": {
-    "node": ">=24"
+    "vite-plugin-solid": "^2.11.13"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
-    "@types/node": "^25.5.0",
-    "vite": "^8.0.0",
-    "vitest": "^4.1.0"
+    "@types/node": "^26.1.1",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "vite": "^8 || ^9"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

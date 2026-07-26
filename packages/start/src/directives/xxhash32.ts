@@ -20,8 +20,7 @@ function toUtf8(text: string): Uint8Array {
     } else if (c < 0xd800 || c >= 0xe000) {
       bytes.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 0x3f), 0x80 | (c & 0x3f));
     } else {
-      const cp =
-        0x10000 + (((c & 0x3ff) << 10) | (text.charCodeAt(++i) & 0x3ff));
+      const cp = 0x10000 + (((c & 0x3ff) << 10) | (text.charCodeAt(++i) & 0x3ff));
       bytes.push(
         0xf0 | ((cp >> 18) & 0x7),
         0x80 | ((cp >> 12) & 0x3f),
@@ -37,11 +36,8 @@ function toUtf8(text: string): Uint8Array {
  * @param buffer - byte array or string
  * @param seed - optional seed (32-bit unsigned);
  */
-export default function xxHash32(
-  buffer: Uint8Array | string,
-  seed = 0,
-): number {
-  buffer = typeof buffer === 'string' ? toUtf8(buffer) : buffer;
+export default function xxHash32(buffer: Uint8Array | string, seed = 0): number {
+  buffer = typeof buffer === "string" ? toUtf8(buffer) : buffer;
   const b = buffer;
 
   /*
@@ -160,9 +156,7 @@ export default function xxHash32(
     const laneP = laneN0 * PRIME32_3 + ((laneN1 * PRIME32_3) << 16);
     acc = (acc + laneP) & 0xffffffff;
     acc = (acc << 17) | (acc >>> 15);
-    acc =
-      ((acc & 0xffff) * PRIME32_4 + (((acc >>> 16) * PRIME32_4) << 16)) &
-      0xffffffff;
+    acc = ((acc & 0xffff) * PRIME32_4 + (((acc >>> 16) * PRIME32_4) << 16)) & 0xffffffff;
   }
 
   /*
@@ -180,9 +174,7 @@ export default function xxHash32(
     const lane = b[offset];
     acc += lane * PRIME32_5;
     acc = (acc << 11) | (acc >>> 21);
-    acc =
-      ((acc & 0xffff) * PRIME32_1 + (((acc >>> 16) * PRIME32_1) << 16)) &
-      0xffffffff;
+    acc = ((acc & 0xffff) * PRIME32_1 + (((acc >>> 16) * PRIME32_1) << 16)) & 0xffffffff;
   }
 
   /*
@@ -200,13 +192,9 @@ export default function xxHash32(
     */
 
   acc ^= acc >>> 15;
-  acc =
-    (((acc & 0xffff) * PRIME32_2) & 0xffffffff) +
-    (((acc >>> 16) * PRIME32_2) << 16);
+  acc = (((acc & 0xffff) * PRIME32_2) & 0xffffffff) + (((acc >>> 16) * PRIME32_2) << 16);
   acc ^= acc >>> 13;
-  acc =
-    (((acc & 0xffff) * PRIME32_3) & 0xffffffff) +
-    (((acc >>> 16) * PRIME32_3) << 16);
+  acc = (((acc & 0xffff) * PRIME32_3) & 0xffffffff) + (((acc >>> 16) * PRIME32_3) << 16);
   acc ^= acc >>> 16;
 
   // turn any negatives back into a positive number;
