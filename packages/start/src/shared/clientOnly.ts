@@ -28,7 +28,9 @@ export default function clientOnly<T extends Component<any>>(
     onMount(() => setMounted(true));
     return createMemo(
       () => (
-        (Comp = comp()), (m = mounted()), untrack(() => (Comp && m ? Comp(rest) : props.fallback))
+        (Comp = comp()),
+        (m = mounted()),
+        untrack(() => (Comp && m ? Comp(rest) : props.fallback))
       ),
     );
   };

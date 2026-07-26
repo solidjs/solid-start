@@ -72,16 +72,16 @@ function TabContent(props: { manager: string; command: string }) {
     >
       <div
         id="upper-line"
-        class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-blue-300/0 via-blue-300/70 to-blue-300/0 animate-bounce"
+        class="absolute -top-px left-20 right-11 h-px bg-linear-to-r from-blue-300/0 via-blue-300/70 to-blue-300/0 animate-bounce"
       ></div>
       <div
         id="bottom-line"
-        class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
+        class="absolute -bottom-px left-11 right-20 h-px bg-linear-to-r from-blue-400/0 via-blue-800 dark:via-blue-400 to-blue-400/0 animate-bounce"
       ></div>
       <pre class="text-l md:text-2xl font-mono py-2 px-5 flex justify-center dark:shadow-[0px_0px_35px_rgb(125,211,252,0.15)] rounded-md ring-1 ring-sky-950 select-all">
         <div
           aria-hidden="true"
-          class="hidden dark:block absolute inset-0 bg-gradient-to-tr from-blue-300 rounded-md via-blue-300/70 to-blue-300 opacity-5 pointer-events-none"
+          class="hidden dark:block absolute inset-0 bg-linear-to-tr from-blue-300 rounded-md via-blue-300/70 to-blue-300 opacity-5 pointer-events-none"
         />
         <span class="dark:text-cyan-200 text-cyan-600">{props.manager}</span> {" " + props.command}
       </pre>

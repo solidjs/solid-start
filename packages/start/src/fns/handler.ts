@@ -133,18 +133,14 @@ export async function handleServerFunction(h3Event: H3Event) {
       // forward headers
       if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
       // forward non-redirect statuses
-      if (
-        (x as any).status &&
-        (!instance || (x as any).status < 300 || (x as any).status >= 400)
-      )
+      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400))
         h3Event.res.status = (x as any).status;
       if ((x as any).customBody) {
         x = await (x as any).customBody();
       } else if ((x as any).body == null) x = null;
       h3Event.res.headers.set("X-Error", "true");
     } else if (instance) {
-      const error =
-        x instanceof Error ? x.message : typeof x === "string" ? x : "true";
+      const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
 
       h3Event.res.headers.set("X-Error", toHeaderValue(error));
     } else {
@@ -196,12 +192,7 @@ function getRefererLocation(request: Request, url: URL) {
   return new URL(import.meta.env.BASE_URL, url.origin).toString();
 }
 
-async function handleNoJS(
-  result: any,
-  request: Request,
-  parsed: any[],
-  thrown?: boolean,
-) {
+async function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
   const url = new URL(request.url);
   const isError = result instanceof Error;
   let statusCode = 302;
@@ -211,10 +202,7 @@ async function handleNoJS(
     if (result.headers.has("Location")) {
       headers.set(
         `Location`,
-        new URL(
-          result.headers.get("Location")!,
-          url.origin + import.meta.env.BASE_URL,
-        ).toString(),
+        new URL(result.headers.get("Location")!, url.origin + import.meta.env.BASE_URL).toString(),
       );
       statusCode = getExpectedRedirectStatus(result);
     } else {
@@ -225,9 +213,7 @@ async function handleNoJS(
     // the body is dropped from the redirect, so don't advertise its type
     headers.delete("Content-Type");
     // mirror the JS path: the flash cookie carries the value, not the Response
-    result = (result as any).customBody
-      ? await (result as any).customBody()
-      : null;
+    result = (result as any).customBody ? await (result as any).customBody() : null;
   } else
     headers = new Headers({
       Location: getRefererLocation(request, url),
@@ -269,9 +255,13 @@ export function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // 	useH3Internals = true;
   // 	sourceEvent.nativeEvent.node.req.headers.cookie = "";
   // }
-  SetCookies.forEach((cookie) => {
+  SetCookies.forEach(cookie => {
     if (!cookie) return;
-    const { maxAge, expires, name, value } = parseSetCookie(cookie);
+    // `parseSetCookie` returns undefined for forbidden cookie names and for
+    // cookies with an empty name and value.
+    const parsed = parseSetCookie(cookie);
+    if (!parsed) return;
+    const { maxAge, expires, name, value } = parsed;
     if (maxAge != null && maxAge <= 0) {
       delete cookies[name];
       return;
@@ -290,10 +280,7 @@ export function createSingleFlightHeaders(sourceEvent: FetchEvent) {
 
   return headers;
 }
-async function handleSingleFlight(
-  sourceEvent: FetchEvent,
-  result: any,
-): Promise<Response> {
+async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
   let revalidate: string[];
   let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
   if (result instanceof Response) {
