@@ -245,7 +245,11 @@ export function createSingleFlightHeaders(sourceEvent: FetchEvent) {
   // }
   SetCookies.forEach((cookie) => {
     if (!cookie) return;
-    const { maxAge, expires, name, value } = parseSetCookie(cookie);
+    // `parseSetCookie` returns undefined for forbidden cookie names and for
+    // cookies with an empty name and value.
+    const parsed = parseSetCookie(cookie);
+    if (!parsed) return;
+    const { maxAge, expires, name, value } = parsed;
     if (maxAge != null && maxAge <= 0) {
       delete cookies[name];
       return;
