@@ -1,5 +1,5 @@
-import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start/router";
+import { createRouter } from "@solidjs/router";
+import { fileRoutes } from "@solidjs/start/router";
 import { Loading } from "solid-js";
 import EditButton from "~/components/EditButton";
 import NoteList from "~/components/NoteList";
@@ -7,11 +7,15 @@ import { getNotes } from "~/lib/api";
 import "./app.css";
 import SearchField from "./components/SearchField";
 
+const Router = createRouter({
+  routes: fileRoutes,
+  preload: ({ location }) => getNotes(String(location.query.searchText || "")),
+});
+
 export default function App() {
   return (
-    <Router
-      rootPreload={({ location }) => getNotes(String(location.query.searchText || ""))}
-      root={props => (
+    <Router>
+      {props => (
         <div class="main">
           <section class="col sidebar">
             <section class="sidebar-header">
@@ -42,8 +46,6 @@ export default function App() {
           </section>
         </div>
       )}
-    >
-      <FileRoutes />
     </Router>
   );
 }

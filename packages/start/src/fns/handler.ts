@@ -12,7 +12,7 @@ import { createFlightDataCollector, createNoJSHandler } from "@solidjs/router/se
 import "solid-start:server-fn-manifest";
 
 import { getFetchEvent } from "../server/fetchEvent.ts";
-import { createRoutes } from "../router.tsx";
+import { fileRoutes } from "../router.tsx";
 import type { FetchEvent } from "../server/types.ts";
 
 let base = import.meta.env.BASE_URL ?? "/";
@@ -21,7 +21,7 @@ if (base.endsWith("/")) base = base.slice(0, -1);
 // Single-flight: the router's preload runner produces the revalidated route
 // data for the post-mutation URL straight off the file-system route tree —
 // no app render involved.
-const collectFlightData = createFlightDataCollector({ routes: createRoutes, base });
+const collectFlightData = createFlightDataCollector({ routes: fileRoutes, base });
 
 // No-JS form posts redirect back (303) with the outcome in the router's
 // flash cookie; the router seeds submission state from it on the next SSR.

@@ -1,13 +1,15 @@
-import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start/router";
+import { createRouter } from "@solidjs/router";
+import { fileRoutes } from "@solidjs/start/router";
 import { Loading } from "solid-js";
 import "./app.css";
 import Nav from "./components/nav";
 
+const Router = createRouter({ routes: fileRoutes });
+
 export default function App() {
   return (
-    <Router
-      root={props => (
+    <Router>
+      {props => (
         <>
           <Nav />
           <Loading fallback={<div class="news-list-nav">Loading...</div>}>
@@ -15,8 +17,6 @@ export default function App() {
           </Loading>
         </>
       )}
-    >
-      <FileRoutes />
     </Router>
   );
 }

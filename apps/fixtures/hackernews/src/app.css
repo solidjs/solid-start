@@ -45,7 +45,9 @@ a {
   color: #fff;
 }
 
-.header a.active {
+/* Router 1.0 marks exact-or-prefix matched anchors with `data-active`
+   (the root path only ever matches exactly, so "/" doesn't stay lit). */
+.header a[data-active] {
   color: #fff;
   font-weight: 400;
 }

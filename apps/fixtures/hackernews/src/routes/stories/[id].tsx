@@ -1,4 +1,4 @@
-import { A, type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
+import { type RouteDefinition, type RouteSectionProps } from "@solidjs/router";
 import { For, Show, createMemo } from "solid-js";
 import Comment from "~/components/comment";
 import { getStory } from "~/lib/api";
@@ -21,7 +21,7 @@ export default function Story(props: RouteSectionProps) {
           <span class="host">({story().domain})</span>
         </Show>
         <p class="meta">
-          {story().points} points | by <A href={`/users/${story().user}`}>{story().user}</A>{" "}
+          {story().points} points | by <a href={`/users/${story().user}`}>{story().user}</a>{" "}
           {story().time_ago} ago
         </p>
       </div>

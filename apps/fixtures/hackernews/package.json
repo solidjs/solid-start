@@ -8,10 +8,10 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@solidjs/router": "0.17.0-next.6",
+    "@solidjs/router": "1.0.0-next.8",
     "@solidjs/start": "workspace:*",
-    "@solidjs/web": "2.0.0-beta.21",
-    "solid-js": "2.0.0-beta.21",
+    "@solidjs/web": "2.0.0-beta.26",
+    "solid-js": "2.0.0-beta.26",
     "vite": "^8.0.0"
   },
   "engines": {

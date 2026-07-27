@@ -5,7 +5,6 @@ import type { JSX } from "@solidjs/web";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 
-import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
@@ -190,9 +189,10 @@ export function createHandler(
 export async function createPageEvent(ctx: FetchEvent) {
   ctx.response.headers.set("Content-Type", "text/html");
   // No-JS submission seeding is the router's now: it reads (and clears) the
-  // flash cookie itself during SSR initialization.
+  // flash cookie itself during SSR initialization. The route tree no longer
+  // rides on the event either — apps hand `fileRoutes` to `createRouter`,
+  // which shares one immutable tree across every request.
   const pageEvent: PageEvent = Object.assign(ctx, {
-    routes: createRoutes(),
     complete: false,
     $islands: new Set<string>(),
   });
