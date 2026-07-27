@@ -9,12 +9,11 @@ import solid, {
   type ServerFunctionsOptions,
 } from "vite-plugin-solid";
 import { boundaryModules } from "./boundary-modules.ts";
-import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
+import { VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
-import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
-import { fsRoutes } from "./fs-routes/index.ts";
-import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
+import { PageFileSystemRouter } from "filesystem-routing";
+import { DEFAULT_EXTENSIONS, fileRoutes } from "filesystem-routing/vite";
 import { parseIdQuery } from "./utils.ts";
 
 export interface SolidStartOptions {
@@ -56,6 +55,22 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const handlers = {
     client: `${start.appRoot}/entry-client${entryExtension}`,
     server: `${start.appRoot}/entry-server${entryExtension}`,
+  };
+  const routers = {
+    // The browser routes and renders pages.
+    [VITE_ENVIRONMENTS.client]: new PageFileSystemRouter({
+      dir: absolute(routeDir, root),
+      extensions,
+    }),
+    // The server additionally serves `GET`/`POST` exports as request
+    // handlers, and in SPA mode routes without ever rendering, so page
+    // modules stay out of the server bundle.
+    [VITE_ENVIRONMENTS.server]: new PageFileSystemRouter({
+      dir: absolute(routeDir, root),
+      extensions,
+      httpMethods: true,
+      components: start.ssr,
+    }),
   };
   return [
     {
@@ -100,6 +115,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
       async config(config, env) {
+        // The route modules are added to this input by the file-routes
+        // plugin, which owns the ids they are loaded from.
         const clientInput = [handlers.client];
         const bundledDev = env.command === "serve" && !!config.experimental?.bundledDev;
         if (bundledDev) {
@@ -113,19 +130,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         const clientEntryUrl = bundledDev
           ? `assets/${basename(handlers.client, entryExtension)}.js`
           : handlers.client;
-        if (env.command === "build") {
-          const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
-          for (const route of await clientRouter.getRoutes()) {
-            for (const [key, value] of Object.entries(route)) {
-              if (value && key.startsWith("$") && !key.startsWith("$$")) {
-                function toRouteId(route: any) {
-                  return `${route.src}?${route.pick.map((p: string) => `pick=${p}`).join("&")}`;
-                }
-                clientInput.push(toRouteId(value));
-              }
-            }
-          }
-        }
         return {
           appType: "custom",
           build: { assetsDir: "_build/assets" },
@@ -227,21 +231,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
     },
-    fsRoutes({
-      routers: {
-        client: new SolidStartClientFileRouter({
-          dir: absolute(routeDir, root),
-          extensions,
-        }),
-        ssr: new SolidStartServerFileRouter({
-          dir: absolute(routeDir, root),
-          extensions,
-          dataOnly: !start.ssr,
-        }),
-      },
-    }),
+    fileRoutes({ routers, buildInputs: VITE_ENVIRONMENTS.client }),
     envPlugin(options?.env),
-    // Must be placed after fsRoutes, as treeShake will remove the
+    // Must be placed after fileRoutes, as treeShake will remove the
     // server fn exports added in by this plugin
     serverFunctions({
       manifest: VIRTUAL_MODULES.serverFnManifest,
