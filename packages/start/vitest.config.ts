@@ -13,6 +13,8 @@ import { VIRTUAL_MODULES } from "./src/config/constants.ts";
 function virtualModuleStubs() {
   const stubs: Record<string, string> = {
     [VIRTUAL_MODULES.serovalPlugins]: "export default globalThis.SEROVAL_PLUGINS_STUB ?? [];",
+    [VIRTUAL_MODULES.getManifest]:
+      "export const getManifest = () => ({ getAssets: async () => [] });",
   };
   return {
     name: "solid-start:test-virtual-module-stubs",
@@ -27,6 +29,12 @@ function virtualModuleStubs() {
 
 export default defineConfig({
   plugins: [virtualModuleStubs()],
+  // A few specs reach modules that import `.tsx` files for their non-JSX
+  // exports. There is no Solid JSX compiler here, so point the transform at a
+  // placeholder factory that is only ever parsed, never called.
+  oxc: {
+    jsx: { runtime: "classic", pragma: "__jsx", pragmaFrag: "__jsxFragment" },
+  },
   test: {
     globals: true,
     environment: "node",
