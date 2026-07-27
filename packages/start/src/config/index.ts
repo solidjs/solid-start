@@ -380,7 +380,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
-    devServer(handlers.server),
+    devServer(handlers.server, start.middleware),
     solid({
       ...start.solid,
       ssr: true,
