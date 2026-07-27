@@ -1,9 +1,20 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { isHtmlResponse, resolvePreviewServerEntry } from "./dev-server.ts";
+import type { ServerResponse } from "node:http";
+import type { Connect } from "vite";
+
+import {
+  headerFromWriteHead,
+  hmrRecoveryMiddleware,
+  injectHmrRecovery,
+  isHtmlErrorResponse,
+  isHtmlResponse,
+  resolvePreviewServerEntry,
+  withoutContentLength,
+} from "./dev-server.ts";
 
 const temporaryDirectories: string[] = [];
 
@@ -62,5 +73,214 @@ describe("isHtmlResponse", () => {
 
   it("does not identify a response without a content type as HTML", () => {
     expect(isHtmlResponse(new Response())).toBe(false);
+  });
+});
+
+describe("injectHmrRecovery", () => {
+  it.each(["</head>", "</body>", "</html>"])("injects the script before %s", closingTag => {
+    const html = `<!DOCTYPE html><html><head><title>Error</title>${closingTag}`;
+    const injected = injectHmrRecovery(html);
+
+    expect(injected).toContain("/@vite/client");
+    expect(injected.indexOf("createHotContext")).toBeLessThan(injected.lastIndexOf(closingTag));
+  });
+
+  it("injects into the last closing tag so the script is not left inside a nested document", () => {
+    const html = "<html><head></head><body><pre>&lt;/head&gt;</pre></body></html>";
+
+    expect(injectHmrRecovery(html)).toMatch(/createHotContext[\s\S]*<\/script><\/head>/);
+  });
+
+  it("appends the script when there is nothing to inject before", () => {
+    expect(injectHmrRecovery("boom")).toMatch(/^boom<script/);
+  });
+
+  it("leaves a page that already talks to the HMR client alone", () => {
+    const html = `<html><head><script type="module" src="/@vite/client"></script></head></html>`;
+
+    expect(injectHmrRecovery(html)).toBe(html);
+  });
+});
+
+describe("isHtmlErrorResponse", () => {
+  it("recognizes an HTML server error", () => {
+    expect(isHtmlErrorResponse(500, "text/html; charset=utf-8")).toBe(true);
+  });
+
+  it.each([
+    [200, "text/html"],
+    [404, "text/html"],
+    [500, "application/json"],
+    [500, undefined],
+  ])("ignores %i %s", (status, contentType) => {
+    expect(isHtmlErrorResponse(status, contentType)).toBe(false);
+  });
+});
+
+describe("headerFromWriteHead", () => {
+  it("reads a header given as an object", () => {
+    const args = [500, "Internal Server Error", { "Content-Type": "text/html" }];
+
+    expect(headerFromWriteHead(args, "content-type")).toBe("text/html");
+  });
+
+  it("reads a header given as a flat array", () => {
+    const args = [500, ["content-length", "12", "content-type", "text/html"]];
+
+    expect(headerFromWriteHead(args, "content-type")).toBe("text/html");
+  });
+
+  it("returns undefined when the header is absent", () => {
+    expect(headerFromWriteHead([500, {}], "content-type")).toBeUndefined();
+  });
+
+  it("does not mistake the status message for headers", () => {
+    expect(headerFromWriteHead([500, "content-type"], "content-type")).toBeUndefined();
+  });
+});
+
+describe("withoutContentLength", () => {
+  it("removes the header from an object without touching the rest", () => {
+    const args = [
+      500,
+      "Internal Server Error",
+      { "Content-Length": "12", "Content-Type": "text/html" },
+    ];
+
+    expect(withoutContentLength(args)).toEqual([
+      500,
+      "Internal Server Error",
+      { "Content-Type": "text/html" },
+    ]);
+  });
+
+  it("removes the name and its value from a flat array", () => {
+    const args = [500, ["content-length", "12", "content-type", "text/html"]];
+
+    expect(withoutContentLength(args)).toEqual([500, ["content-type", "text/html"]]);
+  });
+
+  it("leaves arguments that carry no headers alone", () => {
+    expect(withoutContentLength([500])).toEqual([500]);
+  });
+});
+
+describe("hmrRecoveryMiddleware", () => {
+  function collect(chunk: string | ArrayBufferView) {
+    return typeof chunk === "string"
+      ? Buffer.from(chunk, "utf8")
+      : Buffer.from(chunk.buffer, chunk.byteOffset, chunk.byteLength);
+  }
+
+  function createResponse() {
+    const headers = new Map<string, unknown>();
+    const chunks: Array<Buffer> = [];
+    const response = {
+      statusCode: 200,
+      writeHeadArgs: undefined as Array<unknown> | undefined,
+      getHeader: (name: string) => headers.get(name.toLowerCase()),
+      setHeader(name: string, value: unknown) {
+        headers.set(name.toLowerCase(), value);
+        return response;
+      },
+      writeHead(...args: Array<unknown>) {
+        response.writeHeadArgs = args;
+        return response;
+      },
+      write(chunk: string | ArrayBufferView) {
+        chunks.push(collect(chunk));
+        return true;
+      },
+      end(chunk?: unknown) {
+        // Deliberately does not go through `write`: the real `end` writes to the socket directly,
+        // and delegating would feed the chunk straight back into the middleware's wrapper.
+        if (typeof chunk === "string" || ArrayBuffer.isView(chunk)) chunks.push(collect(chunk));
+        return response;
+      },
+      get body() {
+        return Buffer.concat(chunks).toString("utf8");
+      },
+    };
+
+    return response;
+  }
+
+  function run(response: ReturnType<typeof createResponse>, accept = "text/html") {
+    const next = vi.fn();
+    hmrRecoveryMiddleware(
+      { headers: { accept } } as Connect.IncomingMessage,
+      response as unknown as ServerResponse,
+      next as unknown as Connect.NextFunction,
+    );
+
+    return next;
+  }
+
+  it("injects the recovery script into an HTML server error and corrects the length", () => {
+    const response = createResponse();
+    run(response);
+
+    const page = "<html><head></head><body>boom</body></html>";
+    response.writeHead(500, "Internal Server Error", [
+      "content-length",
+      String(page.length),
+      "content-type",
+      "text/html; charset=utf-8",
+    ]);
+    response.end(new TextEncoder().encode(page));
+
+    expect(response.body).toContain("createHotContext");
+    expect(response.getHeader("content-length")).toBe(Buffer.byteLength(response.body));
+    expect(response.writeHeadArgs).toEqual([
+      500,
+      "Internal Server Error",
+      ["content-type", "text/html; charset=utf-8"],
+    ]);
+  });
+
+  it("buffers a body streamed across several chunks", () => {
+    const response = createResponse();
+    run(response);
+
+    response.writeHead(500, { "content-type": "text/html" });
+    response.write("<html><head></head><body>");
+    response.write("boom");
+    response.end("</body></html>");
+
+    expect(response.body).toContain("createHotContext");
+    expect(response.body.startsWith("<html><head>")).toBe(true);
+  });
+
+  it("leaves a successful page untouched", () => {
+    const response = createResponse();
+    run(response);
+
+    response.writeHead(200, { "content-type": "text/html" });
+    response.end("<html><head></head><body>fine</body></html>");
+
+    expect(response.body).toBe("<html><head></head><body>fine</body></html>");
+    expect(response.getHeader("content-length")).toBeUndefined();
+  });
+
+  it("leaves a non-HTML server error untouched", () => {
+    const response = createResponse();
+    run(response);
+
+    response.writeHead(500, { "content-type": "application/json" });
+    response.end(`{"error":true}`);
+
+    expect(response.body).toBe(`{"error":true}`);
+  });
+
+  it("skips requests that do not accept HTML", () => {
+    const response = createResponse();
+    const next = run(response, "application/json");
+
+    expect(next).toHaveBeenCalled();
+
+    response.writeHead(500, { "content-type": "text/html" });
+    response.end("<html><head></head></html>");
+
+    expect(response.body).toBe("<html><head></head></html>");
   });
 });
