@@ -10,8 +10,8 @@
   "dependencies": {
     "@solidjs/router": "1.0.0-next.8",
     "@solidjs/start": "workspace:*",
-    "@solidjs/web": "2.0.0-beta.25",
-    "solid-js": "2.0.0-beta.25",
+    "@solidjs/web": "2.0.0-beta.26",
+    "solid-js": "2.0.0-beta.26",
     "vite": "^8.0.0"
   },
   "engines": {

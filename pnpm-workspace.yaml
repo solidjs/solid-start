@@ -16,7 +16,7 @@ ignoredBuiltDependencies:
   - prisma
 
 minimumReleaseAgeExclude:
-  - '@dom-expressions/babel-plugin-jsx@0.50.0-next.25'
+  - '@dom-expressions/babel-plugin-jsx@0.50.0-next.25 || 0.50.0-next.31'
   - '@dom-expressions/compiler-darwin-arm64@0.50.0-next.25 || 0.50.0-next.29'
   - '@dom-expressions/compiler-darwin-x64@0.50.0-next.25 || 0.50.0-next.29'
   - '@dom-expressions/compiler-linux-arm64-gnu@0.50.0-next.25 || 0.50.0-next.29'
@@ -25,10 +25,10 @@ minimumReleaseAgeExclude:
   - '@dom-expressions/compiler-win32-x64-msvc@0.50.0-next.25 || 0.50.0-next.29'
   - '@dom-expressions/compiler@0.50.0-next.25 || 0.50.0-next.29'
   - '@solidjs/router@1.0.0-next.8'
-  - '@solidjs/signals@2.0.0-beta.25'
-  - '@solidjs/web@2.0.0-beta.25'
-  - babel-preset-solid@2.0.0-beta.25
-  - solid-js@2.0.0-beta.25
+  - '@solidjs/signals@2.0.0-beta.26'
+  - '@solidjs/web@2.0.0-beta.26'
+  - babel-preset-solid@2.0.0-beta.26
+  - solid-js@2.0.0-beta.26
   - vite-plugin-solid@3.0.0-next.16
 
 onlyBuiltDependencies:
