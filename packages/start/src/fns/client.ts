@@ -19,7 +19,6 @@ async function createRequest(base: string, id: string, instance: string, options
     },
   });
   if (import.meta.env.DEV) {
-    console.log(pushRequest);
     pushRequest(id, instance, request.clone());
   }
   const response = await fetch(request);
