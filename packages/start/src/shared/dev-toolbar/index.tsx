@@ -179,7 +179,6 @@ export function DevToolbar(props: DevToolbarProps) {
   createEffect(() => {
     onCleanup(
       captureServerFunctionCall(call => {
-        console.log(call);
         if (call.type === "request") {
           setStore("instances", call.instance, value => {
             return {
