@@ -30,6 +30,7 @@ minimumReleaseAgeExclude:
   - babel-preset-solid@2.0.0-beta.21
   - solid-js@2.0.0-beta.21
   - vite-plugin-solid@3.0.0-next.14
+  - filesystem-routing@0.1.1
 
 onlyBuiltDependencies:
   - '@parcel/watcher'

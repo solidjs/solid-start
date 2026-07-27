@@ -1,4 +1,4 @@
-/// <reference types="filesystem-routes/types" />
+/// <reference types="filesystem-routing/types" />
 import fileRoutes, { pageRoutes as nestedPageRoutes } from "virtual:file-routes";
 import { createRouter } from "radix3";
 
