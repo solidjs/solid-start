@@ -7,13 +7,12 @@ import type { ServerResponse } from "node:http";
 import type { Connect } from "vite";
 
 import {
-  headerFromWriteHead,
+  HMR_RECOVERY_SCRIPT,
+  inspectWriteHead,
   hmrRecoveryMiddleware,
-  injectHmrRecovery,
   isHtmlErrorResponse,
   isHtmlResponse,
   resolvePreviewServerEntry,
-  withoutContentLength,
 } from "./dev-server.ts";
 
 const temporaryDirectories: string[] = [];
@@ -76,32 +75,6 @@ describe("isHtmlResponse", () => {
   });
 });
 
-describe("injectHmrRecovery", () => {
-  it.each(["</head>", "</body>", "</html>"])("injects the script before %s", closingTag => {
-    const html = `<!DOCTYPE html><html><head><title>Error</title>${closingTag}`;
-    const injected = injectHmrRecovery(html);
-
-    expect(injected).toContain("/@vite/client");
-    expect(injected.indexOf("createHotContext")).toBeLessThan(injected.lastIndexOf(closingTag));
-  });
-
-  it("injects into the last closing tag so the script is not left inside a nested document", () => {
-    const html = "<html><head></head><body><pre>&lt;/head&gt;</pre></body></html>";
-
-    expect(injectHmrRecovery(html)).toMatch(/createHotContext[\s\S]*<\/script><\/head>/);
-  });
-
-  it("appends the script when there is nothing to inject before", () => {
-    expect(injectHmrRecovery("boom")).toMatch(/^boom<script/);
-  });
-
-  it("leaves a page that already talks to the HMR client alone", () => {
-    const html = `<html><head><script type="module" src="/@vite/client"></script></head></html>`;
-
-    expect(injectHmrRecovery(html)).toBe(html);
-  });
-});
-
 describe("isHtmlErrorResponse", () => {
   it("recognizes an HTML server error", () => {
     expect(isHtmlErrorResponse(500, "text/html; charset=utf-8")).toBe(true);
@@ -117,51 +90,44 @@ describe("isHtmlErrorResponse", () => {
   });
 });
 
-describe("headerFromWriteHead", () => {
-  it("reads a header given as an object", () => {
+describe("inspectWriteHead", () => {
+  it("reads the content type from headers given as an object", () => {
     const args = [500, "Internal Server Error", { "Content-Type": "text/html" }];
 
-    expect(headerFromWriteHead(args, "content-type")).toBe("text/html");
+    expect(inspectWriteHead(args).contentType).toBe("text/html");
   });
 
-  it("reads a header given as a flat array", () => {
+  it("reads the content type from headers given as a flat array", () => {
     const args = [500, ["content-length", "12", "content-type", "text/html"]];
 
-    expect(headerFromWriteHead(args, "content-type")).toBe("text/html");
-  });
-
-  it("returns undefined when the header is absent", () => {
-    expect(headerFromWriteHead([500, {}], "content-type")).toBeUndefined();
+    expect(inspectWriteHead(args).contentType).toBe("text/html");
   });
 
   it("does not mistake the status message for headers", () => {
-    expect(headerFromWriteHead([500, "content-type"], "content-type")).toBeUndefined();
+    expect(inspectWriteHead([500, "content-type"]).contentType).toBeUndefined();
   });
-});
 
-describe("withoutContentLength", () => {
-  it("removes the header from an object without touching the rest", () => {
-    const args = [
-      500,
-      "Internal Server Error",
-      { "Content-Length": "12", "Content-Type": "text/html" },
-    ];
+  it("removes the length from an object without touching the rest", () => {
+    const args = [500, "OK", { "Content-Length": "12", "Content-Type": "text/html" }];
 
-    expect(withoutContentLength(args)).toEqual([
+    expect(inspectWriteHead(args).withoutContentLength).toEqual([
       500,
-      "Internal Server Error",
+      "OK",
       { "Content-Type": "text/html" },
     ]);
   });
 
-  it("removes the name and its value from a flat array", () => {
+  it("removes the length and its value from a flat array", () => {
     const args = [500, ["content-length", "12", "content-type", "text/html"]];
 
-    expect(withoutContentLength(args)).toEqual([500, ["content-type", "text/html"]]);
+    expect(inspectWriteHead(args).withoutContentLength).toEqual([
+      500,
+      ["content-type", "text/html"],
+    ]);
   });
 
   it("leaves arguments that carry no headers alone", () => {
-    expect(withoutContentLength([500])).toEqual([500]);
+    expect(inspectWriteHead([500]).withoutContentLength).toEqual([500]);
   });
 });
 
@@ -183,18 +149,25 @@ describe("hmrRecoveryMiddleware", () => {
         headers.set(name.toLowerCase(), value);
         return response;
       },
+      headersSent: false,
+      removeHeader(name: string) {
+        headers.delete(name.toLowerCase());
+      },
       writeHead(...args: Array<unknown>) {
         response.writeHeadArgs = args;
+        response.headersSent = true;
         return response;
       },
       write(chunk: string | ArrayBufferView) {
         chunks.push(collect(chunk));
+        response.headersSent = true;
         return true;
       },
       end(chunk?: unknown) {
         // Deliberately does not go through `write`: the real `end` writes to the socket directly,
         // and delegating would feed the chunk straight back into the middleware's wrapper.
         if (typeof chunk === "string" || ArrayBuffer.isView(chunk)) chunks.push(collect(chunk));
+        response.headersSent = true;
         return response;
       },
       get body() {
@@ -216,7 +189,7 @@ describe("hmrRecoveryMiddleware", () => {
     return next;
   }
 
-  it("injects the recovery script into an HTML server error and corrects the length", () => {
+  it("appends the recovery script to an HTML server error", () => {
     const response = createResponse();
     run(response);
 
@@ -229,8 +202,21 @@ describe("hmrRecoveryMiddleware", () => {
     ]);
     response.end(new TextEncoder().encode(page));
 
-    expect(response.body).toContain("createHotContext");
-    expect(response.getHeader("content-length")).toBe(Buffer.byteLength(response.body));
+    expect(response.body).toBe(page + HMR_RECOVERY_SCRIPT);
+  });
+
+  it("drops the announced length so the longer body can go out chunked", () => {
+    const response = createResponse();
+    run(response);
+
+    response.writeHead(500, "Internal Server Error", [
+      "content-length",
+      "42",
+      "content-type",
+      "text/html; charset=utf-8",
+    ]);
+    response.end("<html></html>");
+
     expect(response.writeHeadArgs).toEqual([
       500,
       "Internal Server Error",
@@ -238,7 +224,20 @@ describe("hmrRecoveryMiddleware", () => {
     ]);
   });
 
-  it("buffers a body streamed across several chunks", () => {
+  it("removes a length set without writeHead before the headers go out", () => {
+    const response = createResponse();
+    run(response);
+
+    response.statusCode = 500;
+    response.setHeader("content-type", "text/html");
+    response.setHeader("content-length", "13");
+    response.end("<html></html>");
+
+    expect(response.getHeader("content-length")).toBeUndefined();
+    expect(response.body).toBe("<html></html>" + HMR_RECOVERY_SCRIPT);
+  });
+
+  it("streams a body written across several chunks straight through", () => {
     const response = createResponse();
     run(response);
 
@@ -247,8 +246,7 @@ describe("hmrRecoveryMiddleware", () => {
     response.write("boom");
     response.end("</body></html>");
 
-    expect(response.body).toContain("createHotContext");
-    expect(response.body.startsWith("<html><head>")).toBe(true);
+    expect(response.body).toBe("<html><head></head><body>boom</body></html>" + HMR_RECOVERY_SCRIPT);
   });
 
   it("leaves a successful page untouched", () => {

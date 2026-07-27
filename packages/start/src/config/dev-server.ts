@@ -184,7 +184,7 @@ function removeHtmlMiddlewares(server: ViteDevServer) {
  * change up, so reloading straight away tends to render the same error again. Retrying briefly is
  * what makes the recovery reliable; failing quietly leaves the next update to try again.
  */
-const HMR_RECOVERY_SCRIPT = `<script type="module">
+export const HMR_RECOVERY_SCRIPT = `<script type="module">
   import { createHotContext } from "/@vite/client";
 
   let pending = false;
@@ -208,73 +208,44 @@ const HMR_RECOVERY_SCRIPT = `<script type="module">
 </script>`;
 
 /**
- * Appends {@link HMR_RECOVERY_SCRIPT} to an SSR error page so that it recovers on the next update.
+ * Reads the content type out of `writeHead` arguments and drops `content-length` from them.
  *
- * @param html the error page rendered by the server
- * @returns the error page, unchanged when it already talks to the HMR client
- */
-export function injectHmrRecovery(html: string): string {
-  if (html.includes("/@vite/client")) return html;
-
-  for (const closingTag of ["</head>", "</body>", "</html>"]) {
-    const index = html.lastIndexOf(closingTag);
-    if (index !== -1) {
-      return html.slice(0, index) + HMR_RECOVERY_SCRIPT + html.slice(index);
-    }
-  }
-
-  return html + HMR_RECOVERY_SCRIPT;
-}
-
-/**
- * Reads a header out of the arguments given to `writeHead`, which may carry them as an object or as
- * a flat `[name, value, ...]` array. They are only applied to the response once the headers flush,
- * so they have to be read from here while the flush is still deferred.
- */
-export function headerFromWriteHead(args: Array<unknown>, name: string): string | undefined {
-  for (const argument of args.slice(1)) {
-    if (Array.isArray(argument)) {
-      for (let i = 0; i < argument.length - 1; i += 2) {
-        if (String(argument[i]).toLowerCase() === name) return String(argument[i + 1]);
-      }
-    } else if (argument && typeof argument === "object") {
-      for (const [key, value] of Object.entries(argument)) {
-        if (key.toLowerCase() === name) return String(value);
-      }
-    }
-  }
-
-  return undefined;
-}
-
-/**
- * Strips `content-length` from `writeHead` arguments so the rewritten body can set its own.
+ * `writeHead` sends the headers immediately, and it may carry them as an object or as a flat
+ * `[name, value, ...]` array that never reaches `getHeader`, so this is the only chance to see or
+ * change them. Dropping the length rather than recomputing it lets Node fall back to chunked
+ * encoding, so the body can stream through untouched instead of being buffered up to measure it.
  *
  * @param args the arguments `writeHead` was called with
- * @returns a copy of them, with the header removed from whichever form it was given in
+ * @returns the content type it announced, and a copy of the arguments without the length
  */
-export function withoutContentLength(args: Array<unknown>): Array<unknown> {
-  return args.map((argument, index) => {
-    if (index === 0) return argument;
+export function inspectWriteHead(args: Array<unknown>) {
+  let contentType: string | undefined;
 
-    if (Array.isArray(argument)) {
-      const kept: Array<unknown> = [];
-      for (let i = 0; i < argument.length - 1; i += 2) {
-        if (String(argument[i]).toLowerCase() !== "content-length") {
-          kept.push(argument[i], argument[i + 1]);
-        }
-      }
-      return kept;
-    }
+  const withoutContentLength = args.map((argument, index) => {
+    const entries = index === 0 ? undefined : headerEntries(argument);
+    if (!entries) return argument;
 
-    if (argument && typeof argument === "object") {
-      return Object.fromEntries(
-        Object.entries(argument).filter(([key]) => key.toLowerCase() !== "content-length"),
-      );
-    }
+    const kept = entries.filter(([name, value]) => {
+      const header = String(name).toLowerCase();
+      if (header === "content-type") contentType ??= String(value);
+      return header !== "content-length";
+    });
 
-    return argument;
+    return Array.isArray(argument) ? kept.flat() : Object.fromEntries(kept);
   });
+
+  return { contentType, withoutContentLength };
+}
+
+/** Both header forms `writeHead` accepts, as pairs. */
+function headerEntries(argument: unknown): Array<[unknown, unknown]> | undefined {
+  if (Array.isArray(argument)) {
+    const pairs: Array<[unknown, unknown]> = [];
+    for (let i = 0; i < argument.length - 1; i += 2) pairs.push([argument[i], argument[i + 1]]);
+    return pairs;
+  }
+
+  return argument && typeof argument === "object" ? Object.entries(argument) : undefined;
 }
 
 export function isHtmlErrorResponse(status: number, contentType: unknown): boolean {
@@ -286,115 +257,45 @@ export function isHtmlErrorResponse(status: number, contentType: unknown): boole
 }
 
 /**
- * Buffers HTML error pages so {@link injectHmrRecovery} can rewrite them before they are flushed.
- *
- * Anything that is not an HTML 5xx passes straight through untouched: the decision is made from the
- * status and content type, which are known by the time the body is first written.
+ * Appends {@link HMR_RECOVERY_SCRIPT} to SSR error pages. Every other response is left alone.
  */
 export function hmrRecoveryMiddleware(
   req: Connect.IncomingMessage,
   res: ServerResponse,
   next: Connect.NextFunction,
 ) {
-  // Only documents can host the recovery script, and this keeps assets out of the buffer.
+  // Only documents can host the recovery script.
   if (!req.headers.accept?.includes("text/html")) return next();
 
   const originalWriteHead = res.writeHead.bind(res);
-  const originalWrite = res.write.bind(res);
   const originalEnd = res.end.bind(res);
+  let injecting: boolean | undefined;
 
-  let intercepting: boolean | undefined;
-  let pendingWriteHead: Array<any> | undefined;
-  const chunks: Array<Buffer> = [];
-
-  /** Hands the response back untouched, flushing whatever was buffered before giving up. */
-  function stopIntercepting() {
-    intercepting = false;
-    res.writeHead = originalWriteHead;
-    res.write = originalWrite;
-    res.end = originalEnd;
-
-    if (pendingWriteHead) originalWriteHead(...(pendingWriteHead as [number]));
-    for (const chunk of chunks) originalWrite(chunk);
-    pendingWriteHead = undefined;
-    chunks.length = 0;
-  }
-
-  /**
-   * The status and content type are known by the time the headers are sent, so the first call
-   * decides for the whole response. A body we cannot concatenate ends interception rather than
-   * corrupt it.
-   *
-   * @param body the chunk about to be written, when there is one
-   * @param writeHeadArgs headers still pending a flush, which win over the ones set on `res`
-   */
-  function shouldIntercept(body?: unknown, writeHeadArgs?: Array<unknown>): boolean {
-    intercepting ??= isHtmlErrorResponse(
-      typeof writeHeadArgs?.[0] === "number" ? writeHeadArgs[0] : res.statusCode,
-      (writeHeadArgs && headerFromWriteHead(writeHeadArgs, "content-type")) ??
-        res.getHeader("content-type"),
-    );
-    if (!intercepting || (body !== undefined && !isWritableBody(body))) stopIntercepting();
-
-    return intercepting;
-  }
-
-  // `writeHead` flushes the headers, which has to wait until the rewritten length is known.
   res.writeHead = function writeHead(...args: Array<any>) {
-    if (!shouldIntercept(undefined, args)) return originalWriteHead(...(args as [number]));
+    const { contentType, withoutContentLength } = inspectWriteHead(args);
+    injecting = isHtmlErrorResponse(
+      typeof args[0] === "number" ? args[0] : res.statusCode,
+      contentType ?? res.getHeader("content-type"),
+    );
 
-    pendingWriteHead = args;
-    return res;
+    return originalWriteHead(...((injecting ? withoutContentLength : args) as [number]));
   } as ServerResponse["writeHead"];
 
-  res.write = function write(chunk: any, ...rest: Array<any>) {
-    if (!shouldIntercept(chunk)) return originalWrite(chunk, ...rest);
-
-    chunks.push(toBuffer(chunk, rest));
-    callbackOf(rest)?.();
-    return true;
-  } as ServerResponse["write"];
-
   res.end = function end(chunk: any, ...rest: Array<any>) {
-    const body = isWritableBody(chunk) ? chunk : undefined;
-    if (!shouldIntercept(body)) return originalEnd(chunk, ...rest);
+    // A response that never called `writeHead` still has its status and headers on `res`.
+    injecting ??= isHtmlErrorResponse(res.statusCode, res.getHeader("content-type"));
+    if (!injecting) return originalEnd(chunk, ...rest);
 
-    if (body !== undefined) chunks.push(toBuffer(body, rest));
-
-    const html = injectHmrRecovery(Buffer.concat(chunks).toString("utf8"));
-    const rewritten = Buffer.from(html, "utf8");
-
-    res.setHeader("content-length", rewritten.byteLength);
-    if (pendingWriteHead) {
-      // Headers passed to `writeHead` win over `setHeader`, so the stale length goes out with them
-      // unless it is removed here first.
-      originalWriteHead(...(withoutContentLength(pendingWriteHead) as [number]));
+    if (!res.headersSent) res.removeHeader("content-length");
+    if (typeof chunk === "string" || ArrayBuffer.isView(chunk)) {
+      res.write(chunk, ...(rest.filter(argument => typeof argument === "string") as []));
     }
 
-    return originalEnd(rewritten, callbackOf([chunk, ...rest]));
+    const callback = [chunk, ...rest].find(argument => typeof argument === "function");
+    return originalEnd(HMR_RECOVERY_SCRIPT, callback as () => void);
   } as ServerResponse["end"];
 
   next();
-}
-
-/** Web stream bodies reach `write` as `Uint8Array`s rather than as Node buffers. */
-function isWritableBody(body: unknown): body is string | ArrayBufferView {
-  return typeof body === "string" || ArrayBuffer.isView(body);
-}
-
-function toBuffer(body: string | ArrayBufferView, rest: Array<unknown>): Buffer {
-  if (typeof body !== "string") {
-    return Buffer.from(body.buffer, body.byteOffset, body.byteLength);
-  }
-
-  const encoding = rest.find(argument => typeof argument === "string") as
-    | BufferEncoding
-    | undefined;
-  return Buffer.from(body, encoding ?? "utf8");
-}
-
-function callbackOf(args: Array<unknown>): (() => void) | undefined {
-  return args.find(argument => typeof argument === "function") as (() => void) | undefined;
 }
 
 /**
