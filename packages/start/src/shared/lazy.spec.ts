@@ -1,8 +1,15 @@
 import { createComponent, ErrorBoundary, Suspense } from "solid-js";
 import { renderToStream } from "solid-js/web";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import lazy from "./lazy.ts";
+// `lazy.ts` only touches these to attach a route's CSS/preload assets during
+// SSR; neither is available (or relevant) outside a Vite build.
+vi.mock("solid-start:get-manifest", () => ({
+  getManifest: () => ({ getAssets: async () => [] }),
+}));
+vi.mock("../server/assets/index.ts", () => ({ useAssets: () => {} }));
+
+const { default: lazy } = await import("./lazy.ts");
 
 /** Render `code` to a stream and resolve once Solid closes it, or reject on timeout. */
 function render(code: () => any, timeout = 1000) {
