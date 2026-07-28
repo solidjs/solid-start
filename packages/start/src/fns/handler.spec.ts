@@ -171,7 +171,7 @@ describe("createSingleFlightHeaders", () => {
   });
 });
 
-describe("handleServerFunction error hook", () => {
+describe("setServerFunctionErrorHandler", () => {
   const callThrowing = async (thrown: unknown) => {
     const request = new Request("http://localhost/_server", {
       method: "POST",
@@ -192,38 +192,52 @@ describe("handleServerFunction error hook", () => {
     return h3Event;
   };
 
-  beforeEach(() => {
+  const register = async (handler: ((thrown: unknown) => unknown) | undefined) => {
+    const { setServerFunctionErrorHandler } = await import("./error-handler.ts");
+    setServerFunctionErrorHandler(handler);
+  };
+
+  beforeEach(async () => {
     vi.clearAllMocks();
-    globalThis.__transformServerFnError = undefined;
+    await register(undefined);
   });
 
-  it("passes the thrown value to the hook", async () => {
+  it("passes the thrown value to the registered handler", async () => {
     const thrown = new Error("boom");
-    const hook = vi.fn(() => undefined);
-    globalThis.__transformServerFnError = hook;
+    const handler = vi.fn(() => undefined);
+    await register(handler);
 
     await callThrowing(thrown);
 
-    expect(hook).toHaveBeenCalledWith(thrown);
+    expect(handler).toHaveBeenCalledWith(thrown);
   });
 
-  it("serializes the replacement the hook returns", async () => {
-    globalThis.__transformServerFnError = () => new Error("replaced");
+  it("serializes the replacement the handler returns", async () => {
+    await register(() => new Error("replaced"));
 
     const h3Event = await callThrowing(new Error("boom"));
 
     expect(h3Event.res.headers.get("X-Error")).toBe("replaced");
   });
 
-  it("keeps the original error when the hook returns nothing", async () => {
-    globalThis.__transformServerFnError = () => undefined;
+  it("treats a Response the handler returns as control flow", async () => {
+    await register(() => new Response(null, { status: 403 }));
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.status).toBe(403);
+    expect(h3Event.res.headers.get("X-Error")).toBe("true");
+  });
+
+  it("keeps the original error when the handler returns nothing", async () => {
+    await register(() => undefined);
 
     const h3Event = await callThrowing(new Error("boom"));
 
     expect(h3Event.res.headers.get("X-Error")).toBe("boom");
   });
 
-  it("leaves the response untouched when no hook is registered", async () => {
+  it("leaves the response untouched when no handler is registered", async () => {
     const h3Event = await callThrowing(new Error("boom"));
 
     expect(h3Event.res.headers.get("X-Error")).toBe("boom");

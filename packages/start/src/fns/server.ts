@@ -2,6 +2,8 @@ import { getRequestEvent } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
 import { registerServerFunction } from "./registration.ts";
 
+export { setServerFunctionErrorHandler, type ServerFunctionErrorHandler } from "./error-handler.ts";
+
 interface Registration<T extends any[], R> {
   id: string;
   fn: (...args: T) => Promise<R>;
