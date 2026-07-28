@@ -18,6 +18,7 @@ ignoredBuiltDependencies:
 minimumReleaseAgeExclude:
   - srvx@0.12.4
   - h3@2.0.1-rc.26
+  - "@solidjs/router@1.0.0"
 
 onlyBuiltDependencies:
   - "@parcel/watcher"
