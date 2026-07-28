@@ -93,7 +93,21 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           try {
             const registry = (globalThis as any)[DEV_MANIFEST_REGISTRY_KEY];
             const resolver = registry?.[server.config.root];
+            if (!resolver) {
+              console.error(
+                `[solid-start] vite-plugin-solid's dev manifest registry has no resolver for root "${server.config.root}" ` +
+                  `(requested asset key "${key}"). The module's client assets cannot be resolved and hydration ` +
+                  "will fail for it. Typical causes: the dev server was not restarted after dependency changes, " +
+                  "or the install is stale.",
+              );
+            }
             const assets = resolver ? await resolver.resolve(key) : null;
+            if (resolver && assets == null) {
+              console.error(
+                `[solid-start] Dev manifest resolver returned no assets for key "${key}" (root "${server.config.root}"). ` +
+                  "The module's hydration preload entry will be missing.",
+              );
+            }
             res.setHeader("content-type", "application/json");
             res.setHeader("cache-control", "no-store");
             return res.end(JSON.stringify(assets));

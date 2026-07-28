@@ -28,7 +28,17 @@ async function resolveDevAssets(request: Request, key: string): Promise<any> {
   const url = new URL(DEV_MANIFEST_ENDPOINT, request.url);
   url.searchParams.set("key", key);
   const response = await fetch(url);
-  return response.ok ? response.json() : null;
+  if (!response.ok) {
+    // A silent null here strips the module's client assets from the SSR'd
+    // hydration asset map and hydration fails much later with a cryptic
+    // client-side error — report the miss where it happens.
+    console.error(
+      `[solid-start] Dev manifest request failed with status ${response.status} for module key "${key}" (${url.href}). ` +
+        "SSR will render without this module's client assets, so its hydration preload entry will be missing.",
+    );
+    return null;
+  }
+  return response.json();
 }
 
 async function resolveDevEntryStyles(
