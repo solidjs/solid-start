@@ -1,5 +1,18 @@
 # @solidjs/start
 
+## 2.0.0-rc.6
+
+### Minor Changes
+
+- bac24b2: Add a `serverFunctions.onError` option naming a module that observes and replaces what a server function threw, before it is serialized into the response
+
+### Patch Changes
+
+- 27c2877: Remove leftover debug `console.log` calls from the server functions inspector, which logged on every server function request in dev.
+- f15724b: Declare `@solidjs/router` as an optional peer dependency constrained to `>=0.16.0 <2.0.0-0`. Router v2 is expected to target Solid v2, so installing it alongside `@solidjs/start` v2 now surfaces a peer warning instead of silently producing an incompatible pairing. The peer is marked optional, so apps that do not use the router are unaffected.
+- 5c8612f: Apply cookies set on a returned or thrown response during single flight mutations. `redirect(to, { headers: { "Set-Cookie": ... } })` previously only reached the browser: the single flight re-render of the redirect target still ran with the old request cookies, so queries reading that cookie saw stale values. Those cookies are now merged into the request the re-render sees, matching what a browser round trip would have sent.
+- 83122ed: Reject server function calls when the response is a 5xx without an X-Error header, instead of resolving with the parsed error body
+
 ## 2.0.0-rc.5
 
 ### Minor Changes
