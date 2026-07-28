@@ -144,7 +144,24 @@ export interface SolidStartOptions {
    * Options controlling which files are processed as server functions
    * (inclusion / exclusion filters for the `"use server"` transform).
    */
-  serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
+  serverFunctions?: Pick<ServerFunctionsOptions, "filter"> & {
+    /**
+     * Path to a module whose default export is called with whatever a server
+     * function threw, before it is serialized into the response. Return a
+     * value to send it in place of what was thrown, or `undefined` to send the
+     * original.
+     *
+     * Naming the module here rather than registering a handler at runtime
+     * keeps the app in sole control of it: no dependency can reach into the
+     * running server and take over reporting.
+     *
+     * The module is bundled into the server only, so it may import server-only
+     * code such as a monitoring SDK.
+     *
+     * @example "src/server-fn-error.ts"
+     */
+    onError?: string;
+  };
 }
 
 const absolute = (path: string, root: string) =>
