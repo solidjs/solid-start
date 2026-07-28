@@ -8,6 +8,9 @@ export default defineConfig({
   },
   plugins: [
     solidStart({
+      serialization: {
+        plugins: "src/seroval-plugins.ts",
+      },
       env: {
         server: {
           load() {
