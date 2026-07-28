@@ -6,10 +6,12 @@
     "@solidjs/image": "0.0.0"
   },
   "changesets": [
+    "brave-hoops-listen",
     "bright-dogs-serve",
     "chilly-rabbits-lie",
     "eighty-jars-invite",
     "eleven-actors-nail",
+    "great-hooks-observe",
     "lemon-plugins-serialize",
     "lucky-moths-nonce",
     "lucky-pans-gather",
@@ -19,6 +21,9 @@
     "sour-knives-look",
     "spotty-jobs-relax",
     "spotty-moons-repeat",
+    "tall-donuts-smile",
+    "tidy-donkeys-cheat",
+    "tidy-donkeys-reject",
     "tidy-paths-resolve",
     "tricky-goats-cheer",
     "wild-pots-repeat"
