@@ -155,4 +155,17 @@ test.describe("server-function", () => {
       );
     }).toPass({ timeout: 15000 });
   });
+
+  test("should send the error the onError module returns in place of the thrown one", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-on-error");
+    // Retry the click until it registers post-hydration (clicks aren't auto-retried).
+    await expect(async () => {
+      await page.locator("#server-fn-test").click();
+      await expect(page.locator("#server-fn-test")).toContainText("replaced by onError", {
+        timeout: 1000,
+      });
+    }).toPass({ timeout: 15000 });
+  });
 });

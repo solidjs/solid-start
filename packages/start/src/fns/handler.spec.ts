@@ -18,6 +18,16 @@ vi.mock("solid-js/web/storage", () => ({
 
 vi.mock("solid-start:server-fn-manifest", () => ({}));
 
+const configuredErrorHandler = vi.hoisted(() => ({
+  current: undefined as ((thrown: unknown) => unknown) | undefined,
+}));
+
+vi.mock("solid-start:server-fn-error-handler", () => ({
+  get default() {
+    return configuredErrorHandler.current;
+  },
+}));
+
 vi.mock("../server/handler.ts", () => ({
   createPageEvent: vi.fn(),
 }));
@@ -171,7 +181,7 @@ describe("createSingleFlightHeaders", () => {
   });
 });
 
-describe("setServerFunctionErrorHandler", () => {
+describe("the configured server function error handler", () => {
   const callThrowing = async (thrown: unknown) => {
     const request = new Request("http://localhost/_server", {
       method: "POST",
@@ -192,28 +202,22 @@ describe("setServerFunctionErrorHandler", () => {
     return h3Event;
   };
 
-  const register = async (handler: ((thrown: unknown) => unknown) | undefined) => {
-    const { setServerFunctionErrorHandler } = await import("./error-handler.ts");
-    setServerFunctionErrorHandler(handler);
-  };
-
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks();
-    await register(undefined);
+    configuredErrorHandler.current = undefined;
   });
 
-  it("passes the thrown value to the registered handler", async () => {
+  it("passes the thrown value to the handler", async () => {
     const thrown = new Error("boom");
-    const handler = vi.fn(() => undefined);
-    await register(handler);
+    configuredErrorHandler.current = vi.fn(() => undefined);
 
     await callThrowing(thrown);
 
-    expect(handler).toHaveBeenCalledWith(thrown);
+    expect(configuredErrorHandler.current).toHaveBeenCalledWith(thrown);
   });
 
   it("serializes the replacement the handler returns", async () => {
-    await register(() => new Error("replaced"));
+    configuredErrorHandler.current = () => new Error("replaced");
 
     const h3Event = await callThrowing(new Error("boom"));
 
@@ -221,7 +225,7 @@ describe("setServerFunctionErrorHandler", () => {
   });
 
   it("treats a Response the handler returns as control flow", async () => {
-    await register(() => new Response(null, { status: 403 }));
+    configuredErrorHandler.current = () => new Response(null, { status: 403 });
 
     const h3Event = await callThrowing(new Error("boom"));
 
@@ -230,14 +234,14 @@ describe("setServerFunctionErrorHandler", () => {
   });
 
   it("keeps the original error when the handler returns nothing", async () => {
-    await register(() => undefined);
+    configuredErrorHandler.current = () => undefined;
 
     const h3Event = await callThrowing(new Error("boom"));
 
     expect(h3Event.res.headers.get("X-Error")).toBe("boom");
   });
 
-  it("leaves the response untouched when no handler is registered", async () => {
+  it("leaves the response untouched when no handler is configured", async () => {
     const h3Event = await callThrowing(new Error("boom"));
 
     expect(h3Event.res.headers.get("X-Error")).toBe("boom");

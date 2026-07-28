@@ -2,4 +2,4 @@
 "@solidjs/start": minor
 ---
 
-Allow a server-function error to be observed and replaced before it is serialized into the response
+Add a `serverFunctions.onError` option naming a module that observes and replaces what a server function threw, before it is serialized into the response

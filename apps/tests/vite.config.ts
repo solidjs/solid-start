@@ -11,6 +11,9 @@ export default defineConfig({
       serialization: {
         plugins: "src/seroval-plugins.ts",
       },
+      serverFunctions: {
+        onError: "src/server-fn-error.ts",
+      },
       env: {
         server: {
           load() {
