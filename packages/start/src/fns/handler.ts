@@ -126,6 +126,10 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
     return serializeToJSONStream(result);
   } catch (x) {
+    // Nothing else observes a server function failure: it is caught here and
+    // written straight to the response, so monitoring never sees the crash and
+    // the thrown value reaches the client as-is.
+    x = globalThis.__transformServerFnError?.(x) ?? x;
     if (x instanceof Response) {
       if (singleFlight && instance) {
         x = await handleSingleFlight(event, x);

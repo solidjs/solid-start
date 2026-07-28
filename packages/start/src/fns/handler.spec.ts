@@ -1,6 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { parseCookies } from "h3";
 import type { FetchEvent } from "../server/types.ts";
+import { getFetchEvent } from "../server/fetchEvent.ts";
+import { getServerFunction } from "./registration.ts";
 
 vi.mock("h3", () => ({
   parseCookies: vi.fn(() => ({})),
@@ -23,6 +25,16 @@ vi.mock("../server/handler.ts", () => ({
 vi.mock("../server/fetchEvent.ts", () => ({
   getFetchEvent: vi.fn(),
   mergeResponseHeaders: vi.fn(),
+}));
+
+vi.mock("./registration.ts", () => ({
+  getServerFunction: vi.fn(),
+  hasServerFunction: vi.fn(() => true),
+}));
+
+vi.mock("./serialization.ts", () => ({
+  serializeToJSONStream: vi.fn(() => "serialized"),
+  serializeToJSStream: vi.fn(() => "serialized"),
 }));
 
 function createMockFetchEvent(
@@ -156,5 +168,64 @@ describe("createSingleFlightHeaders", () => {
     const sourceEvent = createMockFetchEvent();
 
     expect(() => createSingleFlightHeaders(sourceEvent, { some: "value" })).not.toThrow();
+  });
+});
+
+describe("handleServerFunction error hook", () => {
+  const callThrowing = async (thrown: unknown) => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => {
+      throw thrown;
+    });
+    const { handleServerFunction } = await import("./handler.ts");
+    await handleServerFunction(h3Event as never);
+    return h3Event;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    globalThis.__transformServerFnError = undefined;
+  });
+
+  it("passes the thrown value to the hook", async () => {
+    const thrown = new Error("boom");
+    const hook = vi.fn(() => undefined);
+    globalThis.__transformServerFnError = hook;
+
+    await callThrowing(thrown);
+
+    expect(hook).toHaveBeenCalledWith(thrown);
+  });
+
+  it("serializes the replacement the hook returns", async () => {
+    globalThis.__transformServerFnError = () => new Error("replaced");
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("replaced");
+  });
+
+  it("keeps the original error when the hook returns nothing", async () => {
+    globalThis.__transformServerFnError = () => undefined;
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+  });
+
+  it("leaves the response untouched when no hook is registered", async () => {
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
   });
 });
