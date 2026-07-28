@@ -41,6 +41,11 @@ export function manifest(start: SolidStartOptions): PluginOption {
         if (plugins) return await this.resolve(plugins);
         return `\0${VIRTUAL_MODULES.serovalPlugins}`;
       }
+      if (id === VIRTUAL_MODULES.serverFnErrorHandler) {
+        const onError = start.serverFunctions?.onError;
+        if (onError) return await this.resolve(onError);
+        return `\0${VIRTUAL_MODULES.serverFnErrorHandler}`;
+      }
     },
     async load(id) {
       if (id === `\0${VIRTUAL_MODULES.clientViteManifest}`) {
@@ -94,6 +99,8 @@ export function manifest(start: SolidStartOptions): PluginOption {
         return `export const clientViteManifest = ${JSON.stringify(clientViteManifest)};`;
       } else if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
       else if (id === `\0${VIRTUAL_MODULES.serovalPlugins}`) return "export default [];";
+      else if (id === `\0${VIRTUAL_MODULES.serverFnErrorHandler}`)
+        return "export default undefined;";
       else if (id.startsWith("/@manifest")) {
         if (this.environment.mode !== "dev")
           throw new Error("@manifest queries are only allowed in dev");

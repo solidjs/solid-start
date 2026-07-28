@@ -15,6 +15,7 @@ import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./s
 import "solid-start:server-fn-manifest";
 
 import { getServerFunction, hasServerFunction } from "./registration.ts";
+import { applyServerFunctionErrorHandler } from "./error-handler.ts";
 import type { FetchEvent, PageEvent } from "../server/types.ts";
 import { getExpectedRedirectStatus } from "../server/util.ts";
 
@@ -126,6 +127,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
     return serializeToJSONStream(result);
   } catch (x) {
+    x = applyServerFunctionErrorHandler(x);
     if (x instanceof Response) {
       if (singleFlight && instance) {
         x = await handleSingleFlight(event, x);

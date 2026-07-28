@@ -1,6 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { parseCookies } from "h3";
 import type { FetchEvent } from "../server/types.ts";
+import { getFetchEvent } from "../server/fetchEvent.ts";
+import { getServerFunction } from "./registration.ts";
 
 vi.mock("h3", () => ({
   parseCookies: vi.fn(() => ({})),
@@ -16,6 +18,16 @@ vi.mock("solid-js/web/storage", () => ({
 
 vi.mock("solid-start:server-fn-manifest", () => ({}));
 
+const configuredErrorHandler = vi.hoisted(() => ({
+  current: undefined as ((thrown: unknown) => unknown) | undefined,
+}));
+
+vi.mock("solid-start:server-fn-error-handler", () => ({
+  get default() {
+    return configuredErrorHandler.current;
+  },
+}));
+
 vi.mock("../server/handler.ts", () => ({
   createPageEvent: vi.fn(),
 }));
@@ -23,6 +35,16 @@ vi.mock("../server/handler.ts", () => ({
 vi.mock("../server/fetchEvent.ts", () => ({
   getFetchEvent: vi.fn(),
   mergeResponseHeaders: vi.fn(),
+}));
+
+vi.mock("./registration.ts", () => ({
+  getServerFunction: vi.fn(),
+  hasServerFunction: vi.fn(() => true),
+}));
+
+vi.mock("./serialization.ts", () => ({
+  serializeToJSONStream: vi.fn(() => "serialized"),
+  serializeToJSStream: vi.fn(() => "serialized"),
 }));
 
 function createMockFetchEvent(
@@ -156,5 +178,72 @@ describe("createSingleFlightHeaders", () => {
     const sourceEvent = createMockFetchEvent();
 
     expect(() => createSingleFlightHeaders(sourceEvent, { some: "value" })).not.toThrow();
+  });
+});
+
+describe("the configured server function error handler", () => {
+  const callThrowing = async (thrown: unknown) => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => {
+      throw thrown;
+    });
+    const { handleServerFunction } = await import("./handler.ts");
+    await handleServerFunction(h3Event as never);
+    return h3Event;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+  });
+
+  it("passes the thrown value to the handler", async () => {
+    const thrown = new Error("boom");
+    configuredErrorHandler.current = vi.fn(() => undefined);
+
+    await callThrowing(thrown);
+
+    expect(configuredErrorHandler.current).toHaveBeenCalledWith(thrown);
+  });
+
+  it("serializes the replacement the handler returns", async () => {
+    configuredErrorHandler.current = () => new Error("replaced");
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("replaced");
+  });
+
+  it("treats a Response the handler returns as control flow", async () => {
+    configuredErrorHandler.current = () => new Response(null, { status: 403 });
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.status).toBe(403);
+    expect(h3Event.res.headers.get("X-Error")).toBe("true");
+  });
+
+  it("keeps the original error when the handler returns nothing", async () => {
+    configuredErrorHandler.current = () => undefined;
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+  });
+
+  it("leaves the response untouched when no handler is configured", async () => {
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
   });
 });

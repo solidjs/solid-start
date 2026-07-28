@@ -29,3 +29,9 @@ declare module "solid-start:middleware" {
 declare module "solid-start:seroval-plugins" {
   export default SerovalPlugins as import("seroval").Plugin<any, any>[];
 }
+
+declare module "solid-start:server-fn-error-handler" {
+  export default ServerFunctionErrorHandler as
+    | import("./fns/error-handler.ts").ServerFunctionErrorHandler
+    | undefined;
+}
