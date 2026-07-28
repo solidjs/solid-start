@@ -323,6 +323,9 @@ importers:
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.14)
+      '@solidjs/router':
+        specifier: '>=0.16.0 <2.0.0-0'
+        version: 1.0.0(solid-js@1.9.14)
       '@types/babel__traverse':
         specifier: ^7.28.0
         version: 7.28.0
@@ -387,9 +390,6 @@ importers:
         specifier: ^2.11.13
         version: 2.11.13(@testing-library/jest-dom@6.10.0(@testing-library/dom@10.4.1))(solid-js@1.9.14)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
     devDependencies:
-      '@solidjs/router':
-        specifier: ^1.0.0
-        version: 1.0.0(solid-js@1.9.14)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
