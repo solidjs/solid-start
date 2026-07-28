@@ -8,7 +8,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@solidjs/router": "^0.16.2",
+    "@solidjs/router": "^1.0.0",
     "@solidjs/start": "workspace:*",
     "solid-js": "^1.9.14",
     "vite": "^8.1.5"
