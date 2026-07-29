@@ -29,7 +29,7 @@ minimumReleaseAgeExclude:
   - "@solidjs/web@2.0.0-beta.28"
   - babel-preset-solid@2.0.0-beta.28
   - solid-js@2.0.0-beta.28
-  - vite-plugin-solid@3.0.0-next.18
+  - vite-plugin-solid@3.0.0-next.19
   - filesystem-routing@0.1.1
   - srvx@0.12.4
   - h3@2.0.1-rc.26
