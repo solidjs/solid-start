@@ -11,7 +11,7 @@
     "@solidjs/web": "2.0.0-beta.26",
     "nitro": "^3.0.260610-beta",
     "solid-js": "2.0.0-beta.26",
-    "vite": "^8.0.0"
+    "vite": "^8.1.5"
   },
   "engines": {
     "node": ">=24"

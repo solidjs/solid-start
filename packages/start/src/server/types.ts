@@ -1,8 +1,19 @@
-import type { H3Event } from "h3";
+import type { H3, H3Event } from "h3";
 import type { JSX } from "@solidjs/web";
 import type { RequestEvent } from "@solidjs/web";
 
 // export const FETCH_EVENT = "$FETCH";
+
+/**
+ * The h3 app instance returned by `createHandler`.
+ *
+ * Structurally identical to h3's `H3`, but declared here so that `export default
+ * createHandler(...)` in `entry-server.tsx` can be named through `@solidjs/start`.
+ * Referring to `H3` directly makes TypeScript emit a reference to h3's internal
+ * `H3$1` class, which is not portable when h3 is nested inside
+ * `node_modules/@solidjs/start/node_modules` (TS2742 / TS2883).
+ */
+export interface StartHandler extends H3 {}
 
 export type DocumentComponentProps = {
   assets?: JSX.Element;

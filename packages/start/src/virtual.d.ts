@@ -21,3 +21,15 @@ declare module "solid-start:middleware" {
   type MaybeArray<T> = T | Array<T>;
   export default Middleware as import("h3").Middleware[];
 }
+
+declare module "solid-start:seroval-plugins" {
+  // Typed against the seroval instance @solidjs/web serializes with, so the
+  // codec option accepts it even when the workspace resolves its own copy.
+  export default SerovalPlugins as import("@solidjs/web/serialization").SerializerPlugin[];
+}
+
+declare module "solid-start:server-fn-error-handler" {
+  export default ServerFunctionErrorHandler as
+    | import("./fns/error-handler.ts").ServerFunctionErrorHandler
+    | undefined;
+}

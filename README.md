@@ -16,7 +16,7 @@
 
 > [!IMPORTANT]
 > This is the branch for the SolidStart 2.0.0-alpha that is currently under heavy development.
-> 
+>
 > Current SolidStart is maintained at [`1.x`](https://github.com/solidjs/solid-start/tree/1.x).
 
 ## Prerequisites

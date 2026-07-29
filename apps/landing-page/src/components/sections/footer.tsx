@@ -20,7 +20,7 @@ function FooterSectionLink(props: { href: string; children: JSX.Element }) {
 
 export function Footer() {
   return (
-    <footer class="w-full bg-gradient-to-b dark:from-sky-950 from-white  to-sky-400  dark:to-[#081924] pt-32 px-10 pb-10">
+    <footer class="w-full bg-linear-to-b dark:from-sky-950 from-white  to-sky-400  dark:to-[#081924] pt-32 px-10 pb-10">
       <div class="max-w-5xl w-full mx-auto flex flex-col md:flex-row justify-between flex-wrap gap-10">
         <div class="pr-20 order-3 md:order-[unset]">
           <FooterSectionLink href="https://solidjs.com">

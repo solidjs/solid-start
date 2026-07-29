@@ -19,9 +19,11 @@ test.describe("SSR Hydration", () => {
 
     await expect(output).toHaveText("0");
 
-    await button.click();
-
-    await expect(output).toHaveText("1");
+    // Retry until a click is handled post-hydration. Pre-hydration clicks are synchronous no-ops.
+    await expect(async () => {
+      await button.click();
+      await expect(output).toHaveText("1", { timeout: 1000 });
+    }).toPass({ timeout: 15000 });
 
     expect(consoleErrors, "Expected no hydration mismatch errors in console").toEqual([]);
   });

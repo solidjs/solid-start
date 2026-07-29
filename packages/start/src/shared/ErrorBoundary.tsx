@@ -1,12 +1,12 @@
 // @refresh skip
 import { Errored, type ParentProps } from "solid-js";
 import { isServer } from "@solidjs/web";
+import { DevToolbar } from "./dev-toolbar/index.tsx";
 import { HttpStatusCode } from "./HttpStatusCode.ts";
-import { DevOverlay } from "./dev-overlay/index.tsx";
 
 export const ErrorBoundary =
   import.meta.env.DEV && import.meta.env.START_DEV_OVERLAY
-    ? (props: ParentProps) => <DevOverlay>{props.children}</DevOverlay>
+    ? (props: ParentProps) => <DevToolbar>{props.children}</DevToolbar>
     : (props: ParentProps) => {
         const message = isServer
           ? "500 | Internal Server Error"

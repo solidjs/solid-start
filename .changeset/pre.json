@@ -1,16 +1,31 @@
 {
   "mode": "pre",
-  "tag": "beta",
+  "tag": "rc",
   "initialVersions": {
-    "@solidjs/start": "2.0.0-beta.7"
+    "@solidjs/start": "2.0.0-rc.1",
+    "@solidjs/image": "0.0.0"
   },
   "changesets": [
-    "curvy-mice-thank",
-    "fix-1874-unicode-error-header",
-    "fix-2068-server-only-guard",
-    "fix-2133-bun-deno-stream",
-    "fix-dev-server-function-lookup",
-    "support-server-client-only",
-    "tame-dingos-wave"
+    "brave-hoops-listen",
+    "bright-dogs-serve",
+    "chilly-rabbits-lie",
+    "eighty-jars-invite",
+    "eleven-actors-nail",
+    "great-hooks-observe",
+    "lemon-plugins-serialize",
+    "lucky-moths-nonce",
+    "lucky-pans-gather",
+    "olive-apes-clap",
+    "olive-pugs-shave",
+    "soft-cases-repeat",
+    "sour-knives-look",
+    "spotty-jobs-relax",
+    "spotty-moons-repeat",
+    "tall-donuts-smile",
+    "tidy-donkeys-cheat",
+    "tidy-donkeys-reject",
+    "tidy-paths-resolve",
+    "tricky-goats-cheer",
+    "wild-pots-repeat"
   ]
 }

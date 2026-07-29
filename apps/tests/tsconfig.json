@@ -13,7 +13,7 @@
     "types": ["vitest/globals", "@testing-library/jest-dom", "@solidjs/start/env"],
     "isolatedModules": true,
     "paths": {
-      "~/*": ["./src/*"],
-    },
-  },
+      "~/*": ["./src/*"]
+    }
+  }
 }

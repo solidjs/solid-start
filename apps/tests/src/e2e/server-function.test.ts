@@ -73,6 +73,19 @@ test.describe("server-function", () => {
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
   });
 
+  /**
+   * A custom Seroval plugin registered through `serialization.plugins` must
+   * apply to both the request and the response payload, so a class Seroval has
+   * no built-in support for survives the round trip with its prototype intact.
+   * https://github.com/solidjs/solid-start/issues/1474
+   */
+  test("should round-trip a custom class through a custom seroval plugin", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-custom-class");
+    await expect(page.locator("#server-fn-test")).toContainText(
+      '{"receivedInstance":true,"receivedHex":"507f191e810c19729de860ea","returnedInstance":true,"returnedHex":"507f1f77bcf86cd799439011"}',
+    );
+  });
+
   test("should build with a server function w/ form data", async ({ page }) => {
     await page.goto("http://localhost:3000/server-function-form-data");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
@@ -142,6 +155,19 @@ test.describe("server-function", () => {
         "Ошибка 🚀 ünïcode — special chars",
         { timeout: 1000 },
       );
+    }).toPass({ timeout: 15000 });
+  });
+
+  test("should send the error the onError module returns in place of the thrown one", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/server-function-on-error");
+    // Retry the click until it registers post-hydration (clicks aren't auto-retried).
+    await expect(async () => {
+      await page.locator("#server-fn-test").click();
+      await expect(page.locator("#server-fn-test")).toContainText("replaced by onError", {
+        timeout: 1000,
+      });
     }).toPass({ timeout: 15000 });
   });
 });

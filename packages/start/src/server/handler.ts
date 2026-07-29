@@ -1,6 +1,6 @@
 import middleware from "solid-start:middleware";
 import manifest from "virtual:solid-manifest";
-import { defineHandler, H3, type H3Event, redirect } from "h3/generic";
+import { defineHandler, H3, type H3Event, iterable, redirect } from "h3/generic";
 import type { JSX } from "@solidjs/web";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
@@ -8,7 +8,7 @@ import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
-import type { APIEvent, FetchEvent, HandlerOptions, PageEvent } from "./types.ts";
+import type { APIEvent, FetchEvent, HandlerOptions, PageEvent, StartHandler } from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
 import { toWebReadableStream } from "./web-stream.ts";
 import { stripPathBase } from "./strip-path-base.ts";
@@ -75,7 +75,8 @@ export function createBaseHandler(
   createPageEvent: (e: FetchEvent) => Promise<PageEvent>,
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
-): H3 {
+  routerLoad?: (event: FetchEvent) => Promise<void>,
+): StartHandler {
   const handler = defineHandler({
     middleware: middleware.length ? middleware.map(decorateMiddleware) : undefined,
     handler: decorateHandler(async (e: H3Event) => {
@@ -109,6 +110,8 @@ export function createBaseHandler(
           if (!match.isPage) return;
         }
       }
+
+      if (routerLoad) await routerLoad(event);
 
       const context = await createPageEvent(event);
 
@@ -174,11 +177,9 @@ export function createBaseHandler(
 
       if (mode === "async") return await stream;
 
-      delete (stream as any).then;
-
       // h3 expects a standard web ReadableStream across runtimes. The adapter
       // also tolerates cancellation while Solid finishes outstanding work.
-      return toWebReadableStream(stream);
+      return iterable(toWebReadableStream(stream));
     }),
   });
 
@@ -192,8 +193,9 @@ export function createBaseHandler(
 export function createHandler(
   fn: (context: PageEvent) => JSX.Element,
   options: HandlerOptions | ((context: PageEvent) => HandlerOptions | Promise<HandlerOptions>) = {},
-): H3 {
-  return createBaseHandler(createPageEvent, fn, options);
+  routerLoad?: (event: FetchEvent) => Promise<void>,
+): StartHandler {
+  return createBaseHandler(createPageEvent, fn, options, routerLoad);
 }
 
 export async function createPageEvent(ctx: FetchEvent) {
@@ -224,7 +226,13 @@ function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
     context.complete = true;
     const to = context.response && context.response.headers.get("Location");
-    to && write(`<script>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`);
+    if (!to) return;
+    // The shell has already flushed, so the redirect has to happen client side.
+    // Carry the nonce so a strict `script-src` CSP doesn't block it.
+    const nonce = context.nonce ? ` nonce="${escapeAttribute(context.nonce)}"` : "";
+    write(
+      `<script${nonce}>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`,
+    );
   };
 }
 
@@ -264,6 +272,10 @@ function produceResponseWithEventHeaders(res: Response) {
   }
 
   return ret;
+}
+
+function escapeAttribute(value: string) {
+  return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
 
 function stripBaseUrl(path: string) {

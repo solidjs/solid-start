@@ -6,11 +6,17 @@
 // `decodeResponse`.
 import { type Component } from "solid-js";
 import { configureServerFunctionsClient } from "@solidjs/web/server-functions/client";
+import serovalPlugins from "solid-start:seroval-plugins";
 
 let baseURL = import.meta.env.BASE_URL ?? "/";
 if (!baseURL.endsWith("/")) baseURL += "/";
 
-configureServerFunctionsClient({ endpoint: `${baseURL}_server` });
+configureServerFunctionsClient({
+  endpoint: `${baseURL}_server`,
+  // App-supplied Seroval plugins (`serialization.plugins`) — must match the
+  // server handler's codec.
+  codec: { plugins: serovalPlugins },
+});
 
 export {
   createServerReference,

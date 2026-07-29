@@ -8,6 +8,7 @@ import solid, {
   type Options as SolidOptions,
   type ServerFunctionsOptions,
 } from "vite-plugin-solid";
+import { appRootAlias } from "./app-root-alias.ts";
 import { boundaryModules } from "./boundary-modules.ts";
 import { VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
@@ -16,14 +17,134 @@ import { PageFileSystemRouter } from "filesystem-routing";
 import { DEFAULT_EXTENSIONS, fileRoutes } from "filesystem-routing/vite";
 import { parseIdQuery } from "./utils.ts";
 
+/**
+ * Configuration options for SolidStart. (previously in `app.config.ts`)
+ *
+ * @see https://docs.solidjs.com/solid-start/v2/migrating-from-v1#move-framework-configuration-into-viteconfigts
+ */
 export interface SolidStartOptions {
+  /**
+   * Path to the root of the application (where `app.tsx` / `app.jsx` lives).
+   *
+   * @default "./src"
+   */
+  appRoot?: string;
+
+  /**
+   * Options forwarded to `vite-plugin-solid`.
+   *
+   * @see https://github.com/solidjs/vite-plugin-solid#api
+   */
   solid?: Partial<SolidOptions>;
+
+  /**
+   * Enable or disable server-side rendering.
+   *
+   * - `true` — SSR (default)
+   * - `false` — client-side rendering only (SPA mode)
+   *
+   * @default true
+   */
   ssr?: boolean;
+
+  /**
+   * Show the SolidStart development overlay (error overlay, etc.) in development.
+   *
+   * @default true
+   */
+  devOverlay?: boolean;
+
+  /**
+   * Experimental features.
+   */
+  experimental?: {
+    /**
+     * Enable islands architecture mode.
+     *
+     * Currently fixed to `false` (not yet fully supported).
+     *
+     * @default false
+     */
+    islands?: false;
+  };
+
+  /**
+   * Directory containing file-system routes, relative to {@link appRoot}.
+   *
+   * @default "./routes"
+   */
   routeDir?: string;
+
+  /**
+   * File extensions that should be treated as routes.
+   *
+   * @default ["js", "jsx", "ts", "tsx"]
+   */
   extensions?: string[];
+
+  /**
+   * Path to an optional middleware module.
+   *
+   * The module should export a middleware created with `createMiddleware`
+   * from `@solidjs/start/middleware`.
+   *
+   * @example "src/middleware/index.ts"
+   */
   middleware?: string;
+
+  /**
+   * Serialization settings for server-function / action payloads
+   * that cross the server-client boundary.
+   */
+  serialization?: {
+    /**
+     * Path to a module whose default export is an array of custom Seroval
+     * plugins, used to serialize values Seroval doesn't understand natively
+     * (ORM id types, decimals, `Temporal`, and other custom classes).
+     *
+     * Build plugins with `createPlugin` from `@solidjs/start/serialization`.
+     * The module is bundled into both the client and the server so that both
+     * ends of a server function agree on the format, so it must not import
+     * server-only code.
+     *
+     * Custom plugins are consulted ahead of the built-in web plugins: Seroval
+     * uses the first plugin whose `test()` passes.
+     *
+     * Only applies to server-function and action payloads. The SSR hydration
+     * payload is serialized by `solid-js/web` and is unaffected.
+     *
+     * @example "src/seroval-plugins.ts"
+     */
+    plugins?: string;
+  };
+
+  /**
+   * Configures plugin behavior per build environment
+   */
   env?: EnvPluginOptions;
-  serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
+
+  /**
+   * Options controlling which files are processed as server functions
+   * (inclusion / exclusion filters for the `"use server"` transform).
+   */
+  serverFunctions?: Pick<ServerFunctionsOptions, "filter"> & {
+    /**
+     * Path to a module whose default export is called with whatever a server
+     * function threw, before it is serialized into the response. Return a
+     * value to send it in place of what was thrown, or `undefined` to send the
+     * original.
+     *
+     * Naming the module here rather than registering a handler at runtime
+     * keeps the app in sole control of it: no dependency can reach into the
+     * running server and take over reporting.
+     *
+     * The module is bundled into the server only, so it may import server-only
+     * code such as a monitoring SDK.
+     *
+     * @example "src/server-fn-error.ts"
+     */
+    onError?: string;
+  };
 }
 
 const absolute = (path: string, root: string) =>
@@ -43,7 +164,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     },
     solid: {},
     extensions: [],
-  });
+  } satisfies SolidStartOptions);
   const extensions = [...DEFAULT_EXTENSIONS, ...(start.extensions || [])];
   const routeDir = join(start.appRoot, start.routeDir);
   const root = process.cwd();
@@ -192,7 +313,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           resolve: {
             alias: {
               "@solidjs/start/server/entry": handlers.server,
-              "~": join(process.cwd(), start.appRoot),
               ...(!start.ssr
                 ? {
                     "@solidjs/start/server": "@solidjs/start/server/spa",
@@ -245,6 +365,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
     },
+    appRootAlias(root, start.appRoot),
     fileRoutes({ routers, buildInputs: VITE_ENVIRONMENTS.client }),
     envPlugin(options?.env),
     // Must be placed after fileRoutes, as treeShake will remove the
@@ -268,6 +389,18 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           return `\0${VIRTUAL_MODULES.middleware}`;
         }
 
+        if (filename === VIRTUAL_MODULES.serverFnErrorHandler) {
+          const onError = options?.serverFunctions?.onError;
+          if (onError) return await this.resolve(onError);
+          return `\0${VIRTUAL_MODULES.serverFnErrorHandler}`;
+        }
+
+        if (filename === VIRTUAL_MODULES.serovalPlugins) {
+          const plugins = options?.serialization?.plugins;
+          if (plugins) return await this.resolve(plugins);
+          return `\0${VIRTUAL_MODULES.serovalPlugins}`;
+        }
+
         let base;
         if (filename === VIRTUAL_MODULES.clientEntry) base = handlers.client;
         if (filename === VIRTUAL_MODULES.serverEntry) base = handlers.server;
@@ -283,6 +416,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
       load(id) {
         if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
+        if (id === `\0${VIRTUAL_MODULES.serverFnErrorHandler}`) return "export default undefined;";
+        if (id === `\0${VIRTUAL_MODULES.serovalPlugins}`) return "export default [];";
       },
     },
     devServer(handlers.server),

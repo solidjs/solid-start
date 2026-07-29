@@ -10,9 +10,11 @@ import { provideRequestEvent } from "@solidjs/web/storage";
 import { handleServerFunctionRequest } from "@solidjs/web/server-functions/server";
 import { createFlightDataCollector, createNoJSHandler } from "@solidjs/router/server";
 import "solid-start:server-fn-manifest";
+import serovalPlugins from "solid-start:seroval-plugins";
 
 import { getFetchEvent } from "../server/fetchEvent.ts";
 import { fileRoutes } from "../router.tsx";
+import { applyServerFunctionErrorHandler } from "./error-handler.ts";
 import type { FetchEvent } from "../server/types.ts";
 
 let base = import.meta.env.BASE_URL ?? "/";
@@ -39,7 +41,15 @@ export async function handleServerFunction(h3Event: H3Event): Promise<Response> 
         return fn();
       });
     },
+    // The app's configured server-function error handler (`serverFunctions.onError`)
+    // sees thrown values before they are serialized into the response.
+    transformResult(_evt, result, context) {
+      return context.thrown ? applyServerFunctionErrorHandler(result) : result;
+    },
     collectFlightData,
     handleNoJS,
+    // App-supplied Seroval plugins (`serialization.plugins`) — must match the
+    // client transport's codec.
+    codec: { plugins: serovalPlugins },
   });
 }

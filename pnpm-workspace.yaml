@@ -2,15 +2,15 @@ packages:
   - packages/*
   - apps/*
   - apps/fixtures/*
-  - '!**/.tmp/**'
+  - "!**/.tmp/**"
 
 allowBuilds:
-  '@parcel/watcher': true
+  "@parcel/watcher": true
   esbuild: true
 
 ignoredBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
+  - "@prisma/client"
+  - "@prisma/engines"
   - better-sqlite3
   - msw
   - prisma
@@ -31,8 +31,10 @@ minimumReleaseAgeExclude:
   - solid-js@2.0.0-beta.26
   - vite-plugin-solid@3.0.0-next.16
   - filesystem-routing@0.1.1
+  - srvx@0.12.4
+  - h3@2.0.1-rc.26
 
 onlyBuiltDependencies:
-  - '@parcel/watcher'
+  - "@parcel/watcher"
   - cypress
   - esbuild
