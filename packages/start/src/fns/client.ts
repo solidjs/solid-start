@@ -9,6 +9,7 @@ import {
   configureServerFunctionsClient,
   INSTANCE_HEADER,
 } from "@solidjs/web/server-functions/client";
+import { serializeJSON } from "@solidjs/web/serialization";
 import serovalPlugins from "solid-start:seroval-plugins";
 import { pushRequest, pushResponse } from "../shared/dev-toolbar/functions/tracker.ts";
 
@@ -17,11 +18,43 @@ if (!baseURL.endsWith("/")) baseURL += "/";
 
 const endpoint = `${baseURL}_server`;
 
+// The `;0x{8-hex-byte-length};` chunk framing of the server-function wire
+// format (what the transport's ChunkReader on the other end reads).
+function frameChunk(data: string): string {
+  const bytes = new TextEncoder().encode(data).length;
+  const hex = bytes.toString(16);
+  return `;0x${"00000000".slice(0, 8 - hex.length)}${hex};${data}`;
+}
+
+// Codec encoding for argument lists JSON can't carry faithfully — a `.with()`
+// bound value next to FormData (router form actions), Dates, Maps, ... The
+// output is the `BodyFormat.Serialized` encoding the server handler already
+// decodes; this stands in for @solidjs/web's `enableRichArguments()` until a
+// release ships the rich-args entry.
+function serializeArgs(args: unknown[]): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let out = "";
+    serializeJSON(args, {
+      plugins: serovalPlugins,
+      onParse(node) {
+        out += frameChunk(JSON.stringify(node));
+      },
+      onDone() {
+        resolve(out);
+      },
+      onError(error) {
+        reject(error);
+      },
+    });
+  });
+}
+
 configureServerFunctionsClient({
   endpoint,
   // App-supplied Seroval plugins (`serialization.plugins`) — must match the
   // server handler's codec.
   codec: { plugins: serovalPlugins },
+  serializeArgs,
   // Feed the dev toolbar's server-function inspector. The transport stamps a
   // unique instance header on every call; Start's dev server handler echoes
   // it on the response, which is what pairs the two here.

@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 async function sleep(value: unknown, ms: number) {
   return new Promise(res => {
@@ -17,13 +17,15 @@ async function ping(value: URLSearchParams, clone: URLSearchParams) {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  createEffect(async () => {
-    const value = new URLSearchParams([
-      ["foo", "bar"],
-      ["hello", "world"],
-    ]);
-    const result = await ping(value, value);
-    setOutput(prev => ({ ...prev, result: result[0] }));
+  onSettled(() => {
+    void (async () => {
+      const value = new URLSearchParams([
+        ["foo", "bar"],
+        ["hello", "world"],
+      ]);
+      const result = await ping(value, value);
+      setOutput(prev => ({ ...prev, result: result[0] }));
+    })();
   });
 
   return (

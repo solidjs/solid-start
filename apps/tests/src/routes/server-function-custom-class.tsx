@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 import { ObjectId } from "../utils/object-id.ts";
 
 /**
@@ -20,15 +20,17 @@ async function echoObjectId(id: ObjectId) {
 export default function App() {
   const [output, setOutput] = createSignal<Record<string, unknown>>({});
 
-  createEffect(async () => {
-    const result = await echoObjectId(new ObjectId("507f191e810c19729de860ea"));
+  onSettled(() => {
+    void (async () => {
+      const result = await echoObjectId(new ObjectId("507f191e810c19729de860ea"));
 
-    setOutput({
-      receivedInstance: result.receivedInstance,
-      receivedHex: result.receivedHex,
-      returnedInstance: result.returned instanceof ObjectId,
-      returnedHex: result.returned.toHexString(),
-    });
+      setOutput({
+        receivedInstance: result.receivedInstance,
+        receivedHex: result.receivedHex,
+        returnedInstance: result.returned instanceof ObjectId,
+        returnedHex: result.returned.toHexString(),
+      });
+    })();
   });
 
   return (

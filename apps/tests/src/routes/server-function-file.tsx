@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 async function ping(file: File) {
   "use server";
@@ -8,11 +8,13 @@ async function ping(file: File) {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  createEffect(async () => {
-    const file = new File(["Hello, World!"], "hello-world.txt");
-    const result = await ping(file);
-    const value = await file.text();
-    setOutput(prev => ({ ...prev, result: value === result }));
+  onSettled(() => {
+    void (async () => {
+      const file = new File(["Hello, World!"], "hello-world.txt");
+      const result = await ping(file);
+      const value = await file.text();
+      setOutput(prev => ({ ...prev, result: value === result }));
+    })();
   });
 
   return (
