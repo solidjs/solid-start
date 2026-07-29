@@ -366,11 +366,11 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       seroval:
-        specifier: ^1.5.6
-        version: 1.5.6
+        specifier: ^1.6.0
+        version: 1.6.0
       seroval-plugins:
-        specifier: ^1.5.6
-        version: 1.5.6(seroval@1.5.6)
+        specifier: ^1.6.0
+        version: 1.6.0(seroval@1.6.0)
       shiki:
         specifier: ^4.3.1
         version: 4.3.1
@@ -2839,8 +2839,18 @@ packages:
     peerDependencies:
       seroval: ^1.0
 
+  seroval-plugins@1.6.0:
+    resolution: {integrity: sha512-CbR5DP5DPicpd9RwRUzka7hi4x1577eGFXJVBW409LXqqJNst99JSUTZ8CXcnskQX7laPOWpmzliq0gBZEGlrQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      seroval: ^1.0
+
   seroval@1.5.6:
     resolution: {integrity: sha512-rVQVWjjSvlINzaQPZH5JFqsqEsIWdTxY3iJZCnTL/5gQbXIRooVZKI60tVCkOVfzcRPejboxO2t0P89dg5mQaA==}
+    engines: {node: '>=10'}
+
+  seroval@1.6.0:
+    resolution: {integrity: sha512-TBwwKfscTEgnBEWmYKKeCcmCGmrJi0LV6qNUY//WBA3MDesh/zfn+KOMq/ckpxM4gZ0ouAE706A1eenekM2sug==}
     engines: {node: '>=10'}
 
   shebang-command@2.0.0:
@@ -5614,7 +5624,13 @@ snapshots:
     dependencies:
       seroval: 1.5.6
 
+  seroval-plugins@1.6.0(seroval@1.6.0):
+    dependencies:
+      seroval: 1.6.0
+
   seroval@1.5.6: {}
+
+  seroval@1.6.0: {}
 
   shebang-command@2.0.0:
     dependencies:
