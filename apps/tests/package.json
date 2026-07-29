@@ -29,7 +29,7 @@
     "nitro": "^3.0.260610-beta",
     "solid-js": "2.0.0-beta.28",
     "vite": "^8.1.5",
-    "vite-plugin-solid": "^3.0.0-next.19",
+    "vite-plugin-solid": "^3.0.0-next.20",
     "vitest": "^4.1.10"
   },
   "devDependencies": {

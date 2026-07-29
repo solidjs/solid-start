@@ -73,7 +73,7 @@
     "source-map-js": "^1.2.1",
     "srvx": "^0.12.4",
     "terracotta": "2.0.0-next.6",
-    "vite-plugin-solid": "3.0.0-next.19"
+    "vite-plugin-solid": "3.0.0-next.20"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

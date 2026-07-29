@@ -314,8 +314,8 @@ importers:
         specifier: ^8.1.5
         version: 8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0)
       vite-plugin-solid:
-        specifier: ^3.0.0-next.19
-        version: 3.0.0-next.19(@solidjs/web@2.0.0-beta.28(solid-js@2.0.0-beta.28))(@testing-library/jest-dom@6.10.0(@testing-library/dom@10.4.1))(solid-js@2.0.0-beta.28)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
+        specifier: ^3.0.0-next.20
+        version: 3.0.0-next.20(@solidjs/web@2.0.0-beta.28(solid-js@2.0.0-beta.28))(@testing-library/jest-dom@6.10.0(@testing-library/dom@10.4.1))(solid-js@2.0.0-beta.28)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.2)(@vitest/browser-playwright@4.1.10)(@vitest/ui@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
@@ -393,8 +393,8 @@ importers:
         specifier: 2.0.0-next.6
         version: 2.0.0-next.6(@solidjs/web@2.0.0-beta.28(solid-js@2.0.0-beta.28))(solid-js@2.0.0-beta.28)
       vite-plugin-solid:
-        specifier: 3.0.0-next.19
-        version: 3.0.0-next.19(@solidjs/web@2.0.0-beta.28(solid-js@2.0.0-beta.28))(@testing-library/jest-dom@6.10.0(@testing-library/dom@10.4.1))(solid-js@2.0.0-beta.28)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
+        specifier: 3.0.0-next.20
+        version: 3.0.0-next.20(@solidjs/web@2.0.0-beta.28(solid-js@2.0.0-beta.28))(@testing-library/jest-dom@6.10.0(@testing-library/dom@10.4.1))(solid-js@2.0.0-beta.28)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0))
     devDependencies:
       '@types/node':
         specifier: ^26.1.1
@@ -3681,8 +3681,8 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
-  vite-plugin-solid@3.0.0-next.19:
-    resolution: {integrity: sha512-WuEwLEy1HevnkQVn4bwmwzd6uaXs8kpCLL+cNZTL6V8MEtTdi2WowGFRnCSVOV24hmHOhgsQtTm3rahNVeNUfw==}
+  vite-plugin-solid@3.0.0-next.20:
+    resolution: {integrity: sha512-ndiYZFBcBDyUpbgkb3tRMhtM1WeV+J+Fjg/xDzDJAiKzUToC+eMXYbPSa6Dl+KdZEUjl50XktnKBmpEaV7twBg==}
     peerDependencies:
       '@solidjs/web': '>=2.0.0-beta.28 <2.0.0-experimental.0'
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
@@ -7025,7 +7025,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-solid@3.0.0-next.19(@solidjs/web@2.0.0-beta.28(solid-js@2.0.0-beta.28))(@testing-library/jest-dom@6.10.0(@testing-library/dom@10.4.1))(solid-js@2.0.0-beta.28)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0)):
+  vite-plugin-solid@3.0.0-next.20(@solidjs/web@2.0.0-beta.28(solid-js@2.0.0-beta.28))(@testing-library/jest-dom@6.10.0(@testing-library/dom@10.4.1))(solid-js@2.0.0-beta.28)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0)):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/core': 7.29.7
