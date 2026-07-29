@@ -1,4 +1,4 @@
-import { type Accessor, createMemo, createResource } from "solid-js";
+import { type Accessor, createMemo } from "solid-js";
 import getSourceMap from "./get-source-map.ts";
 
 const HTTP_URL_REGEX = /^https?:\/\//;
@@ -31,32 +31,30 @@ function getActualFileSource(path: string): string {
 }
 
 export function createStackFrame(stackframe: StackFrame, isCompiled: () => boolean) {
-  const [data] = createResource(
-    () => ({
+  const data = createMemo(async () => {
+    const source = {
       fileName: stackframe.fileName,
       line: stackframe.lineNumber,
       column: stackframe.columnNumber,
       functionName: stackframe.functionName,
-    }),
-    async source => {
-      if (!source.fileName) {
-        return null;
-      }
-      const url = getActualFileSource(source.fileName);
-      const response = await fetch(url);
-      if (!response.ok) {
-        return null;
-      }
-      const content = await response.text();
-      const sourceMap = await getSourceMap(url, content);
-      return {
-        source,
-        content,
-        sourceMap,
-        isServer: isServerSource(source.fileName),
-      };
-    },
-  );
+    };
+    if (!source.fileName) {
+      return null;
+    }
+    const response = await fetch(getActualFileSource(source.fileName));
+    if (!response.ok) {
+      return null;
+    }
+    const content = await response.text();
+    const url = getActualFileSource(source.fileName);
+    const sourceMap = await getSourceMap(url, content);
+    return {
+      source,
+      content,
+      sourceMap,
+      isServer: isServerSource(source.fileName),
+    };
+  });
 
   const info = createMemo(() => {
     const current = data();

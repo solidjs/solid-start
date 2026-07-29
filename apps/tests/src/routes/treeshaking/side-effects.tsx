@@ -1,4 +1,4 @@
-import { createAsync } from "@solidjs/router";
+import { createMemo } from "solid-js";
 
 export const a = "myTreeshakingTestUniqueString2";
 
@@ -13,7 +13,7 @@ async function getGetA() {
 }
 
 export default function TreeshakingSideEffects() {
-  const s = createAsync(() => getGetA());
+  const s = createMemo(() => getGetA());
   return (
     <h1>
       hello:{a} {s()}

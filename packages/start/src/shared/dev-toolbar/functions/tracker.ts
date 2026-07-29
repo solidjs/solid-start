@@ -24,28 +24,34 @@ export function captureServerFunctionCall(listener: ServerFunctionCallListener):
   return () => LISTENERS.delete(listener);
 }
 
+// Listeners run synchronously inside the transport's call path; a throwing
+// listener must never break the server-function call it is observing.
+function notify(event: ServerFunctionCall): void {
+  for (const listener of new Set(LISTENERS)) {
+    try {
+      listener(event);
+    } catch (error) {
+      console.error("[solid-start] dev toolbar tracker listener failed:", error);
+    }
+  }
+}
+
 export function pushRequest(id: string, instance: string, source: Request): void {
-  const event: ServerFunctionCall = {
+  notify({
     type: "request",
     id,
     instance,
     source,
     time: performance.now(),
-  };
-  for (const listener of new Set(LISTENERS)) {
-    listener(event);
-  }
+  });
 }
 
 export function pushResponse(id: string, instance: string, source: Response): void {
-  const event: ServerFunctionCall = {
+  notify({
     type: "response",
     id,
     instance,
     source,
     time: performance.now(),
-  };
-  for (const listener of new Set(LISTENERS)) {
-    listener(event);
-  }
+  });
 }

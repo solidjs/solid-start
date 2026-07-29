@@ -1,20 +1,16 @@
-declare module "solid-start:client-vite-manifest" {
-  export const clientViteManifest: Record<
-    string,
-    { css?: Array<string>; file: string; [key: string]: unknown }
-  >;
+declare module "virtual:solid-manifest" {
+  // Dev: an async asset resolver `{ resolve, resolveSync }`; prod: the Vite
+  // client manifest (plus `_base`). Provided by vite-plugin-solid and passed
+  // through to renderToStream/renderToString as the `manifest` option.
+  const manifest: Record<string, any>;
+  export default manifest;
 }
 
-interface StartManifest {
-  getAssets(id: string): Promise<import("./server/assets/render").Asset[]>;
-}
-
-declare module "solid-start:get-client-manifest" {
-  export const getClientManifest: () => StartManifest;
-}
-
-declare module "solid-start:get-manifest" {
-  export const getManifest: (target: "client" | "ssr") => StartManifest;
+declare module "virtual:solid-manifest/client" {
+  // Dynamic-entry source keys -> resolved client asset URLs. Empty in dev
+  // (Vite's client owns the dev CSS lifecycle).
+  const assets: Record<string, { js: string[]; css: string[] }>;
+  export default assets;
 }
 
 declare module "solid-start:app" {
@@ -27,7 +23,9 @@ declare module "solid-start:middleware" {
 }
 
 declare module "solid-start:seroval-plugins" {
-  export default SerovalPlugins as import("seroval").Plugin<any, any>[];
+  // Typed against the seroval instance @solidjs/web serializes with, so the
+  // codec option accepts it even when the workspace resolves its own copy.
+  export default SerovalPlugins as import("@solidjs/web/serialization").SerializerPlugin[];
 }
 
 declare module "solid-start:server-fn-error-handler" {

@@ -1,4 +1,4 @@
-import type { ComponentProps, JSX } from "solid-js";
+import type { ComponentProps, JSX } from "@solidjs/web";
 
 import "./Table.css";
 

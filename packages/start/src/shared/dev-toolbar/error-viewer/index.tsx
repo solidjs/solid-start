@@ -1,8 +1,8 @@
 // @refresh skip
 import ErrorStackParser from "error-stack-parser";
 import * as htmlToImage from "html-to-image";
-import type { JSX } from "solid-js";
-import { createMemo, createSignal, ErrorBoundary, For, Show, Suspense } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { Errored, For, Loading, Show, createMemo, createSignal } from "solid-js";
 import IconButton from "../../ui/IconButton.tsx";
 import { Select, SelectOption } from "../../ui/Select.tsx";
 import {
@@ -88,11 +88,11 @@ function StackFramesContent(props: StackFramesContentProps) {
   return (
     <div data-start-error-viewer-stack-frames-content>
       <div data-start-error-viewer-stack-frames-code>
-        <ErrorBoundary fallback={null}>
+        <Errored fallback={null}>
           {(() => {
             const data = createStackFrame(selectedFrame(), () => props.isCompiled);
             return (
-              <Suspense fallback={<CodeFallback />}>
+              <Loading fallback={<CodeFallback />}>
                 <Show when={data()} keyed fallback={<CodeFallback />}>
                   {source => (
                     <>
@@ -107,10 +107,10 @@ function StackFramesContent(props: StackFramesContentProps) {
                     </>
                   )}
                 </Show>
-              </Suspense>
+              </Loading>
             );
           })()}
-        </ErrorBoundary>
+        </Errored>
       </div>
       <Select<ErrorStackParser.StackFrame>
         data-start-error-viewer-stack-frames
@@ -119,7 +119,7 @@ function StackFramesContent(props: StackFramesContentProps) {
       >
         <For each={stackframes}>
           {current => (
-            <ErrorBoundary
+            <Errored
               fallback={
                 <SelectOption value={current} disabled data-start-error-viewer-stack-frame>
                   <span data-start-error-viewer-stack-frame-function>
@@ -140,7 +140,7 @@ function StackFramesContent(props: StackFramesContentProps) {
               {(() => {
                 const data = createStackFrame(current, () => props.isCompiled);
                 return (
-                  <Suspense>
+                  <Loading>
                     <Show when={data()} keyed>
                       {source => (
                         <SelectOption data-start-error-viewer-stack-frame value={current}>
@@ -153,10 +153,10 @@ function StackFramesContent(props: StackFramesContentProps) {
                         </SelectOption>
                       )}
                     </Show>
-                  </Suspense>
+                  </Loading>
                 );
               })()}
-            </ErrorBoundary>
+            </Errored>
           )}
         </For>
       </Select>

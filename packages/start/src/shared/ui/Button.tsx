@@ -1,4 +1,4 @@
-import { Button as BaseButton } from "terracotta";
+import { Button as BaseButton } from "terracotta/button";
 import "./Button.css";
 
 const Button: typeof BaseButton = props => (

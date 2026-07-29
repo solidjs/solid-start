@@ -3,7 +3,7 @@ import {
   TabGroup as BaseTabGroup,
   TabList as BaseTabList,
   TabPanel as BaseTabPanel,
-} from "terracotta";
+} from "terracotta/tabs";
 
 import "./Tabs.css";
 

@@ -1,4 +1,4 @@
-export { default as lazy } from "../shared/lazy.ts";
+export { lazy } from "solid-js";
 export { getServerFunctionMeta } from "../shared/serverFunction.ts";
 export { StartServer } from "./StartServer.tsx";
 export { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
@@ -8,7 +8,6 @@ export type { ServerFunctionErrorHandler } from "../fns/error-handler.ts";
 export type {
   APIEvent,
   APIHandler,
-  Asset,
   ContextMatches,
   DocumentComponentProps,
   FetchEvent,
@@ -18,15 +17,3 @@ export type {
   ServerFunctionMeta,
   StartHandler,
 } from "./types.ts";
-
-/**
- * Checks if user has set a redirect status in the response.
- * If not, falls back to the 302 (temporary redirect)
- */
-// export function getExpectedRedirectStatus(response: ResponseStub): number {
-//   if (response.status && validRedirectStatuses.has(response.status)) {
-//     return response.status;
-//   }
-
-//   return 302;
-// }

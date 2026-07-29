@@ -1,4 +1,4 @@
-import { JSX } from "solid-js";
+import { JSX } from "@solidjs/web";
 
 const clsx = (...args: (string | false | undefined)[]) => args.filter(Boolean).join(" ");
 

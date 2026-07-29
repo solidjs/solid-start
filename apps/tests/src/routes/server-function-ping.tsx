@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 async function sleep(value: unknown, ms: number) {
   return new Promise(res => {
@@ -27,12 +27,14 @@ async function ping(value: Date) {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  createEffect(async () => {
-    const value = new Date();
-    const result = await ping(value);
-    await ping(value);
-    console.log(result);
-    setOutput(prev => ({ ...prev, result: value.toString() === result[0].toString() }));
+  onSettled(() => {
+    void (async () => {
+      const value = new Date();
+      const result = await ping(value);
+      await ping(value);
+      console.log(result);
+      setOutput(prev => ({ ...prev, result: value.toString() === result[0].toString() }));
+    })();
   });
 
   return (

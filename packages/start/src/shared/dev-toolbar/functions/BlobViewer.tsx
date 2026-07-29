@@ -1,4 +1,5 @@
-import { createMemo, createResource, type JSX, onCleanup, Show, Suspense } from "solid-js";
+import { createMemo, Loading, onCleanup, Show } from "solid-js";
+import type { JSX } from "@solidjs/web";
 
 import { Badge } from "../../ui/Badge.tsx";
 import Button from "../../ui/Button.tsx";
@@ -64,11 +65,13 @@ export interface BlobViewerProps {
 }
 
 export function BlobViewer(props: BlobViewerProps): JSX.Element {
-  const [data] = createResource(() => props.source);
+  const data = createMemo(async () => await props.source);
 
   return (
-    <Suspense>
-      <Show when={data()}>{current => <BlobViewerInner source={current()} />}</Show>
-    </Suspense>
+    <Loading>
+      <Show when={data()} keyed>
+        {current => <BlobViewerInner source={current} />}
+      </Show>
+    </Loading>
   );
 }

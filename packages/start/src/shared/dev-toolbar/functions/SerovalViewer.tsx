@@ -1,5 +1,6 @@
 import type { SerovalNode } from "seroval";
-import { createEffect, createSignal, For, type JSX, Show, splitProps } from "solid-js";
+import { createEffect, createSignal, For, omit, Show } from "solid-js";
+import type { JSX } from "@solidjs/web";
 
 import { Badge } from "../../ui/Badge.tsx";
 import { Cascade, CascadeOption } from "../../ui/Cascade.tsx";
@@ -7,7 +8,7 @@ import { Section } from "../../ui/Section.tsx";
 import { HexViewer } from "./HexViewer.tsx";
 import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
-import { SerovalChunkReader } from "../../../fns/serialization.ts";
+import { SerovalChunkReader } from "./seroval-chunk-reader.ts";
 import "./SerovalViewer.css";
 
 function LinkIcon(props: JSX.IntrinsicElements["svg"] & { title: string }): JSX.Element {
@@ -835,7 +836,7 @@ interface SerovalNodeRendererProps extends RenderContext {
 }
 
 function SerovalNodeRenderer(props: SerovalNodeRendererProps): JSX.Element {
-  const [, rest] = splitProps(props, ["node"]);
+  const rest = omit(props, "node");
   const [next, setNext] = createSignal<SerovalNode>();
 
   function onSelect(index: number | undefined) {
@@ -867,7 +868,7 @@ interface SerovalRendererProps extends Omit<RenderContext, "onSelect"> {
 }
 
 function SerovalRenderer(props: SerovalRendererProps): JSX.Element {
-  const [, rest] = splitProps(props, ["node"]);
+  const rest = omit(props, "node");
   return (
     <div data-start-seroval-renderer>
       <Show when={props.node}>{current => <SerovalNodeRenderer node={current()} {...rest} />}</Show>
@@ -876,7 +877,9 @@ function SerovalRenderer(props: SerovalRendererProps): JSX.Element {
 }
 
 function createSimpleStore<T extends Record<string | number, unknown>>(initial: T) {
-  const [state, setState] = createSignal<T>(initial);
+  // The explicit cast keeps createSignal from matching its compute-function
+  // overload for the unresolved generic T.
+  const [state, setState] = createSignal<T>(initial as Exclude<T, Function>);
 
   return {
     get(): T {
@@ -913,76 +916,81 @@ export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
     Record<number, Extract<SerovalNode, { t: 23 | 24 }> | undefined>
   >({});
 
-  createEffect(async () => {
-    setSelected(undefined);
-    if (!props.stream.body) {
-      throw new Error("missing body");
-    }
-    const reader = new SerovalChunkReader(props.stream.body);
-    const result = await reader.next();
-    if (!result.done) {
-      function traverseNode(node: SerovalNode): void {
-        // Check for promises
-        switch (node.t) {
-          case 0:
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-            break;
-          case 23:
-          case 24:
-            promises.write(node.i, node);
-            break;
-          case 32:
-          case 33:
-          case 34:
-            streams.update(node.i, current => {
-              if (current) {
-                return [...current, node];
-              }
-              return [node];
-            });
-            break;
-          case 5:
-          case 6:
-          case 7:
-          case 8:
-          case 9:
-          case 10:
-          case 11:
-          case 12:
-          case 13:
-          case 14:
-          case 15:
-          case 16:
-          case 17:
-          case 18:
-          case 19:
-          case 20:
-          case 21:
-          case 25:
-          case 26:
-          case 27:
-          case 29:
-          case 31:
-          case 35:
-            references.write(node.i, node);
-            break;
+  createEffect(
+    () => props.stream,
+    stream => {
+      void (async () => {
+        setSelected(undefined);
+        if (!stream.body) {
+          throw new Error("missing body");
         }
-      }
+        const reader = new SerovalChunkReader(stream.body);
+        const result = await reader.next();
+        if (!result.done) {
+          function traverseNode(node: SerovalNode): void {
+            // Check for promises
+            switch (node.t) {
+              case 0:
+              case 1:
+              case 2:
+              case 3:
+              case 4:
+                break;
+              case 23:
+              case 24:
+                promises.write(node.i, node);
+                break;
+              case 32:
+              case 33:
+              case 34:
+                streams.update(node.i, current => {
+                  if (current) {
+                    return [...current, node];
+                  }
+                  return [node];
+                });
+                break;
+              case 5:
+              case 6:
+              case 7:
+              case 8:
+              case 9:
+              case 10:
+              case 11:
+              case 12:
+              case 13:
+              case 14:
+              case 15:
+              case 16:
+              case 17:
+              case 18:
+              case 19:
+              case 20:
+              case 21:
+              case 25:
+              case 26:
+              case 27:
+              case 29:
+              case 31:
+              case 35:
+                references.write(node.i, node);
+                break;
+            }
+          }
 
-      function interpretChunk(chunk: string): SerovalNode {
-        const result = JSON.parse(chunk) as SerovalNode;
-        traverse(result, traverseNode);
-        return result;
-      }
+          function interpretChunk(chunk: string): SerovalNode {
+            const result = JSON.parse(chunk) as SerovalNode;
+            traverse(result, traverseNode);
+            return result;
+          }
 
-      void reader.drain(interpretChunk);
-      const root = interpretChunk(result.value);
-      setSelected(root);
-    }
-  });
+          void reader.drain(interpretChunk);
+          const root = interpretChunk(result.value);
+          setSelected(root);
+        }
+      })();
+    },
+  );
 
   return (
     <div data-start-seroval-viewer>

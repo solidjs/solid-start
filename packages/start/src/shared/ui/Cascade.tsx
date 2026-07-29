@@ -1,4 +1,4 @@
-import { Select as BaseSelect, SelectOption as BaseSelectOption } from "terracotta";
+import { Select as BaseSelect, SelectOption as BaseSelectOption } from "terracotta/select";
 
 import "./Cascade.css";
 

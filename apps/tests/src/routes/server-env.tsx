@@ -1,6 +1,6 @@
 import { SERVER_EXAMPLE } from "env:server";
 import env from "env:server/runtime";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 async function getServerCompiledEnv() {
   "use server";
@@ -26,11 +26,13 @@ async function checkServerEnvOnClient() {
 export default function App() {
   const [output, setOutput] = createSignal<{ result?: boolean }>({});
 
-  createEffect(async () => {
-    const resultA = await getServerCompiledEnv();
-    const resultB = await getServerRuntimeEnv();
-    const checkImport = await checkServerEnvOnClient();
-    setOutput(prev => ({ ...prev, result: !!resultA && !!resultB && checkImport }));
+  onSettled(() => {
+    void (async () => {
+      const resultA = await getServerCompiledEnv();
+      const resultB = await getServerRuntimeEnv();
+      const checkImport = await checkServerEnvOnClient();
+      setOutput(prev => ({ ...prev, result: !!resultA && !!resultB && checkImport }));
+    })();
   });
 
   return (

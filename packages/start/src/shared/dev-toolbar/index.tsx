@@ -1,15 +1,7 @@
-import {
-  createEffect,
-  createSignal,
-  ErrorBoundary,
-  onCleanup,
-  resetErrorBoundaries,
-  Show,
-  type JSX,
-} from "solid-js";
-import { createStore } from "solid-js/store";
-import { Portal } from "solid-js/web";
-import { Toolbar } from "terracotta";
+import { createEffect, createSignal, Errored, onSettled, Show } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import { Portal } from "@solidjs/web";
+import { Toolbar } from "terracotta/toolbar";
 import info from "../../../package.json" with { type: "json" };
 import clientOnly from "../clientOnly.ts";
 import { HttpStatusCode } from "../HttpStatusCode.ts";
@@ -31,10 +23,10 @@ export interface DevToolbarProps {
 export function DevToolbar(props: DevToolbarProps) {
   const [ref, setRef] = createSignal<HTMLElement>();
 
-  createEffect(() => {
-    const current = ref();
-
-    if (current) {
+  createEffect(
+    () => ref(),
+    current => {
+      if (!current) return;
       let isDown = false;
 
       // Offsets of the mouse relatively to the element's position
@@ -125,11 +117,11 @@ export function DevToolbar(props: DevToolbarProps) {
         },
       );
 
-      onCleanup(() => {
+      return () => {
         ac.abort();
-      });
-    }
-  });
+      };
+    },
+  );
 
   const [content, setContent] = createSignal<"fn" | "err" | undefined>(undefined);
 
@@ -145,7 +137,6 @@ export function DevToolbar(props: DevToolbarProps) {
 
   function resetError() {
     setErrors([]);
-    resetErrorBoundaries();
   }
 
   function pushError(error: unknown) {
@@ -155,7 +146,7 @@ export function DevToolbar(props: DevToolbarProps) {
     setContent("err");
   }
 
-  createEffect(() => {
+  onSettled(() => {
     const onErrorEvent = (error: ErrorEvent) => {
       // Browsers dispatch benign ResizeObserver loop notifications as window
       // "error" events carrying no error object. They aren't app errors.
@@ -167,36 +158,34 @@ export function DevToolbar(props: DevToolbarProps) {
 
     window.addEventListener("error", onErrorEvent);
 
-    onCleanup(() => {
+    return () => {
       window.removeEventListener("error", onErrorEvent);
-    });
+    };
   });
 
-  const [store, setStore] = createStore({
-    instances: {} as Record<string, ServerFunctionInstance | undefined>,
-  });
+  // A plain record behind a signal, not a store: the captured values hold
+  // native Request/Response objects, whose methods break when reached through
+  // a store proxy (`this` becomes the proxy — "Illegal invocation").
+  const [instances, setInstances] = createSignal<
+    Record<string, ServerFunctionInstance | undefined>
+  >({});
 
-  createEffect(() => {
-    onCleanup(
-      captureServerFunctionCall(call => {
-        if (call.type === "request") {
-          setStore("instances", call.instance, value => {
-            return {
-              ...value,
-              request: call,
-            };
-          });
-        } else {
-          setStore("instances", call.instance, value => {
-            return {
-              ...value,
-              response: call,
-            };
-          });
-        }
-      }),
-    );
-  });
+  onSettled(() =>
+    captureServerFunctionCall(call => {
+      // The tracker fires synchronously inside the transport, which may be
+      // running in an owned scope (e.g. a router preload computation) where
+      // signal writes are not allowed — defer the write out of it.
+      queueMicrotask(() => {
+        setInstances(current => ({
+          ...current,
+          [call.instance]:
+            call.type === "request"
+              ? { ...current[call.instance], request: call }
+              : ({ ...current[call.instance], response: call } as ServerFunctionInstance),
+        }));
+      });
+    }),
+  );
 
   return (
     <>
@@ -223,21 +212,28 @@ export function DevToolbar(props: DevToolbarProps) {
           <ErrorViewer show={content() === "err"} errors={errors()} resetError={resetError} />
           <ServerFunctionViewer
             show={content() === "fn"}
-            instances={store.instances}
+            instances={instances()}
             onDeleteInstance={value => {
-              setStore("instances", value, undefined);
+              setInstances(current => {
+                const next = { ...current };
+                delete next[value];
+                return next;
+              });
             }}
           />
         </div>
       </Portal>
-      <ErrorBoundary
+      <Errored
         fallback={error => {
-          pushError(error);
+          // `error` is an accessor in Solid 2, and signal writes are not
+          // allowed inside the boundary's owned scope, so defer the push.
+          const err = error();
+          queueMicrotask(() => pushError(err));
           return <HttpStatusCode code={500} />;
         }}
       >
         {props.children}
-      </ErrorBoundary>
+      </Errored>
       <Show when={errors().length > 0}>
         <HttpStatusCode code={500} />
       </Show>

@@ -12,7 +12,6 @@ export default defineConfig({
         /**
          * Creates a shared chunk with two components. Needed for the "SharedChunk" test!
          * The vite manifest behaves differently for such shared chunks.
-         * More info: packages/start/src/config/lazy.ts
          *
          * TODO: When switching to Rolldown, migrate this to advancedChunks
          * https://vite.dev/guide/rolldown.html#manualchunks-to-advancedchunks

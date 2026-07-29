@@ -1,145 +1,88 @@
-import { type Component } from "solid-js";
-import { pushRequest, pushResponse } from "../shared/dev-toolbar/functions/tracker.ts";
+// Client half of the runtime ABI: the fetch transport from
+// @solidjs/web/server-functions, configured for Start's BASE_URL-prefixed
+// endpoint. Compiled client output (via vite-plugin-solid's serverFunctions
+// transform) imports createServerReference from here. Integrations (e.g.
+// @solidjs/router) decode pass-through responses themselves with the core
+// `decodeResponse`.
 import {
-  // serializeToJSONStream,
-  serializeToJSONString,
-} from "./serialization.ts";
-import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
+  configureServerFunctionsClient,
+  INSTANCE_HEADER,
+} from "@solidjs/web/server-functions/client";
+import { serializeJSON } from "@solidjs/web/serialization";
+import serovalPlugins from "solid-start:seroval-plugins";
+import { pushRequest, pushResponse } from "../shared/dev-toolbar/functions/tracker.ts";
 
-let INSTANCE = 0;
+let baseURL = import.meta.env.BASE_URL ?? "/";
+if (!baseURL.endsWith("/")) baseURL += "/";
 
-async function createRequest(base: string, id: string, instance: string, options: RequestInit) {
-  const request = new Request(base, {
-    method: "POST",
-    ...options,
-    headers: {
-      ...options.headers,
-      "X-Server-Id": id,
-      "X-Server-Instance": instance,
-    },
-  });
-  if (import.meta.env.DEV) {
-    pushRequest(id, instance, request.clone());
-  }
-  const response = await fetch(request);
-  if (import.meta.env.DEV) {
-    pushResponse(id, instance, response.clone());
-  }
-  return response;
+const endpoint = `${baseURL}_server`;
+
+// The `;0x{8-hex-byte-length};` chunk framing of the server-function wire
+// format (what the transport's ChunkReader on the other end reads).
+function frameChunk(data: string): string {
+  const bytes = new TextEncoder().encode(data).length;
+  const hex = bytes.toString(16);
+  return `;0x${"00000000".slice(0, 8 - hex.length)}${hex};${data}`;
 }
 
-async function initializeResponse(
-  base: string,
-  id: string,
-  instance: string,
-  options: RequestInit,
-  args: any[],
-) {
-  // No args, skip serialization
-  if (args.length === 0) {
-    return createRequest(base, id, instance, options);
-  }
-  // For single arguments, we can directly encode as body
-  if (args.length === 1) {
-    const body = args[0];
-    const result = getHeadersAndBody(body);
-    if (result) {
-      return createRequest(base, id, instance, {
-        ...options,
-        body: result.body,
-        headers: {
-          ...options.headers,
-          ...result.headers,
+// Codec encoding for argument lists JSON can't carry faithfully — a `.with()`
+// bound value next to FormData (router form actions), Dates, Maps, ... The
+// output is the `BodyFormat.Serialized` encoding the server handler already
+// decodes; this stands in for @solidjs/web's `enableRichArguments()` until a
+// release ships the rich-args entry.
+function serializeArgs(args: unknown[]): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let out = "";
+    serializeJSON(args, {
+      plugins: serovalPlugins,
+      onParse(node) {
+        out += frameChunk(JSON.stringify(node));
+      },
+      onDone() {
+        resolve(out);
+      },
+      onError(error) {
+        reject(error);
+      },
+    });
+  });
+}
+
+configureServerFunctionsClient({
+  endpoint,
+  // App-supplied Seroval plugins (`serialization.plugins`) — must match the
+  // server handler's codec.
+  codec: { plugins: serovalPlugins },
+  serializeArgs,
+  // Feed the dev toolbar's server-function inspector. The transport stamps a
+  // unique instance header on every call; Start's dev server handler echoes
+  // it on the response, which is what pairs the two here.
+  ...(import.meta.env.DEV
+    ? {
+        prepareRequest(init: RequestInit, context: { id: string }) {
+          const instance = new Headers(init.headers).get(INSTANCE_HEADER);
+          if (instance) {
+            // GET references carry their args in the query string, which the
+            // hook doesn't see, so the URL is the bare endpoint.
+            pushRequest(context.id, instance, new Request(endpoint, init));
+          }
+          return init;
         },
-      });
-    }
-  }
-  // Fallback to seroval
-  return createRequest(base, id, instance, {
-    ...options,
-    // TODO(Alexis): move to serializeToJSONStream
-    body: await serializeToJSONString(args),
-    // duplex: 'half',
-    // body: serializeToJSONStream(args),
-    headers: {
-      ...options.headers,
-      "Content-Type": "text/plain",
-      [BODY_FORMAT_KEY]: BodyFormat.Seroval,
-    },
-  });
-}
-
-async function fetchServerFunction(
-  base: string,
-  id: string,
-  options: Omit<RequestInit, "body">,
-  args: any[],
-) {
-  const instance = `server-fn:${INSTANCE++}`;
-
-  const response = await initializeResponse(base, id, instance, options, args);
-
-  if (
-    response.headers.has("Location") ||
-    response.headers.has("X-Revalidate") ||
-    response.headers.has("X-Single-Flight")
-  ) {
-    if (response.body) {
-      /* @ts-ignore-next-line */
-      response.customBody = async () => {
-        return await extractBody(instance, true, response.clone());
-      };
-    }
-    return response;
-  }
-
-  const result = await extractBody(instance, true, response.clone());
-  if (response.headers.has("X-Error") || response.status >= 500) {
-    throw result ?? new Error(`Server function call failed with status ${response.status}`);
-  }
-  return result;
-}
-
-export function cloneServerReference(id: string) {
-  let baseURL = import.meta.env.BASE_URL ?? "/";
-  if (!baseURL.endsWith("/")) baseURL += "/";
-
-  const fn = (...args: any[]) => fetchServerFunction(`${baseURL}_server`, id, {}, args);
-
-  return new Proxy(fn, {
-    get(target, prop, receiver) {
-      if (prop === "url") {
-        return `${baseURL}_server?id=${encodeURIComponent(id)}`;
+        responseHandler: {
+          handle(response: Response, ctx: { id: string }) {
+            const instance = response.headers.get(INSTANCE_HEADER);
+            if (instance) {
+              pushResponse(ctx.id, instance, response.clone());
+            }
+            // undefined lets the transport decode the response as usual
+            return undefined;
+          },
+        },
       }
-      if (prop === "GET") {
-        return receiver.withOptions({ method: "GET" });
-      }
-      if (prop === "withOptions") {
-        const url = `${baseURL}_server?id=${encodeURIComponent(id)}`;
-        return (options: RequestInit) => {
-          const fn = async (...args: any[]) => {
-            const encodeArgs = options.method && options.method.toUpperCase() === "GET";
-            return fetchServerFunction(
-              encodeArgs
-                ? url +
-                    (args.length
-                      ? `&args=${encodeURIComponent(await serializeToJSONString(args))}`
-                      : "")
-                : `${baseURL}_server`,
-              id,
-              options,
-              encodeArgs ? [] : args,
-            );
-          };
-          fn.url = url;
-          return fn;
-        };
-      }
-      return (target as any)[prop];
-    },
-  });
-}
+    : {}),
+});
 
-export function createClientReference(Component: Component<any>, id: string) {
-  return Component;
-}
+export {
+  createServerReference,
+  registerServerReference,
+} from "@solidjs/web/server-functions/client";

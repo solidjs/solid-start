@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 function serverFnDestructure() {
   "use server";
@@ -15,9 +15,11 @@ function serverFnDestructure() {
 export default function App() {
   const [output, setOutput] = createSignal<boolean>();
 
-  createEffect(async () => {
-    const result = await serverFnDestructure();
-    setOutput(result);
+  onSettled(() => {
+    void (async () => {
+      const result = await serverFnDestructure();
+      setOutput(result);
+    })();
   });
 
   return (

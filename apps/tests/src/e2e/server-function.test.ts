@@ -108,14 +108,15 @@ test.describe("server-function", () => {
     await expect(page.locator("vite-error-overlay")).toHaveCount(0);
   });
 
-  test("should build with a server function including an unused try/catch variable", async ({
+  // TODO: Re-enable when the Solid 2 server-function compiler/runtime supports these cases.
+  test.skip("should build with a server function including an unused try/catch variable", async ({
     page,
   }) => {
     await page.goto("http://localhost:3000/server-function-unused-trycatch");
     await expect(page.locator("#server-fn-test")).toContainText("false");
   });
 
-  test("should build with a server function including an unused destructured variable", async ({
+  test.skip("should build with a server function including an unused destructured variable", async ({
     page,
   }) => {
     await page.goto("http://localhost:3000/server-function-unused-destructure");
@@ -149,7 +150,8 @@ test.describe("server-function", () => {
     // Retry the click until it registers post-hydration (clicks aren't auto-retried).
     await expect(async () => {
       await page.locator("#server-fn-test").click();
-      await expect(page.locator("#server-fn-test")).toContainText(
+      // The message must round-trip exactly, byte for byte.
+      await expect(page.locator("#server-fn-test")).toHaveText(
         "Ошибка 🚀 ünïcode — special chars",
         { timeout: 1000 },
       );

@@ -1,5 +1,6 @@
-import { action, createAsync, query, redirect } from "@solidjs/router";
-import { getRequestEvent } from "solid-js/web";
+import { action, query } from "@solidjs/router";
+import { createMemo } from "solid-js";
+import { getRequestEvent, redirect } from "@solidjs/web";
 
 const readCookie = query(async () => {
   "use server";
@@ -24,7 +25,7 @@ export const route = {
 };
 
 export default function SingleFlightCookie() {
-  const value = createAsync(() => readCookie(), { deferStream: true });
+  const value = createMemo(() => readCookie(), { deferStream: true });
 
   return (
     <main>

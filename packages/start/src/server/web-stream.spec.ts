@@ -1,5 +1,5 @@
-import { createComponent, createResource, Suspense } from "solid-js";
-import { renderToStream } from "solid-js/web";
+import { createComponent, createMemo, Loading } from "solid-js";
+import { renderToStream } from "@solidjs/web";
 import { describe, expect, it } from "vitest";
 
 import { toWebReadableStream } from "./web-stream.ts";
@@ -45,13 +45,13 @@ describe("toWebReadableStream", () => {
     });
     const stream = renderToStream(
       () => {
-        const [data] = createResource(
+        const data = createMemo(
           () =>
             new Promise<string>(resolve => {
               resolveData = resolve;
             }),
         );
-        return createComponent(Suspense, {
+        return createComponent(Loading, {
           fallback: "loading",
           get children() {
             return data();

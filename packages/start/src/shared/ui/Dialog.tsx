@@ -2,7 +2,7 @@ import {
   Dialog as BaseDialog,
   DialogOverlay as BaseDialogOverlay,
   DialogPanel as BaseDialogPanel,
-} from "terracotta";
+} from "terracotta/dialog";
 
 import "./Dialog.css";
 

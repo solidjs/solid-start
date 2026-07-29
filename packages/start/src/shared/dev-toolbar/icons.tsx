@@ -1,5 +1,5 @@
 // @refresh skip
-import type { JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
 
 export function ArrowRightIcon(
   props: JSX.IntrinsicElements["svg"] & { title: string },

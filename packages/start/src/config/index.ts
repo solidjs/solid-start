@@ -1,20 +1,20 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
-import { basename, extname, isAbsolute, join } from "node:path";
+import { basename, extname, isAbsolute, join, relative } from "node:path";
 import type { PluginOption } from "vite";
-import solid, { type Options as SolidOptions } from "vite-plugin-solid";
-import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
+import solid, {
+  devStylePatch,
+  serverFunctions,
+  type Options as SolidOptions,
+  type ServerFunctionsOptions,
+} from "vite-plugin-solid";
 import { appRootAlias } from "./app-root-alias.ts";
 import { boundaryModules } from "./boundary-modules.ts";
-import { DEFAULT_EXTENSIONS, VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
+import { VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
-import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "./fs-router.ts";
-import { fsRoutes } from "./fs-routes/index.ts";
-import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
-import { sanitizeChunkFileName, toPickId } from "./fs-routes/tree-shake.ts";
-import lazy from "./lazy.ts";
-import { manifest } from "./manifest.ts";
+import { PageFileSystemRouter } from "filesystem-routing";
+import { DEFAULT_EXTENSIONS, fileRoutes } from "filesystem-routing/vite";
 import { parseIdQuery } from "./utils.ts";
 
 /**
@@ -55,20 +55,6 @@ export interface SolidStartOptions {
   devOverlay?: boolean;
 
   /**
-   * Experimental features.
-   */
-  experimental?: {
-    /**
-     * Enable islands architecture mode.
-     *
-     * Currently fixed to `false` (not yet fully supported).
-     *
-     * @default false
-     */
-    islands?: false;
-  };
-
-  /**
    * Directory containing file-system routes, relative to {@link appRoot}.
    *
    * @default "./routes"
@@ -98,34 +84,17 @@ export interface SolidStartOptions {
    */
   serialization?: {
     /**
-     * The serialization mode to use for server functions/actions.
-     *
-     * - `"js"` — Uses a custom binary format (Seroval) that is more efficient
-     *   than JSON, but requires a custom deserializer (with `eval()`) on the client.
-     *   A strong CSP that blocks `eval()` will prevent this mode from working.
-     * - `"json"` — Uses JSON for serialization. Less efficient / larger payloads,
-     *   but can be deserialized with `JSON.parse` on the client and is CSP-friendly.
-     *
-     * @default "json"
-     */
-    mode?: "js" | "json";
-
-    /**
      * Path to a module whose default export is an array of custom Seroval
      * plugins, used to serialize values Seroval doesn't understand natively
      * (ORM id types, decimals, `Temporal`, and other custom classes).
      *
-     * Build plugins with `createPlugin` from `seroval`. The module is bundled
-     * into both the client and the server so that both ends of a server
-     * function agree on the format, so it must not import server-only code.
+     * Build plugins with `createPlugin` from `@solidjs/start/serialization`.
+     * The module is bundled into both the client and the server so that both
+     * ends of a server function agree on the format, so it must not import
+     * server-only code.
      *
-     * SolidStart's built-in plugins take precedence: Seroval uses the first
-     * plugin whose `test()` passes, and these are appended after the built-ins.
-     *
-     * A plugin's `deserialize` rebuilds the value under {@link mode} `"json"`.
-     * `serialize` is only used by `mode: "js"`, where the payload is evaluated
-     * on the client and may therefore reference globals only, not the plugin
-     * module's own imports.
+     * Custom plugins are consulted ahead of the built-in web plugins: Seroval
+     * uses the first plugin whose `test()` passes.
      *
      * Only applies to server-function and action payloads. The SSR hydration
      * payload is serialized by `solid-js/web` and is unaffected.
@@ -167,15 +136,15 @@ export interface SolidStartOptions {
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
 
+const DEV_MANIFEST_REGISTRY_KEY = Symbol.for("vite-plugin-solid:dev-manifest");
+const DEV_MANIFEST_ENDPOINT = "/@solid-start/dev-manifest";
+
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
     appRoot: "./src",
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
-    experimental: {
-      islands: false,
-    },
     solid: {},
     extensions: [],
   } satisfies SolidStartOptions);
@@ -191,19 +160,67 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     client: `${start.appRoot}/entry-client${entryExtension}`,
     server: `${start.appRoot}/entry-server${entryExtension}`,
   };
-  return [
-    // TODO (Alexis): check if the comment below is still relevant
-    //
-    // Must be placed after fsRoutes, as treeShake will remove the
-    // server fn exports added in by this plugin
-    serverFunctionsPlugin({
-      manifest: VIRTUAL_MODULES.serverFnManifest,
-      runtime: {
-        server: "@solidjs/start/fns/server",
-        client: "@solidjs/start/fns/client",
-      },
-      filter: options?.serverFunctions?.filter,
+  const routers = {
+    // The browser routes and renders pages.
+    [VITE_ENVIRONMENTS.client]: new PageFileSystemRouter({
+      dir: absolute(routeDir, root),
+      extensions,
     }),
+    // The server additionally serves `GET`/`POST` exports as request
+    // handlers, and in SPA mode routes without ever rendering, so page
+    // modules stay out of the server bundle.
+    [VITE_ENVIRONMENTS.server]: new PageFileSystemRouter({
+      dir: absolute(routeDir, root),
+      extensions,
+      httpMethods: true,
+      components: start.ssr,
+    }),
+  };
+  return [
+    {
+      name: "solid-start:dev-manifest-bridge",
+      apply: "serve",
+      enforce: "pre",
+      configureServer(server) {
+        // Nitro's SSR runner is isolated from Vite's global resolver registry,
+        // so expose the resolver through Vite's own dev middleware.
+        server.middlewares.use(async (req, res, next) => {
+          const url = new URL(req.url || "/", "http://localhost");
+          if (url.pathname !== DEV_MANIFEST_ENDPOINT) return next();
+
+          const key = url.searchParams.get("key");
+          if (!key) {
+            res.statusCode = 400;
+            return res.end("Missing asset key");
+          }
+
+          try {
+            const registry = (globalThis as any)[DEV_MANIFEST_REGISTRY_KEY];
+            const resolver = registry?.[server.config.root];
+            if (!resolver) {
+              console.error(
+                `[solid-start] vite-plugin-solid's dev manifest registry has no resolver for root "${server.config.root}" ` +
+                  `(requested asset key "${key}"). The module's client assets cannot be resolved and hydration ` +
+                  "will fail for it. Typical causes: the dev server was not restarted after dependency changes, " +
+                  "or the install is stale.",
+              );
+            }
+            const assets = resolver ? await resolver.resolve(key) : null;
+            if (resolver && assets == null) {
+              console.error(
+                `[solid-start] Dev manifest resolver returned no assets for key "${key}" (root "${server.config.root}"). ` +
+                  "The module's hydration preload entry will be missing.",
+              );
+            }
+            res.setHeader("content-type", "application/json");
+            res.setHeader("cache-control", "no-store");
+            return res.end(JSON.stringify(assets));
+          } catch (error) {
+            return next(error);
+          }
+        });
+      },
+    },
     {
       name: "solid-start:config",
       enforce: "pre",
@@ -216,34 +233,39 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         };
       },
       async config(config, env) {
+        // The route modules are added to this input by the file-routes
+        // plugin, which owns the ids they are loaded from.
         const clientInput = [handlers.client];
-        const clientEntryUrl =
-          env.command === "serve" && config.experimental?.bundledDev
-            ? `assets/${basename(handlers.client, entryExtension)}.js`
-            : handlers.client;
-        if (env.command === "build") {
-          const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
-          for (const route of await clientRouter.getRoutes()) {
-            for (const [key, value] of Object.entries(route)) {
-              if (value && key.startsWith("$") && !key.startsWith("$$")) {
-                clientInput.push(toPickId((value as any).src, (value as any).pick));
-              }
-            }
-          }
+        const bundledDev = env.command === "serve" && !!config.experimental?.bundledDev;
+        if (bundledDev) {
+          console.warn(
+            "[solid-start] Vite's experimental `bundledDev` mode is currently unsupported by SolidStart. " +
+              "Vite does not yet provide an API to map a module id to its served URL, which SolidStart " +
+              "needs to emit SSR preload and hydration hints. Until it does " +
+              "(see https://github.com/vitejs/vite/issues/22991), hydration of code-split routes will fail.",
+          );
         }
+        const clientEntryUrl = bundledDev
+          ? `assets/${basename(handlers.client, entryExtension)}.js`
+          : handlers.client;
         return {
           appType: "custom",
-          build: {
-            assetsDir: "_build/assets",
-            rollupOptions: {
-              output: {
-                // Keeps route chunks named after their file rather than after
-                // the `?pick=...` id that addresses them. See toPickId.
-                sanitizeFileName: sanitizeChunkFileName,
-              },
-            },
-          },
+          build: { assetsDir: "_build/assets" },
           optimizeDeps: {
+            include: [
+              "@solidjs/start > seroval",
+              "@solidjs/start > seroval-plugins/web",
+              // Pre-bundle both specifiers of the server-function transport in
+              // the same optimizer pass so they share one module instance.
+              // @solidjs/router (served as source) imports the core entry;
+              // Start's fns/client imports the /client entry. Both resolve to
+              // the same file, but if the router's import falls through to a
+              // raw /@fs URL it gets its own copy of the transport config, and
+              // configureServerFunctionsClient (endpoint, codec plugins, dev
+              // hooks) never applies to router-initiated calls.
+              "@solidjs/web/server-functions",
+              "@solidjs/web/server-functions/client",
+            ],
             // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
             ...({
               rolldownOptions: {
@@ -308,16 +330,20 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
             "import.meta.env.START_SSR": JSON.stringify(start.ssr),
-            // Use JSON.stringify so backslashes on Windows are escaped and
-            // esbuild receives a valid JS string literal for the define value
-            "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
+            // Root-relative (posix) so it can key manifest/resolver lookups.
+            // JSON.stringify keeps the define a valid JS string literal.
+            "import.meta.env.START_APP_ENTRY": JSON.stringify(
+              relative(root, appEntryPath).split("\\").join("/"),
+            ),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+            // Inline dev script (from vite-plugin-solid) that reconciles
+            // SSR'd <style data-vite-dev-id> tags with Vite's HMR client.
+            "import.meta.env.START_DEV_STYLE_PATCH": JSON.stringify(devStylePatch),
             "import.meta.env.SERVER_BASE_URL": JSON.stringify(
               (config.server as { baseURL?: string } | undefined)?.baseURL ?? "",
             ),
-            "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
           builder: {
             sharedPlugins: true,
@@ -336,44 +362,40 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
     },
     appRootAlias(root, start.appRoot),
-    manifest(start),
-    fsRoutes({
-      routers: {
-        client: new SolidStartClientFileRouter({
-          dir: absolute(routeDir, root),
-          extensions,
-        }),
-        ssr: new SolidStartServerFileRouter({
-          dir: absolute(routeDir, root),
-          extensions,
-          dataOnly: !start.ssr,
-        }),
-      },
-    }),
-    lazy(),
+    fileRoutes({ routers, buildInputs: VITE_ENVIRONMENTS.client }),
     envPlugin(options?.env),
+    // Must be placed after fileRoutes, as treeShake will remove the
+    // server fn exports added in by this plugin
+    serverFunctions({
+      manifest: VIRTUAL_MODULES.serverFnManifest,
+      runtime: {
+        server: "@solidjs/start/fns/server",
+        client: "@solidjs/start/fns/client",
+      },
+      filter: options?.serverFunctions?.filter,
+    }),
     boundaryModules(),
-    {
-      name: "solid-start:boundary-modules",
-      enforce: "pre",
-      resolveId(id, importer, { ssr }) {
-        if (id === "server-only") {
-          if (!ssr) this.error(`Attempt to import 'server-only' in a client module: ${importer}`);
-        } else if (id === "client-only") {
-          if (ssr) this.error(`Attempt to import 'client-only' in a server module: ${importer}`);
-        } else {
-          return null;
-        }
-        return "\0solid-start:boundary-modules:id";
-      },
-      load(id) {
-        if (id === "\0solid-start:boundary-modules:id") return "export {}";
-      },
-    },
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {
         const { filename, query } = parseIdQuery(id);
+
+        if (filename === VIRTUAL_MODULES.middleware) {
+          if (start.middleware) return await this.resolve(start.middleware);
+          return `\0${VIRTUAL_MODULES.middleware}`;
+        }
+
+        if (filename === VIRTUAL_MODULES.serverFnErrorHandler) {
+          const onError = options?.serverFunctions?.onError;
+          if (onError) return await this.resolve(onError);
+          return `\0${VIRTUAL_MODULES.serverFnErrorHandler}`;
+        }
+
+        if (filename === VIRTUAL_MODULES.serovalPlugins) {
+          const plugins = options?.serialization?.plugins;
+          if (plugins) return await this.resolve(plugins);
+          return `\0${VIRTUAL_MODULES.serovalPlugins}`;
+        }
 
         let base;
         if (filename === VIRTUAL_MODULES.clientEntry) base = handlers.client;
@@ -388,13 +410,10 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           return id;
         }
       },
-    },
-    {
-      name: "solid-start:capture-client-bundle",
-      enforce: "post",
-      generateBundle(options, bundle) {
-        globalThis.START_CLIENT_BUNDLE = bundle;
-        (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
+      load(id) {
+        if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
+        if (id === `\0${VIRTUAL_MODULES.serverFnErrorHandler}`) return "export default undefined;";
+        if (id === `\0${VIRTUAL_MODULES.serovalPlugins}`) return "export default [];";
       },
     },
     devServer(handlers.server),

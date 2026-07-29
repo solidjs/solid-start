@@ -1,4 +1,5 @@
-import { createMemo, createResource, For, type JSX, Show, Suspense } from "solid-js";
+import { createMemo, For, Loading, Show } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import { Text } from "../../ui/Text.tsx";
 
 import "./HexViewer.css";
@@ -91,11 +92,13 @@ export interface HexViewerProps {
 }
 
 export function HexViewer(props: HexViewerProps): JSX.Element {
-  const [data] = createResource(() => props.bytes);
+  const data = createMemo(async () => await props.bytes);
 
   return (
-    <Suspense>
-      <Show when={data()}>{current => <HexViewerInner bytes={current()} />}</Show>
-    </Suspense>
+    <Loading>
+      <Show when={data()} keyed>
+        {current => <HexViewerInner bytes={current} />}
+      </Show>
+    </Loading>
   );
 }

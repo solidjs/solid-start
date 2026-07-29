@@ -1,4 +1,5 @@
-import { createResource, For, type JSX, Show, Suspense } from "solid-js";
+import { createMemo, For, Loading, Show } from "solid-js";
+import type { JSX } from "@solidjs/web";
 import { Section } from "../../ui/Section.tsx";
 import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
@@ -29,11 +30,13 @@ export interface URLSearchParamsViewerProps {
 }
 
 export function URLSearchParamsViewer(props: URLSearchParamsViewerProps) {
-  const [data] = createResource(() => props.source);
+  const data = createMemo(async () => await props.source);
 
   return (
-    <Suspense>
-      <Show when={data()}>{current => <URLSearchParamsViewerInner source={current()} />}</Show>
-    </Suspense>
+    <Loading>
+      <Show when={data()} keyed>
+        {current => <URLSearchParamsViewerInner source={current} />}
+      </Show>
+    </Loading>
   );
 }

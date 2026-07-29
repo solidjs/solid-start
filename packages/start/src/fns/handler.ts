@@ -1,342 +1,91 @@
-import { parseSetCookie } from "cookie-es";
-import { type H3Event, parseCookies } from "h3";
+// HTTP dispatch for server functions: the core web-standard handler from
+// @solidjs/web/server-functions with Start's platform piece (the h3-derived
+// rich event). Single-flight payload collection is the router's
+// (@solidjs/router/server owns its vocabulary: query cache keys,
+// submissions); the no-JS flash-cookie form convention is router-agnostic
+// and lives in core (@solidjs/web/server-functions/server, as of router
+// 2.0.0-next.12). Start just wires its route tree and base path in.
+import { type H3Event } from "h3";
 import { sharedConfig } from "solid-js";
-import { renderToString } from "solid-js/web";
-import { provideRequestEvent } from "solid-js/web/storage";
-
-import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
-import { createPageEvent } from "../server/handler.ts";
+import { provideRequestEvent } from "@solidjs/web/storage";
 import {
-  deserializeFromJSONString,
-  serializeToJSONStream,
-  serializeToJSStream,
-} from "./serialization.ts";
-import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
+  createNoJSHandler,
+  handleServerFunctionRequest,
+  INSTANCE_HEADER,
+} from "@solidjs/web/server-functions/server";
+import { createFlightDataCollector } from "@solidjs/router/server";
 import "solid-start:server-fn-manifest";
+import serovalPlugins from "solid-start:seroval-plugins";
 
-import { getServerFunction, hasServerFunction } from "./registration.ts";
+import { getFetchEvent } from "../server/fetchEvent.ts";
+import { fileRoutes } from "../router.tsx";
 import { applyServerFunctionErrorHandler } from "./error-handler.ts";
-import type { FetchEvent, PageEvent } from "../server/types.ts";
-import { getExpectedRedirectStatus } from "../server/util.ts";
+import type { FetchEvent } from "../server/types.ts";
 
-export async function handleServerFunction(h3Event: H3Event) {
+let base = import.meta.env.BASE_URL ?? "/";
+if (base.endsWith("/")) base = base.slice(0, -1);
+
+// Single-flight: the router's preload runner produces the revalidated route
+// data for the post-mutation URL straight off the file-system route tree —
+// no app render involved.
+const collectFlightData = createFlightDataCollector({ routes: fileRoutes, base });
+
+// No-JS form posts redirect back (303) with the outcome in the router's
+// flash cookie; the router seeds submission state from it on the next SSR.
+const handleNoJS = createNoJSHandler({ base });
+
+/**
+ * Runs the app's configured handler (`serverFunctions.onError`) over whatever a
+ * server function threw, before the core serializes it. This sits around the
+ * function call rather than on the core's `transformResult` seam because that
+ * seam only sees thrown `Response`s and envelopes — a plain `Error`, the case
+ * the option exists for, never reaches it.
+ */
+function applyErrorHandler(thrown: unknown): never {
+  throw applyServerFunctionErrorHandler(thrown);
+}
+
+export async function handleServerFunction(h3Event: H3Event): Promise<Response> {
   const event = getFetchEvent(h3Event);
-  const request = event.request;
 
-  const serverReference = request.headers.get("X-Server-Id");
-  const instance = request.headers.get("X-Server-Instance");
-  const singleFlight = request.headers.has("X-Single-Flight");
-  const url = new URL(request.url);
-  let functionId: string | undefined | null;
-  if (serverReference) {
-    // invariant(typeof serverReference === "string", "Invalid server function");
-    [functionId] = serverReference.split("#");
-  } else {
-    functionId = url.searchParams.get("id");
-
-    if (!functionId) {
-      return process.env.NODE_ENV === "development"
-        ? new Response("Server function not found", { status: 404 })
-        : new Response(null, { status: 404 });
-    }
-  }
-
-  if (import.meta.env.DEV && !hasServerFunction(functionId!)) {
-    // The module that owns this function has not been evaluated in the server
-    // environment yet (e.g. the route was reached by client-side navigation, so
-    // it was only ever loaded in the browser). Ask the dev server to resolve the
-    // function id back to its owning module and import it, which registers it.
-    // Resolved by the "solid-start:server-functions/preload" plugin.
-    try {
-      // the /@id/ prefix routes the request through the plugin container so the
-      // virtual module can be resolved (bare ids get node-resolved by the runner)
-      await import(
-        /* @vite-ignore */ `/@id/solid-start:server-fn-lookup?id=${encodeURIComponent(functionId!)}`
-      );
-    } catch (error) {
-      // fall through to getServerFunction, which reports the missing function
-      console.error("[solid-start] server function lookup failed:", error);
-    }
-  }
-
-  const serverFunction = getServerFunction(functionId!);
-
-  let parsed: any[] = [];
-
-  // grab bound arguments from url when no JS
-  if (!instance || request.method === "GET") {
-    const args = url.searchParams.get("args");
-    if (args) {
-      const result = (await deserializeFromJSONString(args)) as any[];
-      for (const arg of result) {
-        parsed.push(arg);
-      }
-    }
-  }
-  if (request.method === "POST" && request.body !== null) {
-    const bodyFormat = request.headers.get(BODY_FORMAT_KEY);
-    const decoded = await extractBody("", false, request.clone());
-    if (bodyFormat === BodyFormat.Seroval) {
-      parsed = decoded as any[];
-    } else {
-      parsed.push(decoded);
-    }
-  }
-  try {
-    let result = await provideRequestEvent(event, async () => {
-      /* @ts-expect-error */
-      sharedConfig.context = { event };
-      event.locals.serverFunctionMeta = {
-        id: functionId,
-      };
-      return serverFunction(...parsed);
-    });
-
-    if (singleFlight && instance) {
-      result = await handleSingleFlight(event, result);
-    }
-
-    // handle responses
-    if (result instanceof Response) {
-      if (result.headers && result.headers.has("X-Content-Raw")) return result;
-      if (instance) {
-        // forward headers
-        if (result.headers) mergeResponseHeaders(h3Event, result.headers);
-        // forward non-redirect statuses
-        if (result.status && (result.status < 300 || result.status >= 400))
-          h3Event.res.status = result.status;
-        if ((result as any).customBody) {
-          result = await (result as any).customBody();
-        } else if (result.body == null) result = null;
-      }
-    }
-
-    // handle no JS success case
-    if (!instance) return await handleNoJS(result, request, parsed);
-
-    const body = getHeadersAndBody(result);
-    if (body) {
-      return new Response(body.body, {
-        headers: body.headers,
-      });
-    }
-    h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
-    if (import.meta.env.SEROVAL_MODE === "js") {
-      h3Event.res.headers.set("content-type", "text/javascript");
-      return serializeToJSStream(instance, result);
-    }
-    return serializeToJSONStream(result);
-  } catch (x) {
-    x = applyServerFunctionErrorHandler(x);
-    if (x instanceof Response) {
-      if (singleFlight && instance) {
-        x = await handleSingleFlight(event, x);
-      }
-      // forward headers
-      if ((x as any).headers) mergeResponseHeaders(h3Event, (x as any).headers);
-      // forward non-redirect statuses
-      if ((x as any).status && (!instance || (x as any).status < 300 || (x as any).status >= 400))
-        h3Event.res.status = (x as any).status;
-      if ((x as any).customBody) {
-        x = await (x as any).customBody();
-      } else if ((x as any).body == null) x = null;
-      h3Event.res.headers.set("X-Error", "true");
-    } else if (instance) {
-      const error = x instanceof Error ? x.message : typeof x === "string" ? x : "true";
-
-      h3Event.res.headers.set("X-Error", toHeaderValue(error));
-    } else {
-      x = await handleNoJS(x, request, parsed, true);
-    }
-    if (instance) {
-      const body = getHeadersAndBody(x);
-      if (body) {
-        const headers = new Headers(body.headers as HeadersInit);
-        const errorHeader = h3Event.res.headers.get("X-Error");
-        if (errorHeader !== null) {
-          headers.set("X-Error", errorHeader);
-        }
-        return new Response(body.body, {
-          headers,
-        });
-      }
-      h3Event.res.headers.set(BODY_FORMAT_KEY, BodyFormat.Seroval);
-      if (import.meta.env.SEROVAL_MODE === "js") {
-        h3Event.res.headers.set("content-type", "text/javascript");
-        return serializeToJSStream(instance, x);
-      }
-      return serializeToJSONStream(x);
-    }
-    return x;
-  }
-}
-
-// header values must be ByteString-safe (no chars > 0xFF), otherwise Headers.set throws
-function toHeaderValue(value: string) {
-  const stripped = value.replace(/[\r\n]+/g, "");
-  try {
-    return /[^\x00-\xFF]/.test(stripped) ? encodeURIComponent(stripped) : stripped;
-  } catch {
-    // encodeURIComponent throws on lone surrogates
-    return "true";
-  }
-}
-
-function getRefererLocation(request: Request, url: URL) {
-  const referer = request.headers.get("referer");
-  try {
-    if (referer) return new URL(referer).toString();
-  } catch {
-    // fall through to the app root below
-  }
-  // no usable referer (e.g. a no-referrer policy): the app root still beats
-  // leaving the browser sitting on the server function endpoint
-  return new URL(import.meta.env.BASE_URL, url.origin).toString();
-}
-
-async function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
-  const url = new URL(request.url);
-  const isError = result instanceof Error;
-  let statusCode = 302;
-  let headers: Headers;
-  if (result instanceof Response) {
-    headers = new Headers(result.headers);
-    if (result.headers.has("Location")) {
-      headers.set(
-        `Location`,
-        new URL(result.headers.get("Location")!, url.origin + import.meta.env.BASE_URL).toString(),
-      );
-      statusCode = getExpectedRedirectStatus(result);
-    } else {
-      // responses that carry a value rather than a destination (json(), reload())
-      // still have to send the browser back to the page the form came from
-      headers.set("Location", getRefererLocation(request, url));
-    }
-    // the body is dropped from the redirect, so don't advertise its type
-    headers.delete("Content-Type");
-    // mirror the JS path: the flash cookie carries the value, not the Response
-    result = (result as any).customBody ? await (result as any).customBody() : null;
-  } else
-    headers = new Headers({
-      Location: getRefererLocation(request, url),
-    });
-  if (result) {
-    headers.append(
-      "Set-Cookie",
-      `flash=${encodeURIComponent(
-        JSON.stringify({
-          url: url.pathname + url.search,
-          result: isError ? result.message : result,
-          thrown: thrown,
-          error: isError,
-          input: parsed.length
-            ? [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-            : [],
-        }),
-      )}; Secure; HttpOnly;`,
-    );
-  }
-  return new Response(null, {
-    status: statusCode,
-    headers,
-  });
-}
-
-let App: any;
-export function createSingleFlightHeaders(sourceEvent: FetchEvent, result?: unknown) {
-  // cookie handling logic is pretty simplistic so this might be imperfect
-  // unclear if h3 internals are available on all platforms but we need a way to
-  // update request headers on the underlying H3 event.
-
-  const headers = new Headers(sourceEvent.request.headers);
-  const cookies = parseCookies(sourceEvent.nativeEvent);
-  const SetCookies = sourceEvent.response.headers.getSetCookie();
-  // cookies attached to the returned/thrown response (eg. `redirect(to, { headers })`)
-  // haven't been merged onto the event response yet, but a browser round trip would
-  // have sent them back with the next request, so apply them here too. They come after
-  // the ones on the event response, so they win on conflict.
-  if (result instanceof Response) SetCookies.push(...result.headers.getSetCookie());
-  headers.delete("cookie");
-  // let useH3Internals = false;
-  // if (sourceEvent.nativeEvent.node?.req) {
-  // 	useH3Internals = true;
-  // 	sourceEvent.nativeEvent.node.req.headers.cookie = "";
-  // }
-  SetCookies.forEach(cookie => {
-    if (!cookie) return;
-    // `parseSetCookie` returns undefined for forbidden cookie names and for
-    // cookies with an empty name and value.
-    const parsed = parseSetCookie(cookie);
-    if (!parsed) return;
-    const { maxAge, expires, name, value } = parsed;
-    if (maxAge != null && maxAge <= 0) {
-      delete cookies[name];
-      return;
-    }
-    if (expires != null && expires.getTime() <= Date.now()) {
-      delete cookies[name];
-      return;
-    }
-    cookies[name] = value;
-  });
-  Object.entries(cookies).forEach(([key, value]) => {
-    headers.append("cookie", `${key}=${value}`);
-    // useH3Internals &&
-    // 	(sourceEvent.nativeEvent.node.req.headers.cookie += `${key}=${value};`);
-  });
-
-  return headers;
-}
-async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise<Response> {
-  let revalidate: string[];
-  let url = new URL(sourceEvent.request.headers.get("referer")!).toString();
-  if (result instanceof Response) {
-    if (result.headers.has("X-Revalidate"))
-      revalidate = result.headers.get("X-Revalidate")!.split(",");
-    if (result.headers.has("Location"))
-      url = new URL(
-        result.headers.get("Location")!,
-        new URL(sourceEvent.request.url).origin + import.meta.env.BASE_URL,
-      ).toString();
-  }
-  const event = { ...sourceEvent } as PageEvent;
-  event.request = new Request(url, {
-    headers: createSingleFlightHeaders(sourceEvent, result),
-  });
-  return await provideRequestEvent(event, async () => {
-    await createPageEvent(event);
-    App || (App = (await import("solid-start:app")).default);
-    /* @ts-expect-error */
-    event.router.dataOnly = revalidate || true;
-    /* @ts-expect-error */
-    event.router.previousUrl = sourceEvent.request.headers.get("referer");
-    try {
-      renderToString(() => {
+  const response = await handleServerFunctionRequest(event.request, {
+    createEvent: () => event,
+    provideEvent(evt, fn) {
+      return provideRequestEvent(evt as FetchEvent, () => {
         /* @ts-expect-error */
-        sharedConfig.context.event = event;
-        App();
+        sharedConfig.context = { event: evt };
+        // The seam has to stay synchronous (it must return the function's own
+        // return value, not a promise of it), so route a rejection through the
+        // handler rather than awaiting here.
+        try {
+          const result = fn();
+          return result instanceof Promise
+            ? (result.catch(applyErrorHandler) as typeof result)
+            : result;
+        } catch (thrown) {
+          return applyErrorHandler(thrown);
+        }
       });
-    } catch (e) {
-      console.log(e);
-    }
-
-    /* @ts-expect-error */
-    const body = event.router.data;
-    if (!body) return result;
-    let containsKey = false;
-    for (const key in body) {
-      if (body[key] === undefined) delete body[key];
-      else containsKey = true;
-    }
-    if (!containsKey) return result;
-    if (!(result instanceof Response)) {
-      body["_$value"] = result;
-      result = new Response(null, { status: 200 });
-    } else if ((result as any).customBody) {
-      body["_$value"] = (result as any).customBody();
-    }
-    result.customBody = () => body;
-    result.headers.set("X-Single-Flight", "true");
-    return result;
+    },
+    collectFlightData,
+    handleNoJS,
+    // App-supplied Seroval plugins (`serialization.plugins`) — must match the
+    // client transport's codec.
+    codec: { plugins: serovalPlugins },
   });
+
+  if (import.meta.env.DEV) {
+    // Echo the transport's per-call instance header so the dev toolbar's
+    // inspector can pair this response with the request it captured.
+    const instance = event.request.headers.get(INSTANCE_HEADER);
+    if (instance) {
+      try {
+        response.headers.set(INSTANCE_HEADER, instance);
+      } catch {
+        // some responses (e.g. Response.redirect) have immutable headers
+      }
+    }
+  }
+
+  return response;
 }

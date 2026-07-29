@@ -1,10 +1,10 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 import * as testModule from "~/functions/solid-router-query";
 
 export default function App() {
   const [output, setOutput] = createSignal<boolean | null>();
 
-  createEffect(() => {
+  onSettled(() => {
     setOutput("testQuery" in testModule);
   });
 

@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onSettled } from "solid-js";
 
 function serverFnTryCatch() {
   "use server";
@@ -13,9 +13,11 @@ function serverFnTryCatch() {
 export default function App() {
   const [output, setOutput] = createSignal<boolean>();
 
-  createEffect(async () => {
-    const result = await serverFnTryCatch();
-    setOutput(result);
+  onSettled(() => {
+    void (async () => {
+      const result = await serverFnTryCatch();
+      setOutput(result);
+    })();
   });
 
   return (

@@ -6,7 +6,7 @@
  *
  */
 
-import { useSubmission } from "@solidjs/router";
+import { useSubmissions } from "@solidjs/router";
 import { marked } from "marked";
 import { createSignal } from "solid-js";
 import { deleteNote, saveNote } from "~/lib/api";
@@ -18,8 +18,6 @@ export default function NoteEditor(props: {
 }) {
   const [title, setTitle] = createSignal(props.initialTitle);
   const [body, setBody] = createSignal(props.initialBody);
-  const isSaving = useSubmission(saveNote);
-  const isDeleting = useSubmission(deleteNote);
   const isDraft = props.noteId == null;
 
   return (
@@ -59,25 +57,13 @@ export default function NoteEditor(props: {
       </form>
       <div class="note-editor-preview">
         <div class="note-editor-menu" role="menubar">
-          <button
-            class="note-editor-done"
-            disabled={isSaving.pending}
-            type="submit"
-            form="note-editor"
-            role="menuitem"
-          >
+          <button class="note-editor-done" type="submit" form="note-editor" role="menuitem">
             <img src="/checkmark.svg" width="14px" height="10px" alt="" role="presentation" />
             Done
           </button>
           {!isDraft && (
             <form action={deleteNote.with(props.noteId!)} method="post">
-              <button
-                name="noteId"
-                class="note-editor-delete"
-                disabled={isDeleting.pending}
-                type="submit"
-                role="menuitem"
-              >
+              <button name="noteId" class="note-editor-delete" type="submit" role="menuitem">
                 <img src="/cross.svg" width="10px" height="10px" alt="" role="presentation" />
                 Delete
               </button>
