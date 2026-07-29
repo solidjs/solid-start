@@ -5,14 +5,14 @@ import onServerFunctionError from "solid-start:server-fn-error-handler";
  * it to type the default export of the module named by the
  * `serverFunctions.onError` option in `vite.config.ts`.
  *
- * Called synchronously, and the value it returns is not awaited, so it cannot
- * be an `async` function.
+ * May be asynchronous. A returned promise settles before the error is sent to
+ * the client.
  *
  * @param thrown The value the server function threw. This is a `Response` when
  * the server function threw control flow such as a `redirect()`.
- * @returns `undefined` (or `null`) to send `thrown` unchanged, a `Response` to
- * pass control flow through untouched, or any other value to send in place of
- * `thrown`.
+ * @returns A value or promise resolving to `undefined` (or `null`) to send
+ * `thrown` unchanged, a `Response` to pass control flow through untouched, or
+ * any other value to send in place of `thrown`.
  *
  * @example
  * ```ts
@@ -33,6 +33,7 @@ import onServerFunctionError from "solid-start:server-fn-error-handler";
  */
 export type ServerFunctionErrorHandler = (thrown: unknown) => unknown;
 
-export function applyServerFunctionErrorHandler(thrown: unknown): unknown {
-  return onServerFunctionError?.(thrown) ?? thrown;
+export async function applyServerFunctionErrorHandler(thrown: unknown): Promise<unknown> {
+  const replacement = await onServerFunctionError?.(thrown);
+  return replacement ?? thrown;
 }

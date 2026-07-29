@@ -224,6 +224,17 @@ describe("the configured server function error handler", () => {
     expect(h3Event.res.headers.get("X-Error")).toBe("replaced");
   });
 
+  it("awaits an asynchronous replacement", async () => {
+    configuredErrorHandler.current = async () => {
+      await Promise.resolve();
+      return new Error("replaced asynchronously");
+    };
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("replaced asynchronously");
+  });
+
   it("treats a Response the handler returns as control flow", async () => {
     configuredErrorHandler.current = () => new Response(null, { status: 403 });
 
@@ -235,6 +246,16 @@ describe("the configured server function error handler", () => {
 
   it("keeps the original error when the handler returns nothing", async () => {
     configuredErrorHandler.current = () => undefined;
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+  });
+
+  it("keeps the original error when an asynchronous handler returns nothing", async () => {
+    configuredErrorHandler.current = async () => {
+      await Promise.resolve();
+    };
 
     const h3Event = await callThrowing(new Error("boom"));
 

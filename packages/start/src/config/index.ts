@@ -157,8 +157,8 @@ export interface SolidStartOptions {
      * straight to its caller, and errors from API routes never reach it
      * either.
      *
-     * The export is called synchronously with the thrown value, and what it
-     * returns decides what the client sees:
+     * The export is called with the thrown value, and what it returns or
+     * resolves to decides what the client sees:
      *
      * - `undefined` (or `null`) sends what was thrown, unchanged.
      * - A `Response` is passed through unchanged, which keeps a thrown
@@ -173,9 +173,8 @@ export interface SolidStartOptions {
      * properties, so an error meant to be safe to expose must not carry
      * internal detail.
      *
-     * The return value is not awaited, so make the export a plain function
-     * rather than an `async` one, and report failures with calls that do not
-     * need awaiting.
+     * The return value is awaited, so the export may be an `async` function,
+     * for example to flush a monitoring service before the response is sent.
      *
      * Type the export as `ServerFunctionErrorHandler` from
      * `@solidjs/start/server`. The module is bundled into the server only, so

@@ -8,7 +8,8 @@ import type { ServerFunctionErrorHandler } from "@solidjs/start/server";
  * Returning `undefined` sends whatever was thrown, which is what leaves the
  * other server-function error tests in this app seeing their own errors.
  */
-const onServerFunctionError: ServerFunctionErrorHandler = thrown => {
+const onServerFunctionError: ServerFunctionErrorHandler = async thrown => {
+  await Promise.resolve();
   if (thrown instanceof Error && thrown.message === "replace me") {
     return new Error("replaced by onError");
   }

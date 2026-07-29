@@ -127,7 +127,7 @@ export async function handleServerFunction(h3Event: H3Event) {
     }
     return serializeToJSONStream(result);
   } catch (x) {
-    x = applyServerFunctionErrorHandler(x);
+    x = await applyServerFunctionErrorHandler(x);
     if (x instanceof Response) {
       if (singleFlight && instance) {
         x = await handleSingleFlight(event, x);
