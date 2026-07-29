@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.0-rc.7
+
+### Patch Changes
+
+- 87d73e1: chore: bump seroval to v1.6.0
+
 ## 2.0.0-rc.6
 
 ### Minor Changes
