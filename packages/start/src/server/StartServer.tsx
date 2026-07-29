@@ -47,17 +47,11 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             </>
           }
         >
-          {!import.meta.env.START_ISLANDS ? (
-            <Hydration>
-              <ErrorBoundary>
-                <App />
-              </ErrorBoundary>
-            </Hydration>
-          ) : (
+          <Hydration>
             <ErrorBoundary>
               <App />
             </ErrorBoundary>
-          )}
+          </Hydration>
         </props.document>
       </TopErrorBoundary>
     </NoHydration>

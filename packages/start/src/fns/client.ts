@@ -4,7 +4,6 @@
 // transform) imports createServerReference from here. Integrations (e.g.
 // @solidjs/router) decode pass-through responses themselves with the core
 // `decodeResponse`.
-import { type Component } from "solid-js";
 import {
   configureServerFunctionsClient,
   INSTANCE_HEADER,
@@ -87,7 +86,3 @@ export {
   createServerReference,
   registerServerReference,
 } from "@solidjs/web/server-functions/client";
-
-export function createClientReference(Component: Component<any>, id: string) {
-  return Component;
-}

@@ -17,11 +17,3 @@ export function StartClient() {
     </ErrorBoundary>
   );
 }
-
-export function StartClientTanstack() {
-  return (
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
-  );
-}

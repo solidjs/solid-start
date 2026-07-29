@@ -2,8 +2,6 @@ import type { H3, H3Event } from "h3";
 import type { JSX } from "@solidjs/web";
 import type { RequestEvent } from "@solidjs/web";
 
-// export const FETCH_EVENT = "$FETCH";
-
 /**
  * The h3 app instance returned by `createHandler`.
  *
@@ -52,12 +50,8 @@ export interface FetchEvent {
 }
 
 export interface PageEvent extends RequestEvent {
-  // prevUrl: string | null;
-  // $type: typeof FETCH_EVENT;
-  $islands: Set<string>;
   complete: boolean;
   nonce?: string;
-  // mutation: boolean;
 }
 
 export interface APIEvent extends FetchEvent {

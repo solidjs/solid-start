@@ -55,14 +55,8 @@
     "validate-imports": "node scripts/validate-imports.js"
   },
   "dependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/traverse": "^7.29.7",
-    "@babel/types": "^7.29.7",
-    "@solidjs/meta": "0.30.0-next.0",
     "@solidjs/router": "2.0.0-next.12",
     "@solidjs/web": "2.0.0-beta.28",
-    "@types/babel__traverse": "^7.28.0",
-    "@types/micromatch": "^4.0.10",
     "cookie-es": "^3.1.1",
     "defu": "^6.1.7",
     "error-stack-parser": "^2.1.4",
@@ -70,9 +64,6 @@
     "filesystem-routing": "0.1.1",
     "h3": "^2.0.1-rc.26",
     "html-to-image": "^1.11.13",
-    "micromatch": "^4.0.8",
-    "oxc-parser": "^0.141.0",
-    "path-to-regexp": "^8.4.2",
     "pathe": "^2.0.3",
     "radix3": "^1.1.2",
     "seroval": "^1.5.6",
@@ -85,7 +76,6 @@
     "vite-plugin-solid": "3.0.0-next.18"
   },
   "devDependencies": {
-    "@types/babel__core": "^7.20.5",
     "@types/node": "^26.1.1",
     "vite": "^8.1.5",
     "vitest": "^4.1.10"

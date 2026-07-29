@@ -204,7 +204,6 @@ export async function createPageEvent(ctx: FetchEvent) {
   // which shares one immutable tree across every request.
   const pageEvent: PageEvent = Object.assign(ctx, {
     complete: false,
-    $islands: new Set<string>(),
   });
 
   return pageEvent;

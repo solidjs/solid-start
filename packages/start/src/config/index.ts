@@ -55,20 +55,6 @@ export interface SolidStartOptions {
   devOverlay?: boolean;
 
   /**
-   * Experimental features.
-   */
-  experimental?: {
-    /**
-     * Enable islands architecture mode.
-     *
-     * Currently fixed to `false` (not yet fully supported).
-     *
-     * @default false
-     */
-    islands?: false;
-  };
-
-  /**
    * Directory containing file-system routes, relative to {@link appRoot}.
    *
    * @default "./routes"
@@ -159,9 +145,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
-    experimental: {
-      islands: false,
-    },
     solid: {},
     extensions: [],
   } satisfies SolidStartOptions);
