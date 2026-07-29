@@ -1,6 +1,6 @@
-import { createMemo, createSignal, For, Show } from "solid-js";
+import { createMemo, createSignal, For, Loading, Show } from "solid-js";
 import type { JSX } from "@solidjs/web";
-import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "./body-format.ts";
+import { BODY_FORMAT_FILE_KEY, BODY_FORMAT_KEY, BodyFormat } from "./body-format.ts";
 import { Badge } from "../../ui/Badge.tsx";
 import IconButton from "../../ui/IconButton.tsx";
 import Placeholder from "../../ui/Placeholder.tsx";
@@ -21,11 +21,39 @@ import { URLSearchParamsViewer } from "./URLSearchParamsViewer.tsx";
 
 async function getFile(source: Response | Request): Promise<File> {
   const formData = await source.formData();
-  const file = formData.get(BODY_FORMAL_FILE);
+  const file = formData.get(BODY_FORMAT_FILE_KEY);
   if (!(file && file instanceof File)) {
     throw new Error("invalid file input");
   }
   return file;
+}
+
+interface JsonViewerProps {
+  source: Promise<string>;
+}
+
+// Plain-JSON bodies (JSON-safe argument lists go over the wire as raw JSON).
+function JsonViewer(props: JsonViewerProps): JSX.Element {
+  const data = createMemo(async () => {
+    const text = await props.source;
+    try {
+      return JSON.stringify(JSON.parse(text), null, 2);
+    } catch {
+      return text;
+    }
+  });
+
+  return (
+    <Loading>
+      <Show when={data()} keyed>
+        {current => (
+          <pre data-start-json-viewer>
+            <Text options={{ size: "xs", font: "mono" }}>{current}</Text>
+          </pre>
+        )}
+      </Show>
+    </Loading>
+  );
 }
 
 async function getURLSearchParams(source: Response | Request): Promise<URLSearchParams> {
@@ -49,9 +77,11 @@ function ContentViewer(props: ContentViewerProps): JSX.Element {
           const startType = source.headers.get(BODY_FORMAT_KEY);
           const contentType = source.headers.get("Content-Type");
           switch (true) {
-            case startType === "true":
-            case startType === BodyFormat.Seroval:
+            case startType === BodyFormat.Serialized:
               return <SerovalViewer stream={source} />;
+            case startType === BodyFormat.Json:
+            case contentType?.startsWith("application/json"):
+              return <JsonViewer source={source.text()} />;
             case startType === BodyFormat.String:
               return <HexViewer bytes={source.bytes()} />;
             case startType === BodyFormat.File:

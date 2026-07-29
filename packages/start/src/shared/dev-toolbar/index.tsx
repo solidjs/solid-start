@@ -1,4 +1,4 @@
-import { createEffect, createSignal, createStore, Errored, onSettled, Show } from "solid-js";
+import { createEffect, createSignal, Errored, onSettled, Show } from "solid-js";
 import type { JSX } from "@solidjs/web";
 import { Portal } from "@solidjs/web";
 import { Toolbar } from "terracotta/toolbar";
@@ -163,24 +163,22 @@ export function DevToolbar(props: DevToolbarProps) {
     };
   });
 
-  const [store, setStore] = createStore({
-    instances: {} as Record<string, ServerFunctionInstance | undefined>,
-  });
+  // A plain record behind a signal, not a store: the captured values hold
+  // native Request/Response objects, whose methods break when reached through
+  // a store proxy (`this` becomes the proxy — "Illegal invocation").
+  const [instances, setInstances] = createSignal<
+    Record<string, ServerFunctionInstance | undefined>
+  >({});
 
   onSettled(() =>
     captureServerFunctionCall(call => {
-      if (call.type === "request") {
-        setStore(s => {
-          s.instances[call.instance] = { ...s.instances[call.instance], request: call };
-        });
-      } else {
-        setStore(s => {
-          s.instances[call.instance] = {
-            ...s.instances[call.instance],
-            response: call,
-          } as ServerFunctionInstance;
-        });
-      }
+      setInstances(current => ({
+        ...current,
+        [call.instance]:
+          call.type === "request"
+            ? { ...current[call.instance], request: call }
+            : ({ ...current[call.instance], response: call } as ServerFunctionInstance),
+      }));
     }),
   );
 
@@ -209,10 +207,12 @@ export function DevToolbar(props: DevToolbarProps) {
           <ErrorViewer show={content() === "err"} errors={errors()} resetError={resetError} />
           <ServerFunctionViewer
             show={content() === "fn"}
-            instances={store.instances}
+            instances={instances()}
             onDeleteInstance={value => {
-              setStore(s => {
-                delete s.instances[value];
+              setInstances(current => {
+                const next = { ...current };
+                delete next[value];
+                return next;
               });
             }}
           />

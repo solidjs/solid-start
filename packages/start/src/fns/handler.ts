@@ -7,7 +7,7 @@
 import { type H3Event } from "h3";
 import { sharedConfig } from "solid-js";
 import { provideRequestEvent } from "@solidjs/web/storage";
-import { handleServerFunctionRequest } from "@solidjs/web/server-functions/server";
+import { handleServerFunctionRequest, INSTANCE_HEADER } from "@solidjs/web/server-functions/server";
 import { createFlightDataCollector, createNoJSHandler } from "@solidjs/router/server";
 import "solid-start:server-fn-manifest";
 import serovalPlugins from "solid-start:seroval-plugins";
@@ -32,7 +32,7 @@ const handleNoJS = createNoJSHandler({ base });
 export async function handleServerFunction(h3Event: H3Event): Promise<Response> {
   const event = getFetchEvent(h3Event);
 
-  return handleServerFunctionRequest(event.request, {
+  const response = await handleServerFunctionRequest(event.request, {
     createEvent: () => event,
     provideEvent(evt, fn) {
       return provideRequestEvent(evt as FetchEvent, () => {
@@ -52,4 +52,19 @@ export async function handleServerFunction(h3Event: H3Event): Promise<Response> 
     // client transport's codec.
     codec: { plugins: serovalPlugins },
   });
+
+  if (import.meta.env.DEV) {
+    // Echo the transport's per-call instance header so the dev toolbar's
+    // inspector can pair this response with the request it captured.
+    const instance = event.request.headers.get(INSTANCE_HEADER);
+    if (instance) {
+      try {
+        response.headers.set(INSTANCE_HEADER, instance);
+      } catch {
+        // some responses (e.g. Response.redirect) have immutable headers
+      }
+    }
+  }
+
+  return response;
 }
