@@ -225,10 +225,7 @@ describe("the configured server function error handler", () => {
   });
 
   it("awaits an asynchronous replacement", async () => {
-    configuredErrorHandler.current = async () => {
-      await Promise.resolve();
-      return new Error("replaced asynchronously");
-    };
+    configuredErrorHandler.current = async () => new Error("replaced asynchronously");
 
     const h3Event = await callThrowing(new Error("boom"));
 
@@ -253,9 +250,7 @@ describe("the configured server function error handler", () => {
   });
 
   it("keeps the original error when an asynchronous handler returns nothing", async () => {
-    configuredErrorHandler.current = async () => {
-      await Promise.resolve();
-    };
+    configuredErrorHandler.current = async () => undefined;
 
     const h3Event = await callThrowing(new Error("boom"));
 

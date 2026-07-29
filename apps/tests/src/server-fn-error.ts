@@ -9,7 +9,6 @@ import type { ServerFunctionErrorHandler } from "@solidjs/start/server";
  * other server-function error tests in this app seeing their own errors.
  */
 const onServerFunctionError: ServerFunctionErrorHandler = async thrown => {
-  await Promise.resolve();
   if (thrown instanceof Error && thrown.message === "replace me") {
     return new Error("replaced by onError");
   }
