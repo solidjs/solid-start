@@ -96,7 +96,9 @@ export function HexViewer(props: HexViewerProps): JSX.Element {
 
   return (
     <Loading>
-      <Show when={data()} keyed>{current => <HexViewerInner bytes={current} />}</Show>
+      <Show when={data()} keyed>
+        {current => <HexViewerInner bytes={current} />}
+      </Show>
     </Loading>
   );
 }

@@ -85,7 +85,7 @@ export function createBaseHandler(
       const pathname = stripBaseUrl(url.pathname);
 
       if (pathname.startsWith(SERVER_FN_BASE)) {
-        return produceResponseWithEventHeaders(await handleServerFunction(e));
+        return await handleServerFunction(e);
       }
 
       const match = matchAPIRoute(pathname, event.request.method);
@@ -98,8 +98,6 @@ export function createBaseHandler(
           (sharedConfig as any).context = { event };
           const res = await fn(event);
           if (res !== undefined) {
-            if (res instanceof Response) return produceResponseWithEventHeaders(res);
-
             return res;
           }
           if (event.request.method !== "GET") {
@@ -234,44 +232,6 @@ function handleStreamCompleteRedirect(context: PageEvent) {
       `<script${nonce}>window.location=${JSON.stringify(to).replace(/</g, "\\u003c")}</script>`,
     );
   };
-}
-
-function produceResponseWithEventHeaders(res: Response) {
-  const event = getRequestEvent()!;
-
-  let ret = res;
-
-  // Response.redirect returns an immutable value, so we clone on any redirect just in case
-  if (300 <= res.status && res.status < 400) {
-    const cookies = res.headers.getSetCookie?.() ?? [];
-    const headers = new Headers();
-    res.headers.forEach((value, key) => {
-      if (key.toLowerCase() !== "set-cookie") {
-        headers.set(key, value);
-      }
-    });
-    for (const cookie of cookies) {
-      headers.append("Set-Cookie", cookie);
-    }
-    ret = new Response(res.body, {
-      status: res.status,
-      statusText: res.statusText,
-      headers,
-    });
-  }
-
-  const eventCookies = event.response.headers.getSetCookie?.() ?? [];
-  for (const cookie of eventCookies) {
-    ret.headers.append("Set-Cookie", cookie);
-  }
-
-  for (const [name, value] of event.response.headers) {
-    if (name.toLowerCase() !== "set-cookie") {
-      ret.headers.set(name, value);
-    }
-  }
-
-  return ret;
 }
 
 function escapeAttribute(value: string) {

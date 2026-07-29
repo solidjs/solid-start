@@ -12,9 +12,7 @@ export default function App() {
       {props => (
         <>
           <Nav />
-          <Loading fallback={<div class="news-list-nav">Loading...</div>}>
-            {props.children}
-          </Loading>
+          <Loading fallback={<div class="news-list-nav">Loading...</div>}>{props.children}</Loading>
         </>
       )}
     </Router>

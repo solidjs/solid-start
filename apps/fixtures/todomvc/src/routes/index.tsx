@@ -1,8 +1,4 @@
-import {
-  RouteDefinition,
-  useSubmissions,
-  type RouteSectionProps,
-} from "@solidjs/router";
+import { RouteDefinition, useSubmissions, type RouteSectionProps } from "@solidjs/router";
 import { For, Show, createMemo, createProjection, createSignal } from "solid-js";
 import { CompleteIcon, IncompleteIcon } from "~/components/icons";
 import {
@@ -18,7 +14,7 @@ import { Todo } from "~/types";
 
 declare module "@solidjs/web" {
   namespace JSX {
-    interface ExplicitProperties { }
+    interface ExplicitProperties {}
   }
 }
 const setFocus = () => (el: HTMLElement) => setTimeout(() => el.focus());
@@ -90,23 +86,25 @@ export default function TodoApp(props: RouteSectionProps) {
         <ul class="todo-list">
           <For each={filterList(todos as any)}>
             {todo => {
-              const title = () => todo.title
+              const title = () => todo.title;
               const completed = () => todo.completed;
               const removing = () => removingTodo.some(data => data.input[0] === todo.id);
               return (
                 <Show when={!removing()}>
                   <li
-                    class={["todo", {
-                      editing: editingTodoId() === todo.id,
-                      completed: completed(),
-                    }]}
+                    class={[
+                      "todo",
+                      {
+                        editing: editingTodoId() === todo.id,
+                        completed: completed(),
+                      },
+                    ]}
                   >
                     <form class="view" method="post">
-                      <button
-                        formaction={toggleTodo.with(todo.id)}
-                        class="toggle"
-                      >
-                        <Show when={completed()} fallback={<IncompleteIcon />}><CompleteIcon /></Show>
+                      <button formaction={toggleTodo.with(todo.id)} class="toggle">
+                        <Show when={completed()} fallback={<IncompleteIcon />}>
+                          <CompleteIcon />
+                        </Show>
                       </button>
                       <label onDblClick={[setEditing, { id: todo.id }]}>{title()}</label>
                       <button formaction={removeTodo.with(todo.id)} class="destroy" />
@@ -171,10 +169,7 @@ export default function TodoApp(props: RouteSectionProps) {
               </a>
             </li>
             <li>
-              <a
-                href="?show=completed"
-                class={{ selected: location.query.show === "completed" }}
-              >
+              <a href="?show=completed" class={{ selected: location.query.show === "completed" }}>
                 Completed
               </a>
             </li>
@@ -186,6 +181,6 @@ export default function TodoApp(props: RouteSectionProps) {
           </Show>
         </footer>
       </Show>
-    </section >
+    </section>
   );
 }

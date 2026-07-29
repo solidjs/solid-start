@@ -1,8 +1,10 @@
-import { action, json, redirect, reload, useSubmission } from "@solidjs/router";
+import { action, useSubmissions } from "@solidjs/router";
+// The response helpers are core in v2; `json()` is `respond()`.
+import { redirect, reload, respond } from "@solidjs/web";
 
 const jsonAction = action(async (form: FormData) => {
   "use server";
-  return json({ received: form.get("value") });
+  return respond({ received: form.get("value") });
 }, "no-js-json-action");
 
 const reloadAction = action(async (_form: FormData) => {
@@ -21,8 +23,12 @@ const plainAction = action(async (form: FormData) => {
 }, "no-js-plain-action");
 
 export default function NoJsAction() {
-  const jsonSubmission = useSubmission(jsonAction);
-  const plainSubmission = useSubmission(plainAction);
+  // v2 exposes every submission for an action; these forms submit one at a
+  // time, so the latest is the one under test.
+  const jsonSubmissions = useSubmissions(jsonAction);
+  const plainSubmissions = useSubmissions(plainAction);
+  const latestResult = (submissions: typeof jsonSubmissions) =>
+    submissions[submissions.length - 1]?.result ?? null;
 
   return (
     <main>
@@ -48,8 +54,8 @@ export default function NoJsAction() {
           plain
         </button>
       </form>
-      <span id="json-result">{JSON.stringify(jsonSubmission.result ?? null)}</span>
-      <span id="plain-result">{JSON.stringify(plainSubmission.result ?? null)}</span>
+      <span id="json-result">{JSON.stringify(latestResult(jsonSubmissions))}</span>
+      <span id="plain-result">{JSON.stringify(latestResult(plainSubmissions))}</span>
     </main>
   );
 }

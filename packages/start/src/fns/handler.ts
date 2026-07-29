@@ -34,6 +34,17 @@ const collectFlightData = createFlightDataCollector({ routes: fileRoutes, base }
 // flash cookie; the router seeds submission state from it on the next SSR.
 const handleNoJS = createNoJSHandler({ base });
 
+/**
+ * Runs the app's configured handler (`serverFunctions.onError`) over whatever a
+ * server function threw, before the core serializes it. This sits around the
+ * function call rather than on the core's `transformResult` seam because that
+ * seam only sees thrown `Response`s and envelopes — a plain `Error`, the case
+ * the option exists for, never reaches it.
+ */
+function applyErrorHandler(thrown: unknown): never {
+  throw applyServerFunctionErrorHandler(thrown);
+}
+
 export async function handleServerFunction(h3Event: H3Event): Promise<Response> {
   const event = getFetchEvent(h3Event);
 
@@ -43,13 +54,18 @@ export async function handleServerFunction(h3Event: H3Event): Promise<Response> 
       return provideRequestEvent(evt as FetchEvent, () => {
         /* @ts-expect-error */
         sharedConfig.context = { event: evt };
-        return fn();
+        // The seam has to stay synchronous (it must return the function's own
+        // return value, not a promise of it), so route a rejection through the
+        // handler rather than awaiting here.
+        try {
+          const result = fn();
+          return result instanceof Promise
+            ? (result.catch(applyErrorHandler) as typeof result)
+            : result;
+        } catch (thrown) {
+          return applyErrorHandler(thrown);
+        }
       });
-    },
-    // The app's configured server-function error handler (`serverFunctions.onError`)
-    // sees thrown values before they are serialized into the response.
-    transformResult(_evt, result, context) {
-      return context.thrown ? applyServerFunctionErrorHandler(result) : result;
     },
     collectFlightData,
     handleNoJS,

@@ -39,7 +39,9 @@ export function FormDataViewer(props: FormDataViewerProps) {
 
   return (
     <Loading>
-      <Show when={data()} keyed>{current => <FormDataViewerInner source={current} />}</Show>
+      <Show when={data()} keyed>
+        {current => <FormDataViewerInner source={current} />}
+      </Show>
     </Loading>
   );
 }

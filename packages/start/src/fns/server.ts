@@ -19,4 +19,7 @@ configureServerFunctionsServer({
   endpoint: `${baseURL}_server`,
 });
 
-export { registerServerReference, createServerReference } from "@solidjs/web/server-functions/server";
+export {
+  registerServerReference,
+  createServerReference,
+} from "@solidjs/web/server-functions/server";

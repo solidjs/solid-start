@@ -26,7 +26,9 @@ export default function clientOnly<T extends Component<any>>(
     options.lazy && load(fn, setComp);
     if ((Comp = comp()) && !sharedConfig.hydrating) return Comp(rest);
     const [mounted, setMounted] = createSignal(!sharedConfig.hydrating);
-    onSettled(() => { setMounted(true); });
+    onSettled(() => {
+      setMounted(true);
+    });
     return createMemo(
       () => (
         (Comp = comp()),

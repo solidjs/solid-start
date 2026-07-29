@@ -34,7 +34,9 @@ export function URLSearchParamsViewer(props: URLSearchParamsViewerProps) {
 
   return (
     <Loading>
-      <Show when={data()} keyed>{current => <URLSearchParamsViewerInner source={current} />}</Show>
+      <Show when={data()} keyed>
+        {current => <URLSearchParamsViewerInner source={current} />}
+      </Show>
     </Loading>
   );
 }

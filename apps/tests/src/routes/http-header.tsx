@@ -1,6 +1,6 @@
-import { createAsync, query } from "@solidjs/router";
+import { query } from "@solidjs/router";
 import { HttpHeader } from "@solidjs/start";
-import { Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 import { setTimeout } from "timers/promises";
 
 const getData = query(async () => {
@@ -11,7 +11,7 @@ const getData = query(async () => {
 }, "http-header");
 
 export default function HttpHeaderRoute() {
-  const data = createAsync(() => getData(), { deferStream: true });
+  const data = createMemo(() => getData(), { deferStream: true });
 
   return (
     <main>

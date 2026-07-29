@@ -927,66 +927,66 @@ export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
         const reader = new SerovalChunkReader(stream.body);
         const result = await reader.next();
         if (!result.done) {
-      function traverseNode(node: SerovalNode): void {
-        // Check for promises
-        switch (node.t) {
-          case 0:
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-            break;
-          case 23:
-          case 24:
-            promises.write(node.i, node);
-            break;
-          case 32:
-          case 33:
-          case 34:
-            streams.update(node.i, current => {
-              if (current) {
-                return [...current, node];
-              }
-              return [node];
-            });
-            break;
-          case 5:
-          case 6:
-          case 7:
-          case 8:
-          case 9:
-          case 10:
-          case 11:
-          case 12:
-          case 13:
-          case 14:
-          case 15:
-          case 16:
-          case 17:
-          case 18:
-          case 19:
-          case 20:
-          case 21:
-          case 25:
-          case 26:
-          case 27:
-          case 29:
-          case 31:
-          case 35:
-            references.write(node.i, node);
-            break;
-        }
-      }
+          function traverseNode(node: SerovalNode): void {
+            // Check for promises
+            switch (node.t) {
+              case 0:
+              case 1:
+              case 2:
+              case 3:
+              case 4:
+                break;
+              case 23:
+              case 24:
+                promises.write(node.i, node);
+                break;
+              case 32:
+              case 33:
+              case 34:
+                streams.update(node.i, current => {
+                  if (current) {
+                    return [...current, node];
+                  }
+                  return [node];
+                });
+                break;
+              case 5:
+              case 6:
+              case 7:
+              case 8:
+              case 9:
+              case 10:
+              case 11:
+              case 12:
+              case 13:
+              case 14:
+              case 15:
+              case 16:
+              case 17:
+              case 18:
+              case 19:
+              case 20:
+              case 21:
+              case 25:
+              case 26:
+              case 27:
+              case 29:
+              case 31:
+              case 35:
+                references.write(node.i, node);
+                break;
+            }
+          }
 
-      function interpretChunk(chunk: string): SerovalNode {
-        const result = JSON.parse(chunk) as SerovalNode;
-        traverse(result, traverseNode);
-        return result;
-      }
+          function interpretChunk(chunk: string): SerovalNode {
+            const result = JSON.parse(chunk) as SerovalNode;
+            traverse(result, traverseNode);
+            return result;
+          }
 
-      void reader.drain(interpretChunk);
-      const root = interpretChunk(result.value);
-      setSelected(root);
+          void reader.drain(interpretChunk);
+          const root = interpretChunk(result.value);
+          setSelected(root);
         }
       })();
     },

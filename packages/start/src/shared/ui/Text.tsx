@@ -44,7 +44,5 @@ export function Text<T extends keyof JSX.IntrinsicElements = "span">(
     ) as TextProps<T>;
   });
 
-  return (
-    <Dynamic component={(props.options?.as || "span") as T} {...rest} {...customization()} />
-  );
+  return <Dynamic component={(props.options?.as || "span") as T} {...rest} {...customization()} />;
 }

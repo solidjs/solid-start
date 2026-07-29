@@ -69,7 +69,9 @@ export function BlobViewer(props: BlobViewerProps): JSX.Element {
 
   return (
     <Loading>
-      <Show when={data()} keyed>{current => <BlobViewerInner source={current} />}</Show>
+      <Show when={data()} keyed>
+        {current => <BlobViewerInner source={current} />}
+      </Show>
     </Loading>
   );
 }

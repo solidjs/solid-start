@@ -9,7 +9,7 @@ const Router = createRouter({ routes: fileRoutes });
 export default function App() {
   return (
     <Router>
-      {(props) => (
+      {props => (
         <MetaProvider>
           <Title>SolidStart - Basic</Title>
           <a href="/">Index</a>

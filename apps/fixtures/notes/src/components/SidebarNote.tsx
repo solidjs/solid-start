@@ -21,7 +21,7 @@ export default function SidebarNote(props: { note: Note }) {
   let title = props.note.title;
   createEffect(
     () => props.note.title,
-    (newTitle) => {
+    newTitle => {
       if (newTitle !== title) {
         title = newTitle;
         itemRef.classList.add("flash");
@@ -48,9 +48,7 @@ export default function SidebarNote(props: { note: Note }) {
         href={`/notes/${props.note.id}`}
         class="sidebar-note-open"
         style={{
-          "background-color": isActive()
-            ? "var(--tertiary-blue)"
-            : "",
+          "background-color": isActive() ? "var(--tertiary-blue)" : "",
           border: isActive() ? "1px solid var(--primary-border)" : "1px solid transparent",
         }}
       >
