@@ -372,6 +372,17 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       ...start.solid,
       ssr: true,
       extensions: extensions.map(ext => `.${ext}`),
-    }),
+      // `ssr: true` also registers vite-plugin-solid's client-build-first
+      // buildApp ordering hooks, meant for composed setups without their own
+      // orchestrator. Start orders client-before-server itself in
+      // `builder.buildApp` above, and the pre-order hook is actively harmful
+      // here: it builds the client before nitro's own pre-order buildApp hook
+      // wipes `.output/`, so production builds ship without client assets and
+      // the server bakes in a manifest-less fallback.
+    }).filter(
+      plugin =>
+        plugin.name !== "solid:client-build-first" &&
+        plugin.name !== "solid:client-build-first/complete",
+    ),
   ];
 }
