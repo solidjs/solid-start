@@ -19,6 +19,8 @@ minimumReleaseAgeExclude:
   - srvx@0.12.4
   - h3@2.0.1-rc.26
   - "@solidjs/router@1.0.0"
+  - seroval-plugins@1.6.0
+  - seroval@1.6.0
 
 onlyBuiltDependencies:
   - "@parcel/watcher"
