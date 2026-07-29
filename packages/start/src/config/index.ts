@@ -259,7 +259,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             "[solid-start] Vite's experimental `bundledDev` mode is currently unsupported by SolidStart. " +
               "Vite does not yet provide an API to map a module id to its served URL, which SolidStart " +
               "needs to emit SSR preload and hydration hints. Until it does " +
-              "(see https://github.com/vitejs/vite/issues/22991), hydration of code-split routes will fail."
+              "(see https://github.com/vitejs/vite/issues/22991), hydration of code-split routes will fail.",
           );
         }
         const clientEntryUrl = bundledDev
@@ -269,7 +269,20 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           appType: "custom",
           build: { assetsDir: "_build/assets" },
           optimizeDeps: {
-            include: ["@solidjs/start > seroval", "@solidjs/start > seroval-plugins/web"],
+            include: [
+              "@solidjs/start > seroval",
+              "@solidjs/start > seroval-plugins/web",
+              // Pre-bundle both specifiers of the server-function transport in
+              // the same optimizer pass so they share one module instance.
+              // @solidjs/router (served as source) imports the core entry;
+              // Start's fns/client imports the /client entry. Both resolve to
+              // the same file, but if the router's import falls through to a
+              // raw /@fs URL it gets its own copy of the transport config, and
+              // configureServerFunctionsClient (endpoint, codec plugins, dev
+              // hooks) never applies to router-initiated calls.
+              "@solidjs/web/server-functions",
+              "@solidjs/web/server-functions/client",
+            ],
             // Suppress TS errors from Vite 7 types when configuring Vite 8's Rolldown
             ...({
               rolldownOptions: {

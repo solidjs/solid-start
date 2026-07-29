@@ -172,13 +172,18 @@ export function DevToolbar(props: DevToolbarProps) {
 
   onSettled(() =>
     captureServerFunctionCall(call => {
-      setInstances(current => ({
-        ...current,
-        [call.instance]:
-          call.type === "request"
-            ? { ...current[call.instance], request: call }
-            : ({ ...current[call.instance], response: call } as ServerFunctionInstance),
-      }));
+      // The tracker fires synchronously inside the transport, which may be
+      // running in an owned scope (e.g. a router preload computation) where
+      // signal writes are not allowed — defer the write out of it.
+      queueMicrotask(() => {
+        setInstances(current => ({
+          ...current,
+          [call.instance]:
+            call.type === "request"
+              ? { ...current[call.instance], request: call }
+              : ({ ...current[call.instance], response: call } as ServerFunctionInstance),
+        }));
+      });
     }),
   );
 
