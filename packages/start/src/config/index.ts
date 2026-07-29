@@ -141,22 +141,45 @@ export interface SolidStartOptions {
   env?: EnvPluginOptions;
 
   /**
-   * Options controlling which files are processed as server functions
-   * (inclusion / exclusion filters for the `"use server"` transform).
+   * Options for server functions: which files the `"use server"` transform
+   * processes (inclusion / exclusion filters), and what happens when a server
+   * function throws.
    */
   serverFunctions?: Pick<ServerFunctionsOptions, "filter"> & {
     /**
-     * Path to a module whose default export is called with whatever a server
-     * function threw, before it is serialized into the response. Return a
-     * value to send it in place of what was thrown, or `undefined` to send the
-     * original.
+     * Path to a module whose default export handles whatever a server function
+     * throws, before it reaches the client. Use it to report failures to a
+     * monitoring service, or to replace an error carrying internal detail with
+     * one that is safe to send.
      *
-     * Naming the module here rather than registering a handler at runtime
-     * keeps the app in sole control of it: no dependency can reach into the
-     * running server and take over reporting.
+     * Only server function calls made over the network run through it. A
+     * server function called during rendering runs in process and throws
+     * straight to its caller, and errors from API routes never reach it
+     * either.
      *
-     * The module is bundled into the server only, so it may import server-only
-     * code such as a monitoring SDK.
+     * The export is called synchronously with the thrown value, and what it
+     * returns decides what the client sees:
+     *
+     * - `undefined` (or `null`) sends what was thrown, unchanged.
+     * - A `Response` is passed through unchanged, which keeps a thrown
+     *   `redirect()` working.
+     * - Any other value is sent in place of what was thrown, and the client
+     *   call rejects with it.
+     *
+     * Control flow reaches the export the same way errors do, so a handler
+     * that replaces everything it sees turns redirects into errors.
+     *
+     * Whatever is sent gets serialized to the client along with its own
+     * properties, so an error meant to be safe to expose must not carry
+     * internal detail.
+     *
+     * The return value is not awaited, so make the export a plain function
+     * rather than an `async` one, and report failures with calls that do not
+     * need awaiting.
+     *
+     * Type the export as `ServerFunctionErrorHandler` from
+     * `@solidjs/start/server`. The module is bundled into the server only, so
+     * it may import server-only code such as a monitoring SDK.
      *
      * @example "src/server-fn-error.ts"
      */
