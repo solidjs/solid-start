@@ -1,14 +1,19 @@
 // HTTP dispatch for server functions: the core web-standard handler from
 // @solidjs/web/server-functions with Start's platform piece (the h3-derived
-// rich event). The framework policies that used to live here — single-flight
-// payload collection and the no-JS flash-cookie form convention — are the
-// router's now (@solidjs/router/server owns their vocabulary: query cache
-// keys, submissions); Start just wires its route tree and base path in.
+// rich event). Single-flight payload collection is the router's
+// (@solidjs/router/server owns its vocabulary: query cache keys,
+// submissions); the no-JS flash-cookie form convention is router-agnostic
+// and lives in core (@solidjs/web/server-functions/server, as of router
+// 2.0.0-next.12). Start just wires its route tree and base path in.
 import { type H3Event } from "h3";
 import { sharedConfig } from "solid-js";
 import { provideRequestEvent } from "@solidjs/web/storage";
-import { handleServerFunctionRequest, INSTANCE_HEADER } from "@solidjs/web/server-functions/server";
-import { createFlightDataCollector, createNoJSHandler } from "@solidjs/router/server";
+import {
+  createNoJSHandler,
+  handleServerFunctionRequest,
+  INSTANCE_HEADER,
+} from "@solidjs/web/server-functions/server";
+import { createFlightDataCollector } from "@solidjs/router/server";
 import "solid-start:server-fn-manifest";
 import serovalPlugins from "solid-start:seroval-plugins";
 
