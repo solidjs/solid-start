@@ -9,7 +9,6 @@ import solid, {
   type ServerFunctionsOptions,
 } from "vite-plugin-solid";
 import { appRootAlias } from "./app-root-alias.ts";
-import { boundaryModules } from "./boundary-modules.ts";
 import { VIRTUAL_MODULES, VITE_ENVIRONMENTS } from "./constants.ts";
 import { devServer } from "./dev-server.ts";
 import { envPlugin, type EnvPluginOptions } from "./env.ts";
@@ -136,9 +135,6 @@ export interface SolidStartOptions {
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
 
-const DEV_MANIFEST_REGISTRY_KEY = Symbol.for("vite-plugin-solid:dev-manifest");
-const DEV_MANIFEST_ENDPOINT = "/@solid-start/dev-manifest";
-
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
     appRoot: "./src",
@@ -177,50 +173,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     }),
   };
   return [
-    {
-      name: "solid-start:dev-manifest-bridge",
-      apply: "serve",
-      enforce: "pre",
-      configureServer(server) {
-        // Nitro's SSR runner is isolated from Vite's global resolver registry,
-        // so expose the resolver through Vite's own dev middleware.
-        server.middlewares.use(async (req, res, next) => {
-          const url = new URL(req.url || "/", "http://localhost");
-          if (url.pathname !== DEV_MANIFEST_ENDPOINT) return next();
-
-          const key = url.searchParams.get("key");
-          if (!key) {
-            res.statusCode = 400;
-            return res.end("Missing asset key");
-          }
-
-          try {
-            const registry = (globalThis as any)[DEV_MANIFEST_REGISTRY_KEY];
-            const resolver = registry?.[server.config.root];
-            if (!resolver) {
-              console.error(
-                `[solid-start] vite-plugin-solid's dev manifest registry has no resolver for root "${server.config.root}" ` +
-                  `(requested asset key "${key}"). The module's client assets cannot be resolved and hydration ` +
-                  "will fail for it. Typical causes: the dev server was not restarted after dependency changes, " +
-                  "or the install is stale.",
-              );
-            }
-            const assets = resolver ? await resolver.resolve(key) : null;
-            if (resolver && assets == null) {
-              console.error(
-                `[solid-start] Dev manifest resolver returned no assets for key "${key}" (root "${server.config.root}"). ` +
-                  "The module's hydration preload entry will be missing.",
-              );
-            }
-            res.setHeader("content-type", "application/json");
-            res.setHeader("cache-control", "no-store");
-            return res.end(JSON.stringify(assets));
-          } catch (error) {
-            return next(error);
-          }
-        });
-      },
-    },
     {
       name: "solid-start:config",
       enforce: "pre",
@@ -374,7 +326,6 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
       filter: options?.serverFunctions?.filter,
     }),
-    boundaryModules(),
     {
       name: "solid-start:virtual-modules",
       async resolveId(id) {

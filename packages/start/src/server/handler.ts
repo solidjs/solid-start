@@ -18,29 +18,11 @@ import { stripPathBase } from "./strip-path-base.ts";
  * static (build) manifests, but the dev manifest is an async resolver it
  * can't enumerate — so resolve the client/app entry keys here and register
  * the collected inline styles at render start (pre-shell registrations are
- * injected into <head>, styled from the first byte).
+ * injected into <head>, styled from the first byte). Resolution goes through
+ * vite-plugin-solid's dev manifest, which reaches the dev server's resolver
+ * even from adapter SSR runners that don't share the Vite process (it falls
+ * back to the plugin's HTTP bridge endpoint on a registry miss).
  */
-const DEV_MANIFEST_ENDPOINT = "/@solid-start/dev-manifest";
-
-async function resolveDevAssets(request: Request, key: string): Promise<any> {
-  // Resolve through the host Vite server because adapter SSR runners may not
-  // share the process or global where vite-plugin-solid stores its resolver.
-  const url = new URL(DEV_MANIFEST_ENDPOINT, request.url);
-  url.searchParams.set("key", key);
-  const response = await fetch(url);
-  if (!response.ok) {
-    // A silent null here strips the module's client assets from the SSR'd
-    // hydration asset map and hydration fails much later with a cryptic
-    // client-side error — report the miss where it happens.
-    console.error(
-      `[solid-start] Dev manifest request failed with status ${response.status} for module key "${key}" (${url.href}). ` +
-        "SSR will render without this module's client assets, so its hydration preload entry will be missing.",
-    );
-    return null;
-  }
-  return response.json();
-}
-
 async function resolveDevEntryStyles(
   resolve: (key: string) => Promise<any>,
 ): Promise<any[] | undefined> {
@@ -117,15 +99,11 @@ export function createBaseHandler(
         typeof options === "function" ? await options(context) : { ...options };
       const mode = resolvedOptions.mode || "stream";
       if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
-      const renderManifest = import.meta.env.DEV
-        ? {
-            ...(manifest as Record<string, any>),
-            resolve: (key: string) => resolveDevAssets(event.request, key),
-          }
-        : manifest;
-      (resolvedOptions as any).manifest = renderManifest;
+      // In dev `virtual:solid-manifest` exports the plugin's live resolver
+      // (bridge-backed in isolated runners), so it is usable as-is here too.
+      (resolvedOptions as any).manifest = manifest;
       const entryStyles = import.meta.env.DEV
-        ? await resolveDevEntryStyles(renderManifest.resolve)
+        ? await resolveDevEntryStyles((manifest as Record<string, any>).resolve)
         : undefined;
 
       if (mode === "sync" || !import.meta.env.START_SSR) {
