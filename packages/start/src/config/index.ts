@@ -157,14 +157,17 @@ export interface SolidStartOptions {
      * straight to its caller, and errors from API routes never reach it
      * either.
      *
-     * The export is called synchronously with the thrown value, and what it
-     * returns decides what the client sees:
+     * The handler may be asynchronous. SolidStart awaits its return value
+     * before serializing the response, allowing a monitoring service to flush
+     * first. The resolved value decides what the client sees:
      *
      * - `undefined` (or `null`) sends what was thrown, unchanged.
      * - A `Response` is passed through unchanged, which keeps a thrown
      *   `redirect()` working.
      * - Any other value is sent in place of what was thrown, and the client
      *   call rejects with it.
+     * - If the handler throws or rejects, what the server function threw is
+     *   sent unchanged.
      *
      * Control flow reaches the export the same way errors do, so a handler
      * that replaces everything it sees turns redirects into errors.
@@ -172,10 +175,6 @@ export interface SolidStartOptions {
      * Whatever is sent gets serialized to the client along with its own
      * properties, so an error meant to be safe to expose must not carry
      * internal detail.
-     *
-     * The return value is not awaited, so make the export a plain function
-     * rather than an `async` one, and report failures with calls that do not
-     * need awaiting.
      *
      * Type the export as `ServerFunctionErrorHandler` from
      * `@solidjs/start/server`. The module is bundled into the server only, so
