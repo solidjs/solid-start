@@ -6,7 +6,8 @@ import onServerFunctionError from "solid-start:server-fn-error-handler";
  * `serverFunctions.onError` option in `vite.config.ts`.
  *
  * The handler may be asynchronous. SolidStart awaits its return value before
- * sending the error to the client.
+ * sending the error to the client. If the handler throws or rejects, SolidStart
+ * sends the original thrown value instead.
  *
  * @param thrown The value the server function threw. This is a `Response` when
  * the server function threw control flow such as a `redirect()`.
@@ -34,6 +35,10 @@ import onServerFunctionError from "solid-start:server-fn-error-handler";
 export type ServerFunctionErrorHandler = (thrown: unknown) => unknown;
 
 export async function applyServerFunctionErrorHandler(thrown: unknown): Promise<unknown> {
-  const replacement = await onServerFunctionError?.(thrown);
-  return replacement ?? thrown;
+  try {
+    const replacement = await onServerFunctionError?.(thrown);
+    return replacement ?? thrown;
+  } catch {
+    return thrown;
+  }
 }

@@ -166,6 +166,8 @@ export interface SolidStartOptions {
      *   `redirect()` working.
      * - Any other value is sent in place of what was thrown, and the client
      *   call rejects with it.
+     * - If the handler throws or rejects, what the server function threw is
+     *   sent unchanged.
      *
      * Control flow reaches the export the same way errors do, so a handler
      * that replaces everything it sees turns redirects into errors.
