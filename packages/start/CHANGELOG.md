@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.0-rc.9
+
+### Patch Changes
+
+- 8eef552: Remove type-only import remnants from client server-function transforms so they do not retain server-only dependency chains.
+
 ## 2.0.0-rc.8
 
 ### Patch Changes
