@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 2.0.0-rc.8
+
+### Patch Changes
+
+- 3573985: Await asynchronous `serverFunctions.onError` handlers before serializing server function errors.
+  Preserve the original error if the handler throws or rejects.
+
 ## 2.0.0-rc.7
 
 ### Patch Changes
