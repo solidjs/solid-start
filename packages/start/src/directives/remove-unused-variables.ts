@@ -44,6 +44,14 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
                     parent.remove();
                   } else {
                     binding.path.remove();
+                    if (
+                      parent.node.specifiers.every(
+                        specifier =>
+                          t.isImportSpecifier(specifier) && specifier.importKind === "type",
+                      )
+                    ) {
+                      parent.remove();
+                    }
                   }
                   dirty = true;
                 } else if (!isInvalidForRemoval(binding.path)) {
