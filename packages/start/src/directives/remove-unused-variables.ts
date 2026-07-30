@@ -16,6 +16,22 @@ function isInvalidForRemoval(path: babel.NodePath) {
   return isPathValid(target, t.isObjectPattern) || isPathValid(target, t.isArrayPattern);
 }
 
+function countValidImport(node: t.ImportDeclaration): number {
+  if (node.importKind === "type") {
+    return 0;
+  }
+
+  let count = 0;
+
+  for (const specifier of node.specifiers) {
+    if (specifier.type !== "ImportSpecifier" || specifier.importKind === "value") {
+      count += 1;
+    }
+  }
+
+  return count;
+}
+
 export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
   // TODO(Alexis):
   // This implementation is simple but slow
@@ -40,18 +56,10 @@ export function removeUnusedVariables(program: babel.NodePath<t.Program>) {
               if (binding.references === 0 && !binding.path.removed) {
                 const parent = binding.path.parentPath;
                 if (isPathValid(parent, t.isImportDeclaration)) {
-                  if (parent.node.specifiers.length === 1) {
+                  if (countValidImport(parent.node) <= 1) {
                     parent.remove();
                   } else {
                     binding.path.remove();
-                    if (
-                      parent.node.specifiers.every(
-                        specifier =>
-                          t.isImportSpecifier(specifier) && specifier.importKind === "type",
-                      )
-                    ) {
-                      parent.remove();
-                    }
                   }
                   dirty = true;
                 } else if (!isInvalidForRemoval(binding.path)) {
