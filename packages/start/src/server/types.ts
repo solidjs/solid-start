@@ -39,6 +39,12 @@ export interface ResponseStub {
   status?: number;
   statusText?: string;
   headers: Headers;
+  /**
+   * Set once the response head has been derived/sent — status and header
+   * writes (and the `httpStatus`/`httpHeader` cleanup-time retractions in
+   * `@solidjs/web`) are no-ops from then on.
+   */
+  committed?: boolean;
 }
 
 export interface FetchEvent {

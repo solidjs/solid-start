@@ -1,9 +1,5 @@
 // @refresh skip
-import { onCleanup } from "solid-js";
-import { getRequestEvent, isServer } from "@solidjs/web";
-
-import type { PageEvent } from "../server/types.ts";
-import { appendHeader, setHeader } from "../http/http.ts";
+import { httpHeader } from "@solidjs/web";
 
 export interface HttpHeaderProps {
   name: string;
@@ -12,31 +8,15 @@ export interface HttpHeaderProps {
 }
 
 /**
+ * Component wrapper over the `httpHeader` primitive from `@solidjs/web`,
+ * kept for compatibility with Start's historical component API.
+ *
+ * @deprecated Call the `httpHeader(name, value, { append })` primitive from
+ * `@solidjs/web` directly in a component or reactive-scope body instead.
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/http-header
  */
-export const HttpHeader = isServer
-  ? (props: HttpHeaderProps) => {
-      const event = getRequestEvent() as PageEvent;
-
-      if (props.append) appendHeader(props.name, props.value);
-      else setHeader(props.name, props.value);
-
-      onCleanup(() => {
-        // @ts-expect-error
-        if (event.nativeEvent.handled || event.complete) return;
-        const value = event.response.headers.get(props.name);
-        if (!value) return;
-        if (!value.includes(", ")) {
-          if (value === props.value) event.response.headers.delete(props.name);
-          return;
-        }
-        const values = value.split(", ");
-        const index = values.indexOf(props.value);
-        index !== -1 && values.splice(index, 1);
-        if (values.length) event.response.headers.set(props.name, values.join(","));
-        else event.response.headers.delete(props.name);
-      });
-      return null;
-    }
-  : (_props: HttpHeaderProps) => null;
+export const HttpHeader = (props: HttpHeaderProps) => {
+  httpHeader(props.name, props.value, { append: props.append });
+  return null;
+};

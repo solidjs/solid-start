@@ -8,9 +8,15 @@ import { getRequestEvent, renderToStream, renderToString } from "@solidjs/web";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
-import type { APIEvent, FetchEvent, HandlerOptions, PageEvent, StartHandler } from "./types.ts";
+import type {
+  APIEvent,
+  FetchEvent,
+  HandlerOptions,
+  PageEvent,
+  ResponseStub,
+  StartHandler,
+} from "./types.ts";
 import { getExpectedRedirectStatus } from "./util.ts";
-import { toWebReadableStream } from "./web-stream.ts";
 import { stripPathBase } from "./strip-path-base.ts";
 
 /**
@@ -113,6 +119,9 @@ export function createBaseHandler(
           return fn(context);
         }, resolvedOptions);
         context.complete = true;
+        // Cast: router 2.0.0-next.12's RequestEvent augmentation declares the
+        // response stub inline, predating the `committed` flag.
+        (context.response as ResponseStub).committed = true;
 
         if (context.response && context.response.headers.get("Location")) {
           const status = getExpectedRedirectStatus(context.response);
@@ -153,9 +162,10 @@ export function createBaseHandler(
 
       if (mode === "async") return await stream;
 
-      // h3 expects a standard web ReadableStream across runtimes. The adapter
-      // also tolerates cancellation while Solid finishes outstanding work.
-      return iterable(toWebReadableStream(stream));
+      // h3 expects a standard web ReadableStream across runtimes. The
+      // renderer's `.readable` view tolerates cancellation while Solid
+      // finishes outstanding work (writes after cancel are swallowed).
+      return iterable(stream.readable);
     }),
   });
 
@@ -200,6 +210,7 @@ function handleShellCompleteRedirect(context: PageEvent, e: H3Event) {
 function handleStreamCompleteRedirect(context: PageEvent) {
   return ({ write }: { write: (html: string) => void }) => {
     context.complete = true;
+    (context.response as ResponseStub).committed = true;
     const to = context.response && context.response.headers.get("Location");
     if (!to) return;
     // The shell has already flushed, so the redirect has to happen client side.

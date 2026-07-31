@@ -1,7 +1,5 @@
 // @refresh skip
-import { onCleanup } from "solid-js";
-import { getRequestEvent, isServer } from "@solidjs/web";
-import type { PageEvent } from "../server/types.ts";
+import { httpStatus } from "@solidjs/web";
 
 export interface HttpStatusCodeProps {
   code: number;
@@ -9,19 +7,15 @@ export interface HttpStatusCodeProps {
 }
 
 /**
+ * Component wrapper over the `httpStatus` primitive from `@solidjs/web`,
+ * kept for compatibility with Start's historical component API.
+ *
+ * @deprecated Call the `httpStatus(code, text?)` primitive from
+ * `@solidjs/web` directly in a component or reactive-scope body instead.
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/server/http-status-code
  */
-export const HttpStatusCode = isServer
-  ? (props: HttpStatusCodeProps) => {
-      const event = getRequestEvent() as PageEvent;
-      event.response.status = props.code;
-      event.response.statusText = props.text;
-      onCleanup(
-        () =>
-          // !event.nativeEvent.handled &&
-          !event.complete && (event.response.status = 200),
-      );
-      return null;
-    }
-  : (_props: HttpStatusCodeProps) => null;
+export const HttpStatusCode = (props: HttpStatusCodeProps) => {
+  httpStatus(props.code, props.text);
+  return null;
+};

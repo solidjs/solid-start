@@ -3,7 +3,7 @@ import type { JSX } from "@solidjs/web";
 import { Portal } from "@solidjs/web";
 import { Toolbar } from "terracotta/toolbar";
 import info from "../../../package.json" with { type: "json" };
-import clientOnly from "../clientOnly.ts";
+import { clientOnly } from "@solidjs/web";
 import { HttpStatusCode } from "../HttpStatusCode.ts";
 import IconButton from "../ui/IconButton.tsx";
 import { Text } from "../ui/Text.tsx";
