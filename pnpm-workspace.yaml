@@ -24,7 +24,7 @@ minimumReleaseAgeExclude:
   - "@dom-expressions/compiler-wasm32-wasi@0.50.0-next.25 || 0.50.0-next.29 || 0.50.0-next.33 || 0.50.0-next.34"
   - "@dom-expressions/compiler-win32-x64-msvc@0.50.0-next.25 || 0.50.0-next.29 || 0.50.0-next.33 || 0.50.0-next.34"
   - "@dom-expressions/compiler@0.50.0-next.25 || 0.50.0-next.29 || 0.50.0-next.33 || 0.50.0-next.34"
-  - "@solidjs/router@2.0.0-next.12"
+  - "@solidjs/router@2.0.0-next.12 || 2.0.0-next.13"
   - "@solidjs/signals@2.0.0-beta.28 || 2.0.0-beta.29"
   - "@solidjs/web@2.0.0-beta.28 || 2.0.0-beta.29"
   - babel-preset-solid@2.0.0-beta.28 || 2.0.0-beta.29

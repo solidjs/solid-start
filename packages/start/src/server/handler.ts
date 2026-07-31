@@ -119,8 +119,9 @@ export function createBaseHandler(
           return fn(context);
         }, resolvedOptions);
         context.complete = true;
-        // Cast: router 2.0.0-next.12's RequestEvent augmentation declares the
-        // response stub inline, predating the `committed` flag.
+        // Cast: the router's RequestEvent augmentation (still, as of
+        // 2.0.0-next.13) declares the response stub inline without the
+        // `committed` flag.
         (context.response as ResponseStub).committed = true;
 
         if (context.response && context.response.headers.get("Location")) {
