@@ -10,9 +10,9 @@
   "dependencies": {
     "@solidjs/router": "2.0.0-next.12",
     "@solidjs/start": "workspace:*",
-    "@solidjs/web": "2.0.0-beta.28",
+    "@solidjs/web": "2.0.0-beta.29",
     "nitro": "^3.0.260610-beta",
-    "solid-js": "2.0.0-beta.28",
+    "solid-js": "2.0.0-beta.29",
     "unstorage": "1.17.5",
     "vite": "^8.1.5"
   },
