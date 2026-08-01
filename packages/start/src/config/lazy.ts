@@ -73,12 +73,16 @@ const lazy = (): PluginOption => {
       if (this.environment.name !== VITE_ENVIRONMENTS.client) return;
 
       for (const chunk of Object.values(bundle)) {
-        if (chunk.type !== "chunk" || !chunk.isDynamicEntry || chunk.facadeModuleId) continue;
+        if (chunk.type !== "chunk" || chunk.facadeModuleId) continue;
+        if (!chunk.viteMetadata?.importedCss.size) continue;
+
+        const moduleIds = chunk.moduleIds.filter(id => !id.endsWith("css"));
+        if (moduleIds.length <= 1) continue;
 
         // Has to follow Vites implementation:
         // https://github.com/vitejs/vite/blob/4be37a8389c67873880f826b01fe40137e1c29a7/packages/vite/src/node/plugins/manifest.ts#L179
         const chunkName = `_${basename(chunk.fileName)}`;
-        for (const id of chunk.moduleIds) {
+        for (const id of moduleIds) {
           sharedChunkNames[id] = chunkName;
         }
       }
