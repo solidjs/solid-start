@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { type PluginOption, type ViteDevServer, version as viteVersion } from "vite";
+import { createFilter, type PluginOption, type ViteDevServer, version as viteVersion } from "vite";
 import { fileURLToPath } from "node:url";
 
 import { findStylesInModuleGraph } from "../server/collect-styles.ts";
@@ -8,8 +8,16 @@ import { VIRTUAL_MODULES } from "./constants.ts";
 import { type SolidStartOptions } from "./index.ts";
 import { wrapId } from "./vite-utils.ts";
 
+const DEFAULT_STYLE_EXCLUDE = /node_modules/;
+
 export function manifest(start: SolidStartOptions): PluginOption {
   let devServer: ViteDevServer = undefined!;
+
+  const styleFilter = createFilter(
+    start.css?.filter?.include || [],
+    start.css?.filter?.exclude || DEFAULT_STYLE_EXCLUDE,
+  );
+
   return {
     name: "solid-start:manifest-plugin",
     enforce: "pre",
@@ -118,7 +126,7 @@ export function manifest(start: SolidStartOptions): PluginOption {
           // Client env does not have css dependencies in mod.transformResult
           // Aalways use ssr env instead, to prevent hydration mismatches
           const env = devServer.environments["ssr"];
-          const styles = await findStylesInModuleGraph(env, id);
+          const styles = await findStylesInModuleGraph(env, id, styleFilter);
 
           const cssAssets = Object.entries(styles).map(
             ([key, value]) => `{
