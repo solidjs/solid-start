@@ -7,7 +7,7 @@ import virtualCSS from "./src/virtualCssPlugin";
 export default defineConfig({
   plugins: [virtualCSS(), solidStart(), nitro(), tailwindcss()],
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         /**
          * Creates a shared chunk with two components. Needed for the "SharedChunk" test!

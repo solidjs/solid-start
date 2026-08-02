@@ -270,7 +270,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           appType: "custom",
           build: {
             assetsDir: "_build/assets",
-            rollupOptions: {
+            rolldownOptions: {
               output: {
                 // Keeps route chunks named after their file rather than after
                 // the `?pick=...` id that addresses them. See toPickId.
@@ -295,7 +295,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 write: true,
                 manifest: true,
                 outDir: "dist/client",
-                rollupOptions: {
+                rolldownOptions: {
                   input: clientInput,
                   treeshake: true,
                   preserveEntrySignatures: "exports-only",
@@ -309,7 +309,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 write: true,
                 manifest: true,
                 copyPublicDir: false,
-                rollupOptions: {
+                rolldownOptions: {
                   input: handlers.server,
                 },
                 outDir: "dist/server",

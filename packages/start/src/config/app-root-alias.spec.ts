@@ -69,7 +69,7 @@ it("resolves ~ in stylesheets, which are resolved without user plugins", async (
     logLevel: "silent",
     root,
     plugins: [appRootAlias(root, "./src")],
-    build: { write: false, rollupOptions: { input: join(root, "src/main.js") } },
+    build: { write: false, rolldownOptions: { input: join(root, "src/main.js") } },
   })) as { output: { fileName: string; source?: unknown }[] };
 
   const css = result.output.find(chunk => chunk.fileName.endsWith(".css"));
