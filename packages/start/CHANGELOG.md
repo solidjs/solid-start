@@ -23,8 +23,7 @@
   solidStart({
     css: {
       filter: {
-        exclude:
-          /node_modules\/(?!(?:\.pnpm\/[^/]+\/node_modules\/)?my-dependency(?:\/|$))/,
+        exclude: /node_modules\/(?!(?:\.pnpm\/[^/]+\/node_modules\/)?my-dependency(?:\/|$))/,
       },
     },
   });
