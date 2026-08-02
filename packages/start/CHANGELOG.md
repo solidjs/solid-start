@@ -17,18 +17,6 @@
   });
   ```
 
-  With pnpm, Vite may resolve dependencies through the nested `.pnpm` directory. Use a regular expression that accounts for that layout:
-
-  ```ts
-  solidStart({
-    css: {
-      filter: {
-        exclude: /node_modules\/(?!(?:\.pnpm\/[^/]+\/node_modules\/)?my-dependency(?:\/|$))/,
-      },
-    },
-  });
-  ```
-
 ### Patch Changes
 
 - 6581877: Fixed shared chunk css not being server rendered in production (Vite 8 regression).
@@ -100,7 +88,6 @@
   Route files are imported through an id carrying the picked exports in the query (`routes/api.ts?pick=GET`), which left the id ending in the export name. Plugins whose filter is anchored on the file extension (`/\.[cm]?[jt]sx?$/`, the default for `unplugin-auto-import`, `unplugin-macros` and others) silently skipped every route file. The id now ends with a `lang.<ext>` marker, the same convention Vue SFCs use for `?vue&type=script&lang.ts`. Chunk filenames are unchanged.
 
 - d8f1ea8: Apply the configured `nonce` to the two script tags that were still missing it, so a strict `script-src` CSP no longer needs `unsafe-inline`:
-
   - The client-side redirect that streaming mode emits after the shell has already flushed (`<script>window.location=...</script>`) now carries the nonce.
   - The SPA entry script tag now carries the nonce, matching the SSR entry script.
 
@@ -280,7 +267,6 @@
 - 8256190: Rework `@solidjs/start/env`
 - 6cbba24: Fix multiple Set-Cookie headers being lost on redirect responses
 - d4cc548: ## Bump Seroval
-
   - version `1.4.1`
 
 - dd40610: Handle base url in api routes
