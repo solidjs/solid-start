@@ -1,5 +1,41 @@
 # @solidjs/start
 
+## 2.0.0-rc.10
+
+### Minor Changes
+
+- 3f2b7a7: The file filter logic used for CSS crawling in development can now be configured with the vite plugin option `css.filter` analog to `serverFunctions.filter`:
+
+  ```ts
+  solidStart({
+    css: {
+      filter: {
+        // Exclude all node_modules except "my-dependency" with a flat node_modules layout
+        exclude: "node_modules/!(my-dependency)/**/*",
+      },
+    },
+  });
+  ```
+
+  With pnpm, Vite may resolve dependencies through the nested `.pnpm` directory. Use a regular expression that accounts for that layout:
+
+  ```ts
+  solidStart({
+    css: {
+      filter: {
+        exclude:
+          /node_modules\/(?!(?:\.pnpm\/[^/]+\/node_modules\/)?my-dependency(?:\/|$))/,
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- 6581877: Fixed shared chunk css not being server rendered in production (Vite 8 regression).
+- 37d4488: Migrate the built-in Vite configuration from the deprecated `rollupOptions` alias to `rolldownOptions`.
+- 3f2b7a7: Fixed css from files with url sensitive characters such as `+` not being server-rendered.
+
 ## 2.0.0-rc.9
 
 ### Patch Changes
