@@ -1,7 +1,7 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { basename, extname, isAbsolute, join } from "node:path";
-import type { PluginOption } from "vite";
+import type { PluginOption, FilterPattern } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { appRootAlias } from "./app-root-alias.ts";
@@ -29,6 +29,19 @@ export interface SolidStartOptions {
    * @default "./src"
    */
   appRoot?: string;
+
+  /**
+   * Options related to the css crawling logic
+   */
+  css?: {
+    /**
+     * Filter files included during css crawling in development.
+     */
+    filter?: {
+      include?: FilterPattern;
+      exclude?: FilterPattern;
+    };
+  };
 
   /**
    * Options forwarded to `vite-plugin-solid`.
