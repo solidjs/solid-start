@@ -9,10 +9,13 @@ async function getViteModuleNode(vite: DevEnvironment, file: string, importer?: 
   } catch (err) {}
 }
 
+type StyleFilter = (id: string) => boolean;
+
 async function findModuleDependencies(
   vite: DevEnvironment,
   file: string,
   deps: Set<EnvironmentModuleNode>,
+  filter: StyleFilter,
   crawledFiles = new Set<string>(),
   importer?: string,
 ) {
@@ -22,7 +25,10 @@ async function findModuleDependencies(
 
   deps.add(module);
 
-  if (module.url.endsWith(".css") || module.url.includes("node_modules")) return;
+  if (module.url.endsWith(".css")) return;
+
+  // Apply user-config file filters only to real files (virtual modules should always be included)
+  if (module.file && !module.id.startsWith("\0") && !filter(module.file)) return;
 
   if (!module.transformResult) {
     await vite.transformRequest(module.id).catch(() => {});
@@ -36,7 +42,7 @@ async function findModuleDependencies(
     if (crawledFiles.has(dep)) {
       continue;
     }
-    await findModuleDependencies(vite, dep, deps, crawledFiles, module.id);
+    await findModuleDependencies(vite, dep, deps, filter, crawledFiles, module.id);
   }
 }
 
@@ -49,12 +55,16 @@ const cssModulesRegExp = new RegExp(`\\.module${cssFileRegExp.source}`);
 const isCssFile = (file: string) => cssFileRegExp.test(file);
 export const isCssModulesFile = (file: string) => cssModulesRegExp.test(file);
 
-export async function findStylesInModuleGraph(vite: DevEnvironment, id: string) {
+export async function findStylesInModuleGraph(
+  vite: DevEnvironment,
+  id: string,
+  filter: StyleFilter,
+) {
   const absolute = path.resolve(process.cwd(), id);
   const dependencies = new Set<EnvironmentModuleNode>();
 
   try {
-    await findModuleDependencies(vite, absolute, dependencies);
+    await findModuleDependencies(vite, absolute, dependencies, filter);
   } catch (e) {
     console.error(e);
   }
