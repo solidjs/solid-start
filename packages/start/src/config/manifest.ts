@@ -10,13 +10,16 @@ import { wrapId } from "./vite-utils.ts";
 
 const DEFAULT_STYLE_EXCLUDE = /node_modules/;
 
+type StyleFilterOptions = NonNullable<SolidStartOptions["css"]>["filter"];
+
+export function createStyleFilter(options?: StyleFilterOptions) {
+  return createFilter(options?.include || [], options?.exclude || DEFAULT_STYLE_EXCLUDE);
+}
+
 export function manifest(start: SolidStartOptions): PluginOption {
   let devServer: ViteDevServer = undefined!;
 
-  const styleFilter = createFilter(
-    start.css?.filter?.include || [],
-    start.css?.filter?.exclude || DEFAULT_STYLE_EXCLUDE,
-  );
+  const styleFilter = createStyleFilter(start.css?.filter);
 
   return {
     name: "solid-start:manifest-plugin",
