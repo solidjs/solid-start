@@ -1,5 +1,17 @@
 # @solidjs/start
 
+## 2.0.0
+
+### Highlights
+
+SolidStart v2 is now stable. This release replaces Vinxi with direct use of Vite’s Environment API, providing Solid v1 applications with a simpler Vite 8 and Rolldown-powered foundation, improved compatibility with the Vite ecosystem, and direct integration with deployment plugins.
+
+SolidStart v2 requires Node.js 24 or newer and Vite 8. Most SolidStart v1 applications can upgrade by moving their framework configuration from `app.config.ts` to `vite.config.ts` and following the migration guide.
+
+- [Read the full SolidStart v2 announcement](https://github.com/solidjs/solid-start/discussions/2281)
+- [Follow the migration guide](https://docs.solidjs.com/solid-start/v2/migrating-from-v1)
+- [View the complete changelog](https://github.com/solidjs/solid-start/blob/main/packages/start/CHANGELOG.md)
+
 ## 2.0.0-rc.10
 
 ### Minor Changes
