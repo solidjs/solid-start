@@ -199,6 +199,11 @@ export interface SolidStartOptions {
   };
 }
 
+const DEV_TOOLBAR_COMMONJS_DEPENDENCIES = [
+  "@solidjs/start > source-map-js",
+  "@solidjs/start > error-stack-parser",
+];
+
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
 
@@ -291,6 +296,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           environments: {
             [VITE_ENVIRONMENTS.client]: {
               consumer: "client",
+              ...(start.devOverlay
+                ? { optimizeDeps: { include: DEV_TOOLBAR_COMMONJS_DEPENDENCIES } }
+                : {}),
               build: {
                 write: true,
                 manifest: true,
