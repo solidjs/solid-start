@@ -15,21 +15,21 @@
     "test:all": "pnpm run unit:ci && pnpm run e2e"
   },
   "dependencies": {
-    "@solidjs/meta": "0.30.0-next.0",
-    "@solidjs/router": "2.0.0-next.13",
-    "@solidjs/signals": "2.0.0-beta.30",
+    "@solidjs/meta": "1.0.0-next.0",
+    "@solidjs/router": "2.0.0-next.14",
+    "@solidjs/signals": "2.0.0-beta.31",
     "@solidjs/start": "workspace:*",
     "@solidjs/testing-library": "^0.8.10",
-    "@solidjs/web": "2.0.0-beta.30",
+    "@solidjs/web": "2.0.0-beta.31",
     "@testing-library/jest-dom": "^6.10.0",
     "@testing-library/user-event": "^14.6.1",
     "@vitest/ui": "^4.1.10",
     "jsdom": "^29.1.1",
     "lodash": "^4.18.1",
     "nitro": "^3.0.260610-beta",
-    "solid-js": "2.0.0-beta.30",
+    "solid-js": "2.0.0-beta.31",
     "vite": "^8.1.5",
-    "vite-plugin-solid": "^3.0.0-next.21",
+    "vite-plugin-solid": "^3.0.0-next.22",
     "vitest": "^4.1.10"
   },
   "devDependencies": {
