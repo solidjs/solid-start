@@ -1,4 +1,4 @@
-import { MetaProvider, Title } from "@solidjs/meta";
+import { Title } from "@solidjs/meta";
 import { createRouter } from "@solidjs/router";
 import { fileRoutes } from "@solidjs/start/router";
 import { Loading } from "solid-js";
@@ -10,7 +10,7 @@ export default function App() {
   return (
     <Router>
       {props => (
-        <MetaProvider>
+        <>
           <Title>SolidStart - CSS Fixture</Title>
           <div class="mx-auto max-w-5xl p-10 pt-3">
             <header class="flex gap-3 mb-4">
@@ -21,7 +21,7 @@ export default function App() {
 
             <Loading>{props.children}</Loading>
           </div>
-        </MetaProvider>
+        </>
       )}
     </Router>
   );
