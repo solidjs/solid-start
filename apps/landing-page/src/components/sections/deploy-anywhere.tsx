@@ -55,8 +55,8 @@ export function DeployAnywhere() {
       <header>
         <SectionTitle>Deploy Anywhere</SectionTitle>
         <p class="w-full sm:w-3/5 pt-5 px-2 leading-relaxed max-w-[70ch] mx-auto text-center dark:font-thin text-lg transition-all ease-in-out">
-          On the shoulders of open-source. SolidStart can be deployed to every platform Nitro has a
-          preset for.
+          On the shoulders of open-source. SolidStart can be deployed to every platform with a Vite
+          plugin.
         </p>
       </header>
       <div class="mx-auto w-fit pt-12">
@@ -75,20 +75,30 @@ export function DeployAnywhere() {
             <span class="dark:text-[#89DDFF] text-pink-600">{`({`}</span>
             <br />
             <span>
-              {"    "}server{`: `}
+              {"    "}plugins{`: `}
             </span>
-            <span class="dark:text-[#89DDFF]">{`{`}</span>
+            <span class="dark:text-[#89DDFF]">{`[`}</span>
             <br />
             <span>
-              {"        "}preset{`: `}
+              {"        "}
+              <span class="dark:text-[#82AAFF] text-sky-950">solidStart</span>
+              <span class="dark:text-[#89DDFF] text-pink-600">{`()`}</span>
+              {`,`}
             </span>
-            <span class="dark:text-[#89DDFF] text-pink-600">{`"`}</span>
-            <span class="dark:text-[#C3E88D] text-rose-500">netlify</span>
-            <span class="dark:text-[#89DDFF] text-pink-600">{`"`}</span>
+            <br />
+            <span>
+              {"        "}
+              <span class="dark:text-[#82AAFF] text-sky-950">netlify</span>
+              <span class="dark:text-[#89DDFF] text-pink-600">{`({ `}</span>
+              build{`: { `}
+              enabled{`: `}
+              <span class="dark:text-[#C792EA] text-purple-800">true</span>
+              <span class="dark:text-[#89DDFF] text-pink-600">{` } })`}</span>
+            </span>
             <br />
             <span class="dark:text-[#89DDFF] text-pink-600">
               {"    "}
-              {`}`}
+              {`]`}
             </span>
             <br />
             <span class="dark:text-[#89DDFF] text-pink-600">{`})`}</span>
