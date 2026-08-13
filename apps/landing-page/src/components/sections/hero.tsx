@@ -14,7 +14,7 @@ export function Hero() {
     <header class="w-full mx-auto md:px-10 bg-linear-to-b from-transparent dark:to-[#081924] via-white dark:via-white/0 to-white">
       <div class="flex flex-col items-center justify-center gap-2">
         <a
-          href="#"
+          href="https://www.solidjs.com/blog/solid-2-0-rc-the-big-reveal"
           class="inline-block px-4 py-1 group rounded-full border border-black/5 text-base text-white transition-all ease-in dark:border-white/15 dark:bg-neutral-900/30 dark:hover:bg-neutral-800/20"
         >
           <AnimatedShinyText>
