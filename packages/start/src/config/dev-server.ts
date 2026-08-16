@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { NodeRequest, sendNodeResponse } from "srvx/node";
@@ -15,6 +15,22 @@ export function devServer(serverEntryPath: string): Array<PluginOption> {
     {
       name: "solid-start-dev-server",
       configurePreviewServer(server) {
+        // When Nitro controls the production server, its preview hook
+        // handles requests. Detect this by checking for the Nitro build
+        // output marker — if present, skip our middleware so the
+        // nitro:preview hook runs instead.
+        const nitroJsonPath = join(server.config.root, ".output", "nitro.json");
+        if (existsSync(nitroJsonPath)) {
+          try {
+            const nitroConfig = JSON.parse(readFileSync(nitroJsonPath, "utf8"));
+            if (nitroConfig.serverEntry) {
+              return;
+            }
+          } catch {
+            // Malformed nitro.json — fall through to the default path.
+          }
+        }
+
         const serverEntryUrl = pathToFileURL(resolvePreviewServerEntry(server.config.root)).href;
 
         return () => {
