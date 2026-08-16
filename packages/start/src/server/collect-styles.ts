@@ -72,7 +72,16 @@ export async function findStylesInModuleGraph(
   const styles: Record<string, any> = {};
   for (const dep of dependencies) {
     if (dep.id && isCssFile(dep.url)) {
-      styles[dep.id] = dep.url;
+      // Virtual modules (e.g. UnoCSS /__uno.css) have dep.file === null and
+      // dep.id starting with \0. Using dep.url (e.g. "/__uno.css") in the
+      // generated import() fails in Vite 8 module runner with ERR_DENIED_ID
+      // because the URL looks like a nonexistent filesystem path.
+      //
+      // Instead, use dep.id (the resolved virtual module ID, e.g. \0virtual:uno.css)
+      // which wrapId() converts to /@id/__x00__virtual:uno.css — a safe form
+      // that Vite's /@id/ resolution plugin can resolve through the plugin pipeline.
+      // Real CSS files (dep.file is set) keep using dep.url as before.
+      styles[dep.id] = dep.file === null ? dep.id : dep.url;
     }
   }
 
