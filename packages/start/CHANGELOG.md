@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.1
+
+### Patch Changes
+
+- fd5e2ae: Delegate `vite preview` to Nitro when its preview plugin is active, including for static builds that intentionally have no server entry.
+
 ## 2.0.0
 
 ### Highlights
@@ -100,6 +106,7 @@ SolidStart v2 requires Node.js 24 or newer and Vite 8. Most SolidStart v1 applic
   Route files are imported through an id carrying the picked exports in the query (`routes/api.ts?pick=GET`), which left the id ending in the export name. Plugins whose filter is anchored on the file extension (`/\.[cm]?[jt]sx?$/`, the default for `unplugin-auto-import`, `unplugin-macros` and others) silently skipped every route file. The id now ends with a `lang.<ext>` marker, the same convention Vue SFCs use for `?vue&type=script&lang.ts`. Chunk filenames are unchanged.
 
 - d8f1ea8: Apply the configured `nonce` to the two script tags that were still missing it, so a strict `script-src` CSP no longer needs `unsafe-inline`:
+
   - The client-side redirect that streaming mode emits after the shell has already flushed (`<script>window.location=...</script>`) now carries the nonce.
   - The SPA entry script tag now carries the nonce, matching the SSR entry script.
 
@@ -279,6 +286,7 @@ SolidStart v2 requires Node.js 24 or newer and Vite 8. Most SolidStart v1 applic
 - 8256190: Rework `@solidjs/start/env`
 - 6cbba24: Fix multiple Set-Cookie headers being lost on redirect responses
 - d4cc548: ## Bump Seroval
+
   - version `1.4.1`
 
 - dd40610: Handle base url in api routes
