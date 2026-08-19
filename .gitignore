@@ -56,3 +56,7 @@ tsconfig.tsbuildinfo
 apps/tests/**/test-results
 .solid-start
 .pnpm-store
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
