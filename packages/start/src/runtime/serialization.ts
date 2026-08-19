@@ -140,10 +140,14 @@ class SerovalChunkReader {
   async next(): Promise<
     { done: true; value: undefined } | { done: false; value: string }
   > {
-    // Check if the buffer is empty
-    if (this.buffer.length === 0) {
+    // Check if the buffer is empty or incomplete
+    if (this.buffer.length < 12) {
       // if we are already done...
       if (this.done) {
+        // incomplete stream
+        if (this.buffer.length !== 0) {
+          throw new Error("Malformed server function stream.");
+        }
         return {
           done: true,
           value: undefined,
