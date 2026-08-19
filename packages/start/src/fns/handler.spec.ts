@@ -282,3 +282,57 @@ describe("the configured server function error handler", () => {
     expect(h3Event.res.headers.get("X-Error")).toBe("boom");
   });
 });
+
+describe("seroval stream response headers", () => {
+  const callReturning = async (value: unknown) => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => value);
+    const { handleServerFunction } = await import("./handler.ts");
+    await handleServerFunction(h3Event as never);
+    return h3Event;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+  });
+
+  it("sets an explicit content type on serialized results so intermediaries cannot sniff one", async () => {
+    const h3Event = await callReturning({ some: "value" });
+
+    expect(h3Event.res.headers.get("X-Start-Type")).toBe("0");
+    expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+  });
+
+  it("sets an explicit content type on serialized errors", async () => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => {
+      throw new Error("boom");
+    });
+    const { handleServerFunction } = await import("./handler.ts");
+    await handleServerFunction(h3Event as never);
+
+    expect(h3Event.res.headers.get("X-Start-Type")).toBe("0");
+    expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+  });
+});
