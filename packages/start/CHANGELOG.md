@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 1.3.4
+
+### Patch Changes
+
+- 65d1f24: fix potentially incomplete first chunk for chunk readers
+
 ## 1.3.3
 
 ### Patch Changes
