@@ -1,5 +1,11 @@
 # @solidjs/start
 
+## 2.0.3
+
+### Patch Changes
+
+- 91fc972: Prefix production entry scripts, stylesheets, modulepreloads, and serialized manifest paths with Vite's configured base URL.
+
 ## 2.0.2
 
 ### Patch Changes
