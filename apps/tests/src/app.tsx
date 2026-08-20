@@ -2,9 +2,11 @@ import { MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
+import { getRequestEvent, isServer } from "solid-js/web";
 import "./app.css";
+import Repro2297App from "./repro-2297-app";
 
-export default function App() {
+function OriginalApp() {
   return (
     <Router
       root={props => (
@@ -69,4 +71,12 @@ export default function App() {
       <FileRoutes />
     </Router>
   );
+}
+
+export default function App() {
+  const pathname = isServer
+    ? new URL(getRequestEvent()!.request.url).pathname
+    : window.location.pathname;
+
+  return pathname.startsWith("/suspense-back") ? <Repro2297App /> : <OriginalApp />;
 }

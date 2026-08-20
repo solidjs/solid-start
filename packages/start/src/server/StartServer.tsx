@@ -34,7 +34,6 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
               <script
                 type="module"
                 nonce={nonce}
-                async
                 src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY_URL)}
               />
             </>
