@@ -13,7 +13,7 @@ export function getSsrProdManifest() {
       const viteManifestEntry = clientViteManifest[id /*import.meta.env.START_CLIENT_ENTRY*/];
       if (!viteManifestEntry) throw new Error(`No entry found in vite manifest for '${id}'`);
 
-      return join("/", viteManifestEntry.file);
+      return join(import.meta.env.BASE_URL, viteManifestEntry.file);
     },
     async getAssets(id) {
       if (id.startsWith("./")) id = id.slice(2);
@@ -29,7 +29,7 @@ export function getSsrProdManifest() {
 
       for (const entryKey of entryKeys) {
         json[entryKey] = {
-          output: join("/", viteManifest[entryKey]!.file),
+          output: join(import.meta.env.BASE_URL, viteManifest[entryKey]!.file),
           assets: await this.getAssets(entryKey),
         };
       }
@@ -54,7 +54,7 @@ function createHtmlTagsForAssets(assets: string[]) {
     .map<Asset>(asset => ({
       tag: "link",
       attrs: {
-        href: "/" + asset,
+        href: join(import.meta.env.BASE_URL, asset),
         key: asset,
         ...(asset.endsWith(".css") ? { rel: "stylesheet" } : { rel: "modulepreload" }),
       },
