@@ -125,6 +125,8 @@ export async function handleServerFunction(h3Event: H3Event) {
       h3Event.res.headers.set("content-type", "text/javascript");
       return serializeToJSStream(instance, result);
     }
+    // explicit type keeps intermediaries (e.g. Go proxies) from sniffing one onto the stream
+    h3Event.res.headers.set("content-type", "text/plain; charset=utf-8");
     return serializeToJSONStream(result);
   } catch (x) {
     x = await applyServerFunctionErrorHandler(x);
@@ -165,6 +167,7 @@ export async function handleServerFunction(h3Event: H3Event) {
         h3Event.res.headers.set("content-type", "text/javascript");
         return serializeToJSStream(instance, x);
       }
+      h3Event.res.headers.set("content-type", "text/plain; charset=utf-8");
       return serializeToJSONStream(x);
     }
     return x;
