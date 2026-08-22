@@ -80,6 +80,40 @@ function CodeFallback(): JSX.Element {
   );
 }
 
+interface RawStackFrameOptionProps {
+  frame: ErrorStackParser.StackFrame;
+  disabled?: boolean;
+}
+
+// Frame rendered from the raw (unmapped) stack info — used while the source
+// is loading or when it is unreachable, so the frame never vanishes from
+// the list.
+function RawStackFrameOption(props: RawStackFrameOptionProps): JSX.Element {
+  const fileName = props.frame.getFileName();
+  return (
+    <SelectOption
+      value={props.frame}
+      disabled={props.disabled}
+      data-start-error-viewer-stack-frame
+    >
+      <span data-start-error-viewer-stack-frame-function>
+        {props.frame.functionName ?? "<anonymous>"}
+      </span>
+      <span data-start-error-viewer-stack-frame-file>
+        {fileName
+          ? getFilePath({
+              source: fileName,
+              content: "",
+              line: props.frame.getLineNumber()!,
+              column: props.frame.getColumnNumber()!,
+              name: props.frame.getFunctionName(),
+            })
+          : "<unknown source>"}
+      </span>
+    </SelectOption>
+  );
+}
+
 function StackFramesContent(props: StackFramesContentProps) {
   const stackframes = ErrorStackParser.parse(props.error);
 
@@ -94,29 +128,12 @@ function StackFramesContent(props: StackFramesContentProps) {
       >
         <For each={stackframes}>
           {current => (
-            <ErrorBoundary
-              fallback={
-                <SelectOption value={current} disabled data-start-error-viewer-stack-frame>
-                  <span data-start-error-viewer-stack-frame-function>
-                    {current.functionName ?? "<anonymous>"}
-                  </span>
-                  <span data-start-error-viewer-stack-frame-file>
-                    {getFilePath({
-                      source: current.getFileName()!,
-                      content: "",
-                      line: current.getLineNumber()!,
-                      column: current.getColumnNumber()!,
-                      name: current.getFunctionName(),
-                    })}
-                  </span>
-                </SelectOption>
-              }
-            >
+            <ErrorBoundary fallback={<RawStackFrameOption frame={current} disabled />}>
               {(() => {
                 const data = createStackFrame(current, () => props.isCompiled);
                 return (
-                  <Suspense>
-                    <Show when={data()} keyed>
+                  <Suspense fallback={<RawStackFrameOption frame={current} />}>
+                    <Show when={data()} keyed fallback={<RawStackFrameOption frame={current} />}>
                       {source => (
                         <SelectOption data-start-error-viewer-stack-frame value={current}>
                           <span data-start-error-viewer-stack-frame-function>
