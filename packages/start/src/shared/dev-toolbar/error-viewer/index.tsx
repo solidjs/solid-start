@@ -87,31 +87,6 @@ function StackFramesContent(props: StackFramesContentProps) {
 
   return (
     <div data-start-error-viewer-stack-frames-content>
-      <div data-start-error-viewer-stack-frames-code>
-        <ErrorBoundary fallback={null}>
-          {(() => {
-            const data = createStackFrame(selectedFrame(), () => props.isCompiled);
-            return (
-              <Suspense fallback={<CodeFallback />}>
-                <Show when={data()} keyed fallback={<CodeFallback />}>
-                  {source => (
-                    <>
-                      <span data-start-error-viewer-stack-frames-code-source>{source.source}</span>
-                      <div data-start-error-viewer-stack-frames-code-container>
-                        <CodeView
-                          fileName={source.source}
-                          line={source.line}
-                          content={source.content}
-                        />
-                      </div>
-                    </>
-                  )}
-                </Show>
-              </Suspense>
-            );
-          })()}
-        </ErrorBoundary>
-      </div>
       <Select<ErrorStackParser.StackFrame>
         data-start-error-viewer-stack-frames
         value={selectedFrame()}
@@ -160,6 +135,31 @@ function StackFramesContent(props: StackFramesContentProps) {
           )}
         </For>
       </Select>
+      <div data-start-error-viewer-stack-frames-code>
+        <ErrorBoundary fallback={null}>
+          {(() => {
+            const data = createStackFrame(selectedFrame(), () => props.isCompiled);
+            return (
+              <Suspense fallback={<CodeFallback />}>
+                <Show when={data()} keyed fallback={<CodeFallback />}>
+                  {source => (
+                    <>
+                      <span data-start-error-viewer-stack-frames-code-source>{source.source}</span>
+                      <div data-start-error-viewer-stack-frames-code-container>
+                        <CodeView
+                          fileName={source.source}
+                          line={source.line}
+                          content={source.content}
+                        />
+                      </div>
+                    </>
+                  )}
+                </Show>
+              </Suspense>
+            );
+          })()}
+        </ErrorBoundary>
+      </div>
     </div>
   );
 }

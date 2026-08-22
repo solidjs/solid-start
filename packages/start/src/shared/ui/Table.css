@@ -1,18 +1,20 @@
 [data-start-table] {
-  border: 1px oklch(70.7% 0.165 254.624) solid;
+  border: 1px var(--start-dt-border, oklch(70.7% 0.165 254.624)) solid;
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 [data-start-table-header] {
   display: flex;
   flex-direction: row;
-  background-color: oklch(93.2% 0.032 255.585);
+  background-color: var(--start-dt-surface, oklch(93.2% 0.032 255.585));
   font-weight: 600;
 }
 
 [data-start-table-row] {
   display: flex;
   flex-direction: row;
-  border-top: 1px oklch(70.7% 0.165 254.624) solid;
+  border-top: 1px var(--start-dt-border-soft, oklch(70.7% 0.165 254.624)) solid;
 }
 
 [data-start-table-cell] {

@@ -24,6 +24,6 @@
 [data-start-cascade-option][tc-active],
 [data-start-cascade-option][tc-selected],
 [data-start-cascade-option]:focus {
-  background-color: rgb(219 234 254);
-  color: rgb(30 58 138);
+  background-color: var(--start-dt-accent-soft, rgb(219 234 254));
+  color: var(--start-dt-accent, rgb(30 58 138));
 }

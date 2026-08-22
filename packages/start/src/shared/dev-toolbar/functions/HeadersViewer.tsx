@@ -1,8 +1,7 @@
 import { For } from "solid-js";
-import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
+import { Text } from "../../ui/Text.tsx";
 
 import "./HeadersViewer.css";
-import { Text } from "../../ui/Text.tsx";
 
 interface HeadersViewerProps {
   headers: Headers;
@@ -10,13 +9,19 @@ interface HeadersViewerProps {
 
 export function HeadersViewer(props: HeadersViewerProps) {
   return (
-    <div data-start-headers-viewer data-start-properties>
+    <div data-start-headers-viewer data-start-kv-table>
       <For each={Array.from(props.headers.entries())}>
         {([key, value]) => (
-          <div data-start-property>
-            <Text options={{ size: "xs", weight: "semibold", wrap: "nowrap" }}>{key}</Text>
-            <PropertySeparator />
-            <SerovalValue value={value} />
+          <div data-start-property data-start-kv-row>
+            <Text
+              data-start-kv-key
+              options={{ size: "xs", weight: "semibold", font: "mono", wrap: "nowrap" }}
+            >
+              {key}
+            </Text>
+            <Text data-start-kv-value options={{ size: "xs", font: "mono", wrap: "wrap" }}>
+              {value}
+            </Text>
           </div>
         )}
       </For>

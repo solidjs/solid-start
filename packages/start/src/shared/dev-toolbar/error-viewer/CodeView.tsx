@@ -28,7 +28,7 @@ export interface CodeViewProps {
   line: number;
 }
 
-const RANGE = 8;
+const RANGE = 15;
 
 export function CodeView(props: CodeViewProps): JSX.Element | null {
   const lines = () =>
