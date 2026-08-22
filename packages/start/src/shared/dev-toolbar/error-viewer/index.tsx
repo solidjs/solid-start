@@ -136,29 +136,38 @@ function StackFramesContent(props: StackFramesContentProps) {
         </For>
       </Select>
       <div data-start-error-viewer-stack-frames-code>
-        <ErrorBoundary fallback={null}>
-          {(() => {
-            const data = createStackFrame(selectedFrame(), () => props.isCompiled);
-            return (
-              <Suspense fallback={<CodeFallback />}>
-                <Show when={data()} keyed fallback={<CodeFallback />}>
-                  {source => (
-                    <>
-                      <span data-start-error-viewer-stack-frames-code-source>{source.source}</span>
-                      <div data-start-error-viewer-stack-frames-code-container>
-                        <CodeView
-                          fileName={source.source}
-                          line={source.line}
-                          content={source.content}
-                        />
-                      </div>
-                    </>
-                  )}
-                </Show>
-              </Suspense>
-            );
-          })()}
-        </ErrorBoundary>
+        <Show when={selectedFrame()} keyed>
+          {frame => (
+            // Keyed on the frame so a failure inspecting one frame (an
+            // unreachable source, a failed highlight) resets when another
+            // frame is selected instead of leaving the pane stuck.
+            <ErrorBoundary fallback={<CodeFallback />}>
+              {(() => {
+                const data = createStackFrame(frame, () => props.isCompiled);
+                return (
+                  <Suspense fallback={<CodeFallback />}>
+                    <Show when={data()} keyed fallback={<CodeFallback />}>
+                      {source => (
+                        <>
+                          <span data-start-error-viewer-stack-frames-code-source>
+                            {source.source}
+                          </span>
+                          <div data-start-error-viewer-stack-frames-code-container>
+                            <CodeView
+                              fileName={source.source}
+                              line={source.line}
+                              content={source.content}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </Show>
+                  </Suspense>
+                );
+              })()}
+            </ErrorBoundary>
+          )}
+        </Show>
       </div>
     </div>
   );

@@ -51,9 +51,16 @@ export function CodeView(props: CodeViewProps): JSX.Element | null {
     async value => {
       const highlighter = await loadHighlighter();
       const fileExtension = props.fileName.split(/[#?]/)[0]!.split(".").pop()?.trim();
-      let lang = fileExtension as BuiltinLanguage;
-      if (fileExtension === "mjs" || fileExtension === "cjs") {
-        lang = "js";
+      // Only these grammars are loaded — anything else would make shiki
+      // throw. Fall back to plain JS highlighting for unknown sources.
+      let lang: BuiltinLanguage = "js";
+      if (
+        fileExtension === "jsx" ||
+        fileExtension === "ts" ||
+        fileExtension === "tsx" ||
+        fileExtension === "js"
+      ) {
+        lang = fileExtension;
       }
       return highlighter.codeToHtml(value, {
         theme: "dark-plus",

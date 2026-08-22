@@ -58,6 +58,7 @@
     "@babel/core": "^7.29.7",
     "@babel/traverse": "^7.29.7",
     "@babel/types": "^7.29.7",
+    "@jridgewell/trace-mapping": "^0.3.31",
     "@solidjs/meta": "^0.29.4",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.10",
@@ -76,7 +77,6 @@
     "seroval-plugins": "^1.6.0",
     "shiki": "^4.3.1",
     "solid-js": "^1.9.14",
-    "source-map-js": "^1.2.1",
     "srvx": "^0.12.4",
     "terracotta": "^1.1.1",
     "vite-plugin-solid": "^2.11.13"

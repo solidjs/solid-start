@@ -320,6 +320,9 @@ importers:
       '@babel/types':
         specifier: ^7.29.7
         version: 7.29.7
+      '@jridgewell/trace-mapping':
+        specifier: ^0.3.31
+        version: 0.3.31
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.14)
@@ -377,9 +380,6 @@ importers:
       solid-js:
         specifier: ^1.9.14
         version: 1.9.14
-      source-map-js:
-        specifier: ^1.2.1
-        version: 1.2.1
       srvx:
         specifier: ^0.12.4
         version: 0.12.4
