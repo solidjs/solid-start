@@ -1,5 +1,5 @@
 // @refresh skip
-import ErrorStackParser from "error-stack-parser";
+import { parse as parseErrorStack, type StackFrameLite } from "error-stack-parser-es/lite";
 import * as htmlToImage from "html-to-image";
 import type { JSX } from "solid-js";
 import { createMemo, createSignal, ErrorBoundary, For, Show, Suspense } from "solid-js";
@@ -81,7 +81,7 @@ function CodeFallback(): JSX.Element {
 }
 
 interface RawStackFrameOptionProps {
-  frame: ErrorStackParser.StackFrame;
+  frame: StackFrameLite;
   disabled?: boolean;
 }
 
@@ -89,7 +89,7 @@ interface RawStackFrameOptionProps {
 // is loading or when it is unreachable, so the frame never vanishes from
 // the list.
 function RawStackFrameOption(props: RawStackFrameOptionProps): JSX.Element {
-  const fileName = props.frame.getFileName();
+  const fileName = props.frame.file;
   return (
     <SelectOption
       value={props.frame}
@@ -97,16 +97,16 @@ function RawStackFrameOption(props: RawStackFrameOptionProps): JSX.Element {
       data-start-error-viewer-stack-frame
     >
       <span data-start-error-viewer-stack-frame-function>
-        {props.frame.functionName ?? "<anonymous>"}
+        {props.frame.function ?? "<anonymous>"}
       </span>
       <span data-start-error-viewer-stack-frame-file>
         {fileName
           ? getFilePath({
               source: fileName,
               content: "",
-              line: props.frame.getLineNumber()!,
-              column: props.frame.getColumnNumber()!,
-              name: props.frame.getFunctionName(),
+              line: props.frame.line!,
+              column: props.frame.col!,
+              name: props.frame.function,
             })
           : "<unknown source>"}
       </span>
@@ -115,13 +115,13 @@ function RawStackFrameOption(props: RawStackFrameOptionProps): JSX.Element {
 }
 
 function StackFramesContent(props: StackFramesContentProps) {
-  const stackframes = ErrorStackParser.parse(props.error);
+  const stackframes = parseErrorStack(props.error, { allowEmpty: true });
 
   const [selectedFrame, setSelectedFrame] = createSignal(stackframes[0]!);
 
   return (
     <div data-start-error-viewer-stack-frames-content>
-      <Select<ErrorStackParser.StackFrame>
+      <Select<StackFrameLite>
         data-start-error-viewer-stack-frames
         value={selectedFrame()}
         onChange={setSelectedFrame}

@@ -1,4 +1,5 @@
 import { originalPositionFor, sourceContentFor } from "@jridgewell/trace-mapping";
+import type { StackFrameLite } from "error-stack-parser-es/lite";
 import { type Accessor, createMemo, createResource } from "solid-js";
 import getSourceMap from "./get-source-map.ts";
 
@@ -31,13 +32,13 @@ function getActualFileSource(path: string): string {
   return path;
 }
 
-export function createStackFrame(stackframe: StackFrame, isCompiled: () => boolean) {
+export function createStackFrame(stackframe: StackFrameLite, isCompiled: () => boolean) {
   const [data] = createResource(
     () => ({
-      fileName: stackframe.fileName,
-      line: stackframe.lineNumber,
-      column: stackframe.columnNumber,
-      functionName: stackframe.functionName,
+      fileName: stackframe.file,
+      line: stackframe.line,
+      column: stackframe.col,
+      functionName: stackframe.function,
     }),
     async source => {
       if (!source.fileName) {
