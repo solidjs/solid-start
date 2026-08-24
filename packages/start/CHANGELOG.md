@@ -1,5 +1,18 @@
 # @solidjs/start
 
+## 2.0.4
+
+### Patch Changes
+
+- ac3f321: Parse stack traces in the dev toolbar's error overlay with `error-stack-parser-es/lite` instead of `error-stack-parser`. The lite entry point is a much smaller, ESM-only parser that returns plain frame objects rather than class instances, and it no longer pulls in the `stackframe` package. Errors that carry no stack are now handled as an empty frame list instead of throwing.
+- ac3f321: Redesign the dev toolbar. The toolbar and its panels share a common set of design tokens, giving them a consistent dark palette, translucent surfaces, and elevation. The server function inspector is now a master-detail split with a persistent call list beside the request/response pane, and the error overlay places the stack frame list beside a code preview that fills the panel. Headers, form data, and URL search params render as aligned key-value tables, the hex viewer gains an offset gutter with the ASCII column aligned per row, and blobs are shown as file cards with their type and size. The seroval body inspector is now an expandable tree with collapsed previews, syntax-colored values, cycle detection, and live promise and stream state, replacing the previous column-based drill-down.
+
+  Along with the redesign, the toolbar only starts a drag from the toolbar itself rather than from its panels, unhandled promise rejections are captured by the error overlay, the code preview shows more surrounding lines, and a stack frame whose source cannot be loaded now stays listed and reports that its source is unavailable instead of silently rendering nothing.
+
+- ac3f321: Use `@jridgewell/trace-mapping` instead of `source-map-js` to resolve original sources in the dev toolbar's error overlay. It decodes mappings lazily, so only the positions actually inspected are resolved, it is significantly smaller in the browser bundle, and it understands indexed source maps.
+- f619c7f: Pre-bundle the dev toolbar's CommonJS dependencies so it no longer throws on every dev page load
+- d43ad1b: Update Solid to 1.9.15 to include the latest lazy loading and hydration fixes
+
 ## 2.0.3
 
 ### Patch Changes
