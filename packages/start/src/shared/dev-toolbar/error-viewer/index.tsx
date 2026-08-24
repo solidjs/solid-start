@@ -91,11 +91,7 @@ interface RawStackFrameOptionProps {
 function RawStackFrameOption(props: RawStackFrameOptionProps): JSX.Element {
   const fileName = props.frame.file;
   return (
-    <SelectOption
-      value={props.frame}
-      disabled={props.disabled}
-      data-start-error-viewer-stack-frame
-    >
+    <SelectOption value={props.frame} disabled={props.disabled} data-start-error-viewer-stack-frame>
       <span data-start-error-viewer-stack-frame-function>
         {props.frame.function ?? "<anonymous>"}
       </span>

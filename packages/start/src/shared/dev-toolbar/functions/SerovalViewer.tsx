@@ -582,7 +582,13 @@ function TreeValue(props: TreeValueProps): JSX.Element {
         }
       >
         {target => (
-          <TreeValue ctx={ctx} node={target} seen={props.seen} label={props.label} open={props.open} />
+          <TreeValue
+            ctx={ctx}
+            node={target}
+            seen={props.seen}
+            label={props.label}
+            open={props.open}
+          />
         )}
       </Show>
     );
@@ -660,7 +666,12 @@ function TreeValue(props: TreeValueProps): JSX.Element {
         >
           <For each={node.a}>
             {(child, index) => (
-              <TreeValue ctx={ctx} node={child} seen={seen} label={<EntryKey kind="number" value={index()} />} />
+              <TreeValue
+                ctx={ctx}
+                node={child}
+                seen={seen}
+                label={<EntryKey kind="number" value={index()} />}
+              />
             )}
           </For>
         </ExpandableRow>
@@ -680,8 +691,18 @@ function TreeValue(props: TreeValueProps): JSX.Element {
                 label={<EntryKey kind="number" value={index()} />}
                 preview={`{${previewNode(ctx, key, 1)} => ${previewNode(ctx, value, 1)}}`}
               >
-                <TreeValue ctx={ctx} node={key} seen={seen} label={<EntryKey kind="keyword" value="key" />} />
-                <TreeValue ctx={ctx} node={value} seen={seen} label={<EntryKey kind="keyword" value="value" />} />
+                <TreeValue
+                  ctx={ctx}
+                  node={key}
+                  seen={seen}
+                  label={<EntryKey kind="keyword" value="key" />}
+                />
+                <TreeValue
+                  ctx={ctx}
+                  node={value}
+                  seen={seen}
+                  label={<EntryKey kind="keyword" value="value" />}
+                />
               </ExpandableRow>
             )}
           </For>
@@ -703,7 +724,12 @@ function TreeValue(props: TreeValueProps): JSX.Element {
                   <SerovalValue kind="keyword" value="empty" />
                 </LeafRow>
               ) : (
-                <TreeValue ctx={ctx} node={child} seen={seen} label={<EntryKey kind="number" value={index()} />} />
+                <TreeValue
+                  ctx={ctx}
+                  node={child}
+                  seen={seen}
+                  label={<EntryKey kind="number" value={index()} />}
+                />
               )
             }
           </For>
@@ -727,9 +753,7 @@ function TreeValue(props: TreeValueProps): JSX.Element {
                 node={value}
                 seen={seen}
                 label={
-                  <EntryKey
-                    value={typeof key === "string" ? key : previewNode(ctx, key, 1)}
-                  />
+                  <EntryKey value={typeof key === "string" ? key : previewNode(ctx, key, 1)} />
                 }
               />
             )}
@@ -745,7 +769,12 @@ function TreeValue(props: TreeValueProps): JSX.Element {
           preview={previewNode(ctx, node, 0)}
           open={props.open}
         >
-          <TreeValue ctx={ctx} node={node.f} seen={seen} label={<EntryKey kind="keyword" value="value" />} />
+          <TreeValue
+            ctx={ctx}
+            node={node.f}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="value" />}
+          />
         </ExpandableRow>
       );
     // Error = 13,
@@ -771,9 +800,7 @@ function TreeValue(props: TreeValueProps): JSX.Element {
                     node={value}
                     seen={seen}
                     label={
-                      <EntryKey
-                        value={typeof key === "string" ? key : previewNode(ctx, key, 1)}
-                      />
+                      <EntryKey value={typeof key === "string" ? key : previewNode(ctx, key, 1)} />
                     }
                   />
                 )}
@@ -801,7 +828,12 @@ function TreeValue(props: TreeValueProps): JSX.Element {
           <LeafRow label={<EntryKey kind="keyword" value="byteOffset" />}>
             <SerovalValue kind="number" value={node.b} />
           </LeafRow>
-          <TreeValue ctx={ctx} node={node.f} seen={seen} label={<EntryKey kind="keyword" value="buffer" />} />
+          <TreeValue
+            ctx={ctx}
+            node={node.f}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="buffer" />}
+          />
         </ExpandableRow>
       );
     // ArrayBuffer = 19,
@@ -831,7 +863,12 @@ function TreeValue(props: TreeValueProps): JSX.Element {
           preview={previewNode(ctx, node, 0)}
           open={props.open}
         >
-          <TreeValue ctx={ctx} node={node.f} seen={seen} label={<EntryKey kind="keyword" value="value" />} />
+          <TreeValue
+            ctx={ctx}
+            node={node.f}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="value" />}
+          />
         </ExpandableRow>
       );
     // PromiseConstructor = 22,
@@ -897,7 +934,12 @@ function TreeValue(props: TreeValueProps): JSX.Element {
           preview={previewNode(ctx, node, 0)}
           open={props.open}
         >
-          <TreeValue ctx={ctx} node={node.a[1]} seen={seen} label={<EntryKey kind="keyword" value="values" />} />
+          <TreeValue
+            ctx={ctx}
+            node={node.a[1]}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="values" />}
+          />
         </ExpandableRow>
       );
     // StreamConstructor = 31,

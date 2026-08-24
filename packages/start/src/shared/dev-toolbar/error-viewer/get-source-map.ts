@@ -4,10 +4,7 @@ const INLINE_SOURCEMAP_REGEX = /^data:application\/json[^,]+base64,/;
 const SOURCEMAP_REGEX =
   /(?:\/\/[@#][ \t]+sourceMappingURL=([^\s'"]+?)[ \t]*$)|(?:\/\*[@#][ \t]+sourceMappingURL=([^*]+?)[ \t]*(?:\*\/)[ \t]*$)/;
 
-export default async function getSourceMap(
-  url: string,
-  content: string,
-): Promise<TraceMap | null> {
+export default async function getSourceMap(url: string, content: string): Promise<TraceMap | null> {
   const lines = content.split("\n");
   let sourceMapUrl: string | undefined;
   for (let i = lines.length - 1; i >= 0 && !sourceMapUrl; i--) {

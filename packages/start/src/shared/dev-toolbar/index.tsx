@@ -36,7 +36,8 @@ export function DevToolbar(props: DevToolbarProps) {
 
     if (current) {
       // Only the toolbar pill itself is the drag handle — panels/popovers are not draggable.
-      const handle = (current.querySelector(":scope > [tc-toolbar]") as HTMLElement | null) ?? current;
+      const handle =
+        (current.querySelector(":scope > [tc-toolbar]") as HTMLElement | null) ?? current;
 
       let isDown = false;
 

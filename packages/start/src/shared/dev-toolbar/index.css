@@ -12,9 +12,7 @@
   --start-dt-accent: oklch(0.68 0.13 245);
   --start-dt-accent-soft: oklch(0.68 0.13 245 / 0.16);
   --start-dt-danger: oklch(0.63 0.21 25);
-  --start-dt-shadow:
-    0 12px 32px oklch(0 0 0 / 0.4),
-    0 2px 8px oklch(0 0 0 / 0.25);
+  --start-dt-shadow: 0 12px 32px oklch(0 0 0 / 0.4), 0 2px 8px oklch(0 0 0 / 0.25);
 
   position: fixed;
 
