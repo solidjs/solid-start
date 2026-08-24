@@ -55,8 +55,13 @@ export class BaseFileSystemRouter extends EventTarget {
   }
 
   async buildRoutes(): Promise<any[]> {
-    for (var src of glob(this.glob())) {
-      await this.addRoute(src);
+    this.initialScan = true;
+    try {
+      for (var src of glob(this.glob())) {
+        await this.addRoute(src);
+      }
+    } finally {
+      this.initialScan = false;
     }
 
     return this.routes;
@@ -119,7 +124,15 @@ export class BaseFileSystemRouter extends EventTarget {
     }
   }
 
+  // "reload" listeners invalidate the routes manifest module, so the events
+  // must stay quiet while buildRoutes first discovers the existing files:
+  // a manifest already served to the browser would otherwise be invalidated
+  // ~200ms into the first request, racing hydration with an HMR update of
+  // the app/router module chain.
+  private initialScan = false;
+
   reload(route: string, type: "update" | "remove" | "add") {
+    if (this.initialScan) return;
     this.dispatchEvent(
       new CustomEvent("reload", {
         detail: {
