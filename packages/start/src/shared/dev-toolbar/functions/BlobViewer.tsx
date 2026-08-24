@@ -28,6 +28,16 @@ interface BlobViewerInnerProps {
   source: File | Blob;
 }
 
+function formatSize(size: number): string {
+  if (size < 1024) {
+    return `${size} B`;
+  }
+  if (size < 1024 * 1024) {
+    return `${(size / 1024).toFixed(1)} KB`;
+  }
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 function BlobViewerInner(props: BlobViewerInnerProps): JSX.Element {
   const fileURL = createMemo(() => URL.createObjectURL(props.source));
 
@@ -45,16 +55,23 @@ function BlobViewerInner(props: BlobViewerInnerProps): JSX.Element {
     document.body.removeChild(link);
   }
 
+  const name = createMemo(() => {
+    if (props.source instanceof File) {
+      return props.source.name;
+    }
+    return props.source.type || "Blob";
+  });
+
   return (
     <Button data-start-blob-viewer onClick={() => openFileInNewTab()}>
-      {props.source instanceof File ? (
-        <Badge type="info">
-          <DocumentIcon title={props.source.name} />
-          {props.source.name}
-        </Badge>
-      ) : (
-        <Badge type="info">{props.source.type}</Badge>
-      )}
+      <DocumentIcon title={name()} />
+      <span data-start-blob-viewer-info>
+        <span data-start-blob-viewer-name>{name()}</span>
+        <span data-start-blob-viewer-meta>
+          <Badge type="info">{props.source.type || "unknown"}</Badge>
+          <span>{formatSize(props.source.size)}</span>
+        </span>
+      </span>
     </Button>
   );
 }

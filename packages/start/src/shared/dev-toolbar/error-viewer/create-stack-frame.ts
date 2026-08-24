@@ -1,3 +1,5 @@
+import { originalPositionFor, sourceContentFor } from "@jridgewell/trace-mapping";
+import type { StackFrameLite } from "error-stack-parser-es/lite";
 import { type Accessor, createMemo, createResource } from "solid-js";
 import getSourceMap from "./get-source-map.ts";
 
@@ -30,31 +32,39 @@ function getActualFileSource(path: string): string {
   return path;
 }
 
-export function createStackFrame(stackframe: StackFrame, isCompiled: () => boolean) {
+export function createStackFrame(stackframe: StackFrameLite, isCompiled: () => boolean) {
   const [data] = createResource(
     () => ({
-      fileName: stackframe.fileName,
-      line: stackframe.lineNumber,
-      column: stackframe.columnNumber,
-      functionName: stackframe.functionName,
+      fileName: stackframe.file,
+      line: stackframe.line,
+      column: stackframe.col,
+      functionName: stackframe.function,
     }),
     async source => {
       if (!source.fileName) {
         return null;
       }
-      const url = getActualFileSource(source.fileName);
-      const response = await fetch(url);
-      if (!response.ok) {
+      // Sources can be unreachable — node internals, extension scripts,
+      // files outside the dev server's allowlist. Treat any failure as
+      // "no source" instead of throwing into the error boundary.
+      try {
+        const url = getActualFileSource(source.fileName);
+        const response = await fetch(url);
+        if (!response.ok) {
+          return null;
+        }
+        const content = await response.text();
+        const sourceMap = await getSourceMap(url, content);
+        return {
+          source,
+          content,
+          sourceMap,
+          isServer: isServerSource(source.fileName),
+        };
+      } catch (error) {
+        console.warn("[start dev toolbar] failed to load source for stack frame", error);
         return null;
       }
-      const content = await response.text();
-      const sourceMap = await getSourceMap(url, content);
-      return {
-        source,
-        content,
-        sourceMap,
-        isServer: isServerSource(source.fileName),
-      };
     },
   );
 
@@ -69,9 +79,10 @@ export function createStackFrame(stackframe: StackFrame, isCompiled: () => boole
       if (isServer) {
         // The position is already original; only the original content needs
         // to be pulled out of the source map.
-        const originalContent = sourceMap.sources.length
-          ? sourceMap.sourceContentFor(sourceMap.sources[0]!, true)
-          : null;
+        const originalContent =
+          sourceMap.sources.length && sourceMap.sources[0] != null
+            ? sourceContentFor(sourceMap, sourceMap.sources[0])
+            : null;
         if (originalContent) {
           return {
             source: source.fileName,
@@ -82,14 +93,14 @@ export function createStackFrame(stackframe: StackFrame, isCompiled: () => boole
           } as StackFrameSource;
         }
       } else {
-        const result = sourceMap.originalPositionFor({
+        const result = originalPositionFor(sourceMap, {
           line: source.line,
           column: source.column,
         });
         if (result.source) {
           return {
             ...result,
-            content: sourceMap.sourceContentFor(result.source, true),
+            content: sourceContentFor(sourceMap, result.source),
           } as StackFrameSource;
         }
       }

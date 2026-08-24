@@ -8,11 +8,11 @@
 }
 
 [data-start-select] > * + * {
-  border-top: 1px oklch(87% 0.065 274.039) solid;
+  border-top: 1px var(--start-dt-border-soft, oklch(87% 0.065 274.039)) solid;
 }
 
 [data-start-select-option] {
-  color: rgb(249 250 251);
+  color: var(--start-dt-text, rgb(249 250 251));
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 1rem;
@@ -22,6 +22,8 @@
   outline: none;
   cursor: pointer;
 
+  border-left: 2px solid transparent;
+
   transition-property: color, background-color, border-color, box-shadow;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
@@ -29,9 +31,14 @@
   white-space: nowrap;
 }
 
+[data-start-select-option]:hover {
+  background-color: var(--start-dt-surface-hover, rgb(55 65 81));
+}
+
 [data-start-select-option][tc-active],
 [data-start-select-option][tc-selected],
 [data-start-select-option]:focus {
-  color: rgb(229 231 235);
-  background-color: rgb(55 65 81);
+  color: var(--start-dt-text, rgb(229 231 235));
+  background-color: var(--start-dt-accent-soft, rgb(55 65 81));
+  border-left-color: var(--start-dt-accent, transparent);
 }

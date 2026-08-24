@@ -2,21 +2,51 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  min-width: 0;
+}
+
+[data-start-functions-instance-detail] > [data-start-text-size] {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 [data-start-functions-viewer] {
-  color: rgb(249 250 251);
+  color: var(--start-dt-text);
 
+  display: flex;
+  flex-direction: row;
+
+  height: 100%;
+}
+
+[data-start-functions-sidebar] {
   display: flex;
   flex-direction: column;
 
-  min-height: 100%;
+  width: 17rem;
+  flex-shrink: 0;
+  min-height: 0;
+
+  border-right: var(--start-dt-border-soft) 1px solid;
+}
+
+[data-start-functions-detail] {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+
+  overflow: auto;
 }
 
 [data-start-functions-instances-container] {
-  color: rgb(249 250 251);
+  color: var(--start-dt-text);
   width: 100%;
-  min-height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: auto;
 }
 
@@ -31,8 +61,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem;
-  color: rgb(249 250 251);
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--start-dt-text);
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
 }
 
 [data-start-headers] {
@@ -60,16 +94,21 @@
   gap: 0.25rem;
 }
 
+[data-start-property] > [data-start-text-weight="semibold"] {
+  color: var(--start-dt-text-muted);
+}
+
 [data-start-function-instance-viewer] {
   display: flex;
   flex-direction: column;
 
   width: 100%;
+  min-height: 100%;
 }
 
 [data-start-function-instance-viewer-nav],
 [data-start-functions-nav] {
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -78,32 +117,126 @@
 
   position: sticky;
   top: 0;
+  z-index: 1;
 
-  border-bottom: oklch(87% 0.065 274.039) 1px solid;
+  border-bottom: var(--start-dt-border-soft) 1px solid;
 
-  background: oklch(25.7% 0.09 281.288);
+  background: var(--start-dt-bg-glass);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+
+[data-start-functions-nav] {
+  justify-content: flex-start;
+  flex-shrink: 0;
 }
 
 [data-start-functions-nav] svg {
   padding: 0.25rem;
+  color: var(--start-dt-accent);
+}
+
+[data-start-function-instance-viewer-nav] > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  flex-shrink: 0;
+}
+
+[data-start-function-instance-timing] {
+  display: inline-flex;
+  align-items: center;
+
+  color: var(--start-dt-text-muted);
+  background: var(--start-dt-surface);
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+}
+
+/* Body section (the only non-collapsible <div> section in a tab panel) fills the pane;
+   the minimum keeps it inspectable even when Headers/Information are expanded — the
+   tab panel scrolls instead of squeezing the body. */
+[data-start-tab-panel] > div[data-start-section]:first-child {
+  flex: 1 1 auto;
+  min-height: 18rem;
+}
+
+[data-start-tab-panel] > div[data-start-section]:first-child > [data-start-section-content] {
+  flex: 1;
+  min-height: 0;
 }
 
 [data-start-function-instance-viewer-nav-left] {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  min-width: 0;
 }
 
 [data-start-function-instance-viewer-nav-left] > div {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  min-width: 0;
 }
 
 [data-start-function-instance-viewer-content] {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 [data-start-function-instance-viewer-content] > [tc-tab-group] {
   height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* shared key-value table (headers, form data, url search params) */
+[data-start-kv-table] {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  border: 1px var(--start-dt-border-soft) solid;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+[data-start-kv-row] {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+
+  padding: 0.375rem 0.625rem;
+}
+
+[data-start-kv-row]:nth-child(even) {
+  background-color: oklch(1 0 0 / 0.03);
+}
+
+[data-start-kv-row]:hover {
+  background-color: var(--start-dt-surface-hover);
+}
+
+[data-start-kv-key] {
+  flex: 0 0 11rem;
+  min-width: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  color: oklch(0.78 0.1 305);
+}
+
+[data-start-kv-value] {
+  flex: 1;
+  min-width: 0;
+
+  word-break: break-all;
+
+  color: var(--start-dt-text);
 }

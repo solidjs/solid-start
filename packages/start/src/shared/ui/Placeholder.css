@@ -5,6 +5,8 @@
 
   width: 100%;
   height: 100%;
+
+  color: var(--start-dt-text-muted, inherit);
 }
 
 [data-start-placeholder] > span {

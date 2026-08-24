@@ -35,6 +35,10 @@ export function DevToolbar(props: DevToolbarProps) {
     const current = ref();
 
     if (current) {
+      // Only the toolbar pill itself is the drag handle — panels/popovers are not draggable.
+      const handle =
+        (current.querySelector(":scope > [tc-toolbar]") as HTMLElement | null) ?? current;
+
       let isDown = false;
 
       // Offsets of the mouse relatively to the element's position
@@ -58,7 +62,7 @@ export function DevToolbar(props: DevToolbarProps) {
 
       const ac = new AbortController();
 
-      current.addEventListener(
+      handle.addEventListener(
         "mousedown",
         e => {
           isDown = true;
@@ -165,10 +169,16 @@ export function DevToolbar(props: DevToolbarProps) {
       pushError(error.error ?? error);
     };
 
+    const onRejectionEvent = (event: PromiseRejectionEvent) => {
+      pushError(event.reason);
+    };
+
     window.addEventListener("error", onErrorEvent);
+    window.addEventListener("unhandledrejection", onRejectionEvent);
 
     onCleanup(() => {
       window.removeEventListener("error", onErrorEvent);
+      window.removeEventListener("unhandledrejection", onRejectionEvent);
     });
   });
 
