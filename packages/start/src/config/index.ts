@@ -291,6 +291,16 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           environments: {
             [VITE_ENVIRONMENTS.client]: {
               consumer: "client",
+              optimizeDeps: {
+                // The dev toolbar's lazily-imported error viewer reaches
+                // @jridgewell/trace-mapping (and its CJS/UMD deps) only through
+                // @solidjs/start itself, so the dep scanner never discovers it;
+                // unprebundled, the browser gets the raw UMD files and the
+                // import rejects ("does not provide an export named ...").
+                // The "a > b" form resolves through @solidjs/start under
+                // strict (pnpm) node_modules layouts.
+                include: start.devOverlay ? ["@solidjs/start > @jridgewell/trace-mapping"] : [],
+              },
               build: {
                 write: true,
                 manifest: true,
