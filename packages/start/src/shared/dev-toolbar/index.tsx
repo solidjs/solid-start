@@ -3,12 +3,13 @@ import {
   createSignal,
   ErrorBoundary,
   onCleanup,
+  onMount,
   resetErrorBoundaries,
   Show,
   type JSX,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { Portal } from "solid-js/web";
+import { isServer, render } from "solid-js/web";
 import { Toolbar } from "terracotta";
 import info from "../../../package.json" with { type: "json" };
 import clientOnly from "../clientOnly.ts";
@@ -208,38 +209,73 @@ export function DevToolbar(props: DevToolbarProps) {
     );
   });
 
+  const ToolbarUI = () => (
+    <div data-start-dev-toolbar ref={setRef}>
+      <Toolbar>
+        <div>
+          <IconButton onClick={() => toggleContent("err")} disabled={errors().length === 0}>
+            <ErrorIcon title="View Errors" />
+          </IconButton>
+          <IconButton onClick={() => toggleContent("fn")}>
+            <FunctionIcon title="View Server Functions" />
+          </IconButton>
+        </div>
+        <div>
+          <SolidStartIcon title="Solid Start Version" />
+          <div data-start-dev-toolbar-version>
+            <Text options={{ size: "xs", weight: "semibold", font: "mono", wrap: "nowrap" }}>
+              {info.version as string}
+            </Text>
+          </div>
+        </div>
+      </Toolbar>
+      <ErrorViewer show={content() === "err"} errors={errors()} resetError={resetError} />
+      <ServerFunctionViewer
+        show={content() === "fn"}
+        instances={store.instances}
+        onDeleteInstance={value => {
+          setStore("instances", value, undefined);
+        }}
+      />
+    </div>
+  );
+
+  // The toolbar must stay out of the hydrated app tree. A <Portal> here hands
+  // the hydrating parent a client-created marker node that hydration never
+  // inserts into the DOM, and that phantom entry in insert()'s bookkeeping
+  // corrupts the first reconcile after a navigation (the previous page's DOM
+  // is left behind). So it gets its own render root — but that root must not
+  // be created while the SSR stream is still open either, or hydration of the
+  // pending suspense chunks breaks. The document stays in "loading" readyState
+  // for the whole stream, so DOMContentLoaded is the stream-end signal.
+  if (!isServer) {
+    onMount(() => {
+      let dispose: (() => void) | undefined;
+      let container: HTMLElement | undefined;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const scheduleMount = () => {
+        timer = setTimeout(() => {
+          container = document.createElement("div");
+          document.body.appendChild(container);
+          dispose = render(ToolbarUI, container);
+        }, 0);
+      };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", scheduleMount, { once: true });
+      } else {
+        scheduleMount();
+      }
+      onCleanup(() => {
+        document.removeEventListener("DOMContentLoaded", scheduleMount);
+        clearTimeout(timer);
+        dispose?.();
+        container?.remove();
+      });
+    });
+  }
+
   return (
     <>
-      <Portal>
-        <div data-start-dev-toolbar ref={setRef}>
-          <Toolbar>
-            <div>
-              <IconButton onClick={() => toggleContent("err")} disabled={errors().length === 0}>
-                <ErrorIcon title="View Errors" />
-              </IconButton>
-              <IconButton onClick={() => toggleContent("fn")}>
-                <FunctionIcon title="View Server Functions" />
-              </IconButton>
-            </div>
-            <div>
-              <SolidStartIcon title="Solid Start Version" />
-              <div data-start-dev-toolbar-version>
-                <Text options={{ size: "xs", weight: "semibold", font: "mono", wrap: "nowrap" }}>
-                  {info.version as string}
-                </Text>
-              </div>
-            </div>
-          </Toolbar>
-          <ErrorViewer show={content() === "err"} errors={errors()} resetError={resetError} />
-          <ServerFunctionViewer
-            show={content() === "fn"}
-            instances={store.instances}
-            onDeleteInstance={value => {
-              setStore("instances", value, undefined);
-            }}
-          />
-        </div>
-      </Portal>
       <ErrorBoundary
         fallback={error => {
           pushError(error);
