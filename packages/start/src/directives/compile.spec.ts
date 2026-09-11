@@ -382,3 +382,109 @@ describe("misplaced directives", () => {
     expect(result.warnings).toHaveLength(0);
   });
 });
+
+describe("server function ids", () => {
+  async function idsOf(code: string, options: CompileOptions = clientOptions) {
+    const result = await compile("/src/routes/page.tsx", code, options);
+    return [...result.code.matchAll(/cloneServerReference_1\("([^"]+)"\)/g)].map(
+      match => match[1]!,
+    );
+  }
+
+  it("names a function by where it sits in the file", async () => {
+    const [id] = await idsOf(`
+      export function Page() {
+        const load = async () => { "use server"; return 1; };
+        return load;
+      }
+    `);
+    expect(id).toMatch(/-Page\.load$/);
+  });
+
+  it("tells apart two functions that share a name", async () => {
+    const ids = await idsOf(`
+      export function Page() {
+        return async () => { "use server"; return 1; };
+      }
+      export function Admin() {
+        return async () => { "use server"; return 2; };
+      }
+      export const load = async () => { "use server"; return 3; };
+    `);
+    // Bubbling reorders the output, so compare the set of ids.
+    expect(ids.sort()).toEqual([
+      expect.stringMatching(/-Admin\.anonymous$/),
+      expect.stringMatching(/-Page\.anonymous$/),
+      expect.stringMatching(/-load$/),
+    ]);
+  });
+
+  it("numbers functions that share the same name path", async () => {
+    const ids = await idsOf(`
+      export const pair = register(
+        async () => { "use server"; return 1; },
+        async () => { "use server"; return 2; },
+      );
+    `);
+    expect(ids).toEqual([expect.stringMatching(/-pair$/), expect.stringMatching(/-pair\$1$/)]);
+  });
+
+  it("keeps ids of existing functions when a function is added above them", async () => {
+    const before = await idsOf(`
+      export const load = async () => { "use server"; return 1; };
+      export const save = async () => { "use server"; return 2; };
+    `);
+    const after = await idsOf(`
+      export const added = async () => { "use server"; return 0; };
+      export const load = async () => { "use server"; return 1; };
+      export const save = async () => { "use server"; return 2; };
+    `);
+    expect(after).toContain(before[0]);
+    expect(after).toContain(before[1]);
+  });
+
+  it("keeps client and server ids aligned around nested server functions", async () => {
+    const code = `
+      export const outer = register(async () => {
+        "use server";
+        return register(async () => { "use server"; return 1; });
+      });
+      export const beside = register(async () => { "use server"; return 2; });
+    `;
+    const [client, server] = await compileBoth(code, "/src/routes/page.tsx");
+    const ids = [...client.code.matchAll(/cloneServerReference_1\("([^"]+)"\)/g)].map(
+      match => match[1]!,
+    );
+    expect(ids).toHaveLength(2);
+    for (const id of ids) {
+      expect(server.code).toContain(`createServerReference_1("${id}"`);
+    }
+  });
+
+  it("does not ship source names in production ids", async () => {
+    const production: CompileOptions = { ...clientOptions, env: "production" };
+    const ids = await idsOf(
+      `export function Page() {
+        const load = async () => { "use server"; return 1; };
+        return load;
+      }`,
+      production,
+    );
+    expect(ids[0]).not.toMatch(/Page|load/);
+    expect(ids[0]).toMatch(/^[0-9a-f]+-[0-9a-f]+$/);
+  });
+
+  it("keeps production ids stable when a function is added above them", async () => {
+    const production: CompileOptions = { ...clientOptions, env: "production" };
+    const before = await idsOf(
+      `export const load = async () => { "use server"; return 1; };`,
+      production,
+    );
+    const after = await idsOf(
+      `export const added = async () => { "use server"; return 0; };
+       export const load = async () => { "use server"; return 1; };`,
+      production,
+    );
+    expect(after).toContain(before[0]);
+  });
+});

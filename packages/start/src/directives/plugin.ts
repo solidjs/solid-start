@@ -3,13 +3,14 @@ import type { Binding } from "@babel/traverse";
 import * as t from "@babel/types";
 import { bubbleFunctionDeclaration } from "./bubble-function-declaration.ts";
 import { generateUniqueName } from "./generate-unique-name.ts";
-import { getDescriptiveName } from "./get-descriptive-name.ts";
+import { getHierarchicalName } from "./get-hierarchical-name.ts";
 import { getImportIdentifier } from "./get-import-identifier.ts";
 import { getRootStatementPath } from "./get-root-statement-path.ts";
 import { isStatementTopLevel } from "./is-statement-top-level.ts";
 import { isPathValid, unwrapPath } from "./paths.ts";
 import { removeUnusedVariables } from "./remove-unused-variables.ts";
 import type { ImportDefinition } from "./types.ts";
+import xxHash32 from "./xxhash32.ts";
 import {
   assertHoistable,
   assertNoMethodDirectives,
@@ -22,6 +23,8 @@ export interface StateContext {
   directive: string;
   hash: string;
   count: number;
+  /** How many times each name path has been used, to keep ids unique. */
+  names: Map<string, number>;
   imports: Map<string, t.Identifier>;
   valid: boolean;
   warnings: string[];
@@ -82,12 +85,19 @@ function isFunctionDirectiveValid(
   return false;
 }
 
-function createID(ctx: StateContext, name: string) {
-  const base = `${ctx.hash}-${ctx.count++}`;
+function createID(ctx: StateContext, path: babel.NodePath) {
+  const name = getHierarchicalName(path);
+  // Two functions can still share a name path, such as two arrows passed to
+  // the same call, so repeats are numbered.
+  const seen = ctx.names.get(name) ?? 0;
+  ctx.names.set(name, seen + 1);
+  const unique = seen === 0 ? name : `${name}$${seen}`;
+  ctx.count++;
   if (ctx.env === "development") {
-    return `${base}-${name}`;
+    return `${ctx.hash}-${unique}`;
   }
-  return base;
+  // Production ids stay opaque, so source names are not shipped to the browser.
+  return `${ctx.hash}-${xxHash32(unique).toString(16)}`;
 }
 
 function transformFunction(
@@ -108,7 +118,7 @@ function transformFunction(
   const rootStatement = getRootStatementPath(path);
 
   // Create a unique ID for the function
-  const fnID = createID(ctx, getDescriptiveName(path, "anonymous"));
+  const fnID = createID(ctx, path);
 
   if (ctx.mode === "server") {
     // Create a "source" function on the root-level
@@ -358,7 +368,7 @@ function transformModuleLevelDirective(ctx: StateContext, program: babel.NodePat
     return;
   }
 
-  const ids = entries.map(entry => createID(ctx, getDescriptiveName(entry.path, "anonymous")));
+  const ids = entries.map(entry => createID(ctx, entry.path));
 
   // clear body
   program.node.body = [];

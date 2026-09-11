@@ -12,7 +12,7 @@ export interface CompileResult {
 
 export type CompileOptions = Omit<
   StateContext,
-  "count" | "hash" | "imports" | "valid" | "warnings"
+  "count" | "names" | "hash" | "imports" | "valid" | "warnings"
 >;
 
 export async function compile(
@@ -26,6 +26,7 @@ export async function compile(
     warnings: [],
     hash: xxHash32(id).toString(16),
     count: 0,
+    names: new Map(),
     imports: new Map(),
   };
   const pluginOption = [directivesPlugin, context];
