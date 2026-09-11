@@ -71,9 +71,13 @@ describe("SERVER_BASE_URL", () => {
     await expect(serverBaseUrl(config)).resolves.toBe("/app/");
   });
 
-  it("adds the missing leading slash to server.baseURL", async () => {
+  it("wraps server.baseURL in slashes", async () => {
     const config = { server: { baseURL: "app" } } as UserConfig;
 
-    await expect(serverBaseUrl(config)).resolves.toBe("/app");
+    await expect(serverBaseUrl(config)).resolves.toBe("/app/");
+  });
+
+  it.each(commands)("adds the trailing slash a Vite base may lack (%s)", async command => {
+    await expect(serverBaseUrl({ base: "/app" }, command)).resolves.toBe("/app/");
   });
 });

@@ -205,16 +205,22 @@ const absolute = (path: string, root: string) =>
 // the same test Vite applies to an external base
 const externalUrlRE = /^([a-z]+:)?\/\//;
 
+// A mount path is always wrapped in slashes: `new URL("page", origin + "/app")`
+// resolves to /page, losing the segment, and a bare "app/" would glue onto
+// the origin.
+const withSlashes = (path: string) =>
+  `${path.startsWith("/") ? "" : "/"}${path}${path.endsWith("/") ? "" : "/"}`;
+
 // Where the app is mounted, as opposed to where its assets live. Vite's base
 // says where the assets are; a full URL there means a CDN, and says nothing
 // about the app, which stays at the root. A plain path is shared by both.
 function resolveServerBaseUrl(config: UserConfig) {
   const explicit = (config.server as { baseURL?: string } | undefined)?.baseURL;
-  if (explicit) return explicit.startsWith("/") ? explicit : `/${explicit}`;
+  if (explicit) return withSlashes(explicit);
 
   const base = config.base ?? "/";
   if (externalUrlRE.test(base)) return "/";
-  return new URL(base, "http://vite.dev").pathname;
+  return withSlashes(new URL(base, "http://vite.dev").pathname);
 }
 
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
