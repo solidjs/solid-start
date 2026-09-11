@@ -37,7 +37,7 @@ const rejectionOf = async (call: Promise<unknown>) => {
 
 describe("fetchServerFunction", () => {
   beforeEach(() => {
-    vi.stubEnv("BASE_URL", "http://localhost/");
+    vi.stubEnv("SERVER_BASE_URL", "http://localhost/");
   });
 
   it("rejects when the response is a 5xx without an X-Error header", async () => {
