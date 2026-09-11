@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { parseCookies } from "h3";
 import type { FetchEvent } from "../server/types.ts";
 import { getFetchEvent } from "../server/fetchEvent.ts";
@@ -334,5 +334,45 @@ describe("seroval stream response headers", () => {
 
     expect(h3Event.res.headers.get("X-Start-Type")).toBe("0");
     expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+  });
+});
+
+describe("redirects for submissions without JavaScript", () => {
+  const submitWithoutJS = async (result: unknown) => {
+    const request = new Request("http://localhost/app/_server?id=fn", { method: "POST" });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => result);
+    const { handleServerFunction } = await import("./handler.ts");
+    return (await handleServerFunction(h3Event as never)) as Response;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.stubEnv("BASE_URL", "https://cdn.example.com/");
+    vi.stubEnv("SERVER_BASE_URL", "/app/");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("resolves a relative Location against the app base, not the asset base", async () => {
+    const redirect = new Response(null, { status: 302, headers: { Location: "dashboard" } });
+
+    const response = await submitWithoutJS(redirect);
+
+    expect(response.headers.get("Location")).toBe("http://localhost/app/dashboard");
+  });
+
+  it("sends the browser to the app root when there is no referer", async () => {
+    const response = await submitWithoutJS(undefined);
+
+    expect(response.headers.get("Location")).toBe("http://localhost/app/");
   });
 });
