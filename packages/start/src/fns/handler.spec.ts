@@ -336,3 +336,62 @@ describe("seroval stream response headers", () => {
     expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
   });
 });
+
+describe("the no-JS server function handler", () => {
+  const callNoJS = async (init: RequestInit, fn: (...args: any[]) => unknown) => {
+    const request = new Request("http://localhost/_server?id=fn", {
+      method: "POST",
+      // no X-Server-Instance header, so this is the no-JS form path
+      ...init,
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(fn as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    return handleServerFunction(h3Event as never);
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // Regression for SS-2026-002: a non-form body left `undefined` as the last
+  // parsed argument, and building the flash cookie called `.entries()` on it.
+  it("redirects instead of crashing on a non-form body", async () => {
+    const response = await callNoJS(
+      { headers: { "content-type": "text/plain" }, body: "not a form" },
+      () => ({ ok: true }),
+    );
+
+    expect(response).toBeInstanceOf(Response);
+    expect((response as Response).status).toBe(302);
+  });
+
+  it("redirects instead of crashing on an empty body", async () => {
+    const response = await callNoJS({ body: "" }, () => "a value");
+
+    expect(response).toBeInstanceOf(Response);
+    expect((response as Response).status).toBe(302);
+  });
+
+  it("still echoes submitted form fields in the flash cookie", async () => {
+    const form = new URLSearchParams({ title: "hello" });
+    const response = await callNoJS(
+      {
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        body: form.toString(),
+      },
+      () => ({ ok: true }),
+    );
+
+    const cookie = (response as Response).headers.get("Set-Cookie") ?? "";
+    const flash = decodeURIComponent(/flash=([^;]+)/.exec(cookie)?.[1] ?? "");
+    expect(flash).toContain("title");
+    expect(flash).toContain("hello");
+  });
+});
