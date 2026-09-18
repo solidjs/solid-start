@@ -236,6 +236,19 @@ function getRefererLocation(request: Request, url: URL) {
   return new URL(import.meta.env.BASE_URL, url.origin).toString();
 }
 
+// The no-JS form path passes the submitted FormData as the last argument, and
+// its entries are echoed back through the flash cookie. Any other no-JS POST
+// (empty body, a non-form content type) leaves a value here that is not a
+// FormData, so guard the entries() call instead of assuming it.
+function buildFlashInput(parsed: any[]): unknown[] {
+  if (parsed.length === 0) {
+    return [];
+  }
+  const last = parsed[parsed.length - 1];
+  const entries = typeof last?.entries === "function" ? [...last.entries()] : last;
+  return [...parsed.slice(0, -1), entries];
+}
+
 async function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
   const url = new URL(request.url);
   const isError = result instanceof Error;
@@ -263,20 +276,23 @@ async function handleNoJS(result: any, request: Request, parsed: any[], thrown?:
       Location: getRefererLocation(request, url),
     });
   if (result) {
-    headers.append(
-      "Set-Cookie",
-      `flash=${encodeURIComponent(
-        JSON.stringify({
-          url: url.pathname + url.search,
-          result: isError ? result.message : result,
-          thrown: thrown,
-          error: isError,
-          input: parsed.length
-            ? [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-            : [],
-        }),
-      )}; Secure; HttpOnly;`,
-    );
+    try {
+      headers.append(
+        "Set-Cookie",
+        `flash=${encodeURIComponent(
+          JSON.stringify({
+            url: url.pathname + url.search,
+            result: isError ? result.message : result,
+            thrown: thrown,
+            error: isError,
+            input: buildFlashInput(parsed),
+          }),
+        )}; Secure; HttpOnly;`,
+      );
+    } catch {
+      // The flash cookie is best effort. A value that cannot be serialized must
+      // not take down the redirect, which is also this request's error handler.
+    }
   }
   return new Response(null, {
     status: statusCode,
