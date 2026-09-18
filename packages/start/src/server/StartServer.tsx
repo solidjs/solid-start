@@ -17,6 +17,7 @@ const docType = ssr("<!DOCTYPE html>");
  */
 export function StartServer(props: { document: Component<DocumentComponentProps> }) {
   const context = getRequestEvent() as PageEvent;
+  const url = new URL(context.request.url);
 
   // @ts-ignore
   const nonce = context.nonce;
@@ -35,6 +36,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
                 type="module"
                 nonce={nonce}
                 async
+                data-start-url={url.pathname + url.search}
                 src={getSsrManifest("client").path(import.meta.env.START_CLIENT_ENTRY_URL)}
               />
             </>
