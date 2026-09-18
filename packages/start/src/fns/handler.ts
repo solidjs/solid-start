@@ -224,25 +224,48 @@ async function handleNoJS(result: any, request: Request, parsed: any[], thrown?:
       Location: getRefererLocation(request, url),
     });
   if (result) {
-    headers.append(
-      "Set-Cookie",
-      `flash=${encodeURIComponent(
-        JSON.stringify({
-          url: url.pathname + url.search,
-          result: isError ? result.message : result,
-          thrown: thrown,
-          error: isError,
-          input: parsed.length
-            ? [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-            : [],
-        }),
-      )}; Secure; HttpOnly;`,
-    );
+    const payload = {
+      url: url.pathname + url.search,
+      result: isError ? result.message : result,
+      thrown: thrown,
+      error: isError,
+      input: parsed.length
+        ? [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
+        : [],
+    };
+    let cookie = serializeFlashCookie(payload);
+    if (cookie.length > MAX_FLASH_COOKIE_BYTES) {
+      // The form data is the only part that grows with what the user typed.
+      // Drop it and keep the result: a submission with an empty input beats the
+      // browser silently discarding the oversized cookie, which loses the whole
+      // submission on the page it redirects back to (#2179).
+      payload.input = parsed.length ? [...parsed.slice(0, -1), []] : [];
+      const trimmed = serializeFlashCookie(payload);
+      console.warn(
+        `[solid-start] The form data posted without JavaScript to ${payload.url} does not fit in the flash cookie ` +
+          `(${cookie.length} of at most ${MAX_FLASH_COOKIE_BYTES} bytes), so useSubmission().input will be empty ` +
+          `for that submission.` +
+          (trimmed.length > MAX_FLASH_COOKIE_BYTES
+            ? " The result alone is also too large, so the browser will drop the submission."
+            : ""),
+      );
+      cookie = trimmed;
+    }
+    headers.append("Set-Cookie", `${cookie}; Secure; HttpOnly;`);
   }
   return new Response(null, {
     status: statusCode,
     headers,
   });
+}
+
+// Browsers store at most 4096 bytes of cookie name plus value (RFC 6265 §6.1)
+// and silently ignore a Set-Cookie that exceeds it.
+const MAX_FLASH_COOKIE_BYTES = 4096;
+
+// percent-encoding leaves only ASCII, so the string length is the byte length
+function serializeFlashCookie(payload: unknown) {
+  return `flash=${encodeURIComponent(JSON.stringify(payload))}`;
 }
 
 let App: any;
