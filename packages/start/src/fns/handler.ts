@@ -19,14 +19,53 @@ import { applyServerFunctionErrorHandler } from "./error-handler.ts";
 import type { FetchEvent, PageEvent } from "../server/types.ts";
 import { getExpectedRedirectStatus } from "../server/util.ts";
 
+/**
+ * Server functions are same-origin RPC. A cross-site page must not be able to
+ * invoke one with the visitor's cookies, so reject cross-site requests before
+ * the function runs. This is the token-less CSRF defense used by other
+ * frameworks: trust `Sec-Fetch-Site` when the browser sends it, and fall back
+ * to comparing `Origin` against the request host.
+ *
+ * `same-origin` and `same-site` are allowed, matching the reach of a
+ * `SameSite=Lax`/`Strict` cookie. `none` is a user-initiated navigation
+ * (typed URL, bookmark), not a request forged by another site.
+ */
+function isCrossSiteRequest(request: Request, url: URL): boolean {
+  const secFetchSite = request.headers.get("sec-fetch-site");
+  if (secFetchSite) {
+    return secFetchSite === "cross-site";
+  }
+  // Older browsers omit Sec-Fetch-Site. They still send Origin on the
+  // cross-site requests that matter (form and fetch POSTs), so compare it.
+  const origin = request.headers.get("origin");
+  if (origin && origin !== "null") {
+    try {
+      return new URL(origin).host !== url.host;
+    } catch {
+      return true;
+    }
+  }
+  // No Origin either (a same-origin GET, or a non-browser client): nothing to
+  // reject on.
+  return false;
+}
+
 export async function handleServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
+  const url = new URL(request.url);
+
+  if (isCrossSiteRequest(request, url)) {
+    return new Response(
+      import.meta.env.DEV ? "Cross-site server function requests are not allowed" : null,
+      { status: 403 },
+    );
+  }
+
   const serverReference = request.headers.get("X-Server-Id");
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
-  const url = new URL(request.url);
   let functionId: string | undefined | null;
   if (serverReference) {
     // invariant(typeof serverReference === "string", "Invalid server function");

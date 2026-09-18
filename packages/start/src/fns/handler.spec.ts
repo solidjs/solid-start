@@ -336,3 +336,87 @@ describe("seroval stream response headers", () => {
     expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
   });
 });
+
+describe("cross-site request rejection (CSRF)", () => {
+  const call = async (headers: Record<string, string>, method = "POST") => {
+    const request = new Request("http://localhost/_server?id=fn", { method, headers });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    const fn = vi.fn(() => ({ ok: true }));
+    vi.mocked(getServerFunction).mockReturnValue(fn as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    const response = (await handleServerFunction(h3Event as never)) as Response;
+    return { response, fn };
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("rejects a cross-site request by Sec-Fetch-Site without running the function", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "cross-site",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects a cross-site GET navigation (Sec-Fetch-Site, no Origin)", async () => {
+    const { response, fn } = await call({ "sec-fetch-site": "cross-site" }, "GET");
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects when Origin host differs and Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "https://evil.example",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("allows a same-origin request", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "same-origin",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).not.toBe(403);
+    expect(fn).toHaveBeenCalled();
+  });
+
+  it("allows a same-site request", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "same-site",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a user-initiated navigation (Sec-Fetch-Site: none)", async () => {
+    const { response, fn } = await call({ "sec-fetch-site": "none" }, "GET");
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a matching Origin when Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "http://localhost",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a request with neither header (non-browser client)", async () => {
+    const { fn } = await call({ "x-server-instance": "server-fn:1" });
+    expect(fn).toHaveBeenCalled();
+  });
+});
