@@ -60,3 +60,431 @@ describe("compile", () => {
     expect(result.code).not.toMatch(/\bverify\b/);
   });
 });
+
+const serverOptions: CompileOptions = { ...clientOptions, mode: "server" };
+
+function compileBoth(code: string, id = "/src/server-action.ts") {
+  return Promise.all([compile(id, code, clientOptions), compile(id, code, serverOptions)]);
+}
+
+describe("unsupported server functions", () => {
+  it("rejects a directive in an object method", async () => {
+    await expect(
+      compile(
+        "/src/api.ts",
+        `export const api = { async read() { "use server"; return 1; } };`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/not supported in a method/);
+  });
+
+  it("rejects a directive in a class method", async () => {
+    await expect(
+      compile(
+        "/src/api.ts",
+        `export class Api { async read() { "use server"; return 1; } }`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/not supported in a method/);
+  });
+
+  it("rejects a directive in a getter", async () => {
+    await expect(
+      compile(
+        "/src/api.ts",
+        `const api = { get value() { "use server"; return 1; } };`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/not supported in a method/);
+  });
+
+  it("rejects a value captured from an enclosing function", async () => {
+    await expect(
+      compile(
+        "/src/counter.ts",
+        `export function makeCounter(start) {
+          return async () => { "use server"; return start; };
+        }`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/"start" is declared outside/);
+  });
+
+  it("rejects a value captured from a surrounding block", async () => {
+    await expect(
+      compile(
+        "/src/handlers.ts",
+        `export function handlers(items) {
+          return items.map(item => async () => { "use server"; return item; });
+        }`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/"item" is declared outside/);
+  });
+
+  it("rejects `this` in an arrow inside a class", async () => {
+    await expect(
+      compile(
+        "/src/api.ts",
+        `export class Api {
+          x = 1;
+          handler = async () => { "use server"; return this.x; };
+        }`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/`this` cannot be used/);
+  });
+
+  it("rejects `arguments` in an arrow inside a function", async () => {
+    await expect(
+      compile(
+        "/src/api.ts",
+        `export function outer() {
+          return async () => { "use server"; return arguments.length; };
+        }`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/`arguments` cannot be used/);
+  });
+
+  it("rejects `super`", async () => {
+    await expect(
+      compile(
+        "/src/api.ts",
+        `export class Api extends Object {
+          read() { return async () => { "use server"; return super.toString(); }; }
+        }`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/`super` cannot be used/);
+  });
+
+  it("rejects a private class member", async () => {
+    await expect(
+      compile(
+        "/src/api.ts",
+        `export class Api {
+          #secret = 1;
+          read() { return async () => { "use server"; return this.#secret; }; }
+        }`,
+        clientOptions,
+      ),
+    ).rejects.toThrow(/private class member/);
+  });
+});
+
+describe("supported server functions", () => {
+  it("allows module scope, globals, parameters and locals", async () => {
+    const code = `
+      import { db } from "./db.ts";
+      const table = "users";
+      export const load = async (id: string) => {
+        "use server";
+        const query = \`select * from \${table}\`;
+        return db.run(query, id, Date.now());
+      };
+    `;
+    const [client, server] = await compileBoth(code);
+    expect(client.valid).toBe(true);
+    expect(server.valid).toBe(true);
+  });
+
+  it("allows `this` and `arguments` in a function expression", async () => {
+    const code = `
+      export function outer() {
+        return function () {
+          "use server";
+          return [this, arguments.length];
+        };
+      }
+    `;
+    const [client] = await compileBoth(code);
+    expect(client.valid).toBe(true);
+  });
+
+  it("does not read type annotations as captured values", async () => {
+    const code = `
+      export function outer<T>() {
+        type Local = { id: T };
+        return async (value: Local): Promise<Local> => {
+          "use server";
+          return value;
+        };
+      }
+    `;
+    const [client] = await compileBoth(code);
+    expect(client.valid).toBe(true);
+  });
+});
+
+describe('"use server" modules', () => {
+  it("supports an anonymous default export", async () => {
+    const [client, server] = await compileBoth(
+      `"use server";\nexport default async () => 1;`,
+      "/src/action.ts",
+    );
+    expect(client.code).toContain('export { fn_1 as "default" }');
+    expect(server.code).toContain("createServerReference");
+    // both sides have to agree on the id
+    const id = /cloneServerReference_1\("([^"]+)"\)/.exec(client.code)?.[1];
+    expect(id).toBeTruthy();
+    expect(server.code).toContain(`"${id}"`);
+  });
+
+  it("supports an anonymous default function declaration", async () => {
+    const [client, server] = await compileBoth(
+      `"use server";\nexport default async function () { return 1; }`,
+      "/src/action.ts",
+    );
+    expect(client.code).toContain('export { fn_1 as "default" }');
+    expect(server.code).toContain("createServerReference");
+  });
+
+  it("keeps ids aligned when a module exports several functions", async () => {
+    const code = `"use server";
+      export const first = async () => 1;
+      export default async () => 2;
+      export const second = async () => 3;
+    `;
+    const [client, server] = await compileBoth(code, "/src/actions.ts");
+    const ids = [...client.code.matchAll(/cloneServerReference_1\("([^"]+)"\)/g)].map(
+      match => match[1]!,
+    );
+    expect(ids).toHaveLength(3);
+    for (const id of ids) {
+      expect(server.code).toContain(`createServerReference_1("${id}"`);
+    }
+  });
+
+  it("allows type-only exports", async () => {
+    const code = `"use server";
+      export type Session = { id: string };
+      export const load = async () => 1;
+    `;
+    const [client] = await compileBoth(code, "/src/actions.ts");
+    expect(client.valid).toBe(true);
+  });
+
+  it("reports a non-function export instead of dropping it silently", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `"use server";\nexport const NAME = "constant";\nexport const fn = async () => 1;`,
+      clientOptions,
+    );
+    expect(result.code).not.toMatch(/\bNAME\b/);
+    expect(result.warnings[0]).toMatch(/left out of the client build/);
+  });
+
+  it("still drops a wrapped function, which cannot be recognised statically", async () => {
+    const code = `"use server";
+      import { query } from "@solidjs/router";
+      export const testQuery = query(() => 1, "testQuery");
+    `;
+    const [client] = await compileBoth(code, "/src/actions.ts");
+    expect(client.code).not.toMatch(/\btestQuery\b/);
+    expect(client.warnings).toHaveLength(1);
+  });
+
+  it("reports a class export", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `"use server";\nexport class Service {}\nexport const fn = async () => 1;`,
+      clientOptions,
+    );
+    expect(result.warnings[0]).toMatch(/Only functions can be exported/);
+  });
+
+  it("reports a re-export", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `"use server";\nexport { helper } from "./helper.ts";\nexport const fn = async () => 1;`,
+      clientOptions,
+    );
+    expect(result.warnings[0]).toMatch(/Re-exporting from another module/);
+  });
+
+  it("reports `export * from`", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `"use server";\nexport * from "./other.ts";\nexport const fn = async () => 1;`,
+      clientOptions,
+    );
+    expect(result.warnings[0]).toMatch(/export \* from/);
+  });
+
+  it("reports a destructured export", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `"use server";\nconst obj = { a: 1, b: 2 };\nexport const { a, b } = obj;`,
+      clientOptions,
+    );
+    expect(result.warnings[0]).toMatch(/Destructured exports/);
+  });
+
+  it("reports a non-function default export", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `"use server";\nexport default 42;`,
+      clientOptions,
+    );
+    expect(result.warnings[0]).toMatch(/default export is not a function/);
+  });
+
+  it("keeps ids aligned when an unsupported export sits between two functions", async () => {
+    const code = `"use server";
+      export const first = async () => 1;
+      export const NAME = "constant";
+      export const second = async () => 2;
+    `;
+    const [client, server] = await compileBoth(code, "/src/actions.ts");
+    const ids = [...client.code.matchAll(/cloneServerReference_1\("([^"]+)"\)/g)].map(
+      match => match[1]!,
+    );
+    expect(ids).toHaveLength(2);
+    for (const id of ids) {
+      expect(server.code).toContain(`createServerReference_1("${id}"`);
+    }
+  });
+});
+
+describe("misplaced directives", () => {
+  it("warns when the directive is not the first statement of a module", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `import { thing } from "./thing.ts";\n"use server";\nexport const fn = async () => thing();`,
+      clientOptions,
+    );
+    expect(result.valid).toBe(false);
+    expect(result.warnings).toHaveLength(1);
+    expect(result.warnings[0]).toMatch(/is ignored because it is not the first statement/);
+  });
+
+  it("warns when the directive is not the first statement of a function", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `export const fn = async () => {
+        const now = Date.now();
+        "use server";
+        return now;
+      };`,
+      clientOptions,
+    );
+    expect(result.valid).toBe(false);
+    expect(result.warnings[0]).toMatch(/is ignored because it is not the first statement/);
+  });
+
+  it("does not warn for a correctly placed directive", async () => {
+    const result = await compile(
+      "/src/actions.ts",
+      `export const fn = async () => { "use server"; return 1; };`,
+      clientOptions,
+    );
+    expect(result.warnings).toHaveLength(0);
+  });
+});
+
+describe("server function ids", () => {
+  async function idsOf(code: string, options: CompileOptions = clientOptions) {
+    const result = await compile("/src/routes/page.tsx", code, options);
+    return [...result.code.matchAll(/cloneServerReference_1\("([^"]+)"\)/g)].map(
+      match => match[1]!,
+    );
+  }
+
+  it("names a function by where it sits in the file", async () => {
+    const [id] = await idsOf(`
+      export function Page() {
+        const load = async () => { "use server"; return 1; };
+        return load;
+      }
+    `);
+    expect(id).toMatch(/-Page\.load$/);
+  });
+
+  it("tells apart two functions that share a name", async () => {
+    const ids = await idsOf(`
+      export function Page() {
+        return async () => { "use server"; return 1; };
+      }
+      export function Admin() {
+        return async () => { "use server"; return 2; };
+      }
+      export const load = async () => { "use server"; return 3; };
+    `);
+    // Bubbling reorders the output, so compare the set of ids.
+    expect(ids.sort()).toEqual([
+      expect.stringMatching(/-Admin\.anonymous$/),
+      expect.stringMatching(/-Page\.anonymous$/),
+      expect.stringMatching(/-load$/),
+    ]);
+  });
+
+  it("numbers functions that share the same name path", async () => {
+    const ids = await idsOf(`
+      export const pair = register(
+        async () => { "use server"; return 1; },
+        async () => { "use server"; return 2; },
+      );
+    `);
+    expect(ids).toEqual([expect.stringMatching(/-pair$/), expect.stringMatching(/-pair\$1$/)]);
+  });
+
+  it("keeps ids of existing functions when a function is added above them", async () => {
+    const before = await idsOf(`
+      export const load = async () => { "use server"; return 1; };
+      export const save = async () => { "use server"; return 2; };
+    `);
+    const after = await idsOf(`
+      export const added = async () => { "use server"; return 0; };
+      export const load = async () => { "use server"; return 1; };
+      export const save = async () => { "use server"; return 2; };
+    `);
+    expect(after).toContain(before[0]);
+    expect(after).toContain(before[1]);
+  });
+
+  it("keeps client and server ids aligned around nested server functions", async () => {
+    const code = `
+      export const outer = register(async () => {
+        "use server";
+        return register(async () => { "use server"; return 1; });
+      });
+      export const beside = register(async () => { "use server"; return 2; });
+    `;
+    const [client, server] = await compileBoth(code, "/src/routes/page.tsx");
+    const ids = [...client.code.matchAll(/cloneServerReference_1\("([^"]+)"\)/g)].map(
+      match => match[1]!,
+    );
+    expect(ids).toHaveLength(2);
+    for (const id of ids) {
+      expect(server.code).toContain(`createServerReference_1("${id}"`);
+    }
+  });
+
+  it("does not ship source names in production ids", async () => {
+    const production: CompileOptions = { ...clientOptions, env: "production" };
+    const ids = await idsOf(
+      `export function Page() {
+        const load = async () => { "use server"; return 1; };
+        return load;
+      }`,
+      production,
+    );
+    expect(ids[0]).not.toMatch(/Page|load/);
+    expect(ids[0]).toMatch(/^[0-9a-f]+-[0-9a-f]+$/);
+  });
+
+  it("keeps production ids stable when a function is added above them", async () => {
+    const production: CompileOptions = { ...clientOptions, env: "production" };
+    const before = await idsOf(
+      `export const load = async () => { "use server"; return 1; };`,
+      production,
+    );
+    const after = await idsOf(
+      `export const added = async () => { "use server"; return 0; };
+       export const load = async () => { "use server"; return 1; };`,
+      production,
+    );
+    expect(after).toContain(before[0]);
+  });
+});

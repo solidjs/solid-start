@@ -23,8 +23,9 @@ export interface ServerFunctionsOptions {
   filter?: ServerFunctionsFilter;
 }
 
-const DEFAULT_INCLUDE = "src/**/*.{jsx,tsx,ts,js,mjs,cjs}";
-const DEFAULT_EXCLUDE = "node_modules/**/*.{jsx,tsx,ts,js,mjs,cjs}";
+const EXTENSIONS = "{jsx,tsx,ts,js,mjs,cjs,mts,cts}";
+const DEFAULT_INCLUDE = `src/**/*.${EXTENSIONS}`;
+const DEFAULT_EXCLUDE = `node_modules/**/*.${EXTENSIONS}`;
 const DIRECTIVE = "use server";
 
 // Dev-only virtual module used by fns/handler.ts to lazily resolve a server
@@ -241,6 +242,10 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
           mode,
           env,
         });
+
+        for (const warning of result.warnings) {
+          this.warn(warning);
+        }
 
         if (result.valid) {
           const preloader = preload[mode];
