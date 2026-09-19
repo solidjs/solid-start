@@ -441,3 +441,146 @@ describe("the no-JS flash cookie", () => {
     expect(payload).toMatchObject({ result: "boom", error: true, thrown: true, input: [[]] });
   });
 });
+
+describe("the no-JS server function handler", () => {
+  const callNoJS = async (init: RequestInit, fn: (...args: any[]) => unknown) => {
+    const request = new Request("http://localhost/_server?id=fn", {
+      method: "POST",
+      // no X-Server-Instance header, so this is the no-JS form path
+      ...init,
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(fn as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    return handleServerFunction(h3Event as never);
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // Regression for SS-2026-002: a non-form body left `undefined` as the last
+  // parsed argument, and building the flash cookie called `.entries()` on it.
+  it("redirects instead of crashing on a non-form body", async () => {
+    const response = await callNoJS(
+      { headers: { "content-type": "text/plain" }, body: "not a form" },
+      () => ({ ok: true }),
+    );
+
+    expect(response).toBeInstanceOf(Response);
+    expect((response as Response).status).toBe(302);
+  });
+
+  it("redirects instead of crashing on an empty body", async () => {
+    const response = await callNoJS({ body: "" }, () => "a value");
+
+    expect(response).toBeInstanceOf(Response);
+    expect((response as Response).status).toBe(302);
+  });
+
+  it("still echoes submitted form fields in the flash cookie", async () => {
+    const form = new URLSearchParams({ title: "hello" });
+    const response = await callNoJS(
+      {
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        body: form.toString(),
+      },
+      () => ({ ok: true }),
+    );
+
+    const cookie = (response as Response).headers.get("Set-Cookie") ?? "";
+    const flash = decodeURIComponent(/flash=([^;]+)/.exec(cookie)?.[1] ?? "");
+    expect(flash).toContain("title");
+    expect(flash).toContain("hello");
+  });
+});
+
+describe("cross-site request rejection (CSRF)", () => {
+  const call = async (headers: Record<string, string>, method = "POST") => {
+    const request = new Request("http://localhost/_server?id=fn", { method, headers });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    const fn = vi.fn(() => ({ ok: true }));
+    vi.mocked(getServerFunction).mockReturnValue(fn as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    const response = (await handleServerFunction(h3Event as never)) as Response;
+    return { response, fn };
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("rejects a cross-site request by Sec-Fetch-Site without running the function", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "cross-site",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects a cross-site GET navigation (Sec-Fetch-Site, no Origin)", async () => {
+    const { response, fn } = await call({ "sec-fetch-site": "cross-site" }, "GET");
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects when Origin host differs and Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "https://evil.example",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("allows a same-origin request", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "same-origin",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).not.toBe(403);
+    expect(fn).toHaveBeenCalled();
+  });
+
+  it("allows a same-site request", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "same-site",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a user-initiated navigation (Sec-Fetch-Site: none)", async () => {
+    const { response, fn } = await call({ "sec-fetch-site": "none" }, "GET");
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a matching Origin when Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "http://localhost",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a request with neither header (non-browser client)", async () => {
+    const { fn } = await call({ "x-server-instance": "server-fn:1" });
+    expect(fn).toHaveBeenCalled();
+  });
+});

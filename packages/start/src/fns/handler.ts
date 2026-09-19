@@ -19,14 +19,53 @@ import { applyServerFunctionErrorHandler } from "./error-handler.ts";
 import type { FetchEvent, PageEvent } from "../server/types.ts";
 import { getExpectedRedirectStatus } from "../server/util.ts";
 
+/**
+ * Server functions are same-origin RPC. A cross-site page must not be able to
+ * invoke one with the visitor's cookies, so reject cross-site requests before
+ * the function runs. This is the token-less CSRF defense used by other
+ * frameworks: trust `Sec-Fetch-Site` when the browser sends it, and fall back
+ * to comparing `Origin` against the request host.
+ *
+ * `same-origin` and `same-site` are allowed, matching the reach of a
+ * `SameSite=Lax`/`Strict` cookie. `none` is a user-initiated navigation
+ * (typed URL, bookmark), not a request forged by another site.
+ */
+function isCrossSiteRequest(request: Request, url: URL): boolean {
+  const secFetchSite = request.headers.get("sec-fetch-site");
+  if (secFetchSite) {
+    return secFetchSite === "cross-site";
+  }
+  // Older browsers omit Sec-Fetch-Site. They still send Origin on the
+  // cross-site requests that matter (form and fetch POSTs), so compare it.
+  const origin = request.headers.get("origin");
+  if (origin && origin !== "null") {
+    try {
+      return new URL(origin).host !== url.host;
+    } catch {
+      return true;
+    }
+  }
+  // No Origin either (a same-origin GET, or a non-browser client): nothing to
+  // reject on.
+  return false;
+}
+
 export async function handleServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
+  const url = new URL(request.url);
+
+  if (isCrossSiteRequest(request, url)) {
+    return new Response(
+      import.meta.env.DEV ? "Cross-site server function requests are not allowed" : null,
+      { status: 403 },
+    );
+  }
+
   const serverReference = request.headers.get("X-Server-Id");
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
-  const url = new URL(request.url);
   let functionId: string | undefined | null;
   if (serverReference) {
     // invariant(typeof serverReference === "string", "Invalid server function");
@@ -197,6 +236,19 @@ function getRefererLocation(request: Request, url: URL) {
   return new URL(import.meta.env.BASE_URL, url.origin).toString();
 }
 
+// The no-JS form path passes the submitted FormData as the last argument, and
+// its entries are echoed back through the flash cookie. Any other no-JS POST
+// (empty body, a non-form content type) leaves a value here that is not a
+// FormData, so guard the entries() call instead of assuming it.
+function buildFlashInput(parsed: any[]): unknown[] {
+  if (parsed.length === 0) {
+    return [];
+  }
+  const last = parsed[parsed.length - 1];
+  const entries = typeof last?.entries === "function" ? [...last.entries()] : last;
+  return [...parsed.slice(0, -1), entries];
+}
+
 async function handleNoJS(result: any, request: Request, parsed: any[], thrown?: boolean) {
   const url = new URL(request.url);
   const isError = result instanceof Error;
@@ -224,34 +276,37 @@ async function handleNoJS(result: any, request: Request, parsed: any[], thrown?:
       Location: getRefererLocation(request, url),
     });
   if (result) {
-    const payload = {
-      url: url.pathname + url.search,
-      result: isError ? result.message : result,
-      thrown: thrown,
-      error: isError,
-      input: parsed.length
-        ? [...parsed.slice(0, -1), [...parsed[parsed.length - 1].entries()]]
-        : [],
-    };
-    let cookie = serializeFlashCookie(payload);
-    if (cookie.length > MAX_FLASH_COOKIE_BYTES) {
-      // The form data is the only part that grows with what the user typed.
-      // Drop it and keep the result: a submission with an empty input beats the
-      // browser silently discarding the oversized cookie, which loses the whole
-      // submission on the page it redirects back to (#2179).
-      payload.input = parsed.length ? [...parsed.slice(0, -1), []] : [];
-      const trimmed = serializeFlashCookie(payload);
-      console.warn(
-        `[solid-start] The form data posted without JavaScript to ${payload.url} does not fit in the flash cookie ` +
-          `(${cookie.length} of at most ${MAX_FLASH_COOKIE_BYTES} bytes), so useSubmission().input will be empty ` +
-          `for that submission.` +
-          (trimmed.length > MAX_FLASH_COOKIE_BYTES
-            ? " The result alone is also too large, so the browser will drop the submission."
-            : ""),
-      );
-      cookie = trimmed;
+    try {
+      const payload = {
+        url: url.pathname + url.search,
+        result: isError ? result.message : result,
+        thrown: thrown,
+        error: isError,
+        input: buildFlashInput(parsed),
+      };
+      let cookie = serializeFlashCookie(payload);
+      if (cookie.length > MAX_FLASH_COOKIE_BYTES) {
+        // The form data is the only part that grows with what the user typed.
+        // Drop it and keep the result: a submission with an empty input beats the
+        // browser silently discarding the oversized cookie, which loses the whole
+        // submission on the page it redirects back to (#2179).
+        payload.input = parsed.length ? [...parsed.slice(0, -1), []] : [];
+        const trimmed = serializeFlashCookie(payload);
+        console.warn(
+          `[solid-start] The form data posted without JavaScript to ${payload.url} does not fit in the flash cookie ` +
+            `(${cookie.length} of at most ${MAX_FLASH_COOKIE_BYTES} bytes), so useSubmission().input will be empty ` +
+            `for that submission.` +
+            (trimmed.length > MAX_FLASH_COOKIE_BYTES
+              ? " The result alone is also too large, so the browser will drop the submission."
+              : ""),
+        );
+        cookie = trimmed;
+      }
+      headers.append("Set-Cookie", `${cookie}; Secure; HttpOnly;`);
+    } catch {
+      // The flash cookie is best effort. A value that cannot be serialized must
+      // not take down the redirect, which is also this request's error handler.
     }
-    headers.append("Set-Cookie", `${cookie}; Secure; HttpOnly;`);
   }
   return new Response(null, {
     status: statusCode,
