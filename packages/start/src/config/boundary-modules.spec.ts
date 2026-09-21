@@ -19,8 +19,12 @@ describe("boundaryModules", () => {
     expect(resolveWith("server-only", false)).toThrowError(/server-only.*someClient\.ts/s);
   });
 
-  it("fails when a server module imports client-only", () => {
-    expect(resolveWith("client-only", true)).toThrowError(/client-only.*someClient\.ts/s);
+  it("does not fail the build when a server module resolves client-only", () => {
+    // The server build resolves clientOnly() dynamic imports to emit their
+    // chunks without ever running them, so this must not error at resolve.
+    const plugin = boundaryModules() as any;
+    const id = resolveWith("client-only", true)();
+    expect(plugin.load(id)).toBe("export {}");
   });
 
   it("resolves the markers to an empty module in the allowed environment", () => {
