@@ -233,7 +233,7 @@ function getRefererLocation(request: Request, url: URL) {
   }
   // no usable referer (e.g. a no-referrer policy): the app root still beats
   // leaving the browser sitting on the server function endpoint
-  return new URL(import.meta.env.BASE_URL, url.origin).toString();
+  return new URL(import.meta.env.SERVER_BASE_URL || "/", url.origin).toString();
 }
 
 // The no-JS form path passes the submitted FormData as the last argument, and
@@ -259,7 +259,10 @@ async function handleNoJS(result: any, request: Request, parsed: any[], thrown?:
     if (result.headers.has("Location")) {
       headers.set(
         `Location`,
-        new URL(result.headers.get("Location")!, url.origin + import.meta.env.BASE_URL).toString(),
+        new URL(
+          result.headers.get("Location")!,
+          url.origin + (import.meta.env.SERVER_BASE_URL || "/"),
+        ).toString(),
       );
       statusCode = getExpectedRedirectStatus(result);
     } else {
@@ -354,7 +357,7 @@ async function handleSingleFlight(sourceEvent: FetchEvent, result: any): Promise
     if (result.headers.has("Location"))
       url = new URL(
         result.headers.get("Location")!,
-        new URL(sourceEvent.request.url).origin + import.meta.env.BASE_URL,
+        new URL(sourceEvent.request.url).origin + (import.meta.env.SERVER_BASE_URL || "/"),
       ).toString();
   }
   const event = { ...sourceEvent } as PageEvent;

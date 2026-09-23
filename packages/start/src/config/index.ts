@@ -1,7 +1,7 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { basename, extname, isAbsolute, join } from "node:path";
-import type { PluginOption, FilterPattern } from "vite";
+import type { PluginOption, FilterPattern, UserConfig } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { appRootAlias } from "./app-root-alias.ts";
@@ -202,6 +202,30 @@ export interface SolidStartOptions {
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
 
+// the same test Vite applies to an external base
+const externalUrlRE = /^([a-z]+:)?\/\//;
+
+// A mount path is always wrapped in slashes: `new URL("page", origin + "/app")`
+// resolves to /page, losing the segment, and a bare "app/" would glue onto
+// the origin.
+const withSlashes = (path: string) => {
+  // wrapping "" would give "//", a protocol-relative URL
+  if (path === "") return "/";
+  return `${path.startsWith("/") ? "" : "/"}${path}${path.endsWith("/") ? "" : "/"}`;
+};
+
+// Where the app is mounted, as opposed to where its assets live. Vite's base
+// says where the assets are; a full URL there means a CDN, and says nothing
+// about the app, which stays at the root. A plain path is shared by both.
+function resolveServerBaseUrl(config: UserConfig) {
+  const explicit = (config.server as { baseURL?: string } | undefined)?.baseURL;
+  if (explicit) return withSlashes(explicit);
+
+  const base = config.base ?? "/";
+  if (externalUrlRE.test(base)) return "/";
+  return withSlashes(new URL(base, "http://vite.dev").pathname);
+}
+
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
     appRoot: "./src",
@@ -349,9 +373,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
-            "import.meta.env.SERVER_BASE_URL": JSON.stringify(
-              (config.server as { baseURL?: string } | undefined)?.baseURL ?? "",
-            ),
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify(resolveServerBaseUrl(config)),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
           builder: {

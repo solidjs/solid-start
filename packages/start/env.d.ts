@@ -19,3 +19,12 @@ declare module "server-only" {}
  * Importing it in a server module will throw a build error.
  */
 declare module "client-only" {}
+
+// Merges into the ImportMetaEnv that vite/client declares.
+interface ImportMetaEnv {
+  /**
+   * Path the app is mounted at, always wrapped in slashes: `server.baseURL` (a path, not
+   * a URL), else Vite's `base` when it is a plain path, else `/`.
+   */
+  SERVER_BASE_URL: string;
+}
