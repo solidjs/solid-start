@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { parseCookies } from "h3";
 import type { FetchEvent } from "../server/types.ts";
 import { getFetchEvent } from "../server/fetchEvent.ts";
@@ -334,6 +334,116 @@ describe("seroval stream response headers", () => {
 
     expect(h3Event.res.headers.get("X-Start-Type")).toBe("0");
     expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+  });
+});
+
+describe("the no-JS flash cookie", () => {
+  const submitWithoutJS = async (
+    formData: FormData,
+    implementation: () => unknown = () => ({ ok: true }),
+  ) => {
+    const request = new Request("http://localhost/_server?id=fn", {
+      method: "POST",
+      headers: { referer: "http://localhost/form" },
+      body: formData,
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    const serverFunction = vi.fn(implementation);
+    vi.mocked(getServerFunction).mockReturnValue(serverFunction);
+    const { handleServerFunction } = await import("./handler.ts");
+    const response = (await handleServerFunction(h3Event as never)) as Response;
+    const cookie = response.headers.get("set-cookie");
+    const [nameAndValue] = cookie?.split(";") ?? [];
+    return {
+      response,
+      serverFunction,
+      cookie,
+      payload: nameAndValue && JSON.parse(decodeURIComponent(nameAndValue.slice("flash=".length))),
+    };
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("carries the form data across the redirect when it fits", async () => {
+    const formData = new FormData();
+    formData.append("title", "hello");
+
+    const { response, payload, cookie } = await submitWithoutJS(formData);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("http://localhost/form");
+    expect(cookie!.length).toBeLessThanOrEqual(4096);
+    expect(payload).toMatchObject({
+      url: "/_server?id=fn",
+      result: { ok: true },
+      error: false,
+      input: [[["title", "hello"]]],
+    });
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it("keeps the result and drops the form data when the cookie would exceed the browser limit", async () => {
+    const formData = new FormData();
+    formData.append("title", "hello");
+    formData.append("body", "x".repeat(5000));
+
+    const { serverFunction, payload, cookie } = await submitWithoutJS(formData);
+
+    // the server function itself still receives the full form data
+    expect(serverFunction).toHaveBeenCalledTimes(1);
+    expect((vi.mocked(serverFunction).mock.calls[0] as unknown[])[0]).toBeInstanceOf(FormData);
+    expect(
+      ((vi.mocked(serverFunction).mock.calls[0] as unknown[])[0] as FormData).get("body"),
+    ).toHaveLength(5000);
+
+    expect(cookie!.length).toBeLessThanOrEqual(4096);
+    expect(payload).toMatchObject({
+      url: "/_server?id=fn",
+      result: { ok: true },
+      error: false,
+      input: [[]],
+    });
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(console.warn).mock.calls[0][0]).toContain("does not fit in the flash cookie");
+  });
+
+  it("keeps the error when an oversized submission fails", async () => {
+    const formData = new FormData();
+    formData.append("body", "x".repeat(5000));
+
+    const { payload, cookie } = await submitWithoutJS(formData, () => {
+      throw new Error("boom");
+    });
+
+    expect(cookie!.length).toBeLessThanOrEqual(4096);
+    expect(payload).toMatchObject({ result: "boom", error: true, thrown: true, input: [[]] });
+  });
+
+  it("sends no cookie when the result alone would exceed the browser limit", async () => {
+    const formData = new FormData();
+    formData.append("title", "hello");
+
+    const { response, cookie } = await submitWithoutJS(formData, () => ({
+      body: "x".repeat(5000),
+    }));
+
+    expect(response.status).toBe(302);
+    expect(cookie).toBeNull();
+    expect(vi.mocked(console.warn).mock.calls[0][0]).toContain("result alone is also too large");
   });
 });
 
