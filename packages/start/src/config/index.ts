@@ -208,8 +208,11 @@ const externalUrlRE = /^([a-z]+:)?\/\//;
 // A mount path is always wrapped in slashes: `new URL("page", origin + "/app")`
 // resolves to /page, losing the segment, and a bare "app/" would glue onto
 // the origin.
-const withSlashes = (path: string) =>
-  `${path.startsWith("/") ? "" : "/"}${path}${path.endsWith("/") ? "" : "/"}`;
+const withSlashes = (path: string) => {
+  // wrapping "" would give "//", a protocol-relative URL
+  if (path === "") return "/";
+  return `${path.startsWith("/") ? "" : "/"}${path}${path.endsWith("/") ? "" : "/"}`;
+};
 
 // Where the app is mounted, as opposed to where its assets live. Vite's base
 // says where the assets are; a full URL there means a CDN, and says nothing
