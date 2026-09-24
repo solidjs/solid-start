@@ -245,8 +245,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       configEnvironment(name) {
         return {
           resolve: {
+            conditions: ["generic"],
             // remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
-            externalConditions: ["solid", "node", "generic"],
+            externalConditions: ["solid", "node"],
           },
         };
       },
