@@ -1,13 +1,5 @@
 import middleware from "solid-start:middleware";
-import {
-  defineHandler,
-  getCookie,
-  H3,
-  type H3Event,
-  iterable,
-  redirect,
-  setCookie,
-} from "h3/generic";
+import { defineHandler, getCookie, H3, type H3Event, iterable, redirect, setCookie } from "h3";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
