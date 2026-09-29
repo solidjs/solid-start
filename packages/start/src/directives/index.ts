@@ -236,6 +236,11 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
         if (!filter(id)) {
           return null;
         }
+        // Most modules have no directive. Skipping them avoids a Babel parse
+        // and print whose output would be thrown away.
+        if (!code.includes(DIRECTIVE)) {
+          return null;
+        }
 
         const result = await compile(id!, code, {
           ...(mode === "server" ? serverOptions : clientOptions),

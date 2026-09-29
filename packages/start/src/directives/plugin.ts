@@ -11,11 +11,7 @@ import { isPathValid, unwrapPath } from "./paths.ts";
 import { removeUnusedVariables } from "./remove-unused-variables.ts";
 import type { ImportDefinition } from "./types.ts";
 import xxHash32 from "./xxhash32.ts";
-import {
-  assertHoistable,
-  assertNoMethodDirectives,
-  collectMisplacedDirectives,
-} from "./validate.ts";
+import { assertHoistable, validateDirectivePlacement } from "./validate.ts";
 
 export interface StateContext {
   env: "production" | "development";
@@ -129,9 +125,12 @@ function transformFunction(
 
     const sourceID = generateUniqueName(path, "serverFn");
 
-    rootStatement.insertBefore(
+    const [source] = rootStatement.insertBefore(
       t.variableDeclaration("const", [t.variableDeclarator(sourceID, sourceReference)]),
     );
+    // Registering only the new declaration keeps the scope current without a
+    // full crawl per function. References are recounted once at the end.
+    path.scope.getProgramParent().registerDeclaration(source!);
 
     // Clone the source function to replace the server function
     path.replaceWith(
@@ -145,8 +144,6 @@ function transformFunction(
       ]),
     );
   }
-
-  path.scope.crawl();
 }
 
 function traceBinding(path: babel.NodePath, name: string): Binding | undefined {
@@ -412,8 +409,7 @@ export function directivesPlugin(): babel.PluginObj<State> {
     name: "solid-start:directives",
     visitor: {
       Program(program, ctx) {
-        assertNoMethodDirectives(program, ctx.opts.directive);
-        ctx.opts.warnings.push(...collectMisplacedDirectives(program, ctx.opts.directive));
+        ctx.opts.warnings.push(...validateDirectivePlacement(program, ctx.opts.directive));
 
         const isModuleLevel = isDirectiveValid(ctx.opts, program.node.directives);
         if (isModuleLevel) {
@@ -438,7 +434,6 @@ export function directivesPlugin(): babel.PluginObj<State> {
               transformFunction(ctx.opts, path, false);
             },
           });
-          program.scope.crawl();
 
           if (ctx.opts.count > 0) {
             ctx.opts.valid = true;
