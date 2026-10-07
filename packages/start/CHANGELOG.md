@@ -1,5 +1,25 @@
 # @solidjs/start
 
+## 1.3.5
+
+### Patch Changes
+
+- 1e7fcf8: Update seroval and seroval-plugins to 1.6.8.
+
+  seroval 1.6.8 validates decoded nodes more strictly (a promise cannot settle to another promise, and stream, sequence, and plugin inputs must have the expected shape) and lets `maxBase64Length` configure the 1,000,000-character limit on binary values that 1.5 already enforced. It also enables the `Temporal` feature by default. Apps on `solid-js` 1.9.16 or later share a single seroval copy with `@solidjs/start`; older `solid-js` versions pin seroval 1.5 and will install a second copy.
+
+- 1e7fcf8: Send `Cache-Control: no-store` on server function responses by default.
+
+  Server function responses, including calls made with GET, carried no `Cache-Control`, so a shared cache configured to store them could serve one caller's result to another. Every response from the server function handler now defaults to `no-store`: results, errors, redirects, no-JS redirects, raw `Response` passthroughs, and the handler's own refusals. A `Cache-Control` the function sets itself, on a returned `Response` or on the event's response headers, replaces the default rather than being combined with it, and a `304` is never given one.
+
+- 1e7fcf8: Reject cross-site server function requests with a `403`.
+
+  A `"use server"` function could be invoked from another site with the visitor's cookies, over a GET or a form POST, because the request's origin was not checked. Server function requests are now allowed only from the same origin or the same site. The check trusts the `Sec-Fetch-Site` header (`cross-site` is refused; `same-origin`, `same-site` and `none` are allowed) and, when it is absent, compares `Origin` against the request host. An `Origin: null` without `Sec-Fetch-Site`, as sent by sandboxed iframes and some cross-origin redirect chains, is refused. Requests that carry neither header, such as those from non-browser clients, are still allowed, as are same-origin calls, user-initiated navigations, and no-JS form submissions. A separate origin that needs to call your backend should use an API route with explicit CORS.
+
+- 1e7fcf8: Reject server function argument values that are still pending when the request body ends.
+
+  A seroval request body can describe a promise or stream that it never settles. Such a value stayed pending forever, so a server function awaiting that argument never answered. Arguments are now decoded with seroval's cross-reference decoder, and once the body has been decoded every promise it left pending rejects with "Server function stream ended unexpectedly." and every stream it left open errors. Arguments the client serializes normally (promises, errors, async iterators, streams, `FormData`, `Request`, `Headers`, `URL` and the other supported values) decode as before. Decoded promises that nobody awaits no longer report unhandled rejections; code that awaits them still sees the rejection.
+
 ## 1.3.4
 
 ### Patch Changes
