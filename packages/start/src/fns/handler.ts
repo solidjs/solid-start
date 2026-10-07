@@ -22,13 +22,13 @@ import { getExpectedRedirectStatus } from "../server/util.ts";
 /**
  * Server functions are same-origin RPC. A cross-site page must not be able to
  * invoke one with the visitor's cookies, so reject cross-site requests before
- * the function runs. This is the token-less CSRF defense used by other
+ * the function runs. This is the token-less origin check used by other
  * frameworks: trust `Sec-Fetch-Site` when the browser sends it, and fall back
  * to comparing `Origin` against the request host.
  *
  * `same-origin` and `same-site` are allowed, matching the reach of a
  * `SameSite=Lax`/`Strict` cookie. `none` is a user-initiated navigation
- * (typed URL, bookmark), not a request forged by another site.
+ * (typed URL, bookmark), not a request made by another site.
  */
 function isCrossSiteRequest(request: Request, url: URL): boolean {
   const secFetchSite = request.headers.get("sec-fetch-site");

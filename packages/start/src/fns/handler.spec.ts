@@ -361,8 +361,8 @@ describe("the no-JS server function handler", () => {
     vi.clearAllMocks();
   });
 
-  // Regression for SS-2026-002: a non-form body left `undefined` as the last
-  // parsed argument, and building the flash cookie called `.entries()` on it.
+  // A non-form body leaves `undefined` as the last parsed argument, and
+  // building the flash cookie used to call `.entries()` on it.
   it("redirects instead of crashing on a non-form body", async () => {
     const response = await callNoJS(
       { headers: { "content-type": "text/plain" }, body: "not a form" },
@@ -397,7 +397,7 @@ describe("the no-JS server function handler", () => {
   });
 });
 
-describe("cross-site request rejection (CSRF)", () => {
+describe("cross-site request rejection", () => {
   const call = async (headers: Record<string, string>, method = "POST") => {
     const request = new Request("http://localhost/_server?id=fn", { method, headers });
     const h3Event = { res: { headers: new Headers(), errHeaders: new Headers(), status: 200 } };
@@ -435,7 +435,7 @@ describe("cross-site request rejection (CSRF)", () => {
 
   it("rejects when Origin host differs and Sec-Fetch-Site is absent", async () => {
     const { response, fn } = await call({
-      origin: "https://evil.example",
+      origin: "https://other.example",
       "x-server-instance": "server-fn:1",
     });
     expect(response.status).toBe(403);
