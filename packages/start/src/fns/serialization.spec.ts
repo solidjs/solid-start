@@ -388,6 +388,21 @@ describe("values waiting on a later JS frame", () => {
     expect((globalThis as any).$R["server-fn:0"]).toBeUndefined();
   });
 
+  it("errors a stream that is still open when the body ends", async () => {
+    const body = await firstJSFrame("server-fn:2", [new ReadableStream({ start() {} })]);
+    const { deserializeJSStream } = await loadSerialization(true);
+
+    const [arg] = (await deserializeJSStream("server-fn:2", new Response(body))) as [
+      ReadableStream,
+    ];
+
+    expect(arg).toBeInstanceOf(ReadableStream);
+    const outcome = await settleWithin(arg.getReader().read());
+    expect(outcome.status).toBe("rejected");
+    expect((outcome as { reason: Error }).reason.message).toMatch(/ended unexpectedly/);
+    expect((globalThis as any).$R["server-fn:2"]).toBeUndefined();
+  });
+
   it("rejects pending values with the failure when a later frame is malformed", async () => {
     const body = await firstJSFrame("server-fn:1", [new Promise(() => {})]);
     const { deserializeJSStream } = await loadSerialization(true);

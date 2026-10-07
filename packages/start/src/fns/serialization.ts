@@ -4,6 +4,7 @@ import {
   Feature,
   fromCrossJSON,
   getCrossReferenceHeader,
+  isStream,
   type SerovalNode,
   toCrossJSONStream,
 } from "seroval";
@@ -246,10 +247,12 @@ class DecodedRefs extends Map<number, unknown> {
 
 /**
  * Fails every value still waiting on a frame that will not arrive. Seroval
- * keeps these in the refs between frames: open streams (`__SEROVAL_STREAM__`)
- * and pending-promise resolvers (`{ p, s, f }`). Throwing into a closed stream
- * and rejecting a settled promise are no-ops, so this is safe to run after a
- * body that ended normally.
+ * keeps these in the refs between frames: open streams and pending-promise
+ * resolvers (`{ p, s, f }`). `fromCrossJSON` builds streams from seroval's
+ * internal `Stream` class, which only `isStream` recognizes; the eval-based
+ * `deserialize` rebuilds them as plain `__SEROVAL_STREAM__` objects. Throwing
+ * into a closed stream and rejecting a settled promise are no-ops, so this is
+ * safe to run after a body that ended normally.
  *
  * A ref can be any value a plugin decoded, so nothing is read off it unguarded.
  */
@@ -258,7 +261,9 @@ function settlePendingRefs(refs: Iterable<unknown>, error: unknown) {
     if (value === null || typeof value !== "object") continue;
     try {
       const ref = value as Record<string, any>;
-      if (ref.__SEROVAL_STREAM__ === true && typeof ref.throw === "function") {
+      if (isStream(ref)) {
+        ref.throw(error);
+      } else if (ref.__SEROVAL_STREAM__ === true && typeof ref.throw === "function") {
         ref.throw(error);
       } else if (
         typeof ref.s === "function" &&
