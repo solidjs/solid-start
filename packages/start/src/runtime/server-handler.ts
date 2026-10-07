@@ -18,16 +18,36 @@ import { createPageEvent } from "../server/pageEvent";
 import { FetchEvent, PageEvent } from "../server";
 // @ts-ignore
 import serverFnManifest from "solidstart:server-fn-manifest";
+import { setThrownCacheControl, withDefaultCacheControl } from "./cache-control";
+import { isCrossSiteRequest } from "./cross-site";
 import { deserializeFromJSONString, serializeToJSONStream, serializeToJSStream } from "./serialization";
 
 async function handleServerFunction(h3Event: HTTPEvent) {
+  let response: Awaited<ReturnType<typeof runServerFunction>>;
+  try {
+    response = await runServerFunction(h3Event);
+  } catch (error) {
+    setThrownCacheControl(h3Event);
+    throw error;
+  }
+  return withDefaultCacheControl(h3Event, response);
+}
+
+async function runServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
+
+  const url = new URL(request.url);
+
+  if (isCrossSiteRequest(request, url)) {
+    return process.env.NODE_ENV === "development"
+      ? new Response("Cross-site server function requests are not allowed", { status: 403 })
+      : new Response(null, { status: 403 });
+  }
 
   const serverReference = request.headers.get("X-Server-Id");
   const instance = request.headers.get("X-Server-Instance");
   const singleFlight = request.headers.has("X-Single-Flight");
-  const url = new URL(request.url);
   let functionId: string | undefined | null, name: string | undefined | null;
   if (serverReference) {
     invariant(typeof serverReference === "string", "Invalid server function");

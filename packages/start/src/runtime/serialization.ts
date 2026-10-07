@@ -3,8 +3,9 @@ import {
   deserialize,
   Feature,
   fromCrossJSON,
-  fromJSON,
   getCrossReferenceHeader,
+  isStream,
+  type SerovalJSON,
   type SerovalNode,
   toCrossJSONStream,
   toJSONAsync,
@@ -213,11 +214,83 @@ export async function serializeToJSONString(value: any) {
   }));
 }
 
+const ignoreRejection = () => {};
+
+/**
+ * A decoded payload is the peer's bytes, so a promise it decodes to can reject
+ * with nobody holding it: an argument the function never awaits. Seroval
+ * stores every promise it decodes in the refs map, including ones that reject
+ * synchronously inside `fromCrossJSON`, so claim them as they are stored. Code
+ * that awaits the promise still sees the rejection.
+ */
+class DecodedRefs extends Map<number, unknown> {
+  override set(id: number, value: unknown) {
+    if (value instanceof Promise) value.catch(ignoreRejection);
+    return super.set(id, value);
+  }
+}
+
+/**
+ * Fails every value still waiting on a node that will not arrive. Seroval
+ * keeps these in the refs: open streams (`isStream`) and pending-promise
+ * resolvers (`{ p, s, f }`). Throwing into a closed stream and
+ * rejecting a settled promise are no-ops, so this is safe to run after a body
+ * that decoded completely.
+ *
+ * A ref can be any value a plugin decoded, so nothing is read off it unguarded.
+ */
+function settlePendingRefs(refs: Iterable<unknown>, error: unknown) {
+  for (const value of refs) {
+    if (value === null || typeof value !== "object") continue;
+    try {
+      if (isStream(value)) {
+        value.throw(error);
+        continue;
+      }
+      const ref = value as Record<string, any>;
+      if (
+        typeof ref.s === "function" &&
+        typeof ref.f === "function" &&
+        ref.p instanceof Promise
+      ) {
+        // seroval stores the resolver before its promise, so a failed second
+        // store leaves a promise that `DecodedRefs` never saw
+        ref.p.catch(ignoreRejection);
+        ref.f(error);
+      }
+    } catch {
+      // a stream listener threw, or a plugin value refused the read
+    }
+  }
+}
+
+function createEndOfStreamError() {
+  return new Error("Server function stream ended unexpectedly.");
+}
+
+/**
+ * Decodes the body written by `serializeToJSONString`. The body is the whole
+ * payload, so once it is decoded nothing can settle a promise or stream it
+ * left open; those are failed rather than left waiting. The cross deserializer
+ * is used because it exposes its refs, and it reads the same nodes `toJSONAsync`
+ * emits.
+ */
 export async function deserializeFromJSONString(json: string) {
-  return fromJSON(JSON.parse(json), {
-    plugins: DEFAULT_PLUGINS,
-    disabledFeatures: DISABLED_FEATURES,
-  });
+  const source = JSON.parse(json) as SerovalJSON;
+  const refs = new DecodedRefs();
+  let value: unknown;
+  try {
+    value = fromCrossJSON(source.t, {
+      refs,
+      plugins: DEFAULT_PLUGINS,
+      disabledFeatures: DISABLED_FEATURES,
+    });
+  } catch (error) {
+    settlePendingRefs(refs.values(), error);
+    throw error;
+  }
+  settlePendingRefs(refs.values(), createEndOfStreamError());
+  return value;
 }
 
 export async function deserializeJSONStream(response: Response | Request) {
