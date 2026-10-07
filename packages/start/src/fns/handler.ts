@@ -22,13 +22,13 @@ import { getExpectedRedirectStatus } from "../server/util.ts";
 /**
  * Server functions are same-origin RPC. A cross-site page must not be able to
  * invoke one with the visitor's cookies, so reject cross-site requests before
- * the function runs. This is the token-less CSRF defense used by other
+ * the function runs. This is the token-less origin check used by other
  * frameworks: trust `Sec-Fetch-Site` when the browser sends it, and fall back
  * to comparing `Origin` against the request host.
  *
  * `same-origin` and `same-site` are allowed, matching the reach of a
  * `SameSite=Lax`/`Strict` cookie. `none` is a user-initiated navigation
- * (typed URL, bookmark), not a request forged by another site.
+ * (typed URL, bookmark), not a request made by another site.
  */
 function isCrossSiteRequest(request: Request, url: URL): boolean {
   const secFetchSite = request.headers.get("sec-fetch-site");
@@ -38,7 +38,12 @@ function isCrossSiteRequest(request: Request, url: URL): boolean {
   // Older browsers omit Sec-Fetch-Site. They still send Origin on the
   // cross-site requests that matter (form and fetch POSTs), so compare it.
   const origin = request.headers.get("origin");
-  if (origin && origin !== "null") {
+  // `null` is an opaque origin (a sandboxed iframe, a cross-origin redirect
+  // chain): the browser declines to name the caller, so it cannot be matched.
+  if (origin === "null") {
+    return true;
+  }
+  if (origin) {
     try {
       return new URL(origin).host !== url.host;
     } catch {
@@ -50,7 +55,71 @@ function isCrossSiteRequest(request: Request, url: URL): boolean {
   return false;
 }
 
+const CACHE_CONTROL = "Cache-Control";
+const DEFAULT_CACHE_CONTROL = "no-store";
+
+/**
+ * A server function answers one caller, so a shared cache must not store the
+ * response unless the function opted in with its own `Cache-Control`, either
+ * on a returned Response or on the event's response headers. A 304 is left
+ * alone: it updates a stored response rather than being one, and `no-store`
+ * on it would drop the entry the conditional request was keeping.
+ *
+ * h3 copies `res.headers` onto a returned Response below 400 and
+ * `res.errHeaders` onto one at or above it, and builds every other return
+ * value from `res`, so those are the headers that reach the wire.
+ */
+function withDefaultCacheControl<T>(h3Event: H3Event, value: T): T {
+  if (!(value instanceof Response)) {
+    if (h3Event.res.status !== 304 && !h3Event.res.headers.has(CACHE_CONTROL)) {
+      h3Event.res.headers.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    }
+    return value;
+  }
+  const eventHeaders = value.status >= 400 ? h3Event.res.errHeaders : h3Event.res.headers;
+  if (value.status === 304 || value.headers.has(CACHE_CONTROL) || eventHeaders.has(CACHE_CONTROL)) {
+    return value;
+  }
+  try {
+    value.headers.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    return value;
+  } catch {
+    // a fetch() Response passed through has immutable headers
+    const headers = new Headers(value.headers);
+    headers.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    return new Response(value.body, {
+      status: value.status,
+      statusText: value.statusText,
+      headers,
+    }) as T;
+  }
+}
+
+function thrownCacheControl(error: unknown) {
+  try {
+    const headers = (error as { headers?: HeadersInit } | null)?.headers;
+    return headers ? new Headers(headers).has(CACHE_CONTROL) : false;
+  } catch {
+    return false;
+  }
+}
+
 export async function handleServerFunction(h3Event: H3Event) {
+  let response: Awaited<ReturnType<typeof runServerFunction>>;
+  try {
+    response = await runServerFunction(h3Event);
+  } catch (error) {
+    // h3 answers a thrown value itself, with the error's headers and then
+    // `res.errHeaders`
+    if (!thrownCacheControl(error) && !h3Event.res.errHeaders.has(CACHE_CONTROL)) {
+      h3Event.res.errHeaders.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    }
+    throw error;
+  }
+  return withDefaultCacheControl(h3Event, response);
+}
+
+async function runServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
