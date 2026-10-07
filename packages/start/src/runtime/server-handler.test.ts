@@ -227,3 +227,18 @@ describe("Cache-Control", () => {
     expect(response.headers.has("cache-control")).toBe(false);
   });
 });
+
+describe("serialized arguments", () => {
+  it("answers with an error when an awaited argument is still pending at the end of the body", async () => {
+    serverFn.current = async (arg: Promise<unknown>) => await arg;
+    const outcome = await Promise.race([
+      call({
+        headers: { "x-serialized": "true", "content-type": "text/plain" },
+        body: JSON.stringify({ t: { t: 9, i: 0, a: [{ t: 22, i: 1, s: 2 }], o: 0 }, f: 31, m: [] })
+      }),
+      new Promise<"still waiting">(resolve => setTimeout(() => resolve("still waiting"), 200))
+    ]);
+    expect(outcome).not.toBe("still waiting");
+    expect((outcome as Response).headers.get("x-error")).toMatch(/ended unexpectedly/);
+  });
+});
