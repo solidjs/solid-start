@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/solidjs/solid-start.git",
