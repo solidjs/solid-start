@@ -442,6 +442,21 @@ describe("cross-site request rejection (CSRF)", () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
+  it("rejects an opaque Origin (`null`) when Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "null",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects an opaque Origin (`null`) on a GET when Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({ origin: "null" }, "GET");
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
   it("allows a same-origin request", async () => {
     const { response, fn } = await call({
       "sec-fetch-site": "same-origin",
@@ -476,8 +491,15 @@ describe("cross-site request rejection (CSRF)", () => {
   });
 
   it("allows a request with neither header (non-browser client)", async () => {
-    const { fn } = await call({ "x-server-instance": "server-fn:1" });
+    const { response, fn } = await call({ "x-server-instance": "server-fn:1" });
     expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a GET with neither header (non-browser client)", async () => {
+    const { response, fn } = await call({}, "GET");
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
   });
 });
 

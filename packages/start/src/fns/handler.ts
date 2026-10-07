@@ -38,7 +38,12 @@ function isCrossSiteRequest(request: Request, url: URL): boolean {
   // Older browsers omit Sec-Fetch-Site. They still send Origin on the
   // cross-site requests that matter (form and fetch POSTs), so compare it.
   const origin = request.headers.get("origin");
-  if (origin && origin !== "null") {
+  // `null` is an opaque origin (a sandboxed iframe, a cross-origin redirect
+  // chain): the browser declines to name the caller, so it cannot be matched.
+  if (origin === "null") {
+    return true;
+  }
+  if (origin) {
     try {
       return new URL(origin).host !== url.host;
     } catch {
