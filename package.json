@@ -24,7 +24,7 @@
     "packages:build": "pnpm --filter @solidjs/start build",
     "packages:clean": "pnpx rimraf ./packages/*/node_modules/ ./packages/*/dist/",
     "clean:test": "pnpx rimraf .tmp",
-    "release": "pnpm build && changeset publish --tag v1"
+    "release": "pnpm build && changeset publish --tag v1-latest"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
