@@ -18,10 +18,22 @@ import { createPageEvent } from "../server/pageEvent";
 import { FetchEvent, PageEvent } from "../server";
 // @ts-ignore
 import serverFnManifest from "solidstart:server-fn-manifest";
+import { setThrownCacheControl, withDefaultCacheControl } from "./cache-control";
 import { isCrossSiteRequest } from "./cross-site";
 import { deserializeFromJSONString, serializeToJSONStream, serializeToJSStream } from "./serialization";
 
 async function handleServerFunction(h3Event: HTTPEvent) {
+  let response: Awaited<ReturnType<typeof runServerFunction>>;
+  try {
+    response = await runServerFunction(h3Event);
+  } catch (error) {
+    setThrownCacheControl(h3Event);
+    throw error;
+  }
+  return withDefaultCacheControl(h3Event, response);
+}
+
+async function runServerFunction(h3Event: HTTPEvent) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
