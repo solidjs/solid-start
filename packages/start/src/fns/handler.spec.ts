@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { parseCookies } from "h3";
 import type { FetchEvent } from "../server/types.ts";
-import { getFetchEvent } from "../server/fetchEvent.ts";
+import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
 import { getServerFunction } from "./registration.ts";
 
 vi.mock("h3", () => ({
@@ -400,7 +400,7 @@ describe("the no-JS server function handler", () => {
 describe("cross-site request rejection (CSRF)", () => {
   const call = async (headers: Record<string, string>, method = "POST") => {
     const request = new Request("http://localhost/_server?id=fn", { method, headers });
-    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    const h3Event = { res: { headers: new Headers(), errHeaders: new Headers(), status: 200 } };
     vi.mocked(getFetchEvent).mockReturnValue({
       request,
       response: { headers: { getSetCookie: () => [] } },
@@ -523,5 +523,217 @@ describe("seroval request bodies", () => {
 
     expect(outcome).toBe("answered");
     expect(h3Event.res.headers.get("X-Error")).toMatch(/ended unexpectedly/);
+  });
+});
+
+describe("the default Cache-Control on server function responses", () => {
+  type H3EventStub = { res: { headers: Headers; errHeaders: Headers; status: number } };
+
+  const invoke = async ({
+    url = "http://localhost/_server",
+    method = "POST",
+    headers = { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    fn = () => ({ ok: true }),
+  }: {
+    url?: string;
+    method?: string;
+    headers?: Record<string, string>;
+    fn?: (h3Event: H3EventStub) => unknown;
+  }) => {
+    const request = new Request(url, { method, headers });
+    const h3Event: H3EventStub = {
+      res: { headers: new Headers(), errHeaders: new Headers(), status: 200 },
+    };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: h3Event.res,
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue((() => fn(h3Event)) as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    const returned = await handleServerFunction(h3Event as never);
+    return { returned, h3Event };
+  };
+
+  const raw = (init: ResponseInit & { headers?: Record<string, string> } = {}) =>
+    new Response(init.status === 304 ? null : "raw", {
+      ...init,
+      headers: { "X-Content-Raw": "true", ...init.headers },
+    });
+
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+    const actual =
+      await vi.importActual<typeof import("../server/fetchEvent.ts")>("../server/fetchEvent.ts");
+    vi.mocked(mergeResponseHeaders).mockImplementation(actual.mergeResponseHeaders);
+  });
+
+  it("sets no-store on a serialized POST result", async () => {
+    const { h3Event } = await invoke({});
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a serialized GET result", async () => {
+    const { h3Event } = await invoke({ url: "http://localhost/_server?id=fn", method: "GET" });
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a result sent as its own body", async () => {
+    const { returned } = await invoke({ fn: () => "text" });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a raw Response passed through", async () => {
+    const { returned } = await invoke({ fn: () => raw() });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a raw Response whose headers are immutable", async () => {
+    const immutable = raw();
+    // the guard a fetch() Response's headers carry
+    Object.defineProperty(immutable.headers, "set", {
+      value: () => {
+        throw new TypeError("immutable");
+      },
+    });
+
+    const { returned } = await invoke({ fn: () => immutable });
+
+    expect(returned).toBeInstanceOf(Response);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+    expect((returned as Response).headers.get("X-Content-Raw")).toBe("true");
+    expect(await (returned as Response).text()).toBe("raw");
+  });
+
+  it("sets no-store on a redirect", async () => {
+    const { h3Event } = await invoke({
+      fn: () => new Response(null, { status: 302, headers: { Location: "/next" } }),
+    });
+
+    expect(h3Event.res.headers.get("Location")).toBe("/next");
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a no-JS redirect", async () => {
+    const { returned } = await invoke({
+      url: "http://localhost/_server?id=fn",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+    });
+
+    expect((returned as Response).status).toBe(302);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a serialized error", async () => {
+    const { h3Event } = await invoke({
+      fn: () => {
+        throw new Error("boom");
+      },
+    });
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on the cross-site refusal", async () => {
+    const { returned } = await invoke({
+      headers: { "sec-fetch-site": "cross-site", "X-Server-Instance": "server-fn:1" },
+    });
+
+    expect((returned as Response).status).toBe(403);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a request without a function id", async () => {
+    const { returned } = await invoke({ headers: {} });
+
+    expect((returned as Response).status).toBe(404);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on the error response for an unknown function id", async () => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "missing", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), errHeaders: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: h3Event.res,
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockImplementation(id => {
+      throw new Error("invalid server function: " + id);
+    });
+    const { handleServerFunction } = await import("./handler.ts");
+
+    await expect(handleServerFunction(h3Event as never)).rejects.toThrow(/invalid server function/);
+    expect(h3Event.res.errHeaders.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("keeps a Cache-Control the function returned on a Response", async () => {
+    const { h3Event } = await invoke({
+      fn: () => new Response(null, { headers: { "Cache-Control": "public, max-age=60" } }),
+    });
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("public, max-age=60");
+  });
+
+  it("keeps a Cache-Control the function set on the event response", async () => {
+    const { h3Event } = await invoke({
+      fn: h3Event => {
+        h3Event.res.headers.set("Cache-Control", "private, max-age=60");
+        return "text";
+      },
+    });
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("private, max-age=60");
+  });
+
+  it("keeps a Cache-Control on a raw Response passed through", async () => {
+    const { returned } = await invoke({
+      fn: () => raw({ headers: { "Cache-Control": "public, max-age=60" } }),
+    });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("public, max-age=60");
+  });
+
+  it("keeps a Cache-Control carried by a no-JS redirect", async () => {
+    const { returned } = await invoke({
+      url: "http://localhost/_server?id=fn",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      fn: () =>
+        new Response(null, {
+          status: 302,
+          headers: { Location: "/next", "Cache-Control": "private, max-age=5" },
+        }),
+    });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("private, max-age=5");
+  });
+
+  it("leaves a 304 passed through untouched", async () => {
+    const { returned } = await invoke({ fn: () => raw({ status: 304 }) });
+
+    expect((returned as Response).status).toBe(304);
+    expect((returned as Response).headers.has("Cache-Control")).toBe(false);
+  });
+
+  it("leaves a 304 set on the event response untouched", async () => {
+    const { h3Event } = await invoke({
+      fn: h3Event => {
+        h3Event.res.status = 304;
+        return undefined;
+      },
+    });
+
+    expect(h3Event.res.headers.has("Cache-Control")).toBe(false);
   });
 });
