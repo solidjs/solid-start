@@ -42,7 +42,8 @@ vi.mock("./registration.ts", () => ({
   hasServerFunction: vi.fn(() => true),
 }));
 
-vi.mock("./serialization.ts", () => ({
+vi.mock("./serialization.ts", async importOriginal => ({
+  ...(await importOriginal<typeof import("./serialization.ts")>()),
   serializeToJSONStream: vi.fn(() => "serialized"),
   serializeToJSStream: vi.fn(() => "serialized"),
 }));
@@ -477,5 +478,50 @@ describe("cross-site request rejection (CSRF)", () => {
   it("allows a request with neither header (non-browser client)", async () => {
     const { fn } = await call({ "x-server-instance": "server-fn:1" });
     expect(fn).toHaveBeenCalled();
+  });
+});
+
+describe("seroval request bodies", () => {
+  /** Frames one serialized node the way `serializeToJSONStream` does. */
+  const frame = (node: unknown) => {
+    const data = JSON.stringify(node);
+    return `;0x${new TextEncoder().encode(data).length.toString(16).padStart(8, "0")};${data}`;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+  });
+
+  it("answers with an error when an awaited argument is still pending at the end of the body", async () => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: {
+        "X-Server-Id": "fn",
+        "X-Server-Instance": "server-fn:1",
+        "X-Start-Type": "0",
+        "content-type": "text/plain",
+      },
+      body: frame({ t: 9, i: 0, a: [{ t: 22, i: 100, s: 101 }], o: 0 }),
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(
+      (async (arg: Promise<unknown>) => await arg) as never,
+    );
+    const { handleServerFunction } = await import("./handler.ts");
+
+    const outcome = await Promise.race([
+      handleServerFunction(h3Event as never).then(() => "answered"),
+      new Promise(resolve => setTimeout(() => resolve("still waiting"), 200)),
+    ]);
+
+    expect(outcome).toBe("answered");
+    expect(h3Event.res.headers.get("X-Error")).toMatch(/ended unexpectedly/);
   });
 });

@@ -227,6 +227,59 @@ export class SerovalChunkReader {
   }
 }
 
+const ignoreRejection = () => {};
+
+/**
+ * A decoded payload is the peer's bytes, so a promise it decodes to can reject
+ * with nobody holding it: an argument the function never awaits, a field of a
+ * result the caller ignores. Seroval stores every promise it decodes in the
+ * refs map, including ones that reject synchronously inside `fromCrossJSON`,
+ * so claim them as they are stored. Code that awaits the promise still sees
+ * the rejection.
+ */
+class DecodedRefs extends Map<number, unknown> {
+  override set(id: number, value: unknown) {
+    if (value instanceof Promise) value.catch(ignoreRejection);
+    return super.set(id, value);
+  }
+}
+
+/**
+ * Fails every value still waiting on a frame that will not arrive. Seroval
+ * keeps these in the refs between frames: open streams (`__SEROVAL_STREAM__`)
+ * and pending-promise resolvers (`{ p, s, f }`). Throwing into a closed stream
+ * and rejecting a settled promise are no-ops, so this is safe to run after a
+ * body that ended normally.
+ *
+ * A ref can be any value a plugin decoded, so nothing is read off it unguarded.
+ */
+function settlePendingRefs(refs: Iterable<unknown>, error: unknown) {
+  for (const value of refs) {
+    if (value === null || typeof value !== "object") continue;
+    try {
+      const ref = value as Record<string, any>;
+      if (ref.__SEROVAL_STREAM__ === true && typeof ref.throw === "function") {
+        ref.throw(error);
+      } else if (
+        typeof ref.s === "function" &&
+        typeof ref.f === "function" &&
+        ref.p instanceof Promise
+      ) {
+        // seroval stores the resolver before its promise, so a failed second
+        // store leaves a promise that `DecodedRefs` never saw
+        ref.p.catch(ignoreRejection);
+        ref.f(error);
+      }
+    } catch {
+      // a stream listener threw, or a plugin value refused the read
+    }
+  }
+}
+
+function createEndOfStreamError() {
+  return new Error("Server function stream ended unexpectedly.");
+}
+
 export async function serializeToJSONString(value: any) {
   const response = new Response(serializeToJSONStream(value));
   return await response.text();
@@ -244,7 +297,7 @@ export async function deserializeJSONStream(response: Response | Request) {
   const reader = new SerovalChunkReader(response.body);
   const result = await reader.next();
   if (!result.done) {
-    const refs = new Map();
+    const refs = new DecodedRefs();
 
     function interpretChunk(chunk: string): unknown {
       const value = fromCrossJSON(JSON.parse(chunk) as SerovalNode, {
@@ -256,11 +309,24 @@ export async function deserializeJSONStream(response: Response | Request) {
       return value;
     }
 
-    void reader.drain(interpretChunk);
+    // Once the body is done, whether it ended or failed (a malformed frame, a
+    // dropped connection), nothing can settle what is still waiting on it.
+    reader.drain(interpretChunk).then(
+      () => settlePendingRefs(refs.values(), createEndOfStreamError()),
+      error => settlePendingRefs(refs.values(), error),
+    );
 
     return interpretChunk(result.value);
   }
   return undefined;
+}
+
+function releaseJSScope(id: string, error: unknown) {
+  const scopes = (globalThis as { $R?: Record<string, unknown[] | undefined> }).$R;
+  const refs = scopes?.[id];
+  if (!refs) return;
+  delete scopes[id];
+  settlePendingRefs(refs, error);
 }
 
 export async function deserializeJSStream(id: string, response: Request | Response) {
@@ -273,13 +339,8 @@ export async function deserializeJSStream(id: string, response: Request | Respon
 
   if (!result.done) {
     reader.drain(deserialize).then(
-      () => {
-        // @ts-ignore
-        delete $R[id];
-      },
-      () => {
-        // no-op
-      },
+      () => releaseJSScope(id, createEndOfStreamError()),
+      error => releaseJSScope(id, error),
     );
     return deserialize(result.value);
   }

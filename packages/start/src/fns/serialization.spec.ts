@@ -197,3 +197,213 @@ describe("custom seroval plugins", () => {
     expect(parsed.href).toBe("https://solidjs.com/");
   });
 });
+
+/** Frames one serialized node the way `serializeToJSONStream` does. */
+function frame(node: unknown) {
+  const data = JSON.stringify(node);
+  const size = new TextEncoder().encode(data).length.toString(16).padStart(8, "0");
+  return `;0x${size};${data}`;
+}
+
+/** An argument list whose only item is a promise that a later frame was meant to settle. */
+const PENDING_PROMISE_ARGS = { t: 9, i: 0, a: [{ t: 22, i: 100, s: 101 }], o: 0 };
+
+const STILL_PENDING = { status: "pending" } as const;
+
+async function settleWithin(value: PromiseLike<unknown>, ms = 100) {
+  return await Promise.race([
+    Promise.resolve(value).then(
+      value => ({ status: "fulfilled", value }) as const,
+      reason => ({ status: "rejected", reason }) as const,
+    ),
+    new Promise<typeof STILL_PENDING>(resolve => setTimeout(() => resolve(STILL_PENDING), ms)),
+  ]);
+}
+
+/** Runs `run` with the process-level unhandled rejection listeners swapped for a recorder. */
+async function collectUnhandledRejections(run: () => Promise<void>) {
+  const previous = process.listeners("unhandledRejection");
+  process.removeAllListeners("unhandledRejection");
+  const reasons: unknown[] = [];
+  const record = (reason: unknown) => reasons.push(reason);
+  process.on("unhandledRejection", record);
+  try {
+    await run();
+    // Node reports unhandled rejections once the microtask queue has drained.
+    await new Promise(resolve => setTimeout(resolve, 20));
+  } finally {
+    process.off("unhandledRejection", record);
+    for (const listener of previous) process.on("unhandledRejection", listener);
+  }
+  return reasons;
+}
+
+/** The first frame of a JSON stream that never completes on its own. */
+async function firstFrame(value: unknown) {
+  const { serializeToJSONStream } = await loadSerialization(true);
+  const reader = serializeToJSONStream(value).getReader();
+  const { value: chunk } = await reader.read();
+  await reader.cancel();
+  return new TextDecoder().decode(chunk);
+}
+
+describe("values waiting on a later frame", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("rejects a promise that is still pending when the body ends", async () => {
+    const { deserializeJSONStream } = await loadSerialization(true);
+
+    const [arg] = (await deserializeJSONStream(new Response(frame(PENDING_PROMISE_ARGS)))) as [
+      Promise<unknown>,
+    ];
+
+    expect(arg).toBeInstanceOf(Promise);
+    const outcome = await settleWithin(arg);
+    expect(outcome.status).toBe("rejected");
+    expect((outcome as { reason: Error }).reason.message).toMatch(/ended unexpectedly/);
+  });
+
+  it("errors a stream that is still open when the body ends", async () => {
+    const body = await firstFrame([new ReadableStream({ start() {} })]);
+    const { deserializeJSONStream } = await loadSerialization(true);
+
+    const [arg] = (await deserializeJSONStream(new Response(body))) as [ReadableStream];
+
+    expect(arg).toBeInstanceOf(ReadableStream);
+    const outcome = await settleWithin(arg.getReader().read());
+    expect(outcome.status).toBe("rejected");
+    expect((outcome as { reason: Error }).reason.message).toMatch(/ended unexpectedly/);
+  });
+
+  it("rejects pending values with the failure when a later frame is malformed", async () => {
+    const { deserializeJSONStream } = await loadSerialization(true);
+    let outcome: Awaited<ReturnType<typeof settleWithin>> | undefined;
+
+    const unhandled = await collectUnhandledRejections(async () => {
+      const [arg] = (await deserializeJSONStream(
+        new Response(frame(PENDING_PROMISE_ARGS) + ";0xZZZZZZZZ;junk"),
+      )) as [Promise<unknown>];
+      outcome = await settleWithin(arg);
+    });
+
+    expect(unhandled).toEqual([]);
+    expect(outcome?.status).toBe("rejected");
+    expect((outcome as { reason: Error }).reason.message).toBe("Malformed server function stream.");
+  });
+
+  it("does not report a pending promise nobody awaits once the body ends", async () => {
+    const { deserializeJSONStream } = await loadSerialization(true);
+
+    const unhandled = await collectUnhandledRejections(async () => {
+      await deserializeJSONStream(new Response(frame(PENDING_PROMISE_ARGS)));
+    });
+
+    expect(unhandled).toEqual([]);
+  });
+
+  it("does not report a decoded rejected promise nobody awaits", async () => {
+    const { deserializeJSONStream } = await loadSerialization(true);
+    const rejectedArgs = { t: 9, i: 0, a: [{ t: 12, i: 1, s: 0, f: { t: 1, s: "nope" } }], o: 0 };
+    let arg: Promise<unknown> | undefined;
+
+    const unhandled = await collectUnhandledRejections(async () => {
+      [arg] = (await deserializeJSONStream(new Response(frame(rejectedArgs)))) as [
+        Promise<unknown>,
+      ];
+    });
+
+    expect(unhandled).toEqual([]);
+    await expect(arg).rejects.toBe("nope");
+  });
+
+  it("still resolves a promise settled by a later frame", async () => {
+    const { serializeToJSONString, deserializeFromJSONString } = await loadSerialization(true);
+    const payload = await serializeToJSONString([
+      new Promise(resolve => setTimeout(() => resolve("later"), 5)),
+    ]);
+
+    const [arg] = (await deserializeFromJSONString(payload)) as [Promise<unknown>];
+
+    await expect(arg).resolves.toBe("later");
+  });
+
+  it("still reads a stream completed by later frames", async () => {
+    const { serializeToJSONString, deserializeFromJSONString } = await loadSerialization(true);
+    const payload = await serializeToJSONString([
+      new ReadableStream({
+        start(controller) {
+          controller.enqueue("a");
+          controller.enqueue("b");
+          controller.close();
+        },
+      }),
+    ]);
+
+    const [arg] = (await deserializeFromJSONString(payload)) as [ReadableStream<string>];
+    const values: string[] = [];
+    for await (const value of arg) values.push(value);
+
+    expect(values).toEqual(["a", "b"]);
+  });
+});
+
+describe("values waiting on a later JS frame", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    // seroval's JS output addresses its references through `self.$R`
+    (globalThis as any).self = globalThis;
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    delete (globalThis as any).self;
+    delete (globalThis as any).$R;
+  });
+
+  async function firstJSFrame(id: string, value: unknown) {
+    const { serializeToJSStream } = await loadSerialization(true);
+    const reader = serializeToJSStream(id, value).getReader();
+    const { value: chunk } = await reader.read();
+    await reader.cancel();
+    return new TextDecoder().decode(chunk);
+  }
+
+  it("rejects a promise that is still pending when the body ends", async () => {
+    const body = await firstJSFrame("server-fn:0", [new Promise(() => {})]);
+    const { deserializeJSStream } = await loadSerialization(true);
+
+    const [arg] = (await deserializeJSStream("server-fn:0", new Response(body))) as [
+      Promise<unknown>,
+    ];
+
+    const outcome = await settleWithin(arg);
+    expect(outcome.status).toBe("rejected");
+    expect((outcome as { reason: Error }).reason.message).toMatch(/ended unexpectedly/);
+    expect((globalThis as any).$R["server-fn:0"]).toBeUndefined();
+  });
+
+  it("rejects pending values with the failure when a later frame is malformed", async () => {
+    const body = await firstJSFrame("server-fn:1", [new Promise(() => {})]);
+    const { deserializeJSStream } = await loadSerialization(true);
+    let outcome: Awaited<ReturnType<typeof settleWithin>> | undefined;
+
+    const unhandled = await collectUnhandledRejections(async () => {
+      const [arg] = (await deserializeJSStream(
+        "server-fn:1",
+        new Response(body + ";0xZZZZZZZZ;junk"),
+      )) as [Promise<unknown>];
+      outcome = await settleWithin(arg);
+    });
+
+    expect(unhandled).toEqual([]);
+    expect(outcome?.status).toBe("rejected");
+    expect((outcome as { reason: Error }).reason.message).toBe("Malformed server function stream.");
+    expect((globalThis as any).$R["server-fn:1"]).toBeUndefined();
+  });
+});
