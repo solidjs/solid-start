@@ -14,7 +14,10 @@
     "isolatedModules": true,
     "outDir": "./dist",
     "declaration": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "seroval-plugins/web": ["./node_modules/seroval-plugins/dist/web.d.ts"]
+    }
   },
   "include": ["./src", "./env.d.ts"]
 }
