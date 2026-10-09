@@ -38,6 +38,65 @@ describe("compile", () => {
     expect(result.code).not.toContain("./server-module.ts");
   });
 
+  it("removes declarations that only unused declarations read", async () => {
+    const result = await compile(
+      "/src/server-action.ts",
+      `
+        import { db } from "./db.ts";
+
+        const first = db;
+        const second = first;
+        const third = second;
+
+        export const serverAction = async () => {
+          "use server";
+          return third;
+        };
+      `,
+      clientOptions,
+    );
+
+    expect(result.code).not.toContain("./db.ts");
+    expect(result.code).not.toMatch(/first|second|third/);
+  });
+
+  it("removes every declaration of an unused var", async () => {
+    const result = await compile(
+      "/src/server-action.ts",
+      `
+        var value = 1;
+        var value = 2;
+
+        export const serverAction = async () => {
+          "use server";
+          return 1;
+        };
+      `,
+      clientOptions,
+    );
+
+    expect(result.code).not.toContain("value");
+  });
+
+  it("keeps an unused loop variable", async () => {
+    const result = await compile(
+      "/src/server-action.ts",
+      `
+        for (const item of []) {}
+        for (const key in {}) {}
+
+        export const serverAction = async () => {
+          "use server";
+          return 1;
+        };
+      `,
+      clientOptions,
+    );
+
+    expect(result.code).toContain("for (const item of [])");
+    expect(result.code).toContain("for (const key in {})");
+  });
+
   it("preserves live value specifiers from a mixed import", async () => {
     const result = await compile(
       "/src/server-action.ts",
