@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../shared/dev-toolbar/functions/tracker.ts", () => ({
   pushRequest: vi.fn(),
@@ -37,7 +37,7 @@ const rejectionOf = async (call: Promise<unknown>) => {
 
 describe("fetchServerFunction", () => {
   beforeEach(() => {
-    vi.stubEnv("BASE_URL", "http://localhost/");
+    vi.stubEnv("SERVER_BASE_URL", "http://localhost/");
   });
 
   it("rejects when the response is a 5xx without an X-Error header", async () => {
@@ -57,5 +57,44 @@ describe("fetchServerFunction", () => {
   it("resolves normally for a successful response", async () => {
     respondWith(200);
     await expect(callServerFunction()).resolves.toBeUndefined();
+  });
+});
+
+describe("server function URL", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  const requestedUrl = () => {
+    const call = (fetch as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
+    return (call![0] as Request).url;
+  };
+
+  it("posts to the app base, not to the asset base", async () => {
+    vi.stubEnv("BASE_URL", "https://cdn.example.com/");
+    vi.stubEnv("SERVER_BASE_URL", "http://app.example.com/");
+    respondWith(200);
+
+    await callServerFunction();
+
+    expect(requestedUrl()).toBe("http://app.example.com/_server");
+  });
+
+  it("exposes .url under the app base", () => {
+    vi.stubEnv("BASE_URL", "https://cdn.example.com/");
+    vi.stubEnv("SERVER_BASE_URL", "/app/");
+
+    const fn = cloneServerReference("test-fn") as unknown as { url: string };
+
+    expect(fn.url).toBe("/app/_server?id=test-fn");
+  });
+
+  it("adds the missing trailing slash to the app base", () => {
+    vi.stubEnv("BASE_URL", "https://cdn.example.com/");
+    vi.stubEnv("SERVER_BASE_URL", "/app");
+
+    const fn = cloneServerReference("test-fn") as unknown as { url: string };
+
+    expect(fn.url).toBe("/app/_server?id=test-fn");
   });
 });

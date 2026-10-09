@@ -225,6 +225,6 @@ function escapeAttribute(value: string) {
 }
 
 function stripBaseUrl(path: string) {
-  const base = import.meta.env.SERVER_BASE_URL || import.meta.env.BASE_URL || "/";
+  const base = import.meta.env.SERVER_BASE_URL || "/";
   return stripPathBase(path, base);
 }

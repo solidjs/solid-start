@@ -14,5 +14,4 @@ interface SolidStartMetaEnv {
   START_CLIENT_ENTRY_URL: string;
   START_ISLANDS: boolean;
   // START_DEV_OVERLAY: boolean;
-  SERVER_BASE_URL: string;
 }
