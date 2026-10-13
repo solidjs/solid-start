@@ -2,7 +2,7 @@ import { defu } from "defu";
 import { globSync } from "node:fs";
 import { basename, extname, isAbsolute, join } from "node:path";
 import type { PluginOption, FilterPattern } from "vite";
-import solid, { type Options as SolidOptions } from "vite-plugin-solid";
+import type { Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { appRootAlias } from "./app-root-alias.ts";
 import { boundaryModules } from "./boundary-modules.ts";
@@ -15,6 +15,7 @@ import type { BaseFileSystemRouter } from "./fs-routes/router.ts";
 import { sanitizeChunkFileName, toPickId } from "./fs-routes/tree-shake.ts";
 import lazy from "./lazy.ts";
 import { manifest } from "./manifest.ts";
+import { solidPlugins } from "./solid.ts";
 import { parseIdQuery } from "./utils.ts";
 
 /**
@@ -434,7 +435,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       },
     },
     devServer(handlers.server),
-    solid({
+    ...solidPlugins({
       ...start.solid,
       ssr: true,
       extensions: extensions.map(ext => `.${ext}`),
