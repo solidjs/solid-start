@@ -1,3 +1,4 @@
+import { EventEmitter } from "node:events";
 import { H3Event } from "vinxi/http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cloneEvent, createFetchEvent, getFetchEvent, mergeResponseHeaders } from "./fetchEvent";
@@ -317,5 +318,77 @@ describe("fetchEvent", () => {
         ]);
       });
     });
+  });
+});
+
+describe("request abort signal", () => {
+  const createNodeEvent = (request: Request) => {
+    const res = Object.assign(new EventEmitter(), { writableEnded: false });
+    const req = { errored: null as Error | null };
+    const event = {
+      node: { req, res },
+      context: {},
+      web: { request }
+    } as unknown as H3Event;
+    mockedVinxiHttp.getWebRequest.mockReturnValue(request);
+    return { event, req, res };
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("aborts when the response closes before it was sent", () => {
+    const { event, res } = createNodeEvent(new Request("http://localhost/api"));
+    const { request } = createFetchEvent(event);
+    expect(request.signal.aborted).toBe(false);
+
+    res.emit("close");
+
+    expect(request.signal.aborted).toBe(true);
+  });
+
+  it("does not abort when the response closes after it was sent", () => {
+    const { event, res } = createNodeEvent(new Request("http://localhost/api"));
+    const { request } = createFetchEvent(event);
+
+    res.writableEnded = true;
+    res.emit("close");
+
+    expect(request.signal.aborted).toBe(false);
+  });
+
+  it("aborts with the request error when the request failed", () => {
+    const { event, req, res } = createNodeEvent(new Request("http://localhost/api"));
+    const { request } = createFetchEvent(event);
+    const error = new Error("socket hang up");
+
+    req.errored = error;
+    res.emit("close");
+
+    expect(request.signal.aborted).toBe(true);
+    expect(request.signal.reason).toBe(error);
+  });
+
+  it("keeps the abort signal of the platform request", () => {
+    const controller = new AbortController();
+    const { event } = createNodeEvent(
+      new Request("http://localhost/api", { signal: controller.signal })
+    );
+    const { request } = createFetchEvent(event);
+
+    controller.abort();
+
+    expect(request.signal.aborted).toBe(true);
+  });
+
+  it("gives later readers the same request, with its body", async () => {
+    const { event } = createNodeEvent(
+      new Request("http://localhost/api", { method: "POST", body: "hello" })
+    );
+    const { request } = createFetchEvent(event);
+
+    expect(event.web!.request).toBe(request);
+    expect(await request.text()).toBe("hello");
   });
 });

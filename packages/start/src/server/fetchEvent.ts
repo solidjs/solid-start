@@ -15,9 +15,41 @@ import type { FetchEvent, ResponseStub } from "./types";
 
 const fetchEventContext = "solidFetchEvent";
 
+/**
+ * On Node, the web request vinxi builds has a signal that never aborts, so a
+ * handler cannot tell when the client goes away. This wires the signal to the
+ * response closing before it was fully sent. On web runtimes the platform
+ * request already has a working signal, and it is kept.
+ */
+function createWebRequest(event: H3Event): Request {
+	const request = getWebRequest(event);
+	const res = event.node?.res;
+	if (!res || typeof res.once !== "function") {
+		return request;
+	}
+	const controller = new AbortController();
+	res.once("close", () => {
+		const error = event.node.req.errored;
+		if (error) {
+			controller.abort(error);
+		} else if (!res.writableEnded) {
+			controller.abort();
+		}
+	});
+	const wrapped = new Request(request, {
+		signal: AbortSignal.any([request.signal, controller.signal])
+	});
+	// The wrapped request takes over the body of the original one, so later
+	// calls to getWebRequest must get the wrapped request too.
+	if (event.web) {
+		event.web.request = wrapped;
+	}
+	return wrapped;
+}
+
 export function createFetchEvent(event: H3Event): FetchEvent {
 	return {
-		request: getWebRequest(event),
+		request: createWebRequest(event),
 		response: createResponseStub(event),
 		clientAddress: getRequestIP(event),
 		locals: {},
