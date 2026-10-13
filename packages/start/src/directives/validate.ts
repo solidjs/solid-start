@@ -170,15 +170,22 @@ export function assertHoistable(path: babel.NodePath<HoistableFunction>, directi
 }
 
 /**
+ * Checks where the directive is written, in one walk over the module.
+ *
  * A directive only applies to a function body. The transform ignores one in a
  * method, which ships the method body and every module it imports to the
- * browser.
+ * browser, so that fails the build.
+ *
+ * A directive string that is not in a directive prologue does nothing. It is
+ * almost always meant to be one, so it is returned as a warning. Otherwise the
+ * module compiles as if it had no server functions.
  */
-export function assertNoMethodDirectives(
+export function validateDirectivePlacement(
   program: babel.NodePath<t.Program>,
   directive: string,
-): void {
-  function check(
+): string[] {
+  const warnings: string[] = [];
+  function checkMethod(
     child: babel.NodePath<t.ObjectMethod | t.ClassMethod | t.ClassPrivateMethod>,
   ): void {
     for (const current of child.node.body.directives) {
@@ -191,23 +198,9 @@ export function assertNoMethodDirectives(
     }
   }
   program.traverse({
-    ObjectMethod: check,
-    ClassMethod: check,
-    ClassPrivateMethod: check,
-  });
-}
-
-/**
- * A directive string that is not in a directive prologue does nothing. It is
- * almost always meant to be one, so report it. Otherwise the module compiles as
- * if it had no server functions.
- */
-export function collectMisplacedDirectives(
-  program: babel.NodePath<t.Program>,
-  directive: string,
-): string[] {
-  const warnings: string[] = [];
-  program.traverse({
+    ObjectMethod: checkMethod,
+    ClassMethod: checkMethod,
+    ClassPrivateMethod: checkMethod,
     ExpressionStatement(child) {
       const expression = child.node.expression;
       if (!t.isStringLiteral(expression) || expression.value !== directive) {
