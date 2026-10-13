@@ -377,9 +377,6 @@ importers:
       shiki:
         specifier: ^4.3.1
         version: 4.3.1
-      solid-js:
-        specifier: ^1.9.15
-        version: 1.9.15
       srvx:
         specifier: ^0.12.4
         version: 0.12.4
@@ -396,6 +393,9 @@ importers:
       '@types/node':
         specifier: ^26.1.1
         version: 26.1.1
+      solid-js:
+        specifier: ^1.9.15
+        version: 1.9.15
       vite:
         specifier: ^8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.27.4)(jiti@2.7.0)(terser@5.46.0)

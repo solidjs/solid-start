@@ -76,7 +76,6 @@
     "seroval": "^1.6.8",
     "seroval-plugins": "^1.6.8",
     "shiki": "^4.3.1",
-    "solid-js": "^1.9.15",
     "srvx": "^0.12.4",
     "terracotta": "^1.2.4",
     "vite-plugin-solid": "^2.11.13"
@@ -84,11 +83,13 @@
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
     "@types/node": "^26.1.1",
+    "solid-js": "^1.9.15",
     "vite": "^8.1.5",
     "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@solidjs/router": ">=0.16.0 <2.0.0-0",
+    "solid-js": "^1.9.15",
     "vite": "^8 || ^9"
   },
   "peerDependenciesMeta": {
