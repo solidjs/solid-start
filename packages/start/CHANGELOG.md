@@ -1,5 +1,53 @@
 # @solidjs/start
 
+## 2.0.6
+
+### Patch Changes
+
+- a4ed2a4: Stop `client-only` from failing the build for lazily imported client components.
+
+  A module that imported `client-only` and was loaded through `clientOnly(() => import(...))` failed the server build, even though it only ever runs in the browser. The server build resolves every dynamic import to emit its chunk, so it resolved the `client-only` module and rejected it, though that module never runs on the server. `client-only` no longer fails the build. `server-only` is unchanged and still fails a client build.
+
+- 048f5a9: Stop a no-JS server function POST from returning a 500 when the body is not a form.
+
+  A POST to a server function without the client runtime, carrying an empty body or a non-form content type, left a value that is not a `FormData` as the last argument. Building the flash cookie called `.entries()` on it and threw, and the error handler rethrew the same way, so the request failed with a 500. The response is now the normal redirect, and the flash cookie is best effort so it can no longer take down the error path.
+
+- 59e7dc7: Make reading server function streams safer and faster.
+
+  - A malformed chunk after the first one is now logged instead of causing an unhandled promise rejection. On hosts that do not catch unhandled rejections, one bad request could stop the server process.
+  - The stream is cancelled when a chunk cannot be read or parsed.
+  - Chunk headers are now checked strictly, and a server rejects chunks over 64MB that a client sends.
+  - Large payloads that arrive in many small pieces are read in linear time. A 16MB chunk read in 16KB pieces took about 2 seconds and now takes about 30ms.
+
+- d34acf5: Require seroval and seroval-plugins 1.6.8 or newer.
+- d34acf5: Send `Cache-Control: no-store` on server function responses by default.
+
+  Server function responses, including calls made with GET, carried no `Cache-Control`, so a shared cache configured to store them could serve one caller's result to another. Every response from the server function handler now defaults to `no-store`: results, errors, redirects, no-JS redirects, raw `Response` passthroughs, and the handler's own refusals. A `Cache-Control` the function sets itself, on a returned `Response` or on the event's response headers, is kept as is, and a `304` is never given one.
+
+- d34acf5: Reject cross-site server function requests.
+
+  A `"use server"` function could be invoked from another site with the visitor's cookies, over a GET or a form POST, because the request's origin was not checked. Requests to server functions are now allowed only from the same origin or same site. The check trusts the `Sec-Fetch-Site` header and falls back to comparing `Origin` against the request host, so a page on another site receives a `403` instead of running the function. Same-origin calls, user-initiated navigations, and no-JS form submissions are unaffected. A separate origin that needs to call your backend should use an API route with explicit CORS.
+
+- 9d3cbec: Report server functions that cannot work instead of compiling them into broken output.
+
+  - A `"use server"` function that reads a variable from an enclosing function now fails the build. The function is moved to the top level of its module, so the variable is not in scope when it runs.
+  - The same check covers `this` and `arguments` in an arrow function, `super`, and private class members.
+  - A `"use server"` directive in an object or class method now fails the build. It was ignored before, which shipped the method body and the modules it imports to the browser.
+  - A `"use server"` string that is not the first statement of a module or a function body now logs a warning. It has no effect there.
+  - An export a `"use server"` module cannot serve now logs a warning that names it. These exports are still left out of the client build.
+  - A `"use server"` module can now export an anonymous default function. Both `export default async () => {}` and `export default async function () {}` work.
+  - Server function ids are now built from the names a function is nested under, such as `Page.load`, instead of the order the functions appear in. An id no longer changes when another server function is added to the same file, and two functions that share a name are told apart by the names around them. Production ids stay opaque.
+  - Server functions are now compiled in `.mts` and `.cts` files.
+  - Build errors now point at the full path of the file, not just its name.
+
+- d34acf5: Treat a server function request with `Origin: null` and no `Sec-Fetch-Site` as cross-site.
+
+  Browsers send `Origin: null` from opaque origins, such as sandboxed iframes and some cross-origin redirect chains. When `Sec-Fetch-Site` was absent, the handler skipped the `Origin` comparison for that value and allowed the request. It is now refused with a `403`. Requests that carry neither header, such as those from non-browser clients, are still allowed.
+
+- d34acf5: Settle server function values that are still waiting on the stream when its body ends.
+
+  A seroval body can reference a promise or stream that a later frame settles. If the body ended before that frame arrived, the value stayed pending forever, so a server function awaiting such an argument never answered. A malformed later frame also surfaced as an unhandled rejection. When the body ends or fails, every promise still waiting on it now rejects (with the failure, or with "Server function stream ended unexpectedly.") and every open stream errors. Decoded promises that nobody awaits no longer report unhandled rejections; code that awaits them still sees the rejection.
+
 ## 2.0.5
 
 ### Patch Changes
