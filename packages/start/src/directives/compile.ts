@@ -1,5 +1,4 @@
 import * as babel from "@babel/core";
-import path from "node:path";
 import { directivesPlugin, type StateContext } from "./plugin.ts";
 import xxHash32 from "./xxhash32.ts";
 
@@ -7,9 +6,14 @@ export interface CompileResult {
   valid: boolean;
   code: string;
   map: babel.BabelFileResult["map"];
+  /** Problems that do not stop the compile, reported to the caller. */
+  warnings: string[];
 }
 
-export type CompileOptions = Omit<StateContext, "count" | "hash" | "imports" | "valid">;
+export type CompileOptions = Omit<
+  StateContext,
+  "count" | "names" | "hash" | "imports" | "valid" | "warnings"
+>;
 
 export async function compile(
   id: string,
@@ -19,8 +23,10 @@ export async function compile(
   const context: StateContext = {
     ...options,
     valid: false,
+    warnings: [],
     hash: xxHash32(id).toString(16),
     count: 0,
+    names: new Map(),
     imports: new Map(),
   };
   const pluginOption = [directivesPlugin, context];
@@ -35,7 +41,8 @@ export async function compile(
     parserOpts: {
       plugins,
     },
-    filename: path.basename(id),
+    // The full path, so diagnostics point at the file the user edits.
+    filename: id,
     ast: false,
     sourceMaps: true,
     configFile: false,
@@ -48,6 +55,7 @@ export async function compile(
       valid: context.valid,
       code: result.code || "",
       map: result.map,
+      warnings: context.warnings,
     };
   }
   throw new Error("invariant");

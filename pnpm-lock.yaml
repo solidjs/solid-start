@@ -369,11 +369,11 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       seroval:
-        specifier: ^1.6.0
-        version: 1.6.0
+        specifier: ^1.6.8
+        version: 1.6.8
       seroval-plugins:
-        specifier: ^1.6.0
-        version: 1.6.0(seroval@1.6.0)
+        specifier: ^1.6.8
+        version: 1.6.8(seroval@1.6.8)
       shiki:
         specifier: ^4.3.1
         version: 4.3.1
@@ -2839,8 +2839,8 @@ packages:
     peerDependencies:
       seroval: ^1.0
 
-  seroval-plugins@1.6.0:
-    resolution: {integrity: sha512-CbR5DP5DPicpd9RwRUzka7hi4x1577eGFXJVBW409LXqqJNst99JSUTZ8CXcnskQX7laPOWpmzliq0gBZEGlrQ==}
+  seroval-plugins@1.6.8:
+    resolution: {integrity: sha512-N7mWAMydj89EnYTHtRpS3LBrAz3J9O6oVrqpuXuvlAHfAUG8WEKqtbAd7SBiJNY5NfCAFhSdyAh7wI4Shjqy4g==}
     engines: {node: '>=10'}
     peerDependencies:
       seroval: ^1.0
@@ -2849,8 +2849,8 @@ packages:
     resolution: {integrity: sha512-rVQVWjjSvlINzaQPZH5JFqsqEsIWdTxY3iJZCnTL/5gQbXIRooVZKI60tVCkOVfzcRPejboxO2t0P89dg5mQaA==}
     engines: {node: '>=10'}
 
-  seroval@1.6.0:
-    resolution: {integrity: sha512-TBwwKfscTEgnBEWmYKKeCcmCGmrJi0LV6qNUY//WBA3MDesh/zfn+KOMq/ckpxM4gZ0ouAE706A1eenekM2sug==}
+  seroval@1.6.8:
+    resolution: {integrity: sha512-HlSgSAkTk4EqHcje1ptJjfZi1YDv5KbhVJ/d3P7T/nAXua2VmDu+AKDX5VTdFfZf48nDkWB2TKYt0DrCSa+3wg==}
     engines: {node: '>=10'}
 
   shebang-command@2.0.0:
@@ -5619,13 +5619,13 @@ snapshots:
     dependencies:
       seroval: 1.5.6
 
-  seroval-plugins@1.6.0(seroval@1.6.0):
+  seroval-plugins@1.6.8(seroval@1.6.8):
     dependencies:
-      seroval: 1.6.0
+      seroval: 1.6.8
 
   seroval@1.5.6: {}
 
-  seroval@1.6.0: {}
+  seroval@1.6.8: {}
 
   shebang-command@2.0.0:
     dependencies:
