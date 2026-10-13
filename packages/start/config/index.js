@@ -38,6 +38,36 @@ function solidStartServerFsRouter(config) {
     );
 }
 
+/**
+ * vite-plugin-solid for the client build. The Solid compiler leaves the
+ * templates of `$ServerOnly` elements out of the client bundle, since
+ * hydration reuses the server-rendered DOM. Hot module replacement re-runs the
+ * component on the client and needs them, so without them the first edit throws
+ * "template is not a function" (https://github.com/solidjs/solid-start/issues/1930).
+ * In dev, keep them. Production builds still leave them out.
+ */
+function clientSolidPlugins(options) {
+  const solidOptions = { ...options.solid };
+  return [
+    {
+      name: "solid-start:server-only-hmr",
+      configResolved(config) {
+        // vite-plugin-solid reads these options on every transform, and uses
+        // the same condition to decide whether to enable hot reloading.
+        if (
+          config.command === "serve" &&
+          config.mode !== "production" &&
+          options.hot !== false &&
+          !("omitServerOnlyTemplates" in solidOptions)
+        ) {
+          solidOptions.omitServerOnlyTemplates = false;
+        }
+      }
+    },
+    solid({ ...options, solid: solidOptions })
+  ];
+}
+
 function getFunctionId(id) {
   return xxHash32(id).toString(16);
 }
@@ -214,7 +244,11 @@ export function defineConfig(baseConfig = {}) {
             ...plugins,
             SolidStartServerFnsPlugin.client,
             start.experimental.islands ? serverComponents.client() : null,
-            solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
+            ...clientSolidPlugins({
+              ...start.solid,
+              ssr: start.ssr,
+              extensions: extensions.map(ext => `.${ext}`)
+            }),
             config("app-client", {
               resolve: {
                 alias: {
