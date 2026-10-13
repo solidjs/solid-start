@@ -1,8 +1,13 @@
 // @refresh skip
 import { catchError, ErrorBoundary as DefaultErrorBoundary, type ParentProps } from "solid-js";
 import { isServer } from "solid-js/web";
-import { DevToolbar } from "./dev-toolbar/index.tsx";
+import clientOnly from "./clientOnly.ts";
 import { HttpStatusCode } from "./HttpStatusCode.ts";
+
+const DevToolbar = clientOnly(
+  () => import("./dev-toolbar/index.tsx").then(({ DevToolbar }) => ({ default: DevToolbar })),
+  { lazy: true },
+);
 
 export const ErrorBoundary =
   import.meta.env.DEV && import.meta.env.START_DEV_OVERLAY
