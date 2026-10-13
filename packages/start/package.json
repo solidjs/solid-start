@@ -12,6 +12,9 @@
     "CHANGELOG.md"
   ],
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     ".": "./src/index.tsx",
     "./config": "./dist/config/index.js",
