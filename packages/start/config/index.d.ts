@@ -23,6 +23,18 @@ type SolidStartInlineConfig = {
   routeDir?: string;
   middleware?: string;
   devOverlay?: boolean;
+  /**
+   * Send the page's assets as `103 Early Hints` before the page is rendered, so
+   * the browser can start downloading them while the server is still working.
+   * This covers the app's entry assets and the assets of the routes being
+   * rendered. On runtimes other than Node, the hints are added as `Link`
+   * headers on the response instead. Only applies to production builds.
+   *
+   * Off by default, because some proxies and clients mishandle `1xx` responses.
+   *
+   * @default false
+   */
+  earlyHints?: boolean;
   experimental?: {
     islands?: boolean;
   };

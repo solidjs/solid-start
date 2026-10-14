@@ -81,6 +81,7 @@ export function defineConfig(baseConfig = {}) {
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
+    earlyHints: false,
     experimental: {
       islands: false
     },
@@ -175,6 +176,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
               }
@@ -242,6 +244,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(false),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.SERVER_BASE_URL": JSON.stringify(server?.baseURL ?? ""),
                 "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
@@ -303,6 +306,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
               }

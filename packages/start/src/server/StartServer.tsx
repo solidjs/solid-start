@@ -11,6 +11,7 @@ import {
   useAssets
 } from "solid-js/web";
 import { ErrorBoundary, TopErrorBoundary } from "../shared/ErrorBoundary";
+import { sendEarlyHints } from "./early-hints";
 import { renderAsset } from "./renderAsset";
 import type { Asset, DocumentComponentProps, PageEvent } from "./types";
 
@@ -68,6 +69,7 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
             !context.assets.find((a: Asset) => a.attrs.key === asset.attrs.key)
       )
     );
+    sendEarlyHints(context, assets);
   });
 
   useAssets(() => (assets.length ? assets.map(m => renderAsset(m)) : undefined));

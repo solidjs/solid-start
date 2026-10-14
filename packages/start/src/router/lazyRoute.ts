@@ -1,7 +1,9 @@
 /// <reference types="vinxi/types/client" />
 import { createComponent, lazy, onCleanup, type Component, type JSX } from "solid-js";
+import { getRequestEvent, isServer } from "solid-js/web";
 import { appendStyles, cleanupStyles, preloadStyles, updateStyles } from "vinxi/css";
 
+import { sendEarlyHints } from "../server/early-hints";
 import { renderAsset } from "../server/renderAsset";
 import { Asset } from "../server/types";
 
@@ -52,6 +54,12 @@ export default function lazyRoute<T extends Record<string, any>>(component: any,
         preloadStyles(styles);
       }
       const Comp: Component<T> = props => {
+        // Runs on every render, unlike the code above, which runs once per
+        // route because lazy() caches it.
+        if (isServer) {
+          const event = getRequestEvent();
+          if (event) sendEarlyHints(event, styles);
+        }
         return [...styles.map((asset: Asset) => renderAsset(asset)), createComponent(Component, props)];
       };
       return { default: Comp };
