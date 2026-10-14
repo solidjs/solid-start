@@ -68,6 +68,15 @@ export interface SolidStartOptions {
   devOverlay?: boolean;
 
   /**
+   * Reload the page once when a route's code fails to load during client-side
+   * navigation, such as when a deploy replaced it while the page was open.
+   * Only applies to production builds.
+   *
+   * @default true
+   */
+  reloadOnRouteChunkError?: boolean;
+
+  /**
    * Experimental features.
    */
   experimental?: {
@@ -232,6 +241,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
+    reloadOnRouteChunkError: true,
     experimental: {
       islands: false,
     },
@@ -374,6 +384,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+            "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
+              start.reloadOnRouteChunkError,
+            ),
             "import.meta.env.SERVER_BASE_URL": JSON.stringify(resolveServerBaseUrl(config)),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
