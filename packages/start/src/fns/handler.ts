@@ -22,13 +22,13 @@ import { getExpectedRedirectStatus } from "../server/util.ts";
 /**
  * Server functions are same-origin RPC. A cross-site page must not be able to
  * invoke one with the visitor's cookies, so reject cross-site requests before
- * the function runs. This is the token-less CSRF defense used by other
+ * the function runs. This is the token-less origin check used by other
  * frameworks: trust `Sec-Fetch-Site` when the browser sends it, and fall back
  * to comparing `Origin` against the request host.
  *
  * `same-origin` and `same-site` are allowed, matching the reach of a
  * `SameSite=Lax`/`Strict` cookie. `none` is a user-initiated navigation
- * (typed URL, bookmark), not a request forged by another site.
+ * (typed URL, bookmark), not a request made by another site.
  */
 function isCrossSiteRequest(request: Request, url: URL): boolean {
   const secFetchSite = request.headers.get("sec-fetch-site");
@@ -38,7 +38,12 @@ function isCrossSiteRequest(request: Request, url: URL): boolean {
   // Older browsers omit Sec-Fetch-Site. They still send Origin on the
   // cross-site requests that matter (form and fetch POSTs), so compare it.
   const origin = request.headers.get("origin");
-  if (origin && origin !== "null") {
+  // `null` is an opaque origin (a sandboxed iframe, a cross-origin redirect
+  // chain): the browser declines to name the caller, so it cannot be matched.
+  if (origin === "null") {
+    return true;
+  }
+  if (origin) {
     try {
       return new URL(origin).host !== url.host;
     } catch {
@@ -50,7 +55,71 @@ function isCrossSiteRequest(request: Request, url: URL): boolean {
   return false;
 }
 
+const CACHE_CONTROL = "Cache-Control";
+const DEFAULT_CACHE_CONTROL = "no-store";
+
+/**
+ * A server function answers one caller, so a shared cache must not store the
+ * response unless the function opted in with its own `Cache-Control`, either
+ * on a returned Response or on the event's response headers. A 304 is left
+ * alone: it updates a stored response rather than being one, and `no-store`
+ * on it would drop the entry the conditional request was keeping.
+ *
+ * h3 copies `res.headers` onto a returned Response below 400 and
+ * `res.errHeaders` onto one at or above it, and builds every other return
+ * value from `res`, so those are the headers that reach the wire.
+ */
+function withDefaultCacheControl<T>(h3Event: H3Event, value: T): T {
+  if (!(value instanceof Response)) {
+    if (h3Event.res.status !== 304 && !h3Event.res.headers.has(CACHE_CONTROL)) {
+      h3Event.res.headers.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    }
+    return value;
+  }
+  const eventHeaders = value.status >= 400 ? h3Event.res.errHeaders : h3Event.res.headers;
+  if (value.status === 304 || value.headers.has(CACHE_CONTROL) || eventHeaders.has(CACHE_CONTROL)) {
+    return value;
+  }
+  try {
+    value.headers.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    return value;
+  } catch {
+    // a fetch() Response passed through has immutable headers
+    const headers = new Headers(value.headers);
+    headers.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    return new Response(value.body, {
+      status: value.status,
+      statusText: value.statusText,
+      headers,
+    }) as T;
+  }
+}
+
+function thrownCacheControl(error: unknown) {
+  try {
+    const headers = (error as { headers?: HeadersInit } | null)?.headers;
+    return headers ? new Headers(headers).has(CACHE_CONTROL) : false;
+  } catch {
+    return false;
+  }
+}
+
 export async function handleServerFunction(h3Event: H3Event) {
+  let response: Awaited<ReturnType<typeof runServerFunction>>;
+  try {
+    response = await runServerFunction(h3Event);
+  } catch (error) {
+    // h3 answers a thrown value itself, with the error's headers and then
+    // `res.errHeaders`
+    if (!thrownCacheControl(error) && !h3Event.res.errHeaders.has(CACHE_CONTROL)) {
+      h3Event.res.errHeaders.set(CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+    }
+    throw error;
+  }
+  return withDefaultCacheControl(h3Event, response);
+}
+
+async function runServerFunction(h3Event: H3Event) {
   const event = getFetchEvent(h3Event);
   const request = event.request;
 
@@ -280,18 +349,31 @@ async function handleNoJS(result: any, request: Request, parsed: any[], thrown?:
     });
   if (result) {
     try {
-      headers.append(
-        "Set-Cookie",
-        `flash=${encodeURIComponent(
-          JSON.stringify({
-            url: url.pathname + url.search,
-            result: isError ? result.message : result,
-            thrown: thrown,
-            error: isError,
-            input: buildFlashInput(parsed),
-          }),
-        )}; Secure; HttpOnly;`,
-      );
+      const payload = {
+        url: url.pathname + url.search,
+        result: isError ? result.message : result,
+        thrown: thrown,
+        error: isError,
+        input: buildFlashInput(parsed),
+      };
+      let cookie = serializeFlashCookie(payload);
+      if (!cookie) {
+        // The form data is the only part that grows with what the user typed.
+        // Drop it and keep the result: a submission with an empty input beats the
+        // browser silently discarding the oversized cookie, which loses the whole
+        // submission on the page it redirects back to (#2179).
+        payload.input = parsed.length ? [...parsed.slice(0, -1), []] : [];
+        cookie = serializeFlashCookie(payload);
+        console.warn(
+          `[solid-start] The form data posted without JavaScript to ${payload.url} does not fit in the flash cookie ` +
+            `(at most ${MAX_FLASH_COOKIE_BYTES} bytes), so useSubmission().input will be empty for that submission.` +
+            (cookie
+              ? ""
+              : " The result alone is also too large, so the submission is not carried across the redirect."),
+        );
+      }
+      // a cookie the browser is known to drop is only dead weight on the redirect
+      if (cookie) headers.append("Set-Cookie", cookie);
     } catch {
       // The flash cookie is best effort. A value that cannot be serialized must
       // not take down the redirect, which is also this request's error handler.
@@ -301,6 +383,21 @@ async function handleNoJS(result: any, request: Request, parsed: any[], thrown?:
     status: statusCode,
     headers,
   });
+}
+
+// Browsers store at most 4096 bytes of cookie name plus value (RFC 6265 §6.1)
+// and silently ignore a Set-Cookie that exceeds it. Some count the attributes
+// too, so the whole header value is held to the limit.
+const MAX_FLASH_COOKIE_BYTES = 4096;
+
+// Returns undefined when the cookie would not fit.
+function serializeFlashCookie(payload: unknown) {
+  const json = JSON.stringify(payload);
+  // percent-encoding never shrinks a string, so skip encoding a hopeless one
+  if (json.length > MAX_FLASH_COOKIE_BYTES) return undefined;
+  // percent-encoding leaves only ASCII, so the string length is the byte length
+  const cookie = `flash=${encodeURIComponent(json)}; Secure; HttpOnly;`;
+  return cookie.length <= MAX_FLASH_COOKIE_BYTES ? cookie : undefined;
 }
 
 let App: any;
