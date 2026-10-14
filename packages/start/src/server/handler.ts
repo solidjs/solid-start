@@ -64,7 +64,7 @@ export function createBaseHandler(
       const mode = resolvedOptions.mode || "stream";
       if (resolvedOptions.nonce) context.nonce = resolvedOptions.nonce;
 
-      if (mode === "sync" || !import.meta.env.START_SSR) {
+      if (mode === "sync" || (!import.meta.env.START_SSR && !import.meta.env.START_SSR_DATA)) {
         const html = renderToString(() => {
           (sharedConfig.context as any).event = context;
           return fn(context);

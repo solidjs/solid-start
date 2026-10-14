@@ -55,10 +55,13 @@ export interface SolidStartOptions {
    *
    * - `true` — SSR (default)
    * - `false` — client-side rendering only (SPA mode)
+   * - `"data-only"` — SPA mode, but the server runs the route `preload`s for the
+   *   requested page and sends their query results with the HTML shell. The
+   *   client renders without hydrating and without fetching that data again.
    *
    * @default true
    */
-  ssr?: boolean;
+  ssr?: boolean | "data-only";
 
   /**
    * Show the SolidStart development overlay (error overlay, etc.) in development.
@@ -347,7 +350,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           resolve: {
             alias: {
               "@solidjs/start/server/entry": handlers.server,
-              ...(!start.ssr
+              ...(start.ssr !== true
                 ? {
                     "@solidjs/start/server": "@solidjs/start/server/spa",
                     "@solidjs/start/client": "@solidjs/start/client/spa",
@@ -367,7 +370,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
-            "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+            "import.meta.env.START_SSR": JSON.stringify(start.ssr === true),
+            "import.meta.env.START_SSR_DATA": JSON.stringify(start.ssr === "data-only"),
             // Use JSON.stringify so backslashes on Windows are escaped and
             // esbuild receives a valid JS string literal for the define value
             "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
@@ -404,7 +408,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         ssr: new SolidStartServerFileRouter({
           dir: absolute(routeDir, root),
           extensions,
-          dataOnly: !start.ssr,
+          dataOnly: start.ssr !== true,
         }),
       },
     }),
