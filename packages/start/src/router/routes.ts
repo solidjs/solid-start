@@ -69,8 +69,9 @@ export function matchAPIRoute(path: string, method: string) {
 
     if (handler === undefined) return;
 
-    // Check if this is a page route
-    const isPage = route.page === true && route.$component !== undefined;
+    // Check if this is a page route. SPA builds leave page components out of
+    // the server routes, so this can't depend on `$component`.
+    const isPage = route.page === true;
 
     // Return comprehensive route information
     return {
