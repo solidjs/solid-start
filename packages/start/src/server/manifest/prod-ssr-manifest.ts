@@ -1,7 +1,11 @@
 import { clientViteManifest } from "solid-start:client-vite-manifest";
-import { join } from "pathe";
 import { Manifest } from "vite";
 import type { Asset } from "../assets/render.tsx";
+
+// Vite's base may be a full URL. pathe's join would fold its "://" into ":/".
+function joinBase(base: string, path: string) {
+  return `${base.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+}
 
 // Only reads from client manifest atm, might need server support for islands
 export function getSsrProdManifest() {
@@ -13,7 +17,7 @@ export function getSsrProdManifest() {
       const viteManifestEntry = clientViteManifest[id /*import.meta.env.START_CLIENT_ENTRY*/];
       if (!viteManifestEntry) throw new Error(`No entry found in vite manifest for '${id}'`);
 
-      return join(import.meta.env.BASE_URL, viteManifestEntry.file);
+      return joinBase(import.meta.env.BASE_URL, viteManifestEntry.file);
     },
     async getAssets(id) {
       if (id.startsWith("./")) id = id.slice(2);
@@ -29,7 +33,7 @@ export function getSsrProdManifest() {
 
       for (const entryKey of entryKeys) {
         json[entryKey] = {
-          output: join(import.meta.env.BASE_URL, viteManifest[entryKey]!.file),
+          output: joinBase(import.meta.env.BASE_URL, viteManifest[entryKey]!.file),
           assets: await this.getAssets(entryKey),
         };
       }
@@ -54,7 +58,7 @@ function createHtmlTagsForAssets(assets: string[]) {
     .map<Asset>(asset => ({
       tag: "link",
       attrs: {
-        href: join(import.meta.env.BASE_URL, asset),
+        href: joinBase(import.meta.env.BASE_URL, asset),
         key: asset,
         ...(asset.endsWith(".css") ? { rel: "stylesheet" } : { rel: "modulepreload" }),
       },
