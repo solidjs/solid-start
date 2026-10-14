@@ -15,7 +15,18 @@ type ViteCustomizableConfig = CustomizableConfig & {
 
 type SolidStartInlineConfig = {
   publicDir?: string;
-  ssr?: boolean;
+  /**
+   * Enable or disable server-side rendering.
+   *
+   * - `true` — SSR (default)
+   * - `false` — client-side rendering only (SPA mode)
+   * - `"data-only"` — SPA mode, but the server runs the route `preload`s for the
+   *   requested page and sends their query results with the HTML shell. The
+   *   client renders without hydrating and without fetching that data again.
+   *
+   * @default true
+   */
+  ssr?: boolean | "data-only";
   solid?: Options;
   extensions?: string[];
   server?: AppOptions["server"];
