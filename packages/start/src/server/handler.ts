@@ -6,6 +6,7 @@ import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
 
 import { createRoutes } from "../router.tsx";
 import { decorateHandler, decorateMiddleware } from "./fetchEvent.ts";
+import { sendEarlyHints } from "./early-hints.ts";
 import { getSsrManifest } from "./manifest/ssr-manifest.ts";
 import { matchAPIRoute } from "./routes.ts";
 import { handleServerFunction } from "../fns/handler.ts";
@@ -150,6 +151,7 @@ export async function createPageEvent(ctx: FetchEvent) {
     //     )
     //   : [])
   ];
+  sendEarlyHints(ctx, assets);
   const pageEvent: PageEvent = Object.assign(ctx, {
     assets,
     router: {
