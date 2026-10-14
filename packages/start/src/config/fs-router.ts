@@ -7,23 +7,33 @@ import {
   type FileSystemRouterConfig,
 } from "./fs-routes/router.ts";
 
+/**
+ * Maps a route file to its router path: strips the routes directory and extension,
+ * drops a trailing `index` segment (`blog/index` -> `/blog/`, `index` -> `/`) and
+ * converts `[param]`, `[[optional]]` and `[...rest]` segments to router syntax.
+ */
+function toRoutePath(src: string, config: FileSystemRouterConfig) {
+  const routePath = cleanPath(src, config)
+    // remove the initial slash
+    .slice(1)
+    // only strip a whole `index` segment, not a name that merely ends in "index" (e.g. `reindex`)
+    .replace(/(^|\/)index$/, "$1")
+    .replace(/\[([^/]+)\]/g, (_, m) => {
+      if (m.length > 3 && m.startsWith("...")) {
+        return `*${m.slice(3)}`;
+      }
+      if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
+        return `:${m.slice(1, -1)}?`;
+      }
+      return `:${m}`;
+    });
+
+  return routePath.length > 0 ? `/${routePath}` : "/";
+}
+
 export class SolidStartClientFileRouter extends BaseFileSystemRouter {
   toPath(src: string) {
-    const routePath = cleanPath(src, this.config)
-      // remove the initial slash
-      .slice(1)
-      .replace(/index$/, "")
-      .replace(/\[([^/]+)\]/g, (_, m) => {
-        if (m.length > 3 && m.startsWith("...")) {
-          return `*${m.slice(3)}`;
-        }
-        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-          return `:${m.slice(1, -1)}?`;
-        }
-        return `:${m}`;
-      });
-
-    return routePath?.length > 0 ? `/${routePath}` : "/";
+    return toRoutePath(src, this.config);
   }
 
   toRoute(src: string) {
@@ -107,21 +117,7 @@ export class SolidStartServerFileRouter extends BaseFileSystemRouter {
   }
 
   toPath(src: string) {
-    const routePath = cleanPath(src, this.config)
-      // remove the initial slash
-      .slice(1)
-      .replace(/index$/, "")
-      .replace(/\[([^/]+)\]/g, (_, m) => {
-        if (m.length > 3 && m.startsWith("...")) {
-          return `*${m.slice(3)}`;
-        }
-        if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-          return `:${m.slice(1, -1)}?`;
-        }
-        return `:${m}`;
-      });
-
-    return routePath?.length > 0 ? `/${routePath}` : "/";
+    return toRoutePath(src, this.config);
   }
 
   toRoute(src: string) {

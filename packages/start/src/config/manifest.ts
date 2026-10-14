@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { type PluginOption, type ViteDevServer, version as viteVersion } from "vite";
+import { createFilter, type PluginOption, type ViteDevServer, version as viteVersion } from "vite";
 import { fileURLToPath } from "node:url";
 
 import { findStylesInModuleGraph } from "../server/collect-styles.ts";
@@ -8,8 +8,19 @@ import { VIRTUAL_MODULES } from "./constants.ts";
 import { type SolidStartOptions } from "./index.ts";
 import { wrapId } from "./vite-utils.ts";
 
+const DEFAULT_STYLE_EXCLUDE = /node_modules/;
+
+type StyleFilterOptions = NonNullable<SolidStartOptions["css"]>["filter"];
+
+export function createStyleFilter(options?: StyleFilterOptions) {
+  return createFilter(options?.include || [], options?.exclude || DEFAULT_STYLE_EXCLUDE);
+}
+
 export function manifest(start: SolidStartOptions): PluginOption {
   let devServer: ViteDevServer = undefined!;
+
+  const styleFilter = createStyleFilter(start.css?.filter);
+
   return {
     name: "solid-start:manifest-plugin",
     enforce: "pre",
@@ -40,6 +51,11 @@ export function manifest(start: SolidStartOptions): PluginOption {
         const plugins = start.serialization?.plugins;
         if (plugins) return await this.resolve(plugins);
         return `\0${VIRTUAL_MODULES.serovalPlugins}`;
+      }
+      if (id === VIRTUAL_MODULES.serverFnErrorHandler) {
+        const onError = start.serverFunctions?.onError;
+        if (onError) return await this.resolve(onError);
+        return `\0${VIRTUAL_MODULES.serverFnErrorHandler}`;
       }
     },
     async load(id) {
@@ -94,6 +110,8 @@ export function manifest(start: SolidStartOptions): PluginOption {
         return `export const clientViteManifest = ${JSON.stringify(clientViteManifest)};`;
       } else if (id === `\0${VIRTUAL_MODULES.middleware}`) return "export default {};";
       else if (id === `\0${VIRTUAL_MODULES.serovalPlugins}`) return "export default [];";
+      else if (id === `\0${VIRTUAL_MODULES.serverFnErrorHandler}`)
+        return "export default undefined;";
       else if (id.startsWith("/@manifest")) {
         if (this.environment.mode !== "dev")
           throw new Error("@manifest queries are only allowed in dev");
@@ -111,7 +129,7 @@ export function manifest(start: SolidStartOptions): PluginOption {
           // Client env does not have css dependencies in mod.transformResult
           // Aalways use ssr env instead, to prevent hydration mismatches
           const env = devServer.environments["ssr"];
-          const styles = await findStylesInModuleGraph(env, id);
+          const styles = await findStylesInModuleGraph(env, id, styleFilter);
 
           const cssAssets = Object.entries(styles).map(
             ([key, value]) => `{

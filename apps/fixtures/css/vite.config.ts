@@ -7,19 +7,20 @@ import virtualCSS from "./src/virtualCssPlugin";
 export default defineConfig({
   plugins: [virtualCSS(), solidStart(), nitro(), tailwindcss()],
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         /**
          * Creates a shared chunk with two components. Needed for the "SharedChunk" test!
          * The vite manifest behaves differently for such shared chunks.
          * More info: packages/start/src/config/lazy.ts
-         *
-         * TODO: When switching to Rolldown, migrate this to advancedChunks
-         * https://vite.dev/guide/rolldown.html#manualchunks-to-advancedchunks
          */
-        manualChunks(id) {
-          if (!id.includes("src/components/sharedChunk")) return;
-          return "shared";
+        codeSplitting: {
+          groups: [
+            {
+              name: "shared-css",
+              test: "src/components/sharedChunk",
+            },
+          ],
         },
       },
     },

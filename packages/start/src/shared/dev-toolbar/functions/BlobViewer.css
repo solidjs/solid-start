@@ -1,4 +1,52 @@
+[data-start-blob-viewer] {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  align-self: flex-start;
+
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
 [data-start-blob-viewer] svg {
-  width: 1rem;
-  height: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+
+  color: var(--start-dt-accent, currentColor);
+}
+
+[data-start-blob-viewer-info] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+
+  min-width: 0;
+}
+
+[data-start-blob-viewer-name] {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+  font-size: 0.8125rem;
+  line-height: 1rem;
+  font-weight: 600;
+
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-start-blob-viewer-meta] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 0.75rem;
+  line-height: 1rem;
+
+  color: var(--start-dt-text-muted, inherit);
 }

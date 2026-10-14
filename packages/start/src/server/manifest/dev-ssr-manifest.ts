@@ -2,9 +2,10 @@ import { join, normalize } from "pathe";
 
 export function getSsrDevManifest(environment: "client" | "ssr") {
   return {
+    // Vite reduces an external base to its path in dev, so BASE_URL is always a path here
     path: (id: string) => normalize(join(import.meta.env.BASE_URL, id)),
     async getAssets(id) {
-      const assetsPath = `/@manifest/${environment}/${Date.now()}/assets?id=${id}`;
+      const assetsPath = `/@manifest/${environment}/${Date.now()}/assets?id=${encodeURIComponent(id)}`;
 
       const assets = (await import(/* @vite-ignore */ assetsPath)).default;
 

@@ -7,13 +7,13 @@
 
   border-radius: 0.5rem;
 
-  color: oklch(97% 0.014 254.604);
+  color: var(--start-dt-text, oklch(97% 0.014 254.604));
 
-  background-color: rgb(17 24 39);
-  padding: 0.25rem 0.5rem;
+  background-color: var(--start-dt-surface, rgb(17 24 39));
+  padding: 0.25rem 0.625rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  border: none;
+  border: 1px var(--start-dt-border, transparent) solid;
   outline: none;
 
   transition-property: color, background-color, border-color, box-shadow;
@@ -27,6 +27,7 @@
 [data-start-button][tc-selected],
 [data-start-button]:hover,
 [data-start-button]:focus {
-  color: rgb(219 234 254);
-  background-color: rgb(30 58 138);
+  color: var(--start-dt-text, rgb(219 234 254));
+  background-color: var(--start-dt-surface-hover, rgb(30 58 138));
+  border-color: var(--start-dt-accent, transparent);
 }

@@ -77,6 +77,14 @@ export const CommonTests = (props: { routeModuleClass?: string }) => (
     <Test component="Route" file="notRendered.css" class="notRendered" integration="url" invert />
     <Test component="Lazy" file="lazy.css" class="lazy" lazy />
     <Test
+      component="Lazy+"
+      file="lazyPlus.css"
+      class="lazyPlus"
+      integration="import"
+      lazy
+      comment={<>Tests if files with special characters such as "+" are properly crawled.</>}
+    />
+    <Test
       component="LazyGlob"
       file="lazyGlob.css"
       class="lazyGlob"

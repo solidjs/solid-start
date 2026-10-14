@@ -16,7 +16,7 @@ export default defineConfig({
   test: {
     mockReset: true,
     globals: true,
-    exclude: [...configDefaults.exclude, "**/src/e2e/**"],
+    exclude: [...configDefaults.exclude, "**/src/e2e/**", "**/src/e2e-base/**"],
     projects: [
       {
         // 1. NODE Project (For fs, tree-shaking, server utilities)

@@ -1,13 +1,5 @@
 import middleware from "solid-start:middleware";
-import {
-  defineHandler,
-  getCookie,
-  H3,
-  type H3Event,
-  iterable,
-  redirect,
-  setCookie,
-} from "h3/generic";
+import { defineHandler, getCookie, H3, type H3Event, iterable, redirect, setCookie } from "h3";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
@@ -225,6 +217,6 @@ function escapeAttribute(value: string) {
 }
 
 function stripBaseUrl(path: string) {
-  const base = import.meta.env.SERVER_BASE_URL || import.meta.env.BASE_URL || "/";
+  const base = import.meta.env.SERVER_BASE_URL || "/";
   return stripPathBase(path, base);
 }

@@ -20,6 +20,10 @@ export function devServer(serverEntryPath: string, middlewarePath?: string): Arr
     {
       name: "solid-start-dev-server",
       configurePreviewServer(server) {
+        // Nitro's preview hook handles both server and static builds.
+        // Static builds have no server entry, so detect the active plugin instead.
+        if (server.config.plugins.some(plugin => plugin.name === "nitro:preview")) return;
+
         const serverEntryUrl = pathToFileURL(resolvePreviewServerEntry(server.config.root)).href;
 
         return () => {

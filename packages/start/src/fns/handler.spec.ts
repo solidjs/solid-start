@@ -1,5 +1,8 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { parseCookies } from "h3";
 import type { FetchEvent } from "../server/types.ts";
+import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
+import { getServerFunction } from "./registration.ts";
 
 vi.mock("h3", () => ({
   parseCookies: vi.fn(() => ({})),
@@ -15,6 +18,16 @@ vi.mock("solid-js/web/storage", () => ({
 
 vi.mock("solid-start:server-fn-manifest", () => ({}));
 
+const configuredErrorHandler = vi.hoisted(() => ({
+  current: undefined as ((thrown: unknown) => unknown) | undefined,
+}));
+
+vi.mock("solid-start:server-fn-error-handler", () => ({
+  get default() {
+    return configuredErrorHandler.current;
+  },
+}));
+
 vi.mock("../server/handler.ts", () => ({
   createPageEvent: vi.fn(),
 }));
@@ -24,12 +37,26 @@ vi.mock("../server/fetchEvent.ts", () => ({
   mergeResponseHeaders: vi.fn(),
 }));
 
-function createMockFetchEvent(headers: Record<string, string> = {}): FetchEvent {
+vi.mock("./registration.ts", () => ({
+  getServerFunction: vi.fn(),
+  hasServerFunction: vi.fn(() => true),
+}));
+
+vi.mock("./serialization.ts", async importOriginal => ({
+  ...(await importOriginal<typeof import("./serialization.ts")>()),
+  serializeToJSONStream: vi.fn(() => "serialized"),
+  serializeToJSStream: vi.fn(() => "serialized"),
+}));
+
+function createMockFetchEvent(
+  headers: Record<string, string> = {},
+  setCookies: string[] = [],
+): FetchEvent {
   return {
     request: new Request("http://localhost/test", { headers }),
     response: {
       headers: {
-        getSetCookie: () => [],
+        getSetCookie: () => [...setCookies],
       },
     },
     nativeEvent: {},
@@ -38,10 +65,11 @@ function createMockFetchEvent(headers: Record<string, string> = {}): FetchEvent 
 }
 
 describe("createSingleFlightHeaders", () => {
-  let createSingleFlightHeaders: (sourceEvent: FetchEvent) => Headers;
+  let createSingleFlightHeaders: (sourceEvent: FetchEvent, result?: unknown) => Headers;
 
   beforeEach(async () => {
     vi.clearAllMocks();
+    vi.mocked(parseCookies).mockReturnValue({});
     const module = await import("./handler.ts");
     createSingleFlightHeaders = module.createSingleFlightHeaders;
   });
@@ -81,5 +109,803 @@ describe("createSingleFlightHeaders", () => {
 
     expect(sourceEvent.request.headers.get("cookie")).toBe(originalCookieHeader);
     expect(sourceEvent.request.headers.get("cf-ray")).toBe(originalCfRay);
+  });
+
+  it("should apply cookies set on the event response", () => {
+    const sourceEvent = createMockFetchEvent({}, [
+      "val=1234; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600",
+    ]);
+
+    const result = createSingleFlightHeaders(sourceEvent);
+
+    expect(result.get("cookie")).toBe("val=1234");
+  });
+
+  it("should apply cookies set on a thrown redirect response", () => {
+    const sourceEvent = createMockFetchEvent();
+    const redirect = new Response(null, {
+      status: 302,
+      headers: {
+        Location: "/",
+        "Set-Cookie": "val=1234; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600",
+      },
+    });
+
+    const result = createSingleFlightHeaders(sourceEvent, redirect);
+
+    expect(result.get("cookie")).toBe("val=1234");
+  });
+
+  it("should let response cookies win over ones already on the request", () => {
+    vi.mocked(parseCookies).mockReturnValue({ session: "old" });
+    const sourceEvent = createMockFetchEvent({ cookie: "session=old" });
+    const redirect = new Response(null, {
+      status: 302,
+      headers: { "Set-Cookie": "session=new; Path=/" },
+    });
+
+    const result = createSingleFlightHeaders(sourceEvent, redirect);
+
+    expect(result.get("cookie")).toBe("session=new");
+  });
+
+  it("should remove cookies cleared by the response", () => {
+    vi.mocked(parseCookies).mockReturnValue({ session: "abc123" });
+    const sourceEvent = createMockFetchEvent({ cookie: "session=abc123" });
+    const redirect = new Response(null, {
+      status: 302,
+      headers: { "Set-Cookie": "session=; Path=/; Max-Age=0" },
+    });
+
+    const result = createSingleFlightHeaders(sourceEvent, redirect);
+
+    expect(result.get("cookie")).toBe(null);
+  });
+
+  it("should not copy non-cookie response headers onto the request", () => {
+    const sourceEvent = createMockFetchEvent();
+    const redirect = new Response(null, {
+      status: 302,
+      headers: { Location: "/", "X-Revalidate": "user" },
+    });
+
+    const result = createSingleFlightHeaders(sourceEvent, redirect);
+
+    expect(result.get("location")).toBe(null);
+    expect(result.get("x-revalidate")).toBe(null);
+  });
+
+  it("should ignore non-Response results", () => {
+    const sourceEvent = createMockFetchEvent();
+
+    expect(() => createSingleFlightHeaders(sourceEvent, { some: "value" })).not.toThrow();
+  });
+});
+
+describe("the configured server function error handler", () => {
+  const callThrowing = async (thrown: unknown) => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => {
+      throw thrown;
+    });
+    const { handleServerFunction } = await import("./handler.ts");
+    await handleServerFunction(h3Event as never);
+    return h3Event;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+  });
+
+  it("passes the thrown value to the handler", async () => {
+    const thrown = new Error("boom");
+    configuredErrorHandler.current = vi.fn(() => undefined);
+
+    await callThrowing(thrown);
+
+    expect(configuredErrorHandler.current).toHaveBeenCalledWith(thrown);
+  });
+
+  it("serializes the replacement the handler returns", async () => {
+    configuredErrorHandler.current = () => new Error("replaced");
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("replaced");
+  });
+
+  it("awaits an asynchronous replacement", async () => {
+    configuredErrorHandler.current = async () => new Error("replaced asynchronously");
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("replaced asynchronously");
+  });
+
+  it("treats a Response the handler returns as control flow", async () => {
+    configuredErrorHandler.current = () => new Response(null, { status: 403 });
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.status).toBe(403);
+    expect(h3Event.res.headers.get("X-Error")).toBe("true");
+  });
+
+  it("treats a Response resolved by an asynchronous handler as control flow", async () => {
+    configuredErrorHandler.current = async () => new Response(null, { status: 403 });
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.status).toBe(403);
+    expect(h3Event.res.headers.get("X-Error")).toBe("true");
+  });
+
+  it("keeps the original error when the handler returns nothing", async () => {
+    configuredErrorHandler.current = () => undefined;
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+  });
+
+  it("keeps the original error when an asynchronous handler returns nothing", async () => {
+    configuredErrorHandler.current = async () => undefined;
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+  });
+
+  it("keeps the original error when an asynchronous handler rejects", async () => {
+    configuredErrorHandler.current = async () => {
+      throw new Error("handler failed");
+    };
+
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+  });
+
+  it("leaves the response untouched when no handler is configured", async () => {
+    const h3Event = await callThrowing(new Error("boom"));
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+  });
+});
+
+describe("seroval stream response headers", () => {
+  const callReturning = async (value: unknown) => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => value);
+    const { handleServerFunction } = await import("./handler.ts");
+    await handleServerFunction(h3Event as never);
+    return h3Event;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+  });
+
+  it("sets an explicit content type on serialized results so intermediaries cannot sniff one", async () => {
+    const h3Event = await callReturning({ some: "value" });
+
+    expect(h3Event.res.headers.get("X-Start-Type")).toBe("0");
+    expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+  });
+
+  it("sets an explicit content type on serialized errors", async () => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => {
+      throw new Error("boom");
+    });
+    const { handleServerFunction } = await import("./handler.ts");
+    await handleServerFunction(h3Event as never);
+
+    expect(h3Event.res.headers.get("X-Start-Type")).toBe("0");
+    expect(h3Event.res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+  });
+});
+
+describe("the no-JS flash cookie", () => {
+  const submitWithoutJS = async (
+    formData: FormData,
+    implementation: () => unknown = () => ({ ok: true }),
+  ) => {
+    const request = new Request("http://localhost/_server?id=fn", {
+      method: "POST",
+      headers: { referer: "http://localhost/form" },
+      body: formData,
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    const serverFunction = vi.fn(implementation);
+    vi.mocked(getServerFunction).mockReturnValue(serverFunction);
+    const { handleServerFunction } = await import("./handler.ts");
+    const response = (await handleServerFunction(h3Event as never)) as Response;
+    const cookie = response.headers.get("set-cookie");
+    const [nameAndValue] = cookie?.split(";") ?? [];
+    return {
+      response,
+      serverFunction,
+      cookie,
+      payload: nameAndValue && JSON.parse(decodeURIComponent(nameAndValue.slice("flash=".length))),
+    };
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("carries the form data across the redirect when it fits", async () => {
+    const formData = new FormData();
+    formData.append("title", "hello");
+
+    const { response, payload, cookie } = await submitWithoutJS(formData);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("http://localhost/form");
+    expect(cookie!.length).toBeLessThanOrEqual(4096);
+    expect(payload).toMatchObject({
+      url: "/_server?id=fn",
+      result: { ok: true },
+      error: false,
+      input: [[["title", "hello"]]],
+    });
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it("keeps the result and drops the form data when the cookie would exceed the browser limit", async () => {
+    const formData = new FormData();
+    formData.append("title", "hello");
+    formData.append("body", "x".repeat(5000));
+
+    const { serverFunction, payload, cookie } = await submitWithoutJS(formData);
+
+    // the server function itself still receives the full form data
+    expect(serverFunction).toHaveBeenCalledTimes(1);
+    expect((vi.mocked(serverFunction).mock.calls[0] as unknown[])[0]).toBeInstanceOf(FormData);
+    expect(
+      ((vi.mocked(serverFunction).mock.calls[0] as unknown[])[0] as FormData).get("body"),
+    ).toHaveLength(5000);
+
+    expect(cookie!.length).toBeLessThanOrEqual(4096);
+    expect(payload).toMatchObject({
+      url: "/_server?id=fn",
+      result: { ok: true },
+      error: false,
+      input: [[]],
+    });
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(console.warn).mock.calls[0][0]).toContain("does not fit in the flash cookie");
+  });
+
+  it("keeps the error when an oversized submission fails", async () => {
+    const formData = new FormData();
+    formData.append("body", "x".repeat(5000));
+
+    const { payload, cookie } = await submitWithoutJS(formData, () => {
+      throw new Error("boom");
+    });
+
+    expect(cookie!.length).toBeLessThanOrEqual(4096);
+    expect(payload).toMatchObject({ result: "boom", error: true, thrown: true, input: [[]] });
+  });
+
+  it("sends no cookie when the result alone would exceed the browser limit", async () => {
+    const formData = new FormData();
+    formData.append("title", "hello");
+
+    const { response, cookie } = await submitWithoutJS(formData, () => ({
+      body: "x".repeat(5000),
+    }));
+
+    expect(response.status).toBe(302);
+    expect(cookie).toBeNull();
+    expect(vi.mocked(console.warn).mock.calls[0][0]).toContain("result alone is also too large");
+  });
+});
+
+describe("the no-JS server function handler", () => {
+  const callNoJS = async (init: RequestInit, fn: (...args: any[]) => unknown) => {
+    const request = new Request("http://localhost/_server?id=fn", {
+      method: "POST",
+      // no X-Server-Instance header, so this is the no-JS form path
+      ...init,
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(fn as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    return handleServerFunction(h3Event as never);
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // A non-form body leaves `undefined` as the last parsed argument, and
+  // building the flash cookie used to call `.entries()` on it.
+  it("redirects instead of crashing on a non-form body", async () => {
+    const response = await callNoJS(
+      { headers: { "content-type": "text/plain" }, body: "not a form" },
+      () => ({ ok: true }),
+    );
+
+    expect(response).toBeInstanceOf(Response);
+    expect((response as Response).status).toBe(302);
+  });
+
+  it("redirects instead of crashing on an empty body", async () => {
+    const response = await callNoJS({ body: "" }, () => "a value");
+
+    expect(response).toBeInstanceOf(Response);
+    expect((response as Response).status).toBe(302);
+  });
+
+  it("still echoes submitted form fields in the flash cookie", async () => {
+    const form = new URLSearchParams({ title: "hello" });
+    const response = await callNoJS(
+      {
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        body: form.toString(),
+      },
+      () => ({ ok: true }),
+    );
+
+    const cookie = (response as Response).headers.get("Set-Cookie") ?? "";
+    const flash = decodeURIComponent(/flash=([^;]+)/.exec(cookie)?.[1] ?? "");
+    expect(flash).toContain("title");
+    expect(flash).toContain("hello");
+  });
+});
+
+describe("cross-site request rejection", () => {
+  const call = async (headers: Record<string, string>, method = "POST") => {
+    const request = new Request("http://localhost/_server?id=fn", { method, headers });
+    const h3Event = { res: { headers: new Headers(), errHeaders: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    const fn = vi.fn(() => ({ ok: true }));
+    vi.mocked(getServerFunction).mockReturnValue(fn as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    const response = (await handleServerFunction(h3Event as never)) as Response;
+    return { response, fn };
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("rejects a cross-site request by Sec-Fetch-Site without running the function", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "cross-site",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects a cross-site GET navigation (Sec-Fetch-Site, no Origin)", async () => {
+    const { response, fn } = await call({ "sec-fetch-site": "cross-site" }, "GET");
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects when Origin host differs and Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "https://other.example",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects an opaque Origin (`null`) when Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "null",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("rejects an opaque Origin (`null`) on a GET when Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({ origin: "null" }, "GET");
+    expect(response.status).toBe(403);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("allows a same-origin request", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "same-origin",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(response.status).not.toBe(403);
+    expect(fn).toHaveBeenCalled();
+  });
+
+  it("allows a same-site request", async () => {
+    const { response, fn } = await call({
+      "sec-fetch-site": "same-site",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a user-initiated navigation (Sec-Fetch-Site: none)", async () => {
+    const { response, fn } = await call({ "sec-fetch-site": "none" }, "GET");
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a matching Origin when Sec-Fetch-Site is absent", async () => {
+    const { response, fn } = await call({
+      origin: "http://localhost",
+      "x-server-instance": "server-fn:1",
+    });
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a request with neither header (non-browser client)", async () => {
+    const { response, fn } = await call({ "x-server-instance": "server-fn:1" });
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+
+  it("allows a GET with neither header (non-browser client)", async () => {
+    const { response, fn } = await call({}, "GET");
+    expect(fn).toHaveBeenCalled();
+    expect(response.status).not.toBe(403);
+  });
+});
+
+describe("seroval request bodies", () => {
+  /** Frames one serialized node the way `serializeToJSONStream` does. */
+  const frame = (node: unknown) => {
+    const data = JSON.stringify(node);
+    return `;0x${new TextEncoder().encode(data).length.toString(16).padStart(8, "0")};${data}`;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+  });
+
+  it("answers with an error when an awaited argument is still pending at the end of the body", async () => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: {
+        "X-Server-Id": "fn",
+        "X-Server-Instance": "server-fn:1",
+        "X-Start-Type": "0",
+        "content-type": "text/plain",
+      },
+      body: frame({ t: 9, i: 0, a: [{ t: 22, i: 100, s: 101 }], o: 0 }),
+    });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(
+      (async (arg: Promise<unknown>) => await arg) as never,
+    );
+    const { handleServerFunction } = await import("./handler.ts");
+
+    const outcome = await Promise.race([
+      handleServerFunction(h3Event as never).then(() => "answered"),
+      new Promise(resolve => setTimeout(() => resolve("still waiting"), 200)),
+    ]);
+
+    expect(outcome).toBe("answered");
+    expect(h3Event.res.headers.get("X-Error")).toMatch(/ended unexpectedly/);
+  });
+});
+
+describe("the default Cache-Control on server function responses", () => {
+  type H3EventStub = { res: { headers: Headers; errHeaders: Headers; status: number } };
+
+  const invoke = async ({
+    url = "http://localhost/_server",
+    method = "POST",
+    headers = { "X-Server-Id": "fn", "X-Server-Instance": "server-fn:1" },
+    fn = () => ({ ok: true }),
+  }: {
+    url?: string;
+    method?: string;
+    headers?: Record<string, string>;
+    fn?: (h3Event: H3EventStub) => unknown;
+  }) => {
+    const request = new Request(url, { method, headers });
+    const h3Event: H3EventStub = {
+      res: { headers: new Headers(), errHeaders: new Headers(), status: 200 },
+    };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: h3Event.res,
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue((() => fn(h3Event)) as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    const returned = await handleServerFunction(h3Event as never);
+    return { returned, h3Event };
+  };
+
+  const raw = (init: ResponseInit & { headers?: Record<string, string> } = {}) =>
+    new Response(init.status === 304 ? null : "raw", {
+      ...init,
+      headers: { "X-Content-Raw": "true", ...init.headers },
+    });
+
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    configuredErrorHandler.current = undefined;
+    const actual =
+      await vi.importActual<typeof import("../server/fetchEvent.ts")>("../server/fetchEvent.ts");
+    vi.mocked(mergeResponseHeaders).mockImplementation(actual.mergeResponseHeaders);
+  });
+
+  it("sets no-store on a serialized POST result", async () => {
+    const { h3Event } = await invoke({});
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a serialized GET result", async () => {
+    const { h3Event } = await invoke({ url: "http://localhost/_server?id=fn", method: "GET" });
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a result sent as its own body", async () => {
+    const { returned } = await invoke({ fn: () => "text" });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a raw Response passed through", async () => {
+    const { returned } = await invoke({ fn: () => raw() });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a raw Response whose headers are immutable", async () => {
+    const immutable = raw();
+    // the guard a fetch() Response's headers carry
+    Object.defineProperty(immutable.headers, "set", {
+      value: () => {
+        throw new TypeError("immutable");
+      },
+    });
+
+    const { returned } = await invoke({ fn: () => immutable });
+
+    expect(returned).toBeInstanceOf(Response);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+    expect((returned as Response).headers.get("X-Content-Raw")).toBe("true");
+    expect(await (returned as Response).text()).toBe("raw");
+  });
+
+  it("sets no-store on a redirect", async () => {
+    const { h3Event } = await invoke({
+      fn: () => new Response(null, { status: 302, headers: { Location: "/next" } }),
+    });
+
+    expect(h3Event.res.headers.get("Location")).toBe("/next");
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a no-JS redirect", async () => {
+    const { returned } = await invoke({
+      url: "http://localhost/_server?id=fn",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+    });
+
+    expect((returned as Response).status).toBe(302);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a serialized error", async () => {
+    const { h3Event } = await invoke({
+      fn: () => {
+        throw new Error("boom");
+      },
+    });
+
+    expect(h3Event.res.headers.get("X-Error")).toBe("boom");
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on the cross-site refusal", async () => {
+    const { returned } = await invoke({
+      headers: { "sec-fetch-site": "cross-site", "X-Server-Instance": "server-fn:1" },
+    });
+
+    expect((returned as Response).status).toBe(403);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on a request without a function id", async () => {
+    const { returned } = await invoke({ headers: {} });
+
+    expect((returned as Response).status).toBe(404);
+    expect((returned as Response).headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("sets no-store on the error response for an unknown function id", async () => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "X-Server-Id": "missing", "X-Server-Instance": "server-fn:1" },
+    });
+    const h3Event = { res: { headers: new Headers(), errHeaders: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: h3Event.res,
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockImplementation(id => {
+      throw new Error("invalid server function: " + id);
+    });
+    const { handleServerFunction } = await import("./handler.ts");
+
+    await expect(handleServerFunction(h3Event as never)).rejects.toThrow(/invalid server function/);
+    expect(h3Event.res.errHeaders.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("keeps a Cache-Control the function returned on a Response", async () => {
+    const { h3Event } = await invoke({
+      fn: () => new Response(null, { headers: { "Cache-Control": "public, max-age=60" } }),
+    });
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("public, max-age=60");
+  });
+
+  it("keeps a Cache-Control the function set on the event response", async () => {
+    const { h3Event } = await invoke({
+      fn: h3Event => {
+        h3Event.res.headers.set("Cache-Control", "private, max-age=60");
+        return "text";
+      },
+    });
+
+    expect(h3Event.res.headers.get("Cache-Control")).toBe("private, max-age=60");
+  });
+
+  it("keeps a Cache-Control on a raw Response passed through", async () => {
+    const { returned } = await invoke({
+      fn: () => raw({ headers: { "Cache-Control": "public, max-age=60" } }),
+    });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("public, max-age=60");
+  });
+
+  it("keeps a Cache-Control carried by a no-JS redirect", async () => {
+    const { returned } = await invoke({
+      url: "http://localhost/_server?id=fn",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      fn: () =>
+        new Response(null, {
+          status: 302,
+          headers: { Location: "/next", "Cache-Control": "private, max-age=5" },
+        }),
+    });
+
+    expect((returned as Response).headers.get("Cache-Control")).toBe("private, max-age=5");
+  });
+
+  it("leaves a 304 passed through untouched", async () => {
+    const { returned } = await invoke({ fn: () => raw({ status: 304 }) });
+
+    expect((returned as Response).status).toBe(304);
+    expect((returned as Response).headers.has("Cache-Control")).toBe(false);
+  });
+
+  it("leaves a 304 set on the event response untouched", async () => {
+    const { h3Event } = await invoke({
+      fn: h3Event => {
+        h3Event.res.status = 304;
+        return undefined;
+      },
+    });
+
+    expect(h3Event.res.headers.has("Cache-Control")).toBe(false);
+  });
+});
+
+describe("redirects for submissions without JavaScript", () => {
+  const submitWithoutJS = async (result: unknown) => {
+    const request = new Request("http://localhost/app/_server?id=fn", { method: "POST" });
+    const h3Event = { res: { headers: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    vi.mocked(getServerFunction).mockReturnValue(() => result);
+    const { handleServerFunction } = await import("./handler.ts");
+    return (await handleServerFunction(h3Event as never)) as Response;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.stubEnv("BASE_URL", "https://cdn.example.com/");
+    vi.stubEnv("SERVER_BASE_URL", "/app/");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("resolves a relative Location against the app base, not the asset base", async () => {
+    const redirect = new Response(null, { status: 302, headers: { Location: "dashboard" } });
+
+    const response = await submitWithoutJS(redirect);
+
+    expect(response.headers.get("Location")).toBe("http://localhost/app/dashboard");
+  });
+
+  it("sends the browser to the app root when there is no referer", async () => {
+    const response = await submitWithoutJS(undefined);
+
+    expect(response.headers.get("Location")).toBe("http://localhost/app/");
   });
 });

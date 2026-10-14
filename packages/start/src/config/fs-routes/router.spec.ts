@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { SolidStartClientFileRouter } from "../fs-router.ts";
+import { SolidStartClientFileRouter, SolidStartServerFileRouter } from "../fs-router.ts";
 import { analyzeModule } from "./router.ts";
 
 const temporaryDirectories: string[] = [];
@@ -81,5 +81,39 @@ describe("analyzeModule", () => {
     });
 
     expect(router.toRoute(route)?.$component.pick).toEqual(["default", "$css"]);
+  });
+});
+
+describe("toPath", () => {
+  const dir = "/app/src/routes";
+  const routers = [SolidStartClientFileRouter, SolidStartServerFileRouter];
+
+  it.each([
+    ["index.tsx", "/"],
+    ["blog/index.tsx", "/blog/"],
+    ["[id]/index.tsx", "/:id/"],
+    ["about.tsx", "/about"],
+    ["blog/[slug].tsx", "/blog/:slug"],
+    ["docs/[[version]].tsx", "/docs/:version?"],
+    ["[...404].tsx", "/*404"],
+  ])("maps %s to %s", (file, expected) => {
+    for (const Router of routers) {
+      const router = new Router({ dir, extensions: ["tsx"] });
+      expect(router.toPath(`${dir}/${file}`)).toBe(expected);
+    }
+  });
+
+  // https://github.com/solidjs/solid-start/issues/2314
+  it.each([
+    ["reindex.tsx", "/reindex"],
+    ["myindex.tsx", "/myindex"],
+    ["appendix.tsx", "/appendix"],
+    ["reindex/index.tsx", "/reindex/"],
+    ["blog/reindex.tsx", "/blog/reindex"],
+  ])("does not strip a trailing index substring from %s", (file, expected) => {
+    for (const Router of routers) {
+      const router = new Router({ dir, extensions: ["tsx"] });
+      expect(router.toPath(`${dir}/${file}`)).toBe(expected);
+    }
   });
 });

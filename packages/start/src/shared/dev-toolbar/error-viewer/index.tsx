@@ -1,5 +1,5 @@
 // @refresh skip
-import ErrorStackParser from "error-stack-parser";
+import { parse as parseErrorStack, type StackFrameLite } from "error-stack-parser-es/lite";
 import * as htmlToImage from "html-to-image";
 import type { JSX } from "solid-js";
 import { createMemo, createSignal, ErrorBoundary, For, Show, Suspense } from "solid-js";
@@ -80,68 +80,56 @@ function CodeFallback(): JSX.Element {
   );
 }
 
+interface RawStackFrameOptionProps {
+  frame: StackFrameLite;
+  disabled?: boolean;
+}
+
+// Frame rendered from the raw (unmapped) stack info — used while the source
+// is loading or when it is unreachable, so the frame never vanishes from
+// the list.
+function RawStackFrameOption(props: RawStackFrameOptionProps): JSX.Element {
+  const fileName = props.frame.file;
+  return (
+    <SelectOption value={props.frame} disabled={props.disabled} data-start-error-viewer-stack-frame>
+      <span data-start-error-viewer-stack-frame-function>
+        {props.frame.function ?? "<anonymous>"}
+      </span>
+      <span data-start-error-viewer-stack-frame-file>
+        {fileName
+          ? getFilePath({
+              source: fileName,
+              content: "",
+              line: props.frame.line!,
+              column: props.frame.col!,
+              name: props.frame.function,
+            })
+          : "<unknown source>"}
+      </span>
+    </SelectOption>
+  );
+}
+
 function StackFramesContent(props: StackFramesContentProps) {
-  const stackframes = ErrorStackParser.parse(props.error);
+  const stackframes = parseErrorStack(props.error, { allowEmpty: true });
 
   const [selectedFrame, setSelectedFrame] = createSignal(stackframes[0]!);
 
   return (
     <div data-start-error-viewer-stack-frames-content>
-      <div data-start-error-viewer-stack-frames-code>
-        <ErrorBoundary fallback={null}>
-          {(() => {
-            const data = createStackFrame(selectedFrame(), () => props.isCompiled);
-            return (
-              <Suspense fallback={<CodeFallback />}>
-                <Show when={data()} keyed fallback={<CodeFallback />}>
-                  {source => (
-                    <>
-                      <span data-start-error-viewer-stack-frames-code-source>{source.source}</span>
-                      <div data-start-error-viewer-stack-frames-code-container>
-                        <CodeView
-                          fileName={source.source}
-                          line={source.line}
-                          content={source.content}
-                        />
-                      </div>
-                    </>
-                  )}
-                </Show>
-              </Suspense>
-            );
-          })()}
-        </ErrorBoundary>
-      </div>
-      <Select<ErrorStackParser.StackFrame>
+      <Select<StackFrameLite>
         data-start-error-viewer-stack-frames
         value={selectedFrame()}
         onChange={setSelectedFrame}
       >
         <For each={stackframes}>
           {current => (
-            <ErrorBoundary
-              fallback={
-                <SelectOption value={current} disabled data-start-error-viewer-stack-frame>
-                  <span data-start-error-viewer-stack-frame-function>
-                    {current.functionName ?? "<anonymous>"}
-                  </span>
-                  <span data-start-error-viewer-stack-frame-file>
-                    {getFilePath({
-                      source: current.getFileName()!,
-                      content: "",
-                      line: current.getLineNumber()!,
-                      column: current.getColumnNumber()!,
-                      name: current.getFunctionName(),
-                    })}
-                  </span>
-                </SelectOption>
-              }
-            >
+            <ErrorBoundary fallback={<RawStackFrameOption frame={current} disabled />}>
               {(() => {
                 const data = createStackFrame(current, () => props.isCompiled);
                 return (
-                  <Suspense>
-                    <Show when={data()} keyed>
+                  <Suspense fallback={<RawStackFrameOption frame={current} />}>
+                    <Show when={data()} keyed fallback={<RawStackFrameOption frame={current} />}>
                       {source => (
                         <SelectOption data-start-error-viewer-stack-frame value={current}>
                           <span data-start-error-viewer-stack-frame-function>
@@ -160,6 +148,40 @@ function StackFramesContent(props: StackFramesContentProps) {
           )}
         </For>
       </Select>
+      <div data-start-error-viewer-stack-frames-code>
+        <Show when={selectedFrame()} keyed>
+          {frame => (
+            // Keyed on the frame so a failure inspecting one frame (an
+            // unreachable source, a failed highlight) resets when another
+            // frame is selected instead of leaving the pane stuck.
+            <ErrorBoundary fallback={<CodeFallback />}>
+              {(() => {
+                const data = createStackFrame(frame, () => props.isCompiled);
+                return (
+                  <Suspense fallback={<CodeFallback />}>
+                    <Show when={data()} keyed fallback={<CodeFallback />}>
+                      {source => (
+                        <>
+                          <span data-start-error-viewer-stack-frames-code-source>
+                            {source.source}
+                          </span>
+                          <div data-start-error-viewer-stack-frames-code-container>
+                            <CodeView
+                              fileName={source.source}
+                              line={source.line}
+                              content={source.content}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </Show>
+                  </Suspense>
+                );
+              })()}
+            </ErrorBoundary>
+          )}
+        </Show>
+      </div>
     </div>
   );
 }

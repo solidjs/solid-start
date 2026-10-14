@@ -1,7 +1,7 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { basename, extname, isAbsolute, join } from "node:path";
-import type { PluginOption } from "vite";
+import type { PluginOption, FilterPattern, UserConfig } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { appRootAlias } from "./app-root-alias.ts";
@@ -29,6 +29,19 @@ export interface SolidStartOptions {
    * @default "./src"
    */
   appRoot?: string;
+
+  /**
+   * Options related to the css crawling logic
+   */
+  css?: {
+    /**
+     * Filter files included during css crawling in development.
+     */
+    filter?: {
+      include?: FilterPattern;
+      exclude?: FilterPattern;
+    };
+  };
 
   /**
    * Options forwarded to `vite-plugin-solid`.
@@ -141,14 +154,77 @@ export interface SolidStartOptions {
   env?: EnvPluginOptions;
 
   /**
-   * Options controlling which files are processed as server functions
-   * (inclusion / exclusion filters for the `"use server"` transform).
+   * Options for server functions: which files the `"use server"` transform
+   * processes (inclusion / exclusion filters), and what happens when a server
+   * function throws.
    */
-  serverFunctions?: Pick<ServerFunctionsOptions, "filter">;
+  serverFunctions?: Pick<ServerFunctionsOptions, "filter"> & {
+    /**
+     * Path to a module whose default export handles whatever a server function
+     * throws, before it reaches the client. Use it to report failures to a
+     * monitoring service, or to replace an error carrying internal detail with
+     * one that is safe to send.
+     *
+     * Only server function calls made over the network run through it. A
+     * server function called during rendering runs in process and throws
+     * straight to its caller, and errors from API routes never reach it
+     * either.
+     *
+     * The handler may be asynchronous. SolidStart awaits its return value
+     * before serializing the response, allowing a monitoring service to flush
+     * first. The resolved value decides what the client sees:
+     *
+     * - `undefined` (or `null`) sends what was thrown, unchanged.
+     * - A `Response` is passed through unchanged, which keeps a thrown
+     *   `redirect()` working.
+     * - Any other value is sent in place of what was thrown, and the client
+     *   call rejects with it.
+     * - If the handler throws or rejects, what the server function threw is
+     *   sent unchanged.
+     *
+     * Control flow reaches the export the same way errors do, so a handler
+     * that replaces everything it sees turns redirects into errors.
+     *
+     * Whatever is sent gets serialized to the client along with its own
+     * properties, so an error meant to be safe to expose must not carry
+     * internal detail.
+     *
+     * Type the export as `ServerFunctionErrorHandler` from
+     * `@solidjs/start/server`. The module is bundled into the server only, so
+     * it may import server-only code such as a monitoring SDK.
+     *
+     * @example "src/server-fn-error.ts"
+     */
+    onError?: string;
+  };
 }
 
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
+
+// the same test Vite applies to an external base
+const externalUrlRE = /^([a-z]+:)?\/\//;
+
+// A mount path is always wrapped in slashes: `new URL("page", origin + "/app")`
+// resolves to /page, losing the segment, and a bare "app/" would glue onto
+// the origin.
+const withSlashes = (path: string) => {
+  // wrapping "" would give "//", a protocol-relative URL
+  if (path === "") return "/";
+  return `${path.startsWith("/") ? "" : "/"}${path}${path.endsWith("/") ? "" : "/"}`;
+};
+
+// Where the app is mounted, as opposed to where its assets live. Vite's base
+// says where the assets are; a full URL there means a CDN, and says nothing
+// about the app, which stays at the root. A plain path is shared by both.
+function resolveServerBaseUrl(config: UserConfig) {
+  const explicit = (config.server as { baseURL?: string } | undefined)?.baseURL;
+  if (explicit) return withSlashes(explicit);
+
+  const base = config.base ?? "/";
+  if (externalUrlRE.test(base)) return "/";
+  return withSlashes(new URL(base, "http://vite.dev").pathname);
+}
 
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
@@ -193,6 +269,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
       configEnvironment(name) {
         return {
           resolve: {
+            conditions: ["generic"],
             // remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
             externalConditions: ["solid", "node"],
           },
@@ -218,7 +295,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           appType: "custom",
           build: {
             assetsDir: "_build/assets",
-            rollupOptions: {
+            rolldownOptions: {
               output: {
                 // Keeps route chunks named after their file rather than after
                 // the `?pick=...` id that addresses them. See toPickId.
@@ -243,7 +320,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 write: true,
                 manifest: true,
                 outDir: "dist/client",
-                rollupOptions: {
+                rolldownOptions: {
                   input: clientInput,
                   treeshake: true,
                   preserveEntrySignatures: "exports-only",
@@ -257,7 +334,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
                 write: true,
                 manifest: true,
                 copyPublicDir: false,
-                rollupOptions: {
+                rolldownOptions: {
                   input: handlers.server,
                 },
                 outDir: "dist/server",
@@ -297,9 +374,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
-            "import.meta.env.SERVER_BASE_URL": JSON.stringify(
-              (config.server as { baseURL?: string } | undefined)?.baseURL ?? "",
-            ),
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify(resolveServerBaseUrl(config)),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
           builder: {

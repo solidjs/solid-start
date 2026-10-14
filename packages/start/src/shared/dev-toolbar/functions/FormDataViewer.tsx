@@ -1,7 +1,7 @@
 import { createResource, For, type JSX, Show, Suspense } from "solid-js";
 import { Section } from "../../ui/Section.tsx";
+import { Text } from "../../ui/Text.tsx";
 import { BlobViewer } from "./BlobViewer.tsx";
-import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
 interface FormDataViewerInnerProps {
   source: FormData;
@@ -10,14 +10,20 @@ interface FormDataViewerInnerProps {
 function FormDataViewerInner(props: FormDataViewerInnerProps): JSX.Element {
   return (
     <Section title="FormData" options={{ size: "sm" }}>
-      <div data-start-form-data-viewer data-start-properties>
+      <div data-start-form-data-viewer data-start-kv-table>
         <For each={Array.from(props.source.entries())}>
           {([key, value]) => (
-            <div data-start-property>
-              <SerovalValue value={`"${key}"`} />
-              <PropertySeparator />
+            <div data-start-property data-start-kv-row>
+              <Text
+                data-start-kv-key
+                options={{ size: "xs", weight: "semibold", font: "mono", wrap: "nowrap" }}
+              >
+                {key}
+              </Text>
               {typeof value === "string" ? (
-                <SerovalValue value={`"${JSON.stringify(value)}"`} />
+                <Text data-start-kv-value options={{ size: "xs", font: "mono", wrap: "wrap" }}>
+                  {JSON.stringify(value)}
+                </Text>
               ) : (
                 <BlobViewer source={value} />
               )}

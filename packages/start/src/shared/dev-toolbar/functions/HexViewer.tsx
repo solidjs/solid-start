@@ -23,7 +23,11 @@ function HexChunk(props: HexViewerInnerProps) {
   );
 }
 
-function HexRow(props: HexViewerInnerProps) {
+interface HexRowProps extends HexViewerInnerProps {
+  offset: number;
+}
+
+function HexRow(props: HexRowProps) {
   const chunk1 = createMemo(() => props.bytes.subarray(0, 4));
   const chunk2 = createMemo(() => props.bytes.subarray(4, 8));
   const chunk3 = createMemo(() => props.bytes.subarray(8, 12));
@@ -31,10 +35,14 @@ function HexRow(props: HexViewerInnerProps) {
 
   return (
     <div data-start-hex-row>
+      <Text data-start-hex-offset options={{ size: "xs", weight: "semibold", wrap: "nowrap" }}>
+        {toHex(props.offset, 8)}
+      </Text>
       <HexChunk bytes={chunk1()} />
       <HexChunk bytes={chunk2()} />
       <HexChunk bytes={chunk3()} />
       <HexChunk bytes={chunk4()} />
+      <HexText bytes={props.bytes} />
     </div>
   );
 }
@@ -76,12 +84,9 @@ export function HexViewerInner(props: HexViewerInnerProps): JSX.Element {
 
   return (
     <div data-start-hex-viewer>
-      <div data-start-hex-viewer-bytes>
-        <For each={rows()}>{current => <HexRow bytes={current} />}</For>
-      </div>
-      <div data-start-hex-viewer-text>
-        <For each={rows()}>{current => <HexText bytes={current} />}</For>
-      </div>
+      <For each={rows()}>
+        {(current, index) => <HexRow bytes={current} offset={index() * 16} />}
+      </For>
     </div>
   );
 }

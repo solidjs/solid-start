@@ -1,6 +1,6 @@
 {
   "name": "@solidjs/start",
-  "version": "2.0.0-rc.5",
+  "version": "2.0.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/solidjs/solid-start.git",
@@ -12,6 +12,9 @@
     "CHANGELOG.md"
   ],
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     ".": "./src/index.tsx",
     "./config": "./dist/config/index.js",
@@ -58,12 +61,13 @@
     "@babel/core": "^7.29.7",
     "@babel/traverse": "^7.29.7",
     "@babel/types": "^7.29.7",
+    "@jridgewell/trace-mapping": "^0.3.31",
     "@solidjs/meta": "^0.29.4",
     "@types/babel__traverse": "^7.28.0",
     "@types/micromatch": "^4.0.10",
     "cookie-es": "^3.1.1",
     "defu": "^6.1.7",
-    "error-stack-parser": "^2.1.4",
+    "error-stack-parser-es": "^2.0.1",
     "fast-glob": "^3.3.3",
     "h3": "^2.0.1-rc.26",
     "html-to-image": "^1.11.13",
@@ -72,13 +76,12 @@
     "path-to-regexp": "^8.4.2",
     "pathe": "^2.0.3",
     "radix3": "^1.1.2",
-    "seroval": "^1.5.6",
-    "seroval-plugins": "^1.5.6",
+    "seroval": "^1.6.8",
+    "seroval-plugins": "^1.6.8",
     "shiki": "^4.3.1",
-    "solid-js": "^1.9.14",
-    "source-map-js": "^1.2.1",
+    "solid-js": "^1.9.15",
     "srvx": "^0.12.4",
-    "terracotta": "^1.1.1",
+    "terracotta": "^1.2.4",
     "vite-plugin-solid": "^2.11.13"
   },
   "devDependencies": {
@@ -88,7 +91,13 @@
     "vitest": "^4.1.10"
   },
   "peerDependencies": {
+    "@solidjs/router": ">=0.16.0 <2.0.0-0",
     "vite": "^8 || ^9"
+  },
+  "peerDependenciesMeta": {
+    "@solidjs/router": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=24"

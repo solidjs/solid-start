@@ -6,22 +6,6 @@ import { basename, relative, sep } from "node:path/posix";
 import type { PluginOption } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
 
-const idTransform = (id: string): PluginItem => {
-  return {
-    visitor: {
-      Program(path) {
-        path.node.body.unshift(
-          t.exportNamedDeclaration(
-            t.variableDeclaration("const", [
-              t.variableDeclarator(t.identifier("id$$"), t.stringLiteral(id)),
-            ]),
-          ),
-        );
-      },
-    },
-  };
-};
-
 const importTransform = (): PluginItem => {
   return {
     visitor: {
@@ -73,12 +57,16 @@ const lazy = (): PluginOption => {
       if (this.environment.name !== VITE_ENVIRONMENTS.client) return;
 
       for (const chunk of Object.values(bundle)) {
-        if (chunk.type !== "chunk" || !chunk.isDynamicEntry || chunk.facadeModuleId) continue;
+        if (chunk.type !== "chunk" || chunk.facadeModuleId) continue;
+        if (!chunk.viteMetadata?.importedCss.size) continue;
+
+        const moduleIds = chunk.moduleIds.filter(id => !id.endsWith("css"));
+        if (moduleIds.length <= 1) continue;
 
         // Has to follow Vites implementation:
         // https://github.com/vitejs/vite/blob/4be37a8389c67873880f826b01fe40137e1c29a7/packages/vite/src/node/plugins/manifest.ts#L179
         const chunkName = `_${basename(chunk.fileName)}`;
-        for (const id of chunk.moduleIds) {
+        for (const id of moduleIds) {
           sharedChunkNames[id] = chunkName;
         }
       }
@@ -92,24 +80,21 @@ const lazy = (): PluginOption => {
       if (src.indexOf("import") === -1) return;
       if (id.includes("entry-server")) return;
 
-      const plugins: PluginItem[] = [];
-
-      const hasDefaultExport = src.indexOf("export default") !== -1;
-      if (hasDefaultExport) {
-        const localId = relative(cwd, id);
-        const chunkName = sharedChunkNames[id];
-        plugins.push(idTransform(chunkName ?? localId));
+      // Appended rather than prepended, so no existing code moves and the
+      // source map of the input still applies to the output.
+      let idExport = "";
+      if (src.indexOf("export default") !== -1) {
+        const chunkName = sharedChunkNames[id] ?? relative(cwd, id);
+        idExport = `\nexport const id$$ = ${JSON.stringify(chunkName)};\n`;
       }
 
-      const hasLazy = src.indexOf("lazy(") !== -1;
-      if (hasLazy) plugins.push(importTransform());
-
-      if (!plugins.length) {
-        return;
+      if (src.indexOf("lazy(") === -1) {
+        if (!idExport) return;
+        return { code: src + idExport, map: null };
       }
 
       const transformed = await babel.transformAsync(src, {
-        plugins,
+        plugins: [importTransform()],
         parserOpts: {
           plugins: ["jsx", "typescript"],
         },
@@ -123,8 +108,7 @@ const lazy = (): PluginOption => {
 
       if (!transformed?.code) return;
 
-      const { code, map } = transformed;
-      return { code, map };
+      return { code: transformed.code + idExport, map: transformed.map };
     },
   };
 };

@@ -18,20 +18,30 @@ export function MetaFramework() {
             <p>A strong, highly-performant serializer.</p>
           </NestItem>
 
-          <NestItem isHighlight accent="neutral" title="Vinxi">
-            <p class="leading-relaxed text-lg">Bundler and server runtime</p>
-            <ul class="grid grid-cols-2 gap-2 pt-5">
-              <NestItem title="Vite" accent="yellow">
-                <p>Dev env and bundler</p>
+          <NestItem isHighlight accent="neutral" title="Vite">
+            <p class="leading-relaxed text-lg">Bundler</p>
+            <ul class="grid grid-cols-3 gap-2 pt-5">
+              <NestItem title="Nitro V3" accent="pink">
+                <p>Deployment</p>
               </NestItem>
-              <NestItem title="Nitro" accent="teal">
-                <p>server APIs and presets</p>
+              <NestItem title="Netlify Vite Plugin" accent="teal">
+                <p>Deployment</p>
+              </NestItem>
+              <NestItem title="Cloudflare Vite Plugin" accent="yellow">
+                <p>Deployment</p>
               </NestItem>
             </ul>
           </NestItem>
 
-          <NestItem title="Solid Router" accent="pink">
-            <p>Official client-side router.</p>
+          <NestItem accent="neutral" title="Router Agnostic">
+            <ul class="grid grid-cols-2 gap-2 pt-5">
+              <NestItem title="Solid Router" accent="cyan">
+                <p>Official router</p>
+              </NestItem>
+              <NestItem title="Tanstack Router" accent="emerald">
+                <p>Third party router</p>
+              </NestItem>
+            </ul>
           </NestItem>
         </NesterBox>
         <div class="w-full grid place-items-center overflow-x-hidden">

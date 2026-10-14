@@ -1,4 +1,8 @@
-import { deserializeJSONStream, deserializeJSStream } from "./serialization.ts";
+import {
+  deserializeJSONStream,
+  deserializeJSStream,
+  MAX_REQUEST_CHUNK_SIZE,
+} from "./serialization.ts";
 
 export const BODY_FORMAT_KEY = "X-Start-Type";
 
@@ -91,7 +95,11 @@ export async function extractBody(instance: string, client: boolean, source: Req
       if (client && import.meta.env.SEROVAL_MODE === "js") {
         return await deserializeJSStream(instance, clone);
       }
-      return await deserializeJSONStream(clone);
+      // A server reads chunks sent by any client, so their size is limited.
+      return await deserializeJSONStream(
+        clone,
+        client ? undefined : { maxChunkSize: MAX_REQUEST_CHUNK_SIZE },
+      );
     case startType === BodyFormat.String:
       return await clone.text();
     case startType === BodyFormat.File: {

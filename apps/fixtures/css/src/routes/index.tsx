@@ -12,6 +12,8 @@ const Lazy = lazy(() => import("../components/lazy"));
 const LazyLink = lazy(() => import("../components/lazyLink"));
 const LazyLinkTmp = lazy(() => import("../components/lazyLinkTmp"));
 
+const LazyPlus = lazy(() => import("../components/lazy+"));
+
 const entries = import.meta.glob("../components/lazyG*.tsx");
 const LazyGlob = lazy(Object.values(entries)[0] as any);
 
@@ -36,6 +38,7 @@ export default function Home() {
         <link rel="stylesheet" href={notRenderedInlineCSS} />
       </Show>
       <Lazy />
+      <LazyPlus />
       <LazyGlob />
       <LazyLink />
       <Show when={!data()}>

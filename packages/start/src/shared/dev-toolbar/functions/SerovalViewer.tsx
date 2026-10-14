@@ -1,9 +1,7 @@
 import type { SerovalNode } from "seroval";
-import { createEffect, createSignal, For, type JSX, Show, splitProps } from "solid-js";
+import { createEffect, createSignal, For, type JSX, Show } from "solid-js";
 
 import { Badge } from "../../ui/Badge.tsx";
-import { Cascade, CascadeOption } from "../../ui/Cascade.tsx";
-import { Section } from "../../ui/Section.tsx";
 import { HexViewer } from "./HexViewer.tsx";
 import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
@@ -146,7 +144,7 @@ function getNodeType(node: SerovalNode) {
     case 35:
       return "Sequence";
   }
-  throw new Error("unsupported node type");
+  return "unknown";
 }
 
 function traverse(node: SerovalNode, handler: (node: SerovalNode) => void): void {
@@ -401,272 +399,416 @@ function getStreamKeyword(t: 32 | 33 | 34): string {
   }
 }
 
-function renderSerovalNode(
-  ctx: RenderContext,
-  node: SerovalNode,
-  onSelect: (index: number | undefined) => void,
-  inner?: boolean,
-): JSX.Element {
-  if (
-    node.t >= 4 &&
-    (inner || node.t === 4) &&
-    node.i != null &&
-    !(node.t === 5 || node.t === 6 || node.t === 17)
-  ) {
+const PREVIEW_LENGTH = 32;
+const PREVIEW_KEYS = 3;
+
+function truncate(value: string): string {
+  if (value.length > PREVIEW_LENGTH) {
+    return `${value.slice(0, PREVIEW_LENGTH)}…`;
+  }
+  return value;
+}
+
+function previewNode(ctx: RenderContext, node: SerovalNode, depth: number): string {
+  switch (node.t) {
+    case 0:
+      return `${node.s}`;
+    case 1:
+      return truncate(`"${node.s}"`);
+    case 2:
+      return getConstantValue(node.s);
+    case 3:
+      return `${node.s}n`;
+    case 4: {
+      if (depth >= 1) {
+        return `#${node.i}`;
+      }
+      const target = ctx.getNode(node.i);
+      return target ? previewNode(ctx, target, depth + 1) : `#${node.i}`;
+    }
+    case 5:
+      return truncate(`${node.s}`);
+    case 6:
+      return truncate(`/${node.c}/${node.m}`);
+    case 7:
+      return `Set(${node.a.length})`;
+    case 8:
+      return `Map(${node.e.k.length})`;
+    case 9:
+      return `Array(${node.a.length})`;
+    case 10:
+    case 11: {
+      if (depth >= 1) {
+        return "{…}";
+      }
+      const keys = node.p.k.filter(key => typeof key === "string").slice(0, PREVIEW_KEYS);
+      const rest = node.p.k.length > keys.length ? ", …" : "";
+      return keys.length ? `{${keys.join(", ")}${rest}}` : "{}";
+    }
+    case 12:
+      return "Promise";
+    case 13:
+    case 14:
+      return truncate(`${getNodeType(node)}: ${node.m}`);
+    case 15:
+    case 16:
+      return `${node.c}(${node.l})`;
+    case 17:
+      return getSymbolValue(node.s);
+    case 19:
+      return "ArrayBuffer";
+    case 20:
+      return `DataView(${node.l})`;
+    case 21:
+      return previewNode(ctx, node.f, depth);
+    case 22: {
+      const result = ctx.getPromise(node.s);
+      if (result) {
+        return `Promise<${result.t === 23 ? "success" : "failure"}>`;
+      }
+      return "Promise<pending>";
+    }
+    case 25:
+      return `Plugin(${node.c})`;
+    case 28:
+      return "Iterator";
+    case 30:
+      return "AsyncIterator";
+    case 31:
+      return `Stream(${(ctx.getStream(node.i) || []).length})`;
+    case 35:
+      return `Sequence(${node.a.length})`;
+    default:
+      return getNodeType(node);
+  }
+}
+
+interface EntryKeyProps {
+  value: string | number;
+  kind?: "key" | "number" | "keyword";
+}
+
+function EntryKey(props: EntryKeyProps): JSX.Element {
+  return (
+    <span data-start-seroval-tree-key>
+      <SerovalValue kind={props.kind ?? "key"} value={props.value} />
+      <PropertySeparator />
+    </span>
+  );
+}
+
+interface LeafRowProps {
+  label?: JSX.Element;
+  children: JSX.Element;
+}
+
+function LeafRow(props: LeafRowProps): JSX.Element {
+  return (
+    <div data-start-seroval-tree-node>
+      <div data-start-seroval-tree-row>
+        <span data-start-seroval-tree-chevron data-leaf="true" />
+        {props.label}
+        {props.children}
+      </div>
+    </div>
+  );
+}
+
+interface ExpandableRowProps {
+  label?: JSX.Element;
+  badges?: JSX.Element;
+  preview: JSX.Element;
+  open?: boolean;
+  children: JSX.Element;
+}
+
+function ExpandableRow(props: ExpandableRowProps): JSX.Element {
+  const [open, setOpen] = createSignal(props.open ?? false);
+  return (
+    <div data-start-seroval-tree-node>
+      <button
+        type="button"
+        data-start-seroval-tree-row
+        data-expanded={open() ? "true" : undefined}
+        onClick={() => setOpen(current => !current)}
+      >
+        <span data-start-seroval-tree-chevron />
+        {props.label}
+        {props.badges}
+        <Show when={!open()}>
+          <span data-start-seroval-tree-preview>{props.preview}</span>
+        </Show>
+      </button>
+      <Show when={open()}>
+        <div data-start-seroval-tree-children>{props.children}</div>
+      </Show>
+    </div>
+  );
+}
+
+interface TreeValueProps {
+  ctx: RenderContext;
+  node: SerovalNode;
+  seen: number[];
+  label?: JSX.Element;
+  open?: boolean;
+}
+
+function TreeValue(props: TreeValueProps): JSX.Element {
+  const ctx = props.ctx;
+  const node = props.node;
+
+  // Indexed reference: resolve reactively, guard cycles
+  if (node.t === 4) {
     const index = node.i;
-    const description = `id: ${index}`;
-    const lookup = ctx.getNode(index)!;
+    if (props.seen.includes(index)) {
+      return (
+        <LeafRow label={props.label}>
+          <span data-start-seroval-tree-circular>
+            <LinkIcon title={`Circular reference to #${index}`} />
+            <Badge type="info">{`circular #${index}`}</Badge>
+          </span>
+        </LeafRow>
+      );
+    }
     return (
-      <CascadeOption data-start-seroval-link value={index}>
-        <LinkIcon title={description} />
-        <Badge type="info">{getNodeType(lookup)}</Badge>
-        <Badge type="info">{description}</Badge>
-      </CascadeOption>
+      <Show
+        when={ctx.getNode(index)}
+        keyed
+        fallback={
+          <LeafRow label={props.label}>
+            <Badge type="warning">{`#${index} pending`}</Badge>
+          </LeafRow>
+        }
+      >
+        {target => (
+          <TreeValue
+            ctx={ctx}
+            node={target}
+            seen={props.seen}
+            label={props.label}
+            open={props.open}
+          />
+        )}
+      </Show>
     );
   }
+
+  const seen = node.i != null ? [...props.seen, node.i] : props.seen;
+  const flag = "o" in node ? getObjectFlag(node.o ?? 0) : "none";
+  const badges = (
+    <>
+      {node.i != null && <Badge type="info">{`#${node.i}`}</Badge>}
+      {flag !== "none" && <Badge type="warning">{flag}</Badge>}
+    </>
+  );
+
   switch (node.t) {
     // Number = 0,
     case 0:
-      return <SerovalValue value={node.s} />;
+      return (
+        <LeafRow label={props.label}>
+          <SerovalValue kind="number" value={node.s} />
+        </LeafRow>
+      );
     // String = 1,
     case 1:
-      return <SerovalValue value={`"${node.s}"`} />;
+      return (
+        <LeafRow label={props.label}>
+          <SerovalValue kind="string" value={`"${node.s}"`} />
+        </LeafRow>
+      );
     // Constant = 2,
     case 2:
-      return <SerovalValue value={getConstantValue(node.s)} />;
+      return (
+        <LeafRow label={props.label}>
+          <SerovalValue kind="keyword" value={getConstantValue(node.s)} />
+        </LeafRow>
+      );
     // BigInt = 3,
     case 3:
       return (
-        <div data-start-seroval-link>
-          <Badge type="info">bigint</Badge>
-          <SerovalValue value={node.s} />
-        </div>
+        <LeafRow label={props.label}>
+          <SerovalValue kind="number" value={`${node.s}n`} />
+        </LeafRow>
       );
     // Date = 5,
     case 5:
       return (
-        <div data-start-seroval-link>
+        <LeafRow label={props.label}>
           <Badge type="info">Date</Badge>
-          <SerovalValue value={node.s} />
-        </div>
+          <SerovalValue kind="string" value={node.s} />
+        </LeafRow>
       );
     // RegExp = 6,
     case 6:
       return (
-        <div data-start-seroval-link>
+        <LeafRow label={props.label}>
           <Badge type="info">RegExp</Badge>
-          <SerovalValue value={`/${node.c}/${node.m}`} />
-        </div>
+          <SerovalValue kind="string" value={`/${node.c}/${node.m}`} />
+        </LeafRow>
+      );
+    // WKSymbol = 17,
+    case 17:
+      return (
+        <LeafRow label={props.label}>
+          <SerovalValue kind="keyword" value={getSymbolValue(node.s)} />
+        </LeafRow>
       );
     // Set = 7,
     case 7:
       return (
-        <>
-          <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-property>
-              <SerovalValue value="size" />
-              <PropertySeparator />
-              <SerovalValue value={`${node.a.length}`} />
-            </div>
-          </Section>
-          <Section title="Items" options={{ size: "xs" }}>
-            <Cascade<number | undefined>
-              data-start-properties
-              defaultValue={undefined}
-              onChange={onSelect}
-            >
-              <For each={node.a.map((node, index) => [index, node] as const)}>
-                {([key, value]) => (
-                  <div data-start-property>
-                    <SerovalValue value={key} />
-                    <PropertySeparator />
-                    {renderSerovalNode(ctx, value, onSelect, true)}
-                  </div>
-                )}
-              </For>
-            </Cascade>
-          </Section>
-        </>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <For each={node.a}>
+            {(child, index) => (
+              <TreeValue
+                ctx={ctx}
+                node={child}
+                seen={seen}
+                label={<EntryKey kind="number" value={index()} />}
+              />
+            )}
+          </For>
+        </ExpandableRow>
       );
     // Map = 8,
     case 8:
       return (
-        <>
-          <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-property>
-              <SerovalValue value="size" />
-              <PropertySeparator />
-              <SerovalValue value={`${node.e.k.length}`} />
-            </div>
-          </Section>
-          <Section title="Items" options={{ size: "xs" }}>
-            <Cascade<number | undefined>
-              data-start-properties
-              defaultValue={undefined}
-              onChange={onSelect}
-            >
-              <For each={zip(node.e.k, node.e.v)} fallback={<SerovalValue value="none" />}>
-                {([key, value]) => (
-                  <div data-start-property>
-                    {renderSerovalNode(ctx, key, onSelect, true)}
-                    <PropertySeparator />
-                    {renderSerovalNode(ctx, value, onSelect, true)}
-                  </div>
-                )}
-              </For>
-            </Cascade>
-          </Section>
-        </>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <For each={zip(node.e.k, node.e.v)}>
+            {([key, value], index) => (
+              <ExpandableRow
+                label={<EntryKey kind="number" value={index()} />}
+                preview={`{${previewNode(ctx, key, 1)} => ${previewNode(ctx, value, 1)}}`}
+              >
+                <TreeValue
+                  ctx={ctx}
+                  node={key}
+                  seen={seen}
+                  label={<EntryKey kind="keyword" value="key" />}
+                />
+                <TreeValue
+                  ctx={ctx}
+                  node={value}
+                  seen={seen}
+                  label={<EntryKey kind="keyword" value="value" />}
+                />
+              </ExpandableRow>
+            )}
+          </For>
+        </ExpandableRow>
       );
     // Array = 9,
     case 9:
       return (
-        <>
-          <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-property>
-              <SerovalValue value="length" />
-              <PropertySeparator />
-              <SerovalValue value={`${node.a.length}`} />
-            </div>
-            <div data-start-property>
-              <SerovalValue value="state" />
-              <PropertySeparator />
-              <Badge type="info">{getObjectFlag(node.o)}</Badge>
-            </div>
-          </Section>
-          <Section title="Items" options={{ size: "xs" }}>
-            <Cascade<number | undefined>
-              data-start-properties
-              defaultValue={undefined}
-              onChange={onSelect}
-            >
-              <For
-                each={node.a.map((node, index) => [index, node] as const)}
-                fallback={<SerovalValue value="none" />}
-              >
-                {([key, value]) => (
-                  <div data-start-property>
-                    <SerovalValue value={key} />
-                    <PropertySeparator />
-                    {value === 0 ? (
-                      <SerovalValue value="empty" />
-                    ) : (
-                      renderSerovalNode(ctx, value, onSelect, true)
-                    )}
-                  </div>
-                )}
-              </For>
-            </Cascade>
-          </Section>
-        </>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <For each={node.a}>
+            {(child, index) =>
+              child === 0 ? (
+                <LeafRow label={<EntryKey kind="number" value={index()} />}>
+                  <SerovalValue kind="keyword" value="empty" />
+                </LeafRow>
+              ) : (
+                <TreeValue
+                  ctx={ctx}
+                  node={child}
+                  seen={seen}
+                  label={<EntryKey kind="number" value={index()} />}
+                />
+              )
+            }
+          </For>
+        </ExpandableRow>
       );
     // Object = 10,
     case 10:
     // NullConstructor = 11,
     case 11:
       return (
-        <>
-          <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-property>
-              <SerovalValue value="size" />
-              <PropertySeparator />
-              <SerovalValue value={`${node.p.k.length}`} />
-            </div>
-            <div data-start-property>
-              <SerovalValue value="state" />
-              <PropertySeparator />
-              <Badge type="info">{getObjectFlag(node.o)}</Badge>
-            </div>
-          </Section>
-          <Section title="Properties" options={{ size: "xs" }}>
-            <Cascade<number | undefined>
-              data-start-properties
-              defaultValue={undefined}
-              onChange={onSelect}
-            >
-              <For each={zip(node.p.k, node.p.v)} fallback={<SerovalValue value="none" />}>
-                {([key, value]) => (
-                  <div data-start-property>
-                    {typeof key === "string" ? (
-                      <SerovalValue value={`"${key}"`} />
-                    ) : (
-                      renderSerovalNode(ctx, key, onSelect, true)
-                    )}
-                    <PropertySeparator />
-                    {renderSerovalNode(ctx, value, onSelect, true)}
-                  </div>
-                )}
-              </For>
-            </Cascade>
-          </Section>
-        </>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <For each={zip(node.p.k, node.p.v)}>
+            {([key, value]) => (
+              <TreeValue
+                ctx={ctx}
+                node={value}
+                seen={seen}
+                label={
+                  <EntryKey value={typeof key === "string" ? key : previewNode(ctx, key, 1)} />
+                }
+              />
+            )}
+          </For>
+        </ExpandableRow>
       );
     // Promise = 12,
     case 12:
       return (
-        <Cascade<number | undefined>
-          data-start-properties
-          defaultValue={undefined}
-          onChange={onSelect}
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
         >
-          {renderSerovalNode(ctx, node.f, onSelect, true)}
-        </Cascade>
+          <TreeValue
+            ctx={ctx}
+            node={node.f}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="value" />}
+          />
+        </ExpandableRow>
       );
     // Error = 13,
     case 13:
     // AggregateError = 14,
     case 14:
       return (
-        <>
-          <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-property>
-              <SerovalValue value="message" />
-              <PropertySeparator />
-              <SerovalValue value={`"${node.m}"`} />
-            </div>
-          </Section>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <LeafRow label={<EntryKey kind="keyword" value="message" />}>
+            <SerovalValue kind="string" value={`"${node.m}"`} />
+          </LeafRow>
           <Show when={node.p}>
-            {current => (
-              <Section title="Properties" options={{ size: "xs" }}>
-                <Cascade<number | undefined>
-                  data-start-properties
-                  defaultValue={undefined}
-                  onChange={onSelect}
-                >
-                  <For
-                    each={zip(current().k, current().v)}
-                    fallback={<SerovalValue value="none" />}
-                  >
-                    {([key, value]) => (
-                      <div data-start-property>
-                        {typeof key === "string" ? (
-                          <SerovalValue value={`"${key}"`} />
-                        ) : (
-                          renderSerovalNode(ctx, key, onSelect, true)
-                        )}
-                        <PropertySeparator />
-                        {renderSerovalNode(ctx, value, onSelect, true)}
-                      </div>
-                    )}
-                  </For>
-                </Cascade>
-              </Section>
+            {properties => (
+              <For each={zip(properties().k, properties().v)}>
+                {([key, value]) => (
+                  <TreeValue
+                    ctx={ctx}
+                    node={value}
+                    seen={seen}
+                    label={
+                      <EntryKey value={typeof key === "string" ? key : previewNode(ctx, key, 1)} />
+                    }
+                  />
+                )}
+              </For>
             )}
           </Show>
-        </>
+        </ExpandableRow>
       );
-    // WKSymbol = 17,
-    case 17:
-      return <SerovalValue value={getSymbolValue(node.s)} />;
-    // Reference = 18,
-    case 18:
-      break;
-    // ArrayBuffer = 19,
-    case 19: {
-      const data = atob(node.s);
-      const result = new TextEncoder().encode(data);
-      return <HexViewer bytes={result} />;
-    }
     // TypedArray = 15,
     case 15:
     // BigIntTypedArray = 16,
@@ -674,205 +816,198 @@ function renderSerovalNode(
     // DataView = 20,
     case 20:
       return (
-        <>
-          <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-property>
-              <SerovalValue value="byteLength" />
-              <PropertySeparator />
-              <SerovalValue value={node.l} />
-            </div>
-            <div data-start-property>
-              <SerovalValue value="byteOffset" />
-              <PropertySeparator />
-              <SerovalValue value={node.b} />
-            </div>
-          </Section>
-          <Section title="Buffer" options={{ size: "xs" }}>
-            <Cascade<number | undefined>
-              data-start-properties
-              defaultValue={undefined}
-              onChange={onSelect}
-            >
-              {renderSerovalNode(ctx, node.f, onSelect, true)}
-            </Cascade>
-          </Section>
-        </>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <LeafRow label={<EntryKey kind="keyword" value="byteLength" />}>
+            <SerovalValue kind="number" value={node.l} />
+          </LeafRow>
+          <LeafRow label={<EntryKey kind="keyword" value="byteOffset" />}>
+            <SerovalValue kind="number" value={node.b} />
+          </LeafRow>
+          <TreeValue
+            ctx={ctx}
+            node={node.f}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="buffer" />}
+          />
+        </ExpandableRow>
+      );
+    // ArrayBuffer = 19,
+    case 19:
+      return (
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <div data-start-seroval-tree-raw>
+            {(() => {
+              const data = atob(node.s);
+              const result = new TextEncoder().encode(data);
+              return <HexViewer bytes={result} />;
+            })()}
+          </div>
+        </ExpandableRow>
       );
     // Boxed = 21,
     case 21:
       return (
-        <Cascade<number | undefined>
-          data-start-properties
-          defaultValue={undefined}
-          onChange={onSelect}
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
         >
-          {renderSerovalNode(ctx, node.f, onSelect, true)}
-        </Cascade>
+          <TreeValue
+            ctx={ctx}
+            node={node.f}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="value" />}
+          />
+        </ExpandableRow>
       );
+    // PromiseConstructor = 22,
     case 22:
       return (
-        <>
-          {(() => {
-            const result = ctx.getPromise(node.s);
-            if (result) {
-              const status = result.t === 23 ? "success" : ("failure" as const);
-              return (
-                <Cascade<number | undefined>
-                  data-start-properties
-                  defaultValue={undefined}
-                  onChange={onSelect}
-                >
-                  <div data-start-property>
-                    <SerovalValue value="status" />
-                    <PropertySeparator />
-                    <Badge type={status}>{status}</Badge>
-                  </div>
-                  <span data-start-property>
-                    <SerovalValue value="value" />
-                    <PropertySeparator />
-                    {renderSerovalNode(ctx, result.a[1], onSelect, true)}
-                  </span>
-                </Cascade>
-              );
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={<>{previewNode(ctx, node, 0)}</>}
+          open={props.open}
+        >
+          <Show
+            when={ctx.getPromise(node.s)}
+            keyed
+            fallback={
+              <LeafRow label={<EntryKey kind="keyword" value="status" />}>
+                <Badge type="warning">pending</Badge>
+              </LeafRow>
             }
-            return <Badge type="warning">pending</Badge>;
-          })()}
-        </>
+          >
+            {result => (
+              <>
+                <LeafRow label={<EntryKey kind="keyword" value="status" />}>
+                  <Badge type={result.t === 23 ? "success" : "failure"}>
+                    {result.t === 23 ? "success" : "failure"}
+                  </Badge>
+                </LeafRow>
+                <TreeValue
+                  ctx={ctx}
+                  node={result.a[1]}
+                  seen={seen}
+                  label={<EntryKey kind="keyword" value="value" />}
+                />
+              </>
+            )}
+          </Show>
+        </ExpandableRow>
       );
-    // Plugin = 25
+    // Plugin = 25,
     case 25:
       return (
-        <>
-          <Section title="Information" options={{ size: "xs" }}>
-            <div data-start-property>
-              <SerovalValue value="plugin" />
-              <PropertySeparator />
-              <SerovalValue value={node.c} />
-            </div>
-          </Section>
-          <Section title="Properties" options={{ size: "xs" }}>
-            <Cascade<number | undefined>
-              data-start-properties
-              defaultValue={undefined}
-              onChange={onSelect}
-            >
-              <For each={Object.entries(node.s)} fallback={<SerovalValue value="none" />}>
-                {([key, value]) => (
-                  <div data-start-property>
-                    <SerovalValue value={key} />
-                    <PropertySeparator />
-                    {renderSerovalNode(ctx, value, onSelect, true)}
-                  </div>
-                )}
-              </For>
-            </Cascade>
-          </Section>
-        </>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <For each={Object.entries(node.s)}>
+            {([key, value]) => (
+              <TreeValue ctx={ctx} node={value} seen={seen} label={<EntryKey value={key} />} />
+            )}
+          </For>
+        </ExpandableRow>
       );
-    // IteratorFactory = 27,
-    case 27:
-      break;
     // IteratorFactoryInstance = 28,
     case 28:
-      return renderSerovalNode(ctx, node.a[1], onSelect, true);
-    // AsyncIteratorFactory = 29,
-    case 29:
-      break;
     // AsyncIteratorFactoryInstance = 30,
     case 30:
-      return renderSerovalNode(ctx, node.a[1], onSelect, true);
+      return (
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
+        >
+          <TreeValue
+            ctx={ctx}
+            node={node.a[1]}
+            seen={seen}
+            label={<EntryKey kind="keyword" value="values" />}
+          />
+        </ExpandableRow>
+      );
     // StreamConstructor = 31,
     case 31:
       return (
-        <>
-          {(() => {
-            const result = ctx.getStream(node.i) || [];
-            return (
-              <Cascade<number | undefined>
-                data-start-properties
-                defaultValue={undefined}
-                onChange={onSelect}
-              >
-                <For each={result} fallback={<SerovalValue value="none" />}>
-                  {current => (
-                    <div data-start-property>
-                      <SerovalValue value={getStreamKeyword(current.t)} />
-                      <PropertySeparator />
-                      {renderSerovalNode(ctx, current.f, onSelect, true)}
-                    </div>
-                  )}
-                </For>
-              </Cascade>
-            );
-          })()}
-        </>
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={<>{previewNode(ctx, node, 0)}</>}
+          open={props.open}
+        >
+          <For
+            each={ctx.getStream(node.i) || []}
+            fallback={
+              <LeafRow label={<EntryKey kind="keyword" value="status" />}>
+                <Badge type="warning">waiting</Badge>
+              </LeafRow>
+            }
+          >
+            {chunk => (
+              <TreeValue
+                ctx={ctx}
+                node={chunk.f}
+                seen={seen}
+                label={<EntryKey kind="keyword" value={getStreamKeyword(chunk.t)} />}
+              />
+            )}
+          </For>
+        </ExpandableRow>
       );
     case 35:
       return (
-        <Cascade<number | undefined>
-          data-start-properties
-          defaultValue={undefined}
-          onChange={onSelect}
+        <ExpandableRow
+          label={props.label}
+          badges={badges}
+          preview={previewNode(ctx, node, 0)}
+          open={props.open}
         >
-          <For each={node.a} fallback={<SerovalValue value="none" />}>
-            {(current, index) => (
-              <div data-start-property>
-                <SerovalValue
-                  value={index() === node.l ? "return" : index() === node.s ? "throw" : "next"}
-                />
-                <PropertySeparator />
-                {renderSerovalNode(ctx, current, onSelect, true)}
-              </div>
+          <For each={node.a}>
+            {(child, index) => (
+              <Show when={child}>
+                {current => (
+                  <TreeValue
+                    ctx={ctx}
+                    node={current()}
+                    seen={seen}
+                    label={
+                      <EntryKey
+                        kind="keyword"
+                        value={
+                          index() === node.l ? "return" : index() === node.s ? "throw" : "next"
+                        }
+                      />
+                    }
+                  />
+                )}
+              </Show>
             )}
           </For>
-        </Cascade>
+        </ExpandableRow>
+      );
+    default:
+      return (
+        <LeafRow label={props.label}>
+          <Badge type="warning">{getNodeType(node)}</Badge>
+        </LeafRow>
       );
   }
-}
-
-interface SerovalNodeRendererProps extends RenderContext {
-  node: SerovalNode;
-}
-
-function SerovalNodeRenderer(props: SerovalNodeRendererProps): JSX.Element {
-  const [, rest] = splitProps(props, ["node"]);
-  const [next, setNext] = createSignal<SerovalNode>();
-
-  function onSelect(index: number | undefined) {
-    if (index == null) {
-      setNext(undefined);
-    } else {
-      setNext(props.getNode(index));
-    }
-  }
-
-  return (
-    <>
-      <div data-start-seroval-node>
-        <div data-start-seroval-node-header>
-          <Badge type="info">{getNodeType(props.node)}</Badge>
-          {props.node.i != null && <Badge type="info">{`id: ${props.node.i}`}</Badge>}
-        </div>
-        <div data-start-seroval-node-content>{renderSerovalNode(props, props.node, onSelect)}</div>
-      </div>
-      <Show when={next()} keyed>
-        {current => <SerovalNodeRenderer node={current} {...rest} />}
-      </Show>
-    </>
-  );
-}
-
-interface SerovalRendererProps extends Omit<RenderContext, "onSelect"> {
-  node?: SerovalNode;
-}
-
-function SerovalRenderer(props: SerovalRendererProps): JSX.Element {
-  const [, rest] = splitProps(props, ["node"]);
-  return (
-    <div data-start-seroval-renderer>
-      <Show when={props.node}>{current => <SerovalNodeRenderer node={current()} {...rest} />}</Show>
-    </div>
-  );
 }
 
 function createSimpleStore<T extends Record<string | number, unknown>>(initial: T) {
@@ -986,12 +1121,20 @@ export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
 
   return (
     <div data-start-seroval-viewer>
-      <SerovalRenderer
-        node={selected()}
-        getNode={index => references.read(index)}
-        getPromise={index => promises.read(index)}
-        getStream={index => streams.read(index)}
-      />
+      <Show when={selected()} keyed>
+        {root => (
+          <TreeValue
+            ctx={{
+              getNode: index => references.read(index),
+              getPromise: index => promises.read(index),
+              getStream: index => streams.read(index),
+            }}
+            node={root}
+            seen={[]}
+            open
+          />
+        )}
+      </Show>
     </div>
   );
 }
