@@ -16,11 +16,11 @@ type ClientOnlyModule<T> = T | { default: T };
  *
  * ```tsx
  * const Map = clientOnly(() => import("./map"));
- * const Chart = clientOnly(() => import("./chart").then(m => m.Chart));
+ * const Chart = clientOnly(() => import("./chart").then(({ Chart }) => Chart));
  * ```
  *
- * Reading the export inside the loader, as in the second example, lets the
- * bundler leave the module's other exports out of the chunk.
+ * Destructuring the export inside the loader, as in the second example, lets
+ * the bundler leave the module's other exports out of the chunk.
  *
  * Read more: https://docs.solidjs.com/solid-start/reference/client/client-only
  */
