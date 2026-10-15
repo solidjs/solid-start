@@ -82,6 +82,7 @@ export function defineConfig(baseConfig = {}) {
     ssr: true,
     devOverlay: true,
     earlyHints: false,
+    reloadOnRouteChunkError: true,
     experimental: {
       islands: false
     },
@@ -177,6 +178,9 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
+                "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
+                  start.reloadOnRouteChunkError
+                ),
                 "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
               }
@@ -245,6 +249,9 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
+                "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
+                  start.reloadOnRouteChunkError
+                ),
                 "import.meta.env.SERVER_BASE_URL": JSON.stringify(server?.baseURL ?? ""),
                 "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
@@ -307,6 +314,9 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
+                "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
+                  start.reloadOnRouteChunkError
+                ),
                 "import.meta.env.SEROVAL_MODE": JSON.stringify(serializationMode),
                 ...userConfig.define
               }

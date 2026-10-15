@@ -35,6 +35,14 @@ type SolidStartInlineConfig = {
    * @default false
    */
   earlyHints?: boolean;
+  /**
+   * Reload the page once when a route's code fails to load during client-side
+   * navigation, such as when a deploy replaced it while the page was open.
+   * Only applies to production builds.
+   *
+   * @default true
+   */
+  reloadOnRouteChunkError?: boolean;
   experimental?: {
     islands?: boolean;
   };
