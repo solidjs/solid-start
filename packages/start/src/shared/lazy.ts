@@ -2,6 +2,7 @@ import { Component, lazy as solidLazy } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 import { getManifest } from "solid-start:get-manifest";
 import { useAssets } from "../server/assets/index.ts";
+import { sendEarlyHints } from "../server/early-hints.ts";
 import { Asset, PageEvent } from "../server/types.ts";
 
 const assetsById: Record<string, Asset[]> = {};
@@ -34,8 +35,11 @@ const withAssets = function <T extends () => Promise<{ default: Component<any> }
 
     return {
       default: (props: any) => {
-        const { nonce } = getRequestEvent() as PageEvent;
-        useAssets(assets, nonce);
+        const event = getRequestEvent() as PageEvent;
+        // Runs on every render, unlike the code above, which runs once per
+        // module because lazy() caches it.
+        sendEarlyHints(event, assets);
+        useAssets(assets, event.nonce);
 
         return mod.default(props);
       },

@@ -13,6 +13,7 @@ interface SolidStartMetaEnv {
   START_CLIENT_ENTRY: string;
   START_CLIENT_ENTRY_URL: string;
   START_ISLANDS: boolean;
+  START_EARLY_HINTS: boolean;
   START_RELOAD_ON_ROUTE_CHUNK_ERROR: boolean;
   // START_DEV_OVERLAY: boolean;
 }

@@ -68,6 +68,19 @@ export interface SolidStartOptions {
   devOverlay?: boolean;
 
   /**
+   * Send the page's assets as `103 Early Hints` before the page is rendered, so
+   * the browser can start downloading them while the server is still working.
+   * This covers the app's entry assets and the assets of the routes being
+   * rendered. On runtimes other than Node, the hints are added as `Link`
+   * headers on the response instead. Only applies to production builds.
+   *
+   * Off by default, because some proxies and clients mishandle `1xx` responses.
+   *
+   * @default false
+   */
+  earlyHints?: boolean;
+
+  /**
    * Reload the page once when a route's code fails to load during client-side
    * navigation, such as when a deploy replaced it while the page was open.
    * Only applies to production builds.
@@ -241,6 +254,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
+    earlyHints: false,
     reloadOnRouteChunkError: true,
     experimental: {
       islands: false,
@@ -384,6 +398,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+            "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
             "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
               start.reloadOnRouteChunkError,
             ),
