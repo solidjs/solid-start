@@ -99,7 +99,9 @@ export function defineConfig(baseConfig = {}) {
   
   const routeDir = join(start.appRoot, start.routeDir);
   let server = start.server;
-  if (!start.ssr) {
+  // Data-only mode runs each page's preloads per request, so it can't use a
+  // prerendered shell.
+  if (start.ssr === false) {
     server = { ...server, prerender: { routes: ["/"] } };
   }
   let entryExtension = ".tsx";
@@ -131,7 +133,7 @@ export function defineConfig(baseConfig = {}) {
         },
         handler: `${start.appRoot}/entry-server${entryExtension}`,
         middleware: start.middleware,
-        routes: solidStartServerFsRouter({ dir: routeDir, extensions, dataOnly: !start.ssr }),
+        routes: solidStartServerFsRouter({ dir: routeDir, extensions, dataOnly: start.ssr !== true }),
         extensions,
         target: "server",
         plugins: async () => {
@@ -160,7 +162,7 @@ export function defineConfig(baseConfig = {}) {
                 alias: {
                   "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                   "~": join(process.cwd(), start.appRoot),
-                  ...(!start.ssr
+                  ...(start.ssr !== true
                     ? {
                         "@solidjs/start/server": "@solidjs/start/server/spa"
                       }
@@ -175,7 +177,8 @@ export function defineConfig(baseConfig = {}) {
                 ),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
-                "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr === true),
+                "import.meta.env.START_SSR_DATA": JSON.stringify(start.ssr === "data-only"),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
@@ -220,7 +223,7 @@ export function defineConfig(baseConfig = {}) {
             ...plugins,
             SolidStartServerFnsPlugin.client,
             start.experimental.islands ? serverComponents.client() : null,
-            solid({ ...start.solid, ssr: start.ssr, extensions: extensions.map(ext => `.${ext}`) }),
+            solid({ ...start.solid, ssr: start.ssr === true, extensions: extensions.map(ext => `.${ext}`) }),
             config("app-client", {
               resolve: {
                 alias: {
@@ -231,7 +234,7 @@ export function defineConfig(baseConfig = {}) {
                         "@solidjs/start/client": "@solidjs/start/client/islands"
                       }
                     : {}),
-                  ...(!start.ssr
+                  ...(start.ssr !== true
                     ? {
                         "@solidjs/start/client": "@solidjs/start/client/spa"
                       }
@@ -246,7 +249,8 @@ export function defineConfig(baseConfig = {}) {
                 ),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(false),
-                "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr === true),
+                "import.meta.env.START_SSR_DATA": JSON.stringify(start.ssr === "data-only"),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
@@ -269,7 +273,7 @@ export function defineConfig(baseConfig = {}) {
         ),
         middleware: start.middleware,
         target: "server",
-        routes: solidStartServerFsRouter({ dir: routeDir, extensions, dataOnly: !start.ssr }),
+        routes: solidStartServerFsRouter({ dir: routeDir, extensions, dataOnly: start.ssr !== true }),
         plugins: async () => {
           const userConfig =
             typeof vite === "function" ? await vite({ router: "server-function" }) : { ...vite };
@@ -297,7 +301,7 @@ export function defineConfig(baseConfig = {}) {
                 alias: {
                   "#start/app": join(process.cwd(), start.appRoot, `app${entryExtension}`),
                   "~": join(process.cwd(), start.appRoot),
-                  ...(!start.ssr
+                  ...(start.ssr !== true
                     ? {
                         "@solidjs/start/server": "@solidjs/start/server/spa"
                       }
@@ -311,7 +315,8 @@ export function defineConfig(baseConfig = {}) {
                 ),
                 "import.meta.env.START_ISLANDS": JSON.stringify(start.experimental.islands),
                 "import.meta.env.SSR": JSON.stringify(true),
-                "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+                "import.meta.env.START_SSR": JSON.stringify(start.ssr === true),
+                "import.meta.env.START_SSR_DATA": JSON.stringify(start.ssr === "data-only"),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
                 "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(

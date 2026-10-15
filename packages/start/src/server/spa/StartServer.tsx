@@ -1,10 +1,11 @@
 // @refresh skip
 // @ts-ignore
 import type { Component } from "solid-js";
-import { NoHydration, getRequestEvent, ssr } from "solid-js/web";
+import { Hydration, HydrationScript, NoHydration, getRequestEvent, ssr } from "solid-js/web";
 import { TopErrorBoundary } from "../../shared/ErrorBoundary";
 import { renderAsset } from "../renderAsset";
 import type { DocumentComponentProps, PageEvent } from "../types";
+import { InitialData } from "./initial-data";
 
 const docType = ssr("<!DOCTYPE html>");
 
@@ -21,10 +22,27 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
       {docType as unknown as any}
       <TopErrorBoundary>
         <props.document
-          assets={<>{context.assets.map((m: any) => renderAsset(m))}</>}
+          assets={
+            <>
+              {import.meta.env.START_SSR_DATA && (
+                // Defines `_$HY.r` for the streamed data. Nothing hydrates, so
+                // it doesn't need to capture events for replay. The client
+                // types don't list `eventNames`, the server implementation
+                // takes it.
+                // @ts-ignore
+                <HydrationScript eventNames={[]} />
+              )}
+              {context.assets.map((m: any) => renderAsset(m))}
+            </>
+          }
           scripts={
             nonce ? (
               <>
+                {import.meta.env.START_SSR_DATA && (
+                  <Hydration>
+                    <InitialData />
+                  </Hydration>
+                )}
                 <script
                   nonce={nonce}
                   innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`}
@@ -40,6 +58,11 @@ export function StartServer(props: { document: Component<DocumentComponentProps>
               </>
             ) : (
               <>
+                {import.meta.env.START_SSR_DATA && (
+                  <Hydration>
+                    <InitialData />
+                  </Hydration>
+                )}
                 <script innerHTML={`window.manifest = ${JSON.stringify(context.manifest)}`} />
                 <script
                   type="module"

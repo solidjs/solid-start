@@ -1,5 +1,6 @@
 import { createBaseHandler } from "../handler";
 import { FetchEvent, HandlerOptions, PageEvent } from "../types";
+import { loadInitialData } from "./initial-data";
 
 /**
  *
@@ -15,6 +16,7 @@ export function createHandler(
 
 export async function createPageEvent(ctx: FetchEvent) {
   const clientManifest = import.meta.env.MANIFEST["client"]!;
+  ctx.response.headers.set("Content-Type", "text/html");
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: await clientManifest.json(),
     assets: [...(await clientManifest.inputs[clientManifest.handler]!.assets())],
@@ -25,6 +27,8 @@ export async function createPageEvent(ctx: FetchEvent) {
     // $type: FETCH_EVENT,
     $islands: new Set<string>()
   });
+
+  if (import.meta.env.START_SSR_DATA) await loadInitialData(pageEvent);
 
   return pageEvent;
 }
