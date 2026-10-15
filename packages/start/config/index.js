@@ -81,6 +81,7 @@ export function defineConfig(baseConfig = {}) {
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
+    earlyHints: false,
     reloadOnRouteChunkError: true,
     experimental: {
       islands: false
@@ -176,6 +177,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
                   start.reloadOnRouteChunkError
                 ),
@@ -246,6 +248,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(false),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
                   start.reloadOnRouteChunkError
                 ),
@@ -310,6 +313,7 @@ export function defineConfig(baseConfig = {}) {
                 "import.meta.env.SSR": JSON.stringify(true),
                 "import.meta.env.START_SSR": JSON.stringify(start.ssr),
                 "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
+                "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
                 "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
                   start.reloadOnRouteChunkError
                 ),

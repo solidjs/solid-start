@@ -1,6 +1,7 @@
 import { getCookie, setCookie } from "vinxi/http";
 import { createRoutes } from "../router/FileRoutes";
 import { FetchEvent, PageEvent } from "./types";
+import { sendEarlyHints } from "./early-hints";
 
 function initFromFlash(ctx: FetchEvent) {
   const flash = getCookie(ctx.nativeEvent, "flash");
@@ -53,6 +54,8 @@ export async function createPageEvent(ctx: FetchEvent) {
     complete: false,
     $islands: new Set<string>()
   });
+
+  sendEarlyHints(ctx, pageEvent.assets);
 
   return pageEvent;
 }

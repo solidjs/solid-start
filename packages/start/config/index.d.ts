@@ -24,6 +24,18 @@ type SolidStartInlineConfig = {
   middleware?: string;
   devOverlay?: boolean;
   /**
+   * Send the page's assets as `103 Early Hints` before the page is rendered, so
+   * the browser can start downloading them while the server is still working.
+   * This covers the app's entry assets and the assets of the routes being
+   * rendered. On runtimes other than Node, the hints are added as `Link`
+   * headers on the response instead. Only applies to production builds.
+   *
+   * Off by default, because some proxies and clients mishandle `1xx` responses.
+   *
+   * @default false
+   */
+  earlyHints?: boolean;
+  /**
    * Reload the page once when a route's code fails to load during client-side
    * navigation, such as when a deploy replaced it while the page was open.
    * Only applies to production builds.
