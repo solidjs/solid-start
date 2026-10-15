@@ -1,5 +1,26 @@
 # @solidjs/start
 
+## 1.4.0
+
+### Minor Changes
+
+- 0a027ee: Add `ssr: "data-only"`. The app renders on the client without hydration, as with `ssr: false`, but the server runs the requested page's route `preload`s and streams their query results with the HTML shell, so the client doesn't fetch that data again.
+
+### Patch Changes
+
+- 92d9603: Let a `clientOnly` loader resolve to the component itself, so a named export works without wrapping it in `{ default }`:
+
+  ```tsx
+  const Chart = clientOnly(() => import("./chart").then(({ Chart }) => Chart));
+  ```
+
+  Destructuring the export inside the loader also lets the bundler leave the module's other exports out of the chunk.
+
+- 8f03760: Add an `earlyHints` option that sends the page's assets as `103 Early Hints`, so the browser can start downloading them while the server is still rendering. It covers the app's entry assets and the assets of the routes being rendered. On runtimes other than Node, the same hints are added as `Link` headers on the response. Off by default, and only applies to production builds.
+- e36e23c: Make `event.request.signal` abort when the client disconnects on Node. The request was built without a signal tied to the connection, so it never aborted and API routes kept running after the client went away. On web runtimes the platform signal still applies.
+- 95ca993: Reload the page once when a route's code fails to load during client-side navigation, such as when a deploy replaced it while the page was open. Before, the navigation ended on an error page until the user refreshed by hand. The page now reloads at the destination and loads the new version. A route that still fails right after the reload shows the error instead of reloading again. This only applies to production builds, and can be turned off with `reloadOnRouteChunkError: false`.
+- 273496b: Serve pages in SPA mode (`ssr: false`) when a route file exports both a page and an API handler, such as a `[...404].tsx` with a `GET`. The server treated those routes as API-only, so a `GET` that returned nothing gave a 404 for every URL the route matched.
+
 ## 1.3.5
 
 ### Patch Changes
