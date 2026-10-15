@@ -9,6 +9,7 @@ interface ImportMetaEnv extends SolidStartMetaEnv {}
 
 interface SolidStartMetaEnv {
   START_SSR: boolean;
+  START_SSR_DATA: boolean;
   START_APP_ENTRY: string;
   START_CLIENT_ENTRY: string;
   START_CLIENT_ENTRY_URL: string;
