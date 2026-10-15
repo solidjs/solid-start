@@ -22,5 +22,6 @@ interface SolidStartMetaEnv {
   START_SSR: boolean;
   START_ISLANDS: boolean;
   START_DEV_OVERLAY: boolean;
+  START_RELOAD_ON_ROUTE_CHUNK_ERROR: boolean;
   SERVER_BASE_URL: string;
 }

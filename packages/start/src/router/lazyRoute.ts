@@ -1,9 +1,11 @@
 /// <reference types="vinxi/types/client" />
 import { createComponent, lazy, onCleanup, type Component, type JSX } from "solid-js";
+import { isServer } from "solid-js/web";
 import { appendStyles, cleanupStyles, preloadStyles, updateStyles } from "vinxi/css";
 
 import { renderAsset } from "../server/renderAsset";
 import { Asset } from "../server/types";
+import { withRouteChunkReload } from "../shared/route-chunk-reload";
 
 export default function lazyRoute<T extends Record<string, any>>(component: any, clientManifest: any, serverManifest: any, exported = "default") {
   return lazy(async () => {
@@ -42,7 +44,13 @@ export default function lazyRoute<T extends Record<string, any>>(component: any,
       };
       return { default: Comp };
     } else {
-      const mod = await component.import();
+      // A route's chunk can go missing when a deploy replaces it while the page
+      // is open. Reloading picks up the new version.
+      const load =
+        !isServer && import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR
+          ? withRouteChunkReload(() => component.import())
+          : () => component.import();
+      const mod = await load();
       const Component = mod[exported];
       let assets = await clientManifest.inputs?.[component.src].assets();
       const styles = assets.filter(
