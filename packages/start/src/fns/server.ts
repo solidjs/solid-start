@@ -19,7 +19,7 @@ export function createServerReference<T extends any[], R>(
 export function cloneServerReference<T extends any[], R>({ id, fn }: Registration<T, R>) {
   if (typeof fn !== "function")
     throw new Error("Export from a 'use server' module must be a function");
-  let baseURL = import.meta.env.BASE_URL ?? "/";
+  let baseURL = import.meta.env.SERVER_BASE_URL || "/";
   if (!baseURL.endsWith("/")) baseURL += "/";
 
   return new Proxy(fn, {

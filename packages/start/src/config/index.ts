@@ -1,7 +1,7 @@
 import { defu } from "defu";
 import { globSync } from "node:fs";
 import { basename, extname, isAbsolute, join } from "node:path";
-import type { PluginOption, FilterPattern } from "vite";
+import type { PluginOption, FilterPattern, UserConfig } from "vite";
 import solid, { type Options as SolidOptions } from "vite-plugin-solid";
 import { type ServerFunctionsOptions, serverFunctionsPlugin } from "../directives/index.ts";
 import { appRootAlias } from "./app-root-alias.ts";
@@ -55,10 +55,13 @@ export interface SolidStartOptions {
    *
    * - `true` — SSR (default)
    * - `false` — client-side rendering only (SPA mode)
+   * - `"data-only"` — SPA mode, but the server runs the route `preload`s for the
+   *   requested page and sends their query results with the HTML shell. The
+   *   client renders without hydrating and without fetching that data again.
    *
    * @default true
    */
-  ssr?: boolean;
+  ssr?: boolean | "data-only";
 
   /**
    * Show the SolidStart development overlay (error overlay, etc.) in development.
@@ -66,6 +69,28 @@ export interface SolidStartOptions {
    * @default true
    */
   devOverlay?: boolean;
+
+  /**
+   * Send the page's assets as `103 Early Hints` before the page is rendered, so
+   * the browser can start downloading them while the server is still working.
+   * This covers the app's entry assets and the assets of the routes being
+   * rendered. On runtimes other than Node, the hints are added as `Link`
+   * headers on the response instead. Only applies to production builds.
+   *
+   * Off by default, because some proxies and clients mishandle `1xx` responses.
+   *
+   * @default false
+   */
+  earlyHints?: boolean;
+
+  /**
+   * Reload the page once when a route's code fails to load during client-side
+   * navigation, such as when a deploy replaced it while the page was open.
+   * Only applies to production builds.
+   *
+   * @default true
+   */
+  reloadOnRouteChunkError?: boolean;
 
   /**
    * Experimental features.
@@ -202,12 +227,38 @@ export interface SolidStartOptions {
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
 
+// the same test Vite applies to an external base
+const externalUrlRE = /^([a-z]+:)?\/\//;
+
+// A mount path is always wrapped in slashes: `new URL("page", origin + "/app")`
+// resolves to /page, losing the segment, and a bare "app/" would glue onto
+// the origin.
+const withSlashes = (path: string) => {
+  // wrapping "" would give "//", a protocol-relative URL
+  if (path === "") return "/";
+  return `${path.startsWith("/") ? "" : "/"}${path}${path.endsWith("/") ? "" : "/"}`;
+};
+
+// Where the app is mounted, as opposed to where its assets live. Vite's base
+// says where the assets are; a full URL there means a CDN, and says nothing
+// about the app, which stays at the root. A plain path is shared by both.
+function resolveServerBaseUrl(config: UserConfig) {
+  const explicit = (config.server as { baseURL?: string } | undefined)?.baseURL;
+  if (explicit) return withSlashes(explicit);
+
+  const base = config.base ?? "/";
+  if (externalUrlRE.test(base)) return "/";
+  return withSlashes(new URL(base, "http://vite.dev").pathname);
+}
+
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
     appRoot: "./src",
     routeDir: "./routes",
     ssr: true,
     devOverlay: true,
+    earlyHints: false,
+    reloadOnRouteChunkError: true,
     experimental: {
       islands: false,
     },
@@ -323,7 +374,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           resolve: {
             alias: {
               "@solidjs/start/server/entry": handlers.server,
-              ...(!start.ssr
+              ...(start.ssr !== true
                 ? {
                     "@solidjs/start/server": "@solidjs/start/server/spa",
                     "@solidjs/start/client": "@solidjs/start/client/spa",
@@ -343,16 +394,19 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           },
           define: {
             "import.meta.env.MANIFEST": `globalThis.MANIFEST`,
-            "import.meta.env.START_SSR": JSON.stringify(start.ssr),
+            "import.meta.env.START_SSR": JSON.stringify(start.ssr === true),
+            "import.meta.env.START_SSR_DATA": JSON.stringify(start.ssr === "data-only"),
             // Use JSON.stringify so backslashes on Windows are escaped and
             // esbuild receives a valid JS string literal for the define value
             "import.meta.env.START_APP_ENTRY": JSON.stringify(appEntryPath),
             "import.meta.env.START_CLIENT_ENTRY": JSON.stringify(handlers.client),
             "import.meta.env.START_CLIENT_ENTRY_URL": JSON.stringify(clientEntryUrl),
             "import.meta.env.START_DEV_OVERLAY": JSON.stringify(start.devOverlay),
-            "import.meta.env.SERVER_BASE_URL": JSON.stringify(
-              (config.server as { baseURL?: string } | undefined)?.baseURL ?? "",
+            "import.meta.env.START_EARLY_HINTS": JSON.stringify(start.earlyHints),
+            "import.meta.env.START_RELOAD_ON_ROUTE_CHUNK_ERROR": JSON.stringify(
+              start.reloadOnRouteChunkError,
             ),
+            "import.meta.env.SERVER_BASE_URL": JSON.stringify(resolveServerBaseUrl(config)),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
           },
           builder: {
@@ -382,7 +436,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         ssr: new SolidStartServerFileRouter({
           dir: absolute(routeDir, root),
           extensions,
-          dataOnly: !start.ssr,
+          dataOnly: start.ssr !== true,
         }),
       },
     }),
@@ -433,7 +487,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
         (globalThis as any).START_CLIENT_OUT_DIR = options.dir;
       },
     },
-    devServer(handlers.server),
+    devServer(handlers.server, start.middleware),
     solid({
       ...start.solid,
       ssr: true,

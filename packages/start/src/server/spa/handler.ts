@@ -3,6 +3,7 @@ import type { JSX } from "solid-js";
 import { createBaseHandler } from "../handler.ts";
 import { getSsrManifest } from "../manifest/ssr-manifest.ts";
 import type { FetchEvent, HandlerOptions, PageEvent, StartHandler } from "../types.ts";
+import { loadInitialData } from "./initial-data.ts";
 
 /**
  *
@@ -17,6 +18,7 @@ export function createHandler(
 }
 
 async function createPageEvent(ctx: FetchEvent) {
+  ctx.response.headers.set("Content-Type", "text/html");
   const manifest = getSsrManifest("ssr");
   const pageEvent: PageEvent = Object.assign(ctx, {
     manifest: "json" in manifest ? await manifest.json() : {},
@@ -25,6 +27,8 @@ async function createPageEvent(ctx: FetchEvent) {
     complete: false,
     $islands: new Set<string>(),
   });
+
+  if (import.meta.env.START_SSR_DATA) await loadInitialData(pageEvent);
 
   return pageEvent;
 }
