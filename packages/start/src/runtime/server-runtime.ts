@@ -5,6 +5,7 @@ import {
   deserializeJSStream,
   serializeToJSONString,
 } from "./serialization";
+import { appendUploads, ARGS_PART, createUploadSerializer, UPLOAD_HEADER } from "./uploads";
 
 let INSTANCE = 0;
 
@@ -22,6 +23,42 @@ function createRequest(
       "X-Server-Id": encodeURIComponent(id),
       "X-Server-Instance": instance
     }
+  });
+}
+
+async function createSerializedRequest(
+  base: string,
+  id: string,
+  instance: string,
+  options: RequestInit,
+  args: any[],
+) {
+  const files: Blob[] = [];
+  const serialized = await serializeToJSONString(args, [createUploadSerializer(files)]);
+  if (files.length > 0) {
+    // Files go as form parts, so they are sent as they are instead of encoded.
+    const formData = new FormData();
+    formData.set(ARGS_PART, serialized);
+    await appendUploads(formData, files);
+    return createRequest(base, id, instance, {
+      ...options,
+      body: formData,
+      headers: {
+        ...options.headers,
+        [UPLOAD_HEADER]: "true",
+      },
+    });
+  }
+  return createRequest(base, id, instance, {
+    ...options,
+    body: serialized,
+    // duplex: 'half',
+    // body: serializeToJSONStream(args),
+    headers: {
+      ...options.headers,
+      "x-serialized": "true",
+      "Content-Type": "text/plain"
+    },
   });
 }
 
@@ -45,17 +82,7 @@ async function fetchServerFunction(
             "Content-Type": "application/x-www-form-urlencoded",
           },
         })
-        : createRequest(base, id, instance, {
-          ...options,
-          body: await serializeToJSONString(args),
-          // duplex: 'half',
-          // body: serializeToJSONStream(args),
-          headers: {
-            ...options.headers,
-            "x-serialized": "true",
-            "Content-Type": "text/plain"
-          },
-        }));
+        : createSerializedRequest(base, id, instance, options, args));
 
   if (
     response.headers.has("Location") ||

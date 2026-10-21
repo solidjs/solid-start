@@ -20,6 +20,19 @@ describe("server-function", () => {
     cy.get("#server-fn-test").contains('{"serverFnWithNpmModule":[2,4,6]}');
   });
 
+  it("should send files next to other arguments", () => {
+    cy.visit("/server-function-upload");
+    cy.get("#server-fn-test").contains(
+      JSON.stringify({
+        name: "hello-world.txt",
+        text: "Hello, World!",
+        tags: ["a", "b"],
+        attachments: ["one", "two"],
+        avatar: "avatar.png:png"
+      })
+    );
+  });
+
   it("should have isServer true in the server function - toplevel", () => {
     cy.visit("/is-server-toplevel");
     cy.get("#server-fn-test").contains('{"serverFnWithIsServer":true}');
