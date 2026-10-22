@@ -5,6 +5,7 @@ import {
   fromCrossJSON,
   getCrossReferenceHeader,
   isStream,
+  type Plugin,
   type SerovalJSON,
   type SerovalNode,
   toCrossJSONStream,
@@ -67,6 +68,14 @@ function createChunk(data: string): Uint8Array {
   chunk.set(head);
   chunk.set(encodeData, 12);
   return chunk;
+}
+
+/**
+ * Plugins for one call, such as the ones that carry files as form parts. They
+ * come first, so the values they handle never reach the other plugins.
+ */
+function withPlugins(extra: Plugin<any, any>[] | undefined) {
+  return extra?.length ? [...extra, ...DEFAULT_PLUGINS] : DEFAULT_PLUGINS;
 }
 
 export function serializeToJSStream(id: string, value: any) {
@@ -204,11 +213,11 @@ class SerovalChunkReader {
   }
 }
 
-export async function serializeToJSONString(value: any) {
+export async function serializeToJSONString(value: any, plugins?: Plugin<any, any>[]) {
   // const response = new Response(serializeToJSONStream(value));
   // return await response.text();
   return JSON.stringify(await toJSONAsync(value, {
-    plugins: DEFAULT_PLUGINS,
+    plugins: withPlugins(plugins),
     depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
     disabledFeatures: DISABLED_FEATURES,
   }));
@@ -275,14 +284,14 @@ function createEndOfStreamError() {
  * is used because it exposes its refs, and it reads the same nodes `toJSONAsync`
  * emits.
  */
-export async function deserializeFromJSONString(json: string) {
+export async function deserializeFromJSONString(json: string, plugins?: Plugin<any, any>[]) {
   const source = JSON.parse(json) as SerovalJSON;
   const refs = new DecodedRefs();
   let value: unknown;
   try {
     value = fromCrossJSON(source.t, {
       refs,
-      plugins: DEFAULT_PLUGINS,
+      plugins: withPlugins(plugins),
       disabledFeatures: DISABLED_FEATURES,
     });
   } catch (error) {

@@ -21,6 +21,7 @@ import serverFnManifest from "solidstart:server-fn-manifest";
 import { setThrownCacheControl, withDefaultCacheControl } from "./cache-control";
 import { isCrossSiteRequest } from "./cross-site";
 import { deserializeFromJSONString, serializeToJSONStream, serializeToJSStream } from "./serialization";
+import { readUploadArgs, UPLOAD_HEADER } from "./uploads";
 
 async function handleServerFunction(h3Event: HTTPEvent) {
   let response: Awaited<ReturnType<typeof runServerFunction>>;
@@ -120,7 +121,9 @@ async function runServerFunction(h3Event: HTTPEvent) {
     const tmpReq = isH3EventBodyStreamLocked
       ? request
       : new Request(request, { ...request, body: requestBody });
-    if (request.headers.get('x-serialized')) {
+    if (request.headers.get(UPLOAD_HEADER)) {
+      parsed = (await readUploadArgs(await tmpReq.formData())) as any[];
+    } else if (request.headers.get('x-serialized')) {
       parsed = await deserializeFromJSONString(await tmpReq.text()) as any[];
     } else if (
       contentType?.startsWith("multipart/form-data") ||
