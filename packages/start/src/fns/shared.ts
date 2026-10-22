@@ -1,8 +1,10 @@
 import {
+  deserializeFromJSONString,
   deserializeJSONStream,
   deserializeJSStream,
   MAX_REQUEST_CHUNK_SIZE,
 } from "./serialization.ts";
+import { ARGS_PART, createUploadDeserializer } from "./uploads.ts";
 
 export const BODY_FORMAT_KEY = "X-Start-Type";
 
@@ -17,6 +19,8 @@ export const enum BodyFormat {
   File = "5",
   ArrayBuffer = "6",
   Uint8Array = "7",
+  /** Serialized arguments with their files as parts of multipart form data. */
+  SerovalFormData = "8",
 }
 
 export function getHeadersAndBody(body: any):
@@ -100,6 +104,18 @@ export async function extractBody(instance: string, client: boolean, source: Req
         clone,
         client ? undefined : { maxChunkSize: MAX_REQUEST_CHUNK_SIZE },
       );
+    case startType === BodyFormat.SerovalFormData: {
+      // Only a client sends files, so this is always read on the server.
+      const formData = await clone.formData();
+      const args = formData.get(ARGS_PART);
+      if (typeof args !== "string") {
+        throw new Error("Malformed server function upload.");
+      }
+      return await deserializeFromJSONString(args, {
+        maxChunkSize: MAX_REQUEST_CHUNK_SIZE,
+        plugins: [createUploadDeserializer(formData)],
+      });
+    }
     case startType === BodyFormat.String:
       return await clone.text();
     case startType === BodyFormat.File: {

@@ -184,7 +184,7 @@ async function runServerFunction(h3Event: H3Event) {
   if (request.method === "POST" && request.body !== null) {
     const bodyFormat = request.headers.get(BODY_FORMAT_KEY);
     const decoded = await extractBody("", false, request.clone());
-    if (bodyFormat === BodyFormat.Seroval) {
+    if (bodyFormat === BodyFormat.Seroval || bodyFormat === BodyFormat.SerovalFormData) {
       parsed = decoded as any[];
     } else {
       parsed.push(decoded);
