@@ -909,3 +909,67 @@ describe("redirects for submissions without JavaScript", () => {
     expect(response.headers.get("Location")).toBe("http://localhost/app/");
   });
 });
+
+describe("skew protection", () => {
+  const call = async (headers: Record<string, string>) => {
+    const request = new Request("http://localhost/_server", {
+      method: "POST",
+      headers: { "x-server-id": "fn", ...headers },
+    });
+    const h3Event = { res: { headers: new Headers(), errHeaders: new Headers(), status: 200 } };
+    vi.mocked(getFetchEvent).mockReturnValue({
+      request,
+      response: { headers: { getSetCookie: () => [] } },
+      nativeEvent: h3Event,
+      locals: {},
+    } as unknown as FetchEvent);
+    const fn = vi.fn(() => "ok");
+    vi.mocked(getServerFunction).mockReturnValue(fn as never);
+    const { handleServerFunction } = await import("./handler.ts");
+    const response = (await handleServerFunction(h3Event as never)) as Response;
+    return { response, fn };
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.stubEnv("START_BUILD_ID", "build-b");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("rejects a call from another build without running the function", async () => {
+    const { response, fn } = await call({
+      "x-server-instance": "server-fn:1",
+      "x-start-build": "build-a",
+    });
+    expect(response.status).toBe(409);
+    expect(response.headers.get("X-Start-Skew")).toBe("true");
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it("runs a call from the same build", async () => {
+    const { response, fn } = await call({
+      "x-server-instance": "server-fn:1",
+      "x-start-build": "build-b",
+    });
+    expect(response.status).toBe(200);
+    expect(fn).toHaveBeenCalled();
+  });
+
+  it("runs a call without a build ID", async () => {
+    const { fn } = await call({ "x-server-instance": "server-fn:1" });
+    expect(fn).toHaveBeenCalled();
+  });
+
+  it("runs every call when skew protection is off", async () => {
+    vi.stubEnv("START_BUILD_ID", "");
+    const { fn } = await call({
+      "x-server-instance": "server-fn:1",
+      "x-start-build": "build-a",
+    });
+    expect(fn).toHaveBeenCalled();
+  });
+});
