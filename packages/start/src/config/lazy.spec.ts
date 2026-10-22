@@ -1,12 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import lazy from "./lazy.ts";
 
-async function transform(code: string, id = `${process.cwd()}/src/routes/page.tsx`) {
+async function transform(
+  code: string,
+  id = `${process.cwd()}/src/routes/page.tsx`,
+  root = process.cwd(),
+) {
   const plugin = lazy() as any;
-  const context = { environment: { name: "ssr" } };
+  const context = { environment: { name: "ssr", config: { root } } };
   return plugin.transform.call(context, code, id);
 }
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("lazy", () => {
   it("appends the module id without moving existing code", async () => {
@@ -27,6 +35,19 @@ describe("lazy", () => {
     expect(result.code).not.toMatch(/import \{ lazy \} from "solid-js"/);
     expect(result.code).toContain(`export const id$$ = "src/routes/page.tsx";`);
     expect(result.map).toBeTruthy();
+  });
+
+  it("names the module relative to the root when the working directory is a link to it", async () => {
+    // Vite (8.2 and later) resolves its root and module ids to the real path.
+    // On Windows the working directory keeps the junction or symlink path.
+    vi.spyOn(process, "cwd").mockReturnValue("/link/app");
+    const result = await transform(
+      `import { A } from "./a.ts";\nexport default A;`,
+      "/real/app/src/routes/page.tsx",
+      "/real/app",
+    );
+
+    expect(result.code).toContain(`export const id$$ = "src/routes/page.tsx";`);
   });
 
   it("skips a module without a default export or lazy", async () => {
