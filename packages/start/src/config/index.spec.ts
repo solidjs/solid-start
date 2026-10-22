@@ -81,3 +81,39 @@ describe("SERVER_BASE_URL", () => {
     await expect(serverBaseUrl({ base: "/app" }, command)).resolves.toBe("/app/");
   });
 });
+
+describe("resolve conditions", () => {
+  async function resolveEnvironments(command: ConfigEnv["command"] = "serve") {
+    const { resolveConfig } = await import("vite");
+    const config = await resolveConfig(
+      { root, logLevel: "silent", plugins: [solidStart()] },
+      command,
+      command === "build" ? "production" : "development",
+    );
+    return config.environments;
+  }
+
+  it("keeps Vite's client conditions", async () => {
+    const { client } = await resolveEnvironments();
+
+    expect(client.resolve.conditions).toEqual(expect.arrayContaining(["module", "browser"]));
+    expect(client.resolve.conditions).not.toContain("generic");
+  });
+
+  it("resolves the server to runtime-agnostic builds", async () => {
+    const { ssr } = await resolveEnvironments();
+
+    expect(ssr.resolve.conditions).toContain("generic");
+    expect(ssr.resolve.conditions).not.toContain("node");
+  });
+
+  it("pre-bundles the dev overlay's dependencies in dev only", async () => {
+    const dev = await resolveEnvironments("serve");
+    const build = await resolveEnvironments("build");
+
+    expect(dev.client.optimizeDeps.include).toContain("@solidjs/start > @jridgewell/trace-mapping");
+    expect(build.client.optimizeDeps.include ?? []).not.toContain(
+      "@solidjs/start > @jridgewell/trace-mapping",
+    );
+  });
+});
