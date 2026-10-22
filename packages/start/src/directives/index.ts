@@ -125,10 +125,7 @@ function invalidateModules(
 }
 
 export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[] {
-  const filter = createFilter(
-    options.filter?.include || DEFAULT_INCLUDE,
-    options.filter?.exclude || DEFAULT_EXCLUDE,
-  );
+  let filter: ReturnType<typeof createFilter>;
 
   let env: CompileOptions["env"];
 
@@ -177,6 +174,15 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
       enforce: "pre",
       configResolved(config) {
         env = config.mode !== "production" ? "development" : "production";
+        // Vite resolves its root like every module id: to the real path since
+        // Vite 8.2, unless `resolve.preserveSymlinks`. Patterns resolved against
+        // a working directory that reaches the project through a junction or
+        // symlink would match no module.
+        filter = createFilter(
+          options.filter?.include || DEFAULT_INCLUDE,
+          options.filter?.exclude || DEFAULT_EXCLUDE,
+          { resolve: config.root },
+        );
       },
       configureServer(server) {
         currentServer = server;

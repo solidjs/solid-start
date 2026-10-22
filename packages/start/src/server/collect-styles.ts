@@ -60,7 +60,8 @@ export async function findStylesInModuleGraph(
   id: string,
   filter: StyleFilter,
 ) {
-  const absolute = path.resolve(process.cwd(), id);
+  // Ids are relative to Vite's root, as `lazy` derives `id$$`.
+  const absolute = path.resolve(vite.config.root, id);
   const dependencies = new Set<EnvironmentModuleNode>();
 
   try {
