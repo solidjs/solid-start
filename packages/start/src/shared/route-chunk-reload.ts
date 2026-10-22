@@ -48,7 +48,7 @@ function reloadAfterNavigation(from: string): void {
  * Records a reload. Returns false when one already happened within
  * `RELOAD_WINDOW_MS`, or when it cannot be recorded.
  */
-function recordReload(): boolean {
+export function recordReload(): boolean {
   try {
     const now = Date.now();
     const last = Number(sessionStorage.getItem(STORAGE_KEY));

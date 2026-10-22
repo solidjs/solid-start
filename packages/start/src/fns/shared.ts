@@ -8,6 +8,12 @@ export const BODY_FORMAT_KEY = "X-Start-Type";
 
 export const BODY_FORMAL_FILE = "__START__";
 
+/** Carries the client's build ID on a server function call. */
+export const BUILD_ID_KEY = "X-Start-Build";
+
+/** Marks a call rejected because the client and server builds differ. */
+export const SKEW_KEY = "X-Start-Skew";
+
 export const enum BodyFormat {
   Seroval = "0",
   String = "1",
