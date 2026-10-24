@@ -94,6 +94,18 @@ test.describe("server-function", () => {
     await page.goto("http://localhost:3000/server-function-blob");
     await expect(page.locator("#server-fn-test")).toContainText('{"result":true}');
   });
+  test("should send files next to other arguments", async ({ page }) => {
+    await page.goto("http://localhost:3000/server-function-upload");
+    await expect(page.locator("#server-fn-test")).toContainText(
+      JSON.stringify({
+        name: "hello-world.txt",
+        text: "Hello, World!",
+        tags: ["a", "b"],
+        attachments: ["one", "two"],
+        avatar: "avatar.png:png",
+      }),
+    );
+  });
   test("should remove exports for non-function values when top-level use server is used", async ({
     page,
   }) => {

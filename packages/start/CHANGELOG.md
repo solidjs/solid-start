@@ -1,5 +1,40 @@
 # @solidjs/start
 
+## 2.1.0
+
+### Minor Changes
+
+- ad92979: Add `ssr: "data-only"`. The app renders on the client without hydration, as with `ssr: false`, but the server runs the requested page's route `preload`s and streams their query results with the HTML shell, so the client doesn't fetch that data again.
+
+### Patch Changes
+
+- 5de5afd: Bump `seroval` and `seroval-plugins` to 1.6.11.
+- c30a825: Support a full URL in Vite's `base` so assets can be served from a CDN, completing the base URL prefixing from 2.0.3. Entry, stylesheet, modulepreload and serialized manifest paths no longer collapse `https://` into `https:/`, and server functions post to the path the app is mounted at (`server.baseURL`, else Vite's `base` when it is a plain path, else `/`) instead of the asset base. There is no CDN in development: Vite serves the assets itself, including the public directory, under the URL's path, while the app stays at the root. Root-relative links to public files therefore differ between dev and a build; setting the CDN `base` for production builds only avoids that.
+- 2ff5882: Let a `clientOnly` loader resolve to the component itself, so a named export works without wrapping it in `{ default }`:
+
+  ```tsx
+  const Chart = clientOnly(() => import("./chart").then(({ Chart }) => Chart));
+  ```
+
+  Destructuring the export inside the loader also lets the bundler leave the module's other exports out of the chunk.
+
+- 45bacdb: Stop the dev toolbar's CSS from shipping in production builds. The error boundary statically imports the dev toolbar, whose module imports its stylesheet as a side effect. The toolbar is dead code in production, but the stylesheet survived because the package declared no `sideEffects`, so its styles were bundled into the client CSS. The package now marks only CSS files as having side effects, letting the bundler drop the toolbar and its styles from production output.
+- 9ce2a5d: Add an `earlyHints` option that sends the page's assets as `103 Early Hints`, so the browser can start downloading them while the server is still rendering. It covers the app's entry assets and the assets of the routes being rendered. On runtimes other than Node, the same hints are added as `Link` headers on the response. Off by default, and only applies to production builds.
+- 6c9b0c9: Fall back to client rendering when the browser's path or query changes before hydration starts, preventing hydration mismatches and stale server data after early navigation.
+- a235891: Speed up the server function and lazy transforms.
+
+  - Modules without `"use server"` are no longer parsed by the server function transform.
+  - The server build no longer parses a module with Babel only to add its lazy id.
+  - Modules with many server functions compile about 4 times faster.
+  - A module with a server function no longer fails to compile when it has an unused `for...of` or `for...in` loop variable, or a chain of unused declarations.
+
+- 017001e: Keep the result of a form submitted without JavaScript when its form data is too large for the flash cookie. Browsers silently drop cookies over 4096 bytes, so a large textarea used to make `useSubmission()` come back empty on the page the action redirected to. The form data is now left out of the cookie when it would not fit, the result and error still come through, and a warning is logged on the server.
+- e0e6f6d: Reload the browser when `entry-server` or the middleware changes in dev. Both are server-only, so Vite had nothing to send the browser and the page kept showing the previously rendered output until it was refreshed by hand.
+- 6a9fb75: Reload the page once when a route's code fails to load during client-side navigation, such as when a deploy replaced it while the page was open. Before, the navigation ended on an error page until the user refreshed by hand. The page now reloads at the destination and loads the new version. A route that still fails right after the reload shows the error instead of reloading again. This only applies to production builds, and can be turned off with `reloadOnRouteChunkError: false`.
+- 207cfd2: Make `solid-js` a peer dependency instead of a regular one. When an app's `solid-js` version was outside the range SolidStart asked for, package managers installed a second copy just for SolidStart. The two copies did not share reactive context, so client-side navigation broke with `TypeError: Cannot read properties of null (reading 'push')`. SolidStart now uses the app's `solid-js`, and a version outside the supported range shows up as a peer dependency warning at install time.
+- eb50f39: Serve pages in SPA mode (`ssr: false`) when a route file exports both a page and an API handler, such as a `[...404].tsx` with a `GET`. The server treated those routes as API-only, so a `GET` that returned nothing gave a 404 for every URL the route matched.
+- ad92979: Export `getServerFunctionMeta`, `decorateHandler` and `decorateMiddleware` from `@solidjs/start/server` in SPA mode (`ssr: false`), so apps using them build.
+
 ## 2.0.6
 
 ### Patch Changes

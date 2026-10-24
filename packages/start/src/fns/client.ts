@@ -5,6 +5,7 @@ import {
   serializeToJSONString,
 } from "./serialization.ts";
 import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
+import { appendUploads, ARGS_PART, createUploadSerializer } from "./uploads.ts";
 
 let INSTANCE = 0;
 
@@ -55,10 +56,26 @@ async function initializeResponse(
     }
   }
   // Fallback to seroval
+  const files: Blob[] = [];
+  // TODO(Alexis): move to serializeToJSONStream
+  const serialized = await serializeToJSONString(args, [createUploadSerializer(files)]);
+  if (files.length > 0) {
+    // Files go as form parts, so they are sent as they are instead of encoded.
+    const formData = new FormData();
+    formData.set(ARGS_PART, serialized);
+    await appendUploads(formData, files);
+    return createRequest(base, id, instance, {
+      ...options,
+      body: formData,
+      headers: {
+        ...options.headers,
+        [BODY_FORMAT_KEY]: BodyFormat.SerovalFormData,
+      },
+    });
+  }
   return createRequest(base, id, instance, {
     ...options,
-    // TODO(Alexis): move to serializeToJSONStream
-    body: await serializeToJSONString(args),
+    body: serialized,
     // duplex: 'half',
     // body: serializeToJSONStream(args),
     headers: {

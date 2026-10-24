@@ -224,6 +224,11 @@ export interface SolidStartOptions {
   };
 }
 
+// The dev overlay is served unbundled (solid packages are excluded from
+// pre-bundling), and with the "browser" condition @jridgewell/trace-mapping
+// imports the UMD build of @jridgewell/resolve-uri, which has no ESM exports.
+const DEV_OVERLAY_DEPENDENCIES = ["@solidjs/start > @jridgewell/trace-mapping"];
+
 const absolute = (path: string, root: string) =>
   path ? (isAbsolute(path) ? path : join(root, path)) : path;
 
@@ -293,10 +298,16 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     {
       name: "solid-start:config",
       enforce: "pre",
-      configEnvironment(name) {
+      configEnvironment(name, config) {
+        // Setting resolve.conditions replaces Vite's defaults instead of extending
+        // them. Server environments drop "node" on purpose, so that h3 resolves to
+        // its runtime-agnostic build, but the client must keep "browser" and
+        // "module": without them, packages exposing a "browser" export condition
+        // resolve to their Node build in the browser.
+        const isClient = name === VITE_ENVIRONMENTS.client || config.consumer === "client";
         return {
           resolve: {
-            conditions: ["generic"],
+            ...(isClient ? {} : { conditions: ["generic"] }),
             // remove when https://github.com/solidjs/vite-plugin-solid/pull/228 is released
             externalConditions: ["solid", "node"],
           },
@@ -343,6 +354,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           environments: {
             [VITE_ENVIRONMENTS.client]: {
               consumer: "client",
+              ...(env.command === "serve" && start.devOverlay
+                ? { optimizeDeps: { include: DEV_OVERLAY_DEPENDENCIES } }
+                : {}),
               build: {
                 write: true,
                 manifest: true,

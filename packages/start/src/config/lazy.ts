@@ -1,9 +1,9 @@
 import type { PluginItem } from "@babel/core";
 import babel from "@babel/core";
 import * as t from "@babel/types";
-import { sep as osSep } from "node:path";
-import { basename, relative, sep } from "node:path/posix";
-import type { PluginOption } from "vite";
+import { relative } from "node:path";
+import { basename } from "node:path/posix";
+import { normalizePath, type PluginOption } from "vite";
 import { VITE_ENVIRONMENTS } from "./constants.ts";
 
 const importTransform = (): PluginItem => {
@@ -31,8 +31,6 @@ const importTransform = (): PluginItem => {
 const fileEndingRegex = /(ts|js)x(\?.*)?$/;
 
 const lazy = (): PluginOption => {
-  const cwd = process.cwd().replaceAll(osSep, sep);
-
   /**
    * Maps module ids to their client-specific shared chunk names.
    * Modules in shared chunks need to find their assets via the chunk name, instead of their module id.
@@ -84,7 +82,11 @@ const lazy = (): PluginOption => {
       // source map of the input still applies to the output.
       let idExport = "";
       if (src.indexOf("export default") !== -1) {
-        const chunkName = sharedChunkNames[id] ?? relative(cwd, id);
+        // Derived the way Vite derives the client manifest keys it is looked
+        // up by. Relative to the working directory, it would match no key when
+        // that directory reaches the project through a junction or symlink.
+        const chunkName =
+          sharedChunkNames[id] ?? normalizePath(relative(this.environment.config.root, id));
         idExport = `\nexport const id$$ = ${JSON.stringify(chunkName)};\n`;
       }
 

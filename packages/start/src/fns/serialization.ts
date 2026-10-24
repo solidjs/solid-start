@@ -4,8 +4,9 @@ import {
   Feature,
   fromCrossJSON,
   getCrossReferenceHeader,
-  isStream,
+  type Plugin,
   type SerovalNode,
+  Stream,
   toCrossJSONStream,
 } from "seroval";
 import {
@@ -47,6 +48,14 @@ const DEFAULT_PLUGINS = [
  * rather than a runtime option.
  */
 const PLUGINS = [...DEFAULT_PLUGINS, ...userPlugins];
+
+/**
+ * Plugins for one call, such as the ones that carry files as form parts. They
+ * come first, so the values they handle never reach the other plugins.
+ */
+function withPlugins(extra: Plugin<any, any>[] | undefined) {
+  return extra?.length ? [...extra, ...PLUGINS] : PLUGINS;
+}
 const MAX_SERIALIZATION_DEPTH_LIMIT = 64;
 const DISABLED_FEATURES = Feature.RegExp;
 
@@ -144,13 +153,13 @@ export function serializeToJSStream(id: string, value: any) {
   });
 }
 
-export function serializeToJSONStream(value: any) {
+export function serializeToJSONStream(value: any, plugins?: Plugin<any, any>[]) {
   return new ReadableStream({
     start(controller) {
       toCrossJSONStream(value, {
         disabledFeatures: SERIALIZE_DISABLED_FEATURES,
         depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
-        plugins: PLUGINS,
+        plugins: withPlugins(plugins),
         onParse(node) {
           enqueueChunk(controller, JSON.stringify(node));
         },
@@ -195,6 +204,11 @@ function malformed(): Error {
 export interface SerovalChunkReaderOptions {
   /** Rejects any chunk larger than this many bytes. */
   maxChunkSize?: number;
+}
+
+export interface DeserializeJSONStreamOptions extends SerovalChunkReaderOptions {
+  /** Plugins for this body only, tried before the others. */
+  plugins?: Plugin<any, any>[];
 }
 
 export class SerovalChunkReader {
@@ -332,8 +346,9 @@ class DecodedRefs extends Map<number, unknown> {
  * Fails every value still waiting on a frame that will not arrive. Seroval
  * keeps these in the refs between frames: open streams and pending-promise
  * resolvers (`{ p, s, f }`). `fromCrossJSON` builds streams from seroval's
- * internal `Stream` class, which only `isStream` recognizes; the eval-based
- * `deserialize` rebuilds them as plain `__SEROVAL_STREAM__` objects. Throwing
+ * `Stream` class; the eval-based `deserialize` rebuilds them as plain
+ * `__SEROVAL_STREAM__` objects. Decoding never builds a `LiveStream`, which
+ * `isStream` also matches, so `instanceof Stream` is the check. Throwing
  * into a closed stream and rejecting a settled promise are no-ops, so this is
  * safe to run after a body that ended normally.
  *
@@ -344,7 +359,7 @@ function settlePendingRefs(refs: Iterable<unknown>, error: unknown) {
     if (value === null || typeof value !== "object") continue;
     try {
       const ref = value as Record<string, any>;
-      if (isStream(ref)) {
+      if (ref instanceof Stream) {
         ref.throw(error);
       } else if (ref.__SEROVAL_STREAM__ === true && typeof ref.throw === "function") {
         ref.throw(error);
@@ -368,19 +383,22 @@ function createEndOfStreamError() {
   return new Error("Server function stream ended unexpectedly.");
 }
 
-export async function serializeToJSONString(value: any) {
-  const response = new Response(serializeToJSONStream(value));
+export async function serializeToJSONString(value: any, plugins?: Plugin<any, any>[]) {
+  const response = new Response(serializeToJSONStream(value, plugins));
   return await response.text();
 }
 
-export async function deserializeFromJSONString(json: string) {
+export async function deserializeFromJSONString(
+  json: string,
+  options?: DeserializeJSONStreamOptions,
+) {
   const blob = new Response(json);
-  return await deserializeJSONStream(blob);
+  return await deserializeJSONStream(blob, options);
 }
 
 export async function deserializeJSONStream(
   response: Response | Request,
-  options?: SerovalChunkReaderOptions,
+  options?: DeserializeJSONStreamOptions,
 ) {
   if (!response.body) {
     throw new Error("missing body");
@@ -392,13 +410,14 @@ export async function deserializeJSONStream(
   });
   if (!result.done) {
     const refs = new DecodedRefs();
+    const plugins = withPlugins(options?.plugins);
 
     function interpretChunk(chunk: string): unknown {
       const value = fromCrossJSON(JSON.parse(chunk) as SerovalNode, {
         refs,
         disabledFeatures: DISABLED_FEATURES,
         depthLimit: MAX_SERIALIZATION_DEPTH_LIMIT,
-        plugins: PLUGINS,
+        plugins,
       });
       return value;
     }
