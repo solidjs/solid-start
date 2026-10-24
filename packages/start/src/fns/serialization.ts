@@ -4,9 +4,9 @@ import {
   Feature,
   fromCrossJSON,
   getCrossReferenceHeader,
-  isStream,
   type Plugin,
   type SerovalNode,
+  Stream,
   toCrossJSONStream,
 } from "seroval";
 import {
@@ -346,8 +346,9 @@ class DecodedRefs extends Map<number, unknown> {
  * Fails every value still waiting on a frame that will not arrive. Seroval
  * keeps these in the refs between frames: open streams and pending-promise
  * resolvers (`{ p, s, f }`). `fromCrossJSON` builds streams from seroval's
- * internal `Stream` class, which only `isStream` recognizes; the eval-based
- * `deserialize` rebuilds them as plain `__SEROVAL_STREAM__` objects. Throwing
+ * `Stream` class; the eval-based `deserialize` rebuilds them as plain
+ * `__SEROVAL_STREAM__` objects. Decoding never builds a `LiveStream`, which
+ * `isStream` also matches, so `instanceof Stream` is the check. Throwing
  * into a closed stream and rejecting a settled promise are no-ops, so this is
  * safe to run after a body that ended normally.
  *
@@ -358,7 +359,7 @@ function settlePendingRefs(refs: Iterable<unknown>, error: unknown) {
     if (value === null || typeof value !== "object") continue;
     try {
       const ref = value as Record<string, any>;
-      if (isStream(ref)) {
+      if (ref instanceof Stream) {
         ref.throw(error);
       } else if (ref.__SEROVAL_STREAM__ === true && typeof ref.throw === "function") {
         ref.throw(error);
