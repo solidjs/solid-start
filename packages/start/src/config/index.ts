@@ -1,4 +1,5 @@
 import { defu } from "defu";
+import { randomUUID } from "node:crypto";
 import { globSync } from "node:fs";
 import { basename, extname, isAbsolute, join } from "node:path";
 import type { PluginOption, FilterPattern, UserConfig } from "vite";
@@ -221,6 +222,33 @@ export interface SolidStartOptions {
      * @example "src/server-fn-error.ts"
      */
     onError?: string;
+
+    /**
+     * Reject server function calls from a page loaded before the latest
+     * deploy, and reload that page so it runs the new version.
+     *
+     * Each production build gets an ID that is baked into both the client and
+     * the server. The client sends its ID with every server function call. A
+     * server with a different ID answers with `409` instead of running the
+     * function, and the client reloads the page once. A call that still fails
+     * right after the reload rejects instead of reloading again.
+     *
+     * Every deploy invalidates every open page this way, even when the
+     * function did not change, because a changed argument or return type
+     * cannot be told apart from an unchanged one.
+     *
+     * Requests without the ID, such as no-JS form submissions or
+     * pages built before this option was turned on, are not checked.
+     *
+     * Pass `{ buildId }` when several machines build the same code for one
+     * deploy, such as a commit hash, so their IDs match. Otherwise each build
+     * gets a random ID.
+     *
+     * Only applies to production builds.
+     *
+     * @default false
+     */
+    skewProtection?: boolean | { buildId?: string };
   };
 }
 
@@ -256,6 +284,16 @@ function resolveServerBaseUrl(config: UserConfig) {
   return withSlashes(new URL(base, "http://vite.dev").pathname);
 }
 
+// An empty ID turns the check off on both sides.
+function resolveBuildId(
+  skewProtection: NonNullable<SolidStartOptions["serverFunctions"]>["skewProtection"],
+  command: "build" | "serve",
+  fallback: string,
+) {
+  if (!skewProtection || command !== "build") return "";
+  return (typeof skewProtection === "object" && skewProtection.buildId) || fallback;
+}
+
 export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
   const start = defu(options ?? {}, {
     appRoot: "./src",
@@ -278,6 +316,8 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
     throw new Error(`Could not find an app jsx/tsx entry in ${start.appRoot}.`);
   }
   const entryExtension = extname(appEntryPath);
+  // created once, so every environment of the build gets the same ID
+  const randomBuildId = randomUUID();
   const handlers = {
     client: `${start.appRoot}/entry-client${entryExtension}`,
     server: `${start.appRoot}/entry-server${entryExtension}`,
@@ -319,6 +359,11 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
           env.command === "serve" && config.experimental?.bundledDev
             ? `assets/${basename(handlers.client, entryExtension)}.js`
             : handlers.client;
+        const buildId = resolveBuildId(
+          options?.serverFunctions?.skewProtection,
+          env.command,
+          randomBuildId,
+        );
         if (env.command === "build") {
           const clientRouter: BaseFileSystemRouter = (globalThis as any).ROUTERS.client;
           for (const route of await clientRouter.getRoutes()) {
@@ -422,6 +467,7 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             ),
             "import.meta.env.SERVER_BASE_URL": JSON.stringify(resolveServerBaseUrl(config)),
             "import.meta.env.SEROVAL_MODE": JSON.stringify(start.serialization?.mode || "json"),
+            "import.meta.env.START_BUILD_ID": JSON.stringify(buildId),
           },
           builder: {
             sharedPlugins: true,

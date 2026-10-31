@@ -1,10 +1,18 @@
 import { type Component } from "solid-js";
 import { pushRequest, pushResponse } from "../shared/dev-toolbar/functions/tracker.ts";
+import { recordReload } from "../shared/route-chunk-reload.ts";
 import {
   // serializeToJSONStream,
   serializeToJSONString,
 } from "./serialization.ts";
-import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
+import {
+  BODY_FORMAT_KEY,
+  BodyFormat,
+  BUILD_ID_KEY,
+  extractBody,
+  getHeadersAndBody,
+  SKEW_KEY,
+} from "./shared.ts";
 import { appendUploads, ARGS_PART, createUploadSerializer } from "./uploads.ts";
 
 let INSTANCE = 0;
@@ -17,6 +25,7 @@ async function createRequest(base: string, id: string, instance: string, options
       ...options.headers,
       "X-Server-Id": id,
       "X-Server-Instance": instance,
+      ...(import.meta.env.START_BUILD_ID ? { [BUILD_ID_KEY]: import.meta.env.START_BUILD_ID } : {}),
     },
   });
   if (import.meta.env.DEV) {
@@ -96,6 +105,10 @@ async function fetchServerFunction(
 
   const response = await initializeResponse(base, id, instance, options, args);
 
+  if (import.meta.env.START_BUILD_ID && response.headers.has(SKEW_KEY)) {
+    return handleSkew();
+  }
+
   if (
     response.headers.has("Location") ||
     response.headers.has("X-Revalidate") ||
@@ -115,6 +128,23 @@ async function fetchServerFunction(
     throw result ?? new Error(`Server function call failed with status ${response.status}`);
   }
   return result;
+}
+
+/**
+ * The server was deployed with a different build since this page loaded, so
+ * the page reloads to run the new version. The call never settles, so the
+ * page does not show an error in the moment before the reload. A second skew
+ * within the reload window rejects instead, so a server that keeps answering
+ * from another build (a load balancer mixing old and new instances) does not
+ * reload the page in a loop.
+ */
+function handleSkew(): Promise<never> {
+  if (!recordReload()) {
+    throw new Error("Server function call rejected: the server runs a different build");
+  }
+  console.warn("[solid-start] The server was updated, reloading the page.");
+  location.reload();
+  return new Promise(() => {});
 }
 
 export function cloneServerReference(id: string) {

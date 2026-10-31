@@ -11,7 +11,14 @@ import {
   serializeToJSONStream,
   serializeToJSStream,
 } from "./serialization.ts";
-import { BODY_FORMAT_KEY, BodyFormat, extractBody, getHeadersAndBody } from "./shared.ts";
+import {
+  BODY_FORMAT_KEY,
+  BodyFormat,
+  BUILD_ID_KEY,
+  extractBody,
+  getHeadersAndBody,
+  SKEW_KEY,
+} from "./shared.ts";
 import "solid-start:server-fn-manifest";
 
 import { getServerFunction, hasServerFunction } from "./registration.ts";
@@ -53,6 +60,19 @@ function isCrossSiteRequest(request: Request, url: URL): boolean {
   // No Origin either (a same-origin GET, or a non-browser client): nothing to
   // reject on.
   return false;
+}
+
+/**
+ * With skew protection on, a client from another build may call a function
+ * that changed or no longer exists, so its call is refused before it runs. A
+ * request without a build ID (a no-JS form submission, a page from a
+ * build without skew protection) is let through.
+ */
+function isSkewedRequest(request: Request): boolean {
+  const buildId = import.meta.env.START_BUILD_ID;
+  if (!buildId) return false;
+  const clientBuildId = request.headers.get(BUILD_ID_KEY);
+  return !!clientBuildId && clientBuildId !== buildId;
 }
 
 const CACHE_CONTROL = "Cache-Control";
@@ -130,6 +150,10 @@ async function runServerFunction(h3Event: H3Event) {
       import.meta.env.DEV ? "Cross-site server function requests are not allowed" : null,
       { status: 403 },
     );
+  }
+
+  if (isSkewedRequest(request)) {
+    return new Response(null, { status: 409, headers: { [SKEW_KEY]: "true" } });
   }
 
   const serverReference = request.headers.get("X-Server-Id");
