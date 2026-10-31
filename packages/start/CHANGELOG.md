@@ -1,5 +1,19 @@
 # @solidjs/start
 
+## 2.2.0
+
+### Minor Changes
+
+- 876881b: Add `serverFunctions.skewProtection`. When it is on, a page loaded before a deploy can no longer call the new server's functions with an outdated client. The server answers such a call with `409` instead of running the function, and the page reloads once to load the new version. Each build gets a random ID, or pass `{ buildId }` (such as a commit hash) when several machines build the same deploy. Only applies to production builds, and is off by default.
+- d329369: Let server functions take files and blobs anywhere in their arguments, not only as the only argument. A call like `upload(file, { tags })`, or one with files in arrays, objects, maps, sets or form data, sends them as parts of multipart form data next to the serialized arguments, and the server function gets them as `File` values. Calls without files are sent as before.
+
+### Patch Changes
+
+- 6a7a496: Bump `seroval` and `seroval-plugins` to 1.7.0.
+- ecc390b: Keep the API route matcher out of the client bundle. It is only used on the server, but the client loaded it with the page routes, which added about 2.5 KB of unused code. Routes that only export an `OPTIONS` handler are now matched as API routes.
+- e8bd8c0: Keep Vite's default resolve conditions ("module", "browser") in the client environment: since 2.1.0, packages exposing a "browser" export condition (e.g. `@sentry/solidstart`) resolved to their Node build in the browser. The dev overlay's `@jridgewell/trace-mapping` is now pre-bundled, as the "browser" condition makes it import a UMD build.
+- 6280546: Resolve the server function filter and the ids of lazily loaded modules against Vite's root instead of the working directory. On Windows a working directory entered through a junction or symlink keeps that path, while Vite (8.2 and later) resolves the root and every module id to the real path. The filter then matched no module, so no `"use server"` function was compiled: its body shipped in the client bundle, and the build failed with `Attempt to import 'server-only' in a client module` once one of them imported server-only code such as `@solidjs/start/http`. The ids of lazily loaded route components matched no client manifest entry either, so their CSS was missing from the server-rendered HTML. Relative patterns in the `serverFunctions.filter` option now resolve against Vite's root too.
+
 ## 2.1.0
 
 ### Minor Changes
