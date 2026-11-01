@@ -41,7 +41,7 @@ jobs:
         run: pnpm --filter @solidjs/start test:ci
 
       - name: E2E Chromium
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           project: ./apps/tests
           install: false
@@ -51,7 +51,7 @@ jobs:
           browser: chromium
 
       - name: E2E Firefox
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           project: ./apps/tests
           install: false
