@@ -1,3 +1,4 @@
+import { createPlugin, type SerovalNode } from "seroval";
 import { createApp, toWebHandler } from "vinxi/http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { serializeToJSONString } from "./serialization";
@@ -93,6 +94,59 @@ describe("server function uploads", () => {
     expect(form.has(`${FILE_PART}0`)).toBe(true);
     expect(form.has(`${FILE_PART}1`)).toBe(false);
     expect((second as { again: File }).again).toBe(first);
+  });
+
+  it("keeps the type of a blob", async () => {
+    const [received] = await roundTrip(new Blob(["{}"], { type: "application/json" }));
+
+    expect(received).toBeInstanceOf(Blob);
+    expect((received as Blob).type).toBe("application/json");
+    expect(await (received as Blob).text()).toBe("{}");
+  });
+
+  it("keeps a blob a blob, with its empty type", async () => {
+    const [received] = await roundTrip(new Blob(["raw"]));
+
+    // Every part arrives as a file, and an empty type as application/octet-stream.
+    expect(received).toBeInstanceOf(Blob);
+    expect(received).not.toBeInstanceOf(File);
+    expect((received as Blob).type).toBe("");
+    expect(await (received as Blob).text()).toBe("raw");
+  });
+
+  it("keeps the name and lastModified of a file", async () => {
+    // The form encoder escapes a quote as %22, and the parser decodes every %22.
+    const file = new File(["x"], 'a"b%22.txt', { type: "text/plain", lastModified: 1234 });
+
+    const [received] = await roundTrip(file);
+
+    expect((received as File).name).toBe('a"b%22.txt');
+    expect((received as File).lastModified).toBe(1234);
+  });
+
+  it("reads an upload from a client that sends only the index", async () => {
+    // The plugin of clients before the metadata fields.
+    const legacy = createPlugin<Blob, { i: SerovalNode }>({
+      tag: "solid-start/upload",
+      test: value => value instanceof Blob,
+      parse: {
+        sync: (_value, ctx) => ({ i: ctx.parse(0) }),
+        async: async (_value, ctx) => ({ i: await ctx.parse(0) }),
+        stream: (_value, ctx) => ({ i: ctx.parse(0) })
+      },
+      serialize: () => "",
+      deserialize: () => {
+        throw new Error("unused");
+      }
+    });
+    const form = new FormData();
+    form.set(ARGS_PART, await serializeToJSONString([new File(["x"], "x.txt")], [legacy]));
+    form.set(`${FILE_PART}0`, new File(["x"], "x.txt"));
+
+    const [received] = (await readUploadArgs(form)) as [File];
+
+    expect(received.name).toBe("x.txt");
+    expect(await received.text()).toBe("x");
   });
 
   it("copies a blob from another frame", async () => {

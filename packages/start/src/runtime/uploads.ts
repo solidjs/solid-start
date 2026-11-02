@@ -47,7 +47,14 @@ const UPLOAD_TAG = "solid-start/upload";
  * bodies for a while, because an open tab can call a newer server.
  */
 
-type UploadNode = { i: SerovalNode };
+/**
+ * The index of the part, and what a multipart part does not keep: the type
+ * (an empty one arrives as `application/octet-stream`), whether the value was
+ * a blob or a file (every part arrives as a file), and the file's name (some
+ * characters are escaped) and `lastModified`. Clients before these fields
+ * send only the index.
+ */
+type UploadNode = { i: SerovalNode; t?: SerovalNode; n?: SerovalNode; l?: SerovalNode };
 
 /**
  * True for a file or a blob. One from another frame is an instance of that
@@ -70,20 +77,43 @@ function malformed(): Error {
   return new Error("Malformed server function upload.");
 }
 
+function isFile(value: Blob): value is File {
+  const file = value as Partial<File>;
+  return typeof file.name === "string" && typeof file.lastModified === "number";
+}
+
 /**
  * Serializes each file or blob in the arguments as its index in `files`, so
  * the call can send it as a form part. Seroval calls this wherever it finds
  * one: in arrays, objects, maps, sets and form data.
  */
 export function createUploadSerializer(files: Blob[]): Plugin<Blob, UploadNode> {
-  const parse = (value: Blob) => files.push(value) - 1;
+  // The fields are plain values, so the sync parser works for every mode.
+  const parse = (value: Blob, ctx: { parse(value: unknown): SerovalNode }): UploadNode => {
+    const node: UploadNode = { i: ctx.parse(files.push(value) - 1), t: ctx.parse(value.type) };
+    if (isFile(value)) {
+      node.n = ctx.parse(value.name);
+      node.l = ctx.parse(value.lastModified);
+    }
+    return node;
+  };
   return createPlugin<Blob, UploadNode>({
     tag: UPLOAD_TAG,
     test: isBlob,
     parse: {
-      sync: (value, ctx) => ({ i: ctx.parse(parse(value)) }),
-      async: async (value, ctx) => ({ i: await ctx.parse(parse(value)) }),
-      stream: (value, ctx) => ({ i: ctx.parse(parse(value)) })
+      sync: parse,
+      async: async (value, ctx) => {
+        const node: UploadNode = {
+          i: await ctx.parse(files.push(value) - 1),
+          t: await ctx.parse(value.type)
+        };
+        if (isFile(value)) {
+          node.n = await ctx.parse(value.name);
+          node.l = await ctx.parse(value.lastModified);
+        }
+        return node;
+      },
+      stream: parse
     },
     serialize: (node, ctx) => ctx.serialize(node.i),
     deserialize: () => {
@@ -122,7 +152,16 @@ export function createUploadDeserializer(form: FormData): Plugin<Blob, UploadNod
       }
       const part = form.get(`${FILE_PART}${index}`);
       if (!(part instanceof Blob)) throw malformed();
-      return part;
+      // A client before the metadata fields sends only the index.
+      if (node.t === undefined) return part;
+      const type = ctx.deserialize(node.t);
+      if (typeof type !== "string") throw malformed();
+      // The new blob or file refers to the bytes of the part instead of copying them.
+      if (node.n === undefined) return new Blob([part], { type });
+      const name = ctx.deserialize(node.n);
+      const lastModified = node.l === undefined ? undefined : ctx.deserialize(node.l);
+      if (typeof name !== "string" || typeof lastModified !== "number") throw malformed();
+      return new File([part], name, { type, lastModified });
     }
   });
 }
