@@ -22,6 +22,16 @@ test.describe("api calls", () => {
     expect(redirectResp.headers.get("x-shared-header")).toBe("event");
   });
 
+  test("should serve the page for HEAD when the GET handler returns nothing", async () => {
+    // `[...404].tsx` exports a page and a `GET` that only answers JSON requests.
+    const get = await fetch("http://localhost:3000/no-such-page");
+    const head = await fetch("http://localhost:3000/no-such-page", { method: "HEAD" });
+
+    expect(get.status).toBe(404);
+    expect(head.status).toBe(get.status);
+    expect(head.headers.get("content-type")).toBe(get.headers.get("content-type"));
+  });
+
   test("should preserve multiple Set-Cookie headers on redirect (RFC 6265)", async () => {
     const response = await fetch("http://localhost:3000/api/multi-set-cookie-redirect", {
       redirect: "manual",
