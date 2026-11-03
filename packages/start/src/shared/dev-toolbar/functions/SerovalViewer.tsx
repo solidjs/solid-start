@@ -1,11 +1,13 @@
-import type { SerovalNode } from "seroval";
+import { Feature, fromCrossJSON, type SerovalNode } from "seroval";
 import { createEffect, createSignal, For, type JSX, Show } from "solid-js";
 
 import { Badge } from "../../ui/Badge.tsx";
+import { BlobViewer } from "./BlobViewer.tsx";
 import { HexViewer } from "./HexViewer.tsx";
 import { PropertySeparator, SerovalValue } from "./SerovalValue.tsx";
 
 import { SerovalChunkReader } from "../../../fns/serialization.ts";
+import { FILE_PART, UPLOAD_TAG } from "../../../fns/uploads.ts";
 import "./SerovalViewer.css";
 
 function LinkIcon(props: JSX.IntrinsicElements["svg"] & { title: string }): JSX.Element {
@@ -29,6 +31,8 @@ function LinkIcon(props: JSX.IntrinsicElements["svg"] & { title: string }): JSX.
 
 export interface SerovalViewerProps {
   stream: Request | Response;
+  /** The form a multipart call sent, so each upload shows its file part. */
+  uploads?: FormData;
 }
 
 function getNodeType(node: SerovalNode) {
@@ -386,6 +390,7 @@ interface RenderContext {
   getNode: (index: number) => SerovalNode | undefined;
   getPromise: (index: number) => Extract<SerovalNode, { t: 23 | 24 }> | undefined;
   getStream: (index: number) => Extract<SerovalNode, { t: 32 | 33 | 34 }>[] | undefined;
+  getUpload: (node: SerovalNode) => Blob | undefined;
 }
 
 function getStreamKeyword(t: 32 | 33 | 34): string {
@@ -908,7 +913,15 @@ function TreeValue(props: TreeValueProps): JSX.Element {
         </ExpandableRow>
       );
     // Plugin = 25,
-    case 25:
+    case 25: {
+      const upload = ctx.getUpload(node);
+      if (upload) {
+        return (
+          <LeafRow label={props.label}>
+            <BlobViewer source={upload} />
+          </LeafRow>
+        );
+      }
       return (
         <ExpandableRow
           label={props.label}
@@ -923,6 +936,7 @@ function TreeValue(props: TreeValueProps): JSX.Element {
           </For>
         </ExpandableRow>
       );
+    }
     // IteratorFactoryInstance = 28,
     case 28:
     // AsyncIteratorFactoryInstance = 30,
@@ -1035,6 +1049,38 @@ function createSimpleStore<T extends Record<string | number, unknown>>(initial: 
   };
 }
 
+/**
+ * Reads a primitive node, such as a string or a number, in an upload node.
+ */
+function readPrimitive(node: SerovalNode | undefined): unknown {
+  if (!node) return undefined;
+  return fromCrossJSON(node, { refs: new Map(), disabledFeatures: Feature.RegExp });
+}
+
+/**
+ * Finds the file part of an upload node written by `createUploadSerializer`,
+ * and gives it the type, name and last modified time the node holds, as the
+ * server does.
+ */
+function getUpload(uploads: FormData | undefined, node: SerovalNode): Blob | undefined {
+  if (!uploads || node.t !== 25 || node.c !== UPLOAD_TAG) return undefined;
+  const fields = node.s as { i?: SerovalNode; t?: SerovalNode; n?: SerovalNode; l?: SerovalNode };
+  const index = readPrimitive(fields.i);
+  if (typeof index !== "number") return undefined;
+  const part = uploads.get(`${FILE_PART}${index}`);
+  if (!(part instanceof Blob)) return undefined;
+  // A client before the metadata fields sends only the index.
+  const type = readPrimitive(fields.t);
+  if (typeof type !== "string") return part;
+  const name = readPrimitive(fields.n);
+  if (typeof name !== "string") return new Blob([part], { type });
+  const lastModified = readPrimitive(fields.l);
+  return new File([part], name, {
+    type,
+    lastModified: typeof lastModified === "number" ? lastModified : undefined,
+  });
+}
+
 export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
   const [selected, setSelected] = createSignal<SerovalNode>();
 
@@ -1128,6 +1174,7 @@ export function SerovalViewer(props: SerovalViewerProps): JSX.Element {
               getNode: index => references.read(index),
               getPromise: index => promises.read(index),
               getStream: index => streams.read(index),
+              getUpload: node => getUpload(props.uploads, node),
             }}
             node={root}
             seen={[]}

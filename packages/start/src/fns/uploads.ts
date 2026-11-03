@@ -9,7 +9,7 @@ import { createPlugin, type Plugin, type SerovalNode } from "seroval";
 export const ARGS_PART = "args";
 export const FILE_PART = "file";
 
-const UPLOAD_TAG = "solid-start/upload";
+export const UPLOAD_TAG = "solid-start/upload";
 
 /*
  * Migration note: seroval's binary mode (`binary.serialize` and

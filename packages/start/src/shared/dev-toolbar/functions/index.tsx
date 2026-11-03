@@ -1,5 +1,6 @@
-import { createMemo, createSignal, For, type JSX, Show } from "solid-js";
+import { createMemo, createResource, createSignal, For, type JSX, Show, Suspense } from "solid-js";
 import { BODY_FORMAL_FILE, BODY_FORMAT_KEY, BodyFormat } from "../../../fns/shared.ts";
+import { ARGS_PART } from "../../../fns/uploads.ts";
 import { Badge } from "../../ui/Badge.tsx";
 import IconButton from "../../ui/IconButton.tsx";
 import Placeholder from "../../ui/Placeholder.tsx";
@@ -31,6 +32,32 @@ async function getURLSearchParams(source: Response | Request): Promise<URLSearch
   return new URLSearchParams(text);
 }
 
+interface SerovalFormDataViewerProps {
+  source: Request | Response;
+}
+
+/**
+ * Shows a call that sent files: the arguments from the `ARGS_PART` field as a
+ * Seroval tree, with each upload in the tree replaced by its file part.
+ */
+function SerovalFormDataViewer(props: SerovalFormDataViewerProps): JSX.Element {
+  const [form] = createResource(() => props.source.formData());
+  return (
+    <Suspense>
+      <Show when={form()} keyed>
+        {current => {
+          const args = current.get(ARGS_PART);
+          return (
+            <Show when={typeof args === "string"} fallback={<FormDataViewer source={current} />}>
+              <SerovalViewer stream={new Response(args as string)} uploads={current} />
+            </Show>
+          );
+        }}
+      </Show>
+    </Suspense>
+  );
+}
+
 interface ContentViewerProps {
   source: ServerFunctionRequest | ServerFunctionResponse;
 }
@@ -48,6 +75,8 @@ function ContentViewer(props: ContentViewerProps): JSX.Element {
       case startType === "true":
       case startType === BodyFormat.Seroval:
         return <SerovalViewer stream={source} />;
+      case startType === BodyFormat.SerovalFormData:
+        return <SerovalFormDataViewer source={source} />;
       case startType === BodyFormat.String:
         return <HexViewer bytes={source.bytes()} />;
       case startType === BodyFormat.File:
