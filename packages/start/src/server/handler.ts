@@ -47,7 +47,9 @@ export function createBaseHandler(
           if (res !== undefined) {
             return res;
           }
-          if (event.request.method !== "GET") {
+          // A HEAD request runs the `GET` handler when there is no `HEAD` one,
+          // so it falls through to the page the same way a `GET` does.
+          if (event.request.method !== "GET" && event.request.method !== "HEAD") {
             throw new Error(
               `API handler for ${event.request.method} "${event.request.url}" did not return a response.`,
             );
