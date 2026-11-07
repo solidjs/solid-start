@@ -1,5 +1,12 @@
 # @solidjs/start
 
+## 2.2.2
+
+### Patch Changes
+
+- 6833ab1: Show server function calls that send files in the dev toolbar as a Seroval tree. The arguments used to show as one raw string, with the files listed apart. Each file now shows in its place in the arguments, with its name and type.
+- 460117b: Serve the page for a `HEAD` request when a route file exports both a page and a `GET` that returns nothing, such as a `[...404].tsx`. The server threw "did not return a response" and answered 500 instead of rendering the page as it does for `GET`.
+
 ## 2.2.1
 
 ### Patch Changes
