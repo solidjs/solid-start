@@ -1,19 +1,28 @@
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { createServer as createHttpServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
+  type Connect,
   createServer,
   type DevEnvironment,
   type EnvironmentModuleNode,
   type HotUpdateOptions,
   normalizePath,
   type Plugin,
+  type PreviewServer,
   type ViteDevServer,
 } from "vite";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { VITE_ENVIRONMENTS } from "./constants.ts";
-import { isHtmlResponse, resolvePreviewServerEntry, serverOnlyReload } from "./dev-server.ts";
+import {
+  devServer,
+  isHtmlResponse,
+  resolvePreviewServerEntry,
+  serverOnlyReload,
+} from "./dev-server.ts";
 
 const temporaryDirectories: string[] = [];
 
@@ -52,6 +61,58 @@ describe("resolvePreviewServerEntry", () => {
     expect(() => resolvePreviewServerEntry(root)).toThrow(
       `Could not find the SolidStart server entry in ${join(root, "dist/server")}`,
     );
+  });
+});
+
+describe("the preview server", () => {
+  /**
+   * Serves a built server entry whose `fetch` rejects through the preview
+   * middleware, and answers the status of one request to it.
+   */
+  async function preview(error: Error) {
+    const httpServer = createHttpServer();
+    (globalThis as any).PREVIEW_ERROR = error;
+    try {
+      const { root, serverEntry } = createServerEntry("mjs");
+      writeFileSync(
+        serverEntry,
+        `export default { fetch: () => Promise.reject(globalThis.PREVIEW_ERROR) };`,
+      );
+
+      let middleware: Connect.NextHandleFunction | undefined;
+      const previewServer = {
+        config: { root, plugins: [] },
+        middlewares: { use: (fn: Connect.NextHandleFunction) => (middleware = fn) },
+      } as unknown as PreviewServer;
+      const plugin = devServer("./src/entry-server.tsx")[1] as Plugin;
+      const configure = plugin.configurePreviewServer as (server: PreviewServer) => () => void;
+      configure(previewServer)();
+
+      httpServer.on("request", (req, res) => middleware!(req, res, () => {}));
+      await new Promise<void>(resolve => httpServer.listen(0, "127.0.0.1", resolve));
+      const { port } = httpServer.address() as AddressInfo;
+      const response = await fetch(`http://127.0.0.1:${port}/api`, {
+        signal: AbortSignal.timeout(2000),
+      });
+      await response.body?.cancel();
+      return response.status;
+    } finally {
+      delete (globalThis as any).PREVIEW_ERROR;
+      if (httpServer.listening) {
+        httpServer.closeAllConnections();
+        await new Promise(resolve => httpServer.close(resolve));
+      }
+    }
+  }
+
+  it("answers with a 500 when the app leaves an error to it", async () => {
+    const error = new Error("thrown by an API route");
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const status = await preview(error);
+
+    expect(status).toBe(500);
+    expect(consoleError).toHaveBeenCalledWith(error);
   });
 });
 
