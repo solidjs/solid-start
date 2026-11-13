@@ -415,6 +415,9 @@ export function solidStart(options?: SolidStartOptions): Array<PluginOption> {
             },
             [VITE_ENVIRONMENTS.server]: {
               consumer: "server",
+              // Plugins that pre-bundle server dependencies, such as the Cloudflare Vite plugin,
+              // would otherwise load a second copy of the server function registry
+              optimizeDeps: { exclude: ["@solidjs/start"] },
               build: {
                 ssr: true,
                 write: true,
