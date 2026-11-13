@@ -107,6 +107,12 @@ describe("resolve conditions", () => {
     expect(ssr.resolve.conditions).not.toContain("node");
   });
 
+  it("keeps @solidjs/start out of the server's pre-bundled dependencies", async () => {
+    const { ssr } = await resolveEnvironments();
+
+    expect(ssr.optimizeDeps.exclude).toContain("@solidjs/start");
+  });
+
   it("pre-bundles the dev overlay's dependencies in dev only", async () => {
     const dev = await resolveEnvironments("serve");
     const build = await resolveEnvironments("build");
