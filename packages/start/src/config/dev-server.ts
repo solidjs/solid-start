@@ -29,14 +29,20 @@ export function devServer(serverEntryPath: string, middlewarePath?: string): Arr
         return () => {
           server.middlewares.use(async (req, res) => {
             const webReq = new NodeRequest({ req, res });
-            const def: {
-              default: { fetch: (req: Request) => Promise<Response> };
-            } = await import(serverEntryUrl);
-            const webRes = await def.default.fetch(webReq);
-            if (isHtmlResponse(webRes)) {
-              res.setHeader("content-encoding", "identity");
+            try {
+              const def: {
+                default: { fetch: (req: Request) => Promise<Response> };
+              } = await import(serverEntryUrl);
+              const webRes = await def.default.fetch(webReq);
+              if (isHtmlResponse(webRes)) {
+                res.setHeader("content-encoding", "identity");
+              }
+              sendNodeResponse(res, webRes);
+            } catch (error) {
+              // The handler leaves an unhandled error to the server hosting it.
+              console.error(error);
+              sendNodeResponse(res, new Response("Internal Server Error", { status: 500 }));
             }
-            sendNodeResponse(res, webRes);
           });
         };
       },

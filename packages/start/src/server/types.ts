@@ -12,6 +12,9 @@ import type { RequestEvent } from "solid-js/web";
  * Referring to `H3` directly makes TypeScript emit a reference to h3's internal
  * `H3$1` class, which is not portable when h3 is nested inside
  * `node_modules/@solidjs/start/node_modules` (TS2742 / TS2883).
+ *
+ * Unlike `H3.fetch`, its `fetch` rejects with an error that h3 would answer
+ * as unhandled, for the server hosting it to report and answer.
  */
 export interface StartHandler extends H3 {}
 

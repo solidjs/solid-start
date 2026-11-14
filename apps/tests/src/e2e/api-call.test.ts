@@ -32,6 +32,14 @@ test.describe("api calls", () => {
     expect(head.headers.get("content-type")).toBe(get.headers.get("content-type"));
   });
 
+  test("should pass an error thrown by an API route to Nitro's error hook", async () => {
+    const response = await fetch("http://localhost:3000/api/throws");
+
+    expect(response.status).toBe(500);
+    // Set by the Nitro plugin in `src/nitro-error-hook.ts` from Nitro's `error` hook.
+    expect(response.headers.get("x-nitro-error-hook")).toBe("thrown by an API route");
+  });
+
   test("should preserve multiple Set-Cookie headers on redirect (RFC 6265)", async () => {
     const response = await fetch("http://localhost:3000/api/multi-set-cookie-redirect", {
       redirect: "manual",

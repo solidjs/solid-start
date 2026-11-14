@@ -33,6 +33,7 @@ export default defineConfig({
     }),
     nitro({
       compressPublicAssets: true,
+      plugins: ["./src/nitro-error-hook.ts"],
     }),
   ],
 });

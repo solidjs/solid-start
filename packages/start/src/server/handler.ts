@@ -1,5 +1,16 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import middleware from "solid-start:middleware";
-import { defineHandler, getCookie, H3, type H3Event, iterable, redirect, setCookie } from "h3";
+import {
+  defineHandler,
+  getCookie,
+  H3,
+  type H3Event,
+  HTTPError,
+  iterable,
+  type Middleware,
+  redirect,
+  setCookie,
+} from "h3";
 import type { JSX } from "solid-js";
 import { sharedConfig } from "solid-js";
 import { getRequestEvent, renderToStream, renderToString } from "solid-js/web";
@@ -120,8 +131,111 @@ export function createBaseHandler(
 
   const app = new H3();
 
+  app.use(captureUnhandledError(app));
   app.use(handler);
 
+  return throwUnhandledErrors(app);
+}
+
+/**
+ * A call of a handler's `fetch`: the handler's app, the request passed to the
+ * call, whether the app has started on it, and what the request's handler
+ * threw when that is not an answer (see `isAnswer`). Wrapped, so that a thrown
+ * `undefined` is still found.
+ */
+type FetchCall = {
+  app: H3;
+  request: Request;
+  started: boolean;
+  unhandled?: { thrown: unknown };
+};
+
+/**
+ * The calls of every handler's `fetch`. One for the module: an instance that
+ * has run is only collected after `disable()`.
+ */
+const calls = new AsyncLocalStorage<FetchCall>();
+
+/**
+ * h3 answers whatever a handler throws, so `fetch` would never reject and the
+ * server hosting this handler would never see the error: it could neither
+ * report it nor answer it its own way. This keeps an unhandled error of the
+ * request passed to a `fetch` call away from h3 until that call throws it (see
+ * `throwUnhandledErrors`). The app's first start on that request owns the
+ * call; any other start is another way in, left as it was:
+ * `request()`, where h3 answers it, and an h3 app this one is mounted in,
+ * which gets it.
+ */
+function captureUnhandledError(app: H3): Middleware {
+  return async function captureUnhandledError(event, next) {
+    const call = calls.getStore();
+    const own = call?.app === app && call.request === event.req && !call.started ? call : undefined;
+    if (own) own.started = true;
+    try {
+      return await next();
+    } catch (thrown) {
+      if (!own || isAnswer(thrown)) throw thrown;
+      own.unhandled = { thrown };
+      // Never sent: `fetch` throws instead.
+      return new Response(null, { status: 500 });
+    }
+  };
+}
+
+/** h3's markers for "no route matched" and "already answered" (`Symbol.for`, as h3 makes them) */
+const kNotFound = Symbol.for("h3.notFound");
+const kHandled = Symbol.for("h3.handled");
+
+/**
+ * Whether h3 answers a thrown value as the response the app asked for: a
+ * status thrown as a number, h3's not-found or handled marker, or an h3
+ * `HTTPError` not marked as unhandled.
+ */
+function isAnswer(thrown: unknown): boolean {
+  return (
+    typeof thrown === "number" ||
+    thrown === kNotFound ||
+    thrown === kHandled ||
+    (isH3Error(thrown) && !thrown.unhandled)
+  );
+}
+
+/**
+ * Other libraries name their errors `HTTPError` too (ky's, got's). h3 takes
+ * such an error for its own (any of them before 2.0.1-rc.32, one with a
+ * `status` above 99 since), but needs its own error's `toJSON` to answer one.
+ */
+function isH3Error(thrown: unknown): thrown is HTTPError {
+  return HTTPError.isError(thrown) && typeof thrown.toJSON === "function";
+}
+
+/**
+ * The error the server hosting the handler gets: an `Error` as it was thrown,
+ * else an unhandled 500 caused by the thrown value, as h3's own `toError`
+ * makes it. An error named `HTTPError` that is not h3's (see `isH3Error`) is
+ * wrapped too, keeping its message and stack, so that the host does not take
+ * it for an h3 error and answer with its message.
+ */
+function toError(thrown: unknown): Error {
+  if (thrown instanceof Error && (thrown.name !== "HTTPError" || isH3Error(thrown))) return thrown;
+  const error = new HTTPError({
+    status: 500,
+    unhandled: true,
+    message: thrown instanceof Error ? thrown.message : undefined,
+  });
+  (error as { cause: unknown }).cause = thrown;
+  if (thrown instanceof Error) error.stack = thrown.stack;
+  return error;
+}
+
+function throwUnhandledErrors(app: H3): H3 {
+  const fetch = app.fetch;
+  app.fetch = async request => {
+    const call: FetchCall = { app, request, started: false };
+    const response = await calls.run(call, () => fetch(request));
+    if (call.unhandled) throw toError(call.unhandled.thrown);
+    return response;
+  };
   return app;
 }
 
