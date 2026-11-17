@@ -59,7 +59,7 @@ export function Hero() {
           </div>
           <p class="pt-6 text-center text-lg dark:text-sky-400/70 text-sky-950">
             Still on Solid 1? SolidStart keeps working.{" "}
-            <a href="https://docs.solidjs.com/solid-start" class="underline hover:text-[#017AD4]">
+            <a href="https://v1.solidjs.com/solid-start" class="underline hover:text-[#017AD4]">
               SolidStart docs
             </a>
           </p>
