@@ -18,18 +18,7 @@ export function Hero() {
           class="inline-block px-4 py-1 group rounded-full border border-black/5 text-base text-white transition-all ease-in dark:border-white/15 dark:bg-neutral-900/30 dark:hover:bg-neutral-800/20"
         >
           <AnimatedShinyText>
-            <span>🚀 Solid v2 is now in Release Candidate</span>
-          </AnimatedShinyText>
-        </a>
-
-        <a
-          href="https://github.com/solidjs/solid-start/discussions/2281"
-          target="_blank"
-          rel="noopener"
-          class="inline-block px-4 py-1 group rounded-full border border-black/5 text-base text-white transition-all ease-in dark:border-white/15 dark:bg-neutral-900/30 dark:hover:bg-neutral-800/20"
-        >
-          <AnimatedShinyText>
-            <span>✨ SolidStart v2 is now Stable</span>
+            <span>🚀 Solid v2 is now live</span>
           </AnimatedShinyText>
         </a>
       </div>
@@ -38,10 +27,10 @@ export function Hero() {
         <DownloadLogosMenu />
         <div class="flex flex-col">
           <div class="text-center text-6xl font-semibold">
-            Solid<span class="text-[#017AD4]">Start</span>
+            Solid<span class="text-[#017AD4]">Start</span> → Solid
           </div>
           <strong class="dark:font-thin text-balance font-normal text-3xl block pt-3 text-center">
-            Fine-grained reactivity goes fullstack
+            Fullstack is now built in. Everything SolidStart did ships with Solid 2.
           </strong>
           <div class="pt-10 flex flex-col items-center sm:flex-row gap-4 justify-center px-6">
             <a
@@ -55,19 +44,25 @@ export function Hero() {
             </a>
             <a
               class="hover:shadow-[0_0_35px_rgb(125,211,252,0.3)] max-w-52 sm:w-max w-full py-1.5 hover:bg-transparent dark:border-sky-800 hover:border-sky-800 dark:hover:border-transparent  flex items-center justify-center  border-2 border-transparent px-4 rounded-sm dark:bg-sky-800 bg-sky-200 transition-colors ease-in-out"
-              href="https://docs.solidjs.com/solid-start"
+              href="https://docs.solidjs.com/getting-started/quick-start"
               rel="noopener"
             >
               Get Started
             </a>
             <a
               class="hover:shadow-[0_0_35px_rgb(21,126,182,0.2)] max-w-52 sm:w-max w-full py-1.5 hover:bg-transparent dark:border-sky-800 hover:border-sky-800 dark:hover:border-transparent  flex items-center justify-center  border-2 border-transparent px-4 rounded-sm dark:bg-sky-800 bg-sky-200 transition-colors ease-in-out"
-              href="https://start.solid.new/"
+              href="https://stackblitz.com/github/solidjs/templates/tree/main/solid-v2/fullstack?file=README.md"
               rel="noopener"
             >
               Try with StackBlitz
             </a>
           </div>
+          <p class="pt-6 text-center text-lg dark:text-sky-400/70 text-sky-950">
+            Still on Solid 1? SolidStart keeps working.{" "}
+            <a href="https://docs.solidjs.com/solid-start" class="underline hover:text-[#017AD4]">
+              SolidStart docs
+            </a>
+          </p>
         </div>
       </div>
       <CodeSnippet />
