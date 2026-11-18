@@ -1,5 +1,5 @@
-import { parseSetCookie } from "cookie-es";
-import { type H3Event, parseCookies } from "h3";
+import { parseCookie, parseSetCookie } from "cookie-es";
+import type { H3Event } from "h3";
 import { sharedConfig } from "solid-js";
 import { renderToString } from "solid-js/web";
 import { provideRequestEvent } from "solid-js/web/storage";
@@ -431,7 +431,8 @@ export function createSingleFlightHeaders(sourceEvent: FetchEvent, result?: unkn
   // update request headers on the underlying H3 event.
 
   const headers = new Headers(sourceEvent.request.headers);
-  const cookies = parseCookies(sourceEvent.nativeEvent);
+  // keep values encoded: a decoded `%3B` or `%25` would split or re-decode differently
+  const cookies = parseCookie(headers.get("cookie") ?? "", { decode: value => value });
   const SetCookies = sourceEvent.response.headers.getSetCookie();
   // cookies attached to the returned/thrown response (eg. `redirect(to, { headers })`)
   // haven't been merged onto the event response yet, but a browser round trip would
@@ -439,16 +440,11 @@ export function createSingleFlightHeaders(sourceEvent: FetchEvent, result?: unkn
   // the ones on the event response, so they win on conflict.
   if (result instanceof Response) SetCookies.push(...result.headers.getSetCookie());
   headers.delete("cookie");
-  // let useH3Internals = false;
-  // if (sourceEvent.nativeEvent.node?.req) {
-  // 	useH3Internals = true;
-  // 	sourceEvent.nativeEvent.node.req.headers.cookie = "";
-  // }
   SetCookies.forEach(cookie => {
     if (!cookie) return;
     // `parseSetCookie` returns undefined for forbidden cookie names and for
     // cookies with an empty name and value.
-    const parsed = parseSetCookie(cookie);
+    const parsed = parseSetCookie(cookie, { decode: false });
     if (!parsed) return;
     const { maxAge, expires, name, value } = parsed;
     if (maxAge != null && maxAge <= 0) {
@@ -461,11 +457,11 @@ export function createSingleFlightHeaders(sourceEvent: FetchEvent, result?: unkn
     }
     cookies[name] = value;
   });
-  Object.entries(cookies).forEach(([key, value]) => {
-    headers.append("cookie", `${key}=${value}`);
-    // useH3Internals &&
-    // 	(sourceEvent.nativeEvent.node.req.headers.cookie += `${key}=${value};`);
-  });
+  // a single header: repeated `append` joins with ", " outside Node, which parsers read as one cookie
+  const cookie = Object.entries(cookies)
+    .map(([key, value]) => (key ? `${key}=${value}` : value))
+    .join("; ");
+  if (cookie) headers.set("cookie", cookie);
 
   return headers;
 }
