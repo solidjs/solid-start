@@ -1,12 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { parseCookies } from "h3";
 import type { FetchEvent } from "../server/types.ts";
 import { getFetchEvent, mergeResponseHeaders } from "../server/fetchEvent.ts";
 import { getServerFunction } from "./registration.ts";
-
-vi.mock("h3", () => ({
-  parseCookies: vi.fn(() => ({})),
-}));
 
 vi.mock("solid-js/web", () => ({
   renderToString: vi.fn(),
@@ -69,7 +64,6 @@ describe("createSingleFlightHeaders", () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    vi.mocked(parseCookies).mockReturnValue({});
     const module = await import("./handler.ts");
     createSingleFlightHeaders = module.createSingleFlightHeaders;
   });
@@ -137,7 +131,6 @@ describe("createSingleFlightHeaders", () => {
   });
 
   it("should let response cookies win over ones already on the request", () => {
-    vi.mocked(parseCookies).mockReturnValue({ session: "old" });
     const sourceEvent = createMockFetchEvent({ cookie: "session=old" });
     const redirect = new Response(null, {
       status: 302,
@@ -150,7 +143,6 @@ describe("createSingleFlightHeaders", () => {
   });
 
   it("should remove cookies cleared by the response", () => {
-    vi.mocked(parseCookies).mockReturnValue({ session: "abc123" });
     const sourceEvent = createMockFetchEvent({ cookie: "session=abc123" });
     const redirect = new Response(null, {
       status: 302,
@@ -160,6 +152,38 @@ describe("createSingleFlightHeaders", () => {
     const result = createSingleFlightHeaders(sourceEvent, redirect);
 
     expect(result.get("cookie")).toBe(null);
+  });
+
+  it("should join multiple cookies into a single semicolon-separated header", () => {
+    const sourceEvent = createMockFetchEvent({ cookie: "theme=dark; session=abc" }, [
+      "val=1234; Path=/",
+    ]);
+
+    const append = vi.spyOn(Headers.prototype, "append");
+
+    const result = createSingleFlightHeaders(sourceEvent);
+
+    expect(append).not.toHaveBeenCalledWith("cookie", expect.anything());
+    expect(result.get("cookie")).toBe("theme=dark; session=abc; val=1234");
+    append.mockRestore();
+  });
+
+  it("should keep cookie values encoded as they were sent", () => {
+    const sourceEvent = createMockFetchEvent({ cookie: "token=a%2Bb%3D%3D; other=x" }, [
+      "data=c%3Bd; Path=/",
+    ]);
+
+    const result = createSingleFlightHeaders(sourceEvent);
+
+    expect(result.get("cookie")).toBe("token=a%2Bb%3D%3D; other=x; data=c%3Bd");
+  });
+
+  it("should send a nameless response cookie as its bare value", () => {
+    const sourceEvent = createMockFetchEvent({ cookie: "a=1" }, ["abc"]);
+
+    const result = createSingleFlightHeaders(sourceEvent);
+
+    expect(result.get("cookie")).toBe("a=1; abc");
   });
 
   it("should not copy non-cookie response headers onto the request", () => {
