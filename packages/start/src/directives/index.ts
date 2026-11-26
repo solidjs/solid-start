@@ -5,6 +5,7 @@ import {
   type Plugin,
   type ViteDevServer,
 } from "vite";
+import { relative } from "node:path";
 import fg from "fast-glob";
 import { compile, type CompileOptions } from "./compile.ts";
 import xxHash32 from "./xxhash32.ts";
@@ -129,6 +130,12 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
 
   let env: CompileOptions["env"];
 
+  // Function ids hash the module path relative to the root, so two builds of
+  // the same code in different directories give the same ids and chunks.
+  let root: string;
+  const fileHash = (file: string) =>
+    xxHash32(relative(root, file).split("\\").join("/")).toString(16);
+
   const manifest = createManifest();
 
   const preload: Record<CompileOptions["mode"], Debouncer<string> | undefined> = {
@@ -173,6 +180,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
       name: "solid-start:server-functions/setup",
       enforce: "pre",
       configResolved(config) {
+        root = config.root;
         env = config.mode !== "production" ? "development" : "production";
         // Vite resolves its root like every module id: to the real path since
         // Vite 8.2, unless `resolve.preserveSymlinks`. Patterns resolved against
@@ -215,18 +223,18 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
             throw new Error(`${LOOKUP_ID} is only available in dev`);
           }
           const functionId = new URLSearchParams(id.slice(LOOKUP_ID.length + 1)).get("id");
-          // dev function ids are `${xxHash32(file)}-${count}-${name}`
+          // dev function ids are `${fileHash(file)}-${name}`
           const hash = functionId?.split("-")[0];
           if (!hash) return "export {};";
 
           // Look through the files already discovered by the transform first;
           // fall back to scanning the project so a function is found even when
           // the browser kept a chunk from before a dev server restart.
-          let files = [...manifest.server].filter(file => xxHash32(file).toString(16) === hash);
+          let files = [...manifest.server].filter(file => fileHash(file) === hash);
           if (files.length === 0) {
             files = fg
               .sync(DEFAULT_INCLUDE, { cwd: this.environment.config.root, absolute: true })
-              .filter(file => filter(file) && xxHash32(file).toString(16) === hash);
+              .filter(file => filter(file) && fileHash(file) === hash);
           }
           return files.map(file => `import ${JSON.stringify(file)};`).join("\n") || "export {};";
         }
@@ -250,6 +258,7 @@ export function serverFunctionsPlugin(options: ServerFunctionsOptions): Plugin[]
 
         const result = await compile(id!, code, {
           ...(mode === "server" ? serverOptions : clientOptions),
+          hash: fileHash(id!),
           mode,
           env,
         });

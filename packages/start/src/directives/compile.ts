@@ -13,7 +13,10 @@ export interface CompileResult {
 export type CompileOptions = Omit<
   StateContext,
   "count" | "names" | "hash" | "imports" | "valid" | "warnings"
->;
+> & {
+  /** Prefix of the function ids. Defaults to a hash of `id`. */
+  hash?: string;
+};
 
 export async function compile(
   id: string,
@@ -24,7 +27,7 @@ export async function compile(
     ...options,
     valid: false,
     warnings: [],
-    hash: xxHash32(id).toString(16),
+    hash: options.hash ?? xxHash32(id).toString(16),
     count: 0,
     names: new Map(),
     imports: new Map(),

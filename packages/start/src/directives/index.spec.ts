@@ -18,13 +18,13 @@ export async function getMessage() {
 }
 `;
 
-function clientTransform(filter?: ServerFunctionsFilter) {
+function clientTransform(filter?: ServerFunctionsFilter, projectRoot = root) {
   const plugins = serverFunctionsPlugin({
     manifest: "virtual:server-fn-manifest",
     runtime: { server: "virtual:server-runtime", client: "virtual:client-runtime" },
     filter,
   }) as any[];
-  for (const plugin of plugins) plugin.configResolved?.({ root, mode: "production" });
+  for (const plugin of plugins) plugin.configResolved?.({ root: projectRoot, mode: "production" });
 
   const compiler = plugins.find(p => p.name === "solid-start:server-functions/compiler");
   const context = { environment: { config: { consumer: "client" } }, warn() {} };
@@ -60,5 +60,16 @@ describe("serverFunctionsPlugin", () => {
 
     expect(await transform(`${root}/app/message.ts`)).not.toBeNull();
     expect(await transform(`${root}/src/message.ts`)).toBeNull();
+  });
+
+  it("gives the same function ids to the same code built in another directory", async () => {
+    const otherRoot = normalizePath(join(tmpdir(), "solid-start-other", "app"));
+
+    const first = await clientTransform(undefined, root)(`${root}/src/message.ts`);
+    const second = await clientTransform(undefined, otherRoot)(`${otherRoot}/src/message.ts`);
+    const other = await clientTransform(undefined, root)(`${root}/src/other.ts`);
+
+    expect(second.code).toBe(first.code);
+    expect(other.code).not.toBe(first.code);
   });
 });
